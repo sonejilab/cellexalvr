@@ -1,5 +1,7 @@
 # vrJeans
 
+When project is pulled down, an 'Untitled' scene will show. Double-click on Assets > scene1 to get the correct scene.
+
 To be able to see scenes/projects with the HTC Vive:
 In Unity,
   1. Add necessary asset: Prefabs > SteamVR > Prefabs, drag CameraRig to scene. 
