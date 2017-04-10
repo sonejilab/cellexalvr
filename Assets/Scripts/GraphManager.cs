@@ -8,6 +8,7 @@ public class GraphManager : MonoBehaviour
 	public Cell cell;
 	private Dictionary<string, Cell> cells;
 
+
 	void Start ()
 	{
 		cells = new Dictionary<string, Cell>();
@@ -19,4 +20,10 @@ public class GraphManager : MonoBehaviour
 		}
 		graphs.addGraphPoint (cells [label], x, y, z);
 	}
+
+	public void setMinMaxCoords(Vector3 min, Vector3 max){
+		graphs.setMinMaxCoords (min, max);
+	}
+
+
 }

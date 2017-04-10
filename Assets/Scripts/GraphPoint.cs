@@ -14,7 +14,8 @@ public class GraphPoint : MonoBehaviour
 			this.x = x;
 			this.y = y;
 			this.z = z;
-			Instantiate (prefab, new Vector3 ((x / 100.0f), (y / 100.0f), (z / 100.0f)), Quaternion.identity);
+			Instantiate (prefab, new Vector3 (x, y ,z), Quaternion.identity);
+			
 		}
 	}
 
