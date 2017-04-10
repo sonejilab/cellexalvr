@@ -11,6 +11,10 @@ public class GraphManager : MonoBehaviour
 
 	void Start ()
 	{
+		//cells = new Dictionary<string, Cell>();
+	}
+
+	void Awake(){
 		cells = new Dictionary<string, Cell>();
 	}
 

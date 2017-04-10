@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GraphPoint : MonoBehaviour
 {
-		public GameObject prefab;
-		private Cell cell;
-		private float x, y, z;
+	public GameObject prefab;
+	private Cell cell;
+	private float x, y, z;
+	private GameObject sphere;
 
 	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
 	{
@@ -14,10 +15,14 @@ public class GraphPoint : MonoBehaviour
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		GameObject sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
+		sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
 		/**
-			 * TODO: scale the sphere dependent on the graphArea.
-			 **/
+		* TODO: scale the sphere dependent on the graphArea.
+		**/
+	}
+
+	public GameObject getSphere(){
+		return sphere;
 	}
 }
 

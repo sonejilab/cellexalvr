@@ -49,7 +49,7 @@ public class Graph : MonoBehaviour
 		 * the spheres as children to the graphArea so that they
 		 * move along with it
 		 **/
-		//newGraphpoint.transform.SetParent (graphArea.transform);
+		newGraphpoint.getSphere().transform.SetParent (graphArea.transform);
 
 		points.Add (newGraphpoint);
 
