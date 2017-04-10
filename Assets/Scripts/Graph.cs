@@ -42,7 +42,7 @@ public class Graph : MonoBehaviour
 		scaledCoordinates.Scale (areaSize);
 		scaledCoordinates += minAreaValues;
 
-		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
+		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
 
 		/**
 		 * TODO: Do something like the commented line below to add
