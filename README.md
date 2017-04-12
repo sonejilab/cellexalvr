@@ -1,6 +1,6 @@
 # vrJeans
 
-When project is pulled down, an 'Untitled' scene will show. Double-click on Assets > scene1 to get the correct scene.
+When project is pulled down, an 'Untitled' scene will show. Double-click on Assets > vrjeans_scene1 to get the correct scene.
 
 To be able to see scenes/projects with the HTC Vive:
 In Unity,
