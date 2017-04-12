@@ -5,6 +5,7 @@ using UnityEngine;
 public class CellManager : MonoBehaviour {
 
 	private Dictionary<string, Cell> cells;
+	public Cell cell;
 
 
 	void Awake(){
@@ -13,9 +14,11 @@ public class CellManager : MonoBehaviour {
 
 	public Cell addCell(string label) {
 		if(!cells.ContainsKey(label)) {
-			cells[label] = new Cell(label);
+			cells[label] = Instantiate(cell);
+			cells [label].transform.SetParent (this.transform);
+			cells [label].setLabel (label);
 		}
-		cells [label];
+		return cells [label];
 	}
 
 }
