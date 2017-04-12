@@ -4,7 +4,6 @@ using UnityEngine;
 public class Graph : MonoBehaviour
 	{
 	public GraphPoint graphpoint;
-	public GameObject graphArea;
 
 	private GraphPoint newGraphpoint;
 	private  ArrayList points;
@@ -24,16 +23,16 @@ public class Graph : MonoBehaviour
 	void Awake() {
 		points = new ArrayList();
 		// Grabs the location and size of the graphArea.
-		minAreaValues = graphArea.GetComponent<Renderer> ().bounds.min;
-		maxAreaValues = graphArea.GetComponent<Renderer> ().bounds.max;
-		areaSize = graphArea.GetComponent<Renderer> ().bounds.size;
+		minAreaValues = this.GetComponent<Renderer>().bounds.min;
+		maxAreaValues = this.GetComponent<Renderer> ().bounds.max;
+		areaSize = this.GetComponent<Renderer> ().bounds.size;
 
 	}
 
 	public void addGraphPoint(Cell cell, float x, float y, float z) {
 		newGraphpoint = Instantiate(graphpoint);
 
-		// Scales the sphere coordinates to fit inside the graphArea.
+		// Scales the sphere coordinates to fit inside the this.
 		Vector3 scaledCoordinates = new Vector3 (x, y, z);
 		scaledCoordinates -= minCoordValues;
 		scaledCoordinates.x /= (diffCoordValues.x);
@@ -46,10 +45,10 @@ public class Graph : MonoBehaviour
 
 		/**
 		 * TODO: Do something like the commented line below to add
-		 * the spheres as children to the graphArea so that they
+		 * the spheres as children to the this so that they
 		 * move along with it
 		 **/
-		newGraphpoint.getSphere().transform.SetParent (graphArea.transform);
+		newGraphpoint.transform.SetParent (this.transform);
 
 		points.Add (newGraphpoint);
 

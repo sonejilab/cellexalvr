@@ -16,9 +16,8 @@ public class GraphPoint : MonoBehaviour
 		this.y = y;
 		this.z = z;
 		sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
-		/**
-		* TODO: scale the sphere dependent on the graphArea.
-		**/
+		sphere.transform.SetParent (this.transform);
+
 	}
 
 	public GameObject getSphere(){
