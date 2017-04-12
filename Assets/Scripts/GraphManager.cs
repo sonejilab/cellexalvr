@@ -5,7 +5,6 @@ public class GraphManager : MonoBehaviour
 {
 
 	public Graph graphs;
-	public Cell cell;
 	public CellManager cellManager;
 
 
@@ -16,8 +15,7 @@ public class GraphManager : MonoBehaviour
 
 
 	public void addCell(string label, float x, float y, float z) {
-		Cell newCell = cellManager.addCell (label);
-		graphs.addGraphPoint (newCell, x, y, z);
+		graphs.addGraphPoint (cellManager.addCell(label), x, y, z);
 	}
 
 	public void setMinMaxCoords(Vector3 min, Vector3 max){

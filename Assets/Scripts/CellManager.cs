@@ -14,9 +14,7 @@ public class CellManager : MonoBehaviour {
 
 	public Cell addCell(string label) {
 		if(!cells.ContainsKey(label)) {
-			cells[label] = Instantiate(cell);
-			cells [label].transform.SetParent (this.transform);
-			cells [label].setLabel (label);
+			cells [label] = new Cell (label);
 		}
 		return cells [label];
 	}

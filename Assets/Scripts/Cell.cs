@@ -1,11 +1,15 @@
 ﻿using System;
 using UnityEngine;
-public class Cell : MonoBehaviour
+public class Cell
 	{
 		private string label;
 
-		public void setLabel(string label)
-		{
-			this.label = label;
-		}
+	public Cell (string label) {
+		this.label = label;
 	}
+
+	public void setLabel(string label)
+	{
+		this.label = label;
+	}
+}
