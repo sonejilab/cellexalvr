@@ -85,10 +85,8 @@ namespace VRTK
 					}
 
 					if (device.GetPressDown (triggerButton)) {
-						latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
+						//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
 						latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
-
-
 					}
 
 				
