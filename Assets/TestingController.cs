@@ -26,7 +26,7 @@ public class TestingController : MonoBehaviour {
 		if (device.GetPressDown (triggerButton)) {
 			device.TriggerHapticPulse (3999);
 			if (device.GetAxis().x != 0 || device.GetAxis().y != 0) {
-				Debug.Log(device.GetAxis().x + " " + device.GetAxis().y);
+				//Debug.Log(device.GetAxis().x + " " + device.GetAxis().y);
 			}
 		}		
 	}

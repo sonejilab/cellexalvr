@@ -8,6 +8,7 @@ public class GraphPoint : MonoBehaviour
 	private Cell cell;
 	private float x, y, z;
 	private GameObject sphere;
+	private bool selected = false;
 
 	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
 	{
@@ -19,19 +20,35 @@ public class GraphPoint : MonoBehaviour
 		sphere.transform.SetParent (this.transform);
 		Color color = Color.white;
 		//Vector3 localPos = transform.localPosition;
-		if (x < 0.06f) {
-			sphere.GetComponent<Renderer> ().material.color = Color.blue;
-		} else if (x < 0.07f) {
-			sphere.GetComponent<Renderer> ().material.color = Color.black;
-		} else {
-			sphere.GetComponent<Renderer> ().material.color = Color.red;
-		}
+//		if (x < 0.06f) {
+//			sphere.GetComponent<Renderer> ().material.color = Color.blue;
+//		} else if (x < 0.07f) {
+//			sphere.GetComponent<Renderer> ().material.color = Color.black;
+//		} else {
+//			sphere.GetComponent<Renderer> ().material.color = Color.red;
+//		}
 
 
 	}
 		
 	public GameObject getSphere(){
 		return sphere;
+	}
+
+	public bool isSelected() {
+		return selected;
+	}
+
+	public void setSelected(bool isSelected){
+		selected=isSelected;
+	}
+
+	public void setMaterial(Material material){
+		sphere.GetComponent<Renderer> ().material=material;
+	}
+
+	public Material getMaterial(){
+		return sphere.GetComponent<Renderer> ().material;
 	}
 }
 

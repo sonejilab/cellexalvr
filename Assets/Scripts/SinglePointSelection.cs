@@ -11,6 +11,7 @@ public class SinglePointSelection : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Debug.Log ("Point selected");
 		
 	}
 }
