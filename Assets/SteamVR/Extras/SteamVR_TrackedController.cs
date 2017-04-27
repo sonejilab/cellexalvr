@@ -63,6 +63,7 @@ public class SteamVR_TrackedController : MonoBehaviour
 
 	public virtual void OnTriggerClicked(ClickedEventArgs e)
     {
+		
         if (TriggerClicked != null)
             TriggerClicked(this, e);
     }
