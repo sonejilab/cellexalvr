@@ -22,11 +22,12 @@ public class TestingController : MonoBehaviour {
 	void Update () {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
 
-		if (device.GetAxis().x != 0 || device.GetAxis().y != 0) {
-			Debug.Log(device.GetAxis().x + " " + device.GetAxis().y);
-		}
+
 		if (device.GetPressDown (triggerButton)) {
 			device.TriggerHapticPulse (3999);
+			if (device.GetAxis().x != 0 || device.GetAxis().y != 0) {
+				Debug.Log(device.GetAxis().x + " " + device.GetAxis().y);
+			}
 		}		
 	}
 }
