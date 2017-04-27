@@ -48,7 +48,6 @@ namespace VRTK
         private bool storedBeamState;
         private bool storedTipState;
 		private GraphPoint latestHit;
-		private Material latestMaterial;
 
         protected override void OnEnable()
         {
@@ -82,6 +81,11 @@ namespace VRTK
 					if (latestHit == null) {
 						latestHit = pointerCollidedWith.transform.parent.GetComponent<GraphPoint>();
 						latestHit.setMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
+					}
+
+					if (latestHit != pointerCollidedWith.transform.parent.GetComponent<GraphPoint> ()) {
+						latestHit.setMaterial (Resources.Load ("SphereDefault", typeof(Material)) as Material);
+						latestHit = null;
 					}
 
 					if (device.GetPressDown (triggerButton)) {
@@ -143,7 +147,6 @@ namespace VRTK
         protected override void InitPointer()
         {
 			latestHit = null;
-			latestMaterial = null;
 
 			trackedObject = GetComponent<SteamVR_TrackedObject> ();
             pointerHolder = new GameObject(string.Format("[{0}]BasePointer_SimplePointer_Holder", gameObject.name));
