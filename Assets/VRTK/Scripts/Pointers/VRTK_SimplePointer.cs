@@ -84,7 +84,11 @@ namespace VRTK
 					}
 
 					if (latestHit != pointerCollidedWith.transform.parent.GetComponent<GraphPoint> ()) {
-						latestHit.setMaterial (Resources.Load ("SphereDefault", typeof(Material)) as Material);
+						if(latestHit.isSelected()){
+							latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
+						} else {
+							latestHit.setMaterial (Resources.Load ("SphereDefault", typeof(Material)) as Material);
+						}
 						latestHit = null;
 					}
 

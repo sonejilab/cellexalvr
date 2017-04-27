@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class SinglePointSelection : MonoBehaviour {
 
+	VRTK.VRTK_SimplePointer singleSelect;
+
+
 	// Use this for initialization
 	void Start () {
-		
+		singleSelect = transform.parent.GetComponent<VRTK.VRTK_SimplePointer> ();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log ("Point selected");
 		
+	}
+
+	public void ToggleSingleSelect(){
+		singleSelect.enabled = !singleSelect.enabled;
 	}
 }
