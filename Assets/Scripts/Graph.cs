@@ -48,10 +48,16 @@ public class Graph : MonoBehaviour
 		 * the spheres as children to the this so that they
 		 * move along with it
 		 **/
+		if (points.Count % 3 == 0) {
+			newGraphpoint.getSphere ().GetComponent<Renderer> ().material.color = Color.red;
+		}
+		if (points.Count % 3 == 1) {
+			newGraphpoint.getSphere ().GetComponent<Renderer> ().material.color = Color.blue;
+		}
+
 		newGraphpoint.transform.SetParent (this.transform);
 
 		points.Add (newGraphpoint);
-
 	}
 
 	public void setMinMaxCoords(Vector3 min, Vector3 max){
@@ -59,5 +65,27 @@ public class Graph : MonoBehaviour
 		maxCoordValues = max;
 		diffCoordValues = maxCoordValues - minCoordValues;
 
+	}
+
+	public ArrayList getGroups(){
+		ArrayList colors = new ArrayList ();
+		ArrayList groups = new ArrayList ();
+		for (int i = 0; i < points.Count; i++) {
+			GraphPoint p = (GraphPoint) points [i];
+			Color c = p.getSphere().GetComponent<Renderer> ().material.color;
+
+			if (!colors.Contains (c)) {
+				colors.Add (c);
+				groups.Add (new ArrayList ());
+			}
+			int groupIndex = colors.IndexOf (c);
+			((ArrayList)groups [groupIndex]).Add (p);
+		}
+		// Debug for Testing
+		Debug.Log("Nbr of colors: " + colors.Count);
+		Debug.Log("Color #0: " + colors[0].ToString());
+		Debug.Log("Nbr of points in group #0: " + ((ArrayList)groups[0]).Count);
+
+		return groups;
 	}
 }
