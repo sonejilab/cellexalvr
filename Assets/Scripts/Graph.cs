@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 public class Graph : MonoBehaviour
@@ -58,6 +59,34 @@ public class Graph : MonoBehaviour
 		minCoordValues = min;
 		maxCoordValues = max;
 		diffCoordValues = maxCoordValues - minCoordValues;
+
+	}
+
+	public List<List<GraphPoint>> getGroups(){
+		
+		List<Color> colors = new List<Color>();
+		List<List<GraphPoint>> groups = new List<List<GraphPoint>> ();
+
+		for (int i = 0; i < points.Count; i++) {
+			GraphPoint p = (GraphPoint) points [i];
+			Color m = p.getMaterial ().color;
+
+			if (!colors.Contains (m)) {
+				colors.Add (m);
+				groups.Add (new List<GraphPoint> ());
+			}
+
+			int groupIndex = colors.IndexOf (m);
+			(groups [groupIndex]).Add (p);
+		}
+
+		// Debug for Testing
+//		Debug.Log("Nbr of colors: " + colors.Count);
+//		Debug.Log("Color #0: " + colors[0]);
+//		Debug.Log("Nbr of points in group #0: " + (groups[0]).Count);
+//		Debug.Log("Nbr of points in group #1: " + (groups[1]).Count);
+
+		return groups;
 
 	}
 }
