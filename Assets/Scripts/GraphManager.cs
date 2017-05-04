@@ -22,5 +22,9 @@ public class GraphManager : MonoBehaviour
 		graphs.setMinMaxCoords (min, max);
 	}
 
+	public void colorAllGraphsByGene(string geneName){
+		graphs.colorGraphByGene(geneName);
+	}
+
 
 }

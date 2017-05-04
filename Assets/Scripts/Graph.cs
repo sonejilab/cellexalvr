@@ -7,7 +7,7 @@ public class Graph : MonoBehaviour
 	public GraphPoint graphpoint;
 
 	private GraphPoint newGraphpoint;
-	private  ArrayList points;
+	private ArrayList points;
 	private Vector3 maxCoordValues;
 	private Vector3 minCoordValues;
 	private Vector3 diffCoordValues;
@@ -60,6 +60,12 @@ public class Graph : MonoBehaviour
 		maxCoordValues = max;
 		diffCoordValues = maxCoordValues - minCoordValues;
 
+	}
+
+	public void colorGraphByGene(string geneName){
+		foreach (GraphPoint point in points) {
+			point.colorByGene (geneName);
+		}
 	}
 
 	public List<List<GraphPoint>> getGroups(){

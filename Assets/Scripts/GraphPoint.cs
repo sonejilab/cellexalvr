@@ -40,5 +40,9 @@ public class GraphPoint : MonoBehaviour
 	public Material getMaterial(){
 		return sphere.GetComponent<Renderer> ().material;
 	}
+
+	public void colorByGene(string geneName){
+		setMaterial (cell.getGeneMaterial (geneName));
+	}
 }
 

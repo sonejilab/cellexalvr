@@ -6,21 +6,55 @@ using UnityEngine;
 public class InputReader  : MonoBehaviour{
 	
 	public string CellCoordinatesFileName;
+	public string GeneExpressionFileName;
 	//public string GeneExpressionFileName;
-	public GraphManager manager;
+	public GraphManager graphManager;
+	public CellManager cellManager;
 
 	void Start() {
 		
 		// put each line into an array
 		string[] lines = System.IO.File.ReadAllLines(CellCoordinatesFileName);
+		string[] geneLines = System.IO.File.ReadAllLines(GeneExpressionFileName);
 
 		UpdateMinMax (lines);
 		foreach (string line in lines) {
 			// the coordinates are split with tab characters
 			string[] words = line.Split('\t');
 			float[] coords = new float[3];
-			manager.addCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
+			graphManager.addCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 		}
+			
+
+		string[] cellNames = geneLines [0].Split ('\t');
+
+		for (int i = 1; i < geneLines.Length; i++) {
+			string[] words = geneLines[i].Split ('\t');
+			string geneName = words [0];
+			float minExpr = 10000f;
+			float maxExpr = -1f;
+			for (int j = 1; j < words.Length; j++) {
+				float expr = float.Parse(words [j]); 
+				if (expr > maxExpr) {
+					maxExpr = expr;
+				}
+				if (expr < minExpr) {
+					minExpr = expr;
+				}
+			}
+			float binSize = (maxExpr - minExpr) / 30;
+
+			for (int k = 1; k < words.Length; k++) {
+				int binIndex = 0;
+				float expr = float.Parse(words [k]);
+				binIndex = (int)((expr - minExpr) / binSize);
+				if (binIndex == 30) {
+					binIndex--;
+				}
+				cellManager.setGeneExpression (cellNames [k - 1], geneName, binIndex);
+			}
+		}
+
 	}
 
 	/** 
@@ -53,6 +87,6 @@ public class InputReader  : MonoBehaviour{
 				maxCoordValues.z = coords [2];
 			
 		}
-		manager.setMinMaxCoords (minCoordValues, maxCoordValues);
+		graphManager.setMinMaxCoords (minCoordValues, maxCoordValues);
 	}
 }
