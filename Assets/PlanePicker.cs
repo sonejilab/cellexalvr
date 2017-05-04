@@ -28,11 +28,6 @@ public class PlanePicker : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter(Collider other) {
-		print ("hej");
-
-		//other.attachedRigidbody.useGravity = false;
-	}
 
 
 
