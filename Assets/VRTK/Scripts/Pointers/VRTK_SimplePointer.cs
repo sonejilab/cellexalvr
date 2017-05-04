@@ -34,7 +34,6 @@ namespace VRTK
         [Tooltip("Rescale the pointer cursor proportionally to the distance from this game object (useful when used as a gaze pointer).")]
         public bool pointerCursorRescaledAlongDistance = false;
 
-
 		private SteamVR_TrackedObject trackedObject;
 		private SteamVR_Controller.Device device;
 		private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
@@ -48,6 +47,7 @@ namespace VRTK
         private bool storedBeamState;
         private bool storedTipState;
 		private GraphPoint latestHit;
+		private Material latestHitDefaultMat;
 
         protected override void OnEnable()
         {
@@ -87,7 +87,7 @@ namespace VRTK
 						if(latestHit.isSelected()){
 							latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
 						} else {
-							latestHit.setMaterial (Resources.Load ("SphereDefault", typeof(Material)) as Material);
+							latestHit.setMaterial(latestHit.getDefaultMaterial());
 						}
 						latestHit = null;
 					}
@@ -121,7 +121,7 @@ namespace VRTK
 
 					if (latestHit != null) {
 						if (!latestHit.isSelected ()) {
-							latestHit.setMaterial (Resources.Load ("SphereDefault", typeof(Material)) as Material);
+							latestHit.setMaterial (latestHit.getDefaultMaterial());
 						} else {
 							latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material); 
 						}

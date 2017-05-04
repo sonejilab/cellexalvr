@@ -24,8 +24,8 @@ public class RadialSelector : MonoBehaviour {
 
 	public void ToggleSingleSelect(){
 		singleSelect.enabled = !singleSelect.enabled;
-
-		if (singleSelect.enabled = false) {
+		Debug.Log ("HEJ");
+		if (singleSelect.enabled == false) {
 			graph.getGroups ();
 		}
 	}

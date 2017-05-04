@@ -9,6 +9,7 @@ public class GraphPoint : MonoBehaviour
 	private float x, y, z;
 	private GameObject sphere;
 	private bool selected = false;
+	private Material defaultMat;
 
 	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
 	{
@@ -19,6 +20,7 @@ public class GraphPoint : MonoBehaviour
 		sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
 		sphere.transform.SetParent (this.transform);
 		Color color = Color.white;
+		defaultMat = Resources.Load ("SphereDefault", typeof(Material)) as Material;
 	}
 		
 	public GameObject getSphere(){
@@ -41,8 +43,16 @@ public class GraphPoint : MonoBehaviour
 		return sphere.GetComponent<Renderer> ().material;
 	}
 
+	public Material getDefaultMaterial(){
+		return defaultMat;
+	}
+
 	public void colorByGene(string geneName){
-		setMaterial (cell.getGeneMaterial (geneName));
+		if (!selected) {
+			setMaterial (cell.getGeneMaterial (geneName));
+		}
+
+		defaultMat = cell.getGeneMaterial (geneName);
 	}
 }
 

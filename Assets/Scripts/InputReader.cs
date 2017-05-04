@@ -27,14 +27,16 @@ public class InputReader  : MonoBehaviour{
 			
 
 		string[] cellNames = geneLines [0].Split ('\t');
-
+		float mean = 0;
+		float sum = 0;
 		for (int i = 1; i < geneLines.Length; i++) {
 			string[] words = geneLines[i].Split ('\t');
 			string geneName = words [0];
 			float minExpr = 10000f;
 			float maxExpr = -1f;
 			for (int j = 1; j < words.Length; j++) {
-				float expr = float.Parse(words [j]); 
+				float expr = float.Parse(words [j]);
+				sum += expr;
 				if (expr > maxExpr) {
 					maxExpr = expr;
 				}
@@ -42,6 +44,10 @@ public class InputReader  : MonoBehaviour{
 					minExpr = expr;
 				}
 			}
+			mean = sum / words.Length;
+
+			
+
 			float binSize = (maxExpr - minExpr) / 30;
 
 			for (int k = 1; k < words.Length; k++) {

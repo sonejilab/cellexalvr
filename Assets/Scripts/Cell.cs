@@ -27,6 +27,5 @@ public class Cell {
 		int colorSlot = 0;
 		geneExpressions.TryGetValue (geneName, out colorSlot);
 		return materialList [colorSlot];
-
 	}
 }
