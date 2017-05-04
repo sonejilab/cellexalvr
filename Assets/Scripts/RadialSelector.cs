@@ -5,6 +5,7 @@ using UnityEngine;
 public class RadialSelector : MonoBehaviour {
 
 	public Graph graph;
+	public GameObject keyboard;
 
 	VRTK.VRTK_SimplePointer singleSelect;
 
@@ -24,9 +25,13 @@ public class RadialSelector : MonoBehaviour {
 
 	public void ToggleSingleSelect(){
 		singleSelect.enabled = !singleSelect.enabled;
-		Debug.Log ("HEJ");
 		if (singleSelect.enabled == false) {
 			graph.getGroups ();
 		}
+	}
+
+	public void ToggleColoring(){
+		singleSelect.enabled = false;
+		keyboard.SetActive(!keyboard.activeSelf);
 	}
 }

@@ -11,6 +11,7 @@ public class TestingController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		trackedObject = GetComponent<SteamVR_TrackedObject> ();
+		Debug.Log ((int)trackedObject.index);
 	}
 
 	void Trigger (object sender, ClickedEventArgs e)
