@@ -8,11 +8,12 @@ public class GenerateHeatmapThread {
     {
         string home = Directory.GetCurrentDirectory();
         string rPath;
-        using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
+		using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
         {
             string input = r.ReadToEnd();
             rPath = input;
-            Debug.Log("R result: " + RScriptRunner.RunFromCmd(home + "/Assets/Scripts/Make_heatmap_from_CellIS_list.R", rPath, ""));
+			Debug.Log (home + "/Assets/Scripts/test.R" + "\n" + rPath);
+			Debug.Log("R result: " + RScriptRunner.RunFromCmd(home + "/Assets/Scripts/Make_heatmap_from_CellIS_list.R", rPath, ""));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class CellSelector : MonoBehaviour {
@@ -8,6 +9,7 @@ public class CellSelector : MonoBehaviour {
 	public Graph graph;
 	public Material selectorMaterial;
 
+	bool selectionDone = false;
 	ArrayList selectedCells = new ArrayList();
 	Color[] colors;
 	int currentColorIndex = 0;
@@ -30,6 +32,10 @@ public class CellSelector : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
+		if (selectionDone) {
+			selectedCells.Clear ();
+			selectionDone = false;
+		}
 		other.GetComponentInChildren<Renderer> ().material.color = selectedColor;
 		selectedCells.Add(other);
 	}
@@ -51,8 +57,8 @@ public class CellSelector : MonoBehaviour {
 			cell.GetComponentInChildren<Renderer> ().material.color = Color.green;
 		}
 		// clear the list since we are done with it
-		selectedCells.Clear ();
 
+		selectionDone = true;
 	}
 		
 	public void ChangeColor() {
@@ -65,5 +71,26 @@ public class CellSelector : MonoBehaviour {
 		selectorMaterial.color = selectedColor;
 	}
 
+	public void ctrlZ()
+	{
+		selectedCells.RemoveAt(selectedCells.Count - 1);
+	}
+
+	public void dumpData()
+	{
+		using (System.IO.StreamWriter file =
+			new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection.txt")){
+			// new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
+
+			// print ("dumping data");
+			foreach (Collider cell in selectedCells)
+			{
+				file.WriteLine(cell.GetComponent<GraphPoint>().getLabel());
+				// print ("wrote " + cell.GetComponent<GraphPoint> ().getLabel ());
+			}
+			file.Flush ();
+			file.Close ();
+		}
+	}
 
 }

@@ -26,7 +26,6 @@ make.heatmap.1grp <- function(dfile,cellidfile,outfile){
   print(dim(dat.f))
 
   #heatmap.2(dat.s,trace="none",scale="row",col=bluered(30))
-
   print(outfile)
   png(outfile,height=800,width=1000)
   print("created png")
@@ -35,9 +34,9 @@ make.heatmap.1grp <- function(dfile,cellidfile,outfile){
   print("almost done")
 }
 
-expression_data_filepath <- "C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Data/Gene_Expression_Data.txt"
-group_selection_filepath <- "C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Data/CellIDs2heatmap_1GRP.txt"
-generated_image_filepath <- "C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Images/"
-generated_image_filename <- "heatmap.png"
-make.heatmap.1grp(expression_data_filepath, group_selection_filepath, generated_image_filepath + generated_image_filename)
+expression_data_filepath <- "C:/Users/VR/Documents/VRJeans/vrJeans/Assets/Data/Gene_Expression_Data.txt"
+#group_selection_filepath <- "C:/Users/VR/Documents/VRJeans/vrJeans/Assets/Data/CellIDs2heatmap_1GRP.txt"
+group_selection_filepath <- "C:/Users/VR/Documents/VRJeans/vrJeans/Assets/Data/runtimeGroups/selection.txt"
+generated_image_filepath <- "C:/Users/VR/Documents/VRJeans/vrJeans/Assets/Images/heatmap.png"
+make.heatmap.1grp(expression_data_filepath, group_selection_filepath, generated_image_filepath)
 print("done")

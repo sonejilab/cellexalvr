@@ -22,6 +22,10 @@ public class GraphPoint : MonoBehaviour
 
 
 	}
+
+	public string getLabel() {
+		return cell.Label;
+	}
 		
 	/* public GameObject getSphere(){
 		return sphere;

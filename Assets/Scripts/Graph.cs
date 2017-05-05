@@ -44,8 +44,8 @@ public class Graph : MonoBehaviour
         scaledCoordinates.Scale(areaSize);
         scaledCoordinates += minAreaValues;
 
-        //newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
         newGraphpoint = Instantiate(graphpoint, new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
+		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
 
         /**
 		 * TODO: Do something like the commented line below to add
@@ -65,20 +65,5 @@ public class Graph : MonoBehaviour
 
     }
 
-    public void ctrlZ()
-    {
-        points.RemoveAt(points.Count - 1);
-    }
 
-    public void dumpData()
-    {
-        using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
-        {
-            foreach (Cell cell in points)
-            {
-                file.WriteLine(cell.Label);
-            }
-        }
-    }
 }

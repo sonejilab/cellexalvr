@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using UnityEngine;
 
 /// <summary>
 /// This class runs R code from a file using the console.
@@ -48,7 +49,13 @@ public class RScriptRunner
         }
         catch (Exception ex)
         {
-            throw new Exception("R Script failed: " + result, ex);
+			using (System.IO.StreamWriter writetofile =
+				new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "/Assets/Data/error.txt")){
+				writetofile.WriteLine("R Script failed: " + ex);
+				writetofile.Flush ();
+				writetofile.Close ();
+			}
+			throw new Exception("R Script failed: " + result, ex);
         }
     }
 }
