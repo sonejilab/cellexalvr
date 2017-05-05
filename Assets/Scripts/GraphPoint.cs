@@ -7,7 +7,7 @@ public class GraphPoint : MonoBehaviour
 	public GameObject prefab;
 	private Cell cell;
 	private float x, y, z;
-	private GameObject sphere;
+	//private GameObject sphere;
 
 	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
 	{
@@ -15,16 +15,17 @@ public class GraphPoint : MonoBehaviour
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
-		sphere.transform.SetParent (this.transform);
+		// sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
+		// sphere.transform.SetParent (this.transform);
 		Color color = Color.white;
-		//Vector3 localPos = transform.localPosition;
+		Vector3 localPos = transform.localPosition;
 
 
 	}
 		
-	public GameObject getSphere(){
+	/* public GameObject getSphere(){
 		return sphere;
 	}
+	*/
 }
 

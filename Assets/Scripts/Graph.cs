@@ -30,7 +30,6 @@ public class Graph : MonoBehaviour
 	}
 
 	public void addGraphPoint(Cell cell, float x, float y, float z) {
-		newGraphpoint = Instantiate(graphpoint);
 
 		// Scales the sphere coordinates to fit inside the this.
 		Vector3 scaledCoordinates = new Vector3 (x, y, z);
@@ -41,7 +40,8 @@ public class Graph : MonoBehaviour
 		scaledCoordinates.Scale (areaSize);
 		scaledCoordinates += minAreaValues;
 
-		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
+		//newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
+		newGraphpoint = Instantiate(graphpoint, new Vector3 (scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
 
 		/**
 		 * TODO: Do something like the commented line below to add

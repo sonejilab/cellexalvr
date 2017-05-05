@@ -4,13 +4,18 @@ using UnityEngine;
 public class GraphManager : MonoBehaviour
 {
 
-	public Graph graphs;
+	public Graph graphPrefab;
+	private Graph graphs;
 	public CellManager cellManager;
 
 
 	void Start ()
 	{
 		//cells = new Dictionary<string, Cell>();
+		graphs = Instantiate(graphPrefab);
+		graphs.gameObject.SetActive (true);
+		graphs.transform.parent = this.transform;
+
 	}
 
 
