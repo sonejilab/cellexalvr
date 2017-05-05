@@ -1,16 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 
 public class HeatmapTest : MonoBehaviour {
     
     public GameObject HeatmapImageBoard;
     private ArrayList data;
+    private GenerateHeatmapThread ght;
+    private Thread t;
+    private bool running;
 
 	// Use this for initialization
 	void Start () {
-
+        ght = new GenerateHeatmapThread();
+        t = null;
+        running = false;
     }
 
     // Update is called once per frame
@@ -18,20 +24,13 @@ public class HeatmapTest : MonoBehaviour {
     {
         if (Input.GetKeyDown("n"))
         {
-            runHeatmap();
-            HeatmapImageBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
+            t = new Thread(new ThreadStart(ght.generateHeatmap));
+            t.Start();
+            running = true;
         }
-    }
-
-    public void runHeatmap()
-    {
-        string home = Directory.GetCurrentDirectory();
-        string rPath;
-        using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
-        {
-            string input = r.ReadToEnd();
-            rPath = input;
-            Debug.Log("R result: " + RScriptRunner.RunFromCmd(home + "/Assets/Scripts/Make_heatmap_from_CellIS_list.R", rPath, ""));
+        if(running && !t.IsAlive) {
+            HeatmapImageBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
+            running = false;
         }
     }
 }
