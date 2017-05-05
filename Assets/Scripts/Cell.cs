@@ -8,8 +8,20 @@ public class Cell
 		this.label = label;
 	}
 
-	public void setLabel(string label)
+	/*public void setLabel(string label)
 	{
 		this.label = label;
-	}
+	}*/
+
+    public string Label
+    {
+        get
+        {
+            return this.label;
+        }
+        set
+        {
+            this.label = value;
+        }
+    }
 }

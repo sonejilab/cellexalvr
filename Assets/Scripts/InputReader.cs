@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.IO;
+
 // A classs for reading a data file and creating GraphPoints at the correct locations
 public class InputReader  : MonoBehaviour{
 	
@@ -21,7 +23,14 @@ public class InputReader  : MonoBehaviour{
 			float[] coords = new float[3];
 			manager.addCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 		}
-	}
+
+
+        string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
+        foreach (string f in txtList)
+        {
+            File.Delete(f);
+        }
+    }
 
 	/** 
 	 * Determines the maximum and the minimum values of the dataset. 
