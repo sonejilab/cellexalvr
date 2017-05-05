@@ -35,10 +35,9 @@ make.heatmap.1grp <- function(dfile,cellidfile,outfile){
   print("almost done")
 }
 
-print(getwd())
-setwd("C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Images")
-print(getwd())
 expression_data_filepath <- "C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Data/Gene_Expression_Data.txt"
 group_selection_filepath <- "C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Data/CellIDs2heatmap_1GRP.txt"
-make.heatmap.1grp(expression_data_filepath, group_selection_filepath,"heatmap.png")
+generated_image_filepath <- "C:/Users/Kristian/Documents/Unity_projects/vrJeans/Assets/Images/"
+generated_image_filename <- "heatmap.png"
+make.heatmap.1grp(expression_data_filepath, group_selection_filepath, generated_image_filepath + generated_image_filename)
 print("done")
