@@ -22,13 +22,15 @@ public class CellSelector : MonoBehaviour {
 		colors [4] = new Color (1f, 153f/255f, 204f/255f); // pink
 		colors [5] = new Color (255, 255, 0); // yellow
 		// colors [4] = new Color (1, 0.92, 0.016, 1); // yellow
+	
+		selectorMaterial.color = colors [0];
 
 		selectedColor = Color.red;
-		print (selectedColor.ToString ());
+		// print (selectedColor.ToString ());
 	}
 
 	void OnTriggerEnter(Collider other) {
-		other.GetComponent<Renderer> ().material.color = selectedColor;
+		other.GetComponentInChildren<Renderer> ().material.color = selectedColor;
 		selectedCells.Add(other);
 	}
 
@@ -37,7 +39,6 @@ public class CellSelector : MonoBehaviour {
 			cell.attachedRigidbody.useGravity = true;
 			cell.isTrigger = false;
 		}
-
 	}
 
 	public void ConfirmSelection () {
@@ -45,9 +46,9 @@ public class CellSelector : MonoBehaviour {
 		newGraph.gameObject.SetActive (true);
 		newGraph.transform.parent = manager.transform;
 		foreach(Collider cell in selectedCells) {
-			GameObject graphpoint = cell.transform.parent.gameObject;
+			GameObject graphpoint = cell.gameObject;
 			graphpoint.transform.parent = newGraph.transform;
-			cell.GetComponent<Renderer> ().material.color = Color.green;
+			cell.GetComponentInChildren<Renderer> ().material.color = Color.green;
 		}
 		// clear the list since we are done with it
 		selectedCells.Clear ();
