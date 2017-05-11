@@ -7,12 +7,12 @@ public class RadialSelector : MonoBehaviour {
 	public Graph graph;
 	public GameObject keyboard;
 
-	VRTK.VRTK_SimplePointer singleSelect;
+	VRTK.VRTK_StraightPointerRenderer singleSelect;
 
 
 	// Use this for initialization
 	void Start () {
-		singleSelect = transform.parent.GetComponent<VRTK.VRTK_SimplePointer> ();
+		singleSelect = transform.parent.GetComponent<VRTK.VRTK_StraightPointerRenderer> ();
 
 		singleSelect.enabled = false;
 
@@ -25,6 +25,8 @@ public class RadialSelector : MonoBehaviour {
 
 	public void ToggleSingleSelect(){
 		singleSelect.enabled = !singleSelect.enabled;
+		//graph.GetComponent<Rigidbody> ().detectCollisions = false;
+		Destroy(graph.GetComponent<Rigidbody>());
 		if (singleSelect.enabled == false) {
 			graph.getGroups ();
 		}

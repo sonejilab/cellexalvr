@@ -21,9 +21,16 @@ public class GraphPoint : MonoBehaviour
 		sphere.transform.SetParent (this.transform);
 		Color color = Color.white;
 		defaultMat = Resources.Load ("SphereDefault", typeof(Material)) as Material;
+		Vector3 localPos = transform.localPosition;
+
+
+	}
+
+	public string getLabel() {
+		return cell.Label;
 	}
 		
-	public GameObject getSphere(){
+	 public GameObject getSphere(){
 		return sphere;
 	}
 
@@ -36,7 +43,7 @@ public class GraphPoint : MonoBehaviour
 	}
 
 	public void setMaterial(Material material){
-		sphere.GetComponent<Renderer> ().material=material;
+		sphere.GetComponent<Renderer> ().material = material;
 	}
 
 	public Material getMaterial(){

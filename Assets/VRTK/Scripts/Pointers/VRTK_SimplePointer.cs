@@ -48,6 +48,7 @@ namespace VRTK
         private bool storedTipState;
 		private GraphPoint latestHit;
 		private Material latestHitDefaultMat;
+		public int layerMask = 1<<8;
 
         protected override void OnEnable()
         {
@@ -73,17 +74,20 @@ namespace VRTK
                 var origin = GetOrigin();
                 Ray pointerRaycast = new Ray(origin.position, origin.forward);
                 RaycastHit pointerCollidedWith;
-                var rayHit = Physics.Raycast(pointerRaycast, out pointerCollidedWith, pointerLength, ~layersToIgnore);
+				var rayHit = Physics.Raycast(pointerRaycast, out pointerCollidedWith, pointerLength); // ~layersToIgnore
                 var pointerBeamLength = GetPointerBeamLength(rayHit, pointerCollidedWith);
                 SetPointerTransform(pointerBeamLength, pointerThickness);
                 if (rayHit)
                 {
 					if (latestHit == null) {
-						latestHit = pointerCollidedWith.transform.parent.GetComponent<GraphPoint>();
+						
+						//latestHit = pointerCollidedWith.transform.GetComponent<GraphPoint>;
+						//Debug.Log (pointerCollidedWith.transform.gameObject.name);
+						//Debug.Log (layersToIgnore);
 						latestHit.setMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
 					}
 
-					if (latestHit != pointerCollidedWith.transform.parent.GetComponent<GraphPoint> ()) {
+					if (latestHit != pointerCollidedWith.transform.GetComponent<GraphPoint> ()) {
 						if(latestHit.isSelected()){
 							latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
 						} else {

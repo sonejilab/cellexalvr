@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.IO;
+
 public class Graph : MonoBehaviour
 	{
 	public GraphPoint graphpoint;
@@ -30,37 +32,39 @@ public class Graph : MonoBehaviour
 
 	}
 
-	public void addGraphPoint(Cell cell, float x, float y, float z) {
-		newGraphpoint = Instantiate(graphpoint);
+    public void addGraphPoint(Cell cell, float x, float y, float z)
+    {
 
-		// Scales the sphere coordinates to fit inside the this.
-		Vector3 scaledCoordinates = new Vector3 (x, y, z);
-		scaledCoordinates -= minCoordValues;
-		scaledCoordinates.x /= (diffCoordValues.x);
-		scaledCoordinates.y /= (diffCoordValues.y);
-		scaledCoordinates.z /= (diffCoordValues.z);
-		scaledCoordinates.Scale (areaSize);
-		scaledCoordinates += minAreaValues;
+        // Scales the sphere coordinates to fit inside the this.
+        Vector3 scaledCoordinates = new Vector3(x, y, z);
+        scaledCoordinates -= minCoordValues;
+        scaledCoordinates.x /= (diffCoordValues.x);
+        scaledCoordinates.y /= (diffCoordValues.y);
+        scaledCoordinates.z /= (diffCoordValues.z);
+        scaledCoordinates.Scale(areaSize);
+        scaledCoordinates += minAreaValues;
 
+        newGraphpoint = Instantiate(graphpoint, new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
 		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
 
-		/**
+        /**
 		 * TODO: Do something like the commented line below to add
 		 * the spheres as children to the this so that they
 		 * move along with it
 		 **/
-		newGraphpoint.transform.SetParent (this.transform);
+        newGraphpoint.transform.SetParent(this.transform);
 
-		points.Add (newGraphpoint);
+        points.Add(newGraphpoint);
+    }
 
-	}
+    public void setMinMaxCoords(Vector3 min, Vector3 max)
+    {
+        minCoordValues = min;
+        maxCoordValues = max;
+        diffCoordValues = maxCoordValues - minCoordValues;
 
-	public void setMinMaxCoords(Vector3 min, Vector3 max){
-		minCoordValues = min;
-		maxCoordValues = max;
-		diffCoordValues = maxCoordValues - minCoordValues;
-
-	}
+    }
+		
 
 	public void colorGraphByGene(string geneName){
 		foreach (GraphPoint point in points) {

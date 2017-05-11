@@ -1,0 +1,14 @@
+step 1: download r version 3.3.3 from
+https://cran.r-project.org/bin/windows/base/
+step 2: if using windows edit path to include R. First find the edit environment
+variables window. The top part should list variables PATH, TEMP and TMP.
+Go in and edit the PATH variable. Here you add a new path variable, specifically
+the location of your R x64 directory. For me it looks like this:
+C:\Program Files\R\R-3.3.3\bin\x64
+step 3: r.exe and rscript should now be executable from the windows command prompt.
+r.exe is interactive and rscript executes scripts. Make a copy of the config.example.txt and enter the R filepath.
+step 4: To run heatmap generation you need to install packages pheatmap and gplots. 
+You can make sure dependencies are working as intended by running the Make_heatmap_from_CellIS_list.R script from command line/terminal.
+step 5: Manually change absolute paths in R script Make_heat... (I'm sorry)
+
+If the script won't execute it probably has to do with file paths. RScriptRunner outputs error messages to error.txt in Assets/Data

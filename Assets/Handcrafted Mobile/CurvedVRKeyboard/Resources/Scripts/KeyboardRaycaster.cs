@@ -34,7 +34,7 @@ namespace CurvedVRKeyboard {
             layer = 1 << layerNumber;
 //			trackedObject = controller.GetComponent<SteamVR_TrackedObject> ();
 //			Debug.Log ((int)trackedObject.index);
-			device = SteamVR_Controller.Input (3);
+			device = SteamVR_Controller.Input (4);
         }
 
         void Update () {

@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class Cell {
-	private string label;
+	private string labelString;
 	private Dictionary<string, int> geneExpressions;
 	private List<Material> materialList;
 
 	public Cell (string label, List<Material> materialList) {
-		this.label = label;
+		this.labelString = label;
 		geneExpressions = new Dictionary<string, int> ();
 		this.materialList = materialList;
 
@@ -16,7 +16,8 @@ public class Cell {
 
 	public void setLabel(string label)
 	{
-		this.label = label;
+		this.labelString = label;
+
 	}
 
 	public void setExpressionData(string geneName, int colorSlot){
@@ -28,4 +29,16 @@ public class Cell {
 		geneExpressions.TryGetValue (geneName, out colorSlot);
 		return materialList [colorSlot];
 	}
+
+    public string Label
+    {
+        get
+        {
+            return this.labelString;
+        }
+        set
+        {
+            this.labelString = value;
+        }
+    }
 }

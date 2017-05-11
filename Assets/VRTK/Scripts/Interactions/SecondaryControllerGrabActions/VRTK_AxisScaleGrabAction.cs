@@ -38,7 +38,8 @@ namespace VRTK.SecondaryControllerGrabActions
         {
             base.Initialise(currentGrabbdObject, currentPrimaryGrabbingObject, currentSecondaryGrabbingObject, primaryGrabPoint, secondaryGrabPoint);
             initialScale = currentGrabbdObject.transform.localScale;
-            initalLength = (grabbedObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
+            //initalLength = (grabbedObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
+			initalLength = (primaryGrabbingObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
             initialScaleFactor = currentGrabbdObject.transform.localScale.x / initalLength;
         }
 
@@ -98,8 +99,8 @@ namespace VRTK.SecondaryControllerGrabActions
 
         private void UniformScale()
         {
-            float adjustedLength = (grabbedObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
-            float adjustedScale = initialScaleFactor * adjustedLength;
+			float adjustedLength = (primaryGrabbingObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
+			float adjustedScale = initialScaleFactor * (adjustedLength/initalLength) * 0.05f;
 
             var newScale = new Vector3(adjustedScale, adjustedScale, adjustedScale);
             ApplyScale(newScale);
