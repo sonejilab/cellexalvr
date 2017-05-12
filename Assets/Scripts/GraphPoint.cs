@@ -19,6 +19,7 @@ public class GraphPoint : MonoBehaviour
 		this.z = z;
 		sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
 		sphere.transform.SetParent (this.transform);
+		sphere.gameObject.SetActive (true);
 		Color color = Color.white;
 		defaultMat = Resources.Load ("SphereDefault", typeof(Material)) as Material;
 		Vector3 localPos = transform.localPosition;

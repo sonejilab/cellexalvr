@@ -45,6 +45,7 @@ public class Graph : MonoBehaviour
         scaledCoordinates += minAreaValues;
 
         newGraphpoint = Instantiate(graphpoint, new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
+		newGraphpoint.gameObject.SetActive (true);
 		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
 
         /**

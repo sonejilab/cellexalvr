@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+using VRTK;
+
 public class CellSelector : MonoBehaviour {
 
 	public GraphManager manager;
 	public Graph graph;
 	public Material selectorMaterial;
+	public RadialMenu menu;
+	public Sprite confirmButton;
+	public Sprite noConfirmButton;
+
+
+	List<RadialMenuButton> buttons;
+	bool showConfirmButton = false;
 
 	bool selectionDone = false;
 	ArrayList selectedCells = new ArrayList();
@@ -34,15 +43,40 @@ public class CellSelector : MonoBehaviour {
 
 		selectedColor = Color.red;
 		// print (selectedColor.ToString ());
+
+		// get the radial menue from the right hand control
+		buttons = menu.buttons;
+
+		buttons [0].ButtonIcon = noConfirmButton;
+
 	}
 
 	void OnTriggerEnter(Collider other) {
 		if (selectionDone) {
 			selectedCells.Clear ();
+			menu.RegenerateButtons();
 			selectionDone = false;
 		}
-		other.GetComponentInChildren<Renderer> ().material.color = selectedColor;
-		selectedCells.Add(other);
+		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
+			other.GetComponentInChildren<Renderer> ().material.color = selectedColor;
+		} else {
+			print ("null color, Cellselector.cs:60");
+		}
+		if (!selectedCells.Contains (other)) {
+			selectedCells.Add (other);
+		}
+		print ("OnTriggerEnter");
+		buttons [0].ButtonIcon = confirmButton;
+		if(!showConfirmButton) {
+			showConfirmButton = true;
+			menu.RegenerateButtons();
+		}
+
+
+
+		//menu.buttons[0].ButtonIcon = confirmButton;
+			
+
 	}
 
 	public void RemoveCells () {
@@ -65,9 +99,18 @@ public class CellSelector : MonoBehaviour {
 
 		}
 		// clear the list since we are done with it
+		// ?
+
+		// create .txt file with latest selection
 		dumpData();
 
 		selectionDone = true;
+
+		print ("ConfirmSelection");
+		buttons [0].ButtonIcon = noConfirmButton;
+		menu.RegenerateButtons();
+		showConfirmButton = false;
+
 	}
 		
 	public void ChangeColor() {
@@ -95,7 +138,7 @@ public class CellSelector : MonoBehaviour {
 			foreach (Collider cell in selectedCells)
 			{
 				file.Write(cell.GetComponent<GraphPoint>().getLabel());
-				file.Write ("\t#");
+				file.Write ("\t");
 				Color c = cell.GetComponentInChildren<Renderer> ().material.color;
 				int r = (int)(c.r * 255);
 				int g = (int)(c.g * 255);
@@ -110,3 +153,8 @@ public class CellSelector : MonoBehaviour {
 	}
 
 }
+/*
+ * change tool
+ * change colour
+ * select/confirm
+ * */
