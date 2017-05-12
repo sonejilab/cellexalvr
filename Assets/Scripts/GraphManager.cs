@@ -9,7 +9,7 @@ public class GraphManager : MonoBehaviour
 	public CellManager cellManager;
 
 
-	void Start ()
+	void Awake ()
 	{
 		//cells = new Dictionary<string, Cell>();
 		graphs = Instantiate(graphPrefab);
