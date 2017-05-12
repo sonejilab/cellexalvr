@@ -57,11 +57,11 @@ make.heatmap.multigrp.anova <- function(dfile,cellidfile,num.sig,outfile){
 }
 
 args <- commandArgs(trailingOnly = TRUE)
-print(args[1])
-
 homedir <- args[1]
+latest_version <- args[2]
+
 expression_data_filepath <- paste(homedir, "/Assets/Scripts/R/gedata.RData", sep="")
-group_selection_filepath <- paste(homedir, "/Assets/Data/runtimeGroups/selection0.txt", sep="")
+group_selection_filepath <- paste(homedir, "/Assets/Data/runtimeGroups/selection", latest_version, ".txt", sep="")
 generated_image_filepath <- paste(homedir, "/Assets/Images/heatmap.png", sep="")
 top_genes_number <- 500
 make.heatmap.multigrp.anova(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)
