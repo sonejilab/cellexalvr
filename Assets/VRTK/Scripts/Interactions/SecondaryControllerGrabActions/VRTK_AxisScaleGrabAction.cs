@@ -100,7 +100,7 @@ namespace VRTK.SecondaryControllerGrabActions
         private void UniformScale()
         {
 			float adjustedLength = (primaryGrabbingObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
-			float adjustedScale = initialScaleFactor * (adjustedLength/initalLength) * 0.05f;
+			float adjustedScale = initialScaleFactor * adjustedLength * 0.1f;
 
             var newScale = new Vector3(adjustedScale, adjustedScale, adjustedScale);
             ApplyScale(newScale);
