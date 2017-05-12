@@ -1,0 +1,39 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using UnityEngine;
+
+public class SimHeatmapGenerator : MonoBehaviour {
+
+	public GameObject graph;
+	private CellSelector cellselector;
+    public GameObject HeatmapImageBoard;
+    private ArrayList data;
+    private GenerateHeatmapThread ght;
+    private Thread t;
+    private bool running;
+
+	// Use this for initialization
+	void Start () {
+		cellselector = graph.GetComponent<CellSelector>();
+        ght = new GenerateHeatmapThread();
+        t = null;
+        running = false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+		if (Input.GetKeyDown("n")) {
+            HeatmapImageBoard.SetActive(true);
+            t = new Thread(new ThreadStart(ght.generateHeatmap));
+            t.Start();
+            running = true;
+        }
+        if(running && !t.IsAlive) {
+            HeatmapImageBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
+            running = false;
+        }
+    }
+}
