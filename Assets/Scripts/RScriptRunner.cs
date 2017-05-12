@@ -35,6 +35,7 @@ public class RScriptRunner
 
             info.RedirectStandardInput = false;
             info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
             info.UseShellExecute = false;
             info.CreateNoWindow = true;
 
@@ -42,7 +43,7 @@ public class RScriptRunner
             {
                 proc.StartInfo = info;
                 proc.Start();
-                result = proc.StandardOutput.ReadToEnd();
+                result = "Stout:\n" + proc.StandardOutput.ReadToEnd() + "\nSterr:\n" + proc.StandardError.ReadToEnd();
             }
 
             return result;
@@ -50,7 +51,7 @@ public class RScriptRunner
         catch (Exception ex)
         {
 			using (System.IO.StreamWriter writetofile =
-				new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "/Assets/Data/error.txt")){
+				new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "/Assets/Config/error.txt")){
 				writetofile.WriteLine("R Script failed: " + ex);
 				writetofile.Flush ();
 				writetofile.Close ();

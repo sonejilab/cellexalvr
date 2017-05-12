@@ -6,6 +6,7 @@
 /Assets/AssetStoreTools*
 /Assets/Config/config.txt
 /Assets/Config/config.txt.meta
+/Assets/Config/error*
 /Assets/Data/runtimeGroups/
 /Assets/Data/runtimeGroups.meta
 /Assets/Images/heatmap.png
