@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
 public class RTest : MonoBehaviour {
@@ -9,9 +10,10 @@ public class RTest : MonoBehaviour {
         string rPath;
         using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
         {
-            string input = r.ReadToEnd();
-            rPath = input;
-            Debug.Log(rPath);
+            string rawInput = r.ReadToEnd();
+            string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            rPath = input[0];
+            Debug.Log(rPath + " " + input.Length);
             Debug.Log(RScriptRunner.RunFromCmd(home + "/Assets/Scripts/test.R", rPath, ""));
         }
     }
