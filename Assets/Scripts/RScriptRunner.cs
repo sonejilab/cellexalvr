@@ -43,7 +43,7 @@ public class RScriptRunner
             {
                 proc.StartInfo = info;
                 proc.Start();
-                result = "Stout:\n" + proc.StandardOutput.ReadToEnd() + "\nSterr:\n" + proc.StandardError.ReadToEnd();
+                result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
             }
 
             return result;

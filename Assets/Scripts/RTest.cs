@@ -14,7 +14,7 @@ public class RTest : MonoBehaviour {
             string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             rPath = input[0];
             Debug.Log(rPath + " " + input.Length);
-            Debug.Log(RScriptRunner.RunFromCmd(home + "/Assets/Scripts/test.R", rPath, ""));
+            Debug.Log(RScriptRunner.RunFromCmd(home + "/Assets/Scripts/R/test.R", rPath, ""));
         }
     }
 }
