@@ -22,6 +22,9 @@ public class SelectionToolHandler : MonoBehaviour
 	public Sprite blowupButton_w;
 	public Sprite colorButton;
 
+	public SteamVR_TrackedController right;
+	public SteamVR_TrackedController left;
+
 	ArrayList selectedCells = new ArrayList();
 
 	int fileCreationCtr = 0;
@@ -35,6 +38,11 @@ public class SelectionToolHandler : MonoBehaviour
 	List<RadialMenuButton> buttons;
 	bool inSelectionState = false;
 	bool selectionMade = false;
+	public bool selectionConfirmed = false;
+	public ushort hapticIntensity = 2000;
+
+	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
+	//private SteamVR_TrackedObject trackedObj;
 
 	void Awake () {
 		colors = new Color[10];
@@ -54,15 +62,18 @@ public class SelectionToolHandler : MonoBehaviour
 		planePicker = GameObject.Find ("PlaneSelectors").GetComponent<PlanePicker> ();
 		buttons = menu.buttons;
 		UpdateButtonIcons();
+		//trackedObj = GetComponent<SteamVR_TrackedObject>();
 	}
 		
 	void OnTriggerEnter(Collider other) {
-		print(other.gameObject.name);
+		//print(other.gameObject.name);
 		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
 			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
 		}
 		if (!selectedCells.Contains (other)) {
 			selectedCells.Add (other);
+			//controller.TriggerHapticPulse(500);
+			SteamVR_Controller.Input((int)left.controllerIndex).TriggerHapticPulse(hapticIntensity);
 		}
 		if(!selectionMade) {
 			selectionMade = true;
@@ -77,7 +88,9 @@ public class SelectionToolHandler : MonoBehaviour
 			other.attachedRigidbody.useGravity = true;
 			other.attachedRigidbody.isKinematic = false;
 			other.isTrigger = false;
+			GetComponent<AudioSource> ().Play (); // pop
 		}
+
 		selectedCells.Clear ();
 		selectionMade = false;
 	}
@@ -99,6 +112,7 @@ public class SelectionToolHandler : MonoBehaviour
 		// ?
 		selectedCells.Clear ();
 		selectionMade = false;
+		selectionConfirmed = true;
 	}
 
 	public void CancelSelection() {

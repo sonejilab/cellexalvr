@@ -12,12 +12,14 @@ public class GenerateHeatmapThread {
         string home = Directory.GetCurrentDirectory();
 		using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
         {
+			Debug.Log ("R start");
             string rawInput = r.ReadToEnd();
             string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             string rPath = input[0];
 			Debug.Log (rPath);
 			Debug.Log("R result: " + RScriptRunner.RunFromCmd(home + "/Assets/Scripts/R/Make_heatmap_from_CellID_list_wColourBars_ANOVA.R", rPath, home + " " + latestSelection));
             latestSelection++;
+			Debug.Log ("R done ");
         }
     }
 }

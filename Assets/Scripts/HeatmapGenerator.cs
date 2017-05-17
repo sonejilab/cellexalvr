@@ -15,6 +15,8 @@ public class HeatmapGenerator : MonoBehaviour {
 	private SteamVR_TrackedObject trackedObject;
 	private SteamVR_Controller.Device device;
 	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+	private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
+	private GameObject hourglass;
 
 	// Use this for initialization
 	void Start () {
@@ -22,20 +24,34 @@ public class HeatmapGenerator : MonoBehaviour {
         ght = new GenerateHeatmapThread();
         t = null;
         running = false;
+		hourglass = GameObject.Find ("WaitingForHeatboardHourglass");
+		hourglass.SetActive (false);
     }
 
     // Update is called once per frame
     void Update()
     {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
-		if (device.GetPressDown (triggerButton)) {
-			selectionToolHandler.DumpData();
-			t = new Thread(new ThreadStart(ght.generateHeatmap));
-            t.Start();
-            running = true;
-        }
+		if (selectionToolHandler.selectionConfirmed) {
+			if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
+				//print ("pre-success");
+				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
+					print ("success!");
+					hourglass.SetActive (true);
+					hourglass.GetComponent<AudioSource> ().Play ();
+					selectionToolHandler.DumpData ();
+					t = new Thread (new ThreadStart (ght.generateHeatmap));
+					t.Start ();
+					running = true;
+				}
+			}
+		}
         if(running && !t.IsAlive) {
+			hourglass.SetActive (false);
+			hourglass.GetComponent<AudioSource> ().Stop ();
             HeatmapImageBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
+			HeatmapImageBoard.SetActive (true);
+			HeatmapImageBoard.GetComponent<AudioSource>().Play();
             running = false;
         }
     }
