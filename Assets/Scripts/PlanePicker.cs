@@ -14,6 +14,7 @@ public class PlanePicker : MonoBehaviour {
 	}
 
 	public void cyclePlanes() {
+		print ("cyclePlanes");
 		if (active == planes.Length - 1) {
 			active = 0;
 		} else {

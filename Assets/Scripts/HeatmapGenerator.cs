@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class HeatmapGenerator : MonoBehaviour {
 
-	public GameObject graph;
-	private CellSelector cellselector;
+	public SelectionToolHandler selectionToolHandler; // use to be: public CellSelector cellselector;
     public GameObject HeatmapImageBoard;
     private ArrayList data;
     private GenerateHeatmapThread ght;
@@ -19,7 +18,6 @@ public class HeatmapGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cellselector = graph.GetComponent<CellSelector>();
 		trackedObject = GetComponent<SteamVR_TrackedObject> ();
         ght = new GenerateHeatmapThread();
         t = null;
@@ -31,7 +29,7 @@ public class HeatmapGenerator : MonoBehaviour {
     {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
 		if (device.GetPressDown (triggerButton)) {
-			cellselector.dumpData();
+			selectionToolHandler.DumpData();
 			t = new Thread(new ThreadStart(ght.generateHeatmap));
             t.Start();
             running = true;

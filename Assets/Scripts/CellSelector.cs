@@ -40,13 +40,11 @@ public class CellSelector : MonoBehaviour {
 		// colors [4] = new Color (1, 0.92, 0.016, 1); // yellow
 	
 		selectorMaterial.color = colors [0];
-
-		selectedColor = Color.red;
+		selectedColor = colors [0];
 		// print (selectedColor.ToString ());
 
 		// get the radial menue from the right hand control
 		buttons = menu.buttons;
-
 		buttons [0].ButtonIcon = noConfirmButton;
 
 	}
@@ -58,7 +56,7 @@ public class CellSelector : MonoBehaviour {
 			selectionDone = false;
 		}
 		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
-			other.GetComponentInChildren<Renderer> ().material.color = selectedColor;
+			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
 		} else {
 			print ("null color, Cellselector.cs:60");
 		}
@@ -66,7 +64,7 @@ public class CellSelector : MonoBehaviour {
 			selectedCells.Add (other);
 		}
 		print ("OnTriggerEnter");
-		buttons [0].ButtonIcon = confirmButton;
+		//buttons [0].ButtonIcon = confirmButton;
 		if(!showConfirmButton) {
 			showConfirmButton = true;
 			menu.RegenerateButtons();
@@ -79,13 +77,6 @@ public class CellSelector : MonoBehaviour {
 
 	}
 
-	public void RemoveCells () {
-		foreach(Collider cell in selectedCells) {
-			cell.attachedRigidbody.useGravity = true;
-			cell.isTrigger = false;
-		}
-	}
-
 	public void ConfirmSelection () {
 		Graph newGraph = Instantiate (graph);
 		newGraph.gameObject.SetActive (true);
@@ -94,7 +85,7 @@ public class CellSelector : MonoBehaviour {
 			GameObject graphpoint = cell.gameObject;
 			graphpoint.transform.parent = newGraph.transform;
 			Color c = cell.GetComponentInChildren<Renderer> ().material.color;
-			Color transparentVersion = new Color (c.r, c.g, c.b, .3f);
+			Color transparentVersion = new Color (c.r, c.g, c.b, 1f);
 			cell.GetComponentInChildren<Renderer> ().material.color = transparentVersion;
 
 		}
@@ -102,10 +93,11 @@ public class CellSelector : MonoBehaviour {
 		// ?
 
 		// create .txt file with latest selection
+		print("1");
 		dumpData();
-
+		print("2");
 		selectionDone = true;
-
+		print("3");
 		print ("ConfirmSelection");
 		buttons [0].ButtonIcon = noConfirmButton;
 		menu.RegenerateButtons();
@@ -121,6 +113,8 @@ public class CellSelector : MonoBehaviour {
 		}
 		selectedColor = colors [currentColorIndex];
 		selectorMaterial.color = selectedColor;
+		this.gameObject.GetComponent<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b);
+		// print (this.gameObject.GetComponent<Renderer> ().material.color.r.ToString() + this.gameObject.GetComponent<Renderer> ().material.color.g.ToString() + this.gameObject.GetComponent<Renderer> ().material.color.b.ToString() + this.gameObject.GetComponent<Renderer> ().material.color.a.ToString());
 	}
 
 	public void ctrlZ()

@@ -7,7 +7,7 @@ using UnityEngine;
 public class SimHeatmapGenerator : MonoBehaviour {
 
 	public GameObject graph;
-	private CellSelector cellselector;
+	private SelectionToolHandler selectionToolHandler; // used to be: private CellSelector cellselector;
     public GameObject HeatmapImageBoard;
     private ArrayList data;
     private GenerateHeatmapThread ght;
@@ -16,7 +16,7 @@ public class SimHeatmapGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cellselector = graph.GetComponent<CellSelector>();
+		selectionToolHandler = graph.GetComponent<SelectionToolHandler>();
         ght = new GenerateHeatmapThread();
         t = null;
         running = false;

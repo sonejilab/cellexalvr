@@ -72,7 +72,7 @@ namespace VRTK
         {
             if (enabled && givenHit.transform && controllerIndex < uint.MaxValue)
             {
-				Debug.Log (givenHit.transform.gameObject.name);
+				// Debug.Log (givenHit.transform.gameObject.name);
                 OnDestinationMarkerEnter(SetDestinationMarkerEvent(givenHit.distance, givenHit.transform, givenHit, givenHit.point, controllerIndex));
                 StartUseAction(givenHit.transform);
             }

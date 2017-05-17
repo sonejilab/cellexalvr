@@ -13,7 +13,6 @@ public class GenerateHeatmapThread {
         {
             string rawInput = r.ReadToEnd();
             string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-
             string rPath = input[0];
 			Debug.Log (rPath);
 			Debug.Log("R result: " + RScriptRunner.RunFromCmd(home + "/Assets/Scripts/R/Make_heatmap_from_CellID_list_wColourBars_ANOVA.R", rPath, home));
