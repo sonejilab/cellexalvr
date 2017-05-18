@@ -62,5 +62,23 @@ public class GraphPoint : MonoBehaviour
 
 		defaultMat = cell.getGeneMaterial (geneName);
 	}
+
+	public void resetCoords(){
+		transform.position = new Vector3 (x, y, z);
+		sphere.transform.position = new Vector3 (x, y, z);
+		Rigidbody rig = GetComponent<Rigidbody> ();
+		if (rig != null) {
+			Destroy (rig);
+		}
+		setMaterial (defaultMat);
+	}
+
+	public Vector3 getCoordinates(){
+		return new Vector3 (x, y, z);
+	}
+
+	public Cell getCell(){
+		return cell;
+	}
 }
 

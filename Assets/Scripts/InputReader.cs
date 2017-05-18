@@ -31,7 +31,7 @@ public class InputReader  : MonoBehaviour{
 		string[] cellNames = geneLines [0].Split ('\t');
 		for (int i = 1; i < geneLines.Length; i++) {
 			string[] words = geneLines[i].Split ('\t');
-			string geneName = words [0];
+			string geneName = words [0].ToLower();
 			float minExpr = 10000f;
 			float maxExpr = -1f;
 			for (int j = 1; j < words.Length; j++) {

@@ -9,7 +9,7 @@ public class Graph : MonoBehaviour
 	public GraphPoint graphpoint;
 
 	private GraphPoint newGraphpoint;
-	private ArrayList points;
+	private List<GraphPoint> points;
 	private Vector3 maxCoordValues;
 	private Vector3 minCoordValues;
 	private Vector3 diffCoordValues;
@@ -24,7 +24,7 @@ public class Graph : MonoBehaviour
 
 	//Called before any Start()-function. Avoids nullReferenceException in addGraphPoint().
 	void Awake() {
-		points = new ArrayList();
+		points = new List<GraphPoint>();
 		// Grabs the location and size of the graphArea.
 		minAreaValues = this.GetComponent<Renderer>().bounds.min;
 		maxAreaValues = this.GetComponent<Renderer> ().bounds.max;
@@ -99,5 +99,23 @@ public class Graph : MonoBehaviour
 
 		return groups;
 
+	}
+
+	public void reset(){
+		List<GraphPoint> newList = new List<GraphPoint> ();
+		foreach(GraphPoint point in points) {
+			Vector3 coordinates = point.getCoordinates ();
+			Cell cell = point.getCell ();
+			Destroy (point.gameObject);
+
+			newGraphpoint = Instantiate(graphpoint, new Vector3(coordinates.x, coordinates.y, coordinates.z), Quaternion.identity);
+			newGraphpoint.gameObject.SetActive (true);
+			newGraphpoint.setCoordinates (cell, coordinates.x, coordinates.y, coordinates.z, areaSize);
+
+			newGraphpoint.transform.SetParent(this.transform);
+
+			newList.Add(newGraphpoint);
+		}
+		points = newList;
 	}
 }

@@ -50,9 +50,9 @@ namespace VRTK
         [Tooltip("The transform for the position of the trigger button on the controller.")]
         public Transform trigger;
         [Tooltip("The transform for the position of the grip button on the controller.")]
-        public Transform grip;
+        public Transform lgrip;
         [Tooltip("The transform for the position of the touchpad button on the controller.")]
-        public Transform touchpad;
+        public Transform trackpad;
         [Tooltip("The transform for the position of button one on the controller.")]
         public Transform buttonOne;
         [Tooltip("The transform for the position of button two on the controller.")]
@@ -270,7 +270,7 @@ namespace VRTK
                         break;
                     case "grip":
                         tipText = gripText;
-                        tipTransform = GetTransform(grip, SDK_BaseController.ControllerElements.GripLeft);
+                        tipTransform = GetTransform(lgrip, SDK_BaseController.ControllerElements.GripLeft);
                         if (tipTransform != null)
                         {
                             gripInitialised = true;
@@ -278,7 +278,7 @@ namespace VRTK
                         break;
                     case "touchpad":
                         tipText = touchpadText;
-                        tipTransform = GetTransform(touchpad, SDK_BaseController.ControllerElements.Touchpad);
+                        tipTransform = GetTransform(trackpad, SDK_BaseController.ControllerElements.Touchpad);
                         if (tipTransform != null)
                         {
                             touchpadInitialised = true;

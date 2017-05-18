@@ -8,7 +8,7 @@ namespace CurvedVRKeyboard {
     public abstract class KeyboardComponent: MonoBehaviour {
 
         // Special signs. Feel free to change
-        public const string SPACE = "  ";
+        public const string SPACE = "Set colour";
         public const string BACK = "Back";
         public const string ABC = "ABC";
         public const string QEH = "123\n?!#";

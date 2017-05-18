@@ -6,6 +6,9 @@ public class RadialSelector : MonoBehaviour {
 
 	public Graph graph;
 	public GameObject keyboard;
+	public GameObject toolTipsRight;
+	public GameObject toolTipsLeft;
+	public GraphManager manager;
 
 	VRTK.VRTK_StraightPointerRenderer singleSelect;
 
@@ -24,16 +27,27 @@ public class RadialSelector : MonoBehaviour {
 	}
 
 	public void ToggleSingleSelect(){
+		GetComponent<AudioSource> ().Play ();
 		singleSelect.enabled = !singleSelect.enabled;
-		//graph.GetComponent<Rigidbody> ().detectCollisions = false;
-		Destroy(graph.GetComponent<Rigidbody>());
-		if (singleSelect.enabled == false) {
-			graph.getGroups ();
+		if (singleSelect.enabled) {
+			manager.desroyRigidbodies ();
+		} else {
+			manager.createRigidbodies ();
 		}
 	}
 
 	public void ToggleColoring(){
 		singleSelect.enabled = false;
 		keyboard.SetActive(!keyboard.activeSelf);
+	}
+
+	public void ToggleToolTips() {
+		toolTipsRight.SetActive(!toolTipsRight.activeSelf);
+		toolTipsLeft.SetActive(!toolTipsLeft.activeSelf);
+
+	}
+
+	public void ResetGraph(){
+		manager.resetGraph ();
 	}
 }

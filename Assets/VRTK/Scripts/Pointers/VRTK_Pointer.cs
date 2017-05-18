@@ -64,6 +64,11 @@ namespace VRTK
         protected uint controllerIndex;
         protected VRTK_InteractableObject pointerInteractableObject = null;
 
+		private GraphPoint latestHit;
+		private SteamVR_TrackedObject trackedObject;
+		private SteamVR_Controller.Device device;
+		private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+
         /// <summary>
         /// The PointerEnter method emits a DestinationMarkerEnter event when the pointer enters a valid object.
         /// </summary>
@@ -72,9 +77,11 @@ namespace VRTK
         {
             if (enabled && givenHit.transform && controllerIndex < uint.MaxValue)
             {
-				// Debug.Log (givenHit.transform.gameObject.name);
                 OnDestinationMarkerEnter(SetDestinationMarkerEvent(givenHit.distance, givenHit.transform, givenHit, givenHit.point, controllerIndex));
                 StartUseAction(givenHit.transform);
+
+				latestHit = givenHit.transform.GetComponent<GraphPoint> ();
+				latestHit.setMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
             }
         }
 
@@ -88,6 +95,14 @@ namespace VRTK
             {
                 OnDestinationMarkerExit(SetDestinationMarkerEvent(givenHit.distance, givenHit.transform, givenHit, givenHit.point, controllerIndex));
                 StopUseAction();
+
+				if (latestHit.isSelected ()) {
+					latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
+				} else {
+					latestHit.setMaterial (latestHit.getDefaultMaterial());
+				}
+
+				latestHit = null;
             }
         }
 
@@ -169,6 +184,8 @@ namespace VRTK
 
         protected virtual void Update()
         {
+			trackedObject = GetComponent<SteamVR_TrackedObject> ();
+			device = SteamVR_Controller.Input ((int)trackedObject.index);
             CheckButtonSubscriptions();
             if (EnabledPointerRenderer())
             {
@@ -178,6 +195,10 @@ namespace VRTK
                 {
                     bool currentPointerVisibility = pointerRenderer.IsVisible();
                     pointerRenderer.ToggleInteraction(currentPointerVisibility);
+					if (latestHit != null && device.GetPressDown (triggerButton)) {
+						//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
+						latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
+					}
                 }
             }
         }

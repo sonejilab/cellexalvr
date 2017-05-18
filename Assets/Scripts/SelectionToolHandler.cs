@@ -96,9 +96,7 @@ public class SelectionToolHandler : MonoBehaviour
 	}
 
 	public void ConfirmSelection () {
-		Graph newGraph = Instantiate (graph);
-		newGraph.gameObject.SetActive (true);
-		newGraph.transform.parent = manager.transform;
+		Graph newGraph = manager.newGraphClone ();
 		foreach(Collider cell in selectedCells) {
 			GameObject graphpoint = cell.gameObject;
 			graphpoint.transform.parent = newGraph.transform;
