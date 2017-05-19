@@ -21,6 +21,7 @@ public class InputReader  : MonoBehaviour{
 		graphManager.setActiveGraph (1);
 		graphManager.CreateGraph (1);
 		readFile (SecondCellCoordinatesFileName);
+		graphManager.moveGraphs ();
     }
 
 	public void readFile(string fileName) {

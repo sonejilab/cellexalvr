@@ -33,7 +33,7 @@ public class HeatmapGenerator : MonoBehaviour {
     {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
 		if (selectionToolHandler.selectionConfirmed) {
-			if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
+			//if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
 				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
 					hourglass.SetActive (true);
 					HeatmapImageBoard.SetActive (false);
@@ -42,7 +42,7 @@ public class HeatmapGenerator : MonoBehaviour {
 					t.Start ();
 					running = true;
 				}
-			}
+			//}
 		}
         if(running && !t.IsAlive) {
 			hourglass.SetActive (false);

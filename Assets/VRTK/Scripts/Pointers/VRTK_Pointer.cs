@@ -54,6 +54,9 @@ namespace VRTK
         [Tooltip("A custom transform to use as the origin of the pointer. If no pointer origin transform is provided then the transform the script is attached to is used.")]
         public Transform customOrigin;
 
+		public AudioSource cellHit;
+		public AudioSource laser;
+
         protected VRTK_ControllerEvents.ButtonAlias subscribedActivationButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
         protected VRTK_ControllerEvents.ButtonAlias subscribedSelectionButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
         protected bool currentSelectOnPress;
@@ -197,10 +200,11 @@ namespace VRTK
                     bool currentPointerVisibility = pointerRenderer.IsVisible();
                     pointerRenderer.ToggleInteraction(currentPointerVisibility);
 					if (device.GetPressDown (triggerButton)) {
-						GetComponent<AudioSource>().Play();
+						laser.Play();
 						if (latestHit != null) {
 							//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
 							latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
+							cellHit.Play(7000);
 						}
 					}
 				}
