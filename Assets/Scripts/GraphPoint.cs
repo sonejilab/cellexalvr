@@ -10,6 +10,7 @@ public class GraphPoint : MonoBehaviour
 	private GameObject sphere;
 	private bool selected = false;
 	private Material defaultMat;
+	private Graph defaultParent;
 
 	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
 	{
@@ -65,7 +66,8 @@ public class GraphPoint : MonoBehaviour
 
 	public void resetCoords(){
 		transform.position = new Vector3 (x, y, z);
-		sphere.transform.position = new Vector3 (x, y, z);
+		transform.SetParent (defaultParent.transform);
+		//sphere.transform.position = new Vector3 (x, y, z);
 		Rigidbody rig = GetComponent<Rigidbody> ();
 		if (rig != null) {
 			Destroy (rig);
@@ -80,5 +82,8 @@ public class GraphPoint : MonoBehaviour
 	public Cell getCell(){
 		return cell;
 	}
-}
 
+	public void saveParent(Graph parent) {
+		defaultParent = parent;
+	}
+}

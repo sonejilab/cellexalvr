@@ -5,6 +5,8 @@ public class GraphManager : MonoBehaviour
 {
 
 	public Graph graphPrefab;
+	public AudioSource goodSound;
+	public AudioSource badSound;
 	private Graph graphs;
 	private List<Graph> graphClones;
 	public CellManager cellManager;
@@ -17,7 +19,6 @@ public class GraphManager : MonoBehaviour
 		graphs.gameObject.SetActive (true);
 		graphs.transform.parent = this.transform;
 		graphClones = new List<Graph> ();
-
 	}
 
 
@@ -30,8 +31,12 @@ public class GraphManager : MonoBehaviour
 	}
 
 	public void colorAllGraphsByGene(string geneName){
-		graphs.colorGraphByGene(geneName);
-		GetComponent<AudioSource>().Play();
+		if (cellManager.geneExists(geneName)) {
+			graphs.colorGraphByGene(geneName);
+			goodSound.Play ();
+		} else {
+			badSound.Play ();
+		}
 	}
 
 	public void resetGraph(){
@@ -57,7 +62,7 @@ public class GraphManager : MonoBehaviour
 		return newGraph;
 	}
 
-	public void desroyRigidbodies(){
+	public void destroyRigidbodies(){
 		Destroy (graphs.GetComponent<Rigidbody> ());
 		foreach (Graph clone in graphClones) {
 			Destroy (clone.GetComponent<Rigidbody> ());

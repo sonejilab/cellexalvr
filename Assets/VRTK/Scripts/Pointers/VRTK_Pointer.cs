@@ -80,7 +80,7 @@ namespace VRTK
                 OnDestinationMarkerEnter(SetDestinationMarkerEvent(givenHit.distance, givenHit.transform, givenHit, givenHit.point, controllerIndex));
                 StartUseAction(givenHit.transform);
 
-				latestHit = givenHit.transform.GetComponent<GraphPoint> ();
+				latestHit = givenHit.collider.transform.GetComponent<GraphPoint> ();
 				latestHit.setMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
             }
         }

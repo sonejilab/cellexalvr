@@ -16,7 +16,7 @@ public class Graph : MonoBehaviour
 	private Vector3 minAreaValues;
 	private Vector3 maxAreaValues;
 	private Vector3 areaSize;
-
+	private Vector3 defaultPos;
 	void Start ()
 	{
 		//points = new ArrayList();
@@ -54,8 +54,11 @@ public class Graph : MonoBehaviour
 		 * move along with it
 		 **/
         newGraphpoint.transform.SetParent(this.transform);
+		newGraphpoint.saveParent (this);
 
         points.Add(newGraphpoint);
+
+		defaultPos = transform.position;
     }
 
     public void setMinMaxCoords(Vector3 min, Vector3 max)
@@ -101,7 +104,14 @@ public class Graph : MonoBehaviour
 
 	}
 
-	public void reset(){
+	public void reset() {
+		transform.position = defaultPos;
+		foreach (GraphPoint point in points) {
+			point.resetCoords ();
+		}
+	}
+
+	/*public void reset(){
 		List<GraphPoint> newList = new List<GraphPoint> ();
 		foreach(GraphPoint point in points) {
 			Vector3 coordinates = point.getCoordinates ();
@@ -117,5 +127,5 @@ public class Graph : MonoBehaviour
 			newList.Add(newGraphpoint);
 		}
 		points = newList;
-	}
+	}*/
 }

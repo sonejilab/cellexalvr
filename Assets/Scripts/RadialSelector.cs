@@ -29,11 +29,11 @@ public class RadialSelector : MonoBehaviour {
 	public void ToggleSingleSelect(){
 		GetComponent<AudioSource> ().Play ();
 		singleSelect.enabled = !singleSelect.enabled;
-		if (singleSelect.enabled) {
-			manager.desroyRigidbodies ();
+		/* if (singleSelect.enabled) {
+			manager.destroyRigidbodies ();
 		} else {
 			manager.createRigidbodies ();
-		}
+		}*/
 	}
 
 	public void ToggleColoring(){

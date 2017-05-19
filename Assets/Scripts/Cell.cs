@@ -26,8 +26,11 @@ public class Cell {
 
 	public Material getGeneMaterial(string geneName) {
 		int colorSlot = 0;
-		geneExpressions.TryGetValue (geneName, out colorSlot);
-		return materialList [colorSlot];
+		if (!geneExpressions.TryGetValue (geneName, out colorSlot)) {
+			return null;
+		} else {
+			return materialList [colorSlot];
+		}
 	}
 
     public string Label

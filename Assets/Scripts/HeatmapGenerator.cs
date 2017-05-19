@@ -38,6 +38,7 @@ public class HeatmapGenerator : MonoBehaviour {
 				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
 					print ("success!");
 					hourglass.SetActive (true);
+					HeatmapImageBoard.SetActive (false);
 					hourglass.GetComponent<AudioSource> ().Play ();
 					selectionToolHandler.DumpData ();
 					t = new Thread (new ThreadStart (ght.generateHeatmap));
