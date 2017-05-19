@@ -193,13 +193,17 @@ namespace VRTK
                 pointerRenderer.UpdateRenderer();
                 if (!IsPointerActive())
                 {
+					
                     bool currentPointerVisibility = pointerRenderer.IsVisible();
                     pointerRenderer.ToggleInteraction(currentPointerVisibility);
-					if (latestHit != null && device.GetPressDown (triggerButton)) {
-						//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
-						latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
+					if (device.GetPressDown (triggerButton)) {
+						GetComponent<AudioSource>().Play();
+						if (latestHit != null) {
+							//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
+							latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
+						}
 					}
-                }
+				}
             }
         }
 

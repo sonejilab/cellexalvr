@@ -34,13 +34,10 @@ public class HeatmapGenerator : MonoBehaviour {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
 		if (selectionToolHandler.selectionConfirmed) {
 			if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
-				//print ("pre-success");
 				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
-					print ("success!");
 					hourglass.SetActive (true);
 					HeatmapImageBoard.SetActive (false);
 					hourglass.GetComponent<AudioSource> ().Play ();
-					selectionToolHandler.DumpData ();
 					t = new Thread (new ThreadStart (ght.generateHeatmap));
 					t.Start ();
 					running = true;

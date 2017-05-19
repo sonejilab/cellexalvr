@@ -27,13 +27,15 @@ public class SelectionToolHandler : MonoBehaviour
 
 	ArrayList selectedCells = new ArrayList();
 
-	int fileCreationCtr = 0;
+	public static int fileCreationCtr = 0;
 
 	Color[] colors;
 	int currentColorIndex = 0;
 	Color selectedColor;
 
 	PlanePicker planePicker;
+
+
 
 	List<RadialMenuButton> buttons;
 	bool inSelectionState = false;

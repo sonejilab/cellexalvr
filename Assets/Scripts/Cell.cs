@@ -21,7 +21,9 @@ public class Cell {
 	}
 
 	public void setExpressionData(string geneName, int colorSlot){
-		geneExpressions.Add (geneName, colorSlot);
+		if (!geneExpressions.ContainsKey (geneName)) {
+			geneExpressions.Add (geneName, colorSlot);
+		}
 	}
 
 	public Material getGeneMaterial(string geneName) {

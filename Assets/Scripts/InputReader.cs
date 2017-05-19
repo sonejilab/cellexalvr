@@ -8,15 +8,25 @@ using System.IO;
 public class InputReader  : MonoBehaviour{
 	
 	public string CellCoordinatesFileName;
+	public string SecondCellCoordinatesFileName;
 	public string GeneExpressionFileName;
 	//public string GeneExpressionFileName;
 	public GraphManager graphManager;
 	public CellManager cellManager;
 
 	void Start() {
-		
+		graphManager.setActiveGraph (0);
+		graphManager.CreateGraph (0);
+		readFile (CellCoordinatesFileName);
+		graphManager.setActiveGraph (1);
+		graphManager.CreateGraph (1);
+		readFile (SecondCellCoordinatesFileName);
+    }
+
+	public void readFile(string fileName) {
+
 		// put each line into an array
-		string[] lines = System.IO.File.ReadAllLines(CellCoordinatesFileName);
+		string[] lines = System.IO.File.ReadAllLines(fileName);
 		string[] geneLines = System.IO.File.ReadAllLines(GeneExpressionFileName);
 
 		UpdateMinMax (lines);
@@ -26,7 +36,7 @@ public class InputReader  : MonoBehaviour{
 			float[] coords = new float[3];
 			graphManager.addCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 		}
-			
+
 
 		string[] cellNames = geneLines [0].Split ('\t');
 		for (int i = 1; i < geneLines.Length; i++) {
@@ -57,14 +67,14 @@ public class InputReader  : MonoBehaviour{
 			}
 		}
 
-	
-		
-        string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
-        foreach (string f in txtList)
-        {
-            File.Delete(f);
-        }
-    }
+
+
+		string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
+		foreach (string f in txtList)
+		{
+			File.Delete(f);
+		}
+	}
 
 	/** 
 	 * Determines the maximum and the minimum values of the dataset. 
