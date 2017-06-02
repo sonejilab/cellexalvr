@@ -35,16 +35,19 @@ public class SelectionToolHandler : MonoBehaviour
 
 	PlanePicker planePicker;
 
-
-
 	List<RadialMenuButton> buttons;
 	bool inSelectionState = false;
 	bool selectionMade = false;
 	public bool selectionConfirmed = false;
 	public ushort hapticIntensity = 2000;
 
-	private GameObject rightController;
-	bool heatmapGripped;
+	GameObject leftController;
+	bool heatmapGrabbed = false;
+	GameObject grabbedObject;
+	public GameObject firePrefab;
+	int counter = 0;
+
+
 
 	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 	//private SteamVR_TrackedObject trackedObj;
@@ -64,23 +67,39 @@ public class SelectionToolHandler : MonoBehaviour
 		selectorMaterial.color = colors [0];
 		selectedColor = colors [0];
 
-		planePicker = GameObject.Find ("PlaneSelectors").GetComponent<PlanePicker> ();
+		//planePicker = GameObject.Find ("PlaneSelectors").GetComponent<PlanePicker> ();
+		HideSelectionTool();
 		buttons = menu.buttons;
 		UpdateButtonIcons();
 		//trackedObj = GetComponent<SteamVR_TrackedObject>();
 
-		rightController = GameObject.Find ("RightController");
-		if (rightController != null) {
-			print ("right controller found");
+		leftController = GameObject.Find ("LeftController");
+
+		/*
+		if (leftController != null) {
+			print ("left controller found");
 		}
+		if (leftController.GetComponent<VRTK_InteractGrab> () != null) {
+			print ("VRTK_InteractGrab script found!");
+		}
+		*/
 
 	}
-		
 
 	void Update () {
-		string grabbedObject = rightController.GetComponent<VRTK_InteractGrab> ().GetGrabbedObject ().ToString ();
-		print (grabbedObject);
-		//if ()
+		grabbedObject = leftController.GetComponent<VRTK_InteractGrab> ().GetGrabbedObject ();
+		if (grabbedObject != null) {
+			if (grabbedObject.tag == "HeatBoard") {
+				if (!heatmapGrabbed) {
+					heatmapGrabbed = true;
+					print ("heamap grabbed: " + heatmapGrabbed.ToString ());
+					UpdateButtonIcons ();
+				}
+			}
+		} else if (grabbedObject == null && heatmapGrabbed) {
+			heatmapGrabbed = false;
+			UpdateButtonIcons ();
+		}
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -198,60 +217,90 @@ public class SelectionToolHandler : MonoBehaviour
 			file.Close ();
 		}
 	}
+
+	private void ShowSelectionTool() {
+		GetComponent<Renderer> ().enabled = true;
+		GetComponent<Collider> ().enabled = true;
+	}
 		
+	private void HideSelectionTool() {
+		GetComponent<Renderer> ().enabled = false;
+		GetComponent<Collider> ().enabled = false;
+	}
+
 	public void Up() {
-		print ("up");
-		print ("In selection state: " + inSelectionState.ToString());
-		print ("Selection made: " + selectionMade.ToString());
+		// print ("up");
+		// print ("In selection state: " + inSelectionState.ToString());
+		// print ("Selection made: " + selectionMade.ToString());
 		if (inSelectionState && selectionMade) {
 			ConfirmSelection ();
-			planePicker.cyclePlanes ();
+			//planePicker.cyclePlanes ();
+			HideSelectionTool();
 			inSelectionState = false;
 			UpdateButtonIcons ();
 		}
 	}
 
 	public void Left() {
-		print ("left");
-		print ("In selection state: " + inSelectionState.ToString());
-		print ("Selection made: " + selectionMade.ToString());
+		// print ("left");
+		// print ("In selection state: " + inSelectionState.ToString());
+		// print ("Selection made: " + selectionMade.ToString());
 		if (inSelectionState && selectionMade) {
 			CancelSelection ();
 		} else if (inSelectionState) {
-			planePicker.cyclePlanes ();
+			//planePicker.cyclePlanes ();
+			HideSelectionTool ();
 			inSelectionState = false;
 		} else {
-			planePicker.cyclePlanes ();
+			//planePicker.cyclePlanes ();
+			ShowSelectionTool();
 			inSelectionState = true;
 		}
 		UpdateButtonIcons ();
 	}
 
 	public void Down() {
-		print ("down");
-		print ("In selection state: " + inSelectionState.ToString());
-		print ("Selection made: " + selectionMade.ToString());
-		if (inSelectionState && selectionMade) {
+		// print ("down");
+		// print ("In selection state: " + inSelectionState.ToString());
+		// print ("Selection made: " + selectionMade.ToString());
+
+		if (heatmapGrabbed) {
+			print ("heatmap grabbed & down pressed!");
+			Vector3 heatmapScale = grabbedObject.transform.localScale;
+			Vector3 heatmapPosition = grabbedObject.transform.position;
+			Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
+			GameObject fire = Instantiate (firePrefab, heatmapPosition, grabbedObject.transform.rotation);
+			fire.transform.localScale = new Vector3(10 * heatmapScale.x, fire.transform.localScale.y, 10 * heatmapScale.z);
+			fire.active = true;
+			grabbedObject.GetComponents<AudioSource> () [1].Play (10000);
+			//grabbedObject.GetComponents<AudioSource> () [1].Play (100000);
+
+
+			Destroy (grabbedObject, 2.5f);
+			Destroy (fire, 2.5f);
+			heatmapGrabbed = false;
+			UpdateButtonIcons ();
+		} else if (inSelectionState && selectionMade) {
 			ConfirmRemove ();
 			UpdateButtonIcons ();
 		}
 	}
 
 	public void Right() {
-		print ("right");
-		print ("In selection state: " + inSelectionState.ToString());
-		print ("Selection made: " + selectionMade.ToString());
+		// print ("right");
+		// print ("In selection state: " + inSelectionState.ToString());
+		// print ("Selection made: " + selectionMade.ToString());
 		if (inSelectionState) {
 			ChangeColor ();
 		}
 	}
 
 	private void UpdateButtonIcons() {
-		print ("UpdateButtonIcons");
+		// print ("UpdateButtonIcons");
 		// in selection state - selection made
-		if (heatmapGripped) {
+		if (heatmapGrabbed) {
 			buttons [0].ButtonIcon = noButton;
-			buttons [1].ButtonIcon = cancelButton;
+			buttons [1].ButtonIcon = noButton;
 			buttons [2].ButtonIcon = blowupButton;
 			buttons [3].ButtonIcon = noButton;
 			// in selection state - no selection made

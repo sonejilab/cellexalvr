@@ -25,6 +25,7 @@ public class HeatmapGenerator : MonoBehaviour {
 	private Quaternion heatmapRotation;
 	private float heatmapRotattionAngle = 0.0f;
 	private ArrayList heatmapList;
+	//public AudioSource heatmapCreated;
 
 
 	// Use this for initialization
@@ -40,9 +41,6 @@ public class HeatmapGenerator : MonoBehaviour {
 
 		heatmapPosition = heatmapImageBoard.transform.position;
 		heatmapRotation = heatmapImageBoard.transform.rotation;
-
-
-
     }
 
     // Update is called once per frame
@@ -53,30 +51,25 @@ public class HeatmapGenerator : MonoBehaviour {
 			//if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
 				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
 					hourglass.SetActive (true);
-
 					//heatmapPosition = new Vector3(heatmapPosition.x, heatmapPosition.y, heatmapPosition.z + 3.0f);
 					//heatmapPosition = heatmapPosition + new Vector3 (0, 0, 3.0f);
-					print (heatmapPosition);
-
-
-					
+					//print (heatmapPosition);
 					heatmapRotattionAngle += 90.0f;
-					print(heatmapRotattionAngle);
+					//print(heatmapRotattionAngle);
 					heatBoard = Instantiate (heatmapImageBoard, heatmapPosition, heatmapImageBoard.transform.rotation);
-				heatmapList.Add (heatBoard);	
-				heatBoard.active = true;
-				heatmapPosition = heatmapPosition + new Vector3 (-0.2f, 0, 0);
+					heatmapList.Add (heatBoard);	
+					heatBoard.active = true;
+					heatmapPosition = heatmapPosition + new Vector3 (-0.2f, 0, 0);
 					//heatBoard.transform.Rotate (new Vector3 (0, 0, heatmapRotattionAngle));
 	
-					print ("hallåhallå");
-					print (heatBoard.activeSelf.ToString());
+					//print (heatBoard.activeSelf.ToString());
 					//hourglass = Instantiate (hourglass, heatmapPosition, new Quaternion(0, 0, 0, 0));
 
 					//heatmapImageBoard.SetActive (false);
 					heatBoard.SetActive (false);
 					
 
-				hourglass.GetComponent<AudioSource> ().Play ();
+					hourglass.GetComponent<AudioSource> ().Play ();
 					t = new Thread (new ThreadStart (ght.generateHeatmap));
 					t.Start ();
 					running = true;
@@ -84,17 +77,17 @@ public class HeatmapGenerator : MonoBehaviour {
 			//}
 		}
         if(running && !t.IsAlive) {
-			print ("hej");
 
 			hourglass.SetActive (false);
 			hourglass.GetComponent<AudioSource> ().Stop ();
 
-			filePath = "Assets/Images/heatmap" + heatmapID + ".png";
-			print (filePath);
+			//filePath = "Assets/Images/heatmap" + heatmapID + ".png";
+			//print (filePath);
 
 			heatBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
 			heatBoard.SetActive (true);
 			heatBoard.GetComponent<AudioSource>().Play();
+			//heatmapCreated.Play();
 
 			//heatmapImageBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
 			//heatmapImageBoard.SetActive (true);
