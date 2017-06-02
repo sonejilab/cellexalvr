@@ -25,8 +25,8 @@ public class GraphManager : MonoBehaviour
 
 	public void moveGraphs() {
 		// these values are hard coded for your convenience
-		graphs [0].transform.position = new Vector3 (-1f, 0.625f, -0.413f);
-		graphs [1].transform.position = new Vector3 (0f, 0.6f, 0.33f);
+		graphs [0].transform.position = new Vector3 (0f, 4.7f, -0.413f);
+		graphs [1].transform.position = new Vector3 (0f, 4.55f, 0.33f);
 	}
 
 	public void CreateGraph(int i) {
@@ -58,10 +58,10 @@ public class GraphManager : MonoBehaviour
 
 	public void resetGraph(){
 		foreach (Graph g in graphs) {
-			g.transform.localScale = graphPrefab.transform.localScale;
 			g.reset ();
 		}
 		removeClones ();
+		moveGraphs ();
 	}
 
 	private void removeClones(){

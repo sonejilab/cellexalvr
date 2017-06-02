@@ -17,6 +17,7 @@ public class Graph : MonoBehaviour
 	private Vector3 maxAreaValues;
 	private Vector3 areaSize;
 	private Vector3 defaultPos;
+	private Vector3 defaultScale;
 	void Start ()
 	{
 		//points = new ArrayList();
@@ -48,17 +49,13 @@ public class Graph : MonoBehaviour
 		newGraphpoint.gameObject.SetActive (true);
 		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
 
-        /**
-		 * TODO: Do something like the commented line below to add
-		 * the spheres as children to the this so that they
-		 * move along with it
-		 **/
         newGraphpoint.transform.SetParent(this.transform);
 		newGraphpoint.saveParent (this);
 
         points.Add(newGraphpoint);
 
 		defaultPos = transform.position;
+		defaultScale = transform.localScale;
     }
 
     public void setMinMaxCoords(Vector3 min, Vector3 max)
@@ -106,26 +103,44 @@ public class Graph : MonoBehaviour
 
 	public void reset() {
 		transform.position = defaultPos;
+		transform.localScale = defaultScale;
 		foreach (GraphPoint point in points) {
 			point.resetCoords ();
 		}
 	}
 
-	/*public void reset(){
-		List<GraphPoint> newList = new List<GraphPoint> ();
-		foreach(GraphPoint point in points) {
-			Vector3 coordinates = point.getCoordinates ();
-			Cell cell = point.getCell ();
-			Destroy (point.gameObject);
 
-			newGraphpoint = Instantiate(graphpoint, new Vector3(coordinates.x, coordinates.y, coordinates.z), Quaternion.identity);
-			newGraphpoint.gameObject.SetActive (true);
-			newGraphpoint.setCoordinates (cell, coordinates.x, coordinates.y, coordinates.z, areaSize);
-
-			newGraphpoint.transform.SetParent(this.transform);
-
-			newList.Add(newGraphpoint);
+	/**
+	 * Makes scaling of sub-graphs work better
+	 **/
+	public void limitGraphArea(ArrayList points){
+		maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = -1000000.0f;
+		minCoordValues.x = minCoordValues.y = minCoordValues.z = 1000000.0f;
+		foreach (Collider col in points) {
+			if (col.gameObject.activeSelf) {
+				Vector3 coordinates = col.transform.position;
+				if (coordinates.x > maxCoordValues.x) {
+					maxCoordValues.x = coordinates.x;
+				}
+				if (coordinates.x < minCoordValues.x) {
+					minCoordValues.x = coordinates.x;
+				}
+				if (coordinates.y > maxCoordValues.y) {
+					maxCoordValues.y = coordinates.y;
+				}
+				if (coordinates.y < minCoordValues.y) {
+					minCoordValues.y = coordinates.y;
+				}
+				if (coordinates.z > maxCoordValues.z) {
+					maxCoordValues.z = coordinates.z;
+				}
+				if (coordinates.z < minCoordValues.z) {
+					minCoordValues.z= coordinates.z;
+				}
+			}
 		}
-		points = newList;
-	}*/
+		Vector3 newCenter = Vector3.Lerp (minCoordValues, maxCoordValues, (minCoordValues - maxCoordValues).magnitude / 2);
+		transform.position = newCenter;
+	}
+		
 }

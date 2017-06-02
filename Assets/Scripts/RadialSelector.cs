@@ -9,6 +9,7 @@ public class RadialSelector : MonoBehaviour {
 	public GameObject toolTipsRight;
 	public GameObject toolTipsLeft;
 	public GraphManager manager;
+	public AudioSource laser;
 
 	VRTK.VRTK_StraightPointerRenderer singleSelect;
 
@@ -27,6 +28,8 @@ public class RadialSelector : MonoBehaviour {
 	}
 
 	public void ToggleSingleSelect(){
+		laser.Play ();
+		keyboard.SetActive (false);
 		singleSelect.enabled = !singleSelect.enabled;
 		/* if (singleSelect.enabled) {
 			manager.destroyRigidbodies ();
@@ -41,6 +44,8 @@ public class RadialSelector : MonoBehaviour {
 	}
 
 	public void ToggleToolTips() {
+		keyboard.SetActive (false);
+		singleSelect.enabled = false;
 		toolTipsRight.SetActive(!toolTipsRight.activeSelf);
 		toolTipsLeft.SetActive(!toolTipsLeft.activeSelf);
 
@@ -48,5 +53,6 @@ public class RadialSelector : MonoBehaviour {
 
 	public void ResetGraph(){
 		manager.resetGraph ();
+		manager.resetGraph ();//en andra reset löser en del problem. Fult men who cares?
 	}
 }

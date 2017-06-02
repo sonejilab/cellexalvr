@@ -25,6 +25,7 @@ namespace VRTK.SecondaryControllerGrabActions
         private Vector3 initialScale;
         private float initalLength;
         private float initialScaleFactor;
+		private int counter = 0;
 
         /// <summary>
         /// The Initalise method is used to set up the state of the secondary action when the object is initially grabbed by a secondary controller.
@@ -39,7 +40,7 @@ namespace VRTK.SecondaryControllerGrabActions
             base.Initialise(currentGrabbdObject, currentPrimaryGrabbingObject, currentSecondaryGrabbingObject, primaryGrabPoint, secondaryGrabPoint);
             initialScale = currentGrabbdObject.transform.localScale;
             //initalLength = (grabbedObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
-			initalLength = (primaryGrabbingObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
+			initalLength = (primaryGrabPoint.transform.position - secondaryGrabPoint.transform.position).magnitude;
             initialScaleFactor = currentGrabbdObject.transform.localScale.x / initalLength;
         }
 
@@ -58,14 +59,19 @@ namespace VRTK.SecondaryControllerGrabActions
         {
             if (initialised)
             {
-                if (uniformScaling)
-                {
-                    UniformScale();
-                }
-                else
-                {
-                    NonUniformScale();
-                }
+				counter++;
+				if (counter == 1) {
+					if (uniformScaling)
+					{
+						UniformScale();
+					}
+					else
+					{
+						NonUniformScale();
+					}
+					counter = 0;
+				}
+                
             }
         }
 
@@ -100,7 +106,7 @@ namespace VRTK.SecondaryControllerGrabActions
         private void UniformScale()
         {
 			float adjustedLength = (primaryGrabbingObject.transform.position - secondaryGrabbingObject.transform.position).magnitude;
-			float adjustedScale = initialScaleFactor * adjustedLength * 0.1f;
+			float adjustedScale = initialScaleFactor * adjustedLength;
 
             var newScale = new Vector3(adjustedScale, adjustedScale, adjustedScale);
             ApplyScale(newScale);

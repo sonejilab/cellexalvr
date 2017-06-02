@@ -51,7 +51,7 @@ make.heatmap.multigrp.anova <- function(dfile,cellidfile,num.sig,outfile){
 
   #print(dim(dat.f[sigp,]))
 
-  png(outfile,height=800,width=1000)
+  png(outfile,height=1600,width=2000)
   pheatmap(dat.f[sigp,],cluster_rows=TRUE, show_rownames=F,show_colnames=FALSE,cluster_cols=FALSE,scale="row",clustering_method = "ward.D2",col=bluered(16),breaks=seq(-4,4,by=0.5),annotation_col = annotation_col,annotation_colors=rcolrs)
   dev.off()
 }

@@ -43,6 +43,9 @@ public class SelectionToolHandler : MonoBehaviour
 	public bool selectionConfirmed = false;
 	public ushort hapticIntensity = 2000;
 
+	private GameObject rightController;
+	bool heatmapGripped;
+
 	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 	//private SteamVR_TrackedObject trackedObj;
 
@@ -65,17 +68,50 @@ public class SelectionToolHandler : MonoBehaviour
 		buttons = menu.buttons;
 		UpdateButtonIcons();
 		//trackedObj = GetComponent<SteamVR_TrackedObject>();
+
+		rightController = GameObject.Find ("RightController");
+		if (rightController != null) {
+			print ("right controller found");
+		}
+
 	}
 		
+
+	void Update () {
+		string grabbedObject = rightController.GetComponent<VRTK_InteractGrab> ().GetGrabbedObject ().ToString ();
+		print (grabbedObject);
+		//if ()
+	}
+
 	void OnTriggerEnter(Collider other) {
 		//print(other.gameObject.name);
 		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
 			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+			other.gameObject.GetComponent<GraphPoint> ().setSelected (true); //makes pointer highlighting work
 		}
 		if (!selectedCells.Contains (other)) {
 			selectedCells.Add (other);
 			//controller.TriggerHapticPulse(500);
 			SteamVR_Controller.Input((int)left.controllerIndex).TriggerHapticPulse(hapticIntensity);
+		}
+		if(!selectionMade) {
+			selectionMade = true;
+			UpdateButtonIcons ();
+		}
+	}
+
+	/**
+	 * Adds selection made by pointer to list
+	 **/
+	public void singleSelect(Collider other) {
+		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
+			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+		}
+
+		if (!selectedCells.Contains (other)) {
+			selectedCells.Add (other);
 		}
 		if(!selectionMade) {
 			selectionMade = true;
@@ -99,6 +135,7 @@ public class SelectionToolHandler : MonoBehaviour
 
 	public void ConfirmSelection () {
 		Graph newGraph = manager.newGraphClone ();
+		newGraph.limitGraphArea (selectedCells);
 		foreach(Collider cell in selectedCells) {
 			GameObject graphpoint = cell.gameObject;
 			graphpoint.transform.parent = newGraph.transform;
@@ -212,7 +249,13 @@ public class SelectionToolHandler : MonoBehaviour
 	private void UpdateButtonIcons() {
 		print ("UpdateButtonIcons");
 		// in selection state - selection made
-		if (inSelectionState && selectionMade) {
+		if (heatmapGripped) {
+			buttons [0].ButtonIcon = noButton;
+			buttons [1].ButtonIcon = cancelButton;
+			buttons [2].ButtonIcon = blowupButton;
+			buttons [3].ButtonIcon = noButton;
+			// in selection state - no selection made
+		} else if (inSelectionState && selectionMade) {
 			buttons [0].ButtonIcon = confirmButton;
 			buttons [1].ButtonIcon = cancelButton;
 			buttons [2].ButtonIcon = blowupButton;

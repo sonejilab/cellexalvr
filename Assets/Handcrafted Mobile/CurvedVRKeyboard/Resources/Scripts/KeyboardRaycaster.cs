@@ -11,7 +11,8 @@ namespace CurvedVRKeyboard {
         private GameObject target;
 
 		//private SteamVR_TrackedObject trackedObject;
-		private SteamVR_Controller.Device device1, device2;
+		public SteamVR_TrackedController right;
+		private SteamVR_Controller.Device device;
 		private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
         private float rayLength;
@@ -34,8 +35,8 @@ namespace CurvedVRKeyboard {
             layer = 1 << layerNumber;
 //			trackedObject = controller.GetComponent<SteamVR_TrackedObject> ();
 //			Debug.Log ((int)trackedObject.index);
-			device1 = SteamVR_Controller.Input (3);
-			device2 = SteamVR_Controller.Input (4);
+			device = SteamVR_Controller.Input ((int)right.controllerIndex);
+
         }
 
         void Update () {
@@ -58,7 +59,7 @@ namespace CurvedVRKeyboard {
                     keyItemCurrent.Hovering();
 #if !UNITY_HAS_GOOGLEVR
 					//Debug.Log((int)trackedObject.index);
-					if(device1.GetPressDown (triggerButton) || device2.GetPressDown(triggerButton)) {// If key clicked
+					if(device.GetPressDown (triggerButton)) {// If key clicked
 #else
                     if(GvrController.TouchDown) {
 #endif

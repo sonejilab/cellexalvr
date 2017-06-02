@@ -10,6 +10,7 @@ public class GraphPoint : MonoBehaviour
 	private GameObject sphere;
 	private bool selected = false;
 	private Material defaultMat;
+	private Color selectedColor;
 	private Graph defaultParent;
 
 	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
@@ -56,6 +57,14 @@ public class GraphPoint : MonoBehaviour
 		return defaultMat;
 	}
 
+	public void setSelectedColor(Color col){
+		selectedColor = col;
+	}
+
+	public Color getSelectedColor(){
+		return selectedColor;
+	}
+
 	public void colorByGene(string geneName){
 		if (!selected) {
 			setMaterial (cell.getGeneMaterial (geneName));
@@ -66,12 +75,15 @@ public class GraphPoint : MonoBehaviour
 
 	public void resetCoords(){
 		transform.position = new Vector3 (x, y, z);
+		transform.localScale = new Vector3 (2.5f, 2.5f, 2.5f); //hard-coded to current sphere size
 		transform.SetParent (defaultParent.transform);
 		//sphere.transform.position = new Vector3 (x, y, z);
 		Rigidbody rig = GetComponent<Rigidbody> ();
 		if (rig != null) {
 			Destroy (rig);
 		}
+		selected = false;
+		defaultMat = Resources.Load ("SphereDefault", typeof(Material)) as Material;
 		setMaterial (defaultMat);
 	}
 

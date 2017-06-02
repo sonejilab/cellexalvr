@@ -55,7 +55,6 @@ namespace VRTK
         public Transform customOrigin;
 
 		public AudioSource cellHit;
-		public AudioSource laser;
 
         protected VRTK_ControllerEvents.ButtonAlias subscribedActivationButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
         protected VRTK_ControllerEvents.ButtonAlias subscribedSelectionButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
@@ -71,6 +70,8 @@ namespace VRTK
 		private SteamVR_TrackedObject trackedObject;
 		private SteamVR_Controller.Device device;
 		private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+
+		public GameObject selectionHandler;
 
         /// <summary>
         /// The PointerEnter method emits a DestinationMarkerEnter event when the pointer enters a valid object.
@@ -101,6 +102,7 @@ namespace VRTK
 
 				if (latestHit.isSelected ()) {
 					latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
+					latestHit.gameObject.GetComponentInChildren<Renderer> ().material.color = latestHit.getSelectedColor ();
 				} else {
 					latestHit.setMaterial (latestHit.getDefaultMaterial());
 				}
@@ -200,10 +202,10 @@ namespace VRTK
                     bool currentPointerVisibility = pointerRenderer.IsVisible();
                     pointerRenderer.ToggleInteraction(currentPointerVisibility);
 					if (device.GetPressDown (triggerButton)) {
-						laser.Play();
 						if (latestHit != null) {
 							//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
-							latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
+							latestHit.setSelected(true); //add/remove selected graph point to/from selected points here
+							selectionHandler.GetComponent<SelectionToolHandler>().singleSelect(latestHit.gameObject.GetComponent<Collider>());
 							cellHit.Play(7000);
 						}
 					}
