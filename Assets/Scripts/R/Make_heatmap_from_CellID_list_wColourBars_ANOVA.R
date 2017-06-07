@@ -51,8 +51,8 @@ make.heatmap.multigrp.anova <- function(dfile,cellidfile,num.sig,outfile){
 
   #print(dim(dat.f[sigp,]))
 
-  png(outfile,height=1600,width=2000)
-  pheatmap(dat.f[sigp,],cluster_rows=TRUE, show_rownames=F,show_colnames=FALSE,cluster_cols=FALSE,scale="row",clustering_method = "ward.D2",col=bluered(16),breaks=seq(-4,4,by=0.5),annotation_col = annotation_col,annotation_colors=rcolrs)
+  png(outfile,height=2000,width=2000)
+  pheatmap(dat.f[sigp,],cluster_rows=TRUE, show_rownames=T,show_colnames=FALSE,cluster_cols=FALSE,scale="row",clustering_method = "ward.D2",col=bluered(16),breaks=seq(-4,4,by=0.5),annotation_col = annotation_col,annotation_colors=rcolrs)
   dev.off()
 }
 
@@ -63,5 +63,5 @@ latest_version <- args[2]
 expression_data_filepath <- paste(homedir, "/Assets/Scripts/R/gedata.RData", sep="")
 group_selection_filepath <- paste(homedir, "/Assets/Data/runtimeGroups/selection", latest_version, ".txt", sep="")
 generated_image_filepath <- paste(homedir, "/Assets/Images/heatmap.png", sep="")
-top_genes_number <- 500
+top_genes_number <- 250
 make.heatmap.multigrp.anova(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)

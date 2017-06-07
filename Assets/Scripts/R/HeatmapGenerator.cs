@@ -50,6 +50,7 @@ public class HeatmapGenerator : MonoBehaviour {
 		if (selectionToolHandler.selectionConfirmed) {
 			//if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
 				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
+					
 					hourglass.SetActive (true);
 					//heatmapPosition = new Vector3(heatmapPosition.x, heatmapPosition.y, heatmapPosition.z + 3.0f);
 					//heatmapPosition = heatmapPosition + new Vector3 (0, 0, 3.0f);
@@ -73,6 +74,7 @@ public class HeatmapGenerator : MonoBehaviour {
 					t = new Thread (new ThreadStart (ght.generateHeatmap));
 					t.Start ();
 					running = true;
+
 				}
 			//}
 		}

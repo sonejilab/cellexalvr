@@ -22,6 +22,10 @@ public class CellManager : MonoBehaviour {
 		return cells [label];
 	}
 
+	public Cell getCell(string label) {
+		return cells [label];
+	}
+
 	public bool geneExists(string geneName) {
 		return geneNames.Contains (geneName);
 	}
