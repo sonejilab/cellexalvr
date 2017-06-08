@@ -5,83 +5,84 @@ using UnityEngine;
 
 using VRTK;
 
-public class SelectionToolHandler : MonoBehaviour 
+public class SelectionToolHandler : MonoBehaviour
 {
-	public GraphManager manager;
-	public Graph graph;
-	public Material selectorMaterial;
+    public GraphManager manager;
+    public Graph graph;
+    public Material selectorMaterial;
 
-	public RadialMenu menu;
-	public Sprite noButton;
-	public Sprite toolButton;
-	public Sprite confirmButton;
-	public Sprite confirmButton_w;
-	public Sprite cancelButton;
-	public Sprite cancelButton_w;
-	public Sprite blowupButton;
-	public Sprite blowupButton_w;
-	public Sprite colorButton;
+    public RadialMenu menu;
+    public Sprite noButton;
+    public Sprite toolButton;
+    public Sprite confirmButton;
+    public Sprite confirmButton_w;
+    public Sprite cancelButton;
+    public Sprite cancelButton_w;
+    public Sprite blowupButton;
+    public Sprite blowupButton_w;
+    public Sprite colorButton;
 
-	public SteamVR_TrackedController right;
-	public SteamVR_TrackedController left;
+    public SteamVR_TrackedController right;
+    public SteamVR_TrackedController left;
 
-	ArrayList selectedCells = new ArrayList();
+    ArrayList selectedCells = new ArrayList();
 
-	public static int fileCreationCtr = 0;
+    public static int fileCreationCtr = 0;
 
-	Color[] colors;
-	int currentColorIndex = 0;
-	Color selectedColor;
+    Color[] colors;
+    int currentColorIndex = 0;
+    Color selectedColor;
 
-	PlanePicker planePicker;
+    PlanePicker planePicker;
 
-	List<RadialMenuButton> buttons;
-	bool inSelectionState = false;
-	bool selectionMade = false;
-	public bool selectionConfirmed = false;
-	public ushort hapticIntensity = 2000;
+    List<RadialMenuButton> buttons;
+    bool inSelectionState = false;
+    bool selectionMade = false;
+    public bool selectionConfirmed = false;
+    public ushort hapticIntensity = 2000;
 
-	GameObject leftController;
-	bool heatmapGrabbed = false;
-	GameObject grabbedObject;
-	public GameObject firePrefab;
-	int counter = 0;
+    GameObject leftController;
+    bool heatmapGrabbed = false;
+    GameObject grabbedObject;
+    public GameObject firePrefab;
+    int counter = 0;
 
-	public Material originalMaterial;
-	public Material transparentMaterial;
-	public float fadingTime = 0.1f;
-	Renderer rend;
-	bool fadeHeatmap;
-	float t = 0;
+    public Material originalMaterial;
+    public Material transparentMaterial;
+    public float fadingTime = 0.1f;
+    Renderer rend;
+    bool fadeHeatmap;
+    float t = 0;
 
 
-	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
-	//private SteamVR_TrackedObject trackedObj;
+    //private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
+    //private SteamVR_TrackedObject trackedObj;
 
-	void Awake () {
-		colors = new Color[10];
-		colors [0] = new Color (1, 0, 0); // red
-		colors [1] = new Color (0, 0, 1); // blue
-		colors [2] = new Color (0, 1, 1); // cyan
-		colors [3] = new Color (1, 0, 1); // magenta
-		colors [4] = new Color (1f, 153f/255f, 204f/255f); // pink
-		colors [5] = new Color (1, 1, 0); // yellow
-		colors [6] = new Color (0, 0, 1); // green
-		colors [7] = new Color (.6f, 1, .6f); // lime green
-		colors [8] = new Color (.4f, .2f, 1); // brown
-		colors [9] = new Color (1, .6f, .2f); // orange
-		selectorMaterial.color = colors [0];
-		selectedColor = colors [0];
+    void Awake()
+    {
+        colors = new Color[10];
+        colors[0] = new Color(1, 0, 0); // red
+        colors[1] = new Color(0, 0, 1); // blue
+        colors[2] = new Color(0, 1, 1); // cyan
+        colors[3] = new Color(1, 0, 1); // magenta
+        colors[4] = new Color(1f, 153f / 255f, 204f / 255f); // pink
+        colors[5] = new Color(1, 1, 0); // yellow
+        colors[6] = new Color(0, 0, 1); // green
+        colors[7] = new Color(.6f, 1, .6f); // lime green
+        colors[8] = new Color(.4f, .2f, 1); // brown
+        colors[9] = new Color(1, .6f, .2f); // orange
+        selectorMaterial.color = colors[0];
+        selectedColor = colors[0];
 
-		//planePicker = GameObject.Find ("PlaneSelectors").GetComponent<PlanePicker> ();
-		HideSelectionTool();
-		buttons = menu.buttons;
-		UpdateButtonIcons();
-		//trackedObj = GetComponent<SteamVR_TrackedObject>();
+        //planePicker = GameObject.Find ("PlaneSelectors").GetComponent<PlanePicker> ();
+        HideSelectionTool();
+        buttons = menu.buttons;
+        UpdateButtonIcons();
+        //trackedObj = GetComponent<SteamVR_TrackedObject>();
 
-		leftController = GameObject.Find ("LeftController");
+        leftController = GameObject.Find("LeftController");
 
-		/*
+        /*
 		if (leftController != null) {
 			print ("left controller found");
 		}
@@ -90,275 +91,347 @@ public class SelectionToolHandler : MonoBehaviour
 		}
 		*/
 
-	}
+    }
 
-	void Update () {
-		FindGrabbedHeatMap ();
-		if (fadeHeatmap) {
-			FadeHeatmap ();
-		}
-	}
+    void Update()
+    {
+        FindGrabbedHeatMap();
+        if (fadeHeatmap)
+        {
+            FadeHeatmap();
+        }
+    }
 
-	void FindGrabbedHeatMap() {
-		grabbedObject = leftController.GetComponent<VRTK_InteractGrab> ().GetGrabbedObject ();
-		if (grabbedObject != null) {
-			if (grabbedObject.tag == "HeatBoard") {
-				if (!heatmapGrabbed) {
-					heatmapGrabbed = true;
-					rend = grabbedObject.GetComponent<Renderer> ();
-					print ("heamap grabbed: " + heatmapGrabbed.ToString ());
-					UpdateButtonIcons ();
-				}
-			}
-		} else if (grabbedObject == null && heatmapGrabbed) {
-			heatmapGrabbed = false;
-			UpdateButtonIcons ();
-		}
-	
-	}
+    void FindGrabbedHeatMap()
+    {
+        grabbedObject = leftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
+        if (grabbedObject != null)
+        {
+            if (grabbedObject.tag == "HeatBoard")
+            {
+                if (!heatmapGrabbed)
+                {
+                    heatmapGrabbed = true;
+                    rend = grabbedObject.GetComponent<Renderer>();
+                    print("heamap grabbed: " + heatmapGrabbed.ToString());
+                    UpdateButtonIcons();
+                }
+            }
+        }
+        else if (grabbedObject == null && heatmapGrabbed)
+        {
+            heatmapGrabbed = false;
+            UpdateButtonIcons();
+        }
+
+    }
 
 
-	void BurnHeatmap() {
-		print ("heatmap grabbed & down pressed!");
-		fadeHeatmap = true;
-		Vector3 heatmapScale = grabbedObject.transform.localScale;
-		Vector3 heatmapPosition = grabbedObject.transform.position;
-		Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
-		GameObject fire = Instantiate (firePrefab, heatmapPosition, grabbedObject.transform.rotation);
-		fire.transform.localScale = new Vector3(20 * heatmapScale.x, fire.transform.localScale.y, 10 * heatmapScale.z);
-		fire.active = true;
-		grabbedObject.GetComponents<AudioSource> () [1].Play (10000);
-		Destroy (grabbedObject, 2.5f);
-		Destroy (fire, 2.5f);
-		heatmapGrabbed = false;
-		UpdateButtonIcons ();
-	}
+    void BurnHeatmap()
+    {
+        print("heatmap grabbed & down pressed!");
+        fadeHeatmap = true;
+        Vector3 heatmapScale = grabbedObject.transform.localScale;
+        Vector3 heatmapPosition = grabbedObject.transform.position;
+        Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
+        GameObject fire = Instantiate(firePrefab, heatmapPosition, grabbedObject.transform.rotation);
+        fire.transform.localScale = new Vector3(20 * heatmapScale.x, fire.transform.localScale.y, 10 * heatmapScale.z);
+        fire.active = true;
+        grabbedObject.GetComponents<AudioSource>()[1].Play(10000);
+        Destroy(grabbedObject, 2.5f);
+        Destroy(fire, 2.5f);
+        heatmapGrabbed = false;
+        UpdateButtonIcons();
+    }
 
-	void FadeHeatmap() {
-		print ("trying to fade out heatmap!");
-		Material heatmapMaterial = rend.material;
-		rend.material.Lerp(heatmapMaterial, transparentMaterial , t);
-		t = t + fadingTime * Time.deltaTime;
-		if (t >= 1) {
-			fadeHeatmap = false;
-			t = 0;
-		}
-		print (t);
-	}
+    void FadeHeatmap()
+    {
+        print("trying to fade out heatmap!");
+        Material heatmapMaterial = rend.material;
+        rend.material.Lerp(heatmapMaterial, transparentMaterial, t);
+        t = t + fadingTime * Time.deltaTime;
+        if (t >= 1)
+        {
+            fadeHeatmap = false;
+            t = 0;
+        }
+        print(t);
+    }
 
-	void OnTriggerEnter(Collider other) {
-		//print(other.gameObject.name);
-		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
-			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-			other.gameObject.GetComponent<GraphPoint> ().setSelected (true); //makes pointer highlighting work
-		}
-		if (!selectedCells.Contains (other)) {
-			selectedCells.Add (other);
-			//controller.TriggerHapticPulse(500);
-			SteamVR_Controller.Input((int)left.controllerIndex).TriggerHapticPulse(hapticIntensity);
-		}
-		if(!selectionMade) {
-			selectionMade = true;
-			UpdateButtonIcons ();
-		}
-	}
+    void OnTriggerEnter(Collider other)
+    {
+        //print(other.gameObject.name);
+        if (other.GetComponentInChildren<Renderer>().material.color != null && other.gameObject.GetComponent<GraphPoint>() != null)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+            other.gameObject.GetComponent<GraphPoint>().setSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+            other.gameObject.GetComponent<GraphPoint>().setSelected(true); //makes pointer highlighting work
+        }
+        if (!selectedCells.Contains(other))
+        {
+            selectedCells.Add(other);
+            //controller.TriggerHapticPulse(500);
+            SteamVR_Controller.Input((int)left.controllerIndex).TriggerHapticPulse(hapticIntensity);
+        }
+        if (!selectionMade)
+        {
+            selectionMade = true;
+            UpdateButtonIcons();
+        }
+    }
 
-	/**
+    /**
 	 * Adds selection made by pointer to list
 	 **/
-	public void singleSelect(Collider other) {
-		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
-			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-		}
+    public void singleSelect(Collider other)
+    {
+        if (other.GetComponentInChildren<Renderer>().material.color != null)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+            other.gameObject.GetComponent<GraphPoint>().setSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+        }
 
-		if (!selectedCells.Contains (other)) {
-			selectedCells.Add (other);
-		}
-		if(!selectionMade) {
-			selectionMade = true;
-			UpdateButtonIcons ();
-		}
-	}
+        if (!selectedCells.Contains(other))
+        {
+            selectedCells.Add(other);
+        }
+        if (!selectionMade)
+        {
+            selectionMade = true;
+            UpdateButtonIcons();
+        }
+    }
 
-	public void ConfirmRemove() {
-		foreach (Collider other in selectedCells) {
-			other.transform.parent = null;
-			other.gameObject.AddComponent<Rigidbody>();
-			other.attachedRigidbody.useGravity = true;
-			other.attachedRigidbody.isKinematic = false;
-			other.isTrigger = false;
-			GetComponent<AudioSource> ().Play (); // pop
-		}
+    public void ConfirmRemove()
+    {
+        foreach (Collider other in selectedCells)
+        {
+            other.transform.parent = null;
+            other.gameObject.AddComponent<Rigidbody>();
+            other.attachedRigidbody.useGravity = true;
+            other.attachedRigidbody.isKinematic = false;
+            other.isTrigger = false;
+            GetComponent<AudioSource>().Play(); // pop
+        }
 
-		selectedCells.Clear ();
-		selectionMade = false;
-	}
+        selectedCells.Clear();
+        selectionMade = false;
+    }
 
-	public void ConfirmSelection () {
-		Graph newGraph = manager.newGraphClone ();
-		newGraph.limitGraphArea (selectedCells);
-		foreach(Collider cell in selectedCells) {
-			GameObject graphpoint = cell.gameObject;
-			graphpoint.transform.parent = newGraph.transform;
-			Color cellColor = cell.GetComponentInChildren<Renderer> ().material.color; // breaks if no boom before
-			Color nonTransparentColor = new Color (cellColor.r, cellColor.g, cellColor.b);
-			cell.GetComponentInChildren<Renderer> ().material.color = nonTransparentColor;
-		}
-		// create .txt file with latest selection
-		DumpData();
-		// clear the list since we are done with it
-		// ?
-		selectedCells.Clear ();
-		selectionMade = false;
-		selectionConfirmed = true;
-	}
+    public void ConfirmSelection()
+    {
+        Graph newGraph = manager.newGraphClone();
+        newGraph.limitGraphArea(selectedCells);
+        foreach (Collider cell in selectedCells)
+        {
+            GameObject graphpoint = cell.gameObject;
+            graphpoint.transform.parent = newGraph.transform;
+            Color cellColor = cell.GetComponentInChildren<Renderer>().material.color; // breaks if no boom before
+            Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
+            cell.GetComponentInChildren<Renderer>().material.color = nonTransparentColor;
+        }
+        // create .txt file with latest selection
+        DumpData();
+        // clear the list since we are done with it
+        // ?
+        selectedCells.Clear();
+        selectionMade = false;
+        selectionConfirmed = true;
+    }
 
-	public void CancelSelection() {
-		foreach (Collider other in selectedCells) {
-			other.GetComponentInChildren<Renderer> ().material.color = Color.white;
-		}
-		selectedCells.Clear ();
-		selectionMade = false;
-	}
+    public void CancelSelection()
+    {
+        foreach (Collider other in selectedCells)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = Color.white;
+        }
+        selectedCells.Clear();
+        selectionMade = false;
+    }
 
-	public void ChangeColor() {
-		if (currentColorIndex == colors.Length - 1) {
-			currentColorIndex = 0;
-		} else {
-			currentColorIndex++;
-		}
-		selectedColor = colors [currentColorIndex];
-		selectorMaterial.color = selectedColor;
-		this.gameObject.GetComponent<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b);
-	}
+    public void ChangeColor()
+    {
+        if (currentColorIndex == colors.Length - 1)
+        {
+            currentColorIndex = 0;
+        }
+        else
+        {
+            currentColorIndex++;
+        }
+        selectedColor = colors[currentColorIndex];
+        selectorMaterial.color = selectedColor;
+        this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+    }
 
-	/*public void ctrlZ() //currently not used
+    /*public void ctrlZ() //currently not used
 	{
 		selectedCells.RemoveAt(selectedCells.Count - 1);
 	}*/
 
-	public void DumpData()
-	{
-		using (System.IO.StreamWriter file =
-			new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + fileCreationCtr++ + ".txt")) {
-			// new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
-			// print ("dumping data");
-			foreach (Collider cell in selectedCells)
-			{
-				file.Write(cell.GetComponent<GraphPoint>().getLabel());
-				file.Write ("\t");
-				Color c = cell.GetComponentInChildren<Renderer> ().material.color;
-				int r = (int)(c.r * 255);
-				int g = (int)(c.g * 255);
-				int b = (int)(c.b * 255);
-				file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
-				file.WriteLine ();
-				// print ("wrote " + cell.GetComponent<GraphPoint> ().getLabel () + "\t" + string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
-			}
-			file.Flush ();
-			file.Close ();
-		}
-	}
+    public void DumpData()
+    {
+        using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + fileCreationCtr++ + ".txt"))
+        {
+            // new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
+            // print ("dumping data");
+            foreach (Collider cell in selectedCells)
+            {
+                file.Write(cell.GetComponent<GraphPoint>().getLabel());
+                file.Write("\t");
+                Color c = cell.GetComponentInChildren<Renderer>().material.color;
+                int r = (int)(c.r * 255);
+                int g = (int)(c.g * 255);
+                int b = (int)(c.b * 255);
+                file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                file.WriteLine();
+                // print ("wrote " + cell.GetComponent<GraphPoint> ().getLabel () + "\t" + string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+            }
+            file.Flush();
+            file.Close();
+        }
+    }
 
-	private void ShowSelectionTool() {
-		GetComponent<Renderer> ().enabled = true;
-		GetComponent<Collider> ().enabled = true;
-	}
-		
-	private void HideSelectionTool() {
-		GetComponent<Renderer> ().enabled = false;
-		GetComponent<Collider> ().enabled = false;
-	}
+    private void ShowSelectionTool()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = true;
+        }
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider c in colliders)
+        {
+            c.enabled = true;
+        }
+    }
 
-	public void Up() {
-		// print ("up");
-		// print ("In selection state: " + inSelectionState.ToString());
-		// print ("Selection made: " + selectionMade.ToString());
-		if (inSelectionState && selectionMade) {
-			ConfirmSelection ();
-			//planePicker.cyclePlanes ();
-			HideSelectionTool();
-			inSelectionState = false;
-			UpdateButtonIcons ();
-		}
-	}
+    private void HideSelectionTool()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = false;
+        }
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider c in colliders)
+        {
+            c.enabled = false;
+        }
+    }
 
-	public void Left() {
-		// print ("left");
-		// print ("In selection state: " + inSelectionState.ToString());
-		// print ("Selection made: " + selectionMade.ToString());
-		if (inSelectionState && selectionMade) {
-			CancelSelection ();
-		} else if (inSelectionState) {
-			//planePicker.cyclePlanes ();
-			HideSelectionTool ();
-			inSelectionState = false;
-		} else {
-			//planePicker.cyclePlanes ();
-			ShowSelectionTool();
-			inSelectionState = true;
-		}
-		UpdateButtonIcons ();
-	}
+    public void Up()
+    {
+        // print ("up");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+        if (inSelectionState && selectionMade)
+        {
+            ConfirmSelection();
+            //planePicker.cyclePlanes ();
+            HideSelectionTool();
+            inSelectionState = false;
+            UpdateButtonIcons();
+        }
+    }
 
-	public void Down() {
-		// print ("down");
-		// print ("In selection state: " + inSelectionState.ToString());
-		// print ("Selection made: " + selectionMade.ToString());
+    public void Left()
+    {
+        // print ("left");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+        if (inSelectionState && selectionMade)
+        {
+            CancelSelection();
+        }
+        else if (inSelectionState)
+        {
+            //planePicker.cyclePlanes ();
+            HideSelectionTool();
+            inSelectionState = false;
+        }
+        else
+        {
+            //planePicker.cyclePlanes ();
+            ShowSelectionTool();
+            inSelectionState = true;
+        }
+        UpdateButtonIcons();
+    }
 
-		if (heatmapGrabbed) {
-			BurnHeatmap ();
-		} else if (inSelectionState && selectionMade) {
-			ConfirmRemove ();
-			UpdateButtonIcons ();
-		}
-	}
+    public void Down()
+    {
+        // print ("down");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
 
-	public void Right() {
-		// print ("right");
-		// print ("In selection state: " + inSelectionState.ToString());
-		// print ("Selection made: " + selectionMade.ToString());
-		if (heatmapGrabbed) {
-			grabbedObject.GetComponentInChildren<Heatmap> ().colorCells ();
-		} else if  (inSelectionState) {
-			ChangeColor ();
-		}
-	}
+        if (heatmapGrabbed)
+        {
+            BurnHeatmap();
+        }
+        else if (inSelectionState && selectionMade)
+        {
+            ConfirmRemove();
+            UpdateButtonIcons();
+        }
+    }
+
+    public void Right()
+    {
+        // print ("right");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+        if (heatmapGrabbed)
+        {
+            grabbedObject.GetComponentInChildren<Heatmap>().colorCells();
+        }
+        else if (inSelectionState)
+        {
+            ChangeColor();
+        }
+    }
 
 
 
 
-	private void UpdateButtonIcons() {
-		// print ("UpdateButtonIcons");
-		// in selection state - selection made
-		if (heatmapGrabbed) {
-			buttons [0].ButtonIcon = noButton;
-			buttons [1].ButtonIcon = noButton;
-			buttons [2].ButtonIcon = blowupButton;
-			buttons [3].ButtonIcon = noButton;
-			// in selection state - no selection made
-		} else if (inSelectionState && selectionMade) {
-			buttons [0].ButtonIcon = confirmButton;
-			buttons [1].ButtonIcon = cancelButton;
-			buttons [2].ButtonIcon = blowupButton;
-			buttons [3].ButtonIcon = colorButton;
-		// in selection state - no selection made
-		} else if (inSelectionState) {
-			buttons [0].ButtonIcon = confirmButton_w;
-			buttons [1].ButtonIcon = cancelButton_w;
-			buttons [2].ButtonIcon = blowupButton_w;
-			buttons [3].ButtonIcon = colorButton;
-		// in default state
-		} else {
-			buttons [0].ButtonIcon = noButton;
-			buttons [1].ButtonIcon = toolButton;
-			buttons [2].ButtonIcon = noButton;
-			buttons [3].ButtonIcon = noButton;
-		}
-		menu.RegenerateButtons();
-	}
-		
+    private void UpdateButtonIcons()
+    {
+        // print ("UpdateButtonIcons");
+        // in selection state - selection made
+        if (heatmapGrabbed)
+        {
+            buttons[0].ButtonIcon = noButton;
+            buttons[1].ButtonIcon = noButton;
+            buttons[2].ButtonIcon = blowupButton;
+            buttons[3].ButtonIcon = noButton;
+            // in selection state - no selection made
+        }
+        else if (inSelectionState && selectionMade)
+        {
+            buttons[0].ButtonIcon = confirmButton;
+            buttons[1].ButtonIcon = cancelButton;
+            buttons[2].ButtonIcon = blowupButton;
+            buttons[3].ButtonIcon = colorButton;
+            // in selection state - no selection made
+        }
+        else if (inSelectionState)
+        {
+            buttons[0].ButtonIcon = confirmButton_w;
+            buttons[1].ButtonIcon = cancelButton_w;
+            buttons[2].ButtonIcon = blowupButton_w;
+            buttons[3].ButtonIcon = colorButton;
+            // in default state
+        }
+        else
+        {
+            buttons[0].ButtonIcon = noButton;
+            buttons[1].ButtonIcon = toolButton;
+            buttons[2].ButtonIcon = noButton;
+            buttons[3].ButtonIcon = noButton;
+        }
+        menu.RegenerateButtons();
+    }
+
 }
 

@@ -104,9 +104,15 @@ public class Graph : MonoBehaviour
 	public void reset() {
 		transform.position = defaultPos;
 		transform.localScale = defaultScale;
-		foreach (GraphPoint point in points) {
-			point.resetCoords ();
-		}
+        foreach (GraphPoint point in points)
+        {
+            point.resetCoords();
+            if (point.GetComponent<Rigidbody>() != null)
+            {
+                point.GetComponent<Collider>().isTrigger = true;
+                point.GetComponent<Rigidbody>().isKinematic = false;
+            }
+        }
 	}
 
 

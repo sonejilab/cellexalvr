@@ -12,13 +12,14 @@ public class RadialSelector : MonoBehaviour {
 	public AudioSource laser;
 
 	VRTK.VRTK_StraightPointerRenderer singleSelect;
+    private bool pointerActive = false;
 
 
 	// Use this for initialization
 	void Start () {
 		singleSelect = transform.parent.GetComponent<VRTK.VRTK_StraightPointerRenderer> ();
 
-		singleSelect.enabled = false;
+		// singleSelect.Toggle(pointerActive);
 
 	}
 
@@ -29,8 +30,11 @@ public class RadialSelector : MonoBehaviour {
 
 	public void ToggleSingleSelect(){
 		laser.Play ();
-		keyboard.SetActive (false);
-		singleSelect.enabled = !singleSelect.enabled;
+        // keyboard.SetActive (false);
+        pointerActive = !pointerActive;
+        singleSelect.enabled = pointerActive;
+        
+        // singleSelect.Toggle(pointerActive, pointerActive);
 		/* if (singleSelect.enabled) {
 			manager.destroyRigidbodies ();
 		} else {
@@ -39,7 +43,7 @@ public class RadialSelector : MonoBehaviour {
 	}
 
 	public void ToggleColoring(){
-		singleSelect.enabled = false;
+		singleSelect.enabled = true;
 		keyboard.SetActive(!keyboard.activeSelf);
 	}
 
