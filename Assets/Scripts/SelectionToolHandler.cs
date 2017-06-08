@@ -21,6 +21,7 @@ public class SelectionToolHandler : MonoBehaviour
 	public Sprite blowupButton;
 	public Sprite blowupButton_w;
 	public Sprite colorButton;
+	public Sprite recolorButton;
 
 	public SteamVR_TrackedController right;
 	public SteamVR_TrackedController left;
@@ -44,16 +45,6 @@ public class SelectionToolHandler : MonoBehaviour
 	GameObject leftController;
 	bool heatmapGrabbed = false;
 	GameObject grabbedObject;
-	public GameObject firePrefab;
-	int counter = 0;
-
-	public Material originalMaterial;
-	public Material transparentMaterial;
-	public float fadingTime = 0.1f;
-	Renderer rend;
-	bool fadeHeatmap;
-	float t = 0;
-
 
 	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 	//private SteamVR_TrackedObject trackedObj;
@@ -94,9 +85,6 @@ public class SelectionToolHandler : MonoBehaviour
 
 	void Update () {
 		FindGrabbedHeatMap ();
-		if (fadeHeatmap) {
-			FadeHeatmap ();
-		}
 	}
 
 	void FindGrabbedHeatMap() {
@@ -105,7 +93,6 @@ public class SelectionToolHandler : MonoBehaviour
 			if (grabbedObject.tag == "HeatBoard") {
 				if (!heatmapGrabbed) {
 					heatmapGrabbed = true;
-					rend = grabbedObject.GetComponent<Renderer> ();
 					print ("heamap grabbed: " + heatmapGrabbed.ToString ());
 					UpdateButtonIcons ();
 				}
@@ -115,35 +102,6 @@ public class SelectionToolHandler : MonoBehaviour
 			UpdateButtonIcons ();
 		}
 	
-	}
-
-
-	void BurnHeatmap() {
-		print ("heatmap grabbed & down pressed!");
-		fadeHeatmap = true;
-		Vector3 heatmapScale = grabbedObject.transform.localScale;
-		Vector3 heatmapPosition = grabbedObject.transform.position;
-		Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
-		GameObject fire = Instantiate (firePrefab, heatmapPosition, grabbedObject.transform.rotation);
-		fire.transform.localScale = new Vector3(20 * heatmapScale.x, fire.transform.localScale.y, 10 * heatmapScale.z);
-		fire.active = true;
-		grabbedObject.GetComponents<AudioSource> () [1].Play (10000);
-		Destroy (grabbedObject, 2.5f);
-		Destroy (fire, 2.5f);
-		heatmapGrabbed = false;
-		UpdateButtonIcons ();
-	}
-
-	void FadeHeatmap() {
-		print ("trying to fade out heatmap!");
-		Material heatmapMaterial = rend.material;
-		rend.material.Lerp(heatmapMaterial, transparentMaterial , t);
-		t = t + fadingTime * Time.deltaTime;
-		if (t >= 1) {
-			fadeHeatmap = false;
-			t = 0;
-		}
-		print (t);
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -309,7 +267,7 @@ public class SelectionToolHandler : MonoBehaviour
 		// print ("Selection made: " + selectionMade.ToString());
 
 		if (heatmapGrabbed) {
-			BurnHeatmap ();
+			//(Heatmap) grabbedObject.BurnHeatmap ();
 		} else if (inSelectionState && selectionMade) {
 			ConfirmRemove ();
 			UpdateButtonIcons ();
@@ -337,7 +295,7 @@ public class SelectionToolHandler : MonoBehaviour
 			buttons [0].ButtonIcon = noButton;
 			buttons [1].ButtonIcon = noButton;
 			buttons [2].ButtonIcon = blowupButton;
-			buttons [3].ButtonIcon = noButton;
+			buttons [3].ButtonIcon = recolorButton;
 			// in selection state - no selection made
 		} else if (inSelectionState && selectionMade) {
 			buttons [0].ButtonIcon = confirmButton;
