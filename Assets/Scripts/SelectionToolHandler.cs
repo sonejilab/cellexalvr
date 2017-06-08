@@ -5,8 +5,8 @@ using UnityEngine;
 
 using VRTK;
 
-public class SelectionToolHandler : MonoBehaviour 
-{
+public class SelectionToolHandler : MonoBehaviour {
+
 	public GraphManager manager;
 	public Graph graph;
 	public Material selectorMaterial;
@@ -71,16 +71,6 @@ public class SelectionToolHandler : MonoBehaviour
 		//trackedObj = GetComponent<SteamVR_TrackedObject>();
 
 		leftController = GameObject.Find ("LeftController");
-
-		/*
-		if (leftController != null) {
-			print ("left controller found");
-		}
-		if (leftController.GetComponent<VRTK_InteractGrab> () != null) {
-			print ("VRTK_InteractGrab script found!");
-		}
-		*/
-
 	}
 
 	void Update () {
@@ -122,81 +112,94 @@ public class SelectionToolHandler : MonoBehaviour
 		}
 	}
 
-	/**
-	 * Adds selection made by pointer to list
-	 **/
-	public void singleSelect(Collider other) {
-		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
-			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-		}
 
-		if (!selectedCells.Contains (other)) {
-			selectedCells.Add (other);
-		}
-		if(!selectionMade) {
-			selectionMade = true;
-			UpdateButtonIcons ();
-		}
-	}
+    public void singleSelect(Collider other)
+    {
+        if (other.GetComponentInChildren<Renderer>().material.color != null)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+            other.gameObject.GetComponent<GraphPoint>().setSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+        }
 
-	public void ConfirmRemove() {
-		foreach (Collider other in selectedCells) {
-			other.transform.parent = null;
-			other.gameObject.AddComponent<Rigidbody>();
-			other.attachedRigidbody.useGravity = true;
-			other.attachedRigidbody.isKinematic = false;
-			other.isTrigger = false;
-			GetComponent<AudioSource> ().Play (); // pop
-		}
+        if (!selectedCells.Contains(other))
+        {
+            selectedCells.Add(other);
+        }
+        if (!selectionMade)
+        {
+            selectionMade = true;
+            UpdateButtonIcons();
+        }
+    }
 
-		selectedCells.Clear ();
-		selectionMade = false;
-	}
+    public void ConfirmRemove()
+    {
+        foreach (Collider other in selectedCells)
+        {
+            other.transform.parent = null;
+            other.gameObject.AddComponent<Rigidbody>();
+            other.attachedRigidbody.useGravity = true;
+            other.attachedRigidbody.isKinematic = false;
+            other.isTrigger = false;
+            GetComponent<AudioSource>().Play(); // pop
+        }
 
-	public void ConfirmSelection () {
-		Graph newGraph = manager.newGraphClone ();
-		newGraph.limitGraphArea (selectedCells);
-		foreach(Collider cell in selectedCells) {
-			GameObject graphpoint = cell.gameObject;
-			graphpoint.transform.parent = newGraph.transform;
-			Color cellColor = cell.GetComponentInChildren<Renderer> ().material.color; // breaks if no boom before
-			Color nonTransparentColor = new Color (cellColor.r, cellColor.g, cellColor.b);
-			cell.GetComponentInChildren<Renderer> ().material.color = nonTransparentColor;
-		}
-		// create .txt file with latest selection
-		DumpData();
-		// clear the list since we are done with it
-		// ?
-		selectedCells.Clear ();
-		selectionMade = false;
-		selectionConfirmed = true;
-	}
+        selectedCells.Clear();
+        selectionMade = false;
+    }
 
-	public void CancelSelection() {
-		foreach (Collider other in selectedCells) {
-			other.GetComponentInChildren<Renderer> ().material.color = Color.white;
-		}
-		selectedCells.Clear ();
-		selectionMade = false;
-	}
+    public void ConfirmSelection()
+    {
+        Graph newGraph = manager.newGraphClone();
+        newGraph.limitGraphArea(selectedCells);
+        foreach (Collider cell in selectedCells)
+        {
+            GameObject graphpoint = cell.gameObject;
+            graphpoint.transform.parent = newGraph.transform;
+            Color cellColor = cell.GetComponentInChildren<Renderer>().material.color; // breaks if no boom before
+            Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
+            cell.GetComponentInChildren<Renderer>().material.color = nonTransparentColor;
+        }
+        // create .txt file with latest selection
+        DumpData();
+        // clear the list since we are done with it
+        // ?
+        selectedCells.Clear();
+        selectionMade = false;
+        selectionConfirmed = true;
+    }
 
-	public void ChangeColor() {
-		if (currentColorIndex == colors.Length - 1) {
-			currentColorIndex = 0;
-		} else {
-			currentColorIndex++;
-		}
-		selectedColor = colors [currentColorIndex];
-		selectorMaterial.color = selectedColor;
-		this.gameObject.GetComponent<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b);
-	}
+    public void CancelSelection()
+    {
+        foreach (Collider other in selectedCells)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = Color.white;
+        }
+        selectedCells.Clear();
+        selectionMade = false;
+    }
 
-	/*public void ctrlZ() //currently not used
+    public void ChangeColor()
+    {
+        if (currentColorIndex == colors.Length - 1)
+        {
+            currentColorIndex = 0;
+        }
+        else
+        {
+            currentColorIndex++;
+        }
+        selectedColor = colors[currentColorIndex];
+        selectorMaterial.color = selectedColor;
+        this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+    }
+
+    /*public void ctrlZ() //currently not used
 	{
 		selectedCells.RemoveAt(selectedCells.Count - 1);
 	}*/
 
+<<<<<<< HEAD
 	public void DumpData()
 	{
 		using (System.IO.StreamWriter file =
@@ -317,6 +320,171 @@ public class SelectionToolHandler : MonoBehaviour
 		}
 		menu.RegenerateButtons();
 	}
+		
+=======
+    public void DumpData()
+    {
+        using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + fileCreationCtr++ + ".txt"))
+        {
+            // new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
+            // print ("dumping data");
+            foreach (Collider cell in selectedCells)
+            {
+                file.Write(cell.GetComponent<GraphPoint>().getLabel());
+                file.Write("\t");
+                Color c = cell.GetComponentInChildren<Renderer>().material.color;
+                int r = (int)(c.r * 255);
+                int g = (int)(c.g * 255);
+                int b = (int)(c.b * 255);
+                file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                file.WriteLine();
+                // print ("wrote " + cell.GetComponent<GraphPoint> ().getLabel () + "\t" + string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+            }
+            file.Flush();
+            file.Close();
+        }
+    }
+
+    private void ShowSelectionTool()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = true;
+        }
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider c in colliders)
+        {
+            c.enabled = true;
+        }
+    }
+
+    private void HideSelectionTool()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = false;
+        }
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider c in colliders)
+        {
+            c.enabled = false;
+        }
+    }
+
+    public void Up()
+    {
+        // print ("up");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+        if (inSelectionState && selectionMade)
+        {
+            ConfirmSelection();
+            //planePicker.cyclePlanes ();
+            HideSelectionTool();
+            inSelectionState = false;
+            UpdateButtonIcons();
+        }
+    }
+
+    public void Left()
+    {
+        // print ("left");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+        if (inSelectionState && selectionMade)
+        {
+            CancelSelection();
+        }
+        else if (inSelectionState)
+        {
+            //planePicker.cyclePlanes ();
+            HideSelectionTool();
+            inSelectionState = false;
+        }
+        else
+        {
+            //planePicker.cyclePlanes ();
+            ShowSelectionTool();
+            inSelectionState = true;
+        }
+        UpdateButtonIcons();
+    }
+
+    public void Down()
+    {
+        // print ("down");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+
+        if (heatmapGrabbed)
+        {
+            //BurnHeatmap();
+        }
+        else if (inSelectionState && selectionMade)
+        {
+            ConfirmRemove();
+            UpdateButtonIcons();
+        }
+    }
+
+    public void Right()
+    {
+        // print ("right");
+        // print ("In selection state: " + inSelectionState.ToString());
+        // print ("Selection made: " + selectionMade.ToString());
+        if (heatmapGrabbed)
+        {
+            grabbedObject.GetComponentInChildren<Heatmap>().colorCells();
+        }
+        else if (inSelectionState)
+        {
+            ChangeColor();
+        }
+    }
+
+
+
+
+    private void UpdateButtonIcons()
+    {
+        // print ("UpdateButtonIcons");
+        // in selection state - selection made
+        if (heatmapGrabbed)
+        {
+            buttons[0].ButtonIcon = noButton;
+            buttons[1].ButtonIcon = noButton;
+            buttons[2].ButtonIcon = blowupButton;
+            buttons[3].ButtonIcon = noButton;
+            // in selection state - no selection made
+        }
+        else if (inSelectionState && selectionMade)
+        {
+            buttons[0].ButtonIcon = confirmButton;
+            buttons[1].ButtonIcon = cancelButton;
+            buttons[2].ButtonIcon = blowupButton;
+            buttons[3].ButtonIcon = colorButton;
+            // in selection state - no selection made
+        }
+        else if (inSelectionState)
+        {
+            buttons[0].ButtonIcon = confirmButton_w;
+            buttons[1].ButtonIcon = cancelButton_w;
+            buttons[2].ButtonIcon = blowupButton_w;
+            buttons[3].ButtonIcon = colorButton;
+            // in default state
+        }
+        else
+        {
+            buttons[0].ButtonIcon = noButton;
+            buttons[1].ButtonIcon = toolButton;
+            buttons[2].ButtonIcon = noButton;
+            buttons[3].ButtonIcon = noButton;
+        }
+        menu.RegenerateButtons();
+    }
 		
 }
 

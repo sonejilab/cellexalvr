@@ -25,8 +25,8 @@ public class GraphManager : MonoBehaviour
 
 	public void moveGraphs() {
 		// these values are hard coded for your convenience
-		graphs [0].transform.position = new Vector3 (0f, 4.7f, -0.413f);
-		graphs [1].transform.position = new Vector3 (0f, 4.55f, 0.33f);
+		graphs [0].transform.position = new Vector3 (0f, 4.2f, -0.913f);
+		graphs [1].transform.position = new Vector3 (-.6f, 4.2f, 0.33f);
 	}
 
 	public void CreateGraph(int i) {
