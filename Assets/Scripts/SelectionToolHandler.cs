@@ -22,6 +22,8 @@ public class SelectionToolHandler : MonoBehaviour {
 	public Sprite blowupButton_w;
 	public Sprite colorButton;
 	public Sprite recolorButton;
+	public Sprite ddrtreeButton;
+	public Sprite tsneButton;
 
 	public SteamVR_TrackedController right;
 	public SteamVR_TrackedController left;
@@ -315,8 +317,8 @@ public class SelectionToolHandler : MonoBehaviour {
 		} else {
 			buttons [0].ButtonIcon = noButton;
 			buttons [1].ButtonIcon = toolButton;
-			buttons [2].ButtonIcon = noButton;
-			buttons [3].ButtonIcon = noButton;
+			buttons [2].ButtonIcon = ddrtreeButton;
+			buttons [3].ButtonIcon = tsneButton;
 		}
 		menu.RegenerateButtons();
 	}		
