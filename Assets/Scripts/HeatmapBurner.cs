@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class HeatmapBurner : MonoBehaviour {
 
-	public GameObject SelectionTool;
 	public GameObject firePrefab;
 	public Material originalMaterial;
 	public Material transparentMaterial;
-	public float fadingTime = 0.1f;
+    GameObject fire;
+    float fadingTime = 0.5f;
 	Renderer rend;
-	bool fadeHeatmap;
+    Component[] childrenRenderers;
+    bool fadeHeatmap;
 	float t = 0;
+
+
 
 	// Use this for initialization
 	void Start () {
 		rend = GetComponent<Renderer> ();
-	}
+        childrenRenderers = GetComponentsInChildren<Renderer>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -31,26 +35,28 @@ public class HeatmapBurner : MonoBehaviour {
 		Vector3 heatmapScale = transform.localScale;
 		Vector3 heatmapPosition = transform.position;
 		Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
-		GameObject fire = Instantiate (firePrefab, heatmapPosition, transform.rotation);
-		fire.transform.localScale = new Vector3(1 * heatmapScale.x, fire.transform.localScale.y, 1 * heatmapScale.z);
-		fire.active = true;
+		fire = Instantiate (firePrefab, heatmapPosition + new Vector3(0, 5 * heatmapScale.z, 0), transform.rotation);
+		fire.transform.localScale = new Vector3(5 * heatmapScale.x, 0.2f, heatmapScale.z);
+        fire.transform.Rotate(new Vector3(180.0f, 0, 0));
+        fire.active = true;
 		this.GetComponents<AudioSource> () [1].Play (10000);
-		Destroy (this, 2.5f);
-		Destroy (fire, 2.5f);
-		//SelectionTool.GetComponent<SelectionToolHandler>().heatmapGrabbed = false;
-		//SelectionTool.GetComponent<SelectionToolHandler>().UpdateButtonIcons ();
 	}
 
 	void FadeHeatmap() {
 		print ("trying to fade out heatmap!");
-		Material heatmapMaterial = rend.material;
-		rend.material.Lerp(heatmapMaterial, transparentMaterial , t);
-		t = t + fadingTime * Time.deltaTime;
+		//Material heatmapMaterial = rend.material;
+		rend.material.Lerp(originalMaterial, transparentMaterial , t);
+        foreach (Renderer rend in childrenRenderers) {
+            rend.material.Lerp(originalMaterial, transparentMaterial, t);
+        }
+        t = t + fadingTime * Time.deltaTime;
 		if (t >= 1) {
 			fadeHeatmap = false;
-			t = 0;
+            Destroy (this.gameObject);
+            Destroy (fire);
+            t = 0;
 		}
-		print (t);
+		//print (t);
 	}
 
 }

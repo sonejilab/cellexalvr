@@ -99,5 +99,12 @@ public class GraphManager : MonoBehaviour
 		}
 	}
 
+    public void HideDDRGraph() {
+        graphs[0].gameObject.active = !graphs[0].gameObject.active;
+    }
+
+    public void HideTSNEGraph() {
+       graphs [1].gameObject.active = !graphs[1].gameObject.active;
+    }
 
 }

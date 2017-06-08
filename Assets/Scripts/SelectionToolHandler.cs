@@ -43,7 +43,7 @@ public class SelectionToolHandler : MonoBehaviour {
 	public ushort hapticIntensity = 2000;
 
 	GameObject leftController;
-	bool heatmapGrabbed = false;
+	public bool heatmapGrabbed = false;
 	GameObject grabbedObject;
 
 	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
@@ -85,13 +85,14 @@ public class SelectionToolHandler : MonoBehaviour {
 					heatmapGrabbed = true;
 					print ("heamap grabbed: " + heatmapGrabbed.ToString ());
 					UpdateButtonIcons ();
-				}
+				} else {
+                    
+                }
 			}
 		} else if (grabbedObject == null && heatmapGrabbed) {
 			heatmapGrabbed = false;
 			UpdateButtonIcons ();
 		}
-	
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -111,7 +112,6 @@ public class SelectionToolHandler : MonoBehaviour {
 			UpdateButtonIcons ();
 		}
 	}
-
 
     public void singleSelect(Collider other)
     {
@@ -273,7 +273,9 @@ public class SelectionToolHandler : MonoBehaviour {
 		} else if (inSelectionState && selectionMade) {
 			ConfirmRemove ();
 			UpdateButtonIcons ();
-		}
+		} else {
+            manager.HideDDRGraph();
+        }
 	}
 
 	public void Right() {
@@ -284,10 +286,12 @@ public class SelectionToolHandler : MonoBehaviour {
 			grabbedObject.GetComponentInChildren<Heatmap> ().colorCells ();
 		} else if  (inSelectionState) {
 			ChangeColor ();
-		}
+		} else {
+            manager.HideTSNEGraph();
+        }
 	}
 
-	private void UpdateButtonIcons() {
+	public void UpdateButtonIcons() {
 		// print ("UpdateButtonIcons");
 		// in selection state - selection made
 		if (heatmapGrabbed) {
