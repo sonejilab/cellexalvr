@@ -42,7 +42,7 @@ public class Heatmap : MonoBehaviour {
 			print ("found graphoints " + points.ToString());
 			foreach (GraphPoint gp in points) {
 				if (containedCells.ContainsKey (gp.getCell ())) {
-					print ("found cell");
+					//print ("found cell");
 					gp.GetComponentInChildren<Renderer> ().material.color = containedCells [gp.getCell ()];
 				}
 				

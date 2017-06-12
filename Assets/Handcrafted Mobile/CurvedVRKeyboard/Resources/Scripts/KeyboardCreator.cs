@@ -32,9 +32,6 @@ namespace CurvedVRKeyboard {
         [SerializeField]
         private float referencedPixels = 1f;
 
-
-
-
         //-------private Calculations---------
         private readonly float defaultSpacingColumns = 56.3f;
         private readonly float defaultSpacingRows = 1.0f;
@@ -356,7 +353,6 @@ namespace CurvedVRKeyboard {
             set {
                 clickHandle = value;
                 KeyboardRaycaster rayCaster = GetComponent<KeyboardRaycaster>();
-
                 rayCaster.SetClickButton(clickHandle);
             }
         }

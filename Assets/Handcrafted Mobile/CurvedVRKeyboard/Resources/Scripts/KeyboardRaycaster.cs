@@ -10,10 +10,7 @@ namespace CurvedVRKeyboard {
         [SerializeField, HideInInspector]
         private GameObject target;
 
-		//private SteamVR_TrackedObject trackedObject;
-		public SteamVR_TrackedController right;
-		private SteamVR_Controller.Device device;
-		private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+        public GraphManager graphManager;
 
         private float rayLength;
         private Ray ray;
@@ -23,20 +20,19 @@ namespace CurvedVRKeyboard {
         //---interactedKeys---
         private KeyboardStatus keyboardStatus;
         private KeyboardItem keyItemCurrent;
-		public GraphManager graphManager;
+        public SteamVR_TrackedController rightController;
+        public SteamVR_Controller.Device device;
+        private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
         [SerializeField, HideInInspector]
         private string clickInputName;
 
         void Start () {
             keyboardStatus = gameObject.GetComponent<KeyboardStatus>();
-			keyboardStatus.setGraphManager (graphManager);
+            keyboardStatus.setGraphManager(graphManager);
             int layerNumber = gameObject.layer;
             layer = 1 << layerNumber;
-//			trackedObject = controller.GetComponent<SteamVR_TrackedObject> ();
-//			Debug.Log ((int)trackedObject.index);
-			device = SteamVR_Controller.Input ((int)right.controllerIndex);
-
+            device = SteamVR_Controller.Input((int) rightController.controllerIndex);
         }
 
         void Update () {
@@ -58,8 +54,7 @@ namespace CurvedVRKeyboard {
                     ChangeCurrentKeyItem(focusedKeyItem);
                     keyItemCurrent.Hovering();
 #if !UNITY_HAS_GOOGLEVR
-					//Debug.Log((int)trackedObject.index);
-					if(device.GetPressDown (triggerButton)) {// If key clicked
+                    if(device.GetPressDown(triggerButton)) {// If key clicked
 #else
                     if(GvrController.TouchDown) {
 #endif

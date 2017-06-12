@@ -5,7 +5,6 @@ namespace CurvedVRKeyboard {
 
     [SelectionBase]
     public class KeyboardStatus: KeyboardComponent {
-		private GraphManager graphManager;
 
         //-----------SET IN UNITY --------------
         [SerializeField]
@@ -14,6 +13,8 @@ namespace CurvedVRKeyboard {
         public int maxOutputLength;
         [SerializeField]
         public GameObject targetGameObject;
+
+        private GraphManager graphManager;
 
 
         //----CurrentKeysStatus----
@@ -28,9 +29,6 @@ namespace CurvedVRKeyboard {
         private const string TEXT = "text";
         private Component textComponent;
 
-		public void setGraphManager(GraphManager manager){
-			graphManager = manager;
-		}
 
         /// <summary>
         /// Handles click on keyboarditem
@@ -43,15 +41,20 @@ namespace CurvedVRKeyboard {
             } else if(value.Equals(UP) || value.Equals(LOW)) { // upper/lower case pressed
                 LowerUpperKeys();
             } else if(value.Equals(SPACE)) {
-				graphManager.colorAllGraphsByGene (output);
-				output = "";
-				textComponent = targetGameObject.GetComponent(typeHolder.GetType());
-				textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output,null);
+                graphManager.colorAllGraphsByGene(output);
+                output = "";
+                textComponent = targetGameObject.GetComponent(typeHolder.GetType());
+                textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
             } else if(value.Equals(BACK)) {
                 BackspaceKey();
             } else {// Normal letter
                 TypeKey(value[0]);
             }
+        }
+
+        public void setGraphManager(GraphManager manager)
+        {
+            graphManager = manager;
         }
 
         /// <summary>
