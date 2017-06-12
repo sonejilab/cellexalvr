@@ -1,3 +1,5 @@
+#print("start R")
+
 library(gplots)
 library(pheatmap)
 
@@ -43,7 +45,7 @@ make.heatmap.multigrp.anova <- function(dfile,cellidfile,num.sig,outfile){
 
   sigp <- order(ps)[1:num.sig]
 
-  #print(sort(ps)[1:20])
+  print(sort(ps)[1:20])
 
   annotation_col = data.frame(Group = (grp.vec))
   rownames(annotation_col) <- cellid.o[,1]
@@ -60,8 +62,8 @@ args <- commandArgs(trailingOnly = TRUE)
 homedir <- args[1]
 latest_version <- args[2]
 
-expression_data_filepath <- paste(homedir, "/Assets/Scripts/R/gedata.RData", sep="")
-group_selection_filepath <- paste(homedir, "/Assets/Data/runtimeGroups/selection", latest_version, ".txt", sep="")
-generated_image_filepath <- paste(homedir, "/Assets/Images/heatmap.png", sep="")
+expression_data_filepath <- file.path(homedir, "Assets","Scripts","R","gedata.RData")
+group_selection_filepath <- file.path(homedir, "Assets","Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
+generated_image_filepath <- file.path(homedir, "Assets","Images","heatmap.png")
 top_genes_number <- 250
 make.heatmap.multigrp.anova(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)

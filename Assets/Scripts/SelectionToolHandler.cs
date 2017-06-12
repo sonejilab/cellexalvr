@@ -5,8 +5,8 @@ using UnityEngine;
 
 using VRTK;
 
-public class SelectionToolHandler : MonoBehaviour 
-{
+public class SelectionToolHandler : MonoBehaviour {
+
 	public GraphManager manager;
 	public Graph graph;
 	public Material selectorMaterial;
@@ -21,6 +21,9 @@ public class SelectionToolHandler : MonoBehaviour
 	public Sprite blowupButton;
 	public Sprite blowupButton_w;
 	public Sprite colorButton;
+	public Sprite recolorButton;
+	public Sprite ddrtreeButton;
+	public Sprite tsneButton;
 
 	public SteamVR_TrackedController right;
 	public SteamVR_TrackedController left;
@@ -42,18 +45,8 @@ public class SelectionToolHandler : MonoBehaviour
 	public ushort hapticIntensity = 2000;
 
 	GameObject leftController;
-	bool heatmapGrabbed = false;
+	public bool heatmapGrabbed = false;
 	GameObject grabbedObject;
-	public GameObject firePrefab;
-	int counter = 0;
-
-	public Material originalMaterial;
-	public Material transparentMaterial;
-	public float fadingTime = 0.1f;
-	Renderer rend;
-	bool fadeHeatmap;
-	float t = 0;
-
 
 	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 	//private SteamVR_TrackedObject trackedObj;
@@ -80,23 +73,10 @@ public class SelectionToolHandler : MonoBehaviour
 		//trackedObj = GetComponent<SteamVR_TrackedObject>();
 
 		leftController = GameObject.Find ("LeftController");
-
-		/*
-		if (leftController != null) {
-			print ("left controller found");
-		}
-		if (leftController.GetComponent<VRTK_InteractGrab> () != null) {
-			print ("VRTK_InteractGrab script found!");
-		}
-		*/
-
 	}
 
 	void Update () {
 		FindGrabbedHeatMap ();
-		if (fadeHeatmap) {
-			FadeHeatmap ();
-		}
 	}
 
 	void FindGrabbedHeatMap() {
@@ -105,45 +85,16 @@ public class SelectionToolHandler : MonoBehaviour
 			if (grabbedObject.tag == "HeatBoard") {
 				if (!heatmapGrabbed) {
 					heatmapGrabbed = true;
-					rend = grabbedObject.GetComponent<Renderer> ();
 					print ("heamap grabbed: " + heatmapGrabbed.ToString ());
 					UpdateButtonIcons ();
-				}
+				} else {
+                    
+                }
 			}
 		} else if (grabbedObject == null && heatmapGrabbed) {
 			heatmapGrabbed = false;
 			UpdateButtonIcons ();
 		}
-	
-	}
-
-
-	void BurnHeatmap() {
-		print ("heatmap grabbed & down pressed!");
-		fadeHeatmap = true;
-		Vector3 heatmapScale = grabbedObject.transform.localScale;
-		Vector3 heatmapPosition = grabbedObject.transform.position;
-		Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
-		GameObject fire = Instantiate (firePrefab, heatmapPosition, grabbedObject.transform.rotation);
-		fire.transform.localScale = new Vector3(20 * heatmapScale.x, fire.transform.localScale.y, 10 * heatmapScale.z);
-		fire.active = true;
-		grabbedObject.GetComponents<AudioSource> () [1].Play (10000);
-		Destroy (grabbedObject, 2.5f);
-		Destroy (fire, 2.5f);
-		heatmapGrabbed = false;
-		UpdateButtonIcons ();
-	}
-
-	void FadeHeatmap() {
-		print ("trying to fade out heatmap!");
-		Material heatmapMaterial = rend.material;
-		rend.material.Lerp(heatmapMaterial, transparentMaterial , t);
-		t = t + fadingTime * Time.deltaTime;
-		if (t >= 1) {
-			fadeHeatmap = false;
-			t = 0;
-		}
-		print (t);
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -164,77 +115,88 @@ public class SelectionToolHandler : MonoBehaviour
 		}
 	}
 
-	/**
-	 * Adds selection made by pointer to list
-	 **/
-	public void singleSelect(Collider other) {
-		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
-			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-		}
+    public void singleSelect(Collider other)
+    {
+        if (other.GetComponentInChildren<Renderer>().material.color != null)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+            other.gameObject.GetComponent<GraphPoint>().setSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+        }
 
-		if (!selectedCells.Contains (other)) {
-			selectedCells.Add (other);
-		}
-		if(!selectionMade) {
-			selectionMade = true;
-			UpdateButtonIcons ();
-		}
-	}
+        if (!selectedCells.Contains(other))
+        {
+            selectedCells.Add(other);
+        }
+        if (!selectionMade)
+        {
+            selectionMade = true;
+            UpdateButtonIcons();
+        }
+    }
 
-	public void ConfirmRemove() {
-		foreach (Collider other in selectedCells) {
-			other.transform.parent = null;
-			other.gameObject.AddComponent<Rigidbody>();
-			other.attachedRigidbody.useGravity = true;
-			other.attachedRigidbody.isKinematic = false;
-			other.isTrigger = false;
-			GetComponent<AudioSource> ().Play (); // pop
-		}
+    public void ConfirmRemove()
+    {
+        foreach (Collider other in selectedCells)
+        {
+            other.transform.parent = null;
+            other.gameObject.AddComponent<Rigidbody>();
+            other.attachedRigidbody.useGravity = true;
+            other.attachedRigidbody.isKinematic = false;
+            other.isTrigger = false;
+            GetComponent<AudioSource>().Play(); // pop
+        }
 
-		selectedCells.Clear ();
-		selectionMade = false;
-	}
+        selectedCells.Clear();
+        selectionMade = false;
+    }
 
-	public void ConfirmSelection () {
-		Graph newGraph = manager.newGraphClone ();
-		newGraph.limitGraphArea (selectedCells);
-		foreach(Collider cell in selectedCells) {
-			GameObject graphpoint = cell.gameObject;
-			graphpoint.transform.parent = newGraph.transform;
-			Color cellColor = cell.GetComponentInChildren<Renderer> ().material.color; // breaks if no boom before
-			Color nonTransparentColor = new Color (cellColor.r, cellColor.g, cellColor.b);
-			cell.GetComponentInChildren<Renderer> ().material.color = nonTransparentColor;
-		}
-		// create .txt file with latest selection
-		DumpData();
-		// clear the list since we are done with it
-		// ?
-		selectedCells.Clear ();
-		selectionMade = false;
-		selectionConfirmed = true;
-	}
+    public void ConfirmSelection()
+    {
+        Graph newGraph = manager.newGraphClone();
+        newGraph.limitGraphArea(selectedCells);
+        foreach (Collider cell in selectedCells)
+        {
+            GameObject graphpoint = cell.gameObject;
+            graphpoint.transform.parent = newGraph.transform;
+            Color cellColor = cell.GetComponentInChildren<Renderer>().material.color; // breaks if no boom before
+            Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
+            cell.GetComponentInChildren<Renderer>().material.color = nonTransparentColor;
+        }
+        // create .txt file with latest selection
+        DumpData();
+        // clear the list since we are done with it
+        // ?
+        selectedCells.Clear();
+        selectionMade = false;
+        selectionConfirmed = true;
+    }
 
-	public void CancelSelection() {
-		foreach (Collider other in selectedCells) {
-			other.GetComponentInChildren<Renderer> ().material.color = Color.white;
-		}
-		selectedCells.Clear ();
-		selectionMade = false;
-	}
+    public void CancelSelection()
+    {
+        foreach (Collider other in selectedCells)
+        {
+            other.GetComponentInChildren<Renderer>().material.color = Color.white;
+        }
+        selectedCells.Clear();
+        selectionMade = false;
+    }
 
-	public void ChangeColor() {
-		if (currentColorIndex == colors.Length - 1) {
-			currentColorIndex = 0;
-		} else {
-			currentColorIndex++;
-		}
-		selectedColor = colors [currentColorIndex];
-		selectorMaterial.color = selectedColor;
-		this.gameObject.GetComponent<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b);
-	}
+    public void ChangeColor()
+    {
+        if (currentColorIndex == colors.Length - 1)
+        {
+            currentColorIndex = 0;
+        }
+        else
+        {
+            currentColorIndex++;
+        }
+        selectedColor = colors[currentColorIndex];
+        selectorMaterial.color = selectedColor;
+        this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+    }
 
-	/*public void ctrlZ() //currently not used
+    /*public void ctrlZ() //currently not used
 	{
 		selectedCells.RemoveAt(selectedCells.Count - 1);
 	}*/
@@ -309,11 +271,13 @@ public class SelectionToolHandler : MonoBehaviour
 		// print ("Selection made: " + selectionMade.ToString());
 
 		if (heatmapGrabbed) {
-			BurnHeatmap ();
+			grabbedObject.GetComponent<HeatmapBurner>().BurnHeatmap ();
 		} else if (inSelectionState && selectionMade) {
 			ConfirmRemove ();
 			UpdateButtonIcons ();
-		}
+		} else {
+            manager.HideDDRGraph();
+        }
 	}
 
 	public void Right() {
@@ -324,20 +288,19 @@ public class SelectionToolHandler : MonoBehaviour
 			grabbedObject.GetComponentInChildren<Heatmap> ().colorCells ();
 		} else if  (inSelectionState) {
 			ChangeColor ();
-		}
+		} else {
+            manager.HideTSNEGraph();
+        }
 	}
 
-
-
-
-	private void UpdateButtonIcons() {
+	public void UpdateButtonIcons() {
 		// print ("UpdateButtonIcons");
 		// in selection state - selection made
 		if (heatmapGrabbed) {
 			buttons [0].ButtonIcon = noButton;
 			buttons [1].ButtonIcon = noButton;
 			buttons [2].ButtonIcon = blowupButton;
-			buttons [3].ButtonIcon = noButton;
+			buttons [3].ButtonIcon = recolorButton;
 			// in selection state - no selection made
 		} else if (inSelectionState && selectionMade) {
 			buttons [0].ButtonIcon = confirmButton;
@@ -354,11 +317,10 @@ public class SelectionToolHandler : MonoBehaviour
 		} else {
 			buttons [0].ButtonIcon = noButton;
 			buttons [1].ButtonIcon = toolButton;
-			buttons [2].ButtonIcon = noButton;
-			buttons [3].ButtonIcon = noButton;
+			buttons [2].ButtonIcon = ddrtreeButton;
+			buttons [3].ButtonIcon = tsneButton;
 		}
 		menu.RegenerateButtons();
-	}
-		
+	}		
 }
 
