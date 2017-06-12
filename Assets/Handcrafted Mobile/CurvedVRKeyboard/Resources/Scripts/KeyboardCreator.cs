@@ -63,7 +63,7 @@ namespace CurvedVRKeyboard {
             }
             wasStaticOnStart = gameObject.isStatic;
             SetComponents();
-
+            gameObject.SetActive(false);
         }
 
         public void ManageKeys() {

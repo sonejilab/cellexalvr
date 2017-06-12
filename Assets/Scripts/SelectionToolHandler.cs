@@ -85,7 +85,7 @@ public class SelectionToolHandler : MonoBehaviour {
 			if (grabbedObject.tag == "HeatBoard") {
 				if (!heatmapGrabbed) {
 					heatmapGrabbed = true;
-					print ("heamap grabbed: " + heatmapGrabbed.ToString ());
+					//print ("heamap grabbed: " + heatmapGrabbed.ToString ());
 					UpdateButtonIcons ();
 				} else {
                     

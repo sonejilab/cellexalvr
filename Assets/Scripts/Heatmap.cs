@@ -18,7 +18,7 @@ public class Heatmap : MonoBehaviour {
 		containedCells = new Dictionary<Cell, Color> ();
 		string home = Directory.GetCurrentDirectory();
 		string fileName = home + "\\Assets\\Data\\runtimeGroups\\selection" + (SelectionToolHandler.fileCreationCtr - 1) + ".txt";
-		print (fileName);
+		//print (fileName);
 		readFile (fileName);
 	}
 
