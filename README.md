@@ -9,3 +9,5 @@ In Unity,
   3. To make HMD work: for [CameraRig]>Camera(head)>Camera(eye), add script 'Steam VR_Update Poses (Script)' (Add Component, find script in that drop-down list).
 
 USE UNITY 5.6.1F1 AND R 3.4.0 OR EVERYTHING IS BREAKS. please
+
+
