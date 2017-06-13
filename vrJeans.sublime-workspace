@@ -1,0 +1,413 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Assets/Scripts/HeatmapGenerator.cs",
+			"settings":
+			{
+				"buffer_size": 4842,
+				"encoding": "UTF-8 with BOM",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Scripts/ErrorMessageController.cs",
+			"settings":
+			{
+				"buffer_size": 507,
+				"encoding": "UTF-8 with BOM",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "packa",
+		"selected_items":
+		[
+			[
+				"packa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 432.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/vrproject/Documents/vrJeans"
+	],
+	"file_history":
+	[
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/SelectionToolHandler.cs",
+		"/C/Users/vrproject/Documents/vrJeans/vrJeans.sublime-project",
+		"/C/Users/vrproject/Documents/vrJeans/vrJeans.sln",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/HeatmapGenerator.cs",
+		"/C/Users/vrproject/Documents/vrJeans/vrJeans.sublime-workspace",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/GenerateHeatmapThread.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/GenerateHeatmapThread.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Graph.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Graph.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/GraphManager.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/GraphManager.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/GraphPoint.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/GraphPoint.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Heatmap.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Heatmap.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/HeatmapBurner.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/HeatmapBurner.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/HeatmapGenerator.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/InputReader.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/InputReader.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/LaserPointerController.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/PlanePicker.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/LaserPointerController.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/PlanePicker.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/PlaneScaler.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/PlaneScaler.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/R.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/RadialSelector.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/RadialSelector.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/RScriptRunner.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/RTest.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/RScriptRunner.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/RTest.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Scaling.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Scaling.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/SelectionToolHandler.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Simulator Scene-specific.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Cell.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/ErrorMessageController.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/ErrorMessageController.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/ChangeImage.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/ChangeImage.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/CellManager.cs.meta",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/CellManager.cs",
+		"/C/Users/vrproject/Documents/vrJeans/Assets/Scripts/Cell.cs.meta",
+		"/C/Users/vrproject/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/vrproject/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"auto"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Assets/Scripts/HeatmapGenerator.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4842,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								815,
+								815
+							]
+						],
+						"settings":
+						{
+							"oops":
+							{
+								"107,118": "'UnityEngine' is not a known identifier",
+								"1139,1160": "'SteamVR_TrackedObject' is not a known identifier",
+								"1161,1162": "'GetComponent' is not a known identifier",
+								"1164,1165": "Cannot convert from ? to [UnknownType SteamVR_TrackedObject]",
+								"1223,1233": "'GameObject' is not a known identifier",
+								"1234,1238": "'?' does not contain a definition for 'Find'",
+								"1271,1272": "Cannot convert from ? to [UnknownType GameObject]",
+								"1285,1294": "'GameObject' does not contain a definition for 'SetActive'",
+								"1302,1303": "'GameObject' does not contain a definition for 'SetActive'",
+								"1322,1343": "'GenerateHeatmapThread' is not a known identifier",
+								"1365,1366": "Cannot convert from ? to [UnknownType GenerateHeatmapThread]",
+								"1440,1449": "'GameObject' does not contain a definition for 'transform'",
+								"1450,1458": "Cannot convert from ? to [UnknownType Vector3]",
+								"153,166": "'MonoBehaviour' is not a known identifier",
+								"1609,1627": "'SteamVR_Controller' is not a known identifier",
+								"1628,1633": "'?' does not contain a definition for 'Input'",
+								"1654,1659": "Cannot convert from 'None' to 'System.Int32'",
+								"1660,1661": "Cannot convert from ? to [UnknownType Device]",
+								"1701,1719": "Error: Boolean",
+								"1745,1762": "'SelectionToolHandler' does not contain a definition for 'GetHeatmapCreated'",
+								"1764,1765": "Error: Boolean",
+								"178,198": "'SelectionToolHandler' is not a known identifier",
+								"1873,1885": "'Device' does not contain a definition for 'GetPressDown'",
+								"1887,1905": "'SteamVR_Controller' is not a known identifier",
+								"1906,1916": "'?' does not contain a definition for 'ButtonMask'",
+								"1917,1924": "'?' does not contain a definition for 'Trigger'",
+								"1925,1926": "Cannot convert from ? to System.Boolean",
+								"1995,2011": "'SelectionToolHandler' does not contain a definition for 'GetLastSelection'",
+								"2013,2014": "Cannot convert from ? to System.Collections.ArrayList",
+								"2195,2200": "'Color' is not a known identifier",
+								"2208,2218": "'GraphPoint' is not a known identifier",
+								"2232,2233": "Cannot convert from 'None' to '?'",
+								"2233,2234": "Cannot convert from 'None' to '?'",
+								"2247,2255": "'Renderer' is not a known identifier",
+								"2256,2257": "'?' does not contain a definition for 'GetComponent'",
+								"2258,2259": "'?' does not contain a definition for 'GetComponent'",
+								"2259,2267": "'?' does not contain a definition for 'material'",
+								"2268,2273": "'?' does not contain a definition for 'color'",
+								"2511,2516": "'Color' is not a known identifier",
+								"2524,2534": "'GraphPoint' is not a known identifier",
+								"2547,2548": "Cannot convert from 'None' to '?'",
+								"2548,2549": "Cannot convert from 'None' to '?'",
+								"2562,2570": "'Renderer' is not a known identifier",
+								"2571,2572": "'?' does not contain a definition for 'GetComponent'",
+								"2573,2574": "'?' does not contain a definition for 'GetComponent'",
+								"2574,2582": "'?' does not contain a definition for 'material'",
+								"2583,2588": "'?' does not contain a definition for 'color'",
+								"2621,2622": "'?' does not contain a definition for 'r'",
+								"2629,2630": "Error: Boolean",
+								"2631,2632": "Error: Boolean",
+								"2639,2640": "'?' does not contain a definition for 'g'",
+								"2647,2648": "Error: Boolean",
+								"2649,2650": "Error: Boolean",
+								"2657,2658": "'?' does not contain a definition for 'b'",
+								"2665,2666": "Error: Boolean",
+								"2667,2668": "Error: Boolean",
+								"280,290": "'GameObject' is not a known identifier",
+								"2921,2926": "'print' is not a known identifier",
+								"2966,2967": "'HeatmapGenerator' does not contain a definition for 'print'",
+								"3086,3095": "'GameObject' does not contain a definition for 'SetActive'",
+								"3101,3102": "'GameObject' does not contain a definition for 'SetActive'",
+								"321,343": "'ErrorMessageController' is not a known identifier",
+								"3439,3450": "'Instantiate' is not a known identifier",
+								"3506,3515": "'GameObject' does not contain a definition for 'transform'",
+								"3516,3524": "'?' does not contain a definition for 'rotation'",
+								"3525,3526": "Cannot convert from ? to [UnknownType GameObject]",
+								"3548,3557": "Cannot convert from [UnknownType GameObject] to System.Object",
+								"3558,3559": "Invocation error: ArgumentTypeMismatch",
+								"3575,3584": "'GameObject' does not contain a definition for 'SetActive'",
+								"3590,3591": "'GameObject' does not contain a definition for 'SetActive'",
+								"3636,3643": "'Vector3' is not a known identifier",
+								"3657,3658": "Cannot convert from System.Int32 to [UnknownType Vector3]",
+								"3986,3997": "'AudioSource' is not a known identifier",
+								"3998,3999": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4001,4002": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4002,4006": "'?' does not contain a definition for 'Play'",
+								"4009,4010": "'?' does not contain a definition for 'Play'",
+								"4052,4067": "Cannot convert from ? to System.Threading.ThreadStart",
+								"4068,4069": "Cannot convert from 'None' to 'System.Threading.ThreadStart'",
+								"409,430": "'GenerateHeatmapThread' is not a known identifier",
+								"4182,4191": "'GameObject' does not contain a definition for 'SetActive'",
+								"4197,4198": "'GameObject' does not contain a definition for 'SetActive'",
+								"4225,4234": "'GameObject' does not contain a definition for 'SetActive'",
+								"4242,4243": "'GameObject' does not contain a definition for 'SetActive'",
+								"4270,4281": "'AudioSource' is not a known identifier",
+								"4282,4283": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4285,4286": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4286,4290": "'?' does not contain a definition for 'Stop'",
+								"4293,4294": "'?' does not contain a definition for 'Stop'",
+								"4408,4419": "'ChangeImage' is not a known identifier",
+								"4420,4421": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4422,4423": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4423,4434": "'?' does not contain a definition for 'UpdateImage'",
+								"4463,4464": "'?' does not contain a definition for 'UpdateImage'",
+								"4534,4545": "'AudioSource' is not a known identifier",
+								"4546,4547": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4548,4549": "'GameObject' does not contain a definition for 'GetComponent'",
+								"4549,4553": "'?' does not contain a definition for 'Play'",
+								"4555,4556": "'?' does not contain a definition for 'Play'",
+								"493,514": "'SteamVR_TrackedObject' is not a known identifier",
+								"539,557": "'SteamVR_Controller' is not a known identifier",
+								"558,564": "'?' does not contain a definition for 'Device'",
+								"762,772": "'GameObject' is not a known identifier",
+								"794,804": "'GameObject' is not a known identifier",
+								"879,886": "'Vector3' is not a known identifier"
+							},
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Assets/Scripts/ErrorMessageController.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 507,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								93,
+								93
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.variable_get":
+	{
+		"height": 125.0
+	},
+	"pinned_build_system": "",
+	"project": "vrJeans.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 268.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
