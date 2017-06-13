@@ -23,7 +23,7 @@ public class HeatmapGenerator : MonoBehaviour {
 	private string filePath;
 	private Vector3 heatmapPosition;
 	private Quaternion heatmapRotation;
-	private float heatmapRotattionAngle = 0.0f;
+	private float heatmapRotationAngle = 0.0f;
 	private ArrayList heatmapList;
 	//public AudioSource heatmapCreated;
 
@@ -47,38 +47,38 @@ public class HeatmapGenerator : MonoBehaviour {
     void Update()
     {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
-		if (selectionToolHandler.selectionConfirmed) {
+		if (!running && selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated()) {
 			//if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
-				if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
+			if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
 					
-					hourglass.SetActive (true);
-					//heatmapPosition = new Vector3(heatmapPosition.x, heatmapPosition.y, heatmapPosition.z + 3.0f);
-					//heatmapPosition = heatmapPosition + new Vector3 (0, 0, 3.0f);
-					//print (heatmapPosition);
-					heatmapRotattionAngle += 90.0f;
-					//print(heatmapRotattionAngle);
-					heatBoard = Instantiate (heatmapImageBoard, heatmapPosition, heatmapImageBoard.transform.rotation);
-					heatmapList.Add (heatBoard);	
-					heatBoard.active = true;
-					heatmapPosition = heatmapPosition + new Vector3 (-0.2f, 0, 0);
-					//heatBoard.transform.Rotate (new Vector3 (0, 0, heatmapRotattionAngle));
+				hourglass.SetActive (true);
+				//heatmapPosition = new Vector3(heatmapPosition.x, heatmapPosition.y, heatmapPosition.z + 3.0f);
+				//heatmapPosition = heatmapPosition + new Vector3 (0, 0, 3.0f);
+				//print (heatmapPosition);
+				heatmapRotationAngle += 90.0f;
+				//print(heatmapRotattionAngle);
+				heatBoard = Instantiate (heatmapImageBoard, heatmapPosition, heatmapImageBoard.transform.rotation);
+				heatmapList.Add (heatBoard);	
+				heatBoard.SetActive(true);
+				heatmapPosition = heatmapPosition + new Vector3 (-0.2f, 0, 0);
+				//heatBoard.transform.Rotate (new Vector3 (0, 0, heatmapRotattionAngle));
 	
-					//print (heatBoard.activeSelf.ToString());
-					//hourglass = Instantiate (hourglass, heatmapPosition, new Quaternion(0, 0, 0, 0));
+				//print (heatBoard.activeSelf.ToString());
+				//hourglass = Instantiate (hourglass, heatmapPosition, new Quaternion(0, 0, 0, 0));
 
-					//heatmapImageBoard.SetActive (false);
-					heatBoard.SetActive (false);
-					
+				//heatmapImageBoard.SetActive (false);
+				// heatBoard.SetActive (false);
+				
+				hourglass.GetComponent<AudioSource> ().Play ();
+				t = new Thread (new ThreadStart (ght.generateHeatmap));
+				t.Start ();
+				running = true;
 
-					hourglass.GetComponent<AudioSource> ().Play ();
-					t = new Thread (new ThreadStart (ght.generateHeatmap));
-					t.Start ();
-					running = true;
-
-				}
+			}
 			//}
 		}
         if(running && !t.IsAlive) {
+             heatBoard.SetActive(true);
 
 			hourglass.SetActive (false);
 			hourglass.GetComponent<AudioSource> ().Stop ();
@@ -87,7 +87,7 @@ public class HeatmapGenerator : MonoBehaviour {
 			//print (filePath);
 
 			heatBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
-			heatBoard.SetActive (true);
+            // heatBoard.SetActive (true);
 			heatBoard.GetComponent<AudioSource>().Play();
 			//heatmapCreated.Play();
 

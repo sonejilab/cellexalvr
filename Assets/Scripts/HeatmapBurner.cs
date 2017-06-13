@@ -30,7 +30,7 @@ public class HeatmapBurner : MonoBehaviour {
 	}
 		
 	public void BurnHeatmap() {
-		print ("heatmap grabbed & down pressed!");
+		// print ("heatmap grabbed & down pressed!");
 		fadeHeatmap = true;
 		Vector3 heatmapScale = transform.localScale;
 		Vector3 heatmapPosition = transform.position;
@@ -43,7 +43,7 @@ public class HeatmapBurner : MonoBehaviour {
 	}
 
 	void FadeHeatmap() {
-		print ("trying to fade out heatmap!");
+		// print ("trying to fade out heatmap!");
 		//Material heatmapMaterial = rend.material;
 		rend.material.Lerp(originalMaterial, transparentMaterial , t);
         foreach (Renderer rend in childrenRenderers) {

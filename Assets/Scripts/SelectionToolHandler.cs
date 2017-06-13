@@ -7,46 +7,48 @@ using VRTK;
 
 public class SelectionToolHandler : MonoBehaviour {
 
-	public GraphManager manager;
-	public Graph graph;
-	public Material selectorMaterial;
+    public GraphManager manager;
+    public Graph graph;
+    public Material selectorMaterial;
 
-	public RadialMenu menu;
-	public Sprite noButton;
-	public Sprite toolButton;
-	public Sprite confirmButton;
-	public Sprite confirmButton_w;
-	public Sprite cancelButton;
-	public Sprite cancelButton_w;
-	public Sprite blowupButton;
-	public Sprite blowupButton_w;
-	public Sprite colorButton;
-	public Sprite recolorButton;
-	public Sprite ddrtreeButton;
-	public Sprite tsneButton;
+    public RadialMenu menu;
+    public Sprite noButton;
+    public Sprite toolButton;
+    public Sprite confirmButton;
+    public Sprite confirmButton_w;
+    public Sprite cancelButton;
+    public Sprite cancelButton_w;
+    public Sprite blowupButton;
+    public Sprite blowupButton_w;
+    public Sprite colorButton;
+    public Sprite recolorButton;
+    public Sprite ddrtreeButton;
+    public Sprite tsneButton;
 
-	public SteamVR_TrackedController right;
-	public SteamVR_TrackedController left;
+    public SteamVR_TrackedController right;
+    public SteamVR_TrackedController left;
 
-	ArrayList selectedCells = new ArrayList();
+    ArrayList selectedCells = new ArrayList();
+    ArrayList lastSelectedCells = new ArrayList();
 
-	public static int fileCreationCtr = 0;
+    public static int fileCreationCtr = 0;
 
-	Color[] colors;
-	int currentColorIndex = 0;
-	Color selectedColor;
+    Color[] colors;
+    int currentColorIndex = 0;
+    Color selectedColor;
 
-	PlanePicker planePicker;
+    PlanePicker planePicker;
 
-	List<RadialMenuButton> buttons;
-	bool inSelectionState = false;
-	bool selectionMade = false;
-	public bool selectionConfirmed = false;
-	public ushort hapticIntensity = 2000;
+    List<RadialMenuButton> buttons;
+    bool inSelectionState = false;
+    bool selectionMade = false;
+    public bool selectionConfirmed = false;
+    public ushort hapticIntensity = 2000;
 
-	GameObject leftController;
-	public bool heatmapGrabbed = false;
-	GameObject grabbedObject;
+    GameObject leftController;
+    public bool heatmapGrabbed = false;
+    GameObject grabbedObject;
+    private bool heatmapCreated = true;
 
 	//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 	//private SteamVR_TrackedObject trackedObj;
@@ -166,9 +168,19 @@ public class SelectionToolHandler : MonoBehaviour {
         DumpData();
         // clear the list since we are done with it
         // ?
+        foreach (Collider c in selectedCells)
+        {
+            lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
+        }
         selectedCells.Clear();
+        heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;
+    }
+
+    public ArrayList getLastSelection()
+    {
+        return lastSelectedCells;
     }
 
     public void CancelSelection()
@@ -196,6 +208,15 @@ public class SelectionToolHandler : MonoBehaviour {
         this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
     }
 
+    public void HeatmapCreated()
+    {
+        heatmapCreated = true;
+    }
+
+    public bool GetHeatmapCreated()
+    {
+        return heatmapCreated;
+    }
     /*public void ctrlZ() //currently not used
 	{
 		selectedCells.RemoveAt(selectedCells.Count - 1);
@@ -204,7 +225,7 @@ public class SelectionToolHandler : MonoBehaviour {
 	public void DumpData()
 	{
 		using (System.IO.StreamWriter file =
-			new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + fileCreationCtr++ + ".txt")) {
+			new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt")) {
 			// new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
 			// print ("dumping data");
 			foreach (Collider cell in selectedCells)
@@ -225,14 +246,26 @@ public class SelectionToolHandler : MonoBehaviour {
 	}
 
 	private void ShowSelectionTool() {
-		GetComponent<Renderer> ().enabled = true;
-		GetComponent<Collider> ().enabled = true;
-	}
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = true;
+        }
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+        {
+            c.enabled = true;
+        }
+    }
 		
 	private void HideSelectionTool() {
-		GetComponent<Renderer> ().enabled = false;
-		GetComponent<Collider> ().enabled = false;
-	}
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = false;
+        }
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+        {
+            c.enabled = false;
+        }
+    }
 
 	public void Up() {
 		// print ("up");
