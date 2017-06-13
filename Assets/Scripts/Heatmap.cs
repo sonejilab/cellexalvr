@@ -50,7 +50,7 @@ public class Heatmap : MonoBehaviour {
 			foreach (GraphPoint gp in points) {
 				if (containedCells.ContainsKey (gp.GetCell ())) {
 					//print ("found cell");
-					gp.GetComponentInChildren<Renderer> ().material.color = containedCells [gp.GetCell ()];
+					gp.GetComponent<Renderer> ().material.color = containedCells [gp.GetCell ()];
 				}
 				
 			}

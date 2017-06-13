@@ -30,6 +30,7 @@ public class Graph : MonoBehaviour
 		minAreaValues = this.GetComponent<Renderer>().bounds.min;
 		maxAreaValues = this.GetComponent<Renderer> ().bounds.max;
 		areaSize = this.GetComponent<Renderer> ().bounds.size;
+        graphpoint.gameObject.SetActive(false);
 
 	}
 

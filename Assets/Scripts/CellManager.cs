@@ -15,6 +15,11 @@ public class CellManager : MonoBehaviour {
 		geneNames = new ArrayList();
 	}
 
+    /// <summary>
+    /// Attempts to add a cell to the dictionary
+    /// </summary>
+    /// <param name="label"></param> The cell's name
+    /// <returns> Returns a reference to the added cell </returns>
 	public Cell AddCell(string label) {
 		if(!cells.ContainsKey(label)) {
 			cells [label] = new Cell (label, materialList);

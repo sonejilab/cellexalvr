@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class GraphPoint : MonoBehaviour
 {
-	public GameObject prefab;
-	private Cell cell;
+    private Cell cell;
 	private float x, y, z;
-	private GameObject sphere;
-	private bool selected = false;
+    private bool selected = false;
 	private Material defaultMat;
 	private Color selectedColor;
 	private Graph defaultParent;
@@ -19,46 +17,45 @@ public class GraphPoint : MonoBehaviour
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
+         defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
+
+        /* sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
 		sphere.transform.SetParent (this.transform);
 		sphere.gameObject.SetActive (true);
 		Color color = Color.white;
 		defaultMat = Resources.Load ("SphereDefault", typeof(Material)) as Material;
-		Vector3 localPos = transform.localPosition;
+		Vector3 localPos = transform.localPosition;*/
 
 
-	}
+    }
 
-	public string GetLabel() {
+    public string GetLabel() {
 		return cell.Label;
 	}
 		
-	 public GameObject GetSphere(){
-		return sphere;
-	}
-
 	public bool IsSelected() {
 		return selected;
 	}
 
 	public void SetSelected(bool isSelected){
-		selected=isSelected;
+		selected = isSelected;
 	}
 
 	public void SetMaterial(Material material){
-		sphere.GetComponent<Renderer> ().material = material;
+		GetComponent<Renderer> ().material = material;
 	}
 
 	public Material GetMaterial(){
-		return sphere.GetComponent<Renderer> ().material;
+		return GetComponent<Renderer> ().material;
 	}
 
 	public Material GetDefaultMaterial(){
 		return defaultMat;
 	}
 
-	public void SetSelectedColor(Color col){
-		selectedColor = col;
+	public void SetSelectedColor(Color col)
+    {
+        selectedColor = col;
 	}
 
     public Color GetSelectedColor()

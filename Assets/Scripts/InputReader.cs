@@ -77,11 +77,11 @@ public class InputReader  : MonoBehaviour{
 		}
 	}
 
-	/** 
-	 * Determines the maximum and the minimum values of the dataset. 
-	 * Will be used for the scaling part onto the graphArea.
-	 **/
-	void UpdateMinMax(string[] lines){
+    /// <summary>
+    /// Determines the maximum and the minimum values of the dataset. 
+    /// Will be used for the scaling part onto the graphArea.
+    ///</summary>
+    void UpdateMinMax(string[] lines){
 		Vector3 maxCoordValues = new Vector3 ();
 		maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = -1000000.0f;
 		Vector3 minCoordValues = new Vector3 ();
