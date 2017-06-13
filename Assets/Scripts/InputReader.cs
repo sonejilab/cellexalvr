@@ -34,7 +34,7 @@ public class InputReader  : MonoBehaviour{
 		foreach (string line in lines) {
 			// the coordinates are split with tab characters
 			string[] words = line.Split('\t');
-			float[] coords = new float[3];
+			// float[] coords = new float[3];
 			graphManager.AddCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 		}
 

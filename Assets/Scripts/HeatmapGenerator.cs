@@ -14,15 +14,15 @@ public class HeatmapGenerator : MonoBehaviour {
     private bool running;
 	private SteamVR_TrackedObject trackedObject;
 	private SteamVR_Controller.Device device;
-	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-	private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
+	// private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+	// private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
 	private GameObject hourglass;
 
 	private GameObject heatBoard;
 	private int heatmapID = 1;
 	private string filePath;
 	private Vector3 heatmapPosition;
-	private Quaternion heatmapRotation;
+	// private Quaternion heatmapRotation;
 	private float heatmapRotationAngle = 0.0f;
 	private ArrayList heatmapList;
 	//public AudioSource heatmapCreated;
@@ -36,11 +36,10 @@ public class HeatmapGenerator : MonoBehaviour {
         running = false;
 		hourglass = GameObject.Find ("WaitingForHeatboardHourglass");
 		hourglass.SetActive (false);
-
 		heatmapList = new ArrayList ();
 
 		heatmapPosition = heatmapImageBoard.transform.position;
-		heatmapRotation = heatmapImageBoard.transform.rotation;
+		// heatmapRotation = heatmapImageBoard.transform.rotation;
     }
 
     // Update is called once per frame

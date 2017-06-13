@@ -26,7 +26,7 @@ public class HeatmapBurner : MonoBehaviour {
     void Update () {
 		if (fadeHeatmap) {
 			FadeHeatmap ();
-		}
+        }
 	}
 		
 	public void BurnHeatmap() {
@@ -34,12 +34,12 @@ public class HeatmapBurner : MonoBehaviour {
 		fadeHeatmap = true;
 		Vector3 heatmapScale = transform.localScale;
 		Vector3 heatmapPosition = transform.position;
-		Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
+		// Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
 		fire = Instantiate (firePrefab, heatmapPosition + new Vector3(0, 5 * heatmapScale.z, 0), transform.rotation);
 		fire.transform.localScale = new Vector3(5 * heatmapScale.x, 0.2f, heatmapScale.z);
         fire.transform.Rotate(new Vector3(180.0f, 0, 0));
-        fire.active = true;
-		this.GetComponents<AudioSource> () [1].Play (10000);
+        fire.SetActive(true);
+		this.GetComponents<AudioSource> () [1].PlayDelayed (10000);
 	}
 
 	void FadeHeatmap() {

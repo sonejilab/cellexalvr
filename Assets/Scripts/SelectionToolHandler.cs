@@ -101,7 +101,7 @@ public class SelectionToolHandler : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		//print(other.gameObject.name);
-		if (other.GetComponentInChildren<Renderer> ().material.color != null && other.gameObject.GetComponent<GraphPoint>() != null) {
+		if (other.gameObject.GetComponent<GraphPoint>() != null) {
 			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
 			other.gameObject.GetComponent<GraphPoint> ().SetSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
 			other.gameObject.GetComponent<GraphPoint> ().SetSelected (true); //makes pointer highlighting work
@@ -119,12 +119,8 @@ public class SelectionToolHandler : MonoBehaviour {
 
     public void SingleSelect(Collider other)
     {
-        if (other.GetComponentInChildren<Renderer>().material.color != null)
-        {
-            other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-            other.gameObject.GetComponent<GraphPoint>().SetSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-        }
-
+        other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+        other.gameObject.GetComponent<GraphPoint>().SetSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
         if (!selectedCells.Contains(other))
         {
             selectedCells.Add(other);

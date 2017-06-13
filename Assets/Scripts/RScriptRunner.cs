@@ -22,7 +22,7 @@ public class RScriptRunner
     /// <returns>Returns a string with the R responses.</returns>
     public static string RunFromCmd(string rCodeFilePath, string rScriptExecutablePath, string args)
     {
-        string file = rCodeFilePath;
+        // string file = rCodeFilePath;
         string result = string.Empty;
 
         try

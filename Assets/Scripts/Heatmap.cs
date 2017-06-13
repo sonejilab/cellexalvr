@@ -11,8 +11,8 @@ public class Heatmap : MonoBehaviour {
 	public GraphManager graphManager;
     public SelectionToolHandler selectionToolHandler;
 
-	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-	private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
+	// private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+	// private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
 
 	// Use this for initialization
 	void Start () {
@@ -23,26 +23,9 @@ public class Heatmap : MonoBehaviour {
             containedCells[g.GetCell()] = g.GetMaterial().color;
         }
         selectionToolHandler.HeatmapCreated();
-        //string home = Directory.GetCurrentDirectory(); 
-        // string fileName = home + "\\Assets\\Data\\runtimeGroups\\selection" + (SelectionToolHandler.fileCreationCtr - 1) + ".txt";
-		//print (fileName);
-		// readFile (fileName);
 	}
 
-
-	/* void readFile(string fileName) {
-		string[] lines = System.IO.File.ReadAllLines(fileName);
-		foreach (string line in lines) {
-			// the coordinates are split with tab characters
-			string[] words = line.Split('\t');
-			Color color;
-			ColorUtility.TryParseHtmlString (words [1], out color);
-			containedCells.Add (cellManager.getCell (words [0]), color);
-		}
-
-	}*/
-
-	public void ColorCells() {
+    public void ColorCells() {
 		Graph[] graphs = graphManager.GetComponentsInChildren<Graph> ();
 		foreach (Graph g in graphs) {
 			GraphPoint[] points = g.GetComponentsInChildren<GraphPoint> ();

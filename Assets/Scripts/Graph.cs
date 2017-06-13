@@ -14,7 +14,7 @@ public class Graph : MonoBehaviour
 	private Vector3 minCoordValues;
 	private Vector3 diffCoordValues;
 	private Vector3 minAreaValues;
-	private Vector3 maxAreaValues;
+	// private Vector3 maxAreaValues;
 	private Vector3 areaSize;
 	private Vector3 defaultPos;
 	private Vector3 defaultScale;
@@ -28,7 +28,7 @@ public class Graph : MonoBehaviour
 		points = new List<GraphPoint>();
 		// Grabs the location and size of the graphArea.
 		minAreaValues = this.GetComponent<Renderer>().bounds.min;
-		maxAreaValues = this.GetComponent<Renderer> ().bounds.max;
+		// maxAreaValues = this.GetComponent<Renderer> ().bounds.max;
 		areaSize = this.GetComponent<Renderer> ().bounds.size;
         graphpoint.gameObject.SetActive(false);
 

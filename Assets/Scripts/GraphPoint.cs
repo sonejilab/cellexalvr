@@ -17,7 +17,7 @@ public class GraphPoint : MonoBehaviour
 		this.x = x;
 		this.y = y;
 		this.z = z;
-         defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
+        defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
 
         /* sphere = Instantiate (prefab, new Vector3 (x, y, z), Quaternion.identity);
 		sphere.transform.SetParent (this.transform);
