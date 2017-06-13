@@ -24,7 +24,7 @@ public class SimInputReader  : MonoBehaviour{
 			// the coordinates are split with tab characters
 			string[] words = line.Split('\t');
 			float[] coords = new float[3];
-			graphManager.addCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
+			graphManager.AddCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 		}
 			
 
@@ -53,7 +53,7 @@ public class SimInputReader  : MonoBehaviour{
 				if (binIndex == 30) {
 					binIndex--;
 				}
-				cellManager.setGeneExpression (cellNames [k - 1], geneName, binIndex);
+				cellManager.SetGeneExpression (cellNames [k - 1], geneName, binIndex);
 			}
 		}
 
@@ -96,6 +96,6 @@ public class SimInputReader  : MonoBehaviour{
 				maxCoordValues.z = coords [2];
 			
 		}
-		graphManager.setMinMaxCoords (minCoordValues, maxCoordValues);
+		graphManager.SetMinMaxCoords (minCoordValues, maxCoordValues);
 	}
 }

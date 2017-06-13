@@ -41,7 +41,7 @@ namespace CurvedVRKeyboard {
             } else if(value.Equals(UP) || value.Equals(LOW)) { // upper/lower case pressed
                 LowerUpperKeys();
             } else if(value.Equals(SPACE)) {
-                graphManager.colorAllGraphsByGene(output);
+                graphManager.ColorAllGraphsByGene(output);
                 output = "";
                 textComponent = targetGameObject.GetComponent(typeHolder.GetType());
                 textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);

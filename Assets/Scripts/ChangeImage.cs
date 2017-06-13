@@ -17,7 +17,7 @@ public class ChangeImage : MonoBehaviour {
 		
 	}
 
-    public void updateImage(string filepath)
+    public void UpdateImage(string filepath)
     {
         byte[] fileData = File.ReadAllBytes(filepath);
         Texture2D tex = new Texture2D(2, 2);

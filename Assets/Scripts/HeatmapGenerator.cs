@@ -47,9 +47,10 @@ public class HeatmapGenerator : MonoBehaviour {
     void Update()
     {
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
-		if (!running && selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated()) {
-			//if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
-			if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
+		if (!running && selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated())
+        {
+            //if (device.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
+            if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) { 
 					
 				hourglass.SetActive (true);
 				//heatmapPosition = new Vector3(heatmapPosition.x, heatmapPosition.y, heatmapPosition.z + 3.0f);
@@ -70,7 +71,7 @@ public class HeatmapGenerator : MonoBehaviour {
 				// heatBoard.SetActive (false);
 				
 				hourglass.GetComponent<AudioSource> ().Play ();
-				t = new Thread (new ThreadStart (ght.generateHeatmap));
+				t = new Thread (new ThreadStart (ght.GenerateHeatmap));
 				t.Start ();
 				running = true;
 
@@ -86,7 +87,7 @@ public class HeatmapGenerator : MonoBehaviour {
 			//filePath = "Assets/Images/heatmap" + heatmapID + ".png";
 			//print (filePath);
 
-			heatBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
+			heatBoard.GetComponent<ChangeImage>().UpdateImage("Assets/Images/heatmap.png");
             // heatBoard.SetActive (true);
 			heatBoard.GetComponent<AudioSource>().Play();
 			//heatmapCreated.Play();

@@ -7,7 +7,7 @@ using UnityEngine;
 public class GenerateHeatmapThread {
     //public static int latestSelection = 0;
 
-    public void generateHeatmap()
+    public void GenerateHeatmap()
     {
         string home = Directory.GetCurrentDirectory();
 		using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))

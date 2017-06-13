@@ -15,16 +15,16 @@ public class InputReader  : MonoBehaviour{
 	public CellManager cellManager;
 
 	void Start() {
-		graphManager.setActiveGraph (0);
+		graphManager.SetActiveGraph (0);
 		graphManager.CreateGraph (0);
-		readFile (CellCoordinatesFileName);
-		graphManager.setActiveGraph (1);
+		ReadFile (CellCoordinatesFileName);
+		graphManager.SetActiveGraph (1);
 		graphManager.CreateGraph (1);
-		readFile (SecondCellCoordinatesFileName);
-		graphManager.moveGraphs ();
+		ReadFile (SecondCellCoordinatesFileName);
+		graphManager.MoveGraphs ();
     }
 
-	public void readFile(string fileName) {
+    public void ReadFile(string fileName) {
 
 		// put each line into an array
 		string[] lines = System.IO.File.ReadAllLines(fileName);
@@ -35,7 +35,7 @@ public class InputReader  : MonoBehaviour{
 			// the coordinates are split with tab characters
 			string[] words = line.Split('\t');
 			float[] coords = new float[3];
-			graphManager.addCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
+			graphManager.AddCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 		}
 
 
@@ -64,7 +64,7 @@ public class InputReader  : MonoBehaviour{
 				if (binIndex == 30) {
 					binIndex--;
 				}
-				cellManager.setGeneExpression (cellNames [k - 1], geneName, binIndex);
+				cellManager.SetGeneExpression (cellNames [k - 1], geneName, binIndex);
 			}
 		}
 
@@ -107,6 +107,6 @@ public class InputReader  : MonoBehaviour{
 				maxCoordValues.z = coords [2];
 			
 		}
-		graphManager.setMinMaxCoords (minCoordValues, maxCoordValues);
+		graphManager.SetMinMaxCoords (minCoordValues, maxCoordValues);
 	}
 }

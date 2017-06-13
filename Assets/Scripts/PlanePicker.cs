@@ -13,7 +13,7 @@ public class PlanePicker : MonoBehaviour {
 		}
 	}
 
-	public void cyclePlanes() {
+	public void CyclePlanes() {
 		print ("cyclePlanes");
 		if (active == planes.Length - 1) {
 			active = 0;

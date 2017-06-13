@@ -85,7 +85,7 @@ namespace VRTK
                 StartUseAction(givenHit.transform);
 
 				latestHit = givenHit.collider.transform.GetComponent<GraphPoint> ();
-				latestHit.setMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
+				latestHit.SetMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
             }
         }
 
@@ -100,11 +100,11 @@ namespace VRTK
                 OnDestinationMarkerExit(SetDestinationMarkerEvent(givenHit.distance, givenHit.transform, givenHit, givenHit.point, controllerIndex));
                 StopUseAction();
 
-				if (latestHit.isSelected ()) {
-					latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
-					latestHit.gameObject.GetComponentInChildren<Renderer> ().material.color = latestHit.getSelectedColor ();
+				if (latestHit.IsSelected ()) {
+					latestHit.SetMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
+					latestHit.gameObject.GetComponentInChildren<Renderer> ().material.color = latestHit.GetSelectedColor();
 				} else {
-					latestHit.setMaterial (latestHit.getDefaultMaterial());
+					latestHit.SetMaterial (latestHit.GetDefaultMaterial());
 				}
 
 				latestHit = null;
@@ -204,8 +204,8 @@ namespace VRTK
 					if (device.GetPressDown (triggerButton)) {
 						if (latestHit != null) {
 							//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
-							latestHit.setSelected(true); //add/remove selected graph point to/from selected points here
-							selectionHandler.GetComponent<SelectionToolHandler>().singleSelect(latestHit.gameObject.GetComponent<Collider>());
+							latestHit.SetSelected(true); //add/remove selected graph point to/from selected points here
+							selectionHandler.GetComponent<SelectionToolHandler>().SingleSelect(latestHit.gameObject.GetComponent<Collider>());
 							cellHit.Play(7000);
 						}
 					}

@@ -15,25 +15,25 @@ public class CellManager : MonoBehaviour {
 		geneNames = new ArrayList();
 	}
 
-	public Cell addCell(string label) {
+	public Cell AddCell(string label) {
 		if(!cells.ContainsKey(label)) {
 			cells [label] = new Cell (label, materialList);
 		}
 		return cells [label];
 	}
 
-	public Cell getCell(string label) {
+	public Cell GetCell(string label) {
 		return cells [label];
 	}
 
-	public bool geneExists(string geneName) {
+	public bool GeneExists(string geneName) {
 		return geneNames.Contains (geneName);
 	}
 
-	public void setGeneExpression(string cellName, string geneName, int slot){
+	public void SetGeneExpression(string cellName, string geneName, int slot){
 		Cell cell;
 		cells.TryGetValue (cellName, out cell);
-		cell.setExpressionData (geneName, slot);
+        cell.setExpressionData (geneName, slot);
 		if (!geneNames.Contains (geneName)) {
 			geneNames.Add (geneName);
 		}

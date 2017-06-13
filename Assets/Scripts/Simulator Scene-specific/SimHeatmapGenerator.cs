@@ -27,12 +27,12 @@ public class SimHeatmapGenerator : MonoBehaviour {
     {
 		if (Input.GetKeyDown("n")) {
             HeatmapImageBoard.SetActive(true);
-            t = new Thread(new ThreadStart(ght.generateHeatmap));
+            t = new Thread(new ThreadStart(ght.GenerateHeatmap));
             t.Start();
             running = true;
         }
         if(running && !t.IsAlive) {
-            HeatmapImageBoard.GetComponent<ChangeImage>().updateImage("Assets/Images/heatmap.png");
+            HeatmapImageBoard.GetComponent<ChangeImage>().UpdateImage("Assets/Images/heatmap.png");
             running = false;
         }
     }

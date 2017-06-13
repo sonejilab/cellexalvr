@@ -21,9 +21,9 @@ public class HeatmapBurner : MonoBehaviour {
 		rend = GetComponent<Renderer> ();
         childrenRenderers = GetComponentsInChildren<Renderer>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		if (fadeHeatmap) {
 			FadeHeatmap ();
 		}

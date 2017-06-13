@@ -20,7 +20,7 @@ public class Heatmap : MonoBehaviour {
         ArrayList cells = selectionToolHandler.getLastSelection();
         foreach (GraphPoint g in cells)
         {
-            containedCells[g.getCell()] = g.getMaterial().color;
+            containedCells[g.GetCell()] = g.GetMaterial().color;
         }
         selectionToolHandler.HeatmapCreated();
         //string home = Directory.GetCurrentDirectory(); 
@@ -42,15 +42,15 @@ public class Heatmap : MonoBehaviour {
 
 	}*/
 
-	public void colorCells() {
+	public void ColorCells() {
 		Graph[] graphs = graphManager.GetComponentsInChildren<Graph> ();
 		foreach (Graph g in graphs) {
 			GraphPoint[] points = g.GetComponentsInChildren<GraphPoint> ();
 			// print ("found graphoints " + points.ToString());
 			foreach (GraphPoint gp in points) {
-				if (containedCells.ContainsKey (gp.getCell ())) {
+				if (containedCells.ContainsKey (gp.GetCell ())) {
 					//print ("found cell");
-					gp.GetComponentInChildren<Renderer> ().material.color = containedCells [gp.getCell ()];
+					gp.GetComponentInChildren<Renderer> ().material.color = containedCells [gp.GetCell ()];
 				}
 				
 			}

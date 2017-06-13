@@ -103,8 +103,8 @@ public class SelectionToolHandler : MonoBehaviour {
 		//print(other.gameObject.name);
 		if (other.GetComponentInChildren<Renderer> ().material.color != null && other.gameObject.GetComponent<GraphPoint>() != null) {
 			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-			other.gameObject.GetComponent<GraphPoint> ().setSelected (true); //makes pointer highlighting work
+			other.gameObject.GetComponent<GraphPoint> ().SetSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+			other.gameObject.GetComponent<GraphPoint> ().SetSelected (true); //makes pointer highlighting work
 		}
 		if (!selectedCells.Contains (other)) {
 			selectedCells.Add (other);
@@ -117,12 +117,12 @@ public class SelectionToolHandler : MonoBehaviour {
 		}
 	}
 
-    public void singleSelect(Collider other)
+    public void SingleSelect(Collider other)
     {
         if (other.GetComponentInChildren<Renderer>().material.color != null)
         {
             other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-            other.gameObject.GetComponent<GraphPoint>().setSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+            other.gameObject.GetComponent<GraphPoint>().SetSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
         }
 
         if (!selectedCells.Contains(other))
@@ -154,8 +154,8 @@ public class SelectionToolHandler : MonoBehaviour {
 
     public void ConfirmSelection()
     {
-        Graph newGraph = manager.newGraphClone();
-        newGraph.limitGraphArea(selectedCells);
+        Graph newGraph = manager.NewGraphClone();
+        newGraph.LimitGraphArea(selectedCells);
         foreach (Collider cell in selectedCells)
         {
             GameObject graphpoint = cell.gameObject;
@@ -230,7 +230,7 @@ public class SelectionToolHandler : MonoBehaviour {
 			// print ("dumping data");
 			foreach (Collider cell in selectedCells)
 			{
-				file.Write(cell.GetComponent<GraphPoint>().getLabel());
+				file.Write(cell.GetComponent<GraphPoint>().GetLabel());
 				file.Write ("\t");
 				Color c = cell.GetComponentInChildren<Renderer> ().material.color;
 				int r = (int)(c.r * 255);
@@ -318,7 +318,7 @@ public class SelectionToolHandler : MonoBehaviour {
 		// print ("In selection state: " + inSelectionState.ToString());
 		// print ("Selection made: " + selectionMade.ToString());
 		if (heatmapGrabbed) {
-			grabbedObject.GetComponentInChildren<Heatmap> ().colorCells ();
+			grabbedObject.GetComponentInChildren<Heatmap> ().ColorCells ();
 		} else if  (inSelectionState) {
 			ChangeColor ();
 		} else {

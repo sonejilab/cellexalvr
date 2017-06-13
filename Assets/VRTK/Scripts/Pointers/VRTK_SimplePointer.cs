@@ -84,21 +84,21 @@ namespace VRTK
 						//latestHit = pointerCollidedWith.transform.GetComponent<GraphPoint>;
 						//Debug.Log (pointerCollidedWith.transform.gameObject.name);
 						//Debug.Log (layersToIgnore);
-						latestHit.setMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
+						latestHit.SetMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
 					}
 
 					if (latestHit != pointerCollidedWith.transform.GetComponent<GraphPoint> ()) {
-						if(latestHit.isSelected()){
-							latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
+						if(latestHit.IsSelected()){
+							latestHit.SetMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
 						} else {
-							latestHit.setMaterial(latestHit.getDefaultMaterial());
+							latestHit.SetMaterial(latestHit.GetDefaultMaterial());
 						}
 						latestHit = null;
 					}
 
 					if (device.GetPressDown (triggerButton)) {
 						//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
-						latestHit.setSelected(!latestHit.isSelected()); //add/remove selected graph point to/from selected points here
+						latestHit.SetSelected(!latestHit.IsSelected()); //add/remove selected graph point to/from selected points here
 					}
 
 				
@@ -124,10 +124,10 @@ namespace VRTK
                     }
 
 					if (latestHit != null) {
-						if (!latestHit.isSelected ()) {
-							latestHit.setMaterial (latestHit.getDefaultMaterial());
+						if (!latestHit.IsSelected ()) {
+							latestHit.SetMaterial (latestHit.GetDefaultMaterial());
 						} else {
-							latestHit.setMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material); 
+							latestHit.SetMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material); 
 						}
 						latestHit = null;
 					}

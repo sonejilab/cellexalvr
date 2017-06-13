@@ -56,7 +56,7 @@ public class RadialSelector : MonoBehaviour {
 	}
 
 	public void ResetGraph(){
-		manager.resetGraph ();
-		manager.resetGraph ();//en andra reset löser en del problem. Fult men who cares?
+		manager.ResetGraph ();
+		manager.ResetGraph ();//en andra reset löser en del problem. Fult men who cares?
 	}
 }

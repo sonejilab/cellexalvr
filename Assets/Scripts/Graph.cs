@@ -33,7 +33,7 @@ public class Graph : MonoBehaviour
 
 	}
 
-    public void addGraphPoint(Cell cell, float x, float y, float z)
+    public void AddGraphPoint(Cell cell, float x, float y, float z)
     {
 
         // Scales the sphere coordinates to fit inside the this.
@@ -47,10 +47,10 @@ public class Graph : MonoBehaviour
 
         newGraphpoint = Instantiate(graphpoint, new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
 		newGraphpoint.gameObject.SetActive (true);
-		newGraphpoint.setCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
+		newGraphpoint.SetCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
 
         newGraphpoint.transform.SetParent(this.transform);
-		newGraphpoint.saveParent (this);
+		newGraphpoint.SaveParent (this);
 
         points.Add(newGraphpoint);
 
@@ -58,7 +58,7 @@ public class Graph : MonoBehaviour
 		defaultScale = transform.localScale;
     }
 
-    public void setMinMaxCoords(Vector3 min, Vector3 max)
+    public void SetMinMaxCoords(Vector3 min, Vector3 max)
     {
         minCoordValues = min;
         maxCoordValues = max;
@@ -67,20 +67,20 @@ public class Graph : MonoBehaviour
     }
 		
 
-	public void colorGraphByGene(string geneName){
+	public void ColorGraphByGene(string geneName){
 		foreach (GraphPoint point in points) {
-			point.colorByGene (geneName);
+			point.ColorByGene (geneName);
 		}
 	}
 
-	public List<List<GraphPoint>> getGroups(){
+	public List<List<GraphPoint>> GetGroups(){
 		
 		List<Color> colors = new List<Color>();
 		List<List<GraphPoint>> groups = new List<List<GraphPoint>> ();
 
 		for (int i = 0; i < points.Count; i++) {
 			GraphPoint p = (GraphPoint) points [i];
-			Color m = p.getMaterial ().color;
+			Color m = p.GetMaterial ().color;
 
 			if (!colors.Contains (m)) {
 				colors.Add (m);
@@ -101,12 +101,12 @@ public class Graph : MonoBehaviour
 
 	}
 
-	public void reset() {
+    public void ResetGraph() {
 		transform.position = defaultPos;
 		transform.localScale = defaultScale;
         foreach (GraphPoint point in points)
         {
-            point.resetCoords();
+            point.ResetCoords();
             if (point.GetComponent<Rigidbody>() != null)
             {
                 point.GetComponent<Collider>().isTrigger = true;
@@ -119,7 +119,7 @@ public class Graph : MonoBehaviour
 	/**
 	 * Makes scaling of sub-graphs work better
 	 **/
-	public void limitGraphArea(ArrayList points){
+	public void LimitGraphArea(ArrayList points){
 		maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = -1000000.0f;
 		minCoordValues.x = minCoordValues.y = minCoordValues.z = 1000000.0f;
 		foreach (Collider col in points) {

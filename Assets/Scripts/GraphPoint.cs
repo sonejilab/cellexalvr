@@ -13,7 +13,7 @@ public class GraphPoint : MonoBehaviour
 	private Color selectedColor;
 	private Graph defaultParent;
 
-	public void setCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
+	public void SetCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize)
 	{
 		this.cell = cell;
 		this.x = x;
@@ -29,51 +29,52 @@ public class GraphPoint : MonoBehaviour
 
 	}
 
-	public string getLabel() {
+	public string GetLabel() {
 		return cell.Label;
 	}
 		
-	 public GameObject getSphere(){
+	 public GameObject GetSphere(){
 		return sphere;
 	}
 
-	public bool isSelected() {
+	public bool IsSelected() {
 		return selected;
 	}
 
-	public void setSelected(bool isSelected){
+	public void SetSelected(bool isSelected){
 		selected=isSelected;
 	}
 
-	public void setMaterial(Material material){
+	public void SetMaterial(Material material){
 		sphere.GetComponent<Renderer> ().material = material;
 	}
 
-	public Material getMaterial(){
+	public Material GetMaterial(){
 		return sphere.GetComponent<Renderer> ().material;
 	}
 
-	public Material getDefaultMaterial(){
+	public Material GetDefaultMaterial(){
 		return defaultMat;
 	}
 
-	public void setSelectedColor(Color col){
+	public void SetSelectedColor(Color col){
 		selectedColor = col;
 	}
 
-	public Color getSelectedColor(){
-		return selectedColor;
-	}
+    public Color GetSelectedColor()
+    {
+        return selectedColor;
+    }
 
-	public void colorByGene(string geneName){
+    public void ColorByGene(string geneName){
 		if (!selected) {
-			setMaterial (cell.getGeneMaterial (geneName));
+			SetMaterial (cell.getGeneMaterial (geneName));
 		}
 
 		defaultMat = cell.getGeneMaterial (geneName);
 	}
 
-	public void resetCoords(){
+	public void ResetCoords(){
 		transform.position = new Vector3 (x, y, z);
 		transform.localScale = new Vector3 (2.5f, 2.5f, 2.5f); //hard-coded to current sphere size
 		transform.SetParent (defaultParent.transform);
@@ -84,18 +85,18 @@ public class GraphPoint : MonoBehaviour
 		}
 		selected = false;
 		defaultMat = Resources.Load ("SphereDefault", typeof(Material)) as Material;
-		setMaterial (defaultMat);
+		SetMaterial (defaultMat);
 	}
 
-	public Vector3 getCoordinates(){
+	public Vector3 GetCoordinates(){
 		return new Vector3 (x, y, z);
 	}
 
-	public Cell getCell(){
+	public Cell GetCell(){
 		return cell;
 	}
 
-	public void saveParent(Graph parent) {
+	public void SaveParent(Graph parent) {
 		defaultParent = parent;
 	}
 }
