@@ -101,7 +101,7 @@ public class SelectionToolHandler : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		//print(other.gameObject.name);
-		if (other.GetComponentInChildren<Renderer> ().material.color != null) {
+		if (other.GetComponentInChildren<Renderer> ().material.color != null && other.gameObject.GetComponent<GraphPoint>() != null) {
 			other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
 			other.gameObject.GetComponent<GraphPoint> ().setSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
 			other.gameObject.GetComponent<GraphPoint> ().setSelected (true); //makes pointer highlighting work
