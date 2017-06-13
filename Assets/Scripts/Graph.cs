@@ -7,6 +7,7 @@ using System.IO;
 public class Graph : MonoBehaviour
 	{
 	public GraphPoint graphpoint;
+    public SelectionToolHandler selectionToolHandler;
 
 	private GraphPoint newGraphpoint;
 	private List<GraphPoint> points;
@@ -103,6 +104,7 @@ public class Graph : MonoBehaviour
 	}
 
     public void ResetGraph() {
+        selectionToolHandler.CancelSelection();
 		transform.position = defaultPos;
 		transform.localScale = defaultScale;
         foreach (GraphPoint point in points)

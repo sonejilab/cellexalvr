@@ -17,7 +17,7 @@ public class SimHeatmapGenerator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// selectionToolHandler = graph.GetComponent<SelectionToolHandler>();
-        ght = new GenerateHeatmapThread();
+        ght = new GenerateHeatmapThread(null);
         t = null;
         running = false;
     }

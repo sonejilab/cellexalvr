@@ -17,7 +17,7 @@ public class Heatmap : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		containedCells = new Dictionary<Cell, Color> ();
-        ArrayList cells = selectionToolHandler.getLastSelection();
+        ArrayList cells = selectionToolHandler.GetLastSelection();
         foreach (GraphPoint g in cells)
         {
             containedCells[g.GetCell()] = g.GetMaterial().color;

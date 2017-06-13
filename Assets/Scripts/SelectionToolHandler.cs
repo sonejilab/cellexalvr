@@ -31,7 +31,7 @@ public class SelectionToolHandler : MonoBehaviour {
     ArrayList selectedCells = new ArrayList();
     ArrayList lastSelectedCells = new ArrayList();
 
-    public static int fileCreationCtr = 0;
+    public int fileCreationCtr = 0;
 
     Color[] colors;
     int currentColorIndex = 0;
@@ -164,6 +164,8 @@ public class SelectionToolHandler : MonoBehaviour {
         DumpData();
         // clear the list since we are done with it
         // ?
+
+        lastSelectedCells.Clear(); 
         foreach (Collider c in selectedCells)
         {
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
@@ -174,7 +176,7 @@ public class SelectionToolHandler : MonoBehaviour {
         selectionConfirmed = true;
     }
 
-    public ArrayList getLastSelection()
+    public ArrayList GetLastSelection()
     {
         return lastSelectedCells;
     }
@@ -185,6 +187,12 @@ public class SelectionToolHandler : MonoBehaviour {
         {
             other.GetComponentInChildren<Renderer>().material.color = Color.white;
         }
+        selectedCells.Clear();
+        selectionMade = false;
+    }
+
+    public void clearSelection()
+    {
         selectedCells.Clear();
         selectionMade = false;
     }
@@ -281,7 +289,7 @@ public class SelectionToolHandler : MonoBehaviour {
 		// print ("In selection state: " + inSelectionState.ToString());
 		// print ("Selection made: " + selectionMade.ToString());
 		if (inSelectionState && selectionMade) {
-			CancelSelection ();
+		    CancelSelection ();
 		} else if (inSelectionState) {
 			//planePicker.cyclePlanes ();
 			HideSelectionTool ();

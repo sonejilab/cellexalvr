@@ -64,6 +64,7 @@ latest_version <- args[2]
 
 expression_data_filepath <- file.path(homedir, "Assets","Scripts","R","gedata.RData")
 group_selection_filepath <- file.path(homedir, "Assets","Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
+print(group_selection_filepath)
 generated_image_filepath <- file.path(homedir, "Assets","Images","heatmap.png")
 top_genes_number <- 250
 make.heatmap.multigrp.anova(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)
