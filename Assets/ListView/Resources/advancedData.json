@@ -1,0 +1,112 @@
+﻿[
+    {
+        "title": "Characters",
+		"template": "AdvancedItem",
+        "children": [
+            {
+                "title": "Player",
+				"model": "Player",
+				"template": "AdvancedItemChild",
+				"description": "It's the player.
+He's a player"
+            }
+        ]
+    },
+    {
+        "title": "Props",
+		"template": "AdvancedItem",
+        "children": [
+           {
+                "title": "Arches",
+				"model": "Arches",
+				"template": "AdvancedItemChild",
+				"description": "Some child's toys strewn about"
+            },
+			{
+                "title": "Blox",
+				"model": "Blox",
+				"template": "AdvancedItemChild",
+				"description": "More toys.
+These are off-brand interlocking blocks."
+            },
+			{
+                "title": "Clock",
+				"model": "Clock",
+				"template": "AdvancedItemChild",
+				"description": "A creepy Dali alarm clock"
+            }
+		]
+    },
+	{
+        "title": "Environment",
+		"template": "AdvancedItem",
+        "children": [
+            {
+                "title": "Room",
+				"model": "Room",
+				"template": "AdvancedItemChild",
+				"description": "This is where the game takes place.
+It is made of two objects."
+            },
+            {
+                "title": "Stool",
+				"model": "Stool",
+				"template": "AdvancedItemChild",
+				"description": "A stool for sitting"
+            },
+            {
+                "title": "Drawers",
+				"model": "Drawers",
+				"template": "AdvancedItemChild",
+				"description": "Just a chest of drawers"
+            },
+			{
+                "title": "Dollhouse",
+				"model": "Dollhouse",
+				"template": "AdvancedItemChild",
+				"description": "A creepy old dollhouse.
+I wonder what lurks within!"
+            }
+        ]
+    },
+    {
+        "title": "Enemies",
+		"template": "AdvancedItem",
+        "children": [
+            {
+                "title": "Hellephant",
+				"model": "Hellephant",
+				"template": "AdvancedItemChild",
+				"description": "An elephant
+... from HELL!",
+            },
+            {
+                "title": "ZomBear",
+				"model": "ZomBear",
+				"template": "AdvancedItemChild",
+				"description": "Lions and tigers and zombies
+Oh my!"
+            },
+            {
+                "title": "Zombunny",
+				"model": "Zombunny",
+				"template": "AdvancedItemChild",
+				"description": "Zombie bunny
+Less cute and cuddly than the original"
+            }
+        ]
+    },
+    {
+        "title": "Weapons",
+		"template": "AdvancedItem",
+		"children":[
+			{
+				"title":"Gun",
+				"model":"Gun",
+				"template": "AdvancedItemChild",
+				"description": "A gun.
+How unoriginal."
+			}
+		]
+    }
+]

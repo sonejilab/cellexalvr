@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlanePicker : MonoBehaviour {
@@ -25,7 +23,7 @@ public class PlanePicker : MonoBehaviour {
 				planes [i].SetActive (true);
 			} else {
 				planes [i].SetActive (false);
-			} 
+			}
 		}
 	}
 

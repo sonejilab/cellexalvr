@@ -22,7 +22,7 @@ namespace VRTK.SecondaryControllerGrabActions
 				float distance = Vector3.Distance (leftController.transform.position, rightController.transform.position);
 				startingScale *= distance / startingDist;
 				grabbedObject.GetComponent<Graph> ().transform.localScale = startingScale;
-			
+
 		}
 //		protected override void CreateJoint(GameObject obj)
 //		{

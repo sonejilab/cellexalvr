@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using UnityEngine;
 
 /// <summary>
 /// This class runs R code from a file using the console.
@@ -10,7 +9,7 @@ public class RScriptRunner
 {
     /// <summary>
     /// Runs an R script from a file using Rscript.exe.
-    /// Example:  
+    /// Example:
     ///   RScriptRunner.RunFromCmd(curDirectory + @"\ImageClustering.r", "rscript.exe", curDirectory.Replace('\\','/'));
     /// Getting args passed from C# using R:
     ///   args = commandArgs(trailingOnly = TRUE)

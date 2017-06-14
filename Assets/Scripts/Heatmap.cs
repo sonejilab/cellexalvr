@@ -1,7 +1,5 @@
-﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class Heatmap : MonoBehaviour {
@@ -35,7 +33,7 @@ public class Heatmap : MonoBehaviour {
 					//print ("found cell");
 					gp.GetComponent<Renderer> ().material.color = containedCells [gp.GetCell ()];
 				}
-				
+
 			}
 		}
 	}

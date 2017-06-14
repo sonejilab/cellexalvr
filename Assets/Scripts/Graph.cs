@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
-using System.IO;
 
 public class Graph : MonoBehaviour
 	{
@@ -67,7 +65,7 @@ public class Graph : MonoBehaviour
         diffCoordValues = maxCoordValues - minCoordValues;
 
     }
-		
+
 
 	public void ColorGraphByGene(string geneName){
 		foreach (GraphPoint point in points) {
@@ -76,7 +74,7 @@ public class Graph : MonoBehaviour
 	}
 
 	public List<List<GraphPoint>> GetGroups(){
-		
+
 		List<Color> colors = new List<Color>();
 		List<List<GraphPoint>> groups = new List<List<GraphPoint>> ();
 
@@ -151,5 +149,5 @@ public class Graph : MonoBehaviour
 		Vector3 newCenter = Vector3.Lerp (minCoordValues, maxCoordValues, (minCoordValues - maxCoordValues).magnitude / 2);
 		transform.position = newCenter;
 	}
-		
+
 }

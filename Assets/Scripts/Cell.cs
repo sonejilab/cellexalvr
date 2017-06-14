@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Cell {
 	private string labelString;
 	private Dictionary<string, int> geneExpressions;

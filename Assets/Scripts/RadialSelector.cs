@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RadialSelector : MonoBehaviour {
@@ -33,7 +31,7 @@ public class RadialSelector : MonoBehaviour {
         // keyboard.SetActive (false);
         pointerActive = !pointerActive;
         singleSelect.enabled = pointerActive;
-        
+
         // singleSelect.Toggle(pointerActive, pointerActive);
 		/* if (singleSelect.enabled) {
 			manager.destroyRigidbodies ();

@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GraphPoint : MonoBehaviour
@@ -32,7 +30,7 @@ public class GraphPoint : MonoBehaviour
     public string GetLabel() {
 		return cell.Label;
 	}
-		
+
 	public bool IsSelected() {
 		return selected;
 	}
