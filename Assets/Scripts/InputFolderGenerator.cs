@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
@@ -27,10 +25,11 @@ void Start () {
 		//ameObject newFolder = Instantiate(folderPrefab, folderPosition, Quaternion.identity);
 		//newFolder.transform.Rotate(0f, i*360/directories.Length, -40f);
 		GameObject newFolder = Instantiate(folderPrefab, new Vector3((float)Math.Cos(folderAngle), 1.0f, (float)Math.Sin(folderAngle)), Quaternion.identity);
-		newFolder.transform.LookAt(transform);
-		newFolder.transform.Rotate(0, -90f, -10f);
-		folderAngle += 360 / directories.Length;
+		newFolder.GetComponentInChildren<CellsInBox>().SetDirectory(directory);
 		newFolder.transform.parent = transform;
+		newFolder.transform.LookAt(transform);
+		newFolder.transform.Rotate(0, -90f, 0f);
+		folderAngle += 360 / directories.Length;
 		int forwardSlashIndex = directory.LastIndexOf('/');
 		int backwardSlashIndex = directory.LastIndexOf('\\');
 		string croppedDirectoryName;

@@ -12,7 +12,7 @@ public GraphManager graphManager;
 public CellManager cellManager;
 
 void Start() {
-	ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\testfiles");
+	//ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\testfiles");
 	/* graphManager.SetActiveGraph (0);
 	   graphManager.CreateGraph (0);
 	   ReadFile (CellCoordinatesFileName);
@@ -35,7 +35,7 @@ public void ReadFolder(string path) {
 		ReadMDSFile(file, geneexprFiles[0]);
 		i++;
 	}
-	graphManager.MoveGraphs ();
+	graphManager.SetGraphStartPosition ();
 }
 
 public void ReadMDSFile(string mdsFilename, string geneexprFilename) {
