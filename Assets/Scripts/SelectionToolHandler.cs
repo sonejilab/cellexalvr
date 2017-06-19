@@ -94,7 +94,7 @@ void FindGrabbedHeatMap() {
 }
 
 void OnTriggerEnter(Collider other) {
-	//print(other.gameObject.name);
+	print(other.gameObject.name);
 	if (other.gameObject.GetComponent<GraphPoint>() != null) {
 		other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
 		other.gameObject.GetComponent<GraphPoint> ().SetSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));

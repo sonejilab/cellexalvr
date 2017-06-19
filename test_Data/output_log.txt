@@ -19,7 +19,7 @@ Platform assembly: C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\UnityE
 Loading C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\UnityEngine.VR.dll (this message is harmless)
 Loading C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\UnityEngine.VR.dll into Unity Child Domain
-- Completed reload, in  0.110 seconds
+- Completed reload, in  0.156 seconds
 Platform assembly: C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\System.dll (this message is harmless)
 <RI> Initializing input.
@@ -27,571 +27,103 @@ Platform assembly: C:\Users\vrproject\Documents\vrJeans\test_Data\Managed\System
 desktop: 1920x1200 59Hz; virtual: 3840x1200 at -1920,0
 <RI> Initialized touch support.
 OpenVR initialized!
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF68353EC90 (test) 
-0x00007FF68353F264 (test) 
-0x00007FF68352E057 (test) 
-0x00007FF683537F94 (test) 
-0x00007FF683538030 (test) 
-0x00007FF683444CB8 (test) 
-0x00007FF682C8F145 (test) 
-0x00007FF68362C00C (test) 
+0x00007FF6ED2A1074 (test) 
+0x00007FF6ED2A2C4F (test) 
+0x00007FF6ED16DFBD (test) 
+0x00007FF6ECDD0A16 (test) 
+0x00007FF6ECDD0E6C (test) 
+0x00007FF6ED24EC90 (test) 
+0x00007FF6ED24F264 (test) 
+0x00007FF6ED23E057 (test) 
+0x00007FF6ED247F94 (test) 
+0x00007FF6ED248030 (test) 
+0x00007FF6ED154CB8 (test) 
+0x00007FF6EC99F145 (test) 
+0x00007FF6ED33C00C (test) 
 0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
 0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
  
 (Filename:  Line: 424)
 
-UnloadTime: 0.421301 ms
+UnloadTime: 0.567185 ms
 Connected to lighthouse:LHR-86D668C4
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683401D34 (test) 
-0x00000000059809B8 (Mono JIT Code) (wrapper managed-to-native) UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,string,UnityEngine.Object)
-0x00000000059808BC (Mono JIT Code) UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-0x000000000598064C (Mono JIT Code) UnityEngine.Logger:Log (UnityEngine.LogType,object)
-0x0000000005980400 (Mono JIT Code) UnityEngine.Debug:Log (object)
-0x0000000005978E63 (Mono JIT Code) SteamVR:.ctor ()
-0x000000000597880C (Mono JIT Code) SteamVR:CreateInstance ()
-0x00000000059784E6 (Mono JIT Code) SteamVR:get_instance ()
-0x0000000005977F80 (Mono JIT Code) SteamVR_Camera:OnEnable ()
-0x0000000005952BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
-0x00007FF850C65737 (mono) mono_set_defaults
-0x00007FF850BB8435 (mono) mono_runtime_invoke
-0x00007FF68324FEE4 (test) 
-0x00007FF68324B1BA (test) 
-0x00007FF683450B47 (test) 
-0x00007FF683453F39 (test) 
-0x00007FF6834540F0 (test) 
-0x00007FF6830D9F89 (test) 
-0x00007FF6830DA157 (test) 
-0x00007FF6830E1D38 (test) 
-0x00007FF682EA5996 (test) 
-0x00007FF683400A7F (test) 
-0x00000000059690BB (Mono JIT Code) (wrapper managed-to-native) UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
-0x0000000005969005 (Mono JIT Code) UnityEngine.GameObject:AddComponent (System.Type)
-0x0000000005968F31 (Mono JIT Code) UnityEngine.GameObject:AddComponent<object> ()
-0x0000000005975FD8 (Mono JIT Code) SteamVR_Camera:ForceLast ()
-0x00000000059759B2 (Mono JIT Code) SteamVR_Camera:Awake ()
-0x0000000005952BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
-0x00007FF850C65737 (mono) mono_set_defaults
-0x00007FF850BB8435 (mono) mono_runtime_invoke
-0x00007FF68324FEE4 (test) 
-0x00007FF68324B1BA (test) 
-0x00007FF68324C1CE (test) 
-0x00007FF683450472 (test) 
-0x00007FF683450DA5 (test) 
-0x00007FF683453EF8 (test) 
-0x00007FF6834515D2 (test) 
-0x00007FF683259075 (test) 
-0x00007FF68325A897 (test) 
-0x00007FF68323E658 (test) 
-0x00007FF68324177D (test) 
-0x00007FF683241A7E (test) 
-0x00007FF68324077C (test) 
-0x00007FF683240A2D (test) 
-0x00007FF6830E43DB (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
+0x00007FF6ED2A1074 (test) 
+0x00007FF6ED2A2C4F (test) 
+0x00007FF6ED16DFBD (test) 
+0x00007FF6ECDD0A16 (test) 
+0x00007FF6ECDD0E6C (test) 
+0x00007FF6ED111D34 (test) 
+0x00000000052609C8 (Mono JIT Code) (wrapper managed-to-native) UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,string,UnityEngine.Object)
+0x00000000052608CC (Mono JIT Code) UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+0x000000000526065C (Mono JIT Code) UnityEngine.Logger:Log (UnityEngine.LogType,object)
+0x0000000005260410 (Mono JIT Code) UnityEngine.Debug:Log (object)
+0x0000000005258E73 (Mono JIT Code) SteamVR:.ctor ()
+0x000000000525881C (Mono JIT Code) SteamVR:CreateInstance ()
+0x00000000052584F6 (Mono JIT Code) SteamVR:get_instance ()
+0x0000000005257F90 (Mono JIT Code) SteamVR_Camera:OnEnable ()
+0x0000000005232BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
+0x00007FF84AF55737 (mono) mono_set_defaults
+0x00007FF84AEA8435 (mono) mono_runtime_invoke
+0x00007FF6ECF5FEE4 (test) 
+0x00007FF6ECF5B1BA (test) 
+0x00007FF6ED160B47 (test) 
+0x00007FF6ED163F39 (test) 
+0x00007FF6ED1640F0 (test) 
+0x00007FF6ECDE9F89 (test) 
+0x00007FF6ECDEA157 (test) 
+0x00007FF6ECDF1D38 (test) 
+0x00007FF6ECBB5996 (test) 
+0x00007FF6ED110A7F (test) 
+0x00000000052490CB (Mono JIT Code) (wrapper managed-to-native) UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+0x0000000005249015 (Mono JIT Code) UnityEngine.GameObject:AddComponent (System.Type)
+0x0000000005248F41 (Mono JIT Code) UnityEngine.GameObject:AddComponent<object> ()
+0x0000000005255FE8 (Mono JIT Code) SteamVR_Camera:ForceLast ()
+0x00000000052559C2 (Mono JIT Code) SteamVR_Camera:Awake ()
+0x0000000005232BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
+0x00007FF84AF55737 (mono) mono_set_defaults
+0x00007FF84AEA8435 (mono) mono_runtime_invoke
+0x00007FF6ECF5FEE4 (test) 
+0x00007FF6ECF5B1BA (test) 
+0x00007FF6ECF5C1CE (test) 
+0x00007FF6ED160472 (test) 
+0x00007FF6ED160DA5 (test) 
+0x00007FF6ED163EF8 (test) 
+0x00007FF6ED1615D2 (test) 
+0x00007FF6ECF69075 (test) 
+0x00007FF6ECF6A897 (test) 
+0x00007FF6ECF4E658 (test) 
+0x00007FF6ECF5177D (test) 
+0x00007FF6ECF51A7E (test) 
+0x00007FF6ECF5077C (test) 
+0x00007FF6ECF50A2D (test) 
+0x00007FF6ECDF43DB (test) 
+0x00007FF6EC98B64B (test) 
+0x00007FF6EC98B83A (test) 
+0x00007FF6EC99F3A9 (test) 
+0x00007FF6ED33C00C (test) 
 0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
 0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 1"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 2"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 3"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 4"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/floor"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/lid"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 1"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 2"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 3"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 4"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/floor"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/lid"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 1"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 2"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 3"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/wall 4"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/floor"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
-BoxColliders does not support negative scale or size.
-The effective box size has been forced positive and is likely to give unexpected collision geometry.
-If you absolutely need to use negative scaling you can use the convex MeshCollider. Scene hierarchy path "InputFolderList/FolderBoxPrefab(Clone)/lid"
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF683331013 (test) 
-0x00007FF682EA3F4C (test) 
-0x00007FF682EA46CF (test) 
-0x00007FF6830E4532 (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 0)
-
 Setting up 4 worker threads for Enlighten.
-  Thread -> id: 1d14 -> priority: 1 
-  Thread -> id: 1d20 -> priority: 1 
-  Thread -> id: 24e0 -> priority: 1 
-  Thread -> id: 3288 -> priority: 1 
-Can't add component 'Rigidbody' to lid because such a component is already added to the game object!
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF682EA59FF (test) 
-0x00007FF683400A7F (test) 
-0x00000000059690BB (Mono JIT Code) (wrapper managed-to-native) UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
-0x0000000005969005 (Mono JIT Code) UnityEngine.GameObject:AddComponent (System.Type)
-0x0000000005968F31 (Mono JIT Code) UnityEngine.GameObject:AddComponent<object> ()
-0x00000000059B8CED (Mono JIT Code) CellsInBoxController:Update ()
-0x0000000005952BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
-0x00007FF850C65737 (mono) mono_set_defaults
-0x00007FF850BB8435 (mono) mono_runtime_invoke
-0x00007FF68324FEE4 (test) 
-0x00007FF68324B1BA (test) 
-0x00007FF683450B47 (test) 
-0x00007FF683453A55 (test) 
-0x00007FF682EC68FF (test) 
-0x00007FF6830E460B (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 97)
-
-Can't add component 'Rigidbody' to lid because such a component is already added to the game object!
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF682EA59FF (test) 
-0x00007FF683400A7F (test) 
-0x00000000059690BB (Mono JIT Code) (wrapper managed-to-native) UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
-0x0000000005969005 (Mono JIT Code) UnityEngine.GameObject:AddComponent (System.Type)
-0x0000000005968F31 (Mono JIT Code) UnityEngine.GameObject:AddComponent<object> ()
-0x00000000059B8CED (Mono JIT Code) CellsInBoxController:Update ()
-0x0000000005952BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
-0x00007FF850C65737 (mono) mono_set_defaults
-0x00007FF850BB8435 (mono) mono_runtime_invoke
-0x00007FF68324FEE4 (test) 
-0x00007FF68324B1BA (test) 
-0x00007FF683450B47 (test) 
-0x00007FF683453A55 (test) 
-0x00007FF682EC68FF (test) 
-0x00007FF6830E460B (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 97)
-
-Can't add component 'Rigidbody' to lid because such a component is already added to the game object!
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF682EA59FF (test) 
-0x00007FF683400A7F (test) 
-0x00000000059690BB (Mono JIT Code) (wrapper managed-to-native) UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
-0x0000000005969005 (Mono JIT Code) UnityEngine.GameObject:AddComponent (System.Type)
-0x0000000005968F31 (Mono JIT Code) UnityEngine.GameObject:AddComponent<object> ()
-0x00000000059B8CED (Mono JIT Code) CellsInBoxController:Update ()
-0x0000000005952BFB (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
-0x00007FF850C65737 (mono) mono_set_defaults
-0x00007FF850BB8435 (mono) mono_runtime_invoke
-0x00007FF68324FEE4 (test) 
-0x00007FF68324B1BA (test) 
-0x00007FF683450B47 (test) 
-0x00007FF683453A55 (test) 
-0x00007FF682EC68FF (test) 
-0x00007FF6830E460B (test) 
-0x00007FF682C7B64B (test) 
-0x00007FF682C7B83A (test) 
-0x00007FF682C8F3A9 (test) 
-0x00007FF68362C00C (test) 
-0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
-0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
- 
-(Filename:  Line: 97)
-
+  Thread -> id: 3b58 -> priority: 1 
+  Thread -> id: 4bac -> priority: 1 
+  Thread -> id: 2740 -> priority: 1 
+  Thread -> id: 4be0 -> priority: 1 
 OpenVR Shutdown
-0x00007FF683591074 (test) 
-0x00007FF683592C4F (test) 
-0x00007FF68345DFBD (test) 
-0x00007FF6830C0A16 (test) 
-0x00007FF6830C0E6C (test) 
-0x00007FF68353D3C7 (test) 
-0x00007FF68352C466 (test) 
-0x00007FF682EDBE60 (test) 
-0x00007FF682F67DDF (test) 
-0x00007FF682F68A5F (test) 
-0x00007FF682F4F12A (test) 
-0x00007FF6832FD20C (test) 
+0x00007FF6ED2A1074 (test) 
+0x00007FF6ED2A2C4F (test) 
+0x00007FF6ED16DFBD (test) 
+0x00007FF6ECDD0A16 (test) 
+0x00007FF6ECDD0E6C (test) 
+0x00007FF6ED24D3C7 (test) 
+0x00007FF6ED23C466 (test) 
+0x00007FF6ECBEBE60 (test) 
+0x00007FF6ECC77DDF (test) 
+0x00007FF6ECC78A5F (test) 
+0x00007FF6ECC5F12A (test) 
+0x00007FF6ED00D20C (test) 
 0x00007FF872FB2774 (KERNEL32) BaseThreadInitThunk
 0x00007FF875AB0D61 (ntdll) RtlUserThreadStart
  

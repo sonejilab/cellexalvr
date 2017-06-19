@@ -25,7 +25,7 @@ void Start () {
 		//ameObject newFolder = Instantiate(folderPrefab, folderPosition, Quaternion.identity);
 		//newFolder.transform.Rotate(0f, i*360/directories.Length, -40f);
 		GameObject newFolder = Instantiate(folderPrefab, new Vector3((float)Math.Cos(folderAngle), 1.0f, (float)Math.Sin(folderAngle)), Quaternion.identity);
-		newFolder.GetComponentInChildren<CellsInBox>().SetDirectory(directory);
+		newFolder.GetComponentInChildren<CellsToLoad>().SetDirectory(directory);
 		newFolder.transform.parent = transform;
 		newFolder.transform.LookAt(transform);
 		newFolder.transform.Rotate(0, -90f, 0f);
