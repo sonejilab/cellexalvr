@@ -1,43 +1,18 @@
 ﻿using System.Collections.Generic;
-
 using UnityEngine;
-public class GraphManager : MonoBehaviour
-{
 
+public class GraphManager : MonoBehaviour {
+
+public CellManager cellManager;
 public Graph graphPrefab;
 public AudioSource goodSound;
 public AudioSource badSound;
 private Graph[] graphs;
 private int activeGraph = 0;
 private List<Graph> graphClones;
-public CellManager cellManager;
-/*private Vector3[] startPosition;
-   private Vector3[] finalPosition;
-   private bool moving = false;
-   private float currentTime;
-   private float arrivalTime;*/
-//private float movingTime;
 
 void Awake () {
-	//cells = new Dictionary<string, Cell>();
 	graphs = new Graph[2];
-	// startPosition = new Vector3[2];
-	// finalPosition = new Vector3[2];
-
-}
-
-void Update() {
-	/* if (moving) {
-	    for (int i = 0; i < graphs.Length; i++) {
-	        graphs[i].transform.position = Vector3.Lerp(startPosition[i], finalPosition[i], currentTime / arrivalTime);
-
-	    }
-	    currentTime += Time.deltaTime;
-	    if (currentTime > arrivalTime) {
-	        moving = false;
-	    }
-
-	   }*/
 }
 
 public void SetActiveGraph(int i) {
@@ -50,18 +25,8 @@ public void SetGraphStartPosition() {
 	graphs [1].transform.position = new Vector3 (-.456f, .5f, -0.119f);
 }
 
-/*public void MoveGraphs(Vector3 direction, float time) {
-    moving = true;
-    currentTime = 0;
-    arrivalTime = time;
-    for (int i = 0; i < graphs.Length; i++) {
-        startPosition[i] = graphs[i].transform.position;
-        finalPosition[i] = graphs[i].transform.position + direction;
-    }
-   }*/
-
 public void CreateGraph(int i) {
-	//graphs[i] = Instantiate (graphPrefab);
+	// more hardcoded values
 	if (i == 0) {
 		graphs[0] = Instantiate (graphPrefab, new Vector3(0.686f, .5f, -0.157f), Quaternion.identity);
 	} else if (i == 1) {
@@ -69,7 +34,6 @@ public void CreateGraph(int i) {
 	}
 	graphs[i].gameObject.SetActive (true);
 	graphs[i].transform.parent = this.transform;
-	// more hardcoded values
 	graphClones = new List<Graph> ();
 }
 

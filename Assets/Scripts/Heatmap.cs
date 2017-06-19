@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class Heatmap : MonoBehaviour {
 
-Dictionary<Cell, Color> containedCells;
-private CellManager cellManager;
+public Texture texture;
+public GameObject heatBoard;
+private Dictionary<Cell, Color> containedCells;
 private GraphManager graphManager;
 private SelectionToolHandler selectionToolHandler;
-
-// private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-// private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
 
 // Use this for initialization
 void Start () {
@@ -22,14 +21,19 @@ void Start () {
 	selectionToolHandler.HeatmapCreated();
 }
 
+public void UpdateImage(string filepath) {
+	byte[] fileData = File.ReadAllBytes(filepath);
+	Texture2D tex = new Texture2D(2, 2);
+	tex.LoadImage(fileData);
+	GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
+}
+
 public void ColorCells() {
 	Graph[] graphs = graphManager.GetComponentsInChildren<Graph> ();
 	foreach (Graph g in graphs) {
 		GraphPoint[] points = g.GetComponentsInChildren<GraphPoint> ();
-		// print ("found graphoints " + points.ToString());
 		foreach (GraphPoint gp in points) {
 			if (containedCells.ContainsKey (gp.GetCell ())) {
-				//print ("found cell");
 				gp.GetComponent<Renderer> ().material.color = containedCells [gp.GetCell ()];
 			}
 
@@ -37,8 +41,7 @@ public void ColorCells() {
 	}
 }
 
-public void SetVars(CellManager cellManager, GraphManager graphManager, SelectionToolHandler selectionToolHandler) {
-	this.cellManager = cellManager;
+public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler) {
 	this.graphManager = graphManager;
 	this.selectionToolHandler = selectionToolHandler;
 }

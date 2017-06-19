@@ -12,12 +12,10 @@ private Vector3 maxCoordValues;
 private Vector3 minCoordValues;
 private Vector3 diffCoordValues;
 private Vector3 minAreaValues;
-// private Vector3 maxAreaValues;
 private Vector3 areaSize;
 private Vector3 defaultPos;
 private Vector3 defaultScale;
 void Start () {
-	//points = new ArrayList();
 	defaultPos = transform.position;
 }
 
@@ -26,10 +24,7 @@ void Awake() {
 	points = new List<GraphPoint>();
 	// Grabs the location and size of the graphArea.
 	minAreaValues = this.GetComponent<Renderer>().bounds.min;
-	// maxAreaValues = this.GetComponent<Renderer> ().bounds.max;
 	areaSize = this.GetComponent<Renderer> ().bounds.size;
-	// graphpoint.gameObject.SetActive(false);
-
 }
 
 public void AddGraphPoint(Cell cell, float x, float y, float z) {
@@ -46,10 +41,8 @@ public void AddGraphPoint(Cell cell, float x, float y, float z) {
 	newGraphpoint = Instantiate(graphpoint, new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
 	newGraphpoint.gameObject.SetActive (true);
 	newGraphpoint.SetCoordinates (cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
-
 	newGraphpoint.transform.SetParent(this.transform);
 	newGraphpoint.SaveParent (this);
-
 	points.Add(newGraphpoint);
 
 	defaultScale = transform.localScale;
@@ -86,12 +79,6 @@ public List<List<GraphPoint> > GetGroups() {
 		(groups [groupIndex]).Add (p);
 	}
 
-	// Debug for Testing
-//		Debug.Log("Nbr of colors: " + colors.Count);
-//		Debug.Log("Color #0: " + colors[0]);
-//		Debug.Log("Nbr of points in group #0: " + (groups[0]).Count);
-//		Debug.Log("Nbr of points in group #1: " + (groups[1]).Count);
-
 	return groups;
 
 }
@@ -109,9 +96,7 @@ public void ResetGraph() {
 	}
 }
 
-/**
- * Makes scaling of sub-graphs work better
- **/
+// Makes scaling of sub-graphs work better
 public void LimitGraphArea(ArrayList points) {
 	maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = -1000000.0f;
 	minCoordValues.x = minCoordValues.y = minCoordValues.z = 1000000.0f;

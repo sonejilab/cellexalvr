@@ -5,32 +5,18 @@ using System.IO;
 // A classs for reading a data file and creating GraphPoints at the correct locations
 public class InputReader : MonoBehaviour {
 
-// public string CellCoordinatesFileName;
-// public string SecondCellCoordinatesFileName;
-// public string GeneExpressionFileName;
-//public string GeneExpressionFileName;
 public GraphManager graphManager;
 public CellManager cellManager;
 public LoaderController loaderController;
-
-void Start() {
-	//ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\testfiles");
-	/* graphManager.SetActiveGraph (0);
-	   graphManager.CreateGraph (0);
-	   ReadFile (CellCoordinatesFileName);
-	   graphManager.SetActiveGraph (1);
-	   graphManager.CreateGraph (1);
-	   ReadFile (SecondCellCoordinatesFileName);
-	   graphManager.MoveGraphs ();*/
-}
-
 public void ReadFolder(string path) {
 	string[] geneexprFiles = Directory.GetFiles(path, "*.expr");
+
 	if (geneexprFiles.Length != 1) {
 		throw new System.InvalidOperationException("There must be exactly one gene expression data file");
 	}
+
 	string[] mdsFiles = Directory.GetFiles(path, "*.mds");
-	StartCoroutine(readMDSFiles(mdsFiles, geneexprFiles[0], 25));
+	StartCoroutine(ReadMDSFiles(mdsFiles, geneexprFiles[0], 25));
 
 	// clear the runtimeGroups
 	string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
@@ -40,17 +26,17 @@ public void ReadFolder(string path) {
 
 }
 
-IEnumerator readMDSFiles(string[] mdsFiles, string geneexprFilename, int itemsPerFrame) {
+IEnumerator ReadMDSFiles(string[] mdsFiles, string geneexprFilename, int itemsPerFrame) {
 	int fileIndex = 0;
 	foreach (string file in mdsFiles) {
 		graphManager.CreateGraph(fileIndex);
 		graphManager.SetActiveGraph(fileIndex);
+
 		// put each line into an array
 		string[] lines = System.IO.File.ReadAllLines(file);
 		string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
-
 		UpdateMinMax(lines);
-		//print("coroutine");
+
 		for (int i = 0; i < lines.Length; i += itemsPerFrame) {
 			for (int j = i; j < i + itemsPerFrame && j < lines.Length; ++j) {
 				string line = lines[j];
@@ -59,9 +45,10 @@ IEnumerator readMDSFiles(string[] mdsFiles, string geneexprFilename, int itemsPe
 				graphManager.AddCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
 			}
 			yield return new WaitForEndOfFrame();
-			// print("yielded " + i + " " + fileIndex);
 		}
+
 		string[] cellNames = geneLines[0].Split('\t');
+
 		// process each gene and its expression values
 		for (int i = 1; i < geneLines.Length; i++) {
 			string[] words = geneLines[i].Split('\t');
@@ -90,9 +77,6 @@ IEnumerator readMDSFiles(string[] mdsFiles, string geneexprFilename, int itemsPe
 					binIndex--;
 				}
 				cellManager.SetGeneExpression(cellNames[k - 1], geneName, binIndex);
-
-				//
-
 			}
 		}
 		fileIndex++;

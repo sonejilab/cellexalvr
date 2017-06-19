@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-
 using VRTK;
 
 public class SelectionToolHandler : MonoBehaviour {
@@ -25,27 +24,22 @@ public Sprite ddrtreeButton;
 public Sprite tsneButton;
 public SteamVR_TrackedController right;
 public SteamVR_TrackedController left;
-ArrayList selectedCells = new ArrayList();
-ArrayList lastSelectedCells = new ArrayList();
-public int fileCreationCtr = 0;
-
-Color[] colors;
-int currentColorIndex = 0;
-Color selectedColor;
-PlanePicker planePicker;
-
-List<RadialMenuButton> buttons;
-bool inSelectionState = false;
-bool selectionMade = false;
 public bool selectionConfirmed = false;
 public ushort hapticIntensity = 2000;
-GameObject leftController;
 public bool heatmapGrabbed = false;
-GameObject grabbedObject;
+public int fileCreationCtr = 0;
+private ArrayList selectedCells = new ArrayList();
+private ArrayList lastSelectedCells = new ArrayList();
+private Color[] colors;
+private int currentColorIndex = 0;
+private Color selectedColor;
+private PlanePicker planePicker;
+private List<RadialMenuButton> buttons;
+private bool inSelectionState = false;
+private bool selectionMade = false;
+private GameObject leftController;
+private GameObject grabbedObject;
 private bool heatmapCreated = true;
-
-//private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
-//private SteamVR_TrackedObject trackedObj;
 
 void Awake () {
 	colors = new Color[10];
@@ -55,19 +49,16 @@ void Awake () {
 	colors [3] = new Color (1, 0, 1);     // magenta
 	colors [4] = new Color (1f, 153f/255f, 204f/255f);     // pink
 	colors [5] = new Color (1, 1, 0);     // yellow
-	colors [6] = new Color (0, 0, 1);     // green
+	colors [6] = new Color (0, 1, 0);     // green
 	colors [7] = new Color (.6f, 1, .6f);     // lime green
 	colors [8] = new Color (.4f, .2f, 1);     // brown
 	colors [9] = new Color (1, .6f, .2f);     // orange
 	selectorMaterial.color = colors [0];
 	selectedColor = colors [0];
 
-	//planePicker = GameObject.Find ("PlaneSelectors").GetComponent<PlanePicker> ();
 	HideSelectionTool();
 	buttons = menu.buttons;
 	UpdateButtonIcons();
-	//trackedObj = GetComponent<SteamVR_TrackedObject>();
-
 	leftController = GameObject.Find ("LeftController");
 }
 
@@ -81,10 +72,7 @@ void FindGrabbedHeatMap() {
 		if (grabbedObject.tag == "HeatBoard") {
 			if (!heatmapGrabbed) {
 				heatmapGrabbed = true;
-				//print ("heamap grabbed: " + heatmapGrabbed.ToString ());
 				UpdateButtonIcons ();
-			} else {
-
 			}
 		}
 	} else if (grabbedObject == null && heatmapGrabbed) {
@@ -95,14 +83,16 @@ void FindGrabbedHeatMap() {
 
 void OnTriggerEnter(Collider other) {
 	print(other.gameObject.name);
-	if (other.gameObject.GetComponent<GraphPoint>() != null) {
-		other.GetComponentInChildren<Renderer> ().material.color = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-		other.gameObject.GetComponent<GraphPoint> ().SetSelectedColor (new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f));
-		other.gameObject.GetComponent<GraphPoint> ().SetSelected (true);     //makes pointer highlighting work
+	GraphPoint graphPoint = other.gameObject.GetComponent<GraphPoint>();
+	if (graphPoint == null) {
+		return;
 	}
+	Color transparentColor = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+	graphPoint.gameObject.GetComponent<Renderer> ().material.color = transparentColor;
+	graphPoint.SetSelected(true);
+
 	if (!selectedCells.Contains (other)) {
 		selectedCells.Add (other);
-		//controller.TriggerHapticPulse(500);
 		SteamVR_Controller.Input((int)left.controllerIndex).TriggerHapticPulse(hapticIntensity);
 	}
 	if(!selectionMade) {
@@ -112,8 +102,8 @@ void OnTriggerEnter(Collider other) {
 }
 
 public void SingleSelect(Collider other) {
-	other.GetComponentInChildren<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-	other.gameObject.GetComponent<GraphPoint>().SetSelectedColor(new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f));
+	Color transparentColor = new Color (selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+	other.gameObject.GetComponent<Renderer>().material.color = transparentColor;
 	if (!selectedCells.Contains(other)) {
 		selectedCells.Add(other);
 	}
@@ -130,9 +120,8 @@ public void ConfirmRemove() {
 		other.attachedRigidbody.useGravity = true;
 		other.attachedRigidbody.isKinematic = false;
 		other.isTrigger = false;
-		GetComponent<AudioSource>().Play();     // pop
+		GetComponent<AudioSource>().Play();
 	}
-
 	selectedCells.Clear();
 	selectionMade = false;
 }
@@ -143,16 +132,17 @@ public void ConfirmSelection() {
 	foreach (Collider cell in selectedCells) {
 		GameObject graphpoint = cell.gameObject;
 		graphpoint.transform.parent = newGraph.transform;
-		Color cellColor = cell.gameObject.GetComponent<Renderer>().material.color;     // breaks if no boom before
+		Color cellColor = cell.gameObject.GetComponent<Renderer>().material.color;
 		Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
 		cell.gameObject.GetComponent<Renderer>().material.color = nonTransparentColor;
 	}
+
 	// create .txt file with latest selection
 	DumpData();
-	// clear the list since we are done with it
-	// ?
 
+	// clear the list since we are done with it
 	lastSelectedCells.Clear();
+
 	foreach (Collider c in selectedCells) {
 		lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
 	}
@@ -170,11 +160,6 @@ public void CancelSelection() {
 	foreach (Collider other in selectedCells) {
 		other.GetComponentInChildren<Renderer>().material.color = Color.white;
 	}
-	selectedCells.Clear();
-	selectionMade = false;
-}
-
-public void clearSelection() {
 	selectedCells.Clear();
 	selectionMade = false;
 }
@@ -197,16 +182,11 @@ public void HeatmapCreated() {
 public bool GetHeatmapCreated() {
 	return heatmapCreated;
 }
-/*public void ctrlZ() //currently not used
-   {
-    selectedCells.RemoveAt(selectedCells.Count - 1);
-   }*/
 
 public void DumpData() {
 	using (System.IO.StreamWriter file =
 			   new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt")) {
-		// new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\" + DateTime.Now.ToShortTimeString() + ".txt"))
-		// print ("dumping data");
+
 		foreach (Collider cell in selectedCells) {
 			file.Write(cell.GetComponent<GraphPoint>().GetLabel());
 			file.Write ("\t");
@@ -216,7 +196,6 @@ public void DumpData() {
 			int b = (int)(c.b * 255);
 			file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
 			file.WriteLine ();
-			// print ("wrote " + cell.GetComponent<GraphPoint> ().getLabel () + "\t" + string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
 		}
 		file.Flush ();
 		file.Close ();
@@ -242,12 +221,8 @@ private void HideSelectionTool() {
 }
 
 public void Up() {
-	// print ("up");
-	// print ("In selection state: " + inSelectionState.ToString());
-	// print ("Selection made: " + selectionMade.ToString());
 	if (inSelectionState && selectionMade) {
 		ConfirmSelection ();
-		//planePicker.cyclePlanes ();
 		HideSelectionTool();
 		inSelectionState = false;
 		UpdateButtonIcons ();
@@ -255,17 +230,12 @@ public void Up() {
 }
 
 public void Left() {
-	// print ("left");
-	// print ("In selection state: " + inSelectionState.ToString());
-	// print ("Selection made: " + selectionMade.ToString());
 	if (inSelectionState && selectionMade) {
 		CancelSelection ();
 	} else if (inSelectionState) {
-		//planePicker.cyclePlanes ();
 		HideSelectionTool ();
 		inSelectionState = false;
 	} else {
-		//planePicker.cyclePlanes ();
 		ShowSelectionTool();
 		inSelectionState = true;
 	}
@@ -273,10 +243,6 @@ public void Left() {
 }
 
 public void Down() {
-	// print ("down");
-	// print ("In selection state: " + inSelectionState.ToString());
-	// print ("Selection made: " + selectionMade.ToString());
-
 	if (heatmapGrabbed) {
 		grabbedObject.GetComponent<HeatmapBurner>().BurnHeatmap ();
 	} else if (inSelectionState && selectionMade) {
@@ -288,9 +254,6 @@ public void Down() {
 }
 
 public void Right() {
-	// print ("right");
-	// print ("In selection state: " + inSelectionState.ToString());
-	// print ("Selection made: " + selectionMade.ToString());
 	if (heatmapGrabbed) {
 		grabbedObject.GetComponentInChildren<Heatmap> ().ColorCells ();
 	} else if  (inSelectionState) {
@@ -301,7 +264,6 @@ public void Right() {
 }
 
 public void UpdateButtonIcons() {
-	// print ("UpdateButtonIcons");
 	// in selection state - selection made
 	if (heatmapGrabbed) {
 		buttons [0].ButtonIcon = noButton;
@@ -329,4 +291,5 @@ public void UpdateButtonIcons() {
 	}
 	menu.RegenerateButtons();
 }
+
 }

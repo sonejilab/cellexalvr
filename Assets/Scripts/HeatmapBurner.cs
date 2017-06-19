@@ -6,11 +6,11 @@ public GameObject firePrefab;
 public Material originalMaterial;
 public Material transparentMaterial;
 private GameObject fire;
-private float fadingTime = 0.5f;
+private float fadingSpeed = 0.5f;
 private Renderer rend;
 private Component[] childrenRenderers;
 private bool fadeHeatmap;
-private float t = 0;
+private float fade = 0;
 
 // Use this for initialization
 void Start () {
@@ -26,35 +26,27 @@ void Update () {
 }
 
 public void BurnHeatmap() {
-	//print ("heatmap grabbed & down pressed!");
 	fadeHeatmap = true;
 	Vector3 heatmapScale = transform.localScale;
 	Vector3 heatmapPosition = transform.position;
-	//Vector3 firePosition = new Vector3(heatmapPosition.x, heatmapPosition.y + 2.5f, heatmapPosition.z);
-	//fire = Instantiate(firePrefab, heatmapPosition + new Vector3(0, 5 * heatmapScale.z, 0), transform.rotation);
 	fire = Instantiate (firePrefab, heatmapPosition + new Vector3(0, 5 * heatmapScale.z, 0), new Quaternion(0, 0, 0, 0));
 	fire.transform.localScale = new Vector3(5 * heatmapScale.x, 0.1f, heatmapScale.z);
-	//fire.transform.Rotate(new Vector3(180.0f, 0, 0));
 	fire.transform.Rotate(new Vector3(270.0f, transform.localEulerAngles.y, 0));
-	// fire.SetActive(true);
 	this.GetComponents<AudioSource> () [1].PlayDelayed (10000);
 }
 
 void FadeHeatmap() {
-	//print ("trying to fade out heatmap!");
-	//Material heatmapMaterial = rend.material;
-	rend.material.Lerp(originalMaterial, transparentMaterial, t);
+	rend.material.Lerp(originalMaterial, transparentMaterial, fade);
 	foreach (Renderer rend in childrenRenderers) {
-		rend.material.Lerp(originalMaterial, transparentMaterial, t);
+		rend.material.Lerp(originalMaterial, transparentMaterial, fade);
 	}
-	t = t + fadingTime * Time.deltaTime;
-	if (t >= 1) {
+	fade = fade + fadingSpeed * Time.deltaTime;
+	if (fade >= 1) {
 		fadeHeatmap = false;
 		Destroy (this.gameObject);
 		Destroy (fire);
-		t = 0;
+		fade = 0;
 	}
-	//print (t);
 }
 
 }

@@ -4,44 +4,44 @@ using UnityEngine;
 
 public class CellManager : MonoBehaviour {
 
-	private Dictionary<string, Cell> cells;
-	public Cell cell;
-	private ArrayList geneNames;
-	public List<Material> materialList;
+public Cell cell;
+public List<Material> materialList;
+private ArrayList geneNames;
+private Dictionary<string, Cell> cells;
 
+void Awake() {
+	cells = new Dictionary<string, Cell>();
+	geneNames = new ArrayList();
+}
 
-	void Awake(){
-		cells = new Dictionary<string, Cell>();
-		geneNames = new ArrayList();
+/// <summary>
+/// Attempts to add a cell to the dictionary
+/// </summary>
+/// <param name="label"></param> The cell's name
+/// <returns> Returns a reference to the added cell </returns>
+
+public Cell AddCell(string label) {
+	if(!cells.ContainsKey(label)) {
+		cells [label] = new Cell (label, materialList);
 	}
+	return cells [label];
+}
 
-    /// <summary>
-    /// Attempts to add a cell to the dictionary
-    /// </summary>
-    /// <param name="label"></param> The cell's name
-    /// <returns> Returns a reference to the added cell </returns>
-	public Cell AddCell(string label) {
-		if(!cells.ContainsKey(label)) {
-			cells [label] = new Cell (label, materialList);
-		}
-		return cells [label];
-	}
+public Cell GetCell(string label) {
+	return cells [label];
+}
 
-	public Cell GetCell(string label) {
-		return cells [label];
-	}
+public bool GeneExists(string geneName) {
+	return geneNames.Contains (geneName);
+}
 
-	public bool GeneExists(string geneName) {
-		return geneNames.Contains (geneName);
+public void SetGeneExpression(string cellName, string geneName, int slot) {
+	Cell cell;
+	cells.TryGetValue (cellName, out cell);
+	cell.SetExpressionData (geneName, slot);
+	if (!geneNames.Contains (geneName)) {
+		geneNames.Add (geneName);
 	}
-
-	public void SetGeneExpression(string cellName, string geneName, int slot){
-		Cell cell;
-		cells.TryGetValue (cellName, out cell);
-        cell.setExpressionData (geneName, slot);
-		if (!geneNames.Contains (geneName)) {
-			geneNames.Add (geneName);
-		}
-	}
+}
 
 }

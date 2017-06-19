@@ -4,16 +4,6 @@ public class CellsToLoad : MonoBehaviour {
 
 private string directory;
 private bool graphsLoaded = false;
-// Use this for initialization
-void Start () {
-
-}
-
-// Update is called once per frame
-void Update () {
-
-}
-
 public bool GraphsLoaded() {
 	return graphsLoaded;
 }
