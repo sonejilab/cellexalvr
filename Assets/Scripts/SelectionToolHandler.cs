@@ -58,7 +58,7 @@ void Awake () {
 
 	HideSelectionTool();
 	buttons = menu.buttons;
-	UpdateButtonIcons();
+	//UpdateButtonIcons();
 	leftController = GameObject.Find ("LeftController");
 }
 
@@ -72,17 +72,17 @@ void FindGrabbedHeatMap() {
 		if (grabbedObject.tag == "HeatBoard") {
 			if (!heatmapGrabbed) {
 				heatmapGrabbed = true;
-				UpdateButtonIcons ();
+				//UpdateButtonIcons ();
 			}
 		}
 	} else if (grabbedObject == null && heatmapGrabbed) {
 		heatmapGrabbed = false;
-		UpdateButtonIcons ();
+		//UpdateButtonIcons ();
 	}
 }
 
 void OnTriggerEnter(Collider other) {
-	print(other.gameObject.name);
+	// print(other.gameObject.name);
 	GraphPoint graphPoint = other.gameObject.GetComponent<GraphPoint>();
 	if (graphPoint == null) {
 		return;
@@ -97,7 +97,7 @@ void OnTriggerEnter(Collider other) {
 	}
 	if(!selectionMade) {
 		selectionMade = true;
-		UpdateButtonIcons ();
+		//UpdateButtonIcons ();
 	}
 }
 
@@ -109,7 +109,7 @@ public void SingleSelect(Collider other) {
 	}
 	if (!selectionMade) {
 		selectionMade = true;
-		UpdateButtonIcons();
+		//UpdateButtonIcons();
 	}
 }
 
@@ -202,7 +202,7 @@ public void DumpData() {
 	}
 }
 
-private void ShowSelectionTool() {
+public void ShowSelectionTool() {
 	foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
 		r.enabled = true;
 	}
@@ -211,7 +211,7 @@ private void ShowSelectionTool() {
 	}
 }
 
-private void HideSelectionTool() {
+public void HideSelectionTool() {
 	foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
 		r.enabled = false;
 	}
@@ -220,12 +220,25 @@ private void HideSelectionTool() {
 	}
 }
 
+public void SetSelectionToolEnabled(bool enabled) {
+	foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
+		r.enabled = enabled;
+	}
+	foreach (Collider c in GetComponentsInChildren<Collider>()) {
+		c.enabled = enabled;
+	}
+}
+
+public bool IsSelectionToolEnabled() {
+	return GetComponentInChildren<Renderer>().enabled;
+}
+
 public void Up() {
 	if (inSelectionState && selectionMade) {
 		ConfirmSelection ();
 		HideSelectionTool();
 		inSelectionState = false;
-		UpdateButtonIcons ();
+		//UpdateButtonIcons ();
 	}
 }
 
@@ -239,7 +252,7 @@ public void Left() {
 		ShowSelectionTool();
 		inSelectionState = true;
 	}
-	UpdateButtonIcons ();
+	//UpdateButtonIcons ();
 }
 
 public void Down() {
@@ -247,7 +260,7 @@ public void Down() {
 		grabbedObject.GetComponent<HeatmapBurner>().BurnHeatmap ();
 	} else if (inSelectionState && selectionMade) {
 		ConfirmRemove ();
-		UpdateButtonIcons ();
+		//UpdateButtonIcons ();
 	} else {
 		manager.HideDDRGraph();
 	}
@@ -289,7 +302,7 @@ public void UpdateButtonIcons() {
 		buttons [2].ButtonIcon = ddrtreeButton;
 		buttons [3].ButtonIcon = tsneButton;
 	}
-	menu.RegenerateButtons();
+	//menu.RegenerateButtons();
 }
 
 }

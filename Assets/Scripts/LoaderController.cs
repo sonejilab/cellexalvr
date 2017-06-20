@@ -6,6 +6,7 @@ public class LoaderController : MonoBehaviour {
 public InputReader inputReader;
 public InputFolderGenerator inputFolderGenerator;
 public GraphManager GraphManager;
+public AudioSource sound;
 private bool cellsEntered = false;
 private float timeEntered = 0;
 private ArrayList cellsToDestroy;
@@ -26,9 +27,9 @@ void Update() {
 		currentTime += Time.deltaTime;
 		if (currentTime > arrivalTime) {
 			moving = false;
+			sound.Stop();
 		}
 	}
-
 	if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed) {
 		collidersDestroyed = true;
 
@@ -47,6 +48,7 @@ void Update() {
 		foreach (Transform child in inputFolderGenerator.transform) {
 			if (child.tag == "Folder") {
 				child.gameObject.AddComponent<Rigidbody>();
+				child.gameObject.GetComponent<CellFolder>().PlaySound();
 			}
 		}
 
@@ -55,6 +57,7 @@ void Update() {
 }
 
 public void MoveLoader(Vector3 direction, float time) {
+	sound.Play();
 	moving = true;
 	currentTime = 0;
 	arrivalTime = time;

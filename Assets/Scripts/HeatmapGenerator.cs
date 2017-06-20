@@ -23,6 +23,7 @@ private ArrayList heatmapList;
 
 // Use this for initialization
 void Start () {
+	device = SteamVR_Controller.Input ((int)trackedObject.index);
 	t = null;
 	running = false;
 	hourglass = GameObject.Find ("WaitingForHeatboardHourglass");
@@ -34,7 +35,6 @@ void Start () {
 
 // Update is called once per frame
 void Update() {
-	device = SteamVR_Controller.Input ((int)trackedObject.index);
 	if (!running && selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated()) {
 		if (device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) {
 			ArrayList selection = selectionToolHandler.GetLastSelection();

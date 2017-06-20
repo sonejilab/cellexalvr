@@ -6,7 +6,6 @@ using System.IO;
 public class Heatmap : MonoBehaviour {
 
 public Texture texture;
-public GameObject heatBoard;
 private Dictionary<Cell, Color> containedCells;
 private GraphManager graphManager;
 private SelectionToolHandler selectionToolHandler;

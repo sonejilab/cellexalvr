@@ -10,7 +10,6 @@ public GameObject folderPrefab;
 void Start () {
 	string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Assets/Data");
 	float folderAngle  = 0;
-
 	foreach (string directory in directories) {
 		if (directory.Substring(directory.Length - 13) == "runtimeGroups") {
 			continue;
