@@ -7,6 +7,7 @@ public CellManager cellManager;
 public Graph graphPrefab;
 public AudioSource goodSound;
 public AudioSource badSound;
+public SelectionToolHandler selectionToolHandler;
 private Graph[] graphs;
 private int activeGraph = 0;
 private List<Graph> graphClones;
@@ -37,6 +38,20 @@ public void CreateGraph(int i) {
 	graphClones = new List<Graph> ();
 }
 
+public void DeleteGraphs() {
+	if (graphClones != null) {
+		foreach (Graph g in graphClones) {
+			Destroy(g.gameObject);
+		}
+		graphClones.Clear();
+	}
+	foreach (Graph g in graphs) {
+		if (g != null) {
+			Destroy(g.gameObject);
+		}
+	}
+}
+
 public void AddCell(string label, float x, float y, float z) {
 	graphs[activeGraph].AddGraphPoint (cellManager.AddCell(label), x, y, z);
 }
@@ -57,6 +72,7 @@ public void ColorAllGraphsByGene(string geneName) {
 }
 
 public void ResetGraph() {
+	selectionToolHandler.CancelSelection();
 	foreach (Graph g in graphs) {
 		g.ResetGraph();
 	}

@@ -8,6 +8,10 @@ public GameObject folderPrefab;
 
 // Use this for initialization
 void Start () {
+	GenerateFolders();
+}
+
+public void GenerateFolders() {
 	string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Assets/Data");
 	float folderAngle  = 0;
 	foreach (string directory in directories) {
@@ -31,9 +35,14 @@ void Start () {
 			croppedDirectoryName = directory.Substring(forwardSlashIndex + 1);
 		}
 
-		// Set text on folser box
+		// Set text on folder box
 		newFolder.GetComponentInChildren<TextMesh>().text = croppedDirectoryName;
 	}
 }
 
+public void DestroyFolders() {
+	foreach (Transform child in transform) {
+		Destroy(child.gameObject);
+	}
+}
 }

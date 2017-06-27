@@ -84,7 +84,6 @@ public List<List<GraphPoint> > GetGroups() {
 }
 
 public void ResetGraph() {
-	selectionToolHandler.CancelSelection();
 	transform.position = defaultPos;
 	transform.localScale = defaultScale;
 	foreach (GraphPoint point in points) {

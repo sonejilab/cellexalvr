@@ -11,7 +11,6 @@ public Cell (string label, List<Material> materialList) {
 	this.labelString = label;
 	geneExpressions = new Dictionary<string, int> ();
 	this.materialList = materialList;
-
 }
 
 public void SetLabel(string label) {

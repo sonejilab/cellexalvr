@@ -8,23 +8,39 @@ public SteamVR_TrackedObject trackedObject;
 public Sprite standardTexture;
 public Sprite highlightedTexture;
 public MenuController menuController;
+public RotateMenu rotater;
+public SelectionToolMenu selectionToolMenu;
 private SteamVR_Controller.Device device;
-private bool controllerInside;
 private SpriteRenderer spriteRenderer;
+private bool controllerInside = false;
+private bool menuActive = false;
+private bool buttonsInitialized = false;
 
-// Use this for initialization
 void Start() {
 	device = SteamVR_Controller.Input((int)trackedObject.index);
 	spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 	spriteRenderer.sprite = standardTexture;
-//  highlightedTexture =
+	//  highlightedTexture =
 }
 
-// Update is called once per frame
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
-		selectionToolHandler.SetSelectionToolEnabled(!selectionToolHandler.IsSelectionToolEnabled());
-		menuController.SwichToOriginalModel();
+		// print("selection button");
+		menuController.SwitchToOriginalModel();
+		menuActive = !menuActive;
+		selectionToolMenu.gameObject.SetActive(menuActive);
+		selectionToolHandler.SetSelectionToolEnabled(menuActive);
+		// selectionToolMenu.SetEnabledState(menuActive);
+		if (menuActive && rotater.rotation == 0) {
+			rotater.RotateLeft();
+		}
+		if (!buttonsInitialized) {
+			selectionToolMenu.InitializeButtons();
+			buttonsInitialized = true;
+		}
+		//if (!buttonsInitialized) {
+		//buttonsInitialized = true;
+		//}
 	}
 }
 
@@ -43,7 +59,6 @@ void OnTriggerExit(Collider other) {
 		controllerInside = false;
 		//selectionToolHandler.SetSelectionToolEnabled(!selectionToolHandler.IsSelectionToolEnabled());
 	}
-
 }
 
 }
