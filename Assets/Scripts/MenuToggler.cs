@@ -15,6 +15,22 @@ void Start () {
 void Update () {
 	if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
 		menu.SetActive(!menu.activeSelf);
+		if (!menu.activeSelf) {
+			menu.GetComponent<MenuController>().SwitchToOriginalModel();
+		}
 	}
 }
+
+public void rotateMenuLeft() {
+	if (menu.activeSelf) {
+		menu.GetComponent<RotateMenu>().RotateLeft();
+	}
+}
+
+public void rotateMenuRight() {
+	if (menu.activeSelf) {
+		menu.GetComponent<RotateMenu>().RotateRight();
+	}
+}
+
 }

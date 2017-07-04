@@ -1,8 +1,11 @@
 using UnityEngine;
 
+///<summary>
+/// This class represents a button used for resetting the color and position of the graphs.
+///</summary>
 public class ResetGraphButton : MonoBehaviour {
 public TextMesh descriptionText;
-public SteamVR_TrackedObject trackedObject;
+public SteamVR_TrackedObject rightController;
 public Sprite standardTexture;
 public Sprite highlightedTexture;
 public GraphManager graphManager;
@@ -10,15 +13,12 @@ private SteamVR_Controller.Device device;
 private bool controllerInside;
 private SpriteRenderer spriteRenderer;
 
-// Use this for initialization
 void Start() {
-	device = SteamVR_Controller.Input((int)trackedObject.index);
+	device = SteamVR_Controller.Input((int)rightController.index);
 	spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 	spriteRenderer.sprite = standardTexture;
-//  highlightedTexture =
 }
 
-// Update is called once per frame
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
 		graphManager.ResetGraph();
@@ -38,7 +38,6 @@ void OnTriggerExit(Collider other) {
 		descriptionText.text = "";
 		spriteRenderer.sprite = standardTexture;
 		controllerInside = false;
-		//selectionToolHandler.SetSelectionToolEnabled(!selectionToolHandler.IsSelectionToolEnabled());
 	}
 
 }

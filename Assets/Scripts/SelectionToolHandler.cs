@@ -6,22 +6,23 @@ using VRTK;
 
 public class SelectionToolHandler : MonoBehaviour {
 
+public SelectionToolMenu selectionToolMenu;
 public GraphManager manager;
-public Graph graph;
+//public Graph graph;
 public Material selectorMaterial;
 public RadialMenu menu;
-public Sprite noButton;
-public Sprite toolButton;
-public Sprite confirmButton;
-public Sprite confirmButton_w;
-public Sprite cancelButton;
-public Sprite cancelButton_w;
-public Sprite blowupButton;
-public Sprite blowupButton_w;
-public Sprite colorButton;
-public Sprite recolorButton;
-public Sprite ddrtreeButton;
-public Sprite tsneButton;
+//public Sprite noButton;
+//public Sprite toolButton;
+//public Sprite confirmButton;
+//public Sprite confirmButton_w;
+//public Sprite cancelButton;
+//public Sprite cancelButton_w;
+//public Sprite blowupButton;
+//public Sprite blowupButton_w;
+//public Sprite colorButton;
+//public Sprite recolorButton;
+//public Sprite ddrtreeButton;
+//public Sprite tsneButton;
 public SteamVR_TrackedController right;
 public SteamVR_TrackedController left;
 public bool selectionConfirmed = false;
@@ -40,6 +41,7 @@ private bool selectionMade = false;
 private GameObject leftController;
 private GameObject grabbedObject;
 private bool heatmapCreated = true;
+// int i = 0;
 
 void Awake () {
 	colors = new Color[10];
@@ -56,14 +58,17 @@ void Awake () {
 	selectorMaterial.color = colors [0];
 	selectedColor = colors [0];
 
-	HideSelectionTool();
+	SetSelectionToolEnabled(false);
 	buttons = menu.buttons;
 	//UpdateButtonIcons();
-	leftController = GameObject.Find ("LeftController");
+	leftController = GameObject.Find("LeftController");
 }
 
-void Update () {
-	FindGrabbedHeatMap ();
+void Update() {
+	// if (selectionToolMenu == null) {
+	//  print(i + ": null");
+	//
+	// }
 }
 
 void FindGrabbedHeatMap() {
@@ -81,7 +86,7 @@ void FindGrabbedHeatMap() {
 	}
 }
 
-void OnTriggerEnter(Collider other) {
+public void Trigger(Collider other) {
 	// print(other.gameObject.name);
 	GraphPoint graphPoint = other.gameObject.GetComponent<GraphPoint>();
 	if (graphPoint == null) {
@@ -93,10 +98,11 @@ void OnTriggerEnter(Collider other) {
 
 	if (!selectedCells.Contains (other)) {
 		selectedCells.Add (other);
-		SteamVR_Controller.Input((int)left.controllerIndex).TriggerHapticPulse(hapticIntensity);
+		SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(hapticIntensity);
 	}
 	if(!selectionMade) {
 		selectionMade = true;
+		selectionToolMenu.SelectionStarted();
 		//UpdateButtonIcons ();
 	}
 }
@@ -114,16 +120,17 @@ public void SingleSelect(Collider other) {
 }
 
 public void ConfirmRemove() {
+	GetComponent<AudioSource>().Play();
 	foreach (Collider other in selectedCells) {
 		other.transform.parent = null;
 		other.gameObject.AddComponent<Rigidbody>();
 		other.attachedRigidbody.useGravity = true;
 		other.attachedRigidbody.isKinematic = false;
 		other.isTrigger = false;
-		GetComponent<AudioSource>().Play();
 	}
 	selectedCells.Clear();
 	selectionMade = false;
+	selectionToolMenu.RemoveSelection();
 }
 
 public void ConfirmSelection() {
@@ -136,10 +143,8 @@ public void ConfirmSelection() {
 		Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
 		cell.gameObject.GetComponent<Renderer>().material.color = nonTransparentColor;
 	}
-
 	// create .txt file with latest selection
 	DumpData();
-
 	// clear the list since we are done with it
 	lastSelectedCells.Clear();
 
@@ -150,6 +155,7 @@ public void ConfirmSelection() {
 	heatmapCreated = false;
 	selectionMade = false;
 	selectionConfirmed = true;
+	selectionToolMenu.ConfirmSelection();
 }
 
 public ArrayList GetLastSelection() {
@@ -157,11 +163,15 @@ public ArrayList GetLastSelection() {
 }
 
 public void CancelSelection() {
+	if(selectionToolMenu == null) {
+		print("null");
+	}
 	foreach (Collider other in selectedCells) {
 		other.GetComponentInChildren<Renderer>().material.color = Color.white;
 	}
 	selectedCells.Clear();
 	selectionMade = false;
+	selectionToolMenu.UndoSelection();
 }
 
 public void ChangeColor() {
@@ -172,7 +182,7 @@ public void ChangeColor() {
 	}
 	selectedColor = colors[currentColorIndex];
 	selectorMaterial.color = selectedColor;
-	this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+	// this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
 }
 
 public void HeatmapCreated() {
@@ -184,6 +194,7 @@ public bool GetHeatmapCreated() {
 }
 
 public void DumpData() {
+	// print(new System.Diagnostics.StackTrace());
 	using (System.IO.StreamWriter file =
 			   new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt")) {
 
@@ -202,24 +213,6 @@ public void DumpData() {
 	}
 }
 
-public void ShowSelectionTool() {
-	foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
-		r.enabled = true;
-	}
-	foreach (Collider c in GetComponentsInChildren<Collider>()) {
-		c.enabled = true;
-	}
-}
-
-public void HideSelectionTool() {
-	foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
-		r.enabled = false;
-	}
-	foreach (Collider c in GetComponentsInChildren<Collider>()) {
-		c.enabled = false;
-	}
-}
-
 public void SetSelectionToolEnabled(bool enabled) {
 	foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
 		r.enabled = enabled;
@@ -235,8 +228,8 @@ public bool IsSelectionToolEnabled() {
 
 public void Up() {
 	if (inSelectionState && selectionMade) {
-		ConfirmSelection ();
-		HideSelectionTool();
+		// ConfirmSelection ();
+		// HideSelectionTool();
 		inSelectionState = false;
 		//UpdateButtonIcons ();
 	}
@@ -246,10 +239,10 @@ public void Left() {
 	if (inSelectionState && selectionMade) {
 		CancelSelection ();
 	} else if (inSelectionState) {
-		HideSelectionTool ();
+		// HideSelectionTool ();
 		inSelectionState = false;
 	} else {
-		ShowSelectionTool();
+		// ShowSelectionTool();
 		inSelectionState = true;
 	}
 	//UpdateButtonIcons ();
@@ -278,30 +271,30 @@ public void Right() {
 
 public void UpdateButtonIcons() {
 	// in selection state - selection made
-	if (heatmapGrabbed) {
-		buttons [0].ButtonIcon = noButton;
-		buttons [1].ButtonIcon = noButton;
-		buttons [2].ButtonIcon = blowupButton;
-		buttons [3].ButtonIcon = recolorButton;
-		// in selection state - no selection made
-	} else if (inSelectionState && selectionMade) {
-		buttons [0].ButtonIcon = confirmButton;
-		buttons [1].ButtonIcon = cancelButton;
-		buttons [2].ButtonIcon = blowupButton;
-		buttons [3].ButtonIcon = colorButton;
-		// in selection state - no selection made
-	} else if (inSelectionState) {
-		buttons [0].ButtonIcon = confirmButton_w;
-		buttons [1].ButtonIcon = cancelButton_w;
-		buttons [2].ButtonIcon = blowupButton_w;
-		buttons [3].ButtonIcon = colorButton;
-		// in default state
-	} else {
-		buttons [0].ButtonIcon = noButton;
-		buttons [1].ButtonIcon = toolButton;
-		buttons [2].ButtonIcon = ddrtreeButton;
-		buttons [3].ButtonIcon = tsneButton;
-	}
+	//if (heatmapGrabbed) {
+	//	buttons [0].ButtonIcon = noButton;
+	//	buttons [1].ButtonIcon = noButton;
+	//	buttons [2].ButtonIcon = blowupButton;
+	//	buttons [3].ButtonIcon = recolorButton;
+	//	// in selection state - no selection made
+	//} else if (inSelectionState && selectionMade) {
+	//	buttons [0].ButtonIcon = confirmButton;
+	//	buttons [1].ButtonIcon = cancelButton;
+	//	buttons [2].ButtonIcon = blowupButton;
+	//	buttons [3].ButtonIcon = colorButton;
+	//	// in selection state - no selection made
+	//} else if (inSelectionState) {
+	//	buttons [0].ButtonIcon = confirmButton_w;
+	//	buttons [1].ButtonIcon = cancelButton_w;
+	//	buttons [2].ButtonIcon = blowupButton_w;
+	//	buttons [3].ButtonIcon = colorButton;
+	//	// in default state
+	//} else {
+	//	buttons [0].ButtonIcon = noButton;
+	//	buttons [1].ButtonIcon = toolButton;
+	//	buttons [2].ButtonIcon = ddrtreeButton;
+	//	buttons [3].ButtonIcon = tsneButton;
+	//}
 	//menu.RegenerateButtons();
 }
 

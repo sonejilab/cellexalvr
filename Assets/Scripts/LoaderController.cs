@@ -1,5 +1,5 @@
 using UnityEngine;
-﻿using System.Collections;
+using System.Collections;
 
 public class LoaderController : MonoBehaviour {
 
@@ -7,15 +7,16 @@ public InputReader inputReader;
 public InputFolderGenerator inputFolderGenerator;
 public GraphManager GraphManager;
 public AudioSource sound;
-private bool cellsEntered = false;
 private float timeEntered = 0;
 private ArrayList cellsToDestroy;
+private bool cellsEntered = false;
 private bool collidersDestroyed = false;
 private Vector3 startPosition;
 private Vector3 finalPosition;
 private bool moving = false;
 private float currentTime;
 private float arrivalTime;
+public bool loaderMovedDown = false;
 
 void Start() {
 	cellsToDestroy = new ArrayList();
@@ -30,39 +31,35 @@ void Update() {
 			sound.Stop();
 		}
 	}
+
 	if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed) {
-		collidersDestroyed = true;
-
-		foreach (Collider c in GetComponentsInChildren<Collider>()) {
-			Destroy(c);
-		}
-
-		foreach (Transform child in cellsToDestroy) {
-			Destroy(child.gameObject.GetComponent<Collider>());
-		}
-
-		foreach (Collider c in inputFolderGenerator.GetComponentsInChildren<Collider>()) {
-			Destroy(c);
-		}
-
-		foreach (Transform child in inputFolderGenerator.transform) {
-			if (child.tag == "Folder") {
-				child.gameObject.AddComponent<Rigidbody>();
-				child.gameObject.GetComponent<CellFolder>().PlaySound();
-			}
-		}
-
+		DestroyFolderColliders();
 	}
 
+	if (timeEntered + 10 < Time.time && collidersDestroyed) {
+		inputFolderGenerator.DestroyFolders();
+		DestroyCells();
+	}
+}
+
+public void ResetLoaderBooleans() {
+	inputFolderGenerator.DestroyFolders();
+	cellsEntered = false;
+	timeEntered = 0;
+	collidersDestroyed = false;
 }
 
 public void MoveLoader(Vector3 direction, float time) {
 	sound.Play();
-	moving = true;
 	currentTime = 0;
 	arrivalTime = time;
-	startPosition = gameObject.transform.position;
-	finalPosition = gameObject.transform.position + direction;
+	startPosition = transform.position;
+	if (moving) {
+		finalPosition = finalPosition + direction;
+	} else {
+		finalPosition = transform.position + direction;
+	}
+	moving = true;
 }
 
 void OnTriggerEnter(Collider collider) {
@@ -71,22 +68,61 @@ void OnTriggerEnter(Collider collider) {
 		if (cellParent != null) {
 
 			if (timeEntered == 0) {
+				// assuming the computer clock isn't currently unix epoch
 				timeEntered = Time.time;
 				cellsEntered = true;
 			}
-
 			if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded()) {
 				inputReader.ReadFolder(cellParent.GetComponent<CellsToLoad>().GetDirectory());
 			}
 
+			Destroy(cellParent.GetComponent<Rigidbody>());
 			foreach (Transform child in cellParent) {
-				child.parent = null;
+				// if (child.gameObject.GetComponent<Rigidbody>() == null)
 				child.gameObject.AddComponent<Rigidbody>();
 				cellsToDestroy.Add(child);
 			}
+			// must pass over list again to remove the parents. doing so in the
+			// above loop messes with the iterator somehow and only removes every
+			// second child's parent reference
+			foreach (Transform child in cellsToDestroy) {
+				child.parent = null;
+				// print(child.name);
+			}
 		}
-
 	}
+}
+
+void DestroyFolderColliders() {
+	// foreach (Collider c in GetComponentsInChildren<Collider>()) {
+	//  Destroy(c);
+	// }
+
+	foreach (Transform child in cellsToDestroy) {
+		Destroy(child.gameObject.GetComponent<Collider>());
+	}
+
+	foreach (Collider c in inputFolderGenerator.GetComponentsInChildren<Collider>()) {
+		Destroy(c);
+	}
+
+	foreach (Transform child in inputFolderGenerator.transform) {
+		if (child.tag == "Folder") {
+			child.gameObject.AddComponent<Rigidbody>();
+			child.gameObject.GetComponent<CellFolder>().PlaySound();
+		}
+	}
+	collidersDestroyed = true;
+}
+
+void DestroyCells() {
+	// since we are responisble for removing the parent reference we should probably
+	// destroy the objects as well
+	foreach (Transform child in cellsToDestroy) {
+		Destroy(child.gameObject);
+	}
+	cellsToDestroy.Clear();
+	ResetLoaderBooleans();
 }
 
 }

@@ -9,6 +9,13 @@ public GraphManager graphManager;
 public CellManager cellManager;
 public LoaderController loaderController;
 public void ReadFolder(string path) {
+	// clear the runtimeGroups
+	string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
+	// print(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups");
+	foreach (string f in txtList) {
+		File.Delete(f);
+	}
+
 	string[] geneexprFiles = Directory.GetFiles(path, "*.expr");
 
 	if (geneexprFiles.Length != 1) {
@@ -17,12 +24,6 @@ public void ReadFolder(string path) {
 
 	string[] mdsFiles = Directory.GetFiles(path, "*.mds");
 	StartCoroutine(ReadMDSFiles(mdsFiles, geneexprFiles[0], 25));
-
-	// clear the runtimeGroups
-	string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
-	foreach (string f in txtList) {
-		File.Delete(f);
-	}
 
 }
 
@@ -81,7 +82,8 @@ IEnumerator ReadMDSFiles(string[] mdsFiles, string geneexprFilename, int itemsPe
 		}
 		fileIndex++;
 	}
-	loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 8);
+	loaderController.loaderMovedDown = true;
+	loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
 }
 
 /// <summary>
@@ -91,9 +93,9 @@ IEnumerator ReadMDSFiles(string[] mdsFiles, string geneexprFilename, int itemsPe
 
 void UpdateMinMax(string[] lines) {
 	Vector3 maxCoordValues = new Vector3 ();
-	maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = -1000000.0f;
+	maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = float.MinValue;
 	Vector3 minCoordValues = new Vector3 ();
-	minCoordValues.x = minCoordValues.y = minCoordValues.z = 1000000.0f;
+	minCoordValues.x = minCoordValues.y = minCoordValues.z = float.MaxValue;
 	foreach (string line in lines) {
 		// the coordinates are split with tab characters
 		string[] words = line.Split('\t');

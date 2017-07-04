@@ -271,7 +271,6 @@ namespace VRTK
         protected virtual void UpdatePointerOriginTransformFollow()
         {
             pointerOriginTransformFollow.gameObjectToFollow = (controllingPointer.customOrigin == null ? transform : controllingPointer.customOrigin).gameObject;
-
             pointerOriginTransformFollow.enabled = controllingPointer != null;
             pointerOriginTransformFollowGameObject.SetActive(controllingPointer != null);
 

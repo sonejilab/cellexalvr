@@ -340,7 +340,7 @@ namespace VRTK
             }
             for (int i = 0; i < menuButtons.Count; i++)
             {
-                Destroy(menuButtons[i]);
+                DestroyImmediate(menuButtons[i]);
             }
             menuButtons = new List<GameObject>();
         }

@@ -1,30 +1,43 @@
 using UnityEngine;
 
-public class SelectionToolButton : MonoBehaviour
-{
+///<summary>
+/// This class represents a button used for toggling the selection tool.
+///</summary>
+public class SelectionToolButton : MonoBehaviour {
 public TextMesh descriptionText;
 public SelectionToolHandler selectionToolHandler;
-public SteamVR_TrackedObject trackedObject;
+public SteamVR_TrackedObject rightController;
 public Sprite standardTexture;
 public Sprite highlightedTexture;
 public MenuController menuController;
+public MenuRotator rotator;
+public SelectionToolMenu selectionToolMenu;
 private SteamVR_Controller.Device device;
-private bool controllerInside;
 private SpriteRenderer spriteRenderer;
+private bool controllerInside = false;
+private bool menuActive = false;
+private bool buttonsInitialized = false;
 
-// Use this for initialization
 void Start() {
-	device = SteamVR_Controller.Input((int)trackedObject.index);
+	device = SteamVR_Controller.Input((int)rightController.index);
 	spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 	spriteRenderer.sprite = standardTexture;
-//  highlightedTexture =
 }
 
-// Update is called once per frame
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
-		selectionToolHandler.SetSelectionToolEnabled(!selectionToolHandler.IsSelectionToolEnabled());
-		menuController.SwichToOriginalModel();
+		menuController.SwitchToOriginalModel();
+		menuActive = !menuActive;
+		selectionToolMenu.gameObject.SetActive(menuActive);
+		selectionToolHandler.SetSelectionToolEnabled(menuActive);
+		if (menuActive && rotator.rotation == 0) {
+			rotator.RotateLeft();
+		}
+		if (!buttonsInitialized) {
+			selectionToolMenu.InitializeButtons();
+			buttonsInitialized = true;
+		}
+		menuController.ToolSwitched();
 	}
 }
 
@@ -41,9 +54,6 @@ void OnTriggerExit(Collider other) {
 		descriptionText.text = "";
 		spriteRenderer.sprite = standardTexture;
 		controllerInside = false;
-		//selectionToolHandler.SetSelectionToolEnabled(!selectionToolHandler.IsSelectionToolEnabled());
 	}
-
 }
-
 }

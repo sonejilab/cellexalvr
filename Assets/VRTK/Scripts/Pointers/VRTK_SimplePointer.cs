@@ -34,10 +34,6 @@ namespace VRTK
         [Tooltip("Rescale the pointer cursor proportionally to the distance from this game object (useful when used as a gaze pointer).")]
         public bool pointerCursorRescaledAlongDistance = false;
 
-		private SteamVR_TrackedObject trackedObject;
-		private SteamVR_Controller.Device device;
-		private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-
         private GameObject pointerHolder;
         private GameObject pointerBeam;
         private GameObject pointerTip;
@@ -46,9 +42,6 @@ namespace VRTK
         private bool activeEnabled;
         private bool storedBeamState;
         private bool storedTipState;
-		private GraphPoint latestHit;
-		private Material latestHitDefaultMat;
-		public int layerMask = 1<<8;
 
         protected override void OnEnable()
         {
@@ -67,41 +60,17 @@ namespace VRTK
 
         protected override void Update()
         {
-			device = SteamVR_Controller.Input ((int)trackedObject.index);
             base.Update();
             if (pointerBeam && pointerBeam.activeSelf)
             {
                 var origin = GetOrigin();
                 Ray pointerRaycast = new Ray(origin.position, origin.forward);
                 RaycastHit pointerCollidedWith;
-				var rayHit = Physics.Raycast(pointerRaycast, out pointerCollidedWith, pointerLength); // ~layersToIgnore
+                var rayHit = Physics.Raycast(pointerRaycast, out pointerCollidedWith, pointerLength, ~layersToIgnore);
                 var pointerBeamLength = GetPointerBeamLength(rayHit, pointerCollidedWith);
                 SetPointerTransform(pointerBeamLength, pointerThickness);
                 if (rayHit)
                 {
-					if (latestHit == null) {
-						
-						//latestHit = pointerCollidedWith.transform.GetComponent<GraphPoint>;
-						//Debug.Log (pointerCollidedWith.transform.gameObject.name);
-						//Debug.Log (layersToIgnore);
-						latestHit.SetMaterial(Resources.Load("SphereHighlighted", typeof(Material)) as Material);
-					}
-
-					if (latestHit != pointerCollidedWith.transform.GetComponent<GraphPoint> ()) {
-						if(latestHit.IsSelected()){
-							latestHit.SetMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material);
-						} else {
-							latestHit.SetMaterial(latestHit.GetDefaultMaterial());
-						}
-						latestHit = null;
-					}
-
-					if (device.GetPressDown (triggerButton)) {
-						//latestHit.setMaterial(Resources.Load("SphereSelected", typeof(Material)) as Material);
-						latestHit.SetSelected(!latestHit.IsSelected()); //add/remove selected graph point to/from selected points here
-					}
-
-				
                     if (pointerCursorMatchTargetNormal)
                     {
                         pointerTip.transform.forward = -pointerCollidedWith.normal;
@@ -122,15 +91,6 @@ namespace VRTK
                     {
                         pointerTip.transform.localScale = pointerCursorOriginalScale * pointerBeamLength;
                     }
-
-					if (latestHit != null) {
-						if (!latestHit.IsSelected ()) {
-							latestHit.SetMaterial (latestHit.GetDefaultMaterial());
-						} else {
-							latestHit.SetMaterial (Resources.Load ("SphereSelected", typeof(Material)) as Material); 
-						}
-						latestHit = null;
-					}
                 }
 
                 if (activeEnabled)
@@ -154,9 +114,6 @@ namespace VRTK
 
         protected override void InitPointer()
         {
-			latestHit = null;
-
-			trackedObject = GetComponent<SteamVR_TrackedObject> ();
             pointerHolder = new GameObject(string.Format("[{0}]BasePointer_SimplePointer_Holder", gameObject.name));
             pointerHolder.transform.localPosition = Vector3.zero;
             VRTK_PlayerObject.SetPlayerObject(pointerHolder, VRTK_PlayerObject.ObjectTypes.Pointer);

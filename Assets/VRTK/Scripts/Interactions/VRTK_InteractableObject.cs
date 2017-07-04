@@ -373,11 +373,11 @@ namespace VRTK
         public virtual void ToggleHighlight(bool toggle)
         {
             InitialiseHighlighter();
+
             if (touchHighlightColor != Color.clear && objectHighlighter)
             {
                 if (toggle && !IsGrabbed())
                 {
-					//Debug.Log ("HIGHLIGHT");
                     objectHighlighter.Highlight(touchHighlightColor);
                 }
                 else
@@ -739,7 +739,6 @@ namespace VRTK
                     autoHighlighter = true;
                     objectHighlighter = gameObject.AddComponent<VRTK_MaterialColorSwapHighlighter>();
                 }
-
                 objectHighlighter.Initialise(touchHighlightColor);
             }
         }
