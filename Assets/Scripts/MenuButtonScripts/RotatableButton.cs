@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 ///<summary>
 /// This class holds the logic for rotating buttons when pressed.
 ///</summary>
@@ -121,5 +122,4 @@ public abstract class RotatableButton : MonoBehaviour
             frontsideRenderer.enabled = false;
         }
     }
-
 }

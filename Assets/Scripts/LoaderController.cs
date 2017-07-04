@@ -87,7 +87,6 @@ void OnTriggerEnter(Collider collider) {
 			// second child's parent reference
 			foreach (Transform child in cellsToDestroy) {
 				child.parent = null;
-				// print(child.name);
 			}
 		}
 	}

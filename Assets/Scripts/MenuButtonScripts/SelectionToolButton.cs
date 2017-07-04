@@ -10,6 +10,7 @@ public SteamVR_TrackedObject rightController;
 public Sprite standardTexture;
 public Sprite highlightedTexture;
 public MenuController menuController;
+
 public MenuRotator rotator;
 public SelectionToolMenu selectionToolMenu;
 private SteamVR_Controller.Device device;
@@ -22,16 +23,15 @@ void Start() {
 	device = SteamVR_Controller.Input((int)rightController.index);
 	spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 	spriteRenderer.sprite = standardTexture;
-
 }
 
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
-
 		menuController.SwitchToOriginalModel();
 		menuActive = !menuActive;
 		selectionToolMenu.gameObject.SetActive(menuActive);
 		selectionToolHandler.SetSelectionToolEnabled(menuActive);
+
 		if (menuActive && rotator.rotation == 0) {
 			rotator.RotateLeft();
 		}

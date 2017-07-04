@@ -19,9 +19,11 @@ private bool menuActive = false;
 private bool buttonsInitialized = false;
 
 void Start() {
+
 	device = SteamVR_Controller.Input((int)rightController.index);
 	spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 	spriteRenderer.sprite = standardTexture;
+
 }
 
 void Update() {

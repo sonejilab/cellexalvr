@@ -6,7 +6,6 @@ using System.Collections.Generic;
 /// </summary>
 public class MenuController : MonoBehaviour
 {
-
     public SteamVR_RenderModel originalModel;
     public SelectionToolHandler selectionToolHandler;
     public GameObject fire;
