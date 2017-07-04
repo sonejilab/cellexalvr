@@ -10,6 +10,7 @@ protected override string description {
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating) {
 		selectionToolHandler.ConfirmSelection();
+		// print("confirm");
 	}
 }
 }

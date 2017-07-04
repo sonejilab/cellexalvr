@@ -22,10 +22,12 @@ void Start() {
 	device = SteamVR_Controller.Input((int)rightController.index);
 	spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 	spriteRenderer.sprite = standardTexture;
+
 }
 
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
+
 		menuController.SwitchToOriginalModel();
 		menuActive = !menuActive;
 		selectionToolMenu.gameObject.SetActive(menuActive);
