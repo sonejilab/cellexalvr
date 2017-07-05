@@ -78,15 +78,6 @@ public class GraphManager : MonoBehaviour
     public void ColorAllGraphsByGene(string geneName)
     {
         cellManager.ColorGraphsByGene(geneName);
-        //foreach (Graph g in graphs)
-        //{
-        //if (cellManager.GeneExists (geneName)) {
-        //	goodSound.Play ();
-        //} else {
-        //	badSound.Play ();
-        //}
-
-        //}
     }
 
     public void ResetGraph()
