@@ -9,7 +9,7 @@ private Transform raycastingSource;
 
 [SerializeField, HideInInspector]
 private GameObject target;
-public GraphManager graphManager;
+public CellManager cellManager;
 private float rayLength;
 private Ray ray;
 private RaycastHit hit;
@@ -27,7 +27,7 @@ private string clickInputName;
 
 void Start () {
 	keyboardStatus = gameObject.GetComponent<KeyboardStatus>();
-	keyboardStatus.setGraphManager(graphManager);
+	keyboardStatus.setCellManager(cellManager);
 	int layerNumber = gameObject.layer;
 	layer = 1 << layerNumber;
 	device = SteamVR_Controller.Input((int) rightController.controllerIndex);

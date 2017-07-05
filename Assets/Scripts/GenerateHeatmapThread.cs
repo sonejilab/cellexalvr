@@ -15,7 +15,7 @@ public void GenerateHeatmap() {
 		string rawInput = r.ReadToEnd();
 		string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 		string rPath = input[0];
-		Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\Make_heatmap_from_CellID_list_wColourBars_ANOVA.R", rPath, home + " " + (selectionToolHandler.fileCreationCtr - 1)));
+		Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\better_r_script.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
 	}
 }
 }

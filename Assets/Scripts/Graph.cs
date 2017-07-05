@@ -55,11 +55,11 @@ public void SetMinMaxCoords(Vector3 min, Vector3 max) {
 
 }
 
-public void ColorGraphByGene(string geneName) {
-	foreach (GraphPoint point in points) {
-		point.ColorByGene (geneName);
-	}
-}
+//public void ColorGraphByGene(string geneName) {
+//	foreach (GraphPoint point in points) {
+//		point.ColorByGene (geneName);
+//	}
+//}
 
 public List<List<GraphPoint> > GetGroups() {
 

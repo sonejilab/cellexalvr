@@ -12,7 +12,7 @@ public string output;
 public int maxOutputLength;
 [SerializeField]
 public GameObject targetGameObject;
-private GraphManager graphManager;
+private CellManager cellManager;
 
 //----CurrentKeysStatus----
 [SerializeField]
@@ -38,7 +38,7 @@ public void HandleClick ( KeyboardItem clicked ) {
 	} else if(value.Equals(UP) || value.Equals(LOW)) {         // upper/lower case pressed
 		LowerUpperKeys();
 	} else if(value.Equals(SPACE)) {
-		graphManager.ColorAllGraphsByGene(output);
+		cellManager.ColorGraphsByGene(output);
 		output = "";
 		textComponent = targetGameObject.GetComponent(typeHolder.GetType());
 		textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
@@ -49,8 +49,8 @@ public void HandleClick ( KeyboardItem clicked ) {
 	}
 }
 
-public void setGraphManager(GraphManager manager) {
-	graphManager = manager;
+public void setCellManager(CellManager manager) {
+	cellManager = manager;
 }
 
 /// <summary>

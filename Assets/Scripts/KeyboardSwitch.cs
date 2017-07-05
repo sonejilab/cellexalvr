@@ -7,7 +7,6 @@ public class KeyboardSwitch : MonoBehaviour {
 
 void Start () {
 	gameObject.SetActive(false);
-
 }
 
 }

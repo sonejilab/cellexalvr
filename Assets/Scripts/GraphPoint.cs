@@ -8,12 +8,14 @@ private bool selected = false;
 private Material defaultMat;
 private Color selectedColor;
 private Graph defaultParent;
+
 public void SetCoordinates (Cell cell, float x, float y, float z, Vector3 graphAreaSize) {
 	this.cell = cell;
 	this.x = x;
 	this.y = y;
 	this.z = z;
 	defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
+        cell.AddGraphPoint(this);
 }
 
 public string GetLabel() {
@@ -40,12 +42,12 @@ public Material GetDefaultMaterial() {
 	return defaultMat;
 }
 
-public void ColorByGene(string geneName) {
-	if (!selected) {
-		SetMaterial (cell.GetGeneMaterial (geneName));
-	}
-	defaultMat = cell.GetGeneMaterial (geneName);
-}
+//public void ColorByGene(string geneName) {
+//	if (!selected) {
+//		SetMaterial (cell.GetGeneMaterial (geneName));
+//	}
+//	defaultMat = cell.GetGeneMaterial (geneName);
+//}
 
 public void ResetCoords() {
 	transform.position = new Vector3(x, y, z);
