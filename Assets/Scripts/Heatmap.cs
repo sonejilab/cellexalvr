@@ -16,12 +16,14 @@ public class Heatmap : MonoBehaviour
     private GraphManager graphManager;
     private SelectionToolHandler selectionToolHandler;
     private bool controllerInside = false;
+    private GameObject fire;
     // Use this for initialization
     void Start()
     {
         SteamVR_TrackedObject rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         device = SteamVR_Controller.Input((int)rightController.index);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Controller")
@@ -40,7 +42,7 @@ public class Heatmap : MonoBehaviour
 
     void Update()
     {
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && fire.activeSelf)
         {
             gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();
         }
@@ -82,11 +84,12 @@ public class Heatmap : MonoBehaviour
     /// <summary>
     /// Sets some variables. Should be called after a heatmap is instatiated.
     /// </summary>
-    public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler, ArrayList cells)
+    public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler, ArrayList cells, GameObject fire)
     {
         containedCells = new Dictionary<Cell, Color>();
         this.graphManager = graphManager;
         this.selectionToolHandler = selectionToolHandler;
+        this.fire = fire;
         int numberOfColours = 0;
         List<Color> checkedColors = new List<Color>();
         foreach (GraphPoint g in cells)

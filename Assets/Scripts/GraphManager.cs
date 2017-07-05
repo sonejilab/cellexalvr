@@ -11,7 +11,6 @@ public class GraphManager : MonoBehaviour
     public SelectionToolHandler selectionToolHandler;
     private Graph[] graphs;
     private int activeGraph = 0;
-    private List<Graph> graphClones;
 
     void Awake()
     {
@@ -43,19 +42,10 @@ public class GraphManager : MonoBehaviour
         }
         graphs[i].gameObject.SetActive(true);
         graphs[i].transform.parent = this.transform;
-        graphClones = new List<Graph>();
     }
 
     public void DeleteGraphs()
     {
-        if (graphClones != null)
-        {
-            foreach (Graph g in graphClones)
-            {
-                Destroy(g.gameObject);
-            }
-            graphClones.Clear();
-        }
         foreach (Graph g in graphs)
         {
             if (g != null)
@@ -87,50 +77,7 @@ public class GraphManager : MonoBehaviour
         {
             g.ResetGraph();
         }
-        RemoveClones();
         SetGraphStartPosition();
-    }
-
-    private void RemoveClones()
-    {
-        foreach (Graph graph in graphClones)
-        {
-            Destroy(graph.gameObject);
-        }
-        graphClones.Clear();
-    }
-
-    public Graph NewGraphClone()
-    {
-        Graph newGraph = Instantiate(graphPrefab);
-        newGraph.gameObject.SetActive(true);
-        newGraph.transform.parent = this.transform;
-        graphClones.Add(newGraph);
-        return newGraph;
-    }
-
-    public void DestroyRigidbodies()
-    {
-        Destroy(graphs[activeGraph].GetComponent<Rigidbody>());
-        foreach (Graph clone in graphClones)
-        {
-            Destroy(clone.GetComponent<Rigidbody>());
-        }
-    }
-
-    public void CreateRigidbodies()
-    {
-        graphs[activeGraph].gameObject.AddComponent<Rigidbody>();
-        graphs[activeGraph].gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        graphs[activeGraph].gameObject.GetComponent<Rigidbody>().useGravity = false;
-        graphs[activeGraph].gameObject.GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
-        foreach (Graph clone in graphClones)
-        {
-            clone.gameObject.AddComponent<Rigidbody>();
-            clone.gameObject.GetComponent<Rigidbody>().isKinematic = true;
-            clone.gameObject.GetComponent<Rigidbody>().useGravity = false;
-            clone.gameObject.GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
-        }
     }
 
     public void HideDDRGraph()

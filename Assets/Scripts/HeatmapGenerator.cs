@@ -9,6 +9,7 @@ public class HeatmapGenerator : MonoBehaviour
     public GameObject heatmapPrefab;
     public ErrorMessageController errorMessageController;
     public GraphManager graphManager;
+    public GameObject fire;
     private ArrayList data;
     private GenerateHeatmapThread ght;
     private Thread t;
@@ -88,7 +89,7 @@ public class HeatmapGenerator : MonoBehaviour
             heatBoard = Instantiate(heatmapPrefab, heatmapPosition, heatmapPrefab.transform.rotation);
             Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
             heatBoard.transform.parent = transform;
-            heatmap.SetVars(graphManager, selectionToolHandler, selection);
+            heatmap.SetVars(graphManager, selectionToolHandler, selection, fire);
             heatmapList.Add(heatBoard);
 
             hourglass.SetActive(false);

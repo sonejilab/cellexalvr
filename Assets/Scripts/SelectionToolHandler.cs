@@ -154,12 +154,9 @@ public class SelectionToolHandler : MonoBehaviour
 
     public void ConfirmSelection()
     {
-        Graph newGraph = manager.NewGraphClone();
-        newGraph.LimitGraphArea(selectedCells);
         foreach (Collider cell in selectedCells)
         {
             GameObject graphpoint = cell.gameObject;
-            graphpoint.transform.parent = newGraph.transform;
             Color cellColor = cell.gameObject.GetComponent<Renderer>().material.color;
             Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
             cell.gameObject.GetComponent<Renderer>().material.color = nonTransparentColor;
