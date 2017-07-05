@@ -12,13 +12,38 @@ public class Heatmap : MonoBehaviour
     public Texture texture;
     public TextMesh infoText;
     private Dictionary<Cell, Color> containedCells;
+    private SteamVR_Controller.Device device;
     private GraphManager graphManager;
     private SelectionToolHandler selectionToolHandler;
-
+    private bool controllerInside = false;
     // Use this for initialization
     void Start()
     {
+        SteamVR_TrackedObject rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        device = SteamVR_Controller.Input((int)rightController.index);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Controller")
+        {
+            controllerInside = true;
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Controller")
+        {
+            controllerInside = false;
+        }
+    }
+
+    void Update()
+    {
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();
+        }
     }
 
     /// <summary>
