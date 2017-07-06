@@ -16,7 +16,7 @@ private SpriteRenderer spriteRenderer;
 private bool keyboardActivated = false;
 
 void Awake() {
-	keyboard.SetActive(false);
+	// keyboard.SetActive(false);
 }
 
 void Start() {

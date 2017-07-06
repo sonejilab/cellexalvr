@@ -3,6 +3,7 @@ using SQLiter;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CellManager : MonoBehaviour
 {
@@ -51,10 +52,28 @@ public class CellManager : MonoBehaviour
         }
         for (int i = 0; i < expressions.Count; ++i)
         {
-            string cell = ((CellExpressionPair) expressions[i]).Cell;
-            cells[cell].ColorByExpression((int) ((CellExpressionPair) expressions[i]).Expression);
+            string cell = ((CellExpressionPair)expressions[i]).Cell;
+            cells[cell].ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
         }
 
+    }
+
+     public void DeleteCells()
+    {
+        cells.Clear();
+    }
+
+    public void ColorByAttribute(string attributeType, Color color)
+    {
+        foreach (Cell cell in cells.Values)
+        {
+            cell.ColorByAttribute(attributeType, color);
+        }
+    }
+
+    public void AddAttribute(string cellname, string attributeType, string attribute)
+    {
+        cells[cellname].AddAttribute(attributeType, attribute);
     }
 
     //public bool GeneExists(string geneName)

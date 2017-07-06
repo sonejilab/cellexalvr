@@ -1,33 +1,31 @@
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 
-public class AttributeMenuButton : MonoBehaviour
+public class CreateSkeletonButton : MonoBehaviour
 {
     public TextMesh descriptionText;
-    public GameObject attributeMenu;
     public SteamVR_TrackedObject rightController;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
-    public GameObject buttons;
+    public GraphManager graphManager;
     private SteamVR_Controller.Device device;
+    private bool controllerInside;
     private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
 
+    // Use this for initialization
     void Start()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
+        //  highlightedTexture =
     }
 
+    // Update is called once per frame
     void Update()
     {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-            attributeMenu.SetActive(true);
-            buttons.SetActive(false);
+            graphManager.CreateConvexHull(0);
         }
     }
 
@@ -35,7 +33,7 @@ public class AttributeMenuButton : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
-            descriptionText.text = "Color by attribute";
+            descriptionText.text = "This button does nothing";
             spriteRenderer.sprite = highlightedTexture;
             controllerInside = true;
         }
@@ -48,7 +46,9 @@ public class AttributeMenuButton : MonoBehaviour
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
+            //selectionToolHandler.SetSelectionToolEnabled(!selectionToolHandler.IsSelectionToolEnabled());
         }
-    }
-}
 
+    }
+
+}

@@ -6,6 +6,7 @@ public class Cell
 {
 
     private string labelString;
+    private Dictionary<string, string> attributes;
     //private Dictionary<string, int> geneExpressions;
     private List<GraphPoint> graphPoints;
     private List<Material> materialList;
@@ -16,6 +17,7 @@ public class Cell
         //geneExpressions = new Dictionary<string, int> ();
         graphPoints = new List<GraphPoint>();
         this.materialList = materialList;
+        attributes = new Dictionary<string, string>();
     }
 
     public void SetLabel(string label)
@@ -52,6 +54,22 @@ public class Cell
         {
             this.labelString = value;
         }
+    }
+
+    public void ColorByAttribute(string attributeType, Color color)
+    {
+        if (attributes[attributeType] == "1")
+        {
+            foreach (GraphPoint g in graphPoints)
+            {
+                g.GetComponent<Renderer>().material.color = color;
+            }
+        }
+    }
+
+    public void AddAttribute(string attributeType, string attribute)
+    {
+        attributes[attributeType] = attribute;
     }
 
     public void ColorByExpression(int expression)

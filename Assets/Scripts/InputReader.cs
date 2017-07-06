@@ -13,10 +13,18 @@ public class InputReader : MonoBehaviour
     public LoaderController loaderController;
     public SQLite database;
     public SelectionToolHandler selectionToolHandler;
+    public AttributeSubMenu attributeSubMenu;
+
+    private void Start()
+    {
+        //ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
+    }
+
     public void ReadFolder(string path)
     {
+        
         database.InitDatabase(path + "\\database.sqlite");
-        print(path);
+        // print(path);
         selectionToolHandler.DataDir = path;
         // clear the runtimeGroups
         string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
@@ -35,7 +43,7 @@ public class InputReader : MonoBehaviour
 
         string[] mdsFiles = Directory.GetFiles(path, "*.mds");
         //StartCoroutine(ReadFiles(path, 25));
-        StartCoroutine(ReadMDSFiles(mdsFiles, 25));
+        StartCoroutine(ReadMDSFiles(path, mdsFiles, 25));
 
     }
 
@@ -49,7 +57,7 @@ public class InputReader : MonoBehaviour
         yield break;
     }
 
-    IEnumerator ReadMDSFiles(string[] mdsFiles, int itemsPerFrame)
+    IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
     {
         int fileIndex = 0;
         foreach (string file in mdsFiles)
@@ -58,7 +66,7 @@ public class InputReader : MonoBehaviour
             graphManager.SetActiveGraph(fileIndex);
 
             // put each line into an array
-            string[] lines = System.IO.File.ReadAllLines(file);
+            string[] lines = File.ReadAllLines(file);
             //string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
             UpdateMinMax(lines);
 
@@ -114,6 +122,37 @@ public class InputReader : MonoBehaviour
             }*/
             fileIndex++;
         }
+
+        string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
+        foreach (string metacellfile in metacellfiles)
+        {
+            // print(metacellfile);
+            string[] lines = File.ReadAllLines(metacellfile);
+            // first line is a header line
+            string header = lines[0];
+            string[] attributeTypes = header.Split(null);
+            string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
+            for (int i = 1; i < attributeTypes.Length; ++i)
+            {
+                if (attributeTypes[i].Length > 10)
+                {
+                    attributeTypes[i] = attributeTypes[i].Substring(0, 10);
+                }
+                actualAttributeTypes[i - 1] = attributeTypes[i];
+                //print(attributeTypes[i]);
+            }
+            for (int i = 1; i < lines.Length; ++i)
+            {
+                string[] line = lines[i].Split(null);
+                string cellname = line[0];
+                for (int j = 1; j < line.Length; ++j)
+                {
+                    cellManager.AddAttribute(cellname, attributeTypes[j], line[j]);
+                }
+            }
+            attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
+        }
+
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
     }

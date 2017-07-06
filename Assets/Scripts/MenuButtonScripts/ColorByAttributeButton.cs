@@ -3,42 +3,54 @@ using System.Collections;
 
 public class ColorByAttributeButton : MonoBehaviour
 {
-    public GraphManager graphManager;
+    public CellManager cellManager;
     public SteamVR_TrackedObject rightController;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
+    public TextMesh description;
     private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
+    private new Renderer renderer;
     private bool controllerInside = false;
-    private TextMesh description;
     private string attribute;
+    private Color color;
+    private bool colored = false;
 
-    void Start()
+    void Awake()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
-        description = GetComponentInChildren<TextMesh>();
+        renderer = GetComponent<Renderer>();
     }
 
     void Update()
     {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            //graphManager.ColorAllGraphsByAttribute(attribute);
+            if (!colored)
+            {
+                cellManager.ColorByAttribute(attribute, color);
+            }
+            else
+            {
+                cellManager.ColorByAttribute(attribute, Color.white);
+            }
+            colored = !colored;
         }
     }
 
-    public void SetAttribute(string attribute)
+    public void SetAttribute(string attribute, Color color)
     {
         description.text = attribute;
+        this.attribute = attribute;
+        // sometimes this is done before Awake() it seems, so we use GetComponent() here
+        GetComponent<Renderer>().material.color = color;
+        this.color = color;
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Controller")
         {
-            spriteRenderer.sprite = highlightedTexture;
+            renderer.material.color = Color.white;
             controllerInside = true;
         }
     }
@@ -47,7 +59,7 @@ public class ColorByAttributeButton : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
-            spriteRenderer.sprite = standardTexture;
+            renderer.material.color = color;
             controllerInside = false;
         }
     }

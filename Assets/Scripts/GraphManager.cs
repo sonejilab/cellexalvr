@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GraphManager : MonoBehaviour
@@ -44,8 +45,14 @@ public class GraphManager : MonoBehaviour
         graphs[i].transform.parent = this.transform;
     }
 
+    public void ColorAllGraphsByAttribute(string attribute)
+    {
+
+    }
+
     public void DeleteGraphs()
     {
+        cellManager.DeleteCells();
         foreach (Graph g in graphs)
         {
             if (g != null)
@@ -78,6 +85,10 @@ public class GraphManager : MonoBehaviour
             g.ResetGraph();
         }
         SetGraphStartPosition();
+    }
+    public void CreateConvexHull(int graph)
+    {
+        graphs[graph].CreateConvexHull();
     }
 
     public void HideDDRGraph()

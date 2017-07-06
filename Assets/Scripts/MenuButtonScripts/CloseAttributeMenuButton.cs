@@ -8,6 +8,7 @@ public class CloseAttributeMenuButton : MonoBehaviour
     public SteamVR_TrackedObject rightController;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
+    public GameObject buttons;
     private SteamVR_Controller.Device device;
     private SpriteRenderer spriteRenderer;
     private bool controllerInside = false;
@@ -23,7 +24,10 @@ public class CloseAttributeMenuButton : MonoBehaviour
     {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            spriteRenderer.sprite = standardTexture;
+            controllerInside = false;
             attributeMenu.SetActive(false);
+            buttons.SetActive(true);
         }
     }
 
