@@ -17,7 +17,7 @@ public class InputReader : MonoBehaviour
 
     private void Start()
     {
-        //ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
+        ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
     }
 
     public void ReadFolder(string path)
@@ -75,7 +75,7 @@ public class InputReader : MonoBehaviour
                 for (int j = i; j < i + itemsPerFrame && j < lines.Length; ++j)
                 {
                     string line = lines[j];
-                    string[] words = line.Split('\t');
+                    string[] words = line.Split(null);
                     // print(words[0]);
                     graphManager.AddCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
                 }
@@ -155,6 +155,8 @@ public class InputReader : MonoBehaviour
 
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
+        graphManager.CreateConvexHull(0);
+        graphManager.CreateConvexHull(1);
     }
 
     /// <summary>
@@ -170,8 +172,8 @@ public class InputReader : MonoBehaviour
         minCoordValues.x = minCoordValues.y = minCoordValues.z = float.MaxValue;
         foreach (string line in lines)
         {
-            // the coordinates are split with tab characters
-            string[] words = line.Split('\t');
+            // the coordinates are split with whitespace characters
+            string[] words = line.Split(null);
             float[] coords = new float[3];
             coords[0] = float.Parse(words[1]);
             coords[1] = float.Parse(words[2]);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Graph : MonoBehaviour
@@ -25,9 +26,9 @@ public class Graph : MonoBehaviour
     //Called before any Start()-function. Avoids nullReferenceException in addGraphPoint().
     void Awake()
     {
-        points = new List<GraphPoint>();
+        points = new List<GraphPoint>(1000);
         minAreaValues = gameObject.transform.position;
-        areaSize = new Vector3(1,1,1);
+        areaSize = new Vector3(1, 1, 1);
     }
 
     public void AddGraphPoint(Cell cell, float x, float y, float z)
@@ -60,75 +61,151 @@ public class Graph : MonoBehaviour
 
     }
 
-    //public void ColorGraphByGene(string geneName) {
-    //	foreach (GraphPoint point in points) {
-    //		point.ColorByGene (geneName);
-    //	}
-    //}
-
-    public List<List<GraphPoint>> GetGroups()
+    public static void AutoWeld(Mesh mesh, float threshold, float bucketStep)
     {
+        Vector3[] oldVertices = mesh.vertices;
+        Vector3[] newVertices = new Vector3[oldVertices.Length];
+        int[] old2new = new int[oldVertices.Length];
+        int newSize = 0;
 
-        List<Color> colors = new List<Color>();
-        List<List<GraphPoint>> groups = new List<List<GraphPoint>>();
-
-        for (int i = 0; i < points.Count; i++)
+        // Find AABB
+        Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+        Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        for (int i = 0; i < oldVertices.Length; i++)
         {
-            GraphPoint p = (GraphPoint)points[i];
-            Color m = p.GetMaterial().color;
+            if (oldVertices[i].x < min.x) min.x = oldVertices[i].x;
+            if (oldVertices[i].y < min.y) min.y = oldVertices[i].y;
+            if (oldVertices[i].z < min.z) min.z = oldVertices[i].z;
+            if (oldVertices[i].x > max.x) max.x = oldVertices[i].x;
+            if (oldVertices[i].y > max.y) max.y = oldVertices[i].y;
+            if (oldVertices[i].z > max.z) max.z = oldVertices[i].z;
+        }
 
-            if (!colors.Contains(m))
+        // Make cubic buckets, each with dimensions "bucketStep"
+        int bucketSizeX = Mathf.FloorToInt((max.x - min.x) / bucketStep) + 1;
+        int bucketSizeY = Mathf.FloorToInt((max.y - min.y) / bucketStep) + 1;
+        int bucketSizeZ = Mathf.FloorToInt((max.z - min.z) / bucketStep) + 1;
+        List<int>[,,] buckets = new List<int>[bucketSizeX, bucketSizeY, bucketSizeZ];
+
+        // Make new vertices
+        for (int i = 0; i < oldVertices.Length; i++)
+        {
+            // Determine which bucket it belongs to
+            int x = Mathf.FloorToInt((oldVertices[i].x - min.x) / bucketStep);
+            int y = Mathf.FloorToInt((oldVertices[i].y - min.y) / bucketStep);
+            int z = Mathf.FloorToInt((oldVertices[i].z - min.z) / bucketStep);
+
+            // Check to see if it's already been added
+            if (buckets[x, y, z] == null)
+                buckets[x, y, z] = new List<int>(); // Make buckets lazily
+
+            for (int j = 0; j < buckets[x, y, z].Count; j++)
             {
-                colors.Add(m);
-                groups.Add(new List<GraphPoint>());
+                Vector3 to = newVertices[buckets[x, y, z][j]] - oldVertices[i];
+                if (Vector3.SqrMagnitude(to) < threshold)
+                {
+                    old2new[i] = buckets[x, y, z][j];
+                    goto skip; // Skip to next old vertex if this one is already there
+                }
             }
 
-            int groupIndex = colors.IndexOf(m);
-            (groups[groupIndex]).Add(p);
+            // Add new vertex
+            newVertices[newSize] = oldVertices[i];
+            buckets[x, y, z].Add(newSize);
+            old2new[i] = newSize;
+            newSize++;
+
+            skip:;
         }
 
-        return groups;
-
-    }
-
-    public void CreateConvexHull()
-    {
-        MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
-        CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-        GameObject skeleton = Instantiate(skeletonPrefab);
-        int scaleFactor = 10;
-        int i = 0;
-        //print(meshFilters[0].name);
-        while (i < meshFilters.Length)
+        // Make new triangles
+        int[] oldTris = mesh.triangles;
+        int[] newTris = new int[oldTris.Length];
+        for (int i = 0; i < oldTris.Length; i++)
         {
-            MeshFilter clone = Instantiate(meshFilters[i]);
-            clone.transform.localScale = clone.transform.localScale * scaleFactor;
-            // clone.transform.parent = skeleton.transform;
-            //MeshFilter clone = Instantiate(meshFilters[i]);
-            //combine[i].transform.localScale = combine[i].transform.localScale * scaleFactor;
-            //var scaledMesh = meshFilters[i].mesh;
-            //var vertices = scaledMesh.vertices;
-            //for (int j = 0; j < vertices.Length; ++j)
-            //{
-            //    var vertex = vertices[j];
-            //    var dx = vertex.x * scaleFactor;
-            //    var dy = vertex.y * scaleFactor;
-            //    var dz = vertex.z * scaleFactor;
-            //    vertices[i] = vertex;
-            //}
-            //scaledMesh.vertices = vertices;
-            //meshFilters[i].mesh = scaledMesh;
-            combine[i].mesh = clone.sharedMesh;
-            combine[i].transform = clone.transform.localToWorldMatrix;
-            Destroy(clone);
-            i++;
+            newTris[i] = old2new[oldTris[i]];
         }
-        var skeletonMeshFilter = skeleton.GetComponent<MeshFilter>();
-        skeletonMeshFilter.mesh = new Mesh();
-        skeletonMeshFilter.mesh.CombineMeshes(combine, true);
-        skeleton.GetComponent<MeshCollider>().sharedMesh = skeletonMeshFilter.sharedMesh;
-        
+
+        Vector3[] finalVertices = new Vector3[newSize];
+        for (int i = 0; i < newSize; i++)
+            finalVertices[i] = newVertices[i];
+
+        mesh.Clear();
+        mesh.vertices = finalVertices;
+        mesh.triangles = newTris;
+        mesh.RecalculateNormals();
     }
+
+    //public void CreateConvexHull(int[] xcoords, int[] ycoords, int[] zcoords)
+    public void CreateConvexHull(int graph)
+    {
+        string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie\graph" + (graph + 1) + ".hull";
+        string[] lines = File.ReadAllLines(path);
+
+        int[] xcoords = new int[lines.Length];
+        int[] ycoords = new int[lines.Length];
+        int[] zcoords = new int[lines.Length];
+        Vector3[] vertices = new Vector3[points.Count];
+        int[] triangles = new int[lines.Length * 3];
+
+        for (int i = 0; i < points.Count; ++i)
+        {
+            vertices[i] = points[i].transform.localPosition;
+        }
+
+        var trianglesIndex = 0;
+        for (int i = 0; i < lines.Length; ++i)
+        {
+            string[] coords = lines[i].Split(null);
+            triangles[trianglesIndex++] = int.Parse(coords[1]) - 1;
+            triangles[trianglesIndex++] = int.Parse(coords[2]) - 1;
+            triangles[trianglesIndex++] = int.Parse(coords[3]) - 1;
+        }
+
+        var convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
+        convexHull.mesh = new Mesh()
+        {
+            vertices = vertices,
+            triangles = triangles
+        };
+        convexHull.gameObject.transform.position = transform.position;
+        convexHull.gameObject.transform.rotation = transform.rotation;
+        convexHull.mesh.RecalculateBounds();
+        convexHull.mesh.RecalculateNormals();
+    }
+
+    /* public void CreateConvexHull()
+     {
+         int scaleFactor = 10;
+         Vector3 clonePos = new Vector3(0, .5f, -3.5f);
+         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
+         CombineInstance[] combine = new CombineInstance[100];
+         GameObject skeleton = Instantiate(skeletonPrefab);
+         var skeletonMeshFilter = skeleton.GetComponent<MeshFilter>();
+         skeletonMeshFilter.mesh = new Mesh();
+         int i = 0;
+         while (i < meshFilters.Length)
+         {
+             for (int j = 0; j < 100 && i < meshFilters.Length; ++j, ++i)
+             {
+                 var newMesh = Instantiate(meshFilters[i]);
+                 newMesh.mesh = meshFilters[i].mesh;
+                 newMesh.transform.localScale = meshFilters[i].transform.localScale * scaleFactor;
+                 combine[j].mesh = newMesh.mesh;
+                 combine[j].transform = newMesh.transform.localToWorldMatrix;
+                 Destroy(newMesh.gameObject);
+             }
+             // print("combined meshes " + i);
+             //skeletonMeshFilter.mesh = new Mesh
+             skeletonMeshFilter.mesh.CombineMeshes(combine);
+             Instantiate(skeletonMeshFilter, clonePos += new Vector3(0,0,-1f), Quaternion.identity, null).name = i + "";
+             // Destroy(tmpSkeleton.gameObject);
+             AutoWeld(skeletonMeshFilter.mesh, 0.001f, 1);
+         }
+         skeleton.transform.position = transform.position;
+         skeleton.transform.rotation = transform.rotation;
+         skeleton.transform.parent = transform;
+     }*/
 
     public void ResetGraph()
     {

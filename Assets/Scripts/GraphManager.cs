@@ -88,7 +88,7 @@ public class GraphManager : MonoBehaviour
     }
     public void CreateConvexHull(int graph)
     {
-        graphs[graph].CreateConvexHull();
+        graphs[graph].CreateConvexHull(graph);
     }
 
     public void HideDDRGraph()
@@ -100,5 +100,4 @@ public class GraphManager : MonoBehaviour
     {
         graphs[1].gameObject.SetActive(!graphs[1].gameObject.activeSelf); ;
     }
-
 }
