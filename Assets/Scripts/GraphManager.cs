@@ -10,12 +10,12 @@ public class GraphManager : MonoBehaviour
     public AudioSource goodSound;
     public AudioSource badSound;
     public SelectionToolHandler selectionToolHandler;
-    private Graph[] graphs;
+    private List<Graph> graphs;
     //private int activeGraph = 0;
 
     void Awake()
     {
-        graphs = new Graph[2];
+        graphs = new List<Graph>();
     }
 
     //public void SetActiveGraph(int i)
@@ -33,6 +33,7 @@ public class GraphManager : MonoBehaviour
     public Graph CreateGraph()
     {
         Graph newGraph = Instantiate(graphPrefab);
+        graphs.Add(newGraph);
         // more hardcoded values
         //if (i == 0)
         //{
@@ -97,5 +98,23 @@ public class GraphManager : MonoBehaviour
     public void HideTSNEGraph()
     {
         graphs[1].gameObject.SetActive(!graphs[1].gameObject.activeSelf); ;
+    }
+
+    /// <summary>
+    /// Finds a graph.
+    /// </summary>
+    /// <param name="graphName"> The graph's name </param>
+    /// <returns> A reference to the graph, or null if no graph was found </returns>
+    public Graph FindGraph(string graphName)
+    {
+        foreach (Graph g in graphs)
+        {
+            if (g.GraphName == graphName)
+            {
+                return g;
+            }
+        }
+        // no graph found
+        return null;
     }
 }

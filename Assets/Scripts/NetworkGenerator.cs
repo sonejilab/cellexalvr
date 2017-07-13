@@ -22,7 +22,7 @@ public class NetworkGenerator : MonoBehaviour
 
     IEnumerator GenerateNetworksCoroutine()
     {
-
+        // generate the files containing the network information
         t = new Thread(new ThreadStart(gnt.GenerateNetworks));
         t.Start();
 

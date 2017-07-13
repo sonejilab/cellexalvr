@@ -7,8 +7,7 @@ public class CreateNetworksButton : MonoBehaviour
     public SteamVR_TrackedObject rightController;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
-    private NetworkGenerator networkGenerator;
-    private Thread t;
+    public NetworkGenerator networkGenerator;
     private SteamVR_Controller.Device device;
     private bool controllerInside;
     private SpriteRenderer spriteRenderer;
@@ -18,7 +17,6 @@ public class CreateNetworksButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
-        networkGenerator = new NetworkGenerator();
     }
 
     void Update()

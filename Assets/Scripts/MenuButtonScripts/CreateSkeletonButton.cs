@@ -33,7 +33,7 @@ public class CreateSkeletonButton : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
-            descriptionText.text = "This button does nothing";
+            descriptionText.text = "Create skeletons";
             spriteRenderer.sprite = highlightedTexture;
             controllerInside = true;
         }

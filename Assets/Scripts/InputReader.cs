@@ -4,6 +4,7 @@ using System.IO;
 using SQLiter;
 using System.Text.RegularExpressions;
 using System;
+using System.Collections.Generic;
 //using HDF5DotNet;
 
 // A classs for reading a data file and creating GraphPoints at the correct locations
@@ -16,6 +17,9 @@ public class InputReader : MonoBehaviour
     public SQLite database;
     public SelectionToolHandler selectionToolHandler;
     public AttributeSubMenu attributeSubMenu;
+    public GameObject networkPrefab;
+    public NetworkNode networkNodePrefab;
+    public GameObject headset;
 
     private void Start()
     {
@@ -73,6 +77,7 @@ public class InputReader : MonoBehaviour
             string graphFileName = regexResult[regexResult.Length - 1];
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            newGraph.DirectoryName = regexResult[regexResult.Length - 2];
             // put each line into an array
             string[] lines = File.ReadAllLines(file);
             //string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
@@ -166,6 +171,7 @@ public class InputReader : MonoBehaviour
         //graphManager.CreateConvexHull(0);
         //graphManager.CreateConvexHull(1);
     }
+
     public void ReadNetworkFiles()
     {
         // read the .cnt file
@@ -180,9 +186,28 @@ public class InputReader : MonoBehaviour
             return;
         }
         string[] lines = File.ReadAllLines(cntFilePath[0]);
+        // read the graph's name and create a skeleton
+        string[] firstLine = lines[0].Split(null);
+        string graphName = firstLine[firstLine.Length - 1];
+        Graph graph = graphManager.FindGraph(graphName);
+        GameObject skeleton = graph.CreateConvexHull();
+        Dictionary<string, GameObject> networks = new Dictionary<string, GameObject>();
         foreach (string line in lines)
         {
-            //Instantiate();
+            string[] words = line.Split(null);
+            float x = float.Parse(words[0]);
+            float y = float.Parse(words[1]);
+            float z = float.Parse(words[2]);
+            // the color is a hex string e.g. #FF0099
+            Color color = new Color();
+            ColorUtility.TryParseHtmlString(words[3], out color);
+            Vector3 position = graph.ScaleCoordinates(x, y, z);
+
+            GameObject network = Instantiate(networkPrefab);
+            network.transform.parent = skeleton.transform;
+            network.transform.localPosition = position;
+            network.GetComponent<Renderer>().material.color = color;
+            networks[words[3]] = network;
         }
 
         // read the .nwk file
@@ -197,10 +222,70 @@ public class InputReader : MonoBehaviour
             return;
         }
         lines = File.ReadAllLines(nwkFilePath[0]);
-        foreach (string line in lines)
+        Dictionary<string, NetworkNode> nodes = new Dictionary<string, NetworkNode>(1000);
+        // skip the first line as it is a header
+        for (int i = 1; i < lines.Length; ++i)
         {
-            string[] words = line.Split(null);
-            // read stuff here
+
+            string[] words = lines[i].Split(null);
+            string color = words[6];
+            string geneName1 = words[1];
+            string node1 = geneName1 + color;
+            string geneName2 = words[2];
+            string node2 = geneName2 + color;
+            // add the nodes if they don't already exist
+            if (!nodes.ContainsKey(node1))
+            {
+                NetworkNode newNode = Instantiate(networkNodePrefab);
+                newNode.CameraToLookAt = headset.transform;
+                newNode.Label = geneName1;
+                nodes[node1] = newNode;
+            }
+
+            if (!nodes.ContainsKey(node2))
+            {
+                NetworkNode newNode = Instantiate(networkNodePrefab);
+                newNode.CameraToLookAt = headset.transform;
+                newNode.Label = geneName2;
+                nodes[node2] = newNode;
+            }
+
+            Transform parentNetwork = networks[words[6]].transform;
+            nodes[node1].transform.parent = parentNetwork;
+            nodes[node2].transform.parent = parentNetwork;
+
+            // add a bidirectional connection
+            nodes[node1].AddNeighbour(nodes[node2]);
+
+
+        }
+        // position nodes in a circle
+        //Vector3 pos1 = new Vector3(0, .5f, 0);
+        //Vector3 pos2 = new Vector3(0, -.5f, 0);
+        Dictionary<GameObject, int> nbrOfNodesAdded = new Dictionary<GameObject, int>(networks.Count);
+        foreach (GameObject network in networks.Values)
+        {
+            nbrOfNodesAdded[network] = 0;
+        }
+        foreach (NetworkNode node in nodes.Values)
+        {
+            GameObject parent = node.transform.parent.gameObject;
+            float networkSize = parent.transform.childCount;
+            float t = nbrOfNodesAdded[parent];
+            float x = Mathf.Cos(2f * (float)Math.PI * t / networkSize) * .5f;
+            float y = Mathf.Sin(2f * (float)Math.PI * t / networkSize) * .5f;
+            node.transform.localPosition = new Vector3(x, y, 0);
+            nbrOfNodesAdded[parent]++;
+        }
+
+        // pair together buddies
+        foreach (NetworkNode node in nodes.Values)
+        {
+            node.PositionBuddies();
+        }
+        foreach (NetworkNode node in nodes.Values)
+        {
+            node.AddEdges();
         }
 
     }

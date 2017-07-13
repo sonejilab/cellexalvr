@@ -19,7 +19,7 @@ expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
 group_selection_filepath <- file.path(homedir, "Assets","Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
 
-print(group_selection_filepath)
+#print(group_selection_filepath)
 
 generated_image_filepath <- file.path(homedir, "Assets","Images","heatmap.png")
 

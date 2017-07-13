@@ -9,6 +9,7 @@ public class Graph : MonoBehaviour
     public SelectionToolHandler selectionToolHandler;
     public GameObject skeletonPrefab;
     public string GraphName { get; set; }
+    public string DirectoryName { get; set; }
     private GraphPoint newGraphpoint;
     private List<GraphPoint> points;
     private Vector3 maxCoordValues;
@@ -31,10 +32,9 @@ public class Graph : MonoBehaviour
         areaSize = new Vector3(1, 1, 1);
     }
 
-    public void AddGraphPoint(Cell cell, float x, float y, float z)
+    public Vector3 ScaleCoordinates(float x, float y, float z)
     {
-
-        // Scales the sphere coordinates to fit inside the this.
+        // Scales the sphere coordinates to fit inside the graph's bounds.
         Vector3 scaledCoordinates = new Vector3(x, y, z);
         scaledCoordinates -= minCoordValues;
         scaledCoordinates.x /= (diffCoordValues.x);
@@ -42,7 +42,13 @@ public class Graph : MonoBehaviour
         scaledCoordinates.z /= (diffCoordValues.z);
         scaledCoordinates.Scale(areaSize);
         scaledCoordinates += minAreaValues;
+        return scaledCoordinates;
+    }
 
+    public void AddGraphPoint(Cell cell, float x, float y, float z)
+    {
+
+        Vector3 scaledCoordinates = ScaleCoordinates(x, y, z);
         newGraphpoint = Instantiate(graphpoint, new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z), Quaternion.identity);
         newGraphpoint.gameObject.SetActive(true);
         newGraphpoint.SetCoordinates(cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
@@ -137,10 +143,9 @@ public class Graph : MonoBehaviour
     }
 
     //public void CreateConvexHull(int[] xcoords, int[] ycoords, int[] zcoords)
-    public void CreateConvexHull()
+    public GameObject CreateConvexHull()
     {
-        // TODO this file path should really not be hardcoded
-        string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Jensen_10X\" + GraphName + ".hull";
+        string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
 
         int[] xcoords = new int[lines.Length];
@@ -174,6 +179,7 @@ public class Graph : MonoBehaviour
         convexHull.gameObject.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();
+        return convexHull.gameObject;
     }
 
     /* public void CreateConvexHull()
