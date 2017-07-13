@@ -3,7 +3,7 @@
 ///</summary>
 public class ConfirmSelectionButton : RotatableButton {
 public SelectionToolHandler selectionToolHandler;
-protected override string description {
+protected override string Description {
 	get { return "Confirm selection";}
 }
 

@@ -36,9 +36,41 @@ public class CellManager : MonoBehaviour
         return cells[label];
     }
 
+    public void RemoveExpressedCells()
+    {
+        foreach (Cell c in cells.Values)
+        {
+            if (c.ExpressionLevel > 0)
+            {
+                c.RemoveFromGraphs();
+            }
+        }
+    }
+
+    public void RemoveNonExpressedCells()
+    {
+        foreach (Cell c in cells.Values)
+        {
+            if (c.ExpressionLevel == 0)
+            {
+                c.RemoveFromGraphs();
+            }
+        }
+    }
+
     public Cell GetCell(string label)
     {
         return cells[label];
+    }
+
+    public void ColorGraphsByPreviousExpression(int index)
+    {
+
+        foreach (Cell c in cells.Values)
+        {
+            c.ColorByPreviousExpression(index);
+        }
+
     }
 
     public void ColorGraphsByGene(string geneName)
@@ -55,7 +87,10 @@ public class CellManager : MonoBehaviour
             string cell = ((CellExpressionPair)expressions[i]).Cell;
             cells[cell].ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
         }
-
+        foreach (Cell c in cells.Values)
+        {
+            c.SaveExpression();
+        }
     }
 
      public void DeleteCells()

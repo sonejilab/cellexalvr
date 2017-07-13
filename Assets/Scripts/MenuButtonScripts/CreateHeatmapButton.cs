@@ -3,7 +3,7 @@
 ///</summary>
 public class CreateHeatmapButton : RotatableButton
 {
-    protected override string description
+    protected override string Description
     {
         get { return "Create heatmap"; }
     }

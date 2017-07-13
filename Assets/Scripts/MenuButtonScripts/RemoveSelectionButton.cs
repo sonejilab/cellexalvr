@@ -4,7 +4,7 @@
 public class RemoveSelectionButton : RotatableButton
 {
 
-    protected override string description
+    protected override string Description
     {
         get { return "Remove selection"; }
     }

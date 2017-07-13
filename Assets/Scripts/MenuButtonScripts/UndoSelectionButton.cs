@@ -5,7 +5,7 @@
 public class UndoSelectionButton : RotatableButton
 {
 
-    protected override string description
+    protected override string Description
     {
         get { return "Cancel selection"; }
     }

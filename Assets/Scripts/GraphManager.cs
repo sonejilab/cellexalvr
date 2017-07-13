@@ -11,17 +11,17 @@ public class GraphManager : MonoBehaviour
     public AudioSource badSound;
     public SelectionToolHandler selectionToolHandler;
     private Graph[] graphs;
-    private int activeGraph = 0;
+    //private int activeGraph = 0;
 
     void Awake()
     {
         graphs = new Graph[2];
     }
 
-    public void SetActiveGraph(int i)
-    {
-        activeGraph = i;
-    }
+    //public void SetActiveGraph(int i)
+    //{
+    //    activeGraph = i;
+    //}
 
     public void SetGraphStartPosition()
     {
@@ -30,8 +30,9 @@ public class GraphManager : MonoBehaviour
         graphs[1].transform.position = new Vector3(-.456f, .5f, -0.119f);
     }
 
-    public void CreateGraph(int i)
+    public Graph CreateGraph()
     {
+        //Graph newGraph = 
         // more hardcoded values
         if (i == 0)
         {
@@ -43,6 +44,7 @@ public class GraphManager : MonoBehaviour
         }
         graphs[i].gameObject.SetActive(true);
         graphs[i].transform.parent = this.transform;
+        return newGraph;
     }
 
     public void ColorAllGraphsByAttribute(string attribute)
@@ -62,14 +64,14 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    public void AddCell(string label, float x, float y, float z)
+    public void AddCell(Graph graph, string label, float x, float y, float z)
     {
-        graphs[activeGraph].AddGraphPoint(cellManager.AddCell(label), x, y, z);
+        graph.AddGraphPoint(cellManager.AddCell(label), x, y, z);
     }
 
-    public void SetMinMaxCoords(Vector3 min, Vector3 max)
+    public void SetMinMaxCoords(Graph graph, Vector3 min, Vector3 max)
     {
-        graphs[activeGraph].SetMinMaxCoords(min, max);
+        graph.SetMinMaxCoords(min, max);
     }
 
     public void ColorAllGraphsByGene(string geneName)
@@ -82,13 +84,15 @@ public class GraphManager : MonoBehaviour
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
         {
+
             g.ResetGraph();
         }
         SetGraphStartPosition();
     }
-    public void CreateConvexHull(int graph)
+
+    public void CreateConvexHull(Graph graph)
     {
-        graphs[graph].CreateConvexHull(graph);
+        graph.CreateConvexHull();
     }
 
     public void HideDDRGraph()

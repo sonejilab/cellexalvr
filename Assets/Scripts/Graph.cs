@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -9,6 +8,7 @@ public class Graph : MonoBehaviour
     public GraphPoint graphpoint;
     public SelectionToolHandler selectionToolHandler;
     public GameObject skeletonPrefab;
+    public string GraphName { get; set; }
     private GraphPoint newGraphpoint;
     private List<GraphPoint> points;
     private Vector3 maxCoordValues;
@@ -137,9 +137,10 @@ public class Graph : MonoBehaviour
     }
 
     //public void CreateConvexHull(int[] xcoords, int[] ycoords, int[] zcoords)
-    public void CreateConvexHull(int graph)
+    public void CreateConvexHull()
     {
-        string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie\graph" + (graph + 1) + ".hull";
+        // TODO this file path should really not be hardcoded
+        string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Jensen_10X\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
 
         int[] xcoords = new int[lines.Length];
@@ -170,6 +171,7 @@ public class Graph : MonoBehaviour
         };
         convexHull.gameObject.transform.position = transform.position;
         convexHull.gameObject.transform.rotation = transform.rotation;
+        convexHull.gameObject.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();
     }
@@ -213,6 +215,7 @@ public class Graph : MonoBehaviour
         transform.localScale = defaultScale;
         foreach (GraphPoint point in points)
         {
+            point.gameObject.SetActive(true);
             point.ResetCoords();
             if (point.GetComponent<Rigidbody>() != null)
             {

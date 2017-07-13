@@ -13,7 +13,7 @@ public abstract class RotatableButton : MonoBehaviour
     public Sprite standardTexture;
     public Sprite highlightedTexture;
     // all buttons must override this variable's get property
-    abstract protected string description
+    abstract protected string Description
     {
         get;
     }
@@ -24,6 +24,7 @@ public abstract class RotatableButton : MonoBehaviour
     private Collider buttonCollider;
     protected bool isRotating = false;
     private bool isActivated = true;
+    private float rotatedTotal;
 
     void Start()
     {
@@ -38,7 +39,7 @@ public abstract class RotatableButton : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
-            descriptionText.text = description;
+            descriptionText.text = Description;
             frontsideRenderer.sprite = highlightedTexture;
             controllerInside = true;
         }
@@ -51,7 +52,7 @@ public abstract class RotatableButton : MonoBehaviour
             // if the controller has moved directly to another button without
             // exiting this button's collider the other button will have changed the
             // text and we shouldn't mess with it
-            if (descriptionText.text == description)
+            if (descriptionText.text == Description)
             {
                 descriptionText.text = "";
             }
@@ -67,13 +68,53 @@ public abstract class RotatableButton : MonoBehaviour
             isActivated = active;
             if (active)
             {
-                StartCoroutine(FlipButtonRoutine(180f, 0.15f, active));
+                if (gameObject.activeInHierarchy)
+                {
+                    StartCoroutine(FlipButtonRoutine(180f, 0.15f, active));
+                }
+                else
+                {
+                    // if the button is not activated we must not start a coroutine, so we just set the values directly
+                    backsideRenderer.enabled = false;
+                    buttonCollider.enabled = true;
+                    frontsideRenderer.sprite = standardTexture;
+                    transform.Rotate(0, 180f, 0);
+                }
             }
             else
             {
-                // no need to keep the description up if we are deactivating the button
-                descriptionText.text = "";
-                StartCoroutine(FlipButtonRoutine(-180f, 0.15f, active));
+                if (gameObject.activeInHierarchy)
+                {
+                    // no need to keep the description up if we are deactivating the button
+                    descriptionText.text = "";
+                    StartCoroutine(FlipButtonRoutine(-180f, 0.15f, active));
+                }
+                else
+                {
+                    frontsideRenderer.enabled = false;
+                    transform.Rotate(0, -180f, 0);
+                }
+            }
+        }
+    }
+
+    // if the button is deactivated when rotating, the coroutine will be killed
+    void OnDisable()
+    {
+        if (isRotating)
+        {
+            if (rotatedTotal < 0)
+            {
+                transform.Rotate(0, -180 - rotatedTotal, 0);
+                backsideRenderer.enabled = true;
+                buttonCollider.enabled = false;
+            }
+            else
+            {
+                transform.Rotate(0, 180 - rotatedTotal, 0);
+                backsideRenderer.enabled = false;
+                buttonCollider.enabled = true;
+                frontsideRenderer.sprite = standardTexture;
             }
         }
     }
@@ -86,12 +127,11 @@ public abstract class RotatableButton : MonoBehaviour
         backsideRenderer.enabled = true;
         isRotating = true;
         // how much we have rotated so far
-        float rotatedTotal = 0;
+        rotatedTotal = 0;
         // the absolute value of the rotation angle
         float yAnglesAbs = Mathf.Abs(yAngles);
         // how much we should rotate each frame
         float rotationPerFrame = yAngles / (yAnglesAbs * inTime);
-
 
         while (rotatedTotal < yAnglesAbs && rotatedTotal > -yAnglesAbs)
         {

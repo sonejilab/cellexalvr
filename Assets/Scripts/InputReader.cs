@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using SQLiter;
+using System.Text.RegularExpressions;
+using System;
 //using HDF5DotNet;
 
 // A classs for reading a data file and creating GraphPoints at the correct locations
@@ -17,12 +19,13 @@ public class InputReader : MonoBehaviour
 
     private void Start()
     {
-        ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
+        //ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Jensen_10X");
     }
+
 
     public void ReadFolder(string path)
     {
-        
+
         database.InitDatabase(path + "\\database.sqlite");
         // print(path);
         selectionToolHandler.DataDir = path;
@@ -64,7 +67,12 @@ public class InputReader : MonoBehaviour
         {
             graphManager.CreateGraph(fileIndex);
             graphManager.SetActiveGraph(fileIndex);
-
+            // file will be the full file name e.g C:\...\graph1.mds
+            // good programming habits have left us with a nice mix of forward and backward slashes
+            string[] regexResult = Regex.Split(file, @"[\\/]");
+            string graphFileName = regexResult[regexResult.Length - 1];
+            // remove the ".mds" at the end
+            graphManager.SetGraphName(graphFileName.Substring(0, graphFileName.Length - 4));
             // put each line into an array
             string[] lines = File.ReadAllLines(file);
             //string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
@@ -155,8 +163,46 @@ public class InputReader : MonoBehaviour
 
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
-        graphManager.CreateConvexHull(0);
-        graphManager.CreateConvexHull(1);
+        //graphManager.CreateConvexHull(0);
+        //graphManager.CreateConvexHull(1);
+    }
+    public void ReadNetworkFiles()
+    {
+        // read the .cnt file
+        //
+        // it should contain information about the average positions of the networks
+
+        // there should only be one .cnt file
+        string[] cntFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.cnt");
+        if (cntFilePath.Length == 0)
+        {
+            print("more than one .cnt file in network folder");
+            return;
+        }
+        string[] lines = File.ReadAllLines(cntFilePath[0]);
+        foreach (string line in lines)
+        {
+            //Instantiate();
+        }
+
+        // read the .nwk file
+        //
+        // it should contain all information about each individual node of some networks
+
+        // there should only be one .nwk file
+        string[] nwkFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.nwk");
+        if (nwkFilePath.Length == 0)
+        {
+            print("more than one .nwk file in network folder");
+            return;
+        }
+        lines = File.ReadAllLines(nwkFilePath[0]);
+        foreach (string line in lines)
+        {
+            string[] words = line.Split(null);
+            // read stuff here
+        }
+
     }
 
     /// <summary>

@@ -10,6 +10,8 @@ public class Cell
     //private Dictionary<string, int> geneExpressions;
     private List<GraphPoint> graphPoints;
     private List<Material> materialList;
+    private LinkedList<int> lastExpressions = new LinkedList<int>();
+    public int ExpressionLevel { get; internal set; }
 
     public Cell(string label, List<Material> materialList)
     {
@@ -28,6 +30,16 @@ public class Cell
     public void AddGraphPoint(GraphPoint g)
     {
         graphPoints.Add(g);
+    }
+
+    public void RemoveFromGraphs()
+    {
+        foreach (GraphPoint g in graphPoints)
+        {
+            g.gameObject.SetActive(!g.gameObject.activeSelf);
+            //if (g.GetComponent<Rigidbody>() == null)
+            //    g.gameObject.AddComponent<Rigidbody>();
+        }
     }
 
     //public void SetExpressionData(string geneName, int colorSlot) {
@@ -56,6 +68,8 @@ public class Cell
         }
     }
 
+
+
     public void ColorByAttribute(string attributeType, Color color)
     {
         if (attributes[attributeType] == "1")
@@ -72,17 +86,44 @@ public class Cell
         attributes[attributeType] = attribute;
     }
 
-    public void ColorByExpression(int expression)
+    public void ColorByPreviousExpression(int index)
     {
+        LinkedListNode<int> node = lastExpressions.First;
+        for (int i = 0; i < index; ++i)
+        {
+            node = node.Next;
+        }
+
+        int expression = node.Value;
+        ExpressionLevel = expression;
+
         foreach (GraphPoint g in graphPoints)
         {
-            //if (expression == 0)
-            //{
-            //    Debug.Log(0);
-            //}
             if (expression > 29)
             {
-                //Debug.Log("array index out of bounds in " + labelString + " with " + expression);
+                 expression = 29;
+            }
+            g.GetComponent<Renderer>().material = materialList[expression];
+        }
+    }
+
+    public void SaveExpression()
+    {
+        if (lastExpressions.Count == 10)
+        {
+            lastExpressions.RemoveLast();
+        }
+        lastExpressions.AddFirst(ExpressionLevel);
+    }
+
+    public void ColorByExpression(int expression)
+    {
+        ExpressionLevel = expression;
+
+        foreach (GraphPoint g in graphPoints)
+        {
+            if (expression > 29)
+            {
                 expression = 29;
             }
             g.GetComponent<Renderer>().material = materialList[expression];

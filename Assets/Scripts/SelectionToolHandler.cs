@@ -231,13 +231,16 @@ public class SelectionToolHandler : MonoBehaviour
 
             foreach (Collider cell in selectedCells)
             {
-                file.Write(cell.GetComponent<GraphPoint>().GetLabel());
+                GraphPoint graphPoint = cell.GetComponent<GraphPoint>();
+                file.Write(graphPoint.GetLabel());
                 file.Write("\t");
                 Color c = cell.GetComponentInChildren<Renderer>().material.color;
                 int r = (int)(c.r * 255);
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);
                 file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                file.Write("\t");
+                file.Write(graphPoint.GraphName);
                 file.WriteLine();
             }
             file.Flush();

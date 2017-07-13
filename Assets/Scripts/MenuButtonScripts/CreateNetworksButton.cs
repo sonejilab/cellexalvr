@@ -1,48 +1,31 @@
+﻿using System.Threading;
 using UnityEngine;
 
-///<summary>
-/// This class represents a button used for resetting the input data folders.
-///</summary>
-public class ResetFolderButton : MonoBehaviour
-{
-
+public class CreateNetworksButton : MonoBehaviour
+{ 
     public TextMesh descriptionText;
-    public GraphManager graphManager;
-    public InputFolderGenerator inputFolderGenerator;
-    public LoaderController loader;
     public SteamVR_TrackedObject rightController;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
-    public PreviousSearchesList previousSearchesList;
+    private NetworkGenerator networkGenerator;
+    private Thread t;
     private SteamVR_Controller.Device device;
+    private bool controllerInside;
     private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
-    private bool menuActive = false;
-    private bool buttonsInitialized = false;
 
     void Start()
     {
-
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
-
+        networkGenerator = new NetworkGenerator();
     }
 
     void Update()
     {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            graphManager.DeleteGraphs();
-            previousSearchesList.ClearList();
-            // must reset loader before generating new folders
-            loader.ResetLoaderBooleans();
-            inputFolderGenerator.GenerateFolders();
-            if (loader.loaderMovedDown)
-            {
-                loader.loaderMovedDown = false;
-                loader.MoveLoader(new Vector3(0f, 1f, 0f), 2f);
-            }
+            networkGenerator.GenerateNetworks();
         }
     }
 
@@ -50,7 +33,7 @@ public class ResetFolderButton : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
-            descriptionText.text = "Reset folder";
+            descriptionText.text = "Create networks";
             spriteRenderer.sprite = highlightedTexture;
             controllerInside = true;
         }
@@ -67,3 +50,5 @@ public class ResetFolderButton : MonoBehaviour
     }
 
 }
+
+
