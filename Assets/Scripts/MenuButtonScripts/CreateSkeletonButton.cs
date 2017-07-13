@@ -25,7 +25,7 @@ public class CreateSkeletonButton : MonoBehaviour
     {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            graphManager.CreateConvexHull(0);
+            //graphManager.CreateConvexHull();
         }
     }
 

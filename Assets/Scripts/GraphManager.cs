@@ -32,24 +32,18 @@ public class GraphManager : MonoBehaviour
 
     public Graph CreateGraph()
     {
-        //Graph newGraph = 
+        Graph newGraph = Instantiate(graphPrefab);
         // more hardcoded values
-        if (i == 0)
-        {
-            graphs[0] = Instantiate(graphPrefab, new Vector3(0.686f, .5f, -0.157f), Quaternion.identity);
-        }
-        else if (i == 1)
-        {
-            graphs[1] = Instantiate(graphPrefab, new Vector3(-.456f, .5f, -0.119f), Quaternion.identity);
-        }
-        graphs[i].gameObject.SetActive(true);
-        graphs[i].transform.parent = this.transform;
+        //if (i == 0)
+        //{
+        //    graphs[0] = Instantiate(graphPrefab, new Vector3(0.686f, .5f, -0.157f), Quaternion.identity);
+        //}
+        //else if (i == 1)
+        //{
+        //    graphs[1] = Instantiate(graphPrefab, new Vector3(-.456f, .5f, -0.119f), Quaternion.identity);
+        //}
+        newGraph.transform.parent = this.transform;
         return newGraph;
-    }
-
-    public void ColorAllGraphsByAttribute(string attribute)
-    {
-
     }
 
     public void DeleteGraphs()

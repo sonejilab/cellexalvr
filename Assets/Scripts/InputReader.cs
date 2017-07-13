@@ -65,18 +65,18 @@ public class InputReader : MonoBehaviour
         int fileIndex = 0;
         foreach (string file in mdsFiles)
         {
-            graphManager.CreateGraph(fileIndex);
-            graphManager.SetActiveGraph(fileIndex);
+            Graph newGraph = graphManager.CreateGraph();
+            //graphManager.SetActiveGraph(fileIndex);
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
             string graphFileName = regexResult[regexResult.Length - 1];
             // remove the ".mds" at the end
-            graphManager.SetGraphName(graphFileName.Substring(0, graphFileName.Length - 4));
+            newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
             // put each line into an array
             string[] lines = File.ReadAllLines(file);
             //string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
-            UpdateMinMax(lines);
+            UpdateMinMax(newGraph, lines);
 
             for (int i = 0; i < lines.Length; i += itemsPerFrame)
             {
@@ -85,7 +85,7 @@ public class InputReader : MonoBehaviour
                     string line = lines[j];
                     string[] words = line.Split(null);
                     // print(words[0]);
-                    graphManager.AddCell(words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
+                    graphManager.AddCell(newGraph, words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
                 }
                 yield return new WaitForEndOfFrame();
             }
@@ -210,7 +210,7 @@ public class InputReader : MonoBehaviour
     /// Will be used for the scaling part onto the graphArea.
     ///</summary>
 
-    void UpdateMinMax(string[] lines)
+    void UpdateMinMax(Graph graph, string[] lines)
     {
         Vector3 maxCoordValues = new Vector3();
         maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = float.MinValue;
@@ -238,6 +238,6 @@ public class InputReader : MonoBehaviour
                 maxCoordValues.z = coords[2];
 
         }
-        graphManager.SetMinMaxCoords(minCoordValues, maxCoordValues);
+        graphManager.SetMinMaxCoords(graph, minCoordValues, maxCoordValues);
     }
 }
