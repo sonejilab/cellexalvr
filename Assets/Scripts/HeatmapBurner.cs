@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This class holds the logic for burning and fading out a heatmap.
+/// </summary>
 public class HeatmapBurner : MonoBehaviour {
 
 public GameObject firePrefab;

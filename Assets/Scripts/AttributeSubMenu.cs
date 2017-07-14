@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the sub menu that pops up when the ColorByAttributeButton is pressed.
+/// </summary>
 public class AttributeSubMenu : MonoBehaviour
 {
 
@@ -15,6 +18,7 @@ public class AttributeSubMenu : MonoBehaviour
 
     public void Init()
     {
+        // TODO come up with some more colors
         buttons = new List<ColorByAttributeButton>();
         colors = new Color[22];
         colors[0] = new Color(1, 0, 0);     // red
@@ -29,7 +33,7 @@ public class AttributeSubMenu : MonoBehaviour
         colors[9] = new Color(1, .6f, .2f);     // orange
         colors[10] = new Color(.87f, 8f, .47f);     // some ugly sand color
         colors[11] = new Color(.3f, .3f, .3f);     // grey
-        colors[12] = new Color(.18f, .69f, .54f);     // turquijioutyuoreyourse
+        colors[12] = new Color(.18f, .69f, .54f);     // turquoise
         colors[13] = new Color(.84f, .36f, .15f);     // red panda red
         colors[14] = new Color(0, 1, 1);     // cyan
         colors[15] = new Color(1, 0, 1);     // magenta
@@ -42,6 +46,10 @@ public class AttributeSubMenu : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Creates new buttons for coloring by attributes.
+    /// </summary>
+    /// <param name="attributes"> An array of strings that contain the names of the attributes. </param>
     public void CreateAttributeButtons(string[] attributes)
     {
         if (colors == null)
@@ -62,6 +70,7 @@ public class AttributeSubMenu : MonoBehaviour
             newButton.transform.localPosition = buttonPos;
             newButton.SetAttribute(attribute, colors[i]);
             buttons.Add(newButton);
+            // position the buttons in a 4 column grid.
             if ((i + 1) % 4 == 0)
             {
                 buttonPos -= buttonPosInc * 3;

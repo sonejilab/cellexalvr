@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class represents a manager that holds all graphs.
+/// </summary>
 public class GraphManager : MonoBehaviour
 {
 
@@ -11,17 +14,11 @@ public class GraphManager : MonoBehaviour
     public AudioSource badSound;
     public SelectionToolHandler selectionToolHandler;
     private List<Graph> graphs;
-    //private int activeGraph = 0;
 
     void Awake()
     {
         graphs = new List<Graph>();
     }
-
-    //public void SetActiveGraph(int i)
-    //{
-    //    activeGraph = i;
-    //}
 
     public void SetGraphStartPosition()
     {
@@ -30,19 +27,14 @@ public class GraphManager : MonoBehaviour
         graphs[1].transform.position = new Vector3(-.456f, .5f, -0.119f);
     }
 
+    /// <summary>
+    /// Creates a new graph
+    /// </summary>
+    /// <returns> A reference to the newly created graph </returns>
     public Graph CreateGraph()
     {
         Graph newGraph = Instantiate(graphPrefab);
         graphs.Add(newGraph);
-        // more hardcoded values
-        //if (i == 0)
-        //{
-        //    graphs[0] = Instantiate(graphPrefab, new Vector3(0.686f, .5f, -0.157f), Quaternion.identity);
-        //}
-        //else if (i == 1)
-        //{
-        //    graphs[1] = Instantiate(graphPrefab, new Vector3(-.456f, .5f, -0.119f), Quaternion.identity);
-        //}
         newGraph.transform.parent = this.transform;
         return newGraph;
     }
@@ -59,6 +51,14 @@ public class GraphManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds a cell to a graph.
+    /// </summary>
+    /// <param name="graph"> The graph the cell should belong to. </param>
+    /// <param name="label"> The cell's name. </param>
+    /// <param name="x"> The cell's x-coordinate. </param>
+    /// <param name="y"> The cell's y-coordinate. </param>
+    /// <param name="z"> The cell's z-coordinate. </param>
     public void AddCell(Graph graph, string label, float x, float y, float z)
     {
         graph.AddGraphPoint(cellManager.AddCell(label), x, y, z);
@@ -74,7 +74,10 @@ public class GraphManager : MonoBehaviour
         cellManager.ColorGraphsByGene(geneName);
     }
 
-    public void ResetGraph()
+    /// <summary>
+    /// Resets the position, scale and color of all Graphs.
+    /// </summary>
+    public void ResetGraphs()
     {
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
@@ -85,19 +88,12 @@ public class GraphManager : MonoBehaviour
         SetGraphStartPosition();
     }
 
+    /// <summary>
+    /// Creates a funny looking skeleton of a graph.
+    /// </summary>
     public void CreateConvexHull(Graph graph)
     {
         graph.CreateConvexHull();
-    }
-
-    public void HideDDRGraph()
-    {
-        graphs[0].gameObject.SetActive(!graphs[0].gameObject.activeSelf);
-    }
-
-    public void HideTSNEGraph()
-    {
-        graphs[1].gameObject.SetActive(!graphs[1].gameObject.activeSelf); ;
     }
 
     /// <summary>

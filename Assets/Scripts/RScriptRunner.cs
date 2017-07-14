@@ -16,9 +16,9 @@ public class RScriptRunner
     ///   args = commandArgs(trailingOnly = TRUE)
     ///   print(args[1]);
     /// </summary>
-    /// <param name="rCodeFilePath">File where your R code is located.</param>
-    /// <param name="rScriptExecutablePath">Usually only requires "rscript.exe"</param>
-    /// <param name="args">Multiple R args can be seperated by spaces.</param>
+    /// <param name="rCodeFilePath"> File where your R code is located. </param>
+    /// <param name="rScriptExecutablePath"> Usually only requires "rscript.exe" </param>
+    /// <param name="args"> Multiple R args can be seperated by spaces. </param>
     /// <returns>Returns a string with the R responses.</returns>
 
     public static string RunFromCmd(string rCodeFilePath, string rScriptExecutablePath, string args)

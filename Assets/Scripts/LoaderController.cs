@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
-
+/// <summary>
+/// This class represent the loader.
+/// </summary>
 public class LoaderController : MonoBehaviour
 {
 

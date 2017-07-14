@@ -4,26 +4,16 @@ using System.IO;
 using UnityEngine;
 using VRTK;
 
+/// <summary>
+/// This class represents the selection tool that can be used to select multiple GraphPoints.
+/// </summary>
 public class SelectionToolHandler : MonoBehaviour
 {
 
     public SelectionToolMenu selectionToolMenu;
     public GraphManager manager;
-    //public Graph graph;
     public Material selectorMaterial;
     public RadialMenu menu;
-    //public Sprite noButton;
-    //public Sprite toolButton;
-    //public Sprite confirmButton;
-    //public Sprite confirmButton_w;
-    //public Sprite cancelButton;
-    //public Sprite cancelButton_w;
-    //public Sprite blowupButton;
-    //public Sprite blowupButton_w;
-    //public Sprite colorButton;
-    //public Sprite recolorButton;
-    //public Sprite ddrtreeButton;
-    //public Sprite tsneButton;
     public SteamVR_TrackedController right;
     public SteamVR_TrackedController left;
     public bool selectionConfirmed = false;
@@ -43,7 +33,6 @@ public class SelectionToolHandler : MonoBehaviour
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
     public string DataDir { get; set; }
-    // int i = 0;
 
     void Awake()
     {
@@ -67,35 +56,9 @@ public class SelectionToolHandler : MonoBehaviour
         leftController = GameObject.Find("LeftController");
     }
 
-    void Update()
-    {
-        // if (selectionToolMenu == null) {
-        //  print(i + ": null");
-        //
-        // }
-    }
-
-    void FindGrabbedHeatMap()
-    {
-        grabbedObject = leftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
-        if (grabbedObject != null)
-        {
-            if (grabbedObject.tag == "HeatBoard")
-            {
-                if (!heatmapGrabbed)
-                {
-                    heatmapGrabbed = true;
-                    //UpdateButtonIcons ();
-                }
-            }
-        }
-        else if (grabbedObject == null && heatmapGrabbed)
-        {
-            heatmapGrabbed = false;
-            //UpdateButtonIcons ();
-        }
-    }
-
+    /// <summary>
+    /// This method is called a child object that holds the collider.
+    /// </summary>
     public void Trigger(Collider other)
     {
         // print(other.gameObject.name);
@@ -136,6 +99,9 @@ public class SelectionToolHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds rigidbody to all selected cells, making them fall to the ground.
+    /// </summary>
     public void ConfirmRemove()
     {
         GetComponent<AudioSource>().Play();
@@ -152,6 +118,9 @@ public class SelectionToolHandler : MonoBehaviour
         selectionToolMenu.RemoveSelection();
     }
 
+    /// <summary>
+    /// Confirms a selection and dumps the relevant data to a .txt file.
+    /// </summary>
     public void ConfirmSelection()
     {
         foreach (Collider cell in selectedCells)
@@ -182,6 +151,9 @@ public class SelectionToolHandler : MonoBehaviour
         return lastSelectedCells;
     }
 
+    /// <summary>
+    /// Unselects anything selected.
+    /// </summary>
     public void CancelSelection()
     {
         if (selectionToolMenu == null)
@@ -197,6 +169,9 @@ public class SelectionToolHandler : MonoBehaviour
         selectionToolMenu.UndoSelection();
     }
 
+    /// <summary>
+    /// Changes the color of the selection tool.
+    /// </summary>
     public void ChangeColor()
     {
         if (currentColorIndex == colors.Length - 1)
@@ -222,7 +197,10 @@ public class SelectionToolHandler : MonoBehaviour
         return heatmapCreated;
     }
 
-    public void DumpData()
+    /// <summary>
+    /// Dumps the current selection to a .txt file.
+    /// </summary>
+    private void DumpData()
     {
         // print(new System.Diagnostics.StackTrace());
         using (System.IO.StreamWriter file =
@@ -263,99 +241,6 @@ public class SelectionToolHandler : MonoBehaviour
     public bool IsSelectionToolEnabled()
     {
         return GetComponentInChildren<Renderer>().enabled;
-    }
-
-    public void Up()
-    {
-        if (inSelectionState && selectionMade)
-        {
-            // ConfirmSelection ();
-            // HideSelectionTool();
-            inSelectionState = false;
-            //UpdateButtonIcons ();
-        }
-    }
-
-    public void Left()
-    {
-        if (inSelectionState && selectionMade)
-        {
-            CancelSelection();
-        }
-        else if (inSelectionState)
-        {
-            // HideSelectionTool ();
-            inSelectionState = false;
-        }
-        else
-        {
-            // ShowSelectionTool();
-            inSelectionState = true;
-        }
-        //UpdateButtonIcons ();
-    }
-
-    public void Down()
-    {
-        if (heatmapGrabbed)
-        {
-            grabbedObject.GetComponent<HeatmapBurner>().BurnHeatmap();
-        }
-        else if (inSelectionState && selectionMade)
-        {
-            ConfirmRemove();
-            //UpdateButtonIcons ();
-        }
-        else
-        {
-            manager.HideDDRGraph();
-        }
-    }
-
-    public void Right()
-    {
-        if (heatmapGrabbed)
-        {
-            grabbedObject.GetComponentInChildren<Heatmap>().ColorCells();
-        }
-        else if (inSelectionState)
-        {
-            ChangeColor();
-        }
-        else
-        {
-            manager.HideTSNEGraph();
-        }
-    }
-
-    public void UpdateButtonIcons()
-    {
-        // in selection state - selection made
-        //if (heatmapGrabbed) {
-        //	buttons [0].ButtonIcon = noButton;
-        //	buttons [1].ButtonIcon = noButton;
-        //	buttons [2].ButtonIcon = blowupButton;
-        //	buttons [3].ButtonIcon = recolorButton;
-        //	// in selection state - no selection made
-        //} else if (inSelectionState && selectionMade) {
-        //	buttons [0].ButtonIcon = confirmButton;
-        //	buttons [1].ButtonIcon = cancelButton;
-        //	buttons [2].ButtonIcon = blowupButton;
-        //	buttons [3].ButtonIcon = colorButton;
-        //	// in selection state - no selection made
-        //} else if (inSelectionState) {
-        //	buttons [0].ButtonIcon = confirmButton_w;
-        //	buttons [1].ButtonIcon = cancelButton_w;
-        //	buttons [2].ButtonIcon = blowupButton_w;
-        //	buttons [3].ButtonIcon = colorButton;
-        //	// in default state
-        //} else {
-        //	buttons [0].ButtonIcon = noButton;
-        //	buttons [1].ButtonIcon = toolButton;
-        //	buttons [2].ButtonIcon = ddrtreeButton;
-        //	buttons [3].ButtonIcon = tsneButton;
-        //}
-        //menu.RegenerateButtons();
     }
 
 }

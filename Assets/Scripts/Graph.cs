@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+/// <summary>
+/// This class represents a graph consisting of multiple GraphPoints.
+/// </summary>
 public class Graph : MonoBehaviour
 {
     public GraphPoint graphpoint;
@@ -45,6 +48,15 @@ public class Graph : MonoBehaviour
         return scaledCoordinates;
     }
 
+
+    /// <summary>
+    /// Adds a GraphPoint to this graph.
+    /// x, y and z coordinates will be scaled to fit the graph's size.
+    /// </summary>
+    /// <param name="cell"> The cell object the GraphPoint should represent. </param>
+    /// <param name="x"> The x-coordinate. </param>
+    /// <param name="y"> The y-coordinate. </param>
+    /// <param name="z"> The z-coordinate. </param>
     public void AddGraphPoint(Cell cell, float x, float y, float z)
     {
 
@@ -67,6 +79,8 @@ public class Graph : MonoBehaviour
 
     }
 
+    // not used
+    // welds together vertices of a mesh
     public static void AutoWeld(Mesh mesh, float threshold, float bucketStep)
     {
         Vector3[] oldVertices = mesh.vertices;
@@ -142,7 +156,12 @@ public class Graph : MonoBehaviour
         mesh.RecalculateNormals();
     }
 
-    //public void CreateConvexHull(int[] xcoords, int[] ycoords, int[] zcoords)
+    /// <summary>
+    /// Creates a convex hull of this graph.
+    /// Not really a convex hull though.
+    /// More like a skeleton really.
+    /// </summary>
+    /// <returns> A reference to the created convexhull </returns>
     public GameObject CreateConvexHull()
     {
         string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
@@ -182,39 +201,10 @@ public class Graph : MonoBehaviour
         return convexHull.gameObject;
     }
 
-    /* public void CreateConvexHull()
-     {
-         int scaleFactor = 10;
-         Vector3 clonePos = new Vector3(0, .5f, -3.5f);
-         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
-         CombineInstance[] combine = new CombineInstance[100];
-         GameObject skeleton = Instantiate(skeletonPrefab);
-         var skeletonMeshFilter = skeleton.GetComponent<MeshFilter>();
-         skeletonMeshFilter.mesh = new Mesh();
-         int i = 0;
-         while (i < meshFilters.Length)
-         {
-             for (int j = 0; j < 100 && i < meshFilters.Length; ++j, ++i)
-             {
-                 var newMesh = Instantiate(meshFilters[i]);
-                 newMesh.mesh = meshFilters[i].mesh;
-                 newMesh.transform.localScale = meshFilters[i].transform.localScale * scaleFactor;
-                 combine[j].mesh = newMesh.mesh;
-                 combine[j].transform = newMesh.transform.localToWorldMatrix;
-                 Destroy(newMesh.gameObject);
-             }
-             // print("combined meshes " + i);
-             //skeletonMeshFilter.mesh = new Mesh
-             skeletonMeshFilter.mesh.CombineMeshes(combine);
-             Instantiate(skeletonMeshFilter, clonePos += new Vector3(0,0,-1f), Quaternion.identity, null).name = i + "";
-             // Destroy(tmpSkeleton.gameObject);
-             AutoWeld(skeletonMeshFilter.mesh, 0.001f, 1);
-         }
-         skeleton.transform.position = transform.position;
-         skeleton.transform.rotation = transform.rotation;
-         skeleton.transform.parent = transform;
-     }*/
 
+    /// <summary>
+    /// Resets this graphs position, scale and color.
+    /// </summary>
     public void ResetGraph()
     {
         transform.position = defaultPos;

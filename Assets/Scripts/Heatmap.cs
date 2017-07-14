@@ -82,7 +82,7 @@ public class Heatmap : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets some variables. Should be called after a heatmap is instatiated.
+    /// Sets some variables. Should be called after a heatmap is instantiated.
     /// </summary>
     public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler, ArrayList cells, GameObject fire)
     {

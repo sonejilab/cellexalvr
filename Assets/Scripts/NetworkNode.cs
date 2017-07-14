@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-// TODO after enlarging and bringing back a network it can't be re-enlarged before the convex hull has been moved
+/// <summary>
+/// This class represents one node in a network, it handles the coloring of the connections and part of the network creation process,
+/// </summary>
 public class NetworkNode : MonoBehaviour
 {
     public TextMesh geneName;

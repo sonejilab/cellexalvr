@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents on GraphPoint, the spheres that make up the graphs.
+/// </summary>
 public class GraphPoint : MonoBehaviour
 {
 

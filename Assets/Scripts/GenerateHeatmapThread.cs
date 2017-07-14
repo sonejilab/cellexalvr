@@ -2,20 +2,24 @@
 using System.IO;
 using UnityEngine;
 
-public class GenerateHeatmapThread {
+public class GenerateHeatmapThread
+{
 
-private SelectionToolHandler selectionToolHandler;
+    private SelectionToolHandler selectionToolHandler;
 
-public GenerateHeatmapThread (SelectionToolHandler sth) {
-	selectionToolHandler = sth;
-}
-public void GenerateHeatmap() {
-	string home = Directory.GetCurrentDirectory();
-	using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt")) {
-		string rawInput = r.ReadToEnd();
-		string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-		string rPath = input[0];
-		Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\make_heatmap.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
-	}
-}
+    public GenerateHeatmapThread(SelectionToolHandler sth)
+    {
+        selectionToolHandler = sth;
+    }
+    public void GenerateHeatmap()
+    {
+        string home = Directory.GetCurrentDirectory();
+        using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
+        {
+            string rawInput = r.ReadToEnd();
+            string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            string rPath = input[0];
+            Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\make_heatmap.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
+        }
+    }
 }

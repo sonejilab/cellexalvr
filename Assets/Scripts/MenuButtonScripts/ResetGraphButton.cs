@@ -21,7 +21,7 @@ void Start() {
 
 void Update() {
 	if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
-		graphManager.ResetGraph();
+		graphManager.ResetGraphs();
 	}
 }
 

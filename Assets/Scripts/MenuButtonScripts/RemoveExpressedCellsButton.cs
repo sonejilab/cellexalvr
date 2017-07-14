@@ -22,7 +22,7 @@ public class RemoveExpressedCellsButton : MonoBehaviour
     {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            cellManager.RemoveExpressedCells();
+            cellManager.ToggleExpressedCells();
         }
     }
 

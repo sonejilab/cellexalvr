@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents the locks next to the previous searches.
+/// Pressing one of the locks makes the gene name next to it not move when a new gene is searched for.
+/// </summary>
 public class PreviousSearchesLock : MonoBehaviour
 {
 

@@ -343,7 +343,7 @@ public class SelectionToolHandler_old : MonoBehaviour
         }
         else
         {
-            manager.HideDDRGraph();
+            //manager.HideDDRGraph();
         }
     }
 
@@ -359,7 +359,7 @@ public class SelectionToolHandler_old : MonoBehaviour
         }
         else
         {
-            manager.HideTSNEGraph();
+            //manager.HideTSNEGraph();
         }
     }
 

@@ -2,6 +2,9 @@
 using System.Threading;
 using UnityEngine;
 
+/// <summary>
+/// A generator for heatmaps.
+/// </summary>
 public class HeatmapGenerator : MonoBehaviour
 {
 
@@ -18,7 +21,6 @@ public class HeatmapGenerator : MonoBehaviour
     private GameObject hourglass;
     private GameObject heatBoard;
     private int heatmapID = 1;
-    private string filePath;
     private Vector3 heatmapPosition;
     private ArrayList heatmapList;
 
@@ -38,6 +40,9 @@ public class HeatmapGenerator : MonoBehaviour
         StartCoroutine(GenerateHeatmapRoutine());
     }
 
+    /// <summary>
+    /// Coroutine for creating a heatmap.
+    /// </summary>
     IEnumerator GenerateHeatmapRoutine()
     {
         if (!running && selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated())

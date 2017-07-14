@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class represents one cell. A cell may be present in multiple graphs.
+/// </summary>
 public class Cell
 {
 

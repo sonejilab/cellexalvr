@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents the list of the 10 previous searches of genes.
+/// </summary>
 public class PreviousSearchesList : MonoBehaviour
 {
 
@@ -85,11 +88,18 @@ public class PreviousSearchesList : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the list with a new gene name that will appear at the top of the list.
+    /// </summary>
+    /// <param name="newGeneName"></param>
     public void UpdateList(string newGeneName)
     {
         topListNode.UpdateList(newGeneName);
     }
 
+    /// <summary>
+    /// Clears the list.
+    /// </summary>
     public void ClearList()
     {
         foreach (PreviousSearchesListNode node in GetComponentsInChildren<PreviousSearchesListNode>())

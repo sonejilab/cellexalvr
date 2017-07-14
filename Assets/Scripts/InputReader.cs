@@ -4,12 +4,10 @@ using System.IO;
 using SQLiter;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-
 using System;
-
-//using HDF5DotNet;
-
-// A classs for reading a data file and creating GraphPoints at the correct locations
+/// <summary>
+/// A class for reading data files and creating GraphPoints at the correct locations 
+/// </summary>
 public class InputReader : MonoBehaviour
 {
 
@@ -29,7 +27,10 @@ public class InputReader : MonoBehaviour
         ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie2");
     }
 
-
+    /// <summary>
+    /// Reads one folder of data and creates the graphs described by the data.
+    /// </summary>
+    /// <param name="path"> The path to the folder. </param>
     public void ReadFolder(string path)
     {
 
@@ -57,16 +58,13 @@ public class InputReader : MonoBehaviour
 
     }
 
-    // not used
-    IEnumerator ReadFiles(string path, int itemsPerFrame)
-    {
-        //H5FileId file = H5F.create(path + "/expression.h5", H5F.CreateMode.ACC_RDONLY);
-        //string[] cellnames = HdfExtensions.Read1DArray<string>(file, "cell");
-        //string[] genenames = HdfExtensions.Read1DArray<string>(file, "gene");
-        //string[] expression = HdfExtensions.Read1DArray<string>(file, "expression");
-        yield break;
-    }
-
+    /// <summary>
+    /// Coroutine to create graphs.
+    /// </summary>
+    /// <param name="path"> The path to the folder where the files are. </param>
+    /// <param name="mdsFiles"> The filenames. </param>
+    /// <param name="itemsPerFrame"> How many graphpoints should be Instantiated each frame </param>
+    /// <returns></returns>
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
     {
         int fileIndex = 0;
@@ -171,11 +169,12 @@ public class InputReader : MonoBehaviour
 
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
-        //graphManager.CreateConvexHull(0);
-        //graphManager.CreateConvexHull(1);
         ReadNetworkFiles();
     }
 
+    /// <summary>
+    /// Reads the files containg networks.
+    /// </summary>
     public void ReadNetworkFiles()
     {
         // read the .cnt file

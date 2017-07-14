@@ -1,24 +1,23 @@
-﻿//using HDF5DotNet;
-using SQLiter;
+﻿using SQLiter;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// This class represent a manager that holds all the cells.
+/// </summary>
 public class CellManager : MonoBehaviour
 {
 
     public Cell cell;
     public List<Material> materialList;
     public SQLite database;
-    //private ArrayList geneNames;
     private Dictionary<string, Cell> cells;
-    //private H5FileId h5file;
 
     void Awake()
     {
         cells = new Dictionary<string, Cell>();
-        //geneNames = new ArrayList();
     }
 
     /// <summary>
@@ -36,7 +35,10 @@ public class CellManager : MonoBehaviour
         return cells[label];
     }
 
-    public void RemoveExpressedCells()
+    /// <summary>
+    /// Toggles all cells which have an expression level > 0 by showing / hiding them from the graphs.
+    /// </summary>
+    public void ToggleExpressedCells()
     {
         foreach (Cell c in cells.Values)
         {
@@ -46,8 +48,10 @@ public class CellManager : MonoBehaviour
             }
         }
     }
-
-    public void RemoveNonExpressedCells()
+    /// <summary>
+    /// Toggles all cells which have an expression level == 0 by showing / hiding them from the graphs.
+    /// </summary>
+    public void ToggleNonExpressedCells()
     {
         foreach (Cell c in cells.Values)
         {
@@ -73,11 +77,14 @@ public class CellManager : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
+    /// </summary>
+    /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName)
     {
         ArrayList expressions = database.QueryGene(geneName);
-        //string[] hdfCells = HdfExtensions.Read1DArray<string>(h5file, "cells");
-        //float[] expressions = HdfExtensions.Read1DArray<float>(h5file, "expression/" + geneName);
         foreach (Cell c in cells.Values)
         {
             c.ColorByExpression(0);
@@ -93,7 +100,7 @@ public class CellManager : MonoBehaviour
         }
     }
 
-     public void DeleteCells()
+    public void DeleteCells()
     {
         cells.Clear();
     }
@@ -106,25 +113,14 @@ public class CellManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds an attribute to a cell. 
+    /// </summary>
+    /// <param name="cellname"> The cells name. </param>
+    /// <param name="attributeType"> The attribute type / name </param>
+    /// <param name="attribute"> The attribute value </param>
     public void AddAttribute(string cellname, string attributeType, string attribute)
     {
         cells[cellname].AddAttribute(attributeType, attribute);
     }
-
-    //public bool GeneExists(string geneName)
-    //{
-    //    return geneNames.Contains(geneName);
-    //}
-
-    //public void SetGeneExpression(string cellName, string geneName, int slot)
-    //{
-    //    Cell cell;
-    //    cells.TryGetValue(cellName, out cell);
-    //    cell.SetExpressionData(geneName, slot);
-    //    if (!geneNames.Contains(geneName))
-    //    {
-    //        geneNames.Add(geneName);
-    //    }
-    //}
-
 }

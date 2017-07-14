@@ -35,7 +35,7 @@ public void ToggleToolTips() {
 }
 
 public void ResetGraph() {
-	manager.ResetGraph ();
+	manager.ResetGraphs ();
 }
 
 }

@@ -2,6 +2,9 @@
 using VRTK;
 using VRTK.GrabAttachMechanics;
 
+/// <summary>
+/// This class represents the center of a network. It handles the enlarging when it is pressed.
+/// </summary>
 public class NetworkCenter : MonoBehaviour
 {
     public GameObject replacementPrefab;
@@ -25,7 +28,6 @@ public class NetworkCenter : MonoBehaviour
 
     void Update()
     {
-
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             controllerInside = false;
@@ -87,6 +89,9 @@ public class NetworkCenter : MonoBehaviour
         replacementScript.replacing = this;
     }
 
+    /// <summary>
+    /// If this network is enlarged, bring it back to the convex hull, it it is a replacement, destroy it and bring back the original 
+    /// </summary>
     private void BringBackOriginal()
     {
         if (isReplacement)
@@ -97,6 +102,10 @@ public class NetworkCenter : MonoBehaviour
         else
         {
             Enlarged = false;
+            // this network will now be part of the convex hull which already has a rigidbody and these scripts
+            Destroy(gameObject.GetComponent<Rigidbody>());
+            Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
+            Destroy(gameObject.GetComponent<VRTK_FixedJointGrabAttach>());
             transform.parent = oldParent;
             transform.localPosition = oldLocalPosition;
             transform.localScale = oldScale;
