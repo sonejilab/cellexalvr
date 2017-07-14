@@ -3,8 +3,10 @@ using System.Collections;
 using System.IO;
 using SQLiter;
 using System.Text.RegularExpressions;
-using System;
 using System.Collections.Generic;
+
+using System;
+
 //using HDF5DotNet;
 
 // A classs for reading a data file and creating GraphPoints at the correct locations
@@ -19,11 +21,12 @@ public class InputReader : MonoBehaviour
     public AttributeSubMenu attributeSubMenu;
     public GameObject networkPrefab;
     public NetworkNode networkNodePrefab;
+    //public GameObject edgePrefab;
     public GameObject headset;
 
     private void Start()
     {
-        //ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Jensen_10X");
+        ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie2");
     }
 
 
@@ -170,6 +173,7 @@ public class InputReader : MonoBehaviour
         loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
         //graphManager.CreateConvexHull(0);
         //graphManager.CreateConvexHull(1);
+        ReadNetworkFiles();
     }
 
     public void ReadNetworkFiles()
@@ -260,8 +264,6 @@ public class InputReader : MonoBehaviour
 
         }
         // position nodes in a circle
-        //Vector3 pos1 = new Vector3(0, .5f, 0);
-        //Vector3 pos2 = new Vector3(0, -.5f, 0);
         Dictionary<GameObject, int> nbrOfNodesAdded = new Dictionary<GameObject, int>(networks.Count);
         foreach (GameObject network in networks.Values)
         {
@@ -277,18 +279,18 @@ public class InputReader : MonoBehaviour
             node.transform.localPosition = new Vector3(x, y, 0);
             nbrOfNodesAdded[parent]++;
         }
-
         // pair together buddies
         foreach (NetworkNode node in nodes.Values)
         {
-            node.PositionBuddies();
+            node.PositionBuddies(new Vector3(0,0,.3f), node.transform.localPosition / 3f);
         }
+
         foreach (NetworkNode node in nodes.Values)
         {
             node.AddEdges();
         }
-
     }
+
 
     /// <summary>
     /// Determines the maximum and the minimum values of the dataset.

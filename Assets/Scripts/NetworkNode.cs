@@ -13,6 +13,7 @@ public class NetworkNode : MonoBehaviour
     private Transform textTransform;
     private bool edgesAdded = false;
     private bool repositionedByBuddy = false;
+    private bool repositionedBuddies = false;
 
     void Start()
     {
@@ -21,6 +22,7 @@ public class NetworkNode : MonoBehaviour
 
     void Update()
     {
+        // some math make the text not be mirrored
         textTransform.LookAt(2 * transform.position - CameraToLookAt.position);
     }
 
@@ -29,24 +31,34 @@ public class NetworkNode : MonoBehaviour
         // add this connection both ways
         neighbours.Add(buddy);
         buddy.neighbours.Add(this);
-
-        //buddy.transform.position = transform.position + new Vector3(.05f, 0, 0);
     }
 
-    public void PositionBuddies()
+    public void PositionBuddies(Vector3 offset, Vector3 buddyRepositionInc)
     {
         // only reposition if this node has not already been reposition by one of it's buddies
-        if (repositionedByBuddy)
-            return;
-
+        //if (repositionedByBuddy)
+        //{
+        //    return;
+        //}
         repositionedByBuddy = true;
-        Vector3 buddyRepositionAmount = transform.localPosition;
-        Vector3 buddyRepositionIncAmount = buddyRepositionAmount;
-        foreach (NetworkNode buddy in neighbours)
+        Vector3 buddyRepositionAmount = buddyRepositionInc;
+        if (!repositionedBuddies)
         {
-            buddy.repositionedByBuddy = true;
-            buddy.transform.localPosition = transform.localPosition + buddyRepositionAmount;
-            buddyRepositionAmount += buddyRepositionIncAmount;
+            repositionedBuddies = true;
+            foreach (NetworkNode buddy in neighbours)
+            {
+                if (!buddy.repositionedByBuddy)
+                {
+                    buddy.transform.localPosition = transform.localPosition + offset + buddyRepositionAmount;
+                    buddyRepositionAmount += buddyRepositionInc;
+                    buddy.repositionedByBuddy = true;
+                }
+            }
+            foreach (NetworkNode buddy in neighbours)
+            {
+                if (!buddy.repositionedBuddies)
+                    buddy.PositionBuddies(offset /*+ new Vector3(0, 0, .1f)*/, buddyRepositionInc);
+            }
         }
     }
 
@@ -60,13 +72,23 @@ public class NetworkNode : MonoBehaviour
                 if (!buddy.edgesAdded)
                 {
                     GameObject edge = Instantiate(edgePrefab);
-                    edge.transform.parent = transform.parent;
                     // place this edge in the middle between us and our buddy
-                    edge.transform.localPosition = Vector3.Lerp(transform.localPosition, buddy.transform.localPosition, .5f);
-                    float distance = Vector3.Distance(transform.localPosition, buddy.transform.localPosition);
-                    edge.transform.localScale = new Vector3(edge.transform.localScale.x, edge.transform.localScale.y, edge.transform.localScale.z * distance);
-                    edge.transform.LookAt(transform.parent);
-                    edge.transform.Rotate(0, 0, 90);
+                    LineRenderer renderer = edge.GetComponent<LineRenderer>();
+
+                    edge.transform.parent = transform.parent;
+                    Vector3 middlePoint = (transform.localPosition + buddy.transform.localPosition) / 2f;
+                    //middlePoint.y = UnityEngine.Random.Range(-.5f, .5f);
+                    renderer.SetPositions(new Vector3[] { transform.localPosition, middlePoint, buddy.transform.localPosition });
+                    edge.transform.localPosition = Vector3.zero;
+                    edge.transform.localScale = Vector3.one;
+                    renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .8f, 1, .8f, 1);
+                    //edge.transform.localPosition = (transform.localPosition + buddy.transform.localPosition) / 2f;
+                    //float distance = Vector3.Distance(transform.localPosition, buddy.transform.localPosition);
+                    //edge.transform.localScale = new Vector3(edge.transform.localScale.x, edge.transform.localScale.y, edge.transform.localScale.z * distance);
+                    //edge.transform.LookAt(transform.parent);
+                    //edge.transform.Rotate(0, 0, 90);
+
+                    //edge.transform.parent = transform;
                 }
             }
         }

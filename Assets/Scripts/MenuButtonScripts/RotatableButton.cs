@@ -61,6 +61,23 @@ public abstract class RotatableButton : MonoBehaviour
         }
     }
 
+    private void Activate(bool activate)
+    {
+        if (activate)
+        {
+            backsideRenderer.enabled = false;
+            frontsideRenderer.enabled = true;
+            buttonCollider.enabled = true;
+            frontsideRenderer.sprite = standardTexture;
+        }
+        else
+        {
+            backsideRenderer.enabled = true;
+            frontsideRenderer.enabled = false;
+            buttonCollider.enabled = false;
+        }
+    }
+
     public void SetButtonState(bool active)
     {
         if (isActivated != active)
@@ -75,10 +92,8 @@ public abstract class RotatableButton : MonoBehaviour
                 else
                 {
                     // if the button is not activated we must not start a coroutine, so we just set the values directly
-                    backsideRenderer.enabled = false;
-                    buttonCollider.enabled = true;
-                    frontsideRenderer.sprite = standardTexture;
                     transform.Rotate(0, 180f, 0);
+                    Activate(true);
                 }
             }
             else
@@ -91,8 +106,8 @@ public abstract class RotatableButton : MonoBehaviour
                 }
                 else
                 {
-                    frontsideRenderer.enabled = false;
                     transform.Rotate(0, -180f, 0);
+                    Activate(false);
                 }
             }
         }
@@ -106,16 +121,14 @@ public abstract class RotatableButton : MonoBehaviour
             if (rotatedTotal < 0)
             {
                 transform.Rotate(0, -180 - rotatedTotal, 0);
-                backsideRenderer.enabled = true;
-                buttonCollider.enabled = false;
+                Activate(false);
             }
             else
             {
                 transform.Rotate(0, 180 - rotatedTotal, 0);
-                backsideRenderer.enabled = false;
-                buttonCollider.enabled = true;
-                frontsideRenderer.sprite = standardTexture;
+                Activate(true);
             }
+            isRotating = false;
         }
     }
 
@@ -151,15 +164,6 @@ public abstract class RotatableButton : MonoBehaviour
         }
 
         isRotating = false;
-        if (active)
-        {
-            backsideRenderer.enabled = false;
-            buttonCollider.enabled = true;
-            frontsideRenderer.sprite = standardTexture;
-        }
-        else
-        {
-            frontsideRenderer.enabled = false;
-        }
+        Activate(active);
     }
 }
