@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+// TODO after enlarging and bringing back a network it can't be re-enlarged before the convex hull has been moved
 public class NetworkNode : MonoBehaviour
 {
     public TextMesh geneName;
@@ -10,7 +11,10 @@ public class NetworkNode : MonoBehaviour
     public Transform CameraToLookAt { get; set; }
     public string Label { set { geneName.text = value; } }
     private List<NetworkNode> neighbours = new List<NetworkNode>();
+    private List<LineRenderer> connections = new List<LineRenderer>();
     private Transform textTransform;
+    private Color nodeColor;
+    private List<Color> connectionColors = new List<Color>();
     private bool edgesAdded = false;
     private bool repositionedByBuddy = false;
     private bool repositionedBuddies = false;
@@ -18,6 +22,7 @@ public class NetworkNode : MonoBehaviour
     void Start()
     {
         textTransform = geneName.transform;
+        nodeColor = GetComponent<Renderer>().material.color;
     }
 
     void Update()
@@ -31,6 +36,34 @@ public class NetworkNode : MonoBehaviour
         // add this connection both ways
         neighbours.Add(buddy);
         buddy.neighbours.Add(this);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Controller" && transform.parent.GetComponent<NetworkCenter>().Enlarged)
+        {
+            GetComponent<Renderer>().material.color = Color.white;
+            foreach (LineRenderer r in connections)
+            {
+                r.material.color = Color.white;
+                r.startWidth = .02f;
+                r.endWidth = .02f;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Controller" && transform.parent.GetComponent<NetworkCenter>().Enlarged)
+        {
+            GetComponent<Renderer>().material.color = nodeColor;
+            for (int i = 0; i < connections.Count; ++i)
+            {
+                connections[i].material.color = connectionColors[i];
+                connections[i].startWidth = .001f;
+                connections[i].endWidth = .001f;
+            }
+        }
     }
 
     public void PositionBuddies(Vector3 offset, Vector3 buddyRepositionInc)
@@ -81,7 +114,11 @@ public class NetworkNode : MonoBehaviour
                     renderer.SetPositions(new Vector3[] { transform.localPosition, middlePoint, buddy.transform.localPosition });
                     edge.transform.localPosition = Vector3.zero;
                     edge.transform.localScale = Vector3.one;
-                    renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .8f, 1, .8f, 1);
+                    renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .6f, 1, .6f, 1);
+                    connections.Add(renderer);
+                    connectionColors.Add(renderer.material.color);
+                    buddy.connections.Add(renderer);
+                    buddy.connectionColors.Add(renderer.material.color);
                     //edge.transform.localPosition = (transform.localPosition + buddy.transform.localPosition) / 2f;
                     //float distance = Vector3.Distance(transform.localPosition, buddy.transform.localPosition);
                     //edge.transform.localScale = new Vector3(edge.transform.localScale.x, edge.transform.localScale.y, edge.transform.localScale.z * distance);

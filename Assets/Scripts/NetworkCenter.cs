@@ -1,16 +1,18 @@
 ﻿using UnityEngine;
+using VRTK;
+using VRTK.GrabAttachMechanics;
 
 public class NetworkCenter : MonoBehaviour
 {
     public GameObject replacementPrefab;
     private GameObject pedestal;
-    private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
     private Vector3 oldLocalPosition;
     private Vector3 oldScale;
     private Quaternion oldRotation;
     private Transform oldParent;
+    public bool Enlarged { get; private set; }
     private bool isReplacement = false;
     private NetworkCenter replacing;
 
@@ -23,8 +25,10 @@ public class NetworkCenter : MonoBehaviour
 
     void Update()
     {
+
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            controllerInside = false;
             if (!isReplacement)
                 EnlargeNetwork();
             else
@@ -50,6 +54,17 @@ public class NetworkCenter : MonoBehaviour
 
     private void EnlargeNetwork()
     {
+        Enlarged = true;
+        var rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody.useGravity = false;
+        rigidbody.isKinematic = true;
+        rigidbody.angularDrag = float.PositiveInfinity;
+        var interactableObject = gameObject.AddComponent<VRTK_InteractableObject>();
+        interactableObject.isGrabbable = true;
+        var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
+        grabAttach.precisionGrab = true;
+        grabAttach.breakForce = float.PositiveInfinity;
+
         oldParent = transform.parent;
         oldLocalPosition = transform.localPosition;
         oldScale = transform.localScale;
@@ -81,6 +96,7 @@ public class NetworkCenter : MonoBehaviour
         }
         else
         {
+            Enlarged = false;
             transform.parent = oldParent;
             transform.localPosition = oldLocalPosition;
             transform.localScale = oldScale;
