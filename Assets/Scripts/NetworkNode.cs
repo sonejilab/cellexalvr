@@ -48,8 +48,8 @@ public class NetworkNode : MonoBehaviour
             foreach (LineRenderer r in connections)
             {
                 r.material.color = Color.white;
-                r.startWidth = .02f;
-                r.endWidth = .02f;
+                r.startWidth = .005f;
+                r.endWidth = .005f;
             }
         }
     }
@@ -92,7 +92,7 @@ public class NetworkNode : MonoBehaviour
             foreach (NetworkNode buddy in neighbours)
             {
                 if (!buddy.repositionedBuddies)
-                    buddy.PositionBuddies(offset /*+ new Vector3(0, 0, .1f)*/, buddyRepositionInc);
+                    buddy.PositionBuddies(offset, buddyRepositionInc);
             }
         }
     }

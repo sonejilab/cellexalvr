@@ -194,10 +194,15 @@ public class InputReader : MonoBehaviour
         string graphName = firstLine[firstLine.Length - 1];
         Graph graph = graphManager.FindGraph(graphName);
         GameObject skeleton = graph.CreateConvexHull();
+
         Dictionary<string, GameObject> networks = new Dictionary<string, GameObject>();
         foreach (string line in lines)
         {
+            if (line == "")
+                continue;
+            // print(line);
             string[] words = line.Split(null);
+            // print(words[0]);
             float x = float.Parse(words[0]);
             float y = float.Parse(words[1]);
             float z = float.Parse(words[2]);
@@ -229,7 +234,8 @@ public class InputReader : MonoBehaviour
         // skip the first line as it is a header
         for (int i = 1; i < lines.Length; ++i)
         {
-
+            if (lines[i] == "")
+                continue;
             string[] words = lines[i].Split(null);
             string color = words[6];
             string geneName1 = words[1];
@@ -263,31 +269,49 @@ public class InputReader : MonoBehaviour
 
         }
         // position nodes in a circle
-        Dictionary<GameObject, int> nbrOfNodesAdded = new Dictionary<GameObject, int>(networks.Count);
-        foreach (GameObject network in networks.Values)
+        //Dictionary<GameObject, int> nbrOfNodesAdded = new Dictionary<GameObject, int>(networks.Count);
+        //foreach (GameObject network in networks.Values)
+        //{
+        //    nbrOfNodesAdded[network] = 0;
+        //}
+
+        string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.lay");
+        lines = File.ReadAllLines(layFilePath[0]);
+
+        foreach (string line in lines)
         {
-            nbrOfNodesAdded[network] = 0;
-        }
-        foreach (NetworkNode node in nodes.Values)
-        {
-            GameObject parent = node.transform.parent.gameObject;
-            float networkSize = parent.transform.childCount;
-            float t = nbrOfNodesAdded[parent];
-            float x = Mathf.Cos(2f * (float)Math.PI * t / networkSize) * .5f;
-            float y = Mathf.Sin(2f * (float)Math.PI * t / networkSize) * .5f;
-            node.transform.localPosition = new Vector3(x, y, 0);
-            nbrOfNodesAdded[parent]++;
-        }
-        // pair together buddies
-        foreach (NetworkNode node in nodes.Values)
-        {
-            node.PositionBuddies(new Vector3(0,0,.3f), node.transform.localPosition / 3f);
+            if (line == "")
+                continue;
+            string[] words = line.Split(null);
+            string geneName = words[0];
+            float xcoord = float.Parse(words[1]);
+            float ycoord = float.Parse(words[2]);
+            string color = words[3];
+            string nodeName = geneName + color;
+            nodes[nodeName].transform.localPosition = new Vector3(xcoord / 25f - .5f, ycoord / 25f - .5f, 0f);
+
         }
 
+        //foreach (NetworkNode node in nodes.Values)
+        //{
+        //    GameObject parent = node.transform.parent.gameObject;
+        //    float networkSize = parent.transform.childCount;
+        //    float t = nbrOfNodesAdded[parent];
+        //    float x = Mathf.Cos(2f * (float)Math.PI * t / networkSize) * .5f;
+        //    float y = Mathf.Sin(2f * (float)Math.PI * t / networkSize) * .5f;
+        //    node.transform.localPosition = new Vector3(x, y, 0);
+        //    nbrOfNodesAdded[parent]++;
+        //}
+        //pair together buddies
+        //foreach (NetworkNode node in nodes.Values)
+        //{
+        //    node.PositionBuddies(new Vector3(0, 0, .3f), node.transform.localPosition / 3f);
+        //}
         foreach (NetworkNode node in nodes.Values)
         {
             node.AddEdges();
         }
+        
     }
 
 

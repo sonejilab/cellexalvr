@@ -36,19 +36,22 @@ public class PreviousSearchesLock : MonoBehaviour
 
     public void SetHighlighted(bool highlighted)
     {
-        if (highlighted)
+        if (renderer != null)
         {
-            if (searchListNode.Locked)
-                renderer.material.mainTexture = lockedHighlightedMaterial;
+            if (highlighted)
+            {
+                if (searchListNode.Locked)
+                    renderer.material.mainTexture = lockedHighlightedMaterial;
+                else
+                    renderer.material.mainTexture = unlockedHighlightedMaterial;
+            }
             else
-                renderer.material.mainTexture = unlockedHighlightedMaterial;
-        }
-        else
-        {
-            if (searchListNode.Locked)
-                renderer.material.mainTexture = lockedNormalMaterial;
-            else
-                renderer.material.mainTexture = unlockedNormalMaterial;
+            {
+                if (searchListNode.Locked)
+                    renderer.material.mainTexture = lockedNormalMaterial;
+                else
+                    renderer.material.mainTexture = unlockedNormalMaterial;
+            }
         }
     }
 }

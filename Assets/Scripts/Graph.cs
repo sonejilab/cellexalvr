@@ -201,7 +201,6 @@ public class Graph : MonoBehaviour
         return convexHull.gameObject;
     }
 
-
     /// <summary>
     /// Resets this graphs position, scale and color.
     /// </summary>

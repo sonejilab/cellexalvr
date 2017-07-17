@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VRTK;
 using VRTK.GrabAttachMechanics;
+using VRTK.SecondaryControllerGrabActions;
 
 /// <summary>
 /// This class represents the center of a network. It handles the enlarging when it is pressed.
@@ -64,6 +65,9 @@ public class NetworkCenter : MonoBehaviour
         var interactableObject = gameObject.AddComponent<VRTK_InteractableObject>();
         interactableObject.isGrabbable = true;
         var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
+        var scalescript = gameObject.AddComponent<VRTK_AxisScaleGrabAction>();
+        scalescript.uniformScaling = true;
+        
         grabAttach.precisionGrab = true;
         grabAttach.breakForce = float.PositiveInfinity;
 
@@ -77,6 +81,10 @@ public class NetworkCenter : MonoBehaviour
         transform.localScale = new Vector3(.7f, .7f, .7f);
         transform.rotation = pedestal.transform.rotation;
         transform.Rotate(-90f, 0, 0);
+        GetComponent<Renderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
+
+
 
         var replacement = Instantiate(replacementPrefab);
         replacement.transform.parent = oldParent;
@@ -110,6 +118,9 @@ public class NetworkCenter : MonoBehaviour
             transform.localPosition = oldLocalPosition;
             transform.localScale = oldScale;
             transform.rotation = oldRotation;
+            GetComponent<Renderer>().enabled = true;
+            GetComponent<Collider>().enabled = true;
+            //print(GetComponent<Collider>().bounds.center);
         }
     }
 }

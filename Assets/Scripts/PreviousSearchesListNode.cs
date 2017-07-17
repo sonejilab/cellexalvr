@@ -35,7 +35,8 @@ public class PreviousSearchesListNode : MonoBehaviour
         set
         {
             geneName = value;
-            textMesh.text = geneName;
+            if (textMesh != null)
+                textMesh.text = geneName;
         }
     }
     public int Index;

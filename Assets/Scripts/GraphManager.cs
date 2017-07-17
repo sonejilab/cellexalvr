@@ -49,6 +49,7 @@ public class GraphManager : MonoBehaviour
                 Destroy(g.gameObject);
             }
         }
+        graphs.Clear();
     }
 
     /// <summary>

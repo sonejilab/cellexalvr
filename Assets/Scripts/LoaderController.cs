@@ -123,7 +123,8 @@ public class LoaderController : MonoBehaviour
 
         foreach (Transform child in cellsToDestroy)
         {
-            Destroy(child.gameObject.GetComponent<Collider>());
+            if (child.GetComponent<Collider>() != null)
+                Destroy(child.gameObject.GetComponent<Collider>());
         }
 
         foreach (Collider c in inputFolderGenerator.GetComponentsInChildren<Collider>())
