@@ -24,7 +24,7 @@ public class InputReader : MonoBehaviour
 
     private void Start()
     {
-        ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie2");
+        //ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie2");
     }
 
     /// <summary>
@@ -169,7 +169,7 @@ public class InputReader : MonoBehaviour
 
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
-        ReadNetworkFiles();
+        //ReadNetworkFiles();
     }
 
     /// <summary>
@@ -311,7 +311,7 @@ public class InputReader : MonoBehaviour
         {
             node.AddEdges();
         }
-        
+
     }
 
 
