@@ -3,17 +3,18 @@ using UnityEngine;
 public class CellFolder : MonoBehaviour
 {
 
-    public Transform Cylinder { get; set; }
+    public Transform Rope { get; set; }
     public float YOffset { get; set; }
     public AudioSource sound;
+
     public void PlaySound()
     {
         sound.Play();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.position = new Vector3(transform.position.x, Cylinder.position.y + YOffset, transform.position.z);
+        transform.position = new Vector3(transform.position.x, Rope.position.y + YOffset, transform.position.z);
     }
 
 }

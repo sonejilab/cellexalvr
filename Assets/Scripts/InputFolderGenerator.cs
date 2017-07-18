@@ -22,8 +22,23 @@ public class InputFolderGenerator : MonoBehaviour
 
     public void GenerateFolders()
     {
+        if (!Directory.Exists(Directory.GetCurrentDirectory() + "/Assets/Data/runtimeGroups"))
+        {
+            print("creating runtimeGroups directory");
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/Assets/Data/runtimeGroups");
+        }
         rope.SetActive(true);
         string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Assets/Data");
+        if (directories.Length == 0)
+        {
+            print("No input directeries found");
+            return;
+        }
+        // the - 2 comes from subtracting the runtimeGroups directory and then one more for the integer division to work as intended.
+        int nFloors = 1 + ((directories.Length - 2) / 6);
+        rope.transform.localScale = new Vector3(rope.transform.localScale.x, .5f * nFloors, rope.transform.localScale.z);
+        rope.transform.position = new Vector3(rope.transform.position.x, .5f + .5f * nFloors, rope.transform.position.z);
+        rope.GetComponent<Renderer>().material.mainTextureScale = new Vector2(1f, 30f * nFloors);
         //float folderY = 1f;
         var folderAngle = -(Math.PI * 1.1d) / 2d;
         Vector3[] folderBaseCoords = new Vector3[6];
@@ -59,7 +74,7 @@ public class InputFolderGenerator : MonoBehaviour
                     }
                 }
             }
-            newFolder.GetComponent<CellFolder>().Cylinder = cylinder;
+            newFolder.GetComponent<CellFolder>().Rope = cylinder;
             newFolder.GetComponent<CellFolder>().YOffset = heightVector.y - cylinder.position.y;
             newFolder.GetComponentInChildren<CellsToLoad>().SetDirectory(directory);
             newFolder.transform.parent = transform;

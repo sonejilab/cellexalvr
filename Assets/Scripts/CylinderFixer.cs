@@ -10,7 +10,7 @@ public class CylinderFixer : MonoBehaviour
         startPosition = transform.position;
     }
 
-    void Update()
+    void LateUpdate()
     {
         transform.position = new Vector3(startPosition.x, transform.position.y, startPosition.z);
         transform.rotation = Quaternion.identity;
