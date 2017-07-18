@@ -9,6 +9,7 @@ public class InputFolderGenerator : MonoBehaviour
 {
 
     public GameObject folderPrefab;
+    public GameObject rope;
     private Transform cylinder;
 
     // Use this for initialization
@@ -21,21 +22,21 @@ public class InputFolderGenerator : MonoBehaviour
 
     public void GenerateFolders()
     {
+        rope.SetActive(true);
         string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Assets/Data");
         //float folderY = 1f;
-        var folderAngle = -Math.PI / 2d;
+        var folderAngle = -(Math.PI * 1.1d) / 2d;
         Vector3[] folderBaseCoords = new Vector3[6];
-        for (int i = 0; i < 6; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             folderBaseCoords[i] = new Vector3((float)Math.Cos(folderAngle), 0, (float)Math.Sin(folderAngle));
             //print(folderAngle + " " + folderAngle * 360 / (2 * Math.PI));
-            folderAngle -= Math.PI / 6d;
-            if (i == 2)
-            {
-                //print("greetins traveler");
-                folderAngle -= Math.PI / 6d;
-            }
-
+            folderAngle -= (Math.PI * .9d) / 6d;
+        }
+        int j = 1;
+        for (int i = 3; i < 6; ++i, j += 2)
+        {
+            folderBaseCoords[i] = new Vector3(folderBaseCoords[i - j].x, 0, -folderBaseCoords[i - j].z);
         }
         var nfolder = 0;
         foreach (string directory in directories)
@@ -87,9 +88,11 @@ public class InputFolderGenerator : MonoBehaviour
 
     public void DestroyFolders()
     {
+        rope.SetActive(false);
         foreach (Transform child in transform)
         {
-            Destroy(child.gameObject);
+            if (child.name != "Rope")
+                Destroy(child.gameObject);
         }
     }
 }

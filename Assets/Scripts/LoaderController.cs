@@ -45,7 +45,7 @@ public class LoaderController : MonoBehaviour
             DestroyFolderColliders();
         }
 
-        if (timeEntered + 10 < Time.time && collidersDestroyed)
+        if (timeEntered + 5 < Time.time && collidersDestroyed)
         {
             inputFolderGenerator.DestroyFolders();
             DestroyCells();
