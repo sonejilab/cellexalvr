@@ -54,12 +54,6 @@ public class GraphPoint : MonoBehaviour
         return defaultMat;
     }
 
-    //public void ColorByGene(string geneName) {
-    //	if (!selected) {
-    //		SetMaterial (cell.GetGeneMaterial (geneName));
-    //	}
-    //	defaultMat = cell.GetGeneMaterial (geneName);
-    //}
 
     public void ResetCoords()
     {

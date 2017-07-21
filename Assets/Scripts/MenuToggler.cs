@@ -22,6 +22,7 @@ public class MenuToggler : MonoBehaviour
         {
             menu.SetActive(!menu.activeSelf);
             collider.enabled = !collider.enabled;
+            menuController.SwitchToDesiredModel();
         }
     }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 /// <summary>
 /// This class is responsible for changing the controller model.
@@ -18,6 +19,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
     public GameObject fire;
+
     //public List<GameObject> activatedInMenu;
     //public List<GameObject> deactivatedInMenu;
     public enum Model { Normal, SelectionTool, Menu };
@@ -107,6 +109,11 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
         }
 
+    }
+
+    public void SwitchToDesiredModel()
+    {
+        SwitchToModel(DesiredModel);
     }
 
     public void SwitchControllerModelColor(Color color)

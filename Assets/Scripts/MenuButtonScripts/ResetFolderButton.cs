@@ -41,7 +41,7 @@ public class ResetFolderButton : MonoBehaviour
             if (loader.loaderMovedDown)
             {
                 loader.loaderMovedDown = false;
-                loader.MoveLoader(new Vector3(0f, 1f, 0f), 2f);
+                loader.MoveLoader(new Vector3(0f, 2f, 0f), 2f);
             }
         }
     }

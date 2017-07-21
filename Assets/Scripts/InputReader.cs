@@ -82,6 +82,10 @@ public class InputReader : MonoBehaviour
             // put each line into an array
             string[] lines = File.ReadAllLines(file);
             //string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
+            // we must wait for the graph to fully initialize before adding stuff to it
+            while (!newGraph.Ready())
+                yield return null;
+
             UpdateMinMax(newGraph, lines);
 
             for (int i = 0; i < lines.Length; i += itemsPerFrame)
@@ -93,47 +97,8 @@ public class InputReader : MonoBehaviour
                     // print(words[0]);
                     graphManager.AddCell(newGraph, words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
                 }
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
-
-            /* string[] cellNames = geneLines[0].Split('\t');
-
-            // process each gene and its expression values
-            for (int i = 1; i < geneLines.Length; i++)
-            {
-                string[] words = geneLines[i].Split('\t');
-                // the gene name is always the first word on the line
-                string geneName = words[0].ToLower();
-                float minExpr = 10000f;
-                float maxExpr = -1f;
-                // find the largest and smallest expression
-                for (int j = 1; j < words.Length; j++)
-                {
-                    float expr = float.Parse(words[j]);
-                    if (expr > maxExpr)
-                    {
-                        maxExpr = expr;
-                    }
-                    if (expr < minExpr)
-                    {
-                        minExpr = expr;
-                    }
-                }
-                // figure out how much gene expression each material represents
-                float binSize = (maxExpr - minExpr) / 30;
-                // for each cell, set its gene expression
-                for (int k = 1; k < words.Length; k++)
-                {
-                    int binIndex = 0;
-                    float expr = float.Parse(words[k]);
-                    binIndex = (int)((expr - minExpr) / binSize);
-                    if (binIndex == 30)
-                    {
-                        binIndex--;
-                    }
-                    //cellManager.SetGeneExpression(cellNames[k - 1], geneName, binIndex);
-                }
-            }*/
             fileIndex++;
         }
 
@@ -168,7 +133,7 @@ public class InputReader : MonoBehaviour
         }
 
         loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -1f, 0f), 6f);
+        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
         ReadNetworkFiles();
     }
 
@@ -182,13 +147,18 @@ public class InputReader : MonoBehaviour
         // it should contain information about the average positions of the networks
 
         // there should only be one .cnt file
-        string[] cntFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.cnt");
-        if (cntFilePath.Length == 0)
+        string[] cntFilePaths = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.cnt");
+        if (cntFilePaths.Length == 0)
+        {
+            print("no .cnt file found");
+            return;
+        }
+        if (cntFilePaths.Length > 1)
         {
             print("more than one .cnt file in network folder");
             return;
         }
-        string[] lines = File.ReadAllLines(cntFilePath[0]);
+        string[] lines = File.ReadAllLines(cntFilePaths[0]);
         // read the graph's name and create a skeleton
         string[] firstLine = lines[0].Split(null);
         string graphName = firstLine[firstLine.Length - 1];
@@ -214,6 +184,7 @@ public class InputReader : MonoBehaviour
             GameObject network = Instantiate(networkPrefab);
             network.transform.parent = skeleton.transform;
             network.transform.localPosition = position;
+            //network.transform.localPosition -= graph.transform.position;
             network.GetComponent<Renderer>().material.color = color;
             networks[words[3]] = network;
         }
@@ -268,12 +239,6 @@ public class InputReader : MonoBehaviour
 
 
         }
-        // position nodes in a circle
-        //Dictionary<GameObject, int> nbrOfNodesAdded = new Dictionary<GameObject, int>(networks.Count);
-        //foreach (GameObject network in networks.Values)
-        //{
-        //    nbrOfNodesAdded[network] = 0;
-        //}
 
         string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.lay");
         lines = File.ReadAllLines(layFilePath[0]);
@@ -292,21 +257,6 @@ public class InputReader : MonoBehaviour
 
         }
 
-        //foreach (NetworkNode node in nodes.Values)
-        //{
-        //    GameObject parent = node.transform.parent.gameObject;
-        //    float networkSize = parent.transform.childCount;
-        //    float t = nbrOfNodesAdded[parent];
-        //    float x = Mathf.Cos(2f * (float)Math.PI * t / networkSize) * .5f;
-        //    float y = Mathf.Sin(2f * (float)Math.PI * t / networkSize) * .5f;
-        //    node.transform.localPosition = new Vector3(x, y, 0);
-        //    nbrOfNodesAdded[parent]++;
-        //}
-        //pair together buddies
-        //foreach (NetworkNode node in nodes.Values)
-        //{
-        //    node.PositionBuddies(new Vector3(0, 0, .3f), node.transform.localPosition / 3f);
-        //}
         foreach (NetworkNode node in nodes.Values)
         {
             node.AddEdges();

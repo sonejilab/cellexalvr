@@ -10,12 +10,15 @@ public class LoaderController : MonoBehaviour
     public InputFolderGenerator inputFolderGenerator;
     public GraphManager GraphManager;
     public AudioSource sound;
+    public Transform cylinder;
     private float timeEntered = 0;
     private ArrayList cellsToDestroy;
     private bool cellsEntered = false;
     private bool collidersDestroyed = false;
     private Vector3 startPosition;
     private Vector3 finalPosition;
+    private Vector3 startScale;
+    private Vector3 finalScale;
     private bool moving = false;
     private float currentTime;
     private float arrivalTime;
@@ -32,6 +35,7 @@ public class LoaderController : MonoBehaviour
         if (moving)
         {
             gameObject.transform.position = Vector3.Lerp(startPosition, finalPosition, currentTime / arrivalTime);
+            cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
             currentTime += Time.deltaTime;
             if (currentTime > arrivalTime)
             {
@@ -66,6 +70,15 @@ public class LoaderController : MonoBehaviour
         currentTime = 0;
         arrivalTime = time;
         startPosition = transform.position;
+        startScale = cylinder.localScale;
+        if (direction.y > 0)
+        {
+            finalScale = new Vector3(1f, .03f, 1f);
+        }
+        else
+        {
+            finalScale = new Vector3(3f, .03f, 3f);
+        }
         if (moving)
         {
             finalPosition = finalPosition + direction;

@@ -14,10 +14,10 @@ public class GraphManager : MonoBehaviour
     public AudioSource badSound;
     public SelectionToolHandler selectionToolHandler;
     private List<Graph> graphs;
-    private Vector3[] startPositions =  {   new Vector3(-1f, .5f, .5f),
-                                            new Vector3(-.5f, .5f, -.9f),
-                                            new Vector3(0f, .5f, .5f),
-                                            new Vector3(.5f, .5f, -.9f)
+    private Vector3[] startPositions =  {   new Vector3(-.7f, .5f, .1f),
+                                            new Vector3(-.35f, .5f, -.7f),
+                                            new Vector3(0f, .5f, .1f),
+                                            new Vector3(.35f, .5f, -.7f)
                                         };
 
     void Awake()
@@ -91,7 +91,6 @@ public class GraphManager : MonoBehaviour
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
         {
-
             g.ResetGraph();
         }
         SetGraphStartPosition();
