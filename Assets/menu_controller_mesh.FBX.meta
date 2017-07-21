@@ -1,22 +1,15 @@
 fileFormatVersion: 2
-guid: 78e587f5c9729be4d872a7b00a4bd4b5
-timeCreated: 1498746786
+guid: 496bf1870f67e5745abab4834af9e4a2
+timeCreated: 1500552265
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Circle001
-    100002: //RootNode
-    100004: whole_model_group1
-    400000: Circle001
-    400002: //RootNode
-    400004: whole_model_group1
-    2300000: Circle001
-    2300002: whole_model_group1
-    3300000: Circle001
-    3300002: whole_model_group1
-    4300000: whole_model_group1
-    4300002: Circle001
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Menu Controller Mesh
     7400000: Take 001
     9500000: //RootNode
   materials:

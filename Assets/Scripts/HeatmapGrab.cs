@@ -12,7 +12,7 @@ namespace VRTK.GrabAttachMechanics
 
         public float breakForce = 1500f;
         GameObject menu;
-        private MenuController menuController;
+        private ControllerModelSwitcher menuController;
         private SelectionToolHandler selectionToolHandler;
         private bool menuTurnedOff = false;
         private bool selectionToolTurnedOff = false;
@@ -20,7 +20,7 @@ namespace VRTK.GrabAttachMechanics
         void Start()
         {
             // finds the menu, even if it is turned off
-            menuController = Resources.FindObjectsOfTypeAll<MenuController>()[0];
+            menuController = Resources.FindObjectsOfTypeAll<ControllerModelSwitcher>()[0];
             menu = menuController.gameObject;
             selectionToolHandler = Resources.FindObjectsOfTypeAll<SelectionToolHandler>()[0];
             // this really isn't the right way of doing this
@@ -45,7 +45,7 @@ namespace VRTK.GrabAttachMechanics
             {
                 menuTurnedOff = true;
                 menu.SetActive(false);
-                menuController.SwitchToOriginalModel();
+                menuController.SwitchToModel(ControllerModelSwitcher.Model.Normal);
             }
             else
             {

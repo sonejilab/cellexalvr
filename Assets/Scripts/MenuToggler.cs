@@ -5,7 +5,9 @@ public class MenuToggler : MonoBehaviour
 
     public SteamVR_TrackedObject trackedObject;
     private SteamVR_Controller.Device device;
+    public ControllerModelSwitcher menuController;
     public GameObject menu;
+    public Collider collider;
 
     // Use this for initialization
     void Start()
@@ -19,10 +21,7 @@ public class MenuToggler : MonoBehaviour
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             menu.SetActive(!menu.activeSelf);
-            if (!menu.activeSelf)
-            {
-                menu.GetComponent<MenuController>().SwitchToOriginalModel();
-            }
+            collider.enabled = !collider.enabled;
         }
     }
 

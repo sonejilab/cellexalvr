@@ -9,7 +9,7 @@ public GameObject fire;
 public SteamVR_TrackedObject rightController;
 public Sprite standardTexture;
 public Sprite highlightedTexture;
-public MenuController menuController;
+public ControllerModelSwitcher menuController;
 private SteamVR_Controller.Device device;
 private SpriteRenderer spriteRenderer;
 private bool controllerInside = false;

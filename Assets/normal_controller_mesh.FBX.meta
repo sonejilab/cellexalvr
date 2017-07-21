@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 9d6929ff6b927914b8d3950d9a8c6ef2
-timeCreated: 1497970604
+guid: b5bbcc5ab6517634493a49772456bcc1
+timeCreated: 1500549841
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: whole_model_group1
+    4300000: Normal Controller Mesh
     7400000: Take 001
     9500000: //RootNode
   materials:

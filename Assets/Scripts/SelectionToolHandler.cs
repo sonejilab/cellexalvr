@@ -12,8 +12,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public SelectionToolMenu selectionToolMenu;
     public GraphManager manager;
-    public Material selectorMaterial;
-    public RadialMenu menu;
+    public ControllerModelSwitcher controllerModelSwitcher;
     public SteamVR_TrackedController right;
     public SteamVR_TrackedController left;
     public bool selectionConfirmed = false;
@@ -26,32 +25,31 @@ public class SelectionToolHandler : MonoBehaviour
     private int currentColorIndex = 0;
     private Color selectedColor;
     private PlanePicker planePicker;
-    private List<RadialMenuButton> buttons;
     private bool inSelectionState = false;
     private bool selectionMade = false;
     private GameObject leftController;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
+
     public string DataDir { get; set; }
 
     void Awake()
     {
         colors = new Color[10];
-        colors[0] = new Color(1, 0, 0);     // red
-        colors[1] = new Color(0, 0, 1);     // blue
-        colors[2] = new Color(0, 1, 1);     // cyan
-        colors[3] = new Color(1, 0, 1);     // magenta
+        colors[0] = new Color(1, 0, 0, .5f);     // red
+        colors[1] = new Color(0, 0, 1, .5f);     // blue
+        colors[2] = new Color(0, 1, 1, .5f);     // cyan
+        colors[3] = new Color(1, 0, 1, .5f);     // magenta
         colors[4] = new Color(1f, 153f / 255f, 204f / 255f);     // pink
-        colors[5] = new Color(1, 1, 0);     // yellow
-        colors[6] = new Color(0, 1, 0);     // green
-        colors[7] = new Color(.6f, 1, .6f);     // lime green
-        colors[8] = new Color(.4f, .2f, 1);     // brown
-        colors[9] = new Color(1, .6f, .2f);     // orange
-        selectorMaterial.color = colors[0];
+        colors[5] = new Color(1, 1, 0, .5f);     // yellow
+        colors[6] = new Color(0, 1, 0, .5f);     // green
+        colors[7] = new Color(.6f, 1, .6f, .5f);     // lime green
+        colors[8] = new Color(.4f, .2f, 1, .5f);     // brown
+        colors[9] = new Color(1, .6f, .2f, .5f);     // orange
+        //selectorMaterial.color = colors[0];
         selectedColor = colors[0];
 
         SetSelectionToolEnabled(false);
-        buttons = menu.buttons;
         //UpdateButtonIcons();
         leftController = GameObject.Find("LeftController");
     }
@@ -183,7 +181,8 @@ public class SelectionToolHandler : MonoBehaviour
             currentColorIndex++;
         }
         selectedColor = colors[currentColorIndex];
-        selectorMaterial.color = selectedColor;
+        controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
+        //selectorMaterial.color = selectedColor;
         // this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
     }
 
@@ -228,10 +227,8 @@ public class SelectionToolHandler : MonoBehaviour
 
     public void SetSelectionToolEnabled(bool enabled)
     {
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
-        {
-            r.enabled = enabled;
-        }
+        controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
+        controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = enabled;

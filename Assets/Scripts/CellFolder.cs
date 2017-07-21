@@ -3,8 +3,8 @@ using UnityEngine;
 public class CellFolder : MonoBehaviour
 {
 
-    public Transform Rope { get; set; }
-    public float YOffset { get; set; }
+    //public Transform Rope { get; set; }
+    //public float YOffset { get; set; }
     public AudioSource sound;
 
     public void PlaySound()
@@ -12,9 +12,9 @@ public class CellFolder : MonoBehaviour
         sound.Play();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        transform.position = new Vector3(transform.position.x, Rope.position.y + YOffset, transform.position.z);
+        //transform.position = new Vector3(transform.position.x, Rope.position.y + YOffset, transform.position.z);
     }
 
 }

@@ -40,9 +40,23 @@ public class NetworkNode : MonoBehaviour
         buddy.neighbours.Add(this);
     }
 
+    bool ControllerTag(Collider other)
+    {
+        var parent = other.transform.parent;
+        if (parent != null)
+        {
+            parent = parent.parent;
+            if (parent != null)
+            {
+                return parent.tag == "Controller";
+            }
+        }
+        return false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Controller" && transform.parent.GetComponent<NetworkCenter>().Enlarged)
+        if (ControllerTag(other) && transform.parent.GetComponent<NetworkCenter>().Enlarged)
         {
             GetComponent<Renderer>().material.color = Color.white;
             foreach (LineRenderer r in connections)
@@ -56,7 +70,7 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Controller" && transform.parent.GetComponent<NetworkCenter>().Enlarged)
+        if (ControllerTag(other) && transform.parent.GetComponent<NetworkCenter>().Enlarged)
         {
             GetComponent<Renderer>().material.color = nodeColor;
             for (int i = 0; i < connections.Count; ++i)
@@ -109,25 +123,16 @@ public class NetworkNode : MonoBehaviour
                     GameObject edge = Instantiate(edgePrefab);
                     // place this edge in the middle between us and our buddy
                     LineRenderer renderer = edge.GetComponent<LineRenderer>();
-
                     edge.transform.parent = transform.parent;
-                    Vector3 middlePoint = (transform.localPosition + buddy.transform.localPosition) / 2f;
-                    //middlePoint.y = UnityEngine.Random.Range(-.5f, .5f);
-                    renderer.SetPositions(new Vector3[] { transform.localPosition, middlePoint, buddy.transform.localPosition });
                     edge.transform.localPosition = Vector3.zero;
+                    edge.transform.rotation = Quaternion.identity;
                     edge.transform.localScale = Vector3.one;
+                    renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
                     renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .6f, 1, .6f, 1);
                     connections.Add(renderer);
                     connectionColors.Add(renderer.material.color);
                     buddy.connections.Add(renderer);
                     buddy.connectionColors.Add(renderer.material.color);
-                    //edge.transform.localPosition = (transform.localPosition + buddy.transform.localPosition) / 2f;
-                    //float distance = Vector3.Distance(transform.localPosition, buddy.transform.localPosition);
-                    //edge.transform.localScale = new Vector3(edge.transform.localScale.x, edge.transform.localScale.y, edge.transform.localScale.z * distance);
-                    //edge.transform.LookAt(transform.parent);
-                    //edge.transform.Rotate(0, 0, 90);
-
-                    //edge.transform.parent = transform;
                 }
             }
         }
