@@ -14,6 +14,11 @@ public class GraphManager : MonoBehaviour
     public AudioSource badSound;
     public SelectionToolHandler selectionToolHandler;
     private List<Graph> graphs;
+    private Vector3[] startPositions =  {   new Vector3(-1f, .5f, .5f),
+                                            new Vector3(-.5f, .5f, -.9f),
+                                            new Vector3(0f, .5f, .5f),
+                                            new Vector3(.5f, .5f, -.9f)
+                                        };
 
     void Awake()
     {
@@ -23,8 +28,11 @@ public class GraphManager : MonoBehaviour
     public void SetGraphStartPosition()
     {
         // these values are hard coded for your convenience
-        graphs[0].transform.position = new Vector3(0.686f, .5f, -0.157f);
-        graphs[1].transform.position = new Vector3(-.456f, .5f, -0.119f);
+
+        for (int i = 0; i < graphs.Count; ++i)
+        {
+            graphs[i].transform.position = startPositions[i % 4];
+        }
     }
 
     /// <summary>
@@ -33,9 +41,9 @@ public class GraphManager : MonoBehaviour
     /// <returns> A reference to the newly created graph </returns>
     public Graph CreateGraph()
     {
-        Graph newGraph = Instantiate(graphPrefab);
+        Graph newGraph = Instantiate(graphPrefab, startPositions[(graphs.Count) % 4], Quaternion.identity);
         graphs.Add(newGraph);
-        newGraph.transform.parent = this.transform;
+        newGraph.transform.parent = transform;
         return newGraph;
     }
 

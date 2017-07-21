@@ -22,6 +22,7 @@ public class Graph : MonoBehaviour
     private Vector3 areaSize;
     private Vector3 defaultPos;
     private Vector3 defaultScale;
+
     void Start()
     {
         defaultPos = transform.position;
