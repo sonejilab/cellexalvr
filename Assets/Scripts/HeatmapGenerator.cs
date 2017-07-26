@@ -13,6 +13,7 @@ public class HeatmapGenerator : MonoBehaviour
     public ErrorMessageController errorMessageController;
     public GraphManager graphManager;
     public GameObject fire;
+    public StatusDisplay status;
     private ArrayList data;
     private GenerateHeatmapThread ght;
     private Thread t;
@@ -78,6 +79,7 @@ public class HeatmapGenerator : MonoBehaviour
                 yield break;
             }
 
+            int statusId = status.AddStatus("R script generating heatmap");
             // Start generation of new heatmap in R
             t = new Thread(new ThreadStart(ght.GenerateHeatmap));
             t.Start();
@@ -88,8 +90,9 @@ public class HeatmapGenerator : MonoBehaviour
 
             while (t.IsAlive)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
+            status.RemoveStatus(statusId);
             running = false;
             heatBoard = Instantiate(heatmapPrefab, heatmapPosition, heatmapPrefab.transform.rotation);
             Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
