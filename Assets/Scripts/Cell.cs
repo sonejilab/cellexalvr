@@ -10,6 +10,7 @@ public class Cell
 
     private string labelString;
     private Dictionary<string, string> attributes;
+    private Dictionary<string, int> facs;
     //private Dictionary<string, int> geneExpressions;
     private List<GraphPoint> graphPoints;
     private List<Material> materialList;
@@ -23,11 +24,12 @@ public class Cell
         graphPoints = new List<GraphPoint>();
         this.materialList = materialList;
         attributes = new Dictionary<string, string>();
+        facs = new Dictionary<string, int>();
     }
 
     public void SetLabel(string label)
     {
-        this.labelString = label;
+        labelString = label;
     }
 
     public void AddGraphPoint(GraphPoint g)
@@ -104,7 +106,7 @@ public class Cell
         {
             if (expression > 29)
             {
-                 expression = 29;
+                expression = 29;
             }
             g.GetComponent<Renderer>().material = materialList[expression];
         }
@@ -131,5 +133,19 @@ public class Cell
             }
             g.GetComponent<Renderer>().material = materialList[expression];
         }
+    }
+
+    public void ColorByIndex(string facsName)
+    {
+        foreach (GraphPoint g in graphPoints)
+        {
+            g.GetComponent<Renderer>().material = materialList[facs[facsName]];
+        }
+    }
+
+    internal void AddFacs(string facsName, int index)
+    {
+
+        facs[facsName] = index;
     }
 }

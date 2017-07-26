@@ -123,4 +123,21 @@ public class CellManager : MonoBehaviour
     {
         cells[cellname].AddAttribute(attributeType, attribute);
     }
+
+    internal void AddFacs(string cellName, string facs, int index)
+    {
+        if (index < 0 || index > 29)
+        {
+            print(facs + " " + index);
+        }
+        cells[cellName].AddFacs(facs, index);
+    }
+
+    public void ColorByIndex(string name)
+    {
+        foreach (Cell cell in cells.Values)
+        {
+            cell.ColorByIndex(name);
+        }
+    }
 }

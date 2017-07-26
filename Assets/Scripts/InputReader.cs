@@ -19,6 +19,7 @@ public class InputReader : MonoBehaviour
     public SelectionToolHandler selectionToolHandler;
     public AttributeSubMenu attributeSubMenu;
     public ToggleArcsSubMenu arcsSubMenu;
+    public ColorByIndexMenu indexMenu;
     public NetworkCenter networkPrefab;
     public NetworkNode networkNodePrefab;
     public GameObject headset;
@@ -138,7 +139,72 @@ public class InputReader : MonoBehaviour
         loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
         if (debug)
             ReadNetworkFiles();
+
+        ReadFacsFiles(path);
     }
+
+    private void ReadFacsFiles(string path)
+    {
+        string fullpath = path + "/index.facs";
+
+        if (!File.Exists(fullpath))
+        {
+            print("File " + fullpath + " not found");
+            return;
+        }
+
+        string[] lines = File.ReadAllLines(fullpath);
+        if (lines.Length == 0)
+        {
+            // file is empty
+            return;
+        }
+
+        string headerline = lines[0];
+        string[] header = headerline.Split(null);
+        float[] min = new float[header.Length - 1];
+        float[] max = new float[header.Length - 1];
+        for (int i = 0; i < min.Length; ++i)
+        {
+            min[i] = float.MaxValue;
+            max[i] = float.MinValue;
+        }
+        // calculate the minimum and mean values for each column
+        for (int i = 1; i < lines.Length; ++i)
+        {
+            string[] line = lines[i].Split(null);
+            for (int j = 0; j < line.Length - 1; ++j)
+            {
+                float value = float.Parse(line[j + 1]);
+                if (value < min[j])
+                    min[j] = value;
+                if (value > max[j])
+                    max[j] = value;
+            }
+        }
+
+        for (int i = 1; i < lines.Length; ++i)
+        {
+            string[] line = lines[i].Split(null);
+            string cellName = line[0];
+            for (int j = 1; j < line.Length; ++j)
+            {
+                // normalize to the range [0, 29]
+                float colorIndexFloat = ((float.Parse(line[j]) - min[j - 1]) / (max[j - 1] - min[j - 1])) * 29f;
+                int colorIndex = Mathf.FloorToInt(colorIndexFloat);
+                //print(colorIndex);
+                cellManager.AddFacs(line[0], header[j], colorIndex);
+            }
+        }
+
+        string[] names = new string[header.Length - 1];
+        for (int i = 0; i < header.Length - 1; ++i)
+        {
+            names[i] = header[i + 1];
+        }
+        indexMenu.CreateColorByIndexButtons(names);
+    }
+
 
     private struct NetworkKeyPair
     {

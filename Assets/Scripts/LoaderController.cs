@@ -97,7 +97,6 @@ public class LoaderController : MonoBehaviour
             Transform cellParent = collider.transform.parent;
             if (cellParent != null)
             {
-
                 if (timeEntered == 0)
                 {
                     // assuming the computer clock isn't currently unix epoch

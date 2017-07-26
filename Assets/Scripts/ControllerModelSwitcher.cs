@@ -58,6 +58,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //print("ontriggerenter " + other.gameObject.name);
         if (other.gameObject.tag == "Controller")
         {
             if (controllerBodyMeshFilter == null) return;
