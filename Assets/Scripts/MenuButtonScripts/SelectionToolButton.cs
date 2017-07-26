@@ -22,13 +22,13 @@ public class SelectionToolButton : MonoBehaviour
 
     void Start()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
     }
 
     void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             menuActive = !menuActive;

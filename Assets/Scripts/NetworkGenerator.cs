@@ -2,11 +2,15 @@
 using System.Threading;
 using UnityEngine;
 
+/// <summary>
+/// This class starts the thread that generates the network files and then tells the inputreader to process them.
+/// </summary>
 public class NetworkGenerator : MonoBehaviour
 {
 
     public SelectionToolHandler selectionToolHandler;
     public InputReader inputReader;
+    public ToggleArcsSubMenu subMenu;
     private Thread t;
     private GenerateNetworksThread gnt;
 

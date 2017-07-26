@@ -1,32 +1,15 @@
 fileFormatVersion: 2
-guid: b94051c5d9fbdaa4abfe40c24e13379f
-timeCreated: 1500381297
+guid: 89c605a6a3afd8e4f8e5a3a301332bca
+timeCreated: 1501056002
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Big Cog
-    100002: Box
-    100004: funnel
-    100006: //RootNode
-    100008: Small Cog
-    400000: Big Cog
-    400002: Box
-    400004: funnel
-    400006: //RootNode
-    400008: Small Cog
-    2300000: Big Cog
-    2300002: Box
-    2300004: funnel
-    2300006: Small Cog
-    3300000: Big Cog
-    3300002: Box
-    3300004: funnel
-    3300006: Small Cog
-    4300000: Box
-    4300002: funnel
-    4300004: Small Cog
-    4300006: Big Cog
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cylinder001
     9500000: //RootNode
   materials:
     importMaterials: 1

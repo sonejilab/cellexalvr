@@ -5,6 +5,7 @@ using SQLiter;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
+
 /// <summary>
 /// A class for reading data files and creating GraphPoints at the correct locations 
 /// </summary>
@@ -17,14 +18,16 @@ public class InputReader : MonoBehaviour
     public SQLite database;
     public SelectionToolHandler selectionToolHandler;
     public AttributeSubMenu attributeSubMenu;
-    public GameObject networkPrefab;
+    public ToggleArcsSubMenu arcsSubMenu;
+    public NetworkCenter networkPrefab;
     public NetworkNode networkNodePrefab;
-    //public GameObject edgePrefab;
     public GameObject headset;
+    public bool debug = false;
 
     private void Start()
     {
-        ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
+        if (debug)
+            ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
     }
 
     /// <summary>
@@ -64,7 +67,6 @@ public class InputReader : MonoBehaviour
     /// <param name="path"> The path to the folder where the files are. </param>
     /// <param name="mdsFiles"> The filenames. </param>
     /// <param name="itemsPerFrame"> How many graphpoints should be Instantiated each frame </param>
-    /// <returns></returns>
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
     {
         int fileIndex = 0;
@@ -134,7 +136,22 @@ public class InputReader : MonoBehaviour
 
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
-        ReadNetworkFiles();
+        if (debug)
+            ReadNetworkFiles();
+    }
+
+    private struct NetworkKeyPair
+    {
+        public string color, node1, node2, key1, key2;
+
+        public NetworkKeyPair(string c, string n1, string n2, string k1, string k2)
+        {
+            color = c;
+            key1 = k1;
+            key2 = k2;
+            node1 = n1;
+            node2 = n2;
+        }
     }
 
     /// <summary>
@@ -142,6 +159,7 @@ public class InputReader : MonoBehaviour
     /// </summary>
     public void ReadNetworkFiles()
     {
+
         // read the .cnt file
         //
         // it should contain information about the average positions of the networks
@@ -164,8 +182,9 @@ public class InputReader : MonoBehaviour
         string graphName = firstLine[firstLine.Length - 1];
         Graph graph = graphManager.FindGraph(graphName);
         GameObject skeleton = graph.CreateConvexHull();
+        if (skeleton == null) return;
 
-        Dictionary<string, GameObject> networks = new Dictionary<string, GameObject>();
+        Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
         foreach (string line in lines)
         {
             if (line == "")
@@ -181,11 +200,14 @@ public class InputReader : MonoBehaviour
             ColorUtility.TryParseHtmlString(words[3], out color);
             Vector3 position = graph.ScaleCoordinates(x, y, z);
 
-            GameObject network = Instantiate(networkPrefab);
+            NetworkCenter network = Instantiate(networkPrefab);
             network.transform.parent = skeleton.transform;
             network.transform.localPosition = position;
             //network.transform.localPosition -= graph.transform.position;
-            network.GetComponent<Renderer>().material.color = color;
+            foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
+            {
+                r.material.color = color;
+            }
             networks[words[3]] = network;
         }
 
@@ -202,6 +224,7 @@ public class InputReader : MonoBehaviour
         }
         lines = File.ReadAllLines(nwkFilePath[0]);
         Dictionary<string, NetworkNode> nodes = new Dictionary<string, NetworkNode>(1000);
+        List<NetworkKeyPair> tmp = new List<NetworkKeyPair>();
         // skip the first line as it is a header
         for (int i = 1; i < lines.Length; ++i)
         {
@@ -213,6 +236,8 @@ public class InputReader : MonoBehaviour
             string node1 = geneName1 + color;
             string geneName2 = words[2];
             string node2 = geneName2 + color;
+            string key1 = words[7];
+            string key2 = words[8];
             // add the nodes if they don't already exist
             if (!nodes.ContainsKey(node1))
             {
@@ -236,12 +261,20 @@ public class InputReader : MonoBehaviour
 
             // add a bidirectional connection
             nodes[node1].AddNeighbour(nodes[node2]);
-
+            // add the keypair
+            tmp.Add(new NetworkKeyPair(color, node1, node2, key1, key2));
 
         }
 
+        NetworkKeyPair[] keyPairs = new NetworkKeyPair[tmp.Count];
+        tmp.CopyTo(keyPairs);
+        // sort the array of keypairs
+        // if two keypairs are equal (they both contain the same key), they should be next to each other in the list, otherwise sort based on key1
+        Array.Sort(keyPairs, (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
+
         string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.lay");
         lines = File.ReadAllLines(layFilePath[0]);
+
 
         foreach (string line in lines)
         {
@@ -253,13 +286,50 @@ public class InputReader : MonoBehaviour
             float ycoord = float.Parse(words[2]);
             string color = words[3];
             string nodeName = geneName + color;
-            nodes[nodeName].transform.localPosition = new Vector3(xcoord / 25f - .5f, ycoord / 25f - .5f, 0f);
+            nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
+
+        }
+
+        NetworkKeyPair lastKey = new NetworkKeyPair("", "", "", "", "");
+        List<NetworkKeyPair> lastNodes = new List<NetworkKeyPair>();
+        for (int i = 0; i < keyPairs.Length; ++i)
+        {
+            NetworkKeyPair keypair = keyPairs[i];
+            if (lastKey.key1 == keypair.key1 || lastKey.key1 == keypair.key2)
+            {
+                foreach (NetworkKeyPair node in lastNodes)
+                {
+                    nodes[node.node1].AddArc(nodes[node.node2], nodes[keypair.node1], nodes[keypair.node2]);
+                }
+            }
+            else
+            {
+                lastNodes.Clear();
+            }
+            lastNodes.Add(keypair);
+            lastKey = keypair;
 
         }
 
         foreach (NetworkNode node in nodes.Values)
         {
             node.AddEdges();
+        }
+
+        // copy the networks to an array
+        NetworkCenter[] networkCenterArray = new NetworkCenter[networks.Count];
+        int j = 0;
+        foreach (NetworkCenter n in networks.Values)
+        {
+            networkCenterArray[j++] = n;
+        }
+        //return networkCenterArray;
+        arcsSubMenu.CreateToggleArcsButtons(networkCenterArray);
+
+        // toggle the arcs off
+        foreach (NetworkCenter network in networks.Values)
+        {
+            network.SetArcsVisible(false);
         }
 
     }

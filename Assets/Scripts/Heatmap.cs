@@ -17,11 +17,12 @@ public class Heatmap : MonoBehaviour
     private SelectionToolHandler selectionToolHandler;
     private bool controllerInside = false;
     private GameObject fire;
+    private SteamVR_TrackedObject rightController;
+
     // Use this for initialization
     void Start()
     {
-        SteamVR_TrackedObject rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-        device = SteamVR_Controller.Input((int)rightController.index);
+        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,6 +43,7 @@ public class Heatmap : MonoBehaviour
 
     void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && fire.activeSelf)
         {
             gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();

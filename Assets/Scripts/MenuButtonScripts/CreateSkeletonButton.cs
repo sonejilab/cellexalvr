@@ -14,7 +14,6 @@ public class CreateSkeletonButton : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
         //  highlightedTexture =
@@ -23,6 +22,7 @@ public class CreateSkeletonButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             //graphManager.CreateConvexHull();

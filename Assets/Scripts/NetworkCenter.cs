@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using VRTK;
 using VRTK.GrabAttachMechanics;
 using VRTK.SecondaryControllerGrabActions;
@@ -17,21 +19,24 @@ public class NetworkCenter : MonoBehaviour
     private Quaternion oldRotation;
     private Transform oldParent;
     public bool Enlarged { get; private set; }
+    private bool enlarge = false;
     private bool isReplacement = false;
     private NetworkCenter replacing;
+    private List<GameObject> arcs = new List<GameObject>();
+    private SteamVR_TrackedObject rightController;
 
     void Start()
     {
         pedestal = GameObject.Find("Pedestal");
-        SteamVR_TrackedObject rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-        device = SteamVR_Controller.Input((int)rightController.index);
+        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        // moving kinematic rigidbodies
+        if (enlarge)
         {
-            controllerInside = false;
+            enlarge = false;
             if (!isReplacement)
                 EnlargeNetwork();
             else
@@ -39,38 +44,66 @@ public class NetworkCenter : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        device = SteamVR_Controller.Input((int)rightController.index);
+        // handle input
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            controllerInside = false;
+            enlarge = true;
+            //controllerInside = false;
+            //if (!isReplacement)
+            //    EnlargeNetwork();
+            //else
+            //    BringBackOriginal();
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Controller")
+        if (other.tag == "Smaller Controller Collider")
         {
             controllerInside = true;
+            //print("controller entered");
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Controller")
+        if (other.tag == "Smaller Controller Collider")
         {
             controllerInside = false;
+            //print("controller left");
         }
     }
 
-    private void EnlargeNetwork()
+    /// <summary>
+    /// Called when the controller is inside the network and the trigger is pressed. Enlarges the network and seperates it from the skeleton and makes it movable by the user.
+    /// </summary>
+    public void EnlargeNetwork()
     {
+        // add a rigidbody and the necessary scripts
         Enlarged = true;
+        GetComponent<Renderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
         var rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.useGravity = false;
         rigidbody.isKinematic = true;
         rigidbody.angularDrag = float.PositiveInfinity;
         var interactableObject = gameObject.AddComponent<VRTK_InteractableObject>();
         interactableObject.isGrabbable = true;
+        interactableObject.isUsable = false;
         var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
         var scalescript = gameObject.AddComponent<VRTK_AxisScaleGrabAction>();
         scalescript.uniformScaling = true;
-        
+        interactableObject.grabAttachMechanicScript = grabAttach;
+        interactableObject.secondaryGrabActionScript = scalescript;
+
         grabAttach.precisionGrab = true;
         grabAttach.breakForce = float.PositiveInfinity;
 
+        // save the old variables
         oldParent = transform.parent;
         oldLocalPosition = transform.localPosition;
         oldScale = transform.localScale;
@@ -81,46 +114,83 @@ public class NetworkCenter : MonoBehaviour
         transform.localScale = new Vector3(.7f, .7f, .7f);
         transform.rotation = pedestal.transform.rotation;
         transform.Rotate(-90f, 0, 0);
-        GetComponent<Renderer>().enabled = false;
-        GetComponent<Collider>().enabled = false;
 
-
-
+        // instantiate a replacement in our place
         var replacement = Instantiate(replacementPrefab);
         replacement.transform.parent = oldParent;
         replacement.transform.localPosition = oldLocalPosition;
         replacement.transform.rotation = oldRotation;
         replacement.transform.localScale = oldScale;
+        replacement.GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color;
 
+        // make sure the replacement knows its place in the world
         var replacementScript = replacement.GetComponent<NetworkCenter>();
         replacementScript.isReplacement = true;
         replacementScript.replacing = this;
+
+        // turn on the colliders on the nodes so they can be highlighted
+        foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
+        {
+            b.enabled = true;
+        }
     }
 
     /// <summary>
-    /// If this network is enlarged, bring it back to the convex hull, it it is a replacement, destroy it and bring back the original 
+    /// If this network is enlarged, bring it back to the convex hull, if it is a replacement, destroy it and bring back the original 
     /// </summary>
     private void BringBackOriginal()
     {
         if (isReplacement)
         {
             replacing.BringBackOriginal();
-            Destroy(gameObject);
+            // calling Destroy without the time delay caused the program to crash pretty reliably
+            Destroy(GetComponent<Collider>());
+            Destroy(GetComponent<Renderer>());
+            rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
+            gameObject.SetActive(false);
+            Destroy(gameObject, .1f);
         }
         else
         {
             Enlarged = false;
             // this network will now be part of the convex hull which already has a rigidbody and these scripts
-            Destroy(gameObject.GetComponent<Rigidbody>());
-            Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
             Destroy(gameObject.GetComponent<VRTK_FixedJointGrabAttach>());
-            transform.parent = oldParent;
-            transform.localPosition = oldLocalPosition;
-            transform.localScale = oldScale;
-            transform.rotation = oldRotation;
+            Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
+            Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
+            Destroy(gameObject.GetComponent<Rigidbody>());
+            //var interactableObject = gameObject.GetComponent<VRTK_InteractableObject>();
+            //interactableObject.isGrabbable = false;
+            //interactableObject.isUsable = true;
             GetComponent<Renderer>().enabled = true;
             GetComponent<Collider>().enabled = true;
+            transform.parent = oldParent;
+            transform.localPosition = oldLocalPosition;
+            transform.rotation = oldRotation;
+            transform.localScale = oldScale;
+            ////var rigidbody = gameObject.GetComponentInParent<Rigidbody>();
+            //var rigidbody2 = rigidbody.gameObject.GetComponentInParent<Rigidbody>();
+            //rigidbody2.transform.Translate(.1f, 0, 0);
+            //print(oldParent.name);
+            //oldParent.Translate(0, 0, 0);
+            //rigidbody.transform.Translate(-1, 0, 0);
             //print(GetComponent<Collider>().bounds.center);
+            foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
+            {
+                b.enabled = false;
+            }
+        }
+    }
+
+    internal void AddArc(GameObject edge)
+    {
+        arcs.Add(edge);
+    }
+
+    public void SetArcsVisible(bool toggleToState)
+    {
+        foreach (GameObject arc in arcs)
+        {
+            arc.SetActive(toggleToState);
         }
     }
 }

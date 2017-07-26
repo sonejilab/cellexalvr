@@ -84,11 +84,16 @@ public class Graph : MonoBehaviour
     /// Not really a convex hull though.
     /// More like a skeleton really.
     /// </summary>
-    /// <returns> A reference to the created convexhull </returns>
+    /// <returns> A reference to the created convex hull or null if no file containing the convex hull information was found. </returns>
     public GameObject CreateConvexHull()
     {
         string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
+        if (lines.Length == 0)
+        {
+            print("File " + GraphName + ".hull not found");
+            return null;
+        }
 
         int[] xcoords = new int[lines.Length];
         int[] ycoords = new int[lines.Length];
@@ -116,10 +121,18 @@ public class Graph : MonoBehaviour
             vertices = vertices,
             triangles = triangles
         };
-        convexHull.gameObject.transform.position = transform.position;
-        convexHull.gameObject.transform.rotation = transform.rotation;
-        convexHull.gameObject.transform.localScale = transform.localScale;
-        convexHull.gameObject.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+
+        convexHull.transform.position = transform.position;
+        // move the convexhull slightly out of the way of the graph
+        // in a direction sort of pointing towards the middle
+        Vector3 moveDist = new Vector3(.2f, 0, .2f);
+        if (transform.position.x > 0) moveDist.x = -.2f;
+        if (transform.position.z > 0) moveDist.z = -.2f;
+        convexHull.transform.Translate(moveDist);
+
+        convexHull.transform.rotation = transform.rotation;
+        convexHull.transform.localScale = transform.localScale;
+        convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();
         return convexHull.gameObject;

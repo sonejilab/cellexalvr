@@ -17,12 +17,12 @@ public class ColorByAttributeButton : MonoBehaviour
 
     void Awake()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
         renderer = GetComponent<Renderer>();
     }
 
     void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             if (!colored)

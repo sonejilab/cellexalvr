@@ -60,6 +60,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
+            if (controllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
             fireEnabled = fire.activeSelf;
             fire.SetActive(false);
@@ -71,6 +72,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     {
         if (other.gameObject.tag == "Controller")
         {
+            if (controllerBodyMeshFilter == null) return;
             SwitchToModel(DesiredModel);
         }
     }

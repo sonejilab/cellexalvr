@@ -12,6 +12,7 @@ public class RemoveSelectionButton : RotatableButton
 
     void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
         {
             selectionToolHandler.ConfirmRemove();

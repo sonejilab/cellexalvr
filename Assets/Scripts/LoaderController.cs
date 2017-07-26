@@ -9,7 +9,7 @@ public class LoaderController : MonoBehaviour
     public InputReader inputReader;
     public InputFolderGenerator inputFolderGenerator;
     public GraphManager GraphManager;
-    public AudioSource sound;
+    //public AudioSource sound;
     public Transform cylinder;
     private float timeEntered = 0;
     private ArrayList cellsToDestroy;
@@ -40,7 +40,7 @@ public class LoaderController : MonoBehaviour
             if (currentTime > arrivalTime)
             {
                 moving = false;
-                sound.Stop();
+                //sound.Stop();
             }
         }
 
@@ -66,18 +66,18 @@ public class LoaderController : MonoBehaviour
 
     public void MoveLoader(Vector3 direction, float time)
     {
-        sound.Play();
+        //sound.Play();
         currentTime = 0;
         arrivalTime = time;
         startPosition = transform.position;
         startScale = cylinder.localScale;
         if (direction.y > 0)
         {
-            finalScale = new Vector3(1f, .03f, 1f);
+            finalScale = new Vector3(1f, startScale.y, 1f);
         }
         else
         {
-            finalScale = new Vector3(3f, .03f, 3f);
+            finalScale = new Vector3(3f, startScale.y, 3f);
         }
         if (moving)
         {

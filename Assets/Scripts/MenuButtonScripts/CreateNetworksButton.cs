@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class CreateNetworksButton : MonoBehaviour
-{ 
+{
     public TextMesh descriptionText;
     public SteamVR_TrackedObject rightController;
     public Sprite standardTexture;
@@ -14,13 +14,13 @@ public class CreateNetworksButton : MonoBehaviour
 
     void Start()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
     }
 
     void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             networkGenerator.GenerateNetworks();
