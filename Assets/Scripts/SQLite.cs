@@ -9,6 +9,8 @@ using System.Data;
 using Mono.Data.SqliteClient;
 using System.IO;
 using System.Collections;
+using System.Threading;
+
 
 namespace SQLiter
 {
@@ -40,6 +42,8 @@ namespace SQLiter
     {
         public static SQLite Instance = null;
         public bool DebugMode = false;
+        public StatusDisplay status;
+        public bool QueryRunning { get; private set; }
 
         // Location of database - this will be set during Awake as to stop Unity 5.4 error regarding initialization before scene is set
         // file should show up in the Unity inspector after a few seconds of running it the first time
@@ -59,6 +63,8 @@ namespace SQLiter
         private IDbCommand _command = null;
         private IDataReader _reader = null;
         private string _sqlString;
+        [HideInInspector]
+        public ArrayList _result = new ArrayList();
 
         private bool _createNewTavle = false;
 
@@ -119,7 +125,7 @@ namespace SQLiter
 
         public void InitDatabase(string path)
         {
-             _sqlDBLocation = "URI=file:" + path;
+            _sqlDBLocation = "URI=file:" + path;
 
             Debug.Log(_sqlDBLocation);
             Instance = this;
@@ -207,13 +213,27 @@ namespace SQLiter
         /// </summary>
         /// <param name="geneName"> The name of the gene </param>
         /// <returns> An array of all gene expression, ordered by cell </returns>
-        public ArrayList QueryGene(string geneName)
+        public void QueryGene(string geneName)
         {
-            _connection.Open();
-            //_command.CommandText = "SELECT variable, value FROM data WHERE genes ='" + geneName + "'";
-            _command.CommandText = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id left join genes on datavalues.gene_id = genes.id where gname = \"" + geneName + "\"";
-            _reader = _command.ExecuteReader();
-            ArrayList result = new ArrayList();
+            QueryRunning = true;
+            StartCoroutine(QueryGeneCoroutine(geneName));
+        }
+
+        /// <summary>
+        /// Queries the database for the expression values for a gene and puts the result in _result
+        /// </summary>
+        /// <param name="geneName"> The gene name </param>
+        private IEnumerator QueryGeneCoroutine(string geneName)
+        {
+            int statusId = status.AddStatus("Querying database for gene " + geneName);
+            _result.Clear();
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id left join genes on datavalues.gene_id = genes.id where gname = \"" + geneName + "\"";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
             int i = 0;
             float minExpr = float.MaxValue;
             float maxExpr = float.MinValue;
@@ -229,14 +249,14 @@ namespace SQLiter
                     minExpr = expr;
                 }
                 i++;
-                result.Add(new CellExpressionPair(_reader.GetString(0), expr));
+                _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
             }
             float binSize = (maxExpr - minExpr) / 30f;
             if (DebugMode)
             {
                 print("binsize = " + binSize);
             }
-            foreach (CellExpressionPair pair in result)
+            foreach (CellExpressionPair pair in _result)
             {
                 pair.Expression = (pair.Expression - minExpr) / binSize;
             }
@@ -244,8 +264,18 @@ namespace SQLiter
                 print("Number of columns returned from database: " + i);
             _reader.Close();
             _connection.Close();
-            return result;
+            status.RemoveStatus(statusId);
+            QueryRunning = false;
+        }
 
+        /// <summary>
+        /// Helper method that is run as a Thread.
+        /// </summary>
+        private void QueryThread(string query)
+        {
+            _connection.Open();
+            _command.CommandText = query;
+            _reader = _command.ExecuteReader();
         }
         #endregion
 

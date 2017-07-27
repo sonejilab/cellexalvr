@@ -46,7 +46,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     IEnumerator ChangeModelOnStart()
     {
-        if (controllerBodyMeshFilter != null && controllerBodyRenderer != null)
+        if (controllerBodyMeshFilter != null || controllerBodyRenderer != null)
         {
             SwitchToModel(Model.Normal);
         }
@@ -111,7 +111,16 @@ public class ControllerModelSwitcher : MonoBehaviour
                 controllerBodyRenderer.material.color = desiredColor;
                 break;
         }
+    }
 
+    public void TurnOffActiveTool()
+    {
+        selectionToolEnabled = false;
+        fireEnabled = false;
+        selectionToolHandler.SetSelectionToolEnabled(false);
+        fire.SetActive(false);
+        DesiredModel = Model.Normal;
+        SwitchToModel(Model.Normal);
     }
 
     public void SwitchToDesiredModel()
@@ -125,21 +134,6 @@ public class ControllerModelSwitcher : MonoBehaviour
 
         if (actualModel == Model.SelectionTool)
             controllerBodyRenderer.material.color = desiredColor;
-    }
-
-    /// <summary>
-    /// Shows or hides the menu.
-    /// </summary>
-    public void ShowMenu(bool show)
-    {
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
-        {
-            r.enabled = show;
-        }
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-        {
-            c.enabled = show;
-        }
     }
 
     /// <summary>

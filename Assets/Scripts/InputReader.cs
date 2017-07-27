@@ -23,12 +23,16 @@ public class InputReader : MonoBehaviour
     public NetworkCenter networkPrefab;
     public NetworkNode networkNodePrefab;
     public GameObject headset;
+    public StatusDisplay status;
+    [Tooltip("Automatically loads a the Bertie dataset")]
     public bool debug = false;
 
     private void Start()
     {
         if (debug)
+        {
             ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
+        }
     }
 
     /// <summary>
@@ -70,6 +74,7 @@ public class InputReader : MonoBehaviour
     /// <param name="itemsPerFrame"> How many graphpoints should be Instantiated each frame </param>
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
     {
+        int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         foreach (string file in mdsFiles)
         {
@@ -93,6 +98,7 @@ public class InputReader : MonoBehaviour
 
             for (int i = 0; i < lines.Length; i += itemsPerFrame)
             {
+                status.UpdateStatus(statusId, "Reading " + graphFileName + ". " + i + "/" + lines.Length);
                 for (int j = i; j < i + itemsPerFrame && j < lines.Length; ++j)
                 {
                     string line = lines[j];
@@ -104,7 +110,7 @@ public class InputReader : MonoBehaviour
             }
             fileIndex++;
         }
-
+        status.UpdateStatus(statusId, "Reading .meta.cell files");
         string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
         foreach (string metacellfile in metacellfiles)
         {
@@ -139,8 +145,9 @@ public class InputReader : MonoBehaviour
         loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
         if (debug)
             ReadNetworkFiles();
-
+        status.UpdateStatus(statusId, "Reading index.facs file");
         ReadFacsFiles(path);
+        status.RemoveStatus(statusId);
     }
 
     private void ReadFacsFiles(string path)

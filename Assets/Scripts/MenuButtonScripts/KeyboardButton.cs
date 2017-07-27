@@ -32,7 +32,7 @@ public class KeyboardButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            keyboardActivated = !keyboardActivated;
+            keyboardActivated = !keyboard.activeSelf;
             laserPointer.enabled = keyboardActivated;
             keyboard.SetActive(keyboardActivated);
         }

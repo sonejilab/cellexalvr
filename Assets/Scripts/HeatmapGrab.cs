@@ -51,11 +51,7 @@ namespace VRTK.GrabAttachMechanics
             {
                 menuTurnedOff = false;
             }
-            selectionToolTurnedOff = selectionToolHandler.IsSelectionToolEnabled();
-            if (selectionToolTurnedOff)
-            {
-                selectionToolHandler.SetSelectionToolEnabled(false);
-            }
+            selectionToolHandler.SetSelectionToolEnabled(false);
         }
 
         protected override void DestroyJoint(bool withDestroyImmediate, bool applyGrabbingObjectVelocity)

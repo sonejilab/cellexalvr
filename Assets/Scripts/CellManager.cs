@@ -84,7 +84,21 @@ public class CellManager : MonoBehaviour
     /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName)
     {
-        ArrayList expressions = database.QueryGene(geneName);
+        StartCoroutine(QueryDatabase(geneName));
+    }
+
+    private IEnumerator QueryDatabase(string geneName)
+    {
+        // if there is already a query running, wait for it to finish
+        while (database.QueryRunning)
+            yield return null;
+
+        database.QueryGene(geneName);
+
+        while (database.QueryRunning)
+            yield return null;
+
+        ArrayList expressions = database._result;
         foreach (Cell c in cells.Values)
         {
             c.ColorByExpression(0);
