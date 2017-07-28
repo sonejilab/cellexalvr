@@ -1,21 +1,18 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using UnityEngine;
 
-public class CreateNetworksButton : MonoBehaviour
+public class CreateNetworksButton : RotatableButton
 {
-    public TextMesh descriptionText;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
-    public NetworkGenerator networkGenerator;
-    private SteamVR_Controller.Device device;
-    private bool controllerInside;
-    private SpriteRenderer spriteRenderer;
 
-    void Start()
+    public NetworkGenerator networkGenerator;
+
+    protected override string Description
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
+        get
+        {
+            return "Create Networks";
+        }
     }
 
     void Update()
@@ -23,30 +20,10 @@ public class CreateNetworksButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            SetButtonState(false);
             networkGenerator.GenerateNetworks();
         }
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Controller")
-        {
-            descriptionText.text = "Create networks";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Controller")
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
-    }
-
 }
 
 

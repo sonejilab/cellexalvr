@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23982623659630714}
   - component: {fileID: 114252115367115154}
   - component: {fileID: 65502072426276958}
+  - component: {fileID: 114042002659218664}
   m_Layer: 0
   m_Name: NetworkNodePrefab
   m_TagString: Untagged
@@ -178,6 +179,38 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &114042002659218664
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1147256446606448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bbe35e73e451c47b2b9f300d5d7816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableWhenIdle: 1
+  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  allowedTouchControllers: 0
+  isGrabbable: 0
+  holdButtonToGrab: 0
+  stayGrabbedOnTeleport: 1
+  validDrop: 1
+  grabOverrideButton: 0
+  allowedGrabControllers: 0
+  grabAttachMechanicScript: {fileID: 0}
+  secondaryGrabActionScript: {fileID: 0}
+  isUsable: 1
+  holdButtonToUse: 0
+  useOnlyIfGrabbed: 0
+  pointerActivatesUseAction: 1
+  useOverrideButton: 0
+  allowedUseControllers: 0
+  usingState: 0
+  node: {fileID: 114252115367115154}
+  cellManager: {fileID: 0}
+  highlightColor: {r: 1, g: 1, b: 1, a: 0}
 --- !u!114 &114252115367115154
 MonoBehaviour:
   m_ObjectHideFlags: 1

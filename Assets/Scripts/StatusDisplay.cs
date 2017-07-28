@@ -82,14 +82,20 @@ public class StatusDisplay : MonoBehaviour
     /// </summary>
     private void UpdateStatusPositions()
     {
-        if (statusPositions.Count == 0) return;
-
-        statusPositions[0].localPosition = startSpawnPos;
-        for (int i = 1; i < statusPositions.Count; ++i)
+        if (statusPositions.Count == 0)
         {
-            statusPositions[i].localPosition = statusPositions[i - 1].localPosition + dnextSpawnPos;
+            nextSpawnPos = startSpawnPos;
+
         }
-        nextSpawnPos = statusPositions[statusPositions.Count - 1].localPosition;
+        else
+        {
+            statusPositions[0].localPosition = startSpawnPos;
+            for (int i = 1; i < statusPositions.Count; ++i)
+            {
+                statusPositions[i].localPosition = statusPositions[i - 1].localPosition + dnextSpawnPos;
+            }
+            nextSpawnPos = statusPositions[statusPositions.Count - 1].localPosition + dnextSpawnPos;
+        }
     }
 
 }

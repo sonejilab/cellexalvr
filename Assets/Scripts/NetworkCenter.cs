@@ -87,7 +87,11 @@ public class NetworkCenter : MonoBehaviour
         Enlarged = true;
         GetComponent<Renderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
-        var rigidbody = gameObject.AddComponent<Rigidbody>();
+        var rigidbody = gameObject.GetComponent<Rigidbody>();
+        if (rigidbody == null)
+        {
+            rigidbody = gameObject.AddComponent<Rigidbody>();
+        }
         rigidbody.useGravity = false;
         rigidbody.isKinematic = true;
         rigidbody.angularDrag = float.PositiveInfinity;

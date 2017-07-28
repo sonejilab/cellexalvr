@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 23423498432608762}
   - component: {fileID: 64780885050579716}
   - component: {fileID: 54438818171834790}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SkeletonPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

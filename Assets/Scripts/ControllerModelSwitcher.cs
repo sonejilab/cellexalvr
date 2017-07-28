@@ -46,7 +46,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     IEnumerator ChangeModelOnStart()
     {
-        if (controllerBodyMeshFilter != null || controllerBodyRenderer != null)
+        if (controllerBodyMeshFilter != null && controllerBodyRenderer != null)
         {
             SwitchToModel(Model.Normal);
         }

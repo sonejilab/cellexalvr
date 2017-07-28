@@ -23,7 +23,8 @@ GameObject:
   - component: {fileID: 135946752829001644}
   - component: {fileID: 23003621475484474}
   - component: {fileID: 114190743744166870}
-  m_Layer: 0
+  - component: {fileID: 114073776324487466}
+  m_Layer: 2
   m_Name: NetworkCenterPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +42,7 @@ GameObject:
   - component: {fileID: 33141155334007098}
   - component: {fileID: 23259352955223570}
   - component: {fileID: 64684723448277922}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,6 +168,23 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
+--- !u!114 &114073776324487466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1758485399609656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08517e04830d6d44a13c5ea5f574181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  unhighlightOnDisable: 1
+  thickness: 0.15
+  customOutlineModels: []
+  customOutlineModelPaths: []
+  enableSubmeshHighlight: 0
 --- !u!114 &114190743744166870
 MonoBehaviour:
   m_ObjectHideFlags: 1

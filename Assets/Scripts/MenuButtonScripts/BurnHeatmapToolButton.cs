@@ -35,6 +35,7 @@ public class BurnHeatmapToolButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //print(other.gameObject.name);
         if (other.gameObject.tag == "Controller")
         {
             descriptionText.text = "Burn heatmap tool";

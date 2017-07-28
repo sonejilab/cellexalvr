@@ -12,7 +12,16 @@ public class NetworkNode : MonoBehaviour
     public GameObject edgePrefab;
     public GameObject arcDescriptionPrefab;
     public Transform CameraToLookAt { get; set; }
-    public string Label { set { geneName.text = value; } }
+    private string label;
+    public string Label
+    {
+        get { return label; }
+        set
+        {
+            label = value;
+            geneName.text = value;
+        }
+    }
     private List<NetworkNode> neighbours = new List<NetworkNode>();
     private List<LineRenderer> connections = new List<LineRenderer>();
     private Transform textTransform;

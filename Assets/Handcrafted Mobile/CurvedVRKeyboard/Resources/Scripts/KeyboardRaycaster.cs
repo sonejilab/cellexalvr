@@ -34,11 +34,11 @@ namespace CurvedVRKeyboard
             keyboardStatus.SetVars(cellManager, previousSearchesList);
             int layerNumber = gameObject.layer;
             layer = 1 << layerNumber;
-            device = SteamVR_Controller.Input((int)rightController.controllerIndex);
         }
 
         void Update()
         {
+            device = SteamVR_Controller.Input((int)rightController.controllerIndex);
             // * sum of all scales so keys are never to far
             rayLength = Vector3.Distance(raycastingSource.position, target.transform.position) * (minRaylengthMultipler +
                                                                                                   (Mathf.Abs(target.transform.lossyScale.x) + Mathf.Abs(target.transform.lossyScale.y) + Mathf.Abs(target.transform.lossyScale.z)));
