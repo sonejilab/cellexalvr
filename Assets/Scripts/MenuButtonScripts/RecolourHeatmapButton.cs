@@ -1,24 +1,22 @@
+using System;
 using UnityEngine;
 
 ///<summary>
 /// This class represents a button used the graphs from the cell selection used for this particular heatmap.
 ///</summary>
-public class RecolourHeatmapButton : MonoBehaviour
+public class RecolourHeatmapButton : StationaryButton
 {
-    private TextMesh descriptionText;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
-
-    void Start()
+    protected override string Description
     {
-        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
-        descriptionText = GetComponentInChildren<TextMesh>();
+        get
+        {
+            return "Recoulour heatmap";
+        }
+    }
+
+    protected override void Start()
+    {
+        GameObject.Find("Controller (right)");
     }
 
     void Update()
@@ -26,29 +24,7 @@ public class RecolourHeatmapButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            //print(gameObject.GetComponentInParent<Heatmap>().gameObject.name);
             gameObject.GetComponentInParent<Heatmap>().ColorCells();
         }
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Recolour graphs";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
-    }
-
 }

@@ -1,22 +1,19 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
-public class AttributeMenuButton : MonoBehaviour
+public class AttributeMenuButton : StationaryButton
 {
-    public TextMesh descriptionText;
-    public GameObject attributeMenu;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
-    public GameObject buttons;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
 
-    void Start()
+    public GameObject attributeMenu;
+    public GameObject buttons;
+
+    protected override string Description
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
+        get
+        {
+            return "Show menu for coloring by attribute";
+        }
     }
 
     void Update()
@@ -31,24 +28,5 @@ public class AttributeMenuButton : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Color by attribute";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
-    }
 }
 

@@ -1,22 +1,18 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
-public class ArcsMenuButton : MonoBehaviour
+public class ArcsMenuButton : StationaryButton
 {
-    public TextMesh descriptionText;
-    public GameObject arcsMenu;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
-    public GameObject buttons;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
 
-    void Start()
+    public GameObject arcsMenu;
+    public GameObject buttons;
+
+    protected override string Description
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
+        get
+        {
+            return "Show menu for toggling arcs between networks";
+        }
     }
 
     void Update()
@@ -28,26 +24,6 @@ public class ArcsMenuButton : MonoBehaviour
             controllerInside = false;
             arcsMenu.SetActive(true);
             buttons.SetActive(false);
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Toggle arcs";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
         }
     }
 }

@@ -13,6 +13,7 @@ public class ToggleAllArcsButton : MonoBehaviour
     void Awake()
     {
         renderer = GetComponent<Renderer>();
+        color = renderer.material.color;
     }
 
     void Update()
@@ -29,7 +30,6 @@ public class ToggleAllArcsButton : MonoBehaviour
     {
         //color = network.GetComponent<Renderer>().material.color;
         //GetComponent<Renderer>().material.color = color;
-        color = GetComponent<Renderer>().material.color;
         this.networks = networks;
     }
 

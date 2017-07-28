@@ -1,30 +1,27 @@
+using System;
 using UnityEngine;
 
 
 ///<summary>
 /// This class represents a button used for toggling the selection tool.
 ///</summary>
-public class SelectionToolButton : MonoBehaviour
+public class SelectionToolButton : StationaryButton
 {
-    public TextMesh descriptionText;
     public SelectionToolHandler selectionToolHandler;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
     public MenuRotator rotator;
     public SelectionToolMenu selectionToolMenu;
 
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
     private bool menuActive = false;
     private bool buttonsInitialized = false;
 
-    void Start()
+    protected override string Description
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
+        get
+        {
+            return "Toggle selection tool";
+        }
     }
+
 
     void Update()
     {
@@ -44,26 +41,6 @@ public class SelectionToolButton : MonoBehaviour
                 selectionToolMenu.InitializeButtons();
                 buttonsInitialized = true;
             }
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Toggle selection tool";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
         }
     }
 }

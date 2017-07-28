@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using UnityEngine;
-
-public class CreateNetworksButton : RotatableButton
+﻿public class CreateNetworksButton : RotatableButton
 {
 
     public NetworkGenerator networkGenerator;

@@ -1,31 +1,25 @@
+using System;
 using UnityEngine;
 
 ///<summary>
 /// This class represents a button used for resetting the input data folders.
 ///</summary>
-public class ResetFolderButton : MonoBehaviour
+public class ResetFolderButton : StationaryButton
 {
 
-    public TextMesh descriptionText;
     public GraphManager graphManager;
     public InputFolderGenerator inputFolderGenerator;
     public LoaderController loader;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
     public PreviousSearchesList previousSearchesList;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
     private bool menuActive = false;
     private bool buttonsInitialized = false;
 
-    void Start()
+    protected override string Description
     {
-
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
-
+        get
+        {
+            return "Go back to loading a folder";
+        }
     }
 
     void Update()
@@ -45,25 +39,4 @@ public class ResetFolderButton : MonoBehaviour
             }
         }
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Reset folder";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
-    }
-
 }

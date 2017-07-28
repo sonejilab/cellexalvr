@@ -1,7 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
-using System;
 
 /// <summary>
 /// This class is responsible for changing the controller model.

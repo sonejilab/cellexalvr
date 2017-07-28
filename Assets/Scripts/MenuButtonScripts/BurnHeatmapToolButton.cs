@@ -1,27 +1,23 @@
+using System;
 using UnityEngine;
 
 ///<summary>
 /// This class represents a button used for toggling the burning heatmap tool.
 ///</summary>
-public class BurnHeatmapToolButton : MonoBehaviour
+public class BurnHeatmapToolButton : StationaryButton
 {
-    public TextMesh descriptionText;
+
     public GameObject fire;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
     public ControllerModelSwitcher menuController;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
     private bool fireActivated = false;
 
-    void Start()
+    protected override string Description
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
+        get
+        {
+            return "Burn heatmaps tool";
+        }
     }
-
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
@@ -32,26 +28,4 @@ public class BurnHeatmapToolButton : MonoBehaviour
             menuController.ToolSwitched();
         }
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        //print(other.gameObject.name);
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Burn heatmap tool";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
-    }
-
 }

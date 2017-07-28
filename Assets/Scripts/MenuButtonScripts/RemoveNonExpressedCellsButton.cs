@@ -1,20 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class RemoveNonExpressedCellsButton : MonoBehaviour
+public class RemoveNonExpressedCellsButton : StationaryButton
 {
-    public TextMesh descriptionText;
-    public SteamVR_TrackedObject rightController;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
     public CellManager cellManager;
-    private SteamVR_Controller.Device device;
-    private bool controllerInside;
-    private SpriteRenderer spriteRenderer;
 
-    void Start()
+    protected override string Description
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
+        get
+        {
+            return "Toggle cells with no expression";
+        }
     }
 
     void Update()
@@ -26,24 +22,5 @@ public class RemoveNonExpressedCellsButton : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "Toggle the cells with no expression";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Controller"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
-    }
 
 }
