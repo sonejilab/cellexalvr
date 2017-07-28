@@ -33,7 +33,7 @@ public class ArcsMenuButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             descriptionText.text = "Toggle arcs";
             spriteRenderer.sprite = highlightedTexture;
@@ -43,7 +43,7 @@ public class ArcsMenuButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

@@ -42,8 +42,9 @@ public class GraphManager : MonoBehaviour
     public Graph CreateGraph()
     {
         Graph newGraph = Instantiate(graphPrefab, startPositions[(graphs.Count) % 4], Quaternion.identity);
-        graphs.Add(newGraph);
         newGraph.transform.parent = transform;
+        newGraph.UpdateStartPosition();
+        graphs.Add(newGraph);
         return newGraph;
     }
 

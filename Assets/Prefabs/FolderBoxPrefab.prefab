@@ -289,6 +289,7 @@ GameObject:
   - component: {fileID: 4615302521225052}
   - component: {fileID: 114087049027992102}
   - component: {fileID: 135662525966247618}
+  - component: {fileID: 54419473724299462}
   m_Layer: 2
   m_Name: Lid Hinge
   m_TagString: Untagged
@@ -542,7 +543,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1078450766063612}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.3868794, y: -0.09217179, z: 0.42219818}
+  m_LocalPosition: {x: 2.8505082, y: 0.0028275251, z: 0.65992534}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 4971241689044900}
@@ -1444,6 +1445,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1039998721784696}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &54419473724299462
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1674013852910788}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!54 &54540075727599654
 Rigidbody:
   m_ObjectHideFlags: 1

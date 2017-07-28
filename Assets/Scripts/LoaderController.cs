@@ -92,7 +92,7 @@ public class LoaderController : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Sphere")
+        if (collider.gameObject.CompareTag("Smaller Controller Collider"))
         {
             Transform cellParent = collider.transform.parent;
             if (cellParent != null)
@@ -146,7 +146,7 @@ public class LoaderController : MonoBehaviour
 
         foreach (Transform child in inputFolderGenerator.transform)
         {
-            if (child.tag == "Folder")
+            if (child.CompareTag("Smaller Controller Collider"))
             {
                 child.gameObject.AddComponent<Rigidbody>();
                 child.gameObject.GetComponent<CellFolder>().PlaySound();

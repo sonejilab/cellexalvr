@@ -34,7 +34,7 @@ public class MoveFoldersUpButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Controller")
+        if (other.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = true;
         }
@@ -42,7 +42,7 @@ public class MoveFoldersUpButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Controller")
+        if (other.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = false;
         }

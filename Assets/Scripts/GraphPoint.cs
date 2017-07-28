@@ -57,7 +57,7 @@ public class GraphPoint : MonoBehaviour
 
     public void ResetCoords()
     {
-        transform.position = new Vector3(x, y, z);
+        transform.localPosition = new Vector3(x, y, z);
         //hard-coded to current sphere size
         transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         transform.SetParent(defaultParent.transform);

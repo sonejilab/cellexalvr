@@ -14,6 +14,7 @@ public class Graph : MonoBehaviour
     public GameObject skeletonPrefab;
     public string GraphName { get; set; }
     public string DirectoryName { get; set; }
+
     private GraphPoint newGraphpoint;
     private List<GraphPoint> points;
     private Vector3 maxCoordValues;
@@ -43,6 +44,12 @@ public class Graph : MonoBehaviour
         scaledCoordinates.Scale(areaSize);
         scaledCoordinates += minAreaValues;
         return scaledCoordinates;
+    }
+
+    public void UpdateStartPosition()
+    {
+        defaultPos = transform.position;
+        defaultScale = transform.localScale;
     }
 
     /// <summary>
@@ -143,8 +150,9 @@ public class Graph : MonoBehaviour
     /// </summary>
     public void ResetGraph()
     {
-        transform.position = defaultPos;
         transform.localScale = defaultScale;
+        transform.position = defaultPos;
+        transform.rotation = Quaternion.identity;
         foreach (GraphPoint point in points)
         {
             point.gameObject.SetActive(true);

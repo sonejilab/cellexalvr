@@ -28,7 +28,7 @@ public class RemoveExpressedCellsButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             descriptionText.text = "Toggle the cells with some expression";
             spriteRenderer.sprite = highlightedTexture;
@@ -38,7 +38,7 @@ public class RemoveExpressedCellsButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

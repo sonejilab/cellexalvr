@@ -40,23 +40,9 @@ public class FolderLidOpener : MonoBehaviour
     }
 
 
-    bool ControllerTag(Collider other)
-    {
-        var parent = other.transform.parent;
-        if (parent != null)
-        {
-            parent = parent.parent;
-            if (parent != null)
-            {
-                return parent.tag == "Controller";
-            }
-        }
-        return false;
-    }
-
     void OnTriggerEnter(Collider other)
     {
-        if (ControllerTag(other))
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             desiredState = true;
             if (!coroutineRunning && !lidOpen)
@@ -70,7 +56,7 @@ public class FolderLidOpener : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (ControllerTag(other))
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             desiredState = false;
             if (!coroutineRunning && lidOpen)

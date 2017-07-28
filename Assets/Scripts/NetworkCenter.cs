@@ -62,7 +62,7 @@ public class NetworkCenter : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Smaller Controller Collider")
+        if (other.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = true;
             //print("controller entered");
@@ -71,7 +71,7 @@ public class NetworkCenter : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Smaller Controller Collider")
+        if (other.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = false;
             //print("controller left");

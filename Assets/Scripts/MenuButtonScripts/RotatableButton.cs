@@ -37,7 +37,7 @@ public abstract class RotatableButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             descriptionText.text = Description;
             frontsideRenderer.sprite = highlightedTexture;
@@ -47,7 +47,7 @@ public abstract class RotatableButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             // if the controller has moved directly to another button without
             // exiting this button's collider the other button will have changed the

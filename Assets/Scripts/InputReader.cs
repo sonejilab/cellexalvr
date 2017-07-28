@@ -98,7 +98,8 @@ public class InputReader : MonoBehaviour
 
             for (int i = 0; i < lines.Length; i += itemsPerFrame)
             {
-                status.UpdateStatus(statusId, "Reading " + graphFileName + ". " + i + "/" + lines.Length);
+
+                status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((i * 100) / lines.Length) + "%");
                 for (int j = i; j < i + itemsPerFrame && j < lines.Length; ++j)
                 {
                     string line = lines[j];
@@ -241,12 +242,13 @@ public class InputReader : MonoBehaviour
         string[] cntFilePaths = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.cnt");
         if (cntFilePaths.Length == 0)
         {
-            print("no .cnt file found");
+            status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
+            Debug.LogError("no .cnt file found");
             return;
         }
         if (cntFilePaths.Length > 1)
         {
-            print("more than one .cnt file in network folder");
+            Debug.LogError("more than one .cnt file in network folder");
             return;
         }
         string[] lines = File.ReadAllLines(cntFilePaths[0]);

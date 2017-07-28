@@ -84,7 +84,7 @@ public class SelectionToolHandler_old : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "HeatBoard")
+        if (other.gameObject.CompareTag("HeatBoard"))
         {
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
             {
@@ -95,7 +95,7 @@ public class SelectionToolHandler_old : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "HeatBoard")
+        if (other.gameObject.CompareTag("HeatBoard"))
         {
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
             {
@@ -109,7 +109,7 @@ public class SelectionToolHandler_old : MonoBehaviour
         grabbedObject = leftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
         if (grabbedObject != null)
         {
-            if (grabbedObject.tag == "HeatBoard")
+            if (grabbedObject.CompareTag("HeatBoard"))
             {
                 if (!heatmapGrabbed)
                 {

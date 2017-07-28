@@ -36,7 +36,7 @@ public class ColorByIndexButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             renderer.material.color = Color.white;
             controllerInside = true;
@@ -45,7 +45,7 @@ public class ColorByIndexButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             renderer.material.color = color;
             controllerInside = false;

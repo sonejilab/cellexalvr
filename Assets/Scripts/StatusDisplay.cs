@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+using System;
 
 /// <summary>
 /// Handles the statuses displayed on the right controller.
@@ -33,9 +35,22 @@ public class StatusDisplay : MonoBehaviour
     }
 
     /// <summary>
+    /// Adds a status with a specified color. Calling this with Color.white is equivelent to just calling AddStatus
+    /// </summary>
+    /// <param name="text"> The status text. </param>
+    /// <param name="color"> The status text's color. </param>
+    /// <returns> The status' id. You will need this when removing the status. </returns>
+    public int AddStatus(string text, Color color)
+    {
+        var statusId = AddStatus(text);
+        statuses[statusId].gameObject.GetComponent<Renderer>().material.color = color;
+        return statusId;
+    }
+
+    /// <summary>
     /// Adds a status to the display.
     /// </summary>
-    /// <param name="text"> The desired status. </param>
+    /// <param name="text"> The status text. </param>
     /// <returns> The status' id. You will need this when removing the status. </returns>
     public int AddStatus(string text)
     {
@@ -78,7 +93,37 @@ public class StatusDisplay : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the positions of the statuses. The idea is that the oldest status (first added, not least recently updated) is on the top. And the rest is in a nice list below.
+    /// Shows a status for a time, then removes it.
+    /// </summary>
+    /// <param name="text"> The status text. </param>
+    /// <param name="time"> The time this status should be shown in seconds. </param>
+    /// <param name="color"> The status' color. </param>
+    public void ShowStatusForTime(string text, float time, Color color)
+    {
+        StartCoroutine(ShowStatusForTimeCoroutine(text, time, color));
+    }
+
+
+    /// <summary>
+    /// Shows a status for a time, then removes it.
+    /// </summary>
+    /// <param name="text"> The status text. </param>
+    /// <param name="time"> The time this status should be shown in seconds. </param>
+    public void ShowStatusForTime(string text, float time)
+    {
+        StartCoroutine(ShowStatusForTimeCoroutine(text, time, Color.white));
+    }
+
+    private IEnumerator ShowStatusForTimeCoroutine(string text, float time, Color color)
+    {
+        var statusId = AddStatus(text);
+        statuses[statusId].gameObject.GetComponent<Renderer>().material.color = color;
+        yield return new WaitForSeconds(time);
+        RemoveStatus(statusId);
+    }
+
+    /// <summary>
+    /// Updates the positions of the statuses by ordering them after time created.
     /// </summary>
     private void UpdateStatusPositions()
     {

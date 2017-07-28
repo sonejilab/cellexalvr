@@ -25,7 +25,7 @@ void Update() {
 }
 
 void OnTriggerEnter(Collider other) {
-	if (other.gameObject.tag == "Controller") {
+	if (other.gameObject.CompareTag("Smaller Controller Collider")) {
 		descriptionText.text = "This button does nothing";
 		spriteRenderer.sprite = highlightedTexture;
 		controllerInside = true;
@@ -33,7 +33,7 @@ void OnTriggerEnter(Collider other) {
 }
 
 void OnTriggerExit(Collider other) {
-	if (other.gameObject.tag == "Controller") {
+	if (other.gameObject.CompareTag("Smaller Controller Collider")) {
 		descriptionText.text = "";
 		spriteRenderer.sprite = standardTexture;
 		controllerInside = false;

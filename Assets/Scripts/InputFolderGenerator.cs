@@ -63,7 +63,7 @@ public class InputFolderGenerator : MonoBehaviour
             {
                 foreach (Transform child in transform)
                 {
-                    if (child.tag == "FolderCylinder")
+                    if (child.CompareTag("Smaller Controller Collider"))
                     {
                         //print("cylinder found");
                         cylinder = child;

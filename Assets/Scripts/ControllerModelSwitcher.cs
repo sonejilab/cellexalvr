@@ -59,7 +59,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         //print("ontriggerenter " + other.gameObject.name);
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
@@ -71,7 +71,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Controller")
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(DesiredModel);
@@ -151,7 +151,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         bool controllerInside = false;
         foreach (Collider c in allOverlappingColliders)
         {
-            if (c.gameObject.tag == "Controller")
+            if (c.gameObject.CompareTag("Smaller Controller Collider"))
             {
                 SwitchToModel(Model.Menu);
                 controllerInside = true;
