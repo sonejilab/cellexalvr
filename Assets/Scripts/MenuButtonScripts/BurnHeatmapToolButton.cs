@@ -36,7 +36,7 @@ public class BurnHeatmapToolButton : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         //print(other.gameObject.name);
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "Burn heatmap tool";
             spriteRenderer.sprite = highlightedTexture;
@@ -46,7 +46,7 @@ public class BurnHeatmapToolButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

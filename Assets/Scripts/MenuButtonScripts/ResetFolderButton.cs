@@ -48,7 +48,7 @@ public class ResetFolderButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "Reset folder";
             spriteRenderer.sprite = highlightedTexture;
@@ -58,7 +58,7 @@ public class ResetFolderButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

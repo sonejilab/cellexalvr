@@ -28,6 +28,8 @@ public class NetworkNode : MonoBehaviour
     private Color nodeColor;
     private List<Color> connectionColors = new List<Color>();
     private List<Arc> arcList = new List<Arc>();
+    private Vector3 normalScale;
+    private Vector3 largerScale;
     private bool edgesAdded = false;
     private bool repositionedByBuddy = false;
     private bool repositionedBuddies = false;
@@ -52,6 +54,8 @@ public class NetworkNode : MonoBehaviour
     {
         textTransform = geneName.transform;
         nodeColor = GetComponent<Renderer>().material.color;
+        normalScale = transform.localScale;
+        largerScale = normalScale * 2f;
     }
 
     void Update()
@@ -73,32 +77,27 @@ public class NetworkNode : MonoBehaviour
         buddy.neighbours.Add(this);
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    public void Highlight()
     {
-        if (other.tag == "Smaller Controller Collider" && transform.parent.GetComponent<NetworkCenter>().Enlarged)
+        GetComponent<Renderer>().material.color = Color.white;
+        transform.localScale = largerScale;
+        foreach (LineRenderer r in connections)
         {
-            GetComponent<Renderer>().material.color = Color.white;
-            foreach (LineRenderer r in connections)
-            {
-                r.material.color = Color.white;
-                r.startWidth = .005f;
-                r.endWidth = .005f;
-            }
+            r.material.color = Color.white;
+            r.startWidth = .005f;
+            r.endWidth = .005f;
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void UnHighlight()
     {
-        if (other.tag == "Smaller Controller Collider" && transform.parent.GetComponent<NetworkCenter>().Enlarged)
+        GetComponent<Renderer>().material.color = nodeColor;
+        transform.localScale = normalScale;
+        for (int i = 0; i < connections.Count; ++i)
         {
-            GetComponent<Renderer>().material.color = nodeColor;
-            for (int i = 0; i < connections.Count; ++i)
-            {
-                connections[i].material.color = connectionColors[i];
-                connections[i].startWidth = lineWidth;
-                connections[i].endWidth = lineWidth;
-            }
+            connections[i].material.color = connectionColors[i];
+            connections[i].startWidth = lineWidth;
+            connections[i].endWidth = lineWidth;
         }
     }
 

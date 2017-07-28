@@ -31,7 +31,7 @@ public class CreateSkeletonButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "Create skeletons";
             spriteRenderer.sprite = highlightedTexture;
@@ -41,7 +41,7 @@ public class CreateSkeletonButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

@@ -31,7 +31,7 @@ public class SelectionToolButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            menuActive = !menuActive;
+            menuActive = !selectionToolHandler.IsSelectionToolEnabled();
             selectionToolMenu.gameObject.SetActive(menuActive);
             selectionToolHandler.SetSelectionToolEnabled(menuActive);
 
@@ -49,7 +49,7 @@ public class SelectionToolButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "Toggle selection tool";
             spriteRenderer.sprite = highlightedTexture;
@@ -59,7 +59,7 @@ public class SelectionToolButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

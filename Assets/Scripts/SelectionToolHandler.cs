@@ -252,6 +252,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
         controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
+        selectionToolMenu.SetEnabledState(enabled);
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = enabled;
@@ -260,7 +261,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public bool IsSelectionToolEnabled()
     {
-        return GetComponentInChildren<Renderer>().enabled;
+        return GetComponentInChildren<Collider>().enabled;
     }
 
 }

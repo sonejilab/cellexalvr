@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23601448110652970}
   - component: {fileID: 135869749697501322}
   - component: {fileID: 114483635505091214}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GraphPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

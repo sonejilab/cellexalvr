@@ -19,7 +19,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
     public GameObject fire;
-
+    public SelectionToolButton selectionToolButton;
     //public List<GameObject> activatedInMenu;
     //public List<GameObject> deactivatedInMenu;
     public enum Model { Normal, SelectionTool, Menu };
@@ -115,6 +115,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     public void TurnOffActiveTool()
     {
+        
         selectionToolEnabled = false;
         fireEnabled = false;
         selectionToolHandler.SetSelectionToolEnabled(false);

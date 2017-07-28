@@ -63,7 +63,7 @@ public class InputFolderGenerator : MonoBehaviour
             {
                 foreach (Transform child in transform)
                 {
-                    if (child.CompareTag("Smaller Controller Collider"))
+                    if (child.CompareTag("FolderCylinder"))
                     {
                         //print("cylinder found");
                         cylinder = child;
@@ -77,6 +77,7 @@ public class InputFolderGenerator : MonoBehaviour
             newFolder.transform.parent = transform;
             newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
             newFolder.transform.Rotate(0, -90f, 0);
+            newFolder.GetComponentInChildren<CellsToLoad>().SavePosition();
             nfolder++;
             //newFolder.transform.eulerAngles = new Vector3(newFolder.transform.eulerAngles.x, newFolder.transform.eulerAngles.y, -30f);
             int forwardSlashIndex = directory.LastIndexOf('/');

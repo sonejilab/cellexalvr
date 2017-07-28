@@ -10,13 +10,14 @@ public class StatusDisplay : MonoBehaviour
 {
 
     public GameObject statusPrefab;
+    public GameObject defaultStatus;
 
     private Dictionary<int, TextMesh> statuses = new Dictionary<int, TextMesh>();
     private List<Transform> statusPositions = new List<Transform>();
     private Vector3 startSpawnPos = new Vector3(.055f, -.015f, -.001f);
     private Vector3 nextSpawnPos = new Vector3(.055f, -.015f, -.001f);
     private Vector3 dnextSpawnPos = new Vector3(0f, .007f, 0f);
-    private Vector3 newStatusScale = new Vector3(.0002f, .0002f, .0002f);
+    private Vector3 newStatusScale = new Vector3(.00025f, .00025f, .00025f);
     private bool active = true;
     private int statusId = 0;
 
@@ -54,6 +55,7 @@ public class StatusDisplay : MonoBehaviour
     /// <returns> The status' id. You will need this when removing the status. </returns>
     public int AddStatus(string text)
     {
+        defaultStatus.SetActive(false);
         var newStatus = Instantiate(statusPrefab);
         newStatus.transform.parent = transform;
         newStatus.transform.localPosition = nextSpawnPos;
@@ -90,6 +92,10 @@ public class StatusDisplay : MonoBehaviour
         statuses.Remove(id);
         // if the status we deleted was not the last status, we should update the positions
         UpdateStatusPositions();
+        if (statuses.Count == 0)
+        {
+            defaultStatus.SetActive(true);
+        }
     }
 
     /// <summary>

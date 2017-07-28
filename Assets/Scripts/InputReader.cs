@@ -52,6 +52,13 @@ public class InputReader : MonoBehaviour
         {
             File.Delete(f);
         }
+        // clear the runtimeGroups
+        string[] networkFilesList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Resources\\Networks", "*");
+        // print(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups");
+        foreach (string f in networkFilesList)
+        {
+            File.Delete(f);
+        }
 
         //string[] geneexprFiles = Directory.GetFiles(path, "*.expr");
 

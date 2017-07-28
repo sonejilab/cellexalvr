@@ -28,7 +28,7 @@ public class RemoveNonExpressedCellsButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "Toggle the cells with no expression";
             spriteRenderer.sprite = highlightedTexture;
@@ -38,7 +38,7 @@ public class RemoveNonExpressedCellsButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;
