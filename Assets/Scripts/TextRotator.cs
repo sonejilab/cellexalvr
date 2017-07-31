@@ -20,6 +20,7 @@ public class TextRotator : MonoBehaviour
         // some math make the text not be mirrored
         transform.LookAt(2 * transform.position - CameraToLookAt.position);
 
+        // The text should be in the middle of four transforms
         Vector3 midPoint1 = (t1.position + t2.position) / 2;
         Vector3 midPoint2 = (t3.position + t4.position) / 2;
         transform.position = (midPoint1 + midPoint2) / 2;

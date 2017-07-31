@@ -9,11 +9,6 @@ public class MenuToggler : MonoBehaviour
     public SteamVR_TrackedObject leftController;
     public ControllerModelSwitcher menuSwitcher;
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
     // Update is called once per frame
     void Update()
     {

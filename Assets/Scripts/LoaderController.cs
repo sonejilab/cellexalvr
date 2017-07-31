@@ -9,7 +9,6 @@ public class LoaderController : MonoBehaviour
     public InputReader inputReader;
     public InputFolderGenerator inputFolderGenerator;
     public GraphManager GraphManager;
-    //public AudioSource sound;
     public Transform cylinder;
     private float timeEntered = 0;
     private ArrayList cellsToDestroy;

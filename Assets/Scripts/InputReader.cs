@@ -83,6 +83,11 @@ public class InputReader : MonoBehaviour
     {
         int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
+        //  Read each .mds file
+        // The file format should be
+        //  CELLNAME_1 X_COORD  Y_COORD Z_COORD
+        //  CELLNAME_2 X_COORD  Y_COORD Z_COORD
+        //  ...
         foreach (string file in mdsFiles)
         {
             Graph newGraph = graphManager.CreateGraph();
@@ -96,7 +101,6 @@ public class InputReader : MonoBehaviour
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
             // put each line into an array
             string[] lines = File.ReadAllLines(file);
-            //string[] geneLines = System.IO.File.ReadAllLines(geneexprFilename);
             // we must wait for the graph to fully initialize before adding stuff to it
             while (!newGraph.Ready())
                 yield return null;
@@ -119,6 +123,12 @@ public class InputReader : MonoBehaviour
             fileIndex++;
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
+        // Read the each .meta.cell file
+        // The file format should be
+        //              TYPE_1  TYPE_2  ...
+        //  CELLNAME_1  [0,1]   [0,1]
+        //  CELLNAME_2  [0,1]   [0,1]
+        // ...
         string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
         foreach (string metacellfile in metacellfiles)
         {
@@ -158,6 +168,14 @@ public class InputReader : MonoBehaviour
         status.RemoveStatus(statusId);
     }
 
+    /// <summary>
+    /// Reads the index.facs file.
+    /// The file format should be:
+    ///             TYPE_1  TYPE_2 ...
+    /// CELLNAME_1  VALUE   VALUE  
+    /// CELLNAME_2  VALUE   VALUE
+    /// ...
+    /// </summary>
     private void ReadFacsFiles(string path)
     {
         string fullpath = path + "/index.facs";
@@ -220,7 +238,9 @@ public class InputReader : MonoBehaviour
         indexMenu.CreateColorByIndexButtons(names);
     }
 
-
+    /// <summary>
+    /// Helper struct for sorting network keys.
+    /// </summary>
     private struct NetworkKeyPair
     {
         public string color, node1, node2, key1, key2;
@@ -241,9 +261,13 @@ public class InputReader : MonoBehaviour
     public void ReadNetworkFiles()
     {
 
-        // read the .cnt file
-        //
-        // it should contain information about the average positions of the networks
+        // Read the .cnt file
+        // The file format should be
+        //  X_COORD Y_COORD Z_COORD KEY GRAPHNAME
+        //  X_COORD Y_COORD Z_COORD KEY GRAPHNAME
+        // ...
+        // KEY is simply a hex rgb color code
+        // GRAPHNAME is the name of the file (and graph) that the network was made from
 
         // there should only be one .cnt file
         string[] cntFilePaths = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.cnt");
@@ -293,9 +317,17 @@ public class InputReader : MonoBehaviour
             networks[words[3]] = network;
         }
 
-        // read the .nwk file
-        //
-        // it should contain all information about each individual node of some networks
+        // Read the .nwk file
+        // The file format should be
+        //  PCOR    NODE_1  NODE_2  PVAL    QVAL    PROB    GRPS[I] KEY_1   KEY_2
+        //  VALUE   STRING  STRING  VALUE   VALUE   VALUE   HEX_RGB STRING  STRING
+        //  VALUE   STRING  STRING  VALUE   VALUE   VALUE   HEX_RGB STRING  STRING
+        //  ...
+        // We only care about NODE_1, NODE_2, GRPS[I], KEY_1 and KEY_2
+        // NODE_1 and NODE_2 are two genenames that should be linked together.
+        // GRPS[I] is the network the two genes are in. A gene can be in multiple networks.
+        // KEY_1 is the two genenames concatenated together as NODE_1 + NODE_2
+        // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
 
         // there should only be one .nwk file
         string[] nwkFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.nwk");
@@ -354,10 +386,15 @@ public class InputReader : MonoBehaviour
         // if two keypairs are equal (they both contain the same key), they should be next to each other in the list, otherwise sort based on key1
         Array.Sort(keyPairs, (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
 
+
+        // Read the .lay file
+        // The file format should be
+        // GENENAME X_COORD Y_COORD KEY
+        // GENENAME X_COORD Y_COORD KEY
+        // ...
+        // KEY is the hex rgb color code of the network the gene is in.
         string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.lay");
         lines = File.ReadAllLines(layFilePath[0]);
-
-
         foreach (string line in lines)
         {
             if (line == "")
@@ -415,7 +452,6 @@ public class InputReader : MonoBehaviour
         }
 
     }
-
 
     /// <summary>
     /// Determines the maximum and the minimum values of the dataset.

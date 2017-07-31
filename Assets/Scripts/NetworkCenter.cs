@@ -162,22 +162,14 @@ public class NetworkCenter : MonoBehaviour
             Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
             Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
             Destroy(gameObject.GetComponent<Rigidbody>());
-            //var interactableObject = gameObject.GetComponent<VRTK_InteractableObject>();
-            //interactableObject.isGrabbable = false;
-            //interactableObject.isUsable = true;
+
             GetComponent<Renderer>().enabled = true;
             GetComponent<Collider>().enabled = true;
             transform.parent = oldParent;
             transform.localPosition = oldLocalPosition;
             transform.rotation = oldRotation;
             transform.localScale = oldScale;
-            ////var rigidbody = gameObject.GetComponentInParent<Rigidbody>();
-            //var rigidbody2 = rigidbody.gameObject.GetComponentInParent<Rigidbody>();
-            //rigidbody2.transform.Translate(.1f, 0, 0);
-            //print(oldParent.name);
-            //oldParent.Translate(0, 0, 0);
-            //rigidbody.transform.Translate(-1, 0, 0);
-            //print(GetComponent<Collider>().bounds.center);
+            // Disable the network nodes' colliders
             foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
             {
                 b.enabled = false;

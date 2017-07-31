@@ -64,8 +64,8 @@ public class NetworkNode : MonoBehaviour
         textTransform.LookAt(2 * transform.position - CameraToLookAt.position);
         foreach (Arc a in arcList)
         {
-            Vector3 midPoint1 = Vector3.Lerp(transform.position, a.t1.transform.position, .5f);
-            Vector3 midPoint2 = Vector3.Lerp(a.t2.transform.position, a.t3.transform.position, .5f);
+            Vector3 midPoint1 = (transform.position + a.t1.transform.position) / 2f;
+            Vector3 midPoint2 = (a.t2.transform.position + a.t3.transform.position) / 2f;
             a.renderer.SetPositions(new Vector3[] { midPoint1, midPoint2 });
         }
     }
@@ -98,35 +98,6 @@ public class NetworkNode : MonoBehaviour
             connections[i].material.color = connectionColors[i];
             connections[i].startWidth = lineWidth;
             connections[i].endWidth = lineWidth;
-        }
-    }
-
-    public void PositionBuddies(Vector3 offset, Vector3 buddyRepositionInc)
-    {
-        // only reposition if this node has not already been reposition by one of it's buddies
-        //if (repositionedByBuddy)
-        //{
-        //    return;
-        //}
-        repositionedByBuddy = true;
-        Vector3 buddyRepositionAmount = buddyRepositionInc;
-        if (!repositionedBuddies)
-        {
-            repositionedBuddies = true;
-            foreach (NetworkNode buddy in neighbours)
-            {
-                if (!buddy.repositionedByBuddy)
-                {
-                    buddy.transform.localPosition = transform.localPosition + offset + buddyRepositionAmount;
-                    buddyRepositionAmount += buddyRepositionInc;
-                    buddy.repositionedByBuddy = true;
-                }
-            }
-            foreach (NetworkNode buddy in neighbours)
-            {
-                if (!buddy.repositionedBuddies)
-                    buddy.PositionBuddies(offset, buddyRepositionInc);
-            }
         }
     }
 
@@ -164,15 +135,15 @@ public class NetworkNode : MonoBehaviour
         edge.transform.localPosition = Vector3.zero;
         edge.transform.rotation = Quaternion.identity;
         edge.transform.localScale = Vector3.one;
-        Vector3 midPoint1 = Vector3.Lerp(transform.position, neighbour.transform.position, .5f);
-        Vector3 midPoint2 = Vector3.Lerp(otherNode.transform.position, otherNodeNeighbour.transform.position, .5f);
+        Vector3 midPoint1 = (transform.position + neighbour.transform.position) / 2f;
+        Vector3 midPoint2 = (otherNode.transform.position + otherNodeNeighbour.transform.position) / 2f;
         renderer.useWorldSpace = true;
         renderer.SetPositions(new Vector3[] { midPoint1, midPoint2 });
         arcList.Add(new Arc(renderer, neighbour.transform, otherNode.transform, otherNodeNeighbour.transform));
 
         GameObject arcText = Instantiate(arcDescriptionPrefab);
         arcText.transform.parent = transform.parent.parent;
-        arcText.transform.position = Vector3.Lerp(midPoint1, midPoint2, .5f);
+        arcText.transform.position = (midPoint1 + midPoint2) / 2f;
         arcText.GetComponent<TextRotator>().SetTransforms(transform, neighbour.transform, otherNode.transform, otherNodeNeighbour.transform);
         arcText.GetComponent<TextMesh>().text = geneName.text + " <-> " + neighbour.geneName.text;
 

@@ -8,15 +8,12 @@ public class PreviousSearchesListNode : MonoBehaviour
 {
 
     public PreviousSearchesListNode nextNode;
-    private String geneName;
     private new Renderer renderer;
     private bool locked;
     public bool Locked
     {
         get
-        {
-            return locked;
-        }
+        { return locked; }
         set
         {
             if (geneName != "")
@@ -25,13 +22,11 @@ public class PreviousSearchesListNode : MonoBehaviour
             }
         }
     }
-    [HideInInspector]
+    private string geneName;
     public string GeneName
     {
         get
-        {
-            return geneName;
-        }
+        { return geneName; }
         set
         {
             geneName = value;
@@ -71,6 +66,4 @@ public class PreviousSearchesListNode : MonoBehaviour
     {
         renderer.sharedMaterial = material;
     }
-
-
 }

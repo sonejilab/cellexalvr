@@ -8,7 +8,6 @@ public class GraphPoint : MonoBehaviour
 
     private Cell cell;
     private float x, y, z;
-    private bool selected = false;
     private Material defaultMat;
     private Color selectedColor;
     private Graph defaultParent;
@@ -29,16 +28,6 @@ public class GraphPoint : MonoBehaviour
         return cell.Label;
     }
 
-    public bool IsSelected()
-    {
-        return selected;
-    }
-
-    public void SetSelected(bool isSelected)
-    {
-        selected = isSelected;
-    }
-
     public void SetMaterial(Material material)
     {
         GetComponent<Renderer>().material = material;
@@ -48,12 +37,6 @@ public class GraphPoint : MonoBehaviour
     {
         return GetComponent<Renderer>().material;
     }
-
-    public Material GetDefaultMaterial()
-    {
-        return defaultMat;
-    }
-
 
     public void ResetCoords()
     {
@@ -66,14 +49,8 @@ public class GraphPoint : MonoBehaviour
         {
             Destroy(rig);
         }
-        selected = false;
         defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
         SetMaterial(defaultMat);
-    }
-
-    public Vector3 GetCoordinates()
-    {
-        return new Vector3(x, y, z);
     }
 
     public Cell GetCell()

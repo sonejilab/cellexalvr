@@ -13,27 +13,11 @@ namespace VRTK.GrabAttachMechanics
         public float breakForce = 1500f;
         GameObject menu;
         private ControllerModelSwitcher menuController;
-        private SelectionToolHandler selectionToolHandler;
         private bool menuTurnedOff = false;
-        private bool selectionToolTurnedOff = false;
 
         void Start()
         {
-            // finds the menu, even if it is turned off
-            menuController = Resources.FindObjectsOfTypeAll<ControllerModelSwitcher>()[0];
-            menu = menuController.gameObject;
-            selectionToolHandler = Resources.FindObjectsOfTypeAll<SelectionToolHandler>()[0];
-            // this really isn't the right way of doing this
-            foreach (SelectionToolHandler s in Resources.FindObjectsOfTypeAll<SelectionToolHandler>())
-            {
-                if (s.gameObject.transform.parent != null)
-                {
-                    if (s.gameObject.transform.parent.name == "Controller (right)")
-                    {
-                        selectionToolHandler = s;
-                    }
-                }
-            }
+
         }
 
         protected override void CreateJoint(GameObject obj)
@@ -51,16 +35,11 @@ namespace VRTK.GrabAttachMechanics
             {
                 menuTurnedOff = false;
             }
-            selectionToolHandler.SetSelectionToolEnabled(false);
         }
 
         protected override void DestroyJoint(bool withDestroyImmediate, bool applyGrabbingObjectVelocity)
         {
             base.DestroyJoint(withDestroyImmediate, applyGrabbingObjectVelocity);
-            if (selectionToolTurnedOff)
-            {
-                selectionToolHandler.SetSelectionToolEnabled(true);
-            }
             menu.SetActive(true);
             if (!menuTurnedOff)
             {
@@ -68,7 +47,7 @@ namespace VRTK.GrabAttachMechanics
             }
             else
             {
-                menuController.SwitchControllerModel();
+                menuController.SwitchToDesiredModel();
             }
         }
 

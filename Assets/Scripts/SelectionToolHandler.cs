@@ -73,9 +73,8 @@ public class SelectionToolHandler : MonoBehaviour
         {
             return;
         }
-        Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
-        graphPoint.gameObject.GetComponent<Renderer>().material.color = transparentColor;
-        graphPoint.SetSelected(true);
+        Color nonTransparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+        graphPoint.gameObject.GetComponent<Renderer>().material.color = nonTransparentColor;
 
         if (!selectedCells.Contains(other))
         {
@@ -92,7 +91,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public void SingleSelect(Collider other)
     {
-        Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b, .1f);
+        Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
         other.gameObject.GetComponent<Renderer>().material.color = transparentColor;
         if (!selectedCells.Contains(other))
         {
@@ -178,7 +177,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// <summary>
     /// Changes the color of the selection tool.
     /// </summary>
-    /// <param name="dir"> The direction ot move in the array colors. </param>
+    /// <param name="dir"> The direction to move in the array of colors. true for increment, false for decrement </param>
     public void ChangeColor(bool dir)
     {
         if (currentColorIndex == colors.Length - 1 && dir)
@@ -225,8 +224,8 @@ public class SelectionToolHandler : MonoBehaviour
     private void DumpData()
     {
         // print(new System.Diagnostics.StackTrace());
-        using (System.IO.StreamWriter file =
-                   new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt"))
+        using (StreamWriter file =
+                   new StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt"))
         {
 
             foreach (Collider cell in selectedCells)

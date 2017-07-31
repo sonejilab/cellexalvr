@@ -54,17 +54,17 @@ GameObject:
   m_Component:
   - component: {fileID: 4498765817067812}
   - component: {fileID: 33888058788342512}
-  - component: {fileID: 64814272966664638}
   - component: {fileID: 23833870899542900}
+  - component: {fileID: 54530599137224990}
+  - component: {fileID: 64814272966664638}
   - component: {fileID: 82879482995076830}
+  - component: {fileID: 82114319213300432}
   - component: {fileID: 114974236476035852}
   - component: {fileID: 114334684502987186}
-  - component: {fileID: 54530599137224990}
+  - component: {fileID: 114506243733495470}
   - component: {fileID: 114690386252471788}
-  - component: {fileID: 82114319213300432}
   - component: {fileID: 114046626767165076}
   - component: {fileID: 114822383232603606}
-  - component: {fileID: 114877055379357996}
   m_Layer: 2
   m_Name: HeatBoard 1
   m_TagString: HeatBoard
@@ -205,7 +205,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1174169366114494}
   m_LocalRotation: {x: -0.47066063, y: 0.5277107, z: -0.47066063, w: -0.5277107}
-  m_LocalPosition: {x: -2.180627, y: 0.7414197, z: 0.1870802}
+  m_LocalPosition: {x: -0.312, y: 0, z: 0}
   m_LocalScale: {x: 0.18585785, y: 0.0360693, z: 0.14868629}
   m_Children:
   - {fileID: 4448700408416196}
@@ -695,7 +695,7 @@ TextMesh:
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190080
 --- !u!102 &102500470805281082
 TextMesh:
   serializedVersion: 3
@@ -751,7 +751,7 @@ MonoBehaviour:
   validDrop: 1
   grabOverrideButton: 0
   allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 114877055379357996}
+  grabAttachMechanicScript: {fileID: 114506243733495470}
   secondaryGrabActionScript: {fileID: 114690386252471788}
   isUsable: 1
   holdButtonToUse: 1
@@ -760,6 +760,25 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+--- !u!114 &114506243733495470
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1174169366114494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8afa0b205791c9f4496bf2814aeac078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  precisionGrab: 1
+  rightSnapHandle: {fileID: 0}
+  leftSnapHandle: {fileID: 0}
+  throwVelocityWithAttachDistance: 0
+  throwMultiplier: 1
+  onGrabCollisionDelay: 0
+  destroyImmediatelyOnThrow: 1
+  breakForce: 1500
 --- !u!114 &114690386252471788
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -804,25 +823,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   texture: {fileID: 0}
   infoText: {fileID: 102500470805281082}
---- !u!114 &114877055379357996
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1174169366114494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90878ba3486404a4daa64fc1ba7d9cb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  precisionGrab: 1
-  rightSnapHandle: {fileID: 0}
-  leftSnapHandle: {fileID: 0}
-  throwVelocityWithAttachDistance: 0
-  throwMultiplier: 1
-  onGrabCollisionDelay: 0
-  destroyImmediatelyOnThrow: 1
-  breakForce: 1500
 --- !u!114 &114974236476035852
 MonoBehaviour:
   m_ObjectHideFlags: 1

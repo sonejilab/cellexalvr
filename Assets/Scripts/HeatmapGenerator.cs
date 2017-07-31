@@ -94,9 +94,10 @@ public class HeatmapGenerator : MonoBehaviour
             }
             status.RemoveStatus(statusId);
             running = false;
-            heatBoard = Instantiate(heatmapPrefab, heatmapPosition, heatmapPrefab.transform.rotation);
-            Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
+            heatBoard = Instantiate(heatmapPrefab);
             heatBoard.transform.parent = transform;
+            heatBoard.transform.localPosition = heatmapPosition;
+            Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
             heatmap.SetVars(graphManager, selectionToolHandler, selection, fire);
             heatmapList.Add(heatBoard);
 

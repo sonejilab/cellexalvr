@@ -67,6 +67,9 @@ public class CellManager : MonoBehaviour
         return cells[label];
     }
 
+    /// <summary>
+    /// Color all cells based on a gene previously colored by
+    /// </summary>
     public void ColorGraphsByPreviousExpression(int index)
     {
 
@@ -119,6 +122,9 @@ public class CellManager : MonoBehaviour
         cells.Clear();
     }
 
+    /// <summary>
+    /// Color all cells that belong to a certain attribute.
+    /// </summary>
     public void ColorByAttribute(string attributeType, Color color)
     {
         foreach (Cell cell in cells.Values)
@@ -142,11 +148,15 @@ public class CellManager : MonoBehaviour
     {
         if (index < 0 || index > 29)
         {
+            // value hasn't been normalized ocrrectly
             print(facs + " " + index);
         }
         cells[cellName].AddFacs(facs, index);
     }
 
+    /// <summary>
+    /// Color all graphpoints according to a column in the index.facs file
+    /// </summary>
     public void ColorByIndex(string name)
     {
         foreach (Cell cell in cells.Values)

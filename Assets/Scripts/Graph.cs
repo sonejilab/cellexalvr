@@ -94,6 +94,17 @@ public class Graph : MonoBehaviour
     /// <returns> A reference to the created convex hull or null if no file containing the convex hull information was found. </returns>
     public GameObject CreateConvexHull()
     {
+
+        // Read the .hull file
+        // The file format should be
+        //  VERTEX_1    VERTEX_2    VERTEX_3
+        //  VERTEX_1    VERTEX_2    VERTEX_3
+        // ...
+        // Each line is 3 integers that corresponds to graphpoints
+        // 1 means the graphpoint that was created from the first line in the .mds file
+        // 2 means the graphpoint that was created from the second line
+        // and so on
+        // Each line in the file connects three graphpoints into a triangle
         string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
         if (lines.Length == 0)
@@ -116,7 +127,9 @@ public class Graph : MonoBehaviour
         var trianglesIndex = 0;
         for (int i = 0; i < lines.Length; ++i)
         {
+
             string[] coords = lines[i].Split(null);
+            // subtract 1 because R is 1-indexed
             triangles[trianglesIndex++] = int.Parse(coords[1]) - 1;
             triangles[trianglesIndex++] = int.Parse(coords[2]) - 1;
             triangles[trianglesIndex++] = int.Parse(coords[3]) - 1;

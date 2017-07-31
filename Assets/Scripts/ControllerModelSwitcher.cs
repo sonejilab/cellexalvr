@@ -18,8 +18,6 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material selectionToolHandlerMaterial;
     public GameObject fire;
     public SelectionToolButton selectionToolButton;
-    //public List<GameObject> activatedInMenu;
-    //public List<GameObject> deactivatedInMenu;
     public enum Model { Normal, SelectionTool, Menu };
     public Model DesiredModel { get; set; }
     private Model actualModel;
@@ -113,7 +111,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     public void TurnOffActiveTool()
     {
-        
+
         selectionToolEnabled = false;
         fireEnabled = false;
         selectionToolHandler.SetSelectionToolEnabled(false);
@@ -134,34 +132,4 @@ public class ControllerModelSwitcher : MonoBehaviour
         if (actualModel == Model.SelectionTool)
             controllerBodyRenderer.material.color = desiredColor;
     }
-
-    /// <summary>
-    /// Check if the contoller is inside the menu. If, switch to the menu model. If not, switch to the normal model.
-    /// </summary>
-    public void SwitchControllerModel()
-    {
-        BoxCollider collider = gameObject.GetComponent<BoxCollider>();
-        Vector3 center = collider.transform.position + collider.center;
-        Vector3 halfExtents = Vector3.Scale(collider.size / 2, collider.transform.localScale);
-        int layerMask = 0;
-        layerMask = ~layerMask;
-        Quaternion rotation = collider.transform.rotation;
-        Collider[] allOverlappingColliders = Physics.OverlapBox(center, halfExtents, rotation, layerMask, QueryTriggerInteraction.Collide);
-        bool controllerInside = false;
-        foreach (Collider c in allOverlappingColliders)
-        {
-            if (c.gameObject.CompareTag("Smaller Controller Collider"))
-            {
-                SwitchToModel(Model.Menu);
-                controllerInside = true;
-                break;
-            }
-        }
-        if (!controllerInside)
-        {
-            SwitchToModel(Model.Normal);
-        }
-
-    }
-
 }
