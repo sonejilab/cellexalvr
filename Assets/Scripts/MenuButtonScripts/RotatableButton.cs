@@ -3,15 +3,16 @@ using System.Collections;
 
 
 ///<summary>
-/// This class holds the logic for rotating buttons when pressed.
+/// This class represents a button that rotates when pressed, activated or deactivated.
 ///</summary>
 public abstract class RotatableButton : MonoBehaviour
 {
-
     public SteamVR_TrackedObject rightController;
     public TextMesh descriptionText;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
+    public SpriteRenderer frontsideRenderer;
+    public SpriteRenderer backsideRenderer;
     // all buttons must override this variable's get property
     abstract protected string Description
     {
@@ -19,19 +20,16 @@ public abstract class RotatableButton : MonoBehaviour
     }
     protected SteamVR_Controller.Device device;
     protected bool controllerInside;
-    private SpriteRenderer frontsideRenderer;
-    private SpriteRenderer backsideRenderer;
-    private Collider buttonCollider;
     protected bool isRotating = false;
+    private Collider buttonCollider;
     private bool isActivated = true;
+    // the amount of degrees this button has rotated so far when rotating over multiple frames
     private float rotatedTotal;
 
     void Start()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-        frontsideRenderer = gameObject.GetComponent<SpriteRenderer>();
         frontsideRenderer.sprite = standardTexture;
-        backsideRenderer = gameObject.GetComponentsInChildren<SpriteRenderer>()[1];
         buttonCollider = gameObject.GetComponent<Collider>();
     }
 

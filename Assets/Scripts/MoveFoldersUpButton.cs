@@ -9,6 +9,9 @@ public class MoveFoldersUpButton : MonoBehaviour
     private bool controllerInside = false;
     private bool coroutineRunning = false;
 
+    /// <summary>
+    /// This class represents the button that moves the folders when a controller is moved inside of it.
+    /// </summary>
     private void Start()
     {
         dY = new float[moveTime];
@@ -34,7 +37,7 @@ public class MoveFoldersUpButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = true;
         }
@@ -42,7 +45,7 @@ public class MoveFoldersUpButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = false;
         }

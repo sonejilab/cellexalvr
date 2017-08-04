@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 ///<summary>
@@ -12,24 +11,15 @@ public class KeyboardButton : StationaryButton
 
     protected override string Description
     {
-        get
-        {
-            return "Toggle keyboard";
-        }
+        get { return "Toggle keyboard"; }
     }
-
-    void Awake()
-    {
-        // keyboard.SetActive(false);
-    }
-
 
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            keyboardActivated = !keyboard.activeSelf;
+			keyboardActivated = !laserPointer.enabled;
             laserPointer.enabled = keyboardActivated;
             keyboard.SetActive(keyboardActivated);
         }

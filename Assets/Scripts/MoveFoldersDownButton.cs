@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the button that moves the folders when a controller is moved inside of it.
+/// </summary>
 public class MoveFoldersDownButton : MonoBehaviour
 {
     public Transform folderList;
@@ -34,7 +37,7 @@ public class MoveFoldersDownButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = true;
         }
@@ -42,7 +45,7 @@ public class MoveFoldersDownButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = false;
         }

@@ -11,6 +11,8 @@ public class ToggleArcsSubMenu : MonoBehaviour
     public GameObject buttonPrefab;
     public ToggleAllArcsButton toggleAllArcsOnButton;
     public ToggleAllArcsButton toggleAllArcsOffButton;
+    public ToggleAllCombinedArcsButton toggleAllCombinedArcsOffButton;
+    public ToggleAllCombinedArcsButton toggleAllCombinedArcsOnButton;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
     private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
@@ -66,6 +68,8 @@ public class ToggleArcsSubMenu : MonoBehaviour
         }
         toggleAllArcsOffButton.SetNetworks(networks);
         toggleAllArcsOnButton.SetNetworks(networks);
+        toggleAllCombinedArcsOffButton.SetNetworks(networks);
+        toggleAllCombinedArcsOnButton.SetNetworks(networks);
         for (int i = 0; i < networks.Length; ++i)
         {
             var network = networks[i];

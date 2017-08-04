@@ -2,6 +2,8 @@
 {
 
     public NetworkGenerator networkGenerator;
+    public MenuRotator rotator;
+
 
     protected override string Description
     {
@@ -18,6 +20,10 @@
         {
             SetButtonState(false);
             networkGenerator.GenerateNetworks();
+            if (rotator.gameObject.activeSelf && rotator.SideFacingPlayer == MenuRotator.Rotation.Right)
+            {
+                rotator.RotateLeft();
+            }
         }
     }
 }

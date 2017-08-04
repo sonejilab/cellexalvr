@@ -15,7 +15,10 @@ public class BringBackCellsFloor : MonoBehaviour
             var marker = Instantiate(throwMarker);
             marker.transform.position = reset.gameObject.transform.position;
             marker.transform.LookAt(Vector3.zero);
-            marker.GetComponentInChildren<TextMesh>().text = Vector3.Distance(Vector3.zero, marker.transform.position) + " m!";
+			TextMesh textmesh = marker.GetComponentInChildren<TextMesh> ();
+			float distance = Vector3.Distance (Vector3.zero, marker.transform.position);
+            textmesh.text =  distance + " m!";
+			textmesh.transform.localScale *= (distance / 10f);
             reset.ResetPosition();
             reset = null;
         }
@@ -28,8 +31,6 @@ public class BringBackCellsFloor : MonoBehaviour
 
         var cellsToLoad = parent.GetComponent<CellsToLoad>();
         if (cellsToLoad == null) return;
-
-
 
         if (parent.GetComponent<Rigidbody>().velocity == Vector3.zero)
         {

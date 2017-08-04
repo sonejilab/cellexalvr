@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114483635505091214}
   m_Layer: 8
   m_Name: GraphPoint
-  m_TagString: Untagged
+  m_TagString: Graph
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1

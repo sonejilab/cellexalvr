@@ -198,6 +198,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   replacementPrefab: {fileID: 1758485399609656, guid: ce9410501b8fc964ebb2752ffd411405,
     type: 2}
+  edgePrefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 2}
+  arcDescriptionPrefab: {fileID: 1797228523857888, guid: d9d7155f17f7d1b448e25f3721807daa,
+    type: 2}
+  simpleArcDescriptionPrefab: {fileID: 1797228523857888, guid: 99b3d4fc280c3ee49ab1e6377a0d8ae1,
+    type: 2}
+  combinedArcsColors:
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 0.2156862, g: 0.2156862, b: 0.78431374, a: 1}
+  - {r: 0.42745095, g: 0.42745095, b: 0.57254905, a: 1}
+  - {r: 0.6431373, g: 0.6431373, b: 0.35686272, a: 1}
+  - {r: 0.85882354, g: 0.85882354, b: 0.14117643, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.78431374, b: 0, a: 1}
+  - {r: 1, g: 0.57254905, b: 0, a: 1}
+  - {r: 1, g: 0.35686272, b: 0, a: 1}
+  - {r: 1, g: 0.14117643, b: 0, a: 1}
 --- !u!135 &135946752829001644
 SphereCollider:
   m_ObjectHideFlags: 1

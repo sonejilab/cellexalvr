@@ -5,6 +5,7 @@ using SQLiter;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
+using VRTK;
 
 /// <summary>
 /// A class for reading data files and creating GraphPoints at the correct locations 
@@ -24,14 +25,27 @@ public class InputReader : MonoBehaviour
     public NetworkNode networkNodePrefab;
     public GameObject headset;
     public StatusDisplay status;
-    [Tooltip("Automatically loads a the Bertie dataset")]
+
+    [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
+
+    //Flag for loading previous sessions
+    public bool doLoad = false;
 
     private void Start()
     {
         if (debug)
         {
-            ReadFolder(@"C:\Users\vrproject\Documents\vrJeans\Assets\Data\Bertie");
+            ReadFolder(@"C:\Users\vrproject\Documents\Cellexal\CellExAl\Assets\Data\Bertie");
+        }
+        var sceneLoader = GameObject.Find("Load").GetComponent<Loading>();
+        if (sceneLoader.doLoad)
+        {
+            doLoad = true;
+            GameObject.Find("InputFolderList").gameObject.SetActive(false);
+            graphManager.LoadDirectory();
+            Debug.Log("Read Folder: " + graphManager.directory);
+            ReadFolder(@graphManager.directory);
         }
     }
 
@@ -52,14 +66,16 @@ public class InputReader : MonoBehaviour
         {
             File.Delete(f);
         }
-        // clear the runtimeGroups
-        string[] networkFilesList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Resources\\Networks", "*");
-        // print(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups");
-        foreach (string f in networkFilesList)
+        if (!debug)
         {
-            File.Delete(f);
+            // clear the network folder
+            string[] networkFilesList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Resources\\Networks", "*");
+            // print(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups");
+            foreach (string f in networkFilesList)
+            {
+                File.Delete(f);
+            }
         }
-
         //string[] geneexprFiles = Directory.GetFiles(path, "*.expr");
 
         //if (geneexprFiles.Length != 1)
@@ -68,7 +84,6 @@ public class InputReader : MonoBehaviour
         //}
 
         string[] mdsFiles = Directory.GetFiles(path, "*.mds");
-        //StartCoroutine(ReadFiles(path, 25));
         StartCoroutine(ReadMDSFiles(path, mdsFiles, 25));
 
     }
@@ -91,6 +106,7 @@ public class InputReader : MonoBehaviour
         foreach (string file in mdsFiles)
         {
             Graph newGraph = graphManager.CreateGraph();
+            newGraph.GetComponent<VRTK_InteractableObject>().isGrabbable = false;
             //graphManager.SetActiveGraph(fileIndex);
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
@@ -118,9 +134,15 @@ public class InputReader : MonoBehaviour
                     // print(words[0]);
                     graphManager.AddCell(newGraph, words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
                 }
+
                 yield return null;
             }
             fileIndex++;
+            newGraph.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            if (doLoad)
+            {
+                graphManager.LoadPosition(newGraph, fileIndex);
+            }
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         // Read the each .meta.cell file
@@ -170,12 +192,8 @@ public class InputReader : MonoBehaviour
 
     /// <summary>
     /// Reads the index.facs file.
-    /// The file format should be:
-    ///             TYPE_1  TYPE_2 ...
-    /// CELLNAME_1  VALUE   VALUE  
-    /// CELLNAME_2  VALUE   VALUE
-    /// ...
     /// </summary>
+
     private void ReadFacsFiles(string path)
     {
         string fullpath = path + "/index.facs";
@@ -192,7 +210,11 @@ public class InputReader : MonoBehaviour
             // file is empty
             return;
         }
-
+        /// The file format should be:
+        ///             TYPE_1  TYPE_2 ...
+        /// CELLNAME_1  VALUE   VALUE  
+        /// CELLNAME_2  VALUE   VALUE
+        /// ...
         string headerline = lines[0];
         string[] header = headerline.Split(null);
         float[] min = new float[header.Length - 1];
@@ -289,7 +311,8 @@ public class InputReader : MonoBehaviour
         Graph graph = graphManager.FindGraph(graphName);
         GameObject skeleton = graph.CreateConvexHull();
         if (skeleton == null) return;
-
+        var networkHandler = skeleton.GetComponent<NetworkHandler>();
+        networkHandler.NetworkName = "network from " + graph.GraphName;
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
         foreach (string line in lines)
         {
@@ -309,6 +332,8 @@ public class InputReader : MonoBehaviour
             NetworkCenter network = Instantiate(networkPrefab);
             network.transform.parent = skeleton.transform;
             network.transform.localPosition = position;
+            networkHandler.AddNetwork(network);
+            network.Handler = networkHandler;
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {
@@ -359,6 +384,7 @@ public class InputReader : MonoBehaviour
                 newNode.CameraToLookAt = headset.transform;
                 newNode.Label = geneName1;
                 nodes[node1] = newNode;
+                nodes[node1].Center = networks[color];
             }
 
             if (!nodes.ContainsKey(node2))
@@ -367,6 +393,7 @@ public class InputReader : MonoBehaviour
                 newNode.CameraToLookAt = headset.transform;
                 newNode.Label = geneName2;
                 nodes[node2] = newNode;
+                nodes[node2].Center = networks[color];
             }
 
             Transform parentNetwork = networks[words[6]].transform;
@@ -385,7 +412,6 @@ public class InputReader : MonoBehaviour
         // sort the array of keypairs
         // if two keypairs are equal (they both contain the same key), they should be next to each other in the list, otherwise sort based on key1
         Array.Sort(keyPairs, (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
-
 
         // Read the .lay file
         // The file format should be
@@ -406,23 +432,27 @@ public class InputReader : MonoBehaviour
             string color = words[3];
             string nodeName = geneName + color;
             nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
-
         }
 
+        // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
         NetworkKeyPair lastKey = new NetworkKeyPair("", "", "", "", "");
         List<NetworkKeyPair> lastNodes = new List<NetworkKeyPair>();
         for (int i = 0; i < keyPairs.Length; ++i)
         {
             NetworkKeyPair keypair = keyPairs[i];
+            // if this keypair shares a key with the last keypair
             if (lastKey.key1 == keypair.key1 || lastKey.key1 == keypair.key2)
             {
+                // add arcs to all previous pairs that also shared a key
                 foreach (NetworkKeyPair node in lastNodes)
                 {
-                    nodes[node.node1].AddArc(nodes[node.node2], nodes[keypair.node1], nodes[keypair.node2]);
+                    var center = nodes[node.node1].Center;
+                    center.AddArc(nodes[node.node1], nodes[node.node2], nodes[keypair.node1], nodes[keypair.node2]);
                 }
             }
             else
             {
+                // clear the list if this key did not match the last one
                 lastNodes.Clear();
             }
             lastNodes.Add(keypair);
@@ -445,10 +475,24 @@ public class InputReader : MonoBehaviour
         //return networkCenterArray;
         arcsSubMenu.CreateToggleArcsButtons(networkCenterArray);
 
+        List<int> arcsCombinedList = new List<int>();
         // toggle the arcs off
         foreach (NetworkCenter network in networks.Values)
         {
+            var arcscombined = network.CreateCombinedArcs();
+            arcsCombinedList.Add(arcscombined);
             network.SetArcsVisible(false);
+            network.SetCombinedArcsVisible(false);
+        }
+        var max = 0;
+        foreach (int i in arcsCombinedList)
+        {
+            if (max < i)
+                max = i;
+        }
+        foreach (NetworkCenter network in networks.Values)
+        {
+            network.ColorCombinedArcs(max);
         }
 
     }
@@ -488,4 +532,5 @@ public class InputReader : MonoBehaviour
         }
         graphManager.SetMinMaxCoords(graph, minCoordValues, maxCoordValues);
     }
+
 }

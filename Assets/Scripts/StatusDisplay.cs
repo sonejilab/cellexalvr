@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using System;
 
 /// <summary>
 /// Handles the statuses displayed on the right controller.
@@ -18,13 +17,8 @@ public class StatusDisplay : MonoBehaviour
     private Vector3 nextSpawnPos = new Vector3(.055f, -.015f, -.001f);
     private Vector3 dnextSpawnPos = new Vector3(0f, .007f, 0f);
     private Vector3 newStatusScale = new Vector3(.00025f, .00025f, .00025f);
-    private bool active = true;
+    private bool active = false;
     private int statusId = 0;
-
-    void Start()
-    {
-        ToggleStatusDisplay();
-    }
 
     public void ToggleStatusDisplay()
     {

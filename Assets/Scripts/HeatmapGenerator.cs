@@ -86,7 +86,6 @@ public class HeatmapGenerator : MonoBehaviour
             running = true;
             // Show hourglass
             hourglass.SetActive(true);
-            hourglass.GetComponent<AudioSource>().Play();
 
             while (t.IsAlive)
             {
@@ -102,7 +101,6 @@ public class HeatmapGenerator : MonoBehaviour
             heatmapList.Add(heatBoard);
 
             hourglass.SetActive(false);
-            hourglass.GetComponent<AudioSource>().Stop();
 
             heatmap.UpdateImage("Assets/Images/heatmap.png");
             heatBoard.GetComponent<AudioSource>().Play();

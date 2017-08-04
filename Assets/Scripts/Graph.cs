@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -25,6 +23,7 @@ public class Graph : MonoBehaviour
     private Vector3 defaultPos;
     private Vector3 defaultScale;
 
+
     void Start()
     {
         points = new List<GraphPoint>(1000);
@@ -33,6 +32,21 @@ public class Graph : MonoBehaviour
         defaultPos = transform.position;
     }
 
+    internal void ShowGraph()
+    {
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            r.enabled = true;
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+            c.enabled = true;
+    }
+
+    internal void HideGraph()
+    {
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            r.enabled = false;
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+            c.enabled = false;
+    }
     public Vector3 ScaleCoordinates(float x, float y, float z)
     {
         // Scales the sphere coordinates to fit inside the graph's bounds.
@@ -105,7 +119,7 @@ public class Graph : MonoBehaviour
         // 2 means the graphpoint that was created from the second line
         // and so on
         // Each line in the file connects three graphpoints into a triangle
-        string path = @"C:\Users\vrproject\Documents\vrJeans\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
+        string path = Directory.GetCurrentDirectory() + @"\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
         if (lines.Length == 0)
         {

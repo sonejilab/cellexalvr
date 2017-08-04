@@ -51,13 +51,13 @@ public class SelectionToolHandler : MonoBehaviour
         colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
         colors[8] = new Color(.4f, .2f, 1, .5f);     // brown
         colors[9] = new Color(1, .6f, .2f, .5f);     // orange
-                                                     //selectorMaterial.color = colors[0];
+        //selectorMaterial.color = colors[0];
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
 
         selectedColor = colors[0];
-        SetSelectionToolEnabled(false);
+        SetSelectionToolEnabled(false, true);
         //UpdateButtonIcons();
         leftController = GameObject.Find("LeftController");
     }
@@ -161,10 +161,6 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void CancelSelection()
     {
-        if (selectionToolMenu == null)
-        {
-            print("null");
-        }
         foreach (Collider other in selectedCells)
         {
             other.GetComponentInChildren<Renderer>().material.color = Color.white;
@@ -247,11 +243,14 @@ public class SelectionToolHandler : MonoBehaviour
         }
     }
 
-    public void SetSelectionToolEnabled(bool enabled)
+    public void SetSelectionToolEnabled(bool enabled, bool affectMenu)
     {
         controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
         controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
-        selectionToolMenu.SetEnabledState(enabled);
+        if (affectMenu)
+        {
+            selectionToolMenu.SetEnabledState(enabled);
+        }
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = enabled;

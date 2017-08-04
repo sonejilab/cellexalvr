@@ -14,14 +14,14 @@ public class NetworkNodeInteract : VRTK_InteractableObject
 
     public override void StartTouching(GameObject currentTouchingObject)
     {
-        base.StartTouching(currentTouchingObject);
         node.Highlight();
+        base.StartTouching(currentTouchingObject);
     }
 
     public override void StopTouching(GameObject previousTouchingObject)
     {
-        base.StopTouching(previousTouchingObject);
         node.UnHighlight();
+        base.StopTouching(previousTouchingObject);
     }
 
     public override void StartUsing(GameObject currentUsingObject)

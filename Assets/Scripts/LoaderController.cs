@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using BayatGames.SaveGameFree.Examples;
+
+
 /// <summary>
 /// This class represent the loader.
 /// </summary>
@@ -8,7 +11,7 @@ public class LoaderController : MonoBehaviour
 
     public InputReader inputReader;
     public InputFolderGenerator inputFolderGenerator;
-    public GraphManager GraphManager;
+    public GraphManager graphManager;
     public Transform cylinder;
     private float timeEntered = 0;
     private ArrayList cellsToDestroy;
@@ -18,11 +21,13 @@ public class LoaderController : MonoBehaviour
     private Vector3 finalPosition;
     private Vector3 startScale;
     private Vector3 finalScale;
-    private bool moving = false;
+	private bool moving = false;
+	public bool loadingComplete = false;
     private float currentTime;
     private float arrivalTime;
     [HideInInspector]
     public bool loaderMovedDown = false;
+	public SaveScene savescene;
 
     void Start()
     {
@@ -39,6 +44,8 @@ public class LoaderController : MonoBehaviour
             if (currentTime > arrivalTime)
             {
                 moving = false;
+				loadingComplete = true;
+				Debug.Log ("Loading Complete");
                 //sound.Stop();
             }
         }
@@ -104,6 +111,7 @@ public class LoaderController : MonoBehaviour
                 }
                 if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded())
                 {
+					graphManager.directory = cellParent.GetComponent<CellsToLoad> ().GetDirectory ();
                     inputReader.ReadFolder(cellParent.GetComponent<CellsToLoad>().GetDirectory());
                 }
 
@@ -148,7 +156,6 @@ public class LoaderController : MonoBehaviour
             if (child.CompareTag("Folder"))
             {
                 child.gameObject.AddComponent<Rigidbody>();
-                child.gameObject.GetComponent<CellFolder>().PlaySound();
             }
         }
         collidersDestroyed = true;

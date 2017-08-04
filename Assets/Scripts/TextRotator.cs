@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// This class rotates the text on the arcs between networks and positions the text on the middle of the arcs.

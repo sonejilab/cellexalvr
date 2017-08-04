@@ -14,22 +14,30 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Texture menuControllerTexture;
     public SelectionToolHandler selectionToolHandler;
     public Mesh selectionToolMesh;
+    public Mesh deleteToolMesh;
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
     public GameObject fire;
+    public GameObject minimizer;
+    public GameObject magnifier;
     public SelectionToolButton selectionToolButton;
-    public enum Model { Normal, SelectionTool, Menu };
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool };
     public Model DesiredModel { get; set; }
     private Model actualModel;
-    private bool selectionToolEnabled = false;
-    private bool fireEnabled = false;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
 
     void Awake()
     {
-        SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
+        DesiredModel = Model.Normal;
+        if (controllerBody.activeSelf == false)
+            SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
+        else
+        {
+            controllerBodyMeshFilter = controllerBody.GetComponent<MeshFilter>();
+            controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
+        }
     }
 
     void OnControllerLoaded(SteamVR_RenderModel renderModel, bool success)
@@ -37,50 +45,35 @@ public class ControllerModelSwitcher : MonoBehaviour
         if (!success) return;
         controllerBodyMeshFilter = controllerBody.GetComponent<MeshFilter>();
         controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
-        StartCoroutine(ChangeModelOnStart());
     }
 
-    IEnumerator ChangeModelOnStart()
+    internal bool Ready()
     {
-        if (controllerBodyMeshFilter != null && controllerBodyRenderer != null)
-        {
-            SwitchToModel(Model.Normal);
-        }
-        else
-        {
-            yield return null;
-        }
+        return controllerBodyMeshFilter != null && controllerBodyRenderer != null;
     }
 
     void OnTriggerEnter(Collider other)
     {
         //print("ontriggerenter " + other.gameObject.name);
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
+            //print ("ontriggerenter " + other.gameObject.name);
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
-            fireEnabled = fire.activeSelf;
             fire.SetActive(false);
-
+            minimizer.SetActive(false);
+            magnifier.SetActive(false);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(DesiredModel);
+            ActivateDesiredTool();
         }
-    }
-
-    /// <summary>
-    /// Should be called when a button that changes the tool is pressed.
-    /// </summary>
-    public void ToolSwitched()
-    {
-        selectionToolEnabled = false;
-        fireEnabled = false;
     }
 
     /// <summary>
@@ -88,6 +81,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// </summary>
     public void SwitchToModel(Model model)
     {
+        //print ("switching to " + model);
         actualModel = model;
         switch (model)
         {
@@ -106,16 +100,42 @@ public class ControllerModelSwitcher : MonoBehaviour
                 controllerBodyRenderer.material = selectionToolHandlerMaterial;
                 controllerBodyRenderer.material.color = desiredColor;
                 break;
+
+            case Model.Minimizer:
+                controllerBodyMeshFilter.mesh = deleteToolMesh;
+                break;
+
+            case Model.Magnifier:
+                controllerBodyMeshFilter.mesh = normalControllerMesh;
+                break;
+        }
+    }
+
+    public void ActivateDesiredTool()
+    {
+        switch (DesiredModel)
+        {
+            case Model.SelectionTool:
+                selectionToolHandler.SetSelectionToolEnabled(true, true);
+                break;
+            case Model.Magnifier:
+                magnifier.SetActive(true);
+                break;
+            case Model.HeatmapDeleteTool:
+                fire.SetActive(true);
+                break;
+            case Model.Minimizer:
+                minimizer.SetActive(true);
+                break;
         }
     }
 
     public void TurnOffActiveTool()
     {
 
-        selectionToolEnabled = false;
-        fireEnabled = false;
-        selectionToolHandler.SetSelectionToolEnabled(false);
+        selectionToolHandler.SetSelectionToolEnabled(false, true);
         fire.SetActive(false);
+        minimizer.SetActive(false);
         DesiredModel = Model.Normal;
         SwitchToModel(Model.Normal);
     }

@@ -12,6 +12,8 @@ TagManager:
   - PreviousSearchesListNode
   - FolderCylinder
   - Smaller Controller Collider
+  - Graph
+  - Network
   layers:
   - Default
   - TransparentFX

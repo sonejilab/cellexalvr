@@ -22,7 +22,10 @@ public class ToggleAllArcsButton : MonoBehaviour
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             foreach (NetworkCenter network in networks)
+            {
+                network.SetCombinedArcsVisible(false);
                 network.SetArcsVisible(toggleToState);
+            }
         }
     }
 

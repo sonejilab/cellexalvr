@@ -4,6 +4,8 @@
 public class ConfirmSelectionButton : RotatableButton
 {
     public SelectionToolHandler selectionToolHandler;
+    public ControllerModelSwitcher ctrlMdlSwitcher;
+
     protected override string Description
     {
         get { return "Confirm selection"; }
@@ -15,7 +17,7 @@ public class ConfirmSelectionButton : RotatableButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
         {
             selectionToolHandler.ConfirmSelection();
-            // print("confirm");
+            //ctrlMdlSwitcher.TurnOffActiveTool();
         }
     }
 }

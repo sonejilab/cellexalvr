@@ -46,7 +46,7 @@ public class HeatmapBurner : MonoBehaviour
     void FadeHeatmap()
     {
         rend.material.Lerp(originalMaterial, transparentMaterial, fade);
-        foreach (Renderer rend in childrenRenderers)
+        foreach (Renderer renderer in childrenRenderers)
         {
             rend.material.Lerp(originalMaterial, transparentMaterial, fade);
         }

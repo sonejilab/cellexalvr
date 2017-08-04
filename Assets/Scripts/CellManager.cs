@@ -77,7 +77,7 @@ public class CellManager : MonoBehaviour
         {
             c.ColorByPreviousExpression(index);
         }
-
+        GetComponent<AudioSource>().Play();
     }
 
 
@@ -101,6 +101,7 @@ public class CellManager : MonoBehaviour
         while (database.QueryRunning)
             yield return null;
 
+        GetComponent<AudioSource>().Play();
         ArrayList expressions = database._result;
         foreach (Cell c in cells.Values)
         {
