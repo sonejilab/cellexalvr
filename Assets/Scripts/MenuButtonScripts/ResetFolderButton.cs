@@ -29,8 +29,8 @@ public class ResetFolderButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-			var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
-			sceneLoader.doLoad = false;
+			//var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
+			//sceneLoader.doLoad = false;
             graphManager.DeleteGraphs();
             previousSearchesList.ClearList();
             // must reset loader before generating new folders

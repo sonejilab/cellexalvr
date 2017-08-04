@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StartMenuButton : MonoBehaviour
+public class StartMenuButton : StationaryButton
 {
-	public TextMesh descriptionText;
-	public SteamVR_TrackedObject rightController;
-	private SteamVR_Controller.Device device;
-	private bool controllerInside;
-	private SpriteRenderer spriteRenderer;
 	public SceneLoader sceneLoader;
 
-	void Start()
+	protected override string Description
 	{
-		device = SteamVR_Controller.Input((int)rightController.index);
-		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		get
+		{
+			return "Back to Start Menu";
+		}
 	}
+
+
 
 	void Update()
 	{
@@ -23,7 +22,12 @@ public class StartMenuButton : MonoBehaviour
 			sceneLoader.LoadScene ("SceneLoaderTest");
 		}
 	}
-
+	/*
+	void Start()
+	{
+		device = SteamVR_Controller.Input((int)rightController.index);
+		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+	}
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Controller")
@@ -40,6 +44,6 @@ public class StartMenuButton : MonoBehaviour
 			descriptionText.text = "";
 			controllerInside = false;
 		}
-	}
+	}*/
 
 }

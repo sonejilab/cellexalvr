@@ -18,12 +18,12 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
     public GameObject fire;
-    public GameObject minimizer;
-    public GameObject magnifier;
+    public GameObject deleter;
     public SelectionToolButton selectionToolButton;
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool };
+    public enum Model { Normal, SelectionTool, Menu, DeleteTool };
     public Model DesiredModel { get; set; }
     private Model actualModel;
+    private bool selectionToolEnabled = false;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
@@ -61,8 +61,8 @@ public class ControllerModelSwitcher : MonoBehaviour
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
             fire.SetActive(false);
-            minimizer.SetActive(false);
-            magnifier.SetActive(false);
+            deleter.SetActive(false);
+
         }
     }
 
@@ -72,8 +72,17 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(DesiredModel);
-            ActivateDesiredTool();
+            if (DesiredModel == Model.DeleteTool)
+                deleter.SetActive(true);
         }
+    }
+
+    /// <summary>
+    /// Should be called when a button that changes the tool is pressed.
+    /// </summary>
+    public void ToolSwitched()
+    {
+        selectionToolEnabled = false;
     }
 
     /// <summary>
@@ -100,32 +109,8 @@ public class ControllerModelSwitcher : MonoBehaviour
                 controllerBodyRenderer.material = selectionToolHandlerMaterial;
                 controllerBodyRenderer.material.color = desiredColor;
                 break;
-
-            case Model.Minimizer:
+            case Model.DeleteTool:
                 controllerBodyMeshFilter.mesh = deleteToolMesh;
-                break;
-
-            case Model.Magnifier:
-                controllerBodyMeshFilter.mesh = normalControllerMesh;
-                break;
-        }
-    }
-
-    public void ActivateDesiredTool()
-    {
-        switch (DesiredModel)
-        {
-            case Model.SelectionTool:
-                selectionToolHandler.SetSelectionToolEnabled(true, true);
-                break;
-            case Model.Magnifier:
-                magnifier.SetActive(true);
-                break;
-            case Model.HeatmapDeleteTool:
-                fire.SetActive(true);
-                break;
-            case Model.Minimizer:
-                minimizer.SetActive(true);
                 break;
         }
     }
@@ -133,9 +118,10 @@ public class ControllerModelSwitcher : MonoBehaviour
     public void TurnOffActiveTool()
     {
 
+        selectionToolEnabled = false;
         selectionToolHandler.SetSelectionToolEnabled(false, true);
         fire.SetActive(false);
-        minimizer.SetActive(false);
+        deleter.SetActive(false);
         DesiredModel = Model.Normal;
         SwitchToModel(Model.Normal);
     }

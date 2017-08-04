@@ -2,9 +2,6 @@
 using UnityEngine;
 using VRTK;
 
-/// <summary>
-/// This class represents a tool attached to the controller that moves graphpoints apart when too close to the tool
-/// </summary>
 class MagnifierTool : MonoBehaviour
 {
 
@@ -19,18 +16,10 @@ class MagnifierTool : MonoBehaviour
             var originPos = pair.Value;
             var dir = (originPos - transform.position).normalized;
             var dist = Vector3.Distance(transform.position, originPos);
-
-            if (dist < .01808f)
-            {
-                graphPointTransform.position = originPos + dist * 5 * dir;
-            }
-            else
-            {
-                var l = (0.013f / (dist * .9f + 0.06f) - 0.08f);
-                if (l < 0)
-                    l = 0;
-                graphPointTransform.position = originPos + l * dir;
-            }
+            var l = (float)(0.01 / (dist + 0.04) - 0.1);
+            if (l < 0)
+                l = 0;
+            graphPointTransform.position = originPos + l * dir;
             //graphPointTransform.GetComponent<SphereCollider>().center = originPos;
         }
     }

@@ -3,69 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
 
-public class SaveButton : MonoBehaviour {
+public class SaveButton : StationaryButton {
 	
-	public TextMesh descriptionText;
-	public SteamVR_TrackedObject rightController;
-	private SteamVR_Controller.Device device;
-	private bool controllerInside;
-	private SpriteRenderer spriteRenderer;
 	public SaveScene saveScene;
-	public Sprite green;
-	public Sprite black;
+	public Sprite gray;
+	public Sprite original;
 	private float elapsedTime;
 	private float time = 1.0f;
+	private bool changeSprite;
 
 	// Use this for initialization
-
-	void Start ()
+	protected override string Description
 	{
-		device = SteamVR_Controller.Input((int)rightController.index);
-		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		get { return "Save Session"; }
 	}
+		
 	
 	// Update is called once per frame
 	void Update ()
 	{
+
+		device = SteamVR_Controller.Input((int)rightController.index);
 		if (controllerInside && device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) {
 			Debug.Log ("Do Save");
 			saveScene.Save ();
 			elapsedTime = 0.0f;
-			spriteRenderer.sprite = green;
+			standardTexture = gray;
+			changeSprite = true;
 		}
-		if (elapsedTime < time) {
-			elapsedTime += Time.deltaTime;
-		} else {
-			spriteRenderer.sprite = black;
+		if (changeSprite) {
+			if (elapsedTime < time) {
+				elapsedTime += Time.deltaTime;
+			} else {
+				standardTexture = original;
+				changeSprite = false;
+			}
 		}
 	}
-
+	/*
 	void ChangeSprite() 
 	{
-		spriteRenderer.sprite = green;
+		spriteRenderer.sprite = gray;
 		float elapsedTime = 0.0f;
 		if (elapsedTime > time) 
 		{
-			spriteRenderer.sprite = black;
+			spriteRenderer.sprite = original;
 		} else {
 			elapsedTime += Time.deltaTime;
 		}
-	}
-	void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.tag == "Controller")
-		{
-			descriptionText.text = "Save Session";
-			controllerInside = true;
-		}
-	}
+	}*/
 
-	void OnTriggerExit(Collider other)
-	{
-		if (other.gameObject.tag == "Controller")
-		{
-			descriptionText.text = "";
-			controllerInside = false;
-		}
-	}
 }

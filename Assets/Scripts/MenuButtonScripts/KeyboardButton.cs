@@ -8,6 +8,8 @@ public class KeyboardButton : StationaryButton
     public GameObject keyboard;
     public VRTK.VRTK_StraightPointerRenderer laserPointer;
     private bool keyboardActivated = false;
+	public Sprite gray;
+	public Sprite original;
 
     protected override string Description
     {
@@ -23,6 +25,12 @@ public class KeyboardButton : StationaryButton
             laserPointer.enabled = keyboardActivated;
             keyboard.SetActive(keyboardActivated);
         }
+		if (keyboardActivated) {
+			standardTexture = gray;
+		}
+		if (!keyboardActivated) {
+			standardTexture = original;
+		}
     }
 
 }

@@ -1,37 +1,33 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ScreenshotButton : MonoBehaviour
+public class ScreenshotButton : StationaryButton
 {
-	public TextMesh descriptionText;
-	public SteamVR_TrackedObject rightController;
-	private SteamVR_Controller.Device device;
-	private bool controllerInside;
-	private SpriteRenderer spriteRenderer;
+
 	public Camera camera;
 	public GameObject canvas;
 	public SpriteRenderer spriteRend;
 	public Sprite gray;
 	public Sprite black;
 
-		
-	void Start()
+	protected override string Description
 	{
-		device = SteamVR_Controller.Input((int)rightController.index);
-		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		get { return "Take Snapshots"; }
 	}
 
 	void Update()
 	{
+
+		device = SteamVR_Controller.Input((int)rightController.index);
 		if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
 		{
 			if (canvas.activeSelf) {
 				canvas.SetActive (false);
-				spriteRend.sprite = black;
+				standardTexture = black;
 				camera.gameObject.SetActive (false);
 			} else {
 				canvas.SetActive (true);
-				spriteRend.sprite = gray;
+				standardTexture = gray;
 				camera.gameObject.SetActive (true);
 			}
 
@@ -39,22 +35,16 @@ public class ScreenshotButton : MonoBehaviour
 		}
 	}
 
-	void OnTriggerEnter(Collider other)
+	/*
+	protected virtual override void OnTriggerExit(Collider other)
 	{
-		if (other.gameObject.tag == "Controller")
-		{
-			descriptionText.text = "Take Screenshots";
-			controllerInside = true;
-		}
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		if (other.gameObject.tag == "Controller")
+		if (other.gameObject.CompareTag("Controller"))
 		{
 			descriptionText.text = "";
+			spriteRenderer.sprite = standardTexture;
 			controllerInside = false;
 		}
-	}
+	}*/
+
 
 }

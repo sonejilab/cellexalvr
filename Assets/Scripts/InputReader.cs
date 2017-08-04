@@ -25,28 +25,27 @@ public class InputReader : MonoBehaviour
     public NetworkNode networkNodePrefab;
     public GameObject headset;
     public StatusDisplay status;
-
+	
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
 
-    //Flag for loading previous sessions
-    public bool doLoad = false;
+	//Flag for loading previous sessions
+	public bool doLoad = false;
 
     private void Start()
     {
         if (debug)
         {
-            ReadFolder(@"C:\Users\vrproject\Documents\Cellexal\CellExAl\Assets\Data\Bertie");
+			ReadFolder(@"C:\Users\vrproject\Documents\Cellexal\CellExAl\Assets\Data\Bertie");
         }
-        var sceneLoader = GameObject.Find("Load").GetComponent<Loading>();
-        if (sceneLoader.doLoad)
-        {
-            doLoad = true;
-            GameObject.Find("InputFolderList").gameObject.SetActive(false);
-            graphManager.LoadDirectory();
-            Debug.Log("Read Folder: " + graphManager.directory);
-            ReadFolder(@graphManager.directory);
-        }
+		var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
+		if (sceneLoader.doLoad) {
+			doLoad = true;
+			GameObject.Find ("InputFolderList").gameObject.SetActive (false);
+			graphManager.LoadDirectory ();
+			Debug.Log ("Read Folder: " + graphManager.directory);
+			ReadFolder (@graphManager.directory);
+		}
     }
 
     /// <summary>
@@ -106,7 +105,7 @@ public class InputReader : MonoBehaviour
         foreach (string file in mdsFiles)
         {
             Graph newGraph = graphManager.CreateGraph();
-            newGraph.GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+			newGraph.GetComponent<VRTK_InteractableObject> ().isGrabbable = false;
             //graphManager.SetActiveGraph(fileIndex);
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
@@ -138,11 +137,10 @@ public class InputReader : MonoBehaviour
                 yield return null;
             }
             fileIndex++;
-            newGraph.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            if (doLoad)
-            {
-                graphManager.LoadPosition(newGraph, fileIndex);
-            }
+			newGraph.GetComponent<VRTK_InteractableObject> ().isGrabbable = true;
+			if (doLoad) {
+				graphManager.LoadPosition (newGraph, fileIndex);
+			}
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         // Read the each .meta.cell file
@@ -192,8 +190,8 @@ public class InputReader : MonoBehaviour
 
     /// <summary>
     /// Reads the index.facs file.
-    /// </summary>
-
+	/// </summary>
+	
     private void ReadFacsFiles(string path)
     {
         string fullpath = path + "/index.facs";
@@ -210,11 +208,11 @@ public class InputReader : MonoBehaviour
             // file is empty
             return;
         }
-        /// The file format should be:
-        ///             TYPE_1  TYPE_2 ...
-        /// CELLNAME_1  VALUE   VALUE  
-        /// CELLNAME_2  VALUE   VALUE
-        /// ...
+		/// The file format should be:
+		///             TYPE_1  TYPE_2 ...
+		/// CELLNAME_1  VALUE   VALUE  
+		/// CELLNAME_2  VALUE   VALUE
+		/// ...
         string headerline = lines[0];
         string[] header = headerline.Split(null);
         float[] min = new float[header.Length - 1];
@@ -311,8 +309,8 @@ public class InputReader : MonoBehaviour
         Graph graph = graphManager.FindGraph(graphName);
         GameObject skeleton = graph.CreateConvexHull();
         if (skeleton == null) return;
-        var networkHandler = skeleton.GetComponent<NetworkHandler>();
-        networkHandler.NetworkName = "network from " + graph.GraphName;
+		var networkHandler = skeleton.GetComponent<NetworkHandler> ();
+		networkHandler.NetworkName = "network from " + graph.GraphName;
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
         foreach (string line in lines)
         {
@@ -332,8 +330,8 @@ public class InputReader : MonoBehaviour
             NetworkCenter network = Instantiate(networkPrefab);
             network.transform.parent = skeleton.transform;
             network.transform.localPosition = position;
-            networkHandler.AddNetwork(network);
-            network.Handler = networkHandler;
+			networkHandler.AddNetwork (network);
+			network.Handler = networkHandler;
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {
