@@ -38,14 +38,14 @@ public class InputReader : MonoBehaviour
         {
 			ReadFolder(@"C:\Users\vrproject\Documents\Cellexal\CellExAl\Assets\Data\Bertie");
         }
-		var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
+		/*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
 			doLoad = true;
 			GameObject.Find ("InputFolderList").gameObject.SetActive (false);
 			graphManager.LoadDirectory ();
 			Debug.Log ("Read Folder: " + graphManager.directory);
 			ReadFolder (@graphManager.directory);
-		}
+		}*/
     }
 
     /// <summary>

@@ -48,10 +48,17 @@ public class NetworkCenter : MonoBehaviour
         if (enlarge)
         {
             enlarge = false;
-            if (!isReplacement)
+            if (!isReplacement && this.name != "Enlarged Network")
+            {
+
+                Debug.Log("ENLARGE");
                 EnlargeNetwork();
-            else
+            }
+            else if (isReplacement && this.name == "EmptyNetworkPrefab 1(Clone)")
+            {
+                Debug.Log("ORIGINAL");
                 BringBackOriginal();
+            }
         }
     }
 
@@ -112,6 +119,8 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     public void EnlargeNetwork()
     {
+
+        this.name = "Enlarged Network";
         // add a rigidbody and the necessary scripts
         Enlarged = true;
         GetComponent<Renderer>().enabled = false;
@@ -132,7 +141,7 @@ public class NetworkCenter : MonoBehaviour
         scalescript.uniformScaling = true;
         interactableObject.grabAttachMechanicScript = grabAttach;
         interactableObject.secondaryGrabActionScript = scalescript;
-
+        
         grabAttach.precisionGrab = true;
         grabAttach.breakForce = float.PositiveInfinity;
 
@@ -177,6 +186,8 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     private void BringBackOriginal()
     {
+
+        this.name = "Original Network";
         if (isReplacement)
         {
             replacing.BringBackOriginal();

@@ -28,8 +28,8 @@ class DeleteToolButton : StationaryButton
             }
             else
             {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DeleteTool;
-                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.DeleteTool);
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Minimizer;
+                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Minimizer);
 				changeSprite = true;
             }
         }
