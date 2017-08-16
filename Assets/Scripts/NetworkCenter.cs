@@ -35,11 +35,13 @@ public class NetworkCenter : MonoBehaviour
     private List<Arc> arcs = new List<Arc>();
     private List<CombinedArc> combinedArcs = new List<CombinedArc>();
     private SteamVR_TrackedObject rightController;
+    private NetworkGenerator networkGenerator;
 
     void Start()
     {
         pedestal = GameObject.Find("Pedestal");
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
     }
 
     void FixedUpdate()
@@ -50,13 +52,11 @@ public class NetworkCenter : MonoBehaviour
             enlarge = false;
             if (!isReplacement && this.name != "Enlarged Network")
             {
-
-                Debug.Log("ENLARGE");
                 EnlargeNetwork();
             }
             else if (isReplacement && this.name == "EmptyNetworkPrefab 1(Clone)")
             {
-                Debug.Log("ORIGINAL");
+
                 BringBackOriginal();
             }
         }
@@ -208,7 +208,12 @@ public class NetworkCenter : MonoBehaviour
             Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
             Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
             Destroy(gameObject.GetComponent<Rigidbody>());
-
+            Debug.Log(transform.localScale);
+            if (transform.localScale.x > 5)
+            {
+                Debug.Log("DECREASE OBJ IN SKY");
+                networkGenerator.objectsInSky--;
+            }
             GetComponent<Renderer>().enabled = true;
             GetComponent<Collider>().enabled = true;
             transform.parent = oldParent;

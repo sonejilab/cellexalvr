@@ -17,6 +17,8 @@ public class ConfirmSelectionButton : RotatableButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
         {
             ctrlMdlSwitcher.TurnOffActiveTool();
+
+            ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             selectionToolHandler.ConfirmSelection();
             //ctrlMdlSwitcher.TurnOffActiveTool();
         }

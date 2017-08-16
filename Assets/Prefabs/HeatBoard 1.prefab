@@ -708,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46344268be816794389d9c5c2e66d07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ungrabDistance: 0
+  ungrabDistance: 1
   lockXAxis: 0
   lockYAxis: 0
   lockZAxis: 0

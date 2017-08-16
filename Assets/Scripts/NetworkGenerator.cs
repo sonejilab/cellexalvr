@@ -14,10 +14,12 @@ public class NetworkGenerator : MonoBehaviour
     public StatusDisplay status;
     private Thread t;
     private GenerateNetworksThread gnt;
-
+    public int objectsInSky;
+    
     private void Start()
     {
         gnt = new GenerateNetworksThread(selectionToolHandler);
+        objectsInSky = 0;
     }
 
     public void GenerateNetworks()
