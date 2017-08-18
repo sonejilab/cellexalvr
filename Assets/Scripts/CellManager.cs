@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using VRTK;
 
 /// <summary>
 /// This class represent a manager that holds all the cells.
@@ -15,6 +16,7 @@ public class CellManager : MonoBehaviour
     public SQLite database;
     private Dictionary<string, Cell> cells;
     public SteamVR_TrackedController right;
+    public VRTK_ControllerActions controllerActions;
 
     void Awake()
     {
@@ -81,6 +83,7 @@ public class CellManager : MonoBehaviour
         GetComponent<AudioSource>().Play();
         Debug.Log("FEEL THE PULSE");
         SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
+        
     }
     
 
@@ -91,6 +94,8 @@ public class CellManager : MonoBehaviour
     /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName)
     {
+        //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
+        controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
         StartCoroutine(QueryDatabase(geneName));
     }
 
@@ -106,7 +111,6 @@ public class CellManager : MonoBehaviour
             yield return null;
 
         GetComponent<AudioSource>().Play();
-        Debug.Log("FEEL THE PULSE");
         SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         ArrayList expressions = database._result;
         foreach (Cell c in cells.Values)
