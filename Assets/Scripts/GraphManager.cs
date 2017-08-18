@@ -17,8 +17,8 @@ public class GraphManager : MonoBehaviour
 	public SaveScene saveScene;
 	public string directory;
     private List<Graph> graphs;
-    private Vector3[] startPositions =  {   new Vector3(-.7f, .5f, .1f),
-                                            new Vector3(-.35f, .5f, -.7f),
+    private Vector3[] startPositions =  {   new Vector3(-.2f, .5f, .3f),
+                                            new Vector3(.3f, .5f, -.5f),
                                             new Vector3(0f, .5f, .1f),
                                             new Vector3(.35f, .5f, -.7f)
                                         };

@@ -42,6 +42,7 @@ public class NetworkCenter : MonoBehaviour
         pedestal = GameObject.Find("Pedestal");
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
+
     }
 
     void FixedUpdate()

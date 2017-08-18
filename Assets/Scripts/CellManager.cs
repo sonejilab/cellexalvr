@@ -14,6 +14,7 @@ public class CellManager : MonoBehaviour
     public List<Material> materialList;
     public SQLite database;
     private Dictionary<string, Cell> cells;
+    public SteamVR_TrackedController right;
 
     void Awake()
     {
@@ -78,7 +79,10 @@ public class CellManager : MonoBehaviour
             c.ColorByPreviousExpression(index);
         }
         GetComponent<AudioSource>().Play();
+        Debug.Log("FEEL THE PULSE");
+        SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
     }
+    
 
 
     /// <summary>
@@ -102,6 +106,8 @@ public class CellManager : MonoBehaviour
             yield return null;
 
         GetComponent<AudioSource>().Play();
+        Debug.Log("FEEL THE PULSE");
+        SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         ArrayList expressions = database._result;
         foreach (Cell c in cells.Values)
         {

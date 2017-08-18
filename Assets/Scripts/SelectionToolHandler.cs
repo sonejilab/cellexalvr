@@ -27,7 +27,6 @@ public class SelectionToolHandler : MonoBehaviour
     private ArrayList selectedCells = new ArrayList();
     private ArrayList lastSelectedCells = new ArrayList();
     private Color[] colors;
-    private int currentColorIndex = 0;
     private Color selectedColor;
     private PlanePicker planePicker;
     private bool inSelectionState = false;
@@ -35,12 +34,16 @@ public class SelectionToolHandler : MonoBehaviour
     private GameObject leftController;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
-
+    public int[] groups;
+    private int currentColorIndex = 0;
     public string DataDir { get; set; }
+    public GroupInfoDisplay groupInfoDisplay;
+     
 
     void Awake()
     {
         colors = new Color[10];
+        groups = new int[10];
         colors[0] = new Color(1, 0, 0, .5f);     // red
         colors[1] = new Color(0, 0, 1, .5f);     // blue
         colors[2] = new Color(0, 1, 1, .5f);     // cyan
@@ -55,8 +58,8 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
-
-        selectedColor = colors[0];
+        
+        selectedColor = colors[currentColorIndex];
         SetSelectionToolEnabled(false, true);
         //UpdateButtonIcons();
         leftController = GameObject.Find("LeftController");
@@ -80,6 +83,9 @@ public class SelectionToolHandler : MonoBehaviour
         {
             selectedCells.Add(other);
             SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(hapticIntensity);
+            groups[currentColorIndex]++;
+            groupInfoDisplay.UpdateStatus();
+
         }
         if (!selectionMade)
         {
