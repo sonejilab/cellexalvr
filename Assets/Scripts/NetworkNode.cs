@@ -53,6 +53,12 @@ public class NetworkNode : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Adds a neighbour to this node. A neughbour should be a gene that is correlated to this node's gene.
+    /// This will also add this node as the neighbour's neighbour, so it's basically a bidirectional edge between two vertices.
+    /// A gene may have many neighbours.
+    /// </summary>
+    /// <param name="buddy"> The new neighbour </param>
     public void AddNeighbour(NetworkNode buddy)
     {
         // add this connection both ways
@@ -60,6 +66,9 @@ public class NetworkNode : MonoBehaviour
         buddy.neighbours.Add(this);
     }
 
+    /// <summary>
+    /// Makes this node and all outgoing edges big and white.
+    /// </summary>
     public void Highlight()
     {
         GetComponent<Renderer>().material.color = Color.white;
@@ -72,6 +81,9 @@ public class NetworkNode : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Makes this node and all outgoing edges small and whatever color they were before.
+    /// </summary>
     public void UnHighlight()
     {
         GetComponent<Renderer>().material.color = nodeColor;
@@ -84,6 +96,9 @@ public class NetworkNode : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds one edge for each buddy if there is not one already.
+    /// </summary>
     public void AddEdges()
     {
         if (!edgesAdded)
@@ -100,6 +115,7 @@ public class NetworkNode : MonoBehaviour
                     edge.transform.rotation = Quaternion.identity;
                     edge.transform.localScale = Vector3.one;
                     renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
+                    // The colors are just random, they mean nothing. But they look pretty.
                     renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .6f, 1, .6f, 1);
                     connections.Add(renderer);
                     connectionColors.Add(renderer.material.color);
@@ -109,6 +125,5 @@ public class NetworkNode : MonoBehaviour
             }
         }
     }
-
 
 }

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the area where objects are placed when they are minimized.
+/// </summary>
 
 public class MinimizedObjectHandler : MonoBehaviour
 {
@@ -22,6 +25,11 @@ public class MinimizedObjectHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Minimizes an object and places it on top of the menu.
+    /// </summary>
+    /// <param name="objectToMinimize"> The GameObject to minimize. </param>
+    /// <param name="description"> A text that will be placed on top of the minimized object. </param>
     internal void MinimizeObject(GameObject objectToMinimize, string description)
     {
         var jail = Instantiate(minimizedObjectContainerPrefab);
@@ -50,7 +58,10 @@ public class MinimizedObjectHandler : MonoBehaviour
         jail.GetComponentInChildren<TextMesh>().text = description;
     }
 
-
+    /// <summary>
+    /// Should be called when an object is un-minimzied (maximized?)´.
+    /// </summary>
+    /// <param name="container"> The container that previously contained the object. </param>
     public void ContainerRemoved(MinimizedObjectContainer container)
     {
         spaceTaken[container.SpaceX, container.SpaceY] = false;

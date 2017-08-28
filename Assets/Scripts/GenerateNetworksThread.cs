@@ -2,6 +2,9 @@
 using System.IO;
 using UnityEngine;
 
+/// <summary>
+/// This class is the thread that runs the R script that generates the network data.
+/// </summary>
 public class GenerateNetworksThread
 {
 

@@ -15,8 +15,9 @@ public class FolderLidOpener : MonoBehaviour
 
     void Start()
     {
+        // calcuate an array of how much to rotate the lid every frame.
+        // uses a sinus function to make it a bit more smooth.
         dAngle = new float[moveTime];
-        //var tau = 2 * Mathf.PI;
         var total = 0f;
         for (int i = 0; i < moveTime; ++i)
         {

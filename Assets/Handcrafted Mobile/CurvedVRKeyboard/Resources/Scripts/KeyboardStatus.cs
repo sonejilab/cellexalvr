@@ -49,7 +49,6 @@ namespace CurvedVRKeyboard
             else if (value.Equals(SPACE))
             {
                 cellManager.ColorGraphsByGene(output);
-                previousSearchesList.UpdateList(output);
                 output = "";
                 textComponent = targetGameObject.GetComponent(typeHolder.GetType());
                 textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);

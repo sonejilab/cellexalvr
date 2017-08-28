@@ -30,7 +30,7 @@ public class StatusDisplay : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds a status with a specified color. Calling this with Color.white is equivelent to just calling AddStatus
+    /// Adds a status with a specified color. Calling this with Color.white is equivalent to just calling AddStatus
     /// </summary>
     /// <param name="text"> The status text. </param>
     /// <param name="color"> The status text's color. </param>

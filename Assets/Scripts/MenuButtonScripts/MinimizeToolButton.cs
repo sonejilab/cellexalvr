@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 
-class DeleteToolButton : StationaryButton
+/// <summary>
+/// This class represents the buttont that minimizes things
+/// </summary>
+
+class MinimizeToolButton : StationaryButton
 {
     public ControllerModelSwitcher controllerModelSwitcher;
-    public DeleteTool deleteTool;
+    public MinimizeTool deleteTool;
 	public Sprite original;
 	public Sprite gray;
 	private bool changeSprite;

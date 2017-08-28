@@ -17,20 +17,21 @@ public class GetBackFromSkyButton : VRTK_InteractableObject {
     private bool controllerInside;
     public GameObject sendToSkyButton;
 
-    void Start()
-    {
-        networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
-        device = SteamVR_Controller.Input((int)rightController.index);
-        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-    }
     protected override void Awake()
     {
         base.Awake();
     }
 
+    void Start()
+    {
+        networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
+        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        device = SteamVR_Controller.Input((int)rightController.index);
+    }
+
     public override void StartTouching(GameObject currentTouchingObject)
     {
-        Debug.Log("TOUCHING");
+        // Debug.Log("TOUCHING");
         this.spriteRenderer.sprite = highlightedTexture;
         base.StartTouching(currentTouchingObject);
     }
@@ -43,7 +44,7 @@ public class GetBackFromSkyButton : VRTK_InteractableObject {
 
     public override void StartUsing(GameObject currentUsingObject)
     {
-        Debug.Log("GET BACK HERE");
+        //Debug.Log("GET BACK HERE");
         base.StartUsing(currentUsingObject);
         send.GetBackFromSky();
         sendToSkyButton.SetActive(true);

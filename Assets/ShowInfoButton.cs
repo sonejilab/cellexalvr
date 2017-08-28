@@ -17,8 +17,8 @@ public class ShowInfoButton : VRTK_InteractableObject
 
     void Start()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        device = SteamVR_Controller.Input((int)rightController.index);
     }
 
     /*void Update()

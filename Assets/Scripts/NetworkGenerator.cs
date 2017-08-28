@@ -16,7 +16,6 @@ public class NetworkGenerator : MonoBehaviour
     private GenerateNetworksThread gnt;
     public int objectsInSky;
     
-    
     private void Start()
     {
         gnt = new GenerateNetworksThread(selectionToolHandler);

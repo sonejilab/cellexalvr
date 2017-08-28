@@ -16,11 +16,21 @@ class MagnifierTool : MonoBehaviour
             var originPos = pair.Value;
             var dir = (originPos - transform.position).normalized;
             var dist = Vector3.Distance(transform.position, originPos);
-            var l = (float)(0.01 / (dist + 0.04) - 0.1);
-            if (l < 0)
-                l = 0;
+            // if the graphpoint is sufficiently close to the center, we only offset it linearly based on it's distance from the center
+            // if it is further away, we should offset it less and less
+            float l;
+            if (dist < 0.02f)
+            {
+                l = dist * 5;
+            }
+            else
+            {
+                l = dist * -1.2f + 0.12f;
+                // if the graphoint is far away from the center we might get negative values, which we don't want
+                if (l < 0)
+                    l = 0;
+            }
             graphPointTransform.position = originPos + l * dir;
-            //graphPointTransform.GetComponent<SphereCollider>().center = originPos;
         }
     }
 

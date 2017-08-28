@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114252115367115154}
   - component: {fileID: 65502072426276958}
   - component: {fileID: 114042002659218664}
+  - component: {fileID: 114775559152125964}
   m_Layer: 0
   m_Name: NetworkNodePrefab
   m_TagString: Untagged
@@ -193,13 +194,13 @@ MonoBehaviour:
   disableWhenIdle: 1
   touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   allowedTouchControllers: 0
-  isGrabbable: 0
-  holdButtonToGrab: 0
+  isGrabbable: 1
+  holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
   validDrop: 1
   grabOverrideButton: 0
   allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
+  grabAttachMechanicScript: {fileID: 114775559152125964}
   secondaryGrabActionScript: {fileID: 0}
   isUsable: 1
   holdButtonToUse: 0
@@ -209,8 +210,6 @@ MonoBehaviour:
   allowedUseControllers: 0
   usingState: 0
   node: {fileID: 114252115367115154}
-  cellManager: {fileID: 0}
-  highlightColor: {r: 1, g: 1, b: 1, a: 0}
 --- !u!114 &114252115367115154
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -226,3 +225,22 @@ MonoBehaviour:
   edgePrefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 2}
   arcDescriptionPrefab: {fileID: 1797228523857888, guid: d9d7155f17f7d1b448e25f3721807daa,
     type: 2}
+--- !u!114 &114775559152125964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1147256446606448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d955153b9296eb4a8c229d087f47b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  precisionGrab: 1
+  rightSnapHandle: {fileID: 0}
+  leftSnapHandle: {fileID: 0}
+  throwVelocityWithAttachDistance: 0
+  throwMultiplier: 1
+  onGrabCollisionDelay: 0
+  destroyImmediatelyOnThrow: 1
+  breakForce: 1500

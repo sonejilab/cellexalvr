@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 
-public class DeleteTool : MonoBehaviour
+/// <summary>
+/// This class represents the tool that is used to minimize objects.
+/// Minimized objects are placed on top of the menu.
+/// </summary>
+
+public class MinimizeTool : MonoBehaviour
 {
 
     public SteamVR_TrackedObject rightController;
@@ -29,7 +34,6 @@ public class DeleteTool : MonoBehaviour
             }
             else if (collidingWith.CompareTag("Network"))
             {
-                // the collider is a graphpoint
                 collidingWith.GetComponent<NetworkHandler>().HideNetworks();
                 jail.MinimizeObject(collidingWith, collidingWith.GetComponent<NetworkHandler>().NetworkName);
             }

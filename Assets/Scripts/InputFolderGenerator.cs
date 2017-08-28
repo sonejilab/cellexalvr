@@ -103,8 +103,7 @@ public class InputFolderGenerator : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            if (child.name != "Rope")
-                Destroy(child.gameObject);
+            Destroy(child.gameObject);
         }
     }
 }

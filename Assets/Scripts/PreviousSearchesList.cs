@@ -49,7 +49,7 @@ public class PreviousSearchesList : MonoBehaviour
                 {
                     if (listNode.GeneName != "")
                     {
-                        cellManager.ColorGraphsByPreviousExpression(listNode.Index);
+                        cellManager.ColorGraphsByPreviousExpression(listNode.GeneName);
                     }
                 }
             }
@@ -66,7 +66,6 @@ public class PreviousSearchesList : MonoBehaviour
                 if (device.GetPressDown(triggerButton))
                 {
                     searchLock.ToggleSearchNodeLock();
-
                 }
             }
         }
@@ -86,15 +85,6 @@ public class PreviousSearchesList : MonoBehaviour
             lastHitLock.SetHighlighted(false);
             lastHitLock = null;
         }
-    }
-
-    /// <summary>
-    /// Updates the list with a new gene name that will appear at the top of the list.
-    /// </summary>
-    /// <param name="newGeneName"></param>
-    public void UpdateList(string newGeneName)
-    {
-        topListNode.UpdateList(newGeneName);
     }
 
     /// <summary>

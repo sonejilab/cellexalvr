@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This class holds the logic for toggling the menu.
+/// </summary>
 public class MenuToggler : MonoBehaviour
 {
 
@@ -12,7 +15,9 @@ public class MenuToggler : MonoBehaviour
 
     private void Start()
     {
-        MenuActive = menu.activeSelf;
+        // The menu should be turned off when the program starts
+        menu.SetActive(false);
+        MenuActive = false;
     }
 
     // Update is called once per frame
@@ -25,22 +30,6 @@ public class MenuToggler : MonoBehaviour
             menu.SetActive(MenuActive);
             boxCollider.enabled = MenuActive;
             menuSwitcher.SwitchToDesiredModel();
-        }
-    }
-
-    public void RotateMenuLeft()
-    {
-        if (menu.activeSelf)
-        {
-            menu.GetComponent<RotateMenu>().RotateLeft();
-        }
-    }
-
-    public void RotateMenuRight()
-    {
-        if (menu.activeSelf)
-        {
-            menu.GetComponent<RotateMenu>().RotateRight();
         }
     }
 

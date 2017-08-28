@@ -44,22 +44,39 @@ public class PreviousSearchesListNode : MonoBehaviour
         renderer = GetComponent<Renderer>();
     }
 
-    public void UpdateList(string newGeneName)
+    /// <summary>
+    /// Updates the list with a new gene name, removing the bottom gene name in the list if it is full.
+    /// </summary>
+    /// <param name="newGeneName"> The gene name to add to the list. </param>
+    /// <returns> The gene name that was removed. </returns>
+    public string UpdateList(string newGeneName)
     {
         if (nextNode != null)
         {
             if (!Locked)
             {
-                nextNode.UpdateList(GeneName);
+                var returnGeneName = nextNode.UpdateList(GeneName);
+                GeneName = newGeneName;
+                return returnGeneName;
             }
             else
             {
-                nextNode.UpdateList(newGeneName);
+                return nextNode.UpdateList(newGeneName);
             }
         }
-
-        if (!Locked)
-            GeneName = newGeneName;
+        else
+        {
+            if (!Locked)
+            {
+                var oldGeneName = GeneName;
+                GeneName = newGeneName;
+                return oldGeneName;
+            }
+            else
+            {
+                return newGeneName;
+            }
+        }
     }
 
     public void SetMaterial(Material material)

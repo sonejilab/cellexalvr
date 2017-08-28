@@ -14,9 +14,10 @@ public class CellManager : MonoBehaviour
     public Cell cell;
     public List<Material> materialList;
     public SQLite database;
-    private Dictionary<string, Cell> cells;
     public SteamVR_TrackedController right;
     public VRTK_ControllerActions controllerActions;
+    public PreviousSearchesListNode topListNode;
+    private Dictionary<string, Cell> cells;
 
     void Awake()
     {
@@ -73,19 +74,18 @@ public class CellManager : MonoBehaviour
     /// <summary>
     /// Color all cells based on a gene previously colored by
     /// </summary>
-    public void ColorGraphsByPreviousExpression(int index)
+    public void ColorGraphsByPreviousExpression(string geneName)
     {
-
         foreach (Cell c in cells.Values)
         {
-            c.ColorByPreviousExpression(index);
+            c.ColorByPreviousExpression(geneName);
         }
         GetComponent<AudioSource>().Play();
-        Debug.Log("FEEL THE PULSE");
+        //Debug.Log("FEEL THE PULSE");
         SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
-        
+
     }
-    
+
 
 
     /// <summary>
@@ -113,6 +113,9 @@ public class CellManager : MonoBehaviour
         GetComponent<AudioSource>().Play();
         SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         ArrayList expressions = database._result;
+        // stop the coroutine if the gene was not in the database
+        if (expressions.Count == 0)
+            yield break;
         foreach (Cell c in cells.Values)
         {
             c.ColorByExpression(0);
@@ -122,10 +125,19 @@ public class CellManager : MonoBehaviour
             string cell = ((CellExpressionPair)expressions[i]).Cell;
             cells[cell].ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
         }
+
+        var removedGene = topListNode.UpdateList(geneName);
+        // GameObject.Find("Status Display").GetComponent<StatusDisplay>().ShowStatusForTime("Added " + geneName + " and removed " + removedGene, 5f);
         foreach (Cell c in cells.Values)
         {
-            c.SaveExpression();
+            c.SaveExpression(geneName, removedGene);
         }
+
+    }
+
+    internal void SavePreviousExpression(string newGeneName, string removedGeneName)
+    {
+
     }
 
     public void DeleteCells()

@@ -9,9 +9,9 @@ public class ControllerModelSwitcher : MonoBehaviour
     public SteamVR_RenderModel renderModel;
     public GameObject controllerBody;
     public Mesh normalControllerMesh;
-    public Texture normalControllerTexture;
+    //public Texture normalControllerTexture;
     public Mesh menuControllerMesh;
-    public Texture menuControllerTexture;
+    //public Texture menuControllerTexture;
     public SelectionToolHandler selectionToolHandler;
     public Mesh selectionToolMesh;
     public Mesh deleteToolMesh;
@@ -22,7 +22,11 @@ public class ControllerModelSwitcher : MonoBehaviour
     public GameObject magnifier;
     public SelectionToolButton selectionToolButton;
     public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool };
+    // what model we actually want
     public Model DesiredModel { get; set; }
+    // what model is actually displayed, useful for when we want to change the model temporarily
+    // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
+    // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
     private Model actualModel;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;

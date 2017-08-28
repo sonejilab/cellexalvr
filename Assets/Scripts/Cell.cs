@@ -14,7 +14,7 @@ public class Cell
     //private Dictionary<string, int> geneExpressions;
     private List<GraphPoint> graphPoints;
     private List<Material> materialList;
-    private LinkedList<int> lastExpressions = new LinkedList<int>();
+    private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     public int ExpressionLevel { get; internal set; }
 
     public Cell(string label, List<Material> materialList)
@@ -32,11 +32,19 @@ public class Cell
         labelString = label;
     }
 
+    /// <summary>
+    /// Tell this cell that it is now represented by a graphpoint.
+    /// A cell may be represented by many graphpoints (typically one in each graph).
+    /// </summary>
+    /// <param name="g"> The graphpoint representing this cell. </param>
     public void AddGraphPoint(GraphPoint g)
     {
         graphPoints.Add(g);
     }
 
+    /// <summary>
+    /// Turns off all graphpoints that this cell is represented by.
+    /// </summary>
     public void RemoveFromGraphs()
     {
         foreach (GraphPoint g in graphPoints)
@@ -74,7 +82,11 @@ public class Cell
     }
 
 
-
+    /// <summary>
+    /// Color this cell by an attribute, if it is of that attribute.
+    /// </summary>
+    /// <param name="attributeType"> The attribute to color by. </param>
+    /// <param name="color"> The color to give the graphpoints. </param>
     public void ColorByAttribute(string attributeType, Color color)
     {
         if (attributes[attributeType] == "1")
@@ -86,21 +98,25 @@ public class Cell
         }
     }
 
-    public void AddAttribute(string attributeType, string attribute)
+    /// <summary>
+    /// Adds an attribute to this cell.
+    /// </summary>
+    /// <param name="attributeType"> The type of the attribute. </param>
+    /// <param name="value"> "1" if this cell is of that attribute, "0" otherwise. </param>
+    public void AddAttribute(string attributeType, string value)
     {
-        attributes[attributeType] = attribute;
+        attributes[attributeType] = value;
     }
 
-    public void ColorByPreviousExpression(int index)
+    /// <summary>
+    /// Colors this cell after a gene expression it was recently colored by.
+    /// </summary>
+    /// <param name="index"> The index of the gene (from the list of the 10 last genes) </param>
+    public void ColorByPreviousExpression(string geneName)
     {
-        LinkedListNode<int> node = lastExpressions.First;
-        for (int i = 0; i < index; ++i)
-        {
-            node = node.Next;
-        }
-
-        int expression = node.Value;
+        var expression = lastExpressions[geneName];
         ExpressionLevel = expression;
+
 
         foreach (GraphPoint g in graphPoints)
         {
@@ -112,15 +128,22 @@ public class Cell
         }
     }
 
-    public void SaveExpression()
+    /// <summary>
+    /// Saves the current gene expression of this cell is colored by
+    /// </summary>
+    public void SaveExpression(string saveGeneName, string removeGeneName)
     {
-        if (lastExpressions.Count == 10)
+        if (removeGeneName != null && removeGeneName != "")
         {
-            lastExpressions.RemoveLast();
+            lastExpressions.Remove(removeGeneName);
         }
-        lastExpressions.AddFirst(ExpressionLevel);
+        lastExpressions[saveGeneName] = ExpressionLevel;
     }
 
+    /// <summary>
+    /// Color all graphpoints that represents this cell by their expression of a gene.
+    /// </summary>
+    /// <param name="expression"> A number [0, 29] of how expressed this cell is. </param>
     public void ColorByExpression(int expression)
     {
         ExpressionLevel = expression;
@@ -135,6 +158,11 @@ public class Cell
         }
     }
 
+    /// <summary>
+    /// Color all graphpoints that represents this cell by an index.
+    /// I don't know enough biology to know what this actually is.
+    /// </summary>
+    /// <param name="facsName"> The index. </param>
     public void ColorByIndex(string facsName)
     {
         foreach (GraphPoint g in graphPoints)
