@@ -20,8 +20,9 @@ public class ControllerModelSwitcher : MonoBehaviour
     public GameObject fire;
     public GameObject minimizer;
     public GameObject magnifier;
+    public GameObject helpTool;
     public SelectionToolButton selectionToolButton;
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool };
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool };
     // what model we actually want
     public Model DesiredModel { get; set; }
     // what model is actually displayed, useful for when we want to change the model temporarily
@@ -112,6 +113,10 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Magnifier:
                 controllerBodyMeshFilter.mesh = normalControllerMesh;
                 break;
+
+            case Model.HelpTool:
+                controllerBodyMeshFilter.mesh = normalControllerMesh;
+                break;
         }
     }
 
@@ -131,6 +136,9 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Minimizer:
                 minimizer.SetActive(true);
                 break;
+            case Model.HelpTool:
+                helpTool.SetActive(true);
+                break;
         }
     }
 
@@ -139,6 +147,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         selectionToolHandler.SetSelectionToolEnabled(false, true);
         fire.SetActive(false);
         minimizer.SetActive(false);
+        helpTool.SetActive(false);
         DesiredModel = Model.Normal;
         SwitchToModel(Model.Normal);
     }

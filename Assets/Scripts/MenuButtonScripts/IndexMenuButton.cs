@@ -25,6 +25,7 @@ public class IndexMenuButton : MonoBehaviour
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             spriteRenderer.sprite = standardTexture;
+            descriptionText.text = "";
             controllerInside = false;
             indexMenu.SetActive(true);
             buttons.SetActive(false);

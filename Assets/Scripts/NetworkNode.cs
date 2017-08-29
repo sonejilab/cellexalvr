@@ -50,7 +50,6 @@ public class NetworkNode : MonoBehaviour
     {
         // some math make the text not be mirrored
         textTransform.LookAt(2 * transform.position - CameraToLookAt.position);
-
     }
 
     /// <summary>

@@ -22,6 +22,7 @@ public class LoaderController : MonoBehaviour
     private Vector3 startScale;
     private Vector3 finalScale;
     private bool moving = false;
+    [HideInInspector]
     public bool loadingComplete = false;
     private float currentTime;
     private float arrivalTime;

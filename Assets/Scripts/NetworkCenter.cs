@@ -65,8 +65,8 @@ public class NetworkCenter : MonoBehaviour
 
     void Update()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
         // handle input
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             controllerInside = false;
@@ -142,7 +142,7 @@ public class NetworkCenter : MonoBehaviour
         scalescript.uniformScaling = true;
         interactableObject.grabAttachMechanicScript = grabAttach;
         interactableObject.secondaryGrabActionScript = scalescript;
-        
+
         grabAttach.precisionGrab = true;
         grabAttach.breakForce = float.PositiveInfinity;
 
@@ -154,7 +154,7 @@ public class NetworkCenter : MonoBehaviour
 
         transform.parent = null;
         transform.position = pedestal.transform.position + new Vector3(0, 1, 0);
-        transform.localScale = new Vector3(.7f, .7f, .7f);
+        transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         transform.rotation = pedestal.transform.rotation;
         transform.Rotate(-90f, 0, 0);
 
@@ -199,7 +199,7 @@ public class NetworkCenter : MonoBehaviour
             rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
             gameObject.SetActive(false);
             // calling Destroy without the time delay caused the program to crash pretty reliably
-            Destroy(gameObject, .1f);
+            Destroy(gameObject, 0.1f);
         }
         else
         {

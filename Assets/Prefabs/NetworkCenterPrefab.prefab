@@ -145,11 +145,10 @@ GameObject:
   - component: {fileID: 135946752829001644}
   - component: {fileID: 23003621475484474}
   - component: {fileID: 114190743744166870}
-  - component: {fileID: 114073776324487466}
   - component: {fileID: 114393114096306446}
   m_Layer: 2
   m_Name: NetworkCenterPrefab
-  m_TagString: Untagged
+  m_TagString: Network
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,7 +220,7 @@ GameObject:
   - component: {fileID: 64684723448277922}
   m_Layer: 2
   m_Name: Ring
-  m_TagString: Untagged
+  m_TagString: Network
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -456,23 +455,6 @@ MonoBehaviour:
   standardTexture: {fileID: 21300000, guid: 96fa607cb06dc3d4a9afca790516f0df, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 3e535ae0b13d0b14b95ed52dca57e338, type: 3}
   canvas: {fileID: 1357681130736924}
---- !u!114 &114073776324487466
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1758485399609656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c08517e04830d6d44a13c5ea5f574181, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  unhighlightOnDisable: 1
-  thickness: 0.15
-  customOutlineModels: []
-  customOutlineModelPaths: []
-  enableSubmeshHighlight: 0
 --- !u!114 &114147774324732390
 MonoBehaviour:
   m_ObjectHideFlags: 1

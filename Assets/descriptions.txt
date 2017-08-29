@@ -1,0 +1,29 @@
+# Comments can be written by starting a line with a '#'.
+# The purpose of this file is to contain longer descriptions that are displayed with the helper tool.
+# Tags:
+TAG_Network:Networks consists of multiple cells and shows what genes are correlated within that group. The genes are represented with spheres and the correlations are represented with lines. The lines' colors are random and have no meaning. Arcs between networks can be toggled with from the arc menu. Arcs are connections between networks where a pair of genes is present in both networks.
+TAG_HeatBoard:Heatmaps shows genes that are expressed or not expressed in cells. The selected cells are shown on the x-axis of the heatmap ordered from left to right in the order they were selected. The genes are shown on the y-axis and their names can be found on the right most side of the heatmap. A button on the left side of the heatmap can be used to recolor the graphs to the colors used when creating the heatmap. This will color all cells in all graphs so you can see where the cells are in the other graphs as well.
+TAG_Graph:Graphs consist of multiple cells that are ordered by an algorithm. Cells that are close to each other probably have something to do with each other, and cells far away from each other probably have less to do with each other.
+
+# Names of gameobjects:
+Selectiontool Button:Toggles the selection tool. The selection tool can be used to select cells in a graph. Use the thumb dial on the controller to change the selection tool's color. Once you are happy with your selection, use the menu to confirm it.
+Toggle Keyboard Button:Toggles the keyboard. Use the keyboard by pointing at it with the controller and press the trigger to type. Typing a genename and then pressing "Set color" will color all current graphs after their expression of that gene, if it is present in the supplied database. Cells are colored blue to red via yellow with blue representing the lowest expression and red representing the highest.
+Burn Heatmap Tool Button:Toggles the tool for removing heatmaps. Put the fire inside an undesired heatmap and press the trigger to remove it.
+Reset Graphs Button:Resets all graphs' positions, rotations, scales and color. Does not affect networks, heatmaps or anything else.
+Reset Folder Button:Returns you to the select folder stage. Removes all networks, heatmaps and graphs from the current scene.
+Minimizer Tool Button:Toggles the minimizer tool. Put the shiny red light inside a graph or network and press the trigger to minimize it. Minimized objects are put in little boxes on top of the menu. Putting the controller inside a minimized object and pressing the trigger will return it to its former size and position.
+SaveButton:Saves your progress. Ask Johan to write more info.
+Magnifier Tool Button:Toggles the magnifier tool. The magnifier can be used to look inside clusters of cells in a graph. Put the sphere inside a graph and move it to move the cells apart.
+ScreenshotButton:Toggles the ability to take a screenshot. Press this button and then press the trigger to take a screenshot. Screenshots are saved in the same location as the program.
+Arcs Menu Button:Shows the arc menu. An arc is a connection between two networks that have a matching pair of connected genes. The buttons in the arc menu each have a background color corresponding to which network's arcs they toggle. Pressing a green button will toggle all connected arcs on and pressing a red button will toggle them off. The four buttons on the bottom of the menu are for toggling all arcs on or off, and toggling the combined number of arcs between networks on or off respectively. Below these buttons is a button for closing the menu.
+ConfirmSelectionButton:Confirms your selection. After confirming a selection more cells can not be added to it. You must confirm a selection before creating a heatmap or networks.
+RemoveSelection:Removes all selected cells from a graph. This can be undone by pressing "Reset graphs".
+UndoSelectionButton:Undoes your current selection. All selected cells will be un-selected.
+CreateHeatmapButton:Creates a heatmap from your selection. The heatmap will have the selected cells on its x-axis and 250 genes on its y-axis. The cells are ordered from left to right in the order they were selected. The heatmap can be moved by grabbing it with one controller and rescaled by grabbing it with both controllers.
+Create Networks Button: Creates networks from your selection. Each color be used as one network. Each network will show genes that are correlated. The genes are represented with spheres and the correlations as lines between the spheres. The lines' colors mean nothing, they are randomized for easier viewing. The networks are placed on a skeleton-like structure of the graph they came from to give an idea of where they originate from in the graph. The skeleton can be moved by grabbing it with one controller. Move the controller inside a network and press the trigger to enlarge it and seperate it from the skeleton.
+Toggle Expressed Cells:Use this button after coloring the graphs after a gene's expression. Toggles all cells in the graph that are expressing the gene.
+Toggle Non Expressed Cells: Use this button after coloring the graphs after a gene's expression. Toggles all cells in the graph that are not expressing the gene.
+StartMenuButton:Brings you back to the start menu. All unsaved progress will be lost.
+Attribute Menu Button:Shows the attribute menu. Pressing a button in the menu will toggle the color of cells belonging to that attribute. Use the button on the bottom of this menu to close it.
+Index Menu Button:Show the menu to color by index. Pressing any button in this menu will color all cells based on their value fo the index. I don't really know what any of that means.
+Lasers:Toggles laser pointers.

@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+/// <summary>
+/// This class represents the button that brings up the menu for coloring by attributes.
+/// </summary>
 public class AttributeMenuButton : StationaryButton
 {
 
@@ -23,6 +26,7 @@ public class AttributeMenuButton : StationaryButton
         {
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
+            descriptionText.text = "";
             attributeMenu.SetActive(true);
             buttons.SetActive(false);
         }
