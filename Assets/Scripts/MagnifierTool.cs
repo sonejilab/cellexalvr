@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 
@@ -7,12 +8,12 @@ using VRTK;
 /// </summary>
 class MagnifierTool : MonoBehaviour
 {
-
+    private bool recalc = false;
     private Dictionary<Transform, Vector3> pointsToMagnify = new Dictionary<Transform, Vector3>();
-
 
     private void Update()
     {
+        //if (recalc) return;
         foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
         {
             var graphPointTransform = pair.Key;
@@ -40,9 +41,11 @@ class MagnifierTool : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
+        //print("hit " + Physics.OverlapSphere(transform.position, 0.1337f).Length);
+        foreach (Collider c in Physics.OverlapSphere(transform.position, 0.1337f))
         {
-            pointsToMagnify[pair.Key] = pair.Key.position;
+            if (c.gameObject.CompareTag("Graph"))
+                pointsToMagnify[c.transform] = c.transform.position;
         }
     }
 
@@ -52,12 +55,12 @@ class MagnifierTool : MonoBehaviour
         {
             pair.Key.position = pair.Value;
         }
-        //pointsToMagnify.Clear();
+        pointsToMagnify.Clear();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (!enabled) return;
+        if (!enabled) return;
         if (other.gameObject.CompareTag("Graph"))
         {
             //other.GetComponentInParent<Graph>().GetComponent<VRTK_InteractableObject>().isGrabbable = false;
@@ -67,12 +70,13 @@ class MagnifierTool : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        //if (!enabled) return;
+        if (!enabled) return;
         if (other.gameObject.CompareTag("Graph"))
         {
             //if (pointsToMagnify.Count == 0)
             //other.GetComponentInParent<Graph>().GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            if (enabled)
+            //if (enabled)
+            if (pointsToMagnify.ContainsKey(other.transform))
                 other.transform.position = pointsToMagnify[other.transform];
             pointsToMagnify.Remove(other.transform);
         }
