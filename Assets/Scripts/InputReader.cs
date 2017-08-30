@@ -98,7 +98,6 @@ public class InputReader : MonoBehaviour
         int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         var magnifier = GameObject.Find("Controller (right)").GetComponentInChildren<MagnifierTool>(true);
-        print(magnifier.gameObject.name);
         //  Read each .mds file
         // The file format should be
         //  CELLNAME_1 X_COORD  Y_COORD Z_COORD

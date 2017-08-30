@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using VRTK;
 
 /// <summary>
 /// This class represent the magnifying tool. The tool is a sphere that moves all graphpoints it collides with away from its center.
@@ -41,7 +39,7 @@ class MagnifierTool : MonoBehaviour
 
     private void OnEnable()
     {
-        //print("hit " + Physics.OverlapSphere(transform.position, 0.1337f).Length);
+        // Check which graphpoints are now in the graph, since it might have moved.
         foreach (Collider c in Physics.OverlapSphere(transform.position, 0.1337f))
         {
             if (c.gameObject.CompareTag("Graph"))
@@ -51,6 +49,7 @@ class MagnifierTool : MonoBehaviour
 
     private void OnDisable()
     {
+        // this script is disabled while the user is grabbing and holding the graph.
         foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
         {
             pair.Key.position = pair.Value;
@@ -63,7 +62,6 @@ class MagnifierTool : MonoBehaviour
         if (!enabled) return;
         if (other.gameObject.CompareTag("Graph"))
         {
-            //other.GetComponentInParent<Graph>().GetComponent<VRTK_InteractableObject>().isGrabbable = false;
             pointsToMagnify[other.transform] = other.transform.position;
         }
     }
@@ -73,9 +71,6 @@ class MagnifierTool : MonoBehaviour
         if (!enabled) return;
         if (other.gameObject.CompareTag("Graph"))
         {
-            //if (pointsToMagnify.Count == 0)
-            //other.GetComponentInParent<Graph>().GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            //if (enabled)
             if (pointsToMagnify.ContainsKey(other.transform))
                 other.transform.position = pointsToMagnify[other.transform];
             pointsToMagnify.Remove(other.transform);

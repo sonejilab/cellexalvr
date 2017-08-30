@@ -15,7 +15,6 @@ public class MoveFoldersDownButton : MonoBehaviour
     private void Start()
     {
         dY = new float[moveTime];
-        //var tau = 2 * Mathf.PI;
         var total = 0f;
         for (int i = 0; i < moveTime; ++i)
         {

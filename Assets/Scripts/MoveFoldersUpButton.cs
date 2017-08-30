@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the button that moves the folders when a controller is moved inside of it.
+/// </summary>
 public class MoveFoldersUpButton : MonoBehaviour
 {
     public Transform folderList;
@@ -9,9 +12,6 @@ public class MoveFoldersUpButton : MonoBehaviour
     private bool controllerInside = false;
     private bool coroutineRunning = false;
 
-    /// <summary>
-    /// This class represents the button that moves the folders when a controller is moved inside of it.
-    /// </summary>
     private void Start()
     {
         dY = new float[moveTime];

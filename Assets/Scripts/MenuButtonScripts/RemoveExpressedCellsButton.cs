@@ -1,4 +1,8 @@
-﻿public class RemoveExpressedCellsButton : StationaryButton
+﻿/// <summary>
+/// This class represents the button that toggles all graph 
+/// </summary>
+
+public class RemoveExpressedCellsButton : StationaryButton
 {
     public CellManager cellManager;
 

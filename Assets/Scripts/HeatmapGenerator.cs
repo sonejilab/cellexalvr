@@ -25,7 +25,6 @@ public class HeatmapGenerator : MonoBehaviour
     private Vector3 heatmapPosition;
     private ArrayList heatmapList;
 
-    // Use this for initialization
     void Start()
     {
         t = null;

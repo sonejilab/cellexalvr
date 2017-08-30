@@ -8,10 +8,7 @@ public class PreviousSearchesLock : MonoBehaviour
 {
 
     public PreviousSearchesListNode searchListNode;
-    public Texture unlockedNormalMaterial;
-    public Texture lockedNormalMaterial;
-    public Texture unlockedHighlightedMaterial;
-    public Texture lockedHighlightedMaterial;
+    public bool Locked { get; set; }
     private new Renderer renderer;
 
     void Start()
@@ -21,37 +18,13 @@ public class PreviousSearchesLock : MonoBehaviour
 
     public void ToggleSearchNodeLock()
     {
-        searchListNode.Locked = !searchListNode.Locked;
-        // update the texture
-        if (searchListNode.Locked)
-            renderer.material.mainTexture = lockedHighlightedMaterial;
-        else
-            renderer.material.mainTexture = unlockedHighlightedMaterial;
+        bool newState = !searchListNode.Locked;
+        searchListNode.Locked = newState;
+        Locked = newState;
     }
 
-    public void SetMaterial(Texture texture)
+    public void SetTexture(Texture newTexture)
     {
-        renderer.material.mainTexture = texture;
-    }
-
-    public void SetHighlighted(bool highlighted)
-    {
-        if (renderer != null)
-        {
-            if (highlighted)
-            {
-                if (searchListNode.Locked)
-                    renderer.material.mainTexture = lockedHighlightedMaterial;
-                else
-                    renderer.material.mainTexture = unlockedHighlightedMaterial;
-            }
-            else
-            {
-                if (searchListNode.Locked)
-                    renderer.material.mainTexture = lockedNormalMaterial;
-                else
-                    renderer.material.mainTexture = unlockedNormalMaterial;
-            }
-        }
+        renderer.material.mainTexture = newTexture;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -32,6 +31,10 @@ class HelperTool : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reads the descriptions.txt which should be in the Assets folder.
+    /// </summary>
+    /// <param name="filepath"> The path to the file. </param>
     private void ReadDescriptionFile(string filepath)
     {
         // The file format should be
@@ -47,23 +50,28 @@ class HelperTool : MonoBehaviour
         }
         foreach (string line in lines)
         {
+            // ignore empty lines
             if (line.Length == 0)
                 continue;
+
             // comments in the file start with #
-            if (line[0] != '#')
+            if (line[0] == '#')
+                continue;
+
+            // tag names in the file start with "TAG_"
+            if (line.Substring(0, 4).Equals("TAG_", StringComparison.Ordinal))
             {
-                if (line.Substring(0, 4).Equals("TAG_", StringComparison.Ordinal))
-                {
-                    var colonIndex = line.IndexOf(":");
-                    string tagName = line.Substring(4, colonIndex - 4);
-                    descriptions[tagName] = line.Substring(colonIndex + 1);
-                }
-                else
-                {
-                    string[] splitString = line.Split(new char[] { ':' }, 2);
-                    descriptions[splitString[0]] = splitString[1];
-                }
+                var colonIndex = line.IndexOf(":");
+                string tagName = line.Substring(4, colonIndex - 4);
+                descriptions[tagName] = line.Substring(colonIndex + 1);
             }
+            else
+            {
+                // everything else is assumed to be names of gameobjects
+                string[] splitString = line.Split(new char[] { ':' }, 2);
+                descriptions[splitString[0]] = splitString[1];
+            }
+
         }
     }
 

@@ -54,7 +54,6 @@ public class MinimizedObjectHandler : MonoBehaviour
             }
         }
         afterLoop:
-
         jail.GetComponentInChildren<TextMesh>().text = description;
     }
 

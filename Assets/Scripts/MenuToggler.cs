@@ -20,7 +20,6 @@ public class MenuToggler : MonoBehaviour
         MenuActive = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         device = SteamVR_Controller.Input((int)leftController.index);

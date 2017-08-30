@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using VRTK;
+﻿using VRTK;
 
-
+/// <summary>
+/// This class handles what should happen when a graph is interacted with.
+/// </summary>
 class GraphInteract : VRTK_InteractableObject
 {
     public MagnifierTool magnifier;
@@ -13,6 +10,7 @@ class GraphInteract : VRTK_InteractableObject
 
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
+        // turn off the magnifying tool script so it won't distort the graphs.
         magnifierDisabled = magnifier.gameObject.activeSelf;
         magnifier.enabled = false;
         base.OnInteractableObjectGrabbed(e);
@@ -20,7 +18,6 @@ class GraphInteract : VRTK_InteractableObject
 
     public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
     {
-
         magnifier.enabled = true;
         base.OnInteractableObjectUngrabbed(e);
     }

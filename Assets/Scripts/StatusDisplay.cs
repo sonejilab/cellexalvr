@@ -20,10 +20,13 @@ public class StatusDisplay : MonoBehaviour
     private bool active = false;
     private int statusId = 0;
 
+    /// <summary>
+    /// Toggles the status display by enabling or disabling all its renderers.
+    /// </summary>
     public void ToggleStatusDisplay()
     {
         active = !active;
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
         {
             r.enabled = active;
         }

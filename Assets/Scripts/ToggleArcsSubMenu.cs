@@ -53,7 +53,7 @@ public class ToggleArcsSubMenu : MonoBehaviour
     /// <summary>
     /// Creates new buttons for toggling arcs.
     /// </summary>
-    /// <param name="networks"> An array of strings that contain the names of the networks. </param>
+    /// <param name="networks"> An array containing the networks. </param>
     public void CreateToggleArcsButtons(NetworkCenter[] networks)
     {
         if (colors == null)
