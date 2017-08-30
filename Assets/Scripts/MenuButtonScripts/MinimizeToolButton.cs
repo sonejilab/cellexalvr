@@ -8,9 +8,9 @@ class MinimizeToolButton : StationaryButton
 {
     public ControllerModelSwitcher controllerModelSwitcher;
     public MinimizeTool deleteTool;
-	public Sprite original;
-	public Sprite gray;
-	private bool changeSprite;
+    public Sprite original;
+    public Sprite gray;
+    private bool changeSprite;
 
     protected override string Description
     {
@@ -20,33 +20,38 @@ class MinimizeToolButton : StationaryButton
     private void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-		bool deleteToolActive = deleteTool.gameObject.activeSelf;
+        bool deleteToolActived = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Minimizer;
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            deleteTool.gameObject.SetActive(!deleteToolActive);
-            if (deleteToolActive)
+            //deleteTool.gameObject.SetActive(!deleteToolActive);
+            if (deleteToolActived)
             {
-				controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
-				changeSprite = true;
-				//controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
+                controllerModelSwitcher.TurnOffActiveTool(true);
+                changeSprite = true;
+                //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+                //controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
             }
             else
             {
+
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Minimizer;
-                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Minimizer);
-				changeSprite = true;
+                controllerModelSwitcher.ActivateDesiredTool();
+                changeSprite = true;
             }
         }
-		if (changeSprite) {
-			if (deleteToolActive) {
-				standardTexture = original;
-			}
-			if (!deleteToolActive) {
-				standardTexture = gray;
-			}
-			spriteRenderer.sprite = standardTexture;
-			changeSprite = false;
-		}
+        if (changeSprite)
+        {
+            if (deleteToolActived)
+            {
+                standardTexture = original;
+            }
+            if (!deleteToolActived)
+            {
+                standardTexture = gray;
+            }
+            spriteRenderer.sprite = standardTexture;
+            changeSprite = false;
+        }
 
 
     }

@@ -251,7 +251,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public void SetSelectionToolEnabled(bool enabled, bool affectMenu)
     {
-        controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
+        //controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
         controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
         if (affectMenu)
         {

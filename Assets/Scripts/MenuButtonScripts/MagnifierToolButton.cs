@@ -6,7 +6,7 @@ using UnityEngine;
 class MagnifierToolButton : StationaryButton
 {
     public ControllerModelSwitcher controllerModelSwitcher;
-    public MagnifierTool magnifier;
+    public GameObject magnifier;
     public Sprite gray;
     public Sprite original;
 
@@ -20,18 +20,17 @@ class MagnifierToolButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            bool magnifierActive = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Magnifier;
-            if (magnifierActive)
+            bool magnifierToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Magnifier;
+            if (magnifierToolActivated)
             {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
-                standardTexture = original;
+                controllerModelSwitcher.TurnOffActiveTool(true);
+                //controllerModelSwitcher.SwitchToDesiredModel();
+                //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
             }
             else
             {
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Magnifier;
-                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Magnifier);
                 controllerModelSwitcher.ActivateDesiredTool();
-                standardTexture = gray;
             }
         }
     }

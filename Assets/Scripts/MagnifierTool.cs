@@ -2,6 +2,9 @@
 using UnityEngine;
 using VRTK;
 
+/// <summary>
+/// This class represent the magnifying tool. The tool is a sphere that moves all graphpoints it collides with away from its center.
+/// </summary>
 class MagnifierTool : MonoBehaviour
 {
 
@@ -18,6 +21,7 @@ class MagnifierTool : MonoBehaviour
             var dist = Vector3.Distance(transform.position, originPos);
             // if the graphpoint is sufficiently close to the center, we only offset it linearly based on it's distance from the center
             // if it is further away, we should offset it less and less
+            // l is the distance we want to move the graphpoint
             float l;
             if (dist < 0.02f)
             {
@@ -26,7 +30,7 @@ class MagnifierTool : MonoBehaviour
             else
             {
                 l = dist * -1.2f + 0.12f;
-                // if the graphoint is far away from the center we might get negative values, which we don't want
+                // if the graphpoint is far away from the center we might get negative values, which we don't want
                 if (l < 0)
                     l = 0;
             }
@@ -34,8 +38,26 @@ class MagnifierTool : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
+        {
+            pointsToMagnify[pair.Key] = pair.Key.position;
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
+        {
+            pair.Key.position = pair.Value;
+        }
+        //pointsToMagnify.Clear();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        //if (!enabled) return;
         if (other.gameObject.CompareTag("Graph"))
         {
             //other.GetComponentInParent<Graph>().GetComponent<VRTK_InteractableObject>().isGrabbable = false;
@@ -45,11 +67,13 @@ class MagnifierTool : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        //if (!enabled) return;
         if (other.gameObject.CompareTag("Graph"))
         {
             //if (pointsToMagnify.Count == 0)
             //other.GetComponentInParent<Graph>().GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            other.transform.position = pointsToMagnify[other.transform];
+            if (enabled)
+                other.transform.position = pointsToMagnify[other.transform];
             pointsToMagnify.Remove(other.transform);
         }
     }

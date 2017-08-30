@@ -9,10 +9,7 @@ public class HelpToolButton : StationaryButton
     public ControllerModelSwitcher controllerModelSwitcher;
     protected override string Description
     {
-        get
-        {
-            return "Toggles the help tool";
-        }
+        get { return "Toggles the help tool"; }
     }
 
     void Update()
@@ -20,10 +17,20 @@ public class HelpToolButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            helpTool.SetActive(!helpTool.activeSelf);
-            ControllerModelSwitcher.Model newModel = helpTool.activeSelf ? ControllerModelSwitcher.Model.HelpTool : ControllerModelSwitcher.Model.Normal;
-            controllerModelSwitcher.DesiredModel = newModel;
-            controllerModelSwitcher.SwitchToDesiredModel();
+            bool helpToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool;
+            //ControllerModelSwitcher.Model newModel = helpTool.activeSelf ? ControllerModelSwitcher.Model.HelpTool : ControllerModelSwitcher.Model.Normal;
+            if (helpToolActivated)
+            {
+                controllerModelSwitcher.TurnOffActiveTool(true);
+                //controllerModelSwitcher.SwitchToDesiredModel();
+                //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+            }
+            else
+            {
+                helpTool.SetActive(true);
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
+                controllerModelSwitcher.ActivateDesiredTool();
+            }
         }
     }
 }

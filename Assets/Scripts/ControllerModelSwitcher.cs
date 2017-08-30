@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// This class is responsible for changing the controller model.
+/// This class is responsible for changing the controller model and the activated tool.
 /// </summary>
 public class ControllerModelSwitcher : MonoBehaviour
 {
@@ -45,6 +45,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
     }
 
+    // Used when starting the program to know when steamvr has loaded the model and applied a meshfilter and meshrenderer for us to use.
     void OnControllerLoaded(SteamVR_RenderModel renderModel, bool success)
     {
         if (!success) return;
@@ -52,11 +53,16 @@ public class ControllerModelSwitcher : MonoBehaviour
         controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
     }
 
+    // Used when starting the program.
+    // It takes some time for steamvr and vrtk to set everything up, and for some time
+    // these variables will be null because the components are not yet added to the gameobjects.
     internal bool Ready()
     {
         return controllerBodyMeshFilter != null && controllerBodyRenderer != null;
     }
 
+
+    
     void OnTriggerEnter(Collider other)
     {
         //print("ontriggerenter " + other.gameObject.name);
@@ -120,8 +126,16 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activates the current tool and changes the controller's model to that tool and deactivates previously active tool.
+    /// </summary>
     public void ActivateDesiredTool()
     {
+        selectionToolHandler.SetSelectionToolEnabled(false, true);
+        fire.SetActive(false);
+        magnifier.SetActive(false);
+        minimizer.SetActive(false);
+        helpTool.SetActive(false);
         switch (DesiredModel)
         {
             case Model.SelectionTool:
@@ -140,23 +154,43 @@ public class ControllerModelSwitcher : MonoBehaviour
                 helpTool.SetActive(true);
                 break;
         }
+        SwitchToDesiredModel();
     }
 
-    public void TurnOffActiveTool()
+    /// <summary>
+    /// Turns off the active tool and sets our desired model to the normal model.
+    /// </summary>
+    /// <param name="inMenu"> True if the controller is in the menu and we should temporarily change into the menu model, false otherwise. </param>
+    public void TurnOffActiveTool(bool inMenu)
     {
         selectionToolHandler.SetSelectionToolEnabled(false, true);
         fire.SetActive(false);
+        magnifier.SetActive(false);
         minimizer.SetActive(false);
         helpTool.SetActive(false);
         DesiredModel = Model.Normal;
-        SwitchToModel(Model.Normal);
+        if (inMenu)
+        {
+            SwitchToModel(Model.Menu);
+        }
+        else
+        {
+            SwitchToModel(Model.Normal);
+        }
     }
 
+    /// <summary>
+    /// Switches to the desired model. Does not activate or deactivate any tool.
+    /// </summary>
     public void SwitchToDesiredModel()
     {
         SwitchToModel(DesiredModel);
     }
 
+    /// <summary>
+    /// Used by the selectiontoolhandler. Changes the current model's color.
+    /// </summary>
+    /// <param name="color"> The new color. </param>
     public void SwitchControllerModelColor(Color color)
     {
         desiredColor = color;

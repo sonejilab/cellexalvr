@@ -8,7 +8,7 @@ public class BurnHeatmapToolButton : StationaryButton
 {
 
     public GameObject fire;
-    public ControllerModelSwitcher menuController;
+    public ControllerModelSwitcher controllerModelSwitcher;
     private bool fireActivated = false;
 
     protected override string Description
@@ -23,14 +23,15 @@ public class BurnHeatmapToolButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            if (menuController.DesiredModel == ControllerModelSwitcher.Model.HeatmapDeleteTool)
+            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HeatmapDeleteTool)
             {
-                menuController.DesiredModel = ControllerModelSwitcher.Model.Normal;
+                controllerModelSwitcher.TurnOffActiveTool(true);
             }
             else
             {
-                menuController.DesiredModel = ControllerModelSwitcher.Model.HeatmapDeleteTool;
-                menuController.SwitchToModel(ControllerModelSwitcher.Model.HeatmapDeleteTool);
+                //controllerModelSwitcher.TurnOffActiveTool();
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HeatmapDeleteTool;
+                controllerModelSwitcher.ActivateDesiredTool();
             }
         }
     }

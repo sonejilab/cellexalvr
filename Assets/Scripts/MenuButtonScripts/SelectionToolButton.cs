@@ -10,8 +10,9 @@ public class SelectionToolButton : StationaryButton
     public SelectionToolHandler selectionToolHandler;
     public MenuRotator rotator;
     public SelectionToolMenu selectionToolMenu;
-	public Sprite gray;
-	public Sprite original;
+    public ControllerModelSwitcher controllerModelSwitcher;
+    public Sprite gray;
+    public Sprite original;
 
     private bool menuActive = false;
     private bool buttonsInitialized = false;
@@ -24,20 +25,23 @@ public class SelectionToolButton : StationaryButton
         }
     }
 
-
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            menuActive = !selectionToolHandler.IsSelectionToolEnabled();
-            selectionToolMenu.gameObject.SetActive(menuActive);
-			if (selectionToolMenu.gameObject.activeSelf) {
-				standardTexture = gray;
-			} else {
-				standardTexture = original;
-			}
-            selectionToolHandler.SetSelectionToolEnabled(menuActive, true);
+
+            if (controllerModelSwitcher.DesiredModel != ControllerModelSwitcher.Model.SelectionTool)
+            {
+                standardTexture = gray;
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.SelectionTool;
+                controllerModelSwitcher.ActivateDesiredTool();
+            }
+            else
+            {
+                controllerModelSwitcher.TurnOffActiveTool(true);
+                standardTexture = original;
+            }
             if (menuActive && rotator.SideFacingPlayer == MenuRotator.Rotation.Front)
             {
                 rotator.RotateLeft();
