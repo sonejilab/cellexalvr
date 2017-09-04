@@ -337,6 +337,7 @@ public class InputReader : MonoBehaviour
             network.transform.localPosition = position;
             networkHandler.AddNetwork(network);
             network.Handler = networkHandler;
+            graphManager.AddNetwork(networkHandler);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {

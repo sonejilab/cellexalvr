@@ -14,7 +14,7 @@ class MinimizeToolButton : StationaryButton
 
     protected override string Description
     {
-        get { return "Toggle delete tool"; }
+        get { return "Toggle minimizer tool"; }
     }
 
     private void Update()

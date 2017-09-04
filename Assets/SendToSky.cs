@@ -30,7 +30,6 @@ public class SendToSky : MonoBehaviour {
     // Sends object to sky and places it dependant on how many objects are in the sky already and dependant of what object it is (0 for network and 1 for heatmap)
     public void DoSendToSky(int objInSky, int objType)
     {
-        Debug.Log("# OBJ IN SKY: " + objInSky + " TYPE : " + objType);
         int caseSwitch = objInSky;
         oldPosition = transform.position;
         oldScale = transform.localScale;

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -23,7 +25,7 @@ public class HeatmapGenerator : MonoBehaviour
     private GameObject heatBoard;
     private int heatmapID = 1;
     private Vector3 heatmapPosition;
-    private ArrayList heatmapList;
+    private List<Heatmap> heatmapList = new List<Heatmap>();
 
     void Start()
     {
@@ -31,8 +33,16 @@ public class HeatmapGenerator : MonoBehaviour
         hourglass = GameObject.Find("WaitingForHeatboardHourglass");
         hourglass.SetActive(false);
         ght = new GenerateHeatmapThread(selectionToolHandler);
-        heatmapList = new ArrayList();
         heatmapPosition = heatmapPrefab.transform.position;
+    }
+
+    internal void DeleteHeatmaps()
+    {
+        foreach (Heatmap h in heatmapList)
+        {
+            Destroy(h.gameObject);
+        }
+        heatmapList.Clear();
     }
 
     public void CreateHeatmap()
@@ -97,7 +107,7 @@ public class HeatmapGenerator : MonoBehaviour
             heatBoard.transform.localPosition = heatmapPosition;
             Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
             heatmap.SetVars(graphManager, selectionToolHandler, selection, fire);
-            heatmapList.Add(heatBoard);
+            heatmapList.Add(heatmap);
 
             hourglass.SetActive(false);
 

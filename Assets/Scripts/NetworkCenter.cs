@@ -30,8 +30,8 @@ public class NetworkCenter : MonoBehaviour
 
     private bool isReplacement = false;
 
-
-    private NetworkCenter replacing;
+    [HideInInspector]
+    public NetworkCenter replacing;
     private List<Arc> arcs = new List<Arc>();
     private List<CombinedArc> combinedArcs = new List<CombinedArc>();
     private SteamVR_TrackedObject rightController;

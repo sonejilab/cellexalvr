@@ -32,15 +32,10 @@ public class PreviousSearchesList : MonoBehaviour
     private CorrelatedGenesListNode lastCorrelatedGenesListNode;
     private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
-    void Start()
+    void Update()
     {
         raycastingSource = rightController.transform;
         device = SteamVR_Controller.Input((int)rightController.controllerIndex);
-
-    }
-
-    void Update()
-    {
         // this method is probably responsible for too much. oh well.
         ray = new Ray(raycastingSource.position, raycastingSource.forward);
         if (Physics.Raycast(ray, out hit))

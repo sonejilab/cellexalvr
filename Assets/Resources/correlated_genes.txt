@@ -1,2 +1,2 @@
-klf1	mfsd2b	aqp1	car1	tspo2	atp1b2	gm15915	ces2g	epor	kel
-coro1a	lcp1	limd2	pkm	lsp1	adgrl4	tmsb4x	tmem176b	emb	cd34
+ncf1	irf8	hip1	cd96	tyrobp	emb	cd53	bc035044	slpi	fkbp1a
+sdsl	gata1	gm15915	mfsd2b	vamp5	car2	gfi1b	nfia	ces2g	aqp1

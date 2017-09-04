@@ -25,6 +25,7 @@ public class PreviousSearchesLock : MonoBehaviour
 
     public void SetTexture(Texture newTexture)
     {
-        renderer.material.mainTexture = newTexture;
+        if (renderer != null)
+            renderer.material.mainTexture = newTexture;
     }
 }

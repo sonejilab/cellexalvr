@@ -15,12 +15,7 @@ public class PreviousSearchesListNode : MonoBehaviour
         get
         { return locked; }
         set
-        {
-            if (geneName != "")
-            {
-                locked = value;
-            }
-        }
+        { locked = value; }
     }
     private string geneName;
     public string GeneName
