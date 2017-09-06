@@ -35,7 +35,8 @@ public class CorrelatedGenesButton : MonoBehaviour
     IEnumerator CalculateCorrelatedGenesCoroutine()
     {
         var geneName = listNode.GeneName;
-        Thread t = new Thread(() => GetCorrelatedGenes(geneName));
+        string args = selectionToolHandler.DataDir + " " + geneName + " " + outputFile;
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\get_correlated_genes.R", args));
         var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + geneName);
         t.Start();
         while (t.IsAlive)
@@ -55,22 +56,4 @@ public class CorrelatedGenesButton : MonoBehaviour
 
         statusDisplay.RemoveStatus(statusId);
     }
-
-    public void GetCorrelatedGenes(string geneName)
-    {
-        string home = Directory.GetCurrentDirectory();
-        using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
-        {
-            string rawInput = r.ReadToEnd();
-            string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            string rPath = input[0];
-            //print("r start");
-            if (!File.Exists(outputFile))
-            {
-                File.Create(outputFile);
-            }
-            Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\get_correlated_genes.R", rPath, selectionToolHandler.DataDir + " " + geneName + " " + outputFile));
-        }
-    }
 }
-

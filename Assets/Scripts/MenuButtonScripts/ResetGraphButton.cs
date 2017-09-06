@@ -21,7 +21,7 @@ public class ResetGraphButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            graphManager.ResetGraphs();
+            graphManager.ResetGraphsColor();
         }
     }
 

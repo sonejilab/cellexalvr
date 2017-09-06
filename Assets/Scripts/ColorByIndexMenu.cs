@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the sub menu that pops up when the ToggleArcsButton is pressed.
+/// This class represents the sub menu that pops up when the ColorByIndexButton is pressed.
 /// </summary>
 public class ColorByIndexMenu : MonoBehaviour
 {
@@ -50,7 +50,6 @@ public class ColorByIndexMenu : MonoBehaviour
             {
                 buttonPos += buttonPosInc;
             }
-
         }
     }
 }

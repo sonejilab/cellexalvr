@@ -21,35 +21,50 @@ public class RScriptRunner
     /// <param name="args"> Multiple R args can be seperated by spaces. </param>
     /// <returns>Returns a string with the R responses.</returns>
 
-    public static string RunFromCmd(string rCodeFilePath, string rScriptExecutablePath, string args)
+    public static string RunFromCmd(string rCodeFilePath, string args)
     {
         string result = string.Empty;
-
         try
         {
-            var info = new ProcessStartInfo();
-            info.FileName = rScriptExecutablePath;
-            info.WorkingDirectory = Path.GetDirectoryName(rScriptExecutablePath);
-            info.Arguments = rCodeFilePath + " " + args;
-            info.RedirectStandardInput = false;
-            info.RedirectStandardOutput = true;
-            info.RedirectStandardError = true;
-            info.UseShellExecute = false;
-            info.CreateNoWindow = true;
-
-            using (var proc = new Process())
+            string home = Directory.GetCurrentDirectory();
+            using (StreamReader r = new StreamReader(home + "Assets/Config/config.txt"))
             {
-                proc.StartInfo = info;
-                proc.Start();
-                result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
+                string rawInput = r.ReadToEnd();
+                string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                string rPath = input[0];
+                //r.Close();
+
+                var info = new ProcessStartInfo();
+                info.FileName = rPath;
+                info.WorkingDirectory = Path.GetDirectoryName(rPath);
+                info.Arguments = home + rCodeFilePath + " " + args;
+                info.RedirectStandardInput = false;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
+
+                using (var proc = new Process())
+                {
+                    proc.StartInfo = info;
+                    proc.Start();
+                    result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
+                }
+                using (StreamWriter writetofile =
+                      new StreamWriter(Directory.GetCurrentDirectory() + "/Assets/Config/r_log.txt"))
+                {
+                    writetofile.WriteLine(result);
+                    writetofile.Flush();
+                    writetofile.Close();
+                }
+                return result;
             }
-            return result;
 
         }
         catch (Exception ex)
         {
-            using (System.IO.StreamWriter writetofile =
-                       new System.IO.StreamWriter(Directory.GetCurrentDirectory() + "/Assets/Config/error.txt"))
+            using (StreamWriter writetofile =
+                       new StreamWriter(Directory.GetCurrentDirectory() + "/Assets/Config/error.txt"))
             {
                 writetofile.WriteLine("R Script failed: " + ex);
                 writetofile.Flush();
@@ -58,5 +73,6 @@ public class RScriptRunner
             throw new Exception("R Script failed: " + result, ex);
         }
     }
+
 
 }

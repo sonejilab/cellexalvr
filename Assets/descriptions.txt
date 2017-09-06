@@ -4,8 +4,13 @@
 TAG_Network:Networks consists of multiple cells and shows what genes are correlated within that group. The genes are represented with spheres and the correlations are represented with lines. The lines' colors are random and have no meaning. Arcs between networks can be toggled with from the arc menu. Arcs are connections between networks where a pair of genes is present in both networks.
 TAG_HeatBoard:Heatmaps shows genes that are expressed or not expressed in cells. The selected cells are shown on the x-axis of the heatmap ordered from left to right in the order they were selected. The genes are shown on the y-axis and their names can be found on the right most side of the heatmap. A button on the left side of the heatmap recolors the graphs to the colors used when creating the heatmap. This will color all cells in all graphs so you can see where the cells are in the other graphs as well.
 TAG_Graph:Graphs consist of multiple cells that are ordered by an algorithm. Cells that are close to each other probably have something to do with each other, and cells far away from each other probably have less to do with each other.
+TAG_Folder:This box represents a folder on this computer. Move the controller close to open the box. The text on the lid is the name of the folder.
+TAG_Loader:This is the loading machine. Put some spheres from a box into the funnel to load a folder with data. Once the data is loaded, the loading machine will dissapear. To go back to the loading machine, press "Loading menu" on the main menu (located on one of your controllers).
 
 # Names of gameobjects:
+Cells:These spheres represent the files inside a folder. To pick them up, move the controller inside the cells and press the grip buttons. Put the spheres inside the loading machine to load this data. The loading machine is on the ground between all the boxes.
+
+# Names of buttons:
 Selectiontool Button:Toggles the selection tool. The selection tool selects cells in a graph. Use the thumb dial on the controller to change the selection tool's color. Once you are happy with your selection, use the menu to confirm it.
 Toggle Keyboard Button:Toggles the keyboard. Use the keyboard by pointing at it with the controller and press the trigger to type. Typing a gene name and then pressing "Set color" will color all current graphs after their expression of that gene, if it is present in the supplied database. Cells are colored blue to red via yellow with blue representing the lowest expression and red representing the highest.
 Burn Heatmap Tool Button:Toggles the tool for removing heatmaps. Put the fire inside an undesired heatmap and press the trigger to remove it.
@@ -26,4 +31,9 @@ Toggle Non Expressed Cells: Use this button after coloring the graphs after a ge
 StartMenuButton:Brings you back to the start menu. All unsaved progress will be lost.
 Attribute Menu Button:Shows the attribute menu. Pressing a button in the menu will toggle the color of cells belonging to that attribute. Use the button on the bottom of this menu to close it.
 Index Menu Button:Show the menu to color by index. Pressing any button in this menu will color all cells based on their value of the index. I do not really know what any of that means.
-Lasers:Toggles laser pointers.
+Lasers:Toggles laser pointers. The lasers can be used to press various buttons around you. The lasers will turn green when they are pointing at something that can be interacted with. The lasers can grab graphs, heatmaps and networks by pointing them at something and pressing the grip buttons.
+Save Heatmap Button:Saves this heatmap to the disk. The image will be located where CellExAl is installed in the Saved_Images folder. The current date and time will be appended to the file name.
+Undo One Step Button:This button undoes the last selected cell. Press many times to undo more cells.
+Redo One Step Button:This button redoes the last undone cell. Press many times to redo more cells.
+Undo Ten Steps Button:This button undoes the last 10 selected cells. Press many times to undo more cells.
+Redo Ten Steps Button:This button redoes the last 10 selected cells. Press many times to redo more cells.

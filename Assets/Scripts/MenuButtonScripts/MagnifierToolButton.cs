@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 /// <summary>
 /// This class represents the button that toggles the magnifier tool.
 /// </summary>

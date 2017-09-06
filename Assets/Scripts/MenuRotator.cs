@@ -71,6 +71,11 @@ public class MenuRotator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rotates the menu.
+    /// </summary>
+    /// <param name="zAngles"> The amount of degrees it should be rotated. Positive values rotate the menu clockwise, negative values rotate it counter-clockwise. </param>
+    /// <param name="inTime"> THe number of seconds it should take the menu to rotate the specified degrees. </param>
     IEnumerator RotateMe(float zAngles, float inTime)
     {
         isRotating = true;
@@ -79,7 +84,6 @@ public class MenuRotator : MonoBehaviour
         float zAnglesAbs = Mathf.Abs(zAngles);
         // how much we should rotate each frame
         float rotationPerFrame = zAngles / (zAnglesAbs * inTime);
-        //float rotationPerFrame = yAngles >= 0 ? 1 / inTime : -1 / inTime;
         while (rotatedTotal < zAnglesAbs && rotatedTotal > -zAnglesAbs)
         {
             rotatedTotal += rotationPerFrame;
@@ -88,7 +92,6 @@ public class MenuRotator : MonoBehaviour
             {
                 // only rotate the menu as much as there is left to rotate
                 transform.Rotate(0, 0, rotationPerFrame - (rotatedTotal - zAngles));
-
             }
             else
             {
@@ -96,7 +99,6 @@ public class MenuRotator : MonoBehaviour
             }
             yield return null;
         }
-        // fromAngle = transform.rotation.eulerAngles;
         isRotating = false;
     }
 

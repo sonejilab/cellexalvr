@@ -172,6 +172,17 @@ public class Graph : MonoBehaviour
         return convexHull.gameObject;
     }
 
+    public void ResetGraphColors()
+    {
+        //bool graphPointActive;
+        foreach (GraphPoint point in points)
+        {
+            //point.gameObject.SetActive(true);
+            point.ResetColor();
+        }
+    }
+    
+
     /// <summary>
     /// Resets this graphs position, scale and color.
     /// </summary>

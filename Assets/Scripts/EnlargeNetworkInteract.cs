@@ -1,9 +1,10 @@
 ﻿using VRTK;
 using UnityEngine;
-using VRTK.GrabAttachMechanics;
-using VRTK.SecondaryControllerGrabActions;
 using System.Collections.Generic;
 
+/// <summary>
+/// This class is responsible for elarging networks and returning them to normal size
+/// </summary>
 public class EnlargeNetworkInteract : MonoBehaviour
 {
 

@@ -133,7 +133,6 @@ public class StatusDisplay : MonoBehaviour
         if (statusPositions.Count == 0)
         {
             nextSpawnPos = startSpawnPos;
-
         }
         else
         {

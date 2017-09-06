@@ -1,2 +1,2 @@
-ncf1	irf8	hip1	cd96	tyrobp	emb	cd53	bc035044	slpi	fkbp1a
-sdsl	gata1	gm15915	mfsd2b	vamp5	car2	gfi1b	nfia	ces2g	aqp1
+ctsg	elane	atp8b4	ccl9	anxa3	rab44	clec12a	ms4a3	tyrobp	f630028o10rik
+car2	pdzk1ip1	mllt3	nfia	slc14a1	txnip	isg20	tgm2	tspan13	trib2

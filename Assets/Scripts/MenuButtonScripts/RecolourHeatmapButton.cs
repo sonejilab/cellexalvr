@@ -14,10 +14,10 @@ public class RecolourHeatmapButton : StationaryButton
         }
     }
 
-    protected override void Start()
+    protected override void Awake()
     {
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-        base.Start();
+        base.Awake();
     }
 
     void Update()

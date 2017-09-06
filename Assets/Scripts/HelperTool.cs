@@ -4,23 +4,23 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 
-
+/// <summary>
+/// This class represents the helper tool. Its job is to provide the user with descriptions of whatever it touches.
+/// </summary>
 class HelperTool : MonoBehaviour
 {
 
     public TextMeshPro textMesh;
-    private int numColliders = 0;
+    private string descriptionFilePath = Directory.GetCurrentDirectory() + "\\Assets\\descriptions.txt";
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
 
     private void Start()
     {
-        ReadDescriptionFile(Directory.GetCurrentDirectory() + "\\Assets\\descriptions.txt");
+        ReadDescriptionFile(descriptionFilePath);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        numColliders++;
-        print(other.gameObject.name);
         if (descriptions.ContainsKey(other.tag))
         {
             textMesh.text = descriptions[other.tag];
@@ -41,11 +41,13 @@ class HelperTool : MonoBehaviour
         // [KEY]:[VALUE]
         // [KEY]:[VALUE]
         // ...
+        // Where [KEY] is either TAG_ followed by the name of a tag or just the name of a gameobject as it is displayed in the editor.
+        // [VALUE] is the description that should be displayed when the tool touches the object
 
         string[] lines = File.ReadAllLines(filepath);
         if (lines.Length == 0)
         {
-            Debug.LogWarning("No description file found at " + Directory.GetCurrentDirectory());
+            Debug.LogWarning("No description file found at " + descriptionFilePath);
             return;
         }
         foreach (string line in lines)

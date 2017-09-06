@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -18,6 +19,7 @@ public class Heatmap : MonoBehaviour
     private bool controllerInside = false;
     private GameObject fire;
     private SteamVR_TrackedObject rightController;
+    private string imageFilepath;
 
     // Use this for initialization
     void Start()
@@ -55,10 +57,35 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     public void UpdateImage(string filepath)
     {
+        imageFilepath = filepath;
         byte[] fileData = File.ReadAllBytes(filepath);
         Texture2D tex = new Texture2D(2, 2);
         tex.LoadImage(fileData);
         GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
+    }
+
+    /// <summary>
+    /// Saves the image used to create this heatmap to another directory.
+    /// The saved image will have the a name based on when the image is saved.
+    /// </summary>
+    public void SaveImage()
+    {
+        string saveDir = Directory.GetCurrentDirectory() + @"\Saved_Images";
+        if (!Directory.Exists(saveDir))
+        {
+            Directory.CreateDirectory(saveDir);
+        }
+        // this is the only acceptable date time format, order-wise
+        var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        string saveFileName = saveDir + @"\heatmap_" + time + ".png";
+        //print(imageFilepath);
+        //print(saveDir + @"\heatmap_" + time + ".png");
+        // if the button is pressed twice the same second, the filenames will collapse.
+        while (File.Exists(saveFileName))
+        {
+            saveFileName += "_d";
+        }
+        File.Move(imageFilepath, saveFileName);
     }
 
     /// <summary>

@@ -62,7 +62,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     }
 
 
-    
+
     void OnTriggerEnter(Collider other)
     {
         //print("ontriggerenter " + other.gameObject.name);
@@ -131,7 +131,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// </summary>
     public void ActivateDesiredTool()
     {
-        selectionToolHandler.SetSelectionToolEnabled(false, true);
+        selectionToolHandler.SetSelectionToolEnabled(false);
         fire.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);
@@ -139,7 +139,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         switch (DesiredModel)
         {
             case Model.SelectionTool:
-                selectionToolHandler.SetSelectionToolEnabled(true, true);
+                selectionToolHandler.SetSelectionToolEnabled(true);
                 break;
             case Model.Magnifier:
                 magnifier.SetActive(true);
@@ -163,7 +163,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// <param name="inMenu"> True if the controller is in the menu and we should temporarily change into the menu model, false otherwise. </param>
     public void TurnOffActiveTool(bool inMenu)
     {
-        selectionToolHandler.SetSelectionToolEnabled(false, true);
+        selectionToolHandler.SetSelectionToolEnabled(false);
         fire.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);

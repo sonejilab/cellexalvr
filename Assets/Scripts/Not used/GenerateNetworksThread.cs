@@ -14,6 +14,8 @@ public class GenerateNetworksThread
     {
         selectionToolHandler = sth;
     }
+
+    [Obsolete]
     public void GenerateNetworks()
     {
         string home = Directory.GetCurrentDirectory();
@@ -22,7 +24,7 @@ public class GenerateNetworksThread
             string rawInput = r.ReadToEnd();
             string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             string rPath = input[0];
-            Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\make_networks.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
+            //Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\make_networks.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
         }
     }
 }

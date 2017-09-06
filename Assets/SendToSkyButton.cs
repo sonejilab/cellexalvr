@@ -46,7 +46,6 @@ public class SendToSkyButton : MonoBehaviour
             getBackFromSkyButton.SetActive(true);
             if (send.GetComponent<Transform>().name == "Enlarged Network")
             {
-                
                 send.DoSendToSky(networkGenerator.objectsInSky, 0);
             }
             else

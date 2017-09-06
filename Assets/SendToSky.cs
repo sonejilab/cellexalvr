@@ -4,6 +4,7 @@ using UnityEngine;
 using VRTK;
 
 public class SendToSky : MonoBehaviour {
+
     private VRTK_InteractableObject interact;
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;

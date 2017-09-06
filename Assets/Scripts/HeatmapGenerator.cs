@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using UnityEngine;
 
@@ -90,7 +91,9 @@ public class HeatmapGenerator : MonoBehaviour
 
             int statusId = status.AddStatus("R script generating heatmap");
             // Start generation of new heatmap in R
-            t = new Thread(new ThreadStart(ght.GenerateHeatmap));
+            string home = Directory.GetCurrentDirectory();
+            string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1);
+            t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\make_heatmap.R", args));
             t.Start();
             running = true;
             // Show hourglass
@@ -102,6 +105,12 @@ public class HeatmapGenerator : MonoBehaviour
             }
             status.RemoveStatus(statusId);
             running = false;
+            string heatmapFilePath = home + @"\Assets\Images";
+            // rename the file from heatmap.png to heatmap_X.png. Where X is some number.
+            string newHeatmapFilePath = heatmapFilePath + @"\heatmap_" + (selectionToolHandler.fileCreationCtr - 1) + ".png";
+            File.Delete(newHeatmapFilePath);
+            File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
+
             heatBoard = Instantiate(heatmapPrefab);
             heatBoard.transform.parent = transform;
             heatBoard.transform.localPosition = heatmapPosition;
@@ -111,7 +120,7 @@ public class HeatmapGenerator : MonoBehaviour
 
             hourglass.SetActive(false);
 
-            heatmap.UpdateImage("Assets/Images/heatmap.png");
+            heatmap.UpdateImage(newHeatmapFilePath);
             heatBoard.GetComponent<AudioSource>().Play();
 
             heatmapID++;

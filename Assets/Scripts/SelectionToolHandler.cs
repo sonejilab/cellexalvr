@@ -9,7 +9,6 @@ using VRTK;
 /// </summary>
 public class SelectionToolHandler : MonoBehaviour
 {
-
     public SelectionToolMenu selectionToolMenu;
     public GraphManager manager;
     public ControllerModelSwitcher controllerModelSwitcher;
@@ -17,6 +16,7 @@ public class SelectionToolHandler : MonoBehaviour
     public SteamVR_TrackedController left;
     public ushort hapticIntensity = 2000;
     public RadialMenu radialMenu;
+    public UndoButtonsHandler undoButtonsHandler;
     public Sprite[] buttonIcons;
     [HideInInspector]
     public bool selectionConfirmed = false;
@@ -31,19 +31,44 @@ public class SelectionToolHandler : MonoBehaviour
     private PlanePicker planePicker;
     private bool inSelectionState = false;
     private bool selectionMade = false;
-    private GameObject leftController;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
+    [HideInInspector]
     public int[] groups;
     private int currentColorIndex = 0;
     public string DataDir { get; set; }
     public GroupInfoDisplay groupInfoDisplay;
-     
+    private List<HistoryListInfo> selectionHistory;
+    // the number of steps we have taken back in the history.
+    private int historyIndexOffset;
+
+    /// <summary>
+    /// Helper struct for remembering history when selecting graphpoints.
+    /// </summary>
+    private struct HistoryListInfo
+    {
+        // the graphpoint this affects
+        public GraphPoint graphPoint;
+        // the color it was given
+        public Color toColor;
+        // the color it had before
+        public Color fromColor;
+        // true if this graphpoint was previously not in the list of selected graphpoints
+        public bool newNode;
+
+        public HistoryListInfo(GraphPoint graphPoint, Color toColor, Color fromColor, bool newNode)
+        {
+            this.graphPoint = graphPoint;
+            this.toColor = toColor;
+            this.fromColor = fromColor;
+            this.newNode = newNode;
+        }
+    }
 
     void Awake()
     {
+        // TODO: create more colors.
         colors = new Color[10];
-        groups = new int[10];
         colors[0] = new Color(1, 0, 0, .5f);     // red
         colors[1] = new Color(0, 0, 1, .5f);     // blue
         colors[2] = new Color(0, 1, 1, .5f);     // cyan
@@ -58,15 +83,17 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
-        
+
         selectedColor = colors[currentColorIndex];
-        SetSelectionToolEnabled(false, true);
+        SetSelectionToolEnabled(false);
+        groups = new int[10];
+        selectionHistory = new List<HistoryListInfo>();
         //UpdateButtonIcons();
-        leftController = GameObject.Find("LeftController");
     }
 
     /// <summary>
-    /// This method is called a child object that holds the collider.
+    /// Adds a graphpoint to the current selection, and changes its color.
+    /// This method is called by a child object that holds the collider.
     /// </summary>
     public void Trigger(Collider other)
     {
@@ -76,23 +103,99 @@ public class SelectionToolHandler : MonoBehaviour
         {
             return;
         }
-        Color nonTransparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
-        graphPoint.gameObject.GetComponent<Renderer>().material.color = nonTransparentColor;
-
-        if (!selectedCells.Contains(other))
+        Renderer renderer = graphPoint.gameObject.GetComponent<Renderer>();
+        Color newColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+        Color oldColor = renderer.material.color;
+        renderer.material.color = newColor;
+        bool newNode = !selectedCells.Contains(other);
+        if (historyIndexOffset != 0)
+        {
+            // if we have undone some selected graphpoints, then they should be removed from the history
+            selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
+            historyIndexOffset = 0;
+            // turn off the redo buttons
+            undoButtonsHandler.EndOfHistoryReached();
+        }
+        selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
+        if (newNode)
         {
             selectedCells.Add(other);
             SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(hapticIntensity);
             groups[currentColorIndex]++;
             groupInfoDisplay.UpdateStatus();
-
         }
         if (!selectionMade)
         {
             selectionMade = true;
             selectionToolMenu.SelectionStarted();
+            // turn on the undo buttons
+            undoButtonsHandler.BeginningOfHistoryLeft();
             //UpdateButtonIcons ();
         }
+    }
+
+    /// <summary>
+    /// Goes back one step in the history of selecting cells.
+    /// </summary>
+    public void GoBackOneStepInHistory()
+    {
+        if (historyIndexOffset == 0)
+        {
+            undoButtonsHandler.EndOfHistoryLeft();
+        }
+
+        int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
+        if (indexToMoveTo == 0)
+        {
+            // beginning of history reached
+            undoButtonsHandler.BeginningOfHistoryReached();
+        }
+        else if (indexToMoveTo < 0)
+        {
+            // no more history
+            return;
+        }
+
+        HistoryListInfo info = selectionHistory[indexToMoveTo];
+        info.graphPoint.GetComponent<Renderer>().material.color = info.fromColor;
+        if (info.newNode)
+        {
+            selectedCells.Remove(info.graphPoint.GetComponent<Collider>());
+        }
+        historyIndexOffset++;
+        selectionMade = false;
+    }
+
+    /// <summary>
+    /// Go forward one step in the history of selecting cells.
+    /// </summary>
+    public void GoForwardOneStepInHistory()
+    {
+        if (historyIndexOffset == selectionHistory.Count)
+        {
+            undoButtonsHandler.BeginningOfHistoryLeft();
+        }
+
+        int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
+        if (indexToMoveTo == selectionHistory.Count - 1)
+        {
+            // end of history reached
+            undoButtonsHandler.EndOfHistoryReached();
+        }
+        else if (indexToMoveTo >= selectionHistory.Count)
+        {
+            // no more history
+            return;
+        }
+
+        HistoryListInfo info = selectionHistory[indexToMoveTo];
+        info.graphPoint.GetComponent<Renderer>().material.color = info.toColor;
+        if (info.newNode)
+        {
+            selectedCells.Add(info.graphPoint.GetComponent<Collider>());
+        }
+        historyIndexOffset--;
+        selectionMade = false;
     }
 
     public void SingleSelect(Collider other)
@@ -151,6 +254,7 @@ public class SelectionToolHandler : MonoBehaviour
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
         }
         selectedCells.Clear();
+        selectionHistory.Clear();
         heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;
@@ -171,6 +275,9 @@ public class SelectionToolHandler : MonoBehaviour
         {
             other.GetComponentInChildren<Renderer>().material.color = Color.white;
         }
+        undoButtonsHandler.BeginningOfHistoryReached();
+        undoButtonsHandler.EndOfHistoryLeft();
+        historyIndexOffset = selectionHistory.Count;
         selectedCells.Clear();
         selectionMade = false;
         selectionToolMenu.UndoSelection();
@@ -205,9 +312,6 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.RegenerateButtons();
         selectedColor = colors[currentColorIndex];
         controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
-
-        //selectorMaterial.color = selectedColor;
-        // this.gameObject.GetComponent<Renderer>().material.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
     }
 
     public void HeatmapCreated()
@@ -239,6 +343,7 @@ public class SelectionToolHandler : MonoBehaviour
                 int r = (int)(c.r * 255);
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);
+                // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
                 file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
                 file.Write("\t");
                 file.Write(graphPoint.GraphName);
@@ -249,14 +354,18 @@ public class SelectionToolHandler : MonoBehaviour
         }
     }
 
-    public void SetSelectionToolEnabled(bool enabled, bool affectMenu)
+    /// <summary>
+    /// Activates or deactivates all colliders on the selectiontool.
+    /// </summary>
+    /// <param name="enabled"> True if the selection tool should be activated, false if it should be deactivated. </param>
+    public void SetSelectionToolEnabled(bool enabled)
     {
         //controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
         controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
-        if (affectMenu)
-        {
-            selectionToolMenu.SetEnabledState(enabled);
-        }
+        //if (affectMenu)
+        //{
+        //    selectionToolMenu.SetEnabledState(enabled);
+        //}
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = enabled;

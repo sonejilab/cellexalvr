@@ -14,8 +14,8 @@ public class MoveFoldersUpButton : MonoBehaviour
 
     private void Start()
     {
+        // calculate how much it the folders should move every frame once
         dY = new float[moveTime];
-        //var tau = 2 * Mathf.PI;
         var total = 0f;
         for (int i = 0; i < moveTime; ++i)
         {

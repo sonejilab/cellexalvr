@@ -14,6 +14,7 @@ public class GenerateHeatmapThread
     {
         selectionToolHandler = sth;
     }
+    [Obsolete]
     public void GenerateHeatmap()
     {
         string home = Directory.GetCurrentDirectory();
@@ -22,7 +23,7 @@ public class GenerateHeatmapThread
             string rawInput = r.ReadToEnd();
             string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             string rPath = input[0];
-            Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\make_heatmap.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
+            //Debug.Log("R Out: " + RScriptRunner.RunFromCmd(home + @"\Assets\Scripts\R\make_heatmap.R", rPath, home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1)));
         }
     }
 }

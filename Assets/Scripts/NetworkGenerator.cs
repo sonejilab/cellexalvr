@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Threading;
 using UnityEngine;
 
@@ -31,7 +32,9 @@ public class NetworkGenerator : MonoBehaviour
     {
         int statusId = status.AddStatus("R script generating networks");
         // generate the files containing the network information
-        t = new Thread(new ThreadStart(gnt.GenerateNetworks));
+        string home = Directory.GetCurrentDirectory();
+        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1);
+        t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\make_networks.R", args));
         t.Start();
         while (t.IsAlive)
             yield return null;

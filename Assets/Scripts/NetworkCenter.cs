@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 using VRTK.GrabAttachMechanics;
@@ -16,6 +15,7 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
+    public ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
     private GameObject pedestal;
     private SteamVR_Controller.Device device;
@@ -26,6 +26,7 @@ public class NetworkCenter : MonoBehaviour
     private Transform oldParent;
     public bool Enlarged { get; private set; }
     private bool enlarge = false;
+    private int numColliders = 0;
 
 
     private bool isReplacement = false;
@@ -42,6 +43,7 @@ public class NetworkCenter : MonoBehaviour
         pedestal = GameObject.Find("Pedestal");
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
+        controllerModelSwitcher = GameObject.Find("LeftController").GetComponent<ControllerModelSwitcher>();
 
     }
 
@@ -91,21 +93,33 @@ public class NetworkCenter : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Smaller Controller Collider"))
+        if (other.CompareTag("Controller"))
         {
-
             controllerInside = true;
+            numColliders++;
+            controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Smaller Controller Collider"))
+        if (other.CompareTag("Controller"))
+        {
+            numColliders--;
+        }
+        // We might collide with the network nodes' colliders. So OnTriggerExit is called a little too often,
+        // so we must make sure we have exited all colliders.
+        if (numColliders == 0)
         {
             controllerInside = false;
+            controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
         }
     }
 
+    /// <summary>
+    /// Hides the large sphere around the network if the network is enlarged. 
+    /// The sphere should be hidden if the network is enlarged.
+    /// </summary>
     internal void HideSphereIfEnlarged()
     {
         if (Enlarged)

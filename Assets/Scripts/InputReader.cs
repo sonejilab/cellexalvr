@@ -106,7 +106,7 @@ public class InputReader : MonoBehaviour
         foreach (string file in mdsFiles)
         {
             Graph newGraph = graphManager.CreateGraph();
-            newGraph.GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            newGraph.GetComponent<GraphInteract>().isGrabbable = false;
             //graphManager.SetActiveGraph(fileIndex);
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
@@ -138,7 +138,7 @@ public class InputReader : MonoBehaviour
                 yield return null;
             }
             fileIndex++;
-            newGraph.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            newGraph.GetComponent<GraphInteract>().isGrabbable = true;
             if (doLoad)
             {
                 graphManager.LoadPosition(newGraph, fileIndex);

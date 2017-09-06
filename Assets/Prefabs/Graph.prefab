@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114610040334634022}
   - component: {fileID: 114067437061871334}
   - component: {fileID: 114656299714153516}
+  - component: {fileID: 114613519637220900}
   m_Layer: 0
   m_Name: Graph
   m_TagString: Graph
@@ -91,9 +92,23 @@ MonoBehaviour:
   leftSnapHandle: {fileID: 0}
   throwVelocityWithAttachDistance: 0
   throwMultiplier: 0
-  onGrabCollisionDelay: 0
+  onGrabCollisionDelay: -10.18
   destroyImmediatelyOnThrow: 1
   breakForce: 1500
+--- !u!114 &114613519637220900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1496824086956574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07bf5330424dbc4e94d412f30441b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ungrabDistance: 1
+  releaseSnapSpeed: 0.1
+  lockZRotation: 0
 --- !u!114 &114656299714153516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -114,8 +129,8 @@ MonoBehaviour:
   validDrop: 1
   grabOverrideButton: 0
   allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
+  grabAttachMechanicScript: {fileID: 114610040334634022}
+  secondaryGrabActionScript: {fileID: 114613519637220900}
   isUsable: 0
   holdButtonToUse: 0
   useOnlyIfGrabbed: 0

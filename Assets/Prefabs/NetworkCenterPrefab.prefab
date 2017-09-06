@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224451971760373060}
   - component: {fileID: 222504405785792032}
   - component: {fileID: 114284830985778830}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Other (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 223365399342761644}
   - component: {fileID: 114955523793224592}
   - component: {fileID: 114147774324732390}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: InfoCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 224038655832818268}
   - component: {fileID: 222918310312127076}
   - component: {fileID: 114365614648660516}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Other
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 224012938525598962}
   - component: {fileID: 222179741933623920}
   - component: {fileID: 114878040427955872}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: NrOfCells
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 224725753253782520}
   - component: {fileID: 222213335965301940}
   - component: {fileID: 114900868009569264}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 65265384985586142}
   - component: {fileID: 212061106907495026}
   - component: {fileID: 114052418412184118}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Show Info Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 65831974852151864}
   - component: {fileID: 212731928488867024}
   - component: {fileID: 114659808814376160}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Get Back From Sky Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 223134929994599350}
   - component: {fileID: 114408320813177340}
   - component: {fileID: 114913109776281252}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: ButtonCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 65343870199282692}
   - component: {fileID: 212552534757791222}
   - component: {fileID: 114346932146987030}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Send To Sky Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 222119872287490604}
   - component: {fileID: 114235242178268010}
   - component: {fileID: 114705517376298638}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: ButtonPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 33141155334007098}
   - component: {fileID: 23259352955223570}
   - component: {fileID: 64684723448277922}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Ring
   m_TagString: Network
   m_Icon: {fileID: 0}
@@ -500,6 +500,8 @@ MonoBehaviour:
   - {r: 1, g: 0.57254905, b: 0, a: 1}
   - {r: 1, g: 0.35686272, b: 0, a: 1}
   - {r: 1, g: 0.14117643, b: 0, a: 1}
+  controllerModelSwitcher: {fileID: 0}
+  replacing: {fileID: 0}
 --- !u!114 &114235242178268010
 MonoBehaviour:
   m_ObjectHideFlags: 1

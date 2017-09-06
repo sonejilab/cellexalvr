@@ -10,7 +10,7 @@ public class SelectionToolMenu : MonoBehaviour
 
     void Start()
     {
-        SetEnabledState(false);
+        //SetEnabledState(false);
     }
 
     /// <summary>
@@ -19,14 +19,14 @@ public class SelectionToolMenu : MonoBehaviour
 
     public void SetEnabledState(bool enabled)
     {
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
-        {
-            r.enabled = enabled;
-        }
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-        {
-            c.enabled = enabled;
-        }
+        //foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        //{
+        //    r.enabled = enabled;
+        //}
+        //foreach (Collider c in GetComponentsInChildren<Collider>())
+        //{
+        //    c.enabled = enabled;
+        //}
     }
 
     public void InitializeButtons()

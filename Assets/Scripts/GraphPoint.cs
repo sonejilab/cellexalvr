@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +12,13 @@ public class GraphPoint : MonoBehaviour
     private Material defaultMat;
     private Color selectedColor;
     private Graph defaultParent;
+    private Renderer graphPointRenderer;
     public string GraphName { get { return defaultParent.GraphName; } }
+
+    public void Start()
+    {
+        graphPointRenderer = GetComponent<Renderer>();
+    }
 
     public void SetCoordinates(Cell cell, float x, float y, float z, Vector3 graphAreaSize)
     {
@@ -30,12 +37,12 @@ public class GraphPoint : MonoBehaviour
 
     public void SetMaterial(Material material)
     {
-        GetComponent<Renderer>().material = material;
+        graphPointRenderer.material = material;
     }
 
     public Material GetMaterial()
     {
-        return GetComponent<Renderer>().material;
+        return graphPointRenderer.material;
     }
 
     public void ResetCoords()
@@ -63,4 +70,8 @@ public class GraphPoint : MonoBehaviour
         defaultParent = parent;
     }
 
+    public void ResetColor()
+    {
+        graphPointRenderer.material = Resources.Load("SphereDefault", typeof(Material)) as Material;
+    }
 }

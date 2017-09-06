@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This class holds the directory name that the cells in the boxes should represent.
+/// </summary>
 public class CellsToLoad : MonoBehaviour
 {
 
@@ -8,20 +11,22 @@ public class CellsToLoad : MonoBehaviour
     private Vector3 defaultPosition;
     private Quaternion defaultRotation;
 
+    public string Directory
+    {
+        get
+        {
+            graphsLoaded = true;
+            return directory;
+        }
+        set
+        {
+            directory = value;
+        }
+    }
+
     public bool GraphsLoaded()
     {
         return graphsLoaded;
-    }
-
-    public string GetDirectory()
-    {
-        graphsLoaded = true;
-        return directory;
-    }
-
-    public void SetDirectory(string name)
-    {
-        directory = name;
     }
 
     internal void ResetPosition()

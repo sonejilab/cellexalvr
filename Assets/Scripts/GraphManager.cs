@@ -130,6 +130,15 @@ public class GraphManager : MonoBehaviour
         cellManager.ColorGraphsByGene(geneName);
     }
 
+    public void ResetGraphsColor()
+    {
+        selectionToolHandler.CancelSelection();
+        foreach (Graph g in graphs)
+        {
+            g.ResetGraphColors();
+        }
+    }
+
     /// <summary>
     /// Resets the position, scale and color of all Graphs.
     /// </summary>

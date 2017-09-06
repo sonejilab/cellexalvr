@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// This class represents the button that toggles the help tool.
+/// </summary>
 public class HelpToolButton : StationaryButton
 {
     public GameObject helpTool;
@@ -18,12 +18,9 @@ public class HelpToolButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             bool helpToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool;
-            //ControllerModelSwitcher.Model newModel = helpTool.activeSelf ? ControllerModelSwitcher.Model.HelpTool : ControllerModelSwitcher.Model.Normal;
             if (helpToolActivated)
             {
                 controllerModelSwitcher.TurnOffActiveTool(true);
-                //controllerModelSwitcher.SwitchToDesiredModel();
-                //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
             }
             else
             {

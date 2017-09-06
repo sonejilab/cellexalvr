@@ -10,6 +10,9 @@ public abstract class StationaryButton : MonoBehaviour
     public Sprite standardTexture;
     public Sprite highlightedTexture;
     // all buttons must override this variable's get property
+    /// <summary>
+    /// A string that briefly explains what this button does.
+    /// </summary>
     abstract protected string Description
     {
         get;
@@ -19,7 +22,8 @@ public abstract class StationaryButton : MonoBehaviour
     protected bool controllerInside;
     protected SpriteRenderer spriteRenderer;
 
-   protected virtual void Start()
+    // virtual so other classes may override if needed
+    protected virtual void Awake()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -39,7 +43,13 @@ public abstract class StationaryButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Controller"))
         {
-            descriptionText.text = "";
+            // sometimes the controller moves to another button before exiting this one.
+            // that other button will then (probably) change the description.
+            // so we only change it back to nothing if that has not happened.
+            if (descriptionText.text.Equals(Description))
+            {
+                descriptionText.text = "";
+            }
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
         }

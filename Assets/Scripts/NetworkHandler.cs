@@ -20,6 +20,10 @@ public class NetworkHandler : MonoBehaviour
         networks.Add(network);
     }
 
+
+    /// <summary>
+    /// Toggles all renderers and colliders on for all networks on this convex hull.
+    /// </summary>
     internal void ShowNetworks()
     {
         foreach (NetworkCenter network in Replacements)
@@ -32,6 +36,11 @@ public class NetworkHandler : MonoBehaviour
                 r.enabled = true;
             foreach (Collider c in network.GetComponentsInChildren<Collider>())
                 c.enabled = true;
+            if (network.Enlarged)
+            {
+                // turn off the renderer for the sphere
+                network.gameObject.GetComponent<Renderer>().enabled = false;
+            }
         }
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
             r.enabled = true;
@@ -39,6 +48,9 @@ public class NetworkHandler : MonoBehaviour
             c.enabled = true;
     }
 
+    /// <summary>
+    /// Toggles all renderers and colliders off for all networks on this convex hull.
+    /// </summary>
     internal void HideNetworks()
     {
         foreach (NetworkCenter network in networks)

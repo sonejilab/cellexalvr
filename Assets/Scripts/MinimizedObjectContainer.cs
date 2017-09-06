@@ -9,7 +9,15 @@ public class MinimizedObjectContainer : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     public GameObject MinimizedObject { get; set; }
     public MinimizedObjectHandler Handler { get; set; }
+    /// <summary>
+    /// The x-coordinate in the grid that this container is in.
+    /// Has a range of [0, 4]
+    /// </summary>
     public int SpaceX { get; set; }
+    /// <summary>
+    /// The y-coordinate in the grid that this container is in.
+    /// Has a range of [0, 4]
+    /// </summary>
     public int SpaceY { get; set; }
 
     private bool controllerInside = false;

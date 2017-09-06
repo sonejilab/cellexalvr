@@ -32,6 +32,9 @@ public class HeatmapBurner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawns a fire on top of the heatmap and fades the heatmap away until it is destroyed.
+    /// </summary>
     public void BurnHeatmap()
     {
         fadeHeatmap = true;
@@ -59,5 +62,4 @@ public class HeatmapBurner : MonoBehaviour
             fade = 0;
         }
     }
-
 }

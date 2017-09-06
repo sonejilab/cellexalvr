@@ -112,8 +112,8 @@ public class LoaderController : MonoBehaviour
                 }
                 if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded())
                 {
-                    graphManager.directory = cellParent.GetComponent<CellsToLoad>().GetDirectory();
-                    inputReader.ReadFolder(cellParent.GetComponent<CellsToLoad>().GetDirectory());
+                    graphManager.directory = cellParent.GetComponent<CellsToLoad>().Directory;
+                    inputReader.ReadFolder(cellParent.GetComponent<CellsToLoad>().Directory);
                 }
 
                 Destroy(cellParent.GetComponent<FixedJoint>());
