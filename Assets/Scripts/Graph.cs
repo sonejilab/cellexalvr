@@ -188,7 +188,6 @@ public class Graph : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// Resets this graphs position, scale and color.
     /// </summary>

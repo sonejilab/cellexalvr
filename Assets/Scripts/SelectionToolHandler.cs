@@ -83,6 +83,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
+        groupInfoDisplay.SetColors(colors);
 
         selectedColor = colors[currentColorIndex];
         SetSelectionToolEnabled(false);
@@ -116,13 +117,20 @@ public class SelectionToolHandler : MonoBehaviour
             // turn off the redo buttons
             undoButtonsHandler.EndOfHistoryReached();
         }
-        selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
+        // The user might select cells that already have that color, which is of no use, undoing or redoing those actions would not change the selection.
+        if (!Equals(newColor, oldColor))
+        {
+            selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
+        }
+        groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
         if (newNode)
         {
             selectedCells.Add(other);
             SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(hapticIntensity);
-            groups[currentColorIndex]++;
-            groupInfoDisplay.UpdateStatus();
+        }
+        else
+        {
+            groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
         }
         if (!selectionMade)
         {
@@ -132,6 +140,17 @@ public class SelectionToolHandler : MonoBehaviour
             undoButtonsHandler.BeginningOfHistoryLeft();
             //UpdateButtonIcons ();
         }
+    }
+
+    /// <summary>
+    /// Helper method to see if two colors are equal.
+    /// </summary>
+    /// <param name="c1"> The first color. </param>
+    /// <param name="c2"> The second color. </param>
+    /// <returns> True if the two colors have the same rgb values, false otherwise. </returns>
+    private bool Equals(Color c1, Color c2)
+    {
+        return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
     }
 
     /// <summary>
@@ -158,9 +177,14 @@ public class SelectionToolHandler : MonoBehaviour
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.GetComponent<Renderer>().material.color = info.fromColor;
+        groupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint.GetComponent<Collider>());
+        }
+        else
+        {
+            groupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -190,9 +214,14 @@ public class SelectionToolHandler : MonoBehaviour
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.GetComponent<Renderer>().material.color = info.toColor;
+        groupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
         if (info.newNode)
         {
             selectedCells.Add(info.graphPoint.GetComponent<Collider>());
+        }
+        else
+        {
+            groupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
         }
         historyIndexOffset--;
         selectionMade = false;
