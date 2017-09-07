@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+
 /// <summary>
-/// This class represents the button that redoes the 10 last undone graphpoints.
+/// This class represents the button that redoes all the last undone graphpoints of the same color.
 /// </summary>
-public class RedoTenStepsButton : StationaryButton
+public class RedoLastColorButton : StationaryButton
 {
 
     public SelectionToolHandler selectionToolHandler;
@@ -10,7 +11,7 @@ public class RedoTenStepsButton : StationaryButton
     private Collider buttonCollider;
     protected override string Description
     {
-        get { return "Redo ten steps"; }
+        get { return "Redo last color"; }
     }
 
     protected override void Awake()
@@ -24,10 +25,7 @@ public class RedoTenStepsButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            for (int i = 0; i < 10; i++)
-            {
-                selectionToolHandler.GoForwardOneStepInHistory();
-            }
+            selectionToolHandler.GoForwardOneColorInHistory();
         }
     }
 

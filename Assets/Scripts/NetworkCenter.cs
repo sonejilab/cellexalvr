@@ -44,7 +44,6 @@ public class NetworkCenter : MonoBehaviour
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
         controllerModelSwitcher = GameObject.Find("LeftController").GetComponent<ControllerModelSwitcher>();
-
     }
 
     void FixedUpdate()
@@ -97,6 +96,10 @@ public class NetworkCenter : MonoBehaviour
         {
             controllerInside = true;
             numColliders++;
+            if (controllerModelSwitcher == null)
+            {
+                controllerModelSwitcher = GameObject.Find("LeftController").GetComponent<ControllerModelSwitcher>();
+            }
             controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
         }
     }

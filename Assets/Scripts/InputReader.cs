@@ -25,6 +25,7 @@ public class InputReader : MonoBehaviour
     public NetworkNode networkNodePrefab;
     public GameObject headset;
     public StatusDisplay status;
+    public SteamVR_TrackedObject rightController;
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -36,7 +37,7 @@ public class InputReader : MonoBehaviour
     {
         if (debug)
         {
-            ReadFolder(@"C:\Users\vrproject\Documents\Cellexal\CellExAl\Assets\Data\Bertie");
+            ReadFolder(Directory.GetCurrentDirectory() + @"\Assets\Data\Bertie");
         }
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
@@ -75,12 +76,6 @@ public class InputReader : MonoBehaviour
                 File.Delete(f);
             }
         }
-        //string[] geneexprFiles = Directory.GetFiles(path, "*.expr");
-
-        //if (geneexprFiles.Length != 1)
-        //{
-        //    throw new System.InvalidOperationException("There must be exactly one gene expression data file");
-        //}
 
         string[] mdsFiles = Directory.GetFiles(path, "*.mds");
         StartCoroutine(ReadMDSFiles(path, mdsFiles, 25));
@@ -281,6 +276,21 @@ public class InputReader : MonoBehaviour
     }
 
     /// <summary>
+    /// Helper method to create network nodes.
+    /// </summary>
+    /// <param name="geneName"> The name of the gene that the network node should represent. </param>
+    /// <returns> Returns the newly created NetworkNode. </returns>
+    private NetworkNode CreateNetworkNode(string geneName)
+    {
+        NetworkNode newNode = Instantiate(networkNodePrefab);
+        newNode.CameraToLookAt = headset.transform;
+        newNode.cellManager = cellManager;
+        newNode.Label = geneName;
+        newNode.rightController = rightController;
+        return newNode;
+    }
+
+    /// <summary>
     /// Reads the files containg networks.
     /// </summary>
     public void ReadNetworkFiles()
@@ -384,18 +394,14 @@ public class InputReader : MonoBehaviour
             // add the nodes if they don't already exist
             if (!nodes.ContainsKey(node1))
             {
-                NetworkNode newNode = Instantiate(networkNodePrefab);
-                newNode.CameraToLookAt = headset.transform;
-                newNode.Label = geneName1;
+                NetworkNode newNode = CreateNetworkNode(geneName1);
                 nodes[node1] = newNode;
                 nodes[node1].Center = networks[color];
             }
 
             if (!nodes.ContainsKey(node2))
             {
-                NetworkNode newNode = Instantiate(networkNodePrefab);
-                newNode.CameraToLookAt = headset.transform;
-                newNode.Label = geneName2;
+                NetworkNode newNode = CreateNetworkNode(geneName2);
                 nodes[node2] = newNode;
                 nodes[node2].Center = networks[color];
             }

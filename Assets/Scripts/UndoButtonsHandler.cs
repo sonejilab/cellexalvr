@@ -9,14 +9,23 @@ public class UndoButtonsHandler : MonoBehaviour
     public RedoOneStepButton redoOneStepButton;
     public UndoTenStepsButton undoTenStepsButton;
     public RedoTenStepsButton redoTenStepsButton;
+    public UndoLastColorButton undoLastColorButton;
+    public RedoLastColorButton redoLastColorButton;
 
     void Start()
     {
         // There is no history when the program starts
+        TurnAllButtonsOff();
+    }
+
+    public void TurnAllButtonsOff()
+    {
         undoOneStepButton.SetButtonActive(false);
         redoOneStepButton.SetButtonActive(false);
         undoTenStepsButton.SetButtonActive(false);
         redoTenStepsButton.SetButtonActive(false);
+        undoLastColorButton.SetButtonActive(false);
+        redoLastColorButton.SetButtonActive(false);
     }
 
     /// <summary>
@@ -26,6 +35,7 @@ public class UndoButtonsHandler : MonoBehaviour
     {
         undoOneStepButton.SetButtonActive(false);
         undoTenStepsButton.SetButtonActive(false);
+        undoLastColorButton.SetButtonActive(false);
     }
 
     /// <summary>
@@ -35,6 +45,7 @@ public class UndoButtonsHandler : MonoBehaviour
     {
         undoOneStepButton.SetButtonActive(true);
         undoTenStepsButton.SetButtonActive(true);
+        undoLastColorButton.SetButtonActive(true);
     }
 
     /// <summary>
@@ -44,6 +55,7 @@ public class UndoButtonsHandler : MonoBehaviour
     {
         redoOneStepButton.SetButtonActive(false);
         redoTenStepsButton.SetButtonActive(false);
+        redoLastColorButton.SetButtonActive(false);
     }
 
     /// <summary>
@@ -53,6 +65,7 @@ public class UndoButtonsHandler : MonoBehaviour
     {
         redoOneStepButton.SetButtonActive(true);
         redoTenStepsButton.SetButtonActive(true);
+        redoLastColorButton.SetButtonActive(true);
     }
 }
 

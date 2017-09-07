@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents the button that redoes the last undone graphpoint.
+/// </summary>
 public class RedoOneStepButton : StationaryButton
 {
 

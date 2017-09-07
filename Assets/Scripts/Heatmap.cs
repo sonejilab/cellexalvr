@@ -15,7 +15,6 @@ public class Heatmap : MonoBehaviour
     private Dictionary<Cell, Color> containedCells;
     private SteamVR_Controller.Device device;
     private GraphManager graphManager;
-    private SelectionToolHandler selectionToolHandler;
     private bool controllerInside = false;
     private GameObject fire;
     private SteamVR_TrackedObject rightController;
@@ -117,7 +116,6 @@ public class Heatmap : MonoBehaviour
     {
         containedCells = new Dictionary<Cell, Color>();
         this.graphManager = graphManager;
-        this.selectionToolHandler = selectionToolHandler;
         this.fire = fire;
         int numberOfColours = 0;
         List<Color> checkedColors = new List<Color>();

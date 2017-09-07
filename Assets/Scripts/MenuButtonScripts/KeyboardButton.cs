@@ -7,9 +7,9 @@ public class KeyboardButton : StationaryButton
 {
     public GameObject keyboard;
     public VRTK.VRTK_StraightPointerRenderer laserPointer;
-    private bool keyboardActivated = false;
-	public Sprite gray;
-	public Sprite original;
+    private bool activateKeyboard = false;
+    public Sprite gray;
+    public Sprite original;
 
     protected override string Description
     {
@@ -21,16 +21,18 @@ public class KeyboardButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-			keyboardActivated = !laserPointer.enabled;
-            laserPointer.enabled = keyboardActivated;
-            keyboard.SetActive(keyboardActivated);
+            activateKeyboard = !keyboard.activeSelf;
+            laserPointer.enabled = activateKeyboard;
+            keyboard.SetActive(activateKeyboard);
         }
-		if (keyboardActivated) {
-			standardTexture = gray;
-		}
-		if (!keyboardActivated) {
-			standardTexture = original;
-		}
+        if (activateKeyboard)
+        {
+            standardTexture = gray;
+        }
+        if (!activateKeyboard)
+        {
+            standardTexture = original;
+        }
     }
 
 }

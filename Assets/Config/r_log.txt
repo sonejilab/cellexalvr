@@ -1,7 +1,16 @@
 
 STDOUT:
+null device 
+          1 
 
 STDERR:
+
+Attaching package: 'gplots'
+
+The following object is masked from 'package:stats':
+
+    lowess
+
 Loading required package: rgl
 Loading required package: ppcor
 Loading required package: MASS
@@ -57,15 +66,6 @@ Attaching package: 'graph'
 The following objects are masked from 'package:igraph':
 
     degree, edges, intersection
-
-Loading required package: pheatmap
-Loading required package: gplots
-
-Attaching package: 'gplots'
-
-The following object is masked from 'package:stats':
-
-    lowess
 
 Loading required package: RSQLite
 Loading required package: reshape2

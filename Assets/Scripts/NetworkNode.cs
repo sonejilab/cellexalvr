@@ -30,10 +30,13 @@ public class NetworkNode : MonoBehaviour
     private List<Color> connectionColors = new List<Color>();
     private Vector3 normalScale;
     private Vector3 largerScale;
-    private bool edgesAdded = false;
-    private bool repositionedByBuddy = false;
-    private bool repositionedBuddies = false;
-
+    private bool controllerInside;
+    [HideInInspector]
+    public SteamVR_TrackedObject rightController;
+    [HideInInspector]
+    public CellManager cellManager;
+    private SteamVR_Controller.Device device;
+    private bool edgesAdded;
     private float lineWidth = .001f;
 
 
@@ -50,8 +53,31 @@ public class NetworkNode : MonoBehaviour
     {
         // some math make the text not be mirrored
         textTransform.LookAt(2 * transform.position - CameraToLookAt.position);
+        device = SteamVR_Controller.Input((int)rightController.index);
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            cellManager.ColorGraphsByGene(Label.ToLower());
+        }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Controller"))
+        {
+            controllerInside = true;
+            Highlight();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Controller"))
+        {
+            controllerInside = false;
+            UnHighlight();
+        }
+
+    }
     /// <summary>
     /// Adds a neighbour to this node. A neughbour should be a gene that is correlated to this node's gene.
     /// This will also add this node as the neighbour's neighbour, so it's basically a bidirectional edge between two vertices.

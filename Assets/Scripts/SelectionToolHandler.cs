@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -29,7 +30,6 @@ public class SelectionToolHandler : MonoBehaviour
     private Color[] colors;
     private Color selectedColor;
     private PlanePicker planePicker;
-    private bool inSelectionState = false;
     private bool selectionMade = false;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
@@ -198,6 +198,55 @@ public class SelectionToolHandler : MonoBehaviour
         selectionMade = false;
     }
 
+    /// <summary>
+    /// Go back in history until the color changes. This unselects all the last cells that have the same color.
+    /// </summary>
+    /// <example>
+    /// If the user selects 2 cells as red then 3 cells as blue and then 4 cells as red, in that order, the 4 last red cells would be unselected when calling this method. 
+    /// </example>
+    public void GoBackOneColorInHistory()
+    {
+        int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
+        Color color = selectionHistory[indexToMoveTo].toColor;
+        Color nextColor;
+        do
+        {
+            GoBackOneStepInHistory();
+            indexToMoveTo--;
+            if (indexToMoveTo >= 0)
+            {
+                nextColor = selectionHistory[indexToMoveTo].toColor;
+            }
+            else
+            {
+                break;
+            }
+        } while (color.Equals(nextColor));
+    }
+
+    /// <summary>
+    /// Go forward in history until the color changes. This re-selects all the last cells that have the same color.
+    /// </summary>
+    public void GoForwardOneColorInHistory()
+    {
+        int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
+        Color color = selectionHistory[indexToMoveTo].toColor;
+        Color nextColor;
+        do
+        {
+            GoForwardOneStepInHistory();
+            indexToMoveTo++;
+            if (indexToMoveTo < selectionHistory.Count)
+            {
+                nextColor = selectionHistory[indexToMoveTo].toColor;
+            }
+            else
+            {
+                break;
+            }
+        } while (color.Equals(nextColor));
+    }
+
     public void SingleSelect(Collider other)
     {
         Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
@@ -227,6 +276,8 @@ public class SelectionToolHandler : MonoBehaviour
             other.attachedRigidbody.isKinematic = false;
             other.isTrigger = false;
         }
+        selectionHistory.Clear();
+        undoButtonsHandler.TurnAllButtonsOff();
         selectedCells.Clear();
         selectionMade = false;
         selectionToolMenu.RemoveSelection();
@@ -255,6 +306,7 @@ public class SelectionToolHandler : MonoBehaviour
         }
         selectedCells.Clear();
         selectionHistory.Clear();
+        undoButtonsHandler.TurnAllButtonsOff();
         heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;

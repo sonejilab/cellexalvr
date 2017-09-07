@@ -80,7 +80,7 @@ public class GraphManager : MonoBehaviour
     /// <summary>
     /// Deletes all graphs and networks in the scene.
     /// </summary>
-    public void DeleteGraphs()
+    public void DeleteGraphsAndNetworks()
     {
         cellManager.DeleteCells();
         foreach (Graph g in graphs)

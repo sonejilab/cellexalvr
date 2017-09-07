@@ -23,7 +23,6 @@ public class Graph : MonoBehaviour
     private Vector3 defaultPos;
     private Vector3 defaultScale;
 
-
     void Start()
     {
         points = new List<GraphPoint>(1000);
@@ -32,6 +31,9 @@ public class Graph : MonoBehaviour
         defaultPos = transform.position;
     }
 
+    /// <summary>
+    /// Turns on all renderers and colliders for this graph.
+    /// </summary>
     internal void ShowGraph()
     {
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
@@ -40,6 +42,9 @@ public class Graph : MonoBehaviour
             c.enabled = true;
     }
 
+    /// <summary>
+    /// Turns off all renderers and colliders for this graph.
+    /// </summary>
     internal void HideGraph()
     {
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
@@ -47,6 +52,7 @@ public class Graph : MonoBehaviour
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = false;
     }
+
     public Vector3 ScaleCoordinates(float x, float y, float z)
     {
         // Scales the sphere coordinates to fit inside the graph's bounds.
@@ -181,7 +187,7 @@ public class Graph : MonoBehaviour
             point.ResetColor();
         }
     }
-    
+
 
     /// <summary>
     /// Resets this graphs position, scale and color.

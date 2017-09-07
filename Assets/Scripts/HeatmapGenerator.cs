@@ -18,7 +18,6 @@ public class HeatmapGenerator : MonoBehaviour
     public GameObject fire;
     public StatusDisplay status;
     private ArrayList data;
-    private GenerateHeatmapThread ght;
     private Thread t;
     private bool running = false;
     private SteamVR_Controller.Device device;
@@ -33,7 +32,6 @@ public class HeatmapGenerator : MonoBehaviour
         t = null;
         hourglass = GameObject.Find("WaitingForHeatboardHourglass");
         hourglass.SetActive(false);
-        ght = new GenerateHeatmapThread(selectionToolHandler);
         heatmapPosition = heatmapPrefab.transform.position;
     }
 

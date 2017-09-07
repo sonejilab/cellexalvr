@@ -3,7 +3,6 @@ using UnityEngine;
 
 class SaveHeatmapButton : StationaryButton
 {
-    public Renderer meshRenderer;
     protected override string Description
     {
         get { return "Save heatmap image to disk"; }

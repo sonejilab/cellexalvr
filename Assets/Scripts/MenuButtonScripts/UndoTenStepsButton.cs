@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents the button that undoes the 10 last selected graphpoints.
+/// </summary>
 public class UndoTenStepsButton : StationaryButton
 {
 

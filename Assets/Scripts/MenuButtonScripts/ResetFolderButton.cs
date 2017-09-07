@@ -13,8 +13,6 @@ public class ResetFolderButton : StationaryButton
     public PreviousSearchesList previousSearchesList;
 	public GameObject inputFolderList;
     public HeatmapGenerator heatmapGenerator;
-    private bool menuActive = false;
-    private bool buttonsInitialized = false;
 
 
     protected override string Description
@@ -32,7 +30,7 @@ public class ResetFolderButton : StationaryButton
         {
 			//var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 			//sceneLoader.doLoad = false;
-            graphManager.DeleteGraphs();
+            graphManager.DeleteGraphsAndNetworks();
             heatmapGenerator.DeleteHeatmaps();
             previousSearchesList.ClearList();
             // must reset loader before generating new folders

@@ -1,7 +1,6 @@
 ///<summary>
 /// This class represents a button used for undoing the current selection.
 ///</summary>
-
 public class UndoSelectionButton : RotatableButton
 {
 

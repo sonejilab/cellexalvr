@@ -27,7 +27,7 @@ public class RScriptRunner
         try
         {
             string home = Directory.GetCurrentDirectory();
-            using (StreamReader r = new StreamReader(home + "Assets/Config/config.txt"))
+            using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
             {
                 string rawInput = r.ReadToEnd();
                 string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);

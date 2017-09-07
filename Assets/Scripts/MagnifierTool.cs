@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 class MagnifierTool : MonoBehaviour
 {
-    private bool recalc = false;
     private Dictionary<Transform, Vector3> pointsToMagnify = new Dictionary<Transform, Vector3>();
 
     private void Update()
