@@ -3,9 +3,7 @@ using UnityEngine.SceneManagement;
 using VRTK;
 
 public class SendToSkyButton : MonoBehaviour
-
 {
-    
     public SpriteRenderer spriteRenderer;
     public SendToSky send;
     public SteamVR_TrackedObject rightController;
@@ -31,7 +29,7 @@ public class SendToSkyButton : MonoBehaviour
         {
             //Debug.Log("Find right controller");
             rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-           
+
         }
         if (device == null)
         {
@@ -53,10 +51,9 @@ public class SendToSkyButton : MonoBehaviour
                 send.DoSendToSky(networkGenerator.objectsInSky, 1);
             }
         }
-            
-        
     }
-     void OnTriggerEnter(Collider other)
+
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Controller"))
         {
@@ -65,7 +62,7 @@ public class SendToSkyButton : MonoBehaviour
         }
     }
 
-     void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Controller"))
         {

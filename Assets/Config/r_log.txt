@@ -1,16 +1,51 @@
 
 STDOUT:
-null device 
-          1 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9663 
+
+Estimate (local) false discovery rates (partial correlations):
+Step 1... determine cutoff point
+Step 2... estimate parameters of null distribution and eta0
+Step 3... compute p-values and estimate empirical PDF/CDF
+Step 4... compute q-values and local fdr
+
+
+Significant edges:  91 
+    Corresponding to  0.13 %  of possible edges 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.8853 
+
+Estimate (local) false discovery rates (partial correlations):
+Step 1... determine cutoff point
+Step 2... estimate parameters of null distribution and eta0
+Step 3... compute p-values and estimate empirical PDF/CDF
+Step 4... compute q-values and local fdr
+
+
+Significant edges:  79 
+    Corresponding to  0.11 %  of possible edges 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9198 
+
+Estimate (local) false discovery rates (partial correlations):
+Step 1... determine cutoff point
+Step 2... estimate parameters of null distribution and eta0
+Step 3... compute p-values and estimate empirical PDF/CDF
+Step 4... compute q-values and local fdr
+
+
+Significant edges:  92 
+    Corresponding to  0.13 %  of possible edges 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9384 
+
+Estimate (local) false discovery rates (partial correlations):
+Step 1... determine cutoff point
+Step 2... estimate parameters of null distribution and eta0
+Step 3... compute p-values and estimate empirical PDF/CDF
+Step 4... compute q-values and local fdr
+
+
+Significant edges:  79 
+    Corresponding to  0.11 %  of possible edges 
 
 STDERR:
-
-Attaching package: 'gplots'
-
-The following object is masked from 'package:stats':
-
-    lowess
-
 Loading required package: rgl
 Loading required package: ppcor
 Loading required package: MASS
@@ -67,6 +102,15 @@ The following objects are masked from 'package:igraph':
 
     degree, edges, intersection
 
+Loading required package: pheatmap
+Loading required package: gplots
+
+Attaching package: 'gplots'
+
+The following object is masked from 'package:stats':
+
+    lowess
+
 Loading required package: RSQLite
 Loading required package: reshape2
 Loading required package: rhdf5
@@ -83,6 +127,9 @@ Warning messages:
 4: package 'reshape2' was built under R version 3.4.1 
 5: package 'alphashape3d' was built under R version 3.4.1 
 6: package 'geometry' was built under R version 3.4.1 
+Warning messages:
+1: 2 instances of variables with zero scale detected! 
+2: 2 instances of variables with zero scale detected! 
 
 ----------
 

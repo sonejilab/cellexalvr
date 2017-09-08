@@ -18,6 +18,7 @@ public class PreviousSearchesList : MonoBehaviour
     public Texture searchLockLockedHighlightedTexture;
     public Texture correlatedGenesButtonTexture;
     public Texture correlatedGenesButtonHighlightedTexture;
+    public Texture correlatedGenesButtonWorkingTexture;
     private Transform raycastingSource;
     private Ray ray;
     private RaycastHit hit;
@@ -46,6 +47,7 @@ public class PreviousSearchesList : MonoBehaviour
             searchLock = hit.transform.gameObject.GetComponent<PreviousSearchesLock>();
             correlatedGenesButton = hit.transform.gameObject.GetComponent<CorrelatedGenesButton>();
             correlatedGenesListNode = hit.transform.gameObject.GetComponent<CorrelatedGenesListNode>();
+            // see if we hit anything
             if (listNode != null)
             {
                 // handle the list node
@@ -106,6 +108,7 @@ public class PreviousSearchesList : MonoBehaviour
 
                 if (device.GetPressDown(triggerButton))
                 {
+                    correlatedGenesButton.SetTexture(correlatedGenesButtonWorkingTexture);
                     correlatedGenesButton.CalculateCorrelatedGenes();
                 }
             }

@@ -483,6 +483,7 @@ public class InputReader : MonoBehaviour
             networkCenterArray[j++] = n;
         }
         //return networkCenterArray;
+        
         arcsSubMenu.CreateToggleArcsButtons(networkCenterArray);
 
         List<int> arcsCombinedList = new List<int>();

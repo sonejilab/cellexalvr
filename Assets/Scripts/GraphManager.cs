@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
 
@@ -46,7 +45,6 @@ public class GraphManager : MonoBehaviour
     /// <returns> A reference to the newly created graph </returns>
     public Graph CreateGraph()
     {
-
         Graph newGraph = Instantiate(graphPrefab, startPositions[graphs.Count % 4], Quaternion.identity);
         //Debug.Log(newGraph.transform.position + " - " + saveScene.target1.position);
         newGraph.transform.parent = transform;

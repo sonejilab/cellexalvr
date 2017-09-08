@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using VRTK;
 
-public class SendToSky : MonoBehaviour {
+public class SendToSky : MonoBehaviour
+{
 
     private VRTK_InteractableObject interact;
     private SteamVR_TrackedObject rightController;
@@ -16,18 +15,14 @@ public class SendToSky : MonoBehaviour {
     private Vector3 oldPosition;
     private Quaternion oldRotation;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         oldRotation = new Quaternion(0, 0, 0, 0);
         oldPosition = new Vector3(0, 0, 0);
         oldScale = new Vector3(0, 0, 0);
         networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
     }
-	
-	// Update is called once per frame
-	void Update () {
 
-
-	}
     // Sends object to sky and places it dependant on how many objects are in the sky already and dependant of what object it is (0 for network and 1 for heatmap)
     public void DoSendToSky(int objInSky, int objType)
     {
@@ -38,7 +33,6 @@ public class SendToSky : MonoBehaviour {
         switch (caseSwitch)
         {
             case 0:
-
                 transform.position = new Vector3(4, 5, 4);
                 if (objType == 0)
                 {
@@ -68,7 +62,7 @@ public class SendToSky : MonoBehaviour {
                 }
                 networkGenerator.objectsInSky++;
                 break;
-            
+
             case 2:
                 transform.position = new Vector3(-4, 5, -4);
                 if (objType == 0)
@@ -84,8 +78,6 @@ public class SendToSky : MonoBehaviour {
                 }
                 networkGenerator.objectsInSky++;
                 break;
-
-
         }
     }
 

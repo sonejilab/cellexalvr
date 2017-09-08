@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents a button that toggle all arcs between all networks on a graph skeleton.
+/// </summary>
 public class ToggleAllArcsButton : MonoBehaviour
 {
     public SteamVR_TrackedObject rightController;
@@ -29,11 +32,15 @@ public class ToggleAllArcsButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the networks that this button should deal with.
+    /// </summary>
     public void SetNetworks(NetworkCenter[] networks)
     {
         //color = network.GetComponent<Renderer>().material.color;
         //GetComponent<Renderer>().material.color = color;
-        this.networks = networks;
+        this.networks = new NetworkCenter[networks.Length];
+        networks.CopyTo(this.networks, 0);
     }
 
     void OnTriggerEnter(Collider other)

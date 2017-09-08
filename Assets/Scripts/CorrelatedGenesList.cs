@@ -6,6 +6,7 @@ using UnityEngine;
 /// </summary>
 public class CorrelatedGenesList : MonoBehaviour
 {
+    public CorrelatedGenesListNode sourceGeneListNode;
     public List<CorrelatedGenesListNode> correlatedGenesList;
     public List<CorrelatedGenesListNode> anticorrelatedGenesList;
 
@@ -18,13 +19,14 @@ public class CorrelatedGenesList : MonoBehaviour
     /// </summary>
     /// <param name="correlatedGenes"> The names of the correlated genes. </param>
     /// <param name="anticorrelatedGenes"> The names of the anti correlated genes. </param>
-    public void PopulateList(string[] correlatedGenes, string[] anticorrelatedGenes)
+    public void PopulateList(string geneName, string[] correlatedGenes, string[] anticorrelatedGenes)
     {
         if (correlatedGenes.Length != 10 || anticorrelatedGenes.Length != 10)
         {
             Debug.LogWarning("Correlated genes arrays was not of length 10. Actual lengths: " + correlatedGenes.Length + " and " + anticorrelatedGenes.Length);
             return;
         }
+        sourceGeneListNode.textMesh.text = geneName;
         // fill the list
         for (int i = 0; i < 10; i++)
         {

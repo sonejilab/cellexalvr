@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents a button that toggles arcs between networks.
+/// </summary>
 public class ToggleArcsButton : MonoBehaviour
 {
     public SteamVR_TrackedObject rightController;
     public bool toggleToState;
+    [HideInInspector]
     public ToggleAllCombinedArcsButton combinedNetworksButton;
     private SteamVR_Controller.Device device;
     private new Renderer renderer;
@@ -27,6 +31,9 @@ public class ToggleArcsButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets which network's arcs this button should toggle.
+    /// </summary>
     public void SetNetwork(NetworkCenter network)
     {
         this.network = network;

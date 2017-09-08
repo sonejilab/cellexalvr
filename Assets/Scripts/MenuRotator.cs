@@ -15,6 +15,8 @@ public class MenuRotator : MonoBehaviour
 
     void Start()
     {
+        // Reset rotation in case it is changed in the editor.
+        transform.localRotation = Quaternion.identity;
         SideFacingPlayer = Rotation.Front;
     }
 

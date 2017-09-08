@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,21 +8,25 @@ public class ToggleArcsSubMenu : MonoBehaviour
 {
 
     public GameObject buttonPrefab;
-    public ToggleAllArcsButton toggleAllArcsOnButton;
-    public ToggleAllArcsButton toggleAllArcsOffButton;
-    public ToggleAllCombinedArcsButton toggleAllCombinedArcsOffButton;
-    public ToggleAllCombinedArcsButton toggleAllCombinedArcsOnButton;
+    public GameObject tabPrefab;
     // hard coded positions :)
-    private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
-    private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
-    private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
+    private Vector3 buttonPos = new Vector3(-0.3958f, 0.59f, 0.2688f);
+    private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
+    private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -0.15f);
+    private Vector3 tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
+    private Vector3 tabButtonPosInc = new Vector3(0.1f, 0, 0);
     private Color[] colors;
-    private List<GameObject> buttons;
+    private List<ArcMenuTab> tabs = new List<ArcMenuTab>();
+    private List<GameObject> buttons = new List<GameObject>();
+
+    private void Start()
+    {
+        tabPrefab.SetActive(false);
+    }
 
     public void Init()
     {
         // TODO come up with some more colors
-        buttons = new List<GameObject>();
         colors = new Color[22];
         colors[0] = new Color(1, 0, 0);     // red
         colors[1] = new Color(0, 0, 1);     // blue
@@ -56,30 +59,49 @@ public class ToggleArcsSubMenu : MonoBehaviour
     /// <param name="networks"> An array containing the networks. </param>
     public void CreateToggleArcsButtons(NetworkCenter[] networks)
     {
+        TurnOffTab();
+        var newTab = Instantiate(tabPrefab, transform);
+        newTab.gameObject.SetActive(true);
+        ArcMenuTab tabButton = newTab.GetComponentInChildren<ArcMenuTab>();
+        tabButton.gameObject.transform.localPosition = tabButtonPos;
+        tabButtonPos += tabButtonPosInc;
+        //newTab.tab = newTab.transform.parent.gameObject;
+        tabs.Add(tabButton);
         if (colors == null)
         {
             Init();
         }
-        foreach (GameObject button in buttons)
+        //foreach (GameObject button in buttons)
+        //{
+        //    // wait 0.1 seconds so we are out of the loop before we start destroying stuff
+        //    Destroy(button.gameObject, .1f);
+        //    buttonPos = new Vector3(-.39f, .77f, .282f);
+        //}
+
+        // The prefab contains some buttons that needs some variables set.
+        var toggleAllArcsButtonsInPrefab = newTab.GetComponentsInChildren<ToggleAllArcsButton>();
+        foreach (ToggleAllArcsButton b in toggleAllArcsButtonsInPrefab)
         {
-            // wait 0.1 seconds so we are out of the loop before we start destroying stuff
-            Destroy(button.gameObject, .1f);
-            buttonPos = new Vector3(-.39f, .77f, .282f);
+            b.SetNetworks(networks);
         }
-        toggleAllArcsOffButton.SetNetworks(networks);
-        toggleAllArcsOnButton.SetNetworks(networks);
-        toggleAllCombinedArcsOffButton.SetNetworks(networks);
-        toggleAllCombinedArcsOnButton.SetNetworks(networks);
+        var toggleAllCombindedArcsInPrefab = newTab.GetComponentsInChildren<ToggleAllCombinedArcsButton>();
+        foreach (ToggleAllCombinedArcsButton b in toggleAllCombindedArcsInPrefab)
+        {
+            b.SetNetworks(networks);
+        }
+
+        Vector3 buttonPosOrigin = buttonPos;
         for (int i = 0; i < networks.Length; ++i)
         {
             var network = networks[i];
-            var newButton = Instantiate(buttonPrefab, transform);
+            var newButton = Instantiate(buttonPrefab, newTab.transform);
             newButton.GetComponent<Renderer>().material.color = network.GetComponent<Renderer>().material.color;
             var toggleArcButtonList = newButton.GetComponentsInChildren<ToggleArcsButton>();
             newButton.transform.localPosition = buttonPos;
             newButton.gameObject.SetActive(true);
             foreach (var toggleArcButton in toggleArcButtonList)
             {
+                toggleArcButton.combinedNetworksButton = newTab.GetComponentInChildren<ToggleAllCombinedArcsButton>();
                 toggleArcButton.SetNetwork(network);
             }
             buttons.Add(newButton);
@@ -93,7 +115,20 @@ public class ToggleArcsSubMenu : MonoBehaviour
             {
                 buttonPos += buttonPosInc;
             }
+        }
+        newTab.GetComponentInChildren<ArcMenuTab>().SetButtons(buttons);
+        buttons.Clear();
+        buttonPos = buttonPosOrigin;
+    }
 
+    /// <summary>
+    /// Turns off all tabs.
+    /// </summary>
+    public void TurnOffTab()
+    {
+        foreach (ArcMenuTab tab in tabs)
+        {
+            tab.SetTabActive(false);
         }
     }
 }

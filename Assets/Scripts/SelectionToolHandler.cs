@@ -117,20 +117,20 @@ public class SelectionToolHandler : MonoBehaviour
             // turn off the redo buttons
             undoButtonsHandler.EndOfHistoryReached();
         }
-        // The user might select cells that already have that color, which is of no use, undoing or redoing those actions would not change the selection.
+        // The user might select cells that already have that color
         if (!Equals(newColor, oldColor))
         {
             selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
-        }
-        groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
-        if (newNode)
-        {
-            selectedCells.Add(other);
             SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(hapticIntensity);
-        }
-        else
-        {
-            groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
+            groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
+            if (newNode)
+            {
+                selectedCells.Add(other);
+            }
+            else
+            {
+                groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
+            }
         }
         if (!selectionMade)
         {
@@ -138,7 +138,6 @@ public class SelectionToolHandler : MonoBehaviour
             selectionToolMenu.SelectionStarted();
             // turn on the undo buttons
             undoButtonsHandler.BeginningOfHistoryLeft();
-            //UpdateButtonIcons ();
         }
     }
 

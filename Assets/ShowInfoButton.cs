@@ -70,7 +70,7 @@ public class ShowInfoButton : VRTK_InteractableObject
     public override void StartTouching(GameObject currentTouchingObject)
     {
         this.spriteRenderer.sprite = highlightedTexture;
-        Debug.Log("TOUCHING INFO");
+        //Debug.Log("TOUCHING INFO");
         base.StartTouching(currentTouchingObject);
     }
 
@@ -84,7 +84,7 @@ public class ShowInfoButton : VRTK_InteractableObject
     {
         base.StartUsing(currentUsingObject);
         canvas.SetActive(!canvas.activeSelf);
-        Debug.Log("USE INFO");
+        //Debug.Log("USE INFO");
         //print("using " + node.Label);
     }
 
