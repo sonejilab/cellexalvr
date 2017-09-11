@@ -44,6 +44,21 @@ public class GroupInfoDisplay : MonoBehaviour
     }
 
     /// <summary>
+    /// Reset the display to only zeroes.
+    /// </summary>
+    public void ResetGroupsInfo()
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < colors.Length; i++)
+        {
+            Color col = colors[i];
+            groups[col] = 0;
+            builder.Append("0\n");
+        }
+        status.text = builder.ToString();
+    }
+
+    /// <summary>
     /// Helper class to compare colors.
     /// </summary>
     private class ColorComparer : IEqualityComparer<Color>

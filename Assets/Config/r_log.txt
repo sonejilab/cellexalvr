@@ -1,6 +1,6 @@
 
 STDOUT:
-Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9663 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9785 
 
 Estimate (local) false discovery rates (partial correlations):
 Step 1... determine cutoff point
@@ -9,9 +9,9 @@ Step 3... compute p-values and estimate empirical PDF/CDF
 Step 4... compute q-values and local fdr
 
 
-Significant edges:  91 
-    Corresponding to  0.13 %  of possible edges 
-Estimating optimal shrinkage intensity lambda (correlation matrix): 0.8853 
+Significant edges:  177 
+    Corresponding to  0.25 %  of possible edges 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9615 
 
 Estimate (local) false discovery rates (partial correlations):
 Step 1... determine cutoff point
@@ -20,9 +20,9 @@ Step 3... compute p-values and estimate empirical PDF/CDF
 Step 4... compute q-values and local fdr
 
 
-Significant edges:  79 
-    Corresponding to  0.11 %  of possible edges 
-Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9198 
+Significant edges:  131 
+    Corresponding to  0.18 %  of possible edges 
+Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9767 
 
 Estimate (local) false discovery rates (partial correlations):
 Step 1... determine cutoff point
@@ -31,19 +31,8 @@ Step 3... compute p-values and estimate empirical PDF/CDF
 Step 4... compute q-values and local fdr
 
 
-Significant edges:  92 
-    Corresponding to  0.13 %  of possible edges 
-Estimating optimal shrinkage intensity lambda (correlation matrix): 0.9384 
-
-Estimate (local) false discovery rates (partial correlations):
-Step 1... determine cutoff point
-Step 2... estimate parameters of null distribution and eta0
-Step 3... compute p-values and estimate empirical PDF/CDF
-Step 4... compute q-values and local fdr
-
-
-Significant edges:  79 
-    Corresponding to  0.11 %  of possible edges 
+Significant edges:  104 
+    Corresponding to  0.15 %  of possible edges 
 
 STDERR:
 Loading required package: rgl
@@ -128,8 +117,10 @@ Warning messages:
 5: package 'alphashape3d' was built under R version 3.4.1 
 6: package 'geometry' was built under R version 3.4.1 
 Warning messages:
-1: 2 instances of variables with zero scale detected! 
-2: 2 instances of variables with zero scale detected! 
+1: 1 instances of variables with zero scale detected! 
+2: 1 instances of variables with zero scale detected! 
+3: 3 instances of variables with zero scale detected! 
+4: 3 instances of variables with zero scale detected! 
 
 ----------
 

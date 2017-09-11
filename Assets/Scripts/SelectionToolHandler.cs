@@ -117,6 +117,15 @@ public class SelectionToolHandler : MonoBehaviour
             // turn off the redo buttons
             undoButtonsHandler.EndOfHistoryReached();
         }
+        if (!selectionMade)
+        {
+            // if this is a new selection we should reset some stuff
+            selectionMade = true;
+            selectionToolMenu.SelectionStarted();
+            groupInfoDisplay.ResetGroupsInfo();
+            // turn on the undo buttons
+            undoButtonsHandler.BeginningOfHistoryLeft();
+        }
         // The user might select cells that already have that color
         if (!Equals(newColor, oldColor))
         {
@@ -131,13 +140,6 @@ public class SelectionToolHandler : MonoBehaviour
             {
                 groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
             }
-        }
-        if (!selectionMade)
-        {
-            selectionMade = true;
-            selectionToolMenu.SelectionStarted();
-            // turn on the undo buttons
-            undoButtonsHandler.BeginningOfHistoryLeft();
         }
     }
 
