@@ -304,7 +304,7 @@ namespace SQLiter
                 _command.Dispose();
             _command = null;
 
-            if (_connection != null && _connection.State != ConnectionState.Closed)
+            if (_connection != null && _connection.State != System.Data.ConnectionState.Closed)
                 _connection.Close();
             _connection = null;
         }

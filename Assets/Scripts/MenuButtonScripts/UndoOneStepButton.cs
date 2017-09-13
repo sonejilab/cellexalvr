@@ -22,6 +22,7 @@ public class UndoOneStepButton : StationaryButton
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -29,10 +30,9 @@ public class UndoOneStepButton : StationaryButton
         }
     }
 
-    public void SetButtonActive(bool active)
+    public override void SetButtonActivated(bool active)
     {
-        if (!active) controllerInside = false;
-        buttonCollider.enabled = active;
+        base.SetButtonActivated(active);
         spriteRenderer.sprite = active ? standardTexture : grayScaleTexture;
     }
 }

@@ -3,34 +3,131 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
-
+using VRTK;
 /// <summary>
 /// This class represents the helper tool. Its job is to provide the user with descriptions of whatever it touches.
 /// </summary>
-class HelperTool : MonoBehaviour
+public class HelperTool : MonoBehaviour
 {
 
     public TextMeshPro textMesh;
+    public SteamVR_TrackedController rightController;
+    public VRTK_StraightPointerRenderer pointerRenderer;
+    public VRTK_Pointer pointer;
+    public LayerMask layersToIgnore;
+    public Transform customOrigin;
+    public GameObject transparentQuad;
+    public GameObject opaqueQuad;
+
+    private string standardText = "Point the laser towards something to find out more";
     private string descriptionFilePath = Directory.GetCurrentDirectory() + "\\Assets\\descriptions.txt";
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
+    private SteamVR_Controller.Device device;
+    private Ray ray;
+    private RaycastHit hit;
+    private Transform raycastingSource;
+    private LayerMask laserPointerLayersToIgnore;
+    private Transform laserPointerCustomOrigin;
+    private bool activated;
 
     private void Start()
     {
         ReadDescriptionFile(descriptionFilePath);
+        opaqueQuad.SetActive(false);
+        transparentQuad.SetActive(true);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (descriptions.ContainsKey(other.tag))
+        if (activated)
         {
-            textMesh.text = descriptions[other.tag];
-        }
-        else if (descriptions.ContainsKey(other.gameObject.name))
-        {
-            textMesh.text = descriptions[other.gameObject.name];
+            raycastingSource = customOrigin.transform;
+            device = SteamVR_Controller.Input((int)rightController.controllerIndex);
+            ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            if (Physics.Raycast(ray, out hit, 100f, ~layersToIgnore))
+            {
+                GameObject hitGameObject = hit.transform.gameObject;
+                if (descriptions.ContainsKey(hitGameObject.tag))
+                {
+                    // if the gameobject's tag is in the dictionary
+                    textMesh.text = descriptions[hitGameObject.tag];
+                    SetQuadOpaque(true);
+                }
+                else if (descriptions.ContainsKey(hitGameObject.name))
+                {
+                    // if the gameobject's name is in the dictionary
+                    textMesh.text = descriptions[hitGameObject.name];
+                    SetQuadOpaque(true);
+                }
+                else if (descriptions.ContainsKey(hitGameObject.transform.parent.gameObject.name))
+                {
+                    // if the gameobject's parent's name is in the dictionary
+                    // this happens when the raycast hits the keyboard
+                    textMesh.text = descriptions[hitGameObject.transform.parent.gameObject.name];
+                    SetQuadOpaque(true);
+                }
+                else
+                {
+                    // if we hit something but don't have a description for it
+                    textMesh.text = standardText;
+                    SetQuadOpaque(false);
+                }
+            }
+            else
+            {
+                // if we hit nothing
+                textMesh.text = standardText;
+                SetQuadOpaque(false);
+            }
         }
     }
 
+    /// <summary>
+    /// Sets one of the quads that act as background to active or inactive.
+    /// </summary>
+    /// <param name="opaque"> True for showing the opaque quad, false for showing the transparent. </param>
+    private void SetQuadOpaque(bool opaque)
+    {
+        opaqueQuad.SetActive(opaque);
+        transparentQuad.SetActive(!opaque);
+    }
+
+    /// <summary>
+    /// Activates or deactivates this tool.
+    /// </summary>
+    /// <param name="activate"> True for activating the tool false for deactivating. </param>
+    public void SetToolActivated(bool activate)
+    {
+        if (activate)
+        {
+            // change some fields to make the laser pointer work as intended
+            laserPointerLayersToIgnore = pointerRenderer.layersToIgnore;
+            pointerRenderer.layersToIgnore = layersToIgnore;
+            laserPointerCustomOrigin = pointer.customOrigin;
+            pointer.customOrigin = customOrigin;
+        }
+        else
+        {
+            // change the fields back again
+            pointerRenderer.layersToIgnore = laserPointerLayersToIgnore;
+            pointer.customOrigin = laserPointerCustomOrigin;
+        }
+        pointerRenderer.enabled = activate;
+        activated = activate;
+        gameObject.SetActive(activate);
+    }
+
+    /*    private void OnTriggerEnter(Collider other)
+        {
+            if (descriptions.ContainsKey(other.tag))
+            {
+                textMesh.text = descriptions[other.tag];
+            }
+            else if (descriptions.ContainsKey(other.gameObject.name))
+            {
+                textMesh.text = descriptions[other.gameObject.name];
+            }
+        }*/
     /// <summary>
     /// Reads the descriptions.txt which should be in the Assets folder.
     /// </summary>
@@ -50,6 +147,7 @@ class HelperTool : MonoBehaviour
             Debug.LogWarning("No description file found at " + descriptionFilePath);
             return;
         }
+
         foreach (string line in lines)
         {
             // ignore empty lines

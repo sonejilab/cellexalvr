@@ -15,6 +15,7 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
+    [HideInInspector]
     public ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
     private GameObject pedestal;
@@ -71,6 +72,7 @@ public class NetworkCenter : MonoBehaviour
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             controllerInside = false;
+            numColliders = 0;
             enlarge = true;
         }
 

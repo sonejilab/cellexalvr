@@ -8,42 +8,63 @@ public class GraphPoint : MonoBehaviour
 
     private Cell cell;
     private float x, y, z;
-    private Material defaultMat;
-    private Color selectedColor;
     private Graph defaultParent;
     private Renderer graphPointRenderer;
-    public string GraphName { get { return defaultParent.GraphName; } }
+    private Color selectedColor;
+    private Color defaultColor = new Color(1, 1, 1);
+
+    #region Properties
+
+    public string GraphName
+    {
+        get { return defaultParent.GraphName; }
+    }
+
+    public Cell Cell
+    {
+        get { return cell; }
+    }
+
+    public string Label
+    {
+        get { return cell.Label; }
+    }
+
+    #endregion
 
     public void Start()
     {
         graphPointRenderer = GetComponent<Renderer>();
     }
 
-    public void SetCoordinates(Cell cell, float x, float y, float z, Vector3 graphAreaSize)
+    /// <summary>
+    /// Sets some variables.
+    /// </summary>
+    /// <param name="cell"> The cell that this graphpoint is representing. </param>
+    /// <param name="x"> The x-coordinate. </param>
+    /// <param name="y"> The y-coordinate. </param>
+    /// <param name="z"> The z-coordinate. </param>
+    public void SetCoordinates(Cell cell, float x, float y, float z)
     {
         this.cell = cell;
         this.x = x;
         this.y = y;
         this.z = z;
-        defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
         cell.AddGraphPoint(this);
     }
 
-    public string GetLabel()
+    /// <summary>
+    /// Changes this graphpoints color.
+    /// </summary>
+    /// <param name="col"> The new color. </param>
+    public void SetColor(Color col)
     {
-        return cell.Label;
+        graphPointRenderer.material.color = col;
     }
 
-    public void SetMaterial(Material material)
-    {
-        graphPointRenderer.material = material;
-    }
-
-    public Material GetMaterial()
-    {
-        return graphPointRenderer.material;
-    }
-
+    /// <summary>
+    /// Resets the position, scale and color of this graphpoint.
+    /// </summary>
     public void ResetCoords()
     {
         transform.localPosition = new Vector3(x, y, z);
@@ -55,20 +76,22 @@ public class GraphPoint : MonoBehaviour
         {
             Destroy(rig);
         }
-        defaultMat = Resources.Load("SphereDefault", typeof(Material)) as Material;
-        SetMaterial(defaultMat);
+        graphPointRenderer.material.color = defaultColor;
     }
 
-    public Cell GetCell()
-    {
-        return cell;
-    }
 
+    /// <summary>
+    /// Saves this graphpoint's parent graph.
+    /// </summary>
+    /// <param name="parent"> The graph this graphpoint is part of. </param>
     public void SaveParent(Graph parent)
     {
         defaultParent = parent;
     }
 
+    /// <summary>
+    /// Resets the color of this graphpoint.
+    /// </summary>
     public void ResetColor()
     {
         graphPointRenderer.material = Resources.Load("SphereDefault", typeof(Material)) as Material;

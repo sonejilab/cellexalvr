@@ -20,12 +20,12 @@ public class UndoButtonsHandler : MonoBehaviour
 
     public void TurnAllButtonsOff()
     {
-        undoOneStepButton.SetButtonActive(false);
-        redoOneStepButton.SetButtonActive(false);
-        undoTenStepsButton.SetButtonActive(false);
-        redoTenStepsButton.SetButtonActive(false);
-        undoLastColorButton.SetButtonActive(false);
-        redoLastColorButton.SetButtonActive(false);
+        undoOneStepButton.SetButtonActivated(false);
+        redoOneStepButton.SetButtonActivated(false);
+        undoTenStepsButton.SetButtonActivated(false);
+        redoTenStepsButton.SetButtonActivated(false);
+        undoLastColorButton.SetButtonActivated(false);
+        redoLastColorButton.SetButtonActivated(false);
     }
 
     /// <summary>
@@ -33,9 +33,9 @@ public class UndoButtonsHandler : MonoBehaviour
     /// </summary>
     public void BeginningOfHistoryReached()
     {
-        undoOneStepButton.SetButtonActive(false);
-        undoTenStepsButton.SetButtonActive(false);
-        undoLastColorButton.SetButtonActive(false);
+        undoOneStepButton.SetButtonActivated(false);
+        undoTenStepsButton.SetButtonActivated(false);
+        undoLastColorButton.SetButtonActivated(false);
     }
 
     /// <summary>
@@ -43,9 +43,9 @@ public class UndoButtonsHandler : MonoBehaviour
     /// </summary>
     public void BeginningOfHistoryLeft()
     {
-        undoOneStepButton.SetButtonActive(true);
-        undoTenStepsButton.SetButtonActive(true);
-        undoLastColorButton.SetButtonActive(true);
+        undoOneStepButton.SetButtonActivated(true);
+        undoTenStepsButton.SetButtonActivated(true);
+        undoLastColorButton.SetButtonActivated(true);
     }
 
     /// <summary>
@@ -53,9 +53,9 @@ public class UndoButtonsHandler : MonoBehaviour
     /// </summary>
     public void EndOfHistoryReached()
     {
-        redoOneStepButton.SetButtonActive(false);
-        redoTenStepsButton.SetButtonActive(false);
-        redoLastColorButton.SetButtonActive(false);
+        redoOneStepButton.SetButtonActivated(false);
+        redoTenStepsButton.SetButtonActivated(false);
+        redoLastColorButton.SetButtonActivated(false);
     }
 
     /// <summary>
@@ -63,9 +63,9 @@ public class UndoButtonsHandler : MonoBehaviour
     /// </summary>
     public void EndOfHistoryLeft()
     {
-        redoOneStepButton.SetButtonActive(true);
-        redoTenStepsButton.SetButtonActive(true);
-        redoLastColorButton.SetButtonActive(true);
+        redoOneStepButton.SetButtonActivated(true);
+        redoTenStepsButton.SetButtonActivated(true);
+        redoLastColorButton.SetButtonActivated(true);
     }
 }
 

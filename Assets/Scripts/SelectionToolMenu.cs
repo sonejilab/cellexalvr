@@ -29,6 +29,9 @@ public class SelectionToolMenu : MonoBehaviour
         //}
     }
 
+    /// <summary>
+    /// Sets all to inactive.
+    /// </summary>
     public void InitializeButtons()
     {
         confirmSelectionButton.SetButtonState(false);
@@ -38,6 +41,9 @@ public class SelectionToolMenu : MonoBehaviour
         createNetworksButton.SetButtonState(false);
     }
 
+    /// <summary>
+    /// Sets confirm, remove and undo to active, rest inactive.
+    /// </summary>
     public void SelectionStarted()
     {
         createHeatmapButton.SetButtonState(false);
@@ -47,6 +53,9 @@ public class SelectionToolMenu : MonoBehaviour
         createNetworksButton.SetButtonState(false);
     }
 
+    /// <summary>
+    /// Sets heatmap and network to active, rest inactive.
+    /// </summary>
     public void ConfirmSelection()
     {
         createHeatmapButton.SetButtonState(true);
@@ -56,6 +65,9 @@ public class SelectionToolMenu : MonoBehaviour
         createNetworksButton.SetButtonState(true);
     }
 
+    /// <summary>
+    /// Sets all to inactive.
+    /// </summary>
     public void RemoveSelection()
     {
         confirmSelectionButton.SetButtonState(false);
@@ -65,6 +77,9 @@ public class SelectionToolMenu : MonoBehaviour
         createNetworksButton.SetButtonState(false);
     }
 
+    /// <summary>
+    /// Sets all to inactive.
+    /// </summary>
     public void UndoSelection()
     {
         confirmSelectionButton.SetButtonState(false);

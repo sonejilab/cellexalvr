@@ -24,7 +24,6 @@ public class HelpToolButton : StationaryButton
             }
             else
             {
-                helpTool.SetActive(true);
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
                 controllerModelSwitcher.ActivateDesiredTool();
             }

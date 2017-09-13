@@ -19,14 +19,12 @@ public class Graph : MonoBehaviour
     private Vector3 minCoordValues;
     private Vector3 diffCoordValues;
     private Vector3 minAreaValues;
-    private Vector3 areaSize;
     private Vector3 defaultPos;
     private Vector3 defaultScale;
 
     void Start()
     {
         points = new List<GraphPoint>(1000);
-        areaSize = new Vector3(1, 1, 1);
         minAreaValues = transform.position;
         defaultPos = transform.position;
     }
@@ -61,7 +59,6 @@ public class Graph : MonoBehaviour
         scaledCoordinates.x /= (diffCoordValues.x);
         scaledCoordinates.y /= (diffCoordValues.y);
         scaledCoordinates.z /= (diffCoordValues.z);
-        scaledCoordinates.Scale(areaSize);
         scaledCoordinates += minAreaValues;
         return scaledCoordinates;
     }
@@ -85,7 +82,7 @@ public class Graph : MonoBehaviour
         Vector3 scaledCoordinates = ScaleCoordinates(x, y, z);
         newGraphpoint = Instantiate(graphpoint);
         newGraphpoint.gameObject.SetActive(true);
-        newGraphpoint.SetCoordinates(cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z, areaSize);
+        newGraphpoint.SetCoordinates(cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
         newGraphpoint.transform.parent = transform;
         newGraphpoint.transform.localPosition = new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
         newGraphpoint.SaveParent(this);

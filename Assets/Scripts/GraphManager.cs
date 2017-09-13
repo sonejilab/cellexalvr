@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
+using System;
 
 /// <summary>
 /// This class represents a manager that holds all graphs.
@@ -98,6 +99,11 @@ public class GraphManager : MonoBehaviour
             Destroy(network.gameObject);
         }
         networks.Clear();
+    }
+
+    internal void RecolorGraphPoint(string graphname, string label, Color col)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

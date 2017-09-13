@@ -79,9 +79,11 @@ public class Heatmap : MonoBehaviour
         string saveFileName = saveDir + @"\heatmap_" + time + ".png";
         //print(imageFilepath);
         //print(saveDir + @"\heatmap_" + time + ".png");
-        // if the button is pressed twice the same second, the filenames will collapse.
+        // if the button is pressed twice the same second, the filenames will collide.
         while (File.Exists(saveFileName))
         {
+            // append "_d" until the filenames no longer collide.
+            // microsoft is removing the 260 character filename limit so this shouldn't run into too many problems
             saveFileName += "_d";
         }
         File.Move(imageFilepath, saveFileName);
@@ -94,42 +96,22 @@ public class Heatmap : MonoBehaviour
     public void ColorCells()
     {
         // print("color cells");
-        Graph[] graphs = graphManager.GetComponentsInChildren<Graph>();
-        foreach (Graph g in graphs)
+        foreach (KeyValuePair<Cell, Color> pair in containedCells)
         {
-            GraphPoint[] points = g.GetComponentsInChildren<GraphPoint>();
-            foreach (GraphPoint gp in points)
-            {
-                if (containedCells.ContainsKey(gp.GetCell()))
-                {
-                    gp.GetComponent<Renderer>().material.color = containedCells[gp.GetCell()];
-                }
-
-            }
+            pair.Key.SetColor(pair.Value);
         }
     }
 
     /// <summary>
     /// Sets some variables. Should be called after a heatmap is instantiated.
     /// </summary>
-    public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler, ArrayList cells, GameObject fire)
+    public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler, Dictionary<Cell, Color> colors, GameObject fire)
     {
         containedCells = new Dictionary<Cell, Color>();
         this.graphManager = graphManager;
         this.fire = fire;
-        int numberOfColours = 0;
-        List<Color> checkedColors = new List<Color>();
-        foreach (GraphPoint g in cells)
-        {
-            Color color = g.GetMaterial().color;
-            containedCells[g.GetCell()] = color;
-            if (!checkedColors.Contains(color))
-            {
-                numberOfColours++;
-                checkedColors.Add(color);
-            }
-        }
-        infoText.text = "Total number of cells: " + cells.Count;
-        infoText.text += "\nNumber of colours: " + numberOfColours;
+        containedCells = colors;
+        infoText.text = "Total number of cells: " + colors.Count;
+        // infoText.text += "\nNumber of colours: " + numberOfColours;
     }
 }

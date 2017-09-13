@@ -23,36 +23,17 @@ class MinimizeToolButton : StationaryButton
         bool deleteToolActived = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Minimizer;
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            //deleteTool.gameObject.SetActive(!deleteToolActive);
             if (deleteToolActived)
             {
                 controllerModelSwitcher.TurnOffActiveTool(true);
-                changeSprite = true;
-                //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
-                //controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
+                spriteRenderer.sprite = original;
             }
             else
             {
-
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Minimizer;
                 controllerModelSwitcher.ActivateDesiredTool();
-                changeSprite = true;
+                spriteRenderer.sprite = gray;
             }
         }
-        if (changeSprite)
-        {
-            if (deleteToolActived)
-            {
-                standardTexture = original;
-            }
-            if (!deleteToolActived)
-            {
-                standardTexture = gray;
-            }
-            spriteRenderer.sprite = standardTexture;
-            changeSprite = false;
-        }
-
-
     }
 }

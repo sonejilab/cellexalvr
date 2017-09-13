@@ -134,12 +134,6 @@ public class CellManager : MonoBehaviour
         }
 
     }
-
-    internal void SavePreviousExpression(string newGeneName, string removedGeneName)
-    {
-
-    }
-
     public void DeleteCells()
     {
         cells.Clear();

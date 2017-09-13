@@ -11,8 +11,8 @@ args <- commandArgs(trailingOnly = TRUE)
 homedir <- args[1]
 
 datadir <- args[2]
-latest_version <- args[3]
 
+latest_version <- args[3]
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
@@ -20,7 +20,7 @@ group_selection_filepath <- file.path(homedir, "Assets","Data","runtimeGroups", 
 
 #print(group_selection_filepath)
 
-generated_image_filepath <- file.path(homedir, "Assets","Images","heatmap.png")
+generated_image_filepath <- file.path(homedir, "Assets","Images", paste("heatmap_", latest_version, ".png", sep=""))
 
 top_genes_number <- 250
 

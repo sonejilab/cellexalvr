@@ -20,7 +20,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public GameObject fire;
     public GameObject minimizer;
     public GameObject magnifier;
-    public GameObject helpTool;
+    public HelperTool helpTool;
     public SelectionToolButton selectionToolButton;
     public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool };
     // what model we actually want
@@ -97,6 +97,8 @@ public class ControllerModelSwitcher : MonoBehaviour
         switch (model)
         {
             case Model.Normal:
+            case Model.Magnifier:
+            case Model.HelpTool:
                 controllerBodyMeshFilter.mesh = normalControllerMesh;
                 controllerBodyRenderer.material = normalMaterial;
                 break;
@@ -115,14 +117,6 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Minimizer:
                 controllerBodyMeshFilter.mesh = deleteToolMesh;
                 break;
-
-            case Model.Magnifier:
-                controllerBodyMeshFilter.mesh = normalControllerMesh;
-                break;
-
-            case Model.HelpTool:
-                controllerBodyMeshFilter.mesh = normalControllerMesh;
-                break;
         }
     }
 
@@ -135,7 +129,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         fire.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);
-        helpTool.SetActive(false);
+        helpTool.SetToolActivated(false);
         switch (DesiredModel)
         {
             case Model.SelectionTool:
@@ -151,7 +145,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 minimizer.SetActive(true);
                 break;
             case Model.HelpTool:
-                helpTool.SetActive(true);
+                helpTool.SetToolActivated(true);
                 break;
         }
         SwitchToDesiredModel();
@@ -167,7 +161,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         fire.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);
-        helpTool.SetActive(false);
+        helpTool.SetToolActivated(false);
         DesiredModel = Model.Normal;
         if (inMenu)
         {

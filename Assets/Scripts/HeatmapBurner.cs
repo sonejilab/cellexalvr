@@ -43,7 +43,7 @@ public class HeatmapBurner : MonoBehaviour
         fire = Instantiate(firePrefab, heatmapPosition + new Vector3(0, 5 * heatmapScale.z, 0), new Quaternion(0, 0, 0, 0));
         fire.transform.localScale = new Vector3(5 * heatmapScale.x, 0.1f, heatmapScale.z);
         fire.transform.Rotate(new Vector3(270.0f, transform.localEulerAngles.y, 0));
-        this.GetComponents<AudioSource>()[1].PlayDelayed(10000);
+        this.GetComponents<AudioSource>()[0].PlayDelayed(10000);
     }
 
     void FadeHeatmap()

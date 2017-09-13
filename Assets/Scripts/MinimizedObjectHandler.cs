@@ -58,7 +58,8 @@ public class MinimizedObjectHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Should be called when an object is un-minimzied (maximized?)´.
+    /// Tells the minimized object handler that a space in jail is no longer occupied.
+    /// Should be called when an object is un-minimzied.
     /// </summary>
     /// <param name="container"> The container that previously contained the object. </param>
     public void ContainerRemoved(MinimizedObjectContainer container)

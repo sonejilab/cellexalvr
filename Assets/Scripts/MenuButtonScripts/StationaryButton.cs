@@ -17,9 +17,9 @@ public abstract class StationaryButton : MonoBehaviour
     {
         get;
     }
-
     protected SteamVR_Controller.Device device;
-    protected bool controllerInside;
+    protected bool buttonActivated = true;
+    protected bool controllerInside = false;
     protected SpriteRenderer spriteRenderer;
 
     // virtual so other classes may override if needed
@@ -31,6 +31,7 @@ public abstract class StationaryButton : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if (!buttonActivated) return;
         if (other.gameObject.CompareTag("Controller"))
         {
             descriptionText.text = Description;
@@ -41,6 +42,7 @@ public abstract class StationaryButton : MonoBehaviour
 
     protected virtual void OnTriggerExit(Collider other)
     {
+        if (!buttonActivated) return;
         if (other.gameObject.CompareTag("Controller"))
         {
             // sometimes the controller moves to another button before exiting this one.
@@ -53,6 +55,12 @@ public abstract class StationaryButton : MonoBehaviour
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
         }
+    }
+
+    public virtual void SetButtonActivated(bool activate)
+    {
+        if (!activate) controllerInside = false;
+        buttonActivated = activate;
     }
 
 }

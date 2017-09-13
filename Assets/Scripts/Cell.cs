@@ -11,25 +11,30 @@ public class Cell
     private string labelString;
     private Dictionary<string, string> attributes;
     private Dictionary<string, int> facs;
-    //private Dictionary<string, int> geneExpressions;
     private List<GraphPoint> graphPoints;
     private List<Material> materialList;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     public int ExpressionLevel { get; internal set; }
 
+    public string Label
+    {
+        get { return labelString; }
+        set { labelString = value; }
+    }
+
+
+    /// <summary>
+    /// Creates a new cell.
+    /// </summary>
+    /// <param name="label"> A string that differentiates this cell from other cells. </param>
+    /// <param name="materialList"> A list of materials that should be used when coloring. </param>
     public Cell(string label, List<Material> materialList)
     {
         this.labelString = label;
-        //geneExpressions = new Dictionary<string, int> ();
         graphPoints = new List<GraphPoint>();
         this.materialList = materialList;
         attributes = new Dictionary<string, string>();
         facs = new Dictionary<string, int>();
-    }
-
-    public void SetLabel(string label)
-    {
-        labelString = label;
     }
 
     /// <summary>
@@ -50,37 +55,8 @@ public class Cell
         foreach (GraphPoint g in graphPoints)
         {
             g.gameObject.SetActive(!g.gameObject.activeSelf);
-            //if (g.GetComponent<Rigidbody>() == null)
-            //    g.gameObject.AddComponent<Rigidbody>();
         }
     }
-
-    //public void SetExpressionData(string geneName, int colorSlot) {
-    //	if (!geneExpressions.ContainsKey (geneName)) {
-    //		geneExpressions.Add (geneName, colorSlot);
-    //	}
-    //}
-
-    //public Material GetGeneMaterial(string geneName) {
-    //	int colorSlot = 0;
-    //	if (!geneExpressions.TryGetValue (geneName, out colorSlot)) {
-    //		return null;
-    //	} else {
-    //		return materialList [colorSlot];
-    //	}
-    //}
-    public string Label
-    {
-        get
-        {
-            return this.labelString;
-        }
-        set
-        {
-            this.labelString = value;
-        }
-    }
-
 
     /// <summary>
     /// Color this cell by an attribute, if it is of that attribute.
@@ -175,5 +151,17 @@ public class Cell
     {
 
         facs[facsName] = index;
+    }
+
+    /// <summary>
+    /// Sets the color of all graphpoints that are representing this cell.
+    /// </summary>
+    /// <param name="col"> The new color. </param>
+    public void SetColor(Color col)
+    {
+        foreach (GraphPoint g in graphPoints)
+        {
+            g.SetColor(col);
+        }
     }
 }

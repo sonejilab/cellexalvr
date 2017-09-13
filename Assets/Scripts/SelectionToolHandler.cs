@@ -33,6 +33,12 @@ public class SelectionToolHandler : MonoBehaviour
     private bool selectionMade = false;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
+
+    internal void DoClientSelectAdd(string graphName, string label)
+    {
+        throw new NotImplementedException();
+    }
+
     [HideInInspector]
     public int[] groups;
     private int currentColorIndex = 0;
@@ -169,13 +175,13 @@ public class SelectionToolHandler : MonoBehaviour
         {
             // beginning of history reached
             undoButtonsHandler.BeginningOfHistoryReached();
+            selectionToolMenu.UndoSelection();
         }
         else if (indexToMoveTo < 0)
         {
             // no more history
             return;
         }
-
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.GetComponent<Renderer>().material.color = info.fromColor;
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
@@ -199,6 +205,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (historyIndexOffset == selectionHistory.Count)
         {
             undoButtonsHandler.BeginningOfHistoryLeft();
+            selectionToolMenu.SelectionStarted();
         }
 
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
@@ -419,7 +426,7 @@ public class SelectionToolHandler : MonoBehaviour
             foreach (Collider cell in selectedCells)
             {
                 GraphPoint graphPoint = cell.GetComponent<GraphPoint>();
-                file.Write(graphPoint.GetLabel());
+                file.Write(graphPoint.Label);
                 file.Write("\t");
                 Color c = cell.GetComponentInChildren<Renderer>().material.color;
                 int r = (int)(c.r * 255);
@@ -442,12 +449,10 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="enabled"> True if the selection tool should be activated, false if it should be deactivated. </param>
     public void SetSelectionToolEnabled(bool enabled)
     {
-        //controllerModelSwitcher.DesiredModel = enabled ? ControllerModelSwitcher.Model.SelectionTool : ControllerModelSwitcher.Model.Normal;
-        controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
-        //if (affectMenu)
-        //{
-        //    selectionToolMenu.SetEnabledState(enabled);
-        //}
+        if (enabled)
+        {
+            controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
+        }
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = enabled;
