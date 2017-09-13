@@ -5,11 +5,17 @@
 /// </summary>
 public class HelpToolButton : StationaryButton
 {
-    public GameObject helpTool;
-    public ControllerModelSwitcher controllerModelSwitcher;
+    private ControllerModelSwitcher controllerModelSwitcher;
+
     protected override string Description
     {
         get { return "Toggles the help tool"; }
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     void Update()

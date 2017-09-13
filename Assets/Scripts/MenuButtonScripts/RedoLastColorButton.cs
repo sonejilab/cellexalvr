@@ -5,13 +5,19 @@
 /// </summary>
 public class RedoLastColorButton : StationaryButton
 {
-
-    public SelectionToolHandler selectionToolHandler;
     public Sprite grayScaleTexture;
+
+    private SelectionToolHandler selectionToolHandler;
     private Collider buttonCollider;
+
     protected override string Description
     {
         get { return "Redo last color"; }
+    }
+
+    private void Start()
+    {
+        selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
     protected override void Awake()

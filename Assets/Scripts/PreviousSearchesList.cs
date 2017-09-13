@@ -5,11 +5,8 @@
 /// </summary>
 public class PreviousSearchesList : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
 
-    public CellManager cellManager;
-    public PreviousSearchesListNode topListNode;
-    public SteamVR_TrackedController rightController;
-    public SteamVR_Controller.Device device;
     public Material normalMaterial;
     public Material highlightedMaterial;
     public Texture searchLockNormalTexture;
@@ -19,6 +16,11 @@ public class PreviousSearchesList : MonoBehaviour
     public Texture correlatedGenesButtonTexture;
     public Texture correlatedGenesButtonHighlightedTexture;
     public Texture correlatedGenesButtonWorkingTexture;
+
+    private PreviousSearchesListNode topListNode;
+    private SteamVR_TrackedObject rightController;
+    private SteamVR_Controller.Device device;
+    private CellManager cellManager;
     private Transform raycastingSource;
     private Ray ray;
     private RaycastHit hit;
@@ -33,10 +35,17 @@ public class PreviousSearchesList : MonoBehaviour
     private CorrelatedGenesListNode lastCorrelatedGenesListNode;
     private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
+    private void Start()
+    {
+        topListNode = referenceManager.topListNode;
+        rightController = referenceManager.rightController;
+        cellManager = referenceManager.cellManager;
+    }
+
     void Update()
     {
         raycastingSource = rightController.transform;
-        device = SteamVR_Controller.Input((int)rightController.controllerIndex);
+        device = SteamVR_Controller.Input((int)rightController.index);
         // this method is probably responsible for too much. oh well.
         ray = new Ray(raycastingSource.position, raycastingSource.forward);
         if (Physics.Raycast(ray, out hit))

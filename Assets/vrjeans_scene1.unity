@@ -663,6 +663,8 @@ GameObject:
   m_Component:
   - component: {fileID: 411}
   - component: {fileID: 1210}
+  - component: {fileID: 132}
+  - component: {fileID: 133}
   m_Layer: 0
   m_Name: InputReader
   m_TagString: Untagged
@@ -670,6 +672,67 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9de993d076257b48865457786c5dcc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f587f3de672fd44a9f56f7a325dc237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightController: {fileID: 1308}
+  leftController: {fileID: 124}
+  controllerModelSwitcher: {fileID: 294}
+  groupInfoDisplay: {fileID: 1241101}
+  statusDisplay: {fileID: 1999331952}
+  headset: {fileID: 51}
+  selectionToolHandler: {fileID: 1187}
+  fire: {fileID: 153}
+  minimizeTool: {fileID: 1261628826}
+  helpTool: {fileID: 1361679930}
+  magnifierTool: {fileID: 882508321}
+  mainMenu: {fileID: 2113298552}
+  arcsSubMenu: {fileID: 1984250942}
+  attributeSubMenu: {fileID: 1118}
+  indexMenu: {fileID: 1174890052}
+  selectionToolMenu: {fileID: 1832894451}
+  undoButtonsHandler: {fileID: 1832894452}
+  frontButtons: {fileID: 247095349}
+  rightButtons: {fileID: 1832894449}
+  backButtons: {fileID: 993328920}
+  leftButtons: {fileID: 194325602}
+  frontDescription: {fileID: 891}
+  rightDescription: {fileID: 777993154}
+  backDescription: {fileID: 1942651074}
+  leftDescription: {fileID: 105887393}
+  menuRotator: {fileID: 2113298554}
+  minimizedObjectHandler: {fileID: 388524306}
+  graphManager: {fileID: 1201}
+  cellManager: {fileID: 1238}
+  heatmapGenerator: {fileID: 1243}
+  networkGenerator: {fileID: 1142}
+  inputFolderGenerator: {fileID: 1165}
+  loaderController: {fileID: 1699248068}
+  inputReader: {fileID: 1210}
+  database: {fileID: 78}
+  keyboard: {fileID: 145}
+  correlatedGenesList: {fileID: 211292001}
+  previousSearchesList: {fileID: 1151}
+  topListNode: {fileID: 1595451470}
 --- !u!1 &145 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1663997795977482, guid: 3401bbec4abeaf8488cf6e04bf1eea32,
@@ -4006,7 +4069,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 201}
-  m_Mesh: {fileID: 238360977}
+  m_Mesh: {fileID: 1435238852}
 --- !u!23 &206
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4021,7 +4084,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 1275308763}
+  - {fileID: 1179959109}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4416,7 +4479,7 @@ MonoBehaviour:
   selectionButton: 3
   selectOnPress: 0
   interactWithObjects: 1
-  grabToPointerTip: 0
+  grabToPointerTip: 1
   controller: {fileID: 0}
   customOrigin: {fileID: 0}
 --- !u!1 &290
@@ -4510,22 +4573,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c451605470975f247a264749d7737813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   renderModel: {fileID: 28}
   controllerBody: {fileID: 1121076189}
   normalControllerMesh: {fileID: 4300000, guid: b5bbcc5ab6517634493a49772456bcc1,
     type: 3}
   menuControllerMesh: {fileID: 4300000, guid: 496bf1870f67e5745abab4834af9e4a2, type: 3}
-  selectionToolHandler: {fileID: 1187}
   selectionToolMesh: {fileID: 4300000, guid: f4606eb4b78ab994e8a6b08bb5174d40, type: 3}
   deleteToolMesh: {fileID: 4300000, guid: 68abd0a4163d6224e813ab7ec4ad75df, type: 3}
   normalMaterial: {fileID: 2100000, guid: cc151daa0e8ba3c48abed9c86b2e090d, type: 2}
   selectionToolHandlerMaterial: {fileID: 2100000, guid: 96b0e99b8991fab4e844e566d297fd42,
     type: 2}
-  fire: {fileID: 153}
-  minimizer: {fileID: 1261628823}
-  magnifier: {fileID: 882508318}
-  helpTool: {fileID: 1361679930}
-  selectionToolButton: {fileID: 1979640349}
+  rightLaser: {fileID: 291}
+  leftLaser: {fileID: 299}
 --- !u!65 &295
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4549,10 +4609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cf5a6763bc5e3649872d3e02300d6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 2113298552}
-  boxCollider: {fileID: 295}
-  leftController: {fileID: 124}
-  menuSwitcher: {fileID: 294}
+  referenceManager: {fileID: 133}
 --- !u!114 &297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5390,6 +5447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb99cb70970052542af06785f20c5328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   buttonPrefab: {fileID: 146791636}
 --- !u!114 &1142
 MonoBehaviour:
@@ -5402,10 +5460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c2ae135a008804eb4775cad9105cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolHandler: {fileID: 1187}
-  inputReader: {fileID: 1210}
-  subMenu: {fileID: 1984250942}
-  status: {fileID: 1999331952}
+  referenceManager: {fileID: 133}
   objectsInSky: 0
 --- !u!114 &1151 stripped
 MonoBehaviour:
@@ -5451,14 +5506,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a60ef43efa01494ea9f7df56d0aaacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolMenu: {fileID: 1832894451}
-  manager: {fileID: 1201}
-  controllerModelSwitcher: {fileID: 294}
-  right: {fileID: 280}
-  left: {fileID: 118}
+  referenceManager: {fileID: 133}
   hapticIntensity: 2000
   radialMenu: {fileID: 2012197098}
-  undoButtonsHandler: {fileID: 1832894452}
   buttonIcons:
   - {fileID: 21300000, guid: 3e46672052cbbbb42aa9fd9b4877e411, type: 3}
   - {fileID: 21300000, guid: 23584192f77edcc45a3548e3ab6b6917, type: 3}
@@ -5487,12 +5537,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3aebc3b316f3a843ac559c52145e83d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellManager: {fileID: 1238}
+  referenceManager: {fileID: 133}
   graphPrefab: {fileID: 114827269215865622, guid: dfbe2cb759078df48b6b7f0c5e2046ec,
     type: 2}
   goodSound: {fileID: 870}
   badSound: {fileID: 869}
-  selectionToolHandler: {fileID: 1187}
   saveScene: {fileID: 0}
   directory: 
 --- !u!114 &1210
@@ -5506,21 +5555,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1387051ba67a5d64d8d9fda78daa2dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphManager: {fileID: 1201}
-  cellManager: {fileID: 1238}
-  loaderController: {fileID: 1699248068}
-  database: {fileID: 78}
-  selectionToolHandler: {fileID: 1187}
-  attributeSubMenu: {fileID: 1118}
-  arcsSubMenu: {fileID: 1984250942}
-  indexMenu: {fileID: 1174890052}
+  referenceManager: {fileID: 133}
   networkPrefab: {fileID: 114190743744166870, guid: 802de9a0247fe3f4aa4ce2c5509c2eef,
     type: 2}
   networkNodePrefab: {fileID: 114252115367115154, guid: 5cb849ea400b8b2448cdb7222f0253ef,
     type: 2}
-  headset: {fileID: 51}
-  status: {fileID: 1999331952}
-  rightController: {fileID: 1308}
   debug: 0
   doLoad: 0
 --- !u!114 &1238
@@ -5535,6 +5574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76cbe11f03b36843b137ab4b13b8f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   materialList:
   - {fileID: 2100000, guid: 6049df46edb84b646915f70cb0eee763, type: 2}
   - {fileID: 2100000, guid: adcf57f1d10256c44853b18b2f6bf647, type: 2}
@@ -5566,10 +5606,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 10a31330da06c844d8016440567a36f9, type: 2}
   - {fileID: 2100000, guid: 11ac9b48a8fa0354caa01227b0ae159b, type: 2}
   - {fileID: 2100000, guid: aa176ff715b55424391dbc97233c72a3, type: 2}
-  database: {fileID: 78}
-  right: {fileID: 280}
   controllerActions: {fileID: 1330}
-  topListNode: {fileID: 1595451470}
 --- !u!114 &1243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5581,13 +5618,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4b373d8378073e4abd00a8552530829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolHandler: {fileID: 1187}
+  referenceManager: {fileID: 133}
   heatmapPrefab: {fileID: 1174169366114494, guid: 7a0a3d37c2650024199a218048c4357c,
     type: 2}
   errorMessageController: {fileID: 1278}
-  graphManager: {fileID: 1201}
-  fire: {fileID: 153}
-  status: {fileID: 1999331952}
 --- !u!114 &1278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6544,7 +6578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc79419bb53b91c46aff938a5a6ec244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   toggleToState: 0
 --- !u!23 &74680353
 MeshRenderer:
@@ -7300,14 +7334,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a1fb98e8726d944ba72e7055177531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 7156628462d7d824c9f34852f0b59457, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 53a80acee57b5d74bbd114724394a1eb, type: 3}
   frontsideRenderer: {fileID: 130273292}
   backsideRenderer: {fileID: 68607691}
-  networkGenerator: {fileID: 1142}
-  rotator: {fileID: 2113298554}
 --- !u!212 &130273292
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7473,11 +7505,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb102ebae1c22b4990541d97f16e98d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellManager: {fileID: 1238}
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   standardTexture: {fileID: 21300000, guid: e5689c48a3194d64ba3c3275b973bf7b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 17e3a5e9ab99f0749a11745d15f41ee5, type: 3}
-  description: {fileID: 1472926914}
 --- !u!65 &146791637
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8167,13 +8197,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd50dc6fc487cb49b87c4144f1aca74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 0e8cfe465d950044e8e145b01c0a75d7, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 3bd8faa508c44124287ba74fcab0d50f, type: 3}
   frontsideRenderer: {fileID: 206158646}
   backsideRenderer: {fileID: 1339723219}
-  selectionToolHandler: {fileID: 1187}
 --- !u!212 &206158646
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8567,134 +8596,6 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
---- !u!43 &238360977
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 8
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 24
-    topology: 0
-    firstVertex: 0
-    vertexCount: 8
-    localAABB:
-      m_Center: {x: 0, y: 0.01, z: 0}
-      m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
-  m_Skin: []
-  m_VertexData:
-    m_CurrentChannels: 13
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 28
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 288
-    _typelessdata: 0000c03f0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0.01, z: 0}
-    m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshOptimized: 0
 --- !u!1 &241174622
 GameObject:
   m_ObjectHideFlags: 0
@@ -9164,10 +9065,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 1592399188}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &311639648
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9601,7 +9500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2704df78b44f42f4ab22d5a17bb21e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   toggleToState: 1
 --- !u!23 &352313605
 MeshRenderer:
@@ -10114,12 +10013,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f5e9fe505387841b885f62241589d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 6c58d987b8d2c614196f58f1bd4bbc68, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e5fbf1202ec23fe489d136359a8b637b, type: 3}
-  helpTool: {fileID: 1361679926}
-  controllerModelSwitcher: {fileID: 294}
 --- !u!212 &442242567
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10667,12 +10564,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed68e3ca0fe13a745974ba70a724b4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 60125c79103b77c44b9c4cc8be20579d, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 68012fc251bb15e469e6b50848049436, type: 3}
-  controllerModelSwitcher: {fileID: 294}
-  deleteTool: {fileID: 1261628826}
   original: {fileID: 21300000, guid: 60125c79103b77c44b9c4cc8be20579d, type: 3}
   gray: {fileID: 21300000, guid: ead120639dda0fa4295b1025a7e1c8ab, type: 3}
 --- !u!212 &496862245
@@ -11805,10 +11700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 1389438956}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &610946505
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12137,7 +12030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5ec5e3780dbe54e84d063bfecb3234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: a0ee82edf9e986044a5cdfa503947359, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 0cb5f9e3b4f5a7c488c935c25bb5a658, type: 3}
@@ -12283,16 +12176,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7f23c0668206a4ebd2ec81a2202d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: a01642474cdcf244baca1f450f0dfeb0, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2f5e8dd50b722cd4eb9bc58f980b68d8, type: 3}
-  graphManager: {fileID: 1201}
-  inputFolderGenerator: {fileID: 1165}
-  loader: {fileID: 1699248068}
-  previousSearchesList: {fileID: 1151}
-  inputFolderList: {fileID: 84}
-  heatmapGenerator: {fileID: 1243}
 --- !u!212 &659682436
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12392,10 +12279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 1847100711}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &662444411
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13410,12 +13295,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994ab8f3be3c8c74ea784d489c223770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: e560a6a6f0f63434d9b6aa34a4b8dc1b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: bb3c43d5fbff98d458df0453eb04145f, type: 3}
-  controllerModelSwitcher: {fileID: 294}
-  magnifier: {fileID: 0}
   gray: {fileID: 21300000, guid: 27fea953d5bd6b34b9823bac486c599b, type: 3}
   original: {fileID: 21300000, guid: e560a6a6f0f63434d9b6aa34a4b8dc1b, type: 3}
 --- !u!1 &809358228
@@ -13524,12 +13407,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e64f24c2caf796499f683e67f27cdfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: cd01d99dd4d419f4b953b1b9c4f671d3, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 17e3a5e9ab99f0749a11745d15f41ee5, type: 3}
-  attributeMenu: {fileID: 1851298793}
-  buttons: {fileID: 194325602}
 --- !u!212 &821747571
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -14526,8 +14407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61e5d44e010bd647acc43f35e14e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
-  arcsSubMenu: {fileID: 1984250942}
+  referenceManager: {fileID: 0}
   tab: {fileID: 857516042}
 --- !u!1 &906969247
 GameObject:
@@ -14604,10 +14484,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 787789497}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &907781680
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14859,12 +14737,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b7699eeac153b4fa6ef5fb4fdc4818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: ae8c76c3064bf41499eadd50f407a581, type: 3}
   highlightedTexture: {fileID: 21300000, guid: ec947d47739f28a449907286561988e0, type: 3}
-  attributeMenu: {fileID: 1851298793}
-  buttons: {fileID: 194325602}
 --- !u!212 &973701861
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15254,8 +15130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8053eeb80c81a93448228254bd3075a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
-  cellManager: {fileID: 1238}
+  referenceManager: {fileID: 133}
   description: {fileID: 1543237494}
 --- !u!65 &988306737
 BoxCollider:
@@ -16117,7 +15992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc79419bb53b91c46aff938a5a6ec244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   toggleToState: 1
 --- !u!23 &1034594701
 MeshRenderer:
@@ -16218,12 +16093,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1568f0eed36e8e4cb02a2c6a9a67f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 0658fd4d37f95d64ead0cda820840306, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 17bd1c9bb1117324785b0483c5dbffdb, type: 3}
-  fire: {fileID: 153}
-  controllerModelSwitcher: {fileID: 294}
 --- !u!212 &1040922836
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -17200,16 +17073,16 @@ Prefab:
     - target: {fileID: 224461635667850894, guid: 3401bbec4abeaf8488cf6e04bf1eea32,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00000013944918
+      value: -0.00000039566999
       objectReference: {fileID: 0}
     - target: {fileID: 1663997795977482, guid: 3401bbec4abeaf8488cf6e04bf1eea32, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224560885940876424, guid: 3401bbec4abeaf8488cf6e04bf1eea32,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00000037786776
+      value: -0.0000001572514
       objectReference: {fileID: 0}
     - target: {fileID: 102503497904452344, guid: 3401bbec4abeaf8488cf6e04bf1eea32,
         type: 2}
@@ -18199,6 +18072,11 @@ Prefab:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 2100000, guid: e00995507c2406448b4c8429136104dd, type: 3}
+    - target: {fileID: 114858320945418560, guid: 3401bbec4abeaf8488cf6e04bf1eea32,
+        type: 2}
+      propertyPath: referenceManager
+      value: 
+      objectReference: {fileID: 133}
     m_RemovedComponents:
     - {fileID: 65867254427515290, guid: 3401bbec4abeaf8488cf6e04bf1eea32, type: 2}
     - {fileID: 65205855322436624, guid: 3401bbec4abeaf8488cf6e04bf1eea32, type: 2}
@@ -18589,11 +18467,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeed09a80dea6264080b4e2781e64a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: ae42020c1587bb1408f6e4470192895b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 7e0945ecbf5f3d84e9105f0c2e66dc02, type: 3}
-  selectionToolHandler: {fileID: 1187}
   grayScaleTexture: {fileID: 21300000, guid: fef34dd2ecaa5234ebcb82039cbcf517, type: 3}
 --- !u!212 &1124718774
 SpriteRenderer:
@@ -19179,6 +19056,38 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1174890050}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!21 &1179959109
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1192999971
 GameObject:
   m_ObjectHideFlags: 0
@@ -19223,11 +19132,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6dcb94bf4b930499790d035997064e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 3881dade02783c8438d70b8a7efc0e2b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 4f6db7ac71e1d434c95d55ce48a52273, type: 3}
-  selectionToolHandler: {fileID: 1187}
   grayScaleTexture: {fileID: 21300000, guid: ed6badfce545eba4ea13bed4e4ec18c3, type: 3}
 --- !u!212 &1192999974
 SpriteRenderer:
@@ -19329,7 +19237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e706e2d2067df124ba33f7667ba7246a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   toggleToState: 0
   combinedNetworksButton: {fileID: 74680352}
 --- !u!23 &1196932342
@@ -19703,21 +19611,18 @@ Transform:
 --- !u!114 &1238615984
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114727884406455096, guid: 4d293c8e162f3874b982baadd71153d2,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1238615982}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e64f24c2caf796499f683e67f27cdfe, type: 3}
+  m_Script: {fileID: 11500000, guid: d535e2e9bb386ba45a351ff75f1712d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
-  descriptionText: {fileID: 891}
-  standardTexture: {fileID: 21300000, guid: cd01d99dd4d419f4b953b1b9c4f671d3, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: 17e3a5e9ab99f0749a11745d15f41ee5, type: 3}
-  attributeMenu: {fileID: 30614892}
-  buttons: {fileID: 993328920}
+  referenceManager: {fileID: 133}
+  descriptionText: {fileID: 1942651074}
+  standardTexture: {fileID: 21300000, guid: 2162a5e12c8fca24ba7910cb6d7bed97, type: 3}
+  highlightedTexture: {fileID: 21300000, guid: 30eb2898dc92a35469735e572579abc1, type: 3}
 --- !u!212 &1238615985
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20071,10 +19976,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 681055012}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &1248055281
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20286,8 +20189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99cd322b6511c8a4dadf09658f2ec3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
-  jail: {fileID: 388524306}
+  referenceManager: {fileID: 133}
 --- !u!108 &1261628827
 Light:
   m_ObjectHideFlags: 0
@@ -20335,38 +20237,6 @@ Halo:
     serializedVersion: 2
     rgba: 4278190335
   m_Size: 0.01
---- !u!21 &1275308763
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1279719706
 GameObject:
   m_ObjectHideFlags: 0
@@ -20412,11 +20282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47c004adc7b886439c00d04c3345c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: abbd4d3ab76d1324ab0d746cdf19d0a8, type: 3}
   highlightedTexture: {fileID: 21300000, guid: bdf06d602c2796a41ab1d2d85160d656, type: 3}
-  cellManager: {fileID: 1238}
 --- !u!212 &1279719709
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20517,7 +20386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e706e2d2067df124ba33f7667ba7246a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   toggleToState: 1
   combinedNetworksButton: {fileID: 74680352}
 --- !u!23 &1280699551
@@ -20798,12 +20667,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e64f24c2caf796499f683e67f27cdfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: cd01d99dd4d419f4b953b1b9c4f671d3, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 17e3a5e9ab99f0749a11745d15f41ee5, type: 3}
-  attributeMenu: {fileID: 1174890050}
-  buttons: {fileID: 194325602}
 --- !u!212 &1302230193
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21112,11 +20979,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b0b0f8331b4d14ebe41af9a2587e10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: e2723b9033a38f64e892e7dc37cab71b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5c12d2a8e0599af419a74ac02d000b9c, type: 3}
-  selectionToolHandler: {fileID: 1187}
   grayScaleTexture: {fileID: 21300000, guid: dc5549c8c17a513499b547514cb276ba, type: 3}
 --- !u!1 &1313205143
 GameObject:
@@ -21677,10 +21543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 892143986}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &1359897647
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21780,8 +21644,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a2de8e416f5aa479bbcd77f97f32ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   textMesh: {fileID: 1032002195}
-  rightController: {fileID: 280}
   pointerRenderer: {fileID: 291}
   pointer: {fileID: 289}
   layersToIgnore:
@@ -22094,11 +21958,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf79ad49dbccba04d8d79e018d4cf146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: c5429a20b9a4e5e499fdb527799054e5, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5c10b2b57cfcd064686936e5a6c25562, type: 3}
-  cellManager: {fileID: 1238}
 --- !u!212 &1411796414
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22346,6 +22209,134 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!43 &1435238852
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 24
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0.01, z: 0}
+      m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 13
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 28
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 288
+    _typelessdata: 0000c03f0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0.01, z: 0}
+    m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0
 --- !u!1 &1454458861
 GameObject:
   m_ObjectHideFlags: 0
@@ -22705,10 +22696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 1595451470}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &1480150436
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -23300,14 +23289,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23e4327d2dc42bc42bf280f45b5b7eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 53cb1e01a5d0fba4bbf337711550a27d, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e61968e5f1868ac4bb8bf6bf81560c41, type: 3}
   frontsideRenderer: {fileID: 1549131213}
   backsideRenderer: {fileID: 2093101196}
-  selectionToolHandler: {fileID: 1187}
-  ctrlMdlSwitcher: {fileID: 294}
 --- !u!212 &1549131213
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23422,11 +23409,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf871593647e8141833654d45d85c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 4a647e7578370d64f9afcacb81310837, type: 3}
   highlightedTexture: {fileID: 21300000, guid: f627e8912ed52864a842c4c7c743ebf7, type: 3}
-  graphManager: {fileID: 1201}
 --- !u!212 &1554270043
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23557,12 +23543,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53d71c6943b373449f31e3cbb6a32e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 643d375c5d2202542900138d5c55b429, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 535d4027bd297174d8020b877e31f92d, type: 3}
-  keyboard: {fileID: 145}
-  laserPointer: {fileID: 291}
   gray: {fileID: 21300000, guid: 4ad99e3833f5c1b4cbebb1ad105a4d93, type: 3}
   original: {fileID: 21300000, guid: 643d375c5d2202542900138d5c55b429, type: 3}
 --- !u!212 &1562638533
@@ -24358,12 +24342,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a95fd00f8515a44f8d4d38ac06ef609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  descriptionText: {fileID: 1942651074}
-  arcsMenu: {fileID: 30614892}
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   standardTexture: {fileID: 21300000, guid: 96aff6e085998ac4dac80d60ba0e067f, type: 3}
   highlightedTexture: {fileID: 21300000, guid: ca592774c4bddb44bbd29a55425e3555, type: 3}
-  buttons: {fileID: 993328920}
 --- !u!212 &1652627657
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24605,11 +24586,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d313eb08729064b47881516744159064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: f0019ce949f65ab43a0762da2c9e0821, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e381cc42569eac44e9c3795484c45514, type: 3}
-  selectionToolHandler: {fileID: 1187}
   grayScaleTexture: {fileID: 21300000, guid: f63a098b06c46e9428f84e295e7495f2, type: 3}
 --- !u!212 &1667756348
 SpriteRenderer:
@@ -25086,6 +25066,11 @@ Prefab:
       propertyPath: m_TagString
       value: Loader
       objectReference: {fileID: 0}
+    - target: {fileID: 114492270065877840, guid: 8348cb63ac23cc0469f9006774276b2b,
+        type: 2}
+      propertyPath: referenceManager
+      value: 
+      objectReference: {fileID: 133}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8348cb63ac23cc0469f9006774276b2b, type: 2}
   m_IsPrefabParent: 0
@@ -25208,11 +25193,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2306572897183b84a91ecde1bb640b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: e3da2f70ace80d54b974fce10743ac0f, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 964401804234b464e8d6ba6621d88849, type: 3}
-  selectionToolHandler: {fileID: 1187}
   grayScaleTexture: {fileID: 21300000, guid: 0426a62a895d4264a881e955093657be, type: 3}
 --- !u!212 &1710960417
 SpriteRenderer:
@@ -25740,7 +25724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc07443fcaffbc443919d6d34ff487b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2248ec72c96a8d84496a683fe3c959a6, type: 3}
@@ -26112,7 +26096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2704df78b44f42f4ab22d5a17bb21e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   toggleToState: 0
 --- !u!23 &1832027314
 MeshRenderer:
@@ -26642,10 +26626,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 985147290}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &1889724957
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -27123,11 +27105,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a72278331f212489111afba51ecd54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 97935b1dfd592f041bb36aa85de0c3e2, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 82b10d9f58714514590513bac23d4858, type: 3}
-  selectionToolHandler: {fileID: 1187}
   grayScaleTexture: {fileID: 21300000, guid: bf56c66537dfd804394044bb34737069, type: 3}
 --- !u!1 &1961010855
 GameObject:
@@ -27334,13 +27315,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec72453d01299b749bd422f4ab582e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 8f308393b429b4a40b36ade12536825c, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e316d86bb7cd39f4ca18bd0915d2309e, type: 3}
   frontsideRenderer: {fileID: 1977771850}
   backsideRenderer: {fileID: 235609863}
-  selectionToolHandler: {fileID: 1187}
 --- !u!212 &1977771850
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -27544,14 +27524,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef3a8722f36ef24da3ed031d5efaa9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 47e71e1fb317291489b9ab4a1b2118c9, type: 3}
   highlightedTexture: {fileID: 21300000, guid: c40815c20bcca4944b4bc9eccae1f495, type: 3}
-  selectionToolHandler: {fileID: 1187}
-  rotator: {fileID: 2113298554}
-  selectionToolMenu: {fileID: 1832894451}
-  controllerModelSwitcher: {fileID: 294}
   gray: {fileID: 21300000, guid: e2363ae35f3e694418534320a4dab3ec, type: 3}
   original: {fileID: 21300000, guid: 47e71e1fb317291489b9ab4a1b2118c9, type: 3}
 --- !u!212 &1979640350
@@ -27620,6 +27596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97e7810448b197e4c97318b741afdc5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   buttonPrefab: {fileID: 2146862860}
   tabPrefab: {fileID: 857516042}
 --- !u!1 &1988794848
@@ -27903,10 +27880,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 1155783411}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &2001036716
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -28005,12 +27980,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a10c429f3cebdf42ba06da4d06fcf62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  descriptionText: {fileID: 105887393}
-  indexMenu: {fileID: 1174890050}
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   standardTexture: {fileID: 21300000, guid: 3102797e55d862e4bbdb67e04464de11, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5ff266afbd5c4e34c8ae5c0c94f62348, type: 3}
-  buttons: {fileID: 194325602}
 --- !u!212 &2011978885
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -28299,13 +28271,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a5b6d88add04f428f4c90a4de97492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 1f8001da013265f4f96c4a3379dc2225, type: 3}
   highlightedTexture: {fileID: 21300000, guid: f4c047b425cc9a04c9943fe33ae8d650, type: 3}
   frontsideRenderer: {fileID: 2034533600}
   backsideRenderer: {fileID: 77067732}
-  heatmapGenerator: {fileID: 1243}
 --- !u!212 &2034533600
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -28638,10 +28609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288779ab37397b4ca6bdf9bf9efd83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
   listNode: {fileID: 880209169}
-  correlatedGenesList: {fileID: 211292001}
-  selectionToolHandler: {fileID: 1187}
-  statusDisplay: {fileID: 1999331952}
 --- !u!23 &2076722056
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -28995,12 +28964,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4abd6789a12dd488529120fdc32b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: d4fed908ad4ff204cbded80e41357362, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e924ab2b1758c2149b8042dabc77b22a, type: 3}
-  laserPointerLeft: {fileID: 299}
-  laserPointerRight: {fileID: 291}
+  controllerModelSwitcher: {fileID: 294}
 --- !u!212 &2090726340
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -29785,7 +29753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f3c9e32730b2af4d962c8ef0f08962e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 1308}
+  referenceManager: {fileID: 133}
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: 9cec1f329f40434478a14e1188a2ac1b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 96ce01f1a9ed62c45bd46ad6f83fa523, type: 3}

@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class StationaryButton : MonoBehaviour
 {
-    public SteamVR_TrackedObject rightController;
+    public ReferenceManager referenceManager;
     public TextMesh descriptionText;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
@@ -17,6 +17,7 @@ public abstract class StationaryButton : MonoBehaviour
     {
         get;
     }
+    protected SteamVR_TrackedObject rightController;
     protected SteamVR_Controller.Device device;
     protected bool buttonActivated = true;
     protected bool controllerInside = false;
@@ -25,6 +26,7 @@ public abstract class StationaryButton : MonoBehaviour
     // virtual so other classes may override if needed
     protected virtual void Awake()
     {
+        rightController = referenceManager.rightController;
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }

@@ -8,17 +8,22 @@ using UnityEngine;
 /// </summary>
 public class NetworkGenerator : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
 
-    public SelectionToolHandler selectionToolHandler;
-    public InputReader inputReader;
-    public ToggleArcsSubMenu subMenu;
-    public StatusDisplay status;
+    private SelectionToolHandler selectionToolHandler;
+    private InputReader inputReader;
+    private ToggleArcsSubMenu subMenu;
+    private StatusDisplay status;
     private Thread t;
     public int objectsInSky;
 
     private void Start()
     {
         objectsInSky = 0;
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        inputReader = referenceManager.inputReader;
+        subMenu = referenceManager.arcsSubMenu;
+        status = referenceManager.statusDisplay;
     }
 
     public void GenerateNetworks()

@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 
-public class CloseAttributeMenuButton : StationaryButton
+public class CloseArcsMenuButton : StationaryButton
 {
-    private GameObject attributeMenu;
+    private GameObject arcsMenu;
     private GameObject buttons;
 
     protected override string Description
@@ -17,8 +17,8 @@ public class CloseAttributeMenuButton : StationaryButton
 
     private void Start()
     {
-        attributeMenu = referenceManager.attributeSubMenu.gameObject;
-        buttons = referenceManager.leftButtons;
+        arcsMenu = referenceManager.arcsSubMenu.gameObject;
+        buttons = referenceManager.backButtons;
     }
 
     void Update()
@@ -28,7 +28,7 @@ public class CloseAttributeMenuButton : StationaryButton
         {
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
-            attributeMenu.SetActive(false);
+            arcsMenu.SetActive(false);
             buttons.SetActive(true);
         }
     }

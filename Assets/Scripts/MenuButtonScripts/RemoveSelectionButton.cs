@@ -3,12 +3,18 @@
 ///</summary>
 public class RemoveSelectionButton : RotatableButton
 {
+    private SelectionToolHandler selectionToolHandler;
 
     protected override string Description
     {
         get { return "Remove selection"; }
     }
-    public SelectionToolHandler selectionToolHandler;
+
+    protected override void Start()
+    {
+        base.Start();
+        selectionToolHandler = referenceManager.selectionToolHandler;
+    }
 
     void Update()
     {

@@ -7,13 +7,14 @@ using UnityEngine;
 ///</summary>
 public class SelectionToolButton : StationaryButton
 {
-    public SelectionToolHandler selectionToolHandler;
-    public MenuRotator rotator;
-    public SelectionToolMenu selectionToolMenu;
-    public ControllerModelSwitcher controllerModelSwitcher;
+
     public Sprite gray;
     public Sprite original;
 
+    private SelectionToolHandler selectionToolHandler;
+    private MenuRotator rotator;
+    private SelectionToolMenu selectionToolMenu;
+    private ControllerModelSwitcher controllerModelSwitcher;
     private bool menuActive = false;
     private bool buttonsInitialized = false;
 
@@ -23,6 +24,13 @@ public class SelectionToolButton : StationaryButton
         {
             return "Toggle selection tool";
         }
+    }
+    private void Start()
+    {
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        rotator = referenceManager.menuRotator;
+        selectionToolMenu = referenceManager.selectionToolMenu;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     void Update()

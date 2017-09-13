@@ -1,2 +1,2 @@
-ctsg	elane	atp8b4	ccl9	anxa3	rab44	clec12a	ms4a3	tyrobp	f630028o10rik
-car2	pdzk1ip1	mllt3	nfia	slc14a1	txnip	isg20	tgm2	tspan13	trib2
+coro1a	limd2	pkm	cd34	emb	tmsb4x	tmem176b	lsp1	adgrl4	lyz2
+klf1	mfsd2b	aqp1	gata1	gm15915	samd14	epor	tspo2	car1	atp1b2

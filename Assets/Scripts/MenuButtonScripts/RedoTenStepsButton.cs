@@ -4,10 +4,11 @@
 /// </summary>
 public class RedoTenStepsButton : StationaryButton
 {
-
-    public SelectionToolHandler selectionToolHandler;
     public Sprite grayScaleTexture;
+
+    private SelectionToolHandler selectionToolHandler;
     private Collider buttonCollider;
+
     protected override string Description
     {
         get { return "Redo ten steps"; }
@@ -17,6 +18,11 @@ public class RedoTenStepsButton : StationaryButton
     {
         base.Awake();
         buttonCollider = gameObject.GetComponent<Collider>();
+    }
+
+    private void Start()
+    {
+        selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
     void Update()

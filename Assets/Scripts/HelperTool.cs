@@ -9,9 +9,8 @@ using VRTK;
 /// </summary>
 public class HelperTool : MonoBehaviour
 {
-
+    public ReferenceManager referenceManager;
     public TextMeshPro textMesh;
-    public SteamVR_TrackedController rightController;
     public VRTK_StraightPointerRenderer pointerRenderer;
     public VRTK_Pointer pointer;
     public LayerMask layersToIgnore;
@@ -19,6 +18,7 @@ public class HelperTool : MonoBehaviour
     public GameObject transparentQuad;
     public GameObject opaqueQuad;
 
+    private SteamVR_TrackedObject rightController;
     private string standardText = "Point the laser towards something to find out more";
     private string descriptionFilePath = Directory.GetCurrentDirectory() + "\\Assets\\descriptions.txt";
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
@@ -26,8 +26,8 @@ public class HelperTool : MonoBehaviour
     private Ray ray;
     private RaycastHit hit;
     private Transform raycastingSource;
-    private LayerMask laserPointerLayersToIgnore;
-    private Transform laserPointerCustomOrigin;
+    private LayerMask savedLayersToIgnore;
+    private Transform savedCustomOrigin;
     private bool activated;
 
     private void Start()
@@ -35,6 +35,7 @@ public class HelperTool : MonoBehaviour
         ReadDescriptionFile(descriptionFilePath);
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);
+        rightController = referenceManager.rightController;
     }
 
     private void Update()
@@ -42,7 +43,7 @@ public class HelperTool : MonoBehaviour
         if (activated)
         {
             raycastingSource = customOrigin.transform;
-            device = SteamVR_Controller.Input((int)rightController.controllerIndex);
+            device = SteamVR_Controller.Input((int)rightController.index);
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit, 100f, ~layersToIgnore))
             {
@@ -93,6 +94,14 @@ public class HelperTool : MonoBehaviour
     }
 
     /// <summary>
+    /// Saves the layers that the laserpointer should ignore. Should be called <b>before</b> SetToolActivated.
+    /// </summary>
+    public void SaveLayersToIgnore()
+    {
+        savedLayersToIgnore = pointerRenderer.layersToIgnore;
+    }
+
+    /// <summary>
     /// Activates or deactivates this tool.
     /// </summary>
     /// <param name="activate"> True for activating the tool false for deactivating. </param>
@@ -101,33 +110,21 @@ public class HelperTool : MonoBehaviour
         if (activate)
         {
             // change some fields to make the laser pointer work as intended
-            laserPointerLayersToIgnore = pointerRenderer.layersToIgnore;
             pointerRenderer.layersToIgnore = layersToIgnore;
-            laserPointerCustomOrigin = pointer.customOrigin;
+            savedCustomOrigin = pointer.customOrigin;
             pointer.customOrigin = customOrigin;
         }
         else
         {
             // change the fields back again
-            pointerRenderer.layersToIgnore = laserPointerLayersToIgnore;
-            pointer.customOrigin = laserPointerCustomOrigin;
+            pointerRenderer.layersToIgnore = savedLayersToIgnore;
+            pointer.customOrigin = savedCustomOrigin;
         }
         pointerRenderer.enabled = activate;
         activated = activate;
         gameObject.SetActive(activate);
     }
 
-    /*    private void OnTriggerEnter(Collider other)
-        {
-            if (descriptions.ContainsKey(other.tag))
-            {
-                textMesh.text = descriptions[other.tag];
-            }
-            else if (descriptions.ContainsKey(other.gameObject.name))
-            {
-                textMesh.text = descriptions[other.gameObject.name];
-            }
-        }*/
     /// <summary>
     /// Reads the descriptions.txt which should be in the Assets folder.
     /// </summary>
@@ -176,4 +173,3 @@ public class HelperTool : MonoBehaviour
     }
 
 }
-

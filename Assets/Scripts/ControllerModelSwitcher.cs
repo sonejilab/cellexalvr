@@ -1,4 +1,5 @@
 using UnityEngine;
+using VRTK;
 using System.Collections;
 
 /// <summary>
@@ -6,35 +7,42 @@ using System.Collections;
 /// </summary>
 public class ControllerModelSwitcher : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
+
     public SteamVR_RenderModel renderModel;
     public GameObject controllerBody;
     public Mesh normalControllerMesh;
     //public Texture normalControllerTexture;
     public Mesh menuControllerMesh;
     //public Texture menuControllerTexture;
-    public SelectionToolHandler selectionToolHandler;
     public Mesh selectionToolMesh;
     public Mesh deleteToolMesh;
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
-    public GameObject fire;
-    public GameObject minimizer;
-    public GameObject magnifier;
-    public HelperTool helpTool;
-    public SelectionToolButton selectionToolButton;
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool };
+    public VRTK_StraightPointerRenderer rightLaser;
+    public VRTK_StraightPointerRenderer leftLaser;
+
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool, OneLaser, TwoLasers };
     // what model we actually want
     public Model DesiredModel { get; set; }
     // what model is actually displayed, useful for when we want to change the model temporarily
     // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
     // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
     private Model actualModel;
+
+    private SelectionToolHandler selectionToolHandler;
+    private GameObject fire;
+    private GameObject minimizer;
+    private GameObject magnifier;
+    private HelperTool helpTool;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
 
     void Awake()
     {
+        helpTool = referenceManager.helpTool;
+        helpTool.SaveLayersToIgnore();
         DesiredModel = Model.Normal;
         if (controllerBody.activeSelf == false)
             SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
@@ -43,6 +51,14 @@ public class ControllerModelSwitcher : MonoBehaviour
             controllerBodyMeshFilter = controllerBody.GetComponent<MeshFilter>();
             controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
         }
+    }
+
+    private void Start()
+    {
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        fire = referenceManager.fire;
+        minimizer = referenceManager.minimizeTool.gameObject;
+        magnifier = referenceManager.magnifierTool.gameObject;
     }
 
     // Used when starting the program to know when steamvr has loaded the model and applied a meshfilter and meshrenderer for us to use.
@@ -99,6 +115,8 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Normal:
             case Model.Magnifier:
             case Model.HelpTool:
+            case Model.OneLaser:
+            case Model.TwoLasers:
                 controllerBodyMeshFilter.mesh = normalControllerMesh;
                 controllerBodyRenderer.material = normalMaterial;
                 break;
@@ -130,6 +148,8 @@ public class ControllerModelSwitcher : MonoBehaviour
         magnifier.SetActive(false);
         minimizer.SetActive(false);
         helpTool.SetToolActivated(false);
+        rightLaser.enabled = false;
+        leftLaser.enabled = false;
         switch (DesiredModel)
         {
             case Model.SelectionTool:
@@ -146,6 +166,14 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
             case Model.HelpTool:
                 helpTool.SetToolActivated(true);
+                rightLaser.enabled = true;
+                break;
+            case Model.OneLaser:
+                rightLaser.enabled = true;
+                break;
+            case Model.TwoLasers:
+                rightLaser.enabled = true;
+                leftLaser.enabled = true;
                 break;
         }
         SwitchToDesiredModel();
@@ -162,6 +190,8 @@ public class ControllerModelSwitcher : MonoBehaviour
         magnifier.SetActive(false);
         minimizer.SetActive(false);
         helpTool.SetToolActivated(false);
+        rightLaser.enabled = false;
+        leftLaser.enabled = false;
         DesiredModel = Model.Normal;
         if (inMenu)
         {

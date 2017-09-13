@@ -12,20 +12,21 @@ using VRTK;
 /// </summary>
 public class InputReader : MonoBehaviour
 {
-
-    public GraphManager graphManager;
-    public CellManager cellManager;
-    public LoaderController loaderController;
-    public SQLite database;
-    public SelectionToolHandler selectionToolHandler;
-    public AttributeSubMenu attributeSubMenu;
-    public ToggleArcsSubMenu arcsSubMenu;
-    public ColorByIndexMenu indexMenu;
+    public ReferenceManager referenceManager;
     public NetworkCenter networkPrefab;
     public NetworkNode networkNodePrefab;
-    public GameObject headset;
-    public StatusDisplay status;
-    public SteamVR_TrackedObject rightController;
+
+    private GraphManager graphManager;
+    private CellManager cellManager;
+    private LoaderController loaderController;
+    private SQLite database;
+    private SelectionToolHandler selectionToolHandler;
+    private AttributeSubMenu attributeSubMenu;
+    private ToggleArcsSubMenu arcsSubMenu;
+    private ColorByIndexMenu indexMenu;
+    private GameObject headset;
+    private StatusDisplay status;
+    private SteamVR_TrackedObject rightController;
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -39,6 +40,19 @@ public class InputReader : MonoBehaviour
         {
             ReadFolder(Directory.GetCurrentDirectory() + @"\Assets\Data\Bertie");
         }
+        graphManager = referenceManager.graphManager;
+        cellManager = referenceManager.cellManager;
+        loaderController = referenceManager.loaderController;
+        database = referenceManager.database;
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        attributeSubMenu = referenceManager.attributeSubMenu;
+        arcsSubMenu = referenceManager.arcsSubMenu;
+        indexMenu = referenceManager.indexMenu;
+        headset = referenceManager.headset;
+        status = referenceManager.statusDisplay;
+        rightController = referenceManager.rightController;
+
+
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
 			doLoad = true;

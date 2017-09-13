@@ -1,9 +1,7 @@
 ﻿public class CreateNetworksButton : RotatableButton
 {
-
-    public NetworkGenerator networkGenerator;
-    public MenuRotator rotator;
-
+    private NetworkGenerator networkGenerator;
+    private MenuRotator rotator;
 
     protected override string Description
     {
@@ -11,6 +9,13 @@
         {
             return "Create Networks";
         }
+    }
+
+   protected override void Start()
+    {
+        base.Start();
+        networkGenerator = referenceManager.networkGenerator;
+        rotator = referenceManager.menuRotator;
     }
 
     void Update()

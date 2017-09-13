@@ -8,14 +8,15 @@ using System;
 /// </summary>
 public class GraphManager : MonoBehaviour
 {
-
-    public CellManager cellManager;
+    public ReferenceManager referenceManager;
     public Graph graphPrefab;
     public AudioSource goodSound;
     public AudioSource badSound;
-    public SelectionToolHandler selectionToolHandler;
     public SaveScene saveScene;
     public string directory;
+
+    private CellManager cellManager;
+    private SelectionToolHandler selectionToolHandler;
     private List<Graph> graphs;
     private List<NetworkHandler> networks = new List<NetworkHandler>();
     private Vector3[] startPositions =  {   new Vector3(-.2f, .5f, .3f),
@@ -27,6 +28,12 @@ public class GraphManager : MonoBehaviour
     void Awake()
     {
         graphs = new List<Graph>();
+    }
+
+    private void Start()
+    {
+        cellManager = referenceManager.cellManager;
+        selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
     public void SetGraphStartPosition()

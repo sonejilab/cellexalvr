@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RemoveNonExpressedCellsButton : StationaryButton
 {
-    public CellManager cellManager;
+    private CellManager cellManager;
 
     protected override string Description
     {
@@ -11,6 +11,11 @@ public class RemoveNonExpressedCellsButton : StationaryButton
         {
             return "Toggle cells with no expression";
         }
+    }
+
+    private void Start()
+    {
+        cellManager = referenceManager.cellManager;
     }
 
     void Update()

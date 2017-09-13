@@ -3,12 +3,15 @@ using System.Collections;
 
 public class ArcsMenuButton : MonoBehaviour
 {
-    public TextMesh descriptionText;
-    public GameObject arcsMenu;
-    public SteamVR_TrackedObject rightController;
+
+    public ReferenceManager referenceManager;
+
     public Sprite standardTexture;
     public Sprite highlightedTexture;
-    public GameObject buttons;
+    private TextMesh descriptionText;
+    private GameObject buttons;
+    private GameObject arcsMenu;
+    private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private SpriteRenderer spriteRenderer;
     private bool controllerInside = false;
@@ -17,6 +20,10 @@ public class ArcsMenuButton : MonoBehaviour
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
+        descriptionText = referenceManager.backDescription;
+        buttons = referenceManager.backButtons;
+        arcsMenu = referenceManager.arcsSubMenu.gameObject;
+        rightController = referenceManager.rightController;
     }
 
     void Update()

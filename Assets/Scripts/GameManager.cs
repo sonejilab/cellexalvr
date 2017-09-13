@@ -10,17 +10,18 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : Photon.PunBehaviour
 {
-
-
     #region Public Properties
+
+    public ReferenceManager referenceManager;
     static public GameManager Instance;
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
     public GameObject serverCoordinatorPrefab;
-    public GraphManager graphManager;
-    public CellManager cellManager;
-    public SelectionToolHandler selectionToolHandler;
-    public HeatmapGenerator heatmapGenerator;
+
+    public GraphManager GraphManager;
+    public CellManager CellManager;
+    public SelectionToolHandler SelectionToolHandler;
+    public HeatmapGenerator HeatmapGenerator;
     private ServerCoordinator serverCoordinator;
     private ServerCoordinator clientCoordinator;
 
@@ -101,12 +102,12 @@ public class GameManager : Photon.PunBehaviour
 
     public void DoGraphpointChangeColor(string graphname, string label, Color col)
     {
-        graphManager.RecolorGraphPoint(graphname, label, col);
+        GraphManager.RecolorGraphPoint(graphname, label, col);
     }
 
     public void DoMoveGraph(string moveGraphName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
     {
-        Graph g = graphManager.FindGraph(moveGraphName);
+        Graph g = GraphManager.FindGraph(moveGraphName);
         g.transform.position = new Vector3(x, y, z);
         g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
@@ -180,6 +181,11 @@ public class GameManager : Photon.PunBehaviour
 
     private void Start()
     {
+        GraphManager = referenceManager.graphManager;
+        CellManager = referenceManager.cellManager;
+        SelectionToolHandler = referenceManager.selectionToolHandler;
+        HeatmapGenerator = referenceManager.heatmapGenerator;
+
         Instance = this;
         if (playerPrefab == null)
         {

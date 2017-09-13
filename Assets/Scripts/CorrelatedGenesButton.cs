@@ -9,10 +9,12 @@ using UnityEngine;
 /// </summary>
 public class CorrelatedGenesButton : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
     public PreviousSearchesListNode listNode;
-    public CorrelatedGenesList correlatedGenesList;
-    public SelectionToolHandler selectionToolHandler;
-    public StatusDisplay statusDisplay;
+
+    private CorrelatedGenesList correlatedGenesList;
+    private SelectionToolHandler selectionToolHandler;
+    private StatusDisplay statusDisplay;
     private bool calculatingGenes = false;
     private new Renderer renderer;
     private string outputFile = Directory.GetCurrentDirectory() + @"\Assets\Resources\correlated_genes.txt";
@@ -20,6 +22,9 @@ public class CorrelatedGenesButton : MonoBehaviour
     private void Start()
     {
         renderer = GetComponent<Renderer>();
+        correlatedGenesList = referenceManager.correlatedGenesList;
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        statusDisplay = referenceManager.statusDisplay;
     }
 
     /// <summary>

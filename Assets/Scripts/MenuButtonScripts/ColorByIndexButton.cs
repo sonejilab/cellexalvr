@@ -2,9 +2,12 @@
 
 public class ColorByIndexButton : MonoBehaviour
 {
-    public SteamVR_TrackedObject rightController;
-    public CellManager cellManager;
+
+    public ReferenceManager referenceManager;
     public TextMesh description;
+
+    private SteamVR_TrackedObject rightController;
+    private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private new Renderer renderer;
     private bool controllerInside = false;
@@ -14,6 +17,12 @@ public class ColorByIndexButton : MonoBehaviour
     void Awake()
     {
         renderer = GetComponent<Renderer>();
+    }
+
+    private void Start()
+    {
+        rightController = referenceManager.rightController;
+        cellManager = referenceManager.cellManager;
     }
 
     void Update()

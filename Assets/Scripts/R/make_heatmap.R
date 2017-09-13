@@ -1,11 +1,5 @@
 #print("start R")
 
-library(gplots)
-
-library(pheatmap)
-
-library(cellexalvr)
-
 args <- commandArgs(trailingOnly = TRUE)
 
 homedir <- args[1]
@@ -13,6 +7,12 @@ homedir <- args[1]
 datadir <- args[2]
 
 latest_version <- args[3]
+
+library(gplots)
+
+library(pheatmap)
+
+library(cellexalvr)
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 

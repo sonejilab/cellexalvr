@@ -6,9 +6,10 @@ using UnityEngine;
 /// </summary>
 public class ToggleArcsSubMenu : MonoBehaviour
 {
-
+    public ReferenceManager referenceManager;
     public GameObject buttonPrefab;
     public GameObject tabPrefab;
+
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-0.3958f, 0.59f, 0.2688f);
     private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
@@ -63,6 +64,7 @@ public class ToggleArcsSubMenu : MonoBehaviour
         var newTab = Instantiate(tabPrefab, transform);
         newTab.gameObject.SetActive(true);
         ArcMenuTab tabButton = newTab.GetComponentInChildren<ArcMenuTab>();
+        tabButton.referenceManager = referenceManager;
         tabButton.gameObject.transform.localPosition = tabButtonPos;
         tabButtonPos += tabButtonPosInc;
         //newTab.tab = newTab.transform.parent.gameObject;

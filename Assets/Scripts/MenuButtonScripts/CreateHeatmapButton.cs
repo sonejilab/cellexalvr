@@ -3,11 +3,20 @@
 ///</summary>
 public class CreateHeatmapButton : RotatableButton
 {
+
+    private HeatmapGenerator heatmapGenerator;
+
+
     protected override string Description
     {
         get { return "Create heatmap"; }
     }
-    public HeatmapGenerator heatmapGenerator;
+
+    protected override void Start()
+    {
+        base.Start();
+        heatmapGenerator = referenceManager.heatmapGenerator;
+    }
 
     void Update()
     {

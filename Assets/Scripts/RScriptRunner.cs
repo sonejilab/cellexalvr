@@ -17,7 +17,6 @@ public class RScriptRunner
     ///   print(args[1]);
     /// </summary>
     /// <param name="rCodeFilePath"> File where your R code is located. </param>
-    /// <param name="rScriptExecutablePath"> Usually only requires "rscript.exe" </param>
     /// <param name="args"> Multiple R args can be seperated by spaces. </param>
     /// <returns>Returns a string with the R responses.</returns>
 
@@ -26,8 +25,8 @@ public class RScriptRunner
         string result = string.Empty;
         try
         {
-            string home = Directory.GetCurrentDirectory();
-            using (StreamReader r = new StreamReader(home + "/Assets/Config/config.txt"))
+            string workingDirectory = Directory.GetCurrentDirectory();
+            using (StreamReader r = new StreamReader(workingDirectory + "/Assets/Config/config.txt"))
             {
                 string rawInput = r.ReadToEnd();
                 string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -37,7 +36,7 @@ public class RScriptRunner
                 var info = new ProcessStartInfo();
                 info.FileName = rPath;
                 info.WorkingDirectory = Path.GetDirectoryName(rPath);
-                info.Arguments = home + rCodeFilePath + " " + args;
+                info.Arguments = workingDirectory + rCodeFilePath + " " + args;
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
                 info.RedirectStandardError = true;

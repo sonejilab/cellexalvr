@@ -8,7 +8,6 @@ using UnityEngine;
 public class Graph : MonoBehaviour
 {
     public GraphPoint graphpoint;
-    public SelectionToolHandler selectionToolHandler;
     public GameObject skeletonPrefab;
     public string GraphName { get; set; }
     public string DirectoryName { get; set; }

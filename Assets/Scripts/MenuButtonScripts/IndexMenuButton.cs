@@ -3,12 +3,14 @@ using System.Collections;
 
 public class IndexMenuButton : MonoBehaviour
 {
-    public TextMesh descriptionText;
-    public GameObject indexMenu;
-    public SteamVR_TrackedObject rightController;
+    public ReferenceManager referenceManager;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
-    public GameObject buttons;
+
+    private TextMesh descriptionText;
+    private GameObject indexMenu;
+    private SteamVR_TrackedObject rightController;
+    private GameObject buttons;
     private SteamVR_Controller.Device device;
     private SpriteRenderer spriteRenderer;
     private bool controllerInside = false;
@@ -17,6 +19,10 @@ public class IndexMenuButton : MonoBehaviour
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = standardTexture;
+        descriptionText = referenceManager.leftDescription;
+        indexMenu = referenceManager.indexMenu.gameObject;
+        rightController = referenceManager.rightController;
+        buttons = referenceManager.leftButtons;
     }
 
     void Update()

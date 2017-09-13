@@ -6,15 +6,22 @@
 
 class MinimizeToolButton : StationaryButton
 {
-    public ControllerModelSwitcher controllerModelSwitcher;
-    public MinimizeTool deleteTool;
     public Sprite original;
     public Sprite gray;
+
+    private ControllerModelSwitcher controllerModelSwitcher;
+    private MinimizeTool minimizer;
     private bool changeSprite;
 
     protected override string Description
     {
         get { return "Toggle minimizer tool"; }
+    }
+
+    private void Start()
+    {
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        minimizer = referenceManager.minimizeTool;
     }
 
     private void Update()

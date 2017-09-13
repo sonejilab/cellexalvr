@@ -6,7 +6,8 @@ using UnityEngine;
 ///</summary>
 public class ResetGraphButton : StationaryButton
 {
-    public GraphManager graphManager;
+
+    private GraphManager graphManager;
 
     protected override string Description
     {
@@ -14,6 +15,11 @@ public class ResetGraphButton : StationaryButton
         {
             return "Reset position and colors of all graphs";
         }
+    }
+
+    private void Start()
+    {
+        graphManager = referenceManager.graphManager;
     }
 
     void Update()

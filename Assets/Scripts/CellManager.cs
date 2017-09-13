@@ -10,18 +10,25 @@ using VRTK;
 /// </summary>
 public class CellManager : MonoBehaviour
 {
-
-    public Cell cell;
+    public ReferenceManager referenceManager;
     public List<Material> materialList;
-    public SQLite database;
-    public SteamVR_TrackedController right;
     public VRTK_ControllerActions controllerActions;
-    public PreviousSearchesListNode topListNode;
+
+    private SQLite database;
+    private SteamVR_TrackedObject rightController;
+    private PreviousSearchesListNode topListNode;
     private Dictionary<string, Cell> cells;
 
     void Awake()
     {
         cells = new Dictionary<string, Cell>();
+    }
+
+    private void Start()
+    {
+        database = referenceManager.database;
+        rightController = referenceManager.rightController;
+        topListNode = referenceManager.topListNode;
     }
 
     /// <summary>
@@ -82,7 +89,7 @@ public class CellManager : MonoBehaviour
         }
         GetComponent<AudioSource>().Play();
         //Debug.Log("FEEL THE PULSE");
-        SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
+        SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
 
     }
 
@@ -111,7 +118,7 @@ public class CellManager : MonoBehaviour
             yield return null;
 
         GetComponent<AudioSource>().Play();
-        SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
+        SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
         ArrayList expressions = database._result;
         // stop the coroutine if the gene was not in the database
         if (expressions.Count == 0)

@@ -7,13 +7,20 @@
 
 public class MinimizeTool : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
 
-    public SteamVR_TrackedObject rightController;
-    public MinimizedObjectHandler jail;
+    private SteamVR_TrackedObject rightController;
+    private MinimizedObjectHandler jail;
 
     private bool controllerInside = false;
     private GameObject collidingWith;
     private int numberColliders;
+
+    private void Start()
+    {
+        rightController = referenceManager.rightController;
+        jail = referenceManager.minimizedObjectHandler;
+    }
 
     private void Update()
     {

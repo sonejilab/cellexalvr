@@ -3,44 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
 
-public class SaveButton : StationaryButton {
-	
-	public SaveScene saveScene;
-	public Sprite gray;
-	public Sprite original;
-	private float elapsedTime;
-	private float time = 1.0f;
-	private bool changeSprite;
+public class SaveButton : StationaryButton
+{
 
-	// Use this for initialization
-	protected override string Description
-	{
-		get { return "Save Session"; }
-	}
-		
-	
-	// Update is called once per frame
-	void Update ()
-	{
+    public SaveScene saveScene;
+    public Sprite gray;
+    public Sprite original;
+    private float elapsedTime;
+    private float time = 1.0f;
+    private bool changeSprite;
 
-		device = SteamVR_Controller.Input((int)rightController.index);
-		if (controllerInside && device.GetPressDown (SteamVR_Controller.ButtonMask.Trigger)) {
-			Debug.Log ("Do Save");
-			saveScene.Save ();
-			elapsedTime = 0.0f;
-			standardTexture = gray;
-			changeSprite = true;
-		}
-		if (changeSprite) {
-			if (elapsedTime < time) {
-				elapsedTime += Time.deltaTime;
-			} else {
-				standardTexture = original;
-				changeSprite = false;
-			}
-		}
-	}
-	/*
+    // Use this for initialization
+    protected override string Description
+    {
+        get { return "Save Session"; }
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        device = SteamVR_Controller.Input((int)rightController.index);
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            Debug.Log("Do Save");
+            saveScene.Save();
+            elapsedTime = 0.0f;
+            standardTexture = gray;
+            changeSprite = true;
+        }
+        if (changeSprite)
+        {
+            if (elapsedTime < time)
+            {
+                elapsedTime += Time.deltaTime;
+            }
+            else
+            {
+                standardTexture = original;
+                changeSprite = false;
+            }
+        }
+    }
+    /*
 	void ChangeSprite() 
 	{
 		spriteRenderer.sprite = gray;

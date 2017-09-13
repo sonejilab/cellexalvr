@@ -3,12 +3,18 @@
 ///</summary>
 public class ConfirmSelectionButton : RotatableButton
 {
-    public SelectionToolHandler selectionToolHandler;
-    public ControllerModelSwitcher ctrlMdlSwitcher;
+
+    private SelectionToolHandler selectionToolHandler;
 
     protected override string Description
     {
         get { return "Confirm selection"; }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
     void Update()

@@ -5,9 +5,9 @@
 /// </summary>
 public class RedoOneStepButton : StationaryButton
 {
-
-    public SelectionToolHandler selectionToolHandler;
     public Sprite grayScaleTexture;
+
+    private SelectionToolHandler selectionToolHandler;
     private Collider buttonCollider;
     protected override string Description
     {
@@ -18,6 +18,11 @@ public class RedoOneStepButton : StationaryButton
     {
         base.Awake();
         buttonCollider = gameObject.GetComponent<Collider>();
+    }
+
+    private void Start()
+    {
+        selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
     void Update()

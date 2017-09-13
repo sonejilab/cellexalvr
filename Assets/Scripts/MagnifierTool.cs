@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// This class represent the magnifying tool. The tool is a sphere that moves all graphpoints it collides with away from its center.
 /// </summary>
-class MagnifierTool : MonoBehaviour
+public class MagnifierTool : MonoBehaviour
 {
     private Dictionary<Transform, Vector3> pointsToMagnify = new Dictionary<Transform, Vector3>();
 

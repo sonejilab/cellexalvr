@@ -7,7 +7,8 @@ using System.Collections;
 ///</summary>
 public abstract class RotatableButton : MonoBehaviour
 {
-    public SteamVR_TrackedObject rightController;
+    public ReferenceManager referenceManager;
+
     public TextMesh descriptionText;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
@@ -21,13 +22,16 @@ public abstract class RotatableButton : MonoBehaviour
     protected SteamVR_Controller.Device device;
     protected bool controllerInside;
     protected bool isRotating = false;
+
     private Collider buttonCollider;
+    protected SteamVR_TrackedObject rightController;
     private bool isActivated = true;
     // the amount of degrees this button has rotated so far when rotating over multiple frames
     private float rotatedTotal;
 
-    void Start()
+    protected virtual void Start()
     {
+        rightController = referenceManager.rightController;
         device = SteamVR_Controller.Input((int)rightController.index);
         frontsideRenderer.sprite = standardTexture;
         buttonCollider = gameObject.GetComponent<Collider>();

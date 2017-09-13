@@ -10,14 +10,10 @@ using VRTK;
 /// </summary>
 public class SelectionToolHandler : MonoBehaviour
 {
-    public SelectionToolMenu selectionToolMenu;
-    public GraphManager manager;
-    public ControllerModelSwitcher controllerModelSwitcher;
-    public SteamVR_TrackedController right;
-    public SteamVR_TrackedController left;
+    public ReferenceManager referenceManager;
+
     public ushort hapticIntensity = 2000;
     public RadialMenu radialMenu;
-    public UndoButtonsHandler undoButtonsHandler;
     public Sprite[] buttonIcons;
     [HideInInspector]
     public bool selectionConfirmed = false;
@@ -25,6 +21,11 @@ public class SelectionToolHandler : MonoBehaviour
     public bool heatmapGrabbed = false;
     [HideInInspector]
     public int fileCreationCtr = 0;
+
+    private SelectionToolMenu selectionToolMenu;
+    private ControllerModelSwitcher controllerModelSwitcher;
+    private UndoButtonsHandler undoButtonsHandler;
+    private SteamVR_TrackedObject rightController;
     private ArrayList selectedCells = new ArrayList();
     private ArrayList lastSelectedCells = new ArrayList();
     private Color[] colors;
@@ -33,11 +34,6 @@ public class SelectionToolHandler : MonoBehaviour
     private bool selectionMade = false;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
-
-    internal void DoClientSelectAdd(string graphName, string label)
-    {
-        throw new NotImplementedException();
-    }
 
     [HideInInspector]
     public int[] groups;
@@ -98,6 +94,14 @@ public class SelectionToolHandler : MonoBehaviour
         //UpdateButtonIcons();
     }
 
+    private void Start()
+    {
+        selectionToolMenu = referenceManager.selectionToolMenu;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        undoButtonsHandler = referenceManager.undoButtonsHandler;
+        rightController = referenceManager.rightController;
+    }
+
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.
     /// This method is called by a child object that holds the collider.
@@ -136,7 +140,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (!Equals(newColor, oldColor))
         {
             selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
-            SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(hapticIntensity);
+            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
             groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
             if (newNode)
             {
@@ -147,6 +151,11 @@ public class SelectionToolHandler : MonoBehaviour
                 groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
             }
         }
+    }
+
+    internal void DoClientSelectAdd(string graphName, string label)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

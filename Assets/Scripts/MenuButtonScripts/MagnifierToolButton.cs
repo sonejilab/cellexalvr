@@ -4,14 +4,21 @@
 /// </summary>
 class MagnifierToolButton : StationaryButton
 {
-    public ControllerModelSwitcher controllerModelSwitcher;
-    public GameObject magnifier;
     public Sprite gray;
     public Sprite original;
+
+    private ControllerModelSwitcher controllerModelSwitcher;
+    private GameObject magnifier;
 
     protected override string Description
     {
         get { return "Toggle magnifier tool"; }
+    }
+
+    private void Start()
+    {
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        magnifier = referenceManager.magnifierTool.gameObject;
     }
 
     private void Update()

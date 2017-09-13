@@ -8,11 +8,12 @@ using System;
 /// </summary>
 public class LoaderController : MonoBehaviour
 {
-
-    public InputReader inputReader;
-    public InputFolderGenerator inputFolderGenerator;
-    public GraphManager graphManager;
+    public ReferenceManager referenceManager;
     public Transform cylinder;
+
+    private InputReader inputReader;
+    private InputFolderGenerator inputFolderGenerator;
+    private GraphManager graphManager;
     private float timeEntered = 0;
     private ArrayList cellsToDestroy;
     private bool cellsEntered = false;
@@ -33,6 +34,9 @@ public class LoaderController : MonoBehaviour
     void Start()
     {
         cellsToDestroy = new ArrayList();
+        inputReader = referenceManager.inputReader;
+        inputFolderGenerator = referenceManager.inputFolderGenerator;
+        graphManager = referenceManager.graphManager;
     }
 
     void Update()

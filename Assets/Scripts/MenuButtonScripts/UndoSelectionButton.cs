@@ -3,12 +3,18 @@
 ///</summary>
 public class UndoSelectionButton : RotatableButton
 {
+    private SelectionToolHandler selectionToolHandler;
 
     protected override string Description
     {
         get { return "Cancel selection"; }
     }
-    public SelectionToolHandler selectionToolHandler;
+
+    protected override void Start()
+    {
+        base.Start();
+        selectionToolHandler = referenceManager.selectionToolHandler;
+    }
 
     void Update()
     {

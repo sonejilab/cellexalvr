@@ -16,6 +16,7 @@ public class RecolourHeatmapButton : StationaryButton
 
     protected override void Awake()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         base.Awake();
     }

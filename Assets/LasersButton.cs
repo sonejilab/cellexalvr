@@ -4,8 +4,7 @@
 public class LasersButton : StationaryButton
 {
 
-    public VRTK.VRTK_StraightPointerRenderer laserPointerLeft;
-    public VRTK.VRTK_StraightPointerRenderer laserPointerRight;
+    public ControllerModelSwitcher controllerModelSwitcher;
 
     protected override string Description
     {
@@ -18,9 +17,16 @@ public class LasersButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             // turn both off only if both are on, otherwise turn both on.
-            bool enable = !(laserPointerRight.enabled && laserPointerLeft.enabled);
-            laserPointerRight.enabled = enable;
-            laserPointerLeft.enabled = enable;
+            bool enabled = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers;
+            if (enabled)
+            {
+                controllerModelSwitcher.TurnOffActiveTool(true);
+            }
+            else
+            {
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.TwoLasers;
+                controllerModelSwitcher.ActivateDesiredTool();
+            }
         }
 
     }

@@ -5,15 +5,22 @@ using UnityEngine;
 ///</summary>
 public class KeyboardButton : StationaryButton
 {
-    public GameObject keyboard;
-    public VRTK.VRTK_StraightPointerRenderer laserPointer;
-    private bool activateKeyboard = false;
     public Sprite gray;
     public Sprite original;
+
+    private GameObject keyboard;
+    private ControllerModelSwitcher controllerModelSwitcher;
+    private bool activateKeyboard = false;
 
     protected override string Description
     {
         get { return "Toggle keyboard"; }
+    }
+
+    private void Start()
+    {
+        keyboard = referenceManager.keyboard.gameObject;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     void Update()
@@ -22,7 +29,15 @@ public class KeyboardButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             activateKeyboard = !keyboard.activeSelf;
-            laserPointer.enabled = activateKeyboard;
+            if (activateKeyboard)
+            {
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.OneLaser;
+                controllerModelSwitcher.ActivateDesiredTool();
+            }
+            else
+            {
+                controllerModelSwitcher.TurnOffActiveTool(true);
+            }
             keyboard.SetActive(activateKeyboard);
         }
         if (activateKeyboard)

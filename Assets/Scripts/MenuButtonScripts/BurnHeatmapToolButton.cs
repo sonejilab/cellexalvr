@@ -7,9 +7,15 @@ using UnityEngine;
 public class BurnHeatmapToolButton : StationaryButton
 {
 
-    public GameObject fire;
-    public ControllerModelSwitcher controllerModelSwitcher;
+    private GameObject fire;
+    private ControllerModelSwitcher controllerModelSwitcher;
     private bool fireActivated = false;
+
+    private void Start()
+    {
+        fire = referenceManager.fire;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+    }
 
     protected override string Description
     {

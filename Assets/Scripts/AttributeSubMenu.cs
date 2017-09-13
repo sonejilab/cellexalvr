@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public class AttributeSubMenu : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
 
     public ColorByAttributeButton buttonPrefab;
     // hard coded positions :)
@@ -56,7 +57,7 @@ public class AttributeSubMenu : MonoBehaviour
         {
             Init();
         }
-        foreach(ColorByAttributeButton button in buttons)
+        foreach (ColorByAttributeButton button in buttons)
         {
             // wait 0.1 seconds so we are out of the loop before we start destroying stuff
             Destroy(button.gameObject, .1f);
@@ -67,6 +68,7 @@ public class AttributeSubMenu : MonoBehaviour
             string attribute = attributes[i];
             ColorByAttributeButton newButton = Instantiate(buttonPrefab, transform);
             newButton.gameObject.SetActive(true);
+            newButton.referenceManager = referenceManager;
             newButton.transform.localPosition = buttonPos;
             newButton.SetAttribute(attribute, colors[i]);
             buttons.Add(newButton);

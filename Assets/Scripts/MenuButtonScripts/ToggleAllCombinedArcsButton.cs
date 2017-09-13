@@ -6,8 +6,11 @@
 /// </summary>
 public class ToggleAllCombinedArcsButton : MonoBehaviour
 {
-    public SteamVR_TrackedObject rightController;
+
+    public ReferenceManager referenceManager;
     public bool toggleToState;
+
+    private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private new Renderer renderer;
     private bool controllerInside = false;
@@ -18,6 +21,11 @@ public class ToggleAllCombinedArcsButton : MonoBehaviour
     {
         renderer = GetComponent<Renderer>();
         color = renderer.material.color;
+    }
+
+    private void Start()
+    {
+        rightController = referenceManager.rightController;
     }
 
     void Update()

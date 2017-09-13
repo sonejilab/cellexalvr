@@ -6,9 +6,10 @@ using UnityEngine;
 /// </summary>
 public class ArcMenuTab : MonoBehaviour
 {
-    public SteamVR_TrackedObject rightController;
-    public ToggleArcsSubMenu arcsSubMenu;
+    public ReferenceManager referenceManager;
     public GameObject tab;
+    private SteamVR_TrackedObject rightController;
+    private ToggleArcsSubMenu arcsSubMenu;
     private bool controllerInside = false;
     private SteamVR_Controller.Device device;
     private List<GameObject> buttons = new List<GameObject>();
@@ -19,7 +20,8 @@ public class ArcMenuTab : MonoBehaviour
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-
+        rightController = referenceManager.rightController;
+        arcsSubMenu = referenceManager.arcsSubMenu;
     }
 
     void Update()

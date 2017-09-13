@@ -10,13 +10,14 @@ using UnityEngine;
 /// </summary>
 public class HeatmapGenerator : MonoBehaviour
 {
-
-    public SelectionToolHandler selectionToolHandler;
+    public ReferenceManager referenceManager;
     public GameObject heatmapPrefab;
     public ErrorMessageController errorMessageController;
-    public GraphManager graphManager;
-    public GameObject fire;
-    public StatusDisplay status;
+
+    private SelectionToolHandler selectionToolHandler;
+    private GraphManager graphManager;
+    private GameObject fire;
+    private StatusDisplay status;
     private ArrayList data;
     private Thread t;
     private bool running = false;
@@ -33,6 +34,10 @@ public class HeatmapGenerator : MonoBehaviour
         hourglass = GameObject.Find("WaitingForHeatboardHourglass");
         hourglass.SetActive(false);
         heatmapPosition = heatmapPrefab.transform.position;
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        graphManager = referenceManager.graphManager;
+        fire = referenceManager.fire;
+        status = referenceManager.statusDisplay;
     }
 
     internal void DeleteHeatmaps()

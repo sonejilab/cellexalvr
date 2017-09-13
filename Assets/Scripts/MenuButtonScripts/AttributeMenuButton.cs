@@ -7,9 +7,14 @@ using System;
 /// </summary>
 public class AttributeMenuButton : StationaryButton
 {
+    private GameObject attributeMenu;
+    private GameObject buttons;
 
-    public GameObject attributeMenu;
-    public GameObject buttons;
+    private void Start()
+    {
+        attributeMenu = referenceManager.attributeSubMenu.gameObject;
+        buttons = referenceManager.leftButtons;
+    }
 
     protected override string Description
     {

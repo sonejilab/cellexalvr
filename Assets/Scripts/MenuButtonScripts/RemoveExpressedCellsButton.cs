@@ -4,14 +4,16 @@
 
 public class RemoveExpressedCellsButton : StationaryButton
 {
-    public CellManager cellManager;
+    private CellManager cellManager;
 
     protected override string Description
     {
-        get
-        {
-            return "Toggle cells with some expression";
-        }
+        get { return "Toggle cells with some expression"; }
+    }
+
+    private void Start()
+    {
+        cellManager = referenceManager.cellManager;
     }
 
     void Update()
