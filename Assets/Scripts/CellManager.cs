@@ -122,7 +122,10 @@ public class CellManager : MonoBehaviour
         ArrayList expressions = database._result;
         // stop the coroutine if the gene was not in the database
         if (expressions.Count == 0)
+        {
+            CellExAlLog.Log("The gene " + geneName + " was not found in the database");
             yield break;
+        }
         foreach (Cell c in cells.Values)
         {
             c.ColorByExpression(0);
@@ -134,13 +137,13 @@ public class CellManager : MonoBehaviour
         }
 
         var removedGene = topListNode.UpdateList(geneName);
-        // GameObject.Find("Status Display").GetComponent<StatusDisplay>().ShowStatusForTime("Added " + geneName + " and removed " + removedGene, 5f);
         foreach (Cell c in cells.Values)
         {
             c.SaveExpression(geneName, removedGene);
         }
-
+        CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
+
     public void DeleteCells()
     {
         cells.Clear();
@@ -151,6 +154,7 @@ public class CellManager : MonoBehaviour
     /// </summary>
     public void ColorByAttribute(string attributeType, Color color)
     {
+        CellExAlLog.Log("Colored genes by " + attributeType);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByAttribute(attributeType, color);
@@ -183,6 +187,7 @@ public class CellManager : MonoBehaviour
     /// </summary>
     public void ColorByIndex(string name)
     {
+        CellExAlLog.Log("Colored genes by " + name);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByIndex(name);

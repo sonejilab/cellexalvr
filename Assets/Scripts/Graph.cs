@@ -121,7 +121,7 @@ public class Graph : MonoBehaviour
         // 2 means the graphpoint that was created from the second line
         // and so on
         // Each line in the file connects three graphpoints into a triangle
-        string path = Directory.GetCurrentDirectory() + @"\Assets\Data\" + DirectoryName + @"\" + GraphName + ".hull";
+        string path = Directory.GetCurrentDirectory() + @"\Data\" + DirectoryName + @"\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
         if (lines.Length == 0)
         {

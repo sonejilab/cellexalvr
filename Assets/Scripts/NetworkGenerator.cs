@@ -37,10 +37,16 @@ public class NetworkGenerator : MonoBehaviour
         // generate the files containing the network information
         string home = Directory.GetCurrentDirectory();
         string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1);
-        t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\make_networks.R", args));
+        string rScriptFilePath = @"\Assets\Scripts\R\make_networks.R";
+        CellExAlLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         t.Start();
         while (t.IsAlive)
             yield return null;
+        stopwatch.Stop();
+        CellExAlLog.Log("R script finished in " + stopwatch.Elapsed.ToString());
         status.RemoveStatus(statusId);
         inputReader.ReadNetworkFiles();
     }

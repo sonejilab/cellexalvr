@@ -38,7 +38,7 @@ public class InputReader : MonoBehaviour
     {
         if (debug)
         {
-            ReadFolder(Directory.GetCurrentDirectory() + @"\Assets\Data\Bertie");
+            ReadFolder(Directory.GetCurrentDirectory() + @"\Data\Bertie");
         }
         graphManager = referenceManager.graphManager;
         cellManager = referenceManager.cellManager;
@@ -51,7 +51,6 @@ public class InputReader : MonoBehaviour
         headset = referenceManager.headset;
         status = referenceManager.statusDisplay;
         rightController = referenceManager.rightController;
-
 
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
@@ -73,18 +72,30 @@ public class InputReader : MonoBehaviour
         database.InitDatabase(path + "\\database.sqlite");
         // print(path);
         selectionToolHandler.DataDir = path;
+        string workingDirectory = Directory.GetCurrentDirectory();
+
+        string runtimegroupsDirectory = workingDirectory + "\\Data\\runtimeGroups";
+        if (!Directory.Exists(runtimegroupsDirectory))
+        {
+            Directory.CreateDirectory(runtimegroupsDirectory);
+        }
+
         // clear the runtimeGroups
-        string[] txtList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups", "*.txt");
-        // print(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups");
+        string[] txtList = Directory.GetFiles(runtimegroupsDirectory, "*.txt");
         foreach (string f in txtList)
         {
             File.Delete(f);
         }
+
         if (!debug)
         {
             // clear the network folder
-            string[] networkFilesList = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\Assets\\Resources\\Networks", "*");
-            // print(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups");
+            string networkDirectory = workingDirectory + "\\Resources\\Networks";
+            if (!Directory.Exists(networkDirectory))
+            {
+                Directory.CreateDirectory(networkDirectory);
+            }
+            string[] networkFilesList = Directory.GetFiles(networkDirectory, "*");
             foreach (string f in networkFilesList)
             {
                 File.Delete(f);
@@ -104,6 +115,7 @@ public class InputReader : MonoBehaviour
     /// <param name="itemsPerFrame"> How many graphpoints should be Instantiated each frame </param>
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
     {
+        CellExAlLog.Log("Started reading the data folder at " + path);
         int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         var magnifier = GameObject.Find("Controller (right)").GetComponentInChildren<MagnifierTool>(true);
@@ -116,11 +128,11 @@ public class InputReader : MonoBehaviour
         {
             Graph newGraph = graphManager.CreateGraph();
             newGraph.GetComponent<GraphInteract>().isGrabbable = false;
-            //graphManager.SetActiveGraph(fileIndex);
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
             string graphFileName = regexResult[regexResult.Length - 1];
+            CellExAlLog.Log("Reading graph from " + graphFileName);
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
@@ -152,6 +164,7 @@ public class InputReader : MonoBehaviour
             {
                 graphManager.LoadPosition(newGraph, fileIndex);
             }
+            CellExAlLog.Log("Successfully read graph from " + graphFileName);
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         // Read the each .meta.cell file
@@ -318,17 +331,18 @@ public class InputReader : MonoBehaviour
         // KEY is simply a hex rgb color code
         // GRAPHNAME is the name of the file (and graph) that the network was made from
 
+        CellExAlLog.Log("Started reading network files");
         // there should only be one .cnt file
-        string[] cntFilePaths = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.cnt");
+        string[] cntFilePaths = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Resources\Networks", "*.cnt");
         if (cntFilePaths.Length == 0)
         {
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            Debug.LogError("no .cnt file found");
+            CellExAlLog.Log("no .cnt file found");
             return;
         }
         if (cntFilePaths.Length > 1)
         {
-            Debug.LogError("more than one .cnt file in network folder");
+            CellExAlLog.Log("more than one .cnt file in network folder");
             return;
         }
         string[] lines = File.ReadAllLines(cntFilePaths[0]);
@@ -337,7 +351,12 @@ public class InputReader : MonoBehaviour
         string graphName = firstLine[firstLine.Length - 1];
         Graph graph = graphManager.FindGraph(graphName);
         GameObject skeleton = graph.CreateConvexHull();
-        if (skeleton == null) return;
+        if (skeleton == null)
+        {
+            CellExAlLog.Log("Could not create convex hull of " + graphName);
+            return;
+        }
+        CellExAlLog.Log("Successfully created convex hull of " + graphName);
         var networkHandler = skeleton.GetComponent<NetworkHandler>();
         networkHandler.NetworkName = "network from " + graph.GraphName;
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
@@ -383,7 +402,7 @@ public class InputReader : MonoBehaviour
         // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
 
         // there should only be one .nwk file
-        string[] nwkFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.nwk");
+        string[] nwkFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Resources\Networks", "*.nwk");
         if (nwkFilePath.Length == 0)
         {
             print("no .nwk file in network folder");
@@ -443,8 +462,9 @@ public class InputReader : MonoBehaviour
         // GENENAME X_COORD Y_COORD KEY
         // ...
         // KEY is the hex rgb color code of the network the gene is in.
-        string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Assets\Resources\Networks", "*.lay");
+        string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Resources\Networks", "*.lay");
         lines = File.ReadAllLines(layFilePath[0]);
+
         foreach (string line in lines)
         {
             if (line == "")
@@ -481,7 +501,6 @@ public class InputReader : MonoBehaviour
             }
             lastNodes.Add(keypair);
             lastKey = keypair;
-
         }
 
         foreach (NetworkNode node in nodes.Values)
@@ -519,7 +538,7 @@ public class InputReader : MonoBehaviour
         {
             network.ColorCombinedArcs(max);
         }
-
+        CellExAlLog.Log("Successfully created " + j + " networks");
     }
 
     /// <summary>

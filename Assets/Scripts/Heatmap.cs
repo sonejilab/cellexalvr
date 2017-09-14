@@ -77,8 +77,6 @@ public class Heatmap : MonoBehaviour
         // this is the only acceptable date time format, order-wise
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         string saveFileName = saveDir + @"\heatmap_" + time + ".png";
-        //print(imageFilepath);
-        //print(saveDir + @"\heatmap_" + time + ".png");
         // if the button is pressed twice the same second, the filenames will collide.
         while (File.Exists(saveFileName))
         {

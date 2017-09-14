@@ -313,7 +313,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void ConfirmRemove()
     {
-        GetComponent<AudioSource>().Play();
+        //GetComponent<AudioSource>().Play();
         foreach (Collider other in selectedCells)
         {
             other.transform.parent = null;
@@ -334,13 +334,6 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void ConfirmSelection()
     {
-        foreach (Collider cell in selectedCells)
-        {
-            GameObject graphpoint = cell.gameObject;
-            Color cellColor = cell.gameObject.GetComponent<Renderer>().material.color;
-            Color nonTransparentColor = new Color(cellColor.r, cellColor.g, cellColor.b);
-            cell.gameObject.GetComponent<Renderer>().material.color = nonTransparentColor;
-        }
         // create .txt file with latest selection
         DumpData();
         // clear the list since we are done with it
@@ -428,9 +421,13 @@ public class SelectionToolHandler : MonoBehaviour
     private void DumpData()
     {
         // print(new System.Diagnostics.StackTrace());
+        string filePath = Directory.GetCurrentDirectory() + "\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt";
         using (StreamWriter file =
-                   new StreamWriter(Directory.GetCurrentDirectory() + "\\Assets\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt"))
+                   new StreamWriter(filePath))
         {
+            CellExAlLog.Log("Dumping selection data to " + filePath);
+            CellExAlLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
+            CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
 
             foreach (Collider cell in selectedCells)
             {

@@ -20,13 +20,7 @@ class SaveHeatmapButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            string dir = Directory.GetCurrentDirectory() + @"\Images";
-            if (!Directory.Exists(dir))
-            {
-                gameObject.GetComponentInParent<Heatmap>().SaveImage();
-            }
-
+            gameObject.GetComponentInParent<Heatmap>().SaveImage();
         }
     }
 }
-

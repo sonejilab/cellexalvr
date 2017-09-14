@@ -7,11 +7,10 @@ using System.IO;
 /// </summary>
 public class RScriptRunner
 {
-
     /// <summary>
     /// Runs an R script from a file using Rscript.exe.
     /// Example:
-    ///   RScriptRunner.RunFromCmd(curDirectory + @"\ImageClustering.r", "rscript.exe", curDirectory.Replace('\\','/'));
+    ///   RScriptRunner.RunFromCmd(curDirectory + @"\ImageClustering.r", curDirectory.Replace('\\','/'));
     /// Getting args passed from C# using R:
     ///   args = commandArgs(trailingOnly = TRUE)
     ///   print(args[1]);
@@ -26,7 +25,7 @@ public class RScriptRunner
         try
         {
             string workingDirectory = Directory.GetCurrentDirectory();
-            using (StreamReader r = new StreamReader(workingDirectory + "/Assets/Config/config.txt"))
+            using (StreamReader r = new StreamReader(workingDirectory + "/Config/config.txt"))
             {
                 string rawInput = r.ReadToEnd();
                 string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -62,13 +61,7 @@ public class RScriptRunner
         }
         catch (Exception ex)
         {
-            using (StreamWriter writetofile =
-                       new StreamWriter(Directory.GetCurrentDirectory() + "/Output/r_error.txt"))
-            {
-                writetofile.WriteLine("R Script failed: " + ex);
-                writetofile.Flush();
-                writetofile.Close();
-            }
+            CellExAlLog.Log("R script failed: ", ex.ToString());
             throw new Exception("R Script failed: " + result, ex);
         }
     }

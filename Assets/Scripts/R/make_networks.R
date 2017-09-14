@@ -13,10 +13,10 @@ latest_version <- args[3]
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
-group_selection_filepath <- file.path(homedir, "Assets","Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
+group_selection_filepath <- file.path(homedir, "Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
 
 #print(group_selection_filepath)
 
-generated_table_filepath <- paste(file.path(homedir, "Assets","Resources","Networks"), "/", sep="")
+generated_table_filepath <- paste(file.path(homedir, "Resources","Networks"), "/", sep="")
 
 make.cellexalvr.network(expression_data_filepath, group_selection_filepath, generated_table_filepath)

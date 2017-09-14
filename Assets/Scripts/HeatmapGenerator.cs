@@ -97,7 +97,16 @@ public class HeatmapGenerator : MonoBehaviour
             string home = Directory.GetCurrentDirectory();
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
             string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr;
-            t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\make_heatmap.R", args));
+            string rScriptFilePath = @"\Assets\Scripts\R\make_heatmap.R";
+            string heatmapDirectory = home + @"\Images";
+            if (!Directory.Exists(heatmapDirectory))
+            {
+                Directory.CreateDirectory(heatmapDirectory);
+            }
+            CellExAlLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             t.Start();
             running = true;
             // Show hourglass
@@ -107,11 +116,13 @@ public class HeatmapGenerator : MonoBehaviour
             {
                 yield return null;
             }
+            stopwatch.Stop();
+            CellExAlLog.Log("R script finished in " + stopwatch.Elapsed.ToString());
             status.RemoveStatus(statusId);
             running = false;
-            string heatmapFilePath = home + @"\Assets\Images";
+
             // rename the file from heatmap.png to heatmap_X.png. Where X is some number.
-            string newHeatmapFilePath = heatmapFilePath + @"\heatmap_" + fileCreationCtr + ".png";
+            string newHeatmapFilePath = heatmapDirectory + @"\heatmap_" + fileCreationCtr + ".png";
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
 

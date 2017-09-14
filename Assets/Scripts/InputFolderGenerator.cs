@@ -35,13 +35,13 @@ public class InputFolderGenerator : MonoBehaviour
     /// </summary>
     public void GenerateFolders()
     {
-        if (!Directory.Exists(Directory.GetCurrentDirectory() + "/Assets/Data/runtimeGroups"))
+        if (!Directory.Exists(Directory.GetCurrentDirectory() + "/Data/runtimeGroups"))
         {
             print("creating runtimeGroups directory");
-            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/Assets/Data/runtimeGroups");
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/Data/runtimeGroups");
         }
 
-        string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Assets/Data");
+        string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Data");
         if (directories.Length == 0)
         {
             print("No input directeries found");

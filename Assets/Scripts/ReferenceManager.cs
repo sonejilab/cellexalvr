@@ -58,6 +58,7 @@ public class ReferenceManager : MonoBehaviour
     public LoaderController loaderController;
     public InputReader inputReader;
     public SQLite database;
+    public LogManager logManager;
 
     #endregion
 

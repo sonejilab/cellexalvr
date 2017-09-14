@@ -17,7 +17,7 @@ public class CorrelatedGenesButton : MonoBehaviour
     private StatusDisplay statusDisplay;
     private bool calculatingGenes = false;
     private new Renderer renderer;
-    private string outputFile = Directory.GetCurrentDirectory() + @"\Assets\Resources\correlated_genes.txt";
+    private string outputFile = Directory.GetCurrentDirectory() + @"\Resources\correlated_genes.txt";
 
     private void Start()
     {
@@ -65,6 +65,7 @@ public class CorrelatedGenesButton : MonoBehaviour
         // if the file is not 2 lines, something probably went wrong
         if (lines.Length != 2)
         {
+            CellExAlLog.Log("Correlated genes file at " + outputFile + " was not 2 lines long. Actual length: " + lines.Length);
             Debug.LogWarning("Correlated genes file at " + outputFile + " was not 2 lines long. Actual length: " + lines.Length);
             yield break;
         }

@@ -26,3 +26,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/vrjeans_scene6.unity
     guid: c556a1c489b4faa429ff6f35505bc2d5
+  - enabled: 0
+    path: Assets/Launcher.unity
+    guid: aeed05bb8ad9c5242a4764a845aad31a

@@ -16,11 +16,11 @@ library(cellexalvr)
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
-group_selection_filepath <- file.path(homedir, "Assets","Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
+group_selection_filepath <- file.path(homedir, "Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
 
 #print(group_selection_filepath)
 
-generated_image_filepath <- file.path(homedir, "Assets","Images", paste("heatmap_", latest_version, ".png", sep=""))
+generated_image_filepath <- file.path(homedir, "Images", paste("heatmap_", latest_version, ".png", sep=""))
 
 top_genes_number <- 250
 
