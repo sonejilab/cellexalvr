@@ -92,10 +92,10 @@ namespace ExitGames.Demos.DemoAnimator
         void Update()
         {
             // "back" button of phone equals "Escape". quit app if that's pressed
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                QuitApplication();
-            }
+            //if (Input.GetKeyDown(KeyCode.Escape))
+            //{
+            //    QuitApplication();
+            //}
         }
 
         #endregion

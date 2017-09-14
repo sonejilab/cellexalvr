@@ -23,13 +23,13 @@ public static class CellExAlLog
 
         if (!Directory.Exists(logDirectory))
         {
-            logThis += "Creating directory " + logDirectory;
+            logThis += "Created directory " + logDirectory;
             Directory.CreateDirectory(logDirectory);
         }
 
         if (!File.Exists(logFilePath))
         {
-            logThis += "Creating file " + logFilePath;
+            logThis += "Created file " + logFilePath;
             File.Create(logFilePath).Dispose();
         }
 
