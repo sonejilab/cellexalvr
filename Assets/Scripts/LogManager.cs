@@ -19,14 +19,17 @@ public static class CellExAlLog
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         logDirectory = Directory.GetCurrentDirectory() + "/Output";
         logFilePath = logDirectory + "/cellexal-log-" + time + ".txt";
+        string logThis = "";
 
         if (!Directory.Exists(logDirectory))
         {
+            logThis += "Creating directory " + logDirectory;
             Directory.CreateDirectory(logDirectory);
         }
 
         if (!File.Exists(logFilePath))
         {
+            logThis += "Creating file " + logFilePath;
             File.Create(logFilePath).Dispose();
         }
 
@@ -45,6 +48,7 @@ public static class CellExAlLog
             "\tProcessor count: " + SystemInfo.processorCount,
             "\tGPU: " + SystemInfo.graphicsDeviceName,
             "\tRAM size " + SystemInfo.systemMemorySize);
+        Log(logThis);
     }
 
     /// <summary>
@@ -109,7 +113,7 @@ public class LogManager : MonoBehaviour
         if (success)
             CellExAlLog.Log("Render model successfully loaded");
         else
-            CellExAlLog.Log("Render model not successfully loaded");
+            CellExAlLog.Log("ERROR: Render model not successfully loaded");
     }
 
     private void OnDeviceConnected(int index, bool connected)

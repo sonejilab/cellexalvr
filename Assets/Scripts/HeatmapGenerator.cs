@@ -101,6 +101,7 @@ public class HeatmapGenerator : MonoBehaviour
             string heatmapDirectory = home + @"\Images";
             if (!Directory.Exists(heatmapDirectory))
             {
+                CellExAlLog.Log("Creating directory " + heatmapDirectory);
                 Directory.CreateDirectory(heatmapDirectory);
             }
             CellExAlLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
@@ -117,7 +118,7 @@ public class HeatmapGenerator : MonoBehaviour
                 yield return null;
             }
             stopwatch.Stop();
-            CellExAlLog.Log("R script finished in " + stopwatch.Elapsed.ToString());
+            CellExAlLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
             status.RemoveStatus(statusId);
             running = false;
 

@@ -3294,6 +3294,7 @@ public static class PhotonNetwork
             string settingsPath = Path.GetDirectoryName(PhotonNetwork.serverSettingsAssetPath);
             if (!Directory.Exists(settingsPath))
             {
+
                 Directory.CreateDirectory(settingsPath);
                 AssetDatabase.ImportAsset(settingsPath);
             }

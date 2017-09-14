@@ -6,11 +6,12 @@ using System.Collections;
 /// </summary>
 public class MenuRotator : MonoBehaviour
 {
+    public Rotation SideFacingPlayer { get; set; }
 
     private float finalZRotation = 0;
     private bool isRotating = false;
     private Vector3 fromAngle;
-    public Rotation SideFacingPlayer { get; set; }
+    private float rotatedTotal;
     public enum Rotation { Front, Right, Back, Left }
 
     void Start()
@@ -73,6 +74,22 @@ public class MenuRotator : MonoBehaviour
         }
     }
 
+
+    protected virtual void OnDisable()
+    {
+        if (isRotating)
+        {
+            if (rotatedTotal < 0)
+            {
+                transform.Rotate(0, 0, -180 - rotatedTotal);
+            }
+            else
+            {
+                transform.Rotate(0, 0, 180 - rotatedTotal);
+            }
+            isRotating = false;
+        }
+    }
     /// <summary>
     /// Rotates the menu.
     /// </summary>
@@ -82,7 +99,7 @@ public class MenuRotator : MonoBehaviour
     {
         isRotating = true;
         // how much we have rotated so far
-        float rotatedTotal = 0;
+        rotatedTotal = 0;
         float zAnglesAbs = Mathf.Abs(zAngles);
         // how much we should rotate each frame
         float rotationPerFrame = zAngles / (zAnglesAbs * inTime);

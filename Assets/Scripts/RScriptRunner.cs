@@ -61,7 +61,7 @@ public class RScriptRunner
         }
         catch (Exception ex)
         {
-            CellExAlLog.Log("R script failed: ", ex.ToString());
+            CellExAlLog.Log("ERROR: R script failed: ", ex.ToString());
             throw new Exception("R Script failed: " + result, ex);
         }
     }

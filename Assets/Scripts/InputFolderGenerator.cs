@@ -38,6 +38,7 @@ public class InputFolderGenerator : MonoBehaviour
         if (!Directory.Exists(Directory.GetCurrentDirectory() + "/Data/runtimeGroups"))
         {
             print("creating runtimeGroups directory");
+            CellExAlLog.Log("Creating directory " + heatmapDirectory);
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/Data/runtimeGroups");
         }
 

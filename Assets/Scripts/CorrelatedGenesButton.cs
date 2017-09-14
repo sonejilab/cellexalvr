@@ -53,6 +53,8 @@ public class CorrelatedGenesButton : MonoBehaviour
         calculatingGenes = true;
         var geneName = listNode.GeneName;
         string args = selectionToolHandler.DataDir + " " + geneName + " " + outputFile;
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\get_correlated_genes.R", args));
         var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + geneName);
         t.Start();
@@ -60,6 +62,8 @@ public class CorrelatedGenesButton : MonoBehaviour
         {
             yield return null;
         }
+        stopwatch.Stop();
+        CellExAlLog.Log("Correlated genes R script finished in " + stopwatch.Elapsed.ToString());
         // r script is done, read the results.
         string[] lines = File.ReadAllLines(outputFile);
         // if the file is not 2 lines, something probably went wrong
@@ -73,6 +77,14 @@ public class CorrelatedGenesButton : MonoBehaviour
         string[] correlatedGenes = lines[0].Split(null);
         string[] anticorrelatedGenes = lines[1].Split(null);
         correlatedGenesList.SetVisible(true);
+        if (correlatedGenes.Length != 10 || anticorrelatedGenes.Length != 10)
+        {
+            CellExAlLog.Log("Correlated genes file at " + outputFile + " was incorrectly formatted.",
+                            "\tExpected lengths: 10 plus 10 genes.",
+                            "\tActual lengths: " + correlatedGenes.Length + " plus " + anticorrelatedGenes.Length + " genes");
+            yield break;
+        }
+        CellExAlLog.Log("Successfully calculated genes correlated to " + geneName);
         correlatedGenesList.PopulateList(geneName, correlatedGenes, anticorrelatedGenes);
         // set the texture to a happy face :)
         calculatingGenes = false;

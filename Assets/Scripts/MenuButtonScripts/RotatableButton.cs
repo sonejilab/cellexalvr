@@ -80,6 +80,11 @@ public abstract class RotatableButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the button to active or inactive. Trying to activate an already activate or deactivate a deactivated button does nothing.
+    /// This method will rotate the button to the correct side.
+    /// </summary>
+    /// <param name="active"> True for activating this button. False for deactivating. </param>
     public void SetButtonState(bool active)
     {
         if (isActivated != active)
@@ -93,7 +98,7 @@ public abstract class RotatableButton : MonoBehaviour
                 }
                 else
                 {
-                    // if the button is not activated we must not start a coroutine, so we just set the values directly
+                    // if the button is not activated we can not start a coroutine, so we just set the values directly
                     transform.Rotate(0, 180f, 0);
                     Activate(true);
                 }
@@ -116,7 +121,7 @@ public abstract class RotatableButton : MonoBehaviour
     }
 
     // if the button is deactivated when rotating, the coroutine will be killed
-    void OnDisable()
+    protected virtual void OnDisable()
     {
         if (isRotating)
         {

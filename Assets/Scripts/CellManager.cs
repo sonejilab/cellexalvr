@@ -123,7 +123,7 @@ public class CellManager : MonoBehaviour
         // stop the coroutine if the gene was not in the database
         if (expressions.Count == 0)
         {
-            CellExAlLog.Log("The gene " + geneName + " was not found in the database");
+            CellExAlLog.Log("WARNING: The gene " + geneName + " was not found in the database");
             yield break;
         }
         foreach (Cell c in cells.Values)
@@ -176,7 +176,7 @@ public class CellManager : MonoBehaviour
     {
         if (index < 0 || index > 29)
         {
-            // value hasn't been normalized ocrrectly
+            // value hasn't been normalized correctly
             print(facs + " " + index);
         }
         cells[cellName].AddFacs(facs, index);

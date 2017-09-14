@@ -68,7 +68,6 @@ public class InputReader : MonoBehaviour
     /// <param name="path"> The path to the folder. </param>
     public void ReadFolder(string path)
     {
-
         database.InitDatabase(path + "\\database.sqlite");
         // print(path);
         selectionToolHandler.DataDir = path;
@@ -77,6 +76,7 @@ public class InputReader : MonoBehaviour
         string runtimegroupsDirectory = workingDirectory + "\\Data\\runtimeGroups";
         if (!Directory.Exists(runtimegroupsDirectory))
         {
+            CellExAlLog.Log("Creating directory " + runtimegroupsDirectory);
             Directory.CreateDirectory(runtimegroupsDirectory);
         }
 
@@ -93,9 +93,11 @@ public class InputReader : MonoBehaviour
             string networkDirectory = workingDirectory + "\\Resources\\Networks";
             if (!Directory.Exists(networkDirectory))
             {
+                CellExAlLog.Log("Creating directory " + networkDirectory);
                 Directory.CreateDirectory(networkDirectory);
             }
             string[] networkFilesList = Directory.GetFiles(networkDirectory, "*");
+            CellExAlLog.Log("Deleting " + networkFilesList.Length + " files in " + networkDirectory);
             foreach (string f in networkFilesList)
             {
                 File.Delete(f);
@@ -283,6 +285,7 @@ public class InputReader : MonoBehaviour
             names[i] = header[i + 1];
         }
         indexMenu.CreateColorByIndexButtons(names);
+        CellExAlLog.Log("Successfully read " + fullpath);
     }
 
     /// <summary>
@@ -333,16 +336,17 @@ public class InputReader : MonoBehaviour
 
         CellExAlLog.Log("Started reading network files");
         // there should only be one .cnt file
-        string[] cntFilePaths = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Resources\Networks", "*.cnt");
+        string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
+        string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
         if (cntFilePaths.Length == 0)
         {
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            CellExAlLog.Log("no .cnt file found");
+            CellExAlLog.Log("ERROR: No .cnt file in network folder " + networkDirectory);
             return;
         }
         if (cntFilePaths.Length > 1)
         {
-            CellExAlLog.Log("more than one .cnt file in network folder");
+            CellExAlLog.Log("ERROR: more than one .cnt file in network folder");
             return;
         }
         string[] lines = File.ReadAllLines(cntFilePaths[0]);
@@ -353,7 +357,7 @@ public class InputReader : MonoBehaviour
         GameObject skeleton = graph.CreateConvexHull();
         if (skeleton == null)
         {
-            CellExAlLog.Log("Could not create convex hull of " + graphName);
+            CellExAlLog.Log("ERROR: Could not create convex hull of " + graphName);
             return;
         }
         CellExAlLog.Log("Successfully created convex hull of " + graphName);
@@ -402,10 +406,11 @@ public class InputReader : MonoBehaviour
         // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
 
         // there should only be one .nwk file
-        string[] nwkFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Resources\Networks", "*.nwk");
+        string[] nwkFilePath = Directory.GetFiles(networkDirectory, "*.nwk");
         if (nwkFilePath.Length == 0)
         {
             print("no .nwk file in network folder");
+            CellExAlLog.Log("ERROR: No .nwk file in network folder " + networkDirectory);
             return;
         }
         lines = File.ReadAllLines(nwkFilePath[0]);
@@ -462,7 +467,12 @@ public class InputReader : MonoBehaviour
         // GENENAME X_COORD Y_COORD KEY
         // ...
         // KEY is the hex rgb color code of the network the gene is in.
-        string[] layFilePath = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Resources\Networks", "*.lay");
+        string[] layFilePath = Directory.GetFiles(networkDirectory, "*.lay");
+        if (layFilePath.Length == 0)
+        {
+            CellExAlLog.Log("ERROR: No .lay file found in network folder " + networkDirectory);
+        }
+
         lines = File.ReadAllLines(layFilePath[0]);
 
         foreach (string line in lines)
@@ -538,7 +548,7 @@ public class InputReader : MonoBehaviour
         {
             network.ColorCombinedArcs(max);
         }
-        CellExAlLog.Log("Successfully created " + j + " networks");
+        CellExAlLog.Log("Successfully created " + j + " networks with a total of " + nodes.Values.Count + " nodes");
     }
 
     /// <summary>

@@ -6,10 +6,10 @@ public class ColorByAttributeButton : MonoBehaviour
     public ReferenceManager referenceManager;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
+    public TextMesh description;
 
     private CellManager cellManager;
     private SteamVR_TrackedObject rightController;
-    private TextMesh description;
     private SteamVR_Controller.Device device;
     private new Renderer renderer;
     private bool controllerInside = false;
@@ -26,7 +26,6 @@ public class ColorByAttributeButton : MonoBehaviour
     {
         cellManager = referenceManager.cellManager;
         rightController = referenceManager.rightController;
-        description = referenceManager.leftDescription;
     }
 
     void Update()
@@ -48,10 +47,6 @@ public class ColorByAttributeButton : MonoBehaviour
 
     public void SetAttribute(string attribute, Color color)
     {
-        if (description == null)
-        {
-            description = referenceManager.leftDescription;
-        }
         description.text = attribute;
         this.attribute = attribute;
         // sometimes this is done before Awake() it seems, so we use GetComponent() here

@@ -46,7 +46,7 @@ public class NetworkGenerator : MonoBehaviour
         while (t.IsAlive)
             yield return null;
         stopwatch.Stop();
-        CellExAlLog.Log("R script finished in " + stopwatch.Elapsed.ToString());
+        CellExAlLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
         status.RemoveStatus(statusId);
         inputReader.ReadNetworkFiles();
     }

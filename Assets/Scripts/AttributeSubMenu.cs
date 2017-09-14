@@ -44,7 +44,7 @@ public class AttributeSubMenu : MonoBehaviour
         colors[19] = new Color(1, .6f, .2f);     // orange
         colors[20] = new Color(.87f, 8f, .47f);     // some ugly sand color
         colors[21] = new Color(.3f, .3f, .3f);     // grey
-        gameObject.SetActive(false);
+
     }
 
     /// <summary>
