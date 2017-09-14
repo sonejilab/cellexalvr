@@ -97,7 +97,8 @@ public class HeatmapGenerator : MonoBehaviour
             string home = Directory.GetCurrentDirectory();
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
             string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr;
-            string rScriptFilePath = @"\Assets\Scripts\R\make_heatmap.R";
+
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
             string heatmapDirectory = home + @"\Images";
             if (!Directory.Exists(heatmapDirectory))
             {

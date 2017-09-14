@@ -35,7 +35,7 @@ public class RScriptRunner
                 var info = new ProcessStartInfo();
                 info.FileName = rPath;
                 info.WorkingDirectory = Path.GetDirectoryName(rPath);
-                info.Arguments = workingDirectory + rCodeFilePath + " " + args;
+                info.Arguments = rCodeFilePath + " " + args;
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
                 info.RedirectStandardError = true;

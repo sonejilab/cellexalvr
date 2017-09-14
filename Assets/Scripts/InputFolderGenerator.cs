@@ -35,11 +35,12 @@ public class InputFolderGenerator : MonoBehaviour
     /// </summary>
     public void GenerateFolders()
     {
-        if (!Directory.Exists(Directory.GetCurrentDirectory() + "/Data/runtimeGroups"))
+        string runtimeGroupsDirectory = Directory.GetCurrentDirectory() + "/Data/runtimeGroups";
+        if (!Directory.Exists(runtimeGroupsDirectory))
         {
             print("creating runtimeGroups directory");
-            CellExAlLog.Log("Creating directory " + heatmapDirectory);
-            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/Data/runtimeGroups");
+            CellExAlLog.Log("Creating directory " + runtimeGroupsDirectory);
+            Directory.CreateDirectory(runtimeGroupsDirectory);
         }
 
         string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Data");

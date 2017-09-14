@@ -53,9 +53,11 @@ public class CorrelatedGenesButton : MonoBehaviour
         calculatingGenes = true;
         var geneName = listNode.GeneName;
         string args = selectionToolHandler.DataDir + " " + geneName + " " + outputFile;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";
+        CellExAlLog.Log("Calculating correlated genes with R script " + rScriptFilePath + " with the arguments: " + args);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
-        Thread t = new Thread(() => RScriptRunner.RunFromCmd(@"\Assets\Scripts\R\get_correlated_genes.R", args));
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + geneName);
         t.Start();
         while (t.IsAlive)
