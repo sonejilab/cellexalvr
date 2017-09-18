@@ -23,20 +23,26 @@ public class HelperTool : MonoBehaviour
     private string descriptionFilePath;
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
     private SteamVR_Controller.Device device;
+    private GameObject helpMenu;
     private Ray ray;
     private RaycastHit hit;
     private Transform raycastingSource;
     private LayerMask savedLayersToIgnore;
     private Transform savedCustomOrigin;
+    private float initialY;
     private bool activated;
 
     private void Start()
     {
         descriptionFilePath = Application.streamingAssetsPath + "\\descriptions.txt";
         ReadDescriptionFile(descriptionFilePath);
+        helpMenu = referenceManager.helpMenu;
+        helpMenu.SetActive(false);
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);
         rightController = referenceManager.rightController;
+        initialY = transform.localPosition.y;
+        gameObject.SetActive(false);
     }
 
     private void Update()
@@ -74,6 +80,12 @@ public class HelperTool : MonoBehaviour
                     textMesh.text = standardText;
                     SetQuadOpaque(false);
                 }
+                Vector3 oldScale = opaqueQuad.transform.localScale;
+                float newScaleY = textMesh.renderedHeight / 30f;
+                Vector3 oldPosition = opaqueQuad.transform.localPosition;
+                float newPositionY = -(newScaleY / 2f) + 2.1f;
+                opaqueQuad.transform.localScale = new Vector3(oldScale.x, newScaleY, oldScale.z);
+                opaqueQuad.transform.localPosition = new Vector3(oldPosition.x, newPositionY, oldPosition.z);
             }
             else
             {
@@ -124,6 +136,7 @@ public class HelperTool : MonoBehaviour
         pointerRenderer.enabled = activate;
         activated = activate;
         gameObject.SetActive(activate);
+        helpMenu.SetActive(activate);
     }
 
     /// <summary>
@@ -155,18 +168,20 @@ public class HelperTool : MonoBehaviour
             // comments in the file start with #
             if (line[0] == '#')
                 continue;
-
+            // line breaks in decsriptions are written with \n in plaintext.
+            string formattedLine = line.Replace(@"\n", "\n");
             // tag names in the file start with "TAG_"
-            if (line.Substring(0, 4).Equals("TAG_", StringComparison.Ordinal))
+            if (formattedLine.Substring(0, 4).Equals("TAG_", StringComparison.Ordinal))
             {
-                var colonIndex = line.IndexOf(":");
-                string tagName = line.Substring(4, colonIndex - 4);
-                descriptions[tagName] = line.Substring(colonIndex + 1);
+                var colonIndex = formattedLine.IndexOf(":");
+                string tagName = formattedLine.Substring(4, colonIndex - 4);
+
+                descriptions[tagName] = formattedLine.Substring(colonIndex + 1);
             }
             else
             {
                 // everything else is assumed to be names of gameobjects
-                string[] splitString = line.Split(new char[] { ':' }, 2);
+                string[] splitString = formattedLine.Split(new char[] { ':' }, 2);
                 descriptions[splitString[0]] = splitString[1];
             }
 

@@ -23,6 +23,7 @@ public class ReferenceManager : MonoBehaviour
     public GameObject fire;
     public MinimizeTool minimizeTool;
     public HelperTool helpTool;
+    public GameObject helpMenu;
     public MagnifierTool magnifierTool;
 
     #endregion
@@ -56,6 +57,7 @@ public class ReferenceManager : MonoBehaviour
     public NetworkGenerator networkGenerator;
     public InputFolderGenerator inputFolderGenerator;
     public LoaderController loaderController;
+    public GameObject helperCylinder;
     public InputReader inputReader;
     public SQLite database;
     public LogManager logManager;

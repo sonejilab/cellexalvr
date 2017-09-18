@@ -120,11 +120,11 @@ public class InputReader : MonoBehaviour
         CellExAlLog.Log("Started reading the data folder at " + path);
         int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
-        var magnifier = GameObject.Find("Controller (right)").GetComponentInChildren<MagnifierTool>(true);
+        var magnifier = referenceManager.magnifierTool;
         //  Read each .mds file
         // The file format should be
-        //  CELLNAME_1 X_COORD  Y_COORD Z_COORD
-        //  CELLNAME_2 X_COORD  Y_COORD Z_COORD
+        //  CELLNAME_1 X_COORD Y_COORD Z_COORD
+        //  CELLNAME_2 X_COORD Y_COORD Z_COORD
         //  ...
         foreach (string file in mdsFiles)
         {

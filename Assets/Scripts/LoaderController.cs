@@ -14,6 +14,7 @@ public class LoaderController : MonoBehaviour
     private InputReader inputReader;
     private InputFolderGenerator inputFolderGenerator;
     private GraphManager graphManager;
+    private GameObject helperCylinder;
     private float timeEntered = 0;
     private ArrayList cellsToDestroy;
     private bool cellsEntered = false;
@@ -37,6 +38,7 @@ public class LoaderController : MonoBehaviour
         inputReader = referenceManager.inputReader;
         inputFolderGenerator = referenceManager.inputFolderGenerator;
         graphManager = referenceManager.graphManager;
+        helperCylinder = referenceManager.helperCylinder;
     }
 
     void Update()
@@ -57,6 +59,7 @@ public class LoaderController : MonoBehaviour
 
         if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
         {
+            helperCylinder.SetActive(false);
             DestroyFolderColliders();
         }
 
@@ -85,6 +88,7 @@ public class LoaderController : MonoBehaviour
         if (direction.y > 0)
         {
             finalScale = new Vector3(1f, startScale.y, 1f);
+            helperCylinder.SetActive(true);
         }
         else
         {
@@ -168,7 +172,7 @@ public class LoaderController : MonoBehaviour
 
     void DestroyCells()
     {
-        // since we are responisble for removing the parent reference we should probably
+        // since we are responsible for removing the parent reference we should probably
         // destroy the objects as well
         foreach (Transform child in cellsToDestroy)
         {

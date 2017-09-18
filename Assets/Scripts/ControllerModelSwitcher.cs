@@ -35,6 +35,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     private GameObject minimizer;
     private GameObject magnifier;
     private HelperTool helpTool;
+    private GameObject keyboard;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
@@ -43,6 +44,11 @@ public class ControllerModelSwitcher : MonoBehaviour
     {
         helpTool = referenceManager.helpTool;
         helpTool.SaveLayersToIgnore();
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        fire = referenceManager.fire;
+        minimizer = referenceManager.minimizeTool.gameObject;
+        magnifier = referenceManager.magnifierTool.gameObject;
+        keyboard = referenceManager.keyboard;
         DesiredModel = Model.Normal;
         if (controllerBody.activeSelf == false)
             SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
@@ -51,14 +57,6 @@ public class ControllerModelSwitcher : MonoBehaviour
             controllerBodyMeshFilter = controllerBody.GetComponent<MeshFilter>();
             controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
         }
-    }
-
-    private void Start()
-    {
-        selectionToolHandler = referenceManager.selectionToolHandler;
-        fire = referenceManager.fire;
-        minimizer = referenceManager.minimizeTool.gameObject;
-        magnifier = referenceManager.magnifierTool.gameObject;
     }
 
     // Used when starting the program to know when steamvr has loaded the model and applied a meshfilter and meshrenderer for us to use.
@@ -148,6 +146,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         helpTool.SetToolActivated(false);
         rightLaser.enabled = false;
         leftLaser.enabled = false;
+        keyboard.SetActive(false);
         switch (DesiredModel)
         {
             case Model.SelectionTool:
@@ -167,9 +166,11 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.OneLaser:
+                keyboard.SetActive(true);
                 rightLaser.enabled = true;
                 break;
             case Model.TwoLasers:
+                keyboard.SetActive(true);
                 rightLaser.enabled = true;
                 leftLaser.enabled = true;
                 break;
@@ -190,6 +191,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         helpTool.SetToolActivated(false);
         rightLaser.enabled = false;
         leftLaser.enabled = false;
+        keyboard.SetActive(false);
         DesiredModel = Model.Normal;
         if (inMenu)
         {
