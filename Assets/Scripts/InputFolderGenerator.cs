@@ -14,7 +14,6 @@ public class InputFolderGenerator : MonoBehaviour
 
     void Start()
     {
-        // the - 2 comes from subtracting the runtimeGroups directory and then one more for the integer division to work as intended.
         var folderAngle = -(Math.PI * 1.1d) / 2d;
         folderBaseCoords = new Vector3[6];
         for (int i = 0; i < 3; ++i)
@@ -43,12 +42,15 @@ public class InputFolderGenerator : MonoBehaviour
             Directory.CreateDirectory(runtimeGroupsDirectory);
         }
 
-        string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory() + "/Data");
+        string dataDirectory = Directory.GetCurrentDirectory() + "/Data";
+        string[] directories = Directory.GetDirectories(dataDirectory);
         if (directories.Length == 0)
         {
             print("No input directeries found");
+            CellExAlLog.Log("No data folders found. Aborting loading.");
             return;
         }
+        CellExAlLog.Log("Started generating folders from " + dataDirectory);
 
         var nfolder = 0;
         foreach (string directory in directories)

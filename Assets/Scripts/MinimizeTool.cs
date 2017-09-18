@@ -11,7 +11,7 @@ public class MinimizeTool : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private MinimizedObjectHandler jail;
-
+    private ControllerModelSwitcher controllerModelSwitcher;
     private bool controllerInside = false;
     private GameObject collidingWith;
     private int numberColliders;
@@ -20,6 +20,7 @@ public class MinimizeTool : MonoBehaviour
     {
         rightController = referenceManager.rightController;
         jail = referenceManager.minimizedObjectHandler;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     private void Update()
@@ -41,11 +42,16 @@ public class MinimizeTool : MonoBehaviour
             }
             else if (collidingWith.CompareTag("Network"))
             {
-                collidingWith.GetComponent<NetworkHandler>().HideNetworks();
-                jail.MinimizeObject(collidingWith, collidingWith.GetComponent<NetworkHandler>().NetworkName);
+                if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Minimizer)
+                    return;
+                var networkHandler = collidingWith.GetComponent<NetworkHandler>();
+                if (networkHandler != null)
+                {
+                    networkHandler.HideNetworks();
+                    jail.MinimizeObject(collidingWith, collidingWith.GetComponent<NetworkHandler>().NetworkName);
+                }
             }
         }
-
     }
 
     private void OnTriggerEnter(Collider other)

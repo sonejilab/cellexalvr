@@ -28,7 +28,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     // what model is actually displayed, useful for when we want to change the model temporarily
     // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
     // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
-    private Model actualModel;
+    public Model ActualModel;
 
     private SelectionToolHandler selectionToolHandler;
     private GameObject fire;
@@ -77,12 +77,10 @@ public class ControllerModelSwitcher : MonoBehaviour
         return controllerBodyMeshFilter != null && controllerBodyRenderer != null;
     }
 
-
-
     void OnTriggerEnter(Collider other)
     {
         //print("ontriggerenter " + other.gameObject.name);
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
             //print ("ontriggerenter " + other.gameObject.name);
             if (controllerBodyMeshFilter == null) return;
@@ -95,7 +93,7 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(DesiredModel);
@@ -109,7 +107,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public void SwitchToModel(Model model)
     {
         //print ("switching to " + model);
-        actualModel = model;
+        ActualModel = model;
         switch (model)
         {
             case Model.Normal:
@@ -219,7 +217,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     {
         desiredColor = color;
 
-        if (actualModel == Model.SelectionTool)
+        if (ActualModel == Model.SelectionTool)
             controllerBodyRenderer.material.color = desiredColor;
     }
 }

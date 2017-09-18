@@ -8,7 +8,7 @@ class DesktopMenu : MonoBehaviour
 
     private void Start()
     {
-        menu.SetActive(false);
+        //menu.SetActive(false);
     }
 
     private void Update()
@@ -21,11 +21,20 @@ class DesktopMenu : MonoBehaviour
     }
 
     /// <summary>
+    /// Makes the menu go away.
+    /// </summary>
+    public void DeactivateMenu()
+    {
+        menu.SetActive(false);
+    }
+
+    /// <summary>
     /// Quits the program.
     /// </summary>
     public void Quit()
     {
         CellExAlLog.Log("Quit button pressed");
+        CellExAlLog.LogBacklog();
         // Application.Quit() does not work in the unity editor, only in standalone builds.
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

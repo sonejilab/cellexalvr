@@ -338,6 +338,10 @@ public class InputReader : MonoBehaviour
         // there should only be one .cnt file
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
+        string[] nwkFilePath = Directory.GetFiles(networkDirectory, "*.nwk");
+        string[] layFilePath = Directory.GetFiles(networkDirectory, "*.lay");
+
+        // make sure there is a .cnt file
         if (cntFilePaths.Length == 0)
         {
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
@@ -349,6 +353,34 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("ERROR: more than one .cnt file in network folder");
             return;
         }
+
+        // make sure there is a .nwk file
+        if (nwkFilePath.Length == 0)
+        {
+            print("no .nwk file in network folder");
+            CellExAlLog.Log("ERROR: No .nwk file in network folder " + networkDirectory);
+            return;
+        }
+        FileStream fs = new FileStream(nwkFilePath[0], FileMode.Open);
+        StreamReader sr = new StreamReader(fs);
+        // 1 MB = 1048576 B
+        if (fs.Length > 1048576)
+        {
+            CellExAlLog.Log("Aborting reading network files because .nwk file is larger than 1 MB",
+                            ".nwk file size: " + fs.Length + " B");
+            sr.Close();
+            fs.Close();
+            return;
+        }
+
+        // make sure there is a .lay file
+        if (layFilePath.Length == 0)
+        {
+            CellExAlLog.Log("ERROR: No .lay file found in network folder " + networkDirectory);
+        }
+
+
+
         string[] lines = File.ReadAllLines(cntFilePaths[0]);
         // read the graph's name and create a skeleton
         string[] firstLine = lines[0].Split(null);
@@ -392,7 +424,7 @@ public class InputReader : MonoBehaviour
             }
             networks[words[3]] = network;
         }
-
+        CellExAlLog.Log("Successfully read .cnt file");
         // Read the .nwk file
         // The file format should be
         //  PCOR    NODE_1  NODE_2  PVAL    QVAL    PROB    GRPS[I] KEY_1   KEY_2
@@ -406,22 +438,20 @@ public class InputReader : MonoBehaviour
         // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
 
         // there should only be one .nwk file
-        string[] nwkFilePath = Directory.GetFiles(networkDirectory, "*.nwk");
-        if (nwkFilePath.Length == 0)
-        {
-            print("no .nwk file in network folder");
-            CellExAlLog.Log("ERROR: No .nwk file in network folder " + networkDirectory);
-            return;
-        }
-        lines = File.ReadAllLines(nwkFilePath[0]);
+
+
+        //lines = File.ReadAllLines(nwkFilePath[0]);
+        CellExAlLog.Log("Reading .nwk file with " + fs.Length + " bytes");
         Dictionary<string, NetworkNode> nodes = new Dictionary<string, NetworkNode>(1024);
         List<NetworkKeyPair> tmp = new List<NetworkKeyPair>();
         // skip the first line as it is a header
-        for (int i = 1; i < lines.Length; ++i)
+        sr.ReadLine();
+        while (!sr.EndOfStream)
         {
-            if (lines[i] == "")
+            string line = sr.ReadLine();
+            if (line == "")
                 continue;
-            string[] words = lines[i].Split(null);
+            string[] words = line.Split(null);
             string color = words[6];
             string geneName1 = words[1];
             string node1 = geneName1 + color;
@@ -434,7 +464,10 @@ public class InputReader : MonoBehaviour
             {
                 NetworkNode newNode = CreateNetworkNode(geneName1);
                 nodes[node1] = newNode;
-                nodes[node1].Center = networks[color];
+                if (networks.ContainsKey(color))
+                    nodes[node1].Center = networks[color];
+                else
+                    print(color);
             }
 
             if (!nodes.ContainsKey(node2))
@@ -454,7 +487,9 @@ public class InputReader : MonoBehaviour
             tmp.Add(new NetworkKeyPair(color, node1, node2, key1, key2));
 
         }
-
+        sr.Close();
+        fs.Close();
+        CellExAlLog.Log("Successfully read .nwk file");
         NetworkKeyPair[] keyPairs = new NetworkKeyPair[tmp.Count];
         tmp.CopyTo(keyPairs);
         // sort the array of keypairs
@@ -467,14 +502,10 @@ public class InputReader : MonoBehaviour
         // GENENAME X_COORD Y_COORD KEY
         // ...
         // KEY is the hex rgb color code of the network the gene is in.
-        string[] layFilePath = Directory.GetFiles(networkDirectory, "*.lay");
-        if (layFilePath.Length == 0)
-        {
-            CellExAlLog.Log("ERROR: No .lay file found in network folder " + networkDirectory);
-        }
+
 
         lines = File.ReadAllLines(layFilePath[0]);
-
+        CellExAlLog.Log("Reading .lay file with " + lines.Length + " lines");
         foreach (string line in lines)
         {
             if (line == "")
@@ -487,7 +518,7 @@ public class InputReader : MonoBehaviour
             string nodeName = geneName + color;
             nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
         }
-
+        CellExAlLog.Log("Successfully read .lay file");
         // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
         NetworkKeyPair lastKey = new NetworkKeyPair("", "", "", "", "");
         List<NetworkKeyPair> lastNodes = new List<NetworkKeyPair>();

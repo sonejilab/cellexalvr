@@ -34,7 +34,15 @@ public class GroupInfoDisplay : MonoBehaviour
     /// <param name="n"> How much the number should change by. 1 if adding 1 cell to the color. -1 if subtracting 1 cell from the color. </param>
     public void ChangeGroupsInfo(Color col, int n)
     {
-        groups[col] += n;
+        try
+        {
+            groups[col] += n;
+        }
+        catch (KeyNotFoundException e)
+        {
+            print("Color not found " + col.r + " " + col.g + " " + col.b);
+            print(e);
+        }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < colors.Length; i++)
         {

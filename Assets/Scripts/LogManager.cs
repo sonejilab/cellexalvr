@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Valve.VR;
@@ -12,24 +13,33 @@ public static class CellExAlLog
     private static string logFilePath;
     private static FileStream logStream;
     private static TextWriter logWriter;
+    private static List<string> logThisLater = new List<string>();
 
-    public static void Start()
+    public static void InitNewLog()
     {
-        // File names cant have colons so we only use hyphens for the file name
+        // File names can't have colons so we only use hyphens
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         logDirectory = Directory.GetCurrentDirectory() + "/Output";
-        logFilePath = logDirectory + "/cellexal-log-" + time + ".txt";
-        string logThis = "";
+
 
         if (!Directory.Exists(logDirectory))
         {
-            logThis += "Created directory " + logDirectory;
+            logThisLater.Add("\tCreated directory " + logDirectory);
             Directory.CreateDirectory(logDirectory);
         }
 
+        logDirectory += "/" + CellExAlUser.Username;
+        if (!Directory.Exists(logDirectory))
+        {
+            logThisLater.Add("\tCreated directory " + logDirectory);
+            Directory.CreateDirectory(logDirectory);
+        }
+
+        logFilePath = logDirectory + "/cellexal-log-" + time + ".txt";
+        // this will most likely always happen
         if (!File.Exists(logFilePath))
         {
-            logThis += "Created file " + logFilePath;
+            logThisLater.Add("\tCreated file " + logFilePath);
             File.Create(logFilePath).Dispose();
         }
 
@@ -42,13 +52,28 @@ public static class CellExAlLog
             "BuildGUID: " + Application.buildGUID,
             "Log started at " + nicerTime);
 
-        Log("\nSome system information",
+        Log("\nSome system information:",
             "\tOS: " + SystemInfo.operatingSystem,
             "\tCPU: " + SystemInfo.processorType,
             "\tProcessor count: " + SystemInfo.processorCount,
             "\tGPU: " + SystemInfo.graphicsDeviceName,
-            "\tRAM size " + SystemInfo.systemMemorySize);
-        Log(logThis);
+            "\tRAM size: " + SystemInfo.systemMemorySize);
+
+        if (logThisLater.Count > 0)
+        {
+            Log("The following was generated before the log file existed:");
+            Log(logThisLater.ToArray());
+            Log("\tEnd of what was generated before the log file existed.");
+            logThisLater.Clear();
+        }
+    }
+
+    public static void LogBacklog()
+    {
+        if (logThisLater.Count > 0)
+        {
+            InitNewLog();
+        }
     }
 
     /// <summary>
@@ -57,8 +82,15 @@ public static class CellExAlLog
     /// <param name="message"> The string that should be written to the log. </param>
     public static void Log(string message)
     {
-        logWriter.WriteLine(message);
-        logWriter.Flush();
+        if (logWriter == null)
+        {
+            logThisLater.Add("\t" + message);
+        }
+        else
+        {
+            logWriter.WriteLine(message);
+            logWriter.Flush();
+        }
     }
 
     /// <summary>
@@ -67,11 +99,36 @@ public static class CellExAlLog
     /// <param name="message"> The messages that should be written to the log. </param>
     public static void Log(params string[] message)
     {
-        foreach (string s in message)
+        if (logWriter == null)
         {
-            logWriter.WriteLine(s);
+            foreach (string s in message)
+            {
+                logThisLater.Add("\t" + s);
+            }
         }
-        logWriter.Flush();
+        else
+        {
+            foreach (string s in message)
+            {
+                logWriter.WriteLine(s);
+            }
+            logWriter.Flush();
+        }
+    }
+
+    /// <summary>
+    /// Closes the old log and opens a new log.
+    /// </summary>
+    /// <param name="newUsername"> The new username. </param>
+    public static void UsernameChanged(string newUsername)
+    {
+        if (logWriter != null)
+        {
+            Log("Changing user to " + newUsername,
+                "Goodbye.");
+            Close();
+        }
+        InitNewLog();
     }
 
     /// <summary>
@@ -79,8 +136,13 @@ public static class CellExAlLog
     /// </summary>
     public static void Close()
     {
-        logWriter.Close();
+        if (logWriter != null)
+        {
+            logWriter.Close();
+            logWriter = null;
+        }
     }
+
 }
 
 /// <summary>
@@ -91,7 +153,8 @@ public class LogManager : MonoBehaviour
 
     private void Start()
     {
-        CellExAlLog.Start();
+        //CellExAlLog.InitNewLog();
+        CellExAlUser.UsernameChanged.AddListener(CellExAlLog.UsernameChanged);
     }
 
     #region Events

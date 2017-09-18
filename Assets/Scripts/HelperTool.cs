@@ -20,7 +20,7 @@ public class HelperTool : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private string standardText = "Point the laser towards something to find out more";
-    private string descriptionFilePath = Directory.GetCurrentDirectory() + "\\Assets\\descriptions.txt";
+    private string descriptionFilePath;
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
     private SteamVR_Controller.Device device;
     private Ray ray;
@@ -32,6 +32,7 @@ public class HelperTool : MonoBehaviour
 
     private void Start()
     {
+        descriptionFilePath = Application.streamingAssetsPath + "\\descriptions.txt";
         ReadDescriptionFile(descriptionFilePath);
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);

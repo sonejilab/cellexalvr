@@ -15,8 +15,9 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
-    [HideInInspector]
-    public ControllerModelSwitcher controllerModelSwitcher;
+
+
+    private ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
     private GameObject pedestal;
     private SteamVR_Controller.Device device;
@@ -28,10 +29,7 @@ public class NetworkCenter : MonoBehaviour
     public bool Enlarged { get; private set; }
     private bool enlarge = false;
     private int numColliders = 0;
-
-
     private bool isReplacement = false;
-
     [HideInInspector]
     public NetworkCenter replacing;
     private List<Arc> arcs = new List<Arc>();
@@ -41,10 +39,11 @@ public class NetworkCenter : MonoBehaviour
 
     void Start()
     {
+        var referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         pedestal = GameObject.Find("Pedestal");
-        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-        networkGenerator = GameObject.Find("NetworkGenerator").GetComponent<NetworkGenerator>();
-        controllerModelSwitcher = GameObject.Find("LeftController").GetComponent<ControllerModelSwitcher>();
+        rightController = referenceManager.rightController;
+        networkGenerator = referenceManager.networkGenerator;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     void FixedUpdate()
@@ -53,13 +52,12 @@ public class NetworkCenter : MonoBehaviour
         if (enlarge)
         {
             enlarge = false;
-            if (!isReplacement && this.name != "Enlarged Network")
+            if (!isReplacement && gameObject.name != "Enlarged Network")
             {
                 EnlargeNetwork();
             }
-            else if (isReplacement && this.name == "EmptyNetworkPrefab 1(Clone)")
+            else if (isReplacement && gameObject.name == "EmptyNetworkPrefab 1(Clone)")
             {
-
                 BringBackOriginal();
             }
         }
@@ -94,21 +92,20 @@ public class NetworkCenter : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Controller"))
+        if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
             controllerInside = true;
             numColliders++;
-            if (controllerModelSwitcher == null)
-            {
-                controllerModelSwitcher = GameObject.Find("LeftController").GetComponent<ControllerModelSwitcher>();
-            }
-            controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
+            // i think this sometimes gets called before start
+            // so let's make sure that the controllermodelswitcher is set
+            if (controllerModelSwitcher != null)
+                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Controller"))
+        if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
             numColliders--;
         }
@@ -117,7 +114,7 @@ public class NetworkCenter : MonoBehaviour
         if (numColliders == 0)
         {
             controllerInside = false;
-            controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
+            controllerModelSwitcher.SwitchToDesiredModel();
         }
     }
 
@@ -228,7 +225,7 @@ public class NetworkCenter : MonoBehaviour
             Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
             Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
             Destroy(gameObject.GetComponent<Rigidbody>());
-            Debug.Log(transform.localScale);
+            // Debug.Log(transform.localScale);
             if (transform.localScale.x > 5)
             {
                 Debug.Log("DECREASE OBJ IN SKY");

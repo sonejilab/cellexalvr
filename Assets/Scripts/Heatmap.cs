@@ -28,7 +28,7 @@ public class Heatmap : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             controllerInside = true;
         }
@@ -36,7 +36,7 @@ public class Heatmap : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
             controllerInside = false;
         }
@@ -72,8 +72,17 @@ public class Heatmap : MonoBehaviour
         string saveDir = Directory.GetCurrentDirectory() + @"\Saved_Images";
         if (!Directory.Exists(saveDir))
         {
+            CellExAlLog.Log("Creating directory " + saveDir);
             Directory.CreateDirectory(saveDir);
         }
+
+        saveDir += "/" + CellExAlUser.Username;
+        if (!Directory.Exists(saveDir))
+        {
+            CellExAlLog.Log("Creating directory " + saveDir);
+            Directory.CreateDirectory(saveDir);
+        }
+
         // this is the only acceptable date time format, order-wise
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         string saveFileName = saveDir + @"\heatmap_" + time + ".png";

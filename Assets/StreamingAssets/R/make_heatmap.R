@@ -24,4 +24,7 @@ generated_image_filepath <- file.path(homedir, "Images", paste("heatmap_", lates
 
 top_genes_number <- 250
 
-make.cellexalvr.heatmap(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)
+
+cellexalvrObj <- make.cellexalvr.heatmap(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)
+
+save ( cellexalvrObj , paste(args[4], "/cellexalvrObj",sep="" ))

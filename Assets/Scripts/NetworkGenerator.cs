@@ -36,7 +36,7 @@ public class NetworkGenerator : MonoBehaviour
         int statusId = status.AddStatus("R script generating networks");
         // generate the files containing the network information
         string home = Directory.GetCurrentDirectory();
-        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1);
+        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellExAlUser.UserSpecificFolder;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
         CellExAlLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();

@@ -19,4 +19,6 @@ group_selection_filepath <- file.path(homedir, "Data","runtimeGroups", paste("se
 
 generated_table_filepath <- paste(file.path(homedir, "Resources","Networks"), "/", sep="")
 
-make.cellexalvr.network(expression_data_filepath, group_selection_filepath, generated_table_filepath)
+cellexalvrObj <- make.cellexalvr.network(expression_data_filepath, group_selection_filepath, generated_table_filepath)
+
+save ( cellexalvrObj , paste(args[4], "/cellexalvrObj",sep="" ))
