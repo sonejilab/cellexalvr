@@ -22,7 +22,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public VRTK_StraightPointerRenderer rightLaser;
     public VRTK_StraightPointerRenderer leftLaser;
 
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool, OneLaser, TwoLasers };
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool, OneLaser, TwoLasers, DrawTool };
     // what model we actually want
     public Model DesiredModel { get; set; }
     // what model is actually displayed, useful for when we want to change the model temporarily
@@ -35,6 +35,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     private GameObject minimizer;
     private GameObject magnifier;
     private HelperTool helpTool;
+    private GameObject drawTool;
     private GameObject keyboard;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
@@ -49,6 +50,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         minimizer = referenceManager.minimizeTool.gameObject;
         magnifier = referenceManager.magnifierTool.gameObject;
         keyboard = referenceManager.keyboard;
+        drawTool = referenceManager.drawTool.gameObject;
         DesiredModel = Model.Normal;
         if (controllerBody.activeSelf == false)
             SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
@@ -113,6 +115,7 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.HelpTool:
             case Model.OneLaser:
             case Model.TwoLasers:
+            case Model.DrawTool:
                 controllerBodyMeshFilter.mesh = normalControllerMesh;
                 controllerBodyRenderer.material = normalMaterial;
                 break;
@@ -147,6 +150,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         rightLaser.enabled = false;
         leftLaser.enabled = false;
         keyboard.SetActive(false);
+        drawTool.SetActive(false);
         switch (DesiredModel)
         {
             case Model.SelectionTool:
@@ -174,6 +178,9 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 leftLaser.enabled = true;
                 break;
+            case Model.DrawTool:
+                drawTool.SetActive(true);
+                break;
         }
         SwitchToDesiredModel();
     }
@@ -192,6 +199,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         rightLaser.enabled = false;
         leftLaser.enabled = false;
         keyboard.SetActive(false);
+        drawTool.SetActive(false);
         DesiredModel = Model.Normal;
         if (inMenu)
         {

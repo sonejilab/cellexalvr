@@ -96,7 +96,7 @@ public class HeatmapGenerator : MonoBehaviour
             // Start generation of new heatmap in R
             string home = Directory.GetCurrentDirectory();
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
-            string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr;
+            string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr + " " + CellExAlUser.UserSpecificFolder;
 
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
             string heatmapDirectory = home + @"\Images";
@@ -132,7 +132,6 @@ public class HeatmapGenerator : MonoBehaviour
             heatBoard.transform.parent = transform;
             heatBoard.transform.localPosition = heatmapPosition;
             Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
-            // TODO: fix recoloring not working when generating multiple heatmaps at once
             // save colors before.
             heatmap.SetVars(graphManager, selectionToolHandler, colors, fire);
             heatmapList.Add(heatmap);
@@ -143,8 +142,6 @@ public class HeatmapGenerator : MonoBehaviour
             heatBoard.GetComponent<AudioSource>().Play();
 
             heatmapID++;
-
         }
     }
-
 }

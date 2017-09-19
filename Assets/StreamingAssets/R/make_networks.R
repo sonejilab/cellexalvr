@@ -21,4 +21,4 @@ generated_table_filepath <- paste(file.path(homedir, "Resources","Networks"), "/
 
 cellexalvrObj <- make.cellexalvr.network(expression_data_filepath, group_selection_filepath, generated_table_filepath)
 
-save ( cellexalvrObj , paste(args[4], "/cellexalvrObj",sep="" ))
+save ( cellexalvrObj , file = file.path(args[4], "cellexalvrObj.RData", sep="" ))

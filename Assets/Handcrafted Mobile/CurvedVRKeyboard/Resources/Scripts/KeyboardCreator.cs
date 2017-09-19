@@ -11,6 +11,8 @@ namespace CurvedVRKeyboard
     [ExecuteInEditMode]
     public class KeyboardCreator : KeyboardComponent
     {
+        public Material keyTextMaterial;
+        public Font keyFont;
 
         //-----------SET IN UNITY --------------
         [SerializeField]
@@ -211,7 +213,7 @@ namespace CurvedVRKeyboard
         {
             foreach (KeyboardItem key in keys)
             {
-                key.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial);
+                key.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial, keyTextMaterial, keyFont);
             }
         }
 
@@ -256,7 +258,7 @@ namespace CurvedVRKeyboard
         /// </summary>
         public void ReloadSpaceMaterials()
         {
-            space.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial);
+            space.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial, keyTextMaterial, keyFont);
             space.ManipulateSpace(this, SpaceSprite);
         }
 
@@ -366,7 +368,7 @@ namespace CurvedVRKeyboard
                 {
                     spaceSprite = value;
                     space.ManipulateSpace(this, SpaceSprite);
-                    space.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial);
+                    space.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial, keyTextMaterial, keyFont);
                 }
                 //if value has changed and it's not null
                 else if (value != null)
@@ -376,7 +378,7 @@ namespace CurvedVRKeyboard
                         spaceSprite = value;
                         ChangeBorders(SpaceSprite.border);
                         space.ManipulateSpace(this, SpaceSprite);
-                        space.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial);
+                        space.SetMaterials(KeyNormalMaterial, KeySelectedMaterial, KeyPressedMaterial, keyTextMaterial, keyFont);
                     }
                 }
             }

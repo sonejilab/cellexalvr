@@ -36,10 +36,6 @@ public class InputReader : MonoBehaviour
 
     private void Start()
     {
-        if (debug)
-        {
-            ReadFolder(Directory.GetCurrentDirectory() + @"\Data\Bertie");
-        }
         graphManager = referenceManager.graphManager;
         cellManager = referenceManager.cellManager;
         loaderController = referenceManager.loaderController;
@@ -51,6 +47,11 @@ public class InputReader : MonoBehaviour
         headset = referenceManager.headset;
         status = referenceManager.statusDisplay;
         rightController = referenceManager.rightController;
+        if (debug)
+        {
+            status.gameObject.SetActive(true);
+            ReadFolder(Directory.GetCurrentDirectory() + @"\Data\Bertie");
+        }
 
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
@@ -140,25 +141,48 @@ public class InputReader : MonoBehaviour
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
             // put each line into an array
             string[] lines = File.ReadAllLines(file);
+            FileStream fileStream = new FileStream(file, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
             // we must wait for the graph to fully initialize before adding stuff to it
             while (!newGraph.Ready())
                 yield return null;
             newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
             UpdateMinMax(newGraph, lines);
 
-            for (int i = 0; i < lines.Length; i += itemsPerFrame)
+            float maximumDeltaTime = Time.maximumDeltaTime;
+            // multiply by 1.1 to allow a loss of ~9.0909% fps
+            float maximumDeltaTimeThreshold = maximumDeltaTime * 1.1f;
+            int maximumItemsPerFrame = 50;
+            while (!streamReader.EndOfStream)
             {
-
-                status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((i * 100) / lines.Length) + "%");
-                for (int j = i; j < i + itemsPerFrame && j < lines.Length; ++j)
+                int itemsThisFrame = 0;
+                status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)fileStream.Position / fileStream.Length) + "%");
+                while (!streamReader.EndOfStream)
                 {
-                    string line = lines[j];
+                    if (itemsThisFrame > maximumItemsPerFrame)
+                    {
+                        break;
+                    }
+                    string line = streamReader.ReadLine();
                     string[] words = line.Split(null);
-                    // print(words[0]);
                     graphManager.AddCell(newGraph, words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
+                    itemsThisFrame++;
                 }
-
+                // wait for end of frame
                 yield return null;
+
+                // now is the next frame
+                float lastFrame = Time.deltaTime;
+                if (lastFrame < maximumDeltaTime)
+                {
+                    // we had some time over last frame
+                    maximumItemsPerFrame += 5;
+                }
+                else if (lastFrame > maximumDeltaTimeThreshold)
+                {
+                    // we took too much time last frame
+                    maximumItemsPerFrame -= 5;
+                }
             }
             fileIndex++;
             newGraph.GetComponent<GraphInteract>().isGrabbable = true;
@@ -166,7 +190,8 @@ public class InputReader : MonoBehaviour
             {
                 graphManager.LoadPosition(newGraph, fileIndex);
             }
-            CellExAlLog.Log("Successfully read graph from " + graphFileName);
+
+            CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         // Read the each .meta.cell file
@@ -436,9 +461,6 @@ public class InputReader : MonoBehaviour
         // GRPS[I] is the network the two genes are in. A gene can be in multiple networks.
         // KEY_1 is the two genenames concatenated together as NODE_1 + NODE_2
         // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
-
-        // there should only be one .nwk file
-
 
         //lines = File.ReadAllLines(nwkFilePath[0]);
         CellExAlLog.Log("Reading .nwk file with " + fs.Length + " bytes");

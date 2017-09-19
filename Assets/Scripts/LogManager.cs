@@ -142,7 +142,6 @@ public static class CellExAlLog
             logWriter = null;
         }
     }
-
 }
 
 /// <summary>

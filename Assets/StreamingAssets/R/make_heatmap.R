@@ -27,4 +27,4 @@ top_genes_number <- 250
 
 cellexalvrObj <- make.cellexalvr.heatmap(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)
 
-save ( cellexalvrObj , paste(args[4], "/cellexalvrObj",sep="" ))
+save ( cellexalvrObj , file = file.path(args[4], "cellexalvrObj.RData", sep="" ))

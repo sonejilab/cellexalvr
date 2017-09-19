@@ -25,6 +25,7 @@ public class ReferenceManager : MonoBehaviour
     public HelperTool helpTool;
     public GameObject helpMenu;
     public MagnifierTool magnifierTool;
+    public DrawTool drawTool;
 
     #endregion
 
