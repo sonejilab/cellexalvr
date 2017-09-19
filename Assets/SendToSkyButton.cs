@@ -55,7 +55,7 @@ public class SendToSkyButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             spriteRenderer.sprite = highlightedTexture;
             controllerInside = true;
@@ -64,7 +64,7 @@ public class SendToSkyButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;

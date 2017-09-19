@@ -34,7 +34,7 @@ public abstract class StationaryButton : MonoBehaviour
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             descriptionText.text = Description;
             spriteRenderer.sprite = highlightedTexture;
@@ -45,7 +45,7 @@ public abstract class StationaryButton : MonoBehaviour
     protected virtual void OnTriggerExit(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             // sometimes the controller moves to another button before exiting this one.
             // that other button will then (probably) change the description.

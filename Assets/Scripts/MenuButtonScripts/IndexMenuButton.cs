@@ -40,7 +40,7 @@ public class IndexMenuButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             descriptionText.text = "Color by index";
             spriteRenderer.sprite = highlightedTexture;
@@ -50,7 +50,7 @@ public class IndexMenuButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             descriptionText.text = "";
             spriteRenderer.sprite = standardTexture;

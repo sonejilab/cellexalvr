@@ -1,4 +1,6 @@
-﻿class DrawToolButton : StationaryButton
+﻿using System;
+
+public class DrawToolButton : StationaryButton
 {
     protected override string Description
     {
@@ -26,6 +28,7 @@
             }
             else
             {
+
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DrawTool;
                 controllerModelSwitcher.ActivateDesiredTool();
                 // Tell the draw tool to skip its next draw because we used the trigger to press the button

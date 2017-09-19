@@ -68,7 +68,7 @@ public class ToggleAllCombinedArcsButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             renderer.material.color = Color.white;
             controllerInside = true;
@@ -77,7 +77,7 @@ public class ToggleAllCombinedArcsButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             renderer.material.color = color;
             controllerInside = false;

@@ -36,7 +36,7 @@ public class ArcMenuTab : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = true;
             SetHighlighted(true);
@@ -45,7 +45,7 @@ public class ArcMenuTab : MonoBehaviour
 
     protected void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = false;
             SetHighlighted(false);

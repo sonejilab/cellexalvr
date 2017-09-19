@@ -1,4 +1,4 @@
-﻿class ClearAllDrawToolLinesButton : StationaryButton
+﻿public class ClearAllDrawToolLinesButton : StationaryButton
 {
     protected override string Description
     {

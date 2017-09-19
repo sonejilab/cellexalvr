@@ -79,10 +79,8 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        //print("ontriggerenter " + other.gameObject.name);
         if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
-            //print ("ontriggerenter " + other.gameObject.name);
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
             fire.SetActive(false);
@@ -142,15 +140,40 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// </summary>
     public void ActivateDesiredTool()
     {
-        selectionToolHandler.SetSelectionToolEnabled(false);
-        fire.SetActive(false);
-        magnifier.SetActive(false);
-        minimizer.SetActive(false);
-        helpTool.SetToolActivated(false);
-        rightLaser.enabled = false;
-        leftLaser.enabled = false;
-        keyboard.SetActive(false);
-        drawTool.SetActive(false);
+        if (DesiredModel != Model.SelectionTool)
+        {
+            selectionToolHandler.SetSelectionToolEnabled(false);
+        }
+        if (DesiredModel != Model.HeatmapDeleteTool)
+        {
+            fire.SetActive(false);
+        }
+        if (DesiredModel != Model.Magnifier)
+        {
+            magnifier.SetActive(false);
+        }
+        if (DesiredModel != Model.Minimizer)
+        {
+            minimizer.SetActive(false);
+        }
+        if (DesiredModel != Model.HelpTool)
+        {
+            helpTool.SetToolActivated(false);
+        }
+        if (DesiredModel != Model.OneLaser)
+        {
+            rightLaser.enabled = false;
+            keyboard.SetActive(false);
+        }
+        if (DesiredModel != Model.TwoLasers)
+        {
+            rightLaser.enabled = false;
+            leftLaser.enabled = false;
+        }
+        if (DesiredModel != Model.DrawTool)
+        {
+            drawTool.SetActive(false);
+        }
         switch (DesiredModel)
         {
             case Model.SelectionTool:

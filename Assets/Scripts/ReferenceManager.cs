@@ -14,6 +14,7 @@ public class ReferenceManager : MonoBehaviour
     public GroupInfoDisplay groupInfoDisplay;
     public StatusDisplay statusDisplay;
     public GameObject headset;
+    public BoxCollider controllerMenuCollider;
 
     #endregion
 

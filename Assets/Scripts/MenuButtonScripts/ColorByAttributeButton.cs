@@ -56,7 +56,7 @@ public class ColorByAttributeButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             renderer.material.color = Color.white;
             controllerInside = true;
@@ -65,7 +65,7 @@ public class ColorByAttributeButton : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             renderer.material.color = color;
             controllerInside = false;
