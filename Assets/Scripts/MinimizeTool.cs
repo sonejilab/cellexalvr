@@ -48,7 +48,7 @@ public class MinimizeTool : MonoBehaviour
                 if (networkHandler != null)
                 {
                     networkHandler.HideNetworks();
-                    jail.MinimizeObject(collidingWith, collidingWith.GetComponent<NetworkHandler>().NetworkName);
+                    jail.MinimizeObject(collidingWith, collidingWith.GetComponent<NetworkHandler>().NetworkHandlerName);
                 }
             }
         }

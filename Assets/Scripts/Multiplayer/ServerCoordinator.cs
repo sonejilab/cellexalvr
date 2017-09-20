@@ -57,18 +57,29 @@ class ServerCoordinator : Photon.MonoBehaviour
         gameManager.DoMoveHeatmap(heatmapName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
     }
     [PunRPC]
-	public void SendCreateHeatmap()
+    public void SendCreateHeatmap()
     {
-		gameManager.heatmapGenerator.CreateHeatmap();
+        gameManager.heatmapGenerator.CreateHeatmap();
     }
-	[PunRPC]
-	public void SendGenerateNetworks()
-	{
-		gameManager.networkGenerator.GenerateNetworks ();
-	}
-	[PunRPC]
-	public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
-	{
-		gameManager.DoMoveNetwork(networkName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
-	}
+    [PunRPC]
+    public void SendGenerateNetworks()
+    {
+        gameManager.networkGenerator.GenerateNetworks();
+    }
+    [PunRPC]
+    public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    {
+        gameManager.DoMoveNetwork(networkName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
+    }
+    [PunRPC]
+    public void SendEnlargeNetwork(string networkHandlerName, string networkName)
+    {
+        gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkName).EnlargeNetwork();
+    }
+    [PunRPC]
+    public void SendBringBackNetwork(string networkHandlerName, string networkName)
+    {
+        gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkName).BringBackOriginal();
+    }
+
 }

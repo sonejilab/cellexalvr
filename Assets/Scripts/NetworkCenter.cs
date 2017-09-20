@@ -15,6 +15,7 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
+    public string NetworkName;
 
 
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -36,6 +37,7 @@ public class NetworkCenter : MonoBehaviour
     private List<CombinedArc> combinedArcs = new List<CombinedArc>();
     private SteamVR_TrackedObject rightController;
     private NetworkGenerator networkGenerator;
+    private GameManager gameManager;
 
     void Start()
     {
@@ -44,6 +46,7 @@ public class NetworkCenter : MonoBehaviour
         rightController = referenceManager.rightController;
         networkGenerator = referenceManager.networkGenerator;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        gameManager = referenceManager.gameManager;
     }
 
     void FixedUpdate()
@@ -54,10 +57,12 @@ public class NetworkCenter : MonoBehaviour
             enlarge = false;
             if (!isReplacement && gameObject.name != "Enlarged Network")
             {
+                gameManager.InformEnlargeNetwork(Handler.NetworkHandlerName, NetworkName);
                 EnlargeNetwork();
             }
             else if (isReplacement && gameObject.name == "EmptyNetworkPrefab 1(Clone)")
             {
+                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, NetworkName);
                 BringBackOriginal();
             }
         }
@@ -136,7 +141,6 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     public void EnlargeNetwork()
     {
-
         this.name = "Enlarged Network";
         // add a rigidbody and the necessary scripts
         Enlarged = true;
@@ -201,7 +205,7 @@ public class NetworkCenter : MonoBehaviour
     /// <summary>
     /// If this network is enlarged, bring it back to the convex hull, if it is a replacement, destroy it and bring back the original 
     /// </summary>
-    private void BringBackOriginal()
+    public void BringBackOriginal()
     {
 
         this.name = "Original Network";

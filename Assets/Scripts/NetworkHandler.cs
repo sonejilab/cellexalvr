@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 
@@ -8,23 +9,23 @@ public class NetworkHandler : MonoBehaviour
 
     private List<NetworkCenter> networks = new List<NetworkCenter>();
     public List<NetworkCenter> Replacements { get; private set; }
-    public string NetworkName { get; internal set; }
-	private ReferenceManager referenceManager;
-	private GameManager gameManager;
+    public string NetworkHandlerName { get; internal set; }
+    private ReferenceManager referenceManager;
+    private GameManager gameManager;
 
     private void Start()
     {
         Replacements = new List<NetworkCenter>();
-		referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-		gameManager = referenceManager.gameManager;
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        gameManager = referenceManager.gameManager;
     }
-	private void Update()
-	{
-		if (GetComponent<VRTK_InteractableObject>().enabled)
-		{
-			gameManager.InformMoveNetwork(NetworkName, transform.position, transform.rotation);
-		}
-	}
+    private void Update()
+    {
+        if (GetComponent<VRTK_InteractableObject>().enabled)
+        {
+            gameManager.InformMoveNetwork(NetworkHandlerName, transform.position, transform.rotation);
+        }
+    }
 
 
     internal void AddNetwork(NetworkCenter network)
@@ -78,5 +79,16 @@ public class NetworkHandler : MonoBehaviour
             c.enabled = false;
     }
 
+    public NetworkCenter FindNetworkCenter(string networkName)
+    {
+        foreach (NetworkCenter network in networks)
+        {
+            if (network.NetworkName == networkName)
+            {
+                return network;
+            }
+        }
+        return null;
+    }
 }
 

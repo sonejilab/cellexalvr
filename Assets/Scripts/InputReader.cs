@@ -28,7 +28,7 @@ public class InputReader : MonoBehaviour
     private StatusDisplay status;
     private SteamVR_TrackedObject rightController;
     private GameManager gameManager;
-	private NetworkGenerator networkGenerator;
+    private NetworkGenerator networkGenerator;
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -50,7 +50,7 @@ public class InputReader : MonoBehaviour
         headset = referenceManager.headset;
         status = referenceManager.statusDisplay;
         rightController = referenceManager.rightController;
-		networkGenerator = referenceManager.networkGenerator;
+        networkGenerator = referenceManager.networkGenerator;
         if (debug)
         {
             status.gameObject.SetActive(true);
@@ -76,7 +76,7 @@ public class InputReader : MonoBehaviour
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath = workingDirectory + "/Data/" + path;
         database.InitDatabase(fullPath + "\\database.sqlite");
-           
+
         // print(path);
         selectionToolHandler.DataDir = fullPath;
 
@@ -425,7 +425,8 @@ public class InputReader : MonoBehaviour
         }
         CellExAlLog.Log("Successfully created convex hull of " + graphName);
         var networkHandler = skeleton.GetComponent<NetworkHandler>();
-		networkHandler.NetworkName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
+        string networkHandlerName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
+        networkHandler.NetworkHandlerName = networkHandlerName;
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
         foreach (string line in lines)
         {
@@ -447,8 +448,9 @@ public class InputReader : MonoBehaviour
             network.transform.localPosition = position;
             networkHandler.AddNetwork(network);
             network.Handler = networkHandler;
+            network.NetworkName = networkHandlerName + words[3];
             graphManager.AddNetwork(networkHandler);
-			networkGenerator.networkList.Add (networkHandler);
+            networkGenerator.networkList.Add(networkHandler);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {

@@ -55,11 +55,11 @@ public class NetworkGenerator : MonoBehaviour
     }
 
 
-	public NetworkHandler FindNetwork(string networkName)
+	public NetworkHandler FindNetworkHandler(string networkName)
 	{
 		foreach (NetworkHandler nh in networkList)
 		{
-			if (nh.NetworkName == networkName)
+			if (nh.NetworkHandlerName == networkName)
 			{
 				return nh;
 			}

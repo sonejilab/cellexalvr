@@ -22,52 +22,53 @@ public class GameManager : Photon.PunBehaviour
     public CellManager cellManager;
     public SelectionToolHandler selectionToolHandler;
     public HeatmapGenerator heatmapGenerator;
-	public NetworkGenerator networkGenerator;
+    public NetworkGenerator networkGenerator;
     private ServerCoordinator serverCoordinator;
     private ServerCoordinator clientCoordinator;
     private bool multiplayer = false;
 
     #endregion
-	private void Start()
-	{
-		graphManager = referenceManager.graphManager;
-		cellManager = referenceManager.cellManager;
-		selectionToolHandler = referenceManager.selectionToolHandler;
-		heatmapGenerator = referenceManager.heatmapGenerator;
-		networkGenerator = referenceManager.networkGenerator;
+    private void Start()
+    {
+        graphManager = referenceManager.graphManager;
+        cellManager = referenceManager.cellManager;
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        heatmapGenerator = referenceManager.heatmapGenerator;
+        networkGenerator = referenceManager.networkGenerator;
 
-		Instance = this;
-		if (playerPrefab == null)
-		{
-			Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
-		}
-		else
-		{
-			Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
-			// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-			if (PlayerManager.LocalPlayerInstance == null)
-			{
-				Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
-				// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-				PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-				if (PhotonNetwork.isMasterClient)
-				{
-					serverCoordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
-					// serverCoordinator.RegisterClient(this);
-				}
-				else
-				{
-					PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0);
+        Instance = this;
+        if (playerPrefab == null)
+        {
+            Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+        }
+        else
+        {
+            Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
+            // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+            if (PlayerManager.LocalPlayerInstance == null)
+            {
+                Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
+                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                if (PhotonNetwork.isMasterClient)
+                {
+                    serverCoordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
+                    // serverCoordinator.RegisterClient(this);
+                }
+                else
+                {
+                    PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0);
 
-					//GameObject.Find("ServerCoordinator").GetComponent<ServerCoordinator>().RegisterClient(this);
-				}
-			}
-			else
-			{
-				Debug.Log("Ignoring scene load for " + SceneManager.GetActiveScene().name);
-			}
-		}
-	}
+                    //GameObject.Find("ServerCoordinator").GetComponent<ServerCoordinator>().RegisterClient(this);
+                }
+            }
+            else
+            {
+                Debug.Log("Ignoring scene load for " + SceneManager.GetActiveScene().name);
+            }
+        }
+    }
+
 
     #region Photon Messages
     public void InformReadFolder(string path)
@@ -108,6 +109,7 @@ public class GameManager : Photon.PunBehaviour
             serverCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
         }
     }
+
     public void InformConfirmSelection()
     {
         if (!multiplayer) return;
@@ -173,31 +175,57 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-	public void InformGenerateNetworks()
-	{
-		if (!multiplayer) return;
-		if (PhotonNetwork.isMasterClient)
-		{
-			clientCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
-		}
-		else
-		{
-			serverCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
-		}
-	}
-	public void InformMoveNetwork(string moveNetworkName, Vector3 pos, Quaternion rot)
-	{
-		if (!multiplayer) return;
-		if (PhotonNetwork.isMasterClient)
-		{
-			clientCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
-		}
-		else
-		{
-			serverCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
-		}
-	}
+    public void InformGenerateNetworks()
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
+        }
+    }
 
+    public void InformMoveNetwork(string moveNetworkName, Vector3 pos, Quaternion rot)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
+        }
+    }
+
+    public void InformEnlargeNetwork(string networkHandlerName, string networkName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
+        }
+    }
+
+    public void InformBringBackNetwork(string networkHandlerName, string networkName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendBringBackNetwork", PhotonTargets.Others, networkHandlerName, networkName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendBringBackNetwork", PhotonTargets.Others, networkHandlerName, networkName);
+        }
+    }
 
     public void DoGraphpointChangeColor(string graphname, string label, Color col)
     {
@@ -216,12 +244,12 @@ public class GameManager : Photon.PunBehaviour
         hm.transform.position = new Vector3(x, y, z);
         hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
-	public void DoMoveNetwork(string networkName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
-	{
-		NetworkHandler nh = networkGenerator.FindNetwork (networkName);
-		nh.transform.position = new Vector3(x, y, z);
-		nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-	}
+    public void DoMoveNetwork(string networkName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
+    {
+        NetworkHandler nh = networkGenerator.FindNetworkHandler(networkName);
+        nh.transform.position = new Vector3(x, y, z);
+        nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+    }
 
     /// <summary>
     /// Called when the local player left the room. We need to load the launcher scene.
@@ -233,7 +261,7 @@ public class GameManager : Photon.PunBehaviour
 
     public override void OnPhotonPlayerConnected(PhotonPlayer other)
     {
-		multiplayer = true;
+        multiplayer = true;
         Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
 
 
@@ -289,7 +317,7 @@ public class GameManager : Photon.PunBehaviour
 
     #region Public Methods
 
- 
+
 
 
     public void LeaveRoom()
