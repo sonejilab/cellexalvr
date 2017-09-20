@@ -25,13 +25,12 @@ public class DrawTool : MonoBehaviour
     {
         rightController = referenceManager.rightController;
         rightControllerTransform = rightController.gameObject.transform;
-        lastPosition = rightControllerTransform.position;
+        lastPosition = transform.position;
         controllerMenuCollider = referenceManager.controllerMenuCollider;
     }
 
     private void LateUpdate()
     {
-
         var device = SteamVR_Controller.Input((int)rightController.index);
 
         if (drawing)
@@ -90,7 +89,7 @@ public class DrawTool : MonoBehaviour
         {
             drawing = false;
         }
-        lastPosition = rightControllerTransform.position;
+        lastPosition = transform.position;
     }
 
     /// <summary>
@@ -118,7 +117,7 @@ public class DrawTool : MonoBehaviour
     {
         rightController = referenceManager.rightController;
         rightControllerTransform = rightController.gameObject.transform;
-        lastPosition = rightControllerTransform.position;
+        lastPosition = transform.position;
     }
 
     private void OnDisable()
@@ -134,7 +133,7 @@ public class DrawTool : MonoBehaviour
     private LineRenderer SpawnNewLine()
     {
         var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
-        newLine.SetPositions(new Vector3[] { lastPosition, rightControllerTransform.position });
+        newLine.SetPositions(new Vector3[] { lastPosition, transform.position });
         newLine.startColor = LineColor;
         newLine.endColor = LineColor;
         return newLine;

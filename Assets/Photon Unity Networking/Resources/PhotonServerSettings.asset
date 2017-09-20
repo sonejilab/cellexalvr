@@ -50,4 +50,5 @@ MonoBehaviour:
   - SendGraphpointChangedColor
   - SendMoveGraph
   - SendMoveHeatmap
+  - ConfirmSelectionClient
   DisableAutoOpenWizard: 1

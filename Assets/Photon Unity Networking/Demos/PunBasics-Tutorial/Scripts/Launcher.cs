@@ -135,12 +135,12 @@ namespace ExitGames.Demos.DemoAnimator
             Debug.Log("DemoAnimator/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
             if (PhotonNetwork.room.PlayerCount == 1)
             {
-                Debug.Log("We load the 'PUN_vrjeans_scene' ");
+                Debug.Log("We load the 'Multiplayer Scene' ");
 
 
                 // #Critical
                 // Load the Room Level. 
-                PhotonNetwork.LoadLevel("vrjeans_scene1");
+                PhotonNetwork.LoadLevel("Multiplayer_Scene");
             }
         }
 
