@@ -24,7 +24,7 @@ public class ConfirmSelectionButton : RotatableButton
         {
             selectionToolHandler.SetSelectionToolEnabled(false);
             selectionToolHandler.ConfirmSelection();
-
+            referenceManager.gameManager.InformConfirmSelection();
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             //ctrlMdlSwitcher.TurnOffActiveTool();
         }

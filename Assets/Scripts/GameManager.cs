@@ -288,6 +288,7 @@ public class GameManager : Photon.PunBehaviour
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
+        multiplayer = true;
         Debug.Log("CLIENT JOINED ROOM");
         StartCoroutine(FindServerCoordinator());
     }
