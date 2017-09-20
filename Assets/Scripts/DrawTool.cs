@@ -14,8 +14,10 @@ public class DrawTool : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private Transform rightControllerTransform;
     private BoxCollider controllerMenuCollider;
+    private List<Vector3> newPositions = new List<Vector3>();
+    private List<LineRenderer> temporaryLines = new List<LineRenderer>();
     private List<LineRenderer> lines = new List<LineRenderer>();
-    private LineRenderer[] temporaryLines = new LineRenderer[5];
+    private LineRenderer[] trailLines = new LineRenderer[5];
     private int temporaryLinesIndex = 0;
     private Vector3 lastPosition;
     private bool skipNextDraw;
@@ -37,18 +39,18 @@ public class DrawTool : MonoBehaviour
         {
             // this happens every frame the trigger is pressed
             var newLine = SpawnNewLine();
-            lines.Add(newLine);
+            temporaryLines.Add(newLine);
         }
         else
         {
             // this happens every frame when the trigger is not pressed
-            var tempLine = temporaryLines[temporaryLinesIndex];
+            var tempLine = trailLines[temporaryLinesIndex];
             if (tempLine != null)
             {
                 Destroy(tempLine.gameObject);
             }
-            temporaryLines[temporaryLinesIndex] = SpawnNewLine();
-            if (temporaryLinesIndex == temporaryLines.Length - 1)
+            trailLines[temporaryLinesIndex] = SpawnNewLine();
+            if (temporaryLinesIndex == trailLines.Length - 1)
             {
                 temporaryLinesIndex = 0;
             }
@@ -79,15 +81,39 @@ public class DrawTool : MonoBehaviour
                 }
             }
             // this happens only once when you press the trigger
-            for (int i = 0; i < temporaryLines.Length; i++)
+            for (int i = 0; i < trailLines.Length; i++)
             {
-                Destroy(temporaryLines[i]);
-                temporaryLines[i] = null;
+                if (trailLines[i] != null)
+                {
+                    Destroy(trailLines[i].gameObject);
+                    trailLines[i] = null;
+                }
             }
         }
         if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
-            drawing = false;
+            // this happens only once when the controller trigger is released
+            if (drawing)
+            {
+                drawing = false;
+                // merge all the lines into one gameobject
+                Vector3[] newLinePositions = new Vector3[temporaryLines.Count + 1];
+                newLinePositions[0] = temporaryLines[0].GetPosition(0);
+                for (int i = 1; i <= temporaryLines.Count; i++)
+                {
+                    newLinePositions[i] = temporaryLines[i - 1].GetPosition(1);
+                }
+                var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
+                newLine.positionCount = newLinePositions.Length;
+                newLine.SetPositions(newLinePositions);
+                newLine.startColor = LineColor;
+                newLine.endColor = LineColor;
+                foreach (LineRenderer line in temporaryLines)
+                {
+                    Destroy(line.gameObject);
+                }
+                temporaryLines.Clear();
+            }
         }
         lastPosition = transform.position;
     }
@@ -106,11 +132,11 @@ public class DrawTool : MonoBehaviour
     /// </summary>
     public void ClearAllLines()
     {
-        foreach (LineRenderer line in lines)
+        foreach (LineRenderer line in temporaryLines)
         {
             Destroy(line.gameObject);
         }
-        lines.Clear();
+        temporaryLines.Clear();
     }
 
     private void OnEnable()
@@ -123,10 +149,10 @@ public class DrawTool : MonoBehaviour
     private void OnDisable()
     {
         skipNextDraw = false;
-        for (int i = 0; i < temporaryLines.Length; i++)
+        for (int i = 0; i < trailLines.Length; i++)
         {
-            Destroy(temporaryLines[i]);
-            temporaryLines[i] = null;
+            Destroy(trailLines[i]);
+            trailLines[i] = null;
         }
     }
 
