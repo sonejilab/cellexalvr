@@ -123,6 +123,19 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformDrawLine(float[] xcoords, float[] ycoords, float[] zcoords)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, xcoords, ycoords, zcoords);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, xcoords, ycoords, zcoords);
+        }
+    }
+
     public void InformMoveGraph(string moveGraphName, Vector3 pos, Quaternion rot)
     {
         if (!multiplayer) return;

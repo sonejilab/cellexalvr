@@ -98,11 +98,23 @@ public class DrawTool : MonoBehaviour
                 drawing = false;
                 // merge all the lines into one gameobject
                 Vector3[] newLinePositions = new Vector3[temporaryLines.Count + 1];
+                float[] xcoords = new float[temporaryLines.Count + 1];
+                float[] ycoords = new float[temporaryLines.Count + 1];
+                float[] zcoords = new float[temporaryLines.Count + 1];
                 newLinePositions[0] = temporaryLines[0].GetPosition(0);
+                xcoords[0] = newLinePositions[0].x;
+                ycoords[0] = newLinePositions[0].y;
+                zcoords[0] = newLinePositions[0].z;
+
                 for (int i = 1; i <= temporaryLines.Count; i++)
                 {
                     newLinePositions[i] = temporaryLines[i - 1].GetPosition(1);
+                    xcoords[i] = newLinePositions[i - 1].x;
+                    ycoords[i] = newLinePositions[i - 1].y;
+                    zcoords[i] = newLinePositions[i - 1].z;
                 }
+                referenceManager.gameManager.InformDrawLine(xcoords, ycoords, zcoords);
+
                 var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
                 newLine.positionCount = newLinePositions.Length;
                 newLine.SetPositions(newLinePositions);
@@ -116,6 +128,15 @@ public class DrawTool : MonoBehaviour
             }
         }
         lastPosition = transform.position;
+    }
+
+    public void DrawNewLine(Vector3[] coords)
+    {
+        var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
+        newLine.positionCount = coords.Length;
+        newLine.SetPositions(coords);
+        newLine.startColor = LineColor;
+        newLine.endColor = LineColor;
     }
 
     /// <summary>

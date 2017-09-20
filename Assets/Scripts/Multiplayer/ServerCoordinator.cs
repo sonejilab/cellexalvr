@@ -95,5 +95,15 @@ class ServerCoordinator : Photon.MonoBehaviour
         center.transform.rotation = rot;
         center.transform.localScale = scale;
     }
+    [PunRPC]
+    public void SendDrawLine(float[] xcoords, float[] ycoords, float[] zcoords)
+    {
+        Vector3[] coords = new Vector3[xcoords.Length];
+        for (int i = 0; i < xcoords.Length; i++)
+        {
+            coords[i] = new Vector3(xcoords[i], ycoords[i], zcoords[i]);
+        }
+        gameManager.referenceManager.drawTool.DrawNewLine(coords);
+    }
 
 }

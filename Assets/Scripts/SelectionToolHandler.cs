@@ -356,7 +356,6 @@ public class SelectionToolHandler : MonoBehaviour
         selectionMade = false;
         selectionConfirmed = true;
         selectionToolMenu.ConfirmSelection();
-        //gameManager.InformConfirmSelection();
     }
 
     public ArrayList GetLastSelection()
