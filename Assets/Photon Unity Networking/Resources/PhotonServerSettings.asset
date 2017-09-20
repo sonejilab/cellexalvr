@@ -53,4 +53,6 @@ MonoBehaviour:
   - ConfirmSelectionClient
   - SendLoadData
   - SendReadFolder
+  - SendGenerateNetworks
+  - SendMoveNetwork
   DisableAutoOpenWizard: 1
