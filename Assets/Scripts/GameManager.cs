@@ -24,24 +24,39 @@ public class GameManager : Photon.PunBehaviour
     public HeatmapGenerator HeatmapGenerator;
     private ServerCoordinator serverCoordinator;
     private ServerCoordinator clientCoordinator;
+    private bool multiplayer;
 
     #endregion
 
     #region Photon Messages
-    public void InformGraphPointChangedColor(string graphname, string label, Color color)
+    public void InformReadFolder(string path)
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("InformGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
+            clientCoordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
         }
         else
         {
-            serverCoordinator.photonView.RPC("InformGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
+            serverCoordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
         }
     }
 
+    public void InformGraphPointChangedColor(string graphname, string label, Color color)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
+        }
+    }
     public void InformConfirmSelection()
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendConfirmSelection", PhotonTargets.Others);
@@ -54,6 +69,7 @@ public class GameManager : Photon.PunBehaviour
 
     public void InformMoveGraph(string moveGraphName, Vector3 pos, Quaternion rot)
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
@@ -66,6 +82,7 @@ public class GameManager : Photon.PunBehaviour
 
     public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot)
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
@@ -78,6 +95,7 @@ public class GameManager : Photon.PunBehaviour
 
     public void InformSelectedAdd(string graphName, string label)
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label);
@@ -90,6 +108,7 @@ public class GameManager : Photon.PunBehaviour
 
     public void InformCreateHeatmap()
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
@@ -99,6 +118,7 @@ public class GameManager : Photon.PunBehaviour
             serverCoordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
         }
     }
+
 
     public void DoGraphpointChangeColor(string graphname, string label, Color col)
     {

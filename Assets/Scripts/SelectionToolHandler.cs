@@ -43,6 +43,7 @@ public class SelectionToolHandler : MonoBehaviour
     private List<HistoryListInfo> selectionHistory;
     // the number of steps we have taken back in the history.
     private int historyIndexOffset;
+    private GameManager gameManager;
 
     /// <summary>
     /// Helper struct for remembering history when selecting graphpoints.
@@ -100,6 +101,7 @@ public class SelectionToolHandler : MonoBehaviour
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         undoButtonsHandler = referenceManager.undoButtonsHandler;
         rightController = referenceManager.rightController;
+        gameManager = referenceManager.gameManager;
     }
 
     /// <summary>
@@ -118,6 +120,8 @@ public class SelectionToolHandler : MonoBehaviour
         Color newColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
         Color oldColor = renderer.material.color;
         renderer.material.color = newColor;
+        gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, newColor);
+
         bool newNode = !selectedCells.Contains(other);
         if (historyIndexOffset != 0)
         {
@@ -144,6 +148,7 @@ public class SelectionToolHandler : MonoBehaviour
             groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
             if (newNode)
             {
+                gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
                 selectedCells.Add(other);
             }
             else
@@ -153,9 +158,10 @@ public class SelectionToolHandler : MonoBehaviour
         }
     }
 
-    internal void DoClientSelectAdd(string graphName, string label)
+    public void DoClientSelectAdd(string graphName, string label)
     {
-        throw new NotImplementedException();
+        GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        selectedCells.Add(gp.gameObject.GetComponent<Collider>());
     }
 
     /// <summary>
@@ -350,6 +356,7 @@ public class SelectionToolHandler : MonoBehaviour
         selectionMade = false;
         selectionConfirmed = true;
         selectionToolMenu.ConfirmSelection();
+        gameManager.InformConfirmSelection();
     }
 
     public ArrayList GetLastSelection()

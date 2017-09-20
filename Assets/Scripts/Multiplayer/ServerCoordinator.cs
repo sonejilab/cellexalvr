@@ -14,7 +14,11 @@ class ServerCoordinator : Photon.MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-
+    [PunRPC]
+    public void SendReadFolder(string path)
+    {
+        gameManager.referenceManager.inputReader.ReadFolder(path);
+    }
     [PunRPC]
     public void SendGraphpointChangedColor(string graphName, string label, float r, float g, float b)
     {

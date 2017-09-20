@@ -13,7 +13,8 @@ public class Graph : MonoBehaviour
     public string DirectoryName { get; set; }
 
     private GraphPoint newGraphpoint;
-    private List<GraphPoint> points;
+    public Dictionary<string, GraphPoint> points;
+    private List<Vector3> pointsPositions;
     private Vector3 maxCoordValues;
     private Vector3 minCoordValues;
     private Vector3 diffCoordValues;
@@ -23,9 +24,10 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        points = new List<GraphPoint>(1000);
+        points = new Dictionary<string, GraphPoint>(1000);
         minAreaValues = transform.position;
         defaultPos = transform.position;
+        pointsPositions = new List<Vector3>();
     }
 
     /// <summary>
@@ -85,7 +87,8 @@ public class Graph : MonoBehaviour
         newGraphpoint.transform.parent = transform;
         newGraphpoint.transform.localPosition = new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
         newGraphpoint.SaveParent(this);
-        points.Add(newGraphpoint);
+        points[newGraphpoint.Label] = newGraphpoint;
+        pointsPositions.Add(newGraphpoint.transform.localPosition);
 
         defaultScale = transform.localScale;
     }
@@ -137,7 +140,7 @@ public class Graph : MonoBehaviour
 
         for (int i = 0; i < points.Count; ++i)
         {
-            vertices[i] = points[i].transform.localPosition;
+            vertices[i] = pointsPositions[i];
         }
 
         var trianglesIndex = 0;
@@ -177,7 +180,7 @@ public class Graph : MonoBehaviour
     public void ResetGraphColors()
     {
         //bool graphPointActive;
-        foreach (GraphPoint point in points)
+        foreach (GraphPoint point in points.Values)
         {
             //point.gameObject.SetActive(true);
             point.ResetColor();
@@ -192,7 +195,7 @@ public class Graph : MonoBehaviour
         transform.localScale = defaultScale;
         transform.position = defaultPos;
         transform.rotation = Quaternion.identity;
-        foreach (GraphPoint point in points)
+        foreach (GraphPoint point in points.Values)
         {
             point.gameObject.SetActive(true);
             point.ResetCoords();

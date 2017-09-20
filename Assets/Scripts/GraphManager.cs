@@ -36,6 +36,23 @@ public class GraphManager : MonoBehaviour
         selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
+    public GraphPoint FindGraphPoint(string graphName, string label)
+    {
+        foreach (Graph g in graphs)
+        {
+            if (g.GraphName.Equals(graphName))
+            {
+                return g.points[label];
+            }
+        }
+        return null;
+    }
+
+    public void RecolorGraphPoint(string graphname, string label, Color color)
+    {
+        FindGraphPoint(graphname, label).SetColor(color);
+    }
+
     public void SetGraphStartPosition()
     {
         // these values are hard coded for your convenience
@@ -108,10 +125,6 @@ public class GraphManager : MonoBehaviour
         networks.Clear();
     }
 
-    internal void RecolorGraphPoint(string graphname, string label, Color col)
-    {
-        throw new NotImplementedException();
-    }
 
     /// <summary>
     /// Adds a cell to a graph.

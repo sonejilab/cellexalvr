@@ -63,6 +63,7 @@ public class ReferenceManager : MonoBehaviour
     public InputReader inputReader;
     public SQLite database;
     public LogManager logManager;
+    public GameManager gameManager;
 
     #endregion
 

@@ -27,6 +27,7 @@ public class InputReader : MonoBehaviour
     private GameObject headset;
     private StatusDisplay status;
     private SteamVR_TrackedObject rightController;
+    private GameManager gameManager;
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -36,6 +37,7 @@ public class InputReader : MonoBehaviour
 
     private void Start()
     {
+        gameManager = referenceManager.gameManager;
         graphManager = referenceManager.graphManager;
         cellManager = referenceManager.cellManager;
         loaderController = referenceManager.loaderController;
@@ -69,10 +71,13 @@ public class InputReader : MonoBehaviour
     /// <param name="path"> The path to the folder. </param>
     public void ReadFolder(string path)
     {
-        database.InitDatabase(path + "\\database.sqlite");
-        // print(path);
-        selectionToolHandler.DataDir = path;
+        gameManager.InformReadFolder(path);
         string workingDirectory = Directory.GetCurrentDirectory();
+        string fullPath = workingDirectory + "/Data/" + path;
+        database.InitDatabase(fullPath + "\\database.sqlite");
+           
+        // print(path);
+        selectionToolHandler.DataDir = fullPath;
 
         string runtimegroupsDirectory = workingDirectory + "\\Data\\runtimeGroups";
         if (!Directory.Exists(runtimegroupsDirectory))
@@ -105,8 +110,8 @@ public class InputReader : MonoBehaviour
             }
         }
 
-        string[] mdsFiles = Directory.GetFiles(path, "*.mds");
-        StartCoroutine(ReadMDSFiles(path, mdsFiles, 25));
+        string[] mdsFiles = Directory.GetFiles(fullPath, "*.mds");
+        StartCoroutine(ReadMDSFiles(fullPath, mdsFiles, 25));
 
     }
 

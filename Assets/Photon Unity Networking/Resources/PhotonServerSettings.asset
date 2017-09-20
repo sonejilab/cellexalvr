@@ -51,4 +51,6 @@ MonoBehaviour:
   - SendMoveGraph
   - SendMoveHeatmap
   - ConfirmSelectionClient
+  - SendLoadData
+  - SendReadFolder
   DisableAutoOpenWizard: 1

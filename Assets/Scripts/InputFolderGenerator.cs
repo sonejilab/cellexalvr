@@ -59,9 +59,10 @@ public class InputFolderGenerator : MonoBehaviour
             {
                 continue;
             }
+            print(directory);
+
             Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
             GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector, Quaternion.identity);
-            newFolder.GetComponentInChildren<CellsToLoad>().Directory = directory;
             newFolder.transform.parent = transform;
             newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
             newFolder.transform.Rotate(0, -90f, 0);
@@ -83,6 +84,7 @@ public class InputFolderGenerator : MonoBehaviour
 
             // Set text on folder box
             newFolder.GetComponentInChildren<TextMesh>().text = croppedDirectoryName;
+            newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
         }
     }
 
