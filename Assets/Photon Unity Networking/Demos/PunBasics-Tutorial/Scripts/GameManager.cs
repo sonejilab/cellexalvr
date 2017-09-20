@@ -169,7 +169,7 @@ namespace ExitGames.Demos.DemoAnimator
 
             Debug.Log("PhotonNetwork : Loading Level : " + PhotonNetwork.room.PlayerCount);
 
-            PhotonNetwork.LoadLevel("PunBasics-Room for " + PhotonNetwork.room.PlayerCount);
+            PhotonNetwork.LoadLevel("Multiplayer_Scene");
         }
 
         #endregion
