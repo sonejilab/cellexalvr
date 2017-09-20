@@ -17,6 +17,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendReadFolder(string path)
     {
+        Debug.Log("READ PATH: " + path);
         gameManager.referenceManager.inputReader.ReadFolder(path);
     }
     [PunRPC]

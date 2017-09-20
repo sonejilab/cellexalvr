@@ -71,7 +71,6 @@ public class InputReader : MonoBehaviour
     /// <param name="path"> The path to the folder. </param>
     public void ReadFolder(string path)
     {
-        gameManager.InformReadFolder(path);
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath = workingDirectory + "/Data/" + path;
         database.InitDatabase(fullPath + "\\database.sqlite");

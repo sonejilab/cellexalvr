@@ -24,7 +24,7 @@ public class GameManager : Photon.PunBehaviour
     public HeatmapGenerator HeatmapGenerator;
     private ServerCoordinator serverCoordinator;
     private ServerCoordinator clientCoordinator;
-    private bool multiplayer;
+    private bool multiplayer = true;
 
     #endregion
 

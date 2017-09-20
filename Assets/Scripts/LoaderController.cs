@@ -31,9 +31,11 @@ public class LoaderController : MonoBehaviour
     [HideInInspector]
     public bool loaderMovedDown = false;
     public SaveScene savescene;
+    private GameManager gameManager;
 
     void Start()
     {
+        gameManager = referenceManager.gameManager;
         cellsToDestroy = new ArrayList();
         inputReader = referenceManager.inputReader;
         inputFolderGenerator = referenceManager.inputFolderGenerator;
@@ -120,8 +122,10 @@ public class LoaderController : MonoBehaviour
                 }
                 if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded())
                 {
-                    graphManager.directory = cellParent.GetComponent<CellsToLoad>().Directory;
-                    inputReader.ReadFolder(cellParent.GetComponent<CellsToLoad>().Directory);
+                    string path = cellParent.GetComponent<CellsToLoad>().Directory;
+                    graphManager.directory = path;
+                    inputReader.ReadFolder(path);
+                    gameManager.InformReadFolder(path);
                 }
 
                 Destroy(cellParent.GetComponent<FixedJoint>());
