@@ -99,7 +99,7 @@ public class NetworkCenter : MonoBehaviour
         {
             if (interactableObject.enabled)
             {
-                gameManager.InformMoveNetworkCenter(NetworkCenterName, transform.position, transform.rotation, transform.localScale);
+                gameManager.InformMoveNetworkCenter(Handler.NetworkHandlerName, NetworkCenterName, transform.position, transform.rotation, transform.localScale);
             }
         }
     }

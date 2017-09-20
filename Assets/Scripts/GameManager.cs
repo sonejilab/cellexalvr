@@ -227,16 +227,16 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformMoveNetworkCenter(string networkCenterName, Vector3 pos, Quaternion rot, Vector3 scale)
+    public void InformMoveNetworkCenter(string networkHandlerName, string networkCenterName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+            clientCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkHandlerName, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+            serverCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkHandlerName, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
     }
 
