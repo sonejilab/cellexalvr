@@ -123,16 +123,16 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformDrawLine(float[] xcoords, float[] ycoords, float[] zcoords)
+    public void InformDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
     {
         if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, xcoords, ycoords, zcoords);
+            clientCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords, zcoords);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, xcoords, ycoords, zcoords);
+            serverCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords, zcoords);
         }
     }
 

@@ -113,7 +113,7 @@ public class DrawTool : MonoBehaviour
                     ycoords[i] = newLinePositions[i - 1].y;
                     zcoords[i] = newLinePositions[i - 1].z;
                 }
-                referenceManager.gameManager.InformDrawLine(xcoords, ycoords, zcoords);
+                referenceManager.gameManager.InformDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
 
                 var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
                 newLine.positionCount = newLinePositions.Length;
@@ -130,13 +130,13 @@ public class DrawTool : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    public void DrawNewLine(Vector3[] coords)
+    public void DrawNewLine(Color col, Vector3[] coords)
     {
         var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
         newLine.positionCount = coords.Length;
         newLine.SetPositions(coords);
-        newLine.startColor = LineColor;
-        newLine.endColor = LineColor;
+        newLine.startColor = col;
+        newLine.endColor = col;
     }
 
     /// <summary>
