@@ -55,4 +55,7 @@ MonoBehaviour:
   - SendReadFolder
   - SendGenerateNetworks
   - SendMoveNetwork
+  - SendBringBackNetwork
+  - SendEnlargeNetwork
+  - SendMoveNetworkCenter
   DisableAutoOpenWizard: 1
