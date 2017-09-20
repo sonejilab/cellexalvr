@@ -190,11 +190,11 @@ public class GameManager : Photon.PunBehaviour
 		if (!multiplayer) return;
 		if (PhotonNetwork.isMasterClient)
 		{
-			clientCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
+			clientCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
 		}
 		else
 		{
-			serverCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
+			serverCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
 		}
 	}
 
