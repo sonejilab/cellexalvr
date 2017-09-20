@@ -28,23 +28,23 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendColorGraphsByGene(string geneName)
     {
-        gameManager.CellManager.ColorGraphsByGeneNoInform(geneName);
+        gameManager.cellManager.ColorGraphsByGeneNoInform(geneName);
     }
     [PunRPC]
     public void SendColorGraphsByAttribute(string attributeType, float r, float g, float b)
     {
         Color col = new Color(r, g, b);
-        gameManager.CellManager.GetComponent<CellManager>().ColorByAttribute(attributeType, col);
+        gameManager.cellManager.GetComponent<CellManager>().ColorByAttribute(attributeType, col);
     }
     [PunRPC]
     public void SendAddSelect(string graphName, string label)
     {
-        gameManager.SelectionToolHandler.GetComponent<SelectionToolHandler>().DoClientSelectAdd(graphName, label);
+        gameManager.selectionToolHandler.GetComponent<SelectionToolHandler>().DoClientSelectAdd(graphName, label);
     }
     [PunRPC]
     public void SendConfirmSelection()
     {
-        gameManager.SelectionToolHandler.ConfirmSelection();
+        gameManager.selectionToolHandler.ConfirmSelection();
     }
     [PunRPC]
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
@@ -57,8 +57,18 @@ class ServerCoordinator : Photon.MonoBehaviour
         gameManager.DoMoveHeatmap(heatmapName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
     }
     [PunRPC]
-    public void SendCreateHeatmap()
+	public void SendCreateHeatmap()
     {
-        gameManager.HeatmapGenerator.CreateHeatmap();
+		gameManager.heatmapGenerator.CreateHeatmap();
     }
+	[PunRPC]
+	public void SendGenerateNetworks()
+	{
+		gameManager.networkGenerator.GenerateNetworks ();
+	}
+	[PunRPC]
+	public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+	{
+		gameManager.DoMoveNetwork(networkName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
+	}
 }

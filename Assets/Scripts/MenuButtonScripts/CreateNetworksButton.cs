@@ -2,6 +2,7 @@
 {
     private NetworkGenerator networkGenerator;
     private MenuRotator rotator;
+	private GameManager gameManager;
 
     protected override string Description
     {
@@ -16,7 +17,8 @@
         base.Start();
         networkGenerator = referenceManager.networkGenerator;
         rotator = referenceManager.menuRotator;
-    }
+		gameManager = referenceManager.gameManager;
+	}
 
     void Update()
     {
@@ -25,6 +27,7 @@
         {
             SetButtonState(false);
             networkGenerator.GenerateNetworks();
+			gameManager.InformGenerateNetworks ();
             if (rotator.gameObject.activeSelf && rotator.SideFacingPlayer == MenuRotator.Rotation.Right)
             {
                 rotator.RotateLeft();

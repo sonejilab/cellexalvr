@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using UnityEngine;
@@ -11,6 +13,7 @@ public class NetworkGenerator : MonoBehaviour
     public ReferenceManager referenceManager;
 
     private SelectionToolHandler selectionToolHandler;
+	public List<NetworkHandler> networkList = new List<NetworkHandler>();
     private InputReader inputReader;
     private ToggleArcsSubMenu subMenu;
     private StatusDisplay status;
@@ -31,7 +34,7 @@ public class NetworkGenerator : MonoBehaviour
         StartCoroutine(GenerateNetworksCoroutine());
     }
 
-    IEnumerator GenerateNetworksCoroutine()
+	IEnumerator GenerateNetworksCoroutine( )
     {
         int statusId = status.AddStatus("R script generating networks");
         // generate the files containing the network information
@@ -50,4 +53,17 @@ public class NetworkGenerator : MonoBehaviour
         status.RemoveStatus(statusId);
         inputReader.ReadNetworkFiles();
     }
+
+
+	public NetworkHandler FindNetwork(string networkName)
+	{
+		foreach (NetworkHandler nh in networkList)
+		{
+			if (nh.NetworkName == networkName)
+			{
+				return nh;
+			}
+		}
+		return null;
+	}
 }

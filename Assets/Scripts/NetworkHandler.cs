@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 
 public class NetworkHandler : MonoBehaviour
@@ -8,12 +9,23 @@ public class NetworkHandler : MonoBehaviour
     private List<NetworkCenter> networks = new List<NetworkCenter>();
     public List<NetworkCenter> Replacements { get; private set; }
     public string NetworkName { get; internal set; }
-
+	private ReferenceManager referenceManager;
+	private GameManager gameManager;
 
     private void Start()
     {
         Replacements = new List<NetworkCenter>();
+		referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+		gameManager = referenceManager.gameManager;
     }
+	private void Update()
+	{
+		if (GetComponent<VRTK_InteractableObject>().enabled)
+		{
+			gameManager.InformMoveNetwork(NetworkName, transform.position, transform.rotation);
+		}
+	}
+
 
     internal void AddNetwork(NetworkCenter network)
     {

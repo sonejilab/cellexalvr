@@ -50,7 +50,7 @@ public class HeatmapGenerator : MonoBehaviour
 
     public void CreateHeatmap()
     {
-        string heatmapName = "heatmap_" + selectionToolHandler.fileCreationCtr;
+		string heatmapName = "heatmap_" + (selectionToolHandler.fileCreationCtr - 1);
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
     }
 
@@ -71,7 +71,7 @@ public class HeatmapGenerator : MonoBehaviour
     /// </summary>
     IEnumerator GenerateHeatmapRoutine(string heatmapName)
     {
-        if (selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated())
+        if (selectionToolHandler.selectionConfirmed)
         {
             // make a deep copy of the arraylist
             ArrayList selection = selectionToolHandler.GetLastSelection();

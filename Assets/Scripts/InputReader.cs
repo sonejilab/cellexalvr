@@ -28,6 +28,7 @@ public class InputReader : MonoBehaviour
     private StatusDisplay status;
     private SteamVR_TrackedObject rightController;
     private GameManager gameManager;
+	private NetworkGenerator networkGenerator;
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -49,6 +50,7 @@ public class InputReader : MonoBehaviour
         headset = referenceManager.headset;
         status = referenceManager.statusDisplay;
         rightController = referenceManager.rightController;
+		networkGenerator = referenceManager.networkGenerator;
         if (debug)
         {
             status.gameObject.SetActive(true);
@@ -423,7 +425,7 @@ public class InputReader : MonoBehaviour
         }
         CellExAlLog.Log("Successfully created convex hull of " + graphName);
         var networkHandler = skeleton.GetComponent<NetworkHandler>();
-        networkHandler.NetworkName = "network from " + graph.GraphName;
+		networkHandler.NetworkName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
         foreach (string line in lines)
         {
@@ -446,6 +448,7 @@ public class InputReader : MonoBehaviour
             networkHandler.AddNetwork(network);
             network.Handler = networkHandler;
             graphManager.AddNetwork(networkHandler);
+			networkGenerator.networkList.Add (networkHandler);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {
