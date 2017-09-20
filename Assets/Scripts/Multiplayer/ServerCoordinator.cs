@@ -79,7 +79,9 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendBringBackNetwork(string networkHandlerName, string networkName)
     {
-        gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkName).BringBackOriginal();
+        var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+        var center = handler.FindNetworkCenter(networkName);
+        center.BringBackOriginal();
     }
 
 }

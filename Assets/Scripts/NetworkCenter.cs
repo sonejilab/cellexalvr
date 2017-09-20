@@ -62,7 +62,7 @@ public class NetworkCenter : MonoBehaviour
             }
             else if (isReplacement && gameObject.name == "EmptyNetworkPrefab 1(Clone)")
             {
-                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, NetworkName);
+                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, replacing.NetworkName);
                 BringBackOriginal();
             }
         }
