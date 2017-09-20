@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using VRTK;
 
 /// <summary>
 /// This class represents a graph consisting of multiple GraphPoints.
@@ -21,6 +22,8 @@ public class Graph : MonoBehaviour
     private Vector3 minAreaValues;
     private Vector3 defaultPos;
     private Vector3 defaultScale;
+    private ReferenceManager referenceManager;
+    private GameManager gameManager;
 
     void Start()
     {
@@ -28,8 +31,18 @@ public class Graph : MonoBehaviour
         minAreaValues = transform.position;
         defaultPos = transform.position;
         pointsPositions = new List<Vector3>();
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        gameManager = referenceManager.gameManager;
     }
 
+    private void Update()
+    {
+        if (GetComponent<VRTK_InteractableObject>().enabled)
+        {
+            gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation);
+        }
+
+    }
     /// <summary>
     /// Turns on all renderers and colliders for this graph.
     /// </summary>

@@ -18,6 +18,7 @@ public class CellManager : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private PreviousSearchesListNode topListNode;
     private Dictionary<string, Cell> cells;
+    private GameManager gameManager;
 
     void Awake()
     {
@@ -29,6 +30,7 @@ public class CellManager : MonoBehaviour
         database = referenceManager.database;
         rightController = referenceManager.rightController;
         topListNode = referenceManager.topListNode;
+        gameManager = referenceManager.gameManager;
     }
 
     /// <summary>
@@ -101,7 +103,15 @@ public class CellManager : MonoBehaviour
     /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName)
     {
+
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
+        controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
+        StartCoroutine(QueryDatabase(geneName));
+        gameManager.InformColorGraphsByGene(geneName);
+    }
+
+    public void ColorGraphsByGeneNoInform(string geneName)
+    {
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
         StartCoroutine(QueryDatabase(geneName));
     }

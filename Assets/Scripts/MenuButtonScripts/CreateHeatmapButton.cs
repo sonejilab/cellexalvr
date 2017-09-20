@@ -5,6 +5,7 @@ public class CreateHeatmapButton : RotatableButton
 {
 
     private HeatmapGenerator heatmapGenerator;
+    private GameManager gameManager;
 
 
     protected override string Description
@@ -16,6 +17,7 @@ public class CreateHeatmapButton : RotatableButton
     {
         base.Start();
         heatmapGenerator = referenceManager.heatmapGenerator;
+        gameManager = referenceManager.gameManager;
     }
 
     void Update()
@@ -25,6 +27,7 @@ public class CreateHeatmapButton : RotatableButton
         {
             SetButtonState(false);
             heatmapGenerator.CreateHeatmap();
+            gameManager.InformCreateHeatmap();
         }
     }
 

@@ -28,7 +28,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendColorGraphsByGene(string geneName)
     {
-        gameManager.CellManager.GetComponent<CellManager>().ColorGraphsByGene(geneName);
+        gameManager.CellManager.ColorGraphsByGeneNoInform(geneName);
     }
     [PunRPC]
     public void SendColorGraphsByAttribute(string attributeType, float r, float g, float b)
@@ -52,9 +52,9 @@ class ServerCoordinator : Photon.MonoBehaviour
         gameManager.DoMoveGraph(moveGraphName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
     }
     [PunRPC]
-    public void SendMoveHeatmap(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
     {
-        gameManager.DoMoveGraph(moveGraphName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
+        gameManager.DoMoveHeatmap(heatmapName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
     }
     [PunRPC]
     public void SendCreateHeatmap()

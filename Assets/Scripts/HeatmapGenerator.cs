@@ -23,7 +23,6 @@ public class HeatmapGenerator : MonoBehaviour
     private bool running = false;
     private SteamVR_Controller.Device device;
     private GameObject hourglass;
-    private GameObject heatBoard;
     private int heatmapID = 1;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
@@ -51,13 +50,26 @@ public class HeatmapGenerator : MonoBehaviour
 
     public void CreateHeatmap()
     {
-        StartCoroutine(GenerateHeatmapRoutine());
+        string heatmapName = "heatmap_" + selectionToolHandler.fileCreationCtr;
+        StartCoroutine(GenerateHeatmapRoutine(heatmapName));
+    }
+
+    public Heatmap FindHeatmap(string heatmapName)
+    {
+        foreach (Heatmap hm in heatmapList)
+        {
+            if (hm.HeatmapName == heatmapName)
+            {
+                return hm;
+            }
+        }
+        return null;
     }
 
     /// <summary>
     /// Coroutine for creating a heatmap.
     /// </summary>
-    IEnumerator GenerateHeatmapRoutine()
+    IEnumerator GenerateHeatmapRoutine(string heatmapName)
     {
         if (selectionToolHandler.selectionConfirmed && !selectionToolHandler.GetHeatmapCreated())
         {
@@ -124,14 +136,13 @@ public class HeatmapGenerator : MonoBehaviour
             running = false;
 
             // rename the file from heatmap.png to heatmap_X.png. Where X is some number.
-            string newHeatmapFilePath = heatmapDirectory + @"\heatmap_" + fileCreationCtr + ".png";
+            string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
 
-            heatBoard = Instantiate(heatmapPrefab);
-            heatBoard.transform.parent = transform;
-            heatBoard.transform.localPosition = heatmapPosition;
-            Heatmap heatmap = heatBoard.GetComponent<Heatmap>();
+            var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+            heatmap.transform.parent = transform;
+            heatmap.transform.localPosition = heatmapPosition;
             // save colors before.
             heatmap.SetVars(graphManager, selectionToolHandler, colors, fire);
             heatmapList.Add(heatmap);
@@ -139,8 +150,8 @@ public class HeatmapGenerator : MonoBehaviour
             hourglass.SetActive(false);
 
             heatmap.UpdateImage(newHeatmapFilePath);
-            heatBoard.GetComponent<AudioSource>().Play();
-
+            heatmap.GetComponent<AudioSource>().Play();
+            heatmap.name = heatmapName;
             heatmapID++;
         }
     }

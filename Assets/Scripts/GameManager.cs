@@ -18,10 +18,10 @@ public class GameManager : Photon.PunBehaviour
     public GameObject playerPrefab;
     public GameObject serverCoordinatorPrefab;
 
-    public GraphManager GraphManager;
-    public CellManager CellManager;
-    public SelectionToolHandler SelectionToolHandler;
-    public HeatmapGenerator HeatmapGenerator;
+    private GraphManager graphManager;
+    private CellManager CellManager;
+    private SelectionToolHandler SelectionToolHandler;
+    private HeatmapGenerator HeatmapGenerator;
     private ServerCoordinator serverCoordinator;
     private ServerCoordinator clientCoordinator;
     private bool multiplayer = true;
@@ -52,6 +52,19 @@ public class GameManager : Photon.PunBehaviour
         else
         {
             serverCoordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
+        }
+    }
+
+    public void InformColorGraphsByGene(string geneName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
         }
     }
     public void InformConfirmSelection()
@@ -120,18 +133,25 @@ public class GameManager : Photon.PunBehaviour
     }
 
 
+
+
     public void DoGraphpointChangeColor(string graphname, string label, Color col)
     {
-        GraphManager.RecolorGraphPoint(graphname, label, col);
+        graphManager.RecolorGraphPoint(graphname, label, col);
     }
 
     public void DoMoveGraph(string moveGraphName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
     {
-        Graph g = GraphManager.FindGraph(moveGraphName);
+        Graph g = graphManager.FindGraph(moveGraphName);
         g.transform.position = new Vector3(x, y, z);
         g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
-
+    public void DoMoveHeatmap(string heatmapName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
+    {
+        Heatmap hm = HeatmapGenerator.FindHeatmap(heatmapName);
+        hm.transform.position = new Vector3(x, y, z);
+        hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+    }
 
     /// <summary>
     /// Called when the local player left the room. We need to load the launcher scene.
@@ -201,7 +221,7 @@ public class GameManager : Photon.PunBehaviour
 
     private void Start()
     {
-        GraphManager = referenceManager.graphManager;
+        graphManager = referenceManager.graphManager;
         CellManager = referenceManager.cellManager;
         SelectionToolHandler = referenceManager.selectionToolHandler;
         HeatmapGenerator = referenceManager.heatmapGenerator;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using VRTK;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -19,11 +20,16 @@ public class Heatmap : MonoBehaviour
     private GameObject fire;
     private SteamVR_TrackedObject rightController;
     private string imageFilepath;
+    public string HeatmapName;
+    private ReferenceManager referenceManager;
+    private GameManager gameManager;
 
     // Use this for initialization
     void Start()
     {
-        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        rightController = referenceManager.rightController;
+        gameManager = referenceManager.gameManager;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,6 +54,10 @@ public class Heatmap : MonoBehaviour
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && fire.activeSelf)
         {
             gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();
+        }
+        if (GetComponent<VRTK_InteractableObject>().enabled)
+        {
+            gameManager.InformMoveHeatmap(HeatmapName, transform.position, transform.rotation);
         }
     }
 
