@@ -227,6 +227,19 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformMoveNetworkCenter(string networkCenterName, Vector3 pos, Quaternion rot, Vector3 scale)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+    }
+
     public void DoGraphpointChangeColor(string graphname, string label, Color col)
     {
         graphManager.RecolorGraphPoint(graphname, label, col);
@@ -238,12 +251,14 @@ public class GameManager : Photon.PunBehaviour
         g.transform.position = new Vector3(x, y, z);
         g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
+
     public void DoMoveHeatmap(string heatmapName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
     {
         Heatmap hm = heatmapGenerator.FindHeatmap(heatmapName);
         hm.transform.position = new Vector3(x, y, z);
         hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
+
     public void DoMoveNetwork(string networkName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
     {
         NetworkHandler nh = networkGenerator.FindNetworkHandler(networkName);

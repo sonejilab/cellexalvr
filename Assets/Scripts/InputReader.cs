@@ -448,7 +448,7 @@ public class InputReader : MonoBehaviour
             network.transform.localPosition = position;
             networkHandler.AddNetwork(network);
             network.Handler = networkHandler;
-            network.NetworkName = networkHandlerName + words[3];
+            network.NetworkCenterName = networkHandlerName + words[3];
             graphManager.AddNetwork(networkHandler);
             networkGenerator.networkList.Add(networkHandler);
             //network.transform.localPosition -= graph.transform.position;

@@ -83,7 +83,7 @@ public class NetworkHandler : MonoBehaviour
     {
         foreach (NetworkCenter network in networks)
         {
-            if (network.NetworkName == networkName)
+            if (network.NetworkCenterName == networkName)
             {
                 return network;
             }

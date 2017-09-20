@@ -77,11 +77,23 @@ class ServerCoordinator : Photon.MonoBehaviour
         gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkName).EnlargeNetwork();
     }
     [PunRPC]
-    public void SendBringBackNetwork(string networkHandlerName, string networkName)
+    public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
     {
         var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
-        var center = handler.FindNetworkCenter(networkName);
+        var center = handler.FindNetworkCenter(networkCenterName);
         center.BringBackOriginal();
+    }
+    [PunRPC]
+    public void SendMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+    {
+        Vector3 pos = new Vector3(posX, posY, posZ);
+        Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
+        Vector3 scale = new Vector3(scaleX, scaleY, scaleZ);
+        var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+        var center = handler.FindNetworkCenter(networkCenterName);
+        center.transform.position = pos;
+        center.transform.rotation = rot;
+        center.transform.localScale = scale;
     }
 
 }

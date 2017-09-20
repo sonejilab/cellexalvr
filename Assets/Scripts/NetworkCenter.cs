@@ -15,7 +15,7 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
-    public string NetworkName;
+    public string NetworkCenterName;
 
 
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -57,12 +57,12 @@ public class NetworkCenter : MonoBehaviour
             enlarge = false;
             if (!isReplacement && gameObject.name != "Enlarged Network")
             {
-                gameManager.InformEnlargeNetwork(Handler.NetworkHandlerName, NetworkName);
+                gameManager.InformEnlargeNetwork(Handler.NetworkHandlerName, NetworkCenterName);
                 EnlargeNetwork();
             }
             else if (isReplacement && gameObject.name == "EmptyNetworkPrefab 1(Clone)")
             {
-                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, replacing.NetworkName);
+                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, replacing.NetworkCenterName);
                 BringBackOriginal();
             }
         }
@@ -92,6 +92,15 @@ public class NetworkCenter : MonoBehaviour
                 a.renderer.SetPositions(new Vector3[] { transform.position, a.center2.transform.position });
             else
                 a.renderer.SetPositions(new Vector3[] { transform.position, a.center1.transform.position });
+        }
+
+        var interactableObject = GetComponent<VRTK_InteractableObject>();
+        if (interactableObject)
+        {
+            if (interactableObject.enabled)
+            {
+                gameManager.InformMoveNetworkCenter(NetworkCenterName, transform.position, transform.rotation, transform.localScale);
+            }
         }
     }
 
