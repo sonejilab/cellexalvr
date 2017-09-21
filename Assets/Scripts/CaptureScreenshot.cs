@@ -4,27 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 
+/// <summary>
+/// This class takes screenshots of what the user sees in the virtual environment.
+/// </summary>
 public class CaptureScreenshot : MonoBehaviour
 {
-
-
     public SteamVR_TrackedObject rightController;
     public GameObject fadeScreen;
     private SteamVR_Controller.Device device;
     private float fadeTime = 0.7f;
     private float elapsedTime = 0.0f;
     private float colorAlpha;
-    private int scrnNr;
+    private int screenshotCounter;
     private string directory = Directory.GetCurrentDirectory() + "/Screenshots";
 
-    // Use this for initialization
     void Start()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
         //fadeScreen.GetComponent<Image> ().color = new Color (0, 0, 0);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
@@ -38,10 +37,10 @@ public class CaptureScreenshot : MonoBehaviour
                     CellExAlLog.Log("Creating directory " + directory);
                     Directory.CreateDirectory(directory);
                 }
-                Application.CaptureScreenshot(directory + "/Screenshot" + scrnNr.ToString() + ".png");
-                Debug.Log("Screenshot taken!");
+                Application.CaptureScreenshot(directory + "/Screenshot" + screenshotCounter + ".png");
+                CellExAlLog.Log("Screenshot taken!");
                 elapsedTime = 0.0f;
-                scrnNr++;
+                screenshotCounter++;
             }
         }
 

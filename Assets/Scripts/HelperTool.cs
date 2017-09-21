@@ -17,6 +17,8 @@ public class HelperTool : MonoBehaviour
     public Transform customOrigin;
     public GameObject transparentQuad;
     public GameObject opaqueQuad;
+    public GameObject controllerHelpTextsRight;
+    public GameObject controllerHelpTextsLeft;
 
     private SteamVR_TrackedObject rightController;
     private string standardText = "Point the laser towards something to find out more";
@@ -29,6 +31,7 @@ public class HelperTool : MonoBehaviour
     private Transform raycastingSource;
     private LayerMask savedLayersToIgnore;
     private Transform savedCustomOrigin;
+    private float timeLastHit;
     private float initialY;
     private bool activated;
 
@@ -42,7 +45,7 @@ public class HelperTool : MonoBehaviour
         transparentQuad.SetActive(true);
         rightController = referenceManager.rightController;
         initialY = transform.localPosition.y;
-        gameObject.SetActive(false);
+        SetToolActivated(false);
     }
 
     private void Update()
@@ -59,12 +62,14 @@ public class HelperTool : MonoBehaviour
                 {
                     // if the gameobject's tag is in the dictionary
                     textMesh.text = descriptions[hitGameObject.tag];
+                    timeLastHit = Time.time;
                     SetQuadOpaque(true);
                 }
                 else if (descriptions.ContainsKey(hitGameObject.name))
                 {
                     // if the gameobject's name is in the dictionary
                     textMesh.text = descriptions[hitGameObject.name];
+                    timeLastHit = Time.time;
                     SetQuadOpaque(true);
                 }
                 else if (descriptions.ContainsKey(hitGameObject.transform.parent.gameObject.name))
@@ -72,13 +77,20 @@ public class HelperTool : MonoBehaviour
                     // if the gameobject's parent's name is in the dictionary
                     // this happens when the raycast hits the keyboard
                     textMesh.text = descriptions[hitGameObject.transform.parent.gameObject.name];
+                    timeLastHit = Time.time;
                     SetQuadOpaque(true);
                 }
                 else
                 {
-                    // if we hit something but don't have a description for it
-                    textMesh.text = standardText;
-                    SetQuadOpaque(false);
+                    // Often the laser can be pointed at something and then accidentaly quickly pointed at nothing
+                    // and then pointed at the original thing again. So we wait 4 seconds before removing the current 
+                    // description just in case that happens.
+                    if (Time.time - timeLastHit > 4)
+                    {
+                        // if we hit something but don't have a description for it
+                        textMesh.text = standardText;
+                        SetQuadOpaque(false);
+                    }
                 }
                 Vector3 oldScale = opaqueQuad.transform.localScale;
                 float newScaleY = textMesh.renderedHeight / 30f;
@@ -89,9 +101,12 @@ public class HelperTool : MonoBehaviour
             }
             else
             {
-                // if we hit nothing
-                textMesh.text = standardText;
-                SetQuadOpaque(false);
+                if (Time.time - timeLastHit > 4)
+                {
+                    // if we hit nothing
+                    textMesh.text = standardText;
+                    SetQuadOpaque(false);
+                }
             }
         }
     }
@@ -137,6 +152,8 @@ public class HelperTool : MonoBehaviour
         activated = activate;
         gameObject.SetActive(activate);
         helpMenu.SetActive(activate);
+        controllerHelpTextsRight.SetActive(activate);
+        controllerHelpTextsLeft.SetActive(activate);
     }
 
     /// <summary>
