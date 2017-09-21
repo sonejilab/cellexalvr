@@ -13,6 +13,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     private void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
     }
 
     #region RPCs
