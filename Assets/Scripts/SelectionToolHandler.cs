@@ -340,13 +340,13 @@ public class SelectionToolHandler : MonoBehaviour
     {
         // create .txt file with latest selection
         DumpData();
-        // clear the list since we are done with it
         lastSelectedCells.Clear();
 
         foreach (Collider c in selectedCells)
         {
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
         }
+        // clear the list since we are done with it
         selectedCells.Clear();
         selectionHistory.Clear();
         undoButtonsHandler.TurnAllButtonsOff();

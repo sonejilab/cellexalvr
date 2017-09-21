@@ -50,7 +50,9 @@ public class HeatmapGenerator : MonoBehaviour
 
     public void CreateHeatmap()
     {
+        // name the heatmap "heatmap_X". Where X is some number.
         string heatmapName = "heatmap_" + (selectionToolHandler.fileCreationCtr - 1);
+        CellExAlLog.Log("Creating heatmap");
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
     }
 
@@ -84,6 +86,7 @@ public class HeatmapGenerator : MonoBehaviour
             // Check if more than one color is selected
             if (selection.Count < 2)
             {
+                CellExAlLog.Log("Can not create heatmap with less than 2 graphpoints, aborting");
                 yield break;
             }
             Color c1 = ((GraphPoint)selection[0]).GetComponent<Renderer>().material.color;
@@ -101,6 +104,7 @@ public class HeatmapGenerator : MonoBehaviour
             {
                 // Generate error message if less than two colors are selected
                 errorMessageController.DisplayErrorMessage(3);
+                CellExAlLog.Log("Can not create heatmap with only one grouping color, aborting");
                 yield break;
             }
 
@@ -135,7 +139,6 @@ public class HeatmapGenerator : MonoBehaviour
             status.RemoveStatus(statusId);
             running = false;
 
-            // rename the file from heatmap.png to heatmap_X.png. Where X is some number.
             string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);

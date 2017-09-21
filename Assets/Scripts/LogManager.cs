@@ -50,7 +50,7 @@ public static class CellExAlLog
         Log("Welcome to CellExAl " + Application.version,
             "Running on Unity " + Application.unityVersion,
             "BuildGUID: " + Application.buildGUID,
-            "Log started at " + nicerTime);
+            "Logfile created at " + nicerTime);
 
         Log("\nSome system information:",
             "\tOS: " + SystemInfo.operatingSystem,
