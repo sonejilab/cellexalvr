@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photon;
+using System;
 using System.Collections;
 
 
@@ -78,6 +79,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformReadFolder(string path)
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to read folder " + path);
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
@@ -104,6 +106,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformColorGraphsByGene(string geneName)
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to color graphs by " + geneName);
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
@@ -117,6 +120,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformConfirmSelection()
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to confirm selection");
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendConfirmSelection", PhotonTargets.Others);
@@ -130,6 +134,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to draw line with " + xcoords.Length);
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords, zcoords);
@@ -182,6 +187,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformCreateHeatmap()
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to create heatmap");
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
@@ -195,6 +201,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformGenerateNetworks()
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to generate networks");
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
@@ -221,6 +228,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformEnlargeNetwork(string networkHandlerName, string networkName)
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to enalarge network " + networkName + " in handler + " + networkHandlerName);
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
@@ -234,6 +242,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformBringBackNetwork(string networkHandlerName, string networkName)
     {
         if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to bring back network " + networkName + " in handler " + networkHandlerName);
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendBringBackNetwork", PhotonTargets.Others, networkHandlerName, networkName);
@@ -271,7 +280,7 @@ public class GameManager : Photon.PunBehaviour
     {
         multiplayer = true;
         Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
-
+        CellExAlLog.Log("A client connected to our server");
 
         Debug.Log("MASTER JOINED ROOM");
         //LoadArena();
@@ -283,6 +292,7 @@ public class GameManager : Photon.PunBehaviour
         base.OnJoinedRoom();
         multiplayer = true;
         Debug.Log("CLIENT JOINED ROOM");
+        CellExAlLog.Log("We joined a server");
         StartCoroutine(FindServerCoordinator());
     }
 
@@ -291,13 +301,7 @@ public class GameManager : Photon.PunBehaviour
         yield return new WaitForSeconds(1f);
         clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         Debug.Log("Client Coordinator Found");
-        //while (serverCoordinator == null)
-        //{
-        //    yield return new WaitForSeconds(1f);
-        //    serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>();
-        //    Debug.Log("Server Coordinator Found");
-        //}
-    }
+     }
 
     private IEnumerator FindServerCoordinator()
     {

@@ -22,7 +22,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendReadFolder(string path)
     {
-        Debug.Log("READ PATH: " + path);
+        CellExAlLog.Log("Recieved message to read folder at " + path);
         gameManager.referenceManager.inputReader.ReadFolder(path);
     }
 
@@ -35,12 +35,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendColorGraphsByGene(string geneName)
     {
+        CellExAlLog.Log("Recieved message to color all graphs by " + geneName);
         referenceManager.cellManager.ColorGraphsByGeneNoInform(geneName);
     }
 
     [PunRPC]
     public void SendColorGraphsByAttribute(string attributeType, float r, float g, float b)
     {
+        CellExAlLog.Log("Recieved message to color all graphs by attribute " + attributeType);
         Color col = new Color(r, g, b);
         referenceManager.cellManager.ColorByAttribute(attributeType, col);
     }
@@ -54,6 +56,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendConfirmSelection()
     {
+        CellExAlLog.Log("Recieved message to confirm selection");
         referenceManager.selectionToolHandler.ConfirmSelection();
     }
 
@@ -76,12 +79,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendCreateHeatmap()
     {
+        CellExAlLog.Log("Recieved message to create heatmap");
         referenceManager.heatmapGenerator.CreateHeatmap();
     }
 
     [PunRPC]
     public void SendGenerateNetworks()
     {
+        CellExAlLog.Log("Recieved message to generate networks");
         gameManager.networkGenerator.GenerateNetworks();
     }
 
@@ -96,12 +101,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendEnlargeNetwork(string networkHandlerName, string networkName)
     {
+        CellExAlLog.Log("Recieved message to enlarge network " + networkName + " in handler " + networkHandlerName);
         gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkName).EnlargeNetwork();
     }
 
     [PunRPC]
     public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
     {
+        CellExAlLog.Log("Recieved message to bring back network " + networkName + " in handler " + networkHandlerName);
         var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
         var center = handler.FindNetworkCenter(networkCenterName);
         center.BringBackOriginal();
@@ -123,6 +130,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
     {
+        CellExAlLog.Log("Recieved message to draw line with " + xcoords.Length + " segments");
         Vector3[] coords = new Vector3[xcoords.Length];
         for (int i = 0; i < xcoords.Length; i++)
         {

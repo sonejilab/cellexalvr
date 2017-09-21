@@ -50,7 +50,7 @@ public class HeatmapGenerator : MonoBehaviour
 
     public void CreateHeatmap()
     {
-		string heatmapName = "heatmap_" + (selectionToolHandler.fileCreationCtr - 1);
+        string heatmapName = "heatmap_" + (selectionToolHandler.fileCreationCtr - 1);
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
     }
 
