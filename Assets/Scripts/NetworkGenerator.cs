@@ -13,9 +13,8 @@ public class NetworkGenerator : MonoBehaviour
     public ReferenceManager referenceManager;
 
     private SelectionToolHandler selectionToolHandler;
-	public List<NetworkHandler> networkList = new List<NetworkHandler>();
+    public List<NetworkHandler> networkList = new List<NetworkHandler>();
     private InputReader inputReader;
-    private ToggleArcsSubMenu subMenu;
     private StatusDisplay status;
     private Thread t;
     public int objectsInSky;
@@ -25,7 +24,6 @@ public class NetworkGenerator : MonoBehaviour
         objectsInSky = 0;
         selectionToolHandler = referenceManager.selectionToolHandler;
         inputReader = referenceManager.inputReader;
-        subMenu = referenceManager.arcsSubMenu;
         status = referenceManager.statusDisplay;
     }
 
@@ -34,7 +32,7 @@ public class NetworkGenerator : MonoBehaviour
         StartCoroutine(GenerateNetworksCoroutine());
     }
 
-	IEnumerator GenerateNetworksCoroutine( )
+    IEnumerator GenerateNetworksCoroutine()
     {
         int statusId = status.AddStatus("R script generating networks");
         // generate the files containing the network information
@@ -55,15 +53,15 @@ public class NetworkGenerator : MonoBehaviour
     }
 
 
-	public NetworkHandler FindNetworkHandler(string networkName)
-	{
-		foreach (NetworkHandler nh in networkList)
-		{
-			if (nh.NetworkHandlerName == networkName)
-			{
-				return nh;
-			}
-		}
-		return null;
-	}
+    public NetworkHandler FindNetworkHandler(string networkName)
+    {
+        foreach (NetworkHandler nh in networkList)
+        {
+            if (nh.NetworkHandlerName == networkName)
+            {
+                return nh;
+            }
+        }
+        return null;
+    }
 }

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 8c1230813e9c6ad4c867cf691fb92faa
-timeCreated: 1501666576
+guid: fbebef6c183f57a41997733db540527b
+timeCreated: 1505989175
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Delete Controller Mesh
+    4300000: Menu Controller Mesh
     7400000: Take 001
     9500000: //RootNode
   materials:

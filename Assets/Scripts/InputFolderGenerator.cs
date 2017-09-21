@@ -37,7 +37,6 @@ public class InputFolderGenerator : MonoBehaviour
         string runtimeGroupsDirectory = Directory.GetCurrentDirectory() + "/Data/runtimeGroups";
         if (!Directory.Exists(runtimeGroupsDirectory))
         {
-            print("creating runtimeGroups directory");
             CellExAlLog.Log("Creating directory " + runtimeGroupsDirectory);
             Directory.CreateDirectory(runtimeGroupsDirectory);
         }
@@ -46,7 +45,6 @@ public class InputFolderGenerator : MonoBehaviour
         string[] directories = Directory.GetDirectories(dataDirectory);
         if (directories.Length == 0)
         {
-            print("No input directeries found");
             CellExAlLog.Log("No data folders found. Aborting loading.");
             return;
         }
@@ -59,7 +57,6 @@ public class InputFolderGenerator : MonoBehaviour
             {
                 continue;
             }
-            print(directory);
 
             Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
             GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector, Quaternion.identity);

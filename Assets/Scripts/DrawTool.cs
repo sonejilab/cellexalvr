@@ -154,11 +154,11 @@ public class DrawTool : MonoBehaviour
     /// </summary>
     public void ClearAllLines()
     {
-        foreach (LineRenderer line in temporaryLines)
+        foreach (LineRenderer line in lines)
         {
             Destroy(line.gameObject);
         }
-        temporaryLines.Clear();
+        lines.Clear();
     }
 
     private void OnEnable()
