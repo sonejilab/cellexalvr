@@ -71,6 +71,10 @@ public class GameManager : Photon.PunBehaviour
 
 
     #region Photon Messages
+
+    #region Inform methods
+    // these methods are called when a client wants to inform all other clients that something has happened
+
     public void InformReadFolder(string path)
     {
         if (!multiplayer) return;
@@ -253,10 +257,10 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void DoGraphpointChangeColor(string graphname, string label, Color col)
-    {
-        graphManager.RecolorGraphPoint(graphname, label, col);
-    }
+    #endregion
+
+    #region Do methods
+    // these methods are called when a server wants to inform a specific client that something has happened on another client, and the same thing should happen to this client
 
     public void DoMoveGraph(string moveGraphName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
     {
@@ -278,6 +282,8 @@ public class GameManager : Photon.PunBehaviour
         nh.transform.position = new Vector3(x, y, z);
         nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
+
+    #endregion
 
     /// <summary>
     /// Called when the local player left the room. We need to load the launcher scene.

@@ -58,4 +58,5 @@ MonoBehaviour:
   - SendBringBackNetwork
   - SendEnlargeNetwork
   - SendMoveNetworkCenter
+  - SendDrawLine
   DisableAutoOpenWizard: 1
