@@ -27,14 +27,17 @@ public class SendToSkyButton : MonoBehaviour
     {
         if (rightController == null)
         {
-            //Debug.Log("Find right controller");
-            rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+
+            var controllerGameObject = GameObject.Find("Controller (right)");
+            if (controllerGameObject)
+                rightController = controllerGameObject.GetComponent<SteamVR_TrackedObject>();
+            else
+                return;
 
         }
-        if (device == null)
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-        }
+
+        device = SteamVR_Controller.Input((int)rightController.index);
+
         // handle input
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {

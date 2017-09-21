@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
 using VRTK;
+using System.Text;
 
 /// <summary>
 /// A class for reading data files and creating GraphPoints at the correct locations 
@@ -114,7 +115,7 @@ public class InputReader : MonoBehaviour
 
         string[] mdsFiles = Directory.GetFiles(fullPath, "*.mds");
         CellExAlLog.Log("Reading " + mdsFiles.Length + " .mds files");
-        StartCoroutine(ReadMDSFiles(fullPath, mdsFiles, 25));
+        StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
 
     }
 
@@ -123,17 +124,17 @@ public class InputReader : MonoBehaviour
     /// </summary>
     /// <param name="path"> The path to the folder where the files are. </param>
     /// <param name="mdsFiles"> The filenames. </param>
-    /// <param name="itemsPerFrame"> How many graphpoints should be Instantiated each frame </param>
-    IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
+    IEnumerator ReadMDSFiles(string path, string[] mdsFiles)
     {
         int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         var magnifier = referenceManager.magnifierTool;
         //  Read each .mds file
-        // The file format should be
-        //  CELLNAME_1 X_COORD Y_COORD Z_COORD
-        //  CELLNAME_2 X_COORD Y_COORD Z_COORD
-        //  ...
+        /// The file format should be
+        ///  CELLNAME_1 X_COORD Y_COORD Z_COORD
+        ///  CELLNAME_2 X_COORD Y_COORD Z_COORD
+        ///  ...
+        int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
         {
             Graph newGraph = graphManager.CreateGraph();
@@ -146,33 +147,43 @@ public class InputReader : MonoBehaviour
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
-            // put each line into an array
-            string[] lines = File.ReadAllLines(file);
-            FileStream fileStream = new FileStream(file, FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
+
+            FileStream mdsFileStream = new FileStream(file, FileMode.Open);
+            StreamReader mdsStreamReader = new StreamReader(mdsFileStream);
+            List<string> cellnames = new List<string>();
+            List<float> xcoords = new List<float>();
+            List<float> ycoords = new List<float>();
+            List<float> zcoords = new List<float>();
+
+            while (!mdsStreamReader.EndOfStream)
+            {
+                string[] words = mdsStreamReader.ReadLine().Split(null);
+                cellnames.Add(words[0]);
+                xcoords.Add(float.Parse(words[1]));
+                ycoords.Add(float.Parse(words[2]));
+                zcoords.Add(float.Parse(words[3]));
+            }
+            if (fileIndex == 0)
+            {
+                totalNbrOfCells = xcoords.Count;
+            }
             // we must wait for the graph to fully initialize before adding stuff to it
             while (!newGraph.Ready())
                 yield return null;
             newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
-            UpdateMinMax(newGraph, lines);
+            UpdateMinMax(newGraph, xcoords, ycoords, zcoords);
 
             float maximumDeltaTime = Time.maximumDeltaTime;
             // multiply by 1.1 to allow a loss of ~9.0909% fps
             float maximumDeltaTimeThreshold = maximumDeltaTime * 1.1f;
             int maximumItemsPerFrame = 50;
-            while (!streamReader.EndOfStream)
+            int itemsThisFrame = 0;
+            for (int i = 0; i < xcoords.Count; i += itemsThisFrame, itemsThisFrame = 0)
             {
-                int itemsThisFrame = 0;
-                status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)fileStream.Position / fileStream.Length) + "%");
-                while (!streamReader.EndOfStream)
+                status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsFileStream.Position / mdsFileStream.Length) + "%");
+                for (int j = i; j < (i + maximumItemsPerFrame) && j < xcoords.Count; ++j)
                 {
-                    if (itemsThisFrame > maximumItemsPerFrame)
-                    {
-                        break;
-                    }
-                    string line = streamReader.ReadLine();
-                    string[] words = line.Split(null);
-                    graphManager.AddCell(newGraph, words[0], float.Parse(words[1]), float.Parse(words[2]), float.Parse(words[3]));
+                    graphManager.AddCell(newGraph, cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
                     itemsThisFrame++;
                 }
                 // wait for end of frame
@@ -197,23 +208,25 @@ public class InputReader : MonoBehaviour
             {
                 graphManager.LoadPosition(newGraph, fileIndex);
             }
-
+            mdsFileStream.Close();
+            mdsStreamReader.Close();
             CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         // Read the each .meta.cell file
-        // The file format should be
-        //              TYPE_1  TYPE_2  ...
-        //  CELLNAME_1  [0,1]   [0,1]
-        //  CELLNAME_2  [0,1]   [0,1]
-        // ...
+        /// The file format should be
+        ///              TYPE_1  TYPE_2  ...
+        ///  CELLNAME_1  [0,1]   [0,1]
+        ///  CELLNAME_2  [0,1]   [0,1]
+        /// ...
         string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
         foreach (string metacellfile in metacellfiles)
         {
-            // print(metacellfile);
-            string[] lines = File.ReadAllLines(metacellfile);
             // first line is a header line
-            string header = lines[0];
+            FileStream metacellFileStream = new FileStream(metacellfile, FileMode.Open);
+            StreamReader metacellStreamReader = new StreamReader(metacellFileStream);
+
+            string header = metacellStreamReader.ReadLine();
             string[] attributeTypes = header.Split(null);
             string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
             for (int i = 1; i < attributeTypes.Length; ++i)
@@ -225,13 +238,18 @@ public class InputReader : MonoBehaviour
                 actualAttributeTypes[i - 1] = attributeTypes[i];
                 //print(attributeTypes[i]);
             }
-            for (int i = 1; i < lines.Length; ++i)
+            while (!metacellStreamReader.EndOfStream)
             {
-                string[] line = lines[i].Split(null);
-                string cellname = line[0];
-                for (int j = 1; j < line.Length; ++j)
+                string line = metacellStreamReader.ReadLine();
+                if (line == "")
+                    continue;
+
+                string[] words = line.Split(null);
+
+                string cellname = words[0];
+                for (int j = 1; j < words.Length; ++j)
                 {
-                    cellManager.AddAttribute(cellname, attributeTypes[j], line[j]);
+                    cellManager.AddAttribute(cellname, attributeTypes[j], words[j]);
                 }
             }
             attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
@@ -245,7 +263,7 @@ public class InputReader : MonoBehaviour
             loaderController.DestroyFolders();
         }
         status.UpdateStatus(statusId, "Reading index.facs file");
-        ReadFacsFiles(path);
+        ReadFacsFiles(path, totalNbrOfCells);
         status.RemoveStatus(statusId);
     }
 
@@ -253,70 +271,68 @@ public class InputReader : MonoBehaviour
     /// Reads the index.facs file.
     /// </summary>
 
-    private void ReadFacsFiles(string path)
+    private void ReadFacsFiles(string path, int nbrOfCells)
     {
         string fullpath = path + "/index.facs";
 
         if (!File.Exists(fullpath))
         {
             print("File " + fullpath + " not found");
+            CellExAlLog.Log(".facs file not found");
             return;
         }
 
-        string[] lines = File.ReadAllLines(fullpath);
-        if (lines.Length == 0)
-        {
-            // file is empty
-            return;
-        }
+        FileStream fileStream = new FileStream(fullpath, FileMode.Open);
+        StreamReader streamReader = new StreamReader(fileStream);
+
         /// The file format should be:
         ///             TYPE_1  TYPE_2 ...
         /// CELLNAME_1  VALUE   VALUE  
         /// CELLNAME_2  VALUE   VALUE
         /// ...
-        string headerline = lines[0];
+
+        string headerline = streamReader.ReadLine();
         string[] header = headerline.Split(null);
         float[] min = new float[header.Length - 1];
         float[] max = new float[header.Length - 1];
-        for (int i = 0; i < min.Length; ++i)
+        int i = 0;
+        for (; i < min.Length; ++i)
         {
             min[i] = float.MaxValue;
             max[i] = float.MinValue;
         }
-        // calculate the minimum and mean values for each column
-        for (int i = 1; i < lines.Length; ++i)
+        string[] cellnames = new string[nbrOfCells];
+        float[,] values = new float[nbrOfCells, header.Length - 1];
+
+        // read the file, calculate the min and max values and save all values
+        for (i = 0; !streamReader.EndOfStream; ++i)
         {
-            string[] line = lines[i].Split(null);
+            string[] line = streamReader.ReadLine().Split(null);
             for (int j = 0; j < line.Length - 1; ++j)
             {
                 float value = float.Parse(line[j + 1]);
+                cellnames[i] = line[0];
+                values[i, j] = value;
                 if (value < min[j])
                     min[j] = value;
                 if (value > max[j])
                     max[j] = value;
             }
         }
-
-        for (int i = 1; i < lines.Length; ++i)
+        // now that we know the min and max values we can iterate over the values once again
+        for (i = 0; i < values.GetLength(0); ++i)
         {
-            string[] line = lines[i].Split(null);
-            string cellName = line[0];
-            for (int j = 1; j < line.Length; ++j)
+            for (int j = 0; j < values.GetLength(1); ++j)
             {
                 // normalize to the range [0, 29]
-                float colorIndexFloat = ((float.Parse(line[j]) - min[j - 1]) / (max[j - 1] - min[j - 1])) * 29f;
+                float colorIndexFloat = ((values[i, j] - min[j]) / (max[j] - min[j])) * 29f;
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
-                //print(colorIndex);
-                cellManager.AddFacs(line[0], header[j], colorIndex);
+                cellManager.AddFacs(cellnames[i], header[j], colorIndex);
             }
         }
-
-        string[] names = new string[header.Length - 1];
-        for (int i = 0; i < header.Length - 1; ++i)
-        {
-            names[i] = header[i + 1];
-        }
-        indexMenu.CreateColorByIndexButtons(names);
+        streamReader.Close();
+        fileStream.Close();
+        indexMenu.CreateColorByIndexButtons(cellnames);
         CellExAlLog.Log("Successfully read " + fullpath);
     }
 
@@ -358,20 +374,17 @@ public class InputReader : MonoBehaviour
     public void ReadNetworkFiles()
     {
 
-        // Read the .cnt file
-        // The file format should be
-        //  X_COORD Y_COORD Z_COORD KEY GRAPHNAME
-        //  X_COORD Y_COORD Z_COORD KEY GRAPHNAME
-        // ...
-        // KEY is simply a hex rgb color code
-        // GRAPHNAME is the name of the file (and graph) that the network was made from
 
         CellExAlLog.Log("Started reading network files");
         // there should only be one .cnt file
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
-        string[] nwkFilePath = Directory.GetFiles(networkDirectory, "*.nwk");
-        string[] layFilePath = Directory.GetFiles(networkDirectory, "*.lay");
+        string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
+        string[] layFilePaths = Directory.GetFiles(networkDirectory, "*.lay");
+
+
+        FileStream cntFileStream = new FileStream(cntFilePaths[0], FileMode.Open);
+        StreamReader cntStreamReader = new StreamReader(cntFileStream);
 
         // make sure there is a .cnt file
         if (cntFilePaths.Length == 0)
@@ -387,55 +400,72 @@ public class InputReader : MonoBehaviour
         }
 
         // make sure there is a .nwk file
-        if (nwkFilePath.Length == 0)
+        if (nwkFilePaths.Length == 0)
         {
             print("no .nwk file in network folder");
             CellExAlLog.Log("ERROR: No .nwk file in network folder " + networkDirectory);
             return;
         }
-        FileStream fs = new FileStream(nwkFilePath[0], FileMode.Open);
-        StreamReader sr = new StreamReader(fs);
+        FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
+        StreamReader nwkStreamReader = new StreamReader(nwkFileStream);
         // 1 MB = 1048576 B
-        if (fs.Length > 1048576)
+        if (nwkFileStream.Length > 1048576)
         {
             CellExAlLog.Log("Aborting reading network files because .nwk file is larger than 1 MB",
-                            ".nwk file size: " + fs.Length + " B");
-            sr.Close();
-            fs.Close();
+                            ".nwk file size: " + nwkFileStream.Length + " B");
+            nwkStreamReader.Close();
+            nwkFileStream.Close();
             return;
         }
 
+        FileStream layFileStream = new FileStream(layFilePaths[0], FileMode.Open);
+        StreamReader layStreamReader = new StreamReader(layFileStream);
+
         // make sure there is a .lay file
-        if (layFilePath.Length == 0)
+        if (layFilePaths.Length == 0)
         {
             CellExAlLog.Log("ERROR: No .lay file found in network folder " + networkDirectory);
         }
 
+        // Read the .cnt file
+        /// The file format should be
+        ///  X_COORD Y_COORD Z_COORD KEY GRAPHNAME
+        ///  X_COORD Y_COORD Z_COORD KEY GRAPHNAME
+        /// ...
+        /// KEY is simply a hex rgb color code
+        /// GRAPHNAME is the name of the file (and graph) that the network was made from
 
-
-        string[] lines = File.ReadAllLines(cntFilePaths[0]);
         // read the graph's name and create a skeleton
-        string[] firstLine = lines[0].Split(null);
-        string graphName = firstLine[firstLine.Length - 1];
-        Graph graph = graphManager.FindGraph(graphName);
-        GameObject skeleton = graph.CreateConvexHull();
-        if (skeleton == null)
-        {
-            CellExAlLog.Log("ERROR: Could not create convex hull of " + graphName);
-            return;
-        }
-        CellExAlLog.Log("Successfully created convex hull of " + graphName);
-        var networkHandler = skeleton.GetComponent<NetworkHandler>();
-        string networkHandlerName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
-        networkHandler.NetworkHandlerName = networkHandlerName;
+        bool firstLine = true;
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
-        foreach (string line in lines)
+        // these variables are set when the first line is read
+        Graph graph = null;
+        GameObject skeleton = null;
+        NetworkHandler networkHandler = null;
+        string networkHandlerName = null;
+        while (!cntStreamReader.EndOfStream)
         {
+            string line = cntStreamReader.ReadLine();
             if (line == "")
                 continue;
-            // print(line);
             string[] words = line.Split(null);
-            // print(words[0]);
+
+            if (firstLine)
+            {
+                firstLine = false;
+                string graphName = words[words.Length - 1];
+                graph = graphManager.FindGraph(graphName);
+                skeleton = graph.CreateConvexHull();
+                if (skeleton == null)
+                {
+                    CellExAlLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file");
+                    return;
+                }
+                CellExAlLog.Log("Successfully created convex hull of " + graphName);
+                networkHandler = skeleton.GetComponent<NetworkHandler>();
+                networkHandlerName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
+                networkHandler.NetworkHandlerName = networkHandlerName;
+            }
             float x = float.Parse(words[0]);
             float y = float.Parse(words[1]);
             float z = float.Parse(words[2]);
@@ -459,28 +489,29 @@ public class InputReader : MonoBehaviour
             }
             networks[words[3]] = network;
         }
-        CellExAlLog.Log("Successfully read .cnt file");
-        // Read the .nwk file
-        // The file format should be
-        //  PCOR    NODE_1  NODE_2  PVAL    QVAL    PROB    GRPS[I] KEY_1   KEY_2
-        //  VALUE   STRING  STRING  VALUE   VALUE   VALUE   HEX_RGB STRING  STRING
-        //  VALUE   STRING  STRING  VALUE   VALUE   VALUE   HEX_RGB STRING  STRING
-        //  ...
-        // We only care about NODE_1, NODE_2, GRPS[I], KEY_1 and KEY_2
-        // NODE_1 and NODE_2 are two genenames that should be linked together.
-        // GRPS[I] is the network the two genes are in. A gene can be in multiple networks.
-        // KEY_1 is the two genenames concatenated together as NODE_1 + NODE_2
-        // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
 
-        //lines = File.ReadAllLines(nwkFilePath[0]);
-        CellExAlLog.Log("Reading .nwk file with " + fs.Length + " bytes");
+        CellExAlLog.Log("Successfully read .cnt file");
+
+        // Read the .nwk file
+        /// The file format should be
+        ///  PCOR    NODE_1  NODE_2  PVAL    QVAL    PROB    GRPS[I] KEY_1   KEY_2
+        ///  VALUE   STRING  STRING  VALUE   VALUE   VALUE   HEX_RGB STRING  STRING
+        ///  VALUE   STRING  STRING  VALUE   VALUE   VALUE   HEX_RGB STRING  STRING
+        ///  ...
+        /// We only care about NODE_1, NODE_2, GRPS[I], KEY_1 and KEY_2
+        /// NODE_1 and NODE_2 are two genenames that should be linked together.
+        /// GRPS[I] is the network the two genes are in. A gene can be in multiple networks.
+        /// KEY_1 is the two genenames concatenated together as NODE_1 + NODE_2
+        /// KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
+
+        CellExAlLog.Log("Reading .nwk file with " + nwkFileStream.Length + " bytes");
         Dictionary<string, NetworkNode> nodes = new Dictionary<string, NetworkNode>(1024);
         List<NetworkKeyPair> tmp = new List<NetworkKeyPair>();
         // skip the first line as it is a header
-        sr.ReadLine();
-        while (!sr.EndOfStream)
+        nwkStreamReader.ReadLine();
+        while (!nwkStreamReader.EndOfStream)
         {
-            string line = sr.ReadLine();
+            string line = nwkStreamReader.ReadLine();
             if (line == "")
                 continue;
             string[] words = line.Split(null);
@@ -519,8 +550,8 @@ public class InputReader : MonoBehaviour
             tmp.Add(new NetworkKeyPair(color, node1, node2, key1, key2));
 
         }
-        sr.Close();
-        fs.Close();
+        nwkStreamReader.Close();
+        nwkFileStream.Close();
         CellExAlLog.Log("Successfully read .nwk file");
         NetworkKeyPair[] keyPairs = new NetworkKeyPair[tmp.Count];
         tmp.CopyTo(keyPairs);
@@ -528,21 +559,24 @@ public class InputReader : MonoBehaviour
         // if two keypairs are equal (they both contain the same key), they should be next to each other in the list, otherwise sort based on key1
         Array.Sort(keyPairs, (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
 
-        // Read the .lay file
-        // The file format should be
-        // GENENAME X_COORD Y_COORD KEY
-        // GENENAME X_COORD Y_COORD KEY
-        // ...
-        // KEY is the hex rgb color code of the network the gene is in.
+        /// Read the .lay file
+        /// The file format should be
+        /// GENENAME X_COORD Y_COORD KEY
+        /// GENENAME X_COORD Y_COORD KEY
+        /// ...
+        /// KEY is the hex rgb color code of the network the gene is in.
 
 
-        lines = File.ReadAllLines(layFilePath[0]);
-        CellExAlLog.Log("Reading .lay file with " + lines.Length + " lines");
-        foreach (string line in lines)
+        CellExAlLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
+        while (!layStreamReader.EndOfStream)
         {
+            string line = layStreamReader.ReadLine();
             if (line == "")
                 continue;
             string[] words = line.Split(null);
+            if (words.Length == 0)
+                continue;
+
             string geneName = words[0];
             float xcoord = float.Parse(words[1]);
             float ycoord = float.Parse(words[2]);
@@ -576,6 +610,7 @@ public class InputReader : MonoBehaviour
             lastKey = keypair;
         }
 
+        // give all nodes in the networks edges
         foreach (NetworkNode node in nodes.Values)
         {
             node.AddEdges();
@@ -588,29 +623,40 @@ public class InputReader : MonoBehaviour
         {
             networkCenterArray[j++] = n;
         }
-        //return networkCenterArray;
 
+        // create the toggle arcs menu and its buttons
         arcsSubMenu.CreateToggleArcsButtons(networkCenterArray);
 
         List<int> arcsCombinedList = new List<int>();
-        // toggle the arcs off
         foreach (NetworkCenter network in networks.Values)
         {
             var arcscombined = network.CreateCombinedArcs();
             arcsCombinedList.Add(arcscombined);
+            // toggle the arcs off
             network.SetArcsVisible(false);
             network.SetCombinedArcsVisible(false);
         }
+
+        // figure out how many combined arcs there are
         var max = 0;
         foreach (int i in arcsCombinedList)
         {
             if (max < i)
                 max = i;
         }
+
+        // color all combined arcs
         foreach (NetworkCenter network in networks.Values)
         {
             network.ColorCombinedArcs(max);
         }
+
+        cntStreamReader.Close();
+        cntFileStream.Close();
+        nwkStreamReader.Close();
+        nwkFileStream.Close();
+        layStreamReader.Close();
+        layFileStream.Close();
         CellExAlLog.Log("Successfully created " + j + " networks with a total of " + nodes.Values.Count + " nodes");
     }
 
@@ -619,32 +665,29 @@ public class InputReader : MonoBehaviour
     /// Will be used for the scaling part onto the graphArea.
     ///</summary>
 
-    void UpdateMinMax(Graph graph, string[] lines)
+    void UpdateMinMax(Graph graph, List<float> xcoords, List<float> ycoords, List<float> zcoords)
     {
         Vector3 maxCoordValues = new Vector3();
         maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = float.MinValue;
         Vector3 minCoordValues = new Vector3();
         minCoordValues.x = minCoordValues.y = minCoordValues.z = float.MaxValue;
-        foreach (string line in lines)
+        for (int i = 0; i < xcoords.Count; ++i)
         {
             // the coordinates are split with whitespace characters
-            string[] words = line.Split(null);
-            float[] coords = new float[3];
-            coords[0] = float.Parse(words[1]);
-            coords[1] = float.Parse(words[2]);
-            coords[2] = float.Parse(words[3]);
-            if (coords[0] < minCoordValues.x)
-                minCoordValues.x = coords[0];
-            if (coords[0] > maxCoordValues.x)
-                maxCoordValues.x = coords[0];
-            if (coords[1] < minCoordValues.y)
-                minCoordValues.y = coords[1];
-            if (coords[1] > maxCoordValues.y)
-                maxCoordValues.y = coords[1];
-            if (coords[2] < minCoordValues.z)
-                minCoordValues.z = coords[2];
-            if (coords[2] > maxCoordValues.z)
-                maxCoordValues.z = coords[2];
+            if (xcoords[i] < minCoordValues.x)
+                minCoordValues.x = xcoords[i];
+            if (xcoords[i] > maxCoordValues.x)
+                maxCoordValues.x = xcoords[i];
+
+            if (ycoords[i] < minCoordValues.y)
+                minCoordValues.y = ycoords[i];
+            if (ycoords[i] > maxCoordValues.y)
+                maxCoordValues.y = ycoords[i];
+
+            if (zcoords[i] < minCoordValues.z)
+                minCoordValues.z = zcoords[i];
+            if (zcoords[i] > maxCoordValues.z)
+                maxCoordValues.z = zcoords[i];
 
         }
         graphManager.SetMinMaxCoords(graph, minCoordValues, maxCoordValues);
