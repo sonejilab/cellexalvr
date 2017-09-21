@@ -259,32 +259,6 @@ public class GameManager : Photon.PunBehaviour
 
     #endregion
 
-    #region Do methods
-    // these methods are called when a server wants to inform a specific client that something has happened on another client, and the same thing should happen to this client
-
-    public void DoMoveGraph(string moveGraphName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
-    {
-        Graph g = graphManager.FindGraph(moveGraphName);
-        g.transform.position = new Vector3(x, y, z);
-        g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-    }
-
-    public void DoMoveHeatmap(string heatmapName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
-    {
-        Heatmap hm = heatmapGenerator.FindHeatmap(heatmapName);
-        hm.transform.position = new Vector3(x, y, z);
-        hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-    }
-
-    public void DoMoveNetwork(string networkName, float x, float y, float z, float rotX, float rotY, float rotZ, float rotW)
-    {
-        NetworkHandler nh = networkGenerator.FindNetworkHandler(networkName);
-        nh.transform.position = new Vector3(x, y, z);
-        nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-    }
-
-    #endregion
-
     /// <summary>
     /// Called when the local player left the room. We need to load the launcher scene.
     /// </summary>

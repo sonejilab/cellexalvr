@@ -15,6 +15,7 @@ public class SelectionToolHandler : MonoBehaviour
     public ushort hapticIntensity = 2000;
     public RadialMenu radialMenu;
     public Sprite[] buttonIcons;
+    public GroupInfoDisplay groupInfoDisplay;
     [HideInInspector]
     public bool selectionConfirmed = false;
     [HideInInspector]
@@ -36,11 +37,10 @@ public class SelectionToolHandler : MonoBehaviour
     private bool heatmapCreated = true;
 
     [HideInInspector]
-    public int[] groups;
+    public int[] groups = new int[10];
     private int currentColorIndex = 0;
     public string DataDir { get; set; }
-    public GroupInfoDisplay groupInfoDisplay;
-    private List<HistoryListInfo> selectionHistory;
+    private List<HistoryListInfo> selectionHistory = new List<HistoryListInfo>();
     // the number of steps we have taken back in the history.
     private int historyIndexOffset;
     private GameManager gameManager;
@@ -90,8 +90,6 @@ public class SelectionToolHandler : MonoBehaviour
 
         selectedColor = colors[currentColorIndex];
         SetSelectionToolEnabled(false);
-        groups = new int[10];
-        selectionHistory = new List<HistoryListInfo>();
         //UpdateButtonIcons();
     }
 
@@ -433,7 +431,8 @@ public class SelectionToolHandler : MonoBehaviour
         {
             CellExAlLog.Log("Dumping selection data to " + filePath);
             CellExAlLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
-            CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+            if (selectionHistory != null)
+                CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
 
             foreach (Collider cell in selectedCells)
             {

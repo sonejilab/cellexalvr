@@ -60,19 +60,23 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
     {
-        gameManager.DoMoveGraph(moveGraphName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
+        Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
+        g.transform.position = new Vector3(posX, posY, posZ);
+        g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
 
     [PunRPC]
     public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
     {
-        gameManager.DoMoveHeatmap(heatmapName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
+        Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+        hm.transform.position = new Vector3(posX, posY, posZ);
+        hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
 
     [PunRPC]
     public void SendCreateHeatmap()
     {
-        gameManager.heatmapGenerator.CreateHeatmap();
+        referenceManager.heatmapGenerator.CreateHeatmap();
     }
 
     [PunRPC]
@@ -84,7 +88,9 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
     {
-        gameManager.DoMoveNetwork(networkName, posX, posY, posZ, rotX, rotY, rotZ, rotW);
+        NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+        nh.transform.position = new Vector3(posX, posY, posZ);
+        nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
     }
 
     [PunRPC]
