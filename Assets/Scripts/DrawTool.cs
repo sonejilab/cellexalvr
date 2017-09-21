@@ -29,6 +29,7 @@ public class DrawTool : MonoBehaviour
         rightControllerTransform = rightController.gameObject.transform;
         lastPosition = transform.position;
         controllerMenuCollider = referenceManager.controllerMenuCollider;
+        gameObject.SetActive(false);
     }
 
     private void LateUpdate()

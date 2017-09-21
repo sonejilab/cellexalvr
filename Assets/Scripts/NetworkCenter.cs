@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 using VRTK.GrabAttachMechanics;
@@ -16,7 +17,6 @@ public class NetworkCenter : MonoBehaviour
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
     public string NetworkCenterName;
-
 
     private ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
@@ -151,7 +151,6 @@ public class NetworkCenter : MonoBehaviour
     public void EnlargeNetwork()
     {
         this.name = "Enlarged Network";
-        // add a rigidbody and the necessary scripts
         Enlarged = true;
         GetComponent<Renderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
@@ -225,7 +224,7 @@ public class NetworkCenter : MonoBehaviour
             // destroying without this also caused crashes
             Destroy(GetComponent<Collider>());
             Destroy(GetComponent<Renderer>());
-            rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
+            //rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
             gameObject.SetActive(false);
             // calling Destroy without the time delay caused the program to crash pretty reliably
             Destroy(gameObject, 0.1f);
@@ -233,28 +232,42 @@ public class NetworkCenter : MonoBehaviour
         else
         {
             Enlarged = false;
-            // this network will now be part of the convex hull which already has a rigidbody and these scripts
-            Destroy(gameObject.GetComponent<VRTK_FixedJointGrabAttach>());
-            Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
-            Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
-            Destroy(gameObject.GetComponent<Rigidbody>());
-            // Debug.Log(transform.localScale);
-            if (transform.localScale.x > 5)
-            {
-                Debug.Log("DECREASE OBJ IN SKY");
-                networkGenerator.objectsInSky--;
-            }
-            GetComponent<Renderer>().enabled = true;
-            GetComponent<Collider>().enabled = true;
-            transform.parent = oldParent;
-            transform.localPosition = oldLocalPosition;
-            transform.rotation = oldRotation;
-            transform.localScale = oldScale;
-            // Disable the network nodes' colliders
-            foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
-            {
-                b.enabled = false;
-            }
+            StartCoroutine(BringBackOriginalCoroutine());
+        }
+    }
+
+    private IEnumerator BringBackOriginalCoroutine()
+    {
+        // the ForceStopInteracting waits until the end of the frame before it stops interacting
+        // so we have to wait two frames until proceeding
+        gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
+        yield return null;
+        yield return null;
+        // now we can do things
+        GetComponent<Renderer>().enabled = true;
+        GetComponent<Collider>().enabled = true;
+        transform.parent = oldParent;
+        transform.localPosition = oldLocalPosition;
+        transform.rotation = oldRotation;
+        transform.localScale = oldScale;
+        // this network will now be part of the convex hull which already has a rigidbody and these scripts
+        Destroy(gameObject.GetComponent<VRTK_FixedJointGrabAttach>());
+        Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
+        Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
+        Destroy(gameObject.GetComponent<Rigidbody>());
+
+        if (transform.localScale.x > 5)
+        {
+            Debug.Log("DECREASE OBJ IN SKY");
+            networkGenerator.objectsInSky--;
+        }
+        // we must wait one more frame here or VRTK_InteractTouch gets a bunch of null exceptions.
+        // probably because it is still using these colliders
+        yield return null;
+        // Disable the network nodes' colliders
+        foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
+        {
+            b.enabled = false;
         }
     }
 

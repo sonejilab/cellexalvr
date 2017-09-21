@@ -54,7 +54,7 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             status.gameObject.SetActive(true);
-            ReadFolder(Directory.GetCurrentDirectory() + @"\Data\Bertie");
+            ReadFolder(@"Bertie");
         }
 
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
@@ -75,6 +75,7 @@ public class InputReader : MonoBehaviour
     {
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath = workingDirectory + "/Data/" + path;
+        CellExAlLog.Log("Started reading the data folder at " + fullPath);
         database.InitDatabase(fullPath + "\\database.sqlite");
 
         // print(path);
@@ -112,6 +113,7 @@ public class InputReader : MonoBehaviour
         }
 
         string[] mdsFiles = Directory.GetFiles(fullPath, "*.mds");
+        CellExAlLog.Log("Reading " + mdsFiles.Length + " .mds files");
         StartCoroutine(ReadMDSFiles(fullPath, mdsFiles, 25));
 
     }
@@ -124,7 +126,6 @@ public class InputReader : MonoBehaviour
     /// <param name="itemsPerFrame"> How many graphpoints should be Instantiated each frame </param>
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles, int itemsPerFrame)
     {
-        CellExAlLog.Log("Started reading the data folder at " + path);
         int statusId = status.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         var magnifier = referenceManager.magnifierTool;
