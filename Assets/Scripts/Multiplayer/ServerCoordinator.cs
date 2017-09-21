@@ -99,16 +99,16 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendEnlargeNetwork(string networkHandlerName, string networkName)
+    public void SendEnlargeNetwork(string networkHandlerName, string networkCenterName)
     {
-        CellExAlLog.Log("Recieved message to enlarge network " + networkName + " in handler " + networkHandlerName);
-        gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkName).EnlargeNetwork();
+        CellExAlLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
+        gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
     }
 
     [PunRPC]
     public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
     {
-        CellExAlLog.Log("Recieved message to bring back network " + networkName + " in handler " + networkHandlerName);
+        CellExAlLog.Log("Recieved message to bring back network " + networkCenterName + " in handler " + networkHandlerName);
         var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
         var center = handler.FindNetworkCenter(networkCenterName);
         center.BringBackOriginal();
