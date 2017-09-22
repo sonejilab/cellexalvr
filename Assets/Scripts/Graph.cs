@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using VRTK;
@@ -19,7 +20,6 @@ public class Graph : MonoBehaviour
     private Vector3 maxCoordValues;
     private Vector3 minCoordValues;
     private Vector3 diffCoordValues;
-    private Vector3 minAreaValues;
     private Vector3 defaultPos;
     private Vector3 defaultScale;
     private ReferenceManager referenceManager;
@@ -28,7 +28,6 @@ public class Graph : MonoBehaviour
     void Start()
     {
         points = new Dictionary<string, GraphPoint>(1000);
-        minAreaValues = transform.position;
         defaultPos = transform.position;
         pointsPositions = new List<Vector3>();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -69,11 +68,17 @@ public class Graph : MonoBehaviour
     {
         // Scales the sphere coordinates to fit inside the graph's bounds.
         Vector3 scaledCoordinates = new Vector3(x, y, z);
+
         scaledCoordinates -= minCoordValues;
-        scaledCoordinates.x /= (diffCoordValues.x);
-        scaledCoordinates.y /= (diffCoordValues.y);
-        scaledCoordinates.z /= (diffCoordValues.z);
-        scaledCoordinates += minAreaValues;
+
+        scaledCoordinates.x /= diffCoordValues.x;
+        scaledCoordinates.y /= diffCoordValues.y;
+        scaledCoordinates.z /= diffCoordValues.z;
+
+        scaledCoordinates.x += minCoordValues.x / diffCoordValues.x;
+        scaledCoordinates.y += minCoordValues.y / diffCoordValues.y;
+        scaledCoordinates.z += minCoordValues.z / diffCoordValues.z;
+
         return scaledCoordinates;
     }
 
