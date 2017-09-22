@@ -289,9 +289,9 @@ public class InputReader : MonoBehaviour
         /// ...
 
         string headerline = streamReader.ReadLine();
-        string[] header = headerline.Split(null);
-        float[] min = new float[header.Length - 1];
-        float[] max = new float[header.Length - 1];
+        string[] header = headerline.Split(new string[] { "\t", " " }, StringSplitOptions.RemoveEmptyEntries);
+        float[] min = new float[header.Length];
+        float[] max = new float[header.Length];
         int i = 0;
         for (; i < min.Length; ++i)
         {
@@ -299,7 +299,7 @@ public class InputReader : MonoBehaviour
             max[i] = float.MinValue;
         }
         string[] cellnames = new string[nbrOfCells];
-        float[,] values = new float[nbrOfCells, header.Length - 1];
+        float[,] values = new float[nbrOfCells, header.Length];
 
         // read the file, calculate the min and max values and save all values
         for (i = 0; !streamReader.EndOfStream; ++i)
@@ -329,7 +329,7 @@ public class InputReader : MonoBehaviour
         }
         streamReader.Close();
         fileStream.Close();
-        indexMenu.CreateColorByIndexButtons(cellnames);
+        indexMenu.CreateColorByIndexButtons(header);
         CellExAlLog.Log("Successfully read " + fullpath);
     }
 
