@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 23003621475484474}
   - component: {fileID: 114190743744166870}
   - component: {fileID: 114393114096306446}
+  - component: {fileID: 114492706860786364}
   m_Layer: 2
   m_Name: NetworkCenterPrefab
   m_TagString: Network
@@ -500,7 +501,7 @@ MonoBehaviour:
   - {r: 1, g: 0.57254905, b: 0, a: 1}
   - {r: 1, g: 0.35686272, b: 0, a: 1}
   - {r: 1, g: 0.14117643, b: 0, a: 1}
-  controllerModelSwitcher: {fileID: 0}
+  NetworkCenterName: 
   replacing: {fileID: 0}
 --- !u!114 &114235242178268010
 MonoBehaviour:
@@ -802,6 +803,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114492706860786364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1758485399609656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightController: {fileID: 0}
 --- !u!114 &114659808814376160
 MonoBehaviour:
   m_ObjectHideFlags: 1
