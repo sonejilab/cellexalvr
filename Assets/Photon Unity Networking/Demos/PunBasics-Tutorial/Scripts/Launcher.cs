@@ -140,7 +140,7 @@ namespace ExitGames.Demos.DemoAnimator
 
                 // #Critical
                 // Load the Room Level. 
-                PhotonNetwork.LoadLevel("Multiplayer_Scene");
+                PhotonNetwork.LoadLevel("vrjeans_scene1");
             }
         }
 
