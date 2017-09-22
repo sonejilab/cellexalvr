@@ -126,7 +126,7 @@ public class DrawTool : MonoBehaviour
         }
         referenceManager.gameManager.InformDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
 
-        SpawnNewLine(LineColor, newLinePositions);
+        lines.Add(SpawnNewLine(LineColor, newLinePositions));
         foreach (LineRenderer line in temporaryLines)
         {
             Destroy(line.gameObject);

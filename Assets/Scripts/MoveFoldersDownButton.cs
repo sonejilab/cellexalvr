@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-
+// TODO: give feedback when folders are moving
 /// <summary>
 /// This class represents the button that moves the folders when a controller is moved inside of it.
 /// </summary>
