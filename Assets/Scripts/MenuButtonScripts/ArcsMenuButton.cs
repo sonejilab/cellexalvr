@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class ArcsMenuButton : MonoBehaviour
+public class ArcsMenuButton : StationaryButton
 {
 
-    public ReferenceManager referenceManager;
-
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
-    private TextMesh descriptionText;
     private GameObject buttons;
     private GameObject arcsMenu;
-    private SteamVR_TrackedObject rightController;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
+
+    protected override string Description
+    {
+        get
+        {
+            return "Show the toggle arcs menu";
+        }
+    }
 
     void Start()
     {
@@ -35,26 +35,6 @@ public class ArcsMenuButton : MonoBehaviour
             controllerInside = false;
             arcsMenu.SetActive(true);
             buttons.SetActive(false);
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Controller")
-        {
-            descriptionText.text = "Toggle arcs";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Controller")
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
         }
     }
 }

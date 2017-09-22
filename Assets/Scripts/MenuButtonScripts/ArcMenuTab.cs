@@ -8,6 +8,7 @@ public class ArcMenuTab : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public GameObject tab;
+    public NetworkHandler NetworkHandler;
     private SteamVR_TrackedObject rightController;
     private ToggleArcsSubMenu arcsSubMenu;
     private bool controllerInside = false;
@@ -56,8 +57,9 @@ public class ArcMenuTab : MonoBehaviour
     /// Sets the buttons that this tab is responsible for.
     /// </summary>
     /// <param name="buttons"> A List with the buttons. </param>
-    public void SetButtons(List<GameObject> buttons)
+    public void SetButtons(NetworkHandler handler, List<GameObject> buttons)
     {
+        NetworkHandler = handler;
         foreach (GameObject obj in buttons)
         {
             this.buttons.Add(obj);
@@ -73,10 +75,12 @@ public class ArcMenuTab : MonoBehaviour
         if (highlight)
         {
             meshRenderer.material.color = highlightColor;
+            NetworkHandler.Highlight();
         }
         else
         {
             meshRenderer.material.color = standardColor;
+            NetworkHandler.Unhighlight();
         }
     }
 

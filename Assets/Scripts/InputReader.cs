@@ -5,8 +5,6 @@ using SQLiter;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
-using VRTK;
-using System.Text;
 
 /// <summary>
 /// A class for reading data files and creating GraphPoints at the correct locations 
@@ -270,7 +268,6 @@ public class InputReader : MonoBehaviour
     /// <summary>
     /// Reads the index.facs file.
     /// </summary>
-
     private void ReadFacsFiles(string path, int nbrOfCells)
     {
         string fullpath = path + "/index.facs";

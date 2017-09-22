@@ -118,7 +118,7 @@ public class ToggleArcsSubMenu : MonoBehaviour
                 buttonPos += buttonPosInc;
             }
         }
-        newTab.GetComponentInChildren<ArcMenuTab>().SetButtons(buttons);
+        newTab.GetComponentInChildren<ArcMenuTab>().SetButtons(networks[0].Handler, buttons);
         buttons.Clear();
         buttonPos = buttonPosOrigin;
     }

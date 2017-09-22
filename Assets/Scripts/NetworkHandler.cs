@@ -7,17 +7,25 @@ using VRTK;
 public class NetworkHandler : MonoBehaviour
 {
 
-    private List<NetworkCenter> networks = new List<NetworkCenter>();
+    public Material highlightMaterial;
     public List<NetworkCenter> Replacements { get; private set; }
     public string NetworkHandlerName { get; internal set; }
+
+    private List<NetworkCenter> networks = new List<NetworkCenter>();
     private ReferenceManager referenceManager;
     private GameManager gameManager;
+    private MeshRenderer meshRenderer;
+    private Material[] highlightedMaterials;
+    private Material[] unhighlightedMaterials;
 
     private void Start()
     {
         Replacements = new List<NetworkCenter>();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         gameManager = referenceManager.gameManager;
+        meshRenderer = GetComponent<MeshRenderer>();
+        highlightedMaterials = new Material[] { meshRenderer.materials[0], highlightMaterial };
+        unhighlightedMaterials = new Material[] { meshRenderer.materials[0], null };
     }
     private void Update()
     {
@@ -31,6 +39,16 @@ public class NetworkHandler : MonoBehaviour
     internal void AddNetwork(NetworkCenter network)
     {
         networks.Add(network);
+    }
+
+    public void Highlight()
+    {
+        meshRenderer.materials = highlightedMaterials;
+    }
+
+    public void Unhighlight()
+    {
+        meshRenderer.materials = unhighlightedMaterials;
     }
 
 

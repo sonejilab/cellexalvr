@@ -19,6 +19,7 @@ public class HelperTool : MonoBehaviour
     public GameObject opaqueQuad;
     public GameObject controllerHelpTextsRight;
     public GameObject controllerHelpTextsLeft;
+    public GameObject otherControllerHelpTool;
 
     private SteamVR_TrackedObject rightController;
     private string standardText = "Point the laser towards something to find out more";
@@ -152,6 +153,7 @@ public class HelperTool : MonoBehaviour
         activated = activate;
         gameObject.SetActive(activate);
         helpMenu.SetActive(activate);
+        otherControllerHelpTool.SetActive(activate);
         controllerHelpTextsRight.SetActive(activate);
         controllerHelpTextsLeft.SetActive(activate);
     }

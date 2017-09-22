@@ -19,7 +19,7 @@ class HelperToolActivator : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Controller"))
+        if (other.CompareTag("Menu Controller Collider"))
         {
             controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
             helpTool.SetToolActivated(true);
