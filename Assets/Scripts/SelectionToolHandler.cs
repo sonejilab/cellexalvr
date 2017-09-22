@@ -147,7 +147,7 @@ public class SelectionToolHandler : MonoBehaviour
             if (newNode)
             {
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
-                selectedCells.Add(other);
+                selectedCells.Add(other.gameObject.GetComponent<GraphPoint>());
             }
             else
             {
@@ -159,7 +159,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void DoClientSelectAdd(string graphName, string label)
     {
         GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        selectedCells.Add(gp.gameObject.GetComponent<Collider>());
+        selectedCells.Add(gp);
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public class SelectionToolHandler : MonoBehaviour
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
         if (info.newNode)
         {
-            selectedCells.Remove(info.graphPoint.GetComponent<Collider>());
+            selectedCells.Remove(info.graphPoint);
         }
         else
         {
@@ -238,7 +238,7 @@ public class SelectionToolHandler : MonoBehaviour
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
         if (info.newNode)
         {
-            selectedCells.Add(info.graphPoint.GetComponent<Collider>());
+            selectedCells.Add(info.graphPoint);
         }
         else
         {
@@ -301,9 +301,10 @@ public class SelectionToolHandler : MonoBehaviour
     {
         Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
         other.gameObject.GetComponent<Renderer>().material.color = transparentColor;
-        if (!selectedCells.Contains(other))
+        GraphPoint gp = other.GetComponent<GraphPoint>();
+        if (!selectedCells.Contains(gp))
         {
-            selectedCells.Add(other);
+            selectedCells.Add(gp);
         }
         if (!selectionMade)
         {
@@ -318,13 +319,13 @@ public class SelectionToolHandler : MonoBehaviour
     public void ConfirmRemove()
     {
         //GetComponent<AudioSource>().Play();
-        foreach (Collider other in selectedCells)
+        foreach (GraphPoint other in selectedCells)
         {
             other.transform.parent = null;
             other.gameObject.AddComponent<Rigidbody>();
-            other.attachedRigidbody.useGravity = true;
-            other.attachedRigidbody.isKinematic = false;
-            other.isTrigger = false;
+            other.GetComponent<Rigidbody>().useGravity = true;
+            other.GetComponent<Rigidbody>().isKinematic = false;
+            other.GetComponent<Collider>().isTrigger = false;
         }
         selectionHistory.Clear();
         undoButtonsHandler.TurnAllButtonsOff();
@@ -342,7 +343,7 @@ public class SelectionToolHandler : MonoBehaviour
         DumpData();
         lastSelectedCells.Clear();
 
-        foreach (Collider c in selectedCells)
+        foreach (GraphPoint c in selectedCells)
         {
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
         }
@@ -361,12 +362,17 @@ public class SelectionToolHandler : MonoBehaviour
         return lastSelectedCells;
     }
 
+    public ArrayList GetCurrentSelection()
+    {
+        return selectedCells;
+    }
+
     /// <summary>
     /// Unselects anything selected.
     /// </summary>
     public void CancelSelection()
     {
-        foreach (Collider other in selectedCells)
+        foreach (GraphPoint other in selectedCells)
         {
             other.GetComponentInChildren<Renderer>().material.color = Color.white;
         }
@@ -434,19 +440,19 @@ public class SelectionToolHandler : MonoBehaviour
             if (selectionHistory != null)
                 CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
 
-            foreach (Collider cell in selectedCells)
+            foreach (GraphPoint gp in selectedCells)
             {
-                GraphPoint graphPoint = cell.GetComponent<GraphPoint>();
-                file.Write(graphPoint.Label);
+                
+                file.Write(gp.Label);
                 file.Write("\t");
-                Color c = cell.GetComponentInChildren<Renderer>().material.color;
+                Color c = gp.GetComponentInChildren<Renderer>().material.color;
                 int r = (int)(c.r * 255);
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);
                 // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
                 file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
                 file.Write("\t");
-                file.Write(graphPoint.GraphName);
+                file.Write(gp.GraphName);
                 file.WriteLine();
             }
             file.Flush();

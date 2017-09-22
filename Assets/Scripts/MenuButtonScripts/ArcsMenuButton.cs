@@ -18,12 +18,8 @@ public class ArcsMenuButton : StationaryButton
 
     void Start()
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
-        descriptionText = referenceManager.backDescription;
         buttons = referenceManager.backButtons;
         arcsMenu = referenceManager.arcsSubMenu.gameObject;
-        rightController = referenceManager.rightController;
     }
 
     void Update()

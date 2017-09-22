@@ -10,7 +10,6 @@ public class GraphPoint : MonoBehaviour
     private float x, y, z;
     private Graph defaultParent;
     private Renderer graphPointRenderer;
-    private Color selectedColor;
     private Color defaultColor = new Color(1, 1, 1);
 
     #region Properties
@@ -28,6 +27,12 @@ public class GraphPoint : MonoBehaviour
     public string Label
     {
         get { return cell.Label; }
+    }
+
+    public Color Color
+    {
+        get { return graphPointRenderer.material.color; }
+        set { graphPointRenderer.material.color = value; }
     }
 
     #endregion
@@ -51,15 +56,6 @@ public class GraphPoint : MonoBehaviour
         this.y = y;
         this.z = z;
         cell.AddGraphPoint(this);
-    }
-
-    /// <summary>
-    /// Changes this graphpoints color.
-    /// </summary>
-    /// <param name="col"> The new color. </param>
-    public void SetColor(Color col)
-    {
-        graphPointRenderer.material.color = col;
     }
 
     /// <summary>

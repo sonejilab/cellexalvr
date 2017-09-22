@@ -161,7 +161,7 @@ public class Cell
     {
         foreach (GraphPoint g in graphPoints)
         {
-            g.SetColor(col);
+            g.Color = col;
         }
     }
 }

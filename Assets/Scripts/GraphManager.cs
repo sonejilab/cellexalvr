@@ -50,7 +50,19 @@ public class GraphManager : MonoBehaviour
 
     public void RecolorGraphPoint(string graphname, string label, Color color)
     {
-        FindGraphPoint(graphname, label).SetColor(color);
+        FindGraphPoint(graphname, label).Color = color;
+    }
+
+    public void RecolorAllGraphsAfterSelection()
+    {
+        var selection = selectionToolHandler.GetCurrentSelection();
+        foreach (Graph graph in graphs)
+        {
+            foreach (GraphPoint point in selection)
+            {
+                graph.points[point.Label].Color = point.Color;
+            }
+        }
     }
 
     public void SetGraphStartPosition()
