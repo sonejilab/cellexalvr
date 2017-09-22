@@ -52,7 +52,11 @@ public class NetworkGenerator : MonoBehaviour
         inputReader.ReadNetworkFiles();
     }
 
-
+    /// <summary>
+    /// Finds a networkhandler.
+    /// </summary>
+    /// <param name="networkName"> The name of the networkhandler </param>
+    /// <returns> A reference to the networkhandler, or null if non was found.  </returns>
     public NetworkHandler FindNetworkHandler(string networkName)
     {
         foreach (NetworkHandler nh in networkList)

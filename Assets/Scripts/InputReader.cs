@@ -452,10 +452,15 @@ public class InputReader : MonoBehaviour
                 firstLine = false;
                 string graphName = words[words.Length - 1];
                 graph = graphManager.FindGraph(graphName);
+                if (graph == null)
+                {
+                    CellExAlLog.Log("Could not find graph " + graphName + ", aborting");
+                    return;
+                }
                 skeleton = graph.CreateConvexHull();
                 if (skeleton == null)
                 {
-                    CellExAlLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file");
+                    CellExAlLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file, aborting");
                     return;
                 }
                 CellExAlLog.Log("Successfully created convex hull of " + graphName);
@@ -661,7 +666,6 @@ public class InputReader : MonoBehaviour
     /// Determines the maximum and the minimum values of the dataset.
     /// Will be used for the scaling part onto the graphArea.
     ///</summary>
-
     void UpdateMinMax(Graph graph, List<float> xcoords, List<float> ycoords, List<float> zcoords)
     {
         Vector3 maxCoordValues = new Vector3();

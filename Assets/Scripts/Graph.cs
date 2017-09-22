@@ -128,15 +128,19 @@ public class Graph : MonoBehaviour
     {
 
         // Read the .hull file
-        // The file format should be
-        //  VERTEX_1    VERTEX_2    VERTEX_3
-        //  VERTEX_1    VERTEX_2    VERTEX_3
-        // ...
-        // Each line is 3 integers that corresponds to graphpoints
-        // 1 means the graphpoint that was created from the first line in the .mds file
-        // 2 means the graphpoint that was created from the second line
-        // and so on
-        // Each line in the file connects three graphpoints into a triangle
+        /// The file format should be
+        ///  VERTEX_1    VERTEX_2    VERTEX_3
+        ///  VERTEX_1    VERTEX_2    VERTEX_3
+        /// ...
+        /// Each line is 3 integers that corresponds to graphpoints
+        /// 1 means the graphpoint that was created from the first line in the .mds file
+        /// 2 means the graphpoint that was created from the second line
+        /// and so on
+        /// Each line in the file connects three graphpoints into a triangle
+        /// One problem is that the lines are always ordered numerically so when unity is figuring out 
+        /// which way of the triangle is in and which is out, it's pretty much random what the result is.
+        /// The "solution" was to place a shader which does not cull the backside of the triangles, so 
+        /// both sides are always rendered.
         string path = Directory.GetCurrentDirectory() + @"\Data\" + DirectoryName + @"\" + GraphName + ".hull";
         string[] lines = File.ReadAllLines(path);
         if (lines.Length == 0)

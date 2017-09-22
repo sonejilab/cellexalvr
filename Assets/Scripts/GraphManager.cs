@@ -36,23 +36,41 @@ public class GraphManager : MonoBehaviour
         selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
+    /// <summary>
+    /// Finds a graphpoint.
+    /// </summary>
+    /// <param name="graphName"> The name of the graph the graphpoint is in. </param>
+    /// <param name="label"> The graphpoint's label. </param>
+    /// <returns> A reference to the graphpoint, or null if it was not found. </returns>
     public GraphPoint FindGraphPoint(string graphName, string label)
     {
         foreach (Graph g in graphs)
         {
             if (g.GraphName.Equals(graphName))
             {
-                return g.points[label];
+                if (g.points.ContainsKey(label))
+                    return g.points[label];
+                else
+                    return null;
             }
         }
         return null;
     }
 
+    /// <summary>
+    /// Recolors a graphpoint.
+    /// </summary>
+    /// <param name="graphname"> The name of the graph. </param>
+    /// <param name="label"> The graphpoint's label. </param>
+    /// <param name="color"> The new color. </param>
     public void RecolorGraphPoint(string graphname, string label, Color color)
     {
         FindGraphPoint(graphname, label).Color = color;
     }
 
+    /// <summary>
+    /// Colors all graphs based on the graphpoints in the current selection.
+    /// </summary>
     public void RecolorAllGraphsAfterSelection()
     {
         var selection = selectionToolHandler.GetCurrentSelection();
@@ -63,13 +81,11 @@ public class GraphManager : MonoBehaviour
                 graph.points[point.Label].Color = point.Color;
             }
         }
+        CellExAlLog.Log("Recolored  " + selection.Count + " points in  " + graphs.Count + " graphs after current selection");
     }
 
     public void SetGraphStartPosition()
     {
-        // these values are hard coded for your convenience
-        //startPositions[0] = saveScene.target1.position;
-        //startPositions[1] = saveScene.target2.position;
         for (int i = 0; i < graphs.Count; ++i)
         {
             graphs[i].transform.position = startPositions[i % 4];
@@ -117,6 +133,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void DeleteGraphsAndNetworks()
     {
+        CellExAlLog.Log("Deleting graphs and networks");
         cellManager.DeleteCells();
         foreach (Graph g in graphs)
         {
@@ -159,11 +176,6 @@ public class GraphManager : MonoBehaviour
     public void SetMinMaxCoords(Graph graph, Vector3 min, Vector3 max)
     {
         graph.SetMinMaxCoords(min, max);
-    }
-
-    public void ColorAllGraphsByGene(string geneName)
-    {
-        cellManager.ColorGraphsByGene(geneName);
     }
 
     public void ResetGraphsColor()

@@ -12,7 +12,6 @@ public class DrawTool : MonoBehaviour
     public Color LineColor = Color.white;
 
     private SteamVR_TrackedObject rightController;
-    private Transform rightControllerTransform;
     private BoxCollider controllerMenuCollider;
     private List<Vector3> newPositions = new List<Vector3>();
     private List<LineRenderer> temporaryLines = new List<LineRenderer>();
@@ -26,7 +25,6 @@ public class DrawTool : MonoBehaviour
     private void Start()
     {
         rightController = referenceManager.rightController;
-        rightControllerTransform = rightController.gameObject.transform;
         lastPosition = transform.position;
         controllerMenuCollider = referenceManager.controllerMenuCollider;
         gameObject.SetActive(false);
@@ -39,7 +37,7 @@ public class DrawTool : MonoBehaviour
         if (drawing)
         {
             // this happens every frame the trigger is pressed
-            var newLine = SpawnNewLine();
+            var newLine = SpawnNewLine(LineColor, new Vector3[] { lastPosition, transform.position });
             temporaryLines.Add(newLine);
         }
         else
@@ -50,7 +48,7 @@ public class DrawTool : MonoBehaviour
             {
                 Destroy(tempLine.gameObject);
             }
-            trailLines[temporaryLinesIndex] = SpawnNewLine();
+            trailLines[temporaryLinesIndex] = SpawnNewLine(LineColor, new Vector3[] { lastPosition, transform.position });
             if (temporaryLinesIndex == trailLines.Length - 1)
             {
                 temporaryLinesIndex = 0;
@@ -63,6 +61,7 @@ public class DrawTool : MonoBehaviour
 
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            // this happens only once when you press the trigger
             if (skipNextDraw)
             {
                 skipNextDraw = false;
@@ -81,7 +80,6 @@ public class DrawTool : MonoBehaviour
                     }
                 }
             }
-            // this happens only once when you press the trigger
             for (int i = 0; i < trailLines.Length; i++)
             {
                 if (trailLines[i] != null)
@@ -97,40 +95,50 @@ public class DrawTool : MonoBehaviour
             if (drawing)
             {
                 drawing = false;
-                // merge all the lines into one gameobject
-                Vector3[] newLinePositions = new Vector3[temporaryLines.Count + 1];
-                float[] xcoords = new float[temporaryLines.Count + 1];
-                float[] ycoords = new float[temporaryLines.Count + 1];
-                float[] zcoords = new float[temporaryLines.Count + 1];
-                newLinePositions[0] = temporaryLines[0].GetPosition(0);
-                xcoords[0] = newLinePositions[0].x;
-                ycoords[0] = newLinePositions[0].y;
-                zcoords[0] = newLinePositions[0].z;
-
-                for (int i = 1; i <= temporaryLines.Count; i++)
-                {
-                    newLinePositions[i] = temporaryLines[i - 1].GetPosition(1);
-                    xcoords[i] = newLinePositions[i - 1].x;
-                    ycoords[i] = newLinePositions[i - 1].y;
-                    zcoords[i] = newLinePositions[i - 1].z;
-                }
-                referenceManager.gameManager.InformDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
-
-                var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
-                newLine.positionCount = newLinePositions.Length;
-                newLine.SetPositions(newLinePositions);
-                newLine.startColor = LineColor;
-                newLine.endColor = LineColor;
-                foreach (LineRenderer line in temporaryLines)
-                {
-                    Destroy(line.gameObject);
-                }
-                temporaryLines.Clear();
+                MergeLinesIntoOne();
             }
         }
         lastPosition = transform.position;
     }
 
+    /// <summary>
+    /// Helper method to merge all spawned lines into one.
+    /// </summary>
+    private void MergeLinesIntoOne()
+    {
+        Vector3[] newLinePositions = new Vector3[temporaryLines.Count + 1];
+        // the network can't send Vector3 so we have to divide the array to 3 float arrays
+        float[] xcoords = new float[temporaryLines.Count + 1];
+        float[] ycoords = new float[temporaryLines.Count + 1];
+        float[] zcoords = new float[temporaryLines.Count + 1];
+        // set the starting position
+        newLinePositions[0] = temporaryLines[0].GetPosition(0);
+        xcoords[0] = newLinePositions[0].x;
+        ycoords[0] = newLinePositions[0].y;
+        zcoords[0] = newLinePositions[0].z;
+        // now take every line's end position and stitch them together to one long line
+        for (int i = 1; i <= temporaryLines.Count; i++)
+        {
+            newLinePositions[i] = temporaryLines[i - 1].GetPosition(1);
+            xcoords[i] = newLinePositions[i - 1].x;
+            ycoords[i] = newLinePositions[i - 1].y;
+            zcoords[i] = newLinePositions[i - 1].z;
+        }
+        referenceManager.gameManager.InformDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
+
+        SpawnNewLine(LineColor, newLinePositions);
+        foreach (LineRenderer line in temporaryLines)
+        {
+            Destroy(line.gameObject);
+        }
+        temporaryLines.Clear();
+    }
+
+    /// <summary>
+    /// Draws a new line.
+    /// </summary>
+    /// <param name="col"> The line's color. </param>
+    /// <param name="coords"> An array with the world space coordinates for each point the line should pass through. </param>
     public void DrawNewLine(Color col, Vector3[] coords)
     {
         var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
@@ -164,7 +172,6 @@ public class DrawTool : MonoBehaviour
     private void OnEnable()
     {
         rightController = referenceManager.rightController;
-        rightControllerTransform = rightController.gameObject.transform;
         lastPosition = transform.position;
     }
 
@@ -173,17 +180,27 @@ public class DrawTool : MonoBehaviour
         skipNextDraw = false;
         for (int i = 0; i < trailLines.Length; i++)
         {
-            Destroy(trailLines[i]);
-            trailLines[i] = null;
+            if (trailLines[i])
+            {
+                Destroy(trailLines[i].gameObject);
+                trailLines[i] = null;
+            }
         }
     }
 
-    private LineRenderer SpawnNewLine()
+    /// <summary>
+    /// Helper method to create a new line.
+    /// </summary>
+    /// <param name="col"> The line's color. </param>
+    /// <param name="positions"> An array containing the world space positions that the line should pass through. </param>
+    /// <returns> The new line. </returns
+    private LineRenderer SpawnNewLine(Color col, Vector3[] positions)
     {
         var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
-        newLine.SetPositions(new Vector3[] { lastPosition, transform.position });
-        newLine.startColor = LineColor;
-        newLine.endColor = LineColor;
+        newLine.positionCount = positions.Length;
+        newLine.SetPositions(positions);
+        newLine.startColor = col;
+        newLine.endColor = col;
         return newLine;
     }
 }

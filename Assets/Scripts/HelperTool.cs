@@ -84,9 +84,9 @@ public class HelperTool : MonoBehaviour
                 else
                 {
                     // Often the laser can be pointed at something and then accidentaly quickly pointed at nothing
-                    // and then pointed at the original thing again. So we wait 4 seconds before removing the current 
+                    // and then pointed at the original thing again, especially when pointing it at graphs. So we wait 2 seconds before removing the current 
                     // description just in case that happens.
-                    if (Time.time - timeLastHit > 4)
+                    if (Time.time - timeLastHit > 2)
                     {
                         // if we hit something but don't have a description for it
                         textMesh.text = standardText;
@@ -102,7 +102,7 @@ public class HelperTool : MonoBehaviour
             }
             else
             {
-                if (Time.time - timeLastHit > 4)
+                if (Time.time - timeLastHit > 2)
                 {
                     // if we hit nothing
                     textMesh.text = standardText;
@@ -165,21 +165,24 @@ public class HelperTool : MonoBehaviour
     private void ReadDescriptionFile(string filepath)
     {
         // The file format should be
-        // [KEY]:[VALUE]
-        // [KEY]:[VALUE]
-        // ...
-        // Where [KEY] is either TAG_ followed by the name of a tag or just the name of a gameobject as it is displayed in the editor.
-        // [VALUE] is the description that should be displayed when the tool touches the object
+        /// [KEY]:[VALUE]
+        /// [KEY]:[VALUE]
+        /// ...
+        /// Where [KEY] is either TAG_ followed by the name of a tag or just the name of a gameobject as it is displayed in the editor.
+        /// [VALUE] is the description that should be displayed when the tool touches the object
 
-        string[] lines = File.ReadAllLines(filepath);
-        if (lines.Length == 0)
+        if (!File.Exists(filepath))
         {
-            Debug.LogWarning("No description file found at " + descriptionFilePath);
+            Debug.LogWarning("No description file found at " + filepath);
             return;
         }
 
-        foreach (string line in lines)
+        FileStream fileStream = new FileStream(filepath, FileMode.Open);
+        StreamReader streamReader = new StreamReader(fileStream);
+
+        while (!streamReader.EndOfStream)
         {
+            string line = streamReader.ReadLine();
             // ignore empty lines
             if (line.Length == 0)
                 continue;
@@ -187,6 +190,7 @@ public class HelperTool : MonoBehaviour
             // comments in the file start with #
             if (line[0] == '#')
                 continue;
+
             // line breaks in decsriptions are written with \n in plaintext.
             string formattedLine = line.Replace(@"\n", "\n");
             // tag names in the file start with "TAG_"
@@ -203,8 +207,8 @@ public class HelperTool : MonoBehaviour
                 string[] splitString = formattedLine.Split(new char[] { ':' }, 2);
                 descriptions[splitString[0]] = splitString[1];
             }
-
         }
+        streamReader.Close();
+        fileStream.Close();
     }
-
 }

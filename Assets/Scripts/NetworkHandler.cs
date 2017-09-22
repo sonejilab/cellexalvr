@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 
-
+/// <summary>
+/// This class represents a collection of networks placed on a skeleton like model of a graph.
+/// </summary>
 public class NetworkHandler : MonoBehaviour
 {
 
@@ -35,17 +37,26 @@ public class NetworkHandler : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Adds a networkcenter to this handler.
+    /// </summary>
+    /// <param name="network"> The networkcenter to add. </param>
     internal void AddNetwork(NetworkCenter network)
     {
         networks.Add(network);
     }
 
+    /// <summary>
+    /// Highlights this networkhandler by outlining the skeleton mesh.
+    /// </summary>
     public void Highlight()
     {
         meshRenderer.materials = highlightedMaterials;
     }
 
+    /// <summary>
+    /// Unhighlights this networkhandler.
+    /// </summary>
     public void Unhighlight()
     {
         meshRenderer.materials = unhighlightedMaterials;
@@ -97,11 +108,16 @@ public class NetworkHandler : MonoBehaviour
             c.enabled = false;
     }
 
-    public NetworkCenter FindNetworkCenter(string networkName)
+    /// <summary>
+    /// Finds a networkcenter in this networkhandler.
+    /// </summary>
+    /// <param name="networkCenterName"> The name of the networkcenter </param>
+    /// <returns> A reference to the networkcenter, or null if it was not found. </returns>
+    public NetworkCenter FindNetworkCenter(string networkCenterName)
     {
         foreach (NetworkCenter network in networks)
         {
-            if (network.NetworkCenterName == networkName)
+            if (network.NetworkCenterName == networkCenterName)
             {
                 return network;
             }

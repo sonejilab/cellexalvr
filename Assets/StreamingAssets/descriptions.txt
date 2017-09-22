@@ -1,4 +1,5 @@
 # Comments can be written by starting a line with a '#'.
+# Syntax: [[name of gameobject] or "TAG_"[name of tag]]:[description]
 # All descriptions should be put on exactly one (1) line. Line breaks can be inserted by typing '\n'.
 # The purpose of this file is to contain longer descriptions that are displayed with the helper tool.
 # Note that a tag can not have the same name as a gameobject.
@@ -8,7 +9,7 @@ TAG_HeatBoard:Heatmaps shows genes that are expressed or not expressed in cells.
 TAG_Graph:Graphs consist of multiple cells that are ordered by an algorithm. Cells that are close to each other probably have something to do with each other, and cells far away from each other probably have less to do with each other.
 TAG_Folder:This box represents a folder on this computer. Move the controller close to open the box. The text on the lid is the name of the folder.
 TAG_Sphere:These spheres represent the data inside a folder. Grab the spheres by moving the controller inside them and press the grip buttons. To load this data, put the spheres inside the loading machine on the ground.
-TAG_Loader:This is the loading machine. Put some spheres from a box into the funnel to load a folder with data. Once the data is loaded, the loading machine will dissapear. To go back to the loading machine, press "Loading menu" on the main menu (located on one of your controllers).
+TAG_Loader:This is the loading machine. Put some spheres from a box into the funnel to load a folder with data. Once the data is loaded, the loading machine will disappear. To go back to the loading machine, press "Loading menu" on the main menu (located on one of your controllers).
 
 # Names of gameobjects:
 Cells:These spheres represent the files inside a folder. To pick them up, move the controller inside the cells and press the grip buttons. Put the spheres inside the loading machine to load this data. The loading machine is on the ground between all the boxes.
@@ -40,6 +41,7 @@ RemoveSelection:Removes all selected cells from a graph. This can be undone by p
 UndoSelectionButton:Undoes your current selection. All selected cells will be un-selected.
 CreateHeatmapButton:Creates a heatmap from your selection. The heatmap will have the selected cells on its x-axis and 250 genes on its y-axis. The cells are ordered from left to right in the order they were selected. The heatmap can be moved by grabbing it with one controller and rescaled by grabbing it with both controllers.
 Create Networks Button:Creates a group of networks from your selection. Each color will be used as one network. Each network will show genes that are correlated. The genes are represented with spheres and the correlations as lines between the spheres. The lines' colors mean nothing, they are randomized for easier viewing. The networks are placed on a skeleton-like structure of the graph they came from to give an idea of where they originate from in the graph. The skeleton can be moved by grabbing it with one controller. Move the controller inside a network and press the trigger to enlarge it and separate it from the skeleton.
+Color Graphs After Current Selection Button:Colors all graphs after your current selection.
 Toggle Expressed Cells:Use this button after coloring the graphs after a gene's expression. Toggles all cells in the graph that are expressing the gene.
 Toggle Non Expressed Cells: Use this button after coloring the graphs after a gene's expression. Toggles all cells in the graph that are not expressing the gene.
 StartMenuButton:Brings you back to the start menu. All unsaved progress will be lost.

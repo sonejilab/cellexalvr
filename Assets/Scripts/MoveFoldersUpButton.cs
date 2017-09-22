@@ -28,7 +28,6 @@ public class MoveFoldersUpButton : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
         if (controllerInside && !coroutineRunning)
