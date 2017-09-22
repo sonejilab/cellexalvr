@@ -66,6 +66,7 @@ GameObject:
   - component: {fileID: 82117223924349284}
   - component: {fileID: 114667797717972690}
   - component: {fileID: 114547334913140218}
+  - component: {fileID: 114774649148215532}
   m_Layer: 2
   m_Name: HeatBoard 1
   m_TagString: HeatBoard
@@ -1031,7 +1032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 000c99fbaecbc0e4887c2041c04cb6a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 0}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 102745345987954150}
   standardTexture: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2248ec72c96a8d84496a683fe3c959a6, type: 3}
@@ -1174,6 +1175,18 @@ MonoBehaviour:
   standardTexture: {fileID: 21300000, guid: a85ebfbd2d995a14282efa6ba4124341, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 4fa149a741f5baf4bb66323b98bf2d99, type: 3}
   sendToSkyButton: {fileID: 1737057337252606}
+--- !u!114 &114774649148215532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1174169366114494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightController: {fileID: 0}
 --- !u!114 &114807747511832284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1185,7 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354b980405b7df04c8d370edad8bfead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 0}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 102464530803225886}
   standardTexture: {fileID: 21300000, guid: d0fccaf2d0bb72341a846598948d1eb6, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 7c88cdef3009f724296d174ee192c6d6, type: 3}
@@ -1202,6 +1215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   texture: {fileID: 0}
   infoText: {fileID: 102500470805281082}
+  HeatmapName: 
 --- !u!114 &114974236476035852
 MonoBehaviour:
   m_ObjectHideFlags: 1

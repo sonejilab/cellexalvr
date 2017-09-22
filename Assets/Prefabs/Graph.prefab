@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114067437061871334}
   - component: {fileID: 114656299714153516}
   - component: {fileID: 114613519637220900}
+  - component: {fileID: 114079652239576086}
   m_Layer: 0
   m_Name: Graph
   m_TagString: Graph
@@ -76,6 +77,18 @@ MonoBehaviour:
   lockYAxis: 0
   lockZAxis: 0
   uniformScaling: 1
+--- !u!114 &114079652239576086
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1496824086956574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightController: {fileID: 0}
 --- !u!114 &114610040334634022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,8 +164,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graphpoint: {fileID: 114483635505091214, guid: 34dea2da4c461ea41894fb37a719709f,
-    type: 2}
-  selectionToolHandler: {fileID: 114195336974910480, guid: 59330a73d54052a4b92ddb76ba17e31b,
     type: 2}
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 2}

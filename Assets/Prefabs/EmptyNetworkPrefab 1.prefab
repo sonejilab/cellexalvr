@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 135946752829001644}
   - component: {fileID: 23003621475484474}
   - component: {fileID: 114190743744166870}
+  - component: {fileID: 114363799773430976}
   m_Layer: 0
   m_Name: EmptyNetworkPrefab 1
   m_TagString: Untagged
@@ -94,6 +95,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replacementPrefab: {fileID: 0}
+  edgePrefab: {fileID: 0}
+  arcDescriptionPrefab: {fileID: 0}
+  simpleArcDescriptionPrefab: {fileID: 0}
+  combinedArcsColors: []
+  NetworkCenterName: 
+  replacing: {fileID: 0}
+--- !u!114 &114363799773430976
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1758485399609656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightController: {fileID: 0}
 --- !u!135 &135946752829001644
 SphereCollider:
   m_ObjectHideFlags: 1
