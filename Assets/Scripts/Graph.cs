@@ -69,26 +69,26 @@ public class Graph : MonoBehaviour
         // Scales the sphere coordinates to fit inside the graph's bounds.
         Vector3 scaledCoordinates = new Vector3(x, y, z);
 
-		// move one of the graph's centers to origo
+        // move one of the graph's centers to origo
         scaledCoordinates -= minCoordValues;
 
-		// find the longest axis
-		float longestAxis = Math.Max(Math.Max(diffCoordValues.x, diffCoordValues.y), diffCoordValues.z);
-		// this instead of /= longestaxis puts the graph in a 1x1x1 cube, which is convenient sometimes, but distorts the graph
+        // find the longest axis
+        float longestAxis = Math.Max(Math.Max(diffCoordValues.x, diffCoordValues.y), diffCoordValues.z);
+        // this instead of /= longestaxis puts the graph in a 1x1x1 cube, which is convenient sometimes, but distorts the graph
         //scaledCoordinates.x /= diffCoordValues.x;
         //scaledCoordinates.y /= diffCoordValues.y;
         //scaledCoordinates.z /= diffCoordValues.z;
 
 
-		// uniformly scale all axes down based on the longest axis 
-		scaledCoordinates.x /= longestAxis;
-    	scaledCoordinates.y /= longestAxis;
-		scaledCoordinates.z /= longestAxis;
+        // uniformly scale all axes down based on the longest axis 
+        scaledCoordinates.x /= longestAxis;
+        scaledCoordinates.y /= longestAxis;
+        scaledCoordinates.z /= longestAxis;
 
-		// move the graph a bit so (0, 0, 0) is the center point
-		scaledCoordinates.x -= (diffCoordValues.x / longestAxis) / 2;
-		scaledCoordinates.y -= (diffCoordValues.y / longestAxis) / 2;
-		scaledCoordinates.z -= (diffCoordValues.z / longestAxis) / 2;
+        // move the graph a bit so (0, 0, 0) is the center point
+        scaledCoordinates.x -= (diffCoordValues.x / longestAxis) / 2;
+        scaledCoordinates.y -= (diffCoordValues.y / longestAxis) / 2;
+        scaledCoordinates.z -= (diffCoordValues.z / longestAxis) / 2;
 
         return scaledCoordinates;
     }
@@ -127,7 +127,6 @@ public class Graph : MonoBehaviour
         minCoordValues = min;
         maxCoordValues = max;
         diffCoordValues = maxCoordValues - minCoordValues;
-		print ("min max set in " + GraphName + " " + min + " " + max + " " + diffCoordValues);
     }
 
     internal bool Ready()
@@ -162,7 +161,6 @@ public class Graph : MonoBehaviour
         string[] lines = File.ReadAllLines(path);
         if (lines.Length == 0)
         {
-            print("File " + GraphName + ".hull not found");
             return null;
         }
 
@@ -182,6 +180,8 @@ public class Graph : MonoBehaviour
         {
 
             string[] coords = lines[i].Split(null);
+            if (coords.Length < 4)
+                continue;
             // subtract 1 because R is 1-indexed
             triangles[trianglesIndex++] = int.Parse(coords[1]) - 1;
             triangles[trianglesIndex++] = int.Parse(coords[2]) - 1;

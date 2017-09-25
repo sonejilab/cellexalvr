@@ -156,6 +156,10 @@ public class InputReader : MonoBehaviour
             while (!mdsStreamReader.EndOfStream)
             {
                 string[] words = mdsStreamReader.ReadLine().Split(null);
+                if (words.Length != 4)
+                {
+                    continue;
+                }
                 cellnames.Add(words[0]);
                 xcoords.Add(float.Parse(words[1]));
                 ycoords.Add(float.Parse(words[2]));
@@ -379,10 +383,6 @@ public class InputReader : MonoBehaviour
         string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
         string[] layFilePaths = Directory.GetFiles(networkDirectory, "*.lay");
 
-
-        FileStream cntFileStream = new FileStream(cntFilePaths[0], FileMode.Open);
-        StreamReader cntStreamReader = new StreamReader(cntFileStream);
-
         // make sure there is a .cnt file
         if (cntFilePaths.Length == 0)
         {
@@ -390,11 +390,15 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("ERROR: No .cnt file in network folder " + networkDirectory);
             return;
         }
+
         if (cntFilePaths.Length > 1)
         {
             CellExAlLog.Log("ERROR: more than one .cnt file in network folder");
             return;
         }
+
+        FileStream cntFileStream = new FileStream(cntFilePaths[0], FileMode.Open);
+        StreamReader cntStreamReader = new StreamReader(cntFileStream);
 
         // make sure there is a .nwk file
         if (nwkFilePaths.Length == 0)

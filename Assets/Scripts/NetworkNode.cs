@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 /// <summary>
 /// This class represents one node in a network, it handles the coloring of the connections and part of the network creation process,
 /// </summary>
 public class NetworkNode : MonoBehaviour
 {
-    public TextMesh geneName;
+    public TextMeshPro geneName;
     public GameObject edgePrefab;
     public GameObject arcDescriptionPrefab;
     public Transform CameraToLookAt { get; set; }
@@ -52,7 +53,7 @@ public class NetworkNode : MonoBehaviour
     void Update()
     {
         // some math make the text not be mirrored
-        textTransform.LookAt(2 * transform.position - CameraToLookAt.position);
+        transform.LookAt(2 * transform.position - CameraToLookAt.position);
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
