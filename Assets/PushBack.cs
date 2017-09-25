@@ -11,10 +11,16 @@ public class PushBack : MonoBehaviour {
 	private Transform raycastingSource;
 	private bool push;
 	private bool pull;
+    private Vector3 orgPos;
+    private Vector3 orgScale;
+    private Quaternion orgRot;
     // Use this for initialization
     void Start () {
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         device = SteamVR_Controller.Input((int)rightController.index);
+        orgPos = transform.position;
+        orgRot = transform.rotation;
+        orgScale = transform.localScale;
     }
 	
 	// Update is called once per frame
@@ -29,6 +35,7 @@ public class PushBack : MonoBehaviour {
 				dir = dir.normalized;
 				transform.position += dir;
 				transform.localScale *= 1.2f;
+                transform.LookAt(device.transform.pos);
 			}
 		}
 //		if (pull)
@@ -57,9 +64,11 @@ public class PushBack : MonoBehaviour {
 		 
 		if ((GetComponent<GraphInteract>() != null && GetComponent<GraphInteract> ().enabled) || GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled)
 		{
-			if (device.GetPressDown (SteamVR_Controller.ButtonMask.Touchpad))
+
+            Debug.Log("scale: " + transform.localScale + " pos: " + transform.position);
+            Debug.Log("pos: " + orgPos + " scale: " + orgScale);
+            if (device.GetPressDown (SteamVR_Controller.ButtonMask.Touchpad))
 			{
-				Debug.Log ("TOUCHPAD PRESSED");
 				Vector2 touchpad = (device.GetAxis (Valve.VR.EVRButtonId.k_EButton_Axis0));
 				if (touchpad.y > 0.7f)
 				{
@@ -68,9 +77,12 @@ public class PushBack : MonoBehaviour {
 				}
 				if (touchpad.y < -0.7f)
 				{
-					transform.position = new Vector3 (0.5f, 0.5f, 0.5f);
-					transform.localScale = new Vector3 (1, 1, 1);
-				}
+                    Debug.Log("GET BACK TO ORIGINAL");
+                    transform.position = orgPos;
+					transform.localScale = orgScale;
+                    transform.rotation = orgRot;
+                    Debug.Log("pos: " + orgPos + " scale: " + orgScale);
+                }
 			}
 		}
 		if (device.GetPressUp (SteamVR_Controller.ButtonMask.Touchpad))
