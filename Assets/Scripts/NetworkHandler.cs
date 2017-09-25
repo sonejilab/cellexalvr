@@ -33,7 +33,7 @@ public class NetworkHandler : MonoBehaviour
     {
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {
-            gameManager.InformMoveNetwork(NetworkHandlerName, transform.position, transform.rotation);
+            gameManager.InformMoveNetwork(NetworkHandlerName, transform.position, transform.rotation, transform.localScale);
         }
     }
 
