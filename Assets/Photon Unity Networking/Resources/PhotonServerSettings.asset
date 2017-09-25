@@ -59,4 +59,8 @@ MonoBehaviour:
   - SendEnlargeNetwork
   - SendMoveNetworkCenter
   - SendDrawLine
+  - SendActivateKeyboard
+  - SendColorGraphsByPreviousExpression
+  - SendSearchLockToggled
+  - SendCalculateCorrelatedGenes
   DisableAutoOpenWizard: 1

@@ -117,6 +117,48 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformColorGraphByPreviousExpression(string geneName)
+    {
+        if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to color graphs by previous gene " + geneName);
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
+        }
+    }
+
+    public void InformSearchLockToggled(int index)
+    {
+        if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to toggle lock number " + index);
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendSearchLockToggled", PhotonTargets.Others, index);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendSearchLockToggled", PhotonTargets.Others, index);
+        }
+    }
+
+    public void InformCalculateCorrelatedGenes(int index, string geneName)
+    {
+        if (!multiplayer) return;
+        CellExAlLog.Log("Informing clients to calculate genes correlated to " + geneName);
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, index, geneName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, index, geneName);
+        }
+    }
+
     public void InformConfirmSelection()
     {
         if (!multiplayer) return;
@@ -173,6 +215,7 @@ public class GameManager : Photon.PunBehaviour
 
     public void InformActivateKeyboard(bool activate)
     {
+        if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendActivateKeyboard", PhotonTargets.Others, activate);
@@ -278,6 +321,7 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+
     #endregion
 
     /// <summary>
@@ -313,7 +357,7 @@ public class GameManager : Photon.PunBehaviour
         yield return new WaitForSeconds(1f);
         clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         Debug.Log("Client Coordinator Found");
-     }
+    }
 
     private IEnumerator FindServerCoordinator()
     {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// This class represents the list of the 10 previous searches of genes.
@@ -16,6 +17,8 @@ public class PreviousSearchesList : MonoBehaviour
     public Texture correlatedGenesButtonTexture;
     public Texture correlatedGenesButtonHighlightedTexture;
     public Texture correlatedGenesButtonWorkingTexture;
+    public List<PreviousSearchesLock> searchLocks = new List<PreviousSearchesLock>();
+    public List<CorrelatedGenesButton> correlatedGenesButtons = new List<CorrelatedGenesButton>();
 
     private PreviousSearchesListNode topListNode;
     private SteamVR_TrackedObject rightController;
@@ -34,12 +37,14 @@ public class PreviousSearchesList : MonoBehaviour
     private CorrelatedGenesListNode correlatedGenesListNode;
     private CorrelatedGenesListNode lastCorrelatedGenesListNode;
     private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+    private GameManager gameManager;
 
     private void Start()
     {
         topListNode = referenceManager.topListNode;
         rightController = referenceManager.rightController;
         cellManager = referenceManager.cellManager;
+        gameManager = referenceManager.gameManager;
     }
 
     void Update()
@@ -72,6 +77,7 @@ public class PreviousSearchesList : MonoBehaviour
                     if (listNode.GeneName != "")
                     {
                         cellManager.ColorGraphsByPreviousExpression(listNode.GeneName);
+                        gameManager.InformColorGraphByPreviousExpression(listNode.GeneName);
                     }
                 }
             }
@@ -98,6 +104,8 @@ public class PreviousSearchesList : MonoBehaviour
                 if (device.GetPressDown(triggerButton))
                 {
                     searchLock.ToggleSearchNodeLock();
+                    gameManager.InformSearchLockToggled(searchLocks.IndexOf(searchLock));
+
                     if (searchLock.Locked)
                         searchLock.SetTexture(searchLockLockedHighlightedTexture);
                     else
@@ -118,7 +126,10 @@ public class PreviousSearchesList : MonoBehaviour
                 if (device.GetPressDown(triggerButton))
                 {
                     correlatedGenesButton.SetTexture(correlatedGenesButtonWorkingTexture);
-                    correlatedGenesButton.CalculateCorrelatedGenes();
+                    string geneName = correlatedGenesButton.listNode.GeneName;
+                    int index = correlatedGenesButtons.IndexOf(correlatedGenesButton);
+                    referenceManager.correlatedGenesList.CalculateCorrelatedGenes(index, geneName);
+                    gameManager.InformCalculateCorrelatedGenes(index, geneName);
                 }
             }
             else if (correlatedGenesListNode != null)
@@ -134,7 +145,9 @@ public class PreviousSearchesList : MonoBehaviour
 
                 if (device.GetPressDown(triggerButton))
                 {
-                    cellManager.ColorGraphsByGene(correlatedGenesListNode.GeneName);
+                    string gene = correlatedGenesListNode.GeneName;
+                    cellManager.ColorGraphsByGene(gene);
+                    gameManager.InformColorGraphsByGene(gene);
                 }
             }
         }

@@ -40,6 +40,28 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendColorGraphsByPreviousExpression(string geneName)
+    {
+        CellExAlLog.Log("Recieved message to color all graphs by " + geneName);
+        referenceManager.cellManager.ColorGraphsByPreviousExpression(geneName);
+    }
+
+    [PunRPC]
+    public void SendSearchLockToggled(int index)
+    {
+        CellExAlLog.Log("Recieved message to toggle lock number " + index);
+        referenceManager.previousSearchesList.searchLocks[index].ToggleSearchNodeLock();
+
+    }
+
+    [PunRPC]
+    public void SendCalculateCorrelatedGenes(int index, string geneName)
+    {
+        CellExAlLog.Log("Recieved message to calculate genes correlated to " + geneName);
+        referenceManager.correlatedGenesList.CalculateCorrelatedGenes(index, geneName);
+    }
+
+    [PunRPC]
     public void SendColorGraphsByAttribute(string attributeType, float r, float g, float b)
     {
         CellExAlLog.Log("Recieved message to color all graphs by attribute " + attributeType);

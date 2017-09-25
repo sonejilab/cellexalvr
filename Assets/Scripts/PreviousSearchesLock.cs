@@ -9,6 +9,7 @@ public class PreviousSearchesLock : MonoBehaviour
 
     public PreviousSearchesListNode searchListNode;
     public bool Locked { get; set; }
+
     private new Renderer renderer;
 
     void Start()

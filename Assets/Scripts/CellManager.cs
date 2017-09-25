@@ -92,7 +92,6 @@ public class CellManager : MonoBehaviour
         GetComponent<AudioSource>().Play();
         //Debug.Log("FEEL THE PULSE");
         SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-
     }
 
 
@@ -103,7 +102,6 @@ public class CellManager : MonoBehaviour
     /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName)
     {
-
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
         StartCoroutine(QueryDatabase(geneName, true));
