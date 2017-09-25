@@ -106,17 +106,17 @@ public class CellManager : MonoBehaviour
 
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName));
+        StartCoroutine(QueryDatabase(geneName, true));
         gameManager.InformColorGraphsByGene(geneName);
     }
 
     public void ColorGraphsByGeneNoInform(string geneName)
     {
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName));
+        StartCoroutine(QueryDatabase(geneName, false));
     }
 
-    private IEnumerator QueryDatabase(string geneName)
+    private IEnumerator QueryDatabase(string geneName, bool informServer)
     {
         // if there is already a query running, wait for it to finish
         while (database.QueryRunning)
@@ -147,6 +147,7 @@ public class CellManager : MonoBehaviour
         }
 
         var removedGene = topListNode.UpdateList(geneName);
+        Debug.Log(topListNode.GeneName);
         foreach (Cell c in cells.Values)
         {
             c.SaveExpression(geneName, removedGene);

@@ -171,6 +171,18 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformActivateKeyboard(bool activate)
+    {
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendActivateKeyboard", PhotonTargets.Others, activate);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendActivateKeyboard", PhotonTargets.Others, activate);
+        }
+    }
+
     public void InformSelectedAdd(string graphName, string label)
     {
         if (!multiplayer) return;

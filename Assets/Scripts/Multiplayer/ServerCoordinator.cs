@@ -143,5 +143,11 @@ class ServerCoordinator : Photon.MonoBehaviour
         gameManager.referenceManager.drawTool.DrawNewLine(col, coords);
     }
 
+    [PunRPC]
+    public void SendActivateKeyboard(bool activate)
+    {
+        gameManager.referenceManager.keyboard.SetActive(activate);
+    }
+
     #endregion
 }

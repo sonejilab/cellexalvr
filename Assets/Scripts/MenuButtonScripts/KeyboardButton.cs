@@ -31,7 +31,7 @@ public class KeyboardButton : StationaryButton
             activateKeyboard = !keyboard.activeSelf;
             if (activateKeyboard)
             {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.OneLaser;
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
                 controllerModelSwitcher.ActivateDesiredTool();
             }
             else
