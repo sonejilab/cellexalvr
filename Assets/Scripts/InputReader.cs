@@ -691,7 +691,7 @@ public class InputReader : MonoBehaviour
                 maxCoordValues.z = zcoords[i];
 
         }
-        graphManager.SetMinMaxCoords(graph, minCoordValues, maxCoordValues);
+		graph.SetMinMaxCoords (minCoordValues, maxCoordValues);
     }
 
 }
