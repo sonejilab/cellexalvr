@@ -61,19 +61,21 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
         g.transform.position = new Vector3(posX, posY, posZ);
         g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
     }
 
     [PunRPC]
-    public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
         hm.transform.position = new Vector3(posX, posY, posZ);
         hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        hm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
     }
 
     [PunRPC]
@@ -91,11 +93,12 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
         nh.transform.position = new Vector3(posX, posY, posZ);
         nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        nh.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
     }
 
     [PunRPC]

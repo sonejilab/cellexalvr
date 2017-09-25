@@ -57,7 +57,7 @@ public class Heatmap : MonoBehaviour
         }
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {
-            gameManager.InformMoveHeatmap(HeatmapName, transform.position, transform.rotation);
+            gameManager.InformMoveHeatmap(HeatmapName, transform.position, transform.rotation, transform.localScale);
         }
     }
 

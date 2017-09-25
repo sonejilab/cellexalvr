@@ -38,7 +38,7 @@ public class Graph : MonoBehaviour
     {
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {
-            gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation);
+            gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
 
     }
