@@ -363,9 +363,8 @@ public class InputReader : MonoBehaviour
     {
         NetworkNode newNode = Instantiate(networkNodePrefab);
         newNode.CameraToLookAt = headset.transform;
-        newNode.cellManager = cellManager;
+        newNode.SetReferenceManager(referenceManager);
         newNode.Label = geneName;
-        newNode.rightController = rightController;
         return newNode;
     }
 
@@ -695,7 +694,7 @@ public class InputReader : MonoBehaviour
                 maxCoordValues.z = zcoords[i];
 
         }
-		graph.SetMinMaxCoords (minCoordValues, maxCoordValues);
+        graph.SetMinMaxCoords(minCoordValues, maxCoordValues);
     }
 
 }

@@ -24,6 +24,8 @@ public class NetworkNode : MonoBehaviour
             geneName.text = value;
         }
     }
+
+    private ReferenceManager referenceManager;
     private List<NetworkNode> neighbours = new List<NetworkNode>();
     private List<LineRenderer> connections = new List<LineRenderer>();
     private Transform textTransform;
@@ -32,15 +34,11 @@ public class NetworkNode : MonoBehaviour
     private Vector3 normalScale;
     private Vector3 largerScale;
     private bool controllerInside;
-    [HideInInspector]
-    public SteamVR_TrackedObject rightController;
-    [HideInInspector]
-    public CellManager cellManager;
+    private SteamVR_TrackedObject rightController;
+    private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool edgesAdded;
     private float lineWidth = .001f;
-
-
 
     void Start()
     {
@@ -58,6 +56,7 @@ public class NetworkNode : MonoBehaviour
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             cellManager.ColorGraphsByGene(Label.ToLower());
+            referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
         }
     }
 
@@ -79,6 +78,14 @@ public class NetworkNode : MonoBehaviour
         }
 
     }
+
+    public void SetReferenceManager(ReferenceManager referenceManager)
+    {
+        this.referenceManager = referenceManager;
+        cellManager = referenceManager.cellManager;
+        rightController = referenceManager.rightController;
+    }
+
     /// <summary>
     /// Adds a neighbour to this node. A neughbour should be a gene that is correlated to this node's gene.
     /// This will also add this node as the neighbour's neighbour, so it's basically a bidirectional edge between two vertices.

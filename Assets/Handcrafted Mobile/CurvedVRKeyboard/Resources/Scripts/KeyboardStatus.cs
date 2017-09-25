@@ -15,7 +15,10 @@ namespace CurvedVRKeyboard
         public int maxOutputLength;
         [SerializeField]
         public GameObject targetGameObject;
+
+        private ReferenceManager referenceManager;
         private CellManager cellManager;
+        private PreviousSearchesList previousSearchesList;
 
         //----CurrentKeysStatus----
         [SerializeField]
@@ -28,7 +31,6 @@ namespace CurvedVRKeyboard
         private const char BLANKSPACE = ' ';
         private const string TEXT = "text";
         private Component textComponent;
-        private PreviousSearchesList previousSearchesList;
 
         /// <summary>
         /// Handles click on keyboarditem
@@ -49,6 +51,7 @@ namespace CurvedVRKeyboard
             else if (value.Equals(SPACE))
             {
                 cellManager.ColorGraphsByGene(output);
+                referenceManager.gameManager.InformColorGraphsByGene(output);
                 output = "";
                 textComponent = targetGameObject.GetComponent(typeHolder.GetType());
                 textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
@@ -63,10 +66,11 @@ namespace CurvedVRKeyboard
             }
         }
 
-        public void SetVars(CellManager cellManager, PreviousSearchesList previousSearchesList)
+        public void SetVars(ReferenceManager referenceManager)
         {
-            this.previousSearchesList = previousSearchesList;
-            this.cellManager = cellManager; ;
+            this.referenceManager = referenceManager;
+            previousSearchesList = referenceManager.previousSearchesList;
+            cellManager = referenceManager.cellManager;
         }
 
 

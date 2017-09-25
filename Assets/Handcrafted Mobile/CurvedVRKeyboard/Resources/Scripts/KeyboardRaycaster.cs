@@ -11,8 +11,7 @@ namespace CurvedVRKeyboard
 
         [SerializeField, HideInInspector]
         private GameObject target;
-        public CellManager cellManager;
-        public PreviousSearchesList previousSearchesList;
+        public ReferenceManager referenceManager;
         private float rayLength;
         private Ray ray;
         private RaycastHit hit;
@@ -21,8 +20,8 @@ namespace CurvedVRKeyboard
         //---interactedKeys---
         private KeyboardStatus keyboardStatus;
         private KeyboardItem keyItemCurrent;
-        public SteamVR_TrackedController rightController;
-        public SteamVR_Controller.Device device;
+        private SteamVR_TrackedObject rightController;
+        private SteamVR_Controller.Device device;
         private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
         [SerializeField, HideInInspector]
@@ -30,15 +29,16 @@ namespace CurvedVRKeyboard
 
         void Start()
         {
+            rightController = referenceManager.rightController;
             keyboardStatus = gameObject.GetComponent<KeyboardStatus>();
-            keyboardStatus.SetVars(cellManager, previousSearchesList);
+            keyboardStatus.SetVars(referenceManager);
             int layerNumber = gameObject.layer;
             layer = 1 << layerNumber;
         }
 
         void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.controllerIndex);
+            device = SteamVR_Controller.Input((int)rightController.index);
             // * sum of all scales so keys are never to far
             rayLength = Vector3.Distance(raycastingSource.position, target.transform.position) * (minRaylengthMultipler +
                                                                                                   (Mathf.Abs(target.transform.lossyScale.x) + Mathf.Abs(target.transform.lossyScale.y) + Mathf.Abs(target.transform.lossyScale.z)));

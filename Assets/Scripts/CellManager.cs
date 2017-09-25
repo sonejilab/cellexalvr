@@ -105,13 +105,6 @@ public class CellManager : MonoBehaviour
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
         StartCoroutine(QueryDatabase(geneName, true));
-        gameManager.InformColorGraphsByGene(geneName);
-    }
-
-    public void ColorGraphsByGeneNoInform(string geneName)
-    {
-        controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName, false));
     }
 
     private IEnumerator QueryDatabase(string geneName, bool informServer)

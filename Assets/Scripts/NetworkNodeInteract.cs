@@ -7,12 +7,14 @@ using VRTK;
 public class NetworkNodeInteract : VRTK_InteractableObject
 {
     public NetworkNode node;
+    private ReferenceManager referenceManager;
     private CellManager cellManager;
 
     protected override void Awake()
     {
         base.Awake();
-        cellManager = GameObject.Find("CellManager").GetComponent<CellManager>();
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        cellManager = referenceManager.cellManager;
     }
 
     /// <summary>
@@ -42,5 +44,6 @@ public class NetworkNodeInteract : VRTK_InteractableObject
         base.StartUsing(currentUsingObject);
         //print("using " + node.Label);
         cellManager.ColorGraphsByGene(node.Label.ToLower());
+        referenceManager.gameManager.InformColorGraphsByGene(node.Label.ToLower());
     }
 }
