@@ -18,6 +18,10 @@ expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
 group_selection_filepath <- file.path(homedir, "Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
 
+if ( ! file.exists(group_selection_filepath)) {
+	group_selection_filepath = latest_version # as this is the grouping name!
+}
+
 #print(group_selection_filepath)
 
 generated_image_filepath <- file.path(homedir, "Images", paste("heatmap_", latest_version, ".png", sep=""))
@@ -27,4 +31,5 @@ top_genes_number <- 250
 
 cellexalvrObj <- make.cellexalvr.heatmap(expression_data_filepath,group_selection_filepath,top_genes_number,generated_image_filepath)
 
-save ( cellexalvrObj , file = file.path(args[4], "cellexalvrObj.RData", sep="" ))
+#this is not necesary any more - done wile the group is stored.
+#save ( cellexalvrObj , file = file.path(args[4], "cellexalvrObj.RData", sep="" )) 

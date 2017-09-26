@@ -5,16 +5,16 @@ userfolder <- args[2]
 datafolder <- args[3]
 
 library( cellexalvr )
-print("started")
+#print("started")
 if ( file.exists( file.path( userfolder, 'cellexalObj.RData' )) ){
 	load(  file.path( userfolder, 'cellexalObj.RData' ))
-	print("load from user folder")
+#	print("load from user folder")
 }else {
 	load(  file.path( datafolder, 'cellexalObj.RData' ))
-	print("load from data folder")
+#	print("load from data folder")
 }
 
 cellexalObj <- userGrouping( cellexalObj, selectionfile )
 
 save ( cellexalObj, file=  file.path( userfolder, 'cellexalObj.RData' ))
-print("done")
+#print("done")
