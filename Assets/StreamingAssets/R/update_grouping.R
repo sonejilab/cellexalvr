@@ -16,5 +16,7 @@ if ( file.exists( file.path( userfolder, 'cellexalObj.RData' )) ){
 
 cellexalObj <- userGrouping( cellexalObj, selectionfile )
 
+t <- exportUserGroups4vr ( cellexalObj, userfolder )
+
 save ( cellexalObj, file=  file.path( userfolder, 'cellexalObj.RData' ))
 #print("done")
