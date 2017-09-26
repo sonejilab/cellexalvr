@@ -64,6 +64,13 @@ public class Graph : MonoBehaviour
             c.enabled = false;
     }
 
+    /// <summary>
+    /// Scales three coordinates to fit inside the graphs area. This method requires SetMinMax() to have been called already.
+    /// </summary>
+    /// <param name="x"> The x-coordinate. </param>
+    /// <param name="y"> The y-coordinate. </param>
+    /// <param name="z"> The z-coordinate. </param>
+    /// <returns> A Vector3 with the new scaled coordinates. </returns>
     public Vector3 ScaleCoordinates(float x, float y, float z)
     {
         // Scales the sphere coordinates to fit inside the graph's bounds.
@@ -79,8 +86,8 @@ public class Graph : MonoBehaviour
         //scaledCoordinates.y /= diffCoordValues.y;
         //scaledCoordinates.z /= diffCoordValues.z;
 
-
-        // uniformly scale all axes down based on the longest axis 
+        // uniformly scale all axes down based on the longest axis
+        // this makes the longest axis have length 1 and keeps the proportions of the graph
         scaledCoordinates.x /= longestAxis;
         scaledCoordinates.y /= longestAxis;
         scaledCoordinates.z /= longestAxis;
@@ -122,6 +129,12 @@ public class Graph : MonoBehaviour
         defaultScale = transform.localScale;
     }
 
+    /// <summary>
+    /// Sets the maximum and minumum coordinates that this graph should use.
+    /// These argument Vector3s can be seen as two opposite corners of a cuboid that the graph will the be rescaled to fit inside.
+    /// </summary>
+    /// <param name="min"> The 3 minimun</param>
+    /// <param name="max"></param>
     public void SetMinMaxCoords(Vector3 min, Vector3 max)
     {
         minCoordValues = min;

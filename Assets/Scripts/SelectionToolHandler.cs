@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 using VRTK;
 
@@ -106,10 +107,9 @@ public class SelectionToolHandler : MonoBehaviour
     /// Adds a graphpoint to the current selection, and changes its color.
     /// This method is called by a child object that holds the collider.
     /// </summary>
-    public void Trigger(Collider other)
+    public void AddGraphpointToSelection(GraphPoint graphPoint)
     {
         // print(other.gameObject.name);
-        GraphPoint graphPoint = other.gameObject.GetComponent<GraphPoint>();
         if (graphPoint == null)
         {
             return;
@@ -120,7 +120,7 @@ public class SelectionToolHandler : MonoBehaviour
         renderer.material.color = newColor;
         gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, newColor);
 
-        bool newNode = !selectedCells.Contains(other);
+        bool newNode = !selectedCells.Contains(graphPoint);
         if (historyIndexOffset != 0)
         {
             // if we have undone some selected graphpoints, then they should be removed from the history
@@ -147,7 +147,7 @@ public class SelectionToolHandler : MonoBehaviour
             if (newNode)
             {
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
-                selectedCells.Add(other.gameObject.GetComponent<GraphPoint>());
+                selectedCells.Add(graphPoint);
             }
             else
             {
@@ -342,7 +342,7 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpData();
         lastSelectedCells.Clear();
-
+        StartCoroutine(UpdateRObjectGrouping());
         foreach (GraphPoint c in selectedCells)
         {
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
@@ -355,6 +355,23 @@ public class SelectionToolHandler : MonoBehaviour
         selectionMade = false;
         selectionConfirmed = true;
         selectionToolMenu.ConfirmSelection();
+    }
+
+    private IEnumerator UpdateRObjectGrouping()
+    {
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
+        string args = Directory.GetCurrentDirectory() + "/Data/runtimeGroups/selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
+        CellExAlLog.Log("Updating R Object grouping at " + CellExAlUser.UserSpecificFolder);
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellExAlLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
     }
 
     public ArrayList GetLastSelection()
@@ -442,7 +459,7 @@ public class SelectionToolHandler : MonoBehaviour
 
             foreach (GraphPoint gp in selectedCells)
             {
-                
+
                 file.Write(gp.Label);
                 file.Write("\t");
                 Color c = gp.GetComponentInChildren<Renderer>().material.color;
@@ -479,6 +496,11 @@ public class SelectionToolHandler : MonoBehaviour
     public bool IsSelectionToolEnabled()
     {
         return GetComponentInChildren<Collider>().enabled;
+    }
+
+    public Color GetColor(int index)
+    {
+        return colors[index];
     }
 
 }

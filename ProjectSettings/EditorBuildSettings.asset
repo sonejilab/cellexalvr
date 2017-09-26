@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/SceneLoaderTest.unity
     guid: 00cde3259dd216d46b968f5e350b1925
   - enabled: 1
+    path: Assets/Launcher.unity
+    guid: aeed05bb8ad9c5242a4764a845aad31a
+  - enabled: 1
     path: Assets/vrjeans_scene1.unity
     guid: 14933dc213bea1a42b97f83fda842ff4
   - enabled: 0
@@ -26,6 +29,3 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/vrjeans_scene6.unity
     guid: c556a1c489b4faa429ff6f35505bc2d5
-  - enabled: 0
-    path: Assets/Launcher.unity
-    guid: aeed05bb8ad9c5242a4764a845aad31a

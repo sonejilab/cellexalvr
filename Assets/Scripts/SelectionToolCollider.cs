@@ -3,11 +3,13 @@ using UnityEngine;
 /// <summary>
 /// This class sole purpose is to forward collision events to the selection tool handler
 /// </summary>
-public class SelectionToolCollider : MonoBehaviour {
+public class SelectionToolCollider : MonoBehaviour
+{
 
-public SelectionToolHandler selectionToolHandler;
+    public SelectionToolHandler selectionToolHandler;
 
-void OnTriggerEnter(Collider other) {
-	selectionToolHandler.Trigger(other);
-}
+    void OnTriggerEnter(Collider other)
+    {
+        selectionToolHandler.AddGraphpointToSelection(other.gameObject.GetComponent<GraphPoint>());
+    }
 }

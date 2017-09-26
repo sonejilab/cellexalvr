@@ -19,6 +19,8 @@ public class CellManager : MonoBehaviour
     private PreviousSearchesListNode topListNode;
     private Dictionary<string, Cell> cells;
     private GameManager gameManager;
+    private SelectionToolHandler selectionToolHandler;
+    private GraphManager graphManager;
 
     void Awake()
     {
@@ -31,6 +33,8 @@ public class CellManager : MonoBehaviour
         rightController = referenceManager.rightController;
         topListNode = referenceManager.topListNode;
         gameManager = referenceManager.gameManager;
+        selectionToolHandler = referenceManager.selectionToolHandler;
+        graphManager = referenceManager.graphManager;
     }
 
     /// <summary>
@@ -46,6 +50,18 @@ public class CellManager : MonoBehaviour
             cells[label] = new Cell(label, materialList);
         }
         return cells[label];
+    }
+
+    public void CreateNewSelectionFromArray(string[] cellnames, int[] colors)
+    {
+        // finds any graph
+        Graph graph = graphManager.FindGraph("");
+        for (int i = 0; i < cellnames.Length; ++i)
+        {
+            Cell cell = cells[cellnames[i]];
+            cell.SetColor(selectionToolHandler.GetColor(colors[i]));
+            selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]]);
+        }
     }
 
     /// <summary>

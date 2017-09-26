@@ -211,10 +211,14 @@ public class GraphManager : MonoBehaviour
     /// <summary>
     /// Finds a graph.
     /// </summary>
-    /// <param name="graphName"> The graph's name </param>
+    /// <param name="graphName"> The graph's name, or an empty string for any graph. </param>
     /// <returns> A reference to the graph, or null if no graph was found </returns>
     public Graph FindGraph(string graphName)
     {
+        if (graphName == "" && graphs.Count > 0)
+        {
+            return graphs[0];
+        }
         foreach (Graph g in graphs)
         {
             if (g.GraphName == graphName)
