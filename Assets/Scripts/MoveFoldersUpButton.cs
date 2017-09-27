@@ -7,13 +7,24 @@ using UnityEngine;
 public class MoveFoldersUpButton : MonoBehaviour
 {
     public Transform folderList;
-    public int moveTime = 10;
+    public int moveTime;
     public float[] dY;
+
+    private Vector3 moveDistanceWhenPressed = new Vector3(0f, -0.3f, 0f);
+    private Vector3 colliderMoveDistanceWhenPressed = new Vector3(0f, 0f, 0.3f);
+    private BoxCollider boxCollider;
+    private MeshRenderer meshRenderer;
+    private Color emissionColor;
+    private bool increaseEmission;
+    private int emissionPropertyID;
     private bool controllerInside = false;
     private bool coroutineRunning = false;
 
     private void Start()
     {
+        meshRenderer = GetComponent<MeshRenderer>();
+        emissionPropertyID = Shader.PropertyToID("_EmissionColor");
+        boxCollider = GetComponent<BoxCollider>();
         // calculate how much it the folders should move every frame once
         dY = new float[moveTime];
         var total = 0f;
@@ -39,6 +50,7 @@ public class MoveFoldersUpButton : MonoBehaviour
         if (other.gameObject.CompareTag("Smaller Controller Collider"))
         {
             controllerInside = true;
+            StartCoroutine(Blink());
         }
     }
 
@@ -59,5 +71,41 @@ public class MoveFoldersUpButton : MonoBehaviour
             yield return null;
         }
         coroutineRunning = false;
+    }
+
+    private IEnumerator Blink()
+    {
+        emissionColor = new Color(0.15f, 0.15f, 0.15f);
+        transform.localPosition += moveDistanceWhenPressed;
+        boxCollider.center += colliderMoveDistanceWhenPressed;
+        meshRenderer.material.SetColor(emissionPropertyID, emissionColor);
+        while (controllerInside)
+        {
+            if (increaseEmission)
+            {
+                emissionColor.r = emissionColor.r + 0.025f;
+                emissionColor.g = emissionColor.g + 0.025f;
+                emissionColor.b = emissionColor.b + 0.025f;
+                if (emissionColor.r > 0.6f)
+                {
+                    increaseEmission = false;
+                }
+            }
+            else
+            {
+                emissionColor.r = emissionColor.r - 0.025f;
+                emissionColor.g = emissionColor.g - 0.025f;
+                emissionColor.b = emissionColor.b - 0.025f;
+                if (emissionColor.r <= 0.15)
+                {
+                    increaseEmission = true;
+                }
+            }
+            meshRenderer.material.SetColor(emissionPropertyID, emissionColor);
+            yield return null;
+        }
+        transform.localPosition -= moveDistanceWhenPressed;
+        boxCollider.center -= colliderMoveDistanceWhenPressed;
+        meshRenderer.material.SetColor(emissionPropertyID, Color.black);
     }
 }
