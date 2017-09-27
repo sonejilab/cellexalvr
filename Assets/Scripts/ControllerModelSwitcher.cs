@@ -40,6 +40,9 @@ public class ControllerModelSwitcher : MonoBehaviour
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
+    // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
+    // Otherwise you can't point the helptool towards the keyboard.
+    public bool HelpToolShouldStayActivated { get; set; }
 
     void Awake()
     {
@@ -141,6 +144,12 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// </summary>
     public void ActivateDesiredTool()
     {
+        // These models can have the help tool activated, so if we are not switching to one of them, the help tool should go away
+        if (DesiredModel != Model.HelpTool && DesiredModel != Model.Keyboard)
+        {
+            HelpToolShouldStayActivated = false;
+        }
+        // Deactivate all tools that should not be active.
         if (DesiredModel != Model.SelectionTool)
         {
             selectionToolHandler.SetSelectionToolEnabled(false);
@@ -157,11 +166,12 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             minimizer.SetActive(false);
         }
-        if (DesiredModel != Model.HelpTool)
+        if (DesiredModel != Model.HelpTool && !HelpToolShouldStayActivated)
         {
             helpTool.SetToolActivated(false);
         }
-        if (DesiredModel != Model.Keyboard)
+        // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
+        if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
         {
             rightLaser.enabled = false;
             keyboard.SetActive(false);
@@ -220,13 +230,20 @@ public class ControllerModelSwitcher : MonoBehaviour
         fire.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);
-        helpTool.SetToolActivated(false);
+        if (!HelpToolShouldStayActivated)
+        {
+            helpTool.SetToolActivated(false);
+            DesiredModel = Model.Normal;
+        }
+        else
+        {
+            DesiredModel = Model.HelpTool;
+        }
         rightLaser.enabled = false;
         leftLaser.enabled = false;
         keyboard.SetActive(false);
         referenceManager.gameManager.InformActivateKeyboard(false);
         drawTool.SetActive(false);
-        DesiredModel = Model.Normal;
         if (inMenu)
         {
             SwitchToModel(Model.Menu);

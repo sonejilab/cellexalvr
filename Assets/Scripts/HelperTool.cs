@@ -31,7 +31,7 @@ public class HelperTool : MonoBehaviour
     private RaycastHit hit;
     private Transform raycastingSource;
     private LayerMask savedLayersToIgnore;
-    private Transform savedCustomOrigin;
+    private Transform savedCustomOrigin = null;
     private float timeLastHit;
     private float initialY;
     private bool activated;
@@ -140,7 +140,8 @@ public class HelperTool : MonoBehaviour
         {
             // change some fields to make the laser pointer work as intended
             pointerRenderer.layersToIgnore = layersToIgnore;
-            savedCustomOrigin = pointer.customOrigin;
+            if (savedCustomOrigin == null)
+                savedCustomOrigin = pointer.customOrigin;
             pointer.customOrigin = customOrigin;
         }
         else
@@ -148,6 +149,7 @@ public class HelperTool : MonoBehaviour
             // change the fields back again
             pointerRenderer.layersToIgnore = savedLayersToIgnore;
             pointer.customOrigin = savedCustomOrigin;
+            savedCustomOrigin = null;
         }
         pointerRenderer.enabled = activate;
         activated = activate;

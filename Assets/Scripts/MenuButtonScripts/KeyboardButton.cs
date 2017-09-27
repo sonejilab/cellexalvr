@@ -38,7 +38,6 @@ public class KeyboardButton : StationaryButton
             {
                 controllerModelSwitcher.TurnOffActiveTool(true);
             }
-            keyboard.SetActive(activateKeyboard);
         }
         if (activateKeyboard)
         {

@@ -22,7 +22,8 @@ class HelperToolActivator : MonoBehaviour
         if (other.CompareTag("Menu Controller Collider"))
         {
             controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
-            helpTool.SetToolActivated(true);
+            controllerModelSwitcher.HelpToolShouldStayActivated = true;
+            controllerModelSwitcher.ActivateDesiredTool();
         }
     }
 }

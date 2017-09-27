@@ -6,6 +6,7 @@
 public class HelpToolButton : StationaryButton
 {
     private ControllerModelSwitcher controllerModelSwitcher;
+    private HelperTool helpTool;
 
     protected override string Description
     {
@@ -16,6 +17,7 @@ public class HelpToolButton : StationaryButton
     {
         base.Awake();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        helpTool = referenceManager.helpTool;
     }
 
     void Update()
@@ -23,14 +25,23 @@ public class HelpToolButton : StationaryButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            bool helpToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool;
+            bool helpToolActivated = helpTool.gameObject.activeSelf;
             if (helpToolActivated)
             {
-                controllerModelSwitcher.TurnOffActiveTool(true);
+                if (referenceManager.keyboard.activeSelf)
+                    controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
+                else
+                    controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+                controllerModelSwitcher.HelpToolShouldStayActivated = false;
+                // we can't use controllerModelSwitcher.TurnOffActiveTool(true); here because the tool can be
+                // changed while the actual helptool is still activated.
+                helpTool.SetToolActivated(false);
+
             }
             else
             {
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
+                controllerModelSwitcher.HelpToolShouldStayActivated = true;
                 controllerModelSwitcher.ActivateDesiredTool();
             }
         }
