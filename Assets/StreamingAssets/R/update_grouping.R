@@ -20,5 +20,6 @@ t <- exportUserGroups4vr ( cellexalObj, userfolder )
 
 file.copy(selectionfile, file.path( userfolder,paste(sep='.', cellexalObj@usedObj$lastGroup,'txt' ) ) )
 
-save ( cellexalObj, file=  file.path( userfolder, 'cellexalObj.RData' ))
+lockedSave ( cellexalObj, userfolder)
+
 #print("done")
