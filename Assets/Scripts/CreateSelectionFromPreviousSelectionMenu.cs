@@ -19,7 +19,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
     /// Creates new buttons for toggling arcs.
     /// </summary>
     /// <param name="networks"> An array of strings that contain the names of the networks. </param>
-    public void CreateCreateSelectionFromPreviousSelectionButtons(string[] names)
+    public void CreateSelectionFromPreviousSelectionButtons(string graphName, string[] names, string[][] selectionCellNames, Color[][] selectionColors)
     {
 
         foreach (GameObject button in buttons)
@@ -30,13 +30,16 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
         }
         for (int i = 0; i < names.Length; ++i)
         {
-            var name = names[i];
-            var newButton = Instantiate(buttonPrefab, transform);
-            var buttonList = newButton.GetComponentsInChildren<CreateSelectionFromPreviousButton>();
-            newButton.transform.localPosition = buttonPos;
-            newButton.gameObject.SetActive(true);
-            newButton.SetIndex(name);
-            buttons.Add(newButton);
+            string name = names[i];
+
+            var buttonGameObject = Instantiate(buttonPrefab, transform);
+            buttonGameObject.SetActive(true);
+            buttonGameObject.transform.localPosition = buttonPos;
+
+            var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();
+            button.SetSelection(graphName, name, selectionCellNames[i], selectionColors[i]);
+            buttons.Add(buttonGameObject);
+
             // position the buttons in a 4 column grid.
             if ((i + 1) % 4 == 0)
             {

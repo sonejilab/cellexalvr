@@ -26,13 +26,13 @@ public class UsernameChangedEvent : UnityEvent<string>
 }
 
 /// <summary>
-/// This static class represents a user.
+/// This static class represents a user that works with some data.
 /// </summary>
 public static class CellExAlUser
 {
     private static string workingDirectory = Directory.GetCurrentDirectory();
     private static string username = "default_user";
-    private static bool UsernameSet = false;
+    private static string dataFolder;
 
     /// <summary>
     /// An event that is triggered when the username is changed.
@@ -42,6 +42,7 @@ public static class CellExAlUser
     /// Path to a folder unique to the current user.
     /// </summary>
     public static string UserSpecificFolder = workingDirectory + "/Output/" + username;
+
     /// <summary>
     /// The user's name. This is edited through the escape menu.
     /// </summary>
@@ -55,11 +56,57 @@ public static class CellExAlUser
         {
             if (value.Equals(""))
                 return;
-            UsernameSet = true;
-            string lowercaseUsername = value.ToLower();
-            username = lowercaseUsername;
-            UserSpecificFolder = workingDirectory + "/Output/" + username;
-            UsernameChanged.Invoke(lowercaseUsername);
+            username = value.ToLower();
+            UpdateUserSpecificFolder(username, UserSpecificDataFolder);
+            UsernameChanged.Invoke(username);
+        }
+    }
+
+    /// <summary>
+    /// The folder containing the source data that we are currently working on.
+    /// This should not be a full path, but rather a relative path from the Data folder.
+    /// </summary>
+    /// <example>
+    /// Loading "Cellexal/Data/data_set_1" means this should be set to "data_set_1"
+    /// </example>
+    public static string UserSpecificDataFolder
+    {
+        get
+        {
+            return dataFolder;
+        }
+        set
+        {
+            if (value == "")
+                return;
+            dataFolder = value;
+            UpdateUserSpecificFolder(Username, value);
+        }
+    }
+
+    /// <summary>
+    /// Helper method to set the user specific folder
+    /// </summary>
+    private static void UpdateUserSpecificFolder(string username, string dataFolder)
+    {
+        if (Username == "" || UserSpecificDataFolder == "")
+        {
+            return;
+        }
+
+        // make sure all the folders exist
+        string userFolder = workingDirectory + "/Output/" + username;
+        if (!Directory.Exists(userFolder))
+        {
+            CellExAlLog.Log("Created directory " + userFolder);
+            Directory.CreateDirectory(userFolder);
+        }
+
+        UserSpecificFolder = userFolder + "/" + dataFolder;
+        if (!Directory.Exists(UserSpecificFolder))
+        {
+            CellExAlLog.Log("Created directory " + UserSpecificFolder);
+            Directory.CreateDirectory(UserSpecificFolder);
         }
     }
 }

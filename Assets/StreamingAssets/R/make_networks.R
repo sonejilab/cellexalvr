@@ -9,11 +9,11 @@ homedir <- args[1]
 
 datadir <- args[2]
 latest_version <- args[3]
-
+input_file_dir <- args[4]
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
-group_selection_filepath <- file.path(homedir, "Data","runtimeGroups", paste("selection", latest_version, ".txt", sep=""))
+group_selection_filepath <- file.path(input_file_dir, paste("selection", latest_version, ".txt", sep=""))
 
 if ( ! file.exists(group_selection_filepath)) {
         group_selection_filepath = latest_version # as this is the grouping name!

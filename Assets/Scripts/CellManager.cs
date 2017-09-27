@@ -52,15 +52,15 @@ public class CellManager : MonoBehaviour
         return cells[label];
     }
 
-    public void CreateNewSelectionFromArray(string[] cellnames, int[] colors)
+    public void CreateNewSelectionFromArray(string graphName, string[] cellnames, Color[] colors)
     {
         // finds any graph
-        Graph graph = graphManager.FindGraph("");
+        Graph graph = graphManager.FindGraph(graphName);
         for (int i = 0; i < cellnames.Length; ++i)
         {
             Cell cell = cells[cellnames[i]];
-            cell.SetColor(selectionToolHandler.GetColor(colors[i]));
-            selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]]);
+            selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], colors[i], false);
+            cell.SetColor(colors[i]);
         }
     }
 

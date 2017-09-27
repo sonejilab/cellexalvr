@@ -11,13 +11,13 @@ using UnityEngine;
 public class NetworkGenerator : MonoBehaviour
 {
     public ReferenceManager referenceManager;
+    public List<NetworkHandler> networkList = new List<NetworkHandler>();
+    public int objectsInSky;
 
     private SelectionToolHandler selectionToolHandler;
-    public List<NetworkHandler> networkList = new List<NetworkHandler>();
     private InputReader inputReader;
     private StatusDisplay status;
     private Thread t;
-    public int objectsInSky;
 
     private void Start()
     {

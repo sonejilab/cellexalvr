@@ -104,10 +104,19 @@ public class SelectionToolHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds a graphpoint to the current selection, and changes its color.
+    /// Adds a graphpoint to the current selection, and changes its color to the current color of the selection tool.
     /// This method is called by a child object that holds the collider.
     /// </summary>
     public void AddGraphpointToSelection(GraphPoint graphPoint)
+    {
+        Color newColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+        AddGraphpointToSelection(graphPoint, newColor, true);
+    }
+
+    /// <summary>
+    /// Adds a graphpoint to the current selection, and changes its color.
+    /// </summary>
+    public void AddGraphpointToSelection(GraphPoint graphPoint, Color newColor, bool hapticFeedback)
     {
         // print(other.gameObject.name);
         if (graphPoint == null)
@@ -115,7 +124,7 @@ public class SelectionToolHandler : MonoBehaviour
             return;
         }
         Renderer renderer = graphPoint.gameObject.GetComponent<Renderer>();
-        Color newColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+
         Color oldColor = renderer.material.color;
         renderer.material.color = newColor;
         gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, newColor);
@@ -142,7 +151,10 @@ public class SelectionToolHandler : MonoBehaviour
         if (!Equals(newColor, oldColor))
         {
             selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
-            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
+
+            if (hapticFeedback)
+                SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
+
             groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
             if (newNode)
             {
@@ -360,7 +372,7 @@ public class SelectionToolHandler : MonoBehaviour
     private IEnumerator UpdateRObjectGrouping()
     {
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
-        string args = Directory.GetCurrentDirectory() + "/Data/runtimeGroups/selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
+        string args = CellExAlUser.UserSpecificFolder + "/selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
         CellExAlLog.Log("Updating R Object grouping at " + CellExAlUser.UserSpecificFolder);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
@@ -448,7 +460,7 @@ public class SelectionToolHandler : MonoBehaviour
     private void DumpData()
     {
         // print(new System.Diagnostics.StackTrace());
-        string filePath = Directory.GetCurrentDirectory() + "\\Data\\runtimeGroups\\selection" + (fileCreationCtr++) + ".txt";
+        string filePath = CellExAlUser.UserSpecificFolder + "/selection" + (fileCreationCtr++) + ".txt";
         using (StreamWriter file =
                    new StreamWriter(filePath))
         {

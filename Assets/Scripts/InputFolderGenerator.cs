@@ -34,13 +34,6 @@ public class InputFolderGenerator : MonoBehaviour
     /// </summary>
     public void GenerateFolders()
     {
-        string runtimeGroupsDirectory = Directory.GetCurrentDirectory() + "/Data/runtimeGroups";
-        if (!Directory.Exists(runtimeGroupsDirectory))
-        {
-            CellExAlLog.Log("Creating directory " + runtimeGroupsDirectory);
-            Directory.CreateDirectory(runtimeGroupsDirectory);
-        }
-
         string dataDirectory = Directory.GetCurrentDirectory() + "/Data";
         string[] directories = Directory.GetDirectories(dataDirectory);
         if (directories.Length == 0)
@@ -53,11 +46,6 @@ public class InputFolderGenerator : MonoBehaviour
         var nfolder = 0;
         foreach (string directory in directories)
         {
-            if (directory.Substring(directory.Length - 13) == "runtimeGroups")
-            {
-                continue;
-            }
-
             Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
             GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector, Quaternion.identity);
             newFolder.transform.parent = transform;

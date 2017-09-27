@@ -19,16 +19,8 @@ public static class CellExAlLog
     {
         // File names can't have colons so we only use hyphens
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-        logDirectory = Directory.GetCurrentDirectory() + "/Output";
 
-
-        if (!Directory.Exists(logDirectory))
-        {
-            logThisLater.Add("\tCreated directory " + logDirectory);
-            Directory.CreateDirectory(logDirectory);
-        }
-
-        logDirectory += "/" + CellExAlUser.Username;
+        logDirectory = Directory.GetCurrentDirectory() + "/Output/" + CellExAlUser.Username;
         if (!Directory.Exists(logDirectory))
         {
             logThisLater.Add("\tCreated directory " + logDirectory);
@@ -154,6 +146,13 @@ public class LogManager : MonoBehaviour
     {
         //CellExAlLog.InitNewLog();
         CellExAlUser.UsernameChanged.AddListener(CellExAlLog.UsernameChanged);
+        string outputDirectory = Directory.GetCurrentDirectory() + "/Output";
+
+        if (!Directory.Exists(outputDirectory))
+        {
+            CellExAlLog.Log("Created directory " + outputDirectory);
+            Directory.CreateDirectory(outputDirectory);
+        }
     }
 
     #region Events

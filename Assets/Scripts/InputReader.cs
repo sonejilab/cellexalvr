@@ -55,7 +55,7 @@ public class InputReader : MonoBehaviour
             status.gameObject.SetActive(true);
             ReadFolder(@"Bertie");
         }
-
+        CellExAlUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
 			doLoad = true;
@@ -75,24 +75,12 @@ public class InputReader : MonoBehaviour
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath = workingDirectory + "/Data/" + path;
         CellExAlLog.Log("Started reading the data folder at " + fullPath);
+        CellExAlUser.UserSpecificDataFolder = path;
+        LoadPreviousGroupings(CellExAlUser.Username);
         database.InitDatabase(fullPath + "\\database.sqlite");
 
         // print(path);
         selectionToolHandler.DataDir = fullPath;
-
-        string runtimegroupsDirectory = workingDirectory + "\\Data\\runtimeGroups";
-        if (!Directory.Exists(runtimegroupsDirectory))
-        {
-            CellExAlLog.Log("Creating directory " + runtimegroupsDirectory);
-            Directory.CreateDirectory(runtimegroupsDirectory);
-        }
-
-        // clear the runtimeGroups
-        string[] txtList = Directory.GetFiles(runtimegroupsDirectory, "*.txt");
-        foreach (string f in txtList)
-        {
-            File.Delete(f);
-        }
 
         if (!debug)
         {
@@ -695,6 +683,67 @@ public class InputReader : MonoBehaviour
 
         }
         graph.SetMinMaxCoords(minCoordValues, maxCoordValues);
+    }
+
+    private void LoadPreviousGroupings(string username)
+    {
+        string dataFolder = CellExAlUser.UserSpecificFolder;
+        string groupingsInfoFile = dataFolder + "/groupings_info.txt";
+        CellExAlLog.Log("Started reading the previous groupings files");
+        if (!File.Exists(groupingsInfoFile))
+        {
+            CellExAlLog.Log("WARNING: No groupings info file found at " + groupingsInfoFile);
+            return;
+        }
+        FileStream fileStream = new FileStream(groupingsInfoFile, FileMode.Open);
+        StreamReader streamReader = new StreamReader(fileStream);
+        // skip the header
+        streamReader.ReadLine();
+        List<string> lines = new List<string>();
+        List<string> fileNames = new List<string>();
+        List<int> fileLengths = new List<int>();
+        string line = "";
+        while (!streamReader.EndOfStream)
+        {
+            line = streamReader.ReadLine();
+            lines.Add(line);
+            fileNames.Add(line.Split(null)[0]);
+            fileLengths.Add(int.Parse(line.Split(null)[2]));
+        }
+        streamReader.Close();
+        fileStream.Close();
+
+        CellExAlLog.Log("Reading " + fileNames.Count + " files");
+        // initialize the arrays
+        string[][] cellNames = new string[fileNames.Count][];
+        Color[][] colors = new Color[fileNames.Count][];
+        for (int i = 0; i < cellNames.Length; ++i)
+        {
+            cellNames[i] = new string[fileLengths[i]];
+            colors[i] = new Color[fileLengths[i]];
+        }
+        string[] words = null;
+        string[] files = Directory.GetFiles(dataFolder, "User.group*.txt");
+        for (int i = 0; i < files.Length; ++i)
+        {
+            string file = files[i];
+            fileStream = new FileStream(file, FileMode.Open);
+            streamReader = new StreamReader(fileStream);
+
+            for (int j = 0; j < fileLengths[i]; ++j)
+            {
+                line = streamReader.ReadLine();
+                words = line.Split(null);
+                cellNames[i][j] = words[0];
+                ColorUtility.TryParseHtmlString(words[1], out colors[i][j]);
+            }
+            streamReader.Close();
+            fileStream.Close();
+        }
+        string graphName = words[2];
+        // someone please rename this
+        referenceManager.createSelectionFrompreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphName, fileNames.ToArray(), cellNames, colors);
+        CellExAlLog.Log("Successfully read " + fileNames.Count + " files");
     }
 
 }

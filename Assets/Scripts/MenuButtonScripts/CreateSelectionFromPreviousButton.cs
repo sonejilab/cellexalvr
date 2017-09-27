@@ -6,13 +6,15 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
     public ReferenceManager referenceManager;
     public TextMesh description;
 
+
     private SteamVR_TrackedObject rightController;
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private new Renderer renderer;
     private bool controllerInside = false;
-    private Color color;
-    private string indexName;
+    private string graphName;
+    private string[] selectionCellNames;
+    private Color[] selectionColors;
 
     void Awake()
     {
@@ -30,17 +32,16 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            cellManager.ColorByIndex(indexName);
+            referenceManager.cellManager.CreateNewSelectionFromArray(graphName, selectionCellNames, selectionColors);
         }
     }
 
-    public void SetIndex(string indexName)
+    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, Color[] selectionColors)
     {
-        //color = network.GetComponent<Renderer>().material.color;
-        //GetComponent<Renderer>().material.color = color;
-        color = GetComponent<Renderer>().material.color;
-        this.indexName = indexName;
-        description.text = indexName;
+        description.text = selectionName;
+        this.graphName = graphName;
+        this.selectionCellNames = selectionCellNames;
+        this.selectionColors = selectionColors;
     }
 
     void OnTriggerEnter(Collider other)
@@ -56,7 +57,7 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
-            renderer.material.color = color;
+            renderer.material.color = Color.black;
             controllerInside = false;
         }
     }
