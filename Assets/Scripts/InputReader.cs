@@ -73,10 +73,10 @@ public class InputReader : MonoBehaviour
     public void ReadFolder(string path)
     {
         string workingDirectory = Directory.GetCurrentDirectory();
-        string fullPath = workingDirectory + "/Data/" + path;
-        CellExAlLog.Log("Started reading the data folder at " + fullPath);
+        string fullPath = workingDirectory + "\\Data\\" + path;
+        CellExAlLog.Log("Started reading the data folder at " + CellExAlLog.FixFilePath(fullPath));
         CellExAlUser.UserSpecificDataFolder = path;
-        LoadPreviousGroupings(CellExAlUser.Username);
+        LoadPreviousGroupings();
         database.InitDatabase(fullPath + "\\database.sqlite");
 
         // print(path);
@@ -88,11 +88,11 @@ public class InputReader : MonoBehaviour
             string networkDirectory = workingDirectory + "\\Resources\\Networks";
             if (!Directory.Exists(networkDirectory))
             {
-                CellExAlLog.Log("Creating directory " + networkDirectory);
+                CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(networkDirectory));
                 Directory.CreateDirectory(networkDirectory);
             }
             string[] networkFilesList = Directory.GetFiles(networkDirectory, "*");
-            CellExAlLog.Log("Deleting " + networkFilesList.Length + " files in " + networkDirectory);
+            CellExAlLog.Log("Deleting " + networkFilesList.Length + " files in " + CellExAlLog.FixFilePath(networkDirectory));
             foreach (string f in networkFilesList)
             {
                 File.Delete(f);
@@ -262,7 +262,7 @@ public class InputReader : MonoBehaviour
     /// </summary>
     private void ReadFacsFiles(string path, int nbrOfCells)
     {
-        string fullpath = path + "/index.facs";
+        string fullpath = path + "\\index.facs";
 
         if (!File.Exists(fullpath))
         {
@@ -322,7 +322,7 @@ public class InputReader : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
         indexMenu.CreateColorByIndexButtons(header);
-        CellExAlLog.Log("Successfully read " + fullpath);
+        CellExAlLog.Log("Successfully read " + CellExAlLog.FixFilePath(fullpath));
     }
 
     /// <summary>
@@ -374,7 +374,7 @@ public class InputReader : MonoBehaviour
         if (cntFilePaths.Length == 0)
         {
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            CellExAlLog.Log("ERROR: No .cnt file in network folder " + networkDirectory);
+            CellExAlLog.Log("ERROR: No .cnt file in network folder " + CellExAlLog.FixFilePath(networkDirectory));
             return;
         }
 
@@ -391,7 +391,7 @@ public class InputReader : MonoBehaviour
         if (nwkFilePaths.Length == 0)
         {
             print("no .nwk file in network folder");
-            CellExAlLog.Log("ERROR: No .nwk file in network folder " + networkDirectory);
+            CellExAlLog.Log("ERROR: No .nwk file in network folder " + CellExAlLog.FixFilePath(networkDirectory));
             return;
         }
         FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
@@ -412,7 +412,7 @@ public class InputReader : MonoBehaviour
         // make sure there is a .lay file
         if (layFilePaths.Length == 0)
         {
-            CellExAlLog.Log("ERROR: No .lay file found in network folder " + networkDirectory);
+            CellExAlLog.Log("ERROR: No .lay file found in network folder " + CellExAlLog.FixFilePath(networkDirectory));
         }
 
         // Read the .cnt file
@@ -685,45 +685,59 @@ public class InputReader : MonoBehaviour
         graph.SetMinMaxCoords(minCoordValues, maxCoordValues);
     }
 
-    private void LoadPreviousGroupings(string username)
+    /// <summary>
+    /// Read all the user.group files which cointains the grouping information from previous sessions.
+    /// </summary>
+    private void LoadPreviousGroupings()
     {
         string dataFolder = CellExAlUser.UserSpecificFolder;
-        string groupingsInfoFile = dataFolder + "/groupings_info.txt";
+        string groupingsInfoFile = dataFolder + "\\groupings_info.txt";
         CellExAlLog.Log("Started reading the previous groupings files");
         if (!File.Exists(groupingsInfoFile))
         {
-            CellExAlLog.Log("WARNING: No groupings info file found at " + groupingsInfoFile);
+            CellExAlLog.Log("WARNING: No groupings info file found at " + CellExAlLog.FixFilePath(groupingsInfoFile));
             return;
         }
         FileStream fileStream = new FileStream(groupingsInfoFile, FileMode.Open);
         StreamReader streamReader = new StreamReader(fileStream);
         // skip the header
         streamReader.ReadLine();
-        List<string> lines = new List<string>();
-        List<string> fileNames = new List<string>();
+        List<string> groupingNames = new List<string>();
         List<int> fileLengths = new List<int>();
         string line = "";
+        string[] words = null;
         while (!streamReader.EndOfStream)
         {
             line = streamReader.ReadLine();
-            lines.Add(line);
-            fileNames.Add(line.Split(null)[0]);
+            if (line == "") continue;
+            words = line.Split(null);
+
+            // set the grouping's name to [the grouping's number]\n[number of colors in grouping]\n[number of cells in groupings]
+            string groupingName = words[0];
+            int indexOfLastDot = groupingName.LastIndexOf(".");
+            if (indexOfLastDot == -1)
+            {
+                CellExAlLog.Log("WARNING: Could not find \'.\' in \"" + words[0] + "\"");
+                indexOfLastDot = groupingName.Length - 1;
+            }
+            string groupingNumber = groupingName.Substring(indexOfLastDot, groupingName.Length - indexOfLastDot);
+            groupingNames.Add(groupingNumber + "\n" + words[1] + "\n" + words[2]);
             fileLengths.Add(int.Parse(line.Split(null)[2]));
         }
         streamReader.Close();
         fileStream.Close();
 
-        CellExAlLog.Log("Reading " + fileNames.Count + " files");
+        CellExAlLog.Log("Reading " + groupingNames.Count + " files");
         // initialize the arrays
-        string[][] cellNames = new string[fileNames.Count][];
-        Color[][] colors = new Color[fileNames.Count][];
+        string[][] cellNames = new string[groupingNames.Count][];
+        Color[][] colors = new Color[groupingNames.Count][];
         for (int i = 0; i < cellNames.Length; ++i)
         {
             cellNames[i] = new string[fileLengths[i]];
             colors[i] = new Color[fileLengths[i]];
         }
-        string[] words = null;
-        string[] files = Directory.GetFiles(dataFolder, "User.group*.txt");
+        words = null;
+        string[] files = Directory.GetFiles(dataFolder, "User.group.*.txt");
         for (int i = 0; i < files.Length; ++i)
         {
             string file = files[i];
@@ -742,8 +756,8 @@ public class InputReader : MonoBehaviour
         }
         string graphName = words[2];
         // someone please rename this
-        referenceManager.createSelectionFrompreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphName, fileNames.ToArray(), cellNames, colors);
-        CellExAlLog.Log("Successfully read " + fileNames.Count + " files");
+        referenceManager.createSelectionFrompreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphName, groupingNames.ToArray(), cellNames, colors);
+        CellExAlLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 
 }

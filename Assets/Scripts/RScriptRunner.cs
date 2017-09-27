@@ -25,7 +25,7 @@ public class RScriptRunner
         try
         {
             string workingDirectory = Directory.GetCurrentDirectory();
-            using (StreamReader r = new StreamReader(workingDirectory + "/Config/config.txt"))
+            using (StreamReader r = new StreamReader(workingDirectory + "\\Config\\config.txt"))
             {
                 string rawInput = r.ReadToEnd();
                 string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -49,7 +49,7 @@ public class RScriptRunner
                     result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
                 }
                 using (StreamWriter writetofile =
-                      new StreamWriter(Directory.GetCurrentDirectory() + "/Output/r_log.txt"))
+                      new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt"))
                 {
                     writetofile.WriteLine(result);
                     writetofile.Flush();

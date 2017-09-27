@@ -21,7 +21,7 @@ public class UsernameManager : MonoBehaviour
 }
 
 [System.Serializable]
-public class UsernameChangedEvent : UnityEvent<string>
+public class UsernameChangedEvent : UnityEvent
 {
 }
 
@@ -37,11 +37,11 @@ public static class CellExAlUser
     /// <summary>
     /// An event that is triggered when the username is changed.
     /// </summary>
-    public static UnityEvent<string> UsernameChanged = new UsernameChangedEvent();
+    public static UnityEvent UsernameChanged = new UsernameChangedEvent();
     /// <summary>
-    /// Path to a folder unique to the current user.
+    /// Path to a folder unique to the current user and the currently loaded dataset.
     /// </summary>
-    public static string UserSpecificFolder = workingDirectory + "/Output/" + username;
+    public static string UserSpecificFolder = workingDirectory + @"\Output\" + username;
 
     /// <summary>
     /// The user's name. This is edited through the escape menu.
@@ -58,7 +58,7 @@ public static class CellExAlUser
                 return;
             username = value.ToLower();
             UpdateUserSpecificFolder(username, UserSpecificDataFolder);
-            UsernameChanged.Invoke(username);
+            UsernameChanged.Invoke();
         }
     }
 
@@ -95,14 +95,14 @@ public static class CellExAlUser
         }
 
         // make sure all the folders exist
-        string userFolder = workingDirectory + "/Output/" + username;
+        string userFolder = workingDirectory + @"\Output\" + username;
         if (!Directory.Exists(userFolder))
         {
             CellExAlLog.Log("Created directory " + userFolder);
             Directory.CreateDirectory(userFolder);
         }
 
-        UserSpecificFolder = userFolder + "/" + dataFolder;
+        UserSpecificFolder = userFolder + @"\" + dataFolder;
         if (!Directory.Exists(UserSpecificFolder))
         {
             CellExAlLog.Log("Created directory " + UserSpecificFolder);

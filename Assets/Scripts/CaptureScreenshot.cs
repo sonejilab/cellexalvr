@@ -16,7 +16,7 @@ public class CaptureScreenshot : MonoBehaviour
     private float elapsedTime = 0.0f;
     private float colorAlpha;
     private int screenshotCounter;
-    private string directory = Directory.GetCurrentDirectory() + "/Screenshots";
+    private string directory = Directory.GetCurrentDirectory() + "\\Screenshots";
 
     void Start()
     {
@@ -34,10 +34,10 @@ public class CaptureScreenshot : MonoBehaviour
                 //Touchpad 
                 if (!Directory.Exists(directory))
                 {
-                    CellExAlLog.Log("Creating directory " + directory);
+                    CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(directory));
                     Directory.CreateDirectory(directory);
                 }
-                Application.CaptureScreenshot(directory + "/Screenshot" + screenshotCounter + ".png");
+                Application.CaptureScreenshot(directory + "\\Screenshot" + screenshotCounter + ".png");
                 CellExAlLog.Log("Screenshot taken!");
                 elapsedTime = 0.0f;
                 screenshotCounter++;

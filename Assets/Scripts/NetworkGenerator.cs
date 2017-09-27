@@ -39,7 +39,7 @@ public class NetworkGenerator : MonoBehaviour
         string home = Directory.GetCurrentDirectory();
         string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellExAlUser.UserSpecificFolder;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
-        CellExAlLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
+        CellExAlLog.Log("Running R script " + CellExAlLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));

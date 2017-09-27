@@ -372,7 +372,7 @@ public class SelectionToolHandler : MonoBehaviour
     private IEnumerator UpdateRObjectGrouping()
     {
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
-        string args = CellExAlUser.UserSpecificFolder + "/selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
+        string args = CellExAlUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
         CellExAlLog.Log("Updating R Object grouping at " + CellExAlUser.UserSpecificFolder);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
@@ -460,11 +460,11 @@ public class SelectionToolHandler : MonoBehaviour
     private void DumpData()
     {
         // print(new System.Diagnostics.StackTrace());
-        string filePath = CellExAlUser.UserSpecificFolder + "/selection" + (fileCreationCtr++) + ".txt";
+        string filePath = CellExAlUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
         using (StreamWriter file =
                    new StreamWriter(filePath))
         {
-            CellExAlLog.Log("Dumping selection data to " + filePath);
+            CellExAlLog.Log("Dumping selection data to " + CellExAlLog.FixFilePath(filePath));
             CellExAlLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
             if (selectionHistory != null)
                 CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");

@@ -82,14 +82,14 @@ public class Heatmap : MonoBehaviour
         string saveDir = Directory.GetCurrentDirectory() + @"\Saved_Images";
         if (!Directory.Exists(saveDir))
         {
-            CellExAlLog.Log("Creating directory " + saveDir);
+            CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(saveDir));
             Directory.CreateDirectory(saveDir);
         }
 
-        saveDir += "/" + CellExAlUser.Username;
+        saveDir += "\\" + CellExAlUser.Username;
         if (!Directory.Exists(saveDir))
         {
-            CellExAlLog.Log("Creating directory " + saveDir);
+            CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(saveDir));
             Directory.CreateDirectory(saveDir);
         }
 

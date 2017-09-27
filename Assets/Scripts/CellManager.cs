@@ -21,6 +21,7 @@ public class CellManager : MonoBehaviour
     private GameManager gameManager;
     private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
+    private int coroutinesWaiting;
 
     void Awake()
     {
@@ -120,17 +121,28 @@ public class CellManager : MonoBehaviour
     {
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName, true));
+        StartCoroutine(QueryDatabase(geneName));
     }
 
-    private IEnumerator QueryDatabase(string geneName, bool informServer)
+    private IEnumerator QueryDatabase(string geneName)
     {
+        if (coroutinesWaiting >= 1)
+        {
+            // If there is already another query  waiting for the current to finish we should probably abort.
+            // This is just to make sure that a bug can't create many many coroutines that will form a long queue.
+            CellExAlLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
+            yield break;
+        }
+        coroutinesWaiting++;
+
         // if there is already a query running, wait for it to finish
         while (database.QueryRunning)
             yield return null;
 
+        coroutinesWaiting--;
         database.QueryGene(geneName);
 
+        // now we have to wait for our query to return the results.
         while (database.QueryRunning)
             yield return null;
 

@@ -20,14 +20,14 @@ public static class CellExAlLog
         // File names can't have colons so we only use hyphens
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
-        logDirectory = Directory.GetCurrentDirectory() + "/Output/" + CellExAlUser.Username;
+        logDirectory = Directory.GetCurrentDirectory() + "\\Output\\" + CellExAlUser.Username;
         if (!Directory.Exists(logDirectory))
         {
-            logThisLater.Add("\tCreated directory " + logDirectory);
+            logThisLater.Add("\tCreated directory " + FixFilePath(logDirectory));
             Directory.CreateDirectory(logDirectory);
         }
 
-        logFilePath = logDirectory + "/cellexal-log-" + time + ".txt";
+        logFilePath = logDirectory + "\\cellexal-log-" + time + ".txt";
         // this will most likely always happen
         if (!File.Exists(logFilePath))
         {
@@ -86,6 +86,19 @@ public static class CellExAlLog
     }
 
     /// <summary>
+    /// Replaces all forward and backward slashes with whatever is the correct directory seperator character on this system.
+    /// </summary>
+    /// <param name="path"> A file path with a wierd mix of forward and backward slashes. </param>
+    /// <returns> A file path without a wierd mix of forward and backward slashes. </returns>
+    public static string FixFilePath(string path)
+    {
+        char directorySeparatorChar = Path.DirectorySeparatorChar;
+        path.Replace('/', directorySeparatorChar);
+        path.Replace('\\', directorySeparatorChar);
+        return path;
+    }
+
+    /// <summary>
     /// Logs multiple messages. This method will append a linebreak between each message.
     /// </summary>
     /// <param name="message"> The messages that should be written to the log. </param>
@@ -112,11 +125,11 @@ public static class CellExAlLog
     /// Closes the old log and opens a new log.
     /// </summary>
     /// <param name="newUsername"> The new username. </param>
-    public static void UsernameChanged(string newUsername)
+    public static void UsernameChanged()
     {
         if (logWriter != null)
         {
-            Log("Changing user to " + newUsername,
+            Log("Changing user to " + CellExAlUser.Username,
                 "Goodbye.");
             Close();
         }
@@ -146,11 +159,11 @@ public class LogManager : MonoBehaviour
     {
         //CellExAlLog.InitNewLog();
         CellExAlUser.UsernameChanged.AddListener(CellExAlLog.UsernameChanged);
-        string outputDirectory = Directory.GetCurrentDirectory() + "/Output";
+        string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";
 
         if (!Directory.Exists(outputDirectory))
         {
-            CellExAlLog.Log("Created directory " + outputDirectory);
+            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(outputDirectory));
             Directory.CreateDirectory(outputDirectory);
         }
     }

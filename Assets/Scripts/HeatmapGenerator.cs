@@ -118,10 +118,10 @@ public class HeatmapGenerator : MonoBehaviour
             string heatmapDirectory = home + @"\Images";
             if (!Directory.Exists(heatmapDirectory))
             {
-                CellExAlLog.Log("Creating directory " + heatmapDirectory);
+                CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(heatmapDirectory));
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            CellExAlLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
+            CellExAlLog.Log("Running R script " + CellExAlLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
