@@ -171,17 +171,11 @@ public class Graph : MonoBehaviour
         /// The "solution" was to place a shader which does not cull the backside of the triangles, so 
         /// both sides are always rendered.
         string path = Directory.GetCurrentDirectory() + @"\Data\" + DirectoryName + @"\" + GraphName + ".hull";
-        string[] lines = File.ReadAllLines(path);
-        if (lines.Length == 0)
-        {
-            return null;
-        }
+        FileStream fileStream = new FileStream(path, FileMode.Open);
+        StreamReader streamReader = new StreamReader(fileStream);
 
-        int[] xcoords = new int[lines.Length];
-        int[] ycoords = new int[lines.Length];
-        int[] zcoords = new int[lines.Length];
         Vector3[] vertices = new Vector3[points.Count];
-        int[] triangles = new int[lines.Length * 3];
+        List<int> triangles = new List<int>();
 
         for (int i = 0; i < points.Count; ++i)
         {
@@ -189,10 +183,10 @@ public class Graph : MonoBehaviour
         }
 
         var trianglesIndex = 0;
-        for (int i = 0; i < lines.Length; ++i)
+        while (!streamReader.EndOfStream)
         {
 
-            string[] coords = lines[i].Split(null);
+            string[] coords = streamReader.ReadLine().Split(null);
             if (coords.Length < 4)
                 continue;
             // subtract 1 because R is 1-indexed
@@ -201,16 +195,21 @@ public class Graph : MonoBehaviour
             triangles[trianglesIndex++] = int.Parse(coords[3]) - 1;
         }
 
+        streamReader.Close();
+        fileStream.Close();
+
         var convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
         convexHull.mesh = new Mesh()
         {
             vertices = vertices,
-            triangles = triangles
+            triangles = triangles.ToArray()
         };
 
         convexHull.transform.position = transform.position;
         // move the convexhull slightly out of the way of the graph
-        // in a direction sort of pointing towards the middle
+        // in a direction sort of pointing towards the middle.
+        // otherwise it lags really bad when the skeleton is first 
+        // moved out of the original graph
         Vector3 moveDist = new Vector3(.2f, 0, .2f);
         if (transform.position.x > 0) moveDist.x = -.2f;
         if (transform.position.z > 0) moveDist.z = -.2f;

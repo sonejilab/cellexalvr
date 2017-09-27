@@ -30,11 +30,15 @@ public class Heatmap : MonoBehaviour
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         rightController = referenceManager.rightController;
         gameManager = referenceManager.gameManager;
+        fire = referenceManager.fire;
+        graphManager = referenceManager.graphManager;
     }
+
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = true;
         }
@@ -42,7 +46,7 @@ public class Heatmap : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = false;
         }
@@ -122,11 +126,9 @@ public class Heatmap : MonoBehaviour
     /// <summary>
     /// Sets some variables. Should be called after a heatmap is instantiated.
     /// </summary>
-    public void SetVars(GraphManager graphManager, SelectionToolHandler selectionToolHandler, Dictionary<Cell, Color> colors, GameObject fire)
+    public void SetVars(Dictionary<Cell, Color> colors)
     {
-        containedCells = new Dictionary<Cell, Color>();
-        this.graphManager = graphManager;
-        this.fire = fire;
+        // containedCells = new Dictionary<Cell, Color>();
         containedCells = colors;
         infoText.text = "Total number of cells: " + colors.Count;
         // infoText.text += "\nNumber of colours: " + numberOfColours;

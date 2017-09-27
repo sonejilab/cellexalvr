@@ -21,9 +21,7 @@ public class UsernameManager : MonoBehaviour
 }
 
 [System.Serializable]
-public class UsernameChangedEvent : UnityEvent
-{
-}
+public class UsernameChangedEvent : UnityEvent { }
 
 /// <summary>
 /// This static class represents a user that works with some data.
@@ -38,6 +36,7 @@ public static class CellExAlUser
     /// An event that is triggered when the username is changed.
     /// </summary>
     public static UnityEvent UsernameChanged = new UsernameChangedEvent();
+
     /// <summary>
     /// Path to a folder unique to the current user and the currently loaded dataset.
     /// </summary>

@@ -147,7 +147,7 @@ public class HeatmapGenerator : MonoBehaviour
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
             // save colors before.
-            heatmap.SetVars(graphManager, selectionToolHandler, colors, fire);
+            heatmap.SetVars(colors);
             heatmapList.Add(heatmap);
 
             hourglass.SetActive(false);

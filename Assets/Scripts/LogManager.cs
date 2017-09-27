@@ -144,6 +144,7 @@ public static class CellExAlLog
         if (logWriter != null)
         {
             logWriter.Close();
+            logStream.Close();
             logWriter = null;
         }
     }

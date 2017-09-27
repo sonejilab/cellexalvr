@@ -114,6 +114,7 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Keyboard:
             case Model.TwoLasers:
             case Model.DrawTool:
+            case Model.HeatmapDeleteTool:
                 controllerBodyMeshFilter.mesh = normalControllerMesh;
                 controllerBodyRenderer.material = normalMaterial;
                 break;
