@@ -12,7 +12,6 @@ public class NetworkNode : MonoBehaviour
     public TextMeshPro geneName;
     public GameObject edgePrefab;
     public GameObject arcDescriptionPrefab;
-    public BoxCollider boxCollider;
     public Transform CameraToLookAt { get; set; }
     public NetworkCenter Center { get; set; }
     private string label;
@@ -61,9 +60,18 @@ public class NetworkNode : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Tells this networknode that the networkcenter it belongs to is being brought back to the networkhandler.
+    /// </summary>
+    public void BringBack()
+    {
+        // the networkcenter turns off this networknode's collider, so the controller is not inside any longer.
+        controllerInside = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (boxCollider.enabled && other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = true;
             Highlight();
@@ -72,7 +80,7 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (boxCollider.enabled && other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = false;
             UnHighlight();

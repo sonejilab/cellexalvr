@@ -108,7 +108,7 @@ public class NetworkCenter : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name.Equals("Menu Selecter Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = true;
             numColliders++;
@@ -121,7 +121,7 @@ public class NetworkCenter : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.name.Equals("Menu Selecter Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             numColliders--;
         }
@@ -225,7 +225,6 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     public void BringBackOriginal()
     {
-
         this.name = "Original Network";
         if (isReplacement)
         {
@@ -249,7 +248,7 @@ public class NetworkCenter : MonoBehaviour
     private IEnumerator BringBackOriginalCoroutine()
     {
         // the ForceStopInteracting waits until the end of the frame before it stops interacting
-        // so we have to wait two frames until proceeding
+        // so we also have to wait one frame until proceeding
         gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
         yield return null;
         // now we can do things
@@ -274,9 +273,14 @@ public class NetworkCenter : MonoBehaviour
         // probably because it is still using these colliders
         yield return null;
         // Disable the network nodes' colliders
-        foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
+        foreach (Transform child in transform)
         {
-            b.enabled = false;
+            var node = child.GetComponent<NetworkNode>();
+            if (node)
+            {
+                node.BringBack();
+                node.GetComponent<BoxCollider>().enabled = false;
+            }
         }
     }
 

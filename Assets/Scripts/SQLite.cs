@@ -234,6 +234,7 @@ namespace SQLiter
             {
                 yield return null;
             }
+
             int i = 0;
             float minExpr = float.MaxValue;
             float maxExpr = float.MinValue;

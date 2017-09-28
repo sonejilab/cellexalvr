@@ -43,7 +43,10 @@ public class HeatmapGenerator : MonoBehaviour
     {
         foreach (Heatmap h in heatmapList)
         {
-            Destroy(h.gameObject);
+            if (h != null)
+            {
+                Destroy(h.gameObject);
+            }
         }
         heatmapList.Clear();
     }

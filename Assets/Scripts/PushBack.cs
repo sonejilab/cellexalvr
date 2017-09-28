@@ -31,6 +31,35 @@ public class PushBack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (rightController == null)
+        {
+            //Debug.Log("Find right controller");
+            rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+
+        }
+        if (device == null)
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+        }
+        if (GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<VRTK_InteractableObject>().IsGrabbed())
+        {
+
+            //Debug.Log("scale: " + transform.localScale + " pos: " + transform.position);
+            //Debug.Log("pos: " + orgPos + " scale: " + orgScale);
+            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
+            {
+                Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+                if (touchpad.y > 0.7f)
+                {
+                    push = true;
+                }
+                if (touchpad.y < -0.7f)
+                {
+                    pull = true;
+                }
+            }
+        }
+
         if (push)
         {
             raycastingSource = rightController.transform;
@@ -38,7 +67,6 @@ public class PushBack : MonoBehaviour
             if (Physics.Raycast(ray, out hit) && push)
             {
                 Debug.Log("PUSH BACK");
-                Vector3 dir = hit.transform.position - device.transform.pos;
                 if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     transform.LookAt(Vector3.zero);
@@ -48,6 +76,7 @@ public class PushBack : MonoBehaviour
                     transform.LookAt(Vector3.zero);
                     transform.Rotate(90f, 0, 0);
                 }
+                Vector3 dir = hit.transform.position - device.transform.pos;
                 dir = dir.normalized;
                 transform.position += dir * distanceMultiplier;
                 transform.localScale += orgScale * scaleMultiplier;
@@ -59,47 +88,23 @@ public class PushBack : MonoBehaviour
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit) && pull)
             {
+                Vector3 newScale = transform.localScale - orgScale * scaleMultiplier;
+                // don't let the thing become smaller than what it was originally
+                // this could cause some problems if the user rescales the objects while they are far away
+                if (newScale.x < orgScale.x * 0.95f)
+                {
+                    //print("not pulling back " + newScale.x + " " + orgScale.x);
+                    return;
+                }
                 Debug.Log("PULL BACK");
                 Vector3 dir = hit.transform.position - device.transform.pos;
                 dir = -dir.normalized;
                 transform.position += dir * distanceMultiplier;
-                transform.localScale -= orgScale * scaleMultiplier;
+                transform.localScale = newScale;
             }
         }
-        if (rightController == null)
-        {
-            //Debug.Log("Find right controller");
-            rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
 
-        }
-        if (device == null)
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-        }
 
-        if (/*(GetComponent<GraphInteract>() != null && GetComponent<GraphInteract> ().enabled) || */ GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled)
-        {
-
-            //Debug.Log("scale: " + transform.localScale + " pos: " + transform.position);
-            //Debug.Log("pos: " + orgPos + " scale: " + orgScale);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
-            {
-                Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-                if (touchpad.y > 0.7f)
-                {
-                    push = true;
-
-                }
-                if (touchpad.y < -0.7f)
-                {
-                    //               Debug.Log("GET BACK TO ORIGINAL");
-                    //               transform.position = orgPos;
-                    //transform.localScale = orgScale;
-                    //               transform.rotation = orgRot;
-                    pull = true;
-                }
-            }
-        }
         if (device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
         {
             push = false;
