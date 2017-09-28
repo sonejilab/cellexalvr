@@ -212,10 +212,10 @@ public class InputReader : MonoBehaviour
         string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
         foreach (string metacellfile in metacellfiles)
         {
-            // first line is a header line
             FileStream metacellFileStream = new FileStream(metacellfile, FileMode.Open);
             StreamReader metacellStreamReader = new StreamReader(metacellFileStream);
 
+            // first line is a header line
             string header = metacellStreamReader.ReadLine();
             string[] attributeTypes = header.Split(null);
             string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
@@ -364,7 +364,6 @@ public class InputReader : MonoBehaviour
 
 
         CellExAlLog.Log("Started reading network files");
-        // there should only be one .cnt file
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
         string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
@@ -399,7 +398,7 @@ public class InputReader : MonoBehaviour
         // 1 MB = 1048576 B
         if (nwkFileStream.Length > 1048576)
         {
-            CellExAlLog.Log("Aborting reading network files because .nwk file is larger than 1 MB",
+            CellExAlLog.Log("ERROR: .nwk file is larger than 1 MB",
                             ".nwk file size: " + nwkFileStream.Length + " B");
             nwkStreamReader.Close();
             nwkFileStream.Close();
@@ -413,6 +412,7 @@ public class InputReader : MonoBehaviour
         if (layFilePaths.Length == 0)
         {
             CellExAlLog.Log("ERROR: No .lay file found in network folder " + CellExAlLog.FixFilePath(networkDirectory));
+            return;
         }
 
         // Read the .cnt file
@@ -445,7 +445,7 @@ public class InputReader : MonoBehaviour
                 graph = graphManager.FindGraph(graphName);
                 if (graph == null)
                 {
-                    CellExAlLog.Log("Could not find graph " + graphName + ", aborting");
+                    CellExAlLog.Log("ERROR: Could not find graph " + graphName + ", aborting");
                     return;
                 }
                 skeleton = graph.CreateConvexHull();
@@ -737,16 +737,17 @@ public class InputReader : MonoBehaviour
             colors[i] = new Color[fileLengths[i]];
         }
         words = null;
-        string[] files = Directory.GetFiles(dataFolder, "User.group.*.txt");
-        for (int i = 0; i < files.Length; ++i)
+
+        for (int i = 0; i < fileLengths.Count; ++i)
         {
-            string file = files[i];
+            string file = dataFolder + @"\User.group." + (i + 1) + ".txt";
             fileStream = new FileStream(file, FileMode.Open);
             streamReader = new StreamReader(fileStream);
 
             for (int j = 0; j < fileLengths[i]; ++j)
             {
                 line = streamReader.ReadLine();
+
                 words = line.Split(null);
                 cellNames[i][j] = words[0];
                 ColorUtility.TryParseHtmlString(words[1], out colors[i][j]);

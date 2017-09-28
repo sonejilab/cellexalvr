@@ -78,20 +78,22 @@ public class NetworkCenter : MonoBehaviour
             numColliders = 0;
             enlarge = true;
         }
-
-        foreach (Arc a in arcs)
+        if (gameObject.transform.hasChanged)
         {
-            Vector3 midPoint1 = (a.t1.transform.position + a.t2.transform.position) / 2f;
-            Vector3 midPoint2 = (a.t3.transform.position + a.t4.transform.position) / 2f;
-            a.renderer.SetPositions(new Vector3[] { midPoint1, midPoint2 });
-        }
+            foreach (Arc a in arcs)
+            {
+                Vector3 midPoint1 = (a.t1.position + a.t2.position) / 2f;
+                Vector3 midPoint2 = (a.t3.position + a.t4.position) / 2f;
+                a.renderer.SetPositions(new Vector3[] { midPoint1, midPoint2 });
+            }
 
-        foreach (CombinedArc a in combinedArcs)
-        {
-            if (a.center1 != this)
-                a.renderer.SetPositions(new Vector3[] { transform.position, a.center2.transform.position });
-            else
-                a.renderer.SetPositions(new Vector3[] { transform.position, a.center1.transform.position });
+            foreach (CombinedArc a in combinedArcs)
+            {
+                if (a.center1 != this)
+                    a.renderer.SetPositions(new Vector3[] { transform.position, a.center2.position });
+                else
+                    a.renderer.SetPositions(new Vector3[] { transform.position, a.center1.position });
+            }
         }
 
         var interactableObject = GetComponent<VRTK_InteractableObject>();
@@ -241,7 +243,6 @@ public class NetworkCenter : MonoBehaviour
         // the ForceStopInteracting waits until the end of the frame before it stops interacting
         // so we have to wait two frames until proceeding
         gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
-        yield return null;
         yield return null;
         // now we can do things
         GetComponent<Renderer>().enabled = true;

@@ -66,7 +66,7 @@ GameObject:
   - component: {fileID: 114667797717972690}
   - component: {fileID: 114774649148215532}
   - component: {fileID: 64623160831644576}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: HeatBoard 1
   m_TagString: HeatBoard
   m_Icon: {fileID: 0}

@@ -182,7 +182,6 @@ public class Graph : MonoBehaviour
             vertices[i] = pointsPositions[i];
         }
 
-        var trianglesIndex = 0;
         while (!streamReader.EndOfStream)
         {
 
@@ -190,9 +189,9 @@ public class Graph : MonoBehaviour
             if (coords.Length < 4)
                 continue;
             // subtract 1 because R is 1-indexed
-            triangles[trianglesIndex++] = int.Parse(coords[1]) - 1;
-            triangles[trianglesIndex++] = int.Parse(coords[2]) - 1;
-            triangles[trianglesIndex++] = int.Parse(coords[3]) - 1;
+            triangles.Add(int.Parse(coords[1]) - 1);
+            triangles.Add(int.Parse(coords[2]) - 1);
+            triangles.Add(int.Parse(coords[3]) - 1);
         }
 
         streamReader.Close();

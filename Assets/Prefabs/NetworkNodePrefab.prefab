@@ -56,7 +56,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1147256446606448}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.7473097, y: 0.1849, z: 3.1307204}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 224265354258037560}
@@ -168,8 +168,6 @@ MonoBehaviour:
   edgePrefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 2}
   arcDescriptionPrefab: {fileID: 1797228523857888, guid: d9d7155f17f7d1b448e25f3721807daa,
     type: 2}
-  rightController: {fileID: 0}
-  cellManager: {fileID: 0}
 --- !u!114 &114269250619962334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -296,7 +294,7 @@ RectTransform:
   m_GameObject: {fileID: 1834449077124832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.00365}
-  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_LocalScale: {x: 0.0008592894, y: 0.0008592894, z: 0.0008592894}
   m_Children: []
   m_Father: {fileID: 4837893103903506}
   m_RootOrder: 0
