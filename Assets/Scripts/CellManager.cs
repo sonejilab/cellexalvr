@@ -166,7 +166,7 @@ public class CellManager : MonoBehaviour
         }
 
         var removedGene = topListNode.UpdateList(geneName);
-        Debug.Log(topListNode.GeneName);
+        //Debug.Log(topListNode.GeneName);
         foreach (Cell c in cells.Values)
         {
             c.SaveExpression(geneName, removedGene);

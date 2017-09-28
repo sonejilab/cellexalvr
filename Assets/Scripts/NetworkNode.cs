@@ -12,6 +12,7 @@ public class NetworkNode : MonoBehaviour
     public TextMeshPro geneName;
     public GameObject edgePrefab;
     public GameObject arcDescriptionPrefab;
+    public BoxCollider boxCollider;
     public Transform CameraToLookAt { get; set; }
     public NetworkCenter Center { get; set; }
     private string label;
@@ -62,7 +63,7 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (boxCollider.enabled && other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = true;
             Highlight();
@@ -71,7 +72,7 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (boxCollider.enabled && other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = false;
             UnHighlight();

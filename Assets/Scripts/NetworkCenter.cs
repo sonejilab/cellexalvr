@@ -152,6 +152,11 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     public void EnlargeNetwork()
     {
+        StartCoroutine(EnlargeNetworkCoroutine());
+    }
+
+    private IEnumerator EnlargeNetworkCoroutine()
+    {
         this.name = "Enlarged Network";
         Enlarged = true;
         GetComponent<Renderer>().enabled = false;
@@ -202,6 +207,9 @@ public class NetworkCenter : MonoBehaviour
         replacementScript.replacing = this;
         replacementScript.Handler = Handler;
 
+        // wait 1 frame before turning on the colliders, otherwise they all get triggered if
+        // the controller is inside them
+        yield return null;
         // turn on the colliders on the nodes so they can be highlighted
         foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
         {
@@ -337,18 +345,13 @@ public class NetworkCenter : MonoBehaviour
 
         Arc newArc = new Arc(renderer, n1.Center, n3.Center, n1.transform, n2.transform, n3.transform, n4.transform, edge);
         arcs.Add(newArc);
-        n3.Center.AddArcToList(newArc);
+        n3.Center.arcs.Add(newArc);
 
         GameObject arcText = Instantiate(arcDescriptionPrefab);
         arcText.transform.parent = edge.transform;
         arcText.transform.position = (midPoint1 + midPoint2) / 2f;
         arcText.GetComponent<TextRotator>().SetTransforms(n1.transform, n2.transform, n3.transform, n4.transform);
         arcText.GetComponent<TextMesh>().text = n1.geneName.text + " <-> " + n2.geneName.text;
-    }
-
-    private void AddArcToList(Arc arc)
-    {
-        arcs.Add(arc);
     }
 
     /// <summary>
