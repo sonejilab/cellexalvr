@@ -19,11 +19,20 @@ class HelperToolActivator : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
-            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
-            controllerModelSwitcher.HelpToolShouldStayActivated = true;
-            controllerModelSwitcher.ActivateDesiredTool();
+            bool helpToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool;
+            if (!helpToolActivated)
+            {
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
+                controllerModelSwitcher.HelpToolShouldStayActivated = true;
+                controllerModelSwitcher.ActivateDesiredTool();
+            }
+            else
+            {
+                controllerModelSwitcher.HelpToolShouldStayActivated = false;
+                controllerModelSwitcher.TurnOffActiveTool(false);
+            }
         }
     }
 }

@@ -13,11 +13,13 @@ public class CellManager : MonoBehaviour
     public ReferenceManager referenceManager;
     public List<Material> materialList;
     public VRTK_ControllerActions controllerActions;
+    public GameObject lineBetweenTwoGraphPointsPrefab;
 
     private SQLite database;
     private SteamVR_TrackedObject rightController;
     private PreviousSearchesListNode topListNode;
     private Dictionary<string, Cell> cells;
+    private List<GameObject> lines = new List<GameObject>();
     private GameManager gameManager;
     private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
@@ -111,8 +113,6 @@ public class CellManager : MonoBehaviour
         SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
     }
 
-
-
     /// <summary>
     /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
     /// </summary>
@@ -161,8 +161,9 @@ public class CellManager : MonoBehaviour
         }
         for (int i = 0; i < expressions.Count; ++i)
         {
-            string cell = ((CellExpressionPair)expressions[i]).Cell;
-            cells[cell].ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
+            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
+            cell.Show();
+            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
         }
 
         var removedGene = topListNode.UpdateList(geneName);
@@ -222,5 +223,36 @@ public class CellManager : MonoBehaviour
         {
             cell.ColorByIndex(name);
         }
+    }
+
+    public void DrawLinesBetweenGraphPoints(ArrayList points)
+    {
+        foreach (GraphPoint g in points)
+        {
+            Color color = g.Color;
+            foreach (GraphPoint sameCell in g.Cell.GraphPoints)
+            {
+                if (sameCell != g)
+                {
+                    LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
+                    line.t1 = sameCell.transform;
+                    line.t2 = g.transform;
+                    LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+                    lineRenderer.startColor = color;
+                    lineRenderer.endColor = color;
+                    lines.Add(line.gameObject);
+                }
+            }
+        }
+    }
+
+    public void ClearLinesBetweenGraphPoints()
+    {
+        foreach (GameObject line in lines)
+        {
+            Destroy(line, 0.05f);
+        }
+
+        lines.Clear();
     }
 }

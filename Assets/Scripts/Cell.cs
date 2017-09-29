@@ -7,11 +7,11 @@ using UnityEngine;
 /// </summary>
 public class Cell
 {
+    public List<GraphPoint> GraphPoints;
 
     private string labelString;
     private Dictionary<string, string> attributes;
     private Dictionary<string, int> facs;
-    private List<GraphPoint> graphPoints;
     private List<Material> materialList;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     public int ExpressionLevel { get; internal set; }
@@ -31,7 +31,7 @@ public class Cell
     public Cell(string label, List<Material> materialList)
     {
         this.labelString = label;
-        graphPoints = new List<GraphPoint>();
+        GraphPoints = new List<GraphPoint>();
         this.materialList = materialList;
         attributes = new Dictionary<string, string>();
         facs = new Dictionary<string, int>();
@@ -44,7 +44,7 @@ public class Cell
     /// <param name="g"> The graphpoint representing this cell. </param>
     public void AddGraphPoint(GraphPoint g)
     {
-        graphPoints.Add(g);
+        GraphPoints.Add(g);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class Cell
     /// </summary>
     public void RemoveFromGraphs()
     {
-        foreach (GraphPoint g in graphPoints)
+        foreach (GraphPoint g in GraphPoints)
         {
             g.gameObject.SetActive(!g.gameObject.activeSelf);
         }
@@ -67,7 +67,7 @@ public class Cell
     {
         if (attributes[attributeType] == "1")
         {
-            foreach (GraphPoint g in graphPoints)
+            foreach (GraphPoint g in GraphPoints)
             {
                 g.GetComponent<Renderer>().material.color = color;
             }
@@ -94,7 +94,7 @@ public class Cell
         ExpressionLevel = expression;
 
 
-        foreach (GraphPoint g in graphPoints)
+        foreach (GraphPoint g in GraphPoints)
         {
             if (expression > 29)
             {
@@ -124,7 +124,7 @@ public class Cell
     {
         ExpressionLevel = expression;
 
-        foreach (GraphPoint g in graphPoints)
+        foreach (GraphPoint g in GraphPoints)
         {
             if (expression > 29)
             {
@@ -141,7 +141,7 @@ public class Cell
     /// <param name="facsName"> The index. </param>
     public void ColorByIndex(string facsName)
     {
-        foreach (GraphPoint g in graphPoints)
+        foreach (GraphPoint g in GraphPoints)
         {
             g.GetComponent<Renderer>().material = materialList[facs[facsName]];
         }
@@ -159,9 +159,17 @@ public class Cell
     /// <param name="col"> The new color. </param>
     public void SetColor(Color col)
     {
-        foreach (GraphPoint g in graphPoints)
+        foreach (GraphPoint g in GraphPoints)
         {
             g.Color = col;
+        }
+    }
+
+    internal void Show()
+    {
+        foreach (GraphPoint g in GraphPoints)
+        {
+            g.gameObject.SetActive(true);
         }
     }
 }
