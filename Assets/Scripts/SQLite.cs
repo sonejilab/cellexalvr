@@ -227,7 +227,7 @@ namespace SQLiter
         {
             int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id left join genes on datavalues.gene_id = genes.id where gname = \"" + geneName + "\"";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where gname = \"" + geneName + "\")";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)

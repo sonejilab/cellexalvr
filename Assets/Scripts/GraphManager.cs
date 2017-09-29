@@ -74,6 +74,12 @@ public class GraphManager : MonoBehaviour
     public void RecolorAllGraphsAfterSelection()
     {
         var selection = selectionToolHandler.GetCurrentSelection();
+        if (selection.Count == 0)
+        {
+            // if the user has pressed the confirm selection button, but started a new selection yet
+            // the graphs should be colored based on the previous selection
+            selection = selectionToolHandler.GetLastSelection();
+        }
         foreach (Graph graph in graphs)
         {
             foreach (GraphPoint point in selection)
