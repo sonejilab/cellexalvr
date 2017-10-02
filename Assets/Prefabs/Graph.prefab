@@ -90,7 +90,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightController: {fileID: 0}
   distanceMultiplier: 0.4
-  scaleMultiplier: 0.7
+  scaleMultiplier: 0.5
+  maxScale: 65
+  minScale: 0.95
 --- !u!114 &114610040334634022
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -38,7 +38,7 @@ public class NetworkNode : MonoBehaviour
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool edgesAdded;
-    private float lineWidth = .001f;
+    private float lineWidth = .005f;
 
     void Start()
     {
