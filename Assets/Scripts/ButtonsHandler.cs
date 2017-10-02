@@ -16,7 +16,7 @@ public class ButtonsHandler : MonoBehaviour
     void Start()
     {
         // There is no history when the program starts
-        TurnAllButtonsOff();
+        // TurnAllButtonsOff();
     }
 
     public void TurnAllButtonsOff()

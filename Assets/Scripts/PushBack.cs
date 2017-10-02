@@ -8,6 +8,8 @@ public class PushBack : MonoBehaviour
     public SteamVR_TrackedObject rightController;
     public float distanceMultiplier = 0.5f;
     public float scaleMultiplier = 0.5f;
+	public float maxScale;
+	public float minScale;
 
     private SteamVR_Controller.Device device;
     private Ray ray;
@@ -66,7 +68,12 @@ public class PushBack : MonoBehaviour
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit) && push)
             {
-                Debug.Log("PUSH BACK");
+				Vector3 newScale = transform.localScale + orgScale * scaleMultiplier;
+				if (newScale.x > orgScale.x * maxScale)
+				{
+					//print("not pulling back " + newScale.x + " " + orgScale.x);
+					return;
+				}
                 if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     transform.LookAt(Vector3.zero);
@@ -79,7 +86,7 @@ public class PushBack : MonoBehaviour
                 Vector3 dir = hit.transform.position - device.transform.pos;
                 dir = dir.normalized;
                 transform.position += dir * distanceMultiplier;
-                transform.localScale += orgScale * scaleMultiplier;
+				transform.localScale = newScale;
             }
         }
         if (pull)
@@ -91,12 +98,11 @@ public class PushBack : MonoBehaviour
                 Vector3 newScale = transform.localScale - orgScale * scaleMultiplier;
                 // don't let the thing become smaller than what it was originally
                 // this could cause some problems if the user rescales the objects while they are far away
-                if (newScale.x < orgScale.x * 0.95f)
+				if (newScale.x < orgScale.x * minScale)
                 {
                     //print("not pulling back " + newScale.x + " " + orgScale.x);
                     return;
                 }
-                Debug.Log("PULL BACK");
                 Vector3 dir = hit.transform.position - device.transform.pos;
                 dir = -dir.normalized;
                 transform.position += dir * distanceMultiplier;

@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23982623659630714}
   - component: {fileID: 114252115367115154}
   - component: {fileID: 65502072426276958}
+  - component: {fileID: 114940603741624592}
   m_Layer: 0
   m_Name: NetworkNodePrefab
   m_TagString: Untagged
@@ -57,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 1147256446606448}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 224265354258037560}
   m_Father: {fileID: 0}
@@ -149,7 +150,7 @@ BoxCollider:
   m_GameObject: {fileID: 1147256446606448}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.0047654733, y: 0.0048880256, z: 0.0050137304}
   m_Center: {x: -1.1641532e-10, y: 0, z: 0}
@@ -168,7 +169,6 @@ MonoBehaviour:
   edgePrefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 2}
   arcDescriptionPrefab: {fileID: 1797228523857888, guid: d9d7155f17f7d1b448e25f3721807daa,
     type: 2}
-  boxCollider: {fileID: 65502072426276958}
 --- !u!114 &114269250619962334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -281,6 +281,36 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
+--- !u!114 &114940603741624592
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1147256446606448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bbe35e73e451c47b2b9f300d5d7816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableWhenIdle: 1
+  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  allowedTouchControllers: 0
+  isGrabbable: 0
+  holdButtonToGrab: 1
+  stayGrabbedOnTeleport: 1
+  validDrop: 1
+  grabOverrideButton: 0
+  allowedGrabControllers: 0
+  grabAttachMechanicScript: {fileID: 0}
+  secondaryGrabActionScript: {fileID: 0}
+  isUsable: 1
+  holdButtonToUse: 1
+  useOnlyIfGrabbed: 0
+  pointerActivatesUseAction: 0
+  useOverrideButton: 0
+  allowedUseControllers: 0
+  usingState: 0
+  node: {fileID: 114252115367115154}
 --- !u!222 &222853809826507562
 CanvasRenderer:
   m_ObjectHideFlags: 1
