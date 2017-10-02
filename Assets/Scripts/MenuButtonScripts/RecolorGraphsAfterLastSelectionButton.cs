@@ -1,4 +1,6 @@
-﻿
+﻿/// <summary>
+/// This class represents the button that colors the other graphs after the current celection.
+/// </summary>
 class RecolorGraphsAfterLastSelectionButton : StationaryButton
 {
     private SelectionToolHandler selectionToolHandler;
@@ -6,24 +8,35 @@ class RecolorGraphsAfterLastSelectionButton : StationaryButton
 
     protected override string Description
     {
-        get
-        {
-            return "Colors the selected cells in all other graphs";
-        }
+        get { return "Colors the selected cells in all other graphs"; }
     }
 
     private void Start()
     {
         selectionToolHandler = referenceManager.selectionToolHandler;
         graphManager = referenceManager.graphManager;
+        SetButtonActivated(false);
+        ButtonEvents.SelectionStarted.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             graphManager.RecolorAllGraphsAfterSelection();
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

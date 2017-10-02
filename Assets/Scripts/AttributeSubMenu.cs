@@ -19,7 +19,7 @@ public class AttributeSubMenu : MonoBehaviour
 
     public void Init()
     {
-        // TODO come up with some more colors
+        // TODO CELLEXAL: come up with some more colors
         buttons = new List<ColorByAttributeButton>();
         colors = new Color[22];
         colors[0] = new Color(1, 0, 0);     // red

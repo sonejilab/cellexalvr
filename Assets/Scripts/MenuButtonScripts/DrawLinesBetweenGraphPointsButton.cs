@@ -15,14 +15,29 @@ class DrawLinesBetweenGraphPointsButton : StationaryButton
     {
         cellManager = referenceManager.cellManager;
         selectionToolHandler = referenceManager.selectionToolHandler;
+        SetButtonActivated(false);
+        ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection());
+            ButtonEvents.LinesBetweenGraphsDrawn.Invoke();
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

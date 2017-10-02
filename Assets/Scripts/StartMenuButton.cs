@@ -16,8 +16,10 @@ public class StartMenuButton : StationaryButton
 
 
 	void Update()
-	{
-		if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+    {
+        if (!buttonActivated) return;
+        device = SteamVR_Controller.Input((int)rightController.index);
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
 		{
 			sceneLoader.LoadScene ("SceneLoaderTest");
 		}

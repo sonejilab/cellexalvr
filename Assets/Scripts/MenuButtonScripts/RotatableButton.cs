@@ -169,7 +169,7 @@ public abstract class RotatableButton : MonoBehaviour
             }
             yield return null;
         }
-
+        rotatedTotal = 0;
         isRotating = false;
         Activate(active);
     }

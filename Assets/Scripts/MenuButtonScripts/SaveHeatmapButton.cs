@@ -17,6 +17,7 @@ class SaveHeatmapButton : StationaryButton
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {

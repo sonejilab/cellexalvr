@@ -13,14 +13,29 @@ class ClearLinesBetweenGraphPointsButton : StationaryButton
     private void Start()
     {
         cellManager = referenceManager.cellManager;
+        SetButtonActivated(false);
+        ButtonEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             cellManager.ClearLinesBetweenGraphPoints();
+            ButtonEvents.LinesBetweenGraphsCleared.Invoke();
+            SetButtonActivated(false);
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

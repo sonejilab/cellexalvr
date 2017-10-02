@@ -13,7 +13,6 @@ public class ResetFolderButton : StationaryButton
     private GameObject inputFolderList;
     private HeatmapGenerator heatmapGenerator;
 
-
     protected override string Description
     {
         get
@@ -34,6 +33,7 @@ public class ResetFolderButton : StationaryButton
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -46,6 +46,7 @@ public class ResetFolderButton : StationaryButton
             loader.ResetLoaderBooleans();
             inputFolderGenerator.GenerateFolders();
             inputFolderList.gameObject.SetActive(true);
+            ButtonEvents.GraphsUnloaded.Invoke();
             if (loader.loaderMovedDown)
             {
                 loader.loaderMovedDown = false;

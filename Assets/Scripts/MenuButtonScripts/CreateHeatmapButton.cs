@@ -18,6 +18,9 @@ public class CreateHeatmapButton : RotatableButton
         base.Start();
         heatmapGenerator = referenceManager.heatmapGenerator;
         gameManager = referenceManager.gameManager;
+        SetButtonState(false);
+        ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -28,7 +31,17 @@ public class CreateHeatmapButton : RotatableButton
             SetButtonState(false);
             heatmapGenerator.CreateHeatmap();
             gameManager.InformCreateHeatmap();
+            ButtonEvents.HeatmapCreated.Invoke();
         }
     }
 
+    private void TurnOn()
+    {
+        SetButtonState(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonState(false);
+    }
 }

@@ -2,7 +2,7 @@
 {
     private NetworkGenerator networkGenerator;
     private MenuRotator rotator;
-	private GameManager gameManager;
+    private GameManager gameManager;
 
     protected override string Description
     {
@@ -12,13 +12,16 @@
         }
     }
 
-   protected override void Start()
+    protected override void Start()
     {
         base.Start();
         networkGenerator = referenceManager.networkGenerator;
         rotator = referenceManager.menuRotator;
-		gameManager = referenceManager.gameManager;
-	}
+        gameManager = referenceManager.gameManager;
+        SetButtonState(false);
+        ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+    }
 
     void Update()
     {
@@ -27,12 +30,23 @@
         {
             SetButtonState(false);
             networkGenerator.GenerateNetworks();
-			gameManager.InformGenerateNetworks ();
-            if (rotator.gameObject.activeSelf && rotator.SideFacingPlayer == MenuRotator.Rotation.Right)
-            {
-                rotator.RotateLeft();
-            }
+            gameManager.InformGenerateNetworks();
+            ButtonEvents.NetworkCreated.Invoke();
+            //if (rotator.gameObject.activeSelf && rotator.SideFacingPlayer == MenuRotator.Rotation.Right)
+            //{
+            //    rotator.RotateLeft();
+            //}
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonState(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonState(false);
     }
 }
 

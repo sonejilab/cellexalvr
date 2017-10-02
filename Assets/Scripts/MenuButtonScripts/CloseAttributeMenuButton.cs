@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System;
 
 public class CloseAttributeMenuButton : StationaryButton
 {
@@ -9,10 +7,7 @@ public class CloseAttributeMenuButton : StationaryButton
 
     protected override string Description
     {
-        get
-        {
-            return "Close attribute menu";
-        }
+        get { return "Close attribute menu"; }
     }
 
     private void Start()
@@ -23,6 +18,7 @@ public class CloseAttributeMenuButton : StationaryButton
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {

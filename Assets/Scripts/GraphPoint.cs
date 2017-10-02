@@ -5,10 +5,10 @@ using UnityEngine;
 /// </summary>
 public class GraphPoint : MonoBehaviour
 {
+    public Graph Graph;
 
     private Cell cell;
     private float x, y, z;
-    private Graph defaultParent;
     private Renderer graphPointRenderer;
     private Color defaultColor = new Color(1, 1, 1);
 
@@ -16,7 +16,7 @@ public class GraphPoint : MonoBehaviour
 
     public string GraphName
     {
-        get { return defaultParent.GraphName; }
+        get { return Graph.GraphName; }
     }
 
     public Cell Cell
@@ -66,7 +66,7 @@ public class GraphPoint : MonoBehaviour
         transform.localPosition = new Vector3(x, y, z);
         //hard-coded to current sphere size
         transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-        transform.SetParent(defaultParent.transform);
+        transform.SetParent(Graph.transform);
         Rigidbody rig = GetComponent<Rigidbody>();
         if (rig != null)
         {
@@ -82,7 +82,7 @@ public class GraphPoint : MonoBehaviour
     /// <param name="parent"> The graph this graphpoint is part of. </param>
     public void SaveParent(Graph parent)
     {
-        defaultParent = parent;
+        Graph = parent;
     }
 
     /// <summary>

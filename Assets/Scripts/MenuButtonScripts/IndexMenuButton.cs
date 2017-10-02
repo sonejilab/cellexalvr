@@ -1,32 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class IndexMenuButton : MonoBehaviour
+public class IndexMenuButton : StationaryButton
 {
-    public ReferenceManager referenceManager;
-    public Sprite standardTexture;
-    public Sprite highlightedTexture;
-
-    private TextMesh descriptionText;
     private GameObject indexMenu;
-    private SteamVR_TrackedObject rightController;
     private GameObject buttons;
-    private SteamVR_Controller.Device device;
-    private SpriteRenderer spriteRenderer;
-    private bool controllerInside = false;
+
+    protected override string Description
+    {
+        get { return "Show menu for coloring by index"; }
+    }
+
 
     void Start()
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = standardTexture;
-        descriptionText = referenceManager.leftDescription;
         indexMenu = referenceManager.indexMenu.gameObject;
-        rightController = referenceManager.rightController;
         buttons = referenceManager.leftButtons;
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -38,24 +34,14 @@ public class IndexMenuButton : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    private void TurnOn()
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            descriptionText.text = "Color by index";
-            spriteRenderer.sprite = highlightedTexture;
-            controllerInside = true;
-        }
+        SetButtonActivated(true);
     }
 
-    void OnTriggerExit(Collider other)
+    private void TurnOff()
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            descriptionText.text = "";
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-        }
+        SetButtonActivated(false);
     }
 }
 

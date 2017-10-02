@@ -15,6 +15,9 @@ public class BurnHeatmapToolButton : StationaryButton
     {
         fire = referenceManager.fire;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        SetButtonActivated(false);
+        ButtonEvents.HeatmapCreated.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     protected override string Description
@@ -26,6 +29,7 @@ public class BurnHeatmapToolButton : StationaryButton
     }
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -40,5 +44,15 @@ public class BurnHeatmapToolButton : StationaryButton
                 controllerModelSwitcher.ActivateDesiredTool();
             }
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

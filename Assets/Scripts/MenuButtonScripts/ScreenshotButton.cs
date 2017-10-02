@@ -17,8 +17,8 @@ public class ScreenshotButton : StationaryButton
 
 	void Update()
 	{
-
-		device = SteamVR_Controller.Input((int)rightController.index);
+        if (!buttonActivated) return;
+        device = SteamVR_Controller.Input((int)rightController.index);
 		if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
 		{
 			if (canvas.activeSelf) {

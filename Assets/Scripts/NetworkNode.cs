@@ -9,6 +9,7 @@ using TMPro;
 /// </summary>
 public class NetworkNode : MonoBehaviour
 {
+    // TODO CELLEXAL: pressing a gene in a network to color graphs should put that gene in the previous searches list
     public TextMeshPro geneName;
     public GameObject edgePrefab;
     public GameObject arcDescriptionPrefab;

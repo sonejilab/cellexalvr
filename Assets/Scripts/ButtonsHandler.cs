@@ -3,7 +3,7 @@
 /// <summary>
 /// This class is responsible for knowing which undo and redo buttons should be turned on or off.
 /// </summary>
-public class UndoButtonsHandler : MonoBehaviour
+public class ButtonsHandler : MonoBehaviour
 {
     public UndoOneStepButton undoOneStepButton;
     public RedoOneStepButton redoOneStepButton;
@@ -11,6 +11,7 @@ public class UndoButtonsHandler : MonoBehaviour
     public RedoTenStepsButton redoTenStepsButton;
     public UndoLastColorButton undoLastColorButton;
     public RedoLastColorButton redoLastColorButton;
+
 
     void Start()
     {

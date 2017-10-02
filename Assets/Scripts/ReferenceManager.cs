@@ -36,9 +36,9 @@ public class ReferenceManager : MonoBehaviour
     public ToggleArcsSubMenu arcsSubMenu;
     public AttributeSubMenu attributeSubMenu;
     public ColorByIndexMenu indexMenu;
-    public CreateSelectionFromPreviousSelectionMenu createSelectionFrompreviousSelectionMenu;
+    public CreateSelectionFromPreviousSelectionMenu createSelectionFromPreviousSelectionMenu;
     public SelectionToolMenu selectionToolMenu;
-    public UndoButtonsHandler undoButtonsHandler;
+    public ButtonsHandler undoButtonsHandler;
     public GameObject frontButtons;
     public GameObject rightButtons;
     public GameObject backButtons;

@@ -21,10 +21,14 @@ public class KeyboardButton : StationaryButton
     {
         keyboard = referenceManager.keyboard.gameObject;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -49,4 +53,13 @@ public class KeyboardButton : StationaryButton
         }
     }
 
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
+    }
 }

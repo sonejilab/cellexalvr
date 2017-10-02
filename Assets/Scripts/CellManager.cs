@@ -172,6 +172,7 @@ public class CellManager : MonoBehaviour
         {
             c.SaveExpression(geneName, removedGene);
         }
+        ButtonEvents.GraphsColoredByGene.Invoke();
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
@@ -214,7 +215,7 @@ public class CellManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Color all graphpoints according to a column in the index.facs file
+    /// Color all graphpoints according to a column in the index.facs file.
     /// </summary>
     public void ColorByIndex(string name)
     {
@@ -225,6 +226,10 @@ public class CellManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Draws lines between all points that share the same label.
+    /// </summary>
+    /// <param name="points"> The graphpoints to draw the lines from. </param>
     public void DrawLinesBetweenGraphPoints(ArrayList points)
     {
         foreach (GraphPoint g in points)
@@ -241,11 +246,16 @@ public class CellManager : MonoBehaviour
                     lineRenderer.startColor = color;
                     lineRenderer.endColor = color;
                     lines.Add(line.gameObject);
+                    sameCell.Graph.Lines.Add(line.gameObject);
+                    g.Graph.Lines.Add(line.gameObject);
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Removes all lines between graphs.
+    /// </summary>
     public void ClearLinesBetweenGraphPoints()
     {
         foreach (GameObject line in lines)

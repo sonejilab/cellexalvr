@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
 {
-
+    // TODO CELLEXAL: create buttons immediately when a grouping is confirmed
     public GameObject buttonPrefab;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);

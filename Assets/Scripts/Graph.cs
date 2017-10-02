@@ -13,6 +13,7 @@ public class Graph : MonoBehaviour
     public GameObject skeletonPrefab;
     public string GraphName { get; set; }
     public string DirectoryName { get; set; }
+    public List<GameObject> Lines { get; set; }
 
     private GraphPoint newGraphpoint;
     public Dictionary<string, GraphPoint> points;
@@ -32,6 +33,7 @@ public class Graph : MonoBehaviour
         pointsPositions = new List<Vector3>();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         gameManager = referenceManager.gameManager;
+        Lines = new List<GameObject>();
     }
 
     private void Update()
@@ -51,6 +53,8 @@ public class Graph : MonoBehaviour
             r.enabled = true;
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = true;
+        foreach (GameObject line in Lines)
+            line.SetActive(true);
     }
 
     /// <summary>
@@ -62,6 +66,8 @@ public class Graph : MonoBehaviour
             r.enabled = false;
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = false;
+        foreach (GameObject line in Lines)
+            line.SetActive(false);
     }
 
     /// <summary>

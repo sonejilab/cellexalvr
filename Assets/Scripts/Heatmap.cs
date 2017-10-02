@@ -10,7 +10,7 @@ using VRTK;
 /// </summary>
 public class Heatmap : MonoBehaviour
 {
-
+    // TODO CELLEXAL: make a single gene box plot (out of an existing heatmap?)
     public Texture texture;
     public TextMesh infoText;
     private Dictionary<Cell, Color> containedCells;

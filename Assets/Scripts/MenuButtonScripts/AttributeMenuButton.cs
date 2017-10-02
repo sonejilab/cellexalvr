@@ -10,22 +10,23 @@ public class AttributeMenuButton : StationaryButton
     private GameObject attributeMenu;
     private GameObject buttons;
 
+    protected override string Description
+    {
+        get { return "Show menu for coloring by attribute"; }
+    }
+
     private void Start()
     {
         attributeMenu = referenceManager.attributeSubMenu.gameObject;
         buttons = referenceManager.leftButtons;
-    }
-
-    protected override string Description
-    {
-        get
-        {
-            return "Show menu for coloring by attribute";
-        }
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -37,5 +38,13 @@ public class AttributeMenuButton : StationaryButton
         }
     }
 
-}
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
 
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
+    }
+}

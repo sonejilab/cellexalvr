@@ -18,6 +18,12 @@ public class UndoTenStepsButton : StationaryButton
     {
         base.Awake();
         buttonCollider = gameObject.GetComponent<Collider>();
+        SetButtonActivated(false);
+        ButtonEvents.SelectionStarted.AddListener(TurnOn);
+        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
+        ButtonEvents.BeginningOfHistoryReached.AddListener(TurnOff);
+        ButtonEvents.BeginningOfHistoryLeft.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Start()
@@ -38,9 +44,13 @@ public class UndoTenStepsButton : StationaryButton
         }
     }
 
-    public override void SetButtonActivated(bool active)
+    private void TurnOff()
     {
-        base.SetButtonActivated(active);
-        spriteRenderer.sprite = active ? standardTexture : grayScaleTexture;
+        SetButtonActivated(false);
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
     }
 }

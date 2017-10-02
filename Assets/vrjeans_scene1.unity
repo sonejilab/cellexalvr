@@ -614,9 +614,9 @@ MonoBehaviour:
   arcsSubMenu: {fileID: 1984250942}
   attributeSubMenu: {fileID: 1118}
   indexMenu: {fileID: 1174890052}
-  createSelectionFrompreviousSelectionMenu: {fileID: 1022276736}
+  createSelectionFromPreviousSelectionMenu: {fileID: 1022276736}
   selectionToolMenu: {fileID: 1832894451}
-  undoButtonsHandler: {fileID: 1832894452}
+  undoButtonsHandler: {fileID: 0}
   frontButtons: {fileID: 247095349}
   rightButtons: {fileID: 1832894449}
   backButtons: {fileID: 993328920}
@@ -3991,7 +3991,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 201}
-  m_Mesh: {fileID: 1925562900}
+  m_Mesh: {fileID: 36143660}
 --- !u!23 &206
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4006,7 +4006,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 1521255702}
+  - {fileID: 282298371}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6070,6 +6070,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 9c45f8eb38e922440abdca4bd02e690b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: f6da0bc282453574a87fa18cf1c9a3ac, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: ea389e92e283cf34fa9311364405e272, type: 3}
 --- !u!212 &34392195
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6239,6 +6240,134 @@ LineRenderer:
     textureMode: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!43 &36143660
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 24
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0.01, z: 0}
+      m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 13
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 28
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 288
+    _typelessdata: 0000c03f0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0.01, z: 0}
+    m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0
 --- !u!1 &36359468
 GameObject:
   m_ObjectHideFlags: 0
@@ -6450,6 +6579,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: c70b59dfe1dd30a418d9cde2ec938e34, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 6a4ba50a16d480542b2ab53dc8e05858, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: e79a34c91ed82a3408ca02382822d73b, type: 3}
 --- !u!212 &48250787
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9034,6 +9164,7 @@ MonoBehaviour:
   descriptionText: {fileID: 2014377903}
   standardTexture: {fileID: 21300000, guid: 2162a5e12c8fca24ba7910cb6d7bed97, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 30eb2898dc92a35469735e572579abc1, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonsToActivate: {fileID: 1832894449}
   menuToClose: {fileID: 1022276734}
 --- !u!212 &228410433
@@ -9755,6 +9886,38 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 275966813}
+--- !u!21 &282298371
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 4800000, guid: a1975866494d6c446aef55a8d4038e56, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &293950785
 GameObject:
   m_ObjectHideFlags: 0
@@ -10774,6 +10937,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: cb374db8af48cd44db207dea684e8517, type: 3}
   highlightedTexture: {fileID: 21300000, guid: cb374db8af48cd44db207dea684e8517, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonRenderer: {fileID: 377045549}
   color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &377045549
@@ -11336,6 +11500,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 6c58d987b8d2c614196f58f1bd4bbc68, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e5fbf1202ec23fe489d136359a8b637b, type: 3}
+  deactivatedTexture: {fileID: 0}
 --- !u!212 &442242567
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11610,6 +11775,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 0c336284b7147d24598736f31cd62396, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 0c336284b7147d24598736f31cd62396, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonRenderer: {fileID: 465451643}
   color: {r: 1, g: 0.9724138, b: 0, a: 1}
 --- !u!212 &465451643
@@ -11984,6 +12150,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 202d9e401a633eb49b382da0b23b2b11, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 21359321810e9eb4691ba9134ffb06b8, type: 3}
+  deactivatedTexture: {fileID: 0}
 --- !u!212 &490118992
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12100,6 +12267,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 60125c79103b77c44b9c4cc8be20579d, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 68012fc251bb15e469e6b50848049436, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 76697bcdc75c3e84f8023fcf47283ee8, type: 3}
   original: {fileID: 21300000, guid: 60125c79103b77c44b9c4cc8be20579d, type: 3}
   gray: {fileID: 21300000, guid: ead120639dda0fa4295b1025a7e1c8ab, type: 3}
 --- !u!212 &496862245
@@ -13867,6 +14035,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 5dbb8e70981ecab42abfb3e3fc72eb76, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5dbb8e70981ecab42abfb3e3fc72eb76, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonRenderer: {fileID: 613420174}
   color: {r: 0, g: 0.2965517, b: 1, a: 1}
 --- !u!212 &613420174
@@ -14253,6 +14422,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: a0ee82edf9e986044a5cdfa503947359, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 0cb5f9e3b4f5a7c488c935c25bb5a658, type: 3}
+  deactivatedTexture: {fileID: 0}
   camera: {fileID: 268264670}
   canvas: {fileID: 842173690}
   spriteRend: {fileID: 655985760}
@@ -14502,6 +14672,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: a01642474cdcf244baca1f450f0dfeb0, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2f5e8dd50b722cd4eb9bc58f980b68d8, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: d7ebb1ca9507d7940a2ab11b3850bcca, type: 3}
 --- !u!212 &659682436
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15655,6 +15826,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 633b46e51cb605942a048f98597ca083, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 6da98ecafbedbfd4faedd7d32808cc99, type: 3}
+  deactivatedTexture: {fileID: 0}
 --- !u!212 &747207986
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -16453,6 +16625,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: e560a6a6f0f63434d9b6aa34a4b8dc1b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: bb3c43d5fbff98d458df0453eb04145f, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: d700a14c1163b884089b63fd0f3c39e9, type: 3}
   gray: {fileID: 21300000, guid: 27fea953d5bd6b34b9823bac486c599b, type: 3}
   original: {fileID: 21300000, guid: e560a6a6f0f63434d9b6aa34a4b8dc1b, type: 3}
 --- !u!1 &809358228
@@ -16598,6 +16771,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1151562003}
   standardTexture: {fileID: 21300000, guid: 2162a5e12c8fca24ba7910cb6d7bed97, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 30eb2898dc92a35469735e572579abc1, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonsToActivate: {fileID: 194325602}
   menuToClose: {fileID: 1851298793}
 --- !u!212 &821747571
@@ -18630,6 +18804,7 @@ MonoBehaviour:
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: ae8c76c3064bf41499eadd50f407a581, type: 3}
   highlightedTexture: {fileID: 21300000, guid: ec947d47739f28a449907286561988e0, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 43a612dd1bb83e448a7cf9cb9276d523, type: 3}
 --- !u!212 &973701861
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20297,6 +20472,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 0658fd4d37f95d64ead0cda820840306, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 17bd1c9bb1117324785b0483c5dbffdb, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: cb35a0da9128942458ce51f7fa7e4fa2, type: 3}
 --- !u!212 &1040922836
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20815,6 +20991,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 2e12e44a1e865b848aa4fbc880c29d63, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2e12e44a1e865b848aa4fbc880c29d63, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonRenderer: {fileID: 1072355579}
   color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!212 &1072355579
@@ -22868,6 +23045,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: ae42020c1587bb1408f6e4470192895b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 7e0945ecbf5f3d84e9105f0c2e66dc02, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: fef34dd2ecaa5234ebcb82039cbcf517, type: 3}
   grayScaleTexture: {fileID: 21300000, guid: fef34dd2ecaa5234ebcb82039cbcf517, type: 3}
 --- !u!212 &1124718774
 SpriteRenderer:
@@ -23577,6 +23755,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 3881dade02783c8438d70b8a7efc0e2b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 4f6db7ac71e1d434c95d55ce48a52273, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: ed6badfce545eba4ea13bed4e4ec18c3, type: 3}
   grayScaleTexture: {fileID: 21300000, guid: ed6badfce545eba4ea13bed4e4ec18c3, type: 3}
 --- !u!212 &1192999974
 SpriteRenderer:
@@ -24291,6 +24470,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 2162a5e12c8fca24ba7910cb6d7bed97, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 30eb2898dc92a35469735e572579abc1, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonsToActivate: {fileID: 993328920}
   menuToClose: {fileID: 30614892}
 --- !u!212 &1238615985
@@ -24936,6 +25116,7 @@ MonoBehaviour:
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: abbd4d3ab76d1324ab0d746cdf19d0a8, type: 3}
   highlightedTexture: {fileID: 21300000, guid: bdf06d602c2796a41ab1d2d85160d656, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: e7c3e6f5f3880cd4ca02aed05ea5c3ff, type: 3}
 --- !u!212 &1279719709
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -25351,6 +25532,7 @@ MonoBehaviour:
   descriptionText: {fileID: 730721845}
   standardTexture: {fileID: 21300000, guid: 2162a5e12c8fca24ba7910cb6d7bed97, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 30eb2898dc92a35469735e572579abc1, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonsToActivate: {fileID: 194325602}
   menuToClose: {fileID: 1174890050}
 --- !u!212 &1302230193
@@ -25665,6 +25847,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: e2723b9033a38f64e892e7dc37cab71b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5c12d2a8e0599af419a74ac02d000b9c, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: dc5549c8c17a513499b547514cb276ba, type: 3}
   grayScaleTexture: {fileID: 21300000, guid: dc5549c8c17a513499b547514cb276ba, type: 3}
 --- !u!1 &1313205143
 GameObject:
@@ -26644,6 +26827,7 @@ MonoBehaviour:
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: c5429a20b9a4e5e499fdb527799054e5, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5c10b2b57cfcd064686936e5a6c25562, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 07946674f3d09ba459ddee5421be1261, type: 3}
 --- !u!212 &1411796414
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -27752,6 +27936,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: f73dd102ce40e1d49846de2a00d71a02, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 14e3c07ee3a9a8d4e88dbdfa84f1daad, type: 3}
+  deactivatedTexture: {fileID: 0}
 --- !u!212 &1501066410
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -27923,38 +28108,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1510469545}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!21 &1521255702
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1530247058
 GameObject:
   m_ObjectHideFlags: 0
@@ -28448,6 +28601,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 4a647e7578370d64f9afcacb81310837, type: 3}
   highlightedTexture: {fileID: 21300000, guid: f627e8912ed52864a842c4c7c743ebf7, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: cff52cafa94ae5a4d95e427294261a95, type: 3}
 --- !u!212 &1554270043
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -28582,6 +28736,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 643d375c5d2202542900138d5c55b429, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 535d4027bd297174d8020b877e31f92d, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 4ad99e3833f5c1b4cbebb1ad105a4d93, type: 3}
   gray: {fileID: 21300000, guid: 4ad99e3833f5c1b4cbebb1ad105a4d93, type: 3}
   original: {fileID: 21300000, guid: 643d375c5d2202542900138d5c55b429, type: 3}
 --- !u!212 &1562638533
@@ -28828,6 +28983,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 81a0260e52171bc498bfd6d034772f69, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 81a0260e52171bc498bfd6d034772f69, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonRenderer: {fileID: 1587156614}
   color: {r: 0.11724126, g: 1, b: 0, a: 1}
 --- !u!212 &1587156614
@@ -29506,6 +29662,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 96aff6e085998ac4dac80d60ba0e067f, type: 3}
   highlightedTexture: {fileID: 21300000, guid: ca592774c4bddb44bbd29a55425e3555, type: 3}
+  deactivatedTexture: {fileID: 0}
 --- !u!212 &1652627657
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -29866,6 +30023,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: f0019ce949f65ab43a0762da2c9e0821, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e381cc42569eac44e9c3795484c45514, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: f63a098b06c46e9428f84e295e7495f2, type: 3}
   grayScaleTexture: {fileID: 21300000, guid: f63a098b06c46e9428f84e295e7495f2, type: 3}
 --- !u!212 &1667756348
 SpriteRenderer:
@@ -30441,6 +30599,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: e3da2f70ace80d54b974fce10743ac0f, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 964401804234b464e8d6ba6621d88849, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 0426a62a895d4264a881e955093657be, type: 3}
   grayScaleTexture: {fileID: 21300000, guid: 0426a62a895d4264a881e955093657be, type: 3}
 --- !u!212 &1710960417
 SpriteRenderer:
@@ -30972,6 +31131,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2248ec72c96a8d84496a683fe3c959a6, type: 3}
+  deactivatedTexture: {fileID: 0}
   saveScene: {fileID: 1941345954}
   gray: {fileID: 21300000, guid: 543b79e5b47a14f40ae38602903ab41b, type: 3}
   original: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
@@ -31563,7 +31723,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1832894450}
   - component: {fileID: 1832894451}
-  - component: {fileID: 1832894452}
   m_Layer: 0
   m_Name: Right Buttons
   m_TagString: Untagged
@@ -31618,23 +31777,6 @@ MonoBehaviour:
   removeSelectionButton: {fileID: 1977771849}
   createHeatmapButton: {fileID: 2034533599}
   createNetworksButton: {fileID: 130273291}
---- !u!114 &1832894452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1832894449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b54bdeea9374ff4fb3e86c2937fbf46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  undoOneStepButton: {fileID: 1311252052}
-  redoOneStepButton: {fileID: 1944818639}
-  undoTenStepsButton: {fileID: 1192999973}
-  redoTenStepsButton: {fileID: 1124718773}
-  undoLastColorButton: {fileID: 1667756347}
-  redoLastColorButton: {fileID: 1710960416}
 --- !u!1 &1833258293
 GameObject:
   m_ObjectHideFlags: 0
@@ -31923,6 +32065,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 89663bb84cd26664bae63a729d47442b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: a5928da977c674f49a97c040676b6c86, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 5c5ebe946eab40b4b9038a4015a7025c, type: 3}
   menu: {fileID: 1022276734}
   buttons: {fileID: 1832894449}
 --- !u!1 &1851298793
@@ -32572,134 +32715,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!43 &1925562900
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 8
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 24
-    topology: 0
-    firstVertex: 0
-    vertexCount: 8
-    localAABB:
-      m_Center: {x: 0, y: 0.01, z: 0}
-      m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
-  m_Skin: []
-  m_VertexData:
-    m_CurrentChannels: 13
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 28
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 288
-    _typelessdata: 0000c03f0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0.01, z: 0}
-    m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshOptimized: 0
 --- !u!1 &1939824044
 GameObject:
   m_ObjectHideFlags: 0
@@ -33113,6 +33128,7 @@ MonoBehaviour:
   descriptionText: {fileID: 777993154}
   standardTexture: {fileID: 21300000, guid: 97935b1dfd592f041bb36aa85de0c3e2, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 82b10d9f58714514590513bac23d4858, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: bf56c66537dfd804394044bb34737069, type: 3}
   grayScaleTexture: {fileID: 21300000, guid: bf56c66537dfd804394044bb34737069, type: 3}
 --- !u!1 &1961010855
 GameObject:
@@ -33532,6 +33548,7 @@ MonoBehaviour:
   descriptionText: {fileID: 891}
   standardTexture: {fileID: 21300000, guid: 47e71e1fb317291489b9ab4a1b2118c9, type: 3}
   highlightedTexture: {fileID: 21300000, guid: c40815c20bcca4944b4bc9eccae1f495, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: e2363ae35f3e694418534320a4dab3ec, type: 3}
   gray: {fileID: 21300000, guid: e2363ae35f3e694418534320a4dab3ec, type: 3}
   original: {fileID: 21300000, guid: 47e71e1fb317291489b9ab4a1b2118c9, type: 3}
 --- !u!212 &1979640350
@@ -33985,8 +34002,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
+  descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: 3102797e55d862e4bbdb67e04464de11, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 5ff266afbd5c4e34c8ae5c0c94f62348, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: efb06043417b4c94fac2042d3795f462, type: 3}
 --- !u!212 &2011978885
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -34334,6 +34353,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1942651074}
   standardTexture: {fileID: 21300000, guid: 9e2d6295005c40c428987cfed5b20386, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 9e2d6295005c40c428987cfed5b20386, type: 3}
+  deactivatedTexture: {fileID: 0}
   buttonRenderer: {fileID: 2015652282}
   color: {r: 0.65517235, g: 0, b: 1, a: 1}
 --- !u!212 &2015652282
@@ -35362,6 +35382,7 @@ MonoBehaviour:
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: d4fed908ad4ff204cbded80e41357362, type: 3}
   highlightedTexture: {fileID: 21300000, guid: e924ab2b1758c2149b8042dabc77b22a, type: 3}
+  deactivatedTexture: {fileID: 0}
 --- !u!212 &2090726340
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35780,6 +35801,7 @@ GameObject:
   - component: {fileID: 2113298557}
   - component: {fileID: 2113298556}
   - component: {fileID: 2113298554}
+  - component: {fileID: 2113298555}
   m_Layer: 2
   m_Name: Main Menu
   m_TagString: Untagged
@@ -35823,6 +35845,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2e37b5097006d46b76d41b3de9edc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2113298555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2113298552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b54bdeea9374ff4fb3e86c2937fbf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  undoOneStepButton: {fileID: 0}
+  redoOneStepButton: {fileID: 0}
+  undoTenStepsButton: {fileID: 0}
+  redoTenStepsButton: {fileID: 0}
+  undoLastColorButton: {fileID: 0}
+  redoLastColorButton: {fileID: 0}
 --- !u!23 &2113298556
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36160,6 +36199,7 @@ MonoBehaviour:
   descriptionText: {fileID: 105887393}
   standardTexture: {fileID: 21300000, guid: 9cec1f329f40434478a14e1188a2ac1b, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 96ce01f1a9ed62c45bd46ad6f83fa523, type: 3}
+  deactivatedTexture: {fileID: 0}
   sceneLoader: {fileID: 2142078484}
 --- !u!212 &2142078486
 SpriteRenderer:

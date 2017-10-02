@@ -255,6 +255,7 @@ public class InputReader : MonoBehaviour
         status.UpdateStatus(statusId, "Reading index.facs file");
         ReadFacsFiles(path, totalNbrOfCells);
         status.RemoveStatus(statusId);
+        ButtonEvents.GraphsLoaded.Invoke();
     }
 
     /// <summary>
@@ -757,7 +758,7 @@ public class InputReader : MonoBehaviour
         }
         string graphName = words[2];
         // someone please rename this
-        referenceManager.createSelectionFrompreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphName, groupingNames.ToArray(), cellNames, colors);
+        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphName, groupingNames.ToArray(), cellNames, colors);
         CellExAlLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 

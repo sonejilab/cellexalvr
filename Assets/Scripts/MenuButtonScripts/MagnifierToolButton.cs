@@ -19,10 +19,14 @@ class MagnifierToolButton : StationaryButton
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         magnifier = referenceManager.magnifierTool.gameObject;
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -39,6 +43,16 @@ class MagnifierToolButton : StationaryButton
                 controllerModelSwitcher.ActivateDesiredTool();
             }
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }
 

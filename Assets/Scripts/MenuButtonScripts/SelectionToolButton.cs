@@ -20,10 +20,7 @@ public class SelectionToolButton : StationaryButton
 
     protected override string Description
     {
-        get
-        {
-            return "Toggle selection tool";
-        }
+        get { return "Toggle selection tool"; }
     }
     private void Start()
     {
@@ -31,10 +28,14 @@ public class SelectionToolButton : StationaryButton
         rotator = referenceManager.menuRotator;
         selectionToolMenu = referenceManager.selectionToolMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -60,5 +61,15 @@ public class SelectionToolButton : StationaryButton
                 buttonsInitialized = true;
             }
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

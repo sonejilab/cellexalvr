@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 ///<summary>
 /// This class represents a button used for resetting the color and position of the graphs.
@@ -20,10 +21,14 @@ public class ResetGraphButton : StationaryButton
     private void Start()
     {
         graphManager = referenceManager.graphManager;
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
+        ButtonEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
 
     void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -31,4 +36,13 @@ public class ResetGraphButton : StationaryButton
         }
     }
 
+    private void OnGraphsLoaded()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void OnGraphsUnloaded()
+    {
+        SetButtonActivated(false);
+    }
 }

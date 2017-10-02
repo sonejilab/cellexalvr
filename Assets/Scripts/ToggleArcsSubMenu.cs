@@ -27,7 +27,7 @@ public class ToggleArcsSubMenu : MonoBehaviour
 
     public void Init()
     {
-        // TODO come up with some more colors
+        // TODO CELLEXAL: come up with some more colors
         colors = new Color[22];
         colors[0] = new Color(1, 0, 0);     // red
         colors[1] = new Color(0, 0, 1);     // blue

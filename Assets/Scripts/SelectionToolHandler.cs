@@ -26,7 +26,6 @@ public class SelectionToolHandler : MonoBehaviour
 
     private SelectionToolMenu selectionToolMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
-    private UndoButtonsHandler undoButtonsHandler;
     private SteamVR_TrackedObject rightController;
     private ArrayList selectedCells = new ArrayList();
     private ArrayList lastSelectedCells = new ArrayList();
@@ -71,7 +70,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     void Awake()
     {
-        // TODO: create more colors.
+        // TODO CELLEXAL: create more colors.
         colors = new Color[10];
         colors[0] = new Color(1, 0, 0, .5f);     // red
         colors[1] = new Color(0, 0, 1, .5f);     // blue
@@ -98,7 +97,6 @@ public class SelectionToolHandler : MonoBehaviour
     {
         selectionToolMenu = referenceManager.selectionToolMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        undoButtonsHandler = referenceManager.undoButtonsHandler;
         rightController = referenceManager.rightController;
         gameManager = referenceManager.gameManager;
     }
@@ -136,7 +134,7 @@ public class SelectionToolHandler : MonoBehaviour
             selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
             historyIndexOffset = 0;
             // turn off the redo buttons
-            undoButtonsHandler.EndOfHistoryReached();
+            ButtonEvents.EndOfHistoryReached.Invoke();
         }
         if (!selectionMade)
         {
@@ -145,7 +143,7 @@ public class SelectionToolHandler : MonoBehaviour
             selectionToolMenu.SelectionStarted();
             groupInfoDisplay.ResetGroupsInfo();
             // turn on the undo buttons
-            undoButtonsHandler.BeginningOfHistoryLeft();
+            ButtonEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
         if (!Equals(newColor, oldColor))
@@ -192,14 +190,14 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (historyIndexOffset == 0)
         {
-            undoButtonsHandler.EndOfHistoryLeft();
+            ButtonEvents.EndOfHistoryLeft.Invoke();
         }
 
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
         if (indexToMoveTo == 0)
         {
             // beginning of history reached
-            undoButtonsHandler.BeginningOfHistoryReached();
+            ButtonEvents.BeginningOfHistoryReached.Invoke();
             selectionToolMenu.UndoSelection();
         }
         else if (indexToMoveTo < 0)
@@ -229,7 +227,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (historyIndexOffset == selectionHistory.Count)
         {
-            undoButtonsHandler.BeginningOfHistoryLeft();
+            ButtonEvents.BeginningOfHistoryLeft.Invoke();
             selectionToolMenu.SelectionStarted();
         }
 
@@ -237,7 +235,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (indexToMoveTo == selectionHistory.Count - 1)
         {
             // end of history reached
-            undoButtonsHandler.EndOfHistoryReached();
+            ButtonEvents.EndOfHistoryReached.Invoke();
         }
         else if (indexToMoveTo >= selectionHistory.Count)
         {
@@ -340,7 +338,7 @@ public class SelectionToolHandler : MonoBehaviour
             other.GetComponent<Collider>().isTrigger = false;
         }
         selectionHistory.Clear();
-        undoButtonsHandler.TurnAllButtonsOff();
+        ButtonEvents.SelectionCanceled.Invoke();
         selectedCells.Clear();
         selectionMade = false;
         selectionToolMenu.RemoveSelection();
@@ -362,7 +360,7 @@ public class SelectionToolHandler : MonoBehaviour
         // clear the list since we are done with it
         selectedCells.Clear();
         selectionHistory.Clear();
-        undoButtonsHandler.TurnAllButtonsOff();
+        ButtonEvents.SelectionConfirmed.Invoke();
         heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;
@@ -405,8 +403,7 @@ public class SelectionToolHandler : MonoBehaviour
         {
             other.GetComponentInChildren<Renderer>().material.color = Color.white;
         }
-        undoButtonsHandler.BeginningOfHistoryReached();
-        undoButtonsHandler.EndOfHistoryLeft();
+        ButtonEvents.SelectionCanceled.Invoke();
         historyIndexOffset = selectionHistory.Count;
         selectedCells.Clear();
         selectionMade = false;

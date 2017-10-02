@@ -22,10 +22,14 @@ class MinimizeToolButton : StationaryButton
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         minimizer = referenceManager.minimizeTool;
+        SetButtonActivated(false);
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Update()
     {
+        if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         bool deleteToolActived = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Minimizer;
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -42,5 +46,15 @@ class MinimizeToolButton : StationaryButton
                 spriteRenderer.sprite = gray;
             }
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

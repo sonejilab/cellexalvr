@@ -15,6 +15,10 @@ public class ConfirmSelectionButton : RotatableButton
     {
         base.Start();
         selectionToolHandler = referenceManager.selectionToolHandler;
+        SetButtonState(false);
+        ButtonEvents.SelectionStarted.AddListener(TurnOn);
+        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -28,5 +32,15 @@ public class ConfirmSelectionButton : RotatableButton
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             //ctrlMdlSwitcher.TurnOffActiveTool();
         }
+    }
+
+    private void TurnOn()
+    {
+        SetButtonState(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonState(false);
     }
 }

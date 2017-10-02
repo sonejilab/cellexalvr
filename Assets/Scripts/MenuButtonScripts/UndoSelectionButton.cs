@@ -14,6 +14,10 @@ public class UndoSelectionButton : RotatableButton
     {
         base.Start();
         selectionToolHandler = referenceManager.selectionToolHandler;
+        SetButtonState(false);
+        ButtonEvents.SelectionStarted.AddListener(TurnOn);
+        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -22,7 +26,17 @@ public class UndoSelectionButton : RotatableButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
         {
             selectionToolHandler.CancelSelection();
+            SetButtonState(false);
         }
     }
 
+    private void TurnOn()
+    {
+        SetButtonState(true);
+    }
+
+    private void TurnOff()
+    {
+        SetButtonState(false);
+    }
 }
