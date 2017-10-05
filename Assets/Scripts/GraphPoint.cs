@@ -74,7 +74,6 @@ public class GraphPoint : MonoBehaviour
         {
             Destroy(rig);
         }
-        graphPointRenderer.material.color = defaultColor;
     }
 
 

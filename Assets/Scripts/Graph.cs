@@ -240,6 +240,7 @@ public class Graph : MonoBehaviour
         foreach (GraphPoint point in points.Values)
         {
             //point.gameObject.SetActive(true);
+            point.gameObject.SetActive(true);
             point.ResetColor();
         }
     }
@@ -256,11 +257,7 @@ public class Graph : MonoBehaviour
         {
             point.gameObject.SetActive(true);
             point.ResetCoords();
-            if (point.GetComponent<Rigidbody>() != null)
-            {
-                point.GetComponent<Collider>().isTrigger = true;
-                point.GetComponent<Rigidbody>().isKinematic = false;
-            }
+            point.ResetColor();
         }
     }
 }

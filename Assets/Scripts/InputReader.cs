@@ -361,10 +361,13 @@ public class InputReader : MonoBehaviour
     /// </summary>
     public void ReadNetworkFiles()
     {
-
-
         CellExAlLog.Log("Started reading network files");
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
+        if (!Directory.Exists(networkDirectory))
+        {
+            CellExAlLog.Log("ERROR: No network directory at " + CellExAlLog.FixFilePath(networkDirectory));
+            return;
+        }
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
         string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
         string[] layFilePaths = Directory.GetFiles(networkDirectory, "*.lay");
