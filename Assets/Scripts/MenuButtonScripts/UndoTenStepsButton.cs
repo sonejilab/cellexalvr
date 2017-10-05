@@ -21,6 +21,7 @@ public class UndoTenStepsButton : StationaryButton
         SetButtonActivated(false);
         ButtonEvents.SelectionStarted.AddListener(TurnOn);
         ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
+        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
         ButtonEvents.BeginningOfHistoryReached.AddListener(TurnOff);
         ButtonEvents.BeginningOfHistoryLeft.AddListener(TurnOn);
         ButtonEvents.GraphsUnloaded.AddListener(TurnOff);

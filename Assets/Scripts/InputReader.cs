@@ -121,7 +121,6 @@ public class InputReader : MonoBehaviour
         ///  CELLNAME_2 X_COORD Y_COORD Z_COORD
         ///  ...
 
-
         float maximumDeltaTime = 0.05f; // 20 fps
         int maximumItemsPerFrame = 200;
         int itemsThisFrame = 0;
