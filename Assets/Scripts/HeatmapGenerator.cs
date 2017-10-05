@@ -79,7 +79,7 @@ public class HeatmapGenerator : MonoBehaviour
         if (selectionToolHandler.selectionConfirmed)
         {
             // make a deep copy of the arraylist
-            ArrayList selection = selectionToolHandler.GetLastSelection();
+            List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
             Dictionary<Cell, Color> colors = new Dictionary<Cell, Color>();
             foreach (GraphPoint g in selection)
             {

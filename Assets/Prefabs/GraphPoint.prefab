@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: ec9fe1ff92652d344899609306790269, type: 2}
+  - {fileID: 2100000, guid: f4bf3b670c1428c4ea65660fe9c42064, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93,6 +93,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98f52b2868165944fbd17844d6e84877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Graph: {fileID: 0}
+  normalShader: {fileID: 4800000, guid: 7fd00079c51767248b7731824758b6a7, type: 3}
+  outlineShader: {fileID: 4800000, guid: 9dc1dea0e00ce3d4a826ef13b054b008, type: 3}
 --- !u!135 &135869749697501322
 SphereCollider:
   m_ObjectHideFlags: 1

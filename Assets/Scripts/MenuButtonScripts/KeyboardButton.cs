@@ -17,13 +17,19 @@ public class KeyboardButton : StationaryButton
         get { return "Toggle keyboard"; }
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+    }
+
     private void Start()
     {
         keyboard = referenceManager.keyboard.gameObject;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        
     }
 
     void Update()

@@ -1,7 +1,7 @@
 ///<summary>
 /// This class represents a button used for confirming a cell selection.
 ///</summary>
-public class ConfirmSelectionButton : RotatableButton
+public class ConfirmSelectionButton : StationaryButton
 {
 
     private SelectionToolHandler selectionToolHandler;
@@ -11,20 +11,21 @@ public class ConfirmSelectionButton : RotatableButton
         get { return "Confirm selection"; }
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
+
         selectionToolHandler = referenceManager.selectionToolHandler;
-        SetButtonState(false);
+        SetButtonActivated(false);
         ButtonEvents.SelectionStarted.AddListener(TurnOn);
         ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
+        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
         ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             selectionToolHandler.SetSelectionToolEnabled(false);
             selectionToolHandler.ConfirmSelection();
@@ -36,11 +37,11 @@ public class ConfirmSelectionButton : RotatableButton
 
     private void TurnOn()
     {
-        SetButtonState(true);
+        SetButtonActivated(true);
     }
 
     private void TurnOff()
     {
-        SetButtonState(false);
+        SetButtonActivated(false);
     }
 }

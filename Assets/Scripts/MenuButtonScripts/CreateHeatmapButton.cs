@@ -1,7 +1,7 @@
 ///<summary>
 /// This class represents a button used for creating a heatmap from a cell selection.
 ///</summary>
-public class CreateHeatmapButton : RotatableButton
+public class CreateHeatmapButton : StationaryButton
 {
 
     private HeatmapGenerator heatmapGenerator;
@@ -13,12 +13,11 @@ public class CreateHeatmapButton : RotatableButton
         get { return "Create heatmap"; }
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         heatmapGenerator = referenceManager.heatmapGenerator;
         gameManager = referenceManager.gameManager;
-        SetButtonState(false);
+        SetButtonActivated(false);
         ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
         ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
@@ -26,9 +25,9 @@ public class CreateHeatmapButton : RotatableButton
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            SetButtonState(false);
+            SetButtonActivated(false);
             heatmapGenerator.CreateHeatmap();
             gameManager.InformCreateHeatmap();
             ButtonEvents.HeatmapCreated.Invoke();
@@ -37,11 +36,11 @@ public class CreateHeatmapButton : RotatableButton
 
     private void TurnOn()
     {
-        SetButtonState(true);
+        SetButtonActivated(true);
     }
 
     private void TurnOff()
     {
-        SetButtonState(false);
+        SetButtonActivated(false);
     }
 }

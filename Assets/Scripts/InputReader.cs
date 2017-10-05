@@ -120,6 +120,11 @@ public class InputReader : MonoBehaviour
         ///  CELLNAME_1 X_COORD Y_COORD Z_COORD
         ///  CELLNAME_2 X_COORD Y_COORD Z_COORD
         ///  ...
+
+
+        float maximumDeltaTime = 0.05f; // 20 fps
+        int maximumItemsPerFrame = 200;
+        int itemsThisFrame = 0;
         int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
         {
@@ -163,11 +168,6 @@ public class InputReader : MonoBehaviour
             newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
             UpdateMinMax(newGraph, xcoords, ycoords, zcoords);
 
-            float maximumDeltaTime = Time.maximumDeltaTime;
-            // multiply by 1.1 to allow a loss of ~9.0909% fps
-            float maximumDeltaTimeThreshold = maximumDeltaTime * 1.1f;
-            int maximumItemsPerFrame = 50;
-            int itemsThisFrame = 0;
             for (int i = 0; i < xcoords.Count; i += itemsThisFrame, itemsThisFrame = 0)
             {
                 status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsFileStream.Position / mdsFileStream.Length) + "%");
@@ -184,12 +184,12 @@ public class InputReader : MonoBehaviour
                 if (lastFrame < maximumDeltaTime)
                 {
                     // we had some time over last frame
-                    maximumItemsPerFrame += 5;
+                    maximumItemsPerFrame += 25;
                 }
-                else if (lastFrame > maximumDeltaTimeThreshold)
+                else if (lastFrame > maximumDeltaTime)
                 {
                     // we took too much time last frame
-                    maximumItemsPerFrame -= 5;
+                    maximumItemsPerFrame -= 25;
                 }
             }
             fileIndex++;
@@ -217,7 +217,7 @@ public class InputReader : MonoBehaviour
 
             // first line is a header line
             string header = metacellStreamReader.ReadLine();
-            string[] attributeTypes = header.Split(null);
+            string[] attributeTypes = header.Split('\t');
             string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
             for (int i = 1; i < attributeTypes.Length; ++i)
             {
@@ -234,7 +234,7 @@ public class InputReader : MonoBehaviour
                 if (line == "")
                     continue;
 
-                string[] words = line.Split(null);
+                string[] words = line.Split('\t');
 
                 string cellname = words[0];
                 for (int j = 1; j < words.Length; ++j)
@@ -732,6 +732,7 @@ public class InputReader : MonoBehaviour
         // initialize the arrays
         string[][] cellNames = new string[groupingNames.Count][];
         Color[][] colors = new Color[groupingNames.Count][];
+        string[] graphNames = new string[groupingNames.Count];
         for (int i = 0; i < cellNames.Length; ++i)
         {
             cellNames[i] = new string[fileLengths[i]];
@@ -753,12 +754,12 @@ public class InputReader : MonoBehaviour
                 cellNames[i][j] = words[0];
                 ColorUtility.TryParseHtmlString(words[1], out colors[i][j]);
             }
+            graphNames[i] = words[2];
             streamReader.Close();
             fileStream.Close();
         }
-        string graphName = words[2];
         // someone please rename this
-        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphName, groupingNames.ToArray(), cellNames, colors);
+        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, colors);
         CellExAlLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 

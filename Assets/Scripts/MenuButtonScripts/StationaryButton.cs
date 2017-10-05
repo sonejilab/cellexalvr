@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -6,7 +7,6 @@ using UnityEngine.Events;
 /// </summary>
 public abstract class StationaryButton : MonoBehaviour
 {
-    // TODO CELLEXAL: gray out buttons that are not pressable
     public ReferenceManager referenceManager;
     public TextMesh descriptionText;
     public Sprite standardTexture;
@@ -80,5 +80,20 @@ public abstract class StationaryButton : MonoBehaviour
         buttonActivated = activate;
     }
 
+    /// <summary>
+    /// Tells this button that the menu it is attached to has turned off.
+    /// </summary>
+    public void MenuTurnedOff()
+    {
+        if (buttonActivated)
+        {
+            spriteRenderer.sprite = standardTexture;
+        }
+        else
+        {
+            spriteRenderer.sprite = deactivatedTexture;
+        }
+        controllerInside = false;
+    }
 }
 

@@ -6,10 +6,12 @@ using UnityEngine;
 public class GraphPoint : MonoBehaviour
 {
     public Graph Graph;
+    public Shader normalShader;
+    public Shader outlineShader;
 
     private Cell cell;
     private float x, y, z;
-    private Renderer graphPointRenderer;
+    private MeshRenderer graphPointRenderer;
     private Color defaultColor = new Color(1, 1, 1);
 
     #region Properties
@@ -39,7 +41,7 @@ public class GraphPoint : MonoBehaviour
 
     public void Start()
     {
-        graphPointRenderer = GetComponent<Renderer>();
+        graphPointRenderer = GetComponent<MeshRenderer>();
     }
 
     /// <summary>
@@ -91,5 +93,26 @@ public class GraphPoint : MonoBehaviour
     public void ResetColor()
     {
         graphPointRenderer.material = Resources.Load("SphereDefault", typeof(Material)) as Material;
+    }
+
+    /// <summary>
+    /// Sets the outline of the graphpoint.
+    /// </summary>
+    /// <param name="col"> The color that should be used when outlining, any color with 0 alpha to remove the outline. <param>
+    public void Outline(Color col)
+    {
+        if (col.a !=  0)
+        {
+            graphPointRenderer.material.shader = outlineShader;
+            // Set the outline color to a lighter version of the new color
+            float outlineR = col.r + (1 - col.r) / 2;
+            float outlineG = col.g + (1 - col.g) / 2;
+            float outlineB = col.b + (1 - col.b) / 2;
+            graphPointRenderer.material.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
+        }
+        else
+        {
+            graphPointRenderer.material.shader = normalShader;
+        }
     }
 }

@@ -16,7 +16,7 @@ public class SelectionToolButton : StationaryButton
     private SelectionToolMenu selectionToolMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
     private bool menuActive = false;
-    private bool buttonsInitialized = false;
+    //private bool buttonsInitialized = false;
 
     protected override string Description
     {
@@ -55,11 +55,11 @@ public class SelectionToolButton : StationaryButton
             {
                 rotator.RotateLeft();
             }
-            if (!buttonsInitialized)
-            {
-                selectionToolMenu.InitializeButtons();
-                buttonsInitialized = true;
-            }
+            //if (!buttonsInitialized)
+            //{
+            //    selectionToolMenu.InitializeButtons();
+            //    buttonsInitialized = true;
+            //}
         }
     }
 

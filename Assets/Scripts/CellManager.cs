@@ -230,7 +230,7 @@ public class CellManager : MonoBehaviour
     /// Draws lines between all points that share the same label.
     /// </summary>
     /// <param name="points"> The graphpoints to draw the lines from. </param>
-    public void DrawLinesBetweenGraphPoints(ArrayList points)
+    public void DrawLinesBetweenGraphPoints(List<GraphPoint> points)
     {
         foreach (GraphPoint g in points)
         {

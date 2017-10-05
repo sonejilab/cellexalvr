@@ -34,11 +34,11 @@ public class SelectionToolMenu : MonoBehaviour
     /// </summary>
     public void InitializeButtons()
     {
-        confirmSelectionButton.SetButtonState(false);
-        undoSelectionButton.SetButtonState(false);
-        removeSelectionButton.SetButtonState(false);
-        createHeatmapButton.SetButtonState(false);
-        createNetworksButton.SetButtonState(false);
+        //confirmSelectionButton.SetButtonState(false);
+        //undoSelectionButton.SetButtonState(false);
+        //removeSelectionButton.SetButtonState(false);
+        //createHeatmapButton.SetButtonState(false);
+        //createNetworksButton.SetButtonState(false);
     }
 
     /// <summary>
@@ -46,11 +46,11 @@ public class SelectionToolMenu : MonoBehaviour
     /// </summary>
     public void SelectionStarted()
     {
-        createHeatmapButton.SetButtonState(false);
-        confirmSelectionButton.SetButtonState(true);
-        removeSelectionButton.SetButtonState(true);
-        undoSelectionButton.SetButtonState(true);
-        createNetworksButton.SetButtonState(false);
+        //createHeatmapButton.SetButtonState(false);
+        //confirmSelectionButton.SetButtonState(true);
+        //removeSelectionButton.SetButtonState(true);
+        //undoSelectionButton.SetButtonState(true);
+        //createNetworksButton.SetButtonState(false);
     }
 
     /// <summary>
@@ -58,11 +58,11 @@ public class SelectionToolMenu : MonoBehaviour
     /// </summary>
     public void ConfirmSelection()
     {
-        createHeatmapButton.SetButtonState(true);
-        confirmSelectionButton.SetButtonState(false);
-        removeSelectionButton.SetButtonState(false);
-        undoSelectionButton.SetButtonState(false);
-        createNetworksButton.SetButtonState(true);
+        //createHeatmapButton.SetButtonState(true);
+        //confirmSelectionButton.SetButtonState(false);
+        //removeSelectionButton.SetButtonState(false);
+        //undoSelectionButton.SetButtonState(false);
+        //createNetworksButton.SetButtonState(true);
     }
 
     /// <summary>
@@ -70,11 +70,11 @@ public class SelectionToolMenu : MonoBehaviour
     /// </summary>
     public void RemoveSelection()
     {
-        confirmSelectionButton.SetButtonState(false);
-        removeSelectionButton.SetButtonState(false);
-        createHeatmapButton.SetButtonState(false);
-        undoSelectionButton.SetButtonState(false);
-        createNetworksButton.SetButtonState(false);
+        //confirmSelectionButton.SetButtonState(false);
+        //removeSelectionButton.SetButtonState(false);
+        //createHeatmapButton.SetButtonState(false);
+        //undoSelectionButton.SetButtonState(false);
+        //createNetworksButton.SetButtonState(false);
     }
 
     /// <summary>
@@ -82,11 +82,11 @@ public class SelectionToolMenu : MonoBehaviour
     /// </summary>
     public void UndoSelection()
     {
-        confirmSelectionButton.SetButtonState(false);
-        removeSelectionButton.SetButtonState(false);
-        createHeatmapButton.SetButtonState(false);
-        undoSelectionButton.SetButtonState(false);
-        createNetworksButton.SetButtonState(false);
+        //confirmSelectionButton.SetButtonState(false);
+        //removeSelectionButton.SetButtonState(false);
+        //createHeatmapButton.SetButtonState(false);
+        //undoSelectionButton.SetButtonState(false);
+        //createNetworksButton.SetButtonState(false);
     }
 
 }

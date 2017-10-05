@@ -25,6 +25,7 @@ public class Graph : MonoBehaviour
     private Vector3 defaultScale;
     private ReferenceManager referenceManager;
     private GameManager gameManager;
+    private bool b = false;
 
     void Start()
     {
@@ -124,7 +125,12 @@ public class Graph : MonoBehaviour
     {
         Vector3 scaledCoordinates = ScaleCoordinates(x, y, z);
         newGraphpoint = Instantiate(graphpoint);
+        //print(newGraphpoint.GetComponent<Renderer>().material.FindPass("GRAPHPOINT_OUTLINE"));
+        //newGraphpoint.GetComponent<Renderer>().material.shader.maximumLOD = 200;
+        //newGraphpoint.GetComponent<Renderer>().material.SetShaderPassEnabled("GRAPHPOINT_OUTLINE", false);
+        //Shader.DisableKeyword("GRAPHPOINT_OUTLINE");
         newGraphpoint.gameObject.SetActive(true);
+        //newGraphpoint.GetComponent<Renderer>().material.DisableKeyword("GRAPHPOINT_OUTLINE");
         newGraphpoint.SetCoordinates(cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
         newGraphpoint.transform.parent = transform;
         newGraphpoint.transform.localPosition = new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);

@@ -69,7 +69,7 @@ Shader "Valve/VR/Silhouette"
 #if UNITY_VERSION >= 540
 			extruded.vPositionPs = UnityObjectToClipPos( vertex.vPositionOs.xyzw );
 #else
-			extruded.vPositionPs = mul( UNITY_MATRIX_MVP, vertex.vPositionOs.xyzw );
+			extruded.vPositionPs = mul( UNITY_MATRIX_MVP, vertex.vPositionOs.xyzw ); 
 #endif
 			extruded.vPositionPs.xy += vOffsetPs.xy * extruded.vPositionPs.w * g_flOutlineWidth;
 

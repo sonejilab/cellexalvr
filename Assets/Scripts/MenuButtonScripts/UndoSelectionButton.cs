@@ -1,7 +1,7 @@
 ///<summary>
 /// This class represents a button used for undoing the current selection.
 ///</summary>
-public class UndoSelectionButton : RotatableButton
+public class UndoSelectionButton : StationaryButton
 {
     private SelectionToolHandler selectionToolHandler;
 
@@ -10,11 +10,11 @@ public class UndoSelectionButton : RotatableButton
         get { return "Cancel selection"; }
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
+        
         selectionToolHandler = referenceManager.selectionToolHandler;
-        SetButtonState(false);
+        SetButtonActivated(false);
         ButtonEvents.SelectionStarted.AddListener(TurnOn);
         ButtonEvents.SelectionCanceled.AddListener(TurnOff);
         ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
@@ -23,20 +23,20 @@ public class UndoSelectionButton : RotatableButton
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             selectionToolHandler.CancelSelection();
-            SetButtonState(false);
+            SetButtonActivated(false);
         }
     }
 
     private void TurnOn()
     {
-        SetButtonState(true);
+        SetButtonActivated(true);
     }
 
     private void TurnOff()
     {
-        SetButtonState(false);
+        SetButtonActivated(false);
     }
 }

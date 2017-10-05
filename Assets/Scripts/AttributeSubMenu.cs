@@ -63,6 +63,8 @@ public class AttributeSubMenu : MonoBehaviour
             Destroy(button.gameObject, .1f);
             buttonPos = new Vector3(-.39f, .77f, .282f);
         }
+        buttons.Clear();
+
         for (int i = 0; i < attributes.Length; ++i)
         {
             string attribute = attributes[i];

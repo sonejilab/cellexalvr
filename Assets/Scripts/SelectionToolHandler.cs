@@ -23,12 +23,15 @@ public class SelectionToolHandler : MonoBehaviour
     public bool heatmapGrabbed = false;
     [HideInInspector]
     public int fileCreationCtr = 0;
+    public Material graphpointNormal;
+    public Material graphpointHighlight;
 
     private SelectionToolMenu selectionToolMenu;
+    private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
     private SteamVR_TrackedObject rightController;
-    private ArrayList selectedCells = new ArrayList();
-    private ArrayList lastSelectedCells = new ArrayList();
+    private List<GraphPoint> selectedCells = new List<GraphPoint>();
+    private List<GraphPoint> lastSelectedCells = new List<GraphPoint>();
     private Color[] colors;
     private Color selectedColor;
     private PlanePicker planePicker;
@@ -76,7 +79,7 @@ public class SelectionToolHandler : MonoBehaviour
         colors[1] = new Color(0, 0, 1, .5f);     // blue
         colors[2] = new Color(0, 1, 1, .5f);     // cyan
         colors[3] = new Color(1, 0, 1, .5f);     // magenta
-        colors[4] = new Color(1f, 153f / 255f, 204f / 255f);     // pink
+        colors[4] = new Color(1f, 153f / 255f, 204f / 255f, 0.5f);     // pink
         colors[5] = new Color(1, 1, 0, .5f);     // yellow
         colors[6] = new Color(0, 1, 0, .5f);     // green
         colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
@@ -87,7 +90,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
         groupInfoDisplay.SetColors(colors);
-
+        previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
         selectedColor = colors[currentColorIndex];
         SetSelectionToolEnabled(false);
         //UpdateButtonIcons();
@@ -124,6 +127,7 @@ public class SelectionToolHandler : MonoBehaviour
         Renderer renderer = graphPoint.gameObject.GetComponent<Renderer>();
 
         Color oldColor = renderer.material.color;
+        graphPoint.Outline(newColor);
         renderer.material.color = newColor;
         gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, newColor);
 
@@ -140,7 +144,7 @@ public class SelectionToolHandler : MonoBehaviour
         {
             // if this is a new selection we should reset some stuff
             selectionMade = true;
-            selectionToolMenu.SelectionStarted();
+            //selectionToolMenu.SelectionStarted();
             groupInfoDisplay.ResetGroupsInfo();
             // turn on the undo buttons
             ButtonEvents.BeginningOfHistoryLeft.Invoke();
@@ -157,6 +161,10 @@ public class SelectionToolHandler : MonoBehaviour
             if (newNode)
             {
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
+                if (selectedCells.Count == 0)
+                {
+                    ButtonEvents.SelectionStarted.Invoke();
+                }
                 selectedCells.Add(graphPoint);
             }
             else
@@ -198,7 +206,7 @@ public class SelectionToolHandler : MonoBehaviour
         {
             // beginning of history reached
             ButtonEvents.BeginningOfHistoryReached.Invoke();
-            selectionToolMenu.UndoSelection();
+            //selectionToolMenu.UndoSelection();
         }
         else if (indexToMoveTo < 0)
         {
@@ -207,14 +215,17 @@ public class SelectionToolHandler : MonoBehaviour
         }
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.GetComponent<Renderer>().material.color = info.fromColor;
+        info.graphPoint.Outline(info.fromColor);
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
+            info.graphPoint.Outline(Color.clear);
         }
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
+            info.graphPoint.Outline(info.fromColor);
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -228,7 +239,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (historyIndexOffset == selectionHistory.Count)
         {
             ButtonEvents.BeginningOfHistoryLeft.Invoke();
-            selectionToolMenu.SelectionStarted();
+            //selectionToolMenu.SelectionStarted();
         }
 
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
@@ -245,6 +256,7 @@ public class SelectionToolHandler : MonoBehaviour
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.GetComponent<Renderer>().material.color = info.toColor;
+        info.graphPoint.Outline(info.toColor);
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
         if (info.newNode)
         {
@@ -336,12 +348,13 @@ public class SelectionToolHandler : MonoBehaviour
             other.GetComponent<Rigidbody>().useGravity = true;
             other.GetComponent<Rigidbody>().isKinematic = false;
             other.GetComponent<Collider>().isTrigger = false;
+            other.Outline(Color.clear);
         }
         selectionHistory.Clear();
         ButtonEvents.SelectionCanceled.Invoke();
         selectedCells.Clear();
         selectionMade = false;
-        selectionToolMenu.RemoveSelection();
+        //selectionToolMenu.RemoveSelection();
     }
 
     /// <summary>
@@ -355,16 +368,18 @@ public class SelectionToolHandler : MonoBehaviour
         StartCoroutine(UpdateRObjectGrouping());
         foreach (GraphPoint c in selectedCells)
         {
+            c.Outline(Color.clear);
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
         }
         // clear the list since we are done with it
+        previousSelectionMenu.CreateButton(selectedCells);
         selectedCells.Clear();
         selectionHistory.Clear();
         ButtonEvents.SelectionConfirmed.Invoke();
         heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;
-        selectionToolMenu.ConfirmSelection();
+        //selectionToolMenu.ConfirmSelection();
     }
 
     private IEnumerator UpdateRObjectGrouping()
@@ -384,12 +399,12 @@ public class SelectionToolHandler : MonoBehaviour
         CellExAlLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
     }
 
-    public ArrayList GetLastSelection()
+    public List<GraphPoint> GetLastSelection()
     {
         return lastSelectedCells;
     }
 
-    public ArrayList GetCurrentSelection()
+    public List<GraphPoint> GetCurrentSelection()
     {
         return selectedCells;
     }
@@ -407,7 +422,7 @@ public class SelectionToolHandler : MonoBehaviour
         historyIndexOffset = selectionHistory.Count;
         selectedCells.Clear();
         selectionMade = false;
-        selectionToolMenu.UndoSelection();
+        //selectionToolMenu.UndoSelection();
     }
 
     /// <summary>

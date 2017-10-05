@@ -1,4 +1,4 @@
-﻿public class CreateNetworksButton : RotatableButton
+﻿public class CreateNetworksButton : StationaryButton
 {
     private NetworkGenerator networkGenerator;
     private MenuRotator rotator;
@@ -12,13 +12,13 @@
         }
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
+        
         networkGenerator = referenceManager.networkGenerator;
         rotator = referenceManager.menuRotator;
         gameManager = referenceManager.gameManager;
-        SetButtonState(false);
+        SetButtonActivated(false);
         ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
         ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
@@ -28,7 +28,7 @@
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            SetButtonState(false);
+            SetButtonActivated(false);
             networkGenerator.GenerateNetworks();
             gameManager.InformGenerateNetworks();
             ButtonEvents.NetworkCreated.Invoke();
@@ -41,13 +41,11 @@
 
     private void TurnOn()
     {
-        SetButtonState(true);
+        SetButtonActivated(true);
     }
 
     private void TurnOff()
     {
-        SetButtonState(false);
+        SetButtonActivated(false);
     }
 }
-
-

@@ -9,15 +9,18 @@ public class IndexMenuButton : StationaryButton
     {
         get { return "Show menu for coloring by index"; }
     }
-
+    protected override void Awake()
+    {
+        base.Awake();
+        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
+        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+    }
 
     void Start()
     {
         indexMenu = referenceManager.indexMenu.gameObject;
         buttons = referenceManager.leftButtons;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

@@ -1,7 +1,7 @@
 ///<summary>
 /// This class represents a button used for removing the current cell selection.
 ///</summary>
-public class RemoveSelectionButton : RotatableButton
+public class RemoveSelectionButton : StationaryButton
 {
     private SelectionToolHandler selectionToolHandler;
 
@@ -10,11 +10,11 @@ public class RemoveSelectionButton : RotatableButton
         get { return "Remove selection"; }
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
+        
         selectionToolHandler = referenceManager.selectionToolHandler;
-        SetButtonState(false);
+        SetButtonActivated(false);
         ButtonEvents.SelectionStarted.AddListener(TurnOn);
         ButtonEvents.SelectionCanceled.AddListener(TurnOff);
         ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
@@ -24,21 +24,21 @@ public class RemoveSelectionButton : RotatableButton
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !isRotating)
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            SetButtonState(false);
+            SetButtonActivated(false);
             selectionToolHandler.ConfirmRemove();
         }
     }
 
     private void TurnOn()
     {
-        SetButtonState(true);
+        SetButtonActivated(true);
     }
 
     private void TurnOff()
     {
-        SetButtonState(false);
+        SetButtonActivated(false);
     }
 
 }
