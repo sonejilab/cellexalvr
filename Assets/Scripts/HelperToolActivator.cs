@@ -53,6 +53,10 @@ public class HelperToolActivator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Switches the text on the sign on the helptoolactivator cylinder.
+    /// </summary>
+    /// <param name="activate"> True if the help tool is being activated, false if it is being deactivated. </param>
     public void SwitchText(bool activate)
     {
         if (activate)

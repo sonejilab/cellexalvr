@@ -62,12 +62,17 @@ public class CorrelatedGenesList : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Calculates the genes correlated and anti correlated to a certain gene.
+    /// </summary>
+    /// <param name="index"> The genes index in the list of previous searches. </param>
+    /// <param name="geneName"> The genes name. </param>
     public void CalculateCorrelatedGenes(int index, string geneName)
     {
         StartCoroutine(CalculateCorrelatedGenesCoroutine(index, geneName));
     }
 
-    public IEnumerator CalculateCorrelatedGenesCoroutine(int index, string geneName)
+    private IEnumerator CalculateCorrelatedGenesCoroutine(int index, string geneName)
     {
         string args = selectionToolHandler.DataDir + " " + geneName + " " + outputFile;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";

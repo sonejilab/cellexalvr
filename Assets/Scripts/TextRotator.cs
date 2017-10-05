@@ -26,6 +26,13 @@ public class TextRotator : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Sets the transforms that this text should be in the middle of.
+    /// </summary>
+    /// <param name="t1"> The first transform. </param>
+    /// <param name="t2"> The second transform. </param>
+    /// <param name="t3"> The third transform. </param>
+    /// <param name="t4"> The fourth transform. </param>
     public void SetTransforms(Transform t1, Transform t2, Transform t3, Transform t4)
     {
         this.t1 = t1;

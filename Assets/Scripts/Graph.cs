@@ -107,6 +107,9 @@ public class Graph : MonoBehaviour
         return scaledCoordinates;
     }
 
+    /// <summary>
+    /// Saves the default positions of the graphs.
+    /// </summary>
     public void UpdateStartPosition()
     {
         defaultPos = transform.position;
@@ -234,6 +237,9 @@ public class Graph : MonoBehaviour
         return convexHull.gameObject;
     }
 
+    /// <summary>
+    /// Resets all graphpoint's color to white.
+    /// </summary>
     public void ResetGraphColors()
     {
         //bool graphPointActive;

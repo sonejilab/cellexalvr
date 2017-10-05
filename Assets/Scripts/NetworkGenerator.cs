@@ -27,6 +27,9 @@ public class NetworkGenerator : MonoBehaviour
         status = referenceManager.statusDisplay;
     }
 
+    /// <summary>
+    /// Generates networks based on the selectiontoolhandler's last selection.
+    /// </summary>
     public void GenerateNetworks()
     {
         StartCoroutine(GenerateNetworksCoroutine());

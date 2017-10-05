@@ -49,6 +49,7 @@ public class ReferenceManager : MonoBehaviour
     public TextMesh leftDescription;
     public MenuRotator menuRotator;
     public MinimizedObjectHandler minimizedObjectHandler;
+    public MenuToggler menuToggler;
 
     #endregion
 

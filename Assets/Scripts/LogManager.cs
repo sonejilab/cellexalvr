@@ -60,6 +60,9 @@ public static class CellExAlLog
         }
     }
 
+    /// <summary>
+    /// Creates a new log and prints everything that is in the backlog to the new log.
+    /// </summary>
     public static void LogBacklog()
     {
         if (logThisLater.Count > 0)

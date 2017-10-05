@@ -72,6 +72,9 @@ public class LoaderController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets some important variables used by the loader.
+    /// </summary>
     public void ResetLoaderBooleans()
     {
         inputFolderGenerator.DestroyFolders();
@@ -80,14 +83,19 @@ public class LoaderController : MonoBehaviour
         collidersDestroyed = false;
     }
 
-    public void MoveLoader(Vector3 direction, float time)
+    /// <summary>
+    /// Moves the loader.
+    /// </summary>
+    /// <param name="distance"> The distance in world space to move the loader. </param>
+    /// <param name="time"> The total time in seconds to move the loader. </param>
+    public void MoveLoader(Vector3 distance, float time)
     {
         //sound.Play();
         currentTime = 0;
         arrivalTime = time;
         startPosition = transform.position;
         startScale = cylinder.localScale;
-        if (direction.y > 0)
+        if (distance.y > 0)
         {
             finalScale = new Vector3(1f, startScale.y, 1f);
             helperCylinder.SetActive(true);
@@ -98,11 +106,11 @@ public class LoaderController : MonoBehaviour
         }
         if (moving)
         {
-            finalPosition = finalPosition + direction;
+            finalPosition = finalPosition + distance;
         }
         else
         {
-            finalPosition = transform.position + direction;
+            finalPosition = transform.position + distance;
         }
         moving = true;
     }

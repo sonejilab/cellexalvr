@@ -55,7 +55,13 @@ public class CellManager : MonoBehaviour
         return cells[label];
     }
 
-    public void CreateNewSelectionFromArray(string graphName, string[] cellnames, Color[] colors)
+    /// <summary>
+    /// Creates a new selection.
+    /// </summary>
+    /// <param name="graphName"> The graph that the selection originated from. </param>
+    /// <param name="cellnames"> An array of all the cell names (the graphpoint labels). </param>
+    /// <param name="colors"> An array of all colors that the cells should have. </param>
+    public void CreateNewSelection(string graphName, string[] cellnames, Color[] colors)
     {
         // finds any graph
         Graph graph = graphManager.FindGraph(graphName);
@@ -176,6 +182,9 @@ public class CellManager : MonoBehaviour
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
+    /// <summary>
+    /// Removes all cells.
+    /// </summary>
     public void DeleteCells()
     {
         cells.Clear();

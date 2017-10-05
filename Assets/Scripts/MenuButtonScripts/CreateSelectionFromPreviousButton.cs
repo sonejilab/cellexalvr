@@ -32,7 +32,7 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            referenceManager.cellManager.CreateNewSelectionFromArray(graphName, selectionCellNames, selectionColors);
+            referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionColors);
         }
     }
 

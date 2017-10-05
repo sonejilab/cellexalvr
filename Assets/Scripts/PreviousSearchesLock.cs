@@ -17,6 +17,9 @@ public class PreviousSearchesLock : MonoBehaviour
         renderer = GetComponent<Renderer>();
     }
 
+    /// <summary>
+    /// Toggles the lock.
+    /// </summary>
     public void ToggleSearchNodeLock()
     {
         bool newState = !searchListNode.Locked;

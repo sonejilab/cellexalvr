@@ -25,6 +25,9 @@ public class ToggleArcsSubMenu : MonoBehaviour
         tabPrefab.SetActive(false);
     }
 
+    /// <summary>
+    /// Initializes the arc menu.
+    /// </summary>
     public void Init()
     {
         // TODO CELLEXAL: come up with some more colors

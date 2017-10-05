@@ -11,6 +11,7 @@ public class MenuToggler : MonoBehaviour
 
     private SteamVR_Controller.Device device;
     private GameObject menu;
+    // These dictionaries holds the things that were turned off when the menu was deactivated
     private Dictionary<Renderer, bool> renderers = new Dictionary<Renderer, bool>();
     private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
     private Collider boxCollider;
@@ -43,6 +44,22 @@ public class MenuToggler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds a gameobject to the list of gameobjects to show when to menu is turned back on.
+    /// </summary>
+    /// <param name="item"> The gameobject to turn back on. </param>
+    public void AddGameObjectToActivate(GameObject item)
+    {
+        Renderer r = item.GetComponent<Renderer>();
+        renderers[r] = true;
+        Collider c = item.GetComponent<Collider>();
+        colliders[c] = true;
+    }
+
+    /// <summary>
+    /// Shows or hides the menu.
+    /// </summary>
+    /// <param name="visible"> True for showing the menu, false otherwise. </param>
     private void SetMenuVisible(bool visible)
     {
         if (visible)

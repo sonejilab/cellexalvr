@@ -399,11 +399,19 @@ public class SelectionToolHandler : MonoBehaviour
         CellExAlLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
     }
 
+    /// <summary>
+    /// Gets the last selection that was confirmed.
+    /// </summary>
+    /// <returns> A List of all graphpoints that were selected. </returns>
     public List<GraphPoint> GetLastSelection()
     {
         return lastSelectedCells;
     }
 
+    /// <summary>
+    /// Get the current (not yet confirmed) selection.
+    /// </summary>
+    /// <returns> A List of all graphpoints currently selected. </returns>
     public List<GraphPoint> GetCurrentSelection()
     {
         return selectedCells;
