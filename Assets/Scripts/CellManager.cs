@@ -182,35 +182,65 @@ public class CellManager : MonoBehaviour
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
-    public void FlashGenes(string[] genes)
+    public void FlashGenes(string[][] genes)
     {
         StartCoroutine(GetGeneExpressionCoroutine(genes));
     }
 
-    private IEnumerator GetGeneExpressionCoroutine(string[] genes)
+    private IEnumerator GetGeneExpressionCoroutine(string[][] genes)
     {
-        foreach (string geneName in genes)
+
+        string[] categories = new string[genes.Length];
+        int i = 0;
+        for (; i < genes.Length; ++i)
         {
-            coroutinesWaiting--;
-            database.QueryMultipleGenesFlashingExpression(genes);
+            string[] categoryOfGenes = genes[i];
+            categories[i] = categoryOfGenes[0];
+            database.QueryMultipleGenesFlashingExpression(categoryOfGenes);
 
             // now we have to wait for our query to return the results.
             while (database.QueryRunning)
                 yield return null;
+        }
 
-            while (true)
+        var statusDisplay = referenceManager.statusDisplay;
+        System.Random rng = new System.Random();
+        int statusId = statusDisplay.AddStatus("");
+        Cell cell = null;
+        foreach (Cell c in cells.Values)
+        {
+            cell = c;
+            break;
+        }
+        Dictionary<string, int> categoryLengths = cell.GetCategoryLengths();
+        int[] lengths = new int[categories.Length];
+        for (i = 0; i < categories.Length; ++i)
+        {
+            lengths[i] = categoryLengths[categories[i]];
+        }
+
+        while (true)
+        {
+            for (i = 0; i < categories.Length; ++i)
             {
-                foreach (string gene in genes)
+                statusDisplay.UpdateStatus(statusId, "Category: " + categories[i]);
+                var timeStarted = Time.time;
+                var timeToStop = timeStarted + 10f;
+                while (Time.time < timeToStop)
                 {
+                    int randomGene = rng.Next(0, lengths[i]);
                     foreach (Cell c in cells.Values)
                     {
-                        c.ColorByFlashingExpression(gene);
+                        c.ColorByGeneInCategory(categories[i], randomGene);
+
                     }
-                    yield return null;
+                    for (int j = 0; j < 4; ++j)
+                        yield return null;
                 }
             }
         }
     }
+
     /// <summary>
     /// Removes all cells.
     /// </summary>
@@ -304,8 +334,8 @@ public class CellManager : MonoBehaviour
         lines.Clear();
     }
 
-    internal void SaveFlashingExpression(string cell, string gene, float expr)
+    internal void SaveFlashingExpression(string cell, string category, int[] expr)
     {
-        cells[cell].SaveFlashingExpression(gene, (int)expr);
+        cells[cell].SaveFlashingExpression(category, expr);
     }
 }

@@ -11,6 +11,7 @@ using System.IO;
 using System.Collections;
 using System.Threading;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SQLiter
 {
@@ -279,11 +280,18 @@ namespace SQLiter
 
         private IEnumerator QueryMultipleGenesCoroutine(string[] genes)
         {
+            if (genes.Length < 2)
+            {
+                CellExAlLog.Log("WARNING: List of genes to query database for is too short.");
+                yield break;
+            }
+            string category = genes[0];
+
             QueryRunning = true;
             _result.Clear();
             StringBuilder builder = new StringBuilder();
 
-            int i = 0;
+            int i = 1;
             for (; i < genes.Length; ++i)
             {
                 string gene = genes[i];
@@ -293,70 +301,103 @@ namespace SQLiter
                     builder.Append(", ");
                 }
             }
-            // Get the genes' ids in the database.
-            // This means we don't have to do a second join on the next query which makes it super slow.
             string genesList = builder.ToString();
-            string query = "select gname, id from genes where gname in (" + genesList + ")";
+            // Figure out which genes are actually in the database
+            string query = "select gname from genes where gname in (" + genesList + ")";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
             {
                 yield return null;
             }
+            // Update the list
             _result.Clear();
+            builder.Remove(0, builder.Length);
+            List<string> prunedGenes = new List<string>();
             while (_reader.Read())
             {
-                _result.Add(new StringFloatPair(_reader.GetString(0), _reader.GetInt32(1)));
+                string gene = _reader.GetString(0);
+                prunedGenes.Add(gene);
+                builder.Append("\"").Append(gene).Append("\", ");
             }
-            string[] geneNames = new string[_result.Count];
-            int[] geneIds = new int[_result.Count];
-            for (i = 0; i < _result.Count; ++i)
-            {
-                geneNames[i] = ((StringFloatPair)_result[i]).s;
-                geneIds[i] = ((StringFloatPair)_result[i]).i;
-            }
-
-            query = "select gene_id, cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
+            // Remove the last comma and space.
+            builder.Remove(builder.Length - 2, 2);
+            genesList = builder.ToString();
+            genes = prunedGenes.ToArray();
+            //print(genesList);
+            // Get a list of all cells so we know which cell names are omitted in the results later.
+            query = "select cname from cells";
             t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
             {
                 yield return null;
             }
-            i = 0;
+            List<string> cellNames = new List<string>();
+            while (_reader.Read())
+            {
+                cellNames.Add(_reader.GetString(0));
+            }
+            // Get all relevant values.
+            query = "select gene_id, cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
+            //print(query);
+            t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+            i = 1;
             int lastId = -1;
             float binSize = 0;
-            string lastGeneName = "";
             float minExpr = float.MaxValue;
             float maxExpr = float.MinValue;
+            int[][] expressions = new int[cellNames.Count][];
+            for (int j = 0; j < expressions.Length; ++j)
+            {
+                expressions[j] = new int[genes.Length];
+            }
+            int geneNbr = 0;
             while (_reader.Read())
             {
                 int thisId = _reader.GetInt32(0);
-                // if we encounter a new gene we must get the gene name.
                 // The results should be ordered after gene ids so this should only happen once for every gene.
                 if (thisId != lastId)
                 {
-                    lastId = thisId;
-                    for (int j = 0; j < geneNames.Length; ++j)
+                    if (lastId != -1)
                     {
-                        if (thisId == geneIds[j])
+                        //print(lastGeneName);
+                        binSize = (maxExpr - minExpr) / 30f;
+                        for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
                         {
-                            if (lastGeneName != "")
+                            // Make sure there is a result to get.
+                            if (k < _result.Count)
                             {
-                                //print(lastGeneName);
-                                binSize = (maxExpr - minExpr) / 30f;
-                                foreach (CellExpressionPair pair in _result)
+                                CellExpressionPair pair = (CellExpressionPair)_result[k];
+                                // If the result is not the same cell as the next cell in the cellnames array, that cell has an expression of zero
+                                // Keep adding zeroes until we encounter the cell names in the result
+                                while (pair.Cell != cellNames[cellNbr] && cellNbr < cellNames.Count)
                                 {
-                                    cellManager.SaveFlashingExpression(pair.Cell, lastGeneName, (pair.Expression - minExpr) / binSize);
+                                    expressions[cellNbr][geneNbr] = 0;
+                                    cellNbr++;
                                 }
-                                minExpr = float.MaxValue;
-                                maxExpr = float.MinValue;
+                                if (cellNbr >= cellNames.Count) break;
+                                expressions[cellNbr][geneNbr] = (int)((pair.Expression - minExpr) / binSize);
+                                cellNbr++;
                             }
-                            _result.Clear();
-                            lastGeneName = geneNames[j];
-                            break;
+                            else
+                            {
+                                // If we are out of results, the rest of the expressions should be zero.
+                                expressions[cellNbr][geneNbr] = 0;
+                                cellNbr++;
+                            }
                         }
+                        geneNbr++;
+                        minExpr = float.MaxValue;
+                        maxExpr = float.MinValue;
                     }
+                    lastId = thisId;
+                    _result.Clear();
                 }
                 float expr = _reader.GetFloat(2);
                 if (expr > maxExpr)
@@ -371,14 +412,38 @@ namespace SQLiter
                 _result.Add(new CellExpressionPair(_reader.GetString(1), expr));
             }
             binSize = (maxExpr - minExpr) / 30f;
-            if (DebugMode)
+            for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
             {
-                print("binsize = " + binSize);
+                // Make sure there is a result to get.
+                if (k < _result.Count)
+                {
+                    CellExpressionPair pair = (CellExpressionPair)_result[k];
+                    // If the result is not the same cell as the next cell in the cellnames array, that cell has an expression of zero
+                    // Keep adding zeroes until we encounter the cell names in the result
+                    while (pair.Cell != cellNames[cellNbr] && cellNbr < cellNames.Count)
+                    {
+                        expressions[cellNbr][geneNbr] = 0;
+                        cellNbr++;
+                    }
+                    if (cellNbr >= cellNames.Count) break;
+                    expressions[cellNbr][geneNbr] = (int)((pair.Expression - minExpr) / binSize);
+                    cellNbr++;
+                }
+                else
+                {
+                    // If we are out of results, the rest of the expressions should be zero.
+                    expressions[cellNbr][geneNbr] = 0;
+                    cellNbr++;
+                }
             }
-            foreach (CellExpressionPair pair in _result)
+            // Finally give the cellmanager the results.
+            for (i = 0; i < expressions.Length; ++i)
             {
-                cellManager.SaveFlashingExpression(pair.Cell, lastGeneName, (pair.Expression - minExpr) / binSize);
+                cellManager.SaveFlashingExpression(cellNames[i], category, expressions[i]);
+
             }
+            //print("saved " + cellNames.Count + " " + category + " " + expressions[0].Length);
+
             if (DebugMode)
                 print("Number of columns returned from database: " + i);
             QueryRunning = false;

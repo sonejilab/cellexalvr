@@ -15,7 +15,7 @@ public class Cell
     private Dictionary<string, int> facs;
     private List<Material> materialList;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
-    private Dictionary<string, int> flashingExpressions = new Dictionary<string, int>();
+    private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
     public int ExpressionLevel { get; internal set; }
 
     public string Label
@@ -183,16 +183,16 @@ public class Cell
         }
     }
 
-    public void SaveFlashingExpression(string geneName, int expression)
+    public void SaveFlashingExpression(string category, int[] expression)
     {
-        flashingExpressions[geneName] = expression;
+        flashingExpressions[category] = expression;
     }
 
-    public void ColorByFlashingExpression(string geneName)
+    public bool ColorByGeneInCategory(string category, int index)
     {
-        if (flashingExpressions.ContainsKey(geneName))
+        if (flashingExpressions.ContainsKey(category))
         {
-            int expression = flashingExpressions[geneName];
+            int expression = flashingExpressions[category][index];
             foreach (GraphPoint g in GraphPoints)
             {
                 if (expression > 29)
@@ -209,5 +209,16 @@ public class Cell
                 g.GetComponent<Renderer>().material = materialList[0];
             }
         }
+        return true;
+    }
+
+    internal Dictionary<string, int> GetCategoryLengths()
+    {
+        Dictionary<string, int> lengths = new Dictionary<string, int>();
+        foreach (KeyValuePair<string, int[]> pair in flashingExpressions)
+        {
+            lengths[pair.Key] = pair.Value.Length;
+        }
+        return lengths;
     }
 }

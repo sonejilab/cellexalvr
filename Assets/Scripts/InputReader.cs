@@ -256,22 +256,47 @@ public class InputReader : MonoBehaviour
         status.RemoveStatus(statusId);
         ButtonEvents.GraphsLoaded.Invoke();
         if (debug)
-            cellManager.FlashGenes(ReadFileWithGeneNames("flashinggenes.txt"));
+            cellManager.FlashGenes(ReadFileWithGeneNames("flashing_genes_categories.txt"));
     }
 
-    public string[] ReadFileWithGeneNames(string path)
+    public string[][] ReadFileWithGeneNames(string path)
     {
-        List<string> genes = new List<string>();
         FileStream fileStream = new FileStream(path, FileMode.Open);
         StreamReader streamReader = new StreamReader(fileStream);
 
+        string header = streamReader.ReadLine();
+        string[] words = header.Split(',');
+        List<string>[] genes = new List<string>[words.Length];
+        for (int i = 0; i < words.Length; ++i)
+        {
+            // put the gene category names at the first index of each list.
+            genes[i] = new List<string>();
+            genes[i].Add(words[i].Trim());
+        }
+
         while (!streamReader.EndOfStream)
         {
-            genes.Add(streamReader.ReadLine());
+            string line = streamReader.ReadLine();
+            words = line.Split(',');
+            for (int j = 0; j < words.Length; ++j)
+            {
+                string gene = words[j].Trim();
+                if (gene != string.Empty)
+                {
+                    genes[j].Add(gene.ToLower());
+                }
+            }
         }
+
+        string[][] result = new string[genes.Length][];
+        for (int i = 0; i < words.Length; ++i)
+        {
+            result[i] = genes[i].ToArray();
+        }
+
         streamReader.Close();
         fileStream.Close();
-        return genes.ToArray();
+        return result;
     }
 
     /// <summary>
