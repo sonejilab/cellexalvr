@@ -23,7 +23,7 @@ public class PushBack : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        rightController = GameObject.Find("InputReader").GetComponent<ReferenceManager>().rightController;
         device = SteamVR_Controller.Input((int)rightController.index);
         orgPos = transform.position;
         orgRot = transform.rotation;

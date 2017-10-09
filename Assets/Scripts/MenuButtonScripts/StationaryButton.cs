@@ -85,13 +85,16 @@ public abstract class StationaryButton : MonoBehaviour
     /// </summary>
     public void MenuTurnedOff()
     {
-        if (buttonActivated)
+        if (spriteRenderer)
         {
-            spriteRenderer.sprite = standardTexture;
-        }
-        else
-        {
-            spriteRenderer.sprite = deactivatedTexture;
+            if (buttonActivated)
+            {
+                spriteRenderer.sprite = standardTexture;
+            }
+            else
+            {
+                spriteRenderer.sprite = deactivatedTexture;
+            }
         }
         controllerInside = false;
     }

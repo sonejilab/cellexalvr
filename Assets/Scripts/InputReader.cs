@@ -255,6 +255,23 @@ public class InputReader : MonoBehaviour
         ReadFacsFiles(path, totalNbrOfCells);
         status.RemoveStatus(statusId);
         ButtonEvents.GraphsLoaded.Invoke();
+        if (debug)
+            cellManager.FlashGenes(ReadFileWithGeneNames("flashinggenes.txt"));
+    }
+
+    public string[] ReadFileWithGeneNames(string path)
+    {
+        List<string> genes = new List<string>();
+        FileStream fileStream = new FileStream(path, FileMode.Open);
+        StreamReader streamReader = new StreamReader(fileStream);
+
+        while (!streamReader.EndOfStream)
+        {
+            genes.Add(streamReader.ReadLine());
+        }
+        streamReader.Close();
+        fileStream.Close();
+        return genes.ToArray();
     }
 
     /// <summary>

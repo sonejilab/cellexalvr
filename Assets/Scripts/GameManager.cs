@@ -38,6 +38,7 @@ public class GameManager : Photon.PunBehaviour
         networkGenerator = referenceManager.networkGenerator;
 
         Instance = this;
+        if (!PhotonNetwork.connected) return;
         if (playerPrefab == null)
         {
             Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
@@ -338,7 +339,7 @@ public class GameManager : Photon.PunBehaviour
         Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
         CellExAlLog.Log("A client connected to our server");
 
-        Debug.Log("MASTER JOINED ROOM");
+        //Debug.Log("MASTER JOINED ROOM");
         //LoadArena();
         StartCoroutine(FindClientCoordinator());
 
@@ -405,7 +406,7 @@ public class GameManager : Photon.PunBehaviour
             Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
         }
         Debug.Log("PhotonNetwork : Loading Level : PUN_vrjeans_scene");
-        PhotonNetwork.LoadLevel("PUN_vrjeans_scene");
+        PhotonNetwork.LoadLevel("vrjeans_scene1");
     }
 
 

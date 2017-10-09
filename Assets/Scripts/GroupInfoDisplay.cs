@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ public class GroupInfoDisplay : MonoBehaviour
         }
         catch (KeyNotFoundException e)
         {
-            print("Color not found " + col.r + " " + col.g + " " + col.b);
+            print("Color not found " + col.r + " " + col.g + " " + col.b + " ints: " + ColorComparer.FloatToBitRepresentation(col.r) + " " + ColorComparer.FloatToBitRepresentation(col.g) + " " + ColorComparer.FloatToBitRepresentation(col.b));
             print(e);
         }
         StringBuilder builder = new StringBuilder();
@@ -74,7 +75,7 @@ public class GroupInfoDisplay : MonoBehaviour
         public bool Equals(Color c1, Color c2)
         {
             // Two colors are equal if they have the same rgb values.
-            return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+            return c1.r.Equals(c2.r) && c1.g.Equals(c2.g) && c1.b.Equals(c2.b);
         }
 
         public int GetHashCode(Color obj)
@@ -82,7 +83,26 @@ public class GroupInfoDisplay : MonoBehaviour
             // Makes sure that different color objects with the same rgb values are placed correctly in the dictionary.
             // I don't know how to do this properly but this probably results in fewer collisions than just doing r+g+b.
             // This still collides for (1, 0.9, 0) and (0, 1, 0) but whatever.
-            return (obj.r + obj.g * 10 + obj.b * 100).GetHashCode();
+
+            int r = FloatToBitRepresentation(obj.r) & (-1 << 3);
+            int g = FloatToBitRepresentation(obj.g) & (-1 << 3);
+            int b = FloatToBitRepresentation(obj.b) & (-1 << 3);
+            //print("compare bits to shifted bits " + FloatToBitRepresentation(obj.r) + " " + (FloatToBitRepresentation(obj.r) & (-1 << 3)));
+            //int r = Mathf.RoundToInt(obj.r * 255) & (-1 << 3);
+            //int g = Mathf.RoundToInt(obj.g * 255) & (-1 << 3);
+            //int b = Mathf.RoundToInt(obj.b * 255) & (-1 << 3);
+            //print(r + " " + g + " " + b + " " + (r.GetHashCode() ^ (g.GetHashCode() << 2) ^ (b.GetHashCode() >> 2)));
+            return (r.GetHashCode() ^ (g.GetHashCode() << 2) ^ (b.GetHashCode() >> 2));
+        }
+
+        public static int FloatToBitRepresentation(float f)
+        {
+            byte[] bytes = BitConverter.GetBytes(f);
+            int result = bytes[0];
+            result |= (bytes[1] << 8);
+            result |= (bytes[2] << 16);
+            result |= (bytes[3] << 24);
+            return result;
         }
     }
 }

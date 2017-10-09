@@ -25,6 +25,7 @@ namespace ExitGames.Demos.DemoAnimator
 
 		// Store the PlayerPref Key to avoid typos
 		static string playerNamePrefKey = "PlayerName";
+        private InputField _inputField;
 
 		#endregion
 
@@ -36,16 +37,16 @@ namespace ExitGames.Demos.DemoAnimator
 		void Start () {
 		
 			string defaultName = "";
-			InputField _inputField = this.GetComponent<InputField>();
+			_inputField = this.GetComponent<InputField>();
 
-			if (_inputField!=null)
-			{
-				if (PlayerPrefs.HasKey(playerNamePrefKey))
-				{
-					defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-					_inputField.text = defaultName;
-				}
-			}
+			//if (_inputField!=null)
+			//{
+			//	if (PlayerPrefs.HasKey(playerNamePrefKey))
+			//	{
+			//		defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+			//		_inputField.text = defaultName;
+			//	}
+			//}
 
 			PhotonNetwork.playerName =	defaultName;
 		}
@@ -58,12 +59,14 @@ namespace ExitGames.Demos.DemoAnimator
 		/// Sets the name of the player, and save it in the PlayerPrefs for future sessions.
 		/// </summary>
 		/// <param name="value">The name of the Player</param>
-		public void SetPlayerName(string value)
+		public void SetPlayerName()
 		{
+            string value = _inputField.text;
 			// #Important
 			PhotonNetwork.playerName = value + " "; // force a trailing space string in case value is an empty string, else playerName would not be updated.
 
 			PlayerPrefs.SetString(playerNamePrefKey,value);
+            CellExAlUser.Username = value;
 		}
 		
 		#endregion

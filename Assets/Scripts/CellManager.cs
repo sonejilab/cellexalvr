@@ -182,6 +182,35 @@ public class CellManager : MonoBehaviour
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
+    public void FlashGenes(string[] genes)
+    {
+        StartCoroutine(GetGeneExpressionCoroutine(genes));
+    }
+
+    private IEnumerator GetGeneExpressionCoroutine(string[] genes)
+    {
+        foreach (string geneName in genes)
+        {
+            coroutinesWaiting--;
+            database.QueryMultipleGenesFlashingExpression(genes);
+
+            // now we have to wait for our query to return the results.
+            while (database.QueryRunning)
+                yield return null;
+
+            while (true)
+            {
+                foreach (string gene in genes)
+                {
+                    foreach (Cell c in cells.Values)
+                    {
+                        c.ColorByFlashingExpression(gene);
+                    }
+                    yield return null;
+                }
+            }
+        }
+    }
     /// <summary>
     /// Removes all cells.
     /// </summary>
@@ -273,5 +302,10 @@ public class CellManager : MonoBehaviour
         }
 
         lines.Clear();
+    }
+
+    internal void SaveFlashingExpression(string cell, string gene, float expr)
+    {
+        cells[cell].SaveFlashingExpression(gene, (int)expr);
     }
 }

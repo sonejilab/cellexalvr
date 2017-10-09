@@ -10,7 +10,7 @@ using Mono.Data.SqliteClient;
 using System.IO;
 using System.Collections;
 using System.Threading;
-
+using System.Text;
 
 namespace SQLiter
 {
@@ -42,9 +42,11 @@ namespace SQLiter
     {
         public static SQLite Instance = null;
         public bool DebugMode = false;
-        public StatusDisplay status;
         public bool QueryRunning { get; private set; }
+        public ReferenceManager referenceManager;
 
+        private CellManager cellManager;
+        private StatusDisplay status;
         // Location of database - this will be set during Awake as to stop Unity 5.4 error regarding initialization before scene is set
         // file should show up in the Unity inspector after a few seconds of running it the first time
         private static string _sqlDBLocation = "";
@@ -89,7 +91,8 @@ namespace SQLiter
         {
             if (DebugMode)
                 Debug.Log("--- Start ---");
-
+            cellManager = referenceManager.cellManager;
+            status = referenceManager.statusDisplay;
             // just for testing, comment/uncomment to play with it
             // note that it MUST be invoked after SQLite has initialized, 2-3 seconds later usually.  1 second is cutting it too close
             // Invoke("Test", 3);
@@ -269,6 +272,120 @@ namespace SQLiter
             QueryRunning = false;
         }
 
+        public void QueryMultipleGenesFlashingExpression(string[] genes)
+        {
+            StartCoroutine(QueryMultipleGenesCoroutine(genes));
+        }
+
+        private IEnumerator QueryMultipleGenesCoroutine(string[] genes)
+        {
+            QueryRunning = true;
+            _result.Clear();
+            StringBuilder builder = new StringBuilder();
+
+            int i = 0;
+            for (; i < genes.Length; ++i)
+            {
+                string gene = genes[i];
+                builder.Append("\"").Append(gene).Append("\"");
+                if (i < genes.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            // Get the genes' ids in the database.
+            // This means we don't have to do a second join on the next query which makes it super slow.
+            string genesList = builder.ToString();
+            string query = "select gname, id from genes where gname in (" + genesList + ")";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+            _result.Clear();
+            while (_reader.Read())
+            {
+                _result.Add(new StringFloatPair(_reader.GetString(0), _reader.GetInt32(1)));
+            }
+            string[] geneNames = new string[_result.Count];
+            int[] geneIds = new int[_result.Count];
+            for (i = 0; i < _result.Count; ++i)
+            {
+                geneNames[i] = ((StringFloatPair)_result[i]).s;
+                geneIds[i] = ((StringFloatPair)_result[i]).i;
+            }
+
+            query = "select gene_id, cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
+            t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+            i = 0;
+            int lastId = -1;
+            float binSize = 0;
+            string lastGeneName = "";
+            float minExpr = float.MaxValue;
+            float maxExpr = float.MinValue;
+            while (_reader.Read())
+            {
+                int thisId = _reader.GetInt32(0);
+                // if we encounter a new gene we must get the gene name.
+                // The results should be ordered after gene ids so this should only happen once for every gene.
+                if (thisId != lastId)
+                {
+                    lastId = thisId;
+                    for (int j = 0; j < geneNames.Length; ++j)
+                    {
+                        if (thisId == geneIds[j])
+                        {
+                            if (lastGeneName != "")
+                            {
+                                //print(lastGeneName);
+                                binSize = (maxExpr - minExpr) / 30f;
+                                foreach (CellExpressionPair pair in _result)
+                                {
+                                    cellManager.SaveFlashingExpression(pair.Cell, lastGeneName, (pair.Expression - minExpr) / binSize);
+                                }
+                                minExpr = float.MaxValue;
+                                maxExpr = float.MinValue;
+                            }
+                            _result.Clear();
+                            lastGeneName = geneNames[j];
+                            break;
+                        }
+                    }
+                }
+                float expr = _reader.GetFloat(2);
+                if (expr > maxExpr)
+                {
+                    maxExpr = expr;
+                }
+                if (expr < minExpr)
+                {
+                    minExpr = expr;
+                }
+                i++;
+                _result.Add(new CellExpressionPair(_reader.GetString(1), expr));
+            }
+            binSize = (maxExpr - minExpr) / 30f;
+            if (DebugMode)
+            {
+                print("binsize = " + binSize);
+            }
+            foreach (CellExpressionPair pair in _result)
+            {
+                cellManager.SaveFlashingExpression(pair.Cell, lastGeneName, (pair.Expression - minExpr) / binSize);
+            }
+            if (DebugMode)
+                print("Number of columns returned from database: " + i);
+            QueryRunning = false;
+            _reader.Close();
+            _connection.Close();
+        }
+
         /// <summary>
         /// Helper method that is run as a Thread.
         /// </summary>
@@ -310,6 +427,19 @@ namespace SQLiter
             _connection = null;
         }
     }
+
+    struct StringFloatPair
+    {
+        public string s;
+        public int i;
+        public StringFloatPair(string s, int i)
+        {
+            this.s = s;
+            this.i = i;
+        }
+    }
+
+
     public class CellExpressionPair
     {
         public string Cell { get; private set; }

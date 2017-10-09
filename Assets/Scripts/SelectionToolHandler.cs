@@ -83,8 +83,8 @@ public class SelectionToolHandler : MonoBehaviour
         colors[5] = new Color(1, 1, 0, .5f);     // yellow
         colors[6] = new Color(0, 1, 0, .5f);     // green
         colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
-        colors[8] = new Color(.4f, .2f, 1, .5f);     // brown
-        colors[9] = new Color(1, .6f, .2f, .5f);     // orange
+        colors[8] = new Color(102f / 255f, 51f / 255f, 1, .5f);     // brown
+        colors[9] = new Color(1, 153f / 255f, 51f / 255f, .5f);     // orange
         //selectorMaterial.color = colors[0];
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];

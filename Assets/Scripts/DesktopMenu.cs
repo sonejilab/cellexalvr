@@ -8,7 +8,7 @@ class DesktopMenu : MonoBehaviour
 
     private void Start()
     {
-        menu.SetActive(true);
+        menu.SetActive(false);
     }
 
     private void Update()

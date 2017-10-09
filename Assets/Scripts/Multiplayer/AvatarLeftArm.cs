@@ -25,7 +25,7 @@ namespace Com.MyCompany.MyGame
         // Use this for initialization
         void Start()
         {
-            leftControllerPos = GameObject.Find("Controller (left)").GetComponent<Transform>();
+            leftControllerPos = GameObject.Find("InputReader").GetComponent<ReferenceManager>().leftController.transform;
             target = GetComponent<Transform>();
             if (!target)
             {

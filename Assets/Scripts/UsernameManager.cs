@@ -11,6 +11,7 @@ public class UsernameManager : MonoBehaviour
     private void Start()
     {
         usernameField.onEndEdit.AddListener(OnUsernameSubmitted);
+        usernameText.text = "Current user: " + CellExAlUser.Username;
     }
 
     private void OnUsernameSubmitted(string username)

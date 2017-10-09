@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SQLiter;
 using UnityEngine;
 
 /// <summary>
@@ -14,6 +15,7 @@ public class Cell
     private Dictionary<string, int> facs;
     private List<Material> materialList;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
+    private Dictionary<string, int> flashingExpressions = new Dictionary<string, int>();
     public int ExpressionLevel { get; internal set; }
 
     public string Label
@@ -147,6 +149,11 @@ public class Cell
         }
     }
 
+    /// <summary>
+    /// Adds a .facs thing to this cell.
+    /// </summary>
+    /// <param name="facsName"> The thing's name. </param>
+    /// <param name="index"> The value of the thing. </param>
     internal void AddFacs(string facsName, int index)
     {
 
@@ -165,11 +172,42 @@ public class Cell
         }
     }
 
+    /// <summary>
+    /// Turns all graphpoints representing this cell on.
+    /// </summary>
     internal void Show()
     {
         foreach (GraphPoint g in GraphPoints)
         {
             g.gameObject.SetActive(true);
+        }
+    }
+
+    public void SaveFlashingExpression(string geneName, int expression)
+    {
+        flashingExpressions[geneName] = expression;
+    }
+
+    public void ColorByFlashingExpression(string geneName)
+    {
+        if (flashingExpressions.ContainsKey(geneName))
+        {
+            int expression = flashingExpressions[geneName];
+            foreach (GraphPoint g in GraphPoints)
+            {
+                if (expression > 29)
+                {
+                    expression = 29;
+                }
+                g.GetComponent<Renderer>().material = materialList[expression];
+            }
+        }
+        else
+        {
+            foreach (GraphPoint g in GraphPoints)
+            {
+                g.GetComponent<Renderer>().material = materialList[0];
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Com.MyCompany.MyGame
         // Use this for initialization
         void Start()
         {
-            rightControllerPos = GameObject.Find("Controller (right)").GetComponent<Transform>();
+            rightControllerPos = GameObject.Find("InputReader").GetComponent<ReferenceManager>().rightController.transform;
             target = GetComponent<Transform>();
             if (!target)
             {
