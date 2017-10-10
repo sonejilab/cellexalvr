@@ -38,6 +38,7 @@ public class ReferenceManager : MonoBehaviour
     public ColorByIndexMenu indexMenu;
     public CreateSelectionFromPreviousSelectionMenu createSelectionFromPreviousSelectionMenu;
     public SelectionToolMenu selectionToolMenu;
+    public TextMesh currentFlashedGeneText;
     public ButtonsHandler undoButtonsHandler;
     public GameObject frontButtons;
     public GameObject rightButtons;

@@ -256,13 +256,19 @@ public class InputReader : MonoBehaviour
         status.RemoveStatus(statusId);
         ButtonEvents.GraphsLoaded.Invoke();
         if (debug)
-            cellManager.FlashGenes(ReadFileWithGeneNames("flashing_genes_categories.txt"));
+            cellManager.FlashGenes(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_categories.fgv"));
     }
 
-    public string[][] ReadFileWithGeneNames(string path)
+    public string[][] ReadFlashingGenesFiles(string path)
     {
         FileStream fileStream = new FileStream(path, FileMode.Open);
         StreamReader streamReader = new StreamReader(fileStream);
+        /// The file format should be
+        /// CATEGORY_1, CATEGORY 2  ...
+        /// GENE_11 ,   GENE_21
+        /// GENE_12 ,   GENE_22
+        /// ...
+        /// All categories and genes should be comma seperated.
 
         string header = streamReader.ReadLine();
         string[] words = header.Split(',');

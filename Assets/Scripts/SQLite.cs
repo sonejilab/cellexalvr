@@ -324,6 +324,7 @@ namespace SQLiter
             builder.Remove(builder.Length - 2, 2);
             genesList = builder.ToString();
             genes = prunedGenes.ToArray();
+            cellManager.AddToPrunedGenes(genes);
             //print(genesList);
             // Get a list of all cells so we know which cell names are omitted in the results later.
             query = "select cname from cells";

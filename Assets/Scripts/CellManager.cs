@@ -10,6 +10,49 @@ using VRTK;
 /// </summary>
 public class CellManager : MonoBehaviour
 {
+    /// <summary>
+    /// The number of frames to wait in between each shown gene expression when flashing genes.
+    /// </summary>
+    public int FramesBetweenEachFlash
+    {
+        get
+        {
+            return framesBetweenEachFlash;
+        }
+        set
+        {
+            if (value > 0)
+            {
+                framesBetweenEachFlash = value;
+            }
+        }
+    }
+    private int framesBetweenEachFlash = 2;
+    /// <summary>
+    /// The number of seconds to display each category when flashing genes.
+    /// </summary>
+    public float SecondsBetweenEachCategory;
+    /// <summary>
+    /// The mode for flashing flashing genes.
+    /// The available options are:
+    /// <list type="bullet">
+    ///   <item>
+    ///     <term>DoNotFlash</term>
+    ///     <description>No flashing.</description>
+    ///   </item>
+    ///   <item>
+    ///     <term>RandomWithinCategory</term>
+    ///     <description>Flashes random genes from a category. Waits <see cref="SecondsBetweenEachCategory"/> seconds before switching to the next category.</description>
+    ///   </item>
+    ///   <item>
+    ///     <term>ShuffledCategory</term>
+    ///     <description>Shows the expression of every gene exactly once, in a random order for each category.</description>
+    ///   </item>
+    /// </list>
+    /// </summary>
+    public FlashGenesMode CurrentFlashGenesMode;
+    public enum FlashGenesMode { DoNotFlash, RandomWithinCategory, ShuffledCategory/*, StepForwardOneGene, StepBackwardOneGene */};
+
     public ReferenceManager referenceManager;
     public List<Material> materialList;
     public VRTK_ControllerActions controllerActions;
@@ -24,6 +67,8 @@ public class CellManager : MonoBehaviour
     private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
     private int coroutinesWaiting;
+    private TextMesh currentFlashedGeneText;
+    private List<string[]> prunedGenes = new List<string[]>();
 
     void Awake()
     {
@@ -38,6 +83,7 @@ public class CellManager : MonoBehaviour
         gameManager = referenceManager.gameManager;
         selectionToolHandler = referenceManager.selectionToolHandler;
         graphManager = referenceManager.graphManager;
+        currentFlashedGeneText = referenceManager.currentFlashedGeneText;
     }
 
     /// <summary>
@@ -184,12 +230,12 @@ public class CellManager : MonoBehaviour
 
     public void FlashGenes(string[][] genes)
     {
-        StartCoroutine(GetGeneExpressionCoroutine(genes));
+        StartCoroutine(GetGeneExpressionsToFlashCorotine(genes));
     }
 
-    private IEnumerator GetGeneExpressionCoroutine(string[][] genes)
+    private IEnumerator GetGeneExpressionsToFlashCorotine(string[][] genes)
     {
-
+        CellExAlLog.Log("Querying database for genes to flash");
         string[] categories = new string[genes.Length];
         int i = 0;
         for (; i < genes.Length; ++i)
@@ -203,42 +249,96 @@ public class CellManager : MonoBehaviour
                 yield return null;
         }
 
-        var statusDisplay = referenceManager.statusDisplay;
-        System.Random rng = new System.Random();
-        int statusId = statusDisplay.AddStatus("");
         Cell cell = null;
         foreach (Cell c in cells.Values)
         {
             cell = c;
             break;
         }
+        CellExAlLog.Log("Number of genes that were present in the database:");
         Dictionary<string, int> categoryLengths = cell.GetCategoryLengths();
         int[] lengths = new int[categories.Length];
         for (i = 0; i < categories.Length; ++i)
         {
             lengths[i] = categoryLengths[categories[i]];
-        }
-
-        while (true)
-        {
-            for (i = 0; i < categories.Length; ++i)
+            string percentage = ((lengths[i] * 100f) / genes[i].Length).ToString();
+            if (percentage.Length > 5)
             {
-                statusDisplay.UpdateStatus(statusId, "Category: " + categories[i]);
-                var timeStarted = Time.time;
-                var timeToStop = timeStarted + 10f;
-                while (Time.time < timeToStop)
-                {
-                    int randomGene = rng.Next(0, lengths[i]);
-                    foreach (Cell c in cells.Values)
-                    {
-                        c.ColorByGeneInCategory(categories[i], randomGene);
+                percentage = percentage.Substring(0, 5);
+            }
+            CellExAlLog.Log("\t" + categories[i] + ":\t" + lengths[i] + "/" + genes[i].Length + " \t(" + percentage + "%)");
+        }
+        StartCoroutine(FlashGenesCoroutine(categories, lengths));
+    }
 
+    private IEnumerator FlashGenesCoroutine(string[] categories, int[] lengths)
+    {
+        CurrentFlashGenesMode = FlashGenesMode.ShuffledCategory;
+        CellExAlLog.Log("Starting to flash genes");
+        System.Random rng = new System.Random();
+        while (CurrentFlashGenesMode != FlashGenesMode.DoNotFlash)
+        {
+            // Go through each category
+            for (int i = 0; i < categories.Length; ++i)
+            {
+                if (CurrentFlashGenesMode == FlashGenesMode.RandomWithinCategory)
+                {
+                    // Flash genes within this category for 10 seconds
+                    var timeStarted = Time.time;
+                    var timeToStop = timeStarted + 10f;
+                    while (Time.time < timeToStop && CurrentFlashGenesMode == FlashGenesMode.RandomWithinCategory)
+                    {
+                        int randomGene = rng.Next(0, lengths[i]);
+                        currentFlashedGeneText.text = "Current flashed gene: " + prunedGenes[i][randomGene];
+                        foreach (Cell c in cells.Values)
+                        {
+                            c.ColorByGeneInCategory(categories[i], randomGene);
+                        }
+                        for (int j = 0; j < FramesBetweenEachFlash; ++j)
+                            yield return null;
                     }
-                    for (int j = 0; j < 4; ++j)
-                        yield return null;
+                }
+                else if (CurrentFlashGenesMode == FlashGenesMode.ShuffledCategory)
+                {
+                    // Shuffle a category.
+                    int[] geneOrder = new int[lengths[i]];
+                    int j = 0;
+                    for (; j < geneOrder.Length; ++j)
+                    {
+                        geneOrder[j] = j;
+                    }
+                    // Fisher-Yates shuffling algorithm
+                    for (j = 0; j < geneOrder.Length - 2; ++j)
+                    {
+                        int k = rng.Next(j, geneOrder.Length);
+                        int tmp = geneOrder[j];
+                        geneOrder[j] = geneOrder[k];
+                        geneOrder[k] = tmp;
+                    }
+                    // Go through the array of shuffled indices
+                    for (j = 0; j < geneOrder.Length && CurrentFlashGenesMode == FlashGenesMode.ShuffledCategory; ++j)
+                    {
+                        currentFlashedGeneText.text = "Current flashed gene: " + prunedGenes[i][j];
+                        foreach (Cell c in cells.Values)
+                        {
+                            c.ColorByGeneInCategory(categories[i], geneOrder[j]);
+                        }
+                        for (int k = 0; k < FramesBetweenEachFlash; ++k)
+                            yield return null;
+                    }
+                }
+                else
+                {
+                    CellExAlLog.Log("Unknown flashing genes mode: " + CurrentFlashGenesMode);
+                    yield break;
                 }
             }
         }
+    }
+
+    public void AddToPrunedGenes(string[] genesToAdd)
+    {
+        prunedGenes.Add(genesToAdd);
     }
 
     /// <summary>
