@@ -259,6 +259,11 @@ public class InputReader : MonoBehaviour
             cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
     }
 
+    /// <summary>
+    /// Reads a file containing lists of genes that should be flashed.
+    /// </summary>
+    /// <param name="path"> The path to the file. </param>
+    /// <returns> An array of categories. Each has its name at index zero, and the rest of each array is filled with the content of the category. </returns>
     public string[][] ReadFlashingGenesFiles(string path)
     {
         FileStream fileStream = new FileStream(path, FileMode.Open);

@@ -273,6 +273,10 @@ namespace SQLiter
             QueryRunning = false;
         }
 
+        /// <summary>
+        /// Queries the database for multiple genes that should be used when flashing gene expressions.
+        /// </summary>
+        /// <param name="genes"> A list of genes to query for. </param>
         public void QueryMultipleGenesFlashingExpression(string[] genes)
         {
             StartCoroutine(QueryMultipleGenesCoroutine(genes));
@@ -303,7 +307,7 @@ namespace SQLiter
             }
             string genesList = builder.ToString();
             // Figure out which genes are actually in the database
-            string query = "select gname from genes where gname in (" + genesList + ")";
+            string query = "select gname, id from genes where gname in (" + genesList + ") order by id";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)

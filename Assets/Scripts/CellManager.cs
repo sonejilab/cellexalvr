@@ -10,6 +10,7 @@ using VRTK;
 /// </summary>
 public class CellManager : MonoBehaviour
 {
+    #region Properties
     /// <summary>
     /// The number of frames to wait in between each shown gene expression when flashing genes.
     /// </summary>
@@ -61,7 +62,7 @@ public class CellManager : MonoBehaviour
         set
         {
             currentFlashGenesMode = value;
-            if (value != FlashGenesMode.DoNotFlash)
+            if (value != FlashGenesMode.DoNotFlash && !flashingGenes)
             {
                 StartCoroutine(FlashGenesCoroutine());
             }
@@ -69,6 +70,7 @@ public class CellManager : MonoBehaviour
     }
     private FlashGenesMode currentFlashGenesMode;
     public enum FlashGenesMode { DoNotFlash, RandomWithinCategory, ShuffledCategory/*, StepForwardOneGene, StepBackwardOneGene */};
+    #endregion
 
     public ReferenceManager referenceManager;
     public List<Material> materialList;
@@ -86,6 +88,7 @@ public class CellManager : MonoBehaviour
     private int coroutinesWaiting;
     private TextMesh currentFlashedGeneText;
     private List<string[]> prunedGenes = new List<string[]>();
+    private bool flashingGenes = false;
     private string[] savedFlashGenesCategories;
     private int[] savedFlashGenesLengths;
 
@@ -259,6 +262,13 @@ public class CellManager : MonoBehaviour
         StartCoroutine(GetGeneExpressionsToFlashCoroutine(genes));
     }
 
+    /// <summary>
+    /// Queries the database for the gene expressions that should be flashed.
+    /// </summary>
+    /// <param name="genes"> An array of arrays of strings containing the genes to flash.
+    /// Each array (genes[x] for any x) should contain a category.
+    /// The first element in each array (genes[x][0] for any x) should contain the the category name, the rest of the array should contain the gene names to flash.
+    /// A gene may be in more than one category.</param>
     private IEnumerator GetGeneExpressionsToFlashCoroutine(string[][] genes)
     {
         CellExAlLog.Log("Querying database for genes to flash");
@@ -302,6 +312,7 @@ public class CellManager : MonoBehaviour
     private IEnumerator FlashGenesCoroutine()
     {
         CellExAlLog.Log("Starting to flash genes");
+        flashingGenes = true;
         System.Random rng = new System.Random();
         while (CurrentFlashGenesMode != FlashGenesMode.DoNotFlash)
         {
@@ -357,12 +368,18 @@ public class CellManager : MonoBehaviour
                 else
                 {
                     CellExAlLog.Log("Unknown flashing genes mode: " + CurrentFlashGenesMode);
+                    flashingGenes = false;
                     yield break;
                 }
             }
         }
+        flashingGenes = false;
     }
 
+    /// <summary>
+    /// Used by the database to tell the cellmanager which genes were actually in the database.
+    /// </summary>
+    /// <param name="genesToAdd"> An array of genes that was in the database. </param>
     public void AddToPrunedGenes(string[] genesToAdd)
     {
         prunedGenes.Add(genesToAdd);
@@ -461,6 +478,12 @@ public class CellManager : MonoBehaviour
         lines.Clear();
     }
 
+    /// <summary>
+    /// Saves a series of expressions that should be flashed.
+    /// </summary>
+    /// <param name="cell"> The cell that these expressions belong to. </param>
+    /// <param name="category"> The expressions' category. </param>
+    /// <param name="expr"> An array containing integers int he range [0,29] that denotes the cell's expression of the gene corresponding to that index. </param>
     internal void SaveFlashingExpression(string cell, string category, int[] expr)
     {
         cells[cell].SaveFlashingExpression(category, expr);

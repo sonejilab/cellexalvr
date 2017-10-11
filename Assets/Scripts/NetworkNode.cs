@@ -38,7 +38,7 @@ public class NetworkNode : MonoBehaviour
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool edgesAdded;
-    private float lineWidth = .005f;
+    private float lineWidth = .0005f;
 
     void Start()
     {
@@ -159,6 +159,8 @@ public class NetworkNode : MonoBehaviour
                     renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
                     // The colors are just random, they mean nothing. But they look pretty.
                     renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .6f, 1, .6f, 1);
+                    renderer.startWidth = lineWidth;
+                    renderer.endWidth = lineWidth;
                     connections.Add(renderer);
                     connectionColors.Add(renderer.material.color);
                     buddy.connections.Add(renderer);
