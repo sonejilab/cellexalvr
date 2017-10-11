@@ -256,7 +256,7 @@ public class InputReader : MonoBehaviour
         status.RemoveStatus(statusId);
         ButtonEvents.GraphsLoaded.Invoke();
         if (debug)
-            cellManager.FlashGenes(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_categories.fgv"));
+            cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
     }
 
     public string[][] ReadFlashingGenesFiles(string path)

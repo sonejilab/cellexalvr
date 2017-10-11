@@ -4,12 +4,9 @@ using UnityEngine;
 /// <summary>
 /// This class represents the sub menu that pops up when the ToggleArcsButton is pressed.
 /// </summary>
-public class ToggleArcsSubMenu : MonoBehaviour
+public class ToggleArcsSubMenu : MenuWithTabs
 {
-    public ReferenceManager referenceManager;
     public GameObject buttonPrefab;
-    public GameObject tabPrefab;
-
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-0.3958f, 0.59f, 0.2688f);
     private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
@@ -17,13 +14,6 @@ public class ToggleArcsSubMenu : MonoBehaviour
     private Vector3 tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
     private Vector3 tabButtonPosInc = new Vector3(0.1f, 0, 0);
     private Color[] colors;
-    private List<ArcMenuTab> tabs = new List<ArcMenuTab>();
-    private List<GameObject> buttons = new List<GameObject>();
-
-    private void Start()
-    {
-        tabPrefab.SetActive(false);
-    }
 
     /// <summary>
     /// Initializes the arc menu.
@@ -63,15 +53,23 @@ public class ToggleArcsSubMenu : MonoBehaviour
     /// <param name="networks"> An array containing the networks. </param>
     public void CreateToggleArcsButtons(NetworkCenter[] networks)
     {
+        if (networks.Length == 1)
+        {
+            CellExAlLog.Log("ERROR: Tried to create buttons of a network handler with zero network centers.");
+            return;
+        }
         TurnOffTab();
         var newTab = Instantiate(tabPrefab, transform);
         newTab.gameObject.SetActive(true);
-        ArcMenuTab tabButton = newTab.GetComponentInChildren<ArcMenuTab>();
+        // The prefab contains some buttons that needs some variables set.
+        ArcsTabButton tabButton = newTab.GetComponentInChildren<ArcsTabButton>();
         tabButton.referenceManager = referenceManager;
+        tabButton.tab = newTab;
+        tabButton.Handler = networks[0].Handler;
         tabButton.gameObject.transform.localPosition = tabButtonPos;
         tabButtonPos += tabButtonPosInc;
         //newTab.tab = newTab.transform.parent.gameObject;
-        tabs.Add(tabButton);
+        tabs.Add(newTab);
         if (colors == null)
         {
             Init();
@@ -83,7 +81,6 @@ public class ToggleArcsSubMenu : MonoBehaviour
         //    buttonPos = new Vector3(-.39f, .77f, .282f);
         //}
 
-        // The prefab contains some buttons that needs some variables set.
         var toggleAllArcsButtonsInPrefab = newTab.GetComponentsInChildren<ToggleAllArcsButton>();
         foreach (ToggleAllArcsButton b in toggleAllArcsButtonsInPrefab)
         {
@@ -109,7 +106,6 @@ public class ToggleArcsSubMenu : MonoBehaviour
                 toggleArcButton.combinedNetworksButton = newTab.GetComponentInChildren<ToggleAllCombinedArcsButton>();
                 toggleArcButton.SetNetwork(network);
             }
-            buttons.Add(newButton);
             // position the buttons in a 4 column grid.
             if ((i + 1) % 4 == 0)
             {
@@ -121,21 +117,6 @@ public class ToggleArcsSubMenu : MonoBehaviour
                 buttonPos += buttonPosInc;
             }
         }
-        newTab.GetComponentInChildren<ArcMenuTab>().SetButtons(networks[0].Handler, buttons);
-        buttons.Clear();
         buttonPos = buttonPosOrigin;
-    }
-
-
-
-    /// <summary>
-    /// Turns off all tabs.
-    /// </summary>
-    public void TurnOffTab()
-    {
-        foreach (ArcMenuTab tab in tabs)
-        {
-            tab.SetTabActive(false);
-        }
     }
 }
