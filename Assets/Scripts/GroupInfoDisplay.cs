@@ -80,18 +80,9 @@ public class GroupInfoDisplay : MonoBehaviour
 
         public int GetHashCode(Color obj)
         {
-            // Makes sure that different color objects with the same rgb values are placed correctly in the dictionary.
-            // I don't know how to do this properly but this probably results in fewer collisions than just doing r+g+b.
-            // This still collides for (1, 0.9, 0) and (0, 1, 0) but whatever.
-
             int r = FloatToBitRepresentation(obj.r) & (-1 << 3);
             int g = FloatToBitRepresentation(obj.g) & (-1 << 3);
             int b = FloatToBitRepresentation(obj.b) & (-1 << 3);
-            //print("compare bits to shifted bits " + FloatToBitRepresentation(obj.r) + " " + (FloatToBitRepresentation(obj.r) & (-1 << 3)));
-            //int r = Mathf.RoundToInt(obj.r * 255) & (-1 << 3);
-            //int g = Mathf.RoundToInt(obj.g * 255) & (-1 << 3);
-            //int b = Mathf.RoundToInt(obj.b * 255) & (-1 << 3);
-            //print(r + " " + g + " " + b + " " + (r.GetHashCode() ^ (g.GetHashCode() << 2) ^ (b.GetHashCode() >> 2)));
             return (r.GetHashCode() ^ (g.GetHashCode() << 2) ^ (b.GetHashCode() >> 2));
         }
 

@@ -1,23 +1,30 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// A base class that can be used with <see cref="MenuWithTabs"/> to create menus with tabs.
+/// </summary>
 public class Tab : MonoBehaviour
 {
-
     public ReferenceManager referenceManager;
+    public TabButton TabButton;
 
     /// <summary>
     /// Show or hides all buttons that this tab contains.
     /// </summary>
     /// <param name="active"> True if this tab should be shown, false if hidden. </param>
-    public void SetTabActive(bool active)
+    public virtual void SetTabActive(bool active)
     {
-        foreach (Transform sibling in transform)
+        if (referenceManager.menuToggler.MenuActive)
         {
-            // We don't want to change the state of the tab buttons, they should always be turned on. 
-            if (ReferenceEquals(sibling.gameObject.GetComponent<TabButton>(), null))
+            foreach (Transform child in transform)
             {
-                sibling.gameObject.SetActive(active);
+                // We don't want to change the state of the tab buttons, they should always be turned on. 
+                if (ReferenceEquals(child.gameObject.GetComponent<TabButton>(), null))
+                {
+                    child.gameObject.SetActive(active);
+                }
             }
         }
     }
+
 }

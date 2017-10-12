@@ -1,5 +1,6 @@
-﻿using System;
-
+﻿/// <summary>
+/// This class represents a button that draws lines between all graphpoints that share labels.
+/// </summary>
 class DrawLinesBetweenGraphPointsButton : StationaryButton
 {
 

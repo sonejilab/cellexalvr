@@ -26,4 +26,8 @@ public static class ButtonEvents
 
     public static UnityEvent LinesBetweenGraphsDrawn = new UnityEvent();
     public static UnityEvent LinesBetweenGraphsCleared = new UnityEvent();
+
+    public static UnityEvent FlashGenesFileStartedLoading = new UnityEvent();
+    public static UnityEvent FlashGenesFileFinishedLoading = new UnityEvent();
+    //public static UnityEvent FlashGenesCategoryToggled
 }

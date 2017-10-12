@@ -7,12 +7,12 @@ using UnityEngine;
 public class ToggleArcsSubMenu : MenuWithTabs
 {
     public GameObject buttonPrefab;
+    public Tab tabPrefab;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-0.3958f, 0.59f, 0.2688f);
     private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -0.15f);
-    private Vector3 tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
-    private Vector3 tabButtonPosInc = new Vector3(0.1f, 0, 0);
+
     private Color[] colors;
 
     /// <summary>
@@ -29,21 +29,21 @@ public class ToggleArcsSubMenu : MenuWithTabs
         colors[4] = new Color(0, 1, 1);     // cyan
         colors[5] = new Color(1, 0, 1);     // magenta
         colors[6] = new Color(1f, 153f / 255f, 204f / 255f);     // pink
-        colors[7] = new Color(.6f, 1, .6f);     // lime green
-        colors[8] = new Color(.4f, .2f, 1);     // brown
-        colors[9] = new Color(1, .6f, .2f);     // orange
-        colors[10] = new Color(.87f, 8f, .47f);     // some ugly sand color
-        colors[11] = new Color(.3f, .3f, .3f);     // grey
-        colors[12] = new Color(.18f, .69f, .54f);     // turquoise
-        colors[13] = new Color(.84f, .36f, .15f);     // red panda red
+        colors[7] = new Color(0.6f, 1, 0.6f);     // lime green
+        colors[8] = new Color(0.4f, 0.2f, 1);     // brown
+        colors[9] = new Color(1, 0.6f, 0.2f);     // orange
+        colors[10] = new Color(0.87f, 8f, 0.47f);     // some ugly sand color
+        colors[11] = new Color(0.3f, 0.3f, 0.3f);     // grey
+        colors[12] = new Color(0.18f, 0.69f, 0.54f);     // turquoise
+        colors[13] = new Color(0.84f, 0.36f, 0.15f);     // red panda red
         colors[14] = new Color(0, 1, 1);     // cyan
         colors[15] = new Color(1, 0, 1);     // magenta
         colors[16] = new Color(1f, 153f / 255f, 204f / 255f);     // pink
-        colors[17] = new Color(.6f, 1, .6f);     // lime green
-        colors[18] = new Color(.4f, .2f, 1);     // brown
-        colors[19] = new Color(1, .6f, .2f);     // orange
-        colors[20] = new Color(.87f, 8f, .47f);     // some ugly sand color
-        colors[21] = new Color(.3f, .3f, .3f);     // grey
+        colors[17] = new Color(0.6f, 1, 0.6f);     // lime green
+        colors[18] = new Color(0.4f, 0.2f, 1);     // brown
+        colors[19] = new Color(1, 0.6f, 0.2f);     // orange
+        colors[20] = new Color(0.87f, 8f, 0.47f);     // some ugly sand color
+        colors[21] = new Color(0.3f, 0.3f, 0.3f);     // grey
         // gameObject.SetActive(false);
     }
 
@@ -58,18 +58,15 @@ public class ToggleArcsSubMenu : MenuWithTabs
             CellExAlLog.Log("ERROR: Tried to create buttons of a network handler with zero network centers.");
             return;
         }
-        TurnOffTab();
-        var newTab = Instantiate(tabPrefab, transform);
-        newTab.gameObject.SetActive(true);
+        TurnOffAllTabs();
+        var newTab = AddTab(tabPrefab);
         // The prefab contains some buttons that needs some variables set.
         ArcsTabButton tabButton = newTab.GetComponentInChildren<ArcsTabButton>();
         tabButton.referenceManager = referenceManager;
         tabButton.tab = newTab;
         tabButton.Handler = networks[0].Handler;
-        tabButton.gameObject.transform.localPosition = tabButtonPos;
-        tabButtonPos += tabButtonPosInc;
+
         //newTab.tab = newTab.transform.parent.gameObject;
-        tabs.Add(newTab);
         if (colors == null)
         {
             Init();

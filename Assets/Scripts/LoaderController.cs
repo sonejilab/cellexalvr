@@ -54,7 +54,7 @@ public class LoaderController : MonoBehaviour
             {
                 moving = false;
                 loadingComplete = true;
-                Debug.Log("Loading Complete");
+                //Debug.Log("Loading Complete");
                 //sound.Stop();
             }
         }

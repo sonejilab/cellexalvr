@@ -33,6 +33,7 @@ public class ReferenceManager : MonoBehaviour
     #region Menu
     [Header("Menu")]
     public GameObject mainMenu;
+    public FlashGenesMenu flashGenesMenu;
     public ToggleArcsSubMenu arcsSubMenu;
     public AttributeSubMenu attributeSubMenu;
     public ColorByIndexMenu indexMenu;

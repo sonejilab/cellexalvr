@@ -1,23 +1,56 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class represents a menu that has tabs.
+/// </summary>
 public class MenuWithTabs : MonoBehaviour
 {
     public ReferenceManager referenceManager;
-    public Tab tabPrefab;
 
+    protected MenuToggler menuToggler;
     protected List<Tab> tabs = new List<Tab>();
+    protected Vector3 tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
+    protected Vector3 tabButtonPosInc = new Vector3(0.1f, 0, 0);
 
-
-    private void Start()
+    protected virtual void Start()
     {
-        tabPrefab.gameObject.SetActive(false);
+        menuToggler = referenceManager.menuToggler;
+    }
+
+    /// <summary>
+    /// Adds a tab to this menu.
+    /// </summary>
+    /// <typeparam name="T"> The type of the tab. This type must derive from <see cref="Tab"/>. </typeparam>
+    /// <param name="tabPrefab"> The prefab used as template. </param>
+    /// <returns> A reference to the created tab. The created tab will have the type T. </returns>
+    public virtual T AddTab<T>(T tabPrefab) where T : Tab
+    {
+        var newTab = Instantiate(tabPrefab, transform);
+        newTab.gameObject.SetActive(true);
+        //newTab.transform.parent = transform;
+        newTab.TabButton.gameObject.transform.localPosition = tabButtonPos;
+        newTab.TabButton.Menu = this;
+        tabButtonPos += tabButtonPosInc;
+        tabs.Add(newTab);
+        if (!menuToggler)
+            menuToggler = referenceManager.menuToggler;
+        foreach (Transform child in newTab.GetComponentsInChildren<Transform>())
+        {
+            menuToggler.AddGameObjectToActivate(child.gameObject);
+        }
+        return newTab;
+    }
+
+    public virtual void ResetTabButtonPosition()
+    {
+        tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
     }
 
     /// <summary>
     /// Turns off all tabs.
     /// </summary>
-    public void TurnOffTab()
+    public void TurnOffAllTabs()
     {
         foreach (Tab tab in tabs)
         {

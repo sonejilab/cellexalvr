@@ -20,6 +20,7 @@ public class InputReader : MonoBehaviour
     private LoaderController loaderController;
     private SQLite database;
     private SelectionToolHandler selectionToolHandler;
+    private FlashGenesMenu flashGenesMenu;
     private AttributeSubMenu attributeSubMenu;
     private ToggleArcsSubMenu arcsSubMenu;
     private ColorByIndexMenu indexMenu;
@@ -43,6 +44,7 @@ public class InputReader : MonoBehaviour
         loaderController = referenceManager.loaderController;
         database = referenceManager.database;
         selectionToolHandler = referenceManager.selectionToolHandler;
+        flashGenesMenu = referenceManager.flashGenesMenu;
         attributeSubMenu = referenceManager.attributeSubMenu;
         arcsSubMenu = referenceManager.arcsSubMenu;
         indexMenu = referenceManager.indexMenu;
@@ -253,10 +255,11 @@ public class InputReader : MonoBehaviour
         }
         status.UpdateStatus(statusId, "Reading index.facs file");
         ReadFacsFiles(path, totalNbrOfCells);
+        flashGenesMenu.CreateTabs(path);
         status.RemoveStatus(statusId);
         ButtonEvents.GraphsLoaded.Invoke();
-        if (debug)
-            cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
+        //if (debug)
+        //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
     }
 
     /// <summary>

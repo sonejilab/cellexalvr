@@ -50,10 +50,21 @@ public class MenuToggler : MonoBehaviour
     /// <param name="item"> The gameobject to turn back on. </param>
     public void AddGameObjectToActivate(GameObject item)
     {
+        if (MenuActive) return;
+
         Renderer r = item.GetComponent<Renderer>();
-        renderers[r] = true;
+        if (r)
+        {
+            renderers[r] = true;
+            r.enabled = false;
+        }
+
         Collider c = item.GetComponent<Collider>();
-        colliders[c] = true;
+        if (c)
+        {
+            colliders[c] = true;
+            c.enabled = false;
+        }
     }
 
     /// <summary>
@@ -84,13 +95,19 @@ public class MenuToggler : MonoBehaviour
             // save whether each renderer and collider is enabled
             foreach (Renderer r in menu.GetComponentsInChildren<Renderer>())
             {
-                renderers[r] = r.enabled;
-                r.enabled = false;
+                if (r)
+                {
+                    renderers[r] = r.enabled;
+                    r.enabled = false;
+                }
             }
             foreach (Collider c in menu.GetComponentsInChildren<Collider>())
             {
-                colliders[c] = c.enabled;
-                c.enabled = false;
+                if (c)
+                {
+                    colliders[c] = c.enabled;
+                    c.enabled = false;
+                }
             }
             foreach (StationaryButton b in menu.GetComponentsInChildren<StationaryButton>())
             {

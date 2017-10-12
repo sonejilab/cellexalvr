@@ -3,28 +3,11 @@
 /// <summary>
 /// This class represents a button that toggle all arcs between all networks on a graph skeleton.
 /// </summary>
-public class ToggleAllArcsButton : MonoBehaviour
+public class ToggleAllArcsButton : SolidButton
 {
-    public ReferenceManager referenceManager;
     public bool toggleToState;
 
-    private SteamVR_TrackedObject rightController;
-    private SteamVR_Controller.Device device;
-    private new Renderer renderer;
-    private bool controllerInside = false;
-    private Color color;
     private NetworkCenter[] networks;
-
-    void Awake()
-    {
-        renderer = GetComponent<Renderer>();
-        color = renderer.material.color;
-    }
-
-    private void Start()
-    {
-        rightController = referenceManager.rightController;
-    }
 
     void Update()
     {
@@ -50,22 +33,5 @@ public class ToggleAllArcsButton : MonoBehaviour
         networks.CopyTo(this.networks, 0);
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            renderer.material.color = Color.white;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            renderer.material.color = color;
-            controllerInside = false;
-        }
-    }
 }
 

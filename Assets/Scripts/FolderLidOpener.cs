@@ -12,6 +12,7 @@ public class FolderLidOpener : MonoBehaviour
     private bool lidOpen = false;
     private bool desiredState = false;
     private bool coroutineRunning = false;
+    private int controllersInside;
 
     void Start()
     {
@@ -27,7 +28,6 @@ public class FolderLidOpener : MonoBehaviour
         for (int i = 0; i < moveTime; ++i)
         {
             dAngle[i] *= 90 / total;
-
         }
     }
 
@@ -40,16 +40,14 @@ public class FolderLidOpener : MonoBehaviour
         }
     }
 
-
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
+            controllersInside++;
             desiredState = true;
             if (!coroutineRunning && !lidOpen)
             {
-                lidOpen = true;
-                coroutineRunning = true;
                 StartCoroutine(SetLidOpen(true));
             }
         }
@@ -57,21 +55,24 @@ public class FolderLidOpener : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Smaller Controller Collider"))
+        if (other.gameObject.CompareTag("Controller"))
         {
-            desiredState = false;
-            if (!coroutineRunning && lidOpen)
+            controllersInside--;
+            if (controllersInside == 0)
             {
-                lidOpen = false;
-                coroutineRunning = true;
-                StartCoroutine(SetLidOpen(false));
+                desiredState = false;
+                if (!coroutineRunning && lidOpen)
+                {
+                    StartCoroutine(SetLidOpen(false));
+                }
             }
         }
     }
 
-
     IEnumerator SetLidOpen(bool open)
     {
+        lidOpen = open;
+        coroutineRunning = true;
         for (int i = 0; i < moveTime; ++i)
         {
             var angle = 0f;

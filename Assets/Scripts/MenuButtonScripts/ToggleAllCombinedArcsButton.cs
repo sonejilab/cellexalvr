@@ -4,29 +4,12 @@
 /// This class represents a buttont that toggle all the combined arcs between all networks ina  graph skeleton,
 /// The combined arcs show the number of arcs that are between two networks.
 /// </summary>
-public class ToggleAllCombinedArcsButton : MonoBehaviour
+public class ToggleAllCombinedArcsButton : SolidButton
 {
 
-    public ReferenceManager referenceManager;
     public bool toggleToState;
 
-    private SteamVR_TrackedObject rightController;
-    private SteamVR_Controller.Device device;
-    private new Renderer renderer;
-    private bool controllerInside = false;
-    private Color color;
     private NetworkCenter[] networks;
-
-    void Awake()
-    {
-        renderer = GetComponent<Renderer>();
-        color = renderer.material.color;
-    }
-
-    private void Start()
-    {
-        rightController = referenceManager.rightController;
-    }
 
     void Update()
     {
@@ -63,24 +46,6 @@ public class ToggleAllCombinedArcsButton : MonoBehaviour
         foreach (NetworkCenter network in networks)
         {
             network.SetCombinedArcsVisible(visible);
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            renderer.material.color = Color.white;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            renderer.material.color = color;
-            controllerInside = false;
         }
     }
 }

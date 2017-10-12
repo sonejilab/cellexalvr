@@ -1,29 +1,14 @@
 ﻿using UnityEngine;
 
-public class ColorByIndexButton : MonoBehaviour
+/// <summary>
+/// This class represents a button that colors all graphs according to an index.
+/// </summary>
+public class ColorByIndexButton : SolidButton
 {
-
-    public ReferenceManager referenceManager;
     public TextMesh description;
 
-    private SteamVR_TrackedObject rightController;
     private CellManager cellManager;
-    private SteamVR_Controller.Device device;
-    private new Renderer renderer;
-    private bool controllerInside = false;
-    private Color color;
     private string indexName;
-
-    void Awake()
-    {
-        renderer = GetComponent<Renderer>();
-    }
-
-    private void Start()
-    {
-        rightController = referenceManager.rightController;
-        cellManager = referenceManager.cellManager;
-    }
 
     void Update()
     {
@@ -42,23 +27,4 @@ public class ColorByIndexButton : MonoBehaviour
         this.indexName = indexName;
         description.text = indexName;
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            renderer.material.color = Color.white;
-            controllerInside = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            renderer.material.color = color;
-            controllerInside = false;
-        }
-    }
 }
-

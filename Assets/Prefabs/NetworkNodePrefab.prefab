@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114252115367115154}
   - component: {fileID: 65502072426276958}
   - component: {fileID: 114940603741624592}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: NetworkNodePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 33071858583418696}
   - component: {fileID: 222853809826507562}
   - component: {fileID: 114269250619962334}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Gene Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}

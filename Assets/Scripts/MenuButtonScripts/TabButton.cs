@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the tab buttons on top of the toggle arcs menu.
+/// This class represents the tab buttons on top of a tab.
 /// </summary>
 public class TabButton : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public Tab tab;
+    public MenuWithTabs Menu;
 
     private SteamVR_TrackedObject rightController;
-    private MenuWithTabs subMenu;
     private bool controllerInside = false;
     private SteamVR_Controller.Device device;
     private MeshRenderer meshRenderer;
@@ -20,7 +20,7 @@ public class TabButton : MonoBehaviour
     {
         meshRenderer = GetComponent<MeshRenderer>();
         rightController = referenceManager.rightController;
-        subMenu = referenceManager.arcsSubMenu;
+
     }
 
     protected virtual void Update()
@@ -28,7 +28,7 @@ public class TabButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            subMenu.TurnOffTab();
+            Menu.TurnOffAllTabs();
             tab.SetTabActive(true);
         }
     }
