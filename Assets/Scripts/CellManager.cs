@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using VRTK;
+using TMPro;
 
 /// <summary>
 /// This class represent a manager that holds all the cells.
@@ -51,6 +52,10 @@ public class CellManager : MonoBehaviour
     ///     <term>ShuffledCategory</term>
     ///     <description>Shows the expression of every gene exactly once, in a random order for each category.</description>
     ///   </item>
+    ///   <item>
+    ///     <term>OrderedCategory</term>
+    ///     <description>Flashes the genes in order (order that they are in the database).</description>
+    ///   </item>
     /// </list>
     /// </summary>
     public FlashGenesMode CurrentFlashGenesMode
@@ -69,7 +74,7 @@ public class CellManager : MonoBehaviour
         }
     }
     private FlashGenesMode currentFlashGenesMode;
-    public enum FlashGenesMode { DoNotFlash, RandomWithinCategory, ShuffledCategory/*, StepForwardOneGene, StepBackwardOneGene */};
+    public enum FlashGenesMode { DoNotFlash, RandomWithinCategory, ShuffledCategory, Ordered/*, StepForwardOneGene, StepBackwardOneGene */};
     public string[] SavedFlashGenesCategories { get; set; }
     public Dictionary<string, bool> FlashGenesCategoryFilter { get; private set; }
     #endregion
@@ -90,6 +95,14 @@ public class CellManager : MonoBehaviour
     private StatusDisplay statusDisplay;
     private int coroutinesWaiting;
     private TextMesh currentFlashedGeneText;
+    private GameObject HUD;
+    private GameObject FarDisp;
+    private TextMeshProUGUI HUDflashInfo;
+    private TextMeshProUGUI HUDgroupInfo;
+    private TextMeshProUGUI HUDstatus;
+    private TextMeshProUGUI FarFlashInfo;
+    private TextMeshProUGUI FarGroupInfo;
+    private TextMeshProUGUI FarStatus;
     private List<string[]> prunedGenes = new List<string[]>();
     private bool flashingGenes = false;
     private bool loadingFlashingGenes;
@@ -110,6 +123,14 @@ public class CellManager : MonoBehaviour
         selectionToolHandler = referenceManager.selectionToolHandler;
         graphManager = referenceManager.graphManager;
         currentFlashedGeneText = referenceManager.currentFlashedGeneText;
+        HUD = referenceManager.HUD;
+        HUDflashInfo = referenceManager.HUDFlashInfo;
+        HUDgroupInfo = referenceManager.HUDGroupInfo;
+        HUDstatus = referenceManager.HUDStatus;
+        FarDisp = referenceManager.FarDisplay;
+        FarFlashInfo = referenceManager.FarFlashInfo;
+        FarGroupInfo = referenceManager.FarGroupInfo;
+        FarStatus = referenceManager.FarStatus;
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
     }
 
@@ -220,7 +241,6 @@ public class CellManager : MonoBehaviour
 
         coroutinesWaiting--;
         database.QueryGene(geneName);
-
         // now we have to wait for our query to return the results.
         while (database.QueryRunning)
             yield return null;
@@ -287,6 +307,14 @@ public class CellManager : MonoBehaviour
         stopwatch.Start();
         for (; i < genes.Length; ++i)
         {
+            if (HUD.activeSelf)
+            {
+                HUDstatus.text = "Status: " + "Query " + (i + 1) + "/" + genes.Length + " in progress";
+            }
+            if (FarDisp.activeSelf)
+            {
+                FarStatus.text = "Status: " + "Query " + (i + 1) + "/" + genes.Length + " in progress";
+            }
             statusDisplay.UpdateStatus(statusid, "Query " + (i + 1) + "/" + genes.Length + " in progress");
             string[] categoryOfGenes = genes[i];
             categories[i] = categoryOfGenes[0];
@@ -299,6 +327,8 @@ public class CellManager : MonoBehaviour
         stopwatch.Stop();
         CellExAlLog.Log("Finished " + genes.Length + " queries in " + stopwatch.Elapsed.ToString());
         statusDisplay.RemoveStatus(statusid);
+        HUDstatus.text = "Status: ";
+        FarStatus.text = "Status: ";
         Cell cell = null;
         foreach (Cell c in cells.Values)
         {
@@ -392,6 +422,28 @@ public class CellManager : MonoBehaviour
                         foreach (Cell c in cells.Values)
                         {
                             c.ColorByGeneInCategory(category, geneOrder[j]);
+                        }
+                        for (int k = 0; k < FramesBetweenEachFlash; ++k)
+                            yield return null;
+                    }
+                }
+                else if (CurrentFlashGenesMode == FlashGenesMode.Ordered)
+                {
+
+                    for (int j = 0; j < savedFlashGenesLengths[i] && CurrentFlashGenesMode == FlashGenesMode.Ordered; ++j)
+                    {
+                        if (HUD.activeSelf)
+                        {
+                            HUDflashInfo.text = "Category: " + category + "\nGene: " + prunedGenes[i][j];
+                        }
+                        if (FarDisp.activeSelf)
+                        {
+                            FarFlashInfo.text = "Category: " + category + "\nGene: " + prunedGenes[i][j];
+                        }
+                        currentFlashedGeneText.text = "Category:\t" + category + "\nGene:\t\t" + prunedGenes[i][j];
+                        foreach (Cell c in cells.Values)
+                        {
+                            c.ColorByGeneInCategory(category, j);
                         }
                         for (int k = 0; k < FramesBetweenEachFlash; ++k)
                             yield return null;

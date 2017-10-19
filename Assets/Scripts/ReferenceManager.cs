@@ -1,4 +1,5 @@
 ﻿using SQLiter;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,14 @@ public class ReferenceManager : MonoBehaviour
     public ControllerModelSwitcher controllerModelSwitcher;
     public GroupInfoDisplay groupInfoDisplay;
     public StatusDisplay statusDisplay;
+    public GameObject HUD;
+    public GameObject FarDisplay;
+    public TextMeshProUGUI HUDFlashInfo;
+    public TextMeshProUGUI HUDGroupInfo;
+    public TextMeshProUGUI HUDStatus;
+    public TextMeshProUGUI FarFlashInfo;
+    public TextMeshProUGUI FarGroupInfo;
+    public TextMeshProUGUI FarStatus;
     public GameObject headset;
     public BoxCollider controllerMenuCollider;
 

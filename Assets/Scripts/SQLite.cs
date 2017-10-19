@@ -289,6 +289,7 @@ namespace SQLiter
                 CellExAlLog.Log("WARNING: List of genes to query database for is too short.");
                 yield break;
             }
+
             string category = genes[0];
 
             QueryRunning = true;
@@ -314,7 +315,7 @@ namespace SQLiter
             {
                 yield return null;
             }
-            // Update the list
+            //Update the list
             _result.Clear();
             builder.Remove(0, builder.Length);
             List<string> prunedGenes = new List<string>();

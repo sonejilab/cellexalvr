@@ -1,4 +1,5 @@
-﻿/// <summary>
+﻿using UnityEngine;
+/// <summary>
 /// This class represents the buttons that increase and decrease the number of frames between each gene expression when flashing genes.
 /// </summary>
 namespace Assets.Scripts.MenuButtonScripts
@@ -11,6 +12,8 @@ namespace Assets.Scripts.MenuButtonScripts
         }
 
         public CellManager.FlashGenesMode switchToMode;
+        public StopButton stop;
+        //public GameObject infoCanv;
 
         private CellManager cellManager;
 
@@ -24,7 +27,10 @@ namespace Assets.Scripts.MenuButtonScripts
             device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
+                //infoCanv.SetActive(true);
                 cellManager.CurrentFlashGenesMode = switchToMode;
+                stop.SetButtonActivated(true);
+                //stop.spriteRenderer.sprite = stop.standardTexture;
             }
         }
     }

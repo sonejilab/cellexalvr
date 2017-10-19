@@ -17,6 +17,8 @@ public class SelectionToolHandler : MonoBehaviour
     public RadialMenu radialMenu;
     public Sprite[] buttonIcons;
     public GroupInfoDisplay groupInfoDisplay;
+    public GroupInfoDisplay HUDGroupInfoDisplay;
+    public GroupInfoDisplay FarGroupInfoDisplay;
     [HideInInspector]
     public bool selectionConfirmed = false;
     [HideInInspector]
@@ -90,6 +92,8 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
         groupInfoDisplay.SetColors(colors);
+        HUDGroupInfoDisplay.SetColors(colors);
+        FarGroupInfoDisplay.SetColors(colors);
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
         selectedColor = colors[currentColorIndex];
         SetSelectionToolEnabled(false);
@@ -146,6 +150,8 @@ public class SelectionToolHandler : MonoBehaviour
             selectionMade = true;
             //selectionToolMenu.SelectionStarted();
             groupInfoDisplay.ResetGroupsInfo();
+            HUDGroupInfoDisplay.ResetGroupsInfo();
+            FarGroupInfoDisplay.ResetGroupsInfo();
             // turn on the undo buttons
             ButtonEvents.BeginningOfHistoryLeft.Invoke();
         }
@@ -158,6 +164,8 @@ public class SelectionToolHandler : MonoBehaviour
                 SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
 
             groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(newColor, 1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(newColor, 1);
             if (newNode)
             {
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
@@ -170,6 +178,8 @@ public class SelectionToolHandler : MonoBehaviour
             else
             {
                 groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
+                HUDGroupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
+                FarGroupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
             }
         }
     }
@@ -217,6 +227,8 @@ public class SelectionToolHandler : MonoBehaviour
         info.graphPoint.GetComponent<Renderer>().material.color = info.fromColor;
         info.graphPoint.Outline(info.fromColor);
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
+        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
+        FarGroupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
@@ -225,6 +237,8 @@ public class SelectionToolHandler : MonoBehaviour
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
             info.graphPoint.Outline(info.fromColor);
         }
         historyIndexOffset++;
@@ -258,6 +272,8 @@ public class SelectionToolHandler : MonoBehaviour
         info.graphPoint.GetComponent<Renderer>().material.color = info.toColor;
         info.graphPoint.Outline(info.toColor);
         groupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
+        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
+        FarGroupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
         if (info.newNode)
         {
             selectedCells.Add(info.graphPoint);
@@ -265,6 +281,8 @@ public class SelectionToolHandler : MonoBehaviour
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
         }
         historyIndexOffset--;
         selectionMade = false;

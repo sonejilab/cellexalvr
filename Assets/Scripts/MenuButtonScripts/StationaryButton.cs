@@ -22,9 +22,9 @@ public abstract class StationaryButton : MonoBehaviour
     }
     protected SteamVR_TrackedObject rightController;
     protected SteamVR_Controller.Device device;
-    protected bool buttonActivated = true;
+    public bool buttonActivated = true;
     protected bool controllerInside = false;
-    protected SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
 
     // virtual so other classes may override if needed
     protected virtual void Awake()
