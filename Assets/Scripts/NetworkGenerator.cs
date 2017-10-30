@@ -17,6 +17,8 @@ public class NetworkGenerator : MonoBehaviour
     private SelectionToolHandler selectionToolHandler;
     private InputReader inputReader;
     private StatusDisplay status;
+    private StatusDisplay statusDisplayHUD;
+    private StatusDisplay statusDisplayFar;
     private Thread t;
 
     private void Start()
@@ -25,6 +27,8 @@ public class NetworkGenerator : MonoBehaviour
         selectionToolHandler = referenceManager.selectionToolHandler;
         inputReader = referenceManager.inputReader;
         status = referenceManager.statusDisplay;
+        statusDisplayHUD = referenceManager.statusDisplayHUD;
+        statusDisplayFar = referenceManager.statusDisplayFar;
     }
 
     /// <summary>
@@ -38,6 +42,8 @@ public class NetworkGenerator : MonoBehaviour
     IEnumerator GenerateNetworksCoroutine()
     {
         int statusId = status.AddStatus("R script generating networks");
+        int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
+        int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
         // generate the files containing the network information
         string home = Directory.GetCurrentDirectory();
         string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellExAlUser.UserSpecificFolder;
@@ -52,6 +58,8 @@ public class NetworkGenerator : MonoBehaviour
         stopwatch.Stop();
         CellExAlLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
         status.RemoveStatus(statusId);
+        //statusDisplayHUD.RemoveStatus(statusIdHUD);
+        statusDisplayFar.RemoveStatus(statusIdFar);
         inputReader.ReadNetworkFiles();
     }
 

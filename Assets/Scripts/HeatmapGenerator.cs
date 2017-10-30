@@ -18,6 +18,8 @@ public class HeatmapGenerator : MonoBehaviour
     private GraphManager graphManager;
     private GameObject fire;
     private StatusDisplay status;
+    private StatusDisplay statusDisplayHUD;
+    private StatusDisplay statusDisplayFar;
     private ArrayList data;
     private Thread t;
     private bool running = false;
@@ -37,6 +39,8 @@ public class HeatmapGenerator : MonoBehaviour
         graphManager = referenceManager.graphManager;
         fire = referenceManager.fire;
         status = referenceManager.statusDisplay;
+        statusDisplayHUD = referenceManager.statusDisplayHUD;
+        statusDisplayFar = referenceManager.statusDisplayFar;
     }
 
     internal void DeleteHeatmaps()
@@ -80,10 +84,10 @@ public class HeatmapGenerator : MonoBehaviour
         {
             // make a deep copy of the arraylist
             List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
-            Dictionary<Cell, Color> colors = new Dictionary<Cell, Color>();
+            Dictionary<Cell, int> colors = new Dictionary<Cell, int>();
             foreach (GraphPoint g in selection)
             {
-                colors[g.Cell] = g.GetComponent<Renderer>().material.color;
+                colors[g.Cell] = g.CurrentGroup;
             }
 
             // Check if more than one color is selected
@@ -112,6 +116,8 @@ public class HeatmapGenerator : MonoBehaviour
             //}
 
             int statusId = status.AddStatus("R script generating heatmap");
+            int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
+            int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
             // Start generation of new heatmap in R
             string home = Directory.GetCurrentDirectory();
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
@@ -140,6 +146,8 @@ public class HeatmapGenerator : MonoBehaviour
             stopwatch.Stop();
             CellExAlLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
             status.RemoveStatus(statusId);
+            statusDisplayHUD.RemoveStatus(statusIdHUD);
+            statusDisplayFar.RemoveStatus(statusIdFar);
             running = false;
 
             string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";

@@ -50,9 +50,9 @@ public class Cell
     }
 
     /// <summary>
-    /// Turns off all graphpoints that this cell is represented by.
+    /// Toggles all graphpoints that this cell is represented by.
     /// </summary>
-    public void RemoveFromGraphs()
+    public void ToggleGraphPoints()
     {
         foreach (GraphPoint g in GraphPoints)
         {
@@ -161,14 +161,15 @@ public class Cell
     }
 
     /// <summary>
-    /// Sets the color of all graphpoints that are representing this cell.
+    /// Sets the group and color of all graphpoints that are representing this cell.
     /// </summary>
-    /// <param name="col"> The new color. </param>
-    public void SetColor(Color col)
+    /// <param name="group"> The new group. </param>
+    public void SetGroup(Color col, int group)
     {
         foreach (GraphPoint g in GraphPoints)
         {
             g.Color = col;
+            g.CurrentGroup = group;
         }
     }
 
@@ -212,6 +213,10 @@ public class Cell
         return true;
     }
 
+    /// <summary>
+    /// Gets the lengths of each category.
+    /// </summary>
+    /// <returns> A Dictionary with the categories as keys and their lengths as values. </returns>
     internal Dictionary<string, int> GetCategoryLengths()
     {
         Dictionary<string, int> lengths = new Dictionary<string, int>();
@@ -220,5 +225,13 @@ public class Cell
             lengths[pair.Key] = pair.Value.Length;
         }
         return lengths;
+    }
+
+    /// <summary>
+    /// Clears the saved flashing expressions.
+    /// </summary>
+    public void ClearFlashingExpressions()
+    {
+        flashingExpressions.Clear();
     }
 }

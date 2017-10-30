@@ -7,6 +7,8 @@ public class FarDispButton : StationaryButton
 {
 
     public GameObject FarDisp;
+    public StatusDisplay status;
+
     protected override string Description
     {
         get { return "Toggle Far Away Display"; }
@@ -31,6 +33,7 @@ public class FarDispButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             FarDisp.SetActive(!FarDisp.activeSelf);
+            status.ToggleStatusDisplay();
 
         }
 

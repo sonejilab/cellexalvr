@@ -16,12 +16,16 @@ public class CorrelatedGenesList : MonoBehaviour
     public List<CorrelatedGenesListNode> anticorrelatedGenesList;
 
     private StatusDisplay statusDisplay;
+    private StatusDisplay statusDisplayHUD;
+    private StatusDisplay statusDisplayFar;
     private SelectionToolHandler selectionToolHandler;
     private string outputFile = Directory.GetCurrentDirectory() + @"\Resources\correlated_genes.txt";
 
     private void Start()
     {
         statusDisplay = referenceManager.statusDisplay;
+        statusDisplayHUD = referenceManager.statusDisplayHUD;
+        statusDisplayFar = referenceManager.statusDisplayFar;
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetVisible(false);
     }
@@ -81,6 +85,8 @@ public class CorrelatedGenesList : MonoBehaviour
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + geneName);
+        var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + geneName);
+        var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + geneName);
         t.Start();
         while (t.IsAlive)
         {
@@ -114,6 +120,8 @@ public class CorrelatedGenesList : MonoBehaviour
         var button = referenceManager.previousSearchesList.correlatedGenesButtons[index];
         button.SetTexture(GetComponentInParent<PreviousSearchesList>().correlatedGenesButtonHighlightedTexture);
         statusDisplay.RemoveStatus(statusId);
+        statusDisplayHUD.RemoveStatus(statusIdHUD);
+        statusDisplayFar.RemoveStatus(statusIdFar);
     }
 
 

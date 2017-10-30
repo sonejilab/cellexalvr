@@ -6,6 +6,7 @@ using UnityEngine;
 public class HUDButton : StationaryButton {
 
     public GameObject HUD;
+    public StatusDisplay status;
     protected override string Description
     {
         get { return "Toggle HUD"; }
@@ -29,6 +30,7 @@ public class HUDButton : StationaryButton {
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             HUD.SetActive(!HUD.activeSelf);
+            status.ToggleStatusDisplay();
 
         }
 

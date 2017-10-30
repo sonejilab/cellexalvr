@@ -22,6 +22,10 @@ public class FlashGenesTab : Tab
         inputReader = referenceManager.inputReader;
     }
 
+    /// <summary>
+    /// Creates the category buttons that is displayed on this tab.
+    /// </summary>
+    /// <param name="categories"> An array with the names of the categories. </param>
     public void CreateCategoryButtons(string[] categories)
     {
         Vector3 nextButtonPos = buttonPosStart;
@@ -46,6 +50,10 @@ public class FlashGenesTab : Tab
         }
     }
 
+    /// <summary>
+    /// Turns this tab on or off.
+    /// </summary>
+    /// <param name="active"> True for turning this tab on, false for turning it off. </param>
     public override void SetTabActive(bool active)
     {
         base.SetTabActive(active);

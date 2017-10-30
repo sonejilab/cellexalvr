@@ -2,7 +2,10 @@
 # Syntax: [[name of gameobject] or "TAG_"[name of tag]]:[description]
 # All descriptions should be put on exactly one (1) line. Line breaks can be inserted by typing '\n'.
 # The purpose of this file is to contain longer descriptions that are displayed with the helper tool.
-# Note that a tag can not have the same name as a gameobject.
+# Gameobjects can be given descriptions based on the following: name, tag, parents name.
+# The parents name must be the direct parent to the gameobject.
+# Note that if a gameobject has more than one quality (e.g. both a name and a tag) that has a description in this file, the priorities are: name, tag, name of parent.
+
 # Tags:
 TAG_Network:Networks consists of multiple cells and shows what genes are correlated within that group. The genes are represented with spheres and the correlations are represented with lines. The lines' colors are random and have no meaning. Arcs between networks can be toggled with from the arc menu. Arcs are connections between networks where a pair of genes is present in both networks.
 TAG_HeatBoard:Heatmaps shows genes that are expressed or not expressed in cells. The selected cells are shown on the x-axis of the heatmap ordered from left to right in the order they were selected. The genes are shown on the y-axis and their names can be found on the right most side of the heatmap. A button on the left side of the heatmap recolors the graphs to the colors used when creating the heatmap. This will color all cells in all graphs so you can see where the cells are in the other graphs as well.
@@ -51,7 +54,7 @@ Index Menu Button:Show the menu to color by index. Pressing any button in this m
 Lasers:Toggles laser pointers. The lasers can be used to press various buttons around you. The lasers will turn green when they are pointing at something that can be interacted with. The lasers can grab graphs, heatmaps and networks by pointing them at something and pressing the grip buttons.
 Save Heatmap Button:Saves this heatmap to the disk. The image will be located where CellExAl is installed in the Saved_Images folder. The current date and time will be appended to the file name.
 Close Menu Button:Close the open menu.
-#Undo and redo
+# Undo and redo
 Undo One Step Button:This button undoes the last selected cell. Press many times to undo more cells.
 Redo One Step Button:This button redoes the last undone cell. Press many times to redo more cells.
 Undo Ten Steps Button:This button undoes the last 10 selected cells. Press many times to undo more cells.
@@ -63,18 +66,20 @@ Toggle Arcs On Button:This button toggles all arcs on for the network(s) it is c
 Toggle Arcs Off Button:This button toggles all arcs off for the network(s) it is connected to. Use the green button to toggle all connected arcs on, and the red button to toggle them off. Buttons with a colored background toggle the arcs to the network with the same network. The buttons on the bottom toggle all arcs connected to all networks in the group, and toggle the combined arcs. The combined arcs show how many arcs there are between two networks in total.
 Tab Button:If there is more than one group of networks, this button can be used to show the tab of buttons that toggle arcs for this group of networks. One tab appears for each group of networks that are generated.
 Draw Tool Button:Activates the draw tool. Press and hold the trigger to draw. Use the color wheel to the right to change color.
-#Draw tool
+# Draw tool
 Clear All Drawn Lines Button:Removes all lines that you have drawn.
 Color Wheel Buttons:Changes the color of the draw tool.
-#Create selection from previous selection
+# Create selection from previous selection
 Create Selection From Previous Selection Menu Button:Press to open a menu where groupings on this data set from previous sessions can be chosen.
 Create Selection From Previous Selection Button:Press to select this grouping. The numbers on the buttons are; the grouping's number, the number of groups (colors), and the number of cells, respectively.
-#Flashing genes
+# Flashing genes
 Flash Genes Menu Button:Press to open the menu to control the flashing genes.
 Increase Frames Between Each Flash Button:Press to increase the number of frames to wait between each flashed gene expression. This makes the flashing slower.
 Decrease Frames Between Each Flash Button:Press to decrease the number of frames to wait between each flashed gene expression. This makes the flashing faster.
-Random Within Category Mode Button:Press to switch to the "random within each category mode". This will show each category for 10 seconds in the order they appear in the unput file. All graphs will be colored according to the gene expression of a randomly chosen gene in that category before a new gene expression is chosen. After 10 seconds random genes in the next category is shown for 10 seconds and so on. The same gene expression can appear zero, one or any number of times depending on the mood of the random number generator.
+Random Within Category Mode Button:Press to switch to the "random within each category mode". This will show each category for 10 seconds in the order they appear in the input file. All graphs will be colored according to the gene expression of a randomly chosen gene in that category before a new gene expression is chosen. After 10 seconds random genes in the next category is shown for 10 seconds and so on. The same gene expression can appear zero, one or any number of times depending on the mood of the random number generator.
 Shuffled Category Mode Button:Press to switch to the "shuffled category mode". This will show each category in the order they appear in the input file. All graphs will be colored according to one gene expression at a time. Each gene expression will be shown exactly one time, in a random order. The time it takes to show all of one category depends on the number of genes in that category.
-#Lines between other graphpoints
+Ordered Category Button:Press to switch to the "ordered category mode". This will show each category in the order they appear in the input file, and all genes within each category as they are ordered in the input file.
+Stop Flashing Genes Button:Press to stop the flashing genes. Pressing any mode button again will resume the flashing.
+# Lines between other graphpoints
 Draw Lines Between Same Cell In Graphs Button:Press to draw lines between your selection and all other graphs. A line will be drawn between every cell in your selection that share its label with a cell in another graph.
 Clear Drawn Lines Between Same Cell In Graphs Button:Press to clear all lines that were drawn between all selected cells that shared a label with other cells.

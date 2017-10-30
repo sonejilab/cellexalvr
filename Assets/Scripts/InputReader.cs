@@ -26,6 +26,8 @@ public class InputReader : MonoBehaviour
     private ColorByIndexMenu indexMenu;
     private GameObject headset;
     private StatusDisplay status;
+    private StatusDisplay statusDisplayHUD;
+    private StatusDisplay statusDisplayFar;
     private SteamVR_TrackedObject rightController;
     private GameManager gameManager;
     private NetworkGenerator networkGenerator;
@@ -50,6 +52,8 @@ public class InputReader : MonoBehaviour
         indexMenu = referenceManager.indexMenu;
         headset = referenceManager.headset;
         status = referenceManager.statusDisplay;
+        statusDisplayHUD = referenceManager.statusDisplayHUD;
+        statusDisplayFar = referenceManager.statusDisplayFar;
         rightController = referenceManager.rightController;
         networkGenerator = referenceManager.networkGenerator;
         if (debug)
@@ -115,6 +119,8 @@ public class InputReader : MonoBehaviour
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles)
     {
         int statusId = status.AddStatus("Reading folder " + path);
+        int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
+        int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         var magnifier = referenceManager.magnifierTool;
         //  Read each .mds file
@@ -172,6 +178,8 @@ public class InputReader : MonoBehaviour
             for (int i = 0; i < xcoords.Count; i += itemsThisFrame, itemsThisFrame = 0)
             {
                 status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsFileStream.Position / mdsFileStream.Length) + "%");
+                statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsFileStream.Position / mdsFileStream.Length) + "%");
+                statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsFileStream.Position / mdsFileStream.Length) + "%");
                 for (int j = i; j < (i + maximumItemsPerFrame) && j < xcoords.Count; ++j)
                 {
                     graphManager.AddCell(newGraph, cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
@@ -204,6 +212,8 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
+        statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading .meta.cell files");
+        statusDisplayFar.UpdateStatus(statusIdFar, "Reading .meta.cell files");
         // Read the each .meta.cell file
         /// The file format should be
         ///              TYPE_1  TYPE_2  ...
@@ -254,9 +264,13 @@ public class InputReader : MonoBehaviour
             loaderController.DestroyFolders();
         }
         status.UpdateStatus(statusId, "Reading index.facs file");
+        statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+        statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
         ReadFacsFiles(path, totalNbrOfCells);
         flashGenesMenu.CreateTabs(path);
         status.RemoveStatus(statusId);
+        statusDisplayHUD.RemoveStatus(statusIdHUD);
+        statusDisplayFar.RemoveStatus(statusIdFar);
         ButtonEvents.GraphsLoaded.Invoke();
         //if (debug)
         //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
@@ -432,6 +446,8 @@ public class InputReader : MonoBehaviour
         if (cntFilePaths.Length == 0)
         {
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
+            statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
+            statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             CellExAlLog.Log("ERROR: No .cnt file in network folder " + CellExAlLog.FixFilePath(networkDirectory));
             return;
         }
@@ -789,12 +805,12 @@ public class InputReader : MonoBehaviour
         CellExAlLog.Log("Reading " + groupingNames.Count + " files");
         // initialize the arrays
         string[][] cellNames = new string[groupingNames.Count][];
-        Color[][] colors = new Color[groupingNames.Count][];
+        int[][] groups = new int[groupingNames.Count][];
         string[] graphNames = new string[groupingNames.Count];
         for (int i = 0; i < cellNames.Length; ++i)
         {
             cellNames[i] = new string[fileLengths[i]];
-            colors[i] = new Color[fileLengths[i]];
+            groups[i] = new int[fileLengths[i]];
         }
         words = null;
 
@@ -810,14 +826,14 @@ public class InputReader : MonoBehaviour
 
                 words = line.Split(null);
                 cellNames[i][j] = words[0];
-                ColorUtility.TryParseHtmlString(words[1], out colors[i][j]);
+                groups[i][j] = int.Parse(words[1]);
             }
             graphNames[i] = words[2];
             streamReader.Close();
             fileStream.Close();
         }
         // someone please rename this
-        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, colors);
+        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, groups);
         CellExAlLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 

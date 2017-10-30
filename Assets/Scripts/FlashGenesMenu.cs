@@ -22,9 +22,13 @@ public class FlashGenesMenu : MenuWithTabs
         ButtonEvents.FlashGenesFileFinishedLoading.AddListener(HideLoadingText);
     }
 
+    /// <summary>
+    /// Creates one tab for each .fgv file in the data folder.
+    /// </summary>
+    /// <param name="dataFolderPath"> The path to the folder where the .fgv files are. </param>
     public void CreateTabs(string dataFolderPath)
     {
-        string[] files = Directory.GetFiles(dataFolderPath, "*fgv");
+        string[] files = Directory.GetFiles(dataFolderPath, "*.fgv");
         foreach (string file in files)
         {
             FlashGenesTab newTab = AddTab(tabPrefab);

@@ -5,14 +5,14 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the group info display ont he roght controller. It shows how many cells that currently belong to a group (have a certain color).
+/// This class represents the group info display on the right controller. It shows how many cells that currently belong to a group (have a certain color).
 /// </summary>
 public class GroupInfoDisplay : MonoBehaviour
 {
     public SelectionToolHandler selectionToolHandler;
     public TextMesh status;
     public List<MeshRenderer> coloredSquares;
-    private Dictionary<Color, int> groups = new Dictionary<Color, int>(new ColorComparer());
+    private Dictionary<int, int> groups = new Dictionary<int, int>();
     private Color[] colors;
 
     /// <summary>
@@ -24,31 +24,25 @@ public class GroupInfoDisplay : MonoBehaviour
         this.colors = colors;
         for (int i = 0; i < colors.Length; i++)
         {
-            groups[colors[i]] = 0;
-            coloredSquares[i].material.color = colors[i];
+            Color col = colors[i];
+            groups[i] = 0;
+            coloredSquares[i].material.color = col;
+            //print("Color added " + col.r + " " + col.g + " " + col.b + " ints: " + ColorComparer.Bits(col.r) + " " + ColorComparer.Bits(col.g) + " " + ColorComparer.Bits(col.b));
         }
     }
 
     /// <summary>
     /// Changes the text on the display by adding (or subtracting) the specifed number of cells from the specified color.
     /// </summary>
-    /// <param name="col"> The color which's number should be changed. </param>
+    /// <param name="group"> The group's number that should be changed. </param>
     /// <param name="n"> How much the number should change by. 1 if adding 1 cell to the color. -1 if subtracting 1 cell from the color. </param>
-    public void ChangeGroupsInfo(Color col, int n)
+    public void ChangeGroupsInfo(int group, int n)
     {
-        try
-        {
-            groups[col] += n;
-        }
-        catch (KeyNotFoundException e)
-        {
-            print("Color not found " + col.r + " " + col.g + " " + col.b + " ints: " + ColorComparer.FloatToBitRepresentation(col.r) + " " + ColorComparer.FloatToBitRepresentation(col.g) + " " + ColorComparer.FloatToBitRepresentation(col.b));
-            print(e);
-        }
+        groups[group] += n;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < colors.Length; i++)
         {
-            builder.Append(groups[colors[i]]).Append('\n');
+            builder.Append(groups[i]).Append('\n');
         }
         status.text = builder.ToString();
     }
@@ -62,7 +56,7 @@ public class GroupInfoDisplay : MonoBehaviour
         for (int i = 0; i < colors.Length; i++)
         {
             Color col = colors[i];
-            groups[col] = 0;
+            groups[i] = 0;
             builder.Append("0\n");
         }
         status.text = builder.ToString();
@@ -71,30 +65,51 @@ public class GroupInfoDisplay : MonoBehaviour
     /// <summary>
     /// Helper class to compare colors.
     /// </summary>
-    private class ColorComparer : IEqualityComparer<Color>
+   /* private class ColorComparer : IEqualityComparer<Color>
     {
         public bool Equals(Color c1, Color c2)
         {
             // Two colors are equal if they have the same rgb values.
+            //int c1r = FloatToBitRepresentation(c1.r) & 0x7ffffff8;
+            //int c1g = FloatToBitRepresentation(c1.g) & 0x7ffffff8;
+            //int c1b = FloatToBitRepresentation(c1.b) & 0x7ffffff8;
+            //int c2r = FloatToBitRepresentation(c2.r) & 0x7ffffff8;
+            //int c2g = FloatToBitRepresentation(c2.g) & 0x7ffffff8;
+            //int c2b = FloatToBitRepresentation(c2.b) & 0x7ffffff8;
             return c1.r.Equals(c2.r) && c1.g.Equals(c2.g) && c1.b.Equals(c2.b);
         }
 
         public int GetHashCode(Color obj)
         {
-            int r = FloatToBitRepresentation(obj.r) & (-1 << 3);
-            int g = FloatToBitRepresentation(obj.g) & (-1 << 3);
-            int b = FloatToBitRepresentation(obj.b) & (-1 << 3);
+            //int r = FloatToBitRepresentation(obj.r) & 0x7ffffff8;
+            //int g = FloatToBitRepresentation(obj.g) & 0x7ffffff8;
+            //int b = FloatToBitRepresentation(obj.b) & 0x7ffffff8;
             return (r.GetHashCode() ^ (g.GetHashCode() << 2) ^ (b.GetHashCode() >> 2));
         }
 
         public static int FloatToBitRepresentation(float f)
         {
             byte[] bytes = BitConverter.GetBytes(f);
-            int result = bytes[0];
+            int result = 0;
+            result = bytes[0];
             result |= (bytes[1] << 8);
             result |= (bytes[2] << 16);
             result |= (bytes[3] << 24);
             return result;
         }
-    }
+
+        public static string Bits(float f)
+        {
+            uint bits = BitConverter.ToUInt32(BitConverter.GetBytes(f), 0);
+            uint mask = 0x80000000;
+            StringBuilder builder = new StringBuilder();
+            for (int i = 31; i >= 0; --i)
+            {
+                uint bit = (bits & mask) >> i;
+                builder.Append(bit);
+                mask = mask >> 1;
+            }
+            return builder.ToString();
+        }
+    }*/
 }

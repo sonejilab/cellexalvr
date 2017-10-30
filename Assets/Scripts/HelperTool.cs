@@ -60,17 +60,17 @@ public class HelperTool : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 100f, ~layersToIgnore))
             {
                 GameObject hitGameObject = hit.transform.gameObject;
-                if (descriptions.ContainsKey(hitGameObject.tag))
-                {
-                    // if the gameobject's tag is in the dictionary
-                    textMesh.text = descriptions[hitGameObject.tag];
-                    timeLastHit = Time.time;
-                    SetQuadOpaque(true);
-                }
-                else if (descriptions.ContainsKey(hitGameObject.name))
+                if (descriptions.ContainsKey(hitGameObject.name))
                 {
                     // if the gameobject's name is in the dictionary
                     textMesh.text = descriptions[hitGameObject.name];
+                    timeLastHit = Time.time;
+                    SetQuadOpaque(true);
+                }
+                else if (descriptions.ContainsKey(hitGameObject.tag))
+                {
+                    // if the gameobject's tag is in the dictionary
+                    textMesh.text = descriptions[hitGameObject.tag];
                     timeLastHit = Time.time;
                     SetQuadOpaque(true);
                 }
@@ -89,7 +89,6 @@ public class HelperTool : MonoBehaviour
                     // description just in case that happens.
                     if (Time.time - timeLastHit > 2)
                     {
-                        // if we hit something but don't have a description for it
                         textMesh.text = standardText;
                         SetQuadOpaque(false);
                     }
@@ -197,18 +196,17 @@ public class HelperTool : MonoBehaviour
 
             // line breaks in decsriptions are written with \n in plaintext.
             string formattedLine = line.Replace(@"\n", "\n");
+            string[] splitString = formattedLine.Split(new char[] { ':' }, 2);
             // tag names in the file start with "TAG_"
             if (formattedLine.Substring(0, 4).Equals("TAG_", StringComparison.Ordinal))
             {
-                var colonIndex = formattedLine.IndexOf(":");
-                string tagName = formattedLine.Substring(4, colonIndex - 4);
-
-                descriptions[tagName] = formattedLine.Substring(colonIndex + 1);
+                // Remove the "TAG_" part
+                string tagName = splitString[0].Substring(4);
+                descriptions[tagName] = splitString[1];
             }
             else
             {
                 // everything else is assumed to be names of gameobjects
-                string[] splitString = formattedLine.Split(new char[] { ':' }, 2);
                 descriptions[splitString[0]] = splitString[1];
             }
         }

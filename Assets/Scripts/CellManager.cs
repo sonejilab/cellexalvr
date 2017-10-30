@@ -67,7 +67,7 @@ public class CellManager : MonoBehaviour
         set
         {
             currentFlashGenesMode = value;
-            if (value != FlashGenesMode.DoNotFlash && !flashingGenes && !loadingFlashingGenes)
+            if (value != FlashGenesMode.DoNotFlash && !flashingGenes && !loadingFlashingGenes && SavedFlashGenesCategories.Length != 0)
             {
                 StartCoroutine(FlashGenesCoroutine());
             }
@@ -93,6 +93,8 @@ public class CellManager : MonoBehaviour
     private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
     private StatusDisplay statusDisplay;
+    private StatusDisplay statusDisplayHUD;
+    private StatusDisplay statusDisplayFar;
     private int coroutinesWaiting;
     private TextMesh currentFlashedGeneText;
     private GameObject HUD;
@@ -120,17 +122,17 @@ public class CellManager : MonoBehaviour
         topListNode = referenceManager.topListNode;
         gameManager = referenceManager.gameManager;
         statusDisplay = referenceManager.statusDisplay;
+        statusDisplayHUD = referenceManager.statusDisplayHUD;
+        statusDisplayFar = referenceManager.statusDisplayFar;
         selectionToolHandler = referenceManager.selectionToolHandler;
         graphManager = referenceManager.graphManager;
         currentFlashedGeneText = referenceManager.currentFlashedGeneText;
         HUD = referenceManager.HUD;
         HUDflashInfo = referenceManager.HUDFlashInfo;
         HUDgroupInfo = referenceManager.HUDGroupInfo;
-        HUDstatus = referenceManager.HUDStatus;
         FarDisp = referenceManager.FarDisplay;
         FarFlashInfo = referenceManager.FarFlashInfo;
         FarGroupInfo = referenceManager.FarGroupInfo;
-        FarStatus = referenceManager.FarStatus;
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
     }
 
@@ -154,16 +156,16 @@ public class CellManager : MonoBehaviour
     /// </summary>
     /// <param name="graphName"> The graph that the selection originated from. </param>
     /// <param name="cellnames"> An array of all the cell names (the graphpoint labels). </param>
-    /// <param name="colors"> An array of all colors that the cells should have. </param>
-    public void CreateNewSelection(string graphName, string[] cellnames, Color[] colors)
+    /// <param name="groups"> An array of all colors that the cells should have. </param>
+    public void CreateNewSelection(string graphName, string[] cellnames, int[] groups)
     {
         // finds any graph
         Graph graph = graphManager.FindGraph(graphName);
         for (int i = 0; i < cellnames.Length; ++i)
         {
             Cell cell = cells[cellnames[i]];
-            selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], colors[i], false);
-            cell.SetColor(colors[i]);
+            selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
+            cell.SetGroup(selectionToolHandler.Colors[groups[i]], groups[i]);
         }
     }
 
@@ -176,7 +178,7 @@ public class CellManager : MonoBehaviour
         {
             if (c.ExpressionLevel > 0)
             {
-                c.RemoveFromGraphs();
+                c.ToggleGraphPoints();
             }
         }
     }
@@ -189,7 +191,7 @@ public class CellManager : MonoBehaviour
         {
             if (c.ExpressionLevel == 0)
             {
-                c.RemoveFromGraphs();
+                c.ToggleGraphPoints();
             }
         }
     }
@@ -300,22 +302,22 @@ public class CellManager : MonoBehaviour
         loadingFlashingGenes = true;
         ButtonEvents.FlashGenesFileStartedLoading.Invoke();
         prunedGenes.Clear();
+        foreach (Cell c in cells.Values)
+        {
+            c.ClearFlashingExpressions();
+        }
         string[] categories = new string[genes.Length];
         int i = 0;
         int statusid = statusDisplay.AddStatus("");
+        int statusidHUD = statusDisplayHUD.AddStatus("");
+        int statusidFar = statusDisplayFar.AddStatus("");
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         for (; i < genes.Length; ++i)
         {
-            if (HUD.activeSelf)
-            {
-                HUDstatus.text = "Status: " + "Query " + (i + 1) + "/" + genes.Length + " in progress";
-            }
-            if (FarDisp.activeSelf)
-            {
-                FarStatus.text = "Status: " + "Query " + (i + 1) + "/" + genes.Length + " in progress";
-            }
             statusDisplay.UpdateStatus(statusid, "Query " + (i + 1) + "/" + genes.Length + " in progress");
+            statusDisplayHUD.UpdateStatus(statusidHUD, "Query " + (i + 1) + "/" + genes.Length + " in progress");
+            statusDisplayFar.UpdateStatus(statusidFar, "Query " + (i + 1) + "/" + genes.Length + " in progress");
             string[] categoryOfGenes = genes[i];
             categories[i] = categoryOfGenes[0];
             database.QueryMultipleGenesFlashingExpression(categoryOfGenes);
@@ -327,11 +329,12 @@ public class CellManager : MonoBehaviour
         stopwatch.Stop();
         CellExAlLog.Log("Finished " + genes.Length + " queries in " + stopwatch.Elapsed.ToString());
         statusDisplay.RemoveStatus(statusid);
-        HUDstatus.text = "Status: ";
-        FarStatus.text = "Status: ";
+        statusDisplayHUD.RemoveStatus(statusidHUD);
+        statusDisplayFar.RemoveStatus(statusidFar);
         Cell cell = null;
         foreach (Cell c in cells.Values)
         {
+            // This is a dumb way of getting a cell.
             cell = c;
             break;
         }
@@ -475,6 +478,7 @@ public class CellManager : MonoBehaviour
     public void DeleteCells()
     {
         cells.Clear();
+        SavedFlashGenesCategories = new string[0];
     }
 
     /// <summary>
@@ -521,7 +525,6 @@ public class CellManager : MonoBehaviour
             cell.ColorByIndex(name);
         }
     }
-
     /// <summary>
     /// Draws lines between all points that share the same label.
     /// </summary>

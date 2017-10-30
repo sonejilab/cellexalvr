@@ -27,6 +27,7 @@ public class SelectionToolHandler : MonoBehaviour
     public int fileCreationCtr = 0;
     public Material graphpointNormal;
     public Material graphpointHighlight;
+    public Color[] Colors;
 
     private SelectionToolMenu selectionToolMenu;
     private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
@@ -34,7 +35,6 @@ public class SelectionToolHandler : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private List<GraphPoint> selectedCells = new List<GraphPoint>();
     private List<GraphPoint> lastSelectedCells = new List<GraphPoint>();
-    private Color[] colors;
     private Color selectedColor;
     private PlanePicker planePicker;
     private bool selectionMade = false;
@@ -58,17 +58,17 @@ public class SelectionToolHandler : MonoBehaviour
         // the graphpoint this affects
         public GraphPoint graphPoint;
         // the color it was given
-        public Color toColor;
+        public int toGroup;
         // the color it had before
-        public Color fromColor;
+        public int fromGroup;
         // true if this graphpoint was previously not in the list of selected graphpoints
         public bool newNode;
 
-        public HistoryListInfo(GraphPoint graphPoint, Color toColor, Color fromColor, bool newNode)
+        public HistoryListInfo(GraphPoint graphPoint, int toGroup, int fromGroup, bool newNode)
         {
             this.graphPoint = graphPoint;
-            this.toColor = toColor;
-            this.fromColor = fromColor;
+            this.toGroup = toGroup;
+            this.fromGroup = fromGroup;
             this.newNode = newNode;
         }
     }
@@ -76,26 +76,26 @@ public class SelectionToolHandler : MonoBehaviour
     void Awake()
     {
         // TODO CELLEXAL: create more colors.
-        colors = new Color[10];
-        colors[0] = new Color(1, 0, 0, .5f);     // red
-        colors[1] = new Color(0, 0, 1, .5f);     // blue
-        colors[2] = new Color(0, 1, 1, .5f);     // cyan
-        colors[3] = new Color(1, 0, 1, .5f);     // magenta
-        colors[4] = new Color(1f, 153f / 255f, 204f / 255f, 0.5f);     // pink
-        colors[5] = new Color(1, 1, 0, .5f);     // yellow
-        colors[6] = new Color(0, 1, 0, .5f);     // green
-        colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
-        colors[8] = new Color(102f / 255f, 51f / 255f, 1, .5f);     // brown
-        colors[9] = new Color(1, 153f / 255f, 51f / 255f, .5f);     // orange
+        Colors = new Color[10];
+        Colors[0] = new Color(1, 0, 0, .5f);     // red
+        Colors[1] = new Color(0, 0, 1, .5f);     // blue
+        Colors[2] = new Color(0, 1, 1, .5f);     // cyan
+        Colors[3] = new Color(1, 0, 1, .5f);     // magenta
+        Colors[4] = new Color(1f, 153f / 255f, 204f / 255f, 0.5f);     // pink
+        Colors[5] = new Color(1, 1, 0, .5f);     // yellow
+        Colors[6] = new Color(0, 1, 0, .5f);     // green
+        Colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
+        Colors[8] = new Color(102f / 255f, 51f / 255f, 1, .5f);     // brown
+        Colors[9] = new Color(1, 153f / 255f, 51f / 255f, .5f);     // orange
         //selectorMaterial.color = colors[0];
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
-        groupInfoDisplay.SetColors(colors);
-        HUDGroupInfoDisplay.SetColors(colors);
-        FarGroupInfoDisplay.SetColors(colors);
+        groupInfoDisplay.SetColors(Colors);
+        HUDGroupInfoDisplay.SetColors(Colors);
+        FarGroupInfoDisplay.SetColors(Colors);
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
-        selectedColor = colors[currentColorIndex];
+        selectedColor = Colors[currentColorIndex];
         SetSelectionToolEnabled(false);
         //UpdateButtonIcons();
     }
@@ -114,14 +114,13 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void AddGraphpointToSelection(GraphPoint graphPoint)
     {
-        Color newColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
-        AddGraphpointToSelection(graphPoint, newColor, true);
+        AddGraphpointToSelection(graphPoint, currentColorIndex, true);
     }
 
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.
     /// </summary>
-    public void AddGraphpointToSelection(GraphPoint graphPoint, Color newColor, bool hapticFeedback)
+    public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
         // print(other.gameObject.name);
         if (graphPoint == null)
@@ -130,10 +129,14 @@ public class SelectionToolHandler : MonoBehaviour
         }
         Renderer renderer = graphPoint.gameObject.GetComponent<Renderer>();
 
-        Color oldColor = renderer.material.color;
-        graphPoint.Outline(newColor);
-        renderer.material.color = newColor;
-        gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, newColor);
+        int oldGroup = graphPoint.CurrentGroup;
+
+        Color oldColor = oldGroup == -1 ? Color.white : Colors[oldGroup];
+        Color newColor = Colors[newGroup];
+        graphPoint.Outline(Colors[newGroup]);
+        graphPoint.CurrentGroup = newGroup;
+        renderer.material.color = Colors[newGroup];
+        gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, Colors[newGroup]);
 
         bool newNode = !selectedCells.Contains(graphPoint);
         if (historyIndexOffset != 0)
@@ -156,16 +159,16 @@ public class SelectionToolHandler : MonoBehaviour
             ButtonEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
-        if (!Equals(newColor, oldColor))
+        if (!Equals(newGroup, oldGroup))
         {
-            selectionHistory.Add(new HistoryListInfo(graphPoint, newColor, oldColor, newNode));
+            selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
             if (hapticFeedback)
                 SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
 
-            groupInfoDisplay.ChangeGroupsInfo(newColor, 1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(newColor, 1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(newColor, 1);
+            groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
             if (newNode)
             {
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
@@ -177,9 +180,9 @@ public class SelectionToolHandler : MonoBehaviour
             }
             else
             {
-                groupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
-                HUDGroupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
-                FarGroupInfoDisplay.ChangeGroupsInfo(oldColor, -1);
+                groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
             }
         }
     }
@@ -224,11 +227,11 @@ public class SelectionToolHandler : MonoBehaviour
             return;
         }
         HistoryListInfo info = selectionHistory[indexToMoveTo];
-        info.graphPoint.GetComponent<Renderer>().material.color = info.fromColor;
-        info.graphPoint.Outline(info.fromColor);
-        groupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
-        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
-        FarGroupInfoDisplay.ChangeGroupsInfo(info.toColor, -1);
+        info.graphPoint.CurrentGroup = info.fromGroup;
+        info.graphPoint.Outline(Colors[info.fromGroup]);
+        groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
+        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
+        FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
@@ -236,10 +239,10 @@ public class SelectionToolHandler : MonoBehaviour
         }
         else
         {
-            groupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, 1);
-            info.graphPoint.Outline(info.fromColor);
+            groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
+            info.graphPoint.Outline(Colors[info.fromGroup]);
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -269,20 +272,20 @@ public class SelectionToolHandler : MonoBehaviour
         }
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
-        info.graphPoint.GetComponent<Renderer>().material.color = info.toColor;
-        info.graphPoint.Outline(info.toColor);
-        groupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
-        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
-        FarGroupInfoDisplay.ChangeGroupsInfo(info.toColor, 1);
+        info.graphPoint.CurrentGroup = info.toGroup;
+        info.graphPoint.Outline(Colors[info.toGroup]);
+        groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
+        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
+        FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         if (info.newNode)
         {
             selectedCells.Add(info.graphPoint);
         }
         else
         {
-            groupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromColor, -1);
+            groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
         }
         historyIndexOffset--;
         selectionMade = false;
@@ -297,7 +300,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void GoBackOneColorInHistory()
     {
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
-        Color color = selectionHistory[indexToMoveTo].toColor;
+        Color color = Colors[selectionHistory[indexToMoveTo].toGroup];
         Color nextColor;
         do
         {
@@ -305,7 +308,7 @@ public class SelectionToolHandler : MonoBehaviour
             indexToMoveTo--;
             if (indexToMoveTo >= 0)
             {
-                nextColor = selectionHistory[indexToMoveTo].toColor;
+                nextColor = Colors[selectionHistory[indexToMoveTo].toGroup];
             }
             else
             {
@@ -320,7 +323,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void GoForwardOneColorInHistory()
     {
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
-        Color color = selectionHistory[indexToMoveTo].toColor;
+        Color color = Colors[selectionHistory[indexToMoveTo].toGroup];
         Color nextColor;
         do
         {
@@ -328,7 +331,7 @@ public class SelectionToolHandler : MonoBehaviour
             indexToMoveTo++;
             if (indexToMoveTo < selectionHistory.Count)
             {
-                nextColor = selectionHistory[indexToMoveTo].toColor;
+                nextColor = Colors[selectionHistory[indexToMoveTo].toGroup];
             }
             else
             {
@@ -457,13 +460,13 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="dir"> The direction to move in the array of colors. true for increment, false for decrement </param>
     public void ChangeColor(bool dir)
     {
-        if (currentColorIndex == colors.Length - 1 && dir)
+        if (currentColorIndex == Colors.Length - 1 && dir)
         {
             currentColorIndex = 0;
         }
         else if (currentColorIndex == 0 && !dir)
         {
-            currentColorIndex = colors.Length - 1;
+            currentColorIndex = Colors.Length - 1;
         }
         else if (dir)
         {
@@ -473,13 +476,13 @@ public class SelectionToolHandler : MonoBehaviour
         {
             currentColorIndex--;
         }
-        int buttonIndexLeft = currentColorIndex == 0 ? colors.Length - 1 : currentColorIndex - 1;
-        int buttonIndexRight = currentColorIndex == colors.Length - 1 ? 0 : currentColorIndex + 1;
+        int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
+        int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIndexLeft];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[buttonIndexRight];
         radialMenu.RegenerateButtons();
-        selectedColor = colors[currentColorIndex];
-        controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
+        selectedColor = Colors[currentColorIndex];
+        controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
     }
 
     public void HeatmapCreated()
@@ -535,7 +538,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (enabled)
         {
-            controllerModelSwitcher.SwitchControllerModelColor(colors[currentColorIndex]);
+            controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
         }
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
@@ -550,7 +553,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public Color GetColor(int index)
     {
-        return colors[index];
+        return Colors[index];
     }
 
 }

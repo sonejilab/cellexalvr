@@ -18,10 +18,10 @@ public class ReferenceManager : MonoBehaviour
     public GameObject FarDisplay;
     public TextMeshProUGUI HUDFlashInfo;
     public TextMeshProUGUI HUDGroupInfo;
-    public TextMeshProUGUI HUDStatus;
+    public StatusDisplay statusDisplayHUD;
     public TextMeshProUGUI FarFlashInfo;
     public TextMeshProUGUI FarGroupInfo;
-    public TextMeshProUGUI FarStatus;
+    public StatusDisplay statusDisplayFar;
     public GameObject headset;
     public BoxCollider controllerMenuCollider;
 

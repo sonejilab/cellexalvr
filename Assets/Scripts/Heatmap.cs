@@ -13,7 +13,7 @@ public class Heatmap : MonoBehaviour
     // TODO CELLEXAL: make a single gene box plot (out of an existing heatmap?)
     public Texture texture;
     public TextMesh infoText;
-    private Dictionary<Cell, Color> containedCells;
+    private Dictionary<Cell, int> containedCells;
     private SteamVR_Controller.Device device;
     private GraphManager graphManager;
     private bool controllerInside = false;
@@ -117,16 +117,16 @@ public class Heatmap : MonoBehaviour
     public void ColorCells()
     {
         // print("color cells");
-        foreach (KeyValuePair<Cell, Color> pair in containedCells)
+        foreach (KeyValuePair<Cell, int> pair in containedCells)
         {
-            pair.Key.SetColor(pair.Value);
+            pair.Key.SetGroup(referenceManager.selectionToolHandler.Colors[pair.Value], pair.Value);
         }
     }
 
     /// <summary>
     /// Sets some variables. Should be called after a heatmap is instantiated.
     /// </summary>
-    public void SetVars(Dictionary<Cell, Color> colors)
+    public void SetVars(Dictionary<Cell, int> colors)
     {
         // containedCells = new Dictionary<Cell, Color>();
         containedCells = colors;

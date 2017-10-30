@@ -14,7 +14,7 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
     private bool controllerInside = false;
     private string graphName;
     private string[] selectionCellNames;
-    private Color[] selectionColors;
+    private int[] selectionGroups;
 
     void Awake()
     {
@@ -32,16 +32,16 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionColors);
+            referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionGroups);
         }
     }
 
-    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, Color[] selectionColors)
+    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, int[] selectionColors)
     {
         description.text = selectionName;
         this.graphName = graphName;
         this.selectionCellNames = selectionCellNames;
-        this.selectionColors = selectionColors;
+        this.selectionGroups = selectionColors;
     }
 
     void OnTriggerEnter(Collider other)

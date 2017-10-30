@@ -9,6 +9,8 @@ public class GraphPoint : MonoBehaviour
     public Shader normalShader;
     public Shader outlineShader;
 
+    public int CurrentGroup { get; set; }
+
     private Cell cell;
     private float x, y, z;
     private MeshRenderer graphPointRenderer;
@@ -42,6 +44,7 @@ public class GraphPoint : MonoBehaviour
     public void Start()
     {
         graphPointRenderer = GetComponent<MeshRenderer>();
+        CurrentGroup = -1;
     }
 
     /// <summary>
@@ -91,6 +94,7 @@ public class GraphPoint : MonoBehaviour
     /// </summary>
     public void ResetColor()
     {
+        CurrentGroup = -1;
         graphPointRenderer.material = Resources.Load("SphereDefault", typeof(Material)) as Material;
     }
 
@@ -100,7 +104,7 @@ public class GraphPoint : MonoBehaviour
     /// <param name="col"> The color that should be used when outlining, any color with 0 alpha to remove the outline. <param>
     public void Outline(Color col)
     {
-        if (col.a !=  0)
+        if (col.a != 0)
         {
             graphPointRenderer.material.shader = outlineShader;
             // Set the outline color to a lighter version of the new color

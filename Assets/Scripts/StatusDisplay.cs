@@ -13,10 +13,11 @@ public class StatusDisplay : MonoBehaviour
 
     private Dictionary<int, TextMesh> statuses = new Dictionary<int, TextMesh>();
     private List<Transform> statusPositions = new List<Transform>();
-    private Vector3 startSpawnPos = new Vector3(.055f, -.015f, -.001f);
-    private Vector3 nextSpawnPos = new Vector3(.055f, -.015f, -.001f);
-    private Vector3 dnextSpawnPos = new Vector3(0f, .007f, 0f);
-    private Vector3 newStatusScale = new Vector3(.00025f, .00025f, .00025f);
+    public Vector3 startSpawnPos = new Vector3(.055f, -.015f, -.001f);
+    public Vector3 nextSpawnPos = new Vector3(.055f, -.015f, -.001f);
+    public Vector3 dnextSpawnPos = new Vector3(0f, .007f, 0f);
+    public Vector3 newStatusScale = new Vector3(.00025f, .00025f, .00025f);
+    public Quaternion rotation;
     private bool active = false;
     private int statusId = 0;
 
@@ -56,7 +57,7 @@ public class StatusDisplay : MonoBehaviour
         var newStatus = Instantiate(statusPrefab);
         newStatus.transform.parent = transform;
         newStatus.transform.localPosition = nextSpawnPos;
-        newStatus.transform.localRotation = Quaternion.Euler(0f, 0f, 180f);
+        newStatus.transform.localRotation = rotation;
         newStatus.transform.localScale = newStatusScale;
         newStatus.GetComponent<Renderer>().enabled = active;
         nextSpawnPos += dnextSpawnPos;
@@ -105,7 +106,6 @@ public class StatusDisplay : MonoBehaviour
     {
         StartCoroutine(ShowStatusForTimeCoroutine(text, time, color));
     }
-
 
     /// <summary>
     /// Shows a status for a time, then removes it.

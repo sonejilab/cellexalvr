@@ -29,7 +29,7 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        points = new Dictionary<string, GraphPoint>(1000);
+        points = new Dictionary<string, GraphPoint>(1024);
         defaultPos = transform.position;
         pointsPositions = new List<Vector3>();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
