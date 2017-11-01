@@ -6,6 +6,7 @@
 /Assets/AssetStoreTools*
 /Config/
 /Data/
+/html/
 /Images/
 /Resources/
 /Screenshots/
@@ -39,3 +40,6 @@ sysinfo.txt
 *.exe
 *.apk
 *.unitypackage
+
+Doxyfile
+Documentation.xml

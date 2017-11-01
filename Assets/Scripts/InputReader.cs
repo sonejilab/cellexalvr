@@ -826,7 +826,8 @@ public class InputReader : MonoBehaviour
 
                 words = line.Split(null);
                 cellNames[i][j] = words[0];
-                groups[i][j] = int.Parse(words[1]);
+                // TODO CELLEXAL: fix the save groupings data to write the grouping number and not the color
+                // groups[i][j] = int.Parse(words[1]);
             }
             graphNames[i] = words[2];
             streamReader.Close();

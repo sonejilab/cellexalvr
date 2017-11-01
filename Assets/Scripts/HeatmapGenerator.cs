@@ -90,10 +90,10 @@ public class HeatmapGenerator : MonoBehaviour
                 colors[g.Cell] = g.CurrentGroup;
             }
 
-            // Check if more than one color is selected
+            // Check if more than one cell is selected
             if (selection.Count < 1)
             {
-                CellExAlLog.Log("can not create heatmap with less than 2 graphpoints, aborting");
+                CellExAlLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
                 yield break;
             }
             //Color c1 = ((GraphPoint)selection[0]).GetComponent<Renderer>().material.color;

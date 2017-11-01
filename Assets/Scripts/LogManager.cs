@@ -127,7 +127,6 @@ public static class CellExAlLog
     /// <summary>
     /// Closes the old log and opens a new log.
     /// </summary>
-    /// <param name="newUsername"> The new username. </param>
     public static void UsernameChanged()
     {
         if (logWriter != null)

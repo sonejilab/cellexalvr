@@ -509,20 +509,20 @@ public class SelectionToolHandler : MonoBehaviour
             CellExAlLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
             if (selectionHistory != null)
                 CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
-
             foreach (GraphPoint gp in selectedCells)
             {
-
                 file.Write(gp.Label);
                 file.Write("\t");
-                Color c = gp.GetComponentInChildren<Renderer>().material.color;
+                Color c = gp.Color;
                 int r = (int)(c.r * 255);
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);
                 // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
-                file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                file.Write(string.Format("#{0:X2}{1:X2}{2:X2}\t", r, g, b));
                 file.Write("\t");
                 file.Write(gp.GraphName);
+                file.Write("\t");
+                file.Write(gp.CurrentGroup);
                 file.WriteLine();
             }
             file.Flush();
