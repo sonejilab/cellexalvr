@@ -35,9 +35,10 @@ public class MenuWithTabs : MonoBehaviour
         tabs.Add(newTab);
         if (!menuToggler)
             menuToggler = referenceManager.menuToggler;
+        // hide the tab buttons if the tab is hidden
         foreach (Transform child in newTab.GetComponentsInChildren<Transform>())
         {
-            menuToggler.AddGameObjectToActivate(child.gameObject);
+            menuToggler.AddGameObjectToActivate(child.gameObject, gameObject);
         }
         return newTab;
     }

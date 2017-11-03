@@ -8,18 +8,29 @@ using UnityEngine;
 /// </summary>
 public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
     public GameObject buttonPrefab;
 
+    private MenuToggler menuToggler;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
     private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
     private List<GameObject> buttons = new List<GameObject>();
 
+
+    private void Start()
+    {
+        menuToggler = referenceManager.menuToggler;
+    }
+
     /// <summary>
-    /// Creates new buttons for toggling arcs.
+    /// Creates the buttons for selecting a previous selection. Used when the selections are read from files.
     /// </summary>
-    /// <param name="networks"> An array of strings that contain the names of the networks. </param>
+    /// <param name="graphNames"> An array with the names of the graphs. </param>
+    /// <param name="names"> An array with the names of the selections. </param>
+    /// <param name="selectionCellNames"> An array of arrays with the names of the cells in each selection. </param>
+    /// <param name="selectionGroups"> An array of arrays with the groups that each cell in each selection belong to. </param>
     public void CreateSelectionFromPreviousSelectionButtons(string[] graphNames, string[] names, string[][] selectionCellNames, int[][] selectionGroups)
     {
 
@@ -35,6 +46,8 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
 
             var buttonGameObject = Instantiate(buttonPrefab, transform);
             buttonGameObject.SetActive(true);
+            menuToggler.AddGameObjectToActivate(buttonGameObject, gameObject);
+            menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
             buttonGameObject.transform.localPosition = buttonPos;
 
             var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();
@@ -54,6 +67,10 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds one more button to the menu. Used when a new selection is made, after the buttons created from the information in the files have been created.
+    /// </summary>
+    /// <param name="selectedCells"></param>
     internal void CreateButton(List<GraphPoint> selectedCells)
     {
         string[] cellnames = new string[selectedCells.Count];
@@ -71,6 +88,8 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
 
         var buttonGameObject = Instantiate(buttonPrefab, transform);
         buttonGameObject.SetActive(true);
+        menuToggler.AddGameObjectToActivate(buttonGameObject, gameObject);
+        menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
         buttonGameObject.transform.localPosition = buttonPos;
 
         var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();

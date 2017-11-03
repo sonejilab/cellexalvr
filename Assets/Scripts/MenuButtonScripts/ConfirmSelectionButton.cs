@@ -5,6 +5,7 @@ public class ConfirmSelectionButton : StationaryButton
 {
 
     private SelectionToolHandler selectionToolHandler;
+    private ControllerModelSwitcher controllerModelSwitcher;
 
     protected override string Description
     {
@@ -15,6 +16,7 @@ public class ConfirmSelectionButton : StationaryButton
     {
 
         selectionToolHandler = referenceManager.selectionToolHandler;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
         ButtonEvents.SelectionStarted.AddListener(TurnOn);
         ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
@@ -30,6 +32,7 @@ public class ConfirmSelectionButton : StationaryButton
             selectionToolHandler.SetSelectionToolEnabled(false);
             selectionToolHandler.ConfirmSelection();
             referenceManager.gameManager.InformConfirmSelection();
+            controllerModelSwitcher.TurnOffActiveTool(true);
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             //ctrlMdlSwitcher.TurnOffActiveTool();
         }

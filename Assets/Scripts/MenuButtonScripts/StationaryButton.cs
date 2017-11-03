@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+//TODO CELLEXAL: Make all buttons same scale/size.
+
 /// <summary>
 /// Abstract class for all buttons that do not rotate when pressed.
 /// </summary>
@@ -22,6 +24,7 @@ public abstract class StationaryButton : MonoBehaviour
     }
     protected SteamVR_TrackedObject rightController;
     protected SteamVR_Controller.Device device;
+    [HideInInspector]
     public bool buttonActivated = true;
     protected bool controllerInside = false;
     public SpriteRenderer spriteRenderer;

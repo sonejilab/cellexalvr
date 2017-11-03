@@ -21,8 +21,16 @@ public class CloseMenuButton : StationaryButton
         {
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
-            menuToClose.SetActive(false);
-            buttonsToActivate.SetActive(true);
+
+            foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+            foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
+                c.enabled = false;
+
+            foreach (StationaryButton b in buttonsToActivate.GetComponentsInChildren<StationaryButton>())
+            {
+                b.SetButtonActivated(true);
+            }
         }
     }
 }

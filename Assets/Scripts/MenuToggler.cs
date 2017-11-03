@@ -18,7 +18,6 @@ public class MenuToggler : MonoBehaviour
     private SteamVR_TrackedObject leftController;
     private ControllerModelSwitcher controllerModelSwitcher;
 
-
     private void Start()
     {
         menu = referenceManager.mainMenu;
@@ -41,6 +40,53 @@ public class MenuToggler : MonoBehaviour
             SetMenuVisible(MenuActive);
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
+        }
+    }
+
+    /// <summary>
+    /// Adds a gameobject to the list of gameobjects to show when the menu is turned back on. 
+    /// The gameobject will only be hidden if the whole menu is hidden or if the submenu it is attached to is hidden.
+    /// This should be used when adding a gameobject to a submenu.
+    /// </summary>
+    /// <param name="item"> The gameobject turn back on later. </param>
+    /// <param name="subMenu"> The menu this gameobject is part of. </param>
+    public void AddGameObjectToActivate(GameObject item, GameObject subMenu)
+    {
+        Renderer submenuRenderer = subMenu.GetComponent<Renderer>();
+        // if the menu is not shown now but the submenu was shown when the menu was hidden
+        if (!MenuActive)
+        {
+            bool submenuActive = renderers.ContainsKey(submenuRenderer) && renderers[submenuRenderer];
+            Renderer r = item.GetComponent<Renderer>();
+            if (r)
+            {
+                renderers[r] = submenuActive;
+                r.enabled = false;
+            }
+
+            Collider c = item.GetComponent<Collider>();
+            if (c)
+            {
+                colliders[c] = submenuActive;
+                c.enabled = false;
+            }
+        }
+        // if the menu is active but the submenu is not, then we should not show the new gameobject when the menu is turned back on.
+        else if (MenuActive && !subMenu.GetComponent<Renderer>().enabled)
+        {
+            Renderer r = item.GetComponent<Renderer>();
+            if (r)
+            {
+                renderers[r] = false;
+                r.enabled = false;
+            }
+
+            Collider c = item.GetComponent<Collider>();
+            if (c)
+            {
+                colliders[c] = false;
+                c.enabled = false;
+            }
         }
     }
 
@@ -115,5 +161,4 @@ public class MenuToggler : MonoBehaviour
             }
         }
     }
-
 }

@@ -253,6 +253,8 @@ public class InputReader : MonoBehaviour
                     cellManager.AddAttribute(cellname, attributeTypes[j], words[j]);
                 }
             }
+            metacellStreamReader.Close();
+            metacellFileStream.Close();
             attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
         }
 

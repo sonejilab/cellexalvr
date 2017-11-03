@@ -10,6 +10,8 @@ public class AttributeSubMenu : MonoBehaviour
     public ReferenceManager referenceManager;
 
     public ColorByAttributeButton buttonPrefab;
+
+    private MenuToggler menuToggler;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
     private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
@@ -47,6 +49,11 @@ public class AttributeSubMenu : MonoBehaviour
 
     }
 
+    private void Awake()
+    {
+        menuToggler = referenceManager.menuToggler;
+    }
+
     /// <summary>
     /// Creates new buttons for coloring by attributes.
     /// </summary>
@@ -70,6 +77,13 @@ public class AttributeSubMenu : MonoBehaviour
             string attribute = attributes[i];
             ColorByAttributeButton newButton = Instantiate(buttonPrefab, transform);
             newButton.gameObject.SetActive(true);
+            if (!menuToggler)
+            {
+                menuToggler = referenceManager.menuToggler;
+            }
+            menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
+            if (newButton.transform.childCount > 0)
+                menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
             newButton.referenceManager = referenceManager;
             newButton.transform.localPosition = buttonPos;
             newButton.SetAttribute(attribute, colors[i]);

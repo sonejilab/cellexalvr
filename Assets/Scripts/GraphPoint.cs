@@ -95,16 +95,17 @@ public class GraphPoint : MonoBehaviour
     public void ResetColor()
     {
         CurrentGroup = -1;
+        Outline(Color.clear);
         graphPointRenderer.material = Resources.Load("SphereDefault", typeof(Material)) as Material;
     }
 
     /// <summary>
     /// Sets the outline of the graphpoint.
     /// </summary>
-    /// <param name="col"> The color that should be used when outlining, any color with 0 alpha to remove the outline. <param>
+    /// <param name="col"> The color that should be used when outlining, any color with 0 alpha will remove the outline. <param>
     public void Outline(Color col)
     {
-        if (col.a != 0)
+        if (col.a != 0f)
         {
             graphPointRenderer.material.shader = outlineShader;
             // Set the outline color to a lighter version of the new color

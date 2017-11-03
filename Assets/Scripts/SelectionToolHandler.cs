@@ -445,7 +445,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         foreach (GraphPoint other in selectedCells)
         {
-            other.GetComponentInChildren<Renderer>().material.color = Color.white;
+            other.ResetColor();
         }
         ButtonEvents.SelectionCanceled.Invoke();
         historyIndexOffset = selectionHistory.Count;

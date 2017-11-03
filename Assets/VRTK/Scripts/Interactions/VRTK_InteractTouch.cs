@@ -199,7 +199,7 @@ namespace VRTK
             destroyColliderOnDisable = false;
             var controllerHand = VRTK_DeviceFinder.GetControllerHand(gameObject);
             defaultColliderPrefab = Resources.Load(VRTK_SDK_Bridge.GetControllerDefaultColliderPath(controllerHand));
-            print(VRTK_SDK_Bridge.GetControllerDefaultColliderPath(controllerHand));
+            // print(VRTK_SDK_Bridge.GetControllerDefaultColliderPath(controllerHand));
         }
 
         protected virtual void OnEnable()

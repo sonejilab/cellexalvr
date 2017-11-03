@@ -8,9 +8,6 @@ using UnityEngine;
 public class SelectionToolButton : StationaryButton
 {
 
-    public Sprite gray;
-    public Sprite original;
-
     private SelectionToolHandler selectionToolHandler;
     private MenuRotator rotator;
     private SelectionToolMenu selectionToolMenu;
@@ -42,14 +39,12 @@ public class SelectionToolButton : StationaryButton
 
             if (controllerModelSwitcher.DesiredModel != ControllerModelSwitcher.Model.SelectionTool)
             {
-                standardTexture = gray;
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.SelectionTool;
                 controllerModelSwitcher.ActivateDesiredTool();
             }
             else
             {
                 controllerModelSwitcher.TurnOffActiveTool(true);
-                standardTexture = original;
             }
             if (menuActive && rotator.SideFacingPlayer == MenuRotator.Rotation.Front)
             {

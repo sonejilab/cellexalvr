@@ -24,39 +24,33 @@ public class RScriptRunner
         string result = string.Empty;
         try
         {
-            string workingDirectory = Directory.GetCurrentDirectory();
-            using (StreamReader r = new StreamReader(workingDirectory + "\\Config\\config.txt"))
+            string rPath = CellExAlConfig.RScriptexePath;
+
+            var info = new ProcessStartInfo();
+            info.FileName = rPath;
+            info.WorkingDirectory = Path.GetDirectoryName(rPath);
+            info.Arguments = rCodeFilePath + " " + args;
+            info.RedirectStandardInput = false;
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
+            info.UseShellExecute = false;
+            info.CreateNoWindow = true;
+
+            using (var proc = new Process())
             {
-                string rawInput = r.ReadToEnd();
-                string[] input = rawInput.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-                string rPath = input[0];
-                //r.Close();
-
-                var info = new ProcessStartInfo();
-                info.FileName = rPath;
-                info.WorkingDirectory = Path.GetDirectoryName(rPath);
-                info.Arguments = rCodeFilePath + " " + args;
-                info.RedirectStandardInput = false;
-                info.RedirectStandardOutput = true;
-                info.RedirectStandardError = true;
-                info.UseShellExecute = false;
-                info.CreateNoWindow = true;
-
-                using (var proc = new Process())
-                {
-                    proc.StartInfo = info;
-                    proc.Start();
-                    result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
-                }
-                using (StreamWriter writetofile =
-                      new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt"))
-                {
-                    writetofile.WriteLine(result);
-                    writetofile.Flush();
-                    writetofile.Close();
-                }
-                return result;
+                proc.StartInfo = info;
+                proc.Start();
+                result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
             }
+            using (StreamWriter writetofile =
+                  new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt"))
+            {
+                writetofile.WriteLine(result);
+                writetofile.Flush();
+                writetofile.Close();
+            }
+            return result;
+
 
         }
         catch (Exception ex)

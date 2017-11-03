@@ -7,13 +7,21 @@ using UnityEngine;
 /// </summary>
 public class ColorByIndexMenu : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
 
     public GameObject buttonPrefab;
+
+    private MenuToggler menuToggler;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
     private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
     private List<GameObject> buttons = new List<GameObject>();
+
+    private void Start()
+    {
+        menuToggler = referenceManager.menuToggler;
+    }
 
     /// <summary>
     /// Creates new buttons for toggling arcs.
@@ -35,6 +43,13 @@ public class ColorByIndexMenu : MonoBehaviour
             var colorByIndexButtonList = newButton.GetComponentsInChildren<ColorByIndexButton>();
             newButton.transform.localPosition = buttonPos;
             newButton.gameObject.SetActive(true);
+            if (!menuToggler)
+            {
+                menuToggler = referenceManager.menuToggler;
+            }
+            menuToggler.AddGameObjectToActivate(newButton, gameObject);
+            if (newButton.transform.childCount > 0)
+                menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
             foreach (var toggleArcButton in colorByIndexButtonList)
             {
                 toggleArcButton.SetIndex(name);
