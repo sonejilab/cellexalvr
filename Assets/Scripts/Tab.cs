@@ -21,9 +21,29 @@ public class Tab : MonoBehaviour
                 // We don't want to change the state of the tab buttons, they should always be turned on. 
                 if (ReferenceEquals(child.gameObject.GetComponent<TabButton>(), null))
                 {
-                    child.gameObject.SetActive(active);
+                    ToggleGameObject(child.gameObject, active);
+                    // Toggle all children to the child as well.
+                    foreach (Transform t in child.GetComponentsInChildren<Transform>())
+                    {
+                        ToggleGameObject(t.gameObject, active);
+                    }
                 }
             }
+        }
+    }
+
+    private void ToggleGameObject(GameObject obj, bool active)
+    {
+        Renderer r = obj.GetComponent<Renderer>();
+        if (r)
+        {
+            r.enabled = active;
+        }
+
+        Collider c = obj.GetComponent<Collider>();
+        if (c)
+        {
+            c.enabled = active;
         }
     }
 

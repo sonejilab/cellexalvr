@@ -47,10 +47,10 @@ public class FlashGenesMenu : MenuWithTabs
             newTab.CreateCategoryButtons(categories);
         }
         TurnOffAllTabs();
-        if (tabs.Count > 0)
+        /*if (tabs.Count > 0)
         {
             tabs[tabs.Count - 1].SetTabActive(true);
-        }
+        }*/
     }
 
     private void ShowLoadingText()

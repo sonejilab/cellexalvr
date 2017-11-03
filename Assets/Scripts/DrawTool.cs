@@ -61,7 +61,7 @@ public class DrawTool : MonoBehaviour
 
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            // this happens only once when you press the trigger
+            // this happens only once when the trigger is pressed
             if (skipNextDraw)
             {
                 skipNextDraw = false;
@@ -158,6 +158,32 @@ public class DrawTool : MonoBehaviour
     }
 
     /// <summary>
+    /// Clears all lines with a specified color.
+    /// </summary>
+    /// <param name="col"> The color of the lines that should be removed. </param>
+    public void ClearAllLinesWithColor(Color col)
+    {
+        for (int i = 0; i < lines.Count; ++i)
+        {
+            LineRenderer line = lines[i];
+            if (line.startColor.Equals(col))
+            {
+                Destroy(line.gameObject, 0.1f);
+                lines.RemoveAt(i);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Removes the last drawn line.
+    /// </summary>
+    public void ClearLastLine()
+    {
+        Destroy(lines[lines.Count - 1].gameObject, 0.1f);
+        lines.RemoveAt(lines.Count - 1);
+    }
+
+    /// <summary>
     /// Removes all lines that have been drawn.
     /// </summary>
     public void ClearAllLines()
@@ -193,7 +219,7 @@ public class DrawTool : MonoBehaviour
     /// </summary>
     /// <param name="col"> The line's color. </param>
     /// <param name="positions"> An array containing the world space positions that the line should pass through. </param>
-    /// <returns> The new line. </returns
+    /// <returns> The new line. </returns>
     private LineRenderer SpawnNewLine(Color col, Vector3[] positions)
     {
         var newLine = Instantiate(linePrefab).GetComponent<LineRenderer>();
