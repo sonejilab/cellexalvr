@@ -30,7 +30,7 @@ public class DrawTool : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         var device = SteamVR_Controller.Input((int)rightController.index);
 
@@ -70,10 +70,11 @@ public class DrawTool : MonoBehaviour
             {
                 // if the trigger was pressed we need to make sure that the controller is not inside a button.
                 drawing = true;
-                var colliders = Physics.OverlapBox(controllerMenuCollider.center, controllerMenuCollider.bounds.extents, controllerMenuCollider.gameObject.transform.rotation);
+                var colliders = Physics.OverlapBox(controllerMenuCollider.transform.position, controllerMenuCollider.bounds.extents, controllerMenuCollider.gameObject.transform.rotation);
+
                 foreach (Collider collider in colliders)
                 {
-                    if (collider.gameObject.GetComponent<StationaryButton>() || collider.gameObject.GetComponent<RotatableButton>())
+                    if (collider.gameObject.GetComponent<StationaryButton>() || collider.gameObject.GetComponent<RotatableButton>() || collider.gameObject.GetComponent<SolidButton>())
                     {
                         drawing = false;
                         break;
@@ -166,12 +167,32 @@ public class DrawTool : MonoBehaviour
         for (int i = 0; i < lines.Count; ++i)
         {
             LineRenderer line = lines[i];
-            if (line.startColor.Equals(col))
+            if (CompareColors(line.startColor, col))
             {
                 Destroy(line.gameObject, 0.1f);
                 lines.RemoveAt(i);
+                i--;
             }
         }
+    }
+
+    /// <summary>
+    /// Checks if two colors are almost the same.
+    /// Unity likes changing the color float values of colors slightly it seems, probably because they are represented as [0, 255] somewhere and [0, 1] somewhere else.
+    /// This method returns true if the red green and blue components of two colors are within 0.01 of eachother.
+    /// </summary>
+    /// <param name="col1"> The first color. </param>
+    /// <param name="col2"> The second color. </param>
+    /// <returns> True if the colors are almost the same, false otherwise. </returns>
+    public bool CompareColors(Color col1, Color col2)
+    {
+        float diffr = col1.r - col2.r;
+        float diffg = col1.g - col2.g;
+        float diffb = col1.b - col2.b;
+        bool rCloseEnough = diffr < 0.01f && diffr > -0.01f;
+        bool gCloseEnough = diffg < 0.01f && diffg > -0.01f;
+        bool bCloseEnough = diffb < 0.01f && diffb > -0.01f;
+        return rCloseEnough && gCloseEnough && bCloseEnough;
     }
 
     /// <summary>

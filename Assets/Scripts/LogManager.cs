@@ -96,8 +96,8 @@ public static class CellExAlLog
     public static string FixFilePath(string path)
     {
         char directorySeparatorChar = Path.DirectorySeparatorChar;
-        path.Replace('/', directorySeparatorChar);
-        path.Replace('\\', directorySeparatorChar);
+        path = path.Replace('/', directorySeparatorChar);
+        path = path.Replace('\\', directorySeparatorChar);
         return path;
     }
 

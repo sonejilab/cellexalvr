@@ -18,7 +18,7 @@ public class ConfigManager : MonoBehaviour
     private void Start()
     {
         string workingDir = Directory.GetCurrentDirectory();
-        string configPath = workingDir + @"Config\config.txt";
+        string configPath = workingDir + @"\Config\config.txt";
 
         // make sure the folder and the file exists.
         if (!Directory.Exists("Config"))
