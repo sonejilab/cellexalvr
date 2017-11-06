@@ -17,14 +17,17 @@ public class ClearAllDrawnLinesWithAColor : StationaryButton
     {
         buttonRenderer.color = color;
         Color oldColor = buttonRenderer.color;
-        tintedColor = new Color(oldColor.r - oldColor.r / 2f, oldColor.g - oldColor.g / 2f, oldColor.b - oldColor.b / 2f);
+        float newr = oldColor.r - oldColor.r / 2f;
+        float newg = oldColor.g - oldColor.g / 2f;
+        float newb = oldColor.b - oldColor.b / 2f;
+        tintedColor = new Color(newr, newg, newb);
     }
 
     private void Start()
     {
         drawTool = referenceManager.drawTool;
         buttonRenderer = GetComponent<SpriteRenderer>();
-        buttonRenderer.color = color;
+        OnValidate();
     }
 
     private void Update()

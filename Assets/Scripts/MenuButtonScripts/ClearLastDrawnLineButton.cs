@@ -4,7 +4,7 @@ public class ClearLastDrawnLineButton : StationaryButton
 {
     protected override string Description
     {
-        get { return "Change the color of the draw tool"; }
+        get { return "Clear the last drawn line"; }
     }
 
 
