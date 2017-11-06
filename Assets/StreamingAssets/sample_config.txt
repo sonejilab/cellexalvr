@@ -1,0 +1,14 @@
+# This is a config file for Cellexal
+# Its purpose is to contain values that can be changed by a user
+# Comments can be written anywhere by starting a line with '#'
+
+# The filepath to Rscript.exe
+RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
+
+# The number of lines that will be read from the .mds files when loading graphs
+# A higher number can make faster loading but potentially create a loss of frames when loading
+GraphLoadingCellsPerFrameStartCount = 200
+
+# The number of lines that GraphLoadingCellsPerFrameStartCount will be incremented by if there was additional time left after the last frame or decremented by if there was not enough time left last frame
+# A higher number can make GraphLoadingCellsPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
+GraphLoadingCellsPerFrameIncrement = 25

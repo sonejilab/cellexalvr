@@ -158,7 +158,7 @@ public static class CellExAlLog
 public class LogManager : MonoBehaviour
 {
 
-    private void Start()
+    private void Awake()
     {
         //CellExAlLog.InitNewLog();
         CellExAlUser.UsernameChanged.AddListener(CellExAlLog.UsernameChanged);

@@ -24,7 +24,7 @@ public class RScriptRunner
         string result = string.Empty;
         try
         {
-            string rPath = CellExAlConfig.RScriptexePath;
+            string rPath = CellExAlConfig.RscriptexePath;
 
             var info = new ProcessStartInfo();
             info.FileName = rPath;

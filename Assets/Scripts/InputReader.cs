@@ -130,7 +130,7 @@ public class InputReader : MonoBehaviour
         ///  ...
 
         float maximumDeltaTime = 0.05f; // 20 fps
-        int maximumItemsPerFrame = 200;
+        int maximumItemsPerFrame = CellExAlConfig.GraphLoadingCellsPerFrameStartCount;
         int itemsThisFrame = 0;
         int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
@@ -193,12 +193,12 @@ public class InputReader : MonoBehaviour
                 if (lastFrame < maximumDeltaTime)
                 {
                     // we had some time over last frame
-                    maximumItemsPerFrame += 25;
+                    maximumItemsPerFrame += CellExAlConfig.GraphLoadingCellsPerFrameIncrement;
                 }
                 else if (lastFrame > maximumDeltaTime)
                 {
                     // we took too much time last frame
-                    maximumItemsPerFrame -= 25;
+                    maximumItemsPerFrame -= CellExAlConfig.GraphLoadingCellsPerFrameIncrement;
                 }
             }
             fileIndex++;
