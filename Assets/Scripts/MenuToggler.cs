@@ -72,7 +72,7 @@ public class MenuToggler : MonoBehaviour
             }
         }
         // if the menu is active but the submenu is not, then we should not show the new gameobject when the menu is turned back on.
-        else if (MenuActive && !subMenu.GetComponent<Renderer>().enabled)
+        else if (MenuActive && subMenu.GetComponent<Renderer>() && !subMenu.GetComponent<Renderer>().enabled)
         {
             Renderer r = item.GetComponent<Renderer>();
             if (r)
@@ -125,11 +125,17 @@ public class MenuToggler : MonoBehaviour
             // set everything back the way it was
             foreach (KeyValuePair<Renderer, bool> pair in renderers)
             {
-                pair.Key.enabled = pair.Value;
+                if (pair.Key)
+                {
+                    pair.Key.enabled = pair.Value;
+                }
             }
             foreach (KeyValuePair<Collider, bool> pair in colliders)
             {
-                pair.Key.enabled = pair.Value;
+                if (pair.Key)
+                {
+                    pair.Key.enabled = pair.Value;
+                }
             }
         }
         else

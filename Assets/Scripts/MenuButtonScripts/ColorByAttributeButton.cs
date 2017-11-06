@@ -11,6 +11,12 @@ public class ColorByAttributeButton : SolidButton
     private string attribute;
     private bool colored = false;
 
+    protected override void Start()
+    {
+        base.Start();
+        cellManager = referenceManager.cellManager;
+    }
+
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);

@@ -10,6 +10,12 @@ public class ColorByIndexButton : SolidButton
     private CellManager cellManager;
     private string indexName;
 
+    protected override void Start()
+    {
+        base.Start();
+        cellManager = referenceManager.cellManager;
+    }
+
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
