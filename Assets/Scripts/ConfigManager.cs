@@ -164,7 +164,10 @@ public class ConfigManager : MonoBehaviour
                     List<Color> selectionColors = new List<Color>();
                     while (true)
                     {
-                        selectionColors.Add(ReadColor(value, lineNbr));
+                        Color newColor = ReadColor(value, lineNbr);
+                        newColor.a = 0.5f;
+                        selectionColors.Add(newColor);
+
                         if (!value.Contains("}"))
                         {
                             if (streamReader.EndOfStream)
