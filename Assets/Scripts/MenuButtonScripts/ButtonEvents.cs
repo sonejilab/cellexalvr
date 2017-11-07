@@ -1,10 +1,9 @@
 ﻿using UnityEngine.Events;
 
 /// <summary>
-/// This class contains the events that buttons can subscribe to to now when they should turn on or off.
-/// Other classes can invoke these events to turn the relevant buttons on or off.
+/// This class contains the events that scripts can subscribe to to.
 /// </summary>
-public static class ButtonEvents
+public static class CellExAlEvents
 {
     public static UnityEvent GraphsLoaded = new UnityEvent();
     public static UnityEvent GraphsUnloaded = new UnityEvent();
@@ -29,5 +28,9 @@ public static class ButtonEvents
 
     public static UnityEvent FlashGenesFileStartedLoading = new UnityEvent();
     public static UnityEvent FlashGenesFileFinishedLoading = new UnityEvent();
+
+    public static UnityEvent SelectionToolColorsChanged = new UnityEvent();
+
+    public static UnityEvent GeneExpressionColorsChanged = new UnityEvent();
     //public static UnityEvent FlashGenesCategoryToggled
 }

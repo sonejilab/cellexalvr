@@ -4,7 +4,7 @@ selectionfile <- args[1]
 userfolder <- args[2]
 datafolder <- args[3]
 
-library( cellexalvr )
+library( cellexalvrR )
 #print("started")
 if ( file.exists( file.path( userfolder, 'cellexalObj.RData' )) ){
 	load(  file.path( userfolder, 'cellexalObj.RData' ))

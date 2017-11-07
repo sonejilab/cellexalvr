@@ -19,8 +19,8 @@
         rotator = referenceManager.menuRotator;
         gameManager = referenceManager.gameManager;
         SetButtonActivated(false);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -31,7 +31,7 @@
             SetButtonActivated(false);
             networkGenerator.GenerateNetworks();
             gameManager.InformGenerateNetworks();
-            ButtonEvents.NetworkCreated.Invoke();
+            CellExAlEvents.NetworkCreated.Invoke();
             //if (rotator.gameObject.activeSelf && rotator.SideFacingPlayer == MenuRotator.Rotation.Right)
             //{
             //    rotator.RotateLeft();

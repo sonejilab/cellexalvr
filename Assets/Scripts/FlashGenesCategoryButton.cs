@@ -16,8 +16,8 @@ public class FlashGenesCategoryButton : SolidButton
     {
         base.Start();
         cellManager = referenceManager.cellManager;
-        ButtonEvents.FlashGenesFileStartedLoading.AddListener(DeactivateButton);
-        ButtonEvents.FlashGenesFileFinishedLoading.AddListener(ResetButton);
+        CellExAlEvents.FlashGenesFileStartedLoading.AddListener(DeactivateButton);
+        CellExAlEvents.FlashGenesFileFinishedLoading.AddListener(ResetButton);
         CategoryActivated = true;
         textRenderer.GetComponent<Renderer>().material.color = Color.green;
     }

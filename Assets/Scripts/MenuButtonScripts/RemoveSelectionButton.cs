@@ -15,10 +15,10 @@ public class RemoveSelectionButton : StationaryButton
         
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
-        ButtonEvents.SelectionStarted.AddListener(TurnOn);
-        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
+        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

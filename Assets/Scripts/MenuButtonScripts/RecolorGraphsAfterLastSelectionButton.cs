@@ -16,8 +16,8 @@ class RecolorGraphsAfterLastSelectionButton : StationaryButton
         selectionToolHandler = referenceManager.selectionToolHandler;
         graphManager = referenceManager.graphManager;
         SetButtonActivated(false);
-        ButtonEvents.SelectionStarted.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

@@ -13,7 +13,7 @@ public class Cell
     private string labelString;
     private Dictionary<string, string> attributes;
     private Dictionary<string, int> facs;
-    private List<Material> materialList;
+    private Material[] materialList;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
     public int ExpressionLevel { get; internal set; }
@@ -30,7 +30,7 @@ public class Cell
     /// </summary>
     /// <param name="label"> A string that differentiates this cell from other cells. </param>
     /// <param name="materialList"> A list of materials that should be used when coloring. </param>
-    public Cell(string label, List<Material> materialList)
+    public Cell(string label, Material[] materialList)
     {
         this.labelString = label;
         GraphPoints = new List<GraphPoint>();

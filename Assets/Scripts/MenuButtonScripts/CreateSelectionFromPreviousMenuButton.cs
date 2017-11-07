@@ -15,8 +15,8 @@ class CreateSelectionFromPreviousMenuButton : StationaryButton
         menu = referenceManager.createSelectionFromPreviousSelectionMenu.gameObject;
         buttons = referenceManager.rightButtons;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
 
     }
 

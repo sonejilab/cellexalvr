@@ -20,8 +20,8 @@ class MagnifierToolButton : StationaryButton
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         magnifier = referenceManager.magnifierTool.gameObject;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Update()

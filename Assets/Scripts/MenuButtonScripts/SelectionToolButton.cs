@@ -26,8 +26,8 @@ public class SelectionToolButton : StationaryButton
         selectionToolMenu = referenceManager.selectionToolMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

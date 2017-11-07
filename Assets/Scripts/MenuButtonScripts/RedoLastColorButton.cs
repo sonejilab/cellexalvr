@@ -19,11 +19,11 @@ public class RedoLastColorButton : StationaryButton
     {
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
-        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
-        ButtonEvents.EndOfHistoryReached.AddListener(TurnOff);
-        ButtonEvents.EndOfHistoryLeft.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
+        CellExAlEvents.EndOfHistoryReached.AddListener(TurnOff);
+        CellExAlEvents.EndOfHistoryLeft.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     protected override void Awake()

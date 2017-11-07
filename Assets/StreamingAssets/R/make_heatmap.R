@@ -14,7 +14,7 @@ library(gplots)
 
 library(pheatmap)
 
-library(cellexalvr)
+library(cellexalvrR)
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 

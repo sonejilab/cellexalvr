@@ -20,8 +20,8 @@ public class KeyboardButton : StationaryButton
     protected override void Awake()
     {
         base.Awake();
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Start()

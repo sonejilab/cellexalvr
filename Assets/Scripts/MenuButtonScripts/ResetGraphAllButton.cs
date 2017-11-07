@@ -22,8 +22,8 @@ public class ResetGraphAllButton : StationaryButton
     {
         graphManager = referenceManager.graphManager;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
-        ButtonEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+        CellExAlEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
+        CellExAlEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
 
     void Update()

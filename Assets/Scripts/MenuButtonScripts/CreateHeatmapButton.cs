@@ -18,8 +18,8 @@ public class CreateHeatmapButton : StationaryButton
         heatmapGenerator = referenceManager.heatmapGenerator;
         gameManager = referenceManager.gameManager;
         SetButtonActivated(false);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -30,7 +30,7 @@ public class CreateHeatmapButton : StationaryButton
             SetButtonActivated(false);
             heatmapGenerator.CreateHeatmap();
             gameManager.InformCreateHeatmap();
-            ButtonEvents.HeatmapCreated.Invoke();
+            CellExAlEvents.HeatmapCreated.Invoke();
         }
     }
 

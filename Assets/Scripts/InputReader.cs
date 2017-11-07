@@ -274,7 +274,7 @@ public class InputReader : MonoBehaviour
         status.RemoveStatus(statusId);
         statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
-        ButtonEvents.GraphsLoaded.Invoke();
+        CellExAlEvents.GraphsLoaded.Invoke();
         //if (debug)
         //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
     }

@@ -14,7 +14,7 @@ class ClearLinesBetweenGraphPointsButton : StationaryButton
     {
         cellManager = referenceManager.cellManager;
         SetButtonActivated(false);
-        ButtonEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
+        CellExAlEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
     }
 
     void Update()
@@ -24,7 +24,7 @@ class ClearLinesBetweenGraphPointsButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             cellManager.ClearLinesBetweenGraphPoints();
-            ButtonEvents.LinesBetweenGraphsCleared.Invoke();
+            CellExAlEvents.LinesBetweenGraphsCleared.Invoke();
             SetButtonActivated(false);
         }
     }

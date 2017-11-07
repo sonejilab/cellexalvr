@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +12,69 @@ public static class CellExAlConfig
     public static string RscriptexePath { get; set; }
     public static int GraphLoadingCellsPerFrameStartCount { get; set; }
     public static int GraphLoadingCellsPerFrameIncrement { get; set; }
+    public static Color[] SelectionToolColors
+    {
+        get
+        {
+            return selectionToolColors;
+        }
+        set
+        {
+            selectionToolColors = value;
+            CellExAlEvents.SelectionToolColorsChanged.Invoke();
+        }
+    }
+    private static Color[] selectionToolColors;
+    public static Color LowExpressionColor
+    {
+        get
+        {
+            return lowExpressionColor;
+        }
+        set
+        {
+            lowExpressionColor = value;
+            ColorsSet++;
+        }
+    }
+    private static Color lowExpressionColor;
+    public static Color MidExpressionColor
+    {
+        get
+        {
+            return midExpressionColor;
+        }
+        set
+        {
+            midExpressionColor = value;
+            ColorsSet++;
+        }
+    }
+    private static Color midExpressionColor;
+    public static Color HighExpressionColor
+    {
+        get
+        {
+            return highExpressionColor;
+        }
+        set
+        {
+            highExpressionColor = value;
+            ColorsSet++;
+        }
+    }
+    private static Color highExpressionColor;
+    private static int ColorsSet
+    {
+        get { return colorsSet; }
+        set
+        {
+            colorsSet = value;
+            if (colorsSet == 3)
+                CellExAlEvents.GeneExpressionColorsChanged.Invoke();
+        }
+    }
+    private static int colorsSet;
 }
 
 /// <summary>
@@ -17,6 +82,9 @@ public static class CellExAlConfig
 /// </summary>
 public class ConfigManager : MonoBehaviour
 {
+
+    public ReferenceManager referenceManager;
+
     private void Start()
     {
         string workingDir = Directory.GetCurrentDirectory();
@@ -48,8 +116,8 @@ public class ConfigManager : MonoBehaviour
         {
             lineNbr++;
             string line = streamReader.ReadLine();
-            // ignore empty lines
-            if (line.Length == 0) continue;
+            // ignore empty lines and line with only whitespace
+            if (line.Trim() == "") continue;
             // comments start with #
             if (line[0] == '#') continue;
 
@@ -60,7 +128,7 @@ public class ConfigManager : MonoBehaviour
             // if a '=' is not found
             if (equalIndex == -1)
             {
-                CellExAlLog.Log("WARNING: Misformatted line in the config file. No \"=\" found. Line " + lineNbr + ": " + line);
+                CellExAlLog.Log("WARNING: Bad line in the config file. No \"=\" found. Line " + lineNbr + ": " + line);
                 continue;
             }
             string key = line.Substring(0, equalIndex).Trim();
@@ -68,13 +136,13 @@ public class ConfigManager : MonoBehaviour
 
             if (key.Length == 0)
             {
-                CellExAlLog.Log("WARNING: Misformatted line in the config file. No key found. Line " + lineNbr + ": " + line);
+                CellExAlLog.Log("WARNING: Bad line in the config file. No key found. Line " + lineNbr + ": " + line);
                 continue;
             }
 
             if (value.Length == 0)
             {
-                CellExAlLog.Log("WARNING: Misformatted line in the config file. No value found. Line " + lineNbr + ": " + line);
+                CellExAlLog.Log("WARNING: Bad line in the config file. No value found. Line " + lineNbr + ": " + line);
                 continue;
             }
 
@@ -83,12 +151,54 @@ public class ConfigManager : MonoBehaviour
                 case "RscriptFilePath":
                     CellExAlConfig.RscriptexePath = value;
                     break;
+
                 case "GraphLoadingCellsPerFrameStartCount":
                     CellExAlConfig.GraphLoadingCellsPerFrameStartCount = int.Parse(value);
                     break;
+
                 case "GraphLoadingCellsPerFrameIncrement":
                     CellExAlConfig.GraphLoadingCellsPerFrameIncrement = int.Parse(value);
                     break;
+
+                case "SelectionColors":
+                    List<Color> selectionColors = new List<Color>();
+                    while (true)
+                    {
+                        selectionColors.Add(ReadColor(value, lineNbr));
+                        if (!value.Contains("}"))
+                        {
+                            if (streamReader.EndOfStream)
+                            {
+                                CellExAlLog.Log("WARNING: Unexpected end of file when parsing list of selection colors from the config file.");
+                                break;
+                            }
+                            lineNbr++;
+                            value = streamReader.ReadLine();
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    Color[] selectionColorsArray = selectionColors.ToArray();
+                    // the selection tool handler is not active when the config is being read
+                    SelectionToolHandler selectionToolHandler = referenceManager.selectionToolHandler;
+                    CellExAlConfig.SelectionToolColors = selectionColorsArray;
+                    selectionToolHandler.UpdateColors();
+                    break;
+
+                case "LowExpressionColor":
+                    CellExAlConfig.LowExpressionColor = ReadColor(value, lineNbr);
+                    break;
+
+                case "MidExpressionColor":
+                    CellExAlConfig.MidExpressionColor = ReadColor(value, lineNbr);
+                    break;
+
+                case "HighExpressionColor":
+                    CellExAlConfig.HighExpressionColor = ReadColor(value, lineNbr);
+                    break;
+
                 default:
                     CellExAlLog.Log("WARNING: Unknown option in the config file. At line " + lineNbr + ": " + line);
                     break;
@@ -98,6 +208,25 @@ public class ConfigManager : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
 
-        CellExAlLog.Log("Successfully read the config file");
+        CellExAlLog.Log("Finished reading the config file");
+    }
+
+    /// <summary>
+    /// Helper method to extract a hexadecimal value from a string
+    /// </summary>
+    /// <param name="value"> The string containing the value</param>
+    /// <param name="lineNbr"> The line number that this string was found on, used for error messages. </param>
+    /// <returns> A <see cref="Color"/> that the hexadecimal values represented. </returns>
+    private Color ReadColor(string value, int lineNbr)
+    {
+        int hashtagIndex = value.IndexOf('#');
+        if (hashtagIndex == -1)
+        {
+            CellExAlLog.Log("WARNING: Bad line in the config file. Expected \'#\' but did not find it at line " + lineNbr + ": " + value);
+        }
+        string hexcolorValue = value.Substring(hashtagIndex, 7);
+        Color newColor = new Color();
+        ColorUtility.TryParseHtmlString(hexcolorValue, out newColor);
+        return newColor;
     }
 }

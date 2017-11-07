@@ -76,28 +76,26 @@ public class SelectionToolHandler : MonoBehaviour
     void Awake()
     {
         // TODO CELLEXAL: create more colors.
-        Colors = new Color[10];
-        Colors[0] = new Color(1, 0, 0, .5f);     // red
-        Colors[1] = new Color(0, 0, 1, .5f);     // blue
-        Colors[2] = new Color(0, 1, 1, .5f);     // cyan
-        Colors[3] = new Color(1, 0, 1, .5f);     // magenta
-        Colors[4] = new Color(1f, 153f / 255f, 204f / 255f, 0.5f);     // pink
-        Colors[5] = new Color(1, 1, 0, .5f);     // yellow
-        Colors[6] = new Color(0, 1, 0, .5f);     // green
-        Colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
-        Colors[8] = new Color(102f / 255f, 51f / 255f, 1, .5f);     // brown
-        Colors[9] = new Color(1, 153f / 255f, 51f / 255f, .5f);     // orange
+        //Colors = new Color[10];
+        //Colors[0] = new Color(1, 0, 0, .5f);     // red
+        //Colors[1] = new Color(0, 0, 1, .5f);     // blue
+        //Colors[2] = new Color(0, 1, 1, .5f);     // cyan
+        //Colors[3] = new Color(1, 0, 1, .5f);     // magenta
+        //Colors[4] = new Color(1f, 153f / 255f, 204f / 255f, 0.5f);     // pink
+        //Colors[5] = new Color(1, 1, 0, .5f);     // yellow
+        //Colors[6] = new Color(0, 1, 0, .5f);     // green
+        //Colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
+        //Colors[8] = new Color(102f / 255f, 51f / 255f, 1, .5f);     // brown
+        //Colors[9] = new Color(1, 153f / 255f, 51f / 255f, .5f);     // orange
+
         //selectorMaterial.color = colors[0];
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
-        groupInfoDisplay.SetColors(Colors);
-        HUDGroupInfoDisplay.SetColors(Colors);
-        FarGroupInfoDisplay.SetColors(Colors);
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
-        selectedColor = Colors[currentColorIndex];
-        SetSelectionToolEnabled(false);
         //UpdateButtonIcons();
+        SetSelectionToolEnabled(false);
+        CellExAlEvents.SelectionToolColorsChanged.AddListener(UpdateColors);
     }
 
     private void Start()
@@ -106,6 +104,18 @@ public class SelectionToolHandler : MonoBehaviour
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         rightController = referenceManager.rightController;
         gameManager = referenceManager.gameManager;
+    }
+
+    /// <summary>
+    /// Updates <see cref="Colors"/> to <see cref="CellExAlConfig.SelectionToolColors"/>.
+    /// </summary>
+    public void UpdateColors()
+    {
+        Colors = CellExAlConfig.SelectionToolColors;
+        selectedColor = Colors[currentColorIndex];
+        groupInfoDisplay.SetColors(Colors);
+        HUDGroupInfoDisplay.SetColors(Colors);
+        FarGroupInfoDisplay.SetColors(Colors);
     }
 
     /// <summary>
@@ -145,7 +155,7 @@ public class SelectionToolHandler : MonoBehaviour
             selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
             historyIndexOffset = 0;
             // turn off the redo buttons
-            ButtonEvents.EndOfHistoryReached.Invoke();
+            CellExAlEvents.EndOfHistoryReached.Invoke();
         }
         if (!selectionMade)
         {
@@ -156,7 +166,7 @@ public class SelectionToolHandler : MonoBehaviour
             HUDGroupInfoDisplay.ResetGroupsInfo();
             FarGroupInfoDisplay.ResetGroupsInfo();
             // turn on the undo buttons
-            ButtonEvents.BeginningOfHistoryLeft.Invoke();
+            CellExAlEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
         if (!Equals(newGroup, oldGroup))
@@ -174,7 +184,7 @@ public class SelectionToolHandler : MonoBehaviour
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
                 if (selectedCells.Count == 0)
                 {
-                    ButtonEvents.SelectionStarted.Invoke();
+                    CellExAlEvents.SelectionStarted.Invoke();
                 }
                 selectedCells.Add(graphPoint);
             }
@@ -211,14 +221,14 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (historyIndexOffset == 0)
         {
-            ButtonEvents.EndOfHistoryLeft.Invoke();
+            CellExAlEvents.EndOfHistoryLeft.Invoke();
         }
 
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
         if (indexToMoveTo == 0)
         {
             // beginning of history reached
-            ButtonEvents.BeginningOfHistoryReached.Invoke();
+            CellExAlEvents.BeginningOfHistoryReached.Invoke();
             //selectionToolMenu.UndoSelection();
         }
         else if (indexToMoveTo < 0)
@@ -255,7 +265,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (historyIndexOffset == selectionHistory.Count)
         {
-            ButtonEvents.BeginningOfHistoryLeft.Invoke();
+            CellExAlEvents.BeginningOfHistoryLeft.Invoke();
             //selectionToolMenu.SelectionStarted();
         }
 
@@ -263,7 +273,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (indexToMoveTo == selectionHistory.Count - 1)
         {
             // end of history reached
-            ButtonEvents.EndOfHistoryReached.Invoke();
+            CellExAlEvents.EndOfHistoryReached.Invoke();
         }
         else if (indexToMoveTo >= selectionHistory.Count)
         {
@@ -372,7 +382,7 @@ public class SelectionToolHandler : MonoBehaviour
             other.Outline(Color.clear);
         }
         selectionHistory.Clear();
-        ButtonEvents.SelectionCanceled.Invoke();
+        CellExAlEvents.SelectionCanceled.Invoke();
         selectedCells.Clear();
         selectionMade = false;
         //selectionToolMenu.RemoveSelection();
@@ -396,7 +406,7 @@ public class SelectionToolHandler : MonoBehaviour
         previousSelectionMenu.CreateButton(selectedCells);
         selectedCells.Clear();
         selectionHistory.Clear();
-        ButtonEvents.SelectionConfirmed.Invoke();
+        CellExAlEvents.SelectionConfirmed.Invoke();
         heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;
@@ -447,7 +457,7 @@ public class SelectionToolHandler : MonoBehaviour
         {
             other.ResetColor();
         }
-        ButtonEvents.SelectionCanceled.Invoke();
+        CellExAlEvents.SelectionCanceled.Invoke();
         historyIndexOffset = selectionHistory.Count;
         selectedCells.Clear();
         selectionMade = false;

@@ -46,7 +46,7 @@ public class ResetFolderButton : StationaryButton
             loader.ResetLoaderBooleans();
             inputFolderGenerator.GenerateFolders();
             inputFolderList.gameObject.SetActive(true);
-            ButtonEvents.GraphsUnloaded.Invoke();
+            CellExAlEvents.GraphsUnloaded.Invoke();
             if (loader.loaderMovedDown)
             {
                 loader.loaderMovedDown = false;

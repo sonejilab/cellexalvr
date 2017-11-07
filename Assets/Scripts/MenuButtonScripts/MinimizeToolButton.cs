@@ -23,8 +23,8 @@ class MinimizeToolButton : StationaryButton
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         minimizer = referenceManager.minimizeTool;
         SetButtonActivated(false);
-        ButtonEvents.GraphsLoaded.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Update()

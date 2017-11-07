@@ -18,8 +18,8 @@ public class FlashGenesMenu : MenuWithTabs
     protected override void Start()
     {
         base.Start();
-        ButtonEvents.FlashGenesFileStartedLoading.AddListener(ShowLoadingText);
-        ButtonEvents.FlashGenesFileFinishedLoading.AddListener(HideLoadingText);
+        CellExAlEvents.FlashGenesFileStartedLoading.AddListener(ShowLoadingText);
+        CellExAlEvents.FlashGenesFileFinishedLoading.AddListener(HideLoadingText);
     }
 
     /// <summary>

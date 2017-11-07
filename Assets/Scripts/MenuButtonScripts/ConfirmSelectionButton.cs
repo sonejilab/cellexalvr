@@ -18,10 +18,10 @@ public class ConfirmSelectionButton : StationaryButton
         selectionToolHandler = referenceManager.selectionToolHandler;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        ButtonEvents.SelectionStarted.AddListener(TurnOn);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
-        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

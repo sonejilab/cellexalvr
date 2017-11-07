@@ -15,8 +15,8 @@ public class RemoveExpressedCellsButton : StationaryButton
     {
         cellManager = referenceManager.cellManager;
         SetButtonActivated(false);
-        ButtonEvents.GraphsColoredByGene.AddListener(TurnOn);
-        ButtonEvents.GraphsReset.AddListener(TurnOff);
+        CellExAlEvents.GraphsColoredByGene.AddListener(TurnOn);
+        CellExAlEvents.GraphsReset.AddListener(TurnOff);
     }
 
     void Update()

@@ -1,6 +1,12 @@
 # This is a config file for Cellexal
 # Its purpose is to contain values that can be changed by a user
 # Comments can be written anywhere by starting a line with '#'
+# Since all users share the same config file it would be a bad idea to add any user specific settings here
+# Lists are denoted with one item per line, starting with { and ending with }
+# ExampleList = {	item1
+#					item2
+#					item3 }
+# Comments and blank lines should not be present in lists
 
 # The filepath to Rscript.exe
 RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
@@ -12,3 +18,24 @@ GraphLoadingCellsPerFrameStartCount = 200
 # The number of lines that GraphLoadingCellsPerFrameStartCount will be incremented by if there was additional time left after the last frame or decremented by if there was not enough time left last frame
 # A higher number can make GraphLoadingCellsPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
 GraphLoadingCellsPerFrameIncrement = 25
+
+# The colors that is used by the selection tool
+# One color per line
+SelectionColors = {	#FF0000
+					#0000FF
+					#00FFFF
+					#FF00FF
+					#FF99CC
+					#FFFF00
+					#00FF00
+					#800080
+					#6633FF
+					#FF9933 }
+
+# The colors that is used when coloring graphs by a gene
+# There will be a total of 30 colors generated using the LowExpressionColor as the lowest color and HighExpressionColor as the highest color
+# The generated colors are just linearely interpolated between LowExpressionColor and HighExpressionColor
+# If you want to change these but don't know the RGB values by heart I suggest googling "rgb color picker"
+LowExpressionColor = #0000FF
+MidExpressionColor = #FFFF00
+HighExpressionColor = #FF0000

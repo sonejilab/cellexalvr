@@ -19,11 +19,11 @@ public class RedoOneStepButton : StationaryButton
         base.Awake();
         buttonCollider = gameObject.GetComponent<Collider>();
         SetButtonActivated(false);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
-        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
-        ButtonEvents.EndOfHistoryReached.AddListener(TurnOff);
-        ButtonEvents.EndOfHistoryLeft.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
+        CellExAlEvents.EndOfHistoryReached.AddListener(TurnOff);
+        CellExAlEvents.EndOfHistoryLeft.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
 
     }
 

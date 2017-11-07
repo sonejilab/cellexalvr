@@ -19,12 +19,12 @@ public class UndoTenStepsButton : StationaryButton
         base.Awake();
         buttonCollider = gameObject.GetComponent<Collider>();
         SetButtonActivated(false);
-        ButtonEvents.SelectionStarted.AddListener(TurnOn);
-        ButtonEvents.SelectionConfirmed.AddListener(TurnOff);
-        ButtonEvents.SelectionCanceled.AddListener(TurnOff);
-        ButtonEvents.BeginningOfHistoryReached.AddListener(TurnOff);
-        ButtonEvents.BeginningOfHistoryLeft.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
+        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
+        CellExAlEvents.BeginningOfHistoryReached.AddListener(TurnOff);
+        CellExAlEvents.BeginningOfHistoryLeft.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Start()

@@ -16,8 +16,8 @@ public class BurnHeatmapToolButton : StationaryButton
         fire = referenceManager.fire;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        ButtonEvents.HeatmapCreated.AddListener(TurnOn);
-        ButtonEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellExAlEvents.HeatmapCreated.AddListener(TurnOn);
+        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     protected override string Description

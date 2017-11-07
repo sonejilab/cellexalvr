@@ -1,4 +1,4 @@
-library(cellexalvr)
+library(cellexalvrR)
 
 args <- commandArgs(trailingOnly = TRUE)
 

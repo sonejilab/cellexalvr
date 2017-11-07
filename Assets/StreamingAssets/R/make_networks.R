@@ -1,7 +1,7 @@
 #print("start R")
 
 
-library(cellexalvr)
+library(cellexalvrR)
 
 args <- commandArgs(trailingOnly = TRUE)
 
