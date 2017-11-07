@@ -34,6 +34,11 @@ public class ColorByAttributeButton : SolidButton
         }
     }
 
+    /// <summary>
+    /// Sets which attribute this button show show when pressed.
+    /// </summary>
+    /// <param name="attribute"> the name of the attribute. </param>
+    /// <param name="color"> The color that the cells in possesion of the attribute should get. </param>
     public void SetAttribute(string attribute, Color color)
     {
         description.text = attribute;

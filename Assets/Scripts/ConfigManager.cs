@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEngine;
 
 /// <summary>
@@ -75,6 +74,7 @@ public static class CellExAlConfig
         }
     }
     private static int colorsSet;
+    public static Color[] AttributeColors { get; set; }
 }
 
 /// <summary>
@@ -168,6 +168,7 @@ public class ConfigManager : MonoBehaviour
                         newColor.a = 0.5f;
                         selectionColors.Add(newColor);
 
+                        // a '}' denotes the end of the list
                         if (!value.Contains("}"))
                         {
                             if (streamReader.EndOfStream)
@@ -188,6 +189,33 @@ public class ConfigManager : MonoBehaviour
                     SelectionToolHandler selectionToolHandler = referenceManager.selectionToolHandler;
                     CellExAlConfig.SelectionToolColors = selectionColorsArray;
                     selectionToolHandler.UpdateColors();
+                    break;
+
+                case "AttributeColors":
+                    List<Color> attributeColors = new List<Color>();
+                    while (true)
+                    {
+                        Color newColor = ReadColor(value, lineNbr);
+                        newColor.a = 0.5f;
+                        attributeColors.Add(newColor);
+
+                        // a '}' denotes the end of the list
+                        if (!value.Contains("}"))
+                        {
+                            if (streamReader.EndOfStream)
+                            {
+                                CellExAlLog.Log("WARNING: Unexpected end of file when parsing list of attribute colors from the config file.");
+                                break;
+                            }
+                            lineNbr++;
+                            value = streamReader.ReadLine();
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    CellExAlConfig.AttributeColors = attributeColors.ToArray();
                     break;
 
                 case "LowExpressionColor":

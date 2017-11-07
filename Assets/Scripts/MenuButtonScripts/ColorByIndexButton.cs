@@ -25,6 +25,10 @@ public class ColorByIndexButton : SolidButton
         }
     }
 
+    /// <summary>
+    /// Sets which index this button should show when pressed.
+    /// </summary>
+    /// <param name="indexName"> The name of the index. </param>
     public void SetIndex(string indexName)
     {
         //color = network.GetComponent<Renderer>().material.color;

@@ -499,6 +499,9 @@ namespace SQLiter
         }
     }
 
+    /// <summary>
+    /// Helper struct for representing a pair of a string and an int
+    /// </summary>
     struct StringFloatPair
     {
         public string s;
@@ -510,7 +513,9 @@ namespace SQLiter
         }
     }
 
-
+    /// <summary>
+    /// Helper struct for representing a pair of a cell (represented as a string) and a float
+    /// </summary>
     public class CellExpressionPair
     {
         public string Cell { get; private set; }

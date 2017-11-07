@@ -1,11 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the buttons that are used to create new selections from old ones.
+/// </summary>
 class CreateSelectionFromPreviousButton : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public TextMesh description;
-
 
     private SteamVR_TrackedObject rightController;
     private CellManager cellManager;
@@ -36,12 +38,19 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
         }
     }
 
-    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, int[] selectionColors)
+    /// <summary>
+    /// Set which selection this button represents.
+    /// </summary>
+    /// <param name="graphName"> Which graph the selection originated from. </param>
+    /// <param name="selectionName"> The name of this selection. </param>
+    /// <param name="selectionCellNames"> An array containing the cell names. </param>
+    /// <param name="selectionGroups"> An array containing which groups the cells belonged to. </param>
+    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, int[] selectionGroups)
     {
         description.text = selectionName;
         this.graphName = graphName;
         this.selectionCellNames = selectionCellNames;
-        this.selectionGroups = selectionColors;
+        this.selectionGroups = selectionGroups;
     }
 
     void OnTriggerEnter(Collider other)

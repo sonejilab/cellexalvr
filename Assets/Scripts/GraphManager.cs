@@ -184,6 +184,9 @@ public class GraphManager : MonoBehaviour
         graph.SetMinMaxCoords(min, max);
     }
 
+    /// <summary>
+    /// Resets all graphpoints' in all graphs colors to white.
+    /// </summary>
     public void ResetGraphsColor()
     {
         selectionToolHandler.CancelSelection();
