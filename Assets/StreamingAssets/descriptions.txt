@@ -14,7 +14,7 @@ TAG_Folder:This box represents a folder on this computer. Move the controller cl
 TAG_Sphere:These spheres represent the data inside a folder. Grab the spheres by moving the controller inside them and press the grip buttons. To load this data, put the spheres inside the loading machine on the ground.
 TAG_Loader:This is the loading machine. Put some spheres from a box into the funnel to load a folder with data. Once the data is loaded, the loading machine will disappear. To go back to the loading machine, press "Loading menu" on the main menu (located on one of your controllers).
 
-# Names of gameobjects:
+# Names of gameobjects 
 Cells:These spheres represent the files inside a folder. To pick them up, move the controller inside the cells and press the grip buttons. Put the spheres inside the loading machine to load this data. The loading machine is on the ground between all the boxes.
 Keyboard:The keyboard can be used to search the supplied database for a genename and color the graphs after that gene's expression level. Use the controller you are pointing towards the keyboard and press the trigger to type (turn off this tool first though). Then press "Set colour". It might take a bit of time to find the gene you entered depending on the size of the database. The graphs will then be colored blue to red via yellow. Blue means low expression levels, yellow medium levels, and red high. Genes you search for will appear in the history on the left of the keyboard.
 Previous Searches List:Genes you search for using the keyboard will appear here. Point the controller towards one of the genes in the list to color the graphs according to that gene's expression. 
@@ -28,24 +28,34 @@ Menu Help:The main menu can activate tools that can interact with the environmen
 Tips And Tricks Help:Some tips and tricks:\nPut the controller that has the menu in your non-dominant hand so it's easier to navigate the menu with your dominant hand.\nPutting the right controller inside the menu will temporarily deactivate the tool you are using to make it easier to use the menu. If you want to use a tool, put the menu away by pressing the menu controller's trigger button or just lower your hand.\nRemember to set a username when starting the program so CellExAl can write pretty logs for you. The logs are stored locally in the Output/[username]/ directory.
 
 # Names of buttons on the menu:
-Selectiontool Button:Toggles the selection tool. The selection tool selects cells in a graph. Use the thumb dial on the controller to change the selection tool's color. Once you are happy with your selection, use the menu to confirm it.
-Toggle Keyboard Button:Toggles the keyboard. Use the keyboard by pointing at it with the controller and press the trigger to type. Typing a gene name and then pressing "Set color" will color all current graphs after their expression of that gene, if it is present in the supplied database. Cells are colored blue to red via yellow with blue representing the lowest expression and red representing the highest.
-Burn Heatmap Tool Button:Toggles the tool for removing heatmaps. Put the fire inside an undesired heatmap and press the trigger to remove it.
-Reset Graphs Button:Resets all graphs' positions, rotations, scales and color. Does not affect networks, heatmaps or anything else.
-Reset Folder Button:Returns you to the select folder stage. Removes all networks, heatmaps and graphs from the current scene.
-Minimizer Tool Button:Toggles the minimizer tool. Put the shiny red light inside a graph or network and press the trigger to minimize it. Minimized objects are put in little boxes on top of the menu. Putting the controller inside a minimized object and pressing the trigger will return it to its former size and position.
-SaveButton:Saves your progress. Ask Johan to write more info.
-SaveButton:Saves your progress. Ask Johan to write more info.
-Magnifier Tool Button:Toggles the magnifier tool. The magnifier can be used to look inside clusters of cells in a graph. Put the sphere inside a graph and move it to move the cells apart.
-Magnifier Tool Button:Toggles the magnifier tool. The magnifier can be used to look inside clusters of cells in a graph. Put the sphere inside a graph and move it to move the cells apart.
-ScreenshotButton:Toggles the ability to take a screenshot. Press this button and then press "up" on the touchpad to take a screenshot. Screenshots are saved in the Screenshots folder.
-Arcs Menu Button:Shows the arc menu. An arc is a connection between two networks that have a matching pair of connected genes. The buttons in the arc menu each have a background color corresponding to which network's arcs they toggle. Pressing a green button will toggle all connected arcs on and pressing a red button will toggle them off. The four buttons on the bottom of the menu are for toggling all arcs on or off, and toggling the combined number of arcs between networks on or off respectively. Below these buttons is a button for closing the menu.
+
+# Selection Tool Menu
+Selectiontool Button:Show the menu for the selection tool.
+NewSelection:Toggles the selection tool. The selection tool selects cells in a graph. Use the thumb dial on the controller to change the selection tool's color. Once you are happy with your selection, use the menu to confirm it.
 ConfirmSelectionButton:Confirms your selection. After confirming a selection more cells cannot be added to it. You must confirm a selection before creating a heatmap or networks.
 RemoveSelection:Removes all selected cells from a graph. This can be undone by pressing "Reset graphs".
 UndoSelectionButton:Undoes your current selection. All selected cells will be un-selected.
 CreateHeatmapButton:Creates a heatmap from your selection. The heatmap will have the selected cells on its x-axis and 250 genes on its y-axis. The cells are ordered from left to right in the order they were selected. The heatmap can be moved by grabbing it with one controller and rescaled by grabbing it with both controllers.
 Create Networks Button:Creates a group of networks from your selection. Each color will be used as one network. Each network will show genes that are correlated. The genes are represented with spheres and the correlations as lines between the spheres. The lines' colors mean nothing, they are randomized for easier viewing. The networks are placed on a skeleton-like structure of the graph they came from to give an idea of where they originate from in the graph. The skeleton can be moved by grabbing it with one controller. Move the controller inside a network and press the trigger to enlarge it and separate it from the skeleton.
 Color Graphs After Current Selection Button:Colors all the other graphs based on your current selection. All cells in other graphs that share the same label will be given the same color that you have colored it with.
+Undo One Step Button:This button undoes the last selected cell. Press many times to undo more cells.
+Redo One Step Button:This button redoes the last undone cell. Press many times to redo more cells.
+Undo Ten Steps Button:This button undoes the last 10 selected cells. Press many times to undo more cells.
+Redo Ten Steps Button:This button redoes the last 10 selected cells. Press many times to redo more cells.
+Undo Last Color Button:This button undoes all the last selected cells that were given the same color. Press many times to undo more colors.
+Redo Last Color Button:This button redoes all the last selected cells that were given the same color. Press many times to redo more colors.
+Draw Lines Between Same Cell In Graphs Button:Press to draw lines between your selection and all other graphs. A line will be drawn between every cell in your selection that share its label with a cell in another graph.
+Clear Drawn Lines Between Same Cell In Graphs Button:Press to clear all lines that were drawn between all selected cells that shared a label with other cells.
+
+Toggle Keyboard Button:Toggles the keyboard. Use the keyboard by pointing at it with the controller and press the trigger to type. Typing a gene name and then pressing "Set color" will color all current graphs after their expression of that gene, if it is present in the supplied database. Cells are colored blue to red via yellow with blue representing the lowest expression and red representing the highest.
+Burn Heatmap Tool Button:Toggles the tool for removing heatmaps. Put the fire inside an undesired heatmap and press the trigger to remove it.
+Reset Graphs Button:Resets all graphs' positions, rotations, scales and color. Does not affect networks, heatmaps or anything else.
+Reset Folder Button:Returns you to the select folder stage. Removes all networks, heatmaps and graphs from the current scene.
+Minimizer Tool Button:Toggles the minimizer tool. Put the shiny red light inside a graph or network and press the trigger to minimize it. Minimized objects are put in little boxes on top of the menu. Putting the controller inside a minimized object and pressing the trigger will return it to its former size and position.
+SaveButton:Saves your progress. Ask Johan to write more info.
+Magnifier Tool Button:Toggles the magnifier tool. The magnifier can be used to look inside clusters of cells in a graph. Put the sphere inside a graph and move it to move the cells apart.
+ScreenshotButton:Toggles the ability to take a screenshot. Press this button and then press "up" on the touchpad to take a screenshot. Screenshots are saved in the Screenshots folder.
+Arcs Menu Button:Shows the arc menu. An arc is a connection between two networks that have a matching pair of connected genes. The buttons in the arc menu each have a background color corresponding to which network's arcs they toggle. Pressing a green button will toggle all connected arcs on and pressing a red button will toggle them off. The four buttons on the bottom of the menu are for toggling all arcs on or off, and toggling the combined number of arcs between networks on or off respectively. Below these buttons is a button for closing the menu.
 Toggle Expressed Cells:Use this button after coloring the graphs after a gene's expression. Toggles all cells in the graph that are expressing the gene.
 Toggle Non Expressed Cells: Use this button after coloring the graphs after a gene's expression. Toggles all cells in the graph that are not expressing the gene.
 StartMenuButton:Brings you back to the start menu. All unsaved progress will be lost.
@@ -54,32 +64,25 @@ Index Menu Button:Show the menu to color by index. Pressing any button in this m
 Lasers:Toggles laser pointers. The lasers can be used to press various buttons around you. The lasers will turn green when they are pointing at something that can be interacted with. The lasers can grab graphs, heatmaps and networks by pointing them at something and pressing the grip buttons.
 Save Heatmap Button:Saves this heatmap to the disk. The image will be located where CellExAl is installed in the Saved_Images folder. The current date and time will be appended to the file name.
 Close Menu Button:Close the open menu.
-# Undo and redo
-Undo One Step Button:This button undoes the last selected cell. Press many times to undo more cells.
-Redo One Step Button:This button redoes the last undone cell. Press many times to redo more cells.
-Undo Ten Steps Button:This button undoes the last 10 selected cells. Press many times to undo more cells.
-Redo Ten Steps Button:This button redoes the last 10 selected cells. Press many times to redo more cells.
-Undo Last Color Button:This button undoes all the last selected cells that were given the same color. Press many times to undo more colors.
-Redo Last Color Button:This button redoes all the last selected cells that were given the same color. Press many times to redo more colors.
 # Arcs
 Toggle Arcs On Button:This button toggles all arcs on for the network(s) it is connected to. Use the green button to toggle all connected arcs on, and the red button to toggle them off. Buttons with a colored background toggle the arcs to the network with the same network. The buttons on the bottom toggle all arcs connected to all networks in the group, and toggle the combined arcs. The combined arcs show how many arcs there are between two networks in total.
 Toggle Arcs Off Button:This button toggles all arcs off for the network(s) it is connected to. Use the green button to toggle all connected arcs on, and the red button to toggle them off. Buttons with a colored background toggle the arcs to the network with the same network. The buttons on the bottom toggle all arcs connected to all networks in the group, and toggle the combined arcs. The combined arcs show how many arcs there are between two networks in total.
-Tab Button:If there is more than one group of networks, this button can be used to show the tab of buttons that toggle arcs for this group of networks. One tab appears for each group of networks that are generated.
-Draw Tool Button:Activates the draw tool. Press and hold the trigger to draw. Use the color wheel to the right to change color.
+Tab Button:If there is more than one group of networks, this button can be used to switch between tabs that toggle arcs for this group of networks. One tab appears for each group of networks that are generated.
 # Draw tool
+Draw Tool Button:Activates the draw tool. Press and hold the trigger to draw. Use the color wheel to the right to change color.
 Clear All Drawn Lines Button:Removes all lines that you have drawn.
 Color Wheel Buttons:Changes the color of the draw tool.
+Clear All Drawn Lines of a Color:Press to clear all lines that have this color.
+Clear Last Line:Press to remove the last drawn line.
 # Create selection from previous selection
 Create Selection From Previous Selection Menu Button:Press to open a menu where groupings on this data set from previous sessions can be chosen.
 Create Selection From Previous Selection Button:Press to select this grouping. The numbers on the buttons are; the grouping's number, the number of groups (colors), and the number of cells, respectively.
 # Flashing genes
 Flash Genes Menu Button:Press to open the menu to control the flashing genes.
+Flashing Genes Tab Button:Press to switch to a different file containing genes.
 Increase Frames Between Each Flash Button:Press to increase the number of frames to wait between each flashed gene expression. This makes the flashing slower.
 Decrease Frames Between Each Flash Button:Press to decrease the number of frames to wait between each flashed gene expression. This makes the flashing faster.
 Random Within Category Mode Button:Press to switch to the "random within each category mode". This will show each category for 10 seconds in the order they appear in the input file. All graphs will be colored according to the gene expression of a randomly chosen gene in that category before a new gene expression is chosen. After 10 seconds random genes in the next category is shown for 10 seconds and so on. The same gene expression can appear zero, one or any number of times depending on the mood of the random number generator.
 Shuffled Category Mode Button:Press to switch to the "shuffled category mode". This will show each category in the order they appear in the input file. All graphs will be colored according to one gene expression at a time. Each gene expression will be shown exactly one time, in a random order. The time it takes to show all of one category depends on the number of genes in that category.
 Ordered Category Button:Press to switch to the "ordered category mode". This will show each category in the order they appear in the input file, and all genes within each category as they are ordered in the input file.
 Stop Flashing Genes Button:Press to stop the flashing genes. Pressing any mode button again will resume the flashing.
-# Lines between other graphpoints
-Draw Lines Between Same Cell In Graphs Button:Press to draw lines between your selection and all other graphs. A line will be drawn between every cell in your selection that share its label with a cell in another graph.
-Clear Drawn Lines Between Same Cell In Graphs Button:Press to clear all lines that were drawn between all selected cells that shared a label with other cells.
