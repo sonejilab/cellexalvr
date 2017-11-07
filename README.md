@@ -32,4 +32,4 @@ CellexalVR
 * [Unity 5.6.1f1](https://unity3d.com/get-unity/download/archive)
 
 ## Notes
-If you lose your config.txt there is a sample one at `Assets/StreamingAssets/sample_config.txt`. If you run the program without a `config.txt` file, the sample one will be copied to `Config/config.txt`.
+If you lose your config.txt there is a sample one at [Assets/StreamingAssets/sample_config.txt](Assets/StreamingAssets/sample_config.txt). If you run the program without a `config.txt` file, the sample one will be copied to `Config/config.txt`.
