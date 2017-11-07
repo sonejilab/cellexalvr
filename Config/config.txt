@@ -1,0 +1,71 @@
+# This is a config file for Cellexal.
+# Its purpose is to contain values that can be changed by a user.
+# Comments can be written anywhere by starting a line with '#'. Comments must start at the start of a line.
+# Since all users share the same config file it would be a bad idea to add any user specific settings here.
+# An item is denoted by a key and a value for example:
+# ExampleKey = ExampleValue
+# would give the key "ExampleKey" the value "ExampleValue"
+# Lists are denoted with one item per line, starting with ={ and ending with }
+# ExampleList ={	item1
+#					item2
+#					item3 }
+# Comments and blank lines should not be present in lists but can be inserted anywhere else.
+
+# The filepath to Rscript.exe
+RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
+
+# The number of lines that will be read between every frame from the .mds files when loading graphs
+# A higher number can make faster loading but potentially create a loss of frames when loading
+GraphLoadingCellsPerFrameStartCount = 200
+
+# The number of lines that GraphLoadingCellsPerFrameStartCount will be incremented by if there was additional time left after the last frame or decremented by if there was not enough time left last frame
+# A higher number can make GraphLoadingCellsPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
+GraphLoadingCellsPerFrameIncrement = 25
+
+# The colors that is used by the selection tool
+SelectionColors ={	#FF0000
+					#0000FF
+					#00FFFF
+					#FF00FF
+					#FF99CC
+					#FFFF00
+					#00FF00
+					#800080
+					#6633FF
+					#FF9933 }
+
+# The colors that is used when coloring graphs by a gene
+# There will be a total of 30 colors generated using the LowExpressionColor as the lowest color and HighExpressionColor as the highest color
+# The generated colors are just linearely interpolated between LowExpressionColor and HighExpressionColor
+# If you want to change these but don't know the RGB values by heart I suggest googling "rgb color picker"
+LowExpressionColor = #FF0000
+MidExpressionColor = #000000
+HighExpressionColor = #00FF00
+
+# Colors used when coloring by attribute
+# There should probably be about 25 of these for most datasets i think, if there are more attribute then more colors have to be added.
+AttributeColors ={	#FF0000
+					#0000FF
+					#00FFFF
+					#FF00FF
+					#FF99CC
+					#FFFF00
+					#00FF00
+					#800080
+					#6633FF
+					#FF9933
+					#00FF80	
+					#A700FF
+					#FF0099
+					#9DFF00
+					#A90000
+					#00A971
+					#0016A9
+					#9100A9
+					#63FFF2
+					#FFCE63
+					#82FF63
+					#FF63CE
+					#9FFFAC
+					#2A40AC
+					#6AAC2A	}
