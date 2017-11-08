@@ -38,9 +38,9 @@ SelectionColors ={	#FF0000
 # There will be a total of 30 colors generated using the LowExpressionColor as the lowest color and HighExpressionColor as the highest color
 # The generated colors are just linearely interpolated between LowExpressionColor and HighExpressionColor
 # If you want to change these but don't know the RGB values by heart I suggest googling "rgb color picker"
-LowExpressionColor = #FF0000
-MidExpressionColor = #000000
-HighExpressionColor = #00FF00
+LowExpressionColor = #0000FF
+MidExpressionColor = #FFFF00
+HighExpressionColor = #FF0000
 
 # Colors used when coloring by attribute
 # There should probably be about 25 of these for most datasets i think, if there are more attribute then more colors have to be added.

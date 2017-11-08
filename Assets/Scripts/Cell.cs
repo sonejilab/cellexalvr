@@ -74,7 +74,7 @@ public class Cell
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.GetComponent<Renderer>().material.color = color;
+                g.Color = color;
             }
         }
     }
@@ -105,7 +105,7 @@ public class Cell
             {
                 expression = 29;
             }
-            g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[expression];
+            g.Color = cellManager.GeneExpressionColors[expression];
         }
     }
 
@@ -135,7 +135,7 @@ public class Cell
             {
                 expression = 29;
             }
-            g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[expression];
+            g.Color = cellManager.GeneExpressionColors[expression];
         }
     }
 
@@ -148,7 +148,7 @@ public class Cell
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[facs[facsName]];
+            g.Color = cellManager.GeneExpressionColors[facs[facsName]];
         }
     }
 
@@ -203,14 +203,14 @@ public class Cell
                 {
                     expression = 29;
                 }
-                g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[expression];
+                g.Color = cellManager.GeneExpressionColors[expression];
             }
         }
         else
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[0];
+                g.Color = cellManager.GeneExpressionColors[0];
             }
         }
         return true;

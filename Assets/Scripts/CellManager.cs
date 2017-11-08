@@ -80,7 +80,6 @@ public class CellManager : MonoBehaviour
     #endregion
 
     public ReferenceManager referenceManager;
-    private Material[] geneExpressionMaterialList;
     public VRTK_ControllerActions controllerActions;
     public GameObject lineBetweenTwoGraphPointsPrefab;
 
@@ -155,41 +154,6 @@ public class CellManager : MonoBehaviour
     /// </summary>
     private void OnGeneExpressionColorsChanged()
     {
-        Material geneExpressionMaterial = Resources.Load("Materials/GraphPointGeneExpression") as Material;
-        geneExpressionMaterialList = new Material[30];
-        Color lowExpressionColor = CellExAlConfig.LowExpressionColor;
-        Color midExpressionColor = CellExAlConfig.MidExpressionColor;
-        Color highExpressionColor = CellExAlConfig.HighExpressionColor;
-
-        float lowToMidDiffR = midExpressionColor.r - lowExpressionColor.r;
-        float lowToMidDiffG = midExpressionColor.g - lowExpressionColor.g;
-        float lowtoMidDiffB = midExpressionColor.b - lowExpressionColor.b;
-
-        float midToHighDiffR = highExpressionColor.r - midExpressionColor.r;
-        float midToHighDiffG = highExpressionColor.g - midExpressionColor.g;
-        float midToHighDiffB = highExpressionColor.b - midExpressionColor.b;
-        for (int i = 0; i < 15; ++i)
-        {
-            float normalized = i / 15f;
-            float r = lowExpressionColor.r + lowToMidDiffR * normalized;
-            float g = lowExpressionColor.g + lowToMidDiffG * normalized;
-            float b = lowExpressionColor.b + lowtoMidDiffB * normalized;
-            geneExpressionMaterialList[i] = new Material(geneExpressionMaterial);
-            geneExpressionMaterialList[i].color = new Color(r, g, b);
-        }
-        for (int i = 15; i < 30; ++i)
-        {
-            float normalized = (i - 15) / 15f;
-            float r = midExpressionColor.r + midToHighDiffR * normalized;
-            float g = midExpressionColor.g + midToHighDiffG * normalized;
-            float b = midExpressionColor.b + midToHighDiffB * normalized;
-            geneExpressionMaterialList[i] = new Material(geneExpressionMaterial);
-            geneExpressionMaterialList[i].color = new Color(r, g, b);
-        }
-    }
-
-    private void OnGeneExpressionColorsChangedNew()
-    {
         GeneExpressionColors = new Color[30];
         Color lowExpressionColor = CellExAlConfig.LowExpressionColor;
         Color midExpressionColor = CellExAlConfig.MidExpressionColor;
@@ -225,7 +189,6 @@ public class CellManager : MonoBehaviour
     /// </summary>
     /// <param name="label"> The cell's name </param>
     /// <returns> Returns a reference to the added cell </returns>
-
     public Cell AddCell(string label)
     {
         if (!cells.ContainsKey(label))

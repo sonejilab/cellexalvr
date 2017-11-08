@@ -96,7 +96,7 @@ public class GraphPoint : MonoBehaviour
     {
         CurrentGroup = -1;
         Outline(Color.clear);
-        graphPointRenderer.material = Resources.Load("SphereDefault", typeof(Material)) as Material;
+        Color = Color.white;
     }
 
     /// <summary>
