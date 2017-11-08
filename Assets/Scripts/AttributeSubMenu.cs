@@ -37,7 +37,7 @@ public class AttributeSubMenu : MonoBehaviour
     public void CreateAttributeButtons(string[] attributes)
     {
         if (colors == null)
-        {<
+        {
             Init();
         }
         foreach (ColorByAttributeButton button in buttons)

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using SQLiter;
 using UnityEngine;
 
 /// <summary>
@@ -10,7 +8,7 @@ public class Cell
 {
     public List<GraphPoint> GraphPoints;
 
-    private string labelString;
+    private CellManager cellManager;
     private Dictionary<string, string> attributes;
     private Dictionary<string, int> facs;
     private Material[] materialList;
@@ -18,11 +16,7 @@ public class Cell
     private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
     public int ExpressionLevel { get; internal set; }
 
-    public string Label
-    {
-        get { return labelString; }
-        set { labelString = value; }
-    }
+    public string Label { get; set; }
 
 
     /// <summary>
@@ -32,9 +26,18 @@ public class Cell
     /// <param name="materialList"> A list of materials that should be used when coloring. </param>
     public Cell(string label, Material[] materialList)
     {
-        this.labelString = label;
+        this.Label = label;
         GraphPoints = new List<GraphPoint>();
         this.materialList = materialList;
+        attributes = new Dictionary<string, string>();
+        facs = new Dictionary<string, int>();
+    }
+
+    public Cell(string label, CellManager cellManager)
+    {
+        this.cellManager = cellManager;
+        this.Label = label;
+        GraphPoints = new List<GraphPoint>();
         attributes = new Dictionary<string, string>();
         facs = new Dictionary<string, int>();
     }
@@ -102,7 +105,7 @@ public class Cell
             {
                 expression = 29;
             }
-            g.GetComponent<Renderer>().material = materialList[expression];
+            g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[expression];
         }
     }
 
@@ -132,7 +135,7 @@ public class Cell
             {
                 expression = 29;
             }
-            g.GetComponent<Renderer>().material = materialList[expression];
+            g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[expression];
         }
     }
 
@@ -145,7 +148,7 @@ public class Cell
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.GetComponent<Renderer>().material = materialList[facs[facsName]];
+            g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[facs[facsName]];
         }
     }
 
@@ -200,14 +203,14 @@ public class Cell
                 {
                     expression = 29;
                 }
-                g.GetComponent<Renderer>().material = materialList[expression];
+                g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[expression];
             }
         }
         else
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.GetComponent<Renderer>().material = materialList[0];
+                g.GetComponent<Renderer>().material.color = cellManager.GeneExpressionColors[0];
             }
         }
         return true;

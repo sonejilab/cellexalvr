@@ -110,6 +110,8 @@ public class CellManager : MonoBehaviour
     private bool loadingFlashingGenes;
     private int[] savedFlashGenesLengths;
 
+    public Color[] GeneExpressionColors { get; private set; }
+
     void Awake()
     {
         cells = new Dictionary<string, Cell>();
@@ -186,6 +188,38 @@ public class CellManager : MonoBehaviour
         }
     }
 
+    private void OnGeneExpressionColorsChangedNew()
+    {
+        GeneExpressionColors = new Color[30];
+        Color lowExpressionColor = CellExAlConfig.LowExpressionColor;
+        Color midExpressionColor = CellExAlConfig.MidExpressionColor;
+        Color highExpressionColor = CellExAlConfig.HighExpressionColor;
+
+        float lowToMidDiffR = midExpressionColor.r - lowExpressionColor.r;
+        float lowToMidDiffG = midExpressionColor.g - lowExpressionColor.g;
+        float lowtoMidDiffB = midExpressionColor.b - lowExpressionColor.b;
+
+        float midToHighDiffR = highExpressionColor.r - midExpressionColor.r;
+        float midToHighDiffG = highExpressionColor.g - midExpressionColor.g;
+        float midToHighDiffB = highExpressionColor.b - midExpressionColor.b;
+        for (int i = 0; i < 15; ++i)
+        {
+            float normalized = i / 15f;
+            float r = lowExpressionColor.r + lowToMidDiffR * normalized;
+            float g = lowExpressionColor.g + lowToMidDiffG * normalized;
+            float b = lowExpressionColor.b + lowtoMidDiffB * normalized;
+            GeneExpressionColors[i] = new Color(r, g, b);
+        }
+        for (int i = 15; i < 30; ++i)
+        {
+            float normalized = (i - 15) / 15f;
+            float r = midExpressionColor.r + midToHighDiffR * normalized;
+            float g = midExpressionColor.g + midToHighDiffG * normalized;
+            float b = midExpressionColor.b + midToHighDiffB * normalized;
+            GeneExpressionColors[i] = new Color(r, g, b);
+        }
+    }
+
     /// <summary>
     /// Attempts to add a cell to the dictionary
     /// </summary>
@@ -196,7 +230,7 @@ public class CellManager : MonoBehaviour
     {
         if (!cells.ContainsKey(label))
         {
-            cells[label] = new Cell(label, geneExpressionMaterialList);
+            cells[label] = new Cell(label, this);
         }
         return cells[label];
     }
