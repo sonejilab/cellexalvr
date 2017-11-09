@@ -109,8 +109,6 @@ public class CellManager : MonoBehaviour
     private bool loadingFlashingGenes;
     private int[] savedFlashGenesLengths;
 
-    public Color[] GeneExpressionColors { get; private set; }
-
     void Awake()
     {
         cells = new Dictionary<string, Cell>();
@@ -137,53 +135,6 @@ public class CellManager : MonoBehaviour
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
     }
 
-    private void OnEnable()
-    {
-        CellExAlEvents.GeneExpressionColorsChanged.AddListener(OnGeneExpressionColorsChanged);
-    }
-
-    private void OnDisable()
-    {
-        CellExAlEvents.GeneExpressionColorsChanged.RemoveListener(OnGeneExpressionColorsChanged);
-    }
-
-    /// <summary>
-    /// When all the colors are set by the <see cref="ConfigManager"/> the <see cref="CellExAlEvents.GeneExpressionColorsChanged"/> event is invoked and this method is called.
-    /// This linearely interpolates 15 colors between the <see cref="CellExAlConfig.LowExpressionColor"/> and <see cref="CellExAlConfig.MidExpressionColor"/>
-    /// and 15 colors between <see cref="CellExAlConfig.MidExpressionColor"/> and <see cref="CellExAlConfig.HighExpressionColor"/>.
-    /// </summary>
-    private void OnGeneExpressionColorsChanged()
-    {
-        GeneExpressionColors = new Color[30];
-        Color lowExpressionColor = CellExAlConfig.LowExpressionColor;
-        Color midExpressionColor = CellExAlConfig.MidExpressionColor;
-        Color highExpressionColor = CellExAlConfig.HighExpressionColor;
-
-        float lowToMidDiffR = midExpressionColor.r - lowExpressionColor.r;
-        float lowToMidDiffG = midExpressionColor.g - lowExpressionColor.g;
-        float lowtoMidDiffB = midExpressionColor.b - lowExpressionColor.b;
-
-        float midToHighDiffR = highExpressionColor.r - midExpressionColor.r;
-        float midToHighDiffG = highExpressionColor.g - midExpressionColor.g;
-        float midToHighDiffB = highExpressionColor.b - midExpressionColor.b;
-        for (int i = 0; i < 15; ++i)
-        {
-            float normalized = i / 15f;
-            float r = lowExpressionColor.r + lowToMidDiffR * normalized;
-            float g = lowExpressionColor.g + lowToMidDiffG * normalized;
-            float b = lowExpressionColor.b + lowtoMidDiffB * normalized;
-            GeneExpressionColors[i] = new Color(r, g, b);
-        }
-        for (int i = 15; i < 30; ++i)
-        {
-            float normalized = (i - 15) / 15f;
-            float r = midExpressionColor.r + midToHighDiffR * normalized;
-            float g = midExpressionColor.g + midToHighDiffG * normalized;
-            float b = midExpressionColor.b + midToHighDiffB * normalized;
-            GeneExpressionColors[i] = new Color(r, g, b);
-        }
-    }
-
     /// <summary>
     /// Attempts to add a cell to the dictionary
     /// </summary>
@@ -193,7 +144,7 @@ public class CellManager : MonoBehaviour
     {
         if (!cells.ContainsKey(label))
         {
-            cells[label] = new Cell(label, this);
+            cells[label] = new Cell(label, this, graphManager);
         }
         return cells[label];
     }
@@ -212,7 +163,7 @@ public class CellManager : MonoBehaviour
         {
             Cell cell = cells[cellnames[i]];
             selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
-            cell.SetGroup(selectionToolHandler.Colors[groups[i]], groups[i]);
+            cell.SetGroup(groups[i]);
         }
     }
 
@@ -531,7 +482,7 @@ public class CellManager : MonoBehaviour
     /// <summary>
     /// Color all cells that belong to a certain attribute.
     /// </summary>
-    public void ColorByAttribute(string attributeType, Color color)
+    public void ColorByAttribute(string attributeType, bool color)
     {
         CellExAlLog.Log("Colored genes by " + attributeType);
         foreach (Cell cell in cells.Values)
@@ -545,15 +496,15 @@ public class CellManager : MonoBehaviour
     /// </summary>
     /// <param name="cellname"> The cells name. </param>
     /// <param name="attributeType"> The attribute type / name </param>
-    /// <param name="attribute"> The attribute value </param>
-    public void AddAttribute(string cellname, string attributeType, string attribute)
+    /// <param name="group"> The attribute value </param>
+    public void AddAttribute(string cellname, string attributeType, int group)
     {
-        cells[cellname].AddAttribute(attributeType, attribute);
+        cells[cellname].AddAttribute(attributeType, group);
     }
 
     internal void AddFacs(string cellName, string facs, int index)
     {
-        if (index < 0 || index > 29)
+        if (index < 0 || index >= CellExAlConfig.NumberOfExpressionColors)
         {
             // value hasn't been normalized correctly
             print(facs + " " + index);
@@ -580,7 +531,7 @@ public class CellManager : MonoBehaviour
     {
         foreach (GraphPoint g in points)
         {
-            Color color = g.Color;
+            Color color = g.Material.color;
             foreach (GraphPoint sameCell in g.Cell.GraphPoints)
             {
                 if (sameCell != g)

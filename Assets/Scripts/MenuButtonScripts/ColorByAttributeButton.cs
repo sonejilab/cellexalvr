@@ -22,20 +22,13 @@ public class ColorByAttributeButton : SolidButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            if (!colored)
-            {
-                cellManager.ColorByAttribute(attribute, color);
-            }
-            else
-            {
-                cellManager.ColorByAttribute(attribute, Color.white);
-            }
+            cellManager.ColorByAttribute(attribute, !colored);
             colored = !colored;
         }
     }
 
     /// <summary>
-    /// Sets which attribute this button show show when pressed.
+    /// Sets which attribute this button should show when pressed.
     /// </summary>
     /// <param name="attribute"> the name of the attribute. </param>
     /// <param name="color"> The color that the cells in possesion of the attribute should get. </param>

@@ -29,8 +29,6 @@ public static class CellExAlEvents
     public static UnityEvent FlashGenesFileStartedLoading = new UnityEvent();
     public static UnityEvent FlashGenesFileFinishedLoading = new UnityEvent();
 
-    public static UnityEvent SelectionToolColorsChanged = new UnityEvent();
-
-    public static UnityEvent GeneExpressionColorsChanged = new UnityEvent();
+    public static UnityEvent ConfigLoaded = new UnityEvent();
     //public static UnityEvent FlashGenesCategoryToggled
 }

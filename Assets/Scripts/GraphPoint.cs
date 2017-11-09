@@ -6,37 +6,36 @@ using UnityEngine;
 public class GraphPoint : MonoBehaviour
 {
     public Graph Graph;
-    public Shader normalShader;
-    public Shader outlineShader;
 
-    public int CurrentGroup { get; set; }
-
-    private Cell cell;
     private float x, y, z;
     private MeshRenderer graphPointRenderer;
-    private Color defaultColor = new Color(1, 1, 1);
 
     #region Properties
+
+    public Cell Cell { get; private set; }
+
+    public int CurrentGroup { get; set; }
 
     public string GraphName
     {
         get { return Graph.GraphName; }
     }
 
-    public Cell Cell
-    {
-        get { return cell; }
-    }
 
     public string Label
     {
-        get { return cell.Label; }
+        get { return Cell.Label; }
     }
 
-    public Color Color
+    /// <summary>
+    /// The material used when rendering this graphpoint. 
+    /// Unity can do some pretty heavy batching when graphpoints share materials, therefore, 
+    /// use only the materials defined in the graphmanager.
+    /// </summary>
+    public Material Material
     {
-        get { return graphPointRenderer.material.color; }
-        set { graphPointRenderer.material.color = value; }
+        get { return graphPointRenderer.sharedMaterial; }
+        set { graphPointRenderer.sharedMaterial = value; }
     }
 
     #endregion
@@ -56,7 +55,7 @@ public class GraphPoint : MonoBehaviour
     /// <param name="z"> The z-coordinate. </param>
     public void SetCoordinates(Cell cell, float x, float y, float z)
     {
-        this.cell = cell;
+        this.Cell = cell;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -95,28 +94,31 @@ public class GraphPoint : MonoBehaviour
     public void ResetColor()
     {
         CurrentGroup = -1;
-        Outline(Color.clear);
-        Color = Color.white;
+        SetOutLined(false, -1);
+        // Color = Color.white;
     }
 
     /// <summary>
-    /// Sets the outline of the graphpoint.
+    /// Sets the outline of a graphpoint
     /// </summary>
-    /// <param name="col"> The color that should be used when outlining, any color with 0 alpha will remove the outline. <param>
-    public void Outline(Color col)
+    /// <param name="outline"> True if the graphpoint should be outlined, false if it should not. </param>
+    /// <param name="group"> The group that this graphpoint belongs to. It will be colored based on that group in a selection. -1 indicates that a graphpoint does not belong to a group. </param>
+    public void SetOutLined(bool outline, int group)
     {
-        if (col.a != 0f)
+        if (outline)
         {
-            graphPointRenderer.material.shader = outlineShader;
-            // Set the outline color to a lighter version of the new color
-            float outlineR = col.r + (1 - col.r) / 2;
-            float outlineG = col.g + (1 - col.g) / 2;
-            float outlineB = col.b + (1 - col.b) / 2;
-            graphPointRenderer.material.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
+            graphPointRenderer.sharedMaterial = Graph.graphManager.SelectedMaterialsOutline[group];
         }
         else
         {
-            graphPointRenderer.material.shader = normalShader;
+            if (group == -1)
+            {
+                graphPointRenderer.sharedMaterial = Graph.graphManager.defaultGraphPointMaterial;
+            }
+            else
+            {
+                graphPointRenderer.sharedMaterial = Graph.graphManager.SelectedMaterials[group];
+            }
         }
     }
 }

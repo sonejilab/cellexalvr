@@ -2,6 +2,7 @@
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
 using System;
+using TMPro;
 
 /// <summary>
 /// This class represents a manager that holds all graphs.
@@ -14,16 +15,25 @@ public class GraphManager : MonoBehaviour
     public AudioSource badSound;
     public SaveScene saveScene;
     public string directory;
+    public Material defaultGraphPointMaterial;
+    public Shader graphPointNormalShader;
+    public Shader graphPointOutlineShader;
+
 
     private CellManager cellManager;
     private SelectionToolHandler selectionToolHandler;
     private List<Graph> graphs;
     private List<NetworkHandler> networks = new List<NetworkHandler>();
-    private Vector3[] startPositions =  {   new Vector3(-.2f, .5f, .3f),
-                                            new Vector3(.3f, .5f, -.5f),
-                                            new Vector3(0f, .5f, .1f),
-                                            new Vector3(.35f, .5f, -.7f)
+    private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
+                                            new Vector3(-0.9f, 1.1f, -0.4f),
+                                            new Vector3(-0.9f, 1.1f, 0.4f),
+                                            new Vector3(-0.2f, 1.1f, 0.95f)
                                         };
+
+    public Material[] GeneExpressionMaterials;
+    public Material[] SelectedMaterials;
+    public Material[] SelectedMaterialsOutline;
+    public Material[] AttributeMaterials;
 
     void Awake()
     {
@@ -35,6 +45,95 @@ public class GraphManager : MonoBehaviour
         cellManager = referenceManager.cellManager;
         selectionToolHandler = referenceManager.selectionToolHandler;
     }
+
+    private void OnEnable()
+    {
+        CellExAlEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+    }
+
+    private void OnDisable()
+    {
+        CellExAlEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
+    }
+
+    /// <summary>
+    /// Create the materials needed for recoloring graphpoints.
+    /// </summary>
+    private void OnConfigLoaded()
+    {
+        // Generate the materials needed by the selection tool.
+        Color[] selectionToolColors = CellExAlConfig.SelectionToolColors;
+        int numSelectionColors = selectionToolColors.Length;
+        SelectedMaterials = new Material[numSelectionColors];
+        SelectedMaterialsOutline = new Material[numSelectionColors];
+
+        for (int i = 0; i < numSelectionColors; ++i)
+        {
+            // Non-outlined version
+            Color selectionToolColor = selectionToolColors[i];
+            Material selectedMaterial = new Material(defaultGraphPointMaterial);
+            selectedMaterial.color = selectionToolColor;
+            selectedMaterial.shader = graphPointNormalShader;
+            SelectedMaterials[i] = selectedMaterial;
+            // make the outline a bit lighter
+            float outlineR = selectionToolColor.r + (1 - selectionToolColor.r) / 2;
+            float outlineG = selectionToolColor.g + (1 - selectionToolColor.g) / 2;
+            float outlineB = selectionToolColor.b + (1 - selectionToolColor.b) / 2;
+
+            // Outlined version
+            Material selectedMaterialOutline = new Material(defaultGraphPointMaterial);
+            selectedMaterialOutline.shader = graphPointOutlineShader;
+            selectedMaterialOutline.color = selectionToolColors[i];
+            selectedMaterialOutline.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
+            SelectedMaterialsOutline[i] = selectedMaterialOutline;
+        }
+
+        // Generate the materials used when coloring by gene expressions
+        int nColors = CellExAlConfig.NumberOfExpressionColors;
+        GeneExpressionMaterials = new Material[nColors];
+        Color lowExpressionColor = CellExAlConfig.LowExpressionColor;
+        Color midExpressionColor = CellExAlConfig.MidExpressionColor;
+        Color highExpressionColor = CellExAlConfig.HighExpressionColor;
+
+        float lowToMidDiffR = midExpressionColor.r - lowExpressionColor.r;
+        float lowToMidDiffG = midExpressionColor.g - lowExpressionColor.g;
+        float lowtoMidDiffB = midExpressionColor.b - lowExpressionColor.b;
+
+        float midToHighDiffR = highExpressionColor.r - midExpressionColor.r;
+        float midToHighDiffG = highExpressionColor.g - midExpressionColor.g;
+        float midToHighDiffB = highExpressionColor.b - midExpressionColor.b;
+        // from low to mid
+        for (int i = 0; i < nColors / 2; ++i)
+        {
+            float normalized = i / ((float)nColors / 2);
+            float r = lowExpressionColor.r + lowToMidDiffR * normalized;
+            float g = lowExpressionColor.g + lowToMidDiffG * normalized;
+            float b = lowExpressionColor.b + lowtoMidDiffB * normalized;
+            GeneExpressionMaterials[i] = new Material(defaultGraphPointMaterial);
+            GeneExpressionMaterials[i].color = new Color(r, g, b);
+        }
+        // from mid to high
+        for (int i = nColors / 2; i < nColors; ++i)
+        {
+            float normalized = (i - (float)nColors / 2) / ((float)nColors / 2);
+            float r = midExpressionColor.r + midToHighDiffR * normalized;
+            float g = midExpressionColor.g + midToHighDiffG * normalized;
+            float b = midExpressionColor.b + midToHighDiffB * normalized;
+            GeneExpressionMaterials[i] = new Material(defaultGraphPointMaterial);
+            GeneExpressionMaterials[i].color = new Color(r, g, b);
+        }
+
+        // Generate materials used when coloring by attribute
+        Color[] attributeColors = CellExAlConfig.AttributeColors;
+        AttributeMaterials = new Material[attributeColors.Length];
+        for (int i = 0; i < attributeColors.Length; ++i)
+        {
+            Material attributeMaterial = new Material(defaultGraphPointMaterial);
+            attributeMaterial.color = attributeColors[i];
+            AttributeMaterials[i] = attributeMaterial;
+        }
+    }
+
 
     /// <summary>
     /// Finds a graphpoint.
@@ -65,7 +164,7 @@ public class GraphManager : MonoBehaviour
     /// <param name="color"> The new color. </param>
     public void RecolorGraphPoint(string graphname, string label, Color color)
     {
-        FindGraphPoint(graphname, label).Color = color;
+        //FindGraphPoint(graphname, label).Color = color;
     }
 
     /// <summary>
@@ -84,7 +183,7 @@ public class GraphManager : MonoBehaviour
         {
             foreach (GraphPoint point in selection)
             {
-                graph.points[point.Label].Color = point.Color;
+                graph.points[point.Label].Material = point.Material;
             }
         }
         CellExAlLog.Log("Recolored  " + selection.Count + " points in  " + graphs.Count + " graphs after current selection");
@@ -108,7 +207,9 @@ public class GraphManager : MonoBehaviour
         //Debug.Log(newGraph.transform.position + " - " + saveScene.target1.position);
         newGraph.transform.parent = transform;
         newGraph.UpdateStartPosition();
+        newGraph.graphManager = this;
         graphs.Add(newGraph);
+
         return newGraph;
     }
 

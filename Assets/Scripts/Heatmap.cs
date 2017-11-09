@@ -119,7 +119,7 @@ public class Heatmap : MonoBehaviour
         // print("color cells");
         foreach (KeyValuePair<Cell, int> pair in containedCells)
         {
-            pair.Key.SetGroup(referenceManager.selectionToolHandler.Colors[pair.Value], pair.Value);
+            pair.Key.SetGroup(pair.Value);
         }
     }
 

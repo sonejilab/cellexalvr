@@ -49,6 +49,7 @@ public class SelectionToolHandler : MonoBehaviour
     // the number of steps we have taken back in the history.
     private int historyIndexOffset;
     private GameManager gameManager;
+    private GraphManager graphManager;
 
     /// <summary>
     /// Helper struct for remembering history when selecting graphpoints.
@@ -57,9 +58,9 @@ public class SelectionToolHandler : MonoBehaviour
     {
         // the graphpoint this affects
         public GraphPoint graphPoint;
-        // the color it was given
+        // the group it was given, -1 means no group
         public int toGroup;
-        // the color it had before
+        // the group it had before, -1 means no group
         public int fromGroup;
         // true if this graphpoint was previously not in the list of selected graphpoints
         public bool newNode;
@@ -75,27 +76,12 @@ public class SelectionToolHandler : MonoBehaviour
 
     void Awake()
     {
-        // TODO CELLEXAL: create more colors.
-        //Colors = new Color[10];
-        //Colors[0] = new Color(1, 0, 0, .5f);     // red
-        //Colors[1] = new Color(0, 0, 1, .5f);     // blue
-        //Colors[2] = new Color(0, 1, 1, .5f);     // cyan
-        //Colors[3] = new Color(1, 0, 1, .5f);     // magenta
-        //Colors[4] = new Color(1f, 153f / 255f, 204f / 255f, 0.5f);     // pink
-        //Colors[5] = new Color(1, 1, 0, .5f);     // yellow
-        //Colors[6] = new Color(0, 1, 0, .5f);     // green
-        //Colors[7] = new Color(.5f, 0, .5f, .5f);     // purple
-        //Colors[8] = new Color(102f / 255f, 51f / 255f, 1, .5f);     // brown
-        //Colors[9] = new Color(1, 153f / 255f, 51f / 255f, .5f);     // orange
-
-        //selectorMaterial.color = colors[0];
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
-        //UpdateButtonIcons();
         SetSelectionToolEnabled(false);
-        CellExAlEvents.SelectionToolColorsChanged.AddListener(UpdateColors);
+        CellExAlEvents.ConfigLoaded.AddListener(UpdateColors);
     }
 
     private void Start()
@@ -104,6 +90,7 @@ public class SelectionToolHandler : MonoBehaviour
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         rightController = referenceManager.rightController;
         gameManager = referenceManager.gameManager;
+        graphManager = referenceManager.graphManager;
     }
 
     /// <summary>
@@ -137,15 +124,12 @@ public class SelectionToolHandler : MonoBehaviour
         {
             return;
         }
-        Renderer renderer = graphPoint.gameObject.GetComponent<Renderer>();
 
         int oldGroup = graphPoint.CurrentGroup;
 
-        Color oldColor = oldGroup == -1 ? Color.white : Colors[oldGroup];
-        Color newColor = Colors[newGroup];
-        graphPoint.Outline(Colors[newGroup]);
+        graphPoint.SetOutLined(true, newGroup);
         graphPoint.CurrentGroup = newGroup;
-        renderer.material.color = Colors[newGroup];
+        // renderer.material.color = Colors[newGroup];
         gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, Colors[newGroup]);
 
         bool newNode = !selectedCells.Contains(graphPoint);
@@ -169,7 +153,7 @@ public class SelectionToolHandler : MonoBehaviour
             CellExAlEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
-        if (!Equals(newGroup, oldGroup))
+        if (newGroup != oldGroup)
         {
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
@@ -204,17 +188,6 @@ public class SelectionToolHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Helper method to see if two colors are equal.
-    /// </summary>
-    /// <param name="c1"> The first color. </param>
-    /// <param name="c2"> The second color. </param>
-    /// <returns> True if the two colors have the same rgb values, false otherwise. </returns>
-    private bool Equals(Color c1, Color c2)
-    {
-        return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
-    }
-
-    /// <summary>
     /// Goes back one step in the history of selecting cells.
     /// </summary>
     public void GoBackOneStepInHistory()
@@ -238,21 +211,24 @@ public class SelectionToolHandler : MonoBehaviour
         }
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.CurrentGroup = info.fromGroup;
-        info.graphPoint.Outline(Colors[info.fromGroup]);
+
+        // if info.fromGroup != 1 then the outline should be drawn
+        info.graphPoint.SetOutLined(info.fromGroup != -1, info.fromGroup);
+
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
-            info.graphPoint.Outline(Color.clear);
+            info.graphPoint.SetOutLined(false, -1);
         }
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-            info.graphPoint.Outline(Colors[info.fromGroup]);
+            info.graphPoint.SetOutLined(true, info.fromGroup);
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -283,7 +259,7 @@ public class SelectionToolHandler : MonoBehaviour
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.CurrentGroup = info.toGroup;
-        info.graphPoint.Outline(Colors[info.toGroup]);
+        info.graphPoint.SetOutLined(info.toGroup != -1, info.toGroup);
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
@@ -310,7 +286,8 @@ public class SelectionToolHandler : MonoBehaviour
     public void GoBackOneColorInHistory()
     {
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
-        Color color = Colors[selectionHistory[indexToMoveTo].toGroup];
+        int group = selectionHistory[indexToMoveTo].toGroup;
+        Color color = group != -1 ? Colors[group] : Color.white;
         Color nextColor;
         do
         {
@@ -333,7 +310,8 @@ public class SelectionToolHandler : MonoBehaviour
     public void GoForwardOneColorInHistory()
     {
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
-        Color color = Colors[selectionHistory[indexToMoveTo].toGroup];
+        int group = selectionHistory[indexToMoveTo].toGroup;
+        Color color = group != -1 ? Colors[group] : Color.white;
         Color nextColor;
         do
         {
@@ -379,7 +357,7 @@ public class SelectionToolHandler : MonoBehaviour
             other.GetComponent<Rigidbody>().useGravity = true;
             other.GetComponent<Rigidbody>().isKinematic = false;
             other.GetComponent<Collider>().isTrigger = false;
-            other.Outline(Color.clear);
+            other.SetOutLined(false, -1);
         }
         selectionHistory.Clear();
         CellExAlEvents.SelectionCanceled.Invoke();
@@ -399,7 +377,7 @@ public class SelectionToolHandler : MonoBehaviour
         StartCoroutine(UpdateRObjectGrouping());
         foreach (GraphPoint c in selectedCells)
         {
-            c.Outline(Color.clear);
+            c.SetOutLined(false, c.CurrentGroup);
             lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
         }
         // clear the list since we are done with it
@@ -523,7 +501,7 @@ public class SelectionToolHandler : MonoBehaviour
             {
                 file.Write(gp.Label);
                 file.Write("\t");
-                Color c = gp.Color;
+                Color c = gp.Material.color;
                 int r = (int)(c.r * 255);
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);

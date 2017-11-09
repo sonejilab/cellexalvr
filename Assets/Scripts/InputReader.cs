@@ -5,6 +5,7 @@ using SQLiter;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 /// <summary>
 /// A class for reading data files and creating GraphPoints at the correct locations 
@@ -14,6 +15,9 @@ public class InputReader : MonoBehaviour
     public ReferenceManager referenceManager;
     public NetworkCenter networkPrefab;
     public NetworkNode networkNodePrefab;
+
+    public TextMeshPro graphName;
+
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -143,6 +147,12 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("Reading graph from " + graphFileName);
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            var textmeshgraphname = Instantiate(graphName);
+            textmeshgraphname.transform.position = newGraph.transform.position;
+            textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
+            textmeshgraphname.text = newGraph.GraphName;
+            textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
+            textmeshgraphname.transform.Rotate(0f, 180f, 0f);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
 
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
@@ -251,7 +261,8 @@ public class InputReader : MonoBehaviour
                 string cellname = words[0];
                 for (int j = 1; j < words.Length; ++j)
                 {
-                    cellManager.AddAttribute(cellname, attributeTypes[j], words[j]);
+                    if (words[j] == "1")
+                        cellManager.AddAttribute(cellname, attributeTypes[j], j - 1);
                 }
             }
             metacellStreamReader.Close();
@@ -387,7 +398,7 @@ public class InputReader : MonoBehaviour
             for (int j = 0; j < values.GetLength(1); ++j)
             {
                 // normalize to the range [0, 29]
-                float colorIndexFloat = ((values[i, j] - min[j]) / (max[j] - min[j])) * 29f;
+                float colorIndexFloat = ((values[i, j] - min[j]) / (max[j] - min[j])) * (CellExAlConfig.NumberOfExpressionColors - 1);
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
                 cellManager.AddFacs(cellnames[i], header[j], colorIndex);
             }
@@ -800,7 +811,7 @@ public class InputReader : MonoBehaviour
             }
             string groupingNumber = groupingName.Substring(indexOfLastDot, groupingName.Length - indexOfLastDot);
             groupingNames.Add(groupingNumber + "\n" + words[1] + "\n" + words[2]);
-            fileLengths.Add(int.Parse(line.Split(null)[2]));
+            fileLengths.Add(int.Parse(words[2]));
         }
         streamReader.Close();
         fileStream.Close();
@@ -827,10 +838,24 @@ public class InputReader : MonoBehaviour
             {
                 line = streamReader.ReadLine();
 
-                words = line.Split(null);
+                words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 cellNames[i][j] = words[0];
                 // TODO CELLEXAL: fix the save groupings data to write the grouping number and not the color
-                // groups[i][j] = int.Parse(words[1]);
+                try
+                {
+                    groups[i][j] = int.Parse(words[3]);
+                }
+                catch (FormatException e)
+                {
+                    foreach (string s in words)
+                    {
+                        print(s);
+                    }
+                    print(words[3] + " " + file + " " + j);
+                    streamReader.Close();
+                    fileStream.Close();
+                    return;
+                }
             }
             graphNames[i] = words[2];
             streamReader.Close();

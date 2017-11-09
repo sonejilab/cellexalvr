@@ -256,7 +256,7 @@ namespace SQLiter
                 i++;
                 _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
             }
-            float binSize = (maxExpr - minExpr) / 30f;
+            float binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
             if (DebugMode)
             {
                 print("binsize = " + binSize);
@@ -373,7 +373,7 @@ namespace SQLiter
                     if (lastId != -1)
                     {
                         //print(lastGeneName);
-                        binSize = (maxExpr - minExpr) / 30f;
+                        binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
                         for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
                         {
                             // Make sure there is a result to get.
@@ -417,7 +417,7 @@ namespace SQLiter
                 i++;
                 _result.Add(new CellExpressionPair(_reader.GetString(1), expr));
             }
-            binSize = (maxExpr - minExpr) / 30f;
+            binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
             for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
             {
                 // Make sure there is a result to get.

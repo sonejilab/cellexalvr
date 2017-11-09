@@ -27,7 +27,7 @@ Shader "Custom/GraphPointStandard" {
             ENDCG
         }
 
-        Pass {
+        /*Pass {
         Tags { "LightMode" = "ForwardAdd" }
             Blend One One
             Fog { Color (0,0,0,0) }
@@ -39,7 +39,9 @@ Shader "Custom/GraphPointStandard" {
                 #pragma fragment fragAdd
                 #include "UnityStandardCoreForward.cginc"
             ENDCG
-        }
-    }
+        }*/
+    //}
+	}
     Fallback "Diffuse"
-}
+	}
+	

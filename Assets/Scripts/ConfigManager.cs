@@ -11,69 +11,11 @@ public static class CellExAlConfig
     public static string RscriptexePath { get; set; }
     public static int GraphLoadingCellsPerFrameStartCount { get; set; }
     public static int GraphLoadingCellsPerFrameIncrement { get; set; }
-    public static Color[] SelectionToolColors
-    {
-        get
-        {
-            return selectionToolColors;
-        }
-        set
-        {
-            selectionToolColors = value;
-            CellExAlEvents.SelectionToolColorsChanged.Invoke();
-        }
-    }
-    private static Color[] selectionToolColors;
-    public static Color LowExpressionColor
-    {
-        get
-        {
-            return lowExpressionColor;
-        }
-        set
-        {
-            lowExpressionColor = value;
-            ColorsSet++;
-        }
-    }
-    private static Color lowExpressionColor;
-    public static Color MidExpressionColor
-    {
-        get
-        {
-            return midExpressionColor;
-        }
-        set
-        {
-            midExpressionColor = value;
-            ColorsSet++;
-        }
-    }
-    private static Color midExpressionColor;
-    public static Color HighExpressionColor
-    {
-        get
-        {
-            return highExpressionColor;
-        }
-        set
-        {
-            highExpressionColor = value;
-            ColorsSet++;
-        }
-    }
-    private static Color highExpressionColor;
-    private static int ColorsSet
-    {
-        get { return colorsSet; }
-        set
-        {
-            colorsSet = value;
-            if (colorsSet == 3)
-                CellExAlEvents.GeneExpressionColorsChanged.Invoke();
-        }
-    }
-    private static int colorsSet;
+    public static Color[] SelectionToolColors { get; set; }
+    public static int NumberOfExpressionColors { get; set; }
+    public static Color LowExpressionColor { get; set; }
+    public static Color MidExpressionColor { get; set; }
+    public static Color HighExpressionColor { get; set; }
     public static Color[] AttributeColors { get; set; }
 }
 
@@ -218,6 +160,16 @@ public class ConfigManager : MonoBehaviour
                     CellExAlConfig.AttributeColors = attributeColors.ToArray();
                     break;
 
+                case "NumberOfExpressionColors":
+                    int nColors = int.Parse(value);
+                    if (nColors < 3)
+                    {
+                        CellExAlLog.Log("WARNING: Number of gene expression colors is less than 3, changing it to 3.");
+                        nColors = 3;
+                    }
+                    CellExAlConfig.NumberOfExpressionColors = nColors;
+                    break;
+
                 case "LowExpressionColor":
                     CellExAlConfig.LowExpressionColor = ReadColor(value, lineNbr);
                     break;
@@ -239,6 +191,7 @@ public class ConfigManager : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
 
+        CellExAlEvents.ConfigLoaded.Invoke();
         CellExAlLog.Log("Finished reading the config file");
     }
 

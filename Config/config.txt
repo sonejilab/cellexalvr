@@ -34,6 +34,9 @@ SelectionColors ={	#FF0000
 					#6633FF
 					#FF9933 }
 
+# The number of colors that will be used when coloring graphs by gene expression
+NumberOfExpressionColors = 30
+
 # The colors that is used when coloring graphs by a gene
 # There will be a total of 30 colors generated using the LowExpressionColor as the lowest color and HighExpressionColor as the highest color
 # The generated colors are just linearely interpolated between LowExpressionColor and HighExpressionColor

@@ -9,9 +9,9 @@ public class Cell
     public List<GraphPoint> GraphPoints;
 
     private CellManager cellManager;
-    private Dictionary<string, string> attributes;
+    private GraphManager graphManager;
+    private Dictionary<string, int> attributes;
     private Dictionary<string, int> facs;
-    private Material[] materialList;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
     public int ExpressionLevel { get; internal set; }
@@ -24,21 +24,13 @@ public class Cell
     /// </summary>
     /// <param name="label"> A string that differentiates this cell from other cells. </param>
     /// <param name="materialList"> A list of materials that should be used when coloring. </param>
-    public Cell(string label, Material[] materialList)
-    {
-        this.Label = label;
-        GraphPoints = new List<GraphPoint>();
-        this.materialList = materialList;
-        attributes = new Dictionary<string, string>();
-        facs = new Dictionary<string, int>();
-    }
-
-    public Cell(string label, CellManager cellManager)
+    public Cell(string label, CellManager cellManager, GraphManager graphManager)
     {
         this.cellManager = cellManager;
+        this.graphManager = graphManager;
         this.Label = label;
         GraphPoints = new List<GraphPoint>();
-        attributes = new Dictionary<string, string>();
+        attributes = new Dictionary<string, int>();
         facs = new Dictionary<string, int>();
     }
 
@@ -68,13 +60,16 @@ public class Cell
     /// </summary>
     /// <param name="attributeType"> The attribute to color by. </param>
     /// <param name="color"> The color to give the graphpoints. </param>
-    public void ColorByAttribute(string attributeType, Color color)
+    public void ColorByAttribute(string attributeType, bool color)
     {
-        if (attributes[attributeType] == "1")
+        if (attributes.ContainsKey(attributeType))
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.Color = color;
+                if (color)
+                    g.Material = graphManager.AttributeMaterials[attributes[attributeType]];
+                else
+                    g.Material = graphManager.defaultGraphPointMaterial;
             }
         }
     }
@@ -84,7 +79,7 @@ public class Cell
     /// </summary>
     /// <param name="attributeType"> The type of the attribute. </param>
     /// <param name="value"> "1" if this cell is of that attribute, "0" otherwise. </param>
-    public void AddAttribute(string attributeType, string value)
+    public void AddAttribute(string attributeType, int value)
     {
         attributes[attributeType] = value;
     }
@@ -101,11 +96,11 @@ public class Cell
 
         foreach (GraphPoint g in GraphPoints)
         {
-            if (expression > 29)
+            if (expression > CellExAlConfig.NumberOfExpressionColors - 1)
             {
-                expression = 29;
+                expression = CellExAlConfig.NumberOfExpressionColors - 1;
             }
-            g.Color = cellManager.GeneExpressionColors[expression];
+            g.Material = graphManager.GeneExpressionMaterials[expression];
         }
     }
 
@@ -131,11 +126,11 @@ public class Cell
 
         foreach (GraphPoint g in GraphPoints)
         {
-            if (expression > 29)
+            if (expression >= CellExAlConfig.NumberOfExpressionColors)
             {
-                expression = 29;
+                expression = CellExAlConfig.NumberOfExpressionColors - 1;
             }
-            g.Color = cellManager.GeneExpressionColors[expression];
+            g.Material = graphManager.GeneExpressionMaterials[expression];
         }
     }
 
@@ -148,7 +143,7 @@ public class Cell
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.Color = cellManager.GeneExpressionColors[facs[facsName]];
+            g.Material = graphManager.GeneExpressionMaterials[facs[facsName]];
         }
     }
 
@@ -167,12 +162,12 @@ public class Cell
     /// Sets the group and color of all graphpoints that are representing this cell.
     /// </summary>
     /// <param name="group"> The new group. </param>
-    public void SetGroup(Color col, int group)
+    public void SetGroup(int group)
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.Color = col;
             g.CurrentGroup = group;
+            g.Material = graphManager.SelectedMaterials[group];
         }
     }
 
@@ -203,14 +198,14 @@ public class Cell
                 {
                     expression = 29;
                 }
-                g.Color = cellManager.GeneExpressionColors[expression];
+                g.Material = graphManager.GeneExpressionMaterials[expression];
             }
         }
         else
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.Color = cellManager.GeneExpressionColors[0];
+                g.Material = graphManager.GeneExpressionMaterials[0];
             }
         }
         return true;

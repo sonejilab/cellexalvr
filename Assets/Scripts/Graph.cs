@@ -14,6 +14,7 @@ public class Graph : MonoBehaviour
     public string GraphName { get; set; }
     public string DirectoryName { get; set; }
     public List<GameObject> Lines { get; set; }
+    public GraphManager graphManager;
 
     private GraphPoint newGraphpoint;
     public Dictionary<string, GraphPoint> points;
@@ -27,6 +28,8 @@ public class Graph : MonoBehaviour
     private GameManager gameManager;
     private bool b = false;
 
+    private Material graphPointMaterial; // = Resources.Load("Materials/GraphPointGeneExpression") as Material;
+
     void Start()
     {
         points = new Dictionary<string, GraphPoint>(1024);
@@ -35,6 +38,7 @@ public class Graph : MonoBehaviour
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         gameManager = referenceManager.gameManager;
         Lines = new List<GameObject>();
+        graphPointMaterial = Resources.Load("Materials/GraphPointGeneExpression") as Material;
     }
 
     private void Update()
@@ -43,7 +47,6 @@ public class Graph : MonoBehaviour
         {
             gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
-
     }
     /// <summary>
     /// Turns on all renderers and colliders for this graph.
@@ -128,12 +131,7 @@ public class Graph : MonoBehaviour
     {
         Vector3 scaledCoordinates = ScaleCoordinates(x, y, z);
         newGraphpoint = Instantiate(graphpoint);
-        //print(newGraphpoint.GetComponent<Renderer>().material.FindPass("GRAPHPOINT_OUTLINE"));
-        //newGraphpoint.GetComponent<Renderer>().material.shader.maximumLOD = 200;
-        //newGraphpoint.GetComponent<Renderer>().material.SetShaderPassEnabled("GRAPHPOINT_OUTLINE", false);
-        //Shader.DisableKeyword("GRAPHPOINT_OUTLINE");
         newGraphpoint.gameObject.SetActive(true);
-        //newGraphpoint.GetComponent<Renderer>().material.DisableKeyword("GRAPHPOINT_OUTLINE");
         newGraphpoint.SetCoordinates(cell, scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
         newGraphpoint.transform.parent = transform;
         newGraphpoint.transform.localPosition = new Vector3(scaledCoordinates.x, scaledCoordinates.y, scaledCoordinates.z);
@@ -141,6 +139,7 @@ public class Graph : MonoBehaviour
         points[newGraphpoint.Label] = newGraphpoint;
         pointsPositions.Add(newGraphpoint.transform.localPosition);
 
+        newGraphpoint.GetComponent<Renderer>().sharedMaterial = graphManager.defaultGraphPointMaterial;
         defaultScale = transform.localScale;
     }
 

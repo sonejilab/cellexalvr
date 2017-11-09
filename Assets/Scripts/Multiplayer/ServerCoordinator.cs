@@ -66,7 +66,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellExAlLog.Log("Recieved message to color all graphs by attribute " + attributeType);
         Color col = new Color(r, g, b);
-        referenceManager.cellManager.ColorByAttribute(attributeType, col);
+        //referenceManager.cellManager.ColorByAttribute(attributeType, col);
     }
 
     [PunRPC]

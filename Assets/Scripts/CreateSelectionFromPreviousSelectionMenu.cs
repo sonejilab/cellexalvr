@@ -46,6 +46,10 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
 
             var buttonGameObject = Instantiate(buttonPrefab, transform);
             buttonGameObject.SetActive(true);
+            if (!menuToggler)
+            {
+                menuToggler = referenceManager.menuToggler;
+            }
             menuToggler.AddGameObjectToActivate(buttonGameObject, gameObject);
             menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
             buttonGameObject.transform.localPosition = buttonPos;
@@ -82,7 +86,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
             GraphPoint gp = selectedCells[i];
             cellnames[i] = gp.Label;
             cellgroups[i] = gp.CurrentGroup;
-            colors[gp.Color] = true;
+            colors[gp.Material.color] = true;
         }
         string name = "." + (buttons.Count + 1) + "\n" + colors.Count + "\n" + cellnames.Length;
 
