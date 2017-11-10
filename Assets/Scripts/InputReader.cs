@@ -317,6 +317,8 @@ public class InputReader : MonoBehaviour
         while (!streamReader.EndOfStream)
         {
             string line = streamReader.ReadLine();
+            if (line.Length == 0)
+                continue;
             words = line.Split(',');
             for (int j = 0; j < words.Length; ++j)
             {

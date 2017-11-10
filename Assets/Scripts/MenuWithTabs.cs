@@ -11,6 +11,7 @@ public class MenuWithTabs : MonoBehaviour
     protected MenuToggler menuToggler;
     protected List<Tab> tabs = new List<Tab>();
     protected Vector3 tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
+    protected Vector3 tabButtonPosOriginal = new Vector3(-0.433f, 0, 0.517f);
     protected Vector3 tabButtonPosInc = new Vector3(0.1f, 0, 0);
 
     protected virtual void Start()
@@ -43,9 +44,25 @@ public class MenuWithTabs : MonoBehaviour
         return newTab;
     }
 
+    /// <summary>
+    /// Destroys all tabs.
+    /// </summary>
+    public virtual void DestroyTabs()
+    {
+        foreach (Tab t in tabs)
+        {
+            Destroy(t.gameObject, 0.1f);
+        }
+        ResetTabButtonPosition();
+        tabs.Clear();
+    }
+
+    /// <summary>
+    /// Reset the position of where the next tab button should be created.
+    /// </summary>
     public virtual void ResetTabButtonPosition()
     {
-        tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
+        tabButtonPos = tabButtonPosOriginal;
     }
 
     /// <summary>

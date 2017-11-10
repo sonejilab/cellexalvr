@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 /// <summary>
@@ -9,15 +10,18 @@ public class FlashGenesMenu : MenuWithTabs
     public FlashGenesTab tabPrefab;
     public TextMesh loadingText;
 
+    // used for overriding some values
     public FlashGenesMenu()
     {
         tabButtonPos = new Vector3(-3.168f, 5.44f, 6.46f);
+        tabButtonPosOriginal = tabButtonPos;
         tabButtonPosInc = new Vector3(1.7f, 0, 0);
     }
 
     protected override void Start()
     {
         base.Start();
+        CellExAlEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
         CellExAlEvents.FlashGenesFileStartedLoading.AddListener(ShowLoadingText);
         CellExAlEvents.FlashGenesFileFinishedLoading.AddListener(HideLoadingText);
     }
@@ -51,6 +55,11 @@ public class FlashGenesMenu : MenuWithTabs
         {
             tabs[tabs.Count - 1].SetTabActive(true);
         }*/
+    }
+
+    private void OnGraphsUnloaded()
+    {
+        DestroyTabs();
     }
 
     private void ShowLoadingText()

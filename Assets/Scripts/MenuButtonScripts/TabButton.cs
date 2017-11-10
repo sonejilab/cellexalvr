@@ -9,9 +9,9 @@ public class TabButton : MonoBehaviour
     public Tab tab;
     public MenuWithTabs Menu;
 
-    private SteamVR_TrackedObject rightController;
-    private bool controllerInside = false;
-    private SteamVR_Controller.Device device;
+    protected SteamVR_TrackedObject rightController;
+    protected bool controllerInside = false;
+    protected SteamVR_Controller.Device device;
     private MeshRenderer meshRenderer;
     private Color standardColor = Color.gray;
     private Color highlightColor = Color.white;

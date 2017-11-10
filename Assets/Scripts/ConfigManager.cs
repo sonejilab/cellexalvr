@@ -207,6 +207,7 @@ public class ConfigManager : MonoBehaviour
         if (hashtagIndex == -1)
         {
             CellExAlLog.Log("WARNING: Bad line in the config file. Expected \'#\' but did not find it at line " + lineNbr + ": " + value);
+            return Color.white;
         }
         string hexcolorValue = value.Substring(hashtagIndex, 7);
         Color newColor = new Color();

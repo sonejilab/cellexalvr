@@ -144,7 +144,7 @@ public class CellManager : MonoBehaviour
     {
         if (!cells.ContainsKey(label))
         {
-            cells[label] = new Cell(label, this, graphManager);
+            cells[label] = new Cell(label, graphManager);
         }
         return cells[label];
     }
