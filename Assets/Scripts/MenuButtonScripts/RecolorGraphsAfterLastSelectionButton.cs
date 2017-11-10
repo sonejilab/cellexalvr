@@ -3,7 +3,6 @@
 /// </summary>
 class RecolorGraphsAfterLastSelectionButton : StationaryButton
 {
-    private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
 
     protected override string Description
@@ -13,7 +12,6 @@ class RecolorGraphsAfterLastSelectionButton : StationaryButton
 
     private void Start()
     {
-        selectionToolHandler = referenceManager.selectionToolHandler;
         graphManager = referenceManager.graphManager;
         SetButtonActivated(false);
         CellExAlEvents.SelectionStarted.AddListener(TurnOn);

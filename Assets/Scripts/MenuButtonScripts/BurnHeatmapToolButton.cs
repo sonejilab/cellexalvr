@@ -6,14 +6,10 @@ using UnityEngine;
 ///</summary>
 public class BurnHeatmapToolButton : StationaryButton
 {
-
-    private GameObject fire;
     private ControllerModelSwitcher controllerModelSwitcher;
-    private bool fireActivated = false;
 
     private void Start()
     {
-        fire = referenceManager.fire;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
         CellExAlEvents.HeatmapCreated.AddListener(TurnOn);

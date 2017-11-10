@@ -28,7 +28,6 @@ public class NetworkNode : MonoBehaviour
     private ReferenceManager referenceManager;
     private List<NetworkNode> neighbours = new List<NetworkNode>();
     private List<LineRenderer> connections = new List<LineRenderer>();
-    private Transform textTransform;
     private Color nodeColor;
     private List<Color> connectionColors = new List<Color>();
     private Vector3 normalScale;
@@ -42,7 +41,6 @@ public class NetworkNode : MonoBehaviour
 
     void Start()
     {
-        textTransform = geneName.transform;
         nodeColor = GetComponent<Renderer>().material.color;
         normalScale = transform.localScale;
         largerScale = normalScale * 2f;

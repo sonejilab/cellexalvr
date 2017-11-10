@@ -1,7 +1,6 @@
 ﻿public class CreateNetworksButton : StationaryButton
 {
     private NetworkGenerator networkGenerator;
-    private MenuRotator rotator;
     private GameManager gameManager;
 
     protected override string Description
@@ -14,9 +13,8 @@
 
     protected void Start()
     {
-        
+
         networkGenerator = referenceManager.networkGenerator;
-        rotator = referenceManager.menuRotator;
         gameManager = referenceManager.gameManager;
         SetButtonActivated(false);
         CellExAlEvents.SelectionConfirmed.AddListener(TurnOn);
@@ -32,10 +30,6 @@
             networkGenerator.GenerateNetworks();
             gameManager.InformGenerateNetworks();
             CellExAlEvents.NetworkCreated.Invoke();
-            //if (rotator.gameObject.activeSelf && rotator.SideFacingPlayer == MenuRotator.Rotation.Right)
-            //{
-            //    rotator.RotateLeft();
-            //}
         }
     }
 

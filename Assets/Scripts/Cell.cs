@@ -8,7 +8,6 @@ public class Cell
 {
     public List<GraphPoint> GraphPoints;
 
-    private CellManager cellManager;
     private GraphManager graphManager;
     private Dictionary<string, int> attributes;
     private Dictionary<string, int> facs;
@@ -23,10 +22,9 @@ public class Cell
     /// Creates a new cell.
     /// </summary>
     /// <param name="label"> A string that differentiates this cell from other cells. </param>
-    /// <param name="materialList"> A list of materials that should be used when coloring. </param>
-    public Cell(string label, CellManager cellManager, GraphManager graphManager)
+    /// <param name="graphManager"> The graphmanager that this cell has graphpoints in. </param>
+    public Cell(string label, GraphManager graphManager)
     {
-        this.cellManager = cellManager;
         this.graphManager = graphManager;
         this.Label = label;
         GraphPoints = new List<GraphPoint>();
@@ -56,10 +54,10 @@ public class Cell
     }
 
     /// <summary>
-    /// Color this cell by an attribute, if it is of that attribute.
+    /// Colors all graphpoints that represents this cell if this cell is of an attribute.
     /// </summary>
     /// <param name="attributeType"> The attribute to color by. </param>
-    /// <param name="color"> The color to give the graphpoints. </param>
+    /// <param name="color"> True if the graphpoints should be colored, false  if they should be white. (True means show this attribute, false means hide basically) </param>
     public void ColorByAttribute(string attributeType, bool color)
     {
         if (attributes.ContainsKey(attributeType))
@@ -78,16 +76,16 @@ public class Cell
     /// Adds an attribute to this cell.
     /// </summary>
     /// <param name="attributeType"> The type of the attribute. </param>
-    /// <param name="value"> "1" if this cell is of that attribute, "0" otherwise. </param>
-    public void AddAttribute(string attributeType, int value)
+    /// <param name="color"> The color that should be used for this attribute. This corresponds to an index in <see cref="GraphManager.AttributeMaterials"/>. </param>
+    public void AddAttribute(string attributeType, int color)
     {
-        attributes[attributeType] = value;
+        attributes[attributeType] = color;
     }
 
     /// <summary>
     /// Colors this cell after a gene expression it was recently colored by.
     /// </summary>
-    /// <param name="index"> The index of the gene (from the list of the 10 last genes) </param>
+    /// <param name="geneName"> The name of the gene </param>
     public void ColorByPreviousExpression(string geneName)
     {
         var expression = lastExpressions[geneName];
@@ -107,6 +105,8 @@ public class Cell
     /// <summary>
     /// Saves the current gene expression of this cell is colored by
     /// </summary>
+    /// <param name="saveGeneName"> The genename to save </param>
+    /// <param name="removeGeneName"> The name of a gene to remove or an empty string to not remove anything. Gene expressions can use up quite some memory so only 10 are saved at a time. </param>
     public void SaveExpression(string saveGeneName, string removeGeneName)
     {
         if (removeGeneName != null && removeGeneName != "")
@@ -119,7 +119,7 @@ public class Cell
     /// <summary>
     /// Color all graphpoints that represents this cell by their expression of a gene.
     /// </summary>
-    /// <param name="expression"> A number [0, 29] of how expressed this cell is. </param>
+    /// <param name="expression"> A number corresponding to an index in <see cref="GraphManager.GeneExpressionMaterials"/> of how expressed this cell is. </param>
     public void ColorByExpression(int expression)
     {
         ExpressionLevel = expression;
@@ -182,12 +182,22 @@ public class Cell
         }
     }
 
+    /// <summary>
+    /// Saves gene expressions so they can be flashed quickly later.
+    /// </summary>
+    /// <param name="category"> The category the gene expressions are in </param>
+    /// <param name="expression"> An array containing indices corresponding to <see cref="GraphManager.GeneExpressionMaterials"/>. </param>
     public void SaveFlashingExpression(string category, int[] expression)
     {
         flashingExpressions[category] = expression;
     }
 
-    public bool ColorByGeneInCategory(string category, int index)
+    /// <summary>
+    /// Colors by a gene in a category. Used for flashing genes.
+    /// </summary>
+    /// <param name="category"> The name of the category to choose from. </param>
+    /// <param name="index"> An index in from the array saved in <see cref="SaveFlashingExpression(string, int[])"/>. </param>
+    public void ColorByGeneInCategory(string category, int index)
     {
         if (flashingExpressions.ContainsKey(category))
         {
@@ -208,7 +218,6 @@ public class Cell
                 g.Material = graphManager.GeneExpressionMaterials[0];
             }
         }
-        return true;
     }
 
     /// <summary>

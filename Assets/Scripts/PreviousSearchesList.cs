@@ -20,7 +20,6 @@ public class PreviousSearchesList : MonoBehaviour
     public List<PreviousSearchesLock> searchLocks = new List<PreviousSearchesLock>();
     public List<CorrelatedGenesButton> correlatedGenesButtons = new List<CorrelatedGenesButton>();
 
-    private PreviousSearchesListNode topListNode;
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private CellManager cellManager;
@@ -41,7 +40,6 @@ public class PreviousSearchesList : MonoBehaviour
 
     private void Start()
     {
-        topListNode = referenceManager.topListNode;
         rightController = referenceManager.rightController;
         cellManager = referenceManager.cellManager;
         gameManager = referenceManager.gameManager;

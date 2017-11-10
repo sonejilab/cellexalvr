@@ -4,11 +4,7 @@
 /// </summary>
 class MagnifierToolButton : StationaryButton
 {
-    public Sprite gray;
-    public Sprite original;
-
     private ControllerModelSwitcher controllerModelSwitcher;
-    private GameObject magnifier;
 
     protected override string Description
     {
@@ -18,7 +14,6 @@ class MagnifierToolButton : StationaryButton
     private void Start()
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        magnifier = referenceManager.magnifierTool.gameObject;
         SetButtonActivated(false);
         CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
         CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);

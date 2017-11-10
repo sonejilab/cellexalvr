@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -15,14 +14,11 @@ public class HeatmapGenerator : MonoBehaviour
     public ErrorMessageController errorMessageController;
 
     private SelectionToolHandler selectionToolHandler;
-    private GraphManager graphManager;
-    private GameObject fire;
     private StatusDisplay status;
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;
     private ArrayList data;
     private Thread t;
-    private bool running = false;
     private SteamVR_Controller.Device device;
     private GameObject hourglass;
     private int heatmapID = 1;
@@ -36,8 +32,6 @@ public class HeatmapGenerator : MonoBehaviour
         hourglass.SetActive(false);
         heatmapPosition = heatmapPrefab.transform.position;
         selectionToolHandler = referenceManager.selectionToolHandler;
-        graphManager = referenceManager.graphManager;
-        fire = referenceManager.fire;
         status = referenceManager.statusDisplay;
         statusDisplayHUD = referenceManager.statusDisplayHUD;
         statusDisplayFar = referenceManager.statusDisplayFar;
@@ -135,7 +129,6 @@ public class HeatmapGenerator : MonoBehaviour
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             t.Start();
-            running = true;
             // Show hourglass
             hourglass.SetActive(true);
 
@@ -148,7 +141,6 @@ public class HeatmapGenerator : MonoBehaviour
             status.RemoveStatus(statusId);
             statusDisplayHUD.RemoveStatus(statusIdHUD);
             statusDisplayFar.RemoveStatus(statusIdFar);
-            running = false;
 
             string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";
             //File.Delete(newHeatmapFilePath);

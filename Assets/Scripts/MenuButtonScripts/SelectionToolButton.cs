@@ -8,9 +8,7 @@ using UnityEngine;
 public class SelectionToolButton : StationaryButton
 {
 
-    private SelectionToolHandler selectionToolHandler;
     private MenuRotator rotator;
-    private SelectionToolMenu selectionToolMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
     private bool menuActive = false;
     //private bool buttonsInitialized = false;
@@ -21,9 +19,7 @@ public class SelectionToolButton : StationaryButton
     }
     private void Start()
     {
-        selectionToolHandler = referenceManager.selectionToolHandler;
         rotator = referenceManager.menuRotator;
-        selectionToolMenu = referenceManager.selectionToolMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
         CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
@@ -50,11 +46,6 @@ public class SelectionToolButton : StationaryButton
             {
                 rotator.RotateLeft();
             }
-            //if (!buttonsInitialized)
-            //{
-            //    selectionToolMenu.InitializeButtons();
-            //    buttonsInitialized = true;
-            //}
         }
     }
 

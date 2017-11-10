@@ -13,7 +13,6 @@ public class DrawTool : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private BoxCollider controllerMenuCollider;
-    private List<Vector3> newPositions = new List<Vector3>();
     private List<LineRenderer> temporaryLines = new List<LineRenderer>();
     private List<LineRenderer> lines = new List<LineRenderer>();
     private LineRenderer[] trailLines = new LineRenderer[5];

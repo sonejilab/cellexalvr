@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -15,7 +14,6 @@ public class Heatmap : MonoBehaviour
     public TextMesh infoText;
     private Dictionary<Cell, int> containedCells;
     private SteamVR_Controller.Device device;
-    private GraphManager graphManager;
     private bool controllerInside = false;
     private GameObject fire;
     private SteamVR_TrackedObject rightController;
@@ -31,10 +29,7 @@ public class Heatmap : MonoBehaviour
         rightController = referenceManager.rightController;
         gameManager = referenceManager.gameManager;
         fire = referenceManager.fire;
-        graphManager = referenceManager.graphManager;
     }
-
-
 
     private void OnTriggerEnter(Collider other)
     {

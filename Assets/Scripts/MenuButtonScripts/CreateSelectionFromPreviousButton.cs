@@ -10,7 +10,6 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
     public TextMesh description;
 
     private SteamVR_TrackedObject rightController;
-    private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private new Renderer renderer;
     private bool controllerInside = false;
@@ -26,7 +25,6 @@ class CreateSelectionFromPreviousButton : MonoBehaviour
     private void Start()
     {
         rightController = referenceManager.rightController;
-        cellManager = referenceManager.cellManager;
     }
 
     void Update()

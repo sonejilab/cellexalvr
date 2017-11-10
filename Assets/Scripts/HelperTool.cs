@@ -26,7 +26,6 @@ public class HelperTool : MonoBehaviour
     private string standardText = "Point the laser towards something to find out more";
     private string descriptionFilePath;
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
-    private SteamVR_Controller.Device device;
     private GameObject helpMenu;
     private Ray ray;
     private RaycastHit hit;
@@ -34,7 +33,6 @@ public class HelperTool : MonoBehaviour
     private LayerMask savedLayersToIgnore;
     private Transform savedCustomOrigin = null;
     private float timeLastHit;
-    private float initialY;
     private bool activated;
 
     private void Start()
@@ -46,7 +44,6 @@ public class HelperTool : MonoBehaviour
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);
         rightController = referenceManager.rightController;
-        initialY = transform.localPosition.y;
         SetToolActivated(false);
     }
 
@@ -55,7 +52,6 @@ public class HelperTool : MonoBehaviour
         if (activated)
         {
             raycastingSource = customOrigin.transform;
-            device = SteamVR_Controller.Input((int)rightController.index);
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit, 100f, ~layersToIgnore))
             {
@@ -168,12 +164,12 @@ public class HelperTool : MonoBehaviour
     private void ReadDescriptionFile(string filepath)
     {
         // The file format should be
-        /// [KEY]:[VALUE]
-        /// [KEY]:[VALUE]
-        /// ...
-        /// Where [KEY] is either TAG_ followed by the name of a tag or just the name of a gameobject as it is displayed in the editor.
-        /// [VALUE] is the description that should be displayed when the tool touches the object
-
+        // [KEY]:[VALUE]
+        // [KEY]:[VALUE]
+        // ...
+        // Where [KEY] is either TAG_ followed by the name of a tag or just the name of a gameobject as it is displayed in the editor.
+        // [VALUE] is the description that should be displayed when the tool touches the object
+        CellExAlLog.Log("Started reading description file.");
         if (!File.Exists(filepath))
         {
             Debug.LogWarning("No description file found at " + filepath);
@@ -182,9 +178,10 @@ public class HelperTool : MonoBehaviour
 
         FileStream fileStream = new FileStream(filepath, FileMode.Open);
         StreamReader streamReader = new StreamReader(fileStream);
-
+        int lineNbr = 0;
         while (!streamReader.EndOfStream)
         {
+            lineNbr++;
             string line = streamReader.ReadLine();
             // ignore empty lines
             if (line.Length == 0)
@@ -197,6 +194,21 @@ public class HelperTool : MonoBehaviour
             // line breaks in decsriptions are written with \n in plaintext.
             string formattedLine = line.Replace(@"\n", "\n");
             string[] splitString = formattedLine.Split(new char[] { ':' }, 2);
+            if (splitString.Length != 2)
+            {
+                CellExAlLog.Log("WARNING: No colon (:) found in description file at line " + lineNbr);
+                continue;
+            }
+            if (splitString[0].Length == 0)
+            {
+                CellExAlLog.Log("WARNING: No key found in description file at line " + lineNbr);
+                continue;
+            }
+            if (splitString[1].Length == 0)
+            {
+                CellExAlLog.Log("WARNING: No description found in description file at line " + lineNbr);
+                continue;
+            }
             // tag names in the file start with "TAG_"
             if (formattedLine.Substring(0, 4).Equals("TAG_", StringComparison.Ordinal))
             {
@@ -212,5 +224,6 @@ public class HelperTool : MonoBehaviour
         }
         streamReader.Close();
         fileStream.Close();
+        CellExAlLog.Log("Finished reading description file.");
     }
 }

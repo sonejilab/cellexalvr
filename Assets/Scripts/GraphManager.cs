@@ -280,11 +280,6 @@ public class GraphManager : MonoBehaviour
         networks.Add(handler);
     }
 
-    public void SetMinMaxCoords(Graph graph, Vector3 min, Vector3 max)
-    {
-        graph.SetMinMaxCoords(min, max);
-    }
-
     /// <summary>
     /// Resets all graphpoints' in all graphs colors to white.
     /// </summary>

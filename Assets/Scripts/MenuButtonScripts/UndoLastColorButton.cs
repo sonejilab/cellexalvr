@@ -8,7 +8,6 @@ public class UndoLastColorButton : StationaryButton
     public Sprite grayScaleTexture;
 
     private SelectionToolHandler selectionToolHandler;
-    private Collider buttonCollider;
     protected override string Description
     {
         get { return "Undo last color"; }
@@ -17,7 +16,6 @@ public class UndoLastColorButton : StationaryButton
     protected override void Awake()
     {
         base.Awake();
-        buttonCollider = gameObject.GetComponent<Collider>();
         SetButtonActivated(false);
         CellExAlEvents.SelectionStarted.AddListener(TurnOn);
         CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
@@ -30,7 +28,6 @@ public class UndoLastColorButton : StationaryButton
     private void Start()
     {
         selectionToolHandler = referenceManager.selectionToolHandler;
-
     }
 
     void Update()

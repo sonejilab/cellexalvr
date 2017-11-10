@@ -32,7 +32,6 @@ public class InputReader : MonoBehaviour
     private StatusDisplay status;
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;
-    private SteamVR_TrackedObject rightController;
     private GameManager gameManager;
     private NetworkGenerator networkGenerator;
 
@@ -58,7 +57,6 @@ public class InputReader : MonoBehaviour
         status = referenceManager.statusDisplay;
         statusDisplayHUD = referenceManager.statusDisplayHUD;
         statusDisplayFar = referenceManager.statusDisplayFar;
-        rightController = referenceManager.rightController;
         networkGenerator = referenceManager.networkGenerator;
         if (debug)
         {

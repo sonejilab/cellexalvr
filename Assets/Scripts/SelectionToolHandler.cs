@@ -29,7 +29,6 @@ public class SelectionToolHandler : MonoBehaviour
     public Material graphpointHighlight;
     public Color[] Colors;
 
-    private SelectionToolMenu selectionToolMenu;
     private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
     private SteamVR_TrackedObject rightController;
@@ -49,7 +48,6 @@ public class SelectionToolHandler : MonoBehaviour
     // the number of steps we have taken back in the history.
     private int historyIndexOffset;
     private GameManager gameManager;
-    private GraphManager graphManager;
 
     /// <summary>
     /// Helper struct for remembering history when selecting graphpoints.
@@ -86,11 +84,9 @@ public class SelectionToolHandler : MonoBehaviour
 
     private void Start()
     {
-        selectionToolMenu = referenceManager.selectionToolMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         rightController = referenceManager.rightController;
         gameManager = referenceManager.gameManager;
-        graphManager = referenceManager.graphManager;
     }
 
     /// <summary>

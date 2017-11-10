@@ -8,7 +8,6 @@ public class RedoLastColorButton : StationaryButton
     public Sprite grayScaleTexture;
 
     private SelectionToolHandler selectionToolHandler;
-    private Collider buttonCollider;
 
     protected override string Description
     {
@@ -24,12 +23,6 @@ public class RedoLastColorButton : StationaryButton
         CellExAlEvents.EndOfHistoryReached.AddListener(TurnOff);
         CellExAlEvents.EndOfHistoryLeft.AddListener(TurnOn);
         CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-        buttonCollider = gameObject.GetComponent<Collider>();
     }
 
     void Update()

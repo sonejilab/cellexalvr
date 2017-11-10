@@ -10,7 +10,6 @@ class MinimizeToolButton : StationaryButton
     public Sprite gray;
 
     private ControllerModelSwitcher controllerModelSwitcher;
-    private MinimizeTool minimizer;
     private bool changeSprite;
 
     protected override string Description
@@ -21,7 +20,6 @@ class MinimizeToolButton : StationaryButton
     private void Start()
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        minimizer = referenceManager.minimizeTool;
         SetButtonActivated(false);
         CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
         CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);

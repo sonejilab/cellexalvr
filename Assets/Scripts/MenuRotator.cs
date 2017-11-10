@@ -8,7 +8,6 @@ public class MenuRotator : MonoBehaviour
 {
     public Rotation SideFacingPlayer { get; set; }
 
-    private float finalZRotation = 0;
     private bool isRotating = false;
     private Vector3 fromAngle;
     private float rotatedTotal;

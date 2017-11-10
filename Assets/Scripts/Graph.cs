@@ -26,7 +26,6 @@ public class Graph : MonoBehaviour
     private Vector3 defaultScale;
     private ReferenceManager referenceManager;
     private GameManager gameManager;
-    private bool b = false;
 
     private Material graphPointMaterial; // = Resources.Load("Materials/GraphPointGeneExpression") as Material;
 
@@ -75,7 +74,7 @@ public class Graph : MonoBehaviour
     }
 
     /// <summary>
-    /// Scales three coordinates to fit inside the graphs area. This method requires SetMinMax() to have been called already.
+    /// Scales three coordinates to fit inside the graphs area. This method requires <see cref="SetMinMaxCoords(Vector3, Vector3)"/> to have been called already.
     /// </summary>
     /// <param name="x"> The x-coordinate. </param>
     /// <param name="y"> The y-coordinate. </param>
@@ -147,8 +146,8 @@ public class Graph : MonoBehaviour
     /// Sets the maximum and minumum coordinates that this graph should use.
     /// These argument Vector3s can be seen as two opposite corners of a cuboid that the graph will the be rescaled to fit inside.
     /// </summary>
-    /// <param name="min"> The 3 minimun</param>
-    /// <param name="max"></param>
+    /// <param name="min"> The minimum coordinates. </param>
+    /// <param name="max"> The maximum coordinates. </param>
     public void SetMinMaxCoords(Vector3 min, Vector3 max)
     {
         minCoordValues = min;
@@ -241,10 +240,8 @@ public class Graph : MonoBehaviour
     /// </summary>
     public void ResetGraphColors()
     {
-        //bool graphPointActive;
         foreach (GraphPoint point in points.Values)
         {
-            //point.gameObject.SetActive(true);
             point.gameObject.SetActive(true);
             point.ResetColor();
         }

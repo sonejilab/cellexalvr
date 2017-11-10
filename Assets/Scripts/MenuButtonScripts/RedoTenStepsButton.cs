@@ -7,7 +7,6 @@ public class RedoTenStepsButton : StationaryButton
     public Sprite grayScaleTexture;
 
     private SelectionToolHandler selectionToolHandler;
-    private Collider buttonCollider;
 
     protected override string Description
     {
@@ -17,7 +16,6 @@ public class RedoTenStepsButton : StationaryButton
     protected override void Awake()
     {
         base.Awake();
-        buttonCollider = gameObject.GetComponent<Collider>();
         SetButtonActivated(false);
         CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
         CellExAlEvents.SelectionCanceled.AddListener(TurnOff);

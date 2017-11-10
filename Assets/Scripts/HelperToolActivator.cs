@@ -9,7 +9,6 @@ public class HelperToolActivator : MonoBehaviour
     public ReferenceManager referenceManager;
     public TextMesh descriptionText;
 
-    private HelperTool helpTool;
     private ControllerModelSwitcher controllerModelSwitcher;
     private int numControllersInside = 0;
     private string deactivatedDescription = "Put both controllers here\nif you need some help";
@@ -17,7 +16,6 @@ public class HelperToolActivator : MonoBehaviour
 
     private void Start()
     {
-        helpTool = referenceManager.helpTool;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 

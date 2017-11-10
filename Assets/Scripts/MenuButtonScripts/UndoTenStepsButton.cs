@@ -8,7 +8,6 @@ public class UndoTenStepsButton : StationaryButton
     public Sprite grayScaleTexture;
 
     private SelectionToolHandler selectionToolHandler;
-    private Collider buttonCollider;
     protected override string Description
     {
         get { return "Undo ten steps"; }
@@ -17,7 +16,6 @@ public class UndoTenStepsButton : StationaryButton
     protected override void Awake()
     {
         base.Awake();
-        buttonCollider = gameObject.GetComponent<Collider>();
         SetButtonActivated(false);
         CellExAlEvents.SelectionStarted.AddListener(TurnOn);
         CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
