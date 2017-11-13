@@ -11,17 +11,16 @@ public class FlashGenesTab : Tab
 
     private CellManager cellManager;
     private InputReader inputReader;
-    private MenuToggler menuToggler;
     private List<FlashGenesCategoryButton> buttons = new List<FlashGenesCategoryButton>();
     private Vector3 buttonPosStart = new Vector3(0, 0, 0);
     private Vector3 buttonPosInc = new Vector3(2.5f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(-7.5f, -2.5f, 0);
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         cellManager = referenceManager.cellManager;
         inputReader = referenceManager.inputReader;
-        menuToggler = referenceManager.menuToggler;
     }
 
     /// <summary>
@@ -35,8 +34,8 @@ public class FlashGenesTab : Tab
         {
             FlashGenesCategoryButton newButton = Instantiate(buttonPrefab, transform);
             newButton.gameObject.SetActive(true);
-            menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
-            menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
+            //menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
+            //menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
             newButton.transform.localPosition = nextButtonPos;
             newButton.transform.localRotation = Quaternion.identity;
             newButton.transform.localScale = Vector3.one;

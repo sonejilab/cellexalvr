@@ -43,6 +43,27 @@ public class MenuToggler : MonoBehaviour
         }
     }
 
+    public void AddGameObjectToActivateNoChildren(GameObject item, bool activate)
+    {
+        if (MenuActive) return;
+        Renderer r = item.GetComponent<Renderer>();
+        {
+            if (r)
+            {
+                renderers[r] = activate;
+                r.enabled = false;
+            }
+        }
+        Collider c = item.GetComponent<Collider>();
+        {
+            if (c)
+            {
+                colliders[c] = activate;
+                c.enabled = false;
+            }
+        }
+    }
+
     /// <summary>
     /// Adds a gameobject to the list of gameobjects to show when the menu is turned back on. 
     /// The gameobject will only be hidden if the whole menu is hidden or if the submenu it is attached to is hidden.
@@ -57,36 +78,12 @@ public class MenuToggler : MonoBehaviour
         if (!MenuActive)
         {
             bool submenuActive = renderers.ContainsKey(submenuRenderer) && renderers[submenuRenderer];
-            Renderer r = item.GetComponent<Renderer>();
-            if (r)
-            {
-                renderers[r] = submenuActive;
-                r.enabled = false;
-            }
-
-            Collider c = item.GetComponent<Collider>();
-            if (c)
-            {
-                colliders[c] = submenuActive;
-                c.enabled = false;
-            }
+            SaveAndSetVisible(item, submenuActive, false);
         }
         // if the menu is active but the submenu is not, then we should not show the new gameobject when the menu is turned back on.
         else if (MenuActive && subMenu.GetComponent<Renderer>() && !subMenu.GetComponent<Renderer>().enabled)
         {
-            Renderer r = item.GetComponent<Renderer>();
-            if (r)
-            {
-                renderers[r] = false;
-                r.enabled = false;
-            }
-
-            Collider c = item.GetComponent<Collider>();
-            if (c)
-            {
-                colliders[c] = false;
-                c.enabled = false;
-            }
+            SaveAndSetVisible(item, false, false);
         }
     }
 
@@ -98,19 +95,7 @@ public class MenuToggler : MonoBehaviour
     {
         if (MenuActive) return;
 
-        Renderer r = item.GetComponent<Renderer>();
-        if (r)
-        {
-            renderers[r] = true;
-            r.enabled = false;
-        }
-
-        Collider c = item.GetComponent<Collider>();
-        if (c)
-        {
-            colliders[c] = true;
-            c.enabled = false;
-        }
+        SaveAndSetVisible(item, true, false);
     }
 
     /// <summary>
@@ -164,6 +149,32 @@ public class MenuToggler : MonoBehaviour
             foreach (StationaryButton b in menu.GetComponentsInChildren<StationaryButton>())
             {
                 b.MenuTurnedOff();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Helper method to show or hide all renderers and colliders that belongs to a gameobject and are children to the gameobject.
+    /// </summary>
+    /// <param name="obj"> The gameobject. </param>
+    /// <param name="save"> True if this gameobject should turn back on when the menu is turned on, false otherwise. </param>
+    /// <param name="visible"> True if this gameobecj should be visible right now. </param>
+    private void SaveAndSetVisible(GameObject obj, bool save, bool visible)
+    {
+        foreach (Renderer r in obj.GetComponentsInChildren<Renderer>())
+        {
+            if (r)
+            {
+                renderers[r] = save;
+                r.enabled = visible;
+            }
+        }
+        foreach (Collider c in obj.GetComponentsInChildren<Collider>())
+        {
+            if (c)
+            {
+                colliders[c] = save;
+                c.enabled = visible;
             }
         }
     }

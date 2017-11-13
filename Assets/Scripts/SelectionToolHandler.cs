@@ -502,7 +502,7 @@ public class SelectionToolHandler : MonoBehaviour
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);
                 // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
-                file.Write(string.Format("#{0:X2}{1:X2}{2:X2}\t", r, g, b));
+                file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
                 file.Write("\t");
                 file.Write(gp.GraphName);
                 file.Write("\t");

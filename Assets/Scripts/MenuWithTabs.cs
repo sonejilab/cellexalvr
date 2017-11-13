@@ -29,6 +29,7 @@ public class MenuWithTabs : MonoBehaviour
     {
         var newTab = Instantiate(tabPrefab, transform);
         newTab.gameObject.SetActive(true);
+        //newTab.SetTabActive(false);
         //newTab.transform.parent = transform;
         newTab.TabButton.gameObject.transform.localPosition = tabButtonPos;
         newTab.TabButton.Menu = this;
@@ -36,11 +37,8 @@ public class MenuWithTabs : MonoBehaviour
         tabs.Add(newTab);
         if (!menuToggler)
             menuToggler = referenceManager.menuToggler;
-        // hide the tab buttons if the tab is hidden
-        foreach (Transform child in newTab.GetComponentsInChildren<Transform>())
-        {
-            menuToggler.AddGameObjectToActivate(child.gameObject, gameObject);
-        }
+        // tell the menu toggler to activate the tab button later if the menu is not active
+        menuToggler.AddGameObjectToActivateNoChildren(newTab.TabButton.gameObject, true);
         return newTab;
     }
 
