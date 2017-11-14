@@ -9,6 +9,7 @@ public class Tab : MonoBehaviour
     public TabButton TabButton;
 
     private MenuToggler menuToggler;
+    public bool Active { get; private set; }
 
     protected virtual void Awake()
     {
@@ -21,6 +22,11 @@ public class Tab : MonoBehaviour
     /// <param name="active"> True if this tab should be shown, false if hidden. </param>
     public virtual void SetTabActive(bool active)
     {
+        Active = active;
+        if (!menuToggler)
+        {
+            menuToggler = referenceManager.menuToggler;
+        }
         foreach (Transform child in transform)
         {
             // We don't want to change the state of the tab buttons, they should always be turned on. 
@@ -30,7 +36,7 @@ public class Tab : MonoBehaviour
                 {
                     // if the menu is turned on
                     ToggleGameObject(child.gameObject, active);
-                    // Toggle all children to the child as well.
+                    // Toggle all children to the child as well
                     foreach (Transform t in child.GetComponentsInChildren<Transform>())
                     {
                         ToggleGameObject(t.gameObject, active);

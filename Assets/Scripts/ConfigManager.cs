@@ -17,6 +17,9 @@ public static class CellExAlConfig
     public static Color MidExpressionColor { get; set; }
     public static Color HighExpressionColor { get; set; }
     public static Color[] AttributeColors { get; set; }
+    public static float NetworkLineSmallWidth { get; set; }
+    public static float NetworkLineLargeWidth { get; set; }
+    public static int NumberOfNetworkLineColors { get; set; }
 }
 
 /// <summary>
@@ -44,7 +47,6 @@ public class ConfigManager : MonoBehaviour
         {
             File.Copy(sampleConfigPath, configPath);
             CellExAlLog.Log("WARNING: No config file found at " + configPath + ". A sample config file has been created.");
-            return;
         }
         CellExAlLog.Log("Started reading the config file");
 
@@ -180,6 +182,17 @@ public class ConfigManager : MonoBehaviour
 
                 case "HighExpressionColor":
                     CellExAlConfig.HighExpressionColor = ReadColor(value, lineNbr);
+                    break;
+
+                case "NetworkLineSmallWidth":
+                    CellExAlConfig.NetworkLineSmallWidth = float.Parse(value);
+                    break;
+
+                case "NetworkLineLargeWidth":
+                    CellExAlConfig.NetworkLineLargeWidth = float.Parse(value);
+                    break;
+                case "NumberOfNetworkLineColors":
+                    CellExAlConfig.NumberOfNetworkLineColors = int.Parse(value);
                     break;
 
                 default:

@@ -114,6 +114,8 @@ public class ToggleArcsSubMenu : MenuWithTabs
                 buttonPos += buttonPosInc;
             }
         }
+        TurnOffAllTabs();
+        newTab.SetTabActive(GetComponent<Renderer>().enabled);
         buttonPos = buttonPosOrigin;
     }
 }

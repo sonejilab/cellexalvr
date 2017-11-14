@@ -11,7 +11,7 @@ Shader "Custom/GraphPointStandard" {
             "Queue" = "Geometry"
             "RenderType" = "Opaque"
             "IgnoreProjector" = "True"
-            "ForceNoShadowCasting" = "True"
+			"ForceNoShadowCasting" = "True"
         }
         Pass {
         Tags { "LightMode" = "ForwardBase" }
@@ -20,28 +20,16 @@ Shader "Custom/GraphPointStandard" {
             ZWrite On
             ZTest LEqual
             CGPROGRAM
+       	        // multi compile allows us to draw the spot light coming from the camera in the base pass
+				// this allows the use of batching which triples the framerate.
+		        #pragma multi_compile_fwdbase 
                 #pragma target 3.0
                 #pragma vertex vertBase
                 #pragma fragment fragBase
                 #include "UnityStandardCoreForward.cginc"
             ENDCG
         }
-
-        /*Pass {
-        Tags { "LightMode" = "ForwardAdd" }
-            Blend One One
-            Fog { Color (0,0,0,0) }
-            ZWrite On
-            ZTest LEqual
-            CGPROGRAM
-                #pragma target 3.0
-                #pragma vertex vertAdd
-                #pragma fragment fragAdd
-                #include "UnityStandardCoreForward.cginc"
-            ENDCG
-        }*/
-    //}
 	}
     Fallback "Diffuse"
-	}
+}
 	

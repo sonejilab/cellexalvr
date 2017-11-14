@@ -14,7 +14,6 @@ public class InputReader : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public NetworkCenter networkPrefab;
-    public NetworkNode networkNodePrefab;
 
     public TextMeshPro graphName;
 
@@ -426,19 +425,7 @@ public class InputReader : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Helper method to create network nodes.
-    /// </summary>
-    /// <param name="geneName"> The name of the gene that the network node should represent. </param>
-    /// <returns> Returns the newly created NetworkNode. </returns>
-    private NetworkNode CreateNetworkNode(string geneName)
-    {
-        NetworkNode newNode = Instantiate(networkNodePrefab);
-        newNode.CameraToLookAt = headset.transform;
-        newNode.SetReferenceManager(referenceManager);
-        newNode.Label = geneName;
-        return newNode;
-    }
+
 
     /// <summary>
     /// Reads the files containg networks.
@@ -555,15 +542,7 @@ public class InputReader : MonoBehaviour
             Color color = new Color();
             ColorUtility.TryParseHtmlString(words[3], out color);
             Vector3 position = graph.ScaleCoordinates(x, y, z);
-
-            NetworkCenter network = Instantiate(networkPrefab);
-            network.transform.parent = skeleton.transform;
-            network.transform.localPosition = position;
-            networkHandler.AddNetwork(network);
-            network.Handler = networkHandler;
-            network.NetworkCenterName = networkHandlerName + words[3];
-            graphManager.AddNetwork(networkHandler);
-            networkGenerator.networkList.Add(networkHandler);
+            NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, words[3], position);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {
@@ -607,19 +586,14 @@ public class InputReader : MonoBehaviour
             // add the nodes if they don't already exist
             if (!nodes.ContainsKey(node1))
             {
-                NetworkNode newNode = CreateNetworkNode(geneName1);
+                NetworkNode newNode = networkGenerator.CreateNetworkNode(geneName1, networks[color]);
                 nodes[node1] = newNode;
-                if (networks.ContainsKey(color))
-                    nodes[node1].Center = networks[color];
-                else
-                    print(color);
             }
 
             if (!nodes.ContainsKey(node2))
             {
-                NetworkNode newNode = CreateNetworkNode(geneName2);
+                NetworkNode newNode = networkGenerator.CreateNetworkNode(geneName2, networks[color]);
                 nodes[node2] = newNode;
-                nodes[node2].Center = networks[color];
             }
 
             Transform parentNetwork = networks[words[6]].transform;

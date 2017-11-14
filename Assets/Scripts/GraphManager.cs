@@ -19,7 +19,6 @@ public class GraphManager : MonoBehaviour
     public Shader graphPointNormalShader;
     public Shader graphPointOutlineShader;
 
-
     private CellManager cellManager;
     private SelectionToolHandler selectionToolHandler;
     private List<Graph> graphs;

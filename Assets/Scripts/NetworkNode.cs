@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using TMPro;
 
 /// <summary>
@@ -14,6 +12,8 @@ public class NetworkNode : MonoBehaviour
     public GameObject arcDescriptionPrefab;
     public Transform CameraToLookAt { get; set; }
     public NetworkCenter Center { get; set; }
+    public Material standardMaterial;
+    public Material highlightMaterial;
     private string label;
     public string Label
     {
@@ -28,7 +28,6 @@ public class NetworkNode : MonoBehaviour
     private ReferenceManager referenceManager;
     private List<NetworkNode> neighbours = new List<NetworkNode>();
     private List<LineRenderer> connections = new List<LineRenderer>();
-    private Color nodeColor;
     private List<Color> connectionColors = new List<Color>();
     private Vector3 normalScale;
     private Vector3 largerScale;
@@ -37,11 +36,12 @@ public class NetworkNode : MonoBehaviour
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool edgesAdded;
-    private float lineWidth = .0005f;
+    private float lineWidth = CellExAlConfig.NetworkLineSmallWidth;
 
     void Start()
     {
-        nodeColor = GetComponent<Renderer>().material.color;
+        GetComponent<Renderer>().sharedMaterial = standardMaterial;
+        GetComponent<Collider>().enabled = false;
         normalScale = transform.localScale;
         largerScale = normalScale * 2f;
     }
@@ -111,13 +111,12 @@ public class NetworkNode : MonoBehaviour
     /// </summary>
     public void Highlight()
     {
-        GetComponent<Renderer>().material.color = Color.white;
+        GetComponent<Renderer>().sharedMaterial = highlightMaterial;
         transform.localScale = largerScale;
         foreach (LineRenderer r in connections)
         {
             r.material.color = Color.white;
-            r.startWidth = .005f;
-            r.endWidth = .005f;
+            r.startWidth = r.endWidth = CellExAlConfig.NetworkLineSmallWidth * 3;
         }
     }
 
@@ -126,13 +125,12 @@ public class NetworkNode : MonoBehaviour
     /// </summary>
     public void UnHighlight()
     {
-        GetComponent<Renderer>().material.color = nodeColor;
+        GetComponent<Renderer>().sharedMaterial = standardMaterial;
         transform.localScale = normalScale;
         for (int i = 0; i < connections.Count; ++i)
         {
             connections[i].material.color = connectionColors[i];
-            connections[i].startWidth = lineWidth;
-            connections[i].endWidth = lineWidth;
+            connections[i].startWidth = connections[i].endWidth = CellExAlConfig.NetworkLineSmallWidth;
         }
     }
 
@@ -143,6 +141,8 @@ public class NetworkNode : MonoBehaviour
     {
         if (!edgesAdded)
         {
+            NetworkGenerator networkGenerator = referenceManager.networkGenerator;
+            Material[] LineMaterials = networkGenerator.LineMaterials;
             edgesAdded = true;
             foreach (NetworkNode buddy in neighbours)
             {
@@ -156,9 +156,8 @@ public class NetworkNode : MonoBehaviour
                     edge.transform.localScale = Vector3.one;
                     renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
                     // The colors are just random, they mean nothing. But they look pretty.
-                    renderer.material.color = UnityEngine.Random.ColorHSV(0, 1, .6f, 1, .6f, 1);
-                    renderer.startWidth = lineWidth;
-                    renderer.endWidth = lineWidth;
+                    renderer.sharedMaterial = LineMaterials[Random.Range(0, LineMaterials.Length)];
+                    renderer.startWidth = renderer.endWidth = CellExAlConfig.NetworkLineSmallWidth;
                     connections.Add(renderer);
                     connectionColors.Add(renderer.material.color);
                     buddy.connections.Add(renderer);

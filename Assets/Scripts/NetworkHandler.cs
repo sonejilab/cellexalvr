@@ -26,7 +26,8 @@ public class NetworkHandler : MonoBehaviour
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         gameManager = referenceManager.gameManager;
         meshRenderer = GetComponent<MeshRenderer>();
-        highlightedMaterials = new Material[] { meshRenderer.materials[0], highlightMaterial };
+        highlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(highlightMaterial) };
+        highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
         unhighlightedMaterials = new Material[] { meshRenderer.materials[0], null };
     }
     private void Update()

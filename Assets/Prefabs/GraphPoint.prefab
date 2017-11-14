@@ -28,7 +28,7 @@ GameObject:
   m_TagString: Graph
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &4702052495741726
 Transform:
@@ -52,7 +52,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
-  m_MotionVectors: 1
+  m_MotionVectors: 2
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
@@ -106,5 +106,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Graph: {fileID: 0}
-  normalShader: {fileID: 4800000, guid: 7fd00079c51767248b7731824758b6a7, type: 3}
-  outlineShader: {fileID: 4800000, guid: 9dc1dea0e00ce3d4a826ef13b054b008, type: 3}

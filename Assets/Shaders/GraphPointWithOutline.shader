@@ -20,30 +20,17 @@ Shader "Custom/GraphPointWithOutline" {
 		// Draw the actual graphpoint
         Pass {
         Tags { "LightMode" = "ForwardBase" }
-            //Blend One One
-            //Fog { Color (0,0,0,0) }
-            ZWrite On
-            ZTest LEqual
-            CGPROGRAM
-                #pragma target 3.0
-                #pragma vertex vertBase
-                #pragma fragment fragBase
-                #include "UnityStandardCoreForward.cginc"
-            ENDCG
-        }
-
-        Pass {
-        Tags { "LightMode" = "ForwardAdd" }
-            Blend One One
-            Fog { Color (0,0,0,0) }
-            ZWrite On
-            ZTest LEqual
-            CGPROGRAM
-                #pragma target 3.0
-                #pragma vertex vertAdd
-                #pragma fragment fragAdd
-                #include "UnityStandardCoreForward.cginc"
-            ENDCG
+           //Blend One One
+           //Fog { Color (0,0,0,0) }
+           ZWrite On
+           ZTest LEqual
+           CGPROGRAM
+		      #pragma multi_compile_fwdbase 
+              #pragma target 3.0
+              #pragma vertex vertBase
+              #pragma fragment fragBase
+              #include "UnityStandardCoreForward.cginc"
+           ENDCG
         }
 
         // Fill the stencil buffer

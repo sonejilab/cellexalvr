@@ -269,6 +269,7 @@ namespace VRTK
 
                 OnControllerTouchInteractableObject(SetControllerInteractEvent(touchedObject));
             }
+
         }
 
         protected virtual void FixedUpdate()

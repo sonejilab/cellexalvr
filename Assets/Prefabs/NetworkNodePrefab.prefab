@@ -169,6 +169,8 @@ MonoBehaviour:
   edgePrefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 2}
   arcDescriptionPrefab: {fileID: 1797228523857888, guid: d9d7155f17f7d1b448e25f3721807daa,
     type: 2}
+  standardMaterial: {fileID: 2100000, guid: 9cfe725c6e37d244a964b41189e1d31d, type: 2}
+  highlightMaterial: {fileID: 2100000, guid: e333e1753c2fcf1458b8dd3da30b3466, type: 2}
 --- !u!114 &114269250619962334
 MonoBehaviour:
   m_ObjectHideFlags: 1

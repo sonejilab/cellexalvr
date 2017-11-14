@@ -72,3 +72,13 @@ AttributeColors ={	#FF0000
 					#9FFFAC
 					#2A40AC
 					#6AAC2A	}
+
+# The scale of the lines between genes within networks when the networks are still small and a graph skeleton.
+NetworkLineSmallWidth = 0.003
+
+
+NetworkLineLargeWidth = 0.01
+
+# The number of color hue values used drawing the the lines between genes within networks.
+# The total number of materials created is n*(n/6)^2
+NumberOfNetworkLineColors = 12

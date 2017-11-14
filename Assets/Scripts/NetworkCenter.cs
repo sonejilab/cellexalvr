@@ -169,7 +169,7 @@ public class NetworkCenter : MonoBehaviour
         rigidbody.useGravity = false;
         rigidbody.isKinematic = true;
         rigidbody.angularDrag = float.PositiveInfinity;
-        var interactableObject = gameObject.AddComponent<VRTK_InteractableObject>();
+        var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
         interactableObject.isGrabbable = true;
         interactableObject.isUsable = false;
         var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
@@ -259,7 +259,7 @@ public class NetworkCenter : MonoBehaviour
         transform.rotation = oldRotation;
         transform.localScale = oldScale;
         // this network will now be part of the convex hull which already has a rigidbody and these scripts
-        Destroy(gameObject.GetComponent<VRTK_FixedJointGrabAttach>());
+        Destroy(gameObject.GetComponent<NetworkCenterInteract>());
         Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
         Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
         Destroy(gameObject.GetComponent<Rigidbody>());
