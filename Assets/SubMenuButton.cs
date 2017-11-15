@@ -77,7 +77,7 @@ class SubMenuButton : StationaryButton
                 }
                 else
                 {
-                    if (tab == menu.GetComponent<ToggleArcsSubMenu>().tabPrefab) continue;
+					if (menu.GetComponent<ToggleArcsSubMenu>() && tab == menu.GetComponent<ToggleArcsSubMenu>().tabPrefab) continue;
                     if (activeTab != null)
                         tab.SetTabActive(tab == activeTab);
                     else
