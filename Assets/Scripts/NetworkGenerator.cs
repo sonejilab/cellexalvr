@@ -58,7 +58,7 @@ public class NetworkGenerator : MonoBehaviour
             numColors = 1;
         }
         List<Material> result = new List<Material>();
-        // Create a cuboid a 3D color spectrum and choose the colors
+        // Create a cuboid in a 3D color spectrum and choose the colors
         // from the spectrum at (sort of) evenly distributed points in that cuboid.
         float spaceBetween = 1f / numColors;
         int sidex = numColors;

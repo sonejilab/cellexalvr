@@ -156,7 +156,7 @@ public class NetworkNode : MonoBehaviour
                     edge.transform.localScale = Vector3.one;
                     renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
                     // The colors are just random, they mean nothing. But they look pretty.
-                    renderer.sharedMaterial = LineMaterials[Random.Range(0, LineMaterials.Length)];
+                    renderer.sharedMaterial = networkGenerator.LineMaterials[Random.Range(0, LineMaterials.Length)];
                     renderer.startWidth = renderer.endWidth = CellExAlConfig.NetworkLineSmallWidth;
                     connections.Add(renderer);
                     connectionColors.Add(renderer.material.color);

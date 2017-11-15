@@ -10,9 +10,7 @@ using Valve.VR;
 public static class CellExAlLog
 {
     private static string logDirectory;
-    private static string logFilePath;
-    private static FileStream logStream;
-    private static TextWriter logWriter;
+    private static string logFilePath = "";
     private static List<string> logThisLater = new List<string>();
 
     public static void InitNewLog()
@@ -35,8 +33,6 @@ public static class CellExAlLog
             File.Create(logFilePath).Dispose();
         }
 
-        logStream = new FileStream(logFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-        logWriter = new StreamWriter(logStream);
 
         string nicerTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         Log("Welcome to CellExAl " + Application.version,
@@ -77,22 +73,53 @@ public static class CellExAlLog
     /// <param name="message"> The string that should be written to the log. </param>
     public static void Log(string message)
     {
-        if (logWriter == null)
+        if (logFilePath == "")
         {
             logThisLater.Add("\t" + message);
         }
         else
         {
-            logWriter.WriteLine(message);
-            logWriter.Flush();
+            using (StreamWriter logWriter = new StreamWriter(new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+            {
+                logWriter.WriteLine(message);
+                logWriter.Flush();
+            }
         }
+    }
+
+    /// <summary>
+    /// Logs multiple messages. This method will append a linebreak between each message.
+    /// </summary>
+    /// <param name="message"> The messages that should be written to the log. </param>
+    public static void Log(params string[] message)
+    {
+        if (logFilePath == "")
+        {
+            foreach (string s in message)
+            {
+                logThisLater.Add("\t" + s);
+            }
+        }
+        else
+        {
+            using (StreamWriter logWriter = new StreamWriter(new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+            {
+                foreach (string s in message)
+                {
+                    logWriter.WriteLine(s);
+                }
+                logWriter.Flush();
+            }
+        }
+
+
     }
 
     /// <summary>
     /// Replaces all forward and backward slashes with whatever is the correct directory seperator character on this system.
     /// </summary>
-    /// <param name="path"> A file path with a wierd mix of forward and backward slashes. </param>
-    /// <returns> A file path without a wierd mix of forward and backward slashes. </returns>
+    /// <param name="path"> A file path with a weird mix of forward and backward slashes. </param>
+    /// <returns> A file path without a weird mix of forward and backward slashes. </returns>
     public static string FixFilePath(string path)
     {
         char directorySeparatorChar = Path.DirectorySeparatorChar;
@@ -102,53 +129,16 @@ public static class CellExAlLog
     }
 
     /// <summary>
-    /// Logs multiple messages. This method will append a linebreak between each message.
-    /// </summary>
-    /// <param name="message"> The messages that should be written to the log. </param>
-    public static void Log(params string[] message)
-    {
-        if (logWriter == null)
-        {
-            foreach (string s in message)
-            {
-                logThisLater.Add("\t" + s);
-            }
-        }
-        else
-        {
-            foreach (string s in message)
-            {
-                logWriter.WriteLine(s);
-            }
-            logWriter.Flush();
-        }
-    }
-
-    /// <summary>
     /// Closes the old log and opens a new log.
     /// </summary>
     public static void UsernameChanged()
     {
-        if (logWriter != null)
+        if (logFilePath != "")
         {
             Log("Changing user to " + CellExAlUser.Username,
                 "Goodbye.");
-            Close();
         }
         InitNewLog();
-    }
-
-    /// <summary>
-    /// Closes the output stream to the log.
-    /// </summary>
-    public static void Close()
-    {
-        if (logWriter != null)
-        {
-            logWriter.Close();
-            logStream.Close();
-            logWriter = null;
-        }
     }
 }
 
@@ -162,6 +152,8 @@ public class LogManager : MonoBehaviour
     {
         //CellExAlLog.InitNewLog();
         CellExAlUser.UsernameChanged.AddListener(CellExAlLog.UsernameChanged);
+        CellExAlEvents.GraphsLoaded.AddListener(CellExAlLog.InitNewLog);
+
         string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";
 
         if (!Directory.Exists(outputDirectory))
@@ -210,7 +202,6 @@ public class LogManager : MonoBehaviour
         string nicerTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         CellExAlLog.Log("Application quit on " + nicerTime);
         CellExAlLog.Log("Goodbye.");
-        CellExAlLog.Close();
     }
 
     #endregion

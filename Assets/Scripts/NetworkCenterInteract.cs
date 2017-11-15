@@ -2,19 +2,26 @@
 using VRTK;
 
 /// <summary>
-/// This class handles what happens when a network is interacted with.
+/// This class handles what happens when a network center is interacted with.
 /// </summary>
 class NetworkCenterInteract : VRTK_InteractableObject
 {
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
-        // moving many triggers really pushes what unity is capable of
-        foreach (Collider c in GetComponentsInChildren<Collider>())
+        if (grabbingObjects.Count == 1)
         {
-            if (c.gameObject.name != "Ring")
-                c.enabled = false;
-            else
-                ((MeshCollider)c).convex = true;
+            // moving many triggers really pushes what unity is capable of
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+            {
+                if (c.gameObject.name != "Ring" && c.gameObject.name != "Enlarged Network")
+                {
+                    c.enabled = false;
+                }
+                else if (c.gameObject.name == "Ring")
+                {
+                    ((MeshCollider)c).convex = true;
+                }
+            }
         }
         base.OnInteractableObjectGrabbed(e);
     }
@@ -25,10 +32,15 @@ class NetworkCenterInteract : VRTK_InteractableObject
         {
             foreach (Collider c in GetComponentsInChildren<Collider>())
             {
-                if (c.gameObject.name != "Ring")
+                if (c.gameObject.name != "Ring" && c.gameObject.name != "Enlarged Network")
+                {
                     c.enabled = true;
-                else
+                }
+                else if (c.gameObject.name == "Ring")
+                {
                     ((MeshCollider)c).convex = false;
+                }
+
             }
         }
         base.OnInteractableObjectUngrabbed(e);

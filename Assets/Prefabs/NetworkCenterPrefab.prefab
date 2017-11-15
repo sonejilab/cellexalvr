@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33453337135627904}
   - component: {fileID: 23259352955223570}
   - component: {fileID: 64684723448277922}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Ring
   m_TagString: Network
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 224451971760373060}
   - component: {fileID: 222504405785792032}
   - component: {fileID: 114284830985778830}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Other (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 223365399342761644}
   - component: {fileID: 114955523793224592}
   - component: {fileID: 114147774324732390}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: InfoCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 224038655832818268}
   - component: {fileID: 222918310312127076}
   - component: {fileID: 114365614648660516}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Other
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 224012938525598962}
   - component: {fileID: 222179741933623920}
   - component: {fileID: 114878040427955872}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: NrOfCells
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 224725753253782520}
   - component: {fileID: 222213335965301940}
   - component: {fileID: 114900868009569264}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 65265384985586142}
   - component: {fileID: 212061106907495026}
   - component: {fileID: 114052418412184118}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Show Info Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 23003621475484474}
   - component: {fileID: 114190743744166870}
   - component: {fileID: 114492706860786364}
-  m_Layer: 2
+  m_Layer: 11
   m_Name: NetworkCenterPrefab
   m_TagString: Network
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 223134929994599350}
   - component: {fileID: 114408320813177340}
   - component: {fileID: 114913109776281252}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ButtonCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 222119872287490604}
   - component: {fileID: 114235242178268010}
   - component: {fileID: 114705517376298638}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ButtonPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 4151404759430638}
   - component: {fileID: 33141155334007098}
   - component: {fileID: 64510857593938476}
-  m_Layer: 2
+  m_Layer: 11
   m_Name: Ring2
   m_TagString: Network
   m_Icon: {fileID: 0}
