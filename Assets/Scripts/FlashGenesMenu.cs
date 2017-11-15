@@ -32,7 +32,6 @@ public class FlashGenesMenu : MenuWithTabs
     /// <param name="dataFolderPath"> The path to the folder where the .fgv files are. </param>
     public void CreateTabs(string dataFolderPath)
     {
-		print (dataFolderPath);
         string[] files = Directory.GetFiles(dataFolderPath, "*.fgv");
         foreach (string file in files)
         {

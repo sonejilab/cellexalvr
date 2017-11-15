@@ -319,6 +319,7 @@ namespace SQLiter
             _result.Clear();
             builder.Remove(0, builder.Length);
             List<string> prunedGenes = new List<string>();
+
             while (_reader.Read())
             {
                 string gene = _reader.GetString(0);

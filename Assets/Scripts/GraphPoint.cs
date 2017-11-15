@@ -9,6 +9,7 @@ public class GraphPoint : MonoBehaviour
 
     private float x, y, z;
     private MeshRenderer graphPointRenderer;
+	public string label;
 
     #region Properties
 
@@ -56,6 +57,7 @@ public class GraphPoint : MonoBehaviour
     public void SetCoordinates(Cell cell, float x, float y, float z)
     {
         this.Cell = cell;
+		label = cell.Label;
         this.x = x;
         this.y = y;
         this.z = z;

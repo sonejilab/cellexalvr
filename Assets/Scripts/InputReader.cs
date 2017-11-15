@@ -60,7 +60,7 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             status.gameObject.SetActive(true);
-            ReadFolder(@"Bertie");
+            ReadFolder(@"stresstest");
         }
         CellExAlUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
