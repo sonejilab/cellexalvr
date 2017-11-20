@@ -20,9 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4792838495551032}
   - component: {fileID: 33350529180476388}
-  - component: {fileID: 114270204001594816}
+  - component: {fileID: 114028151767601336}
   - component: {fileID: 114610040334634022}
-  - component: {fileID: 114067437061871334}
   - component: {fileID: 23423498432608762}
   - component: {fileID: 64780885050579716}
   - component: {fileID: 54438818171834790}
@@ -197,7 +196,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114067437061871334
+--- !u!114 &114028151767601336
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -205,35 +204,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1496824086956574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46344268be816794389d9c5c2e66d07d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ungrabDistance: 2
-  lockXAxis: 0
-  lockYAxis: 0
-  lockZAxis: 0
-  uniformScaling: 1
---- !u!114 &114070940930869060
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1496824086956574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e43948f7a8190d4ab339dfabc00e687, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 2100000, guid: 3d938759d8b7a414988ec3261fb5265d, type: 2}
---- !u!114 &114270204001594816
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1496824086956574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 16b8da533ac96d844b01e7b24f2356a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
@@ -246,7 +217,7 @@ MonoBehaviour:
   grabOverrideButton: 0
   allowedGrabControllers: 0
   grabAttachMechanicScript: {fileID: 114610040334634022}
-  secondaryGrabActionScript: {fileID: 114067437061871334}
+  secondaryGrabActionScript: {fileID: 0}
   isUsable: 0
   holdButtonToUse: 0
   useOnlyIfGrabbed: 0
@@ -254,6 +225,18 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+--- !u!114 &114070940930869060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1496824086956574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e43948f7a8190d4ab339dfabc00e687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 2100000, guid: 3d938759d8b7a414988ec3261fb5265d, type: 2}
 --- !u!114 &114610040334634022
 MonoBehaviour:
   m_ObjectHideFlags: 1

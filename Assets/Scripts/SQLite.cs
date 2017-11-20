@@ -47,6 +47,7 @@ namespace SQLiter
         public ReferenceManager referenceManager;
 
         private CellManager cellManager;
+        private InputReader inputReader;
         private StatusDisplay status;
         // Location of database - this will be set during Awake as to stop Unity 5.4 error regarding initialization before scene is set
         // file should show up in the Unity inspector after a few seconds of running it the first time
@@ -94,6 +95,7 @@ namespace SQLiter
                 Debug.Log("--- Start ---");
             cellManager = referenceManager.cellManager;
             status = referenceManager.statusDisplay;
+            inputReader = referenceManager.inputReader;
             // just for testing, comment/uncomment to play with it
             // note that it MUST be invoked after SQLite has initialized, 2-3 seconds later usually.  1 second is cutting it too close
             // Invoke("Test", 3);
@@ -359,11 +361,7 @@ namespace SQLiter
             float binSize = 0;
             float minExpr = float.MaxValue;
             float maxExpr = float.MinValue;
-            int[][] expressions = new int[cellNames.Count][];
-            for (int j = 0; j < expressions.Length; ++j)
-            {
-                expressions[j] = new int[genes.Length];
-            }
+            int[,] expressions = new int[cellNames.Count, genes.Length];
             int geneNbr = 0;
             while (_reader.Read())
             {
@@ -385,17 +383,17 @@ namespace SQLiter
                                 // Keep adding zeroes until we encounter the cell names in the result
                                 while (pair.Cell != cellNames[cellNbr] && cellNbr < cellNames.Count)
                                 {
-                                    expressions[cellNbr][geneNbr] = 0;
+                                    expressions[cellNbr, geneNbr] = 0;
                                     cellNbr++;
                                 }
                                 if (cellNbr >= cellNames.Count) break;
-                                expressions[cellNbr][geneNbr] = (int)((pair.Expression - minExpr) / binSize);
+                                expressions[cellNbr, geneNbr] = (int)((pair.Expression - minExpr) / binSize);
                                 cellNbr++;
                             }
                             else
                             {
                                 // If we are out of results, the rest of the expressions should be zero.
-                                expressions[cellNbr][geneNbr] = 0;
+                                expressions[cellNbr, geneNbr] = 0;
                                 cellNbr++;
                             }
                         }
@@ -429,26 +427,39 @@ namespace SQLiter
                     // Keep adding zeroes until we encounter the cell names in the result
                     while (pair.Cell != cellNames[cellNbr] && cellNbr < cellNames.Count)
                     {
-                        expressions[cellNbr][geneNbr] = 0;
+                        expressions[cellNbr, geneNbr] = 0;
                         cellNbr++;
                     }
                     if (cellNbr >= cellNames.Count) break;
-                    expressions[cellNbr][geneNbr] = (int)((pair.Expression - minExpr) / binSize);
+                    expressions[cellNbr, geneNbr] = (int)((pair.Expression - minExpr) / binSize);
                     cellNbr++;
                 }
                 else
                 {
                     // If we are out of results, the rest of the expressions should be zero.
-                    expressions[cellNbr][geneNbr] = 0;
+                    expressions[cellNbr, geneNbr] = 0;
                     cellNbr++;
                 }
             }
             // Finally give the cellmanager the results.
-            for (i = 0; i < expressions.Length; ++i)
-            {
-                cellManager.SaveFlashingExpression(cellNames[i], category, expressions[i]);
+            string[] sortedGenes = prunedGenes.ToArray();
+            int[][] invertedExpressions = new int[expressions.GetLength(1)][];
 
+            for (int j = 0; j < invertedExpressions.Length; ++j)
+            {
+                invertedExpressions[j] = new int[expressions.GetLength(0)];
             }
+
+            for (int j = 0; j < expressions.GetLength(0); ++j)
+            {
+                for (int k = 0; k < expressions.GetLength(1); ++k)
+                {
+                    invertedExpressions[k][j] = expressions[j, k];
+                }
+            }
+
+            inputReader.SortGenesMeanExpression(ref sortedGenes, ref invertedExpressions);
+            cellManager.SaveFlashingExpression(cellNames.ToArray(), category, invertedExpressions);
             //print("saved " + cellNames.Count + " " + category + " " + expressions[0].Length);
 
             if (DebugMode)

@@ -6,7 +6,6 @@ using VRTK;
 /// </summary>
 class NetworkHandlerInteract : VRTK_InteractableObject
 {
-    public MagnifierTool magnifier;
 
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
@@ -15,6 +14,10 @@ class NetworkHandlerInteract : VRTK_InteractableObject
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = false;
+            if (c.gameObject.name == "Ring")
+            {
+                ((MeshCollider)c).convex = true;
+            }
         }
         base.OnInteractableObjectGrabbed(e);
     }
@@ -24,6 +27,10 @@ class NetworkHandlerInteract : VRTK_InteractableObject
         foreach (Collider c in GetComponentsInChildren<Collider>())
         {
             c.enabled = true;
+            if (c.gameObject.name == "Ring")
+            {
+                ((MeshCollider)c).convex = false;
+            }
         }
         base.OnInteractableObjectUngrabbed(e);
     }

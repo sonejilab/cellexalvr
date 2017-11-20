@@ -43,6 +43,12 @@ public class MenuToggler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///  Adds a gameobject to activate or not activate later when the menu comes back on.
+    ///  This method does nothing if the menu is already active.
+    /// </summary>
+    /// <param name="item"> The gameobject to activate. </param>
+    /// <param name="activate"> True for activating the gameobject later, false for not activating it. </param>
     public void AddGameObjectToActivateNoChildren(GameObject item, bool activate)
     {
         if (MenuActive) return;

@@ -67,8 +67,11 @@ class SubMenuButton : StationaryButton
             }
             else
             {
+                // for everything that is a tab
                 if (!activate)
                 {
+                    // if we are turning off the menu
+                    // save the active tab
                     if (tab.Active)
                         activeTab = tab;
                     tab.SetTabActive(false);
@@ -77,12 +80,16 @@ class SubMenuButton : StationaryButton
                 }
                 else
                 {
-					if (menu.GetComponent<ToggleArcsSubMenu>() && tab == menu.GetComponent<ToggleArcsSubMenu>().tabPrefab) continue;
-					if (menu.GetComponent<FlashGenesMenu>() && tab == menu.GetComponent<FlashGenesMenu>().tabPrefab) continue;
+                    // if we are turning on the menu
+                    // skip the tab prefabs
+                    if (menu.GetComponent<ToggleArcsSubMenu>() && tab == menu.GetComponent<ToggleArcsSubMenu>().tabPrefab) continue;
+                    if (menu.GetComponent<FlashGenesMenu>() && tab == menu.GetComponent<FlashGenesMenu>().tabPrefab) continue;
+                    // if we have a saved tab that should be active, turn on that one and turn off the other ones.
+                    // if there is no saved active tab, turn all tabs off
                     if (activeTab != null)
                         tab.SetTabActive(tab == activeTab);
                     else
-                        tab.SetTabActive(true);
+                        tab.SetTabActive(false);
                     tab.TabButton.GetComponent<Renderer>().enabled = true;
                     tab.TabButton.GetComponent<Collider>().enabled = true;
                 }

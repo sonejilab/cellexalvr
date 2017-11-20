@@ -8,8 +8,9 @@ public class GraphPoint : MonoBehaviour
     public Graph Graph;
 
     private float x, y, z;
+    public string label;
     private MeshRenderer graphPointRenderer;
-	public string label;
+    private GameObject oldParent;
 
     #region Properties
 
@@ -57,7 +58,7 @@ public class GraphPoint : MonoBehaviour
     public void SetCoordinates(Cell cell, float x, float y, float z)
     {
         this.Cell = cell;
-		label = cell.Label;
+        label = cell.Label;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -76,6 +77,7 @@ public class GraphPoint : MonoBehaviour
         Rigidbody rig = GetComponent<Rigidbody>();
         if (rig != null)
         {
+            transform.parent = oldParent.transform;
             Destroy(rig);
         }
     }
@@ -88,6 +90,7 @@ public class GraphPoint : MonoBehaviour
     public void SaveParent(Graph parent)
     {
         Graph = parent;
+        oldParent = parent.gameObject;
     }
 
     /// <summary>

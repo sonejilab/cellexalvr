@@ -149,7 +149,7 @@ public class SelectionToolHandler : MonoBehaviour
             CellExAlEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
-        if (newGroup != oldGroup)
+        if (newGroup != oldGroup || newNode)
         {
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
@@ -367,6 +367,10 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void ConfirmSelection()
     {
+        if (selectedCells.Count == 0)
+        {
+            print("0");
+        }
         // create .txt file with latest selection
         DumpData();
         lastSelectedCells.Clear();
@@ -374,10 +378,10 @@ public class SelectionToolHandler : MonoBehaviour
         foreach (GraphPoint c in selectedCells)
         {
             c.SetOutLined(false, c.CurrentGroup);
-            lastSelectedCells.Add(c.gameObject.GetComponent<GraphPoint>());
+            lastSelectedCells.Add(c);
         }
-        // clear the list since we are done with it
         previousSelectionMenu.CreateButton(selectedCells);
+        // clear the list since we are done with it
         selectedCells.Clear();
         selectionHistory.Clear();
         CellExAlEvents.SelectionConfirmed.Invoke();
@@ -389,6 +393,8 @@ public class SelectionToolHandler : MonoBehaviour
 
     private IEnumerator UpdateRObjectGrouping()
     {
+        // wait one frame to let ConfirmSelection finish.
+        yield return null;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
         string args = CellExAlUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
         CellExAlLog.Log("Updating R Object grouping at " + CellExAlUser.UserSpecificFolder);

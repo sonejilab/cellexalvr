@@ -157,7 +157,7 @@ public class CellManager : MonoBehaviour
     /// <param name="groups"> An array of all colors that the cells should have. </param>
     public void CreateNewSelection(string graphName, string[] cellnames, int[] groups)
     {
-        // finds any graph
+        selectionToolHandler.CancelSelection();
         Graph graph = graphManager.FindGraph(graphName);
         for (int i = 0; i < cellnames.Length; ++i)
         {
@@ -336,6 +336,7 @@ public class CellManager : MonoBehaviour
             cell = c;
             break;
         }
+
         CellExAlLog.Log("Number of genes that were present in the database:");
         Dictionary<string, int> categoryLengths = cell.GetCategoryLengths();
         FlashGenesCategoryFilter.Clear();
@@ -569,8 +570,19 @@ public class CellManager : MonoBehaviour
     /// <param name="cell"> The cell that these expressions belong to. </param>
     /// <param name="category"> The expressions' category. </param>
     /// <param name="expr"> An array containing integers int he range [0,29] that denotes the cell's expression of the gene corresponding to that index. </param>
-    internal void SaveFlashingExpression(string cell, string category, int[] expr)
+    internal void SaveFlashingExpression(string[] cell, string category, int[][] expr)
     {
-        cells[cell].SaveFlashingExpression(category, expr);
+        for (int i = 0; i < cell.Length; ++i)
+        {
+            cells[cell[i]].InitSaveSingleFlashingGenesExpression(category, expr.Length);
+        }
+
+        for (int i = 0; i < expr.Length; ++i)
+        {
+            for (int j = 0; j < expr[i].Length; ++j)
+            {
+                cells[cell[j]].SaveSingleFlashingGenesExpression(category, i, expr[i][j]);
+            }
+        }
     }
 }

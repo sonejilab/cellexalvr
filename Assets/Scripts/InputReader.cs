@@ -60,7 +60,7 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             status.gameObject.SetActive(true);
-            ReadFolder(@"stresstest");
+            ReadFolder(@"Bertie");
         }
         CellExAlUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
@@ -144,12 +144,12 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("Reading graph from " + graphFileName);
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
-           // var textmeshgraphname = Instantiate(graphName);
-           // textmeshgraphname.transform.position = newGraph.transform.position;
-           // textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
-           // textmeshgraphname.text = newGraph.GraphName;
-           // textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
-           // textmeshgraphname.transform.Rotate(0f, 180f, 0f);
+            // var textmeshgraphname = Instantiate(graphName);
+            // textmeshgraphname.transform.position = newGraph.transform.position;
+            // textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
+            // textmeshgraphname.text = newGraph.GraphName;
+            // textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
+            // textmeshgraphname.transform.Rotate(0f, 180f, 0f);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
 
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
@@ -622,7 +622,6 @@ public class InputReader : MonoBehaviour
         // ...
         // KEY is the hex rgb color code of the network the gene is in.
 
-
         CellExAlLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
         while (!layStreamReader.EndOfStream)
         {
@@ -814,7 +813,6 @@ public class InputReader : MonoBehaviour
 
                 words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 cellNames[i][j] = words[0];
-                // TODO CELLEXAL: fix the save groupings data to write the grouping number and not the color
                 try
                 {
                     groups[i][j] = int.Parse(words[3]);
@@ -825,7 +823,7 @@ public class InputReader : MonoBehaviour
                     {
                         print(s);
                     }
-                    print(words[3] + " " + file + " " + j);
+                    print(words[3] + " " + file + " " + j + "\n" + e.StackTrace);
                     streamReader.Close();
                     fileStream.Close();
                     return;
@@ -840,4 +838,46 @@ public class InputReader : MonoBehaviour
         CellExAlLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 
+    /// <summary>
+    /// Sorts a list of gene expressions based on the mean expression level.
+    /// </summary>
+    /// <param name="genes"> An array of genes to be sorted. This array will be reordered but the elements won't be modified. </param>
+    /// <param name="expressions"> An array of arrays containing the expressions.</param>
+    /// <remarks> The expressions parameter should be set up as follows: the first dimension should be the genes and the second the cells, i.e. looking for a certain expression is done via <code>expressions[geneIndex][cellIndex]</code></remarks>
+    public void SortGenesMeanExpression(ref string[] genes, ref int[][] expressions)
+    {
+        StringFloatPair[] pairList = new StringFloatPair[genes.Length];
+
+        for (int i = 0; i < expressions.Length; ++i)
+        {
+            float meanExpressions = 0;
+            for (int j = 0; j < expressions[i].Length; ++j)
+            {
+                meanExpressions += expressions[i][j];
+            }
+            pairList[i] = new StringFloatPair(genes[i], meanExpressions + expressions[i].Length);
+        }
+        // magic
+        Array.Sort(pairList, expressions);
+    }
+
+    /// <summary>
+    /// Helper class to sort a list of genes based on mean gene expression.
+    /// </summary>
+    private class StringFloatPair : IComparable<StringFloatPair>
+    {
+        private string s;
+        private float f;
+
+        public StringFloatPair(string s, float f)
+        {
+            this.s = s;
+            this.f = f;
+        }
+
+        public int CompareTo(StringFloatPair other)
+        {
+            return f.CompareTo(other.f);
+        }
+    }
 }

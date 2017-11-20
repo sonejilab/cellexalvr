@@ -182,6 +182,16 @@ public class Cell
         }
     }
 
+    public void InitSaveSingleFlashingGenesExpression(string category, int length)
+    {
+        flashingExpressions[category] = new int[length];
+    }
+
+    public void SaveSingleFlashingGenesExpression(string category, int index, int expression)
+    {
+        flashingExpressions[category][index] = expression;
+    }
+
     /// <summary>
     /// Saves gene expressions so they can be flashed quickly later.
     /// </summary>
