@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 class SubMenuButton : StationaryButton
 {
@@ -33,6 +32,7 @@ class SubMenuButton : StationaryButton
                 b.SetButtonActivated(false);
             }
             SetMenuActivated(true);
+            descriptionText.text = "";
         }
     }
 

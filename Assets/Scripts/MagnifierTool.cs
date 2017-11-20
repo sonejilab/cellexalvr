@@ -14,7 +14,7 @@ public class MagnifierTool : MonoBehaviour
         {
             // The sphere is about 0.13 in radius.
             // Anything between 0.00 and 0.02 from the center will be linearly offset based on it's distance up to 0.10 distance away from the center.
-            // Anything between 0.02 and 0.10 from the center will be put at the edge of the a sphere with a radius if 0.10.
+            // Anything between 0.02 and 0.10 from the center will be put at the edge of the a sphere with a radius of 0.10.
             // Anything further away than 0.10 won't be moved.
             var graphPointTransform = pair.Key;
             var originPos = pair.Value;
@@ -39,6 +39,7 @@ public class MagnifierTool : MonoBehaviour
 
     private void OnEnable()
     {
+        //print("onenable");
         // Check which graphpoints are now in the graph, since it might have moved.
         // 0.1337 comes from multiplying the scale of this object (0.2675) with the radius of the sphere (0.5). All parent objects are of scale 1.
         foreach (Collider c in Physics.OverlapSphere(transform.position, 0.1337f))
@@ -50,6 +51,7 @@ public class MagnifierTool : MonoBehaviour
 
     private void OnDisable()
     {
+        //print("ondisable");
         // this script is disabled while the user is grabbing and holding the graph.
         foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
         {

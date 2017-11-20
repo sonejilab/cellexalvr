@@ -21,6 +21,7 @@ public class CloseMenuButton : StationaryButton
         {
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
+            descriptionText.text = "";
 
             foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
                 r.enabled = false;
