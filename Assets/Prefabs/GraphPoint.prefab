@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23601448110652970}
   - component: {fileID: 114483635505091214}
   - component: {fileID: 65032051190882804}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: GraphPoint
   m_TagString: Graph
   m_Icon: {fileID: 0}
@@ -106,3 +106,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Graph: {fileID: 0}
+  label: 

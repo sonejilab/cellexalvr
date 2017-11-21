@@ -31,8 +31,8 @@ TagManager:
   - MenuLayer
   - NetworkLayer
   - FloorLayer
-  - 
-  - 
+  - GraphPointLayer
+  - SelectionToolLayer
   - 
   - 
   - 

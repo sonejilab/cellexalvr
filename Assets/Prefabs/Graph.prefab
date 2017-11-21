@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 54549514463788902}
   - component: {fileID: 114827269215865622}
   - component: {fileID: 114610040334634022}
-  - component: {fileID: 114656299714153516}
   - component: {fileID: 114613519637220900}
   - component: {fileID: 114079652239576086}
+  - component: {fileID: 114710119163050030}
   m_Layer: 8
   m_Name: Graph
   m_TagString: Graph
@@ -109,7 +109,7 @@ MonoBehaviour:
   ungrabDistance: 1
   releaseSnapSpeed: 0.1
   lockZRotation: 0
---- !u!114 &114656299714153516
+--- !u!114 &114710119163050030
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
   grabAttachMechanicScript: {fileID: 114610040334634022}
   secondaryGrabActionScript: {fileID: 0}
   isUsable: 0
-  holdButtonToUse: 0
+  holdButtonToUse: 1
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
   useOverrideButton: 0
@@ -154,3 +154,4 @@ MonoBehaviour:
     type: 2}
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 2}
+  graphManager: {fileID: 0}

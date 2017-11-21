@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
-using System;
-using TMPro;
 
 /// <summary>
 /// This class represents a manager that holds all graphs.
 /// </summary>
 public class GraphManager : MonoBehaviour
+
 {
     public ReferenceManager referenceManager;
     public Graph graphPrefab;

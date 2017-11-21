@@ -97,7 +97,6 @@ public class ControllerModelSwitcher : MonoBehaviour
         if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
             if (controllerBodyMeshFilter == null) return;
-            SwitchToModel(DesiredModel);
             ActivateDesiredTool();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using VRTK;
 
@@ -22,6 +23,8 @@ public class Graph : MonoBehaviour
     private Vector3 maxCoordValues;
     private Vector3 minCoordValues;
     private Vector3 diffCoordValues;
+    private float longestAxis;
+    private Vector3 scaledOffset;
     private Vector3 defaultPos;
     private Vector3 defaultScale;
     private ReferenceManager referenceManager;
@@ -85,11 +88,9 @@ public class Graph : MonoBehaviour
         // Scales the sphere coordinates to fit inside the graph's bounds.
         Vector3 scaledCoordinates = new Vector3(x, y, z);
 
-        // move one of the graph's centers to origo
+        // move one of the graph's corners to origo
         scaledCoordinates -= minCoordValues;
 
-        // find the longest axis
-        float longestAxis = Math.Max(Math.Max(diffCoordValues.x, diffCoordValues.y), diffCoordValues.z);
         // this instead of /= longestaxis puts the graph in a 1x1x1 cube, which is convenient sometimes, but distorts the graph
         //scaledCoordinates.x /= diffCoordValues.x;
         //scaledCoordinates.y /= diffCoordValues.y;
@@ -97,14 +98,10 @@ public class Graph : MonoBehaviour
 
         // uniformly scale all axes down based on the longest axis
         // this makes the longest axis have length 1 and keeps the proportions of the graph
-        scaledCoordinates.x /= longestAxis;
-        scaledCoordinates.y /= longestAxis;
-        scaledCoordinates.z /= longestAxis;
+        scaledCoordinates /= longestAxis;
 
         // move the graph a bit so (0, 0, 0) is the center point
-        scaledCoordinates.x -= (diffCoordValues.x / longestAxis) / 2;
-        scaledCoordinates.y -= (diffCoordValues.y / longestAxis) / 2;
-        scaledCoordinates.z -= (diffCoordValues.z / longestAxis) / 2;
+        scaledCoordinates -= scaledOffset;
 
         return scaledCoordinates;
     }
@@ -153,6 +150,9 @@ public class Graph : MonoBehaviour
         minCoordValues = min;
         maxCoordValues = max;
         diffCoordValues = maxCoordValues - minCoordValues;
+        longestAxis = Math.Max(Math.Max(diffCoordValues.x, diffCoordValues.y), diffCoordValues.z);
+        scaledOffset = (diffCoordValues / longestAxis) / 2;
+        //GetComponent<BoxCollider>().size = new Vector3(diffCoordValues.x, diffCoordValues.y, diffCoordValues.z) / longestAxis;
     }
 
     internal bool Ready()
@@ -261,5 +261,130 @@ public class Graph : MonoBehaviour
             point.ResetCoords();
             point.ResetColor();
         }
+    }
+
+    /// <summary>
+    /// Adds many boxcolliders to this graph. The idea is that when grabbing graphs we do not want to collide with all the small colliders on the graphpoints, so we put many boxcolliders that cover the graph instead.
+    /// </summary>
+    public void CreateColliders()
+    {
+        // maximum number of times we allow colliders to grow in size
+        int maxColliderIncreaseIterations = 10;
+        // how many more graphpoints there must be for it to be worth exctending a collider
+        float extensionThreshold = 0.1f;
+        // copy points dictionary
+        Dictionary<string, GraphPoint> notIncluded = new Dictionary<string, GraphPoint>(points);
+
+        LayerMask layerMask = LayerMask.NameToLayer("GraphLayer");
+
+        while (notIncluded.Count > 0)
+        {
+            // get any graphpoint
+            GraphPoint point = notIncluded.Values.First();
+            Vector3 pointPosition = point.transform.position;
+            Vector3 halfExtents = new Vector3(0.01f, 0.01f, 0.01f);
+            Vector3 oldHalfExtents = halfExtents;
+
+            for (int j = 0; j < maxColliderIncreaseIterations; ++j)
+            {
+                // find the graphspoints it is near
+                Collider[] collidesWith = Physics.OverlapBox(point.transform.position, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                // should we increase the size?
+
+                // centers for new boxes to check
+                Vector3[] newVectors = {
+                    new Vector3(pointPosition.x + halfExtents.x, pointPosition.y, pointPosition.z),
+                    new Vector3(pointPosition.x - halfExtents.x, pointPosition.y, pointPosition.z),
+                    new Vector3(pointPosition.x, pointPosition.y + halfExtents.y, pointPosition.z),
+                    new Vector3(pointPosition.x, pointPosition.y - halfExtents.y, pointPosition.z),
+                    new Vector3(pointPosition.x, pointPosition.y, pointPosition.z + halfExtents.z),
+                    new Vector3(pointPosition.x, pointPosition.y, pointPosition.z - halfExtents.z)
+                };
+
+                // halfextents for new boxes
+                Vector3[] newHalfExtents = {
+                    new Vector3(oldHalfExtents.x, halfExtents.y + oldHalfExtents.y * 2, halfExtents.z + oldHalfExtents.z * 2),
+                    new Vector3(halfExtents.x + oldHalfExtents.x * 2, oldHalfExtents.y, halfExtents.z + oldHalfExtents.z * 2),
+                    new Vector3(halfExtents.x + oldHalfExtents.x * 2, halfExtents.y + oldHalfExtents.y * 2, oldHalfExtents.z),
+                };
+
+                // check how many colliders there are surrounding us
+                Collider[] collidesWithx1 = Physics.OverlapBox(newVectors[0], newHalfExtents[0], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWithx2 = Physics.OverlapBox(newVectors[1], newHalfExtents[0], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                int totalCollidersx = NumberOfNotIncludedColliders(collidesWithx1, notIncluded) + NumberOfNotIncludedColliders(collidesWithx2, notIncluded);
+
+                Collider[] collidesWithy1 = Physics.OverlapBox(newVectors[2], newHalfExtents[1], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWithy2 = Physics.OverlapBox(newVectors[3], newHalfExtents[1], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                int totalCollidersy = NumberOfNotIncludedColliders(collidesWithy1, notIncluded) + NumberOfNotIncludedColliders(collidesWithy2, notIncluded);
+
+                Collider[] collidesWithz1 = Physics.OverlapBox(newVectors[4], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWithz2 = Physics.OverlapBox(newVectors[5], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                int totalCollidersz = NumberOfNotIncludedColliders(collidesWithz1, notIncluded) + NumberOfNotIncludedColliders(collidesWithz1, notIncluded);
+                bool extended = false;
+                // increase the halfextents if it seems worth it
+                if (totalCollidersx > (int)(collidesWith.Length * extensionThreshold))
+                {
+                    halfExtents.x += oldHalfExtents.x;
+                    extended = true;
+                }
+                if (totalCollidersy > (int)(collidesWith.Length * extensionThreshold))
+                {
+                    halfExtents.y += oldHalfExtents.y;
+                    extended = true;
+                }
+                if (totalCollidersz > (int)(collidesWith.Length * extensionThreshold))
+                {
+                    halfExtents.z += oldHalfExtents.z;
+                    extended = true;
+                }
+                // remove all the graphpoints that collide with this new collider
+                collidesWith = Physics.OverlapBox(point.transform.position, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                RemoveGraphPointsFromDictionary(collidesWith, ref notIncluded);
+                if (!extended) break;
+            }
+            // add the collider
+            BoxCollider newCollider = gameObject.AddComponent<BoxCollider>();
+            newCollider.center = transform.InverseTransformPoint(pointPosition);
+            newCollider.size = halfExtents * 2;
+        }
+    }
+
+    /// <summary>
+    /// Helper method to remove graphpoints from a dictionary.
+    /// </summary>
+    /// <param name="colliders"> An array with colliders attached to graphpoints. </param>
+    /// <param name="dict"> A dictionary containing graphpoints. </param>
+    private void RemoveGraphPointsFromDictionary(Collider[] colliders, ref Dictionary<string, GraphPoint> dict)
+    {
+        {
+            foreach (Collider c in colliders)
+            {
+                GraphPoint p = c.gameObject.GetComponent<GraphPoint>();
+                if (p)
+                {
+                    dict.Remove(p.label);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Helper method to count number of not yet added grapphpoints we collided with.
+    /// </summary>
+    /// <param name="colliders"> An array of colliders attached to graphpoints. </param>
+    /// <param name="dict"> A dictionary containing graphpoints. </param>
+    /// <returns> The number of graphpoints that were present in the dictionary. </returns>
+    private int NumberOfNotIncludedColliders(Collider[] colliders, Dictionary<string, GraphPoint> dict)
+    {
+        int total = 0;
+        foreach (Collider c in colliders)
+        {
+            GraphPoint p = c.gameObject.GetComponent<GraphPoint>();
+            if (p)
+            {
+                total += dict.ContainsKey(p.label) ? 1 : 0;
+            }
+        }
+        return total;
     }
 }

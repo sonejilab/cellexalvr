@@ -8,7 +8,7 @@ public class MagnifierTool : MonoBehaviour
 {
     private Dictionary<Transform, Vector3> pointsToMagnify = new Dictionary<Transform, Vector3>();
 
-    private void Update()
+    private void FixedUpdate()
     {
         foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
         {

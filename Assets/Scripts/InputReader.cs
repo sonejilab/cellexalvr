@@ -144,12 +144,12 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("Reading graph from " + graphFileName);
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
-            // var textmeshgraphname = Instantiate(graphName);
-            // textmeshgraphname.transform.position = newGraph.transform.position;
-            // textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
-            // textmeshgraphname.text = newGraph.GraphName;
-            // textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
-            // textmeshgraphname.transform.Rotate(0f, 180f, 0f);
+            var textmeshgraphname = Instantiate(graphName);
+            textmeshgraphname.transform.position = newGraph.transform.position;
+            textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
+            textmeshgraphname.text = newGraph.GraphName;
+            textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
+            textmeshgraphname.transform.Rotate(0f, 180f, 0f);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
 
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
@@ -210,6 +210,11 @@ public class InputReader : MonoBehaviour
                 }
                 fileIndex++;
                 newGraph.GetComponent<GraphInteract>().isGrabbable = true;
+                System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+                newGraph.CreateColliders();
+                stopwatch.Stop();
+                CellExAlLog.Log("Created " + newGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
                 if (doLoad)
                 {
                     graphManager.LoadPosition(newGraph, fileIndex);
@@ -857,8 +862,12 @@ public class InputReader : MonoBehaviour
             }
             pairList[i] = new StringFloatPair(genes[i], meanExpressions + expressions[i].Length);
         }
-        // magic
+        // sort based on mean expressions, will also sort the expression matrix accordingly
         Array.Sort(pairList, expressions);
+        for (int i = 0; i < pairList.Length; ++i)
+        {
+            genes[i] = pairList[i].s;
+        }
     }
 
     /// <summary>
@@ -866,8 +875,8 @@ public class InputReader : MonoBehaviour
     /// </summary>
     private class StringFloatPair : IComparable<StringFloatPair>
     {
-        private string s;
-        private float f;
+        public string s;
+        public float f;
 
         public StringFloatPair(string s, float f)
         {

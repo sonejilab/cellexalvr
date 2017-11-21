@@ -40,6 +40,7 @@ public class MenuToggler : MonoBehaviour
             SetMenuVisible(MenuActive);
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
+            controllerModelSwitcher.ActivateDesiredTool();
         }
     }
 
