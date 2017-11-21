@@ -319,7 +319,7 @@ public class Graph : MonoBehaviour
 
                 Collider[] collidesWithz1 = Physics.OverlapBox(newVectors[4], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
                 Collider[] collidesWithz2 = Physics.OverlapBox(newVectors[5], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                int totalCollidersz = NumberOfNotIncludedColliders(collidesWithz1, notIncluded) + NumberOfNotIncludedColliders(collidesWithz1, notIncluded);
+                int totalCollidersz = NumberOfNotIncludedColliders(collidesWithz1, notIncluded) + NumberOfNotIncludedColliders(collidesWithz2, notIncluded);
                 bool extended = false;
                 // increase the halfextents if it seems worth it
                 if (totalCollidersx > (int)(collidesWith.Length * extensionThreshold))

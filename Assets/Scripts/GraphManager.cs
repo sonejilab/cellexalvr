@@ -332,4 +332,12 @@ public class GraphManager : MonoBehaviour
         // no graph found
         return null;
     }
+
+    public void ClearLinesBetweenGraphs()
+    {
+        foreach (Graph g in graphs)
+        {
+            g.Lines.Clear();
+        }
+    }
 }
