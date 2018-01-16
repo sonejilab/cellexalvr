@@ -28,6 +28,22 @@ public class GraphManager : MonoBehaviour
                                             new Vector3(-0.2f, 1.1f, 0.95f)
                                         };
 
+    /// <summary>
+    /// The different methods for coloring graphs by gene expression. The different options are:
+    /// <list>
+    ///   <item>
+    ///     <term>Linear:</term>
+    ///     <description>Each color represent a range of expression values. All ranges are the same size.</description>
+    ///   </item>
+    ///   <item>
+    ///     <term>Ranked:</term>
+    ///     <description>Each color contains the same number of cells.</description>
+    ///   </item>
+    /// </list>
+    /// </summary>
+    public enum GeneExpressionColoringMethods { Linear, Ranked };
+    public GeneExpressionColoringMethods GeneExpressionColoringMethod = GeneExpressionColoringMethods.Linear;
+
     public Material[] GeneExpressionMaterials;
     public Material[] SelectedMaterials;
     public Material[] SelectedMaterialsOutline;
@@ -206,6 +222,7 @@ public class GraphManager : MonoBehaviour
         newGraph.transform.parent = transform;
         newGraph.UpdateStartPosition();
         newGraph.graphManager = this;
+        referenceManager.helpTool.GraphInfoPanels.Add(newGraph.graphInfoText.transform.parent.gameObject);
         graphs.Add(newGraph);
 
         return newGraph;
@@ -333,11 +350,26 @@ public class GraphManager : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Removes all lines between graphpoints.
+    /// </summary>
     public void ClearLinesBetweenGraphs()
     {
         foreach (Graph g in graphs)
         {
             g.Lines.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Set all graphs' info panels to visible or not visible.
+    /// </summary>
+    /// <param name="visible"> TRue for visible, false for invisible </param>
+    public void SetInfoPanelsVisible(bool visible)
+    {
+        foreach (Graph g in graphs)
+        {
+            g.SetInfoTextVisible(visible);
         }
     }
 }

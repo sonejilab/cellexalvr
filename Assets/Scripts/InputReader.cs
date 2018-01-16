@@ -144,12 +144,12 @@ public class InputReader : MonoBehaviour
             CellExAlLog.Log("Reading graph from " + graphFileName);
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
-            var textmeshgraphname = Instantiate(graphName);
-            textmeshgraphname.transform.position = newGraph.transform.position;
-            textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
-            textmeshgraphname.text = newGraph.GraphName;
-            textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
-            textmeshgraphname.transform.Rotate(0f, 180f, 0f);
+            //var textmeshgraphname = Instantiate(graphName);
+            //textmeshgraphname.transform.position = newGraph.transform.position;
+            //textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
+            //textmeshgraphname.text = newGraph.GraphName;
+            //textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
+            //textmeshgraphname.transform.Rotate(0f, 180f, 0f);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
 
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
@@ -209,6 +209,8 @@ public class InputReader : MonoBehaviour
                     }
                 }
                 fileIndex++;
+                // tell the graph that the info text is ready to be set
+                newGraph.SetInfoText();
                 newGraph.GetComponent<GraphInteract>().isGrabbable = true;
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();

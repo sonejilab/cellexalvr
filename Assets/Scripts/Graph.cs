@@ -12,10 +12,12 @@ public class Graph : MonoBehaviour
 {
     public GraphPoint graphpoint;
     public GameObject skeletonPrefab;
-    public string GraphName { get; set; }
     public string DirectoryName { get; set; }
     public List<GameObject> Lines { get; set; }
+    [HideInInspector]
     public GraphManager graphManager;
+    public TextMesh graphNameText;
+    public TextMesh graphInfoText;
 
     private GraphPoint newGraphpoint;
     public Dictionary<string, GraphPoint> points;
@@ -28,7 +30,22 @@ public class Graph : MonoBehaviour
     private Vector3 defaultPos;
     private Vector3 defaultScale;
     private ReferenceManager referenceManager;
+    private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
+
+    private string graphName;
+    /// <summary>
+    /// The name of this graph. Should just be the filename that the graph came from.
+    /// </summary>
+    public string GraphName
+    {
+        get { return graphName; }
+        set
+        {
+            graphName = value;
+            graphNameText.text = value;
+        }
+    }
 
     private Material graphPointMaterial; // = Resources.Load("Materials/GraphPointGeneExpression") as Material;
 
@@ -41,6 +58,7 @@ public class Graph : MonoBehaviour
         gameManager = referenceManager.gameManager;
         Lines = new List<GameObject>();
         graphPointMaterial = Resources.Load("Materials/GraphPointGeneExpression") as Material;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     private void Update()
@@ -111,6 +129,7 @@ public class Graph : MonoBehaviour
     /// </summary>
     public void UpdateStartPosition()
     {
+
         defaultPos = transform.position;
         defaultScale = transform.localScale;
     }
@@ -233,6 +252,26 @@ public class Graph : MonoBehaviour
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();
         return convexHull.gameObject;
+    }
+
+    /// <summary>
+    /// Tells this graph that all graphpoints are added to this graph and we can update the info text.
+    /// </summary>
+    public void SetInfoText()
+    {
+        graphInfoText.transform.parent.localPosition = ScaleCoordinates(maxCoordValues.x - (maxCoordValues.x - minCoordValues.x) / 2, maxCoordValues.y, maxCoordValues.z);
+        graphInfoText.text = "Points: " + points.Count;
+        // the info panels should only be shown when the help tool is activated
+        SetInfoTextVisible(controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool);
+    }
+
+    /// <summary>
+    /// Set this graph's info panel visible or not visible.
+    /// </summary>
+    /// <param name="visible"> True for visible, false for invisible </param>
+    public void SetInfoTextVisible(bool visible)
+    {
+        graphInfoText.transform.parent.gameObject.SetActive(visible);
     }
 
     /// <summary>

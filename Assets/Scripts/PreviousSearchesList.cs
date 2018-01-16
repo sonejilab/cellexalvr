@@ -35,6 +35,8 @@ public class PreviousSearchesList : MonoBehaviour
     private CorrelatedGenesButton lastCorrelatedGenesButton;
     private CorrelatedGenesListNode correlatedGenesListNode;
     private CorrelatedGenesListNode lastCorrelatedGenesListNode;
+    private ColoringOptionsButton coloringOptionsButton;
+    private ColoringOptionsButton lastColoringOptionsButton;
     private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
     private GameManager gameManager;
 
@@ -59,6 +61,7 @@ public class PreviousSearchesList : MonoBehaviour
             searchLock = hit.transform.gameObject.GetComponent<PreviousSearchesLock>();
             correlatedGenesButton = hit.transform.gameObject.GetComponent<CorrelatedGenesButton>();
             correlatedGenesListNode = hit.transform.gameObject.GetComponent<CorrelatedGenesListNode>();
+            coloringOptionsButton = hit.transform.gameObject.GetComponent<ColoringOptionsButton>();
             // see if we hit anything
             if (listNode != null)
             {
@@ -126,7 +129,9 @@ public class PreviousSearchesList : MonoBehaviour
                     correlatedGenesButton.SetTexture(correlatedGenesButtonWorkingTexture);
                     string geneName = correlatedGenesButton.listNode.GeneName;
                     int index = correlatedGenesButtons.IndexOf(correlatedGenesButton);
-                    referenceManager.correlatedGenesList.CalculateCorrelatedGenes(index, geneName);
+                    // we need to split on a space here beacause the genename will actually be "<genename> <coloring mode>"
+                    // so we have to get rid of the coloring mode, it's not interesting when calculating correlated genes
+                    referenceManager.correlatedGenesList.CalculateCorrelatedGenes(index, geneName = geneName.Split(' ')[0]);
                     gameManager.InformCalculateCorrelatedGenes(index, geneName);
                 }
             }
@@ -148,6 +153,22 @@ public class PreviousSearchesList : MonoBehaviour
                     gameManager.InformColorGraphsByGene(gene);
                 }
             }
+            else if (coloringOptionsButton != null)
+            {
+                // handle the gene expression coloring button button
+                if (lastColoringOptionsButton != coloringOptionsButton)
+                {
+                    if (lastColoringOptionsButton != null)
+                        lastColoringOptionsButton.SetMaterial(normalMaterial);
+                    lastColoringOptionsButton = coloringOptionsButton;
+                    coloringOptionsButton.SetMaterial(highlightedMaterial);
+                }
+
+                if (device.GetPressDown(triggerButton))
+                {
+                    coloringOptionsButton.PressButton();
+                }
+            }
         }
         else
         {
@@ -156,6 +177,7 @@ public class PreviousSearchesList : MonoBehaviour
             searchLock = null;
             correlatedGenesButton = null;
             correlatedGenesListNode = null;
+            coloringOptionsButton = null;
         }
         // when the raycaster leaves an object we must un-highlight it
         if (listNode == null && lastHitListNode != null)
@@ -180,6 +202,11 @@ public class PreviousSearchesList : MonoBehaviour
         {
             lastCorrelatedGenesListNode.SetMaterial(normalMaterial);
             lastCorrelatedGenesListNode = null;
+        }
+        else if (coloringOptionsButton == null && lastColoringOptionsButton != null)
+        {
+            lastColoringOptionsButton.SetMaterial(normalMaterial);
+            lastColoringOptionsButton = null;
         }
     }
 

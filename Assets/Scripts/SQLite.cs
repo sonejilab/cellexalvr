@@ -12,6 +12,7 @@ using System.Collections;
 using System.Threading;
 using System.Text;
 using System.Collections.Generic;
+using System;
 
 namespace SQLiter
 {
@@ -244,28 +245,52 @@ namespace SQLiter
             int i = 0;
             float minExpr = float.MaxValue;
             float maxExpr = float.MinValue;
-            while (_reader.Read())
+            if (referenceManager.graphManager.GeneExpressionColoringMethod == GraphManager.GeneExpressionColoringMethods.Linear)
             {
-                float expr = _reader.GetFloat(1);
-                if (expr > maxExpr)
+                // put results in equally sized buckets
+                while (_reader.Read())
                 {
-                    maxExpr = expr;
+                    float expr = _reader.GetFloat(1);
+                    if (expr > maxExpr)
+                    {
+                        maxExpr = expr;
+                    }
+                    if (expr < minExpr)
+                    {
+                        minExpr = expr;
+                    }
+                    i++;
+                    _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
                 }
-                if (expr < minExpr)
+                float binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
+                if (DebugMode)
                 {
-                    minExpr = expr;
+                    print("binsize = " + binSize);
                 }
-                i++;
-                _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
+                foreach (CellExpressionPair pair in _result)
+                {
+                    pair.Expression = (pair.Expression - minExpr) / binSize;
+                }
             }
-            float binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
-            if (DebugMode)
+            else
             {
-                print("binsize = " + binSize);
-            }
-            foreach (CellExpressionPair pair in _result)
-            {
-                pair.Expression = (pair.Expression - minExpr) / binSize;
+                List<CellExpressionPair> result = new List<CellExpressionPair>();
+                // put the same number of results in each bucket, ordered
+                while (_reader.Read())
+                {
+                    result.Add(new CellExpressionPair(_reader.GetString(0), _reader.GetFloat(1)));
+                }
+
+                // sort the list based on gene expressions
+                result.Sort();
+
+                int binsize = result.Count / CellExAlConfig.NumberOfExpressionColors;
+                for (int j = 0; j < result.Count; ++j)
+                {
+                    result[j].Expression = j / binsize;
+
+                }
+                _result.AddRange(result);
             }
             if (DebugMode)
                 print("Number of columns returned from database: " + i);
@@ -528,7 +553,7 @@ namespace SQLiter
     /// <summary>
     /// Helper struct for representing a pair of a cell (represented as a string) and a float
     /// </summary>
-    public class CellExpressionPair
+    public class CellExpressionPair : IComparable<CellExpressionPair>
     {
         public string Cell { get; private set; }
         public float Expression { get; set; }
@@ -539,5 +564,9 @@ namespace SQLiter
             this.Expression = Expression;
         }
 
+        public int CompareTo(CellExpressionPair other)
+        {
+            return (int)(Expression - other.Expression);
+        }
     }
 }

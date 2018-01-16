@@ -22,6 +22,7 @@ public class HelperTool : MonoBehaviour
     public GameObject otherControllerHelpTool;
     public HelperToolActivator helpToolActivator;
 
+    private GraphManager graphManager;
     private SteamVR_TrackedObject rightController;
     private string standardText = "Point the laser towards something to find out more";
     private string descriptionFilePath;
@@ -35,6 +36,9 @@ public class HelperTool : MonoBehaviour
     private float timeLastHit;
     private bool activated;
 
+    private List<GameObject> graphInfoPanels = new List<GameObject>();
+    public List<GameObject> GraphInfoPanels { get { return graphInfoPanels; } }
+
     private void Start()
     {
         descriptionFilePath = Application.streamingAssetsPath + "\\descriptions.txt";
@@ -44,7 +48,9 @@ public class HelperTool : MonoBehaviour
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);
         rightController = referenceManager.rightController;
+        graphManager = referenceManager.graphManager;
         SetToolActivated(false);
+
     }
 
     private void Update()
@@ -155,6 +161,10 @@ public class HelperTool : MonoBehaviour
         controllerHelpTextsRight.SetActive(activate);
         controllerHelpTextsLeft.SetActive(activate);
         helpToolActivator.SwitchText(activate);
+        foreach (GameObject panel in GraphInfoPanels)
+        {
+            panel.SetActive(activate);
+        }
     }
 
     /// <summary>

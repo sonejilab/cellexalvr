@@ -265,11 +265,11 @@ public class CellManager : MonoBehaviour
             cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
         }
 
-        var removedGene = topListNode.UpdateList(geneName);
+        var removedGene = topListNode.UpdateList(geneName + " " + graphManager.GeneExpressionColoringMethod);
         //Debug.Log(topListNode.GeneName);
         foreach (Cell c in cells.Values)
         {
-            c.SaveExpression(geneName, removedGene);
+            c.SaveExpression(geneName + " " + graphManager.GeneExpressionColoringMethod, removedGene);
         }
         CellExAlEvents.GraphsColoredByGene.Invoke();
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
