@@ -85,6 +85,11 @@ public class StatusDisplay : MonoBehaviour
     /// <param name="id"> The status id. (return value from AddStatus) </param>
     public void RemoveStatus(int id)
     {
+        if (!statuses.ContainsKey(id))
+        {
+            // that status didn't exist
+            return;
+        }
         statusPositions.Remove(statuses[id].transform);
         Destroy(statuses[id].gameObject);
         statuses.Remove(id);

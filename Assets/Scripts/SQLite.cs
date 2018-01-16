@@ -70,6 +70,8 @@ namespace SQLiter
         private string _sqlString;
         [HideInInspector]
         public ArrayList _result = new ArrayList();
+        public float LowestExpression { get; private set; }
+        public float HighestExpression { get; private set; }
 
         private bool _createNewTavle = false;
 
@@ -243,42 +245,54 @@ namespace SQLiter
             }
 
             int i = 0;
-            float minExpr = float.MaxValue;
-            float maxExpr = float.MinValue;
+            LowestExpression = float.MaxValue;
+            HighestExpression = float.MinValue;
             if (referenceManager.graphManager.GeneExpressionColoringMethod == GraphManager.GeneExpressionColoringMethods.Linear)
             {
                 // put results in equally sized buckets
                 while (_reader.Read())
                 {
                     float expr = _reader.GetFloat(1);
-                    if (expr > maxExpr)
+                    if (expr > HighestExpression)
                     {
-                        maxExpr = expr;
+                        HighestExpression = expr;
                     }
-                    if (expr < minExpr)
+                    if (expr < LowestExpression)
                     {
-                        minExpr = expr;
+                        LowestExpression = expr;
                     }
                     i++;
                     _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
                 }
-                float binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
+                float binSize = (HighestExpression - LowestExpression) / CellExAlConfig.NumberOfExpressionColors;
                 if (DebugMode)
                 {
                     print("binsize = " + binSize);
                 }
                 foreach (CellExpressionPair pair in _result)
                 {
-                    pair.Expression = (pair.Expression - minExpr) / binSize;
+                    pair.Expression = (pair.Expression - LowestExpression) / binSize;
                 }
             }
             else
             {
                 List<CellExpressionPair> result = new List<CellExpressionPair>();
+                LowestExpression = float.MaxValue;
+                HighestExpression = float.MinValue;
                 // put the same number of results in each bucket, ordered
                 while (_reader.Read())
                 {
-                    result.Add(new CellExpressionPair(_reader.GetString(0), _reader.GetFloat(1)));
+                    CellExpressionPair newPair = new CellExpressionPair(_reader.GetString(0), _reader.GetFloat(1));
+                    result.Add(newPair);
+                    float expr = newPair.Expression;
+                    if (expr > HighestExpression)
+                    {
+                        HighestExpression = expr;
+                    }
+                    if (expr < LowestExpression)
+                    {
+                        LowestExpression = expr;
+                    }
                 }
 
                 // sort the list based on gene expressions

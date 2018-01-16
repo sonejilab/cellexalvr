@@ -300,6 +300,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void ResetGraphsColor()
     {
+        CellExAlEvents.GraphsReset.Invoke();
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
         {
@@ -312,6 +313,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void ResetGraphs()
     {
+        CellExAlEvents.GraphsReset.Invoke();
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
         {

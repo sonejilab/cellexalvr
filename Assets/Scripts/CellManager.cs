@@ -108,6 +108,7 @@ public class CellManager : MonoBehaviour
     private bool flashingGenes = false;
     private bool loadingFlashingGenes;
     private int[] savedFlashGenesLengths;
+    private int coloringInfoStatusId;
 
     void Awake()
     {
@@ -116,6 +117,9 @@ public class CellManager : MonoBehaviour
 
     private void Start()
     {
+        CellExAlEvents.GraphsReset.AddListener(RemoveStatus);
+        CellExAlEvents.GraphsUnloaded.AddListener(RemoveStatus);
+
         database = referenceManager.database;
         rightController = referenceManager.rightController;
         topListNode = referenceManager.topListNode;
@@ -258,12 +262,16 @@ public class CellManager : MonoBehaviour
         {
             c.ColorByExpression(0);
         }
+
         for (int i = 0; i < expressions.Count; ++i)
         {
             Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
             cell.Show();
             cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
         }
+        float percentInResults = (float)database._result.Count / cells.Values.Count;
+        statusDisplay.RemoveStatus(coloringInfoStatusId);
+        coloringInfoStatusId = statusDisplay.AddStatus(String.Format("low: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
 
         var removedGene = topListNode.UpdateList(geneName + " " + graphManager.GeneExpressionColoringMethod);
         //Debug.Log(topListNode.GeneName);
@@ -585,5 +593,10 @@ public class CellManager : MonoBehaviour
                 cells[cell[j]].SaveSingleFlashingGenesExpression(category, i, expr[i][j]);
             }
         }
+    }
+
+    private void RemoveStatus()
+    {
+        statusDisplay.RemoveStatus(coloringInfoStatusId);
     }
 }
