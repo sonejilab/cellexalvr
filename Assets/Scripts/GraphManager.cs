@@ -276,7 +276,6 @@ public class GraphManager : MonoBehaviour
         networks.Clear();
     }
 
-
     /// <summary>
     /// Adds a cell to a graph.
     /// </summary>
