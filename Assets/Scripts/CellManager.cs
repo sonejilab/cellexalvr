@@ -271,7 +271,7 @@ public class CellManager : MonoBehaviour
         }
         float percentInResults = (float)database._result.Count / cells.Values.Count;
         statusDisplay.RemoveStatus(coloringInfoStatusId);
-        coloringInfoStatusId = statusDisplay.AddStatus(String.Format("low: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
+        coloringInfoStatusId = statusDisplay.AddStatus(String.Format("low: {0:0.####}, high: {1:0.####}, above 0: {2:0.##%}", database.LowestExpression, database.HighestExpression, percentInResults));
 
         var removedGene = topListNode.UpdateList(geneName + " " + graphManager.GeneExpressionColoringMethod);
         //Debug.Log(topListNode.GeneName);

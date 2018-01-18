@@ -222,7 +222,7 @@ public class InputReader : MonoBehaviour
                     graphManager.LoadPosition(newGraph, fileIndex);
                 }
                 //mdsFileStream.Close();
-                //mdsStreamReader.Close();
+                mdsStreamReader.Close();
             }
             CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }

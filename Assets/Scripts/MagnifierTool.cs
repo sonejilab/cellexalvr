@@ -10,6 +10,7 @@ public class MagnifierTool : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //if (!enabled) return;
         foreach (KeyValuePair<Transform, Vector3> pair in pointsToMagnify)
         {
             // The sphere is about 0.13 in radius.
@@ -39,13 +40,14 @@ public class MagnifierTool : MonoBehaviour
 
     private void OnEnable()
     {
+
         //print("onenable");
         // Check which graphpoints are now in the graph, since it might have moved.
         // 0.1337 comes from multiplying the scale of this object (0.2675) with the radius of the sphere (0.5). All parent objects are of scale 1.
         foreach (Collider c in Physics.OverlapSphere(transform.position, 0.1337f))
         {
-            if (c.gameObject.CompareTag("Graph"))
-                pointsToMagnify[c.transform] = c.transform.position;
+            if (c.gameObject.GetComponent<GraphPoint>() != null && !pointsToMagnify.ContainsKey(c.transform))
+                    pointsToMagnify[c.transform] = c.transform.position;
         }
     }
 
@@ -64,7 +66,7 @@ public class MagnifierTool : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!enabled) return;
-        if (other.gameObject.CompareTag("Graph"))
+        if (other.gameObject.GetComponent<GraphPoint>() != null && !pointsToMagnify.ContainsKey(other.transform))
         {
             pointsToMagnify[other.transform] = other.transform.position;
         }
@@ -73,10 +75,10 @@ public class MagnifierTool : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!enabled) return;
-        if (other.gameObject.CompareTag("Graph"))
+        if (other.gameObject.GetComponent<GraphPoint>() != null)
         {
             if (pointsToMagnify.ContainsKey(other.transform))
-                other.transform.position = pointsToMagnify[other.transform];
+                    other.transform.position = pointsToMagnify[other.transform];
             pointsToMagnify.Remove(other.transform);
         }
     }
