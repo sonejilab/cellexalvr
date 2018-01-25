@@ -18,7 +18,7 @@ library(cellexalvrR)
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
- group_selection_filepath <- file.path(input_file_dir, paste("selection", latest_version, ".txt", sep=""))
+group_selection_filepath <- file.path(input_file_dir, paste("selection", latest_version, ".txt", sep=""))
 
 if ( ! file.exists(group_selection_filepath)) {
 	group_selection_filepath = latest_version # as this is the grouping name!

@@ -18,8 +18,11 @@ cellexalObj <- userGrouping( cellexalObj, selectionfile )
 
 t <- exportUserGroups4vr ( cellexalObj, userfolder )
 
-file.copy(selectionfile, file.path( userfolder,paste(sep='.', cellexalObj@usedObj$lastGroup,'txt' ) ) )
-
+if ( isS4(cellexalObj) ) {
+	file.copy(selectionfile, file.path( userfolder,paste(sep='.', cellexalObj@usedObj$lastGroup,'txt' ) ) )
+}else {
+	file.copy(selectionfile, file.path( userfolder,paste(sep='.', cellexalObj$usedObj$lastGroup,'txt' ) ) )
+}
 lockedSave ( cellexalObj, userfolder)
 
 #print("done")
