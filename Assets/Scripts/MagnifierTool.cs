@@ -40,14 +40,13 @@ public class MagnifierTool : MonoBehaviour
 
     private void OnEnable()
     {
-
         //print("onenable");
         // Check which graphpoints are now in the graph, since it might have moved.
         // 0.1337 comes from multiplying the scale of this object (0.2675) with the radius of the sphere (0.5). All parent objects are of scale 1.
         foreach (Collider c in Physics.OverlapSphere(transform.position, 0.1337f))
         {
             if (c.gameObject.GetComponent<GraphPoint>() != null && !pointsToMagnify.ContainsKey(c.transform))
-                    pointsToMagnify[c.transform] = c.transform.position;
+                pointsToMagnify[c.transform] = c.transform.position;
         }
     }
 
@@ -78,7 +77,7 @@ public class MagnifierTool : MonoBehaviour
         if (other.gameObject.GetComponent<GraphPoint>() != null)
         {
             if (pointsToMagnify.ContainsKey(other.transform))
-                    other.transform.position = pointsToMagnify[other.transform];
+                other.transform.position = pointsToMagnify[other.transform];
             pointsToMagnify.Remove(other.transform);
         }
     }

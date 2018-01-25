@@ -5,6 +5,8 @@ public class CloseMenuButton : StationaryButton
     public GameObject buttonsToActivate;
     public GameObject menuToClose;
 
+    public bool deactivateMenu = false;
+
     protected override string Description
     {
         get
@@ -22,12 +24,17 @@ public class CloseMenuButton : StationaryButton
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
             descriptionText.text = "";
-
-            foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
-                r.enabled = false;
-            foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
-                c.enabled = false;
-
+            if (deactivateMenu)
+            {
+                menuToClose.SetActive(false);
+            }
+            else
+            {
+                foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
+                    r.enabled = false;
+                foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
+                    c.enabled = false;
+            }
             foreach (StationaryButton b in buttonsToActivate.GetComponentsInChildren<StationaryButton>())
             {
                 b.SetButtonActivated(true);

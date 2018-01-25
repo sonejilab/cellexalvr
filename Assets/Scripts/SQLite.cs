@@ -217,6 +217,198 @@ namespace SQLiter
         }
 
         #region Query
+
+        public void QueryTopGenes()
+        {
+            var list = referenceManager.selectionToolHandler.GetLastSelection();
+            List<string> cellNames1 = new List<string>();
+            List<string> cellNames2 = new List<string>();
+            foreach (GraphPoint gp in list)
+            {
+                if (gp.CurrentGroup == 0)
+                {
+                    cellNames1.Add(gp.Cell.Label);
+                }
+                else
+                {
+                    cellNames2.Add(gp.Cell.Label);
+                }
+            }
+            QueryRunning = true;
+            StartCoroutine(QueryTopGenesCoroutine(cellNames1.ToArray(), cellNames2.ToArray()));
+        }
+
+
+        private IEnumerator QueryTopGenesCoroutine(string[] cellNames1, string[] cellNames2)
+        {
+            _result.Clear();
+            // Create the two lists of cell names
+            StringBuilder builder = new StringBuilder();
+
+            int i = 1;
+            for (; i < cellNames1.Length; ++i)
+            {
+                string cell = cellNames1[i];
+                builder.Append("\"").Append(cell).Append("\"");
+                if (i < cellNames1.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string cellNamesString1 = builder.ToString();
+
+            for (; i < cellNames2.Length; ++i)
+            {
+                string cell = cellNames2[i];
+                builder.Append("\"").Append(cell).Append("\"");
+                if (i < cellNames2.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string cellNamesString2 = builder.ToString();
+            // Query for list 1
+            string query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString1 + ") order by gene_id";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            int prevGene = -1;
+            i = 0;
+            List<CellExpressionPair> pairs1 = new List<CellExpressionPair>();
+            while (_reader.Read())
+            {
+                int gene_id = _reader.GetInt32(0);
+                float expr = _reader.GetFloat(1);
+                if (prevGene == -1)
+                {
+                    // first iteration
+                    prevGene = gene_id;
+                    pairs1.Add(new CellExpressionPair(gene_id.ToString(), 0f));
+                }
+
+                if (gene_id != prevGene)
+                {
+                    pairs1[pairs1.Count - 1].Expression /= cellNames1.Length;
+                    i = 0;
+                    pairs1.Add(new CellExpressionPair(gene_id.ToString(), 0f));
+                }
+                else
+                {
+                    pairs1[pairs1.Count - 1].Expression += expr;
+                }
+                prevGene = gene_id;
+                i++;
+            }
+            pairs1[pairs1.Count - 1].Expression /= cellNames1.Length;
+
+            // query for list 2
+            query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
+            t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            prevGene = -1;
+            i = 0;
+            List<CellExpressionPair> pairs2 = new List<CellExpressionPair>();
+
+            while (_reader.Read())
+            {
+                int gene_id = _reader.GetInt32(0);
+                float expr = _reader.GetFloat(1);
+                if (prevGene == -1)
+                {
+                    // first iteration
+                    prevGene = gene_id;
+                    pairs2.Add(new CellExpressionPair(gene_id.ToString(), 0f));
+                }
+
+                if (gene_id != prevGene)
+                {
+                    pairs2[pairs2.Count - 1].Expression /= cellNames2.Length;
+                    i = 0;
+                    pairs2.Add(new CellExpressionPair(gene_id.ToString(), 0f));
+                }
+                else
+                {
+                    pairs2[pairs2.Count - 1].Expression += expr;
+                }
+                prevGene = gene_id;
+                i++;
+            }
+            pairs2[pairs2.Count - 1].Expression /= cellNames2.Length;
+
+            // calculate the difference in expressions
+            _result = new ArrayList(pairs1.Count);
+            List<string> actualGeneIds = new List<string>();
+            int index1 = 0, index2 = 0;
+            for (i = 0; index1 < pairs1.Count - 1 && index2 < pairs2.Count - 1; ++i)
+            {
+                string geneId = "";
+                float expr1 = 0, expr2 = 0;
+                if (int.Parse(pairs1[index1].Cell) == i && index1 < pairs1.Count - 1)
+                {
+                    geneId = pairs1[index1].Cell;
+                    expr1 = pairs1[index1].Expression;
+                    index1++;
+                }
+                if (int.Parse(pairs2[index2].Cell) == i && index2 < pairs2.Count - 1)
+                {
+                    geneId = pairs2[index2].Cell;
+                    expr2 = pairs2[index2].Expression;
+                    index2++;
+                }
+
+                // only add genes that have a difference in expression > 0
+                if (expr1 != 0 && expr2 != 0)
+                {
+                    float diffExpr = Mathf.Abs(expr1 - expr2);
+                    _result.Add(new CellExpressionPair(geneId, diffExpr));
+                    actualGeneIds.Add(geneId);
+                }
+            }
+
+            // get the actual gene names
+            builder = new StringBuilder();
+            for (i = 0; i < actualGeneIds.Count; ++i)
+            {
+                string gene = actualGeneIds[i];
+                builder.Append(gene);
+                if (i < actualGeneIds.Count - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string actualGeneIdsString = builder.ToString();
+
+            query = "select id, gname from genes where id in (" + actualGeneIdsString + ") order by id";
+            t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            //print(diffPairs.Count);
+            i = 0;
+            while (_reader.Read())
+            {
+                int geneId = _reader.GetInt32(0);
+                string geneName = _reader.GetString(1);
+                ((CellExpressionPair)_result[i]).Cell = geneName;
+                i++;
+            }
+
+            _reader.Close();
+            _connection.Close();
+            QueryRunning = false;
+        }
         /// <summary>
         /// Queries the database for the expressions of a gene.
         /// </summary>
@@ -569,7 +761,7 @@ namespace SQLiter
     /// </summary>
     public class CellExpressionPair : IComparable<CellExpressionPair>
     {
-        public string Cell { get; private set; }
+        public string Cell { get; set; }
         public float Expression { get; set; }
 
         public CellExpressionPair(string Cell, float Expression)
@@ -580,7 +772,7 @@ namespace SQLiter
 
         public int CompareTo(CellExpressionPair other)
         {
-            return (int)(Expression - other.Expression);
+            return (int)(Expression * 1000 - other.Expression * 1000);
         }
     }
 }

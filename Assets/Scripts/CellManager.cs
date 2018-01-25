@@ -283,6 +283,34 @@ public class CellManager : MonoBehaviour
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
+    public void QueryTopGenes()
+    {
+        StartCoroutine(QueryTopGenesCoroutine());
+    }
+
+    private IEnumerator QueryTopGenesCoroutine()
+    {
+        while (database.QueryRunning)
+        {
+            yield return null;
+        }
+
+        database.QueryTopGenes();
+
+        while (database.QueryRunning)
+        {
+            yield return null;
+        }
+        CellExpressionPair[] results = (CellExpressionPair[])database._result.ToArray(typeof(CellExpressionPair));
+        Array.Sort(results, (CellExpressionPair x, CellExpressionPair y) => y.Expression.CompareTo(x.Expression));
+        string[] genes = new string[results.Length];
+        for (int i = 0; i < results.Length; ++i)
+        {
+            genes[i] = ((CellExpressionPair)results[i]).Cell;
+        }
+        referenceManager.colorByGeneMenu.CreateGeneButtons(genes);
+    }
+
     /// <summary>
     /// Prepares the cellmanager to flash some gene expressions.
     /// </summary>

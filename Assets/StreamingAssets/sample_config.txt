@@ -12,7 +12,7 @@
 # Comments and blank lines should not be present in lists but can be inserted anywhere else.
 
 # The filepath to Rscript.exe
-RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
+RscriptFilePath = <<<PUT THE PATH TO YOUR RSCRIPT.EXE HERE>>>
 
 # The number of lines that will be read between every frame from the .mds files when loading graphs
 # A higher number can make faster loading but potentially create a loss of frames when loading
