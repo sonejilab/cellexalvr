@@ -218,8 +218,15 @@ namespace SQLiter
 
         #region Query
 
+        /// <summary>
+        /// Different modes to sort genes.
+        /// </summary>
         public enum QueryTopGenesRankingMode { Mean, TTest }
 
+        /// <summary>
+        /// Queries the database for all gene expressions and sorts them based on the difference in expression between two chosen groups.
+        /// </summary>
+        /// <param name="mode">The mode to sort the gene expressinos by.</param>
         public void QueryTopGenes(QueryTopGenesRankingMode mode)
         {
             var list = referenceManager.selectionToolHandler.GetLastSelection();
@@ -818,6 +825,11 @@ namespace SQLiter
         }
     }
 
+    /// <summary>
+    /// Helper class to store two generic type.
+    /// </summary>
+    /// <typeparam name="T">The first type</typeparam>
+    /// <typeparam name="U">The second type</typeparam>
     public class Pair<T, U>
     {
         public T First { get; set; }

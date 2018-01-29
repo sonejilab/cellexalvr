@@ -287,6 +287,10 @@ public class CellManager : MonoBehaviour
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
+    /// <summary>
+    /// Queries the database for all genes and sorts them based on the chosen mode.
+    /// </summary>
+    /// <param name="mode">The chosen mode. <see cref="SQLite.QueryTopGenesRankingMode"/></param>
     public void QueryTopGenes(SQLite.QueryTopGenesRankingMode mode)
     {
         StartCoroutine(QueryTopGenesCoroutine(mode));

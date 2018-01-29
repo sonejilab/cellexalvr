@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-
-class ColoringOptionsButton : MonoBehaviour
+/// <summary>
+/// This class represents a button that can choose between a <see cref="GraphManager.GeneExpressionColoringMethods"/>
+/// </summary>
+public class ColoringOptionsButton : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public GraphManager.GeneExpressionColoringMethods modeToSwitchTo;
@@ -15,6 +17,9 @@ class ColoringOptionsButton : MonoBehaviour
         renderer = GetComponent<Renderer>();
     }
 
+    /// <summary>
+    /// Press this button and choose this mode.
+    /// </summary>
     public void PressButton()
     {
         graphManager.GeneExpressionColoringMethod = modeToSwitchTo;

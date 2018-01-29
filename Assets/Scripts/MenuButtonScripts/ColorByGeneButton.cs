@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class represents a button that can be pressed to color all graphs based on the expression of some gene.
+/// </summary>
 public class ColorByGeneButton : SolidButton
 {
 
@@ -23,9 +26,14 @@ public class ColorByGeneButton : SolidButton
         }
     }
 
-    public void SetGene(string gene, float tValue)
+    /// <summary>
+    /// Sets the text on this button.
+    /// </summary>
+    /// <param name="gene">The name of the gene</param>
+    /// <param name="value">The value that this gene was sorted by.</param>
+    public void SetGene(string gene, float value)
     {
         this.gene = gene;
-        description.text = string.Format("{0}\n{1:F3}", gene, tValue);
+        description.text = string.Format("{0}\n{1:F3}", gene, value);
     }
 }

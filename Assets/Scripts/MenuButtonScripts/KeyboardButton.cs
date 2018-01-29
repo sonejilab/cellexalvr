@@ -29,7 +29,7 @@ public class KeyboardButton : StationaryButton
         keyboard = referenceManager.keyboard.gameObject;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        
+
     }
 
     void Update()
@@ -48,14 +48,6 @@ public class KeyboardButton : StationaryButton
             {
                 controllerModelSwitcher.TurnOffActiveTool(true);
             }
-        }
-        if (activateKeyboard)
-        {
-            standardTexture = gray;
-        }
-        if (!activateKeyboard)
-        {
-            standardTexture = original;
         }
     }
 

@@ -183,11 +183,23 @@ public class Cell
         }
     }
 
+    /// <summary>
+    /// Initializes the cell for saving genee expressions for flashing.
+    /// Should be called before <see cref="SaveSingleFlashingGenesExpression(string, int, int)"/>
+    /// </summary>
+    /// <param name="category">The name of a category that should be initialized</param>
+    /// <param name="length">The number of genes in that category</param>
     public void InitSaveSingleFlashingGenesExpression(string category, int length)
     {
         flashingExpressions[category] = new int[length];
     }
 
+    /// <summary>
+    /// Saves a gene expression that can be flashed later.
+    /// </summary>
+    /// <param name="category">The name of the category that this gene is in</param>
+    /// <param name="index">Which index it should be put on</param>
+    /// <param name="expression">A value between 0 and <see cref="CellExAlConfig.NumberOfExpressionColors"/></param>
     public void SaveSingleFlashingGenesExpression(string category, int index, int expression)
     {
         flashingExpressions[category][index] = expression;

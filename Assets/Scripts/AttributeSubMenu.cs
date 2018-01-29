@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the sub menu that pops up when the ColorByAttributeButton is pressed.
+/// This class represents the sub menu that pops up when the <see cref="AttributeMenuButton"/> is pressed.
 /// </summary>
 public class AttributeSubMenu : MonoBehaviour
 {
