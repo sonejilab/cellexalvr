@@ -319,10 +319,12 @@ public class CellManager : MonoBehaviour
             for (int i = 0; i < 10; ++i)
             {
                 genes[i] = results[i].First;
+                values[i] = results[i].Second;
             }
             for (int i = 0; i < 10; ++i)
             {
                 genes[i + 10] = results[results.Length - (i + 1)].First;
+                values[i + 10] = results[results.Length - (i + 1)].Second;
             }
         }
         else if (mode == SQLite.QueryTopGenesRankingMode.TTest)

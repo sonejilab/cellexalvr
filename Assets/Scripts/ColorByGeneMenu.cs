@@ -50,7 +50,7 @@ public class ColorByGeneMenu : MonoBehaviour
     /// Creates new buttons for coloring by attributes.
     /// </summary>
     /// <param name="genes"> An array of strings that contain the names of the attributes. </param>
-    public void CreateGeneButtons(string[] genes, float[] tValues)
+    public void CreateGeneButtons(string[] genes, float[] values)
     {
         if (buttons == null)
         {
@@ -60,7 +60,7 @@ public class ColorByGeneMenu : MonoBehaviour
         {
             // wait 0.1 seconds so we are out of the loop before we start destroying stuff
             Destroy(button.gameObject, .1f);
-            buttonPos = new Vector3(-.39f, .77f, .282f);
+            buttonPos = new Vector3(-0.40f, 1.3f, 0.135f);
         }
         buttons.Clear();
 
@@ -81,7 +81,7 @@ public class ColorByGeneMenu : MonoBehaviour
                 menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
             newButton.referenceManager = referenceManager;
             newButton.transform.localPosition = buttonPos;
-            newButton.SetGene(gene, tValues[i]);
+            newButton.SetGene(gene, values[i]);
             buttons.Add(newButton);
             // position the buttons in a 5 column grid.
             if ((i + 1) % 5 == 0)
