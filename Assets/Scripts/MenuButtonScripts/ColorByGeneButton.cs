@@ -19,14 +19,13 @@ public class ColorByGeneButton : SolidButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            cellManager.ColorGraphsByGene(gene);
+            cellManager.ColorGraphsByGene(gene, false);
         }
     }
 
-    public void SetGene(string gene)
+    public void SetGene(string gene, float tValue)
     {
         this.gene = gene;
-        description.text = gene;
+        description.text = string.Format("{0}\n{1:F3}", gene, tValue);
     }
 }
-

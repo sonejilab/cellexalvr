@@ -9,12 +9,13 @@ public class ColorByGeneMenu : MonoBehaviour
     public ReferenceManager referenceManager;
 
     public ColorByGeneButton buttonPrefab;
+    public TextMesh loadingText;
 
     private MenuToggler menuToggler;
     // hard coded positions :)
-    private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
-    private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
-    private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
+    private Vector3 buttonPos = new Vector3(-0.40f, 1.3f, 0.135f);
+    private Vector3 buttonPosInc = new Vector3(0.20f, 0, 0);
+    private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -0.15f);
     private List<ColorByGeneButton> buttons;
 
     public void Init()
@@ -25,13 +26,31 @@ public class ColorByGeneMenu : MonoBehaviour
     private void Awake()
     {
         menuToggler = referenceManager.menuToggler;
+        CellExAlEvents.QueryTopGenesStarted.AddListener(ShowLoadingText);
+        CellExAlEvents.QueryTopGenesFinished.AddListener(HideLoadingText);
+    }
+
+    /// <summary>
+    /// Sets the menu to be visible or invisible
+    /// </summary>
+    /// <param name="visible"> True for making the menu visible, false for invisible. </param>
+    public void SetMenuVisible(bool visible)
+    {
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = visible;
+        }
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+        {
+            c.enabled = visible;
+        }
     }
 
     /// <summary>
     /// Creates new buttons for coloring by attributes.
     /// </summary>
     /// <param name="genes"> An array of strings that contain the names of the attributes. </param>
-    public void CreateGeneButtons(string[] genes)
+    public void CreateGeneButtons(string[] genes, float[] tValues)
     {
         if (buttons == null)
         {
@@ -45,8 +64,11 @@ public class ColorByGeneMenu : MonoBehaviour
         }
         buttons.Clear();
 
+        bool menuOn = GetComponent<Renderer>().enabled;
+
         for (int i = 0; i < genes.Length && i < 20; ++i)
         {
+            // first take the top 10, then the bottom 10
             string gene = genes[i];
             ColorByGeneButton newButton = Instantiate(buttonPrefab, transform);
             newButton.gameObject.SetActive(true);
@@ -59,12 +81,12 @@ public class ColorByGeneMenu : MonoBehaviour
                 menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
             newButton.referenceManager = referenceManager;
             newButton.transform.localPosition = buttonPos;
-            newButton.SetGene(gene);
+            newButton.SetGene(gene, tValues[i]);
             buttons.Add(newButton);
-            // position the buttons in a 4 column grid.
-            if ((i + 1) % 4 == 0)
+            // position the buttons in a 5 column grid.
+            if ((i + 1) % 5 == 0)
             {
-                buttonPos -= buttonPosInc * 3;
+                buttonPos -= buttonPosInc * 4;
                 buttonPos += buttonPosNewRowInc;
             }
             else
@@ -73,5 +95,15 @@ public class ColorByGeneMenu : MonoBehaviour
             }
 
         }
+    }
+
+    private void ShowLoadingText()
+    {
+        loadingText.gameObject.SetActive(true);
+    }
+
+    private void HideLoadingText()
+    {
+        loadingText.gameObject.SetActive(false);
     }
 }

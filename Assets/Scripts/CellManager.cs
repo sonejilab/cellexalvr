@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using VRTK;
 using TMPro;
+using System.IO;
 
 /// <summary>
 /// This class represent a manager that holds all the cells.
@@ -221,14 +222,14 @@ public class CellManager : MonoBehaviour
     /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
     /// </summary>
     /// <param name="geneName"> The name of the gene. </param>
-    public void ColorGraphsByGene(string geneName)
+    public void ColorGraphsByGene(string geneName, bool triggerEvent = true)
     {
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName));
+        StartCoroutine(QueryDatabase(geneName, triggerEvent));
     }
 
-    private IEnumerator QueryDatabase(string geneName)
+    private IEnumerator QueryDatabase(string geneName, bool triggerEvent)
     {
         if (coroutinesWaiting >= 1)
         {
@@ -279,36 +280,71 @@ public class CellManager : MonoBehaviour
         {
             c.SaveExpression(geneName + " " + graphManager.GeneExpressionColoringMethod, removedGene);
         }
-        CellExAlEvents.GraphsColoredByGene.Invoke();
+        if (triggerEvent)
+        {
+            CellExAlEvents.GraphsColoredByGene.Invoke();
+        }
         CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
-    public void QueryTopGenes()
+    public void QueryTopGenes(SQLite.QueryTopGenesRankingMode mode)
     {
-        StartCoroutine(QueryTopGenesCoroutine());
+        StartCoroutine(QueryTopGenesCoroutine(mode));
     }
 
-    private IEnumerator QueryTopGenesCoroutine()
+    private IEnumerator QueryTopGenesCoroutine(SQLite.QueryTopGenesRankingMode mode)
     {
+        CellExAlEvents.QueryTopGenesStarted.Invoke();
         while (database.QueryRunning)
         {
             yield return null;
         }
 
-        database.QueryTopGenes();
+        database.QueryTopGenes(mode);
 
         while (database.QueryRunning)
         {
             yield return null;
         }
-        CellExpressionPair[] results = (CellExpressionPair[])database._result.ToArray(typeof(CellExpressionPair));
-        Array.Sort(results, (CellExpressionPair x, CellExpressionPair y) => y.Expression.CompareTo(x.Expression));
-        string[] genes = new string[results.Length];
-        for (int i = 0; i < results.Length; ++i)
+        Pair<string, float>[] results = (Pair<string, float>[])database._result.ToArray(typeof(Pair<string, float>));
+        Array.Sort(results, (Pair<string, float> x, Pair<string, float> y) => y.Second.CompareTo(x.Second));
+        string[] genes = new string[20];
+        float[] values = new float[20];
+        if (mode == SQLite.QueryTopGenesRankingMode.Mean)
         {
-            genes[i] = ((CellExpressionPair)results[i]).Cell;
+            for (int i = 0; i < 10; ++i)
+            {
+                genes[i] = results[i].First;
+            }
+            for (int i = 0; i < 10; ++i)
+            {
+                genes[i + 10] = results[results.Length - (i + 1)].First;
+            }
         }
-        referenceManager.colorByGeneMenu.CreateGeneButtons(genes);
+        else if (mode == SQLite.QueryTopGenesRankingMode.TTest)
+        {
+            for (int i = 0; i < 10; ++i)
+            {
+                genes[i] = results[i].First;
+                values[i] = results[i].Second;
+            }
+            for (int i = 0; i < 10; ++i)
+            {
+                genes[i + 10] = results[results.Length - (i + 1)].First;
+                values[i + 10] = results[results.Length - (i + 1)].Second;
+            }
+        }
+        CellExAlLog.Log("Overwriting file: " + CellExAlUser.UserSpecificFolder + "\\gene_expr_diff.txt with new results");
+        StreamWriter stream = new StreamWriter(CellExAlUser.UserSpecificFolder + "\\gene_expr_diff.txt", false);
+        foreach (Pair<string, float> p in results)
+        {
+            stream.Write(p.First + "\t\t " + p.Second + "\n");
+        }
+        stream.Flush();
+        stream.Close();
+
+        CellExAlEvents.QueryTopGenesFinished.Invoke();
+        referenceManager.colorByGeneMenu.CreateGeneButtons(genes, values);
     }
 
     /// <summary>

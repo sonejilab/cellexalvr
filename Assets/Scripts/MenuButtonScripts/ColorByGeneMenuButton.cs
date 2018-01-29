@@ -1,23 +1,30 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+/// <summary>
+/// This class represents the button that opens the color by gene menu.
+/// </summary>
 public class ColorByGeneMenuButton : StationaryButton
 {
 
     private GameObject buttons;
-    private GameObject colorByGeneMenu;
+    private ColorByGeneMenu colorByGeneMenu;
 
     protected override string Description
     {
         get
         {
-            return "Show the toggle arcs menu";
+            return "Show menu for calculating\ntop differentially expressed genes";
         }
     }
 
     void Start()
     {
         buttons = referenceManager.leftButtons;
-        colorByGeneMenu = referenceManager.colorByGeneMenu.gameObject;
+        colorByGeneMenu = referenceManager.colorByGeneMenu;
+        colorByGeneMenu.gameObject.SetActive(true);
+        colorByGeneMenu.SetMenuVisible(false);
+
     }
 
     void Update()
@@ -28,7 +35,9 @@ public class ColorByGeneMenuButton : StationaryButton
         {
             spriteRenderer.sprite = standardTexture;
             controllerInside = false;
-            colorByGeneMenu.SetActive(true);
+            descriptionText.text = "";
+            colorByGeneMenu.SetMenuVisible(true);
+
             foreach (StationaryButton b in buttons.GetComponentsInChildren<StationaryButton>())
             {
                 b.SetButtonActivated(false);

@@ -30,5 +30,9 @@ public static class CellExAlEvents
     public static UnityEvent FlashGenesFileFinishedLoading = new UnityEvent();
 
     public static UnityEvent ConfigLoaded = new UnityEvent();
+
+    public static UnityEvent QueryTopGenesStarted = new UnityEvent();
+    public static UnityEvent QueryTopGenesFinished = new UnityEvent();
+
     //public static UnityEvent FlashGenesCategoryToggled
 }

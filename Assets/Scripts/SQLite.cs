@@ -218,7 +218,9 @@ namespace SQLiter
 
         #region Query
 
-        public void QueryTopGenes()
+        public enum QueryTopGenesRankingMode { Mean, TTest }
+
+        public void QueryTopGenes(QueryTopGenesRankingMode mode)
         {
             var list = referenceManager.selectionToolHandler.GetLastSelection();
             List<string> cellNames1 = new List<string>();
@@ -234,18 +236,20 @@ namespace SQLiter
                     cellNames2.Add(gp.Cell.Label);
                 }
             }
+            CellExAlLog.Log("Querying database for all gene expressions in " + (cellNames1.Count + cellNames2.Count) + " cells");
             QueryRunning = true;
-            StartCoroutine(QueryTopGenesCoroutine(cellNames1.ToArray(), cellNames2.ToArray()));
+            StartCoroutine(QueryTopGenesCoroutine(cellNames1.ToArray(), cellNames2.ToArray(), mode));
         }
 
-
-        private IEnumerator QueryTopGenesCoroutine(string[] cellNames1, string[] cellNames2)
+        private IEnumerator QueryTopGenesCoroutine(string[] cellNames1, string[] cellNames2, QueryTopGenesRankingMode mode)
         {
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
             _result.Clear();
             // Create the two lists of cell names
             StringBuilder builder = new StringBuilder();
 
-            int i = 1;
+            int i = 0;
             for (; i < cellNames1.Length; ++i)
             {
                 string cell = cellNames1[i];
@@ -257,7 +261,8 @@ namespace SQLiter
             }
             string cellNamesString1 = builder.ToString();
 
-            for (; i < cellNames2.Length; ++i)
+            builder = new StringBuilder();
+            for (i = 0; i < cellNames2.Length; ++i)
             {
                 string cell = cellNames2[i];
                 builder.Append("\"").Append(cell).Append("\"");
@@ -267,7 +272,7 @@ namespace SQLiter
                 }
             }
             string cellNamesString2 = builder.ToString();
-            // Query for list 1
+            // query for list 1
             string query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString1 + ") order by gene_id";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
@@ -276,34 +281,7 @@ namespace SQLiter
                 yield return null;
             }
 
-            int prevGene = -1;
-            i = 0;
-            List<CellExpressionPair> pairs1 = new List<CellExpressionPair>();
-            while (_reader.Read())
-            {
-                int gene_id = _reader.GetInt32(0);
-                float expr = _reader.GetFloat(1);
-                if (prevGene == -1)
-                {
-                    // first iteration
-                    prevGene = gene_id;
-                    pairs1.Add(new CellExpressionPair(gene_id.ToString(), 0f));
-                }
-
-                if (gene_id != prevGene)
-                {
-                    pairs1[pairs1.Count - 1].Expression /= cellNames1.Length;
-                    i = 0;
-                    pairs1.Add(new CellExpressionPair(gene_id.ToString(), 0f));
-                }
-                else
-                {
-                    pairs1[pairs1.Count - 1].Expression += expr;
-                }
-                prevGene = gene_id;
-                i++;
-            }
-            pairs1[pairs1.Count - 1].Expression /= cellNames1.Length;
+            List<Pair<string, List<float>>> expressions1 = GetResultsTopGeneQuery();
 
             // query for list 2
             query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
@@ -314,64 +292,17 @@ namespace SQLiter
                 yield return null;
             }
 
-            prevGene = -1;
-            i = 0;
-            List<CellExpressionPair> pairs2 = new List<CellExpressionPair>();
+            List<Pair<string, List<float>>> expressions2 = GetResultsTopGeneQuery();
 
-            while (_reader.Read())
+            // actual results will be in _result after these functions
+            List<string> actualGeneIds = new List<string>(0);
+            if (mode == QueryTopGenesRankingMode.Mean)
             {
-                int gene_id = _reader.GetInt32(0);
-                float expr = _reader.GetFloat(1);
-                if (prevGene == -1)
-                {
-                    // first iteration
-                    prevGene = gene_id;
-                    pairs2.Add(new CellExpressionPair(gene_id.ToString(), 0f));
-                }
-
-                if (gene_id != prevGene)
-                {
-                    pairs2[pairs2.Count - 1].Expression /= cellNames2.Length;
-                    i = 0;
-                    pairs2.Add(new CellExpressionPair(gene_id.ToString(), 0f));
-                }
-                else
-                {
-                    pairs2[pairs2.Count - 1].Expression += expr;
-                }
-                prevGene = gene_id;
-                i++;
+                actualGeneIds = CalculateMeans(expressions1, expressions2, cellNames1.Length, cellNames2.Length);
             }
-            pairs2[pairs2.Count - 1].Expression /= cellNames2.Length;
-
-            // calculate the difference in expressions
-            _result = new ArrayList(pairs1.Count);
-            List<string> actualGeneIds = new List<string>();
-            int index1 = 0, index2 = 0;
-            for (i = 0; index1 < pairs1.Count - 1 && index2 < pairs2.Count - 1; ++i)
+            else if (mode == QueryTopGenesRankingMode.TTest)
             {
-                string geneId = "";
-                float expr1 = 0, expr2 = 0;
-                if (int.Parse(pairs1[index1].Cell) == i && index1 < pairs1.Count - 1)
-                {
-                    geneId = pairs1[index1].Cell;
-                    expr1 = pairs1[index1].Expression;
-                    index1++;
-                }
-                if (int.Parse(pairs2[index2].Cell) == i && index2 < pairs2.Count - 1)
-                {
-                    geneId = pairs2[index2].Cell;
-                    expr2 = pairs2[index2].Expression;
-                    index2++;
-                }
-
-                // only add genes that have a difference in expression > 0
-                if (expr1 != 0 && expr2 != 0)
-                {
-                    float diffExpr = Mathf.Abs(expr1 - expr2);
-                    _result.Add(new CellExpressionPair(geneId, diffExpr));
-                    actualGeneIds.Add(geneId);
-                }
+                actualGeneIds = TTestLists(expressions1, expressions2, cellNames1.Length, cellNames2.Length);
             }
 
             // get the actual gene names
@@ -399,16 +330,84 @@ namespace SQLiter
             i = 0;
             while (_reader.Read())
             {
-                int geneId = _reader.GetInt32(0);
                 string geneName = _reader.GetString(1);
-                ((CellExpressionPair)_result[i]).Cell = geneName;
+                ((Pair<string, float>)_result[i]).First = geneName;
                 i++;
             }
-
+            stopwatch.Stop();
+            CellExAlLog.Log("Finished querying for gene expressions in " + (cellNames1.Length + cellNames2.Length) + " cells in " + stopwatch.Elapsed.ToString());
             _reader.Close();
             _connection.Close();
             QueryRunning = false;
         }
+
+        private List<Pair<string, List<float>>> GetResultsTopGeneQuery()
+        {
+            // int expressionsToAdd = 0;
+            int prevGene = -1;
+            int i = -1;
+            List<Pair<string, List<float>>> expressions = new List<Pair<string, List<float>>>();
+            while (_reader.Read())
+            {
+                int gene_id = _reader.GetInt32(0);
+                float expr = _reader.GetFloat(1);
+
+                if (prevGene != gene_id)
+                {
+                    expressions.Add(new Pair<string, List<float>>(gene_id.ToString(), new List<float>()));
+                    prevGene = gene_id;
+                    i++;
+                }
+                expressions[i].Second.Add(expr);
+            }
+            return expressions;
+        }
+
+        private List<string> CalculateMeans(List<Pair<string, List<float>>> expressions1, List<Pair<string, List<float>>> expressions2, int length1, int length2)
+        {
+            // calculate the difference in expressions
+            _result = new ArrayList();
+            List<string> actualGeneIds = new List<string>();
+            int index1 = 0, index2 = 0;
+            for (int i = 0; index1 < expressions1.Count - 1 && index2 < expressions2.Count - 1; ++i)
+            {
+                string geneId = "";
+                float expr1 = 0, expr2 = 0;
+                if (int.Parse(expressions1[index1].First) == i && index1 < expressions1.Count - 1)
+                {
+                    geneId = expressions1[index1].First;
+                    expr1 = Mean(expressions1[index1].Second, length1);
+                    index1++;
+                }
+                if (int.Parse(expressions2[index2].First) == i && index2 < expressions2.Count - 1)
+                {
+                    geneId = expressions2[index2].First;
+                    expr2 = Mean(expressions2[index2].Second, length2);
+                    index2++;
+                }
+
+                // only add genes that have a difference in expression > 0
+                if (expr1 != 0 || expr2 != 0)
+                {
+                    float diffExpr = expr1 - expr2;
+                    _result.Add(new Pair<string, float>(geneId, diffExpr));
+                    actualGeneIds.Add(geneId);
+                }
+            }
+            return actualGeneIds;
+        }
+
+        private float Mean(List<float> list, int length)
+        {
+            double mean = 0;
+            for (int i = 0; i < list.Count; ++i)
+            {
+                mean += list[i];
+            }
+            mean /= length;
+            return (float)mean;
+        }
+
         /// <summary>
         /// Queries the database for the expressions of a gene.
         /// </summary>
@@ -494,7 +493,6 @@ namespace SQLiter
                 for (int j = 0; j < result.Count; ++j)
                 {
                     result[j].Expression = j / binsize;
-
                 }
                 _result.AddRange(result);
             }
@@ -504,6 +502,84 @@ namespace SQLiter
             _connection.Close();
             status.RemoveStatus(statusId);
             QueryRunning = false;
+        }
+
+        private List<string> TTestLists(List<Pair<string, List<float>>> expressions1, List<Pair<string, List<float>>> expressions2, int length1, int length2)
+        {
+
+            _result = new ArrayList();
+            List<string> actualGeneIds = new List<string>();
+            int index1 = 0, index2 = 0;
+            for (int i = 0; index1 < expressions1.Count || index2 < expressions2.Count; ++i)
+            {
+                string geneId = "";
+                List<float> expr1 = null, expr2 = null;
+                if (index1 < expressions1.Count && int.Parse(expressions1[index1].First) == i)
+                {
+                    geneId = expressions1[index1].First;
+                    expr1 = expressions1[index1].Second;
+                    index1++;
+                }
+                if (index2 < expressions2.Count && int.Parse(expressions2[index2].First) == i)
+                {
+                    geneId = expressions2[index2].First;
+                    expr2 = expressions2[index2].Second;
+                    index2++;
+                }
+
+                if (expr1 != null || expr2 != null)
+                {
+                    if (expr1 == null)
+                    {
+                        expr1 = new List<float>();
+                    }
+                    if (expr2 == null)
+                    {
+                        expr2 = new List<float>();
+                    }
+                    float tValue = TTest(expr1.ToArray(), expr2.ToArray(), length1, length2);
+                    _result.Add(new Pair<string, float>(geneId, tValue));
+                    actualGeneIds.Add(geneId);
+                }
+            }
+            return actualGeneIds;
+        }
+
+        /// <summary>
+        /// Conduct a t-test
+        /// </summary>
+        private float TTest(float[] x, float[] y, int n1, int n2)
+        {
+            double sumX = 0.0;
+            double sumY = 0.0;
+            for (int i = 0; i < x.Length; ++i)
+                sumX += x[i];
+            for (int i = 0; i < y.Length; ++i)
+                sumY += y[i];
+
+            // means
+            double meanX = sumX / n1;
+            double meanY = sumY / n2;
+
+            // variances
+            double sumXminusMeanSquared = 0.0;
+            double sumYminusMeanSquared = 0.0;
+            for (int i = 0; i < x.Length; ++i)
+                sumXminusMeanSquared += (x[i] - meanX) * (x[i] - meanX);
+            sumXminusMeanSquared += meanX * meanX * (n1 - x.Length);
+
+            for (int i = 0; i < y.Length; ++i)
+                sumYminusMeanSquared += (y[i] - meanY) * (y[i] - meanY);
+            sumYminusMeanSquared += meanY * meanY * (n2 - y.Length);
+
+            double varX = sumXminusMeanSquared / (n1 - 1);
+            double varY = sumYminusMeanSquared / (n2 - 1);
+
+            // the t statistic
+            if (varX == 0.0 && varY == 0.0) return 0f;
+            double top = (meanX - meanY);
+            double bot = Math.Sqrt((varX / n1) + (varY / n2));
+            return (float)(top / bot);
         }
 
         /// <summary>
@@ -739,6 +815,20 @@ namespace SQLiter
             if (_connection != null && _connection.State != System.Data.ConnectionState.Closed)
                 _connection.Close();
             _connection = null;
+        }
+    }
+
+    public class Pair<T, U>
+    {
+        public T First { get; set; }
+        public U Second { get; set; }
+
+        public Pair() { }
+
+        public Pair(T first, U second)
+        {
+            this.First = first;
+            this.Second = second;
         }
     }
 
