@@ -6,6 +6,7 @@ using UnityEngine;
 /// </summary>
 public class ColorByGeneMenuButton : StationaryButton
 {
+    public TextMesh textMeshToDarken;
 
     private GameObject buttons;
     private ColorByGeneMenu colorByGeneMenu;
@@ -24,7 +25,6 @@ public class ColorByGeneMenuButton : StationaryButton
         colorByGeneMenu = referenceManager.colorByGeneMenu;
         colorByGeneMenu.gameObject.SetActive(true);
         colorByGeneMenu.SetMenuVisible(false);
-
     }
 
     void Update()
@@ -42,7 +42,7 @@ public class ColorByGeneMenuButton : StationaryButton
             {
                 b.SetButtonActivated(false);
             }
+            textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
         }
     }
 }
-

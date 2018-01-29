@@ -616,10 +616,10 @@ MonoBehaviour:
   rightButtons: {fileID: 260779679}
   backButtons: {fileID: 678749163}
   leftButtons: {fileID: 337163141}
-  frontDescription: {fileID: 891}
-  rightDescription: {fileID: 777993154}
-  backDescription: {fileID: 1942651074}
-  leftDescription: {fileID: 105887393}
+  frontDescription: {fileID: 15121586}
+  rightDescription: {fileID: 581793072}
+  backDescription: {fileID: 1105236481}
+  leftDescription: {fileID: 66379882}
   menuRotator: {fileID: 214544481}
   minimizedObjectHandler: {fileID: 877589487}
   menuToggler: {fileID: 296}
@@ -3999,7 +3999,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 201}
-  m_Mesh: {fileID: 1557545518}
+  m_Mesh: {fileID: 1442387773}
 --- !u!23 &206
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4014,7 +4014,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 1815115881}
+  - {fileID: 825100622}
   - {fileID: 434891969}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -6483,7 +6483,7 @@ GameObject:
   - component: {fileID: 28707706}
   - component: {fileID: 28707705}
   m_Layer: 10
-  m_Name: Query Top Genes Buttons Mean
+  m_Name: Query Top Genes Button Mean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7160,6 +7160,7 @@ MonoBehaviour:
   description: 
   buttonsToDeactivate: {fileID: 322652824}
   menu: {fileID: 1175211502}
+  textMeshToDarken: {fileID: 0}
 --- !u!212 &40110772
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8555,6 +8556,7 @@ MonoBehaviour:
   description: Show menu for coloring by attribute
   buttonsToDeactivate: {fileID: 337163141}
   menu: {fileID: 1057236350}
+  textMeshToDarken: {fileID: 990631724}
 --- !u!212 &96251009
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9124,6 +9126,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 605130061}
   menuToClose: {fileID: 1550789343}
+  textMeshToUndarken: {fileID: 1812950483}
   deactivateMenu: 0
 --- !u!212 &112473970
 SpriteRenderer:
@@ -9805,6 +9808,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 337163141}
   menuToClose: {fileID: 654271208}
+  textMeshToUndarken: {fileID: 990631724}
   deactivateMenu: 0
 --- !u!212 &140201413
 SpriteRenderer:
@@ -10709,6 +10713,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 337163141}
   menuToClose: {fileID: 1057236350}
+  textMeshToUndarken: {fileID: 990631724}
   deactivateMenu: 0
 --- !u!212 &170498383
 SpriteRenderer:
@@ -12164,6 +12169,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 1832894449}
   menuToClose: {fileID: 1022276734}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!212 &228410433
 SpriteRenderer:
@@ -12495,6 +12501,7 @@ MonoBehaviour:
   description: Open menu for toggling arcs
   buttonsToDeactivate: {fileID: 337163141}
   menu: {fileID: 654271208}
+  textMeshToDarken: {fileID: 990631724}
 --- !u!212 &242216882
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21800,7 +21807,7 @@ GameObject:
   - component: {fileID: 618135694}
   - component: {fileID: 618135693}
   m_Layer: 10
-  m_Name: Query Top Genes Buttons T-Test
+  m_Name: Query Top Genes Button T-Test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23050,6 +23057,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: ed2b3376d6cee9749a802a2d6f0130b5, type: 3}
   buttonActivated: 1
   spriteRenderer: {fileID: 668572148}
+  textMeshToDarken: {fileID: 990631724}
 --- !u!212 &668572148
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23088,7 +23096,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.46, y: 5.46}
+  m_Size: {x: 5.7, y: 5.73}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
 --- !u!65 &668572149
@@ -25622,6 +25630,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 337163141}
   menuToClose: {fileID: 922960128}
+  textMeshToUndarken: {fileID: 990631724}
   deactivateMenu: 0
 --- !u!212 &788300170
 SpriteRenderer:
@@ -26137,6 +26146,7 @@ MonoBehaviour:
   description: Show menu for coloring by index
   buttonsToDeactivate: {fileID: 337163141}
   menu: {fileID: 337548415}
+  textMeshToDarken: {fileID: 990631724}
 --- !u!212 &814390765
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -26308,6 +26318,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 194325602}
   menuToClose: {fileID: 1851298793}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!212 &821747571
 SpriteRenderer:
@@ -26432,6 +26443,38 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!21 &825100622
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 4800000, guid: a1975866494d6c446aef55a8d4038e56, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &828458524
 GameObject:
   m_ObjectHideFlags: 0
@@ -28954,6 +28997,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 194325602}
   menuToClose: {fileID: 293065841}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!212 &962299794
 SpriteRenderer:
@@ -30990,6 +31034,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 260779679}
   menuToClose: {fileID: 1071140891}
+  textMeshToUndarken: {fileID: 1529427924}
   deactivateMenu: 0
 --- !u!212 &1028551767
 SpriteRenderer:
@@ -31787,6 +31832,7 @@ MonoBehaviour:
   description: Selection Tool
   buttonsToDeactivate: {fileID: 260779679}
   menu: {fileID: 322652824}
+  textMeshToDarken: {fileID: 1529427924}
 --- !u!1 &1049821103
 GameObject:
   m_ObjectHideFlags: 0
@@ -36808,6 +36854,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 337163141}
   menuToClose: {fileID: 337548415}
+  textMeshToUndarken: {fileID: 990631724}
   deactivateMenu: 0
 --- !u!212 &1196363264
 SpriteRenderer:
@@ -37738,6 +37785,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 993328920}
   menuToClose: {fileID: 30614892}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!212 &1238615985
 SpriteRenderer:
@@ -39249,6 +39297,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 194325602}
   menuToClose: {fileID: 1174890050}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!212 &1302230193
 SpriteRenderer:
@@ -39854,6 +39903,7 @@ MonoBehaviour:
   description: Draw Tool
   buttonsToDeactivate: {fileID: 260779679}
   menu: {fileID: 1071140891}
+  textMeshToDarken: {fileID: 1529427924}
 --- !u!1 &1324671535
 GameObject:
   m_ObjectHideFlags: 0
@@ -40331,6 +40381,7 @@ MonoBehaviour:
   description: Flash Genes Menu
   buttonsToDeactivate: {fileID: 337163141}
   menu: {fileID: 922960128}
+  textMeshToDarken: {fileID: 990631724}
 --- !u!212 &1353044963
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -41583,6 +41634,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 337163141}
   menuToClose: {fileID: 348558331}
+  textMeshToUndarken: {fileID: 990631724}
   deactivateMenu: 0
 --- !u!212 &1420785098
 SpriteRenderer:
@@ -42095,6 +42147,134 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!43 &1442387773
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 24
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0.01, z: 0}
+      m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 13
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 28
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 288
+    _typelessdata: 0000c03f0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0.01, z: 0}
+    m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0
 --- !u!1 &1445508316
 GameObject:
   m_ObjectHideFlags: 0
@@ -44455,6 +44635,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1537185757}
   buttonsToActivate: {fileID: 322652824}
   menuToClose: {fileID: 1175211502}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!212 &1537185757
 SpriteRenderer:
@@ -45140,134 +45321,6 @@ Transform:
   m_Father: {fileID: 29}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &1557545518
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 8
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 24
-    topology: 0
-    firstVertex: 0
-    vertexCount: 8
-    localAABB:
-      m_Center: {x: 0, y: 0.01, z: 0}
-      m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
-  m_Skin: []
-  m_VertexData:
-    m_CurrentChannels: 13
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 28
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 288
-    _typelessdata: 0000c03f0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0.01, z: 0}
-    m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshOptimized: 0
 --- !u!1 &1562638530
 GameObject:
   m_ObjectHideFlags: 0
@@ -45847,6 +45900,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   buttonsToActivate: {fileID: 260779679}
   menuToClose: {fileID: 322652824}
+  textMeshToUndarken: {fileID: 1529427924}
   deactivateMenu: 0
 --- !u!212 &1582721426
 SpriteRenderer:
@@ -50497,38 +50551,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!21 &1815115881
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 4800000, guid: a1975866494d6c446aef55a8d4038e56, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1817044472
 GameObject:
   m_ObjectHideFlags: 0
@@ -56021,6 +56043,7 @@ MonoBehaviour:
   description: Display Mode
   buttonsToDeactivate: {fileID: 605130061}
   menu: {fileID: 1550789343}
+  textMeshToDarken: {fileID: 1812950483}
 --- !u!1 &2078097148
 GameObject:
   m_ObjectHideFlags: 0

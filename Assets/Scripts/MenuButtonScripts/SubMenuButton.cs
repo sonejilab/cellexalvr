@@ -5,6 +5,7 @@ class SubMenuButton : StationaryButton
     public string description;
     public GameObject buttonsToDeactivate;
     public GameObject menu;
+    public TextMesh textMeshToDarken;
     private Tab activeTab;
 
     protected override string Description
@@ -31,6 +32,7 @@ class SubMenuButton : StationaryButton
             {
                 b.SetButtonActivated(false);
             }
+            textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
             SetMenuActivated(true);
             descriptionText.text = "";
         }

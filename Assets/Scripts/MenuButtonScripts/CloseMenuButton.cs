@@ -4,6 +4,7 @@ public class CloseMenuButton : StationaryButton
 {
     public GameObject buttonsToActivate;
     public GameObject menuToClose;
+    public TextMesh textMeshToUndarken;
 
     public bool deactivateMenu = false;
 
@@ -35,6 +36,7 @@ public class CloseMenuButton : StationaryButton
                 foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
                     c.enabled = false;
             }
+            textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
             foreach (StationaryButton b in buttonsToActivate.GetComponentsInChildren<StationaryButton>())
             {
                 b.SetButtonActivated(true);
