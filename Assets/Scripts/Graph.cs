@@ -19,6 +19,8 @@ public class Graph : MonoBehaviour
     public TextMesh graphNameText;
     public TextMesh graphInfoText;
 
+    public Boolean GraphActive = true;
+
     private GraphPoint newGraphpoint;
     public Dictionary<string, GraphPoint> points;
     private List<Vector3> pointsPositions;
@@ -73,6 +75,7 @@ public class Graph : MonoBehaviour
     /// </summary>
     internal void ShowGraph()
     {
+        GraphActive = true;
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
             r.enabled = true;
         foreach (Collider c in GetComponentsInChildren<Collider>())
@@ -86,6 +89,7 @@ public class Graph : MonoBehaviour
     /// </summary>
     internal void HideGraph()
     {
+        GraphActive = false;
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
             r.enabled = false;
         foreach (Collider c in GetComponentsInChildren<Collider>())

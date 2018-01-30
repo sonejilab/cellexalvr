@@ -624,6 +624,10 @@ public class CellManager : MonoBehaviour
                     lines.Add(line.gameObject);
                     sameCell.Graph.Lines.Add(line.gameObject);
                     g.Graph.Lines.Add(line.gameObject);
+                    if (!sameCell.Graph.GraphActive)
+                    {
+                        line.gameObject.SetActive(false);
+                    }
                 }
             }
         }
