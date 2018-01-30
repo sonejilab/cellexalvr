@@ -30,6 +30,7 @@ public class NetworkHandler : MonoBehaviour
         highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
         unhighlightedMaterials = new Material[] { meshRenderer.materials[0], null };
     }
+
     private void Update()
     {
         if (GetComponent<VRTK_InteractableObject>().enabled)
@@ -71,24 +72,25 @@ public class NetworkHandler : MonoBehaviour
     {
         foreach (NetworkCenter network in Replacements)
         {
+            network.GetComponent<Renderer>().enabled = true;
+            network.GetComponent<Collider>().enabled = true;
             network.HideSphereIfEnlarged();
         }
         foreach (NetworkCenter network in networks)
         {
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                 r.enabled = true;
-            foreach (Collider c in network.GetComponentsInChildren<Collider>())
-                c.enabled = true;
+            network.GetComponent<Collider>().enabled = true;
             if (network.Enlarged)
             {
-                // turn off the renderer for the sphere
                 network.gameObject.GetComponent<Renderer>().enabled = false;
+                foreach (Collider c in network.GetComponentsInChildren<Collider>())
+                    c.enabled = true;
             }
+
         }
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
-            r.enabled = true;
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-            c.enabled = true;
+        GetComponent<Renderer>().enabled = true;
+        GetComponent<Collider>().enabled = true;
     }
 
     /// <summary>
@@ -107,6 +109,21 @@ public class NetworkHandler : MonoBehaviour
             r.enabled = false;
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = false;
+    }
+
+    internal void ToggleNetworkColliders(bool newState)
+    {
+        foreach (NetworkCenter network in networks)
+        {
+            if (network.Enlarged)
+            {
+
+                foreach (Collider c in network.GetComponentsInChildren<Collider>())
+                {
+                    c.enabled = newState;
+                }
+            }
+        }
     }
 
     /// <summary>

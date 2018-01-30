@@ -224,7 +224,7 @@ public class InputReader : MonoBehaviour
                 //mdsFileStream.Close();
                 mdsStreamReader.Close();
             }
-            CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantating ~" + maximumItemsPerFrame + " graphpoints every frame");
+            CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading .meta.cell files");
@@ -676,6 +676,7 @@ public class InputReader : MonoBehaviour
         foreach (NetworkNode node in nodes.Values)
         {
             node.AddEdges();
+            node.gameObject.GetComponent<BoxCollider>().enabled = false;
         }
 
         // copy the networks to an array
