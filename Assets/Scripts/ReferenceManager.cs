@@ -78,7 +78,7 @@ public class ReferenceManager : MonoBehaviour
     public SQLite database;
     public LogManager logManager;
     public GameManager gameManager;
-
+    public GameObject calculatorCluster;
     #endregion
 
     #region Keyboard

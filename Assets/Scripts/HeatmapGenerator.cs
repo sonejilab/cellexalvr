@@ -13,6 +13,9 @@ public class HeatmapGenerator : MonoBehaviour
     public GameObject heatmapPrefab;
     public ErrorMessageController errorMessageController;
 
+    public bool GeneratingHeatmaps { get; private set; }
+
+    private GameObject calculatorCluster;
     private SelectionToolHandler selectionToolHandler;
     private StatusDisplay status;
     private StatusDisplay statusDisplayHUD;
@@ -20,7 +23,6 @@ public class HeatmapGenerator : MonoBehaviour
     private ArrayList data;
     private Thread t;
     private SteamVR_Controller.Device device;
-    private GameObject hourglass;
     private int heatmapID = 1;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
@@ -28,13 +30,14 @@ public class HeatmapGenerator : MonoBehaviour
     void Start()
     {
         t = null;
-        hourglass = GameObject.Find("WaitingForHeatboardHourglass");
-        hourglass.SetActive(false);
         heatmapPosition = heatmapPrefab.transform.position;
         selectionToolHandler = referenceManager.selectionToolHandler;
         status = referenceManager.statusDisplay;
         statusDisplayHUD = referenceManager.statusDisplayHUD;
         statusDisplayFar = referenceManager.statusDisplayFar;
+        calculatorCluster = referenceManager.calculatorCluster;
+        calculatorCluster.SetActive(false);
+        GeneratingHeatmaps = false;
     }
 
     internal void DeleteHeatmaps()
@@ -76,6 +79,7 @@ public class HeatmapGenerator : MonoBehaviour
     {
         if (selectionToolHandler.selectionConfirmed)
         {
+            GeneratingHeatmaps = true;
             // make a deep copy of the arraylist
             List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
             Dictionary<Cell, int> colors = new Dictionary<Cell, int>();
@@ -130,7 +134,7 @@ public class HeatmapGenerator : MonoBehaviour
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             t.Start();
             // Show hourglass
-            hourglass.SetActive(true);
+            calculatorCluster.SetActive(true);
 
             while (t.IsAlive)
             {
@@ -141,7 +145,7 @@ public class HeatmapGenerator : MonoBehaviour
             status.RemoveStatus(statusId);
             statusDisplayHUD.RemoveStatus(statusIdHUD);
             statusDisplayFar.RemoveStatus(statusIdFar);
-
+            GeneratingHeatmaps = false;
             string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
@@ -153,7 +157,8 @@ public class HeatmapGenerator : MonoBehaviour
             heatmap.SetVars(colors);
             heatmapList.Add(heatmap);
 
-            hourglass.SetActive(false);
+            if (!referenceManager.networkGenerator.GeneratingNetworks)
+                calculatorCluster.SetActive(false);
 
             heatmap.UpdateImage(newHeatmapFilePath);
             heatmap.GetComponent<AudioSource>().Play();

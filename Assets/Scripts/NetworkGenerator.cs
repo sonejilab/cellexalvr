@@ -18,8 +18,11 @@ public class NetworkGenerator : MonoBehaviour
     public List<NetworkHandler> networkList = new List<NetworkHandler>();
     public int objectsInSky;
 
+    public bool GeneratingNetworks { get; private set; }
+
     public Material[] LineMaterials;
 
+    private GameObject calculatorCluster;
     private SelectionToolHandler selectionToolHandler;
     private InputReader inputReader;
     private GraphManager graphManager;
@@ -44,6 +47,7 @@ public class NetworkGenerator : MonoBehaviour
         status = referenceManager.statusDisplay;
         statusDisplayHUD = referenceManager.statusDisplayHUD;
         statusDisplayFar = referenceManager.statusDisplayFar;
+        calculatorCluster = referenceManager.calculatorCluster;
     }
 
     /// <summary>
@@ -102,6 +106,8 @@ public class NetworkGenerator : MonoBehaviour
 
     IEnumerator GenerateNetworksCoroutine()
     {
+        GeneratingNetworks = true;
+        calculatorCluster.SetActive(true);
         int statusId = status.AddStatus("R script generating networks");
         int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
         int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
@@ -119,6 +125,9 @@ public class NetworkGenerator : MonoBehaviour
         stopwatch.Stop();
         CellExAlLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
         status.RemoveStatus(statusId);
+        GeneratingNetworks = false;
+        if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)
+            calculatorCluster.SetActive(false);
         //statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
         inputReader.ReadNetworkFiles();
