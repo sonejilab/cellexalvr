@@ -2,7 +2,7 @@
 A tool for visualising and analysing single cell expression data in VR.
 CellexalVR was created by some masters students at Lund's University in cooperation with some scientists at the biomedical centre.
 Its purpose is to create a more intuitive way of performing single cell analysis on large datasets.
-You can read more about this project at [our website](http://cellexalvr.lu.se).
+You can read more about this project at [our website](http://cellexalvr.med.lu.se).
 
 ## Running CellexalVR
 There are a few things that must be done if you are planning to run CellexalVR for the first time.
