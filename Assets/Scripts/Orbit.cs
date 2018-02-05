@@ -22,7 +22,7 @@ public class Orbit : MonoBehaviour
     private float angleChangePerFrame;
     private Vector3 originalPosition;
     private Vector3 originalWorldPosition;
-    
+
     private float half = 1;
 
     void Start()
@@ -37,6 +37,7 @@ public class Orbit : MonoBehaviour
             startAngle += 1;
             half = -1;
         }
+        transform.rotation = Quaternion.Euler(transform.position / radius * 90);
     }
 
     void Update()
@@ -48,7 +49,7 @@ public class Orbit : MonoBehaviour
         }
         Vector3 newPos = Vector3.Slerp(from, to, angle);
         transform.localPosition = originalPosition + half * newPos;
-        transform.LookAt(originalWorldPosition);
+        transform.Rotate(orbitDirection);
         angle += angleChangePerFrame;
 
     }

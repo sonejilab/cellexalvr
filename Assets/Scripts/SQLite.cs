@@ -230,6 +230,11 @@ namespace SQLiter
         public void QueryTopGenes(QueryTopGenesRankingMode mode)
         {
             var list = referenceManager.selectionToolHandler.GetLastSelection();
+            if (list.Count < 2)
+            {
+                CellExAlLog.Log("WARNING: Not querying for genes because list of cells is too short.");
+                return;
+            }
             List<string> cellNames1 = new List<string>();
             List<string> cellNames2 = new List<string>();
             foreach (GraphPoint gp in list)
