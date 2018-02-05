@@ -6,8 +6,6 @@
 
 class MinimizeToolButton : StationaryButton
 {
-    public Sprite original;
-    public Sprite gray;
 
     private ControllerModelSwitcher controllerModelSwitcher;
     private bool changeSprite;
@@ -35,13 +33,13 @@ class MinimizeToolButton : StationaryButton
             if (deleteToolActived)
             {
                 controllerModelSwitcher.TurnOffActiveTool(true);
-                spriteRenderer.sprite = original;
+                spriteRenderer.sprite = standardTexture;
             }
             else
             {
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Minimizer;
                 controllerModelSwitcher.ActivateDesiredTool();
-                spriteRenderer.sprite = gray;
+                spriteRenderer.sprite = deactivatedTexture;
             }
         }
     }

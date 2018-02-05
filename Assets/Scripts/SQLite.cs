@@ -518,7 +518,6 @@ namespace SQLiter
 
         private List<string> TTestLists(List<Pair<string, List<float>>> expressions1, List<Pair<string, List<float>>> expressions2, int length1, int length2)
         {
-
             _result = new ArrayList();
             List<string> actualGeneIds = new List<string>();
             int index1 = 0, index2 = 0;
@@ -549,7 +548,7 @@ namespace SQLiter
                     {
                         expr2 = new List<float>();
                     }
-                    float tValue = TTest(expr1.ToArray(), expr2.ToArray(), length1, length2);
+                    float tValue = TTest(expr1, expr2, length1, length2);
                     _result.Add(new Pair<string, float>(geneId, tValue));
                     actualGeneIds.Add(geneId);
                 }
@@ -560,13 +559,13 @@ namespace SQLiter
         /// <summary>
         /// Conduct a t-test
         /// </summary>
-        private float TTest(float[] x, float[] y, int n1, int n2)
+        private float TTest(List<float> x, List<float> y, int n1, int n2)
         {
             double sumX = 0.0;
             double sumY = 0.0;
-            for (int i = 0; i < x.Length; ++i)
+            for (int i = 0; i < x.Count; ++i)
                 sumX += x[i];
-            for (int i = 0; i < y.Length; ++i)
+            for (int i = 0; i < y.Count; ++i)
                 sumY += y[i];
 
             // means
@@ -576,13 +575,13 @@ namespace SQLiter
             // variances
             double sumXminusMeanSquared = 0.0;
             double sumYminusMeanSquared = 0.0;
-            for (int i = 0; i < x.Length; ++i)
+            for (int i = 0; i < x.Count; ++i)
                 sumXminusMeanSquared += (x[i] - meanX) * (x[i] - meanX);
-            sumXminusMeanSquared += meanX * meanX * (n1 - x.Length);
+            sumXminusMeanSquared += meanX * meanX * (n1 - x.Count);
 
-            for (int i = 0; i < y.Length; ++i)
+            for (int i = 0; i < y.Count; ++i)
                 sumYminusMeanSquared += (y[i] - meanY) * (y[i] - meanY);
-            sumYminusMeanSquared += meanY * meanY * (n2 - y.Length);
+            sumYminusMeanSquared += meanY * meanY * (n2 - y.Count);
 
             double varX = sumXminusMeanSquared / (n1 - 1);
             double varY = sumYminusMeanSquared / (n2 - 1);
