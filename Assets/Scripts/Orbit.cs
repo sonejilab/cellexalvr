@@ -22,7 +22,7 @@ public class Orbit : MonoBehaviour
     private float angleChangePerFrame;
     private Vector3 originalPosition;
     private Vector3 originalWorldPosition;
-
+    
     private float half = 1;
 
     void Start()

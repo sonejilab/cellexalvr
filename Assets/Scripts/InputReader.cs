@@ -88,7 +88,6 @@ public class InputReader : MonoBehaviour
 
         // print(path);
         selectionToolHandler.DataDir = fullPath;
-
         if (!debug)
         {
             // clear the network folder

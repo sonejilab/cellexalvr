@@ -169,6 +169,7 @@ public class CellManager : MonoBehaviour
             Cell cell = cells[cellnames[i]];
             selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
             cell.SetGroup(groups[i]);
+            graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groups[i]);
         }
     }
 

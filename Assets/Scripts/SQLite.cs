@@ -289,7 +289,7 @@ namespace SQLiter
             }
 
             List<Pair<string, List<float>>> expressions1 = GetResultsTopGeneQuery();
-
+            _result.Clear();
             // query for list 2
             query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
             t = new Thread(() => QueryThread(query));

@@ -50,7 +50,7 @@ public class HelperTool : MonoBehaviour
         rightController = referenceManager.rightController;
         graphManager = referenceManager.graphManager;
         SetToolActivated(false);
-
+        CellExAlEvents.GraphsUnloaded.AddListener(ClearGraphInfoPanels);
     }
 
     private void Update()
@@ -112,6 +112,11 @@ public class HelperTool : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ClearGraphInfoPanels()
+    {
+        graphInfoPanels.Clear();
     }
 
     /// <summary>
