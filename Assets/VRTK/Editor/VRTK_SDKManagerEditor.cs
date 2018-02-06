@@ -245,7 +245,6 @@
                 Debug.Log("Scripting Define Symbol Added To [Project Settings->Player]: " + define);
             }
             PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, string.Join(";", definesList.ToArray()));
-            
         }
 
         private void RemoveScriptingDefineSymbol(string define)
