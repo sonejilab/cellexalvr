@@ -117,7 +117,6 @@ public class NetworkHandler : MonoBehaviour
         {
             if (network.Enlarged)
             {
-
                 foreach (Collider c in network.GetComponentsInChildren<Collider>())
                 {
                     c.enabled = newState;

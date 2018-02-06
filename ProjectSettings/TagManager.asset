@@ -4,19 +4,17 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - FxTemporaire
-  - HeatBoard
-  - Sphere
-  - Folder
   - Controller
   - PreviousSearchesListNode
-  - FolderCylinder
   - Smaller Controller Collider
-  - Graph
-  - Network
-  - Loader
-  - Cells
   - Menu Controller Collider
+  - Loader
+  - HeatBoard
+  - Folder
+  - Network
+  - Graph
+  - Cells
+  - Sphere
   layers:
   - Default
   - TransparentFX
