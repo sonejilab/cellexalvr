@@ -92,7 +92,7 @@ public class CellManager : MonoBehaviour
     private GameManager gameManager;
     private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
-    private StatusDisplay statusDisplay;
+    private StatusDisplay statusDisplay; 
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;
     private int coroutinesWaiting;
