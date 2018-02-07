@@ -236,7 +236,7 @@ public class NetworkCenter : MonoBehaviour
             //rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
             gameObject.SetActive(false);
             // calling Destroy without the time delay caused the program to crash pretty reliably
-            Destroy(gameObject, 0.1f);
+            Destroy(gameObject);
         }
         else
         {

@@ -42,7 +42,7 @@ public class InputFolderGenerator : MonoBehaviour
             return;
         }
         CellExAlLog.Log("Started generating folders from " + CellExAlLog.FixFilePath(dataDirectory));
-
+         
         var nfolder = 0;
         foreach (string directory in directories)
         {
