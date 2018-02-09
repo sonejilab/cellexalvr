@@ -7,13 +7,13 @@ using UnityEngine;
 using System.Data;
 //using System.Collections.Generic;
 using Mono.Data.SqliteClient;
-using System.IO; 
+using System.IO;
 using System.Collections;
 using System.Threading;
 using System.Text;
 using System.Collections.Generic;
 using System;
- 
+
 namespace SQLiter
 {
     /// <summary>
@@ -67,6 +67,7 @@ namespace SQLiter
         private IDbConnection _connection = null;
         private IDbCommand _command = null;
         private IDataReader _reader = null;
+
         private string _sqlString;
         [HideInInspector]
         public ArrayList _result = new ArrayList();
@@ -419,6 +420,45 @@ namespace SQLiter
             mean /= length;
             return (float)mean;
         }
+
+
+        internal void QueryGenesInCells(string gene, string[] cells)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGenesInCellsCoroutine(gene, cells));
+        }
+
+        private IEnumerator QueryGenesInCellsCoroutine(string gene, string[] cells)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < cells.Length; ++i)
+            {
+                string cell = cells[i];
+                builder.Append("\"").Append(cell).Append("\"");
+                if (i < cells.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string cellNames = builder.ToString();
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNames + ") and gene_id in (select id from genes where gname = \"" + gene + "\")";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+            while (_reader.Read())
+            {
+                string cellName = _reader.GetString(0);
+                float expression = _reader.GetFloat(1);
+                _result.Add(new Tuple<string, float>(cellName, expression));
+            }
+            QueryRunning = false;
+        }
+
 
         /// <summary>
         /// Queries the database for the expressions of a gene.

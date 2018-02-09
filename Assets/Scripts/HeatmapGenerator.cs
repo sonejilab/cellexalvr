@@ -94,24 +94,6 @@ public class HeatmapGenerator : MonoBehaviour
                 CellExAlLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
                 yield break;
             }
-            //Color c1 = ((GraphPoint)selection[0]).GetComponent<Renderer>().material.color;
-            //bool colorFound = false;
-            //for (int i = 1; i < selection.Count; ++i)
-            //{
-            //    Color c2 = ((GraphPoint)selection[i]).GetComponent<Renderer>().material.color;
-            //    if (!((c1.r == c2.r) && (c1.g == c2.g) && (c1.b == c2.b)))
-            //    {
-            //        colorFound = true;
-            //        break;
-            //    }
-            //}
-            //if (!colorFound)
-            //{
-            //    // Generate error message if less than two colors are selected
-            //    errorMessageController.DisplayErrorMessage(3);
-            //    CellExAlLog.Log("Can not create heatmap with only one grouping color, aborting");
-            //    yield break;
-            //}
 
             int statusId = status.AddStatus("R script generating heatmap");
             int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
@@ -133,7 +115,7 @@ public class HeatmapGenerator : MonoBehaviour
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             t.Start();
-            // Show hourglass
+            // Show calculators
             calculatorCluster.SetActive(true);
 
             while (t.IsAlive)
