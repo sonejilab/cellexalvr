@@ -18,6 +18,9 @@ public class Heatmap : MonoBehaviour
     public Texture texture;
     public TextMesh infoText;
     public GameObject highlightQuad;
+    public GameObject confirmQuad;
+    public GameObject movingQuadX;
+    public GameObject movingQuadY;
 
     private Dictionary<Cell, int> containedCells;
     private SteamVR_Controller.Device device;
@@ -31,9 +34,14 @@ public class Heatmap : MonoBehaviour
     private GameManager gameManager;
     private TextMesh highlightInfoText;
 
-
+    /// <summary>
+    /// Item1: cell name, Item2: group
+    /// </summary>
     private List<Tuple<string, int>> cells;
-    private List<Tuple<int, float>> groupWidths;
+    /// <summary>
+    /// Item1, group number, Item2: gorup width in coordinates, Item3: number of cells in the group
+    /// </summary>
+    private List<Tuple<int, float, int>> groupWidths;
     private string[] genes;
     private int bitmapWidth = 4096;
     private int bitmapHeight = 4096;
@@ -46,7 +54,22 @@ public class Heatmap : MonoBehaviour
     private int groupBarY = 150;
     private int groupBarHeight = 50;
 
-    // Use this for initialization
+    private int selectionStartX;
+    private int selectionStartY;
+    private bool selecting = false;
+    private bool movingSelection = false;
+    // these are numbers ranging [0, groupWidths.Length)
+    private int selectedGroupLeft;
+    private int selectedGroupRight;
+    // these are numbers ranging [0, genes.Length)
+    private int selectedGeneTop;
+    private int selectedGeneBottom;
+    // these are the actual coordinates and size of the box
+    private float selectedBoxX;
+    private float selectedBoxY;
+    private float selectedBoxWidth;
+    private float selectedBoxHeight;
+
     void Start()
     {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -54,23 +77,26 @@ public class Heatmap : MonoBehaviour
         raycastingSource = rightController.transform;
         gameManager = referenceManager.gameManager;
         fire = referenceManager.fire;
+        highlightQuad.SetActive(false);
+        confirmQuad.SetActive(false);
+        movingQuadX.SetActive(false);
+        movingQuadY.SetActive(false);
         highlightInfoText = highlightQuad.GetComponentInChildren<TextMesh>();
+        gameObject.SetActive(false);
     }
 
     public void BuildTexture()
     {
-        StartCoroutine(BuildTextureCoroutine());
-    }
+        gameObject.SetActive(true);
+        GetComponent<Collider>().enabled = false;
 
-    private IEnumerator BuildTextureCoroutine()
-    {
         List<GraphPoint> selection = referenceManager.selectionToolHandler.GetLastSelection();
         // item1 is the cell name, item2 is the group
         cells = new List<Tuple<string, int>>();
-        groupWidths = new List<Tuple<int, float>>();
-
+        groupWidths = new List<Tuple<int, float, int>>();
+        float cellWidth = (float)heatmapWidth / selection.Count;
         int lastGroup = -1;
-        float width = 0;
+        int width = 0;
         // read the cells and their groups
         foreach (GraphPoint graphpoint in selection)
         {
@@ -84,18 +110,27 @@ public class Heatmap : MonoBehaviour
             // used for saving the widths of the groups later
             if (group != lastGroup)
             {
-                groupWidths.Add(new Tuple<int, float>(lastGroup, width));
+                groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, (int)width));
                 width = 0;
                 lastGroup = group;
             }
             width++;
         }
         // add the last group as well
-        groupWidths.Add(new Tuple<int, float>(lastGroup, width));
-
+        groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, width));
         string[] tempGenes = { "gata1", "klf1", "car1", "kel", "mpl", "hlf", "ltb", "ly6a", "ifitm1", "elane", "atp8b4", "ccl9" };
-        genes = tempGenes;
+        StartCoroutine(BuildTextureCoroutine(groupWidths, tempGenes));
+    }
 
+    private void BuildTexture(List<Tuple<int, float, int>> groupWidths, string[] genes)
+    {
+        GetComponent<Collider>().enabled = false;
+        StartCoroutine(BuildTextureCoroutine(groupWidths, genes));
+    }
+
+    private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths, string[] genes)
+    {
+        this.genes = genes;
         SQLiter.SQLite database = referenceManager.database;
 
         Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
@@ -105,13 +140,21 @@ public class Heatmap : MonoBehaviour
 
         // turn the expression colors into brushes that are used for drawing later
         int numberOfExpressionColors = CellExAlConfig.NumberOfExpressionColors;
-        SolidBrush[] brushes = new SolidBrush[numberOfExpressionColors];
+        SolidBrush[] heatmapBrushes = new SolidBrush[numberOfExpressionColors];
         GraphManager graphManager = referenceManager.graphManager;
         for (int i = 0; i < numberOfExpressionColors; ++i)
         {
             UnityEngine.Color uc = graphManager.GeneExpressionMaterials[i].color;
             SolidBrush p = new SolidBrush(System.Drawing.Color.FromArgb((int)(uc.r * 255), (int)(uc.g * 255), (int)(uc.b * 255)));
-            brushes[i] = p;
+            heatmapBrushes[i] = p;
+        }
+
+        // get the grouping colors
+        SolidBrush[] groupBrushes = new SolidBrush[numberOfExpressionColors];
+        for (int i = 0; i < graphManager.SelectedMaterials.Length; ++i)
+        {
+            UnityEngine.Color unitycolor = graphManager.SelectedMaterials[i].color;
+            groupBrushes[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
         }
         g.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
 
@@ -130,24 +173,10 @@ public class Heatmap : MonoBehaviour
         // update the group widths now that we know the width of one cell in the heatmap
         for (int i = 0; i < groupWidths.Count; ++i)
         {
-            Tuple<int, float> oldTuple = groupWidths[i];
-            groupWidths[i] = new Tuple<int, float>(oldTuple.Item1, oldTuple.Item2 * xcoordInc);
-        }
-
-        // get the grouping colors
-        SolidBrush[] groupBrushes = new SolidBrush[numberOfExpressionColors];
-        for (int i = 0; i < graphManager.SelectedMaterials.Length; ++i)
-        {
-            UnityEngine.Color unitycolor = graphManager.SelectedMaterials[i].color;
-            groupBrushes[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
-        }
-
-        // draw the colored bar on the top
-        for (int i = 0; i < cells.Count; ++i)
-        {
-            // the group bar should be aligned with the heatmap in X-axis
-            g.FillRectangle(groupBrushes[cells[i].Item2], xcoord, groupBarY, xcoordInc, groupBarHeight);
-            xcoord += xcoordInc;
+            int groupNbr = groupWidths[i].Item1;
+            float groupWidth = groupWidths[i].Item2;
+            g.FillRectangle(groupBrushes[groupNbr], xcoord, groupBarY, groupWidth, groupBarHeight);
+            xcoord += groupWidth;
         }
         xcoord = heatmapX;
 
@@ -188,11 +217,11 @@ public class Heatmap : MonoBehaviour
 
                 if (expression == highestExpression)
                 {
-                    g.FillRectangle(brushes[brushes.Length - 1], xcoord, ycoord, xcoordInc, ycoordInc);
+                    g.FillRectangle(heatmapBrushes[heatmapBrushes.Length - 1], xcoord, ycoord, xcoordInc, ycoordInc);
                 }
                 else
                 {
-                    g.FillRectangle(brushes[(int)(expression / highestExpression * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
+                    g.FillRectangle(heatmapBrushes[(int)(expression / highestExpression * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
                 }
                 xcoord += xcoordInc;
             }
@@ -211,6 +240,7 @@ public class Heatmap : MonoBehaviour
         tex.LoadImage(stream.ToArray());
         stream.Close();
         GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
+        GetComponent<Collider>().enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -242,7 +272,6 @@ public class Heatmap : MonoBehaviour
         }
 
         raycastingSource = rightController.transform;
-        // this method is probably responsible for too much. oh well.
         Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
@@ -252,17 +281,7 @@ public class Heatmap : MonoBehaviour
             if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
             {
                 // if we hit the list of genes
-                int geneHit = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
-
-                float highlightMarkerWidth = (float)geneListWidth / bitmapWidth;
-                float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length;
-                float highlightMarkerX = (float)geneListX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-                float highlightMarkerY = -(float)heatmapY / bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
-
-                highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
-                highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
-                highlightQuad.SetActive(true);
-                highlightInfoText.text = "";
+                int geneHit = HandleHitGeneList(hity);
 
                 if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
@@ -272,76 +291,425 @@ public class Heatmap : MonoBehaviour
             else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
             {
                 // if we hit the grouping bar
-
-                // get this groups width and xcoordinate
-                float groupX = heatmapX;
-                float groupWidth = 0;
-                for (int i = 0; i < groupWidths.Count; ++i)
-                {
-                    if (groupX + groupWidths[i].Item2 > hitx)
-                    {
-                        groupWidth = groupWidths[i].Item2;
-                        break;
-                    }
-                    groupX += groupWidths[i].Item2;
-                }
-
-                float highlightMarkerWidth = groupWidth / bitmapWidth;
-                float highlightMarkerHeight = ((float)groupBarHeight / bitmapHeight);
-                float highlightMarkerX = groupX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-                float highlightMarkerY = -(float)groupBarY / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
-
-                highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
-                highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
-                highlightQuad.SetActive(true);
-                highlightInfoText.text = "";
+                HandleHitGroupingBar(hitx);
             }
             else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
             {
                 // if we hit the actual heatmap
-                // get this groups width and xcoordinate
-                float groupX = heatmapX;
-                float groupWidth = 0;
-                int group = 0;
-                for (int i = 0; i < groupWidths.Count; ++i)
+                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
-                    if (groupX + groupWidths[i].Item2 > hitx)
+                    if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
                     {
-                        group = groupWidths[i].Item1;
-                        groupWidth = groupWidths[i].Item2;
-                        break;
+                        // if we hit a confirmed selection
+                        movingSelection = true;
                     }
-                    groupX += groupWidths[i].Item2;
+                    else
+                    {
+                        // if we hit something else
+                        selecting = true;
+                        selectionStartX = hitx;
+                        selectionStartY = hity;
+                    }
                 }
-                int geneHit = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
-                float highlightMarkerWidth = groupWidth / bitmapWidth;
-                float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length;
-                float highlightMarkerX = groupX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-                float highlightMarkerY = -(float)heatmapY / bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
 
-                highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
-                highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
-                highlightQuad.SetActive(true);
-                highlightInfoText.text = "Group: " + group + "\nGene: " + genes[geneHit];
-                highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth, 0.003f / highlightMarkerHeight, 0.003f);
-
+                if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                {
+                    // called when choosing a box selection
+                    HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+                }
+                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                {
+                    // called when letting go of the trigger to finalize a box selection
+                    selecting = false;
+                    ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+                }
+                else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                {
+                    // called when moving a selection
+                    HandleMovingSelection(hitx, hity);
+                }
+                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                {
+                    // called when letting go of the trigger to move the selection
+                    MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+                }
+                else
+                {
+                    // handle when the raycast just hits the heatmap
+                    HandleHitHeatmap(hitx, hity);
+                }
             }
             else
             {
+                // if we hit the heatmap but not any area of interest, like the borders or any space in between
                 highlightQuad.SetActive(false);
                 highlightInfoText.text = "";
             }
         }
         else
         {
+            // if we don't hit the heatmap at all
             highlightQuad.SetActive(false);
             highlightInfoText.text = "";
         }
+        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
+
+            selecting = false;
+            movingSelection = false;
+        }
     }
 
+    /// <summary>
+    /// Handles the highlighting when the raycast hits the heatmap
+    /// </summary>
+    /// <param name="hitx"> The x coordinate of the hit. Measured in pixels of the texture.</param>
+    /// <param name="hity">The x coordinate if the hit. Meaured in pixels of the texture.</param>
+    private void HandleHitHeatmap(int hitx, int hity)
+    {
+        // get this groups width and xcoordinate
+        float groupX, groupWidth;
+        int group;
+        FindGroupInfo(hitx, out groupX, out groupWidth, out group);
+
+        int geneHit = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
+        float highlightMarkerWidth = groupWidth / bitmapWidth;
+        float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length;
+        float highlightMarkerX = groupX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+        float highlightMarkerY = -(float)heatmapY / bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
+
+        highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
+        highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+        highlightQuad.SetActive(true);
+        highlightInfoText.text = "Group: " + group + "\nGene: " + genes[geneHit];
+        // the smaller the highlight quad becomes, the larger the text has to become
+        highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth, 0.003f / highlightMarkerHeight, 0.003f);
+    }
+
+    /// <summary>
+    /// Finds out some info about what group is at a x coordinate.
+    /// </summary>
+    /// <param name="hitx">The x coordinate that the raycast hit.</param>
+    /// <param name="groupX">The leftmost x coordinate of the group that was hit.</param>
+    /// <param name="groupWidth">The width of the group, measured in pixels.</param>
+    /// <param name="group">The number (color) of the group.</param>
+    private void FindGroupInfo(int hitx, out float groupX, out float groupWidth, out int group)
+    {
+        groupX = heatmapX;
+        groupWidth = 0;
+        group = 0;
+        for (int i = 0; i < groupWidths.Count; ++i)
+        {
+            if (groupX + groupWidths[i].Item2 > hitx)
+            {
+                group = groupWidths[i].Item1;
+                groupWidth = groupWidths[i].Item2;
+                break;
+            }
+            groupX += groupWidths[i].Item2;
+        }
+    }
+
+    /// <summary>
+    /// Handles the highlighting when the raycast hits the grouping bar.
+    /// The grouping bar is only 1 item tall and thus we do not care about the y coorindate.
+    /// </summary>
+    /// <param name="hitx"> The xcoordinate of the hit.</param>
+    private void HandleHitGroupingBar(int hitx)
+    {
+        // get this groups width and xcoordinate
+        float groupX, groupWidth;
+        int group;
+        FindGroupInfo(hitx, out groupX, out groupWidth, out group);
+
+        float highlightMarkerWidth = groupWidth / bitmapWidth;
+        float highlightMarkerHeight = ((float)groupBarHeight / bitmapHeight);
+        float highlightMarkerX = groupX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+        float highlightMarkerY = -(float)groupBarY / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+
+        highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
+        highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+        highlightQuad.SetActive(true);
+        highlightInfoText.text = "";
+    }
+
+    /// <summary>
+    /// Handles the highlighting of the gene list.
+    /// The gene list is only 1 item wide and thus we do not care about the xcoordinate.
+    /// </summary>
+    /// <param name="hity">The y coordinate of the hit.</param>
+    /// <returns>An index of the gene that was hit.</returns>
+    private int HandleHitGeneList(int hity)
+    {
+        int geneHit = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
+
+        float highlightMarkerWidth = (float)geneListWidth / bitmapWidth;
+        float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length;
+        float highlightMarkerX = (float)geneListX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+        float highlightMarkerY = -(float)heatmapY / bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
+
+        highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
+        highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+        highlightQuad.SetActive(true);
+        highlightInfoText.text = "";
+        return geneHit;
+    }
+
+    /// <summary>
+    /// Handles the highlighting when the user is holding the trigger button to select multiple groups and genes. <paramref name="hitx"/> and <paramref name="hity"/> are determined on this frame,
+    /// <paramref name="selectionStartX"/> and <paramref name="selectionStartY"/> were determined when the user first pressed the trigger.
+    /// </summary>
+    /// <param name="hitx">The last x coordinate that the raycast hit.</param>
+    /// <param name="hity">The last y coordinate that the raycast hit.</param>
+    /// <param name="selectionStartX">The first x coordinate that the raycast hit.</param>
+    /// <param name="selectionStartY">The first y coordinate that the raycast hit.</param>
+    private void HandleBoxSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
+    {
+        // since the groupings have irregular widths we need to iterate over the list of widths
+        float boxX = heatmapX;
+        float boxWidth = 0;
+        for (int i = 0; i < groupWidths.Count; ++i)
+        {
+            if (boxX + groupWidths[i].Item2 > hitx || boxX + groupWidths[i].Item2 > selectionStartX)
+            {
+                do
+                {
+                    boxWidth += groupWidths[i].Item2;
+                    i++;
+                } while (boxX + boxWidth < hitx || boxX + boxWidth < selectionStartX);
+                break;
+            }
+            boxX += groupWidths[i].Item2;
+        }
+
+        float highlightMarkerWidth = boxWidth / bitmapWidth;
+        float highlightMarkerX = boxX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+
+        // the genes all have the same height so no need for loops here
+        int geneHit1 = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
+        int geneHit2 = (int)((float)((bitmapHeight - selectionStartY) - heatmapY) / heatmapHeight * genes.Length);
+        int smallerGeneHit = geneHit1 < geneHit2 ? geneHit1 : geneHit2;
+        float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length * (Math.Abs(geneHit1 - geneHit2) + 1);
+        float highlightMarkerY = -((float)heatmapY + smallerGeneHit * (heatmapHeight / genes.Length)) / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+
+        highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
+        highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+        highlightQuad.SetActive(true);
+        highlightInfoText.text = "";
+
+    }
+
+    /// <summary>
+    /// Checks if two coordinate are inside a rectangle.
+    /// </summary>
+    /// <param name="x">The x coordinate</param>
+    /// <param name="y">The y coordinate</param>
+    /// <param name="rectX">The rectangle's x coordinate</param>
+    /// <param name="rectY">The rectangle's y coordinate</param>
+    /// <param name="rectWidth">The rectangle's width</param>
+    /// <param name="rectHeight">The rectangle's height</param>
+    /// <returns></returns>
     private bool CoordinatesInsideRect(int x, int y, int rectX, int rectY, int rectWidth, int rectHeight)
     {
         return x >= rectX && y >= rectY && x <= rectX + rectWidth && y <= rectY + rectHeight;
+    }
+
+    /// <summary>
+    /// Confirms the cells inside the rectangle drawn by the user. <paramref name="hitx"/> and <paramref name="hity"/> are determined on this frame,
+    /// <paramref name="selectionStartX"/> and <paramref name="selectionStartY"/> were determined when the user first pressed the trigger.
+    /// </summary>
+    /// <param name="hitx">The last x coordinate that the raycast hit.</param>
+    /// <param name="hity">The last y coordinate that the raycast hit.</param>
+    /// <param name="selectionStartX">The first x coordinate that the raycast hit when the user first pressed the trigger.</param>
+    /// <param name="selectionStartY">The first y coordinate that the raycast hit when the user first pressed the trigger.</param>
+    private void ConfirmSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
+    {
+        // since the groupings have irregular widths we need to iterate over the list of widths
+        selectedBoxX = heatmapX;
+        selectedBoxWidth = 0;
+
+        selectedGroupLeft = 0;
+        // the do while loop below increments selectedGroupRight one time too many, so start at -1
+        selectedGroupRight = -1;
+        selectedGeneBottom = 0;
+        selectedGeneTop = 0;
+
+        for (int i = 0; i < groupWidths.Count; ++i)
+        {
+            if (selectedBoxX + groupWidths[i].Item2 > hitx || selectedBoxX + groupWidths[i].Item2 > selectionStartX)
+            {
+                do
+                {
+                    selectedGroupRight++;
+                    selectedBoxWidth += groupWidths[i].Item2;
+                    i++;
+                } while (selectedBoxX + selectedBoxWidth < hitx || selectedBoxX + selectedBoxWidth < selectionStartX);
+                break;
+            }
+            selectedBoxX += groupWidths[i].Item2;
+            selectedGroupLeft++;
+            selectedGroupRight++;
+        }
+
+        float highlightMarkerWidth = selectedBoxWidth / bitmapWidth;
+        float highlightMarkerX = selectedBoxX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+
+        // the genes all have the same height so no need for loops here
+        int geneHit1 = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
+        int geneHit2 = (int)((float)((bitmapHeight - selectionStartY) - heatmapY) / heatmapHeight * genes.Length);
+        if (geneHit1 < geneHit2)
+        {
+            selectedGeneTop = geneHit1;
+            selectedGeneBottom = geneHit2;
+        }
+        else
+        {
+            selectedGeneTop = geneHit2;
+            selectedGeneBottom = geneHit1;
+        }
+        // have to add 1 at the end here so it includes the bottom row as well
+        selectedBoxHeight = ((float)heatmapHeight) / genes.Length * (Math.Abs(geneHit1 - geneHit2) + 1);
+        float highlightMarkerHeight = selectedBoxHeight / bitmapHeight;
+        selectedBoxY = (float)heatmapY + selectedGeneTop * (heatmapHeight / genes.Length);
+        float highlightMarkerY = -(selectedBoxY) / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+
+        confirmQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
+        confirmQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+        confirmQuad.SetActive(true);
+    }
+
+    /// <summary>
+    /// Moves the <see cref="movingQuadX"/> and <see cref="movingQuadY"/> when choosing where to move a selection
+    /// </summary>
+    /// <param name="hitx">The x coordinate where the raycast hit the heatmap</param>
+    /// <param name="hity">The y coordinate where the raycast hit the heatmap</param>
+    private void HandleMovingSelection(int hitx, int hity)
+    {
+        if (hitx < selectedBoxX || hitx > selectedBoxX + selectedBoxWidth)
+        {
+            float groupX, groupWidth;
+            int group;
+            FindGroupInfo(hitx, out groupX, out groupWidth, out group);
+            if (hitx > groupX + groupWidth / 2f)
+            {
+                groupX += groupWidth;
+            }
+            float highlightMarkerX = groupX / bitmapWidth + heatmapWidth / (2 * bitmapWidth) - 0.5f;
+            movingQuadY.transform.localPosition = new Vector3(highlightMarkerX, 0f, -0.001f);
+            movingQuadY.SetActive(true);
+        }
+        else
+        {
+            movingQuadY.SetActive(false);
+        }
+        if (bitmapHeight - hity < selectedBoxY || bitmapHeight - hity > selectedBoxY + selectedBoxHeight)
+        {
+
+            int geneHit = (int)(((bitmapHeight - hity + ((float)heatmapHeight / genes.Length) / 2) - heatmapY) / heatmapHeight * genes.Length);
+            float highlightMarkerY = -((float)heatmapY + geneHit * (heatmapHeight / genes.Length)) / bitmapHeight + 0.5f;
+            movingQuadX.transform.localPosition = new Vector3(0f, highlightMarkerY, -0.001f);
+            movingQuadX.SetActive(true);
+        }
+        else
+        {
+            movingQuadX.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Moves a part of the heatmap to another part. This can mean moving both rows and coloumns. Entire rows and coloumns and always moved and never split.
+    /// </summary>
+    /// <param name="hitx">The x coordinate where the selection should be moved to.</param>
+    /// <param name="hity">The y coordinate where the selection should be moved to.</param>
+    /// <param name="selectedGroupLeft">The lower index of the groups that should be moved.</param>
+    /// <param name="selectedGroupRight">The higher index of the groups that should be moved.</param>
+    /// <param name="selectedGeneTop">The lower index of the genes that should be moved.</param>
+    /// <param name="selectedGeneBottom">The higher index of the gnees that should be moved.</param>
+    private void MoveSelection(int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+    {
+        bool recalculate = false;
+        if (hitx < selectedBoxX || hitx > selectedBoxX + selectedBoxWidth)
+        {
+            int nbrOfGroups = selectedGroupRight - selectedGroupLeft + 1;
+            int groupIndexToMoveTo = 0;
+            float groupX = heatmapX;
+            while (groupX + groupWidths[groupIndexToMoveTo].Item2 < hitx)
+            {
+                groupX += groupWidths[groupIndexToMoveTo].Item2;
+                groupIndexToMoveTo++;
+            }
+            if (hitx > groupX + groupWidths[groupIndexToMoveTo].Item2 / 2f)
+            {
+                groupIndexToMoveTo++;
+            }
+
+            List<Tuple<int, float, int>> temp = new List<Tuple<int, float, int>>(nbrOfGroups);
+            // add the groups we are moving to a temporary list
+            temp.AddRange(groupWidths.GetRange(selectedGroupLeft, nbrOfGroups));
+            // we have to do this for both the groups and the cells
+            // figure out the index that the first group is on in the cells list
+            int cellsStartIndex = 0;
+            foreach (Tuple<int, float, int> t in groupWidths.GetRange(0, selectedGroupLeft))
+            {
+                cellsStartIndex += t.Item3;
+            }
+            int cellsStartIndexToMoveTo = 0;
+            foreach (Tuple<int, float, int> t in groupWidths.GetRange(0, groupIndexToMoveTo))
+            {
+                cellsStartIndexToMoveTo += t.Item3;
+            }
+            // figure out how many cells the groups cover in total
+            int totalNbrOfCells = 0;
+            foreach (Tuple<int, float, int> t in temp)
+            {
+                totalNbrOfCells += t.Item3;
+            }
+            List<Tuple<string, int>> tempCells = new List<Tuple<string, int>>(totalNbrOfCells);
+            tempCells.AddRange(cells.GetRange(cellsStartIndex, totalNbrOfCells));
+            groupWidths.RemoveRange(selectedGroupLeft, nbrOfGroups);
+            cells.RemoveRange(cellsStartIndex, totalNbrOfCells);
+            // the correct index to move the groups to will have changed if the groups are moved to higher indices
+            if (groupIndexToMoveTo > selectedGroupRight)
+            {
+                groupIndexToMoveTo -= nbrOfGroups;
+                cellsStartIndexToMoveTo -= totalNbrOfCells;
+            }
+            // insert them back in on the correct index
+            cells.InsertRange(cellsStartIndexToMoveTo, tempCells);
+            groupWidths.InsertRange(groupIndexToMoveTo, temp);
+            recalculate = true;
+        }
+
+        if (bitmapHeight - hity < selectedBoxY || bitmapHeight - hity > selectedBoxY + selectedBoxHeight)
+        {
+            int nbrOfGenes = selectedGeneBottom - selectedGeneTop + 1;
+            int geneIndex = (int)(((bitmapHeight - hity + ((float)heatmapHeight / genes.Length) / 2) - heatmapY) / heatmapHeight * genes.Length);
+            // Take the list of genes orignal genes
+            List<string> original = new List<string>(genes);
+            // make a temporary list with enough space for what should be moved
+            List<string> temp = new List<string>(nbrOfGenes);
+            // add what should be moved to the temporary list
+            temp.AddRange(original.GetRange(selectedGeneTop, nbrOfGenes));
+            // remove what should be moved from the original list
+            original.RemoveRange(selectedGeneTop, nbrOfGenes);
+            // recalculate the index if needed. Since we removed stuff from the original list the indeces might have shifted
+            if (geneIndex > selectedGeneTop)
+            {
+                geneIndex -= nbrOfGenes;
+            }
+            // insert what should be moved back into the original
+            original.InsertRange(geneIndex, temp);
+            genes = original.ToArray();
+            recalculate = true;
+        }
+        if (recalculate)
+        {
+            // rebuild the heatmap texture
+            BuildTexture(groupWidths, genes);
+        }
+        confirmQuad.SetActive(false);
+        movingQuadX.SetActive(false);
+        movingQuadY.SetActive(false);
     }
 
     /// <summary>

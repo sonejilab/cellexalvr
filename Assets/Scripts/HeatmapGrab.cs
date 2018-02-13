@@ -14,7 +14,7 @@ namespace VRTK.GrabAttachMechanics
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            if (grabbingObjects.Count == 2)
+            if (grabbingObjects.Count == 0)
                 GetComponent<MeshCollider>().convex = false;
             base.OnInteractableObjectUngrabbed(e);
         }
