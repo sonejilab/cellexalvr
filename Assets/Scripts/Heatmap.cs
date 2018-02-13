@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-//using System.Drawing;
 using System;
 using VRTK;
 using System.Drawing;
 using System.Collections;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -34,12 +32,13 @@ public class Heatmap : MonoBehaviour
     private GameManager gameManager;
     private TextMesh highlightInfoText;
 
+    private Bitmap bitmap;
     /// <summary>
     /// Item1: cell name, Item2: group
     /// </summary>
     private List<Tuple<string, int>> cells;
     /// <summary>
-    /// Item1, group number, Item2: gorup width in coordinates, Item3: number of cells in the group
+    /// Item1: group number, Item2: group width in coordinates, Item3: number of cells in the group
     /// </summary>
     private List<Tuple<int, float, int>> groupWidths;
     private string[] genes;
@@ -51,8 +50,8 @@ public class Heatmap : MonoBehaviour
     private int heatmapHeight = 3596;
     private int geneListX = 3846;
     private int geneListWidth = 250;
-    private int groupBarY = 150;
-    private int groupBarHeight = 50;
+    private int groupBarY = 100;
+    private int groupBarHeight = 100;
 
     private int selectionStartX;
     private int selectionStartY;
@@ -125,15 +124,32 @@ public class Heatmap : MonoBehaviour
     private void BuildTexture(List<Tuple<int, float, int>> groupWidths, string[] genes)
     {
         GetComponent<Collider>().enabled = false;
+        // merge groups
+        for (int i = 0; i < groupWidths.Count - 1; ++i)
+        {
+            // if two groups with the same color are now beside eachother, merge them
+            if (groupWidths[i].Item1 == groupWidths[i + 1].Item1)
+            {
+                Tuple<int, float, int> oldTuple1 = groupWidths[i];
+                Tuple<int, float, int> oldTuple2 = groupWidths[i + 1];
+                float newWidthCoords = oldTuple1.Item2 + oldTuple2.Item2;
+                int newWidthCells = oldTuple1.Item3 + oldTuple2.Item3;
+                groupWidths[i] = new Tuple<int, float, int>(oldTuple1.Item1, newWidthCoords, newWidthCells);
+                groupWidths.RemoveAt(i + 1);
+            }
+        }
         StartCoroutine(BuildTextureCoroutine(groupWidths, genes));
     }
 
     private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths, string[] genes)
     {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        CellExAlLog.Log("Started building a heatmap texture");
         this.genes = genes;
         SQLiter.SQLite database = referenceManager.database;
 
-        Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
+        bitmap = new Bitmap(bitmapWidth, bitmapHeight);
         System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bitmap);
 
         System.Drawing.Font geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 40f, System.Drawing.FontStyle.Bold);
@@ -241,6 +257,9 @@ public class Heatmap : MonoBehaviour
         stream.Close();
         GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
         GetComponent<Collider>().enabled = true;
+
+        stopwatch.Stop();
+        CellExAlLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -500,7 +519,7 @@ public class Heatmap : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if two coordinate are inside a rectangle.
+    /// Checks if two coordinates are inside a rectangle.
     /// </summary>
     /// <param name="x">The x coordinate</param>
     /// <param name="y">The y coordinate</param>
@@ -707,14 +726,31 @@ public class Heatmap : MonoBehaviour
             // rebuild the heatmap texture
             BuildTexture(groupWidths, genes);
         }
+        ResetSelection();
+    }
+
+    /// <summary>
+    /// Resets the selection on the heatmap.
+    /// </summary>
+    private void ResetSelection()
+    {
         confirmQuad.SetActive(false);
         movingQuadX.SetActive(false);
         movingQuadY.SetActive(false);
+        selectedBoxX = 0;
+        selectedBoxY = 0;
+        selectedBoxHeight = 0;
+        selectedBoxWidth = 0;
+        selectedGeneBottom = 0;
+        selectedGeneTop = 0;
+        selectedGroupLeft = 0;
+        selectedGroupRight = 0;
     }
 
     /// <summary>
     /// Updates this heatmap's image.
     /// </summary>
+    [Obsolete("Use BuildTexture")]
     public void UpdateImage(string filepath)
     {
         imageFilepath = filepath;
@@ -752,9 +788,10 @@ public class Heatmap : MonoBehaviour
         {
             // append "_d" until the filenames no longer collide.
             // microsoft is removing the 260 character filename limit so this shouldn't run into too many problems
+            // unless you press this button way too many times the same second
             saveFileName += "_d";
         }
-        File.Move(imageFilepath, saveFileName);
+        bitmap.Save(saveFileName);
     }
 
     /// <summary>
