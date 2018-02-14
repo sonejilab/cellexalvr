@@ -8,6 +8,7 @@ using System.Collections;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -22,6 +23,7 @@ public class Heatmap : MonoBehaviour
     public GameObject movingQuadX;
     public GameObject movingQuadY;
 
+    private GraphManager graphManager;
     private Dictionary<Cell, int> containedCells;
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
@@ -54,6 +56,10 @@ public class Heatmap : MonoBehaviour
     private int geneListWidth = 250;
     private int groupBarY = 100;
     private int groupBarHeight = 100;
+    private System.Drawing.Font geneFont;
+    private int numberOfExpressionColors;
+    private SolidBrush[] heatmapBrushes;
+    private Texture2D tex;
 
     private int selectionStartX;
     private int selectionStartY;
@@ -83,6 +89,21 @@ public class Heatmap : MonoBehaviour
         movingQuadX.SetActive(false);
         movingQuadY.SetActive(false);
         highlightInfoText = highlightQuad.GetComponentInChildren<TextMesh>();
+
+        geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
+
+        // turn the expression colors into brushes that are used for drawing later
+        numberOfExpressionColors = CellExAlConfig.NumberOfExpressionColors;
+        heatmapBrushes = new SolidBrush[numberOfExpressionColors];
+        graphManager = referenceManager.graphManager;
+        for (int i = 0; i < numberOfExpressionColors; ++i)
+        {
+            UnityEngine.Color uc = graphManager.GeneExpressionMaterials[i].color;
+            SolidBrush p = new SolidBrush(System.Drawing.Color.FromArgb((int)(uc.r * 255), (int)(uc.g * 255), (int)(uc.b * 255)));
+            heatmapBrushes[i] = p;
+        }
+
+
         gameObject.SetActive(false);
     }
 
@@ -129,8 +150,6 @@ public class Heatmap : MonoBehaviour
         }
         streamReader.Close();
         StartCoroutine(BuildTextureCoroutine(groupWidths, tempGenes));
-
-
     }
 
     private void BuildTexture(List<Tuple<int, float, int>> groupWidths, string[] genes)
@@ -164,21 +183,10 @@ public class Heatmap : MonoBehaviour
         bitmap = new Bitmap(bitmapWidth, bitmapHeight);
         System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bitmap);
 
-        System.Drawing.Font geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
-        // turn the expression colors into brushes that are used for drawing later
-        int numberOfExpressionColors = CellExAlConfig.NumberOfExpressionColors;
-        SolidBrush[] heatmapBrushes = new SolidBrush[numberOfExpressionColors];
         GraphManager graphManager = referenceManager.graphManager;
-        for (int i = 0; i < numberOfExpressionColors; ++i)
-        {
-            UnityEngine.Color uc = graphManager.GeneExpressionMaterials[i].color;
-            SolidBrush p = new SolidBrush(System.Drawing.Color.FromArgb((int)(uc.r * 255), (int)(uc.g * 255), (int)(uc.b * 255)));
-            heatmapBrushes[i] = p;
-        }
-
         // get the grouping colors
-        SolidBrush[] groupBrushes = new SolidBrush[numberOfExpressionColors];
+        SolidBrush[] groupBrushes = new SolidBrush[graphManager.SelectedMaterials.Length];
         for (int i = 0; i < graphManager.SelectedMaterials.Length; ++i)
         {
             UnityEngine.Color unitycolor = graphManager.SelectedMaterials[i].color;
@@ -236,14 +244,53 @@ public class Heatmap : MonoBehaviour
         {
             yield return null;
         }
-
-        // cellname, gene_id, expression
         result = database._result;
+        Thread thread = new Thread(() => ReadQueryResults(g, xcoordInc, ycoordInc, result, geneIds, genePositions, cellsPosition));
+        thread.Start();
+        while (thread.IsAlive)
+        {
+            yield return null;
+        }
+        // the thread is now done and the heatmap has been painted
+        g.Dispose();
+        //// copy the bitmap data over to a unity texture
+        //// using a memorystream here seemed like a better alternative but made the standalone crash
+        string heatmapFilePath = Directory.GetCurrentDirectory() + @"\Images\heatmap_temp.png";
+        bitmap.Save(heatmapFilePath, ImageFormat.Png);
+
+        // these yields makes the loading a little bit smoother, but still cuts a few frames.
+        Texture2D tex = new Texture2D(4096, 4096);
+        yield return null;
+        tex.LoadImage(File.ReadAllBytes(heatmapFilePath));
+        yield return null;
+        GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
+        yield return null;
+        GetComponent<Collider>().enabled = true;
+
+        stopwatch.Stop();
+        CellExAlLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
+    }
+
+    /// <summary>
+    /// Run as a thread in <see cref="BuildTexture"/>. Reads the result as a thread because it takes more than a single frame and figuring out where to put yields is hard.
+    /// </summary>
+    /// <param name="g">The graphics object bound to the heatmap.</param>
+    /// <param name="xcoordInc">The width of a cell in the heatmap.</param>
+    /// <param name="ycoordInc">The height of a gene in the heatmap.</param>
+    /// <param name="result">The list from the database with the results.</param>
+    /// <param name="geneIds">Dictionary mapping gene ids to gene names.</param>
+    /// <param name="genePositions">Dictionary mapping gene names to their position on the heatmap.</param>
+    /// <param name="cellsPosition">Dictionary mapping cell names to their position on the heatmap.</param>
+    private void ReadQueryResults(System.Drawing.Graphics g, float xcoordInc, float ycoordInc, ArrayList result, Dictionary<string, string> geneIds, Dictionary<string, int> genePositions, Dictionary<string, int> cellsPosition)
+    {
         string geneName = "";
         float highestExpression = 0;
         g.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
+        float xcoord = 0;
+        float ycoord = 0;
         for (int i = 0; i < result.Count; ++i)
         {
+            // the arraylist should contain the gene id and that gene's highest expression before all the expressions
             Tuple<string, float> tuple = (Tuple<string, float>)result[i];
             if (geneIds.ContainsKey(tuple.Item1))
             {
@@ -269,18 +316,7 @@ public class Heatmap : MonoBehaviour
                 }
             }
         }
-        g.Dispose();
-        // copy the bitmap data over to a unity texture
-        string heatmapFilePath = Directory.GetCurrentDirectory() + @"\Images\heatmap_temp.png";
-        bitmap.Save(heatmapFilePath, ImageFormat.Png);
 
-        Texture2D tex = new Texture2D(4096, 4096);
-        tex.LoadImage(File.ReadAllBytes(heatmapFilePath));
-        GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
-        GetComponent<Collider>().enabled = true;
-
-        stopwatch.Stop();
-        CellExAlLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
     }
 
     private void OnTriggerEnter(Collider other)
