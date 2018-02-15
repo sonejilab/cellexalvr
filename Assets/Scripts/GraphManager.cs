@@ -105,36 +105,36 @@ public class GraphManager : MonoBehaviour
         // Generate the materials used when coloring by gene expressions
         int nColors = CellExAlConfig.NumberOfExpressionColors;
         GeneExpressionMaterials = new Material[nColors];
-        Color lowExpressionColor = CellExAlConfig.LowExpressionColor;
-        Color midExpressionColor = CellExAlConfig.MidExpressionColor;
-        Color highExpressionColor = CellExAlConfig.HighExpressionColor;
+        Color low = CellExAlConfig.LowExpressionColor;
+        Color mid = CellExAlConfig.MidExpressionColor;
+        Color high = CellExAlConfig.HighExpressionColor;
 
-        float lowToMidDiffR = midExpressionColor.r - lowExpressionColor.r;
-        float lowToMidDiffG = midExpressionColor.g - lowExpressionColor.g;
-        float lowtoMidDiffB = midExpressionColor.b - lowExpressionColor.b;
+        int dividerLowMid = nColors / 2 - 1;
+        float lowMidDeltaR = (mid.r * mid.r - low.r * low.r) / dividerLowMid;
+        float lowMidDeltaG = (mid.g * mid.g - low.g * low.g) / dividerLowMid;
+        float lowMidDeltaB = (mid.b * mid.b - low.b * low.b) / dividerLowMid;
 
-        float midToHighDiffR = highExpressionColor.r - midExpressionColor.r;
-        float midToHighDiffG = highExpressionColor.g - midExpressionColor.g;
-        float midToHighDiffB = highExpressionColor.b - midExpressionColor.b;
+        int dividerMidHigh = nColors - dividerLowMid - 1;
+        float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
+        float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
+        float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
         // from low to mid
         for (int i = 0; i < nColors / 2; ++i)
         {
-            float normalized = i / ((float)nColors / 2);
-            float r = lowExpressionColor.r + lowToMidDiffR * normalized;
-            float g = lowExpressionColor.g + lowToMidDiffG * normalized;
-            float b = lowExpressionColor.b + lowtoMidDiffB * normalized;
+            float r = low.r + lowMidDeltaR * i;
+            float g = low.g + lowMidDeltaG * i;
+            float b = low.b + lowMidDeltaB * i;
             GeneExpressionMaterials[i] = new Material(defaultGraphPointMaterial);
-            GeneExpressionMaterials[i].color = new Color(r, g, b);
+            GeneExpressionMaterials[i].color = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
         }
         // from mid to high
-        for (int i = nColors / 2; i < nColors; ++i)
+        for (int i = nColors / 2, j = 1; i < nColors; ++i, ++j)
         {
-            float normalized = (i - (float)nColors / 2) / ((float)nColors / 2);
-            float r = midExpressionColor.r + midToHighDiffR * normalized;
-            float g = midExpressionColor.g + midToHighDiffG * normalized;
-            float b = midExpressionColor.b + midToHighDiffB * normalized;
+            float r = mid.r + midHighDeltaR * j;
+            float g = mid.g + midHighDeltaG * j;
+            float b = mid.b + midHighDeltaB * j;
             GeneExpressionMaterials[i] = new Material(defaultGraphPointMaterial);
-            GeneExpressionMaterials[i].color = new Color(r, g, b);
+            GeneExpressionMaterials[i].color = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
         }
 
         // Generate materials used when coloring by attribute

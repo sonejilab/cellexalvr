@@ -478,6 +478,17 @@ namespace SQLiter
             QueryRunning = false;
         }
 
+        /// <summary>
+        /// Query the database for all expressions of multiple genes and multiple cells.
+        /// This method puts many <see cref="Tuple"/> with string and floats in the <see cref="ArrayList"/> _result.
+        /// The first <see cref="Tuple"/> is always a gene id and the highest expression of that gene. The next bunch of <see cref="Tuple"/>
+        /// are cell names and their respective expression of the gene in the previously mentioned Tuple.
+        /// Then another <see cref="Tuple"/> follows with the next gene id followed by cells and their expression and so on.
+        /// Not all cells are put in the ArrayList, only the ones that were found in the database. This means
+        /// that there is not the same amount of elements between each tuple which marks a new gene.
+        /// </summary>
+        /// <param name="genes">An array with the genes to query for.</param>
+        /// <param name="cells">An array with the cells to query for.</param>
         internal void QueryGenesInCells(string[] genes, string[] cells)
         {
             QueryRunning = true;
@@ -523,7 +534,6 @@ namespace SQLiter
             float highestExpression = 0;
             string lastGeneId = "";
             int highestGeneExpressionIndex = -1;
-            //int index = 0;
             while (_reader.Read())
             {
                 string cellName = _reader.GetString(0);
@@ -547,7 +557,6 @@ namespace SQLiter
                 {
                     highestExpression = expression;
                 }
-                //index++;
             }
             // replace the last value as well
             _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
@@ -555,6 +564,11 @@ namespace SQLiter
             QueryRunning = false;
         }
 
+        /// <summary>
+        /// Queries the databsae for the gene ids of multiple genes.
+        /// This method will put <see cref="Tuple"/> with gene names as string and gene ids as string in <see cref="_result"/>.
+        /// </summary>
+        /// <param name="genes">An arra with the gene names.</param>
         internal void QueryGenesIds(string[] genes)
         {
             QueryRunning = true;

@@ -20,6 +20,10 @@ public static class CellExAlConfig
     public static float NetworkLineSmallWidth { get; set; }
     public static float NetworkLineLargeWidth { get; set; }
     public static int NumberOfNetworkLineColors { get; set; }
+    public static int NumberOfHeatmapColors { get; set; }
+    public static Color HeatmapLowExpressionColor { get; set; }
+    public static Color HeatmapMidExpressionColor { get; set; }
+    public static Color HeatmapHighExpressionColor { get; set; }
 }
 
 /// <summary>
@@ -148,7 +152,7 @@ public class ConfigManager : MonoBehaviour
                         {
                             if (streamReader.EndOfStream)
                             {
-                                CellExAlLog.Log("WARNING: Unexpected end of file when parsing list of attribute colors from the config file.");
+                                CellExAlLog.Log("ERROR: Unexpected end of file when parsing list of attribute colors from the config file.");
                                 break;
                             }
                             lineNbr++;
@@ -175,11 +179,9 @@ public class ConfigManager : MonoBehaviour
                 case "LowExpressionColor":
                     CellExAlConfig.LowExpressionColor = ReadColor(value, lineNbr);
                     break;
-
                 case "MidExpressionColor":
                     CellExAlConfig.MidExpressionColor = ReadColor(value, lineNbr);
                     break;
-
                 case "HighExpressionColor":
                     CellExAlConfig.HighExpressionColor = ReadColor(value, lineNbr);
                     break;
@@ -187,12 +189,25 @@ public class ConfigManager : MonoBehaviour
                 case "NetworkLineSmallWidth":
                     CellExAlConfig.NetworkLineSmallWidth = float.Parse(value);
                     break;
-
                 case "NetworkLineLargeWidth":
                     CellExAlConfig.NetworkLineLargeWidth = float.Parse(value);
                     break;
                 case "NumberOfNetworkLineColors":
                     CellExAlConfig.NumberOfNetworkLineColors = int.Parse(value);
+                    break;
+
+
+                case "NumberOfHeatmapColors":
+                    CellExAlConfig.NumberOfHeatmapColors = int.Parse(value);
+                    break;
+                case "HeatmapLowExpressionColor":
+                    CellExAlConfig.HeatmapLowExpressionColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapMidExpressionColor":
+                    CellExAlConfig.HeatmapMidExpressionColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapHighExpressionColor":
+                    CellExAlConfig.HeatmapHighExpressionColor = ReadColor(value, lineNbr);
                     break;
 
                 default:

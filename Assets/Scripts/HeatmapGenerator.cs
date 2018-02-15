@@ -15,6 +15,9 @@ public class HeatmapGenerator : MonoBehaviour
 
     public bool GeneratingHeatmaps { get; private set; }
 
+    public Color[] expressionColors;
+
+
     private GameObject calculatorCluster;
     private SelectionToolHandler selectionToolHandler;
     private StatusDisplay status;
@@ -38,6 +41,59 @@ public class HeatmapGenerator : MonoBehaviour
         calculatorCluster = referenceManager.calculatorCluster;
         calculatorCluster.SetActive(false);
         GeneratingHeatmaps = false;
+    }
+
+    /// <summary>
+    /// Checks if the <see cref="expressionColors"/> is initialized.
+    /// </summary>
+    /// <returns>True if <see cref="expressionColors"/> is initialized.</returns>
+    public bool ColorsReady()
+    {
+        return expressionColors != null && expressionColors.Length != 0;
+    }
+
+    /// <summary>
+    /// Initializes <see cref="expressionColors"/> with the colors in the config file.
+    /// </summary>
+    public void InitColors()
+    {
+
+        int numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
+        expressionColors = new Color[numberOfExpressionColors];
+        Color low = CellExAlConfig.HeatmapLowExpressionColor;
+        Color mid = CellExAlConfig.HeatmapMidExpressionColor;
+        Color high = CellExAlConfig.HeatmapHighExpressionColor;
+
+        int dividerLowMid = numberOfExpressionColors / 2 - 1;
+        float lowMidDeltaR = (mid.r * mid.r - low.r * low.r) / dividerLowMid;
+        float lowMidDeltaG = (mid.g * mid.g - low.g * low.g) / dividerLowMid;
+        float lowMidDeltaB = (mid.b * mid.b - low.b * low.b) / dividerLowMid;
+
+        int dividerMidHigh = numberOfExpressionColors - dividerLowMid - 1;
+        float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
+        float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
+        float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
+
+        for (int i = 0; i < numberOfExpressionColors / 2; ++i)
+        {
+            float r = low.r + lowMidDeltaR * i;
+            float g = low.g + lowMidDeltaG * i;
+            float b = low.b + lowMidDeltaB * i;
+            if (r < 0) r = 0;
+            if (g < 0) g = 0;
+            if (b < 0) b = 0;
+            expressionColors[i] = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
+        }
+        for (int i = numberOfExpressionColors / 2, j = 1; i < numberOfExpressionColors; ++i, ++j)
+        {
+            float r = mid.r + midHighDeltaR * j;
+            float g = mid.g + midHighDeltaG * j;
+            float b = mid.b + midHighDeltaB * j;
+            if (r < 0) r = 0;
+            if (g < 0) g = 0;
+            if (b < 0) b = 0;
+            expressionColors[i] = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
+        }
     }
 
     internal void DeleteHeatmaps()

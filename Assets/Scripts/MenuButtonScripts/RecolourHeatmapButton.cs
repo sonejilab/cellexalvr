@@ -10,7 +10,7 @@ public class RecolourHeatmapButton : StationaryButton
     {
         get
         {
-            return "Recoulour heatmap";
+            return "";
         }
     }
 

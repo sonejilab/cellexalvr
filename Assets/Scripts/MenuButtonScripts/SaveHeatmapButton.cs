@@ -5,7 +5,7 @@ class SaveHeatmapButton : StationaryButton
 {
     protected override string Description
     {
-        get { return "Save heatmap image to disk"; }
+        get { return "Save heatma\nimage to disk"; }
     }
 
     protected override void Awake()

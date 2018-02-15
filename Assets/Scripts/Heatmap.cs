@@ -6,8 +6,6 @@ using VRTK;
 using System.Drawing;
 using System.Collections;
 using System.Drawing.Imaging;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 /// <summary>
@@ -24,7 +22,7 @@ public class Heatmap : MonoBehaviour
     public GameObject movingQuadY;
 
     private GraphManager graphManager;
-    private Dictionary<Cell, int> containedCells;
+    private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
     private GameObject fire;
@@ -35,6 +33,7 @@ public class Heatmap : MonoBehaviour
     private ReferenceManager referenceManager;
     private GameManager gameManager;
     private TextMesh highlightInfoText;
+    private ControllerModelSwitcher controllerModelSwitcher;
 
     private Bitmap bitmap;
     /// <summary>
@@ -81,9 +80,12 @@ public class Heatmap : MonoBehaviour
     {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         rightController = referenceManager.rightController;
+        graphManager = referenceManager.graphManager;
+        cellManager = referenceManager.cellManager;
         raycastingSource = rightController.transform;
         gameManager = referenceManager.gameManager;
         fire = referenceManager.fire;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         highlightQuad.SetActive(false);
         confirmQuad.SetActive(false);
         movingQuadX.SetActive(false);
@@ -93,20 +95,29 @@ public class Heatmap : MonoBehaviour
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
         // turn the expression colors into brushes that are used for drawing later
-        numberOfExpressionColors = CellExAlConfig.NumberOfExpressionColors;
+        numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
         heatmapBrushes = new SolidBrush[numberOfExpressionColors];
         graphManager = referenceManager.graphManager;
+        HeatmapGenerator heatmapGenerator = referenceManager.heatmapGenerator;
+
+        if (!heatmapGenerator.ColorsReady())
+        {
+            heatmapGenerator.InitColors();
+        }
+        UnityEngine.Color[] colors = heatmapGenerator.expressionColors;
         for (int i = 0; i < numberOfExpressionColors; ++i)
         {
-            UnityEngine.Color uc = graphManager.GeneExpressionMaterials[i].color;
+            UnityEngine.Color uc = colors[i];
             SolidBrush p = new SolidBrush(System.Drawing.Color.FromArgb((int)(uc.r * 255), (int)(uc.g * 255), (int)(uc.b * 255)));
             heatmapBrushes[i] = p;
         }
 
-
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Builds the heatmap texture.
+    /// </summary>
     public void BuildTexture()
     {
         gameObject.SetActive(true);
@@ -140,7 +151,6 @@ public class Heatmap : MonoBehaviour
         }
         // add the last group as well
         groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, width));
-        //string[] tempGenes = { "gata1", "klf1", "car1", "kel", "mpl", "hlf", "ltb", "ly6a", "ifitm1", "elane", "atp8b4", "ccl9" };
         StreamReader streamReader = new StreamReader(Directory.GetCurrentDirectory() + "\\test_genes.txt");
         string[] tempGenes = new string[250];
         int i = 0;
@@ -183,7 +193,6 @@ public class Heatmap : MonoBehaviour
         bitmap = new Bitmap(bitmapWidth, bitmapHeight);
         System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bitmap);
 
-
         GraphManager graphManager = referenceManager.graphManager;
         // get the grouping colors
         SolidBrush[] groupBrushes = new SolidBrush[graphManager.SelectedMaterials.Length];
@@ -225,12 +234,11 @@ public class Heatmap : MonoBehaviour
         Dictionary<string, int> genePositions = new Dictionary<string, int>(genes.Length);
         for (int i = 0; i < genes.Length; ++i)
         {
-            // ids are keys, names are values
+            // gene names are keys, positions are values
             genePositions[genes[i]] = i;
         }
 
         Dictionary<string, int> cellsPosition = new Dictionary<string, int>(cells.Count);
-
 
         string[] cellsArray = new string[cells.Count];
         for (int i = 0; i < cells.Count; ++i)
@@ -253,8 +261,8 @@ public class Heatmap : MonoBehaviour
         }
         // the thread is now done and the heatmap has been painted
         g.Dispose();
-        //// copy the bitmap data over to a unity texture
-        //// using a memorystream here seemed like a better alternative but made the standalone crash
+        // copy the bitmap data over to a unity texture
+        // using a memorystream here seemed like a better alternative but made the standalone crash
         string heatmapFilePath = Directory.GetCurrentDirectory() + @"\Images\heatmap_temp.png";
         bitmap.Save(heatmapFilePath, ImageFormat.Png);
 
@@ -316,7 +324,6 @@ public class Heatmap : MonoBehaviour
                 }
             }
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -347,92 +354,95 @@ public class Heatmap : MonoBehaviour
             gameManager.InformMoveHeatmap(HeatmapName, transform.position, transform.rotation, transform.localScale);
         }
 
-        raycastingSource = rightController.transform;
-        Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
         {
-            int hitx = (int)(hit.textureCoord.x * bitmapWidth);
-            int hity = (int)(hit.textureCoord.y * bitmapHeight);
-            if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
+            raycastingSource = rightController.transform;
+            Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                // if we hit the list of genes
-                int geneHit = HandleHitGeneList(hity);
+                int hitx = (int)(hit.textureCoord.x * bitmapWidth);
+                int hity = (int)(hit.textureCoord.y * bitmapHeight);
+                if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
+                {
+                    // if we hit the list of genes
+                    int geneHit = HandleHitGeneList(hity);
 
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    referenceManager.cellManager.ColorGraphsByGene(genes[geneHit]);
-                }
-            }
-            else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
-            {
-                // if we hit the grouping bar
-                HandleHitGroupingBar(hitx);
-            }
-            else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
-            {
-                // if we hit the actual heatmap
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
+                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
-                        // if we hit a confirmed selection
-                        movingSelection = true;
+                        referenceManager.cellManager.ColorGraphsByGene(genes[geneHit]);
+                    }
+                }
+                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
+                {
+                    // if we hit the grouping bar
+                    HandleHitGroupingBar(hitx);
+                }
+                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
+                {
+                    // if we hit the actual heatmap
+                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    {
+                        if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
+                        {
+                            // if we hit a confirmed selection
+                            movingSelection = true;
+                        }
+                        else
+                        {
+                            // if we hit something else
+                            selecting = true;
+                            selectionStartX = hitx;
+                            selectionStartY = hity;
+                        }
+                    }
+
+                    if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    {
+                        // called when choosing a box selection
+                        HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+                    }
+                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    {
+                        // called when letting go of the trigger to finalize a box selection
+                        selecting = false;
+                        ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+                    }
+                    else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    {
+                        // called when moving a selection
+                        HandleMovingSelection(hitx, hity);
+                    }
+                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    {
+                        // called when letting go of the trigger to move the selection
+                        MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
                     }
                     else
                     {
-                        // if we hit something else
-                        selecting = true;
-                        selectionStartX = hitx;
-                        selectionStartY = hity;
+                        // handle when the raycast just hits the heatmap
+                        HandleHitHeatmap(hitx, hity);
                     }
-                }
-
-                if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
-                {
-                    // called when choosing a box selection
-                    HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
-                }
-                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
-                {
-                    // called when letting go of the trigger to finalize a box selection
-                    selecting = false;
-                    ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
-                }
-                else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
-                {
-                    // called when moving a selection
-                    HandleMovingSelection(hitx, hity);
-                }
-                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
-                {
-                    // called when letting go of the trigger to move the selection
-                    MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
                 }
                 else
                 {
-                    // handle when the raycast just hits the heatmap
-                    HandleHitHeatmap(hitx, hity);
+                    // if we hit the heatmap but not any area of interest, like the borders or any space in between
+                    highlightQuad.SetActive(false);
+                    highlightInfoText.text = "";
                 }
             }
             else
             {
-                // if we hit the heatmap but not any area of interest, like the borders or any space in between
+                // if we don't hit the heatmap at all
                 highlightQuad.SetActive(false);
                 highlightInfoText.text = "";
             }
-        }
-        else
-        {
-            // if we don't hit the heatmap at all
-            highlightQuad.SetActive(false);
-            highlightInfoText.text = "";
-        }
-        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-        {
+            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            {
 
-            selecting = false;
-            movingSelection = false;
+                selecting = false;
+                movingSelection = false;
+            }
         }
     }
 
@@ -458,6 +468,7 @@ public class Heatmap : MonoBehaviour
         highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
         highlightQuad.SetActive(true);
         highlightInfoText.text = "Group: " + group + "\nGene: " + genes[geneHit];
+
         // the smaller the highlight quad becomes, the larger the text has to become
         highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth, 0.003f / highlightMarkerHeight, 0.003f);
     }
@@ -566,7 +577,7 @@ public class Heatmap : MonoBehaviour
         int geneHit2 = (int)((float)((bitmapHeight - selectionStartY) - heatmapY) / heatmapHeight * genes.Length);
         int smallerGeneHit = geneHit1 < geneHit2 ? geneHit1 : geneHit2;
         float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length * (Math.Abs(geneHit1 - geneHit2) + 1);
-        float highlightMarkerY = -((float)heatmapY + smallerGeneHit * (heatmapHeight / genes.Length)) / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+        float highlightMarkerY = -((float)heatmapY + smallerGeneHit * ((float)heatmapHeight / genes.Length)) / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
 
         highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
         highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
@@ -587,7 +598,7 @@ public class Heatmap : MonoBehaviour
     /// <returns></returns>
     private bool CoordinatesInsideRect(int x, int y, int rectX, int rectY, int rectWidth, int rectHeight)
     {
-        return x >= rectX && y >= rectY && x <= rectX + rectWidth && y <= rectY + rectHeight;
+        return x >= rectX && y >= rectY && x < rectX + rectWidth && y < rectY + rectHeight;
     }
 
     /// <summary>
@@ -646,7 +657,7 @@ public class Heatmap : MonoBehaviour
         // have to add 1 at the end here so it includes the bottom row as well
         selectedBoxHeight = ((float)heatmapHeight) / genes.Length * (Math.Abs(geneHit1 - geneHit2) + 1);
         float highlightMarkerHeight = selectedBoxHeight / bitmapHeight;
-        selectedBoxY = (float)heatmapY + selectedGeneTop * (heatmapHeight / genes.Length);
+        selectedBoxY = (float)heatmapY + selectedGeneTop * ((float)heatmapHeight / genes.Length);
         float highlightMarkerY = -(selectedBoxY) / bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
 
         confirmQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
@@ -682,7 +693,7 @@ public class Heatmap : MonoBehaviour
         {
 
             int geneHit = (int)(((bitmapHeight - hity + ((float)heatmapHeight / genes.Length) / 2) - heatmapY) / heatmapHeight * genes.Length);
-            float highlightMarkerY = -((float)heatmapY + geneHit * (heatmapHeight / genes.Length)) / bitmapHeight + 0.5f;
+            float highlightMarkerY = -((float)heatmapY + geneHit * ((float)heatmapHeight / genes.Length)) / bitmapHeight + 0.5f;
             movingQuadX.transform.localPosition = new Vector3(0f, highlightMarkerY, -0.001f);
             movingQuadX.SetActive(true);
         }
@@ -860,9 +871,9 @@ public class Heatmap : MonoBehaviour
     public void ColorCells()
     {
         // print("color cells");
-        foreach (KeyValuePair<Cell, int> pair in containedCells)
+        foreach (Tuple<string, int> t in cells)
         {
-            pair.Key.SetGroup(pair.Value);
+            cellManager.GetCell(t.Item1).SetGroup(t.Item2);
         }
     }
 
@@ -872,7 +883,7 @@ public class Heatmap : MonoBehaviour
     public void SetVars(Dictionary<Cell, int> colors)
     {
         // containedCells = new Dictionary<Cell, Color>();
-        containedCells = colors;
+        //containedCells = colors;
         infoText.text = "Total number of cells: " + colors.Count;
         // infoText.text += "\nNumber of colours: " + numberOfColours;
     }
