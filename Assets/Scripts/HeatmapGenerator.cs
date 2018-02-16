@@ -66,9 +66,7 @@ public class HeatmapGenerator : MonoBehaviour
 
         int dividerMidHigh = numberOfExpressionColors - dividerLowMid - 1;
         if (dividerMidHigh == 0)
-        {
             dividerMidHigh = 1;
-        }
         float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
         float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
         float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
@@ -76,8 +74,8 @@ public class HeatmapGenerator : MonoBehaviour
 
         for (int i = 0; i < numberOfExpressionColors / 2 + 1; ++i)
         {
-            float r = low.r * low.r+ lowMidDeltaR * i;
-            float g = low.g * low.g+ lowMidDeltaG * i;
+            float r = low.r * low.r + lowMidDeltaR * i;
+            float g = low.g * low.g + lowMidDeltaG * i;
             float b = low.b * low.b + lowMidDeltaB * i;
             if (r < 0) r = 0;
             if (g < 0) g = 0;
