@@ -33,19 +33,39 @@ public class ConfigManager : MonoBehaviour
 {
 
     public ReferenceManager referenceManager;
+    private string configDir;
+    private string configPath;
+    private string sampleConfigPath;
 
-    private void Start
-        ()
+    private void Start()
     {
-        string workingDir = Directory.GetCurrentDirectory();
-        string configPath = workingDir + @"\Config\config.txt";
-        string sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.txt";
+        configDir = Directory.GetCurrentDirectory() + @"\Config";
+        configPath = configDir + @"\config.txt";
+        sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.txt";
+        ReadConfigFile();
 
+        FileSystemWatcher watcher = new FileSystemWatcher(configDir);
+        watcher.NotifyFilter = NotifyFilters.LastWrite;
+        watcher.Filter = "config.txt";
+        watcher.Changed += new FileSystemEventHandler(OnChanged);
+        watcher.EnableRaisingEvents = true;
+
+    }
+
+    private void OnChanged(object source, FileSystemEventArgs e)
+    {
+        // Make the ReadConfigFile execute in the main thread
+        SQLiter.LoomManager.Loom.QueueOnMainThread(() => ReadConfigFile());
+
+    }
+
+    private void ReadConfigFile()
+    {
         // make sure the folder and the file exists.
         if (!Directory.Exists("Config"))
         {
             Directory.CreateDirectory("Config");
-            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(workingDir + @"\Config"));
+            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(configDir));
         }
 
         if (!File.Exists(configPath))
@@ -54,6 +74,7 @@ public class ConfigManager : MonoBehaviour
             CellExAlLog.Log("WARNING: No config file found at " + configPath + ". A sample config file has been created.");
         }
         CellExAlLog.Log("Started reading the config file");
+
 
         // start reading the contents.
         FileStream fileStream = new FileStream(configPath, FileMode.Open);
@@ -199,7 +220,13 @@ public class ConfigManager : MonoBehaviour
 
 
                 case "NumberOfHeatmapColors":
-                    CellExAlConfig.NumberOfHeatmapColors = int.Parse(value);
+                    int numberOfHeatmapColors = int.Parse(value);
+                    if (numberOfHeatmapColors < 3)
+                    {
+                        CellExAlLog.Log("WARNING: Number of heatmap colors is less than 3, changing it to 3.");
+                        numberOfHeatmapColors = 3;
+                    }
+                    CellExAlConfig.NumberOfHeatmapColors = numberOfHeatmapColors;
                     break;
                 case "HeatmapLowExpressionColor":
                     CellExAlConfig.HeatmapLowExpressionColor = ReadColor(value, lineNbr);
@@ -239,8 +266,12 @@ public class ConfigManager : MonoBehaviour
             return Color.white;
         }
         string hexcolorValue = value.Substring(hashtagIndex, 7);
-        Color newColor = new Color();
-        ColorUtility.TryParseHtmlString(hexcolorValue, out newColor);
-        return newColor;
+        string r = hexcolorValue.Substring(1, 2);
+        string g = hexcolorValue.Substring(3, 2);
+        string b = hexcolorValue.Substring(5, 2);
+        float unityR = byte.Parse(r, System.Globalization.NumberStyles.HexNumber) / 255f;
+        float unityG = byte.Parse(g, System.Globalization.NumberStyles.HexNumber) / 255f;
+        float unityB = byte.Parse(b, System.Globalization.NumberStyles.HexNumber) / 255f;
+        return new Color(unityR, unityG, unityB);
     }
 }

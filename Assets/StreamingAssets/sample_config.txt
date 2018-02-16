@@ -1,4 +1,4 @@
-# This is a config file for Cellexal.
+# This is a config file for CellexalVR.
 # Its purpose is to contain values that can be changed by a user.
 # Comments can be written anywhere by starting a line with '#'. Comments must start at the start of a line.
 # Since all users share the same config file it would be a bad idea to add any user specific settings here.
@@ -12,7 +12,7 @@
 # Comments and blank lines should not be present in lists but can be inserted anywhere else.
 
 # The filepath to Rscript.exe
-RscriptFilePath = <<<PUT THE PATH TO YOUR RSCRIPT.EXE HERE>>>
+RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
 
 # The number of lines that will be read between every frame from the .mds files when loading graphs
 # A higher number can make faster loading but potentially create a loss of frames when loading
@@ -38,7 +38,7 @@ SelectionColors ={	#FF0000
 NumberOfExpressionColors = 30
 
 # The colors that is used when coloring graphs by a gene
-# There will be a total of 30 colors generated using the LowExpressionColor as the lowest color and HighExpressionColor as the highest color
+# There will be colors generated using the LowExpressionColor as the lowest color and HighExpressionColor as the highest color
 # The generated colors are just linearely interpolated between LowExpressionColor and MidExpressionColor and HighExpressionColor
 # If you want to change these but don't know the RGB values by heart I suggest googling "rgb color picker"
 LowExpressionColor = #0000FF
@@ -82,3 +82,11 @@ NetworkLineLargeWidth = 0.01
 # The number of color hue values used drawing the the lines between genes within networks.
 # The total number of materials created is n*(n/6)^2
 NumberOfNetworkLineColors = 12
+
+# The number of colors that the heatmap should use
+NumberOfHeatmapColors = 30
+
+# The colors that the heatmap should use. Colors are linearly interpolated between HeatmapLowExpressionColor and HeatmapMidExpressionColor and HeatmapHighExpressionColor
+HeatmapLowExpressionColor = #0000FF
+HeatmapMidExpressionColor = #FFFF00
+HeatmapHighExpressionColor = #FF0000
