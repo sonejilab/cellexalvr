@@ -94,16 +94,12 @@ public class Heatmap : MonoBehaviour
 
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
-        // turn the expression colors into brushes that are used for drawing later
         numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
         heatmapBrushes = new SolidBrush[numberOfExpressionColors];
         graphManager = referenceManager.graphManager;
         HeatmapGenerator heatmapGenerator = referenceManager.heatmapGenerator;
 
-        if (!heatmapGenerator.ColorsReady())
-        {
-            heatmapGenerator.InitColors();
-        }
+        // turn the expression colors into brushes that are used for drawing later
         UnityEngine.Color[] colors = heatmapGenerator.expressionColors;
         for (int i = 0; i < numberOfExpressionColors; ++i)
         {
@@ -303,10 +299,8 @@ public class Heatmap : MonoBehaviour
             if (geneIds.ContainsKey(tuple.Item1))
             {
                 // new gene
-                geneName = geneIds[tuple.Item1];
                 highestExpression = tuple.Item2;
                 ycoord = heatmapY + genePositions[geneName] * ycoordInc;
-                g.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
             }
             else
             {
@@ -323,6 +317,14 @@ public class Heatmap : MonoBehaviour
                     g.FillRectangle(heatmapBrushes[(int)(expression / highestExpression * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
                 }
             }
+        }
+        ycoord = heatmapY;
+        // draw all the gene names
+        for (int i = 0; i < genes.Length; ++i)
+        {
+            geneName = genes[i];
+            g.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
+            ycoord += ycoordInc;
         }
     }
 

@@ -41,21 +41,13 @@ public class HeatmapGenerator : MonoBehaviour
         calculatorCluster = referenceManager.calculatorCluster;
         calculatorCluster.SetActive(false);
         GeneratingHeatmaps = false;
-    }
-
-    /// <summary>
-    /// Checks if the <see cref="expressionColors"/> is initialized.
-    /// </summary>
-    /// <returns>True if <see cref="expressionColors"/> is initialized.</returns>
-    public bool ColorsReady()
-    {
-        return expressionColors != null && expressionColors.Length != 0;
+        CellExAlEvents.ConfigLoaded.AddListener(InitColors);
     }
 
     /// <summary>
     /// Initializes <see cref="expressionColors"/> with the colors in the config file.
     /// </summary>
-    public void InitColors()
+    private void InitColors()
     {
 
         int numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;

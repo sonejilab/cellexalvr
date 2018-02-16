@@ -34,7 +34,8 @@ public class ConfigManager : MonoBehaviour
 
     public ReferenceManager referenceManager;
 
-    private void Start()
+    private void Start
+        ()
     {
         string workingDir = Directory.GetCurrentDirectory();
         string configPath = workingDir + @"\Config\config.txt";
