@@ -533,7 +533,7 @@ namespace SQLiter
             _result.Clear();
             float highestExpression = 0;
             string lastGeneId = "";
-            int highestGeneExpressionIndex = -1;
+            int highestGeneExpressionIndex = 0;
             while (_reader.Read())
             {
                 string cellName = _reader.GetString(0);

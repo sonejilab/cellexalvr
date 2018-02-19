@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class HeatmapGenerator : MonoBehaviour
 
     public bool GeneratingHeatmaps { get; private set; }
 
-    public Color[] expressionColors;
+    public SolidBrush[] expressionColors;
 
 
     private GameObject calculatorCluster;
@@ -51,10 +52,10 @@ public class HeatmapGenerator : MonoBehaviour
     {
 
         int numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
-        expressionColors = new Color[numberOfExpressionColors];
-        Color low = CellExAlConfig.HeatmapLowExpressionColor;
-        Color mid = CellExAlConfig.HeatmapMidExpressionColor;
-        Color high = CellExAlConfig.HeatmapHighExpressionColor;
+        expressionColors = new SolidBrush[numberOfExpressionColors];
+        UnityEngine.Color low = CellExAlConfig.HeatmapLowExpressionColor;
+        UnityEngine.Color mid = CellExAlConfig.HeatmapMidExpressionColor;
+        UnityEngine.Color high = CellExAlConfig.HeatmapHighExpressionColor;
         //print(low + " " + mid + " " + high);
 
         int dividerLowMid = numberOfExpressionColors / 2;
@@ -80,7 +81,7 @@ public class HeatmapGenerator : MonoBehaviour
             if (r < 0) r = 0;
             if (g < 0) g = 0;
             if (b < 0) b = 0;
-            expressionColors[i] = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
+            expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
         }
         for (int i = numberOfExpressionColors / 2 + 1, j = 1; i < numberOfExpressionColors; ++i, ++j)
         {
@@ -90,7 +91,7 @@ public class HeatmapGenerator : MonoBehaviour
             if (r < 0) r = 0;
             if (g < 0) g = 0;
             if (b < 0) b = 0;
-            expressionColors[i] = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
+            expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
         }
     }
 

@@ -14,6 +14,7 @@ using System.Threading;
 public class Heatmap : MonoBehaviour
 {
     // TODO CELLEXAL: make a single gene box plot (out of an existing heatmap?)
+    public ReferenceManager referenceManager;
     public Texture texture;
     public TextMesh infoText;
     public GameObject highlightQuad;
@@ -30,12 +31,13 @@ public class Heatmap : MonoBehaviour
     private Transform raycastingSource;
     private string imageFilepath;
     public string HeatmapName;
-    private ReferenceManager referenceManager;
     private GameManager gameManager;
     private TextMesh highlightInfoText;
     private ControllerModelSwitcher controllerModelSwitcher;
+    private HeatmapGenerator heatmapGenerator;
 
     private Bitmap bitmap;
+    private System.Drawing.Graphics graphics;
     /// <summary>
     /// Item1: cell name, Item2: group
     /// </summary>
@@ -55,6 +57,10 @@ public class Heatmap : MonoBehaviour
     private int geneListWidth = 250;
     private int groupBarY = 100;
     private int groupBarHeight = 100;
+    private int newHeatmapBoxX = 0;
+    private int newHeatmapBoxY = 0;
+    private int newHeatmapBoxWidth = 150;
+    private int newHeatmapBoxHeight = 150;
     private System.Drawing.Font geneFont;
     private int numberOfExpressionColors;
     private SolidBrush[] heatmapBrushes;
@@ -78,6 +84,11 @@ public class Heatmap : MonoBehaviour
 
     void Start()
     {
+        Init();
+    }
+
+    public void Init()
+    {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         rightController = referenceManager.rightController;
         graphManager = referenceManager.graphManager;
@@ -95,20 +106,9 @@ public class Heatmap : MonoBehaviour
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
         numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
-        heatmapBrushes = new SolidBrush[numberOfExpressionColors];
         graphManager = referenceManager.graphManager;
-        HeatmapGenerator heatmapGenerator = referenceManager.heatmapGenerator;
+        heatmapGenerator = referenceManager.heatmapGenerator;
 
-        // turn the expression colors into brushes that are used for drawing later
-        UnityEngine.Color[] colors = heatmapGenerator.expressionColors;
-        for (int i = 0; i < numberOfExpressionColors; ++i)
-        {
-            UnityEngine.Color uc = colors[i];
-            SolidBrush p = new SolidBrush(System.Drawing.Color.FromArgb((int)(uc.r * 255), (int)(uc.g * 255), (int)(uc.b * 255)));
-            heatmapBrushes[i] = p;
-        }
-
-        gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -147,18 +147,21 @@ public class Heatmap : MonoBehaviour
         }
         // add the last group as well
         groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, width));
-        StreamReader streamReader = new StreamReader(Directory.GetCurrentDirectory() + "\\test_genes.txt");
-        string[] tempGenes = new string[250];
-        int i = 0;
-        while (!streamReader.EndOfStream)
+        if (genes == null || genes.Length == 0)
         {
-            tempGenes[i++] = streamReader.ReadLine();
+            StreamReader streamReader = new StreamReader(Directory.GetCurrentDirectory() + "\\test_genes.txt");
+            List<string> tempGenes = new List<string>();
+            while (!streamReader.EndOfStream)
+            {
+                tempGenes.Add(streamReader.ReadLine());
+            }
+            streamReader.Close();
+            genes = tempGenes.ToArray();
         }
-        streamReader.Close();
-        StartCoroutine(BuildTextureCoroutine(groupWidths, tempGenes));
+        StartCoroutine(BuildTextureCoroutine(groupWidths));
     }
 
-    private void BuildTexture(List<Tuple<int, float, int>> groupWidths, string[] genes)
+    private void BuildTexture(List<Tuple<int, float, int>> groupWidths)
     {
         GetComponent<Collider>().enabled = false;
         // merge groups
@@ -175,19 +178,26 @@ public class Heatmap : MonoBehaviour
                 groupWidths.RemoveAt(i + 1);
             }
         }
-        StartCoroutine(BuildTextureCoroutine(groupWidths, genes));
+        StartCoroutine(BuildTextureCoroutine(groupWidths));
     }
 
-    private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths, string[] genes)
+    private void BuildTexture(List<Tuple<string, int>> newCells, string[] newGenes, List<Tuple<int, float, int>> newGroupWidths)
+    {
+        cells = newCells;
+        genes = newGenes;
+        groupWidths = newGroupWidths;
+        StartCoroutine(BuildTextureCoroutine(groupWidths));
+    }
+
+    private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths)
     {
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         CellExAlLog.Log("Started building a heatmap texture");
 
-        this.genes = genes;
         SQLiter.SQLite database = referenceManager.database;
         bitmap = new Bitmap(bitmapWidth, bitmapHeight);
-        System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bitmap);
+        graphics = System.Drawing.Graphics.FromImage(bitmap);
 
         GraphManager graphManager = referenceManager.graphManager;
         // get the grouping colors
@@ -197,21 +207,25 @@ public class Heatmap : MonoBehaviour
             UnityEngine.Color unitycolor = graphManager.SelectedMaterials[i].color;
             groupBrushes[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
         }
-        g.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
+        // draw a white background
+        graphics.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
 
         float xcoord = heatmapX;
         float ycoord = heatmapY;
         float xcoordInc = (float)heatmapWidth / cells.Count;
         float ycoordInc = (float)heatmapHeight / genes.Length;
-
+        // draw the grouping bar
         for (int i = 0; i < groupWidths.Count; ++i)
         {
             int groupNbr = groupWidths[i].Item1;
             float groupWidth = groupWidths[i].Item2;
-            g.FillRectangle(groupBrushes[groupNbr], xcoord, groupBarY, groupWidth, groupBarHeight);
+            graphics.FillRectangle(groupBrushes[groupNbr], xcoord, groupBarY, groupWidth, groupBarHeight);
             xcoord += groupWidth;
         }
         xcoord = heatmapX;
+
+        // draw the new heatmap box text
+        graphics.DrawString("Drop a selection\nhere to create\na new heatmap", geneFont, SystemBrushes.MenuText, newHeatmapBoxX, newHeatmapBoxY);
 
         database.QueryGenesIds(genes);
         while (database.QueryRunning)
@@ -249,14 +263,59 @@ public class Heatmap : MonoBehaviour
             yield return null;
         }
         result = database._result;
-        Thread thread = new Thread(() => ReadQueryResults(g, xcoordInc, ycoordInc, result, geneIds, genePositions, cellsPosition));
+
+        Thread thread = new Thread(() =>
+        {
+            System.Drawing.SolidBrush[] heatmapBrushes = heatmapGenerator.expressionColors;
+            CellExAlLog.Log("Reading " + result.Count + " results from database");
+            float highestExpression = 0;
+            graphics.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
+            int genescount = 0, cellcount = 0;
+            for (int i = 0; i < result.Count; ++i)
+            {
+                // the arraylist should contain the gene id and that gene's highest expression before all the expressions
+                Tuple<string, float> tuple = (Tuple<string, float>)result[i];
+                if (geneIds.ContainsKey(tuple.Item1))
+                {
+                    // new gene
+                    highestExpression = tuple.Item2;
+                    ycoord = heatmapY + genePositions[geneIds[tuple.Item1]] * ycoordInc;
+                    genescount++;
+                }
+                else
+                {
+                    string cellName = tuple.Item1;
+                    float expression = tuple.Item2;
+                    xcoord = heatmapX + cellsPosition[cellName] * xcoordInc;
+
+                    if (expression == highestExpression)
+                    {
+                        graphics.FillRectangle(heatmapBrushes[heatmapBrushes.Length - 1], xcoord, ycoord, xcoordInc, ycoordInc);
+                    }
+                    else
+                    {
+                        graphics.FillRectangle(heatmapBrushes[(int)(expression / highestExpression * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
+                    }
+                    cellcount++;
+                }
+            }
+            ycoord = heatmapY;
+            // draw all the gene names
+            for (int i = 0; i < genes.Length; ++i)
+            {
+                string geneName = genes[i];
+                graphics.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
+                ycoord += ycoordInc;
+            }
+        });
+
         thread.Start();
         while (thread.IsAlive)
         {
             yield return null;
         }
+
         // the thread is now done and the heatmap has been painted
-        g.Dispose();
         // copy the bitmap data over to a unity texture
         // using a memorystream here seemed like a better alternative but made the standalone crash
         string heatmapFilePath = Directory.GetCurrentDirectory() + @"\Images\heatmap_temp.png";
@@ -270,62 +329,10 @@ public class Heatmap : MonoBehaviour
         GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
         yield return null;
         GetComponent<Collider>().enabled = true;
+        graphics.Dispose();
 
         stopwatch.Stop();
         CellExAlLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
-    }
-
-    /// <summary>
-    /// Run as a thread in <see cref="BuildTexture"/>. Reads the result as a thread because it takes more than a single frame and figuring out where to put yields is hard.
-    /// </summary>
-    /// <param name="g">The graphics object bound to the heatmap.</param>
-    /// <param name="xcoordInc">The width of a cell in the heatmap.</param>
-    /// <param name="ycoordInc">The height of a gene in the heatmap.</param>
-    /// <param name="result">The list from the database with the results.</param>
-    /// <param name="geneIds">Dictionary mapping gene ids to gene names.</param>
-    /// <param name="genePositions">Dictionary mapping gene names to their position on the heatmap.</param>
-    /// <param name="cellsPosition">Dictionary mapping cell names to their position on the heatmap.</param>
-    private void ReadQueryResults(System.Drawing.Graphics g, float xcoordInc, float ycoordInc, ArrayList result, Dictionary<string, string> geneIds, Dictionary<string, int> genePositions, Dictionary<string, int> cellsPosition)
-    {
-        string geneName = "";
-        float highestExpression = 0;
-        g.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
-        float xcoord = 0;
-        float ycoord = 0;
-        for (int i = 0; i < result.Count; ++i)
-        {
-            // the arraylist should contain the gene id and that gene's highest expression before all the expressions
-            Tuple<string, float> tuple = (Tuple<string, float>)result[i];
-            if (geneIds.ContainsKey(tuple.Item1))
-            {
-                // new gene
-                highestExpression = tuple.Item2;
-                ycoord = heatmapY + genePositions[geneName] * ycoordInc;
-            }
-            else
-            {
-                string cellName = tuple.Item1;
-                float expression = tuple.Item2;
-                xcoord = heatmapX + cellsPosition[cellName] * xcoordInc;
-
-                if (expression == highestExpression)
-                {
-                    g.FillRectangle(heatmapBrushes[heatmapBrushes.Length - 1], xcoord, ycoord, xcoordInc, ycoordInc);
-                }
-                else
-                {
-                    g.FillRectangle(heatmapBrushes[(int)(expression / highestExpression * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
-                }
-            }
-        }
-        ycoord = heatmapY;
-        // draw all the gene names
-        for (int i = 0; i < genes.Length; ++i)
-        {
-            geneName = genes[i];
-            g.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
-            ycoord += ycoordInc;
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -361,7 +368,7 @@ public class Heatmap : MonoBehaviour
             raycastingSource = rightController.transform;
             Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit) && hit.transform == transform)
             {
                 int hitx = (int)(hit.textureCoord.x * bitmapWidth);
                 int hity = (int)(hit.textureCoord.y * bitmapHeight);
@@ -794,9 +801,61 @@ public class Heatmap : MonoBehaviour
         if (recalculate)
         {
             // rebuild the heatmap texture
-            BuildTexture(groupWidths, genes);
+            BuildTexture(groupWidths);
         }
         ResetSelection();
+    }
+
+    private void HandleHitNewHeatmapBox()
+    {
+        float highlightMarkerX = newHeatmapBoxX / bitmapWidth - 0.5f;
+        float highlightMarkerY = newHeatmapBoxY / bitmapHeight + 0.5f;
+        float highlightMarkerWidth = newHeatmapBoxWidth / (bitmapWidth * 2f);
+        float highlightMarkerHeight = newHeatmapBoxHeight / (bitmapHeight * 2f);
+
+        highlightQuad.transform.position = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
+        highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+        highlightQuad.SetActive(true);
+    }
+
+    public void CreateNewHeatmapFromSelection()
+    {
+        // create a copy of this
+        GameObject newHeatmap = Instantiate(gameObject);
+        //newHeatmap.transform.parent = null;
+        Heatmap heatmap = newHeatmap.GetComponent<Heatmap>();
+        // find out which indices the cells start and end at
+        List<Tuple<string, int>> newCells = new List<Tuple<string, int>>();
+        int cellsIndexStart = 0;
+        for (int i = 0; i < selectedGroupLeft; ++i)
+        {
+            cellsIndexStart += groupWidths[i].Item3;
+        }
+        int numberOfCells = 0;
+        for (int i = selectedGroupLeft; i <= selectedGroupRight; ++i)
+        {
+            numberOfCells += groupWidths[i].Item3;
+        }
+        newCells.AddRange(cells.GetRange(cellsIndexStart, numberOfCells));
+
+        string[] newGenes = new string[selectedGeneBottom - selectedGeneTop + 1];
+        for (int i = selectedGeneTop, j = 0; i <= selectedGeneBottom; ++i, ++j)
+        {
+            newGenes[j] = genes[i];
+        }
+
+        // rebuild the groupwidth list with the new widths.
+        List<Tuple<int, float, int>> newGroupWidths = new List<Tuple<int, float, int>>();
+        float newXCoordInc = (float)heatmapWidth / newCells.Count;
+        for (int i = selectedGroupLeft; i <= selectedGroupRight; ++i)
+        {
+            Tuple<int, float, int> old = groupWidths[i];
+            newGroupWidths.Add(new Tuple<int, float, int>(old.Item1, old.Item3 * newXCoordInc, old.Item3));
+        }
+
+        heatmap.Init();
+        heatmap.BuildTexture(newCells, newGenes, newGroupWidths);
+
     }
 
     /// <summary>
