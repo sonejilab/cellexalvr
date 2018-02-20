@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the button that calculates the correlated genes.
+/// Represents the button that calculates the correlated genes.
 /// </summary>
 public class CorrelatedGenesButton : MonoBehaviour
 {

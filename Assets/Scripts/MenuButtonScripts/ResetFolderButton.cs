@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 
 ///<summary>
-/// This class represents a button used for resetting the input data folders.
+/// Represents a button used for resetting the input data folders.
 ///</summary>
 public class ResetFolderButton : StationaryButton
 {

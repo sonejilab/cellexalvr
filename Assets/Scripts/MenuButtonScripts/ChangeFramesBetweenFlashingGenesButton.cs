@@ -1,5 +1,5 @@
 ﻿/// <summary>
-/// This class represents the buttons that increase and decrease the number of frames between each gene expression when flashing genes.
+/// Represents the buttons that increase and decrease the number of frames between each gene expression when flashing genes.
 /// </summary>
 namespace Assets.Scripts.MenuButtonScripts
 {

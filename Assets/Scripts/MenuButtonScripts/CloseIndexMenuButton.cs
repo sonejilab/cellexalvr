@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
-
+/// <summary>
+/// Represents the button that closes the index menu.
+/// </summary>
 public class CloseIndexMenuButton : StationaryButton
 {
     private GameObject indexMenu;

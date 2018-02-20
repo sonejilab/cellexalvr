@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class opens the lids of the boxes automatically when a controller is nearby.
+/// Opens the lids of the boxes automatically when a controller is nearby.
 /// Such luxury.
 /// </summary>
 public class FolderLidOpener : MonoBehaviour

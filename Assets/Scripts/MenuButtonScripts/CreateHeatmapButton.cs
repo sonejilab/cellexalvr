@@ -1,5 +1,5 @@
 ///<summary>
-/// This class represents a button used for creating a heatmap from a cell selection.
+/// Represents a button used for creating a heatmap from a cell selection.
 ///</summary>
 public class CreateHeatmapButton : StationaryButton
 {

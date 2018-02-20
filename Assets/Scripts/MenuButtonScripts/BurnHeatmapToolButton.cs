@@ -1,8 +1,5 @@
-using System;
-using UnityEngine;
-
 ///<summary>
-/// This class represents a button used for toggling the burning heatmap tool.
+/// Represents a button used for toggling the burning heatmap tool.
 ///</summary>
 public class BurnHeatmapToolButton : StationaryButton
 {

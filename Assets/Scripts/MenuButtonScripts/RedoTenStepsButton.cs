@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 /// <summary>
-/// This class represents the button that redoes the 10 last undone graphpoints.
+/// Represents the button that redoes the 10 last undone graphpoints.
 /// </summary>
 public class RedoTenStepsButton : StationaryButton
 {

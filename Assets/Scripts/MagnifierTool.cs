@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represent the magnifying tool. The tool is a sphere that moves all graphpoints it collides with away from its center.
+/// Represent the magnifying tool. The tool is a sphere that moves all graphpoints it collides with away from its center.
 /// </summary>
 public class MagnifierTool : MonoBehaviour
 {

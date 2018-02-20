@@ -1,6 +1,8 @@
 using UnityEngine;
 using VRTK;
-
+/// <summary>
+/// Turns off a laser pointer when the program starts.
+/// </summary>
 public class LaserPointerController : MonoBehaviour
 {
 

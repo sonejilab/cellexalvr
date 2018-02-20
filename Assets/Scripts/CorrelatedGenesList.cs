@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using UnityEngine;
 
 /// <summary>
-/// This class represents a list of correlated and anati correlated genes.
+/// Represents a list of correlated and anati correlated genes.
 /// </summary>
 public class CorrelatedGenesList : MonoBehaviour
 {

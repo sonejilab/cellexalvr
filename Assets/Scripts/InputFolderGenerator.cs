@@ -3,7 +3,7 @@ using System.IO;
 using System;
 
 /// <summary>
-/// This class generates the boxes that represents folders with input data.
+/// Generates the boxes that represents folders with input data.
 /// </summary>
 public class InputFolderGenerator : MonoBehaviour
 {
@@ -42,7 +42,7 @@ public class InputFolderGenerator : MonoBehaviour
             return;
         }
         CellExAlLog.Log("Started generating folders from " + CellExAlLog.FixFilePath(dataDirectory));
-         
+
         var nfolder = 0;
         foreach (string directory in directories)
         {

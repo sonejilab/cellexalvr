@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Represents the button that closes the attribute menu.
+/// </summary>
 public class CloseAttributeMenuButton : StationaryButton
 {
     private GameObject attributeMenu;

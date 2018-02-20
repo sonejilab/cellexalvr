@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using VRTK;
 
 public class PushBack : MonoBehaviour
@@ -8,8 +6,8 @@ public class PushBack : MonoBehaviour
     public SteamVR_TrackedObject rightController;
     public float distanceMultiplier = 0.5f;
     public float scaleMultiplier = 0.5f;
-	public float maxScale;
-	public float minScale;
+    public float maxScale;
+    public float minScale;
 
     private SteamVR_Controller.Device device;
     private Ray ray;
@@ -20,7 +18,7 @@ public class PushBack : MonoBehaviour
     private Vector3 orgPos;
     private Vector3 orgScale;
     private Quaternion orgRot;
-    // Use this for initialization
+
     void Start()
     {
         rightController = GameObject.Find("InputReader").GetComponent<ReferenceManager>().rightController;
@@ -30,19 +28,14 @@ public class PushBack : MonoBehaviour
         orgScale = transform.localScale;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (rightController == null)
         {
-            //Debug.Log("Find right controller");
             rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        }
 
-        }
-        if (device == null)
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-        }
+        device = SteamVR_Controller.Input((int)rightController.index);
         if (GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<VRTK_InteractableObject>().IsGrabbed())
         {
 
@@ -68,12 +61,12 @@ public class PushBack : MonoBehaviour
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit) && push)
             {
-				Vector3 newScale = transform.localScale + orgScale * scaleMultiplier;
-				if (newScale.x > orgScale.x * maxScale)
-				{
-					//print("not pulling back " + newScale.x + " " + orgScale.x);
-					return;
-				}
+                Vector3 newScale = transform.localScale + orgScale * scaleMultiplier;
+                if (newScale.x > orgScale.x * maxScale)
+                {
+                    //print("not pulling back " + newScale.x + " " + orgScale.x);
+                    return;
+                }
                 if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     transform.LookAt(Vector3.zero);
@@ -86,7 +79,7 @@ public class PushBack : MonoBehaviour
                 Vector3 dir = hit.transform.position - device.transform.pos;
                 dir = dir.normalized;
                 transform.position += dir * distanceMultiplier;
-				transform.localScale = newScale;
+                transform.localScale = newScale;
             }
         }
         if (pull)
@@ -98,7 +91,7 @@ public class PushBack : MonoBehaviour
                 Vector3 newScale = transform.localScale - orgScale * scaleMultiplier;
                 // don't let the thing become smaller than what it was originally
                 // this could cause some problems if the user rescales the objects while they are far away
-				if (newScale.x < orgScale.x * minScale)
+                if (newScale.x < orgScale.x * minScale)
                 {
                     //print("not pulling back " + newScale.x + " " + orgScale.x);
                     return;

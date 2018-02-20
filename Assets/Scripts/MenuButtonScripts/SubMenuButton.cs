@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Represents a button that opens a pop up menu.
+/// </summary>
 class SubMenuButton : StationaryButton
 {
     public string description;

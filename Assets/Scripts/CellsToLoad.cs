@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class holds the directory name that the cells in the boxes should represent.
+/// Holds the directory name that the cells in the boxes should represent.
 /// </summary>
 public class CellsToLoad : MonoBehaviour
 {

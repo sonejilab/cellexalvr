@@ -1,5 +1,5 @@
 ﻿/// <summary>
-/// This class represents the button that colors the other graphs after the current celection.
+/// Represents the button that colors the other graphs after the current selection.
 /// </summary>
 class RecolorGraphsAfterLastSelectionButton : StationaryButton
 {

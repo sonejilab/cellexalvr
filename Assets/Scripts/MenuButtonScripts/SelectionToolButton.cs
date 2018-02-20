@@ -1,9 +1,6 @@
-using System;
-using UnityEngine;
-
 
 ///<summary>
-/// This class represents a button used for toggling the selection tool.
+/// Represents a button used for toggling the selection tool.
 ///</summary>
 public class SelectionToolButton : StationaryButton
 {

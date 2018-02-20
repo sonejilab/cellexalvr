@@ -1,4 +1,6 @@
-﻿
+﻿/// <summary>
+/// Represents the button used for creating a new heatmap from a selection on the heatmap.
+/// </summary>
 class CreateNewHeatmapButton : StationaryButton
 {
     protected override string Description
@@ -15,4 +17,3 @@ class CreateNewHeatmapButton : StationaryButton
         }
     }
 }
-

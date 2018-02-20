@@ -8,7 +8,8 @@ using System;
 using TMPro;
 
 /// <summary>
-/// A class for reading data files and creating GraphPoints at the correct locations 
+/// A class for reading data files and creating objects in the virtual environment.
+/// 
 /// </summary>
 public class InputReader : MonoBehaviour
 {

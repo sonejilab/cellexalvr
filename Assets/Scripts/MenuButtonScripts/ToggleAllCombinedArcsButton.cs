@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a buttont that toggle all the combined arcs between all networks ina  graph skeleton,
+/// Represents a buttont that toggle all the combined arcs between all networks ina  graph skeleton,
 /// The combined arcs show the number of arcs that are between two networks.
 /// </summary>
 public class ToggleAllCombinedArcsButton : SolidButton

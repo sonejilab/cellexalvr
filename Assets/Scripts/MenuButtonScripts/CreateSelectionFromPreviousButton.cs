@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the buttons that are used to create new selections from old ones.
+/// Represents the buttons that are used to create new selections from old ones.
 /// </summary>
 class CreateSelectionFromPreviousButton : MonoBehaviour
 {

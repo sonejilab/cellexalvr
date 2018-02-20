@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// The class represents an object that temporarily holds another object while it is minimized.
+/// Represents an object that temporarily holds another object while it is minimized.
 /// </summary>
 public class MinimizedObjectContainer : MonoBehaviour
 {

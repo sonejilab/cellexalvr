@@ -6,7 +6,7 @@ using VRTK.GrabAttachMechanics;
 using VRTK.SecondaryControllerGrabActions;
 
 /// <summary>
-/// This class represents the center of a network. It handles the enlarging when it is pressed.
+/// Represents the center of a network. It handles the enlarging when it is pressed.
 /// </summary>
 public class NetworkCenter : MonoBehaviour
 {

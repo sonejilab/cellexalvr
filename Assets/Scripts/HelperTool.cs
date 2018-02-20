@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using VRTK;
 /// <summary>
-/// This class represents the helper tool. Its job is to provide the user with descriptions of whatever it touches.
+/// Represents the helper tool. Its job is to provide the user with descriptions of whatever it touches.
 /// </summary>
 public class HelperTool : MonoBehaviour
 {

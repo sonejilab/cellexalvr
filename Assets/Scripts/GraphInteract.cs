@@ -2,7 +2,7 @@
 using VRTK;
 
 /// <summary>
-/// This class handles what happens when a graph is interacted with.
+/// Handles what happens when a graph is interacted with.
 /// </summary>
 class GraphInteract : VRTK_InteractableObject
 {

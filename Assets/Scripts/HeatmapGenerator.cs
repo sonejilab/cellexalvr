@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEngine;
 
 /// <summary>
-/// A generator for heatmaps.
+/// A generator for heatmaps. Creates the colors that are later used when generating heatmaps
 /// </summary>
 public class HeatmapGenerator : MonoBehaviour
 {

@@ -2,7 +2,7 @@
 using VRTK;
 
 /// <summary>
-/// This class handles what happens when a network handler is interacted with.
+/// Handles what happens when a network handler is interacted with.
 /// </summary>
 class NetworkHandlerInteract : VRTK_InteractableObject
 {

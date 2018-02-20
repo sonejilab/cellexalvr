@@ -1,7 +1,6 @@
 using UnityEngine;
-
 ///<summary>
-/// This class represents a button used for toggling the keyboard.
+/// Represents a button used for toggling the keyboard.
 ///</summary>
 public class KeyboardButton : StationaryButton
 {

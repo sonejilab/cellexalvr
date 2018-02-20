@@ -1,9 +1,7 @@
 using UnityEngine;
-using System.Collections;
-using System;
 
 /// <summary>
-/// This class represents the button that brings up the menu for coloring by attributes.
+/// Represents the button that brings up the menu for coloring by attributes.
 /// </summary>
 public class AttributeMenuButton : StationaryButton
 {

@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the area where objects are placed when they are minimized.
+/// Represents the area where objects are placed when they are minimized.
 /// </summary>
 
 public class MinimizedObjectHandler : MonoBehaviour

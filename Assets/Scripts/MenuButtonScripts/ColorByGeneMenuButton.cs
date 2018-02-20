@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the button that opens the color by gene menu.
+/// Represents the button that opens the color by gene menu.
 /// </summary>
 public class ColorByGeneMenuButton : StationaryButton
 {

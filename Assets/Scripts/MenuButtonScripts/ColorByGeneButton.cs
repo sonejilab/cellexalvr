@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a button that can be pressed to color all graphs based on the expression of some gene.
+/// Represents a button that can be pressed to color all graphs based on the expression of some gene.
 /// </summary>
 public class ColorByGeneButton : SolidButton
 {

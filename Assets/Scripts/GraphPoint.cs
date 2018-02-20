@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents a graphpoint, the spheres that make up the graphs.
+/// Represents a graphpoint, the spheres that make up the graphs.
 /// </summary>
 public class GraphPoint : MonoBehaviour
 {

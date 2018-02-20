@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-/// <summary>
-/// This class represents the button that toggles the magnifier tool.
+﻿/// <summary>
+/// Represents the button that toggles the magnifier tool.
 /// </summary>
 class MagnifierToolButton : StationaryButton
 {

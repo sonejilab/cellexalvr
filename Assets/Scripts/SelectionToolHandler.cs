@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -7,7 +6,7 @@ using UnityEngine;
 using VRTK;
 
 /// <summary>
-/// This class represents the selection tool that can be used to select multiple GraphPoints.
+/// Represents the selection tool that can be used to select multiple GraphPoints.
 /// </summary>
 public class SelectionToolHandler : MonoBehaviour
 {

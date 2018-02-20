@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Represents a line between two graphpoints and moves the line accordingly when the graphpoints move.
+/// </summary>
 class LineBetweenTwoPoints : MonoBehaviour
 {
 

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Represents the button that opens the menu for coloring graphs based on a previous selection.
+/// </summary>
 class CreateSelectionFromPreviousMenuButton : StationaryButton
 {
     public GameObject menu;

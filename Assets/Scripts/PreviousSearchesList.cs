@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the list of the 10 previous searches of genes.
+/// Represents the list of the 10 previous searches of genes.
 /// </summary>
 public class PreviousSearchesList : MonoBehaviour
 {

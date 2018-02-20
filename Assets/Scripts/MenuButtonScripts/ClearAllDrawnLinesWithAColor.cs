@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Represents the button that clears all lines drawn with a certain color with the draw tool.
+/// </summary>
 public class ClearAllDrawnLinesWithAColor : StationaryButton
 {
     protected override string Description

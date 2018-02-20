@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
 
+/// <summary>
+/// Represents the button that saves the current scene.
+/// </summary>
 public class SaveButton : StationaryButton
 {
 

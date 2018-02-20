@@ -3,7 +3,7 @@ using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
 
 /// <summary>
-/// This class represents a manager that holds all graphs.
+/// Represents a manager that holds all graphs.
 /// </summary>
 public class GraphManager : MonoBehaviour
 

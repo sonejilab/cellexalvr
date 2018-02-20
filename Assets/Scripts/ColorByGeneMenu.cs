@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the sub menu that pops up when the <see cref="ColorByGeneMenuButton"/> is pressed.
+/// Represents the sub menu that pops up when the <see cref="ColorByGeneMenuButton"/> is pressed.
 /// </summary>
 public class ColorByGeneMenu : MonoBehaviour
 {

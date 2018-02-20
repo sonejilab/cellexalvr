@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the button that toggles the help tool.
+/// Represents the button that toggles the help tool.
 /// </summary>
 public class HelpToolButton : StationaryButton
 {

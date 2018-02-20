@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-
+/// <summary>
+/// Represents the button that toggles the screenshot tool.
+/// </summary>
 public class ScreenshotButton : StationaryButton
 {
 

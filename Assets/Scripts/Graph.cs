@@ -6,7 +6,7 @@ using UnityEngine;
 using VRTK;
 
 /// <summary>
-/// This class represents a graph consisting of multiple GraphPoints.
+/// Represents a graph consisting of multiple GraphPoints.
 /// </summary>
 public class Graph : MonoBehaviour
 {

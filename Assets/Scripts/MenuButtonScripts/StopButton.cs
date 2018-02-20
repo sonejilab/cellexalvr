@@ -1,4 +1,8 @@
-﻿class StopButton : StationaryButton
+﻿/// <summary>
+/// Represents the button that stops the flashing genes.
+/// </summary>
+
+class StopButton : StationaryButton
 {
     public CellManager.FlashGenesMode switchToMode;
     public StationaryButton random;

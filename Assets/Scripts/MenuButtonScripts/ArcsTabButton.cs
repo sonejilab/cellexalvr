@@ -1,4 +1,6 @@
-﻿
+﻿/// <summary>
+/// Represents the button that chooses a network on the toggle arcs menu.
+/// </summary>
 public class ArcsTabButton : TabButton
 {
     [UnityEngine.HideInInspector]

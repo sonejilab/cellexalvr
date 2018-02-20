@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This class holds the logic for toggling the menu.
+/// Holds the logic for toggling the menu.
 /// </summary>
 public class MenuToggler : MonoBehaviour
 {

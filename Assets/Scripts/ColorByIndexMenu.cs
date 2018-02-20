@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the sub menu that pops up when the ColorByIndexButton is pressed.
+/// Represents the sub menu that pops up when the <see cref="ColorByIndexButton"/> is pressed.
 /// </summary>
 public class ColorByIndexMenu : MonoBehaviour
 {

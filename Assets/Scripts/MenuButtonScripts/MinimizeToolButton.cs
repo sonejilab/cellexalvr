@@ -1,7 +1,5 @@
-﻿using UnityEngine;
-
-/// <summary>
-/// This class represents the buttont that minimizes things
+﻿/// <summary>
+/// Represents the buttont that minimizes things
 /// </summary>
 
 class MinimizeToolButton : StationaryButton

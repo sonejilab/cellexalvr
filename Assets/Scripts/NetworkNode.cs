@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 
 /// <summary>
-/// This class represents one node in a network, it handles the coloring of the connections and part of the network creation process,
+/// Represents one node in a network, it handles the coloring of the connections and part of the network creation process,
 /// </summary>
 public class NetworkNode : MonoBehaviour
 {

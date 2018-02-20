@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// this class represents a button that closes a menu that is opened on top of the main menu.
+/// Represents a button that closes a menu that is opened on top of the main menu.
 /// </summary>
 public class CloseMenuButton : StationaryButton
 {

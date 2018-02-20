@@ -472,7 +472,7 @@ public class Heatmap : MonoBehaviour
             }
             if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
-                // if the raycaste leaves the heatmap and the user lets go of the trigger
+                // if the raycast leaves the heatmap and the user lets go of the trigger
                 selecting = false;
                 movingSelection = false;
             }
@@ -808,9 +808,6 @@ public class Heatmap : MonoBehaviour
             Array.Copy(cells, otherPartStartIndex, cells, otherPartIndexToMoveTo, numberOfcellsInOtherPart);
             // move the cells from the temporary array to their new location
             Array.Copy(cellsToMove, 0, cells, cellsStartIndexToMoveTo, totalNbrOfCells);
-            //List<Tuple<string, int>> tempCells = new List<Tuple<string, int>>(totalNbrOfCells);
-            //tempCells.AddRange(cells.GetRange(cellsStartIndex, totalNbrOfCells));
-            //cells.RemoveRange(cellsStartIndex, totalNbrOfCells);
             recalculate = true;
         }
 

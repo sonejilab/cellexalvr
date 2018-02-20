@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 
 /// <summary>
-/// This static class represents the config file and its contents.
+/// Static class that represents the config file and its contents.
 /// </summary>
 public static class CellExAlConfig
 {

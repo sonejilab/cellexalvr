@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Rotates the panels that are shown beside each graph when the help tool is activated.
+/// </summary>
 public class GraphInfoPanelRotator : MonoBehaviour
 {
 

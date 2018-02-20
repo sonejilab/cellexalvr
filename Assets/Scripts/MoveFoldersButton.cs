@@ -2,14 +2,16 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the button that moves the folders when a controller is moved inside of it.
+/// Represents the button that moves the folders when a controller is moved inside of it.
 /// </summary>
-public class MoveFoldersUpButton : MonoBehaviour
+public class MoveFoldersButton : MonoBehaviour
 {
     public Transform folderList;
     public int moveTime;
-    public float[] dY;
+    public enum Direction { Up, Down };
+    public Direction direction;
 
+    private float[] dY;
     private Vector3 moveDistanceWhenPressed = new Vector3(0f, -0.3f, 0f);
     private Vector3 colliderMoveDistanceWhenPressed = new Vector3(0f, 0f, 0.3f);
     private BoxCollider boxCollider;
@@ -28,10 +30,11 @@ public class MoveFoldersUpButton : MonoBehaviour
         // calculate how much it the folders should move every frame once
         dY = new float[moveTime];
         var total = 0f;
+        int dir = direction == Direction.Up ? 1 : -1;
         for (int i = 0; i < moveTime; ++i)
         {
-            dY[i] = Mathf.Sin(Mathf.PI * ((float)i / moveTime));
-            total += dY[i];
+            dY[i] = Mathf.Sin(Mathf.PI * ((float)i / moveTime)) * dir;
+            total += Mathf.Abs(dY[i]);
         }
         for (int i = 0; i < moveTime; ++i)
         {

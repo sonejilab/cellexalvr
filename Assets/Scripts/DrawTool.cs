@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the draw tool. It is used to draw lines in the virtual environment.
+/// Represents the draw tool. It is used to draw lines in the virtual environment.
 /// </summary>
 public class DrawTool : MonoBehaviour
 {

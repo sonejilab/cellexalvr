@@ -1,5 +1,5 @@
 ﻿/// <summary>
-/// This class represents the button that toggles all graphpoints that have an expression == 0
+/// Represents the button that toggles all graphpoints that have an expression equal to zero
 /// </summary>
 public class RemoveNonExpressedCellsButton : StationaryButton
 {

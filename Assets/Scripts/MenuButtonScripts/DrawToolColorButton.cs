@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Represents the buttons that make up the color wheel for choosing the draw tool's color.
+/// </summary>
 public class DrawToolColorButton : StationaryButton
 {
     protected override string Description

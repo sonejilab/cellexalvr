@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the individual tabs that make up the menu for cnotroling the flashing genes.
+/// Represents the individual tabs that make up the menu for cnotroling the flashing genes.
 /// </summary>
 public class FlashGenesTab : Tab
 {

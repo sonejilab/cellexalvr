@@ -2,7 +2,7 @@
 using System;
 
 /// <summary>
-/// This class represents one node in the list of the 10 previous searches.
+/// Represents one node in the list of the 10 previous searches.
 /// </summary>
 public class PreviousSearchesListNode : MonoBehaviour
 {

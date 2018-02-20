@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 /// <summary>
-/// This class is repsonsible for turning on and off the laser pointers.
+/// Represents the button for turning on and off the laser pointers.
 /// </summary>
 public class LasersButton : StationaryButton
 {

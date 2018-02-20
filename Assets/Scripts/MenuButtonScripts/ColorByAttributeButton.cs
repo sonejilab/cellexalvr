@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a button that colors all graphs according to an attribute.
+/// Represents a button that colors all graphs according to an attribute.
 /// </summary>
 public class ColorByAttributeButton : SolidButton
 {

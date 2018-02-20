@@ -1,9 +1,8 @@
 using UnityEngine;
 using VRTK;
-using System.Collections;
 
 /// <summary>
-/// This class is responsible for changing the controller model and the activated tool.
+/// Responsible for changing the controller model and the activated tool.
 /// </summary>
 public class ControllerModelSwitcher : MonoBehaviour
 {

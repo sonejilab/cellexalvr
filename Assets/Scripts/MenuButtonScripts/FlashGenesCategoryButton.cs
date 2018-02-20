@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 /// <summary>
-/// This class represents the buttons that toggles individual categories on or off when flashing genes.
+/// Represents the buttons that toggles individual categories on or off when flashing genes.
 /// </summary>
 public class FlashGenesCategoryButton : SolidButton
 {
