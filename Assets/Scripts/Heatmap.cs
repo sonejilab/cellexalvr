@@ -38,10 +38,7 @@ public class Heatmap : MonoBehaviour
 
     private Bitmap bitmap;
     private System.Drawing.Graphics graphics;
-    /// <summary>
-    /// Item1: cell name, Item2: group
-    /// </summary>
-    private List<Tuple<string, int>> cells;
+    private string[] cells;
     /// <summary>
     /// Item1: group number, Item2: group width in coordinates, Item3: number of cells in the group
     /// </summary>
@@ -64,7 +61,7 @@ public class Heatmap : MonoBehaviour
     private System.Drawing.Font geneFont;
     private int numberOfExpressionColors;
     private SolidBrush[] heatmapBrushes;
-    private Texture2D tex;
+    private bool buildingTexture = false;
 
     private int selectionStartX;
     private int selectionStartY;
@@ -116,21 +113,27 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     public void BuildTexture()
     {
+        if (buildingTexture)
+        {
+            CellExAlLog.Log("WARNING: Not building heatmap texture because it is already building");
+            return;
+        }
         gameObject.SetActive(true);
         GetComponent<Collider>().enabled = false;
 
         List<GraphPoint> selection = referenceManager.selectionToolHandler.GetLastSelection();
         // item1 is the cell name, item2 is the group
-        cells = new List<Tuple<string, int>>();
+        cells = new string[selection.Count];
         groupWidths = new List<Tuple<int, float, int>>();
         float cellWidth = (float)heatmapWidth / selection.Count;
         int lastGroup = -1;
         int width = 0;
         // read the cells and their groups
-        foreach (GraphPoint graphpoint in selection)
+        for (int i = 0; i < selection.Count; ++i)
         {
+            GraphPoint graphpoint = selection[i];
             int group = graphpoint.CurrentGroup;
-            cells.Add(new Tuple<string, int>(graphpoint.Label, group));
+            cells[i] = graphpoint.Label;
             if (lastGroup == -1)
             {
                 lastGroup = group;
@@ -163,6 +166,11 @@ public class Heatmap : MonoBehaviour
 
     private void BuildTexture(List<Tuple<int, float, int>> groupWidths)
     {
+        if (buildingTexture)
+        {
+            CellExAlLog.Log("WARNING: Not building heatmap texture because it is already building");
+            return;
+        }
         GetComponent<Collider>().enabled = false;
         // merge groups
         for (int i = 0; i < groupWidths.Count - 1; ++i)
@@ -181,8 +189,19 @@ public class Heatmap : MonoBehaviour
         StartCoroutine(BuildTextureCoroutine(groupWidths));
     }
 
-    private void BuildTexture(List<Tuple<string, int>> newCells, string[] newGenes, List<Tuple<int, float, int>> newGroupWidths)
+    /// <summary>
+    /// Builds this heatmaps texture using the supplied cells and genes.
+    /// </summary>
+    /// <param name="newCells">The cells that the heatmap should contain.</param>
+    /// <param name="newGenes">The genes that the heatmap should contain.</param>
+    /// <param name="newGroupWidths">The grouping information.</param>
+    private void BuildTexture(string[] newCells, string[] newGenes, List<Tuple<int, float, int>> newGroupWidths)
     {
+        if (buildingTexture)
+        {
+            CellExAlLog.Log("WARNING: Not building heatmap texture because it is already building");
+            return;
+        }
         cells = newCells;
         genes = newGenes;
         groupWidths = newGroupWidths;
@@ -191,6 +210,7 @@ public class Heatmap : MonoBehaviour
 
     private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths)
     {
+        buildingTexture = true;
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         CellExAlLog.Log("Started building a heatmap texture");
@@ -212,7 +232,7 @@ public class Heatmap : MonoBehaviour
 
         float xcoord = heatmapX;
         float ycoord = heatmapY;
-        float xcoordInc = (float)heatmapWidth / cells.Count;
+        float xcoordInc = (float)heatmapWidth / cells.Length;
         float ycoordInc = (float)heatmapHeight / genes.Length;
         // draw the grouping bar
         for (int i = 0; i < groupWidths.Count; ++i)
@@ -224,9 +244,10 @@ public class Heatmap : MonoBehaviour
         }
         xcoord = heatmapX;
 
-        // draw the new heatmap box text
-        graphics.DrawString("Drop a selection\nhere to create\na new heatmap", geneFont, SystemBrushes.MenuText, newHeatmapBoxX, newHeatmapBoxY);
-
+        while (database.QueryRunning)
+        {
+            yield return null;
+        }
         database.QueryGenesIds(genes);
         while (database.QueryRunning)
         {
@@ -248,16 +269,17 @@ public class Heatmap : MonoBehaviour
             genePositions[genes[i]] = i;
         }
 
-        Dictionary<string, int> cellsPosition = new Dictionary<string, int>(cells.Count);
+        Dictionary<string, int> cellsPosition = new Dictionary<string, int>(cells.Length);
 
-        string[] cellsArray = new string[cells.Count];
-        for (int i = 0; i < cells.Count; ++i)
+        for (int i = 0; i < cells.Length; ++i)
         {
-            cellsPosition[cells[i].Item1] = i;
-            cellsArray[i] = cells[i].Item1;
+            cellsPosition[cells[i]] = i;
         }
-
-        database.QueryGenesInCells(genes, cellsArray);
+        while (database.QueryRunning)
+        {
+            yield return null;
+        }
+        database.QueryGenesInCells(genes, cells);
         while (database.QueryRunning)
         {
             yield return null;
@@ -333,6 +355,7 @@ public class Heatmap : MonoBehaviour
 
         stopwatch.Stop();
         CellExAlLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
+        buildingTexture = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -425,6 +448,7 @@ public class Heatmap : MonoBehaviour
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
                     {
                         // called when letting go of the trigger to move the selection
+                        movingSelection = false;
                         MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
                     }
                     else
@@ -448,7 +472,7 @@ public class Heatmap : MonoBehaviour
             }
             if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
-
+                // if the raycaste leaves the heatmap and the user lets go of the trigger
                 selecting = false;
                 movingSelection = false;
             }
@@ -739,9 +763,9 @@ public class Heatmap : MonoBehaviour
                 groupIndexToMoveTo++;
             }
 
-            List<Tuple<int, float, int>> temp = new List<Tuple<int, float, int>>(nbrOfGroups);
+            List<Tuple<int, float, int>> groupWidthsToMove = new List<Tuple<int, float, int>>(nbrOfGroups);
             // add the groups we are moving to a temporary list
-            temp.AddRange(groupWidths.GetRange(selectedGroupLeft, nbrOfGroups));
+            groupWidthsToMove.AddRange(groupWidths.GetRange(selectedGroupLeft, nbrOfGroups));
             // we have to do this for both the groups and the cells
             // figure out the index that the first group is on in the cells list
             int cellsStartIndex = 0;
@@ -756,23 +780,37 @@ public class Heatmap : MonoBehaviour
             }
             // figure out how many cells the groups cover in total
             int totalNbrOfCells = 0;
-            foreach (Tuple<int, float, int> t in temp)
+            foreach (Tuple<int, float, int> t in groupWidthsToMove)
             {
                 totalNbrOfCells += t.Item3;
             }
-            List<Tuple<string, int>> tempCells = new List<Tuple<string, int>>(totalNbrOfCells);
-            tempCells.AddRange(cells.GetRange(cellsStartIndex, totalNbrOfCells));
-            groupWidths.RemoveRange(selectedGroupLeft, nbrOfGroups);
-            cells.RemoveRange(cellsStartIndex, totalNbrOfCells);
             // the correct index to move the groups to will have changed if the groups are moved to higher indices
             if (groupIndexToMoveTo > selectedGroupRight)
             {
                 groupIndexToMoveTo -= nbrOfGroups;
                 cellsStartIndexToMoveTo -= totalNbrOfCells;
             }
-            // insert them back in on the correct index
-            cells.InsertRange(cellsStartIndexToMoveTo, tempCells);
-            groupWidths.InsertRange(groupIndexToMoveTo, temp);
+            groupWidths.RemoveRange(selectedGroupLeft, nbrOfGroups);
+            groupWidths.InsertRange(groupIndexToMoveTo, groupWidthsToMove);
+
+            // here we need swap some stuff around in the cells array
+            // figure out the index of the other part of the array that we need to move
+            int otherPartStartIndex = cellsStartIndex < cellsStartIndexToMoveTo ? cellsStartIndex + totalNbrOfCells : cellsStartIndexToMoveTo;
+            // figure out how many cells are inbetween the indeces. this is the same number of cells that the other part contains
+            int numberOfcellsInOtherPart = Math.Abs(cellsStartIndex - cellsStartIndexToMoveTo);
+            // figure out the index that the other part is moving to
+            int otherPartIndexToMoveTo = cellsStartIndex < cellsStartIndexToMoveTo ? cellsStartIndex : cellsStartIndex + totalNbrOfCells;
+            // temporary array with the cells we should move
+            string[] cellsToMove = new string[totalNbrOfCells];
+            // move the cells into the temporary array
+            Array.Copy(cells, cellsStartIndex, cellsToMove, 0, totalNbrOfCells);
+            // move the part we are swapping with to its new location
+            Array.Copy(cells, otherPartStartIndex, cells, otherPartIndexToMoveTo, numberOfcellsInOtherPart);
+            // move the cells from the temporary array to their new location
+            Array.Copy(cellsToMove, 0, cells, cellsStartIndexToMoveTo, totalNbrOfCells);
+            //List<Tuple<string, int>> tempCells = new List<Tuple<string, int>>(totalNbrOfCells);
+            //tempCells.AddRange(cells.GetRange(cellsStartIndex, totalNbrOfCells));
+            //cells.RemoveRange(cellsStartIndex, totalNbrOfCells);
             recalculate = true;
         }
 
@@ -806,37 +844,34 @@ public class Heatmap : MonoBehaviour
         ResetSelection();
     }
 
-    private void HandleHitNewHeatmapBox()
-    {
-        float highlightMarkerX = newHeatmapBoxX / bitmapWidth - 0.5f;
-        float highlightMarkerY = newHeatmapBoxY / bitmapHeight + 0.5f;
-        float highlightMarkerWidth = newHeatmapBoxWidth / (bitmapWidth * 2f);
-        float highlightMarkerHeight = newHeatmapBoxHeight / (bitmapHeight * 2f);
-
-        highlightQuad.transform.position = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
-        highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
-        highlightQuad.SetActive(true);
-    }
-
+    /// <summary>
+    /// Creates a new heatmap based on what was selected on this heatmap.
+    /// </summary>
     public void CreateNewHeatmapFromSelection()
     {
         // create a copy of this
         GameObject newHeatmap = Instantiate(gameObject);
-        //newHeatmap.transform.parent = null;
         Heatmap heatmap = newHeatmap.GetComponent<Heatmap>();
+        heatmap.transform.Translate(0.1f, 0.1f, 0.1f, Space.Self);
+
         // find out which indices the cells start and end at
-        List<Tuple<string, int>> newCells = new List<Tuple<string, int>>();
         int cellsIndexStart = 0;
         for (int i = 0; i < selectedGroupLeft; ++i)
         {
             cellsIndexStart += groupWidths[i].Item3;
         }
+
         int numberOfCells = 0;
         for (int i = selectedGroupLeft; i <= selectedGroupRight; ++i)
         {
             numberOfCells += groupWidths[i].Item3;
         }
-        newCells.AddRange(cells.GetRange(cellsIndexStart, numberOfCells));
+
+        string[] newCells = new string[numberOfCells];
+        for (int i = 0, j = cellsIndexStart; i < numberOfCells; ++i, ++j)
+        {
+            newCells[i] = cells[j];
+        }
 
         string[] newGenes = new string[selectedGeneBottom - selectedGeneTop + 1];
         for (int i = selectedGeneTop, j = 0; i <= selectedGeneBottom; ++i, ++j)
@@ -846,7 +881,7 @@ public class Heatmap : MonoBehaviour
 
         // rebuild the groupwidth list with the new widths.
         List<Tuple<int, float, int>> newGroupWidths = new List<Tuple<int, float, int>>();
-        float newXCoordInc = (float)heatmapWidth / newCells.Count;
+        float newXCoordInc = (float)heatmapWidth / newCells.Length;
         for (int i = selectedGroupLeft; i <= selectedGroupRight; ++i)
         {
             Tuple<int, float, int> old = groupWidths[i];
@@ -931,10 +966,14 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     public void ColorCells()
     {
-        // print("color cells");
-        foreach (Tuple<string, int> t in cells)
+        for (int i = 0, cellIndex = 0; i < groupWidths.Count; ++i)
         {
-            cellManager.GetCell(t.Item1).SetGroup(t.Item2);
+            int group = groupWidths[i].Item1;
+            int numberOfCellsInGroup = groupWidths[i].Item3;
+            for (int j = 0; j < numberOfCellsInGroup; ++j, ++cellIndex)
+            {
+                cellManager.GetCell(cells[cellIndex]).SetGroup(group);
+            }
         }
     }
 
