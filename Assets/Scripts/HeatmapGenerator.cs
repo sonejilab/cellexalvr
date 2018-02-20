@@ -30,6 +30,8 @@ public class HeatmapGenerator : MonoBehaviour
     private int heatmapID = 1;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
+    private UnityEngine.Color HighlightMarkerColor;
+    private UnityEngine.Color ConfirmMarkerColor;
 
     void Awake()
     {
@@ -93,6 +95,8 @@ public class HeatmapGenerator : MonoBehaviour
             if (b < 0) b = 0;
             expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
         }
+        HighlightMarkerColor = CellExAlConfig.HeatmapHighlightMarkerColor;
+        ConfirmMarkerColor = CellExAlConfig.HeatmapConfirmMarkerColor;
     }
 
 
@@ -198,9 +202,11 @@ public class HeatmapGenerator : MonoBehaviour
             if (!referenceManager.networkGenerator.GeneratingNetworks)
                 calculatorCluster.SetActive(false);
 
-            heatmap.UpdateImage(newHeatmapFilePath);
+            //heatmap.UpdateImage(newHeatmapFilePath);
             heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName;
+            heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
+            heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
             heatmapID++;
         }
     }

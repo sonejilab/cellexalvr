@@ -24,6 +24,8 @@ public static class CellExAlConfig
     public static Color HeatmapLowExpressionColor { get; set; }
     public static Color HeatmapMidExpressionColor { get; set; }
     public static Color HeatmapHighExpressionColor { get; set; }
+    public static Color HeatmapHighlightMarkerColor { get; set; }
+    public static Color HeatmapConfirmMarkerColor { get; set; }
 }
 
 /// <summary>

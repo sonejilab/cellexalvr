@@ -47,7 +47,6 @@ public class ReferenceManager : MonoBehaviour
     public AttributeSubMenu attributeSubMenu;
     public ColorByIndexMenu indexMenu;
     public CreateSelectionFromPreviousSelectionMenu createSelectionFromPreviousSelectionMenu;
-    public SelectionToolMenu selectionToolMenu;
     public ColorByGeneMenu colorByGeneMenu;
     public TextMesh currentFlashedGeneText;
     public ButtonsHandler undoButtonsHandler;
@@ -58,7 +57,7 @@ public class ReferenceManager : MonoBehaviour
     public TextMesh frontDescription;
     public TextMesh rightDescription;
     public TextMesh backDescription;
-    public TextMesh leftDescription;
+    public TextMesh leftDescription;  
     public MenuRotator menuRotator;
     public MinimizedObjectHandler minimizedObjectHandler;
     public MenuToggler menuToggler;

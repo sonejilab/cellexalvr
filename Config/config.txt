@@ -90,3 +90,9 @@ NumberOfHeatmapColors = 30
 HeatmapLowExpressionColor = #0000FF
 HeatmapMidExpressionColor = #FFFF00
 HeatmapHighExpressionColor = #FF0000
+
+# If you change the colors above, the rectangles showing selections on the heatmap might become hard to see
+# The color used by the rectangle that show what you are pointing the laser at, and that show what you are selecting (before releasing the trigger)
+HeatmapHighlighMarkerColor = #FFFFFFC0
+# The color used by the rectangle that show what you have selected (after releasing the trigger)
+HeatmapConfirmMarkerColor = #00FF37C0
