@@ -13,7 +13,6 @@ using System.Threading;
 /// </summary>
 public class Heatmap : MonoBehaviour
 {
-    // TODO CELLEXAL: make a single gene box plot (out of an existing heatmap?)
     public ReferenceManager referenceManager;
     public Texture texture;
     public TextMesh infoText;
@@ -29,7 +28,6 @@ public class Heatmap : MonoBehaviour
     private GameObject fire;
     private SteamVR_TrackedObject rightController;
     private Transform raycastingSource;
-    private string imageFilepath;
     public string HeatmapName;
     private GameManager gameManager;
     private TextMesh highlightInfoText;
@@ -37,7 +35,6 @@ public class Heatmap : MonoBehaviour
     private HeatmapGenerator heatmapGenerator;
 
     private Bitmap bitmap;
-    private System.Drawing.Graphics graphics;
     private string[] cells;
     /// <summary>
     /// Item1: group number, Item2: group width in coordinates, Item3: number of cells in the group
@@ -54,10 +51,6 @@ public class Heatmap : MonoBehaviour
     private int geneListWidth = 250;
     private int groupBarY = 100;
     private int groupBarHeight = 100;
-    private int newHeatmapBoxX = 0;
-    private int newHeatmapBoxY = 0;
-    private int newHeatmapBoxWidth = 150;
-    private int newHeatmapBoxHeight = 150;
     private System.Drawing.Font geneFont;
     private int numberOfExpressionColors;
     private SolidBrush[] heatmapBrushes;
@@ -103,7 +96,6 @@ public class Heatmap : MonoBehaviour
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
         numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
-        graphManager = referenceManager.graphManager;
         heatmapGenerator = referenceManager.heatmapGenerator;
 
     }
@@ -111,7 +103,9 @@ public class Heatmap : MonoBehaviour
     /// <summary>
     /// Builds the heatmap texture.
     /// </summary>
-    public void BuildTexture()
+    /// <param name="selection">An array containing the <see cref="GraphPoint"/> that are in the heatmap</param>
+    /// <param name="filepath">A path to the file containing the gene names</param>
+    public void BuildTexture(List<GraphPoint> selection, string filepath)
     {
         if (buildingTexture)
         {
@@ -121,8 +115,6 @@ public class Heatmap : MonoBehaviour
         gameObject.SetActive(true);
         GetComponent<Collider>().enabled = false;
 
-        List<GraphPoint> selection = referenceManager.selectionToolHandler.GetLastSelection();
-        // item1 is the cell name, item2 is the group
         cells = new string[selection.Count];
         groupWidths = new List<Tuple<int, float, int>>();
         float cellWidth = (float)heatmapWidth / selection.Count;
@@ -152,14 +144,16 @@ public class Heatmap : MonoBehaviour
         groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, width));
         if (genes == null || genes.Length == 0)
         {
-            StreamReader streamReader = new StreamReader(Directory.GetCurrentDirectory() + "\\test_genes.txt");
-            List<string> tempGenes = new List<string>();
+            StreamReader streamReader = new StreamReader(filepath);
+            int numberOfGenes = int.Parse(streamReader.ReadLine());
+            genes = new string[numberOfGenes];
+            int i = 0;
             while (!streamReader.EndOfStream)
             {
-                tempGenes.Add(streamReader.ReadLine());
+                genes[i] = streamReader.ReadLine();
+                i++;
             }
             streamReader.Close();
-            genes = tempGenes.ToArray();
         }
         StartCoroutine(BuildTextureCoroutine(groupWidths));
     }
@@ -217,9 +211,8 @@ public class Heatmap : MonoBehaviour
 
         SQLiter.SQLite database = referenceManager.database;
         bitmap = new Bitmap(bitmapWidth, bitmapHeight);
-        graphics = System.Drawing.Graphics.FromImage(bitmap);
+        System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
 
-        GraphManager graphManager = referenceManager.graphManager;
         // get the grouping colors
         SolidBrush[] groupBrushes = new SolidBrush[graphManager.SelectedMaterials.Length];
         for (int i = 0; i < graphManager.SelectedMaterials.Length; ++i)
@@ -916,7 +909,6 @@ public class Heatmap : MonoBehaviour
     [Obsolete("Use BuildTexture")]
     public void UpdateImage(string filepath)
     {
-        imageFilepath = filepath;
         byte[] fileData = File.ReadAllBytes(filepath);
         Texture2D tex = new Texture2D(2, 2);
         tex.LoadImage(fileData);

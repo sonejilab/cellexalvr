@@ -26,6 +26,7 @@ public static class CellExAlConfig
     public static Color HeatmapHighExpressionColor { get; set; }
     public static Color HeatmapHighlightMarkerColor { get; set; }
     public static Color HeatmapConfirmMarkerColor { get; set; }
+    public static int HeatmapNumberOfGenes { get; set; }
 }
 
 /// <summary>
@@ -46,6 +47,7 @@ public class ConfigManager : MonoBehaviour
         sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.txt";
         ReadConfigFile();
 
+        // set up a filesystemwatcher that notifies us if the file is changed and we should reload it
         FileSystemWatcher watcher = new FileSystemWatcher(configDir);
         watcher.NotifyFilter = NotifyFilters.LastWrite;
         watcher.Filter = "config.txt";
@@ -238,6 +240,9 @@ public class ConfigManager : MonoBehaviour
                     break;
                 case "HeatmapHighExpressionColor":
                     CellExAlConfig.HeatmapHighExpressionColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapNumberOfGenes":
+                    CellExAlConfig.HeatmapNumberOfGenes = int.Parse(value);
                     break;
 
                 default:

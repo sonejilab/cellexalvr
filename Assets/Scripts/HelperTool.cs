@@ -22,8 +22,6 @@ public class HelperTool : MonoBehaviour
     public GameObject otherControllerHelpTool;
     public HelperToolActivator helpToolActivator;
 
-    private GraphManager graphManager;
-    private SteamVR_TrackedObject rightController;
     private string standardText = "Point the laser towards something to find out more";
     private string descriptionFilePath;
     private Dictionary<string, string> descriptions = new Dictionary<string, string>();
@@ -35,9 +33,7 @@ public class HelperTool : MonoBehaviour
     private Transform savedCustomOrigin = null;
     private float timeLastHit;
     private bool activated;
-
-    private List<GameObject> graphInfoPanels = new List<GameObject>();
-    public List<GameObject> GraphInfoPanels { get { return graphInfoPanels; } }
+    public List<GameObject> GraphInfoPanels { get; } = new List<GameObject>();
 
     private void Start()
     {
@@ -47,8 +43,6 @@ public class HelperTool : MonoBehaviour
         helpMenu.SetActive(false);
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);
-        rightController = referenceManager.rightController;
-        graphManager = referenceManager.graphManager;
         SetToolActivated(false);
         CellExAlEvents.GraphsUnloaded.AddListener(ClearGraphInfoPanels);
     }
@@ -116,7 +110,7 @@ public class HelperTool : MonoBehaviour
 
     private void ClearGraphInfoPanels()
     {
-        graphInfoPanels.Clear();
+        GraphInfoPanels.Clear();
     }
 
     /// <summary>

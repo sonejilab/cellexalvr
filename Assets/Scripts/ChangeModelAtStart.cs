@@ -18,7 +18,7 @@ class ChangeModelAtStart : MonoBehaviour
     {
         while (!modelSwitcher.Ready())
             yield return null;
-        modelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
+        modelSwitcher.SetMeshes();
     }
 }
 

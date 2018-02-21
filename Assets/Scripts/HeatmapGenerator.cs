@@ -142,11 +142,6 @@ public class HeatmapGenerator : MonoBehaviour
             GeneratingHeatmaps = true;
             // make a deep copy of the arraylist
             List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
-            Dictionary<Cell, int> colors = new Dictionary<Cell, int>();
-            foreach (GraphPoint g in selection)
-            {
-                colors[g.Cell] = g.CurrentGroup;
-            }
 
             // Check if more than one cell is selected
             if (selection.Count < 1)
@@ -161,10 +156,11 @@ public class HeatmapGenerator : MonoBehaviour
             // Start generation of new heatmap in R
             string home = Directory.GetCurrentDirectory();
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
-            string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr + " " + CellExAlUser.UserSpecificFolder;
 
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
-            string heatmapDirectory = home + @"\Images";
+            string heatmapDirectory = home + @"\Resources";
+            string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
+            string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr + " " + outputFilePath + " " + CellExAlConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(heatmapDirectory));
@@ -174,9 +170,9 @@ public class HeatmapGenerator : MonoBehaviour
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
             // Show calculators
             calculatorCluster.SetActive(true);
+            t.Start();
 
             while (t.IsAlive)
             {
@@ -188,7 +184,6 @@ public class HeatmapGenerator : MonoBehaviour
             statusDisplayHUD.RemoveStatus(statusIdHUD);
             statusDisplayFar.RemoveStatus(statusIdFar);
             GeneratingHeatmaps = false;
-            string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
 
@@ -196,13 +191,14 @@ public class HeatmapGenerator : MonoBehaviour
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
             // save colors before.
-            heatmap.SetVars(colors);
+            //heatmap.SetVars(colors);
             heatmapList.Add(heatmap);
 
             if (!referenceManager.networkGenerator.GeneratingNetworks)
                 calculatorCluster.SetActive(false);
 
             //heatmap.UpdateImage(newHeatmapFilePath);
+            heatmap.BuildTexture(selection, outputFilePath);
             heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
