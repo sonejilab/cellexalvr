@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the menu that controls the flashing genes.
+/// Represents the menu that controls the flashing genes.
 /// </summary>
 public class FlashGenesMenu : MenuWithTabs
 {

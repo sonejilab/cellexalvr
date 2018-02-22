@@ -67,6 +67,7 @@ namespace SQLiter
         private IDbConnection _connection = null;
         private IDbCommand _command = null;
         private IDataReader _reader = null;
+
         private string _sqlString;
         [HideInInspector]
         public ArrayList _result = new ArrayList();
@@ -420,6 +421,192 @@ namespace SQLiter
             return (float)mean;
         }
 
+        /// <summary>
+        /// Queries the database for the expression of a gene in some cells.
+        /// </summary>
+        /// <param name="gene">The gene to query for.</param>
+        /// <param name="cells">The cells to query for.</param>
+        internal void QueryGenesInCells(string gene, string[] cells)
+        {
+            QueryRunning = true;
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < cells.Length; ++i)
+            {
+                string cell = cells[i];
+                builder.Append("\"").Append(cell).Append("\"");
+                if (i < cells.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string cellNames = builder.ToString();
+            StartCoroutine(QueryGenesInCellsCoroutine(gene, cellNames));
+        }
+
+        /// <summary>
+        /// Queries the database for the expression of a gene in some cells. This function assumes that the string <paramref name="cells"/> is already formatted the way sqlite wants.
+        /// </summary>
+        /// <param name="gene">The gene to query for.</param>
+        /// <param name="cells">The cells to query for. Cell names should be inside quotes (") and seperated with commas.</param>
+        /// <example>
+        /// QueryGenesInCells("Gata1", "\"HSPC_001\", \"HSPC_002\", \"HSPC_003\"");
+        /// </example>
+        internal void QueryGenesInCells(string gene, string cells)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGenesInCellsCoroutine(gene, cells));
+        }
+
+        private IEnumerator QueryGenesInCellsCoroutine(string gene, string cells)
+        {
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+
+            while (_reader.Read())
+            {
+                string cellName = _reader.GetString(0);
+                float expression = _reader.GetFloat(1);
+                _result.Add(new Tuple<string, float>(cellName, expression));
+            }
+            QueryRunning = false;
+        }
+
+        /// <summary>
+        /// Query the database for all expressions of multiple genes and multiple cells.
+        /// This method puts many <see cref="Tuple"/> with string and floats in the <see cref="ArrayList"/> _result.
+        /// The first <see cref="Tuple"/> is always a gene id and the highest expression of that gene. The next bunch of <see cref="Tuple"/>
+        /// are cell names and their respective expression of the gene in the previously mentioned Tuple.
+        /// Then another <see cref="Tuple"/> follows with the next gene id followed by cells and their expression and so on.
+        /// Not all cells are put in the ArrayList, only the ones that were found in the database. This means
+        /// that there is not the same amount of elements between each tuple which marks a new gene.
+        /// </summary>
+        /// <param name="genes">An array with the genes to query for.</param>
+        /// <param name="cells">An array with the cells to query for.</param>
+        internal void QueryGenesInCells(string[] genes, string[] cells)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGenesInCellsCoroutine(genes, cells));
+
+        }
+
+        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, string[] cells)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < cells.Length; ++i)
+            {
+                string cell = cells[i];
+                builder.Append("\"").Append(cell).Append("\"");
+                if (i < cells.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string cellNames = builder.ToString();
+
+            builder.Clear();
+            for (int i = 0; i < genes.Length; ++i)
+            {
+                string gene = genes[i];
+                builder.Append("\"").Append(gene).Append("\"");
+                if (i < genes.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string geneNames = builder.ToString();
+
+            string query = "select cname, gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNames + ") and gene_id in (select id from genes where gname in (" + geneNames + "))";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+            float highestExpression = 0;
+            string lastGeneId = "";
+            int highestGeneExpressionIndex = 0;
+            while (_reader.Read())
+            {
+                string cellName = _reader.GetString(0);
+                string geneId = _reader.GetInt32(1).ToString();
+                float expression = _reader.GetFloat(2);
+                if (geneId != lastGeneId)
+                {
+                    // reserve this space for later
+                    _result.Add(new Tuple<string, float>("", 0f));
+                    if (highestGeneExpressionIndex != -1)
+                    {
+                        // replace the last reserved space with the highest expression we found
+                        _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
+                    }
+                    highestGeneExpressionIndex = _result.Count - 1;
+                    highestExpression = 0f;
+                    lastGeneId = geneId;
+                }
+                _result.Add(new Tuple<string, float>(cellName, expression));
+                if (expression > highestExpression)
+                {
+                    highestExpression = expression;
+                }
+            }
+            // replace the last value as well
+            _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
+            // the structure if _result is now a list with each gene's highest epxression followed by all the individual expressions
+            QueryRunning = false;
+        }
+
+        /// <summary>
+        /// Queries the databsae for the gene ids of multiple genes.
+        /// This method will put <see cref="Tuple"/> with gene names as string and gene ids as string in <see cref="_result"/>.
+        /// </summary>
+        /// <param name="genes">An arra with the gene names.</param>
+        internal void QueryGenesIds(string[] genes)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGeneIdsCoroutine(genes));
+
+        }
+
+        private IEnumerator QueryGeneIdsCoroutine(string[] genes)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < genes.Length; ++i)
+            {
+                string gene = genes[i];
+                builder.Append("\"").Append(gene).Append("\"");
+                if (i < genes.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string geneNames = builder.ToString();
+
+            string query = "select gname, id from genes where gname in (" + geneNames + ")";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+            while (_reader.Read())
+            {
+                string geneName = _reader.GetString(0);
+                string id = _reader.GetInt32(1).ToString();
+                _result.Add(new Tuple<string, string>(geneName, id));
+            }
+            QueryRunning = false;
+        }
         /// <summary>
         /// Queries the database for the expressions of a gene.
         /// </summary>

@@ -28,6 +28,7 @@ ExportedObj/
 *.booproj
 *.svd
 .collabignore
+*db.lock
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -43,3 +44,6 @@ sysinfo.txt
 Doxyfile
 Documentation.xml
 html.zip
+Example_HM_matrix.txt
+selection0.txt
+test_genes.txt

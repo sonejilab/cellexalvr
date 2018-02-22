@@ -1,30 +1,28 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-
+﻿
 public class StartMenuButton : StationaryButton
 {
-	public SceneLoader sceneLoader;
+    public SceneLoader sceneLoader;
 
-	protected override string Description
-	{
-		get
-		{
-			return "Back to Start Menu";
-		}
-	}
+    protected override string Description
+    {
+        get
+        {
+            return "Back to Start Menu";
+        }
+    }
 
 
 
-	void Update()
+    void Update()
     {
         if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-		{
-			sceneLoader.LoadScene ("SceneLoaderTest");
-		}
-	}
-	/*
+        {
+            sceneLoader.LoadScene("SceneLoaderTest");
+        }
+    }
+    /*
 	void Start()
 	{
 		device = SteamVR_Controller.Input((int)rightController.index);

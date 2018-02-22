@@ -2,7 +2,7 @@
 using VRTK;
 
 /// <summary>
-/// This class handles what happens when a network center is interacted with.
+/// Handles what happens when a network center is interacted with.
 /// </summary>
 class NetworkCenterInteract : VRTK_InteractableObject
 {

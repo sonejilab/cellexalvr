@@ -1,14 +1,10 @@
-﻿// Fixed Joint Grab Attach|GrabAttachMechanics|50040
-namespace VRTK.GrabAttachMechanics
+﻿namespace VRTK.GrabAttachMechanics
 {
     using UnityEngine;
 
     /// <summary>
-    /// The Fixed Joint Grab Attach script is used to create a simple Fixed Joint connection between the object and the grabbing object.
+    /// Lets a <see cref="VRTK_InteractableObject"/> be grabbed by its parent gameobject instead of this gameobject.
     /// </summary>
-    /// <example>
-    /// `VRTK/Examples/005_Controller_BasicObjectGrabbing` demonstrates this grab attach mechanic all of the grabbable objects in the scene.
-    /// </example>
     public class FixedParentJointGrabAttach : VRTK_BaseJointGrabAttach
     {
         [Tooltip("Maximum force the joint can withstand before breaking. Infinity means unbreakable.")]

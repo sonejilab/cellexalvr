@@ -104,9 +104,9 @@ namespace CapturePanorama
         {
             switch (format)
             {
-                case ImageFormat.PNG:  return DrawingImageFormat.Png;
+                case ImageFormat.PNG: return DrawingImageFormat.Png;
                 case ImageFormat.JPEG: return DrawingImageFormat.Jpeg;
-                case ImageFormat.BMP:  return DrawingImageFormat.Bmp;
+                case ImageFormat.BMP: return DrawingImageFormat.Bmp;
                 default: Debug.Assert(false); return DrawingImageFormat.Png;
             }
         }
@@ -115,9 +115,9 @@ namespace CapturePanorama
         {
             switch (format)
             {
-                case ImageFormat.PNG:  return "image/png";
+                case ImageFormat.PNG: return "image/png";
                 case ImageFormat.JPEG: return "image/jpeg";
-                case ImageFormat.BMP:  return "image/bmp";
+                case ImageFormat.BMP: return "image/bmp";
                 default: Debug.Assert(false); return "";
             }
         }
@@ -126,9 +126,9 @@ namespace CapturePanorama
         {
             switch (format)
             {
-                case ImageFormat.PNG:  return "png";
+                case ImageFormat.PNG: return "png";
                 case ImageFormat.JPEG: return "jpg";
-                case ImageFormat.BMP:  return "bmp";
+                case ImageFormat.BMP: return "bmp";
                 default: Debug.Assert(false); return "";
             }
         }
@@ -191,7 +191,7 @@ namespace CapturePanorama
                 Destroy(cubemapRenderTexture);
             cubemapRenderTexture = null;
 
-            convertPanoramaKernelIdx = renderStereoIdx = textureToBufferIdx  = -1;
+            convertPanoramaKernelIdx = renderStereoIdx = textureToBufferIdx = -1;
             convertPanoramaKernelIdxs = null;
 
             resultPixels = cameraPixels = null;
@@ -201,7 +201,8 @@ namespace CapturePanorama
             forceWaitTexture = new Texture2D(1, 1);
         }
 
-        void Reinitialize() {
+        void Reinitialize()
+        {
             try
             {
                 ReinitializeBody();
@@ -213,7 +214,8 @@ namespace CapturePanorama
             }
         }
 
-        void ReinitializeBody() {
+        void ReinitializeBody()
+        {
             Log("Settings changed, calling Reinitialize()");
 
             initializeFailed = true;
@@ -237,9 +239,9 @@ namespace CapturePanorama
             Cleanup();
 
             faces = new CubemapFace[] {
-			    CubemapFace.PositiveX, CubemapFace.NegativeX,
-			    CubemapFace.PositiveY, CubemapFace.NegativeY,
-			    CubemapFace.PositiveZ, CubemapFace.NegativeZ };
+                CubemapFace.PositiveX, CubemapFace.NegativeX,
+                CubemapFace.PositiveY, CubemapFace.NegativeY,
+                CubemapFace.PositiveZ, CubemapFace.NegativeZ };
 
             for (int i = 0; i < faces.Length; i++)
                 Debug.Assert((int)faces[i] == i); // Required for ConvertPanoramaShader
@@ -290,7 +292,7 @@ namespace CapturePanorama
 
             double ppd90 = panoramaWidth * 90.0 / 360.0;
             // Match PPD at 90 degrees - if it's larger, central 90 degree section should match PPD
-            cameraWidth = (int)Math.Ceiling(Math.Tan(hFov * (2.0f*Mathf.PI)/360.0f / 2.0f) * ppd90 * ssaaFactor);
+            cameraWidth = (int)Math.Ceiling(Math.Tan(hFov * (2.0f * Mathf.PI) / 360.0f / 2.0f) * ppd90 * ssaaFactor);
             cameraHeight = (int)Math.Ceiling(Math.Tan(vFov * (2.0f * Mathf.PI) / 360.0f / 2.0f) * ppd90 * ssaaFactor);
 
             Log("Number of cameras: " + numCameras);
@@ -323,7 +325,7 @@ namespace CapturePanorama
             textureToBufferIdx = textureToBufferShader.FindKernel("TextureToBuffer");
             textureToBufferShader.SetInt("width", cameraWidth);
             textureToBufferShader.SetInt("height", cameraHeight);
-            textureToBufferShader.SetFloat("gamma", QualitySettings.activeColorSpace == ColorSpace.Linear ? 1.0f/2.2f : 1.0f);
+            textureToBufferShader.SetFloat("gamma", QualitySettings.activeColorSpace == ColorSpace.Linear ? 1.0f / 2.2f : 1.0f);
 
             renderStereoIdx = convertPanoramaStereoShader.FindKernel("RenderStereo");
 
@@ -443,7 +445,7 @@ namespace CapturePanorama
             while (enumerator.MoveNext()) { }
         }
 
-    
+
 
         public void CaptureScreenshotAsync(string filenameBase)
         {
@@ -729,12 +731,12 @@ namespace CapturePanorama
                 {
                     switch ((CubemapFace)i)
                     {
-                        case CubemapFace.PositiveX: camGos[1].transform.localRotation = Quaternion.Euler(  0.0f,  90.0f, 0.0f); break;
-                        case CubemapFace.NegativeX: camGos[1].transform.localRotation = Quaternion.Euler(  0.0f, -90.0f, 0.0f); break;
-                        case CubemapFace.PositiveY: camGos[1].transform.localRotation = Quaternion.Euler( 90.0f,   0.0f, 0.0f); break;
-                        case CubemapFace.NegativeY: camGos[1].transform.localRotation = Quaternion.Euler(-90.0f,   0.0f, 0.0f); break;
-                        case CubemapFace.PositiveZ: camGos[1].transform.localRotation = Quaternion.Euler(  0.0f,   0.0f, 0.0f); break;
-                        case CubemapFace.NegativeZ: camGos[1].transform.localRotation = Quaternion.Euler(  0.0f, 180.0f, 0.0f); break;
+                        case CubemapFace.PositiveX: camGos[1].transform.localRotation = Quaternion.Euler(0.0f, 90.0f, 0.0f); break;
+                        case CubemapFace.NegativeX: camGos[1].transform.localRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f); break;
+                        case CubemapFace.PositiveY: camGos[1].transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f); break;
+                        case CubemapFace.NegativeY: camGos[1].transform.localRotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f); break;
+                        case CubemapFace.PositiveZ: camGos[1].transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f); break;
+                        case CubemapFace.NegativeZ: camGos[1].transform.localRotation = Quaternion.Euler(0.0f, 180.0f, 0.0f); break;
                     }
                 }
 
@@ -742,11 +744,11 @@ namespace CapturePanorama
                 {
                     // To get the camera in the right eye position, migrate the camera transform to camGos[0]
                     camGos[2].transform.parent = null;
-                    
+
                     cam.CopyFrom(c);
 
                     // TODO: Determine if we should reset matrices of the camera in case it's using custom transform matrices
-                    
+
                     camGos[0].transform.localPosition = cam.transform.localPosition;
                     camGos[0].transform.localRotation = cam.transform.localRotation;
                     camGos[2].transform.parent = camGos[1].transform;
@@ -787,7 +789,7 @@ namespace CapturePanorama
                     c.fieldOfView = saveFieldOfView;
                     c.targetTexture = saveRenderTexture;
                 }
-                
+
                 // Read one pixel from texture to force render to complete before continuing
                 RenderTexture.active = cubemapRenderTexture;
                 forceWaitTexture.ReadPixels(new Rect(cameraWidth - 1, cameraHeight - 1, 1, 1), 0, 0);
@@ -1069,27 +1071,27 @@ namespace CapturePanorama
         {
             u *= cameraWidth;
             v *= cameraHeight;
-            int left   = (int)Math.Floor(u);
-            int right  = (int)Math.Min(cameraWidth  - 1, left + 1);
-            int top    = (int)Math.Floor(v);
-            int bottom = (int)Math.Min(cameraHeight - 1, top  + 1);
+            int left = (int)Math.Floor(u);
+            int right = (int)Math.Min(cameraWidth - 1, left + 1);
+            int top = (int)Math.Floor(v);
+            int bottom = (int)Math.Min(cameraHeight - 1, top + 1);
             float uFrac = u - left;
             float vFrac = v - top;
 
             int baseIdx = cameraNum * cameraWidth * cameraHeight;
-            int topRow    = baseIdx + top    * cameraWidth;
+            int topRow = baseIdx + top * cameraWidth;
             int bottomRow = baseIdx + bottom * cameraWidth;
-            uint topLeft     = cameraPixels[topRow    + left ];
-            uint topRight    = cameraPixels[topRow    + right];
-            uint bottomLeft  = cameraPixels[bottomRow + left ];
+            uint topLeft = cameraPixels[topRow + left];
+            uint topRight = cameraPixels[topRow + right];
+            uint bottomLeft = cameraPixels[bottomRow + left];
             uint bottomRight = cameraPixels[bottomRow + right];
 
-            float r = Mathf.Lerp(Mathf.Lerp( topLeft  >> 16        ,  bottomLeft  >> 16        , vFrac),
-                                 Mathf.Lerp( topRight >> 16        ,  bottomRight >> 16        , vFrac), uFrac);
-            float g = Mathf.Lerp(Mathf.Lerp((topLeft  >>  8) & 0xFF, (bottomLeft  >>  8) & 0xFF, vFrac),
-                                 Mathf.Lerp((topRight >>  8) & 0xFF, (bottomRight >>  8) & 0xFF, vFrac), uFrac);
-            float b = Mathf.Lerp(Mathf.Lerp( topLeft         & 0xFF,  bottomLeft         & 0xFF, vFrac),
-                                 Mathf.Lerp( topRight        & 0xFF,  bottomRight        & 0xFF, vFrac), uFrac);
+            float r = Mathf.Lerp(Mathf.Lerp(topLeft >> 16, bottomLeft >> 16, vFrac),
+                                 Mathf.Lerp(topRight >> 16, bottomRight >> 16, vFrac), uFrac);
+            float g = Mathf.Lerp(Mathf.Lerp((topLeft >> 8) & 0xFF, (bottomLeft >> 8) & 0xFF, vFrac),
+                                 Mathf.Lerp((topRight >> 8) & 0xFF, (bottomRight >> 8) & 0xFF, vFrac), uFrac);
+            float b = Mathf.Lerp(Mathf.Lerp(topLeft & 0xFF, bottomLeft & 0xFF, vFrac),
+                                 Mathf.Lerp(topRight & 0xFF, bottomRight & 0xFF, vFrac), uFrac);
 
             return new Color(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
         }
@@ -1155,156 +1157,156 @@ namespace CapturePanorama
                 float processingTimePerFrame = cpuMillisecondsPerFrame / 1000.0f;
 
                 for (int y = 0; y < panoramaHeight; y++)
-                for (int x = 0; x < panoramaWidth;  x++)
-                {
-                    float xcoord = (float)x / panoramaWidth;
-                    float ycoord = (float)y / panoramaHeight;
-
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float sinLat = Mathf.Sin(latitude);
-                    float cosLat = Mathf.Cos(latitude);
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
-                    float sinLong = Mathf.Sin(longitude);
-                    float cosLong = Mathf.Cos(longitude);
-
-                    // Scale IPD down as latitude moves toward poles to avoid discontinuities
-                    float latitudeNormalized = latitude / (Mathf.PI / 2.0f); // Map to [-1, 1]
-                    float ipdScale = IpdScaleFunction(latitudeNormalized);
-                    float scaledEyeRadius = ipdScale * interpupillaryDistance / 2.0f;
-
-                    int cameraNum;
-                    float u, v;
-
-                    float ipdScaleLerp = 1.0f - ipdScale * 5.0f; // Scale [0, 0.2] to [0, 1] and reverse
-                    // Top/bottom cap
-                    Color colorCap = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-                    if (ipdScaleLerp > 0.0f)
+                    for (int x = 0; x < panoramaWidth; x++)
                     {
-                        Vector3 equirectRayDirection = new Vector3(cosLat * sinLong, sinLat, cosLat * cosLong);
-                        float distance = 1.0f / equirectRayDirection.y;
-                        u = equirectRayDirection.x * distance; v = equirectRayDirection.z * distance;
-                        if (u * u <= 1 && v * v <= 1)
+                        float xcoord = (float)x / panoramaWidth;
+                        float ycoord = (float)y / panoramaHeight;
+
+                        float latitude = (ycoord - 0.5f) * Mathf.PI;
+                        float sinLat = Mathf.Sin(latitude);
+                        float cosLat = Mathf.Cos(latitude);
+                        float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                        float sinLong = Mathf.Sin(longitude);
+                        float cosLong = Mathf.Cos(longitude);
+
+                        // Scale IPD down as latitude moves toward poles to avoid discontinuities
+                        float latitudeNormalized = latitude / (Mathf.PI / 2.0f); // Map to [-1, 1]
+                        float ipdScale = IpdScaleFunction(latitudeNormalized);
+                        float scaledEyeRadius = ipdScale * interpupillaryDistance / 2.0f;
+
+                        int cameraNum;
+                        float u, v;
+
+                        float ipdScaleLerp = 1.0f - ipdScale * 5.0f; // Scale [0, 0.2] to [0, 1] and reverse
+                                                                     // Top/bottom cap
+                        Color colorCap = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+                        if (ipdScaleLerp > 0.0f)
                         {
-                            if (equirectRayDirection.y > 0.0f)
+                            Vector3 equirectRayDirection = new Vector3(cosLat * sinLong, sinLat, cosLat * cosLong);
+                            float distance = 1.0f / equirectRayDirection.y;
+                            u = equirectRayDirection.x * distance; v = equirectRayDirection.z * distance;
+                            if (u * u <= 1 && v * v <= 1)
                             {
-                                cameraNum = 0;
-                            }
-                            else
-                            {
-                                u = -u;
-                                cameraNum = 1;
-                            }
+                                if (equirectRayDirection.y > 0.0f)
+                                {
+                                    cameraNum = 0;
+                                }
+                                else
+                                {
+                                    u = -u;
+                                    cameraNum = 1;
+                                }
 
-                            u = (u + 1.0f) * 0.5f;
-                            v = (v + 1.0f) * 0.5f;
+                                u = (u + 1.0f) * 0.5f;
+                                v = (v + 1.0f) * 0.5f;
 
-                            colorCap = GetCameraPixelBilinear(cameraPixels, cameraNum, u, v);
+                                colorCap = GetCameraPixelBilinear(cameraPixels, cameraNum, u, v);
+                            }
                         }
-                    }
 
-                    for (int i = 0; i < 2; i++)
-                    {
-                        // The following is equivalent to:
-                        // Quaternion eyesRotation = Quaternion.Euler(0.0f, longitude * 360.0f / (2 * Mathf.PI), 0.0f);
-                        // Vector3 initialEyePosition = (i == 0 ? Vector3.left : Vector3.right) * scaledEyeRadius;
-                        // Vector3 pos = eyesRotation * initialEyePosition; // eye position
-                        // Vector3 dir = eyesRotation * Vector3.forward; // gaze direction
-
-                        Vector3 dir = new Vector3(sinLong, 0.0f, cosLong);
-
-                        float angle = (Mathf.PI / 2.0f - Mathf.Acos(scaledEyeRadius / circleRadius));
-                        if (i == 0) angle = -angle;
-                        float circlePointAngle = longitude + angle;
-                        if (circlePointAngle < 0.0f) circlePointAngle += 2 * Mathf.PI;
-                        if (circlePointAngle >= 2 * Mathf.PI) circlePointAngle -= 2 * Mathf.PI;
-                        // Debug.Assert(circlePointAngle >= 0.0f && circlePointAngle < 2 * Mathf.PI);
-
-                        float circlePointNumber = circlePointAngle / (2 * Mathf.PI) * numCirclePoints;
-                        int circlePoint0 = (int)Mathf.Floor(circlePointNumber) % numCirclePoints;
-
-                        // Get color from each adjacent circle point
-                        Color color0 = new Color(), color1 = new Color();
-                        for (int j=0; j < 2; j++)
+                        for (int i = 0; i < 2; i++)
                         {
-                            int circlePointIdx = (j == 0 ? circlePoint0 : (circlePoint0 + 1) % numCirclePoints);
-                            float cameraPointAngle = 2 * Mathf.PI * circlePointIdx / numCirclePoints;
-                            float sinCameraPointAngle = Mathf.Sin(cameraPointAngle);
-                            float cosCameraPointAngle = Mathf.Cos(cameraPointAngle);
+                            // The following is equivalent to:
+                            // Quaternion eyesRotation = Quaternion.Euler(0.0f, longitude * 360.0f / (2 * Mathf.PI), 0.0f);
+                            // Vector3 initialEyePosition = (i == 0 ? Vector3.left : Vector3.right) * scaledEyeRadius;
+                            // Vector3 pos = eyesRotation * initialEyePosition; // eye position
+                            // Vector3 dir = eyesRotation * Vector3.forward; // gaze direction
 
-                            // Equivalent to (using fact that both dir and circlePointNorm are unit vectors):
-                            // Quaternion circlePointRotation = Quaternion.Euler(0.0f, cameraPointAngle * 360.0f / (2 * Mathf.PI), 0.0f);
-                            // Vector3 circlePointNormal = circlePointRotation * Vector3.forward;
-                            // float newLongitude = Mathf.Sign(Vector3.Cross(circlePointNormal, dir).y) * Vector3.Angle(circlePointNormal, dir) * (2 * Mathf.PI) / 360.0f;
+                            Vector3 dir = new Vector3(sinLong, 0.0f, cosLong);
 
-                            float newLongitude = Mathf.Sign(dir.x * cosCameraPointAngle - dir.z * sinCameraPointAngle) *
-                                                 Mathf.Acos(dir.z * cosCameraPointAngle + dir.x * sinCameraPointAngle);
-                            float cosNewLong = Mathf.Cos(newLongitude);
-                            float sinNewLong = Mathf.Sin(newLongitude);
+                            float angle = (Mathf.PI / 2.0f - Mathf.Acos(scaledEyeRadius / circleRadius));
+                            if (i == 0) angle = -angle;
+                            float circlePointAngle = longitude + angle;
+                            if (circlePointAngle < 0.0f) circlePointAngle += 2 * Mathf.PI;
+                            if (circlePointAngle >= 2 * Mathf.PI) circlePointAngle -= 2 * Mathf.PI;
+                            // Debug.Assert(circlePointAngle >= 0.0f && circlePointAngle < 2 * Mathf.PI);
 
-                            // Select which of the two cameras for this point to use and adjust ray to make camera plane perpendicular to axes
-                            cameraNum = 2 + circlePointIdx * (CamerasPerCirclePoint / 2) + (newLongitude >= 0.0f ? 1 : 0);
-                        
-                            float longitudeAdjust = (newLongitude >= 0.0f ? -hFovAdjust : hFovAdjust);
-                            float longSum = newLongitude + longitudeAdjust;
+                            float circlePointNumber = circlePointAngle / (2 * Mathf.PI) * numCirclePoints;
+                            int circlePoint0 = (int)Mathf.Floor(circlePointNumber) % numCirclePoints;
 
-                            // Equivalent to:
-                            // Vector3 textureRayDir = Quaternion.Euler(-latitude * 360.0f / (2 * Mathf.PI), newLongitude * 360.0f / (2 * Mathf.PI), 0.0f) * Vector3.forward;
-                            // Vector3 textureRayDirAdjusted = Quaternion.Euler(0.0f, longitudeAdjust * 360.0f / (2 * Mathf.PI), 0.0f) * textureRayDir;
-                            Vector3 textureRayDirAdjusted = new Vector3(cosLat * Mathf.Sin(longSum), sinLat, cosLat * Mathf.Cos(longSum)); 
-
-                            u =  textureRayDirAdjusted.x / textureRayDirAdjusted.z / tanHalfHFov;
-                            v = -textureRayDirAdjusted.y / textureRayDirAdjusted.z / tanHalfVFov;
-
-                            // There's a lot of vertical overlap so don't accept v near the edge of the left/right cameras, to avoid artifact pixels
-                            if (! (textureRayDirAdjusted.z > 0.0f && u * u <= 1.0f && v * v <= 1.0f - 0.1f) )
+                            // Get color from each adjacent circle point
+                            Color color0 = new Color(), color1 = new Color();
+                            for (int j = 0; j < 2; j++)
                             {
-                                cameraNum = 2 + numCirclePoints * (CamerasPerCirclePoint / 2) + circlePointIdx * (CamerasPerCirclePoint / 2) + (latitude >= 0.0f ? 1 : 0);
-                                float latitudeAdjust = (latitude >= 0.0f ? vFovAdjust : -vFovAdjust);
-                                float cosLatAdjust = Mathf.Cos(latitudeAdjust);
-                                float sinLatAdjust = Mathf.Sin(latitudeAdjust);
-                                // Equivalent to:
-                                // textureRayDirAdjusted = Quaternion.Euler(latitudeAdjust * 360.0f / (2 * Mathf.PI), 0.0f, 0.0f) * textureRayDir;
-                                textureRayDirAdjusted = new Vector3(cosLat * sinNewLong,
-                                                                    cosLatAdjust * sinLat - cosLat * cosNewLong * sinLatAdjust,
-                                                                    sinLatAdjust * sinLat + cosLat * cosNewLong * cosLatAdjust);
+                                int circlePointIdx = (j == 0 ? circlePoint0 : (circlePoint0 + 1) % numCirclePoints);
+                                float cameraPointAngle = 2 * Mathf.PI * circlePointIdx / numCirclePoints;
+                                float sinCameraPointAngle = Mathf.Sin(cameraPointAngle);
+                                float cosCameraPointAngle = Mathf.Cos(cameraPointAngle);
 
-                                u =  textureRayDirAdjusted.x / textureRayDirAdjusted.z / tanHalfHFov;
+                                // Equivalent to (using fact that both dir and circlePointNorm are unit vectors):
+                                // Quaternion circlePointRotation = Quaternion.Euler(0.0f, cameraPointAngle * 360.0f / (2 * Mathf.PI), 0.0f);
+                                // Vector3 circlePointNormal = circlePointRotation * Vector3.forward;
+                                // float newLongitude = Mathf.Sign(Vector3.Cross(circlePointNormal, dir).y) * Vector3.Angle(circlePointNormal, dir) * (2 * Mathf.PI) / 360.0f;
+
+                                float newLongitude = Mathf.Sign(dir.x * cosCameraPointAngle - dir.z * sinCameraPointAngle) *
+                                                     Mathf.Acos(dir.z * cosCameraPointAngle + dir.x * sinCameraPointAngle);
+                                float cosNewLong = Mathf.Cos(newLongitude);
+                                float sinNewLong = Mathf.Sin(newLongitude);
+
+                                // Select which of the two cameras for this point to use and adjust ray to make camera plane perpendicular to axes
+                                cameraNum = 2 + circlePointIdx * (CamerasPerCirclePoint / 2) + (newLongitude >= 0.0f ? 1 : 0);
+
+                                float longitudeAdjust = (newLongitude >= 0.0f ? -hFovAdjust : hFovAdjust);
+                                float longSum = newLongitude + longitudeAdjust;
+
+                                // Equivalent to:
+                                // Vector3 textureRayDir = Quaternion.Euler(-latitude * 360.0f / (2 * Mathf.PI), newLongitude * 360.0f / (2 * Mathf.PI), 0.0f) * Vector3.forward;
+                                // Vector3 textureRayDirAdjusted = Quaternion.Euler(0.0f, longitudeAdjust * 360.0f / (2 * Mathf.PI), 0.0f) * textureRayDir;
+                                Vector3 textureRayDirAdjusted = new Vector3(cosLat * Mathf.Sin(longSum), sinLat, cosLat * Mathf.Cos(longSum));
+
+                                u = textureRayDirAdjusted.x / textureRayDirAdjusted.z / tanHalfHFov;
                                 v = -textureRayDirAdjusted.y / textureRayDirAdjusted.z / tanHalfVFov;
 
-                                // Debug.Assert(ipdScaleLerp >= 1.0 || (textureRayDirAdjusted.z > 0.0f && u * u <= 1.0f && v * v <= 1.0f));
+                                // There's a lot of vertical overlap so don't accept v near the edge of the left/right cameras, to avoid artifact pixels
+                                if (!(textureRayDirAdjusted.z > 0.0f && u * u <= 1.0f && v * v <= 1.0f - 0.1f))
+                                {
+                                    cameraNum = 2 + numCirclePoints * (CamerasPerCirclePoint / 2) + circlePointIdx * (CamerasPerCirclePoint / 2) + (latitude >= 0.0f ? 1 : 0);
+                                    float latitudeAdjust = (latitude >= 0.0f ? vFovAdjust : -vFovAdjust);
+                                    float cosLatAdjust = Mathf.Cos(latitudeAdjust);
+                                    float sinLatAdjust = Mathf.Sin(latitudeAdjust);
+                                    // Equivalent to:
+                                    // textureRayDirAdjusted = Quaternion.Euler(latitudeAdjust * 360.0f / (2 * Mathf.PI), 0.0f, 0.0f) * textureRayDir;
+                                    textureRayDirAdjusted = new Vector3(cosLat * sinNewLong,
+                                                                        cosLatAdjust * sinLat - cosLat * cosNewLong * sinLatAdjust,
+                                                                        sinLatAdjust * sinLat + cosLat * cosNewLong * cosLatAdjust);
+
+                                    u = textureRayDirAdjusted.x / textureRayDirAdjusted.z / tanHalfHFov;
+                                    v = -textureRayDirAdjusted.y / textureRayDirAdjusted.z / tanHalfVFov;
+
+                                    // Debug.Assert(ipdScaleLerp >= 1.0 || (textureRayDirAdjusted.z > 0.0f && u * u <= 1.0f && v * v <= 1.0f));
+                                }
+
+                                u = (u + 1.0f) * 0.5f;
+                                v = (v + 1.0f) * 0.5f;
+
+                                Color col = GetCameraPixelBilinear(cameraPixels, cameraNum, u, v);
+                                if (j == 0) color0 = col; else color1 = col;
                             }
 
-                            u = (u + 1.0f) * 0.5f;
-        				    v = (v + 1.0f) * 0.5f;
+                            Color32 c = Color.Lerp(color0, color1, circlePointNumber - Mathf.Floor(circlePointNumber));
+                            if (colorCap.a > 0.0f && ipdScaleLerp > 0.0f)
+                                c = Color.Lerp(c, colorCap, ipdScaleLerp);
 
-                            Color col = GetCameraPixelBilinear(cameraPixels, cameraNum, u, v);
-                            if (j == 0) color0 = col; else color1 = col;
+                            int outputIdx = stride * (y + panoramaHeight * i) + x * 4;
+                            pixelValues[outputIdx + 0] = c.b;
+                            pixelValues[outputIdx + 1] = c.g;
+                            pixelValues[outputIdx + 2] = c.r;
+                            pixelValues[outputIdx + 3] = 255;
                         }
 
-                        Color32 c = Color.Lerp(color0, color1, circlePointNumber - Mathf.Floor(circlePointNumber));
-                        if (colorCap.a > 0.0f && ipdScaleLerp > 0.0f)
-                            c = Color.Lerp(c, colorCap, ipdScaleLerp);
-
-                        int outputIdx = stride * (y + panoramaHeight * i) + x * 4;
-                        pixelValues[outputIdx + 0] = c.b;
-                        pixelValues[outputIdx + 1] = c.g;
-                        pixelValues[outputIdx + 2] = c.r;
-                        pixelValues[outputIdx + 3] = 255;
+                        if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                        {
+                            yield return null; // Wait until next frame
+                            startTime = Time.realtimeSinceStartup;
+                        }
                     }
-
-                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                    {
-                        yield return null; // Wait until next frame
-                        startTime = Time.realtimeSinceStartup;
-                    }
-                }
             }
             else if (!captureStereoscopic && usingGpuTransform)
             {
                 int sliceHeight = (panoramaHeight + ResultBufferSlices - 1) / ResultBufferSlices;
 
                 Log("Invoking GPU shader for equirectangular reprojection");
-                int endYNegative   = (int)Mathf.Floor(panoramaHeight * 0.25f);
+                int endYNegative = (int)Mathf.Floor(panoramaHeight * 0.25f);
                 int startYPositive = (int)Mathf.Ceil(panoramaHeight * 0.75f);
                 for (int sliceNum = 0; sliceNum < ResultBufferSlices; sliceNum++)
                 {
@@ -1368,31 +1370,31 @@ namespace CapturePanorama
 
             float startTime = Time.realtimeSinceStartup;
             float processingTimePerFrame = cpuMillisecondsPerFrame / 1000.0f;
-            float maxWidth  = 1.0f - 1.0f / cameraWidth;
+            float maxWidth = 1.0f - 1.0f / cameraWidth;
             float maxHeight = 1.0f - 1.0f / cameraHeight;
             int numPixelsAveraged = ssaaFactor * ssaaFactor;
 
             // For efficiency we're going to do a series of rectangles each drawn from only one texture,
             // only using the slow general-case reprojection where necessary.
 
-            int endYPositive   = (int)Mathf.Floor(panoramaHeight * 0.25f);
+            int endYPositive = (int)Mathf.Floor(panoramaHeight * 0.25f);
             int startYNegative = (int)Mathf.Ceil(panoramaHeight * 0.75f);
 
             // 0.195913f is angle in radians between (1, 0, 1) and (1, 1, 1) over pi
-            int endTopMixedRegion      = (int)Mathf.Ceil (panoramaHeight * (0.5f - 0.195913f));
+            int endTopMixedRegion = (int)Mathf.Ceil(panoramaHeight * (0.5f - 0.195913f));
             int startBottomMixedRegion = (int)Mathf.Floor(panoramaHeight * (0.5f + 0.195913f));
 
-            int startXNegative = (int)Mathf.Ceil (panoramaWidth * 1.0f / 8.0f);
-            int endXNegative   = (int)Mathf.Floor(panoramaWidth * 3.0f / 8.0f);
+            int startXNegative = (int)Mathf.Ceil(panoramaWidth * 1.0f / 8.0f);
+            int endXNegative = (int)Mathf.Floor(panoramaWidth * 3.0f / 8.0f);
 
-            int startZPositive = (int)Mathf.Ceil (panoramaWidth * 3.0f / 8.0f);
-            int endZPositive   = (int)Mathf.Floor(panoramaWidth * 5.0f / 8.0f);
+            int startZPositive = (int)Mathf.Ceil(panoramaWidth * 3.0f / 8.0f);
+            int endZPositive = (int)Mathf.Floor(panoramaWidth * 5.0f / 8.0f);
 
-            int startXPositive = (int)Mathf.Ceil(panoramaWidth  * 5.0f / 8.0f);
-            int endXPositive   = (int)Mathf.Floor(panoramaWidth * 7.0f / 8.0f);
+            int startXPositive = (int)Mathf.Ceil(panoramaWidth * 5.0f / 8.0f);
+            int endXPositive = (int)Mathf.Floor(panoramaWidth * 7.0f / 8.0f);
 
-            int startZNegative = (int)Mathf.Ceil(panoramaWidth  * 7.0f / 8.0f);
-            int endZNegative   = (int)Mathf.Floor(panoramaWidth * 1.0f / 8.0f); // z negative wraps/loops around
+            int startZNegative = (int)Mathf.Ceil(panoramaWidth * 7.0f / 8.0f);
+            int endZNegative = (int)Mathf.Floor(panoramaWidth * 1.0f / 8.0f); // z negative wraps/loops around
 
             if (async)
             {
@@ -1453,7 +1455,7 @@ namespace CapturePanorama
                 enumerator = CubemapToEquirectangularCpuPositiveZ(cameraPixels, pixelValues, stride, panoramaWidth, panoramaHeight, ssaaFactor, startTime, processingTimePerFrame, numPixelsAveraged,
                     startZPositive, endTopMixedRegion, endZPositive, startBottomMixedRegion);
                 while (enumerator.MoveNext()) { }
-            
+
                 // Do in two pieces since z negative wraps/loops around
                 enumerator = CubemapToEquirectangularCpuNegativeZ(cameraPixels, pixelValues, stride, panoramaWidth, panoramaHeight, ssaaFactor, startTime, processingTimePerFrame, numPixelsAveraged,
                     startZNegative, endTopMixedRegion, panoramaWidth, startBottomMixedRegion);
@@ -1504,374 +1506,374 @@ namespace CapturePanorama
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 1.0f / equirectRayDirection.y;
-                    float u = equirectRayDirection.x * distance, v = equirectRayDirection.z * distance;
-                    // Debug.Assert (equirectRayDirection.y > 0.0f);
-                    // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
+                            float distance = 1.0f / equirectRayDirection.y;
+                            float u = equirectRayDirection.x * distance, v = equirectRayDirection.z * distance;
+                            // Debug.Assert (equirectRayDirection.y > 0.0f);
+                            // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
 
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
 
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.PositiveY, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.PositiveY, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                    {
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
+                    }
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
 
         private IEnumerator CubemapToEquirectangularCpuNegativeY(uint[] cameraPixels, byte[] pixelValues, int stride, int panoramaWidth, int panoramaHeight, int ssaaFactor, float startTime, float processingTimePerFrame, int numPixelsAveraged,
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 1.0f / equirectRayDirection.y;
-                    float u = equirectRayDirection.x * distance, v = equirectRayDirection.z * distance;
-                    u = -u;
-                    // Debug.Assert (equirectRayDirection.y < 0.0f);
-                    // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
+                            float distance = 1.0f / equirectRayDirection.y;
+                            float u = equirectRayDirection.x * distance, v = equirectRayDirection.z * distance;
+                            u = -u;
+                            // Debug.Assert (equirectRayDirection.y < 0.0f);
+                            // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
 
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
 
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.NegativeY, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.NegativeY, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                    {
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
+                    }
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
 
         private IEnumerator CubemapToEquirectangularCpuPositiveX(uint[] cameraPixels, byte[] pixelValues, int stride, int panoramaWidth, int panoramaHeight, int ssaaFactor, float startTime, float processingTimePerFrame, int numPixelsAveraged,
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 1.0f / equirectRayDirection.x;
-                    float u = -equirectRayDirection.z * distance, v = equirectRayDirection.y * distance;
-                    v = -v;
-                    // Debug.Assert(equirectRayDirection.x > 0.0f);
-                    // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
+                            float distance = 1.0f / equirectRayDirection.x;
+                            float u = -equirectRayDirection.z * distance, v = equirectRayDirection.y * distance;
+                            v = -v;
+                            // Debug.Assert(equirectRayDirection.x > 0.0f);
+                            // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
 
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
 
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.PositiveX, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.PositiveX, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                    {
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
+                    }
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
 
         private IEnumerator CubemapToEquirectangularCpuNegativeX(uint[] cameraPixels, byte[] pixelValues, int stride, int panoramaWidth, int panoramaHeight, int ssaaFactor, float startTime, float processingTimePerFrame, int numPixelsAveraged,
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 1.0f / equirectRayDirection.x;
-                    float u = -equirectRayDirection.z * distance, v = equirectRayDirection.y * distance;
-                    // Debug.Assert(equirectRayDirection.x < 0.0f);
-                    // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
+                            float distance = 1.0f / equirectRayDirection.x;
+                            float u = -equirectRayDirection.z * distance, v = equirectRayDirection.y * distance;
+                            // Debug.Assert(equirectRayDirection.x < 0.0f);
+                            // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
 
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
 
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.NegativeX, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.NegativeX, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                    {
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
+                    }
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
 
         private IEnumerator CubemapToEquirectangularCpuPositiveZ(uint[] cameraPixels, byte[] pixelValues, int stride, int panoramaWidth, int panoramaHeight, int ssaaFactor, float startTime, float processingTimePerFrame, int numPixelsAveraged,
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 1.0f / equirectRayDirection.z;
-                    float u = equirectRayDirection.x * distance, v = equirectRayDirection.y * distance;
-                    v = -v;
-                    // Debug.Assert (equirectRayDirection.z > 0.0f);
-                    // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
+                            float distance = 1.0f / equirectRayDirection.z;
+                            float u = equirectRayDirection.x * distance, v = equirectRayDirection.y * distance;
+                            v = -v;
+                            // Debug.Assert (equirectRayDirection.z > 0.0f);
+                            // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
 
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
 
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.PositiveZ, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.PositiveZ, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                    {
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
+                    }
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
 
         private IEnumerator CubemapToEquirectangularCpuNegativeZ(uint[] cameraPixels, byte[] pixelValues, int stride, int panoramaWidth, int panoramaHeight, int ssaaFactor, float startTime, float processingTimePerFrame, int numPixelsAveraged,
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 1.0f / equirectRayDirection.z;
-                    float u = equirectRayDirection.x * distance, v = equirectRayDirection.y * distance;
-                    // Debug.Assert (equirectRayDirection.z < 0.0f);
-                    // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
+                            float distance = 1.0f / equirectRayDirection.z;
+                            float u = equirectRayDirection.x * distance, v = equirectRayDirection.y * distance;
+                            // Debug.Assert (equirectRayDirection.z < 0.0f);
+                            // Debug.Assert (! (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f) );
 
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
 
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.NegativeZ, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)CubemapFace.NegativeZ, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
+                    {
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
+                    }
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
 
         private IEnumerator CubemapToEquirectangularCpuGeneralCase(uint[] cameraPixels, byte[] pixelValues, int stride, int panoramaWidth, int panoramaHeight, int ssaaFactor, float startTime, float processingTimePerFrame, float maxWidth, float maxHeight, int numPixelsAveraged,
             int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
-            for (int x = startX; x < endX; x++)
-            {
-                int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
-                for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
-                for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                for (int x = startX; x < endX; x++)
                 {
-                    float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
-                    float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
+                    int rTotal = 0, gTotal = 0, bTotal = 0, aTotal = 0;
+                    for (int ySsaa = y * ssaaFactor; ySsaa < (y + 1) * ssaaFactor; ySsaa++)
+                        for (int xSsaa = x * ssaaFactor; xSsaa < (x + 1) * ssaaFactor; xSsaa++)
+                        {
+                            float xcoord = (float)xSsaa / (panoramaWidth * ssaaFactor);
+                            float ycoord = (float)ySsaa / (panoramaHeight * ssaaFactor);
 
-                    float latitude = (ycoord - 0.5f) * Mathf.PI;
-                    float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
+                            float latitude = (ycoord - 0.5f) * Mathf.PI;
+                            float longitude = (xcoord * 2.0f - 1.0f) * Mathf.PI;
 
-                    // Equivalent to: Vector3 equirectRayDirection =
-                    //     Quaternion.Euler(-latitude * 360/(2*Mathf.PI), longitude * 360/(2*Mathf.PI), 0.0f) * new Vector3(0, 0, 1);
-                    float cosLat = Mathf.Cos(latitude);
-                    Vector3 equirectRayDirection = new Vector3(
-                        cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
+                            // Equivalent to: Vector3 equirectRayDirection =
+                            //     Quaternion.Euler(-latitude * 360/(2*Mathf.PI), longitude * 360/(2*Mathf.PI), 0.0f) * new Vector3(0, 0, 1);
+                            float cosLat = Mathf.Cos(latitude);
+                            Vector3 equirectRayDirection = new Vector3(
+                                cosLat * Mathf.Sin(longitude), -Mathf.Sin(latitude), cosLat * Mathf.Cos(longitude));
 
-                    float distance = 0.0f;
-                    CubemapFace face;
-                    float u, v;
+                            float distance = 0.0f;
+                            CubemapFace face;
+                            float u, v;
 
+                            {
+                                distance = 1.0f / equirectRayDirection.y;
+                                u = equirectRayDirection.x * distance; v = equirectRayDirection.z * distance;
+                                if (equirectRayDirection.y > 0.0f)
+                                {
+                                    face = CubemapFace.PositiveY;
+                                }
+                                else
+                                {
+                                    face = CubemapFace.NegativeY;
+                                    u = -u;
+                                }
+                            }
+
+                            if (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f)
+                            {
+                                distance = 1.0f / equirectRayDirection.x;
+                                u = -equirectRayDirection.z * distance; v = equirectRayDirection.y * distance;
+                                if (equirectRayDirection.x > 0.0f)
+                                {
+                                    face = CubemapFace.PositiveX;
+                                    v = -v;
+                                }
+                                else
+                                {
+                                    face = CubemapFace.NegativeX;
+                                }
+                            }
+                            if (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f)
+                            {
+                                distance = 1.0f / equirectRayDirection.z;
+                                u = equirectRayDirection.x * distance; v = equirectRayDirection.y * distance;
+                                if (equirectRayDirection.z > 0.0f)
+                                {
+                                    face = CubemapFace.PositiveZ;
+                                    v = -v;
+                                }
+                                else
+                                {
+                                    face = CubemapFace.NegativeZ;
+                                }
+                            }
+
+                            u = (u + 1.0f) / 2.0f;
+                            v = (v + 1.0f) / 2.0f;
+
+                            // Boundary: should blend between cubemap views, but for now just grab color
+                            // of nearest pixel in selected cubemap view
+                            u = Mathf.Min(u, maxWidth);
+                            v = Mathf.Min(v, maxHeight);
+
+                            Color32 c = GetCameraPixelBilinear(cameraPixels, (int)face, u, v);
+                            rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
+                        }
+
+                    int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
+                    pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
+                    pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
+
+                    if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
                     {
-                        distance = 1.0f / equirectRayDirection.y;
-                        u = equirectRayDirection.x * distance; v = equirectRayDirection.z * distance;
-                        if (equirectRayDirection.y > 0.0f)
-                        {
-                            face = CubemapFace.PositiveY;
-                        }
-                        else
-                        {
-                            face = CubemapFace.NegativeY;
-                            u = -u;
-                        }
+                        yield return null; // Wait until next frame
+                        startTime = Time.realtimeSinceStartup;
                     }
-
-                    if (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f)
-                    {
-                        distance = 1.0f / equirectRayDirection.x;
-                        u = -equirectRayDirection.z * distance; v = equirectRayDirection.y * distance;
-                        if (equirectRayDirection.x > 0.0f)
-                        {
-                            face = CubemapFace.PositiveX;
-                            v = -v;
-                        }
-                        else
-                        {
-                            face = CubemapFace.NegativeX;
-                        }
-                    }
-                    if (Mathf.Abs(u) > 1.0f || Mathf.Abs(v) > 1.0f)
-                    {
-                        distance = 1.0f / equirectRayDirection.z;
-                        u = equirectRayDirection.x * distance; v = equirectRayDirection.y * distance;
-                        if (equirectRayDirection.z > 0.0f)
-                        {
-                            face = CubemapFace.PositiveZ;
-                            v = -v;
-                        }
-                        else
-                        {
-                            face = CubemapFace.NegativeZ;
-                        }
-                    }
-
-                    u = (u + 1.0f) / 2.0f;
-                    v = (v + 1.0f) / 2.0f;
-
-                    // Boundary: should blend between cubemap views, but for now just grab color
-                    // of nearest pixel in selected cubemap view
-                    u = Mathf.Min(u, maxWidth);
-                    v = Mathf.Min(v, maxHeight);
-
-                    Color32 c = GetCameraPixelBilinear(cameraPixels, (int)face, u, v);
-                    rTotal += c.r; gTotal += c.g; bTotal += c.b; aTotal += c.a;
                 }
-
-                int baseIdx = stride * (panoramaHeight - 1 - y) + x * 4;
-                pixelValues[baseIdx + 0] = (byte)(bTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 1] = (byte)(gTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 2] = (byte)(rTotal / numPixelsAveraged);
-                pixelValues[baseIdx + 3] = (byte)(aTotal / numPixelsAveraged);
-
-                if ((x & 0xFF) == 0 && Time.realtimeSinceStartup - startTime > processingTimePerFrame)
-                {
-                    yield return null; // Wait until next frame
-                    startTime = Time.realtimeSinceStartup;
-                }
-            }
         }
     }
 }

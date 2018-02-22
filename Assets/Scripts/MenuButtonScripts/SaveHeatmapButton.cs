@@ -1,11 +1,12 @@
-﻿using System.IO;
-using UnityEngine;
-
+﻿using UnityEngine;
+/// <summary>
+/// Represents the button that saves the heatmap it is attached to the disk.
+/// </summary>
 class SaveHeatmapButton : StationaryButton
 {
     protected override string Description
     {
-        get { return "Save heatmap image to disk"; }
+        get { return "Save heatma\nimage to disk"; }
     }
 
     protected override void Awake()

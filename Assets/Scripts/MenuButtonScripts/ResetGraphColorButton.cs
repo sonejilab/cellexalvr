@@ -1,9 +1,6 @@
-using System;
-using UnityEngine;
-using UnityEngine.Events;
 
 ///<summary>
-/// This class represents a button used for resetting the color and position of the graphs.
+/// Represents a button used for resetting the color and position of the graphs.
 ///</summary>
 public class ResetGraphColorButton : StationaryButton
 {

@@ -1,5 +1,6 @@
-﻿using System;
-
+﻿/// <summary>
+/// Represents the button that toggles the draw tool.
+/// </summary>
 public class DrawToolButton : StationaryButton
 {
     protected override string Description

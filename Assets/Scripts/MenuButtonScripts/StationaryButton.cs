@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 //TODO CELLEXAL: Make all buttons same scale/size.
 
@@ -32,6 +30,10 @@ public abstract class StationaryButton : MonoBehaviour
     // virtual so other classes may override if needed
     protected virtual void Awake()
     {
+        if (referenceManager == null)
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
         rightController = referenceManager.rightController;
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();

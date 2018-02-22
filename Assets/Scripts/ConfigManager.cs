@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 
 /// <summary>
-/// This static class represents the config file and its contents.
+/// Static class that represents the config file and its contents.
 /// </summary>
 public static class CellExAlConfig
 {
@@ -20,6 +20,13 @@ public static class CellExAlConfig
     public static float NetworkLineSmallWidth { get; set; }
     public static float NetworkLineLargeWidth { get; set; }
     public static int NumberOfNetworkLineColors { get; set; }
+    public static int NumberOfHeatmapColors { get; set; }
+    public static Color HeatmapLowExpressionColor { get; set; }
+    public static Color HeatmapMidExpressionColor { get; set; }
+    public static Color HeatmapHighExpressionColor { get; set; }
+    public static Color HeatmapHighlightMarkerColor { get; set; }
+    public static Color HeatmapConfirmMarkerColor { get; set; }
+    public static int HeatmapNumberOfGenes { get; set; }
 }
 
 /// <summary>
@@ -29,18 +36,40 @@ public class ConfigManager : MonoBehaviour
 {
 
     public ReferenceManager referenceManager;
+    private string configDir;
+    private string configPath;
+    private string sampleConfigPath;
 
     private void Start()
     {
-        string workingDir = Directory.GetCurrentDirectory();
-        string configPath = workingDir + @"\Config\config.txt";
-        string sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.txt";
+        configDir = Directory.GetCurrentDirectory() + @"\Config";
+        configPath = configDir + @"\config.txt";
+        sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.txt";
+        ReadConfigFile();
 
+        // set up a filesystemwatcher that notifies us if the file is changed and we should reload it
+        FileSystemWatcher watcher = new FileSystemWatcher(configDir);
+        watcher.NotifyFilter = NotifyFilters.LastWrite;
+        watcher.Filter = "config.txt";
+        watcher.Changed += new FileSystemEventHandler(OnChanged);
+        watcher.EnableRaisingEvents = true;
+
+    }
+
+    private void OnChanged(object source, FileSystemEventArgs e)
+    {
+        // Make the ReadConfigFile execute in the main thread
+        SQLiter.LoomManager.Loom.QueueOnMainThread(() => ReadConfigFile());
+
+    }
+
+    private void ReadConfigFile()
+    {
         // make sure the folder and the file exists.
         if (!Directory.Exists("Config"))
         {
             Directory.CreateDirectory("Config");
-            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(workingDir + @"\Config"));
+            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(configDir));
         }
 
         if (!File.Exists(configPath))
@@ -49,6 +78,7 @@ public class ConfigManager : MonoBehaviour
             CellExAlLog.Log("WARNING: No config file found at " + configPath + ". A sample config file has been created.");
         }
         CellExAlLog.Log("Started reading the config file");
+
 
         // start reading the contents.
         FileStream fileStream = new FileStream(configPath, FileMode.Open);
@@ -148,7 +178,7 @@ public class ConfigManager : MonoBehaviour
                         {
                             if (streamReader.EndOfStream)
                             {
-                                CellExAlLog.Log("WARNING: Unexpected end of file when parsing list of attribute colors from the config file.");
+                                CellExAlLog.Log("ERROR: Unexpected end of file when parsing list of attribute colors from the config file.");
                                 break;
                             }
                             lineNbr++;
@@ -175,11 +205,9 @@ public class ConfigManager : MonoBehaviour
                 case "LowExpressionColor":
                     CellExAlConfig.LowExpressionColor = ReadColor(value, lineNbr);
                     break;
-
                 case "MidExpressionColor":
                     CellExAlConfig.MidExpressionColor = ReadColor(value, lineNbr);
                     break;
-
                 case "HighExpressionColor":
                     CellExAlConfig.HighExpressionColor = ReadColor(value, lineNbr);
                     break;
@@ -187,12 +215,40 @@ public class ConfigManager : MonoBehaviour
                 case "NetworkLineSmallWidth":
                     CellExAlConfig.NetworkLineSmallWidth = float.Parse(value);
                     break;
-
                 case "NetworkLineLargeWidth":
                     CellExAlConfig.NetworkLineLargeWidth = float.Parse(value);
                     break;
                 case "NumberOfNetworkLineColors":
                     CellExAlConfig.NumberOfNetworkLineColors = int.Parse(value);
+                    break;
+
+
+                case "NumberOfHeatmapColors":
+                    int numberOfHeatmapColors = int.Parse(value);
+                    if (numberOfHeatmapColors < 3)
+                    {
+                        CellExAlLog.Log("WARNING: Number of heatmap colors is less than 3, changing it to 3.");
+                        numberOfHeatmapColors = 3;
+                    }
+                    CellExAlConfig.NumberOfHeatmapColors = numberOfHeatmapColors;
+                    break;
+                case "HeatmapLowExpressionColor":
+                    CellExAlConfig.HeatmapLowExpressionColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapMidExpressionColor":
+                    CellExAlConfig.HeatmapMidExpressionColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapHighExpressionColor":
+                    CellExAlConfig.HeatmapHighExpressionColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapNumberOfGenes":
+                    CellExAlConfig.HeatmapNumberOfGenes = int.Parse(value);
+                    break;
+                case "HeatmapHighlightMarkerColor":
+                    CellExAlConfig.HeatmapHighlightMarkerColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapConfirmMarkerColor":
+                    CellExAlConfig.HeatmapConfirmMarkerColor = ReadColor(value, lineNbr);
                     break;
 
                 default:
@@ -222,9 +278,28 @@ public class ConfigManager : MonoBehaviour
             CellExAlLog.Log("WARNING: Bad line in the config file. Expected \'#\' but did not find it at line " + lineNbr + ": " + value);
             return Color.white;
         }
-        string hexcolorValue = value.Substring(hashtagIndex, 7);
-        Color newColor = new Color();
-        ColorUtility.TryParseHtmlString(hexcolorValue, out newColor);
-        return newColor;
+        string hexcolorValue = value.Substring(hashtagIndex);
+        string r = hexcolorValue.Substring(1, 2);
+        string g = hexcolorValue.Substring(3, 2);
+        string b = hexcolorValue.Substring(5, 2);
+        float unityR = byte.Parse(r, System.Globalization.NumberStyles.HexNumber) / 255f;
+        float unityG = byte.Parse(g, System.Globalization.NumberStyles.HexNumber) / 255f;
+        float unityB = byte.Parse(b, System.Globalization.NumberStyles.HexNumber) / 255f;
+        if (hexcolorValue.Length == 9)
+        {
+            // if there is an alpha value as well
+            string a = hexcolorValue.Substring(7, 2);
+            try
+            {
+                float unityA = byte.Parse(a, System.Globalization.NumberStyles.HexNumber) / 255f;
+                return new Color(unityR, unityG, unityB, unityA);
+            }
+            catch (System.FormatException e)
+            {
+                // we found something that seemed like an alpha value, but wasn't
+                return new Color(unityR, unityG, unityB);
+            }
+        }
+        return new Color(unityR, unityG, unityB);
     }
 }

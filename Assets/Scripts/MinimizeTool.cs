@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the tool that is used to minimize objects.
+/// Represents the tool that is used to minimize objects.
 /// Minimized objects are placed on top of the menu.
 /// </summary>
 

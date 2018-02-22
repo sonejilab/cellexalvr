@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a button that toggles arcs between networks.
+/// Represents a button that toggles arcs between networks.
 /// </summary>
 public class ToggleArcsButton : SolidButton
 {

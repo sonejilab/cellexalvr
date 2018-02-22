@@ -2,7 +2,7 @@
 using VRTK;
 
 /// <summary>
-/// This class handles what happens when a network handler is interacted with.
+/// Handles what happens when a network handler is interacted with.
 /// </summary>
 class NetworkHandlerInteract : VRTK_InteractableObject
 {
@@ -16,7 +16,6 @@ class NetworkHandlerInteract : VRTK_InteractableObject
             if (c.gameObject.name == "Ring")
             {
                 ((MeshCollider)c).convex = true;
-                break;
             }
         }
         GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
@@ -30,7 +29,6 @@ class NetworkHandlerInteract : VRTK_InteractableObject
             if (c.gameObject.name == "Ring")
             {
                 ((MeshCollider)c).convex = false;
-                break;
             }
         }
         GetComponent<NetworkHandler>().ToggleNetworkColliders(true);

@@ -1,16 +1,16 @@
 using UnityEngine;
 using VRTK;
-using System.Collections;
 
 /// <summary>
-/// This class is responsible for changing the controller model and the activated tool.
+/// Responsible for changing the controller model and the activated tool.
 /// </summary>
 public class ControllerModelSwitcher : MonoBehaviour
 {
     public ReferenceManager referenceManager;
 
     public SteamVR_RenderModel renderModel;
-    public GameObject controllerBody;
+    public GameObject rightControllerBody;
+    public GameObject leftControllerBody;
     public Mesh normalControllerMesh;
     //public Texture normalControllerTexture;
     public Mesh menuControllerMesh;
@@ -19,6 +19,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Mesh deleteToolMesh;
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
+    public Material leftControllerMaterial;
     public VRTK_StraightPointerRenderer rightLaser;
     public VRTK_StraightPointerRenderer leftLaser;
 
@@ -55,21 +56,32 @@ public class ControllerModelSwitcher : MonoBehaviour
         keyboard = referenceManager.keyboard;
         drawTool = referenceManager.drawTool.gameObject;
         DesiredModel = Model.Normal;
-        if (controllerBody.activeSelf == false)
-            SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
-        else
-        {
-            controllerBodyMeshFilter = controllerBody.GetComponent<MeshFilter>();
-            controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
-        }
+        //if (rightControllerBody.activeSelf)
+        //{
+        //SetMeshes();
+        //}
+        //else
+        //{
+        //SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
+        //}
     }
 
     // Used when starting the program to know when steamvr has loaded the model and applied a meshfilter and meshrenderer for us to use.
     void OnControllerLoaded(SteamVR_RenderModel renderModel, bool success)
     {
         if (!success) return;
-        controllerBodyMeshFilter = controllerBody.GetComponent<MeshFilter>();
-        controllerBodyRenderer = controllerBody.GetComponent<Renderer>();
+        SetMeshes();
+    }
+
+    public void SetMeshes()
+    {
+        controllerBodyMeshFilter = rightControllerBody.GetComponent<MeshFilter>();
+        controllerBodyMeshFilter.mesh = normalControllerMesh;
+        controllerBodyRenderer = rightControllerBody.GetComponent<Renderer>();
+        controllerBodyRenderer.material = normalMaterial;
+        var leftBody = leftControllerBody.GetComponent<Renderer>();
+        leftBody.material = leftControllerMaterial;
+
     }
 
     // Used when starting the program.
@@ -77,7 +89,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     // these variables will be null because the components are not yet added to the gameobjects.
     internal bool Ready()
     {
-        return controllerBodyMeshFilter != null && controllerBodyRenderer != null;
+        return rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null && leftControllerBody.GetComponent<Renderer>() != null;
     }
 
     void OnTriggerEnter(Collider other)

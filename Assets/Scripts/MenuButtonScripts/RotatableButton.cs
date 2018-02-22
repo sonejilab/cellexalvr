@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 ///<summary>
 /// This class represents a button that rotates when pressed, activated or deactivated.
 ///</summary>

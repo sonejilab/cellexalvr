@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the button that undoes the last selected graphpoint.
+/// Represents the button that undoes the last selected graphpoint.
 /// </summary>
 public class UndoOneStepButton : StationaryButton
 {

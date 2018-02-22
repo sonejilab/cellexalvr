@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System.IO;
 
+/// <summary>
+/// Handles what happens when a username is entered into the username field in the <see cref="DesktopMenu"/>.
+/// </summary>
 public class UsernameManager : MonoBehaviour
 {
 

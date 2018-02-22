@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the cylinder that appears with the loader and helps users who don't know how anything works.
+/// Represents the cylinder that appears with the loader and helps users who don't know how anything works.
 /// </summary>
 public class HelperToolActivator : MonoBehaviour
 {

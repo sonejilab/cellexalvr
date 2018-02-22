@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// This class holds the logic for rotating the menu.
+/// Holds the logic for rotating the menu.
 /// </summary>
 public class MenuRotator : MonoBehaviour
 {

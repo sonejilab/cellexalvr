@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// This class represents the group info display on the right controller. It shows how many cells that currently belong to a group (have a certain color).
+/// Represents the group info display on the right controller. It shows how many cells that currently belong to a group (have a certain color).
 /// </summary>
 public class GroupInfoDisplay : MonoBehaviour
 {

@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 
 ///<summary>
-/// This class represents a button used the graphs from the cell selection used for this particular heatmap.
+/// Represents a button used the graphs from the cell selection used for this particular heatmap.
 ///</summary>
 public class RecolourHeatmapButton : StationaryButton
 {
@@ -10,7 +9,7 @@ public class RecolourHeatmapButton : StationaryButton
     {
         get
         {
-            return "Recoulour heatmap";
+            return "";
         }
     }
 

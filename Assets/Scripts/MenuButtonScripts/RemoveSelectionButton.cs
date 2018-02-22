@@ -1,5 +1,5 @@
 ///<summary>
-/// This class represents a button used for removing the current cell selection.
+/// Represents a button used for removing the current cell selection.
 ///</summary>
 public class RemoveSelectionButton : StationaryButton
 {

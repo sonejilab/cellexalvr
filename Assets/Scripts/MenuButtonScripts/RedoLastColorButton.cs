@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the button that redoes all the last undone graphpoints of the same color.
+/// Represents the button that redoes all the last undone graphpoints of the same color.
 /// </summary>
 public class RedoLastColorButton : StationaryButton
 {

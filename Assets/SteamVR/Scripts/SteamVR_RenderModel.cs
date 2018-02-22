@@ -1,4 +1,4 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 //
 // Purpose: Render model of associated tracked object
 //
@@ -14,18 +14,24 @@ using Valve.VR;
 public class SteamVR_RenderModel : MonoBehaviour
 {
     public SteamVR_TrackedObject.EIndex index = SteamVR_TrackedObject.EIndex.None;
+
+    public const string modelOverrideWarning = "Model override is really only meant to be used in " +
+        "the scene view for lining things up; using it at runtime is discouraged.  Use tracked device " +
+        "index instead to ensure the correct model is displayed for all users.";
+
+    [Tooltip(modelOverrideWarning)]
     public string modelOverride;
 
-    // Shader to apply to model.
+    [Tooltip("Shader to apply to model.")]
     public Shader shader;
 
-    // Enable to print out when render models are loaded.
+    [Tooltip("Enable to print out when render models are loaded.")]
     public bool verbose = false;
 
-    // If available, break down into separate components instead of loading as a single mesh.
+    [Tooltip("If available, break down into separate components instead of loading as a single mesh.")]
     public bool createComponents = true;
 
-    // Update transforms of components at runtime to reflect user action.
+    [Tooltip("Update transforms of components at runtime to reflect user action.")]
     public bool updateDynamically = true;
 
     // Additional controller settings for showing scrollwheel, etc.
@@ -35,10 +41,7 @@ public class SteamVR_RenderModel : MonoBehaviour
     public const string k_localTransformName = "attach";
 
     // Cached name of this render model for updating component transforms at runtime.
-    public string renderModelName
-    {
-        get; private set;
-    }
+    public string renderModelName { get; private set; }
 
     // If someone knows how to keep these from getting cleaned up every time
     // you exit play mode, let me know.  I've tried marking the RenderModel
@@ -56,14 +59,8 @@ public class SteamVR_RenderModel : MonoBehaviour
             this.mesh = mesh;
             this.material = material;
         }
-        public Mesh mesh
-        {
-            get; private set;
-        }
-        public Material material
-        {
-            get; private set;
-        }
+        public Mesh mesh { get; private set; }
+        public Material material { get; private set; }
     }
 
     public static Hashtable models = new Hashtable();
@@ -83,7 +80,7 @@ public class SteamVR_RenderModel : MonoBehaviour
                     if (!SteamVR.active && !SteamVR.usingNativeSupport)
                     {
                         var error = EVRInitError.None;
-                        OpenVR.Init(ref error, EVRApplicationType.VRApplication_Other);
+                        OpenVR.Init(ref error, EVRApplicationType.VRApplication_Utility);
                         needsShutdown = true;
                     }
 
@@ -230,6 +227,7 @@ public class SteamVR_RenderModel : MonoBehaviour
                         continue;
 
                     var pRenderModel = System.IntPtr.Zero;
+
                     var error = renderModels.LoadRenderModel_Async(name, ref pRenderModel);
                     if (error == EVRRenderModelError.Loading)
                     {
@@ -257,7 +255,7 @@ public class SteamVR_RenderModel : MonoBehaviour
 
                 if (loading)
                 {
-                    yield return new WaitForSeconds(0.1f);
+                    yield return new WaitForSecondsRealtime(0.1f);
                 }
                 else
                 {
@@ -318,6 +316,7 @@ public class SteamVR_RenderModel : MonoBehaviour
     RenderModel LoadRenderModel(CVRRenderModels renderModels, string renderModelName, string baseName)
     {
         var pRenderModel = System.IntPtr.Zero;
+
         EVRRenderModelError error;
         while (true)
         {
@@ -325,7 +324,7 @@ public class SteamVR_RenderModel : MonoBehaviour
             if (error != EVRRenderModelError.Loading)
                 break;
 
-            System.Threading.Thread.Sleep(1);
+            Sleep();
         }
 
         if (error != EVRRenderModelError.None)
@@ -335,9 +334,11 @@ public class SteamVR_RenderModel : MonoBehaviour
         }
 
         var renderModel = MarshalRenderModel(pRenderModel);
+
         var vertices = new Vector3[renderModel.unVertexCount];
         var normals = new Vector3[renderModel.unVertexCount];
         var uv = new Vector2[renderModel.unVertexCount];
+
         var type = typeof(RenderModel_Vertex_t);
         for (int iVert = 0; iVert < renderModel.unVertexCount; iVert++)
         {
@@ -368,7 +369,7 @@ public class SteamVR_RenderModel : MonoBehaviour
         mesh.triangles = triangles;
 
 #if (UNITY_5_4 || UNITY_5_3 || UNITY_5_2 || UNITY_5_1 || UNITY_5_0)
-	mesh.Optimize();
+		mesh.Optimize();
 #endif
         //mesh.hideFlags = HideFlags.DontUnloadUnusedAsset;
 
@@ -384,13 +385,13 @@ public class SteamVR_RenderModel : MonoBehaviour
                 if (error != EVRRenderModelError.Loading)
                     break;
 
-                System.Threading.Thread.Sleep(1);
+                Sleep();
             }
 
             if (error == EVRRenderModelError.None)
             {
                 var diffuseTexture = MarshalRenderModel_TextureMap(pDiffuseTexture);
-                var texture = new Texture2D(diffuseTexture.unWidth, diffuseTexture.unHeight, TextureFormat.ARGB32, false);
+                var texture = new Texture2D(diffuseTexture.unWidth, diffuseTexture.unHeight, TextureFormat.RGBA32, false);
                 if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Direct3D11)
                 {
                     texture.Apply();
@@ -401,12 +402,12 @@ public class SteamVR_RenderModel : MonoBehaviour
                         if (error != EVRRenderModelError.Loading)
                             break;
 
-                        System.Threading.Thread.Sleep(1);
+                        Sleep();
                     }
                 }
                 else
                 {
-                    var textureMapData = new byte[diffuseTexture.unWidth * diffuseTexture.unHeight * 4];     // RGBA
+                    var textureMapData = new byte[diffuseTexture.unWidth * diffuseTexture.unHeight * 4]; // RGBA
                     Marshal.Copy(diffuseTexture.rubTextureMapData, textureMapData, 0, textureMapData.Length);
 
                     var colors = new Color32[diffuseTexture.unWidth * diffuseTexture.unHeight];
@@ -578,7 +579,7 @@ public class SteamVR_RenderModel : MonoBehaviour
 
     SteamVR_Events.Action deviceConnectedAction, hideRenderModelsAction, modelSkinSettingsHaveChangedAction;
 
-    void Awake()
+    SteamVR_RenderModel()
     {
         deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
         hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
@@ -593,7 +594,7 @@ public class SteamVR_RenderModel : MonoBehaviour
 #endif
         if (!string.IsNullOrEmpty(modelOverride))
         {
-            Debug.Log("Model override is really only meant to be used in the scene view for lining things up; using it at runtime is discouraged.  Use tracked device index instead to ensure the correct model is displayed for all users.");
+            Debug.Log(modelOverrideWarning);
             enabled = false;
             return;
         }
@@ -630,6 +631,7 @@ public class SteamVR_RenderModel : MonoBehaviour
         {
             // See if anything has changed since this gets called whenever anything gets touched.
             var fields = GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+
             bool modified = false;
 
             if (values == null)
@@ -677,7 +679,7 @@ public class SteamVR_RenderModel : MonoBehaviour
                     values[f] = f.GetValue(this);
             }
 
-            return;     // Do not update transforms (below) when not playing in Editor (to avoid keeping OpenVR running all the time).
+            return; // Do not update transforms (below) when not playing in Editor (to avoid keeping OpenVR running all the time).
         }
 #endif
         // Update component transforms dynamically.
@@ -697,7 +699,7 @@ public class SteamVR_RenderModel : MonoBehaviour
             return;
 
         var controllerState = (index != SteamVR_TrackedObject.EIndex.None) ?
-                              SteamVR_Controller.Input((int)index).GetState() : new VRControllerState_t();
+            SteamVR_Controller.Input((int)index).GetState() : new VRControllerState_t();
 
         if (nameCache == null)
             nameCache = new Dictionary<int, string>();
@@ -749,8 +751,15 @@ public class SteamVR_RenderModel : MonoBehaviour
         }
     }
 
+    private static void Sleep()
+    {
+#if !UNITY_METRO
+        System.Threading.Thread.Sleep(1);
+#endif
+    }
+
     /// <summary>
-    /// Helper function to handle the inconvenient fact that the packing for RenderModel_t is
+    /// Helper function to handle the inconvenient fact that the packing for RenderModel_t is 
     /// different on Linux/OSX (4) than it is on Windows (8)
     /// </summary>
     /// <param name="pRenderModel">native pointer to the RenderModel_t</param>
@@ -772,7 +781,7 @@ public class SteamVR_RenderModel : MonoBehaviour
     }
 
     /// <summary>
-    /// Helper function to handle the inconvenient fact that the packing for RenderModel_TextureMap_t is
+    /// Helper function to handle the inconvenient fact that the packing for RenderModel_TextureMap_t is 
     /// different on Linux/OSX (4) than it is on Windows (8)
     /// </summary>
     /// <param name="pRenderModel">native pointer to the RenderModel_TextureMap_t</param>
@@ -793,3 +802,4 @@ public class SteamVR_RenderModel : MonoBehaviour
         }
     }
 }
+

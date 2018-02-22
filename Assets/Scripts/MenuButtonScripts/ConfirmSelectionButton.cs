@@ -1,5 +1,5 @@
 ///<summary>
-/// This class represents a button used for confirming a cell selection.
+/// Represents a button used for confirming a cell selection.
 ///</summary>
 public class ConfirmSelectionButton : StationaryButton
 {

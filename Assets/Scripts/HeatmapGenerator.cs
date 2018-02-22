@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using UnityEngine;
 
 /// <summary>
-/// A generator for heatmaps.
+/// A generator for heatmaps. Creates the colors that are later used when generating heatmaps
 /// </summary>
 public class HeatmapGenerator : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class HeatmapGenerator : MonoBehaviour
     public ErrorMessageController errorMessageController;
 
     public bool GeneratingHeatmaps { get; private set; }
+
+    public SolidBrush[] expressionColors;
+
 
     private GameObject calculatorCluster;
     private SelectionToolHandler selectionToolHandler;
@@ -26,8 +30,10 @@ public class HeatmapGenerator : MonoBehaviour
     private int heatmapID = 1;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
+    public UnityEngine.Color HighlightMarkerColor { get; private set; }
+    public UnityEngine.Color ConfirmMarkerColor { get; private set; }
 
-    void Start()
+    void Awake()
     {
         t = null;
         heatmapPosition = heatmapPrefab.transform.position;
@@ -38,7 +44,61 @@ public class HeatmapGenerator : MonoBehaviour
         calculatorCluster = referenceManager.calculatorCluster;
         calculatorCluster.SetActive(false);
         GeneratingHeatmaps = false;
+        CellExAlEvents.ConfigLoaded.AddListener(InitColors);
     }
+
+    /// <summary>
+    /// Initializes <see cref="expressionColors"/> with the colors in the config file.
+    /// </summary>
+    private void InitColors()
+    {
+
+        int numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
+        expressionColors = new SolidBrush[numberOfExpressionColors];
+        UnityEngine.Color low = CellExAlConfig.HeatmapLowExpressionColor;
+        UnityEngine.Color mid = CellExAlConfig.HeatmapMidExpressionColor;
+        UnityEngine.Color high = CellExAlConfig.HeatmapHighExpressionColor;
+        //print(low + " " + mid + " " + high);
+
+        int dividerLowMid = numberOfExpressionColors / 2;
+        if (dividerLowMid == 0)
+            dividerLowMid = 1;
+        float lowMidDeltaR = (mid.r * mid.r - low.r * low.r) / dividerLowMid;
+        float lowMidDeltaG = (mid.g * mid.g - low.g * low.g) / dividerLowMid;
+        float lowMidDeltaB = (mid.b * mid.b - low.b * low.b) / dividerLowMid;
+
+        int dividerMidHigh = numberOfExpressionColors - dividerLowMid - 1;
+        if (dividerMidHigh == 0)
+            dividerMidHigh = 1;
+        float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
+        float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
+        float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
+        //print(midHighDeltaR + " " + midHighDeltaG + " " + midHighDeltaB);
+
+        for (int i = 0; i < numberOfExpressionColors / 2 + 1; ++i)
+        {
+            float r = low.r * low.r + lowMidDeltaR * i;
+            float g = low.g * low.g + lowMidDeltaG * i;
+            float b = low.b * low.b + lowMidDeltaB * i;
+            if (r < 0) r = 0;
+            if (g < 0) g = 0;
+            if (b < 0) b = 0;
+            expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
+        }
+        for (int i = numberOfExpressionColors / 2 + 1, j = 1; i < numberOfExpressionColors; ++i, ++j)
+        {
+            float r = mid.r * mid.r + midHighDeltaR * j;
+            float g = mid.g * mid.g + midHighDeltaG * j;
+            float b = mid.b * mid.b + midHighDeltaB * j;
+            if (r < 0) r = 0;
+            if (g < 0) g = 0;
+            if (b < 0) b = 0;
+            expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
+        }
+        HighlightMarkerColor = CellExAlConfig.HeatmapHighlightMarkerColor;
+        ConfirmMarkerColor = CellExAlConfig.HeatmapConfirmMarkerColor;
+    }
+
 
     internal void DeleteHeatmaps()
     {
@@ -82,11 +142,6 @@ public class HeatmapGenerator : MonoBehaviour
             GeneratingHeatmaps = true;
             // make a deep copy of the arraylist
             List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
-            Dictionary<Cell, int> colors = new Dictionary<Cell, int>();
-            foreach (GraphPoint g in selection)
-            {
-                colors[g.Cell] = g.CurrentGroup;
-            }
 
             // Check if more than one cell is selected
             if (selection.Count < 1)
@@ -94,24 +149,6 @@ public class HeatmapGenerator : MonoBehaviour
                 CellExAlLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
                 yield break;
             }
-            //Color c1 = ((GraphPoint)selection[0]).GetComponent<Renderer>().material.color;
-            //bool colorFound = false;
-            //for (int i = 1; i < selection.Count; ++i)
-            //{
-            //    Color c2 = ((GraphPoint)selection[i]).GetComponent<Renderer>().material.color;
-            //    if (!((c1.r == c2.r) && (c1.g == c2.g) && (c1.b == c2.b)))
-            //    {
-            //        colorFound = true;
-            //        break;
-            //    }
-            //}
-            //if (!colorFound)
-            //{
-            //    // Generate error message if less than two colors are selected
-            //    errorMessageController.DisplayErrorMessage(3);
-            //    CellExAlLog.Log("Can not create heatmap with only one grouping color, aborting");
-            //    yield break;
-            //}
 
             int statusId = status.AddStatus("R script generating heatmap");
             int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
@@ -119,10 +156,11 @@ public class HeatmapGenerator : MonoBehaviour
             // Start generation of new heatmap in R
             string home = Directory.GetCurrentDirectory();
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
-            string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr + " " + CellExAlUser.UserSpecificFolder;
 
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
-            string heatmapDirectory = home + @"\Images";
+            string heatmapDirectory = home + @"\Resources";
+            string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
+            string args = home + " " + CellExAlUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellExAlConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(heatmapDirectory));
@@ -132,9 +170,9 @@ public class HeatmapGenerator : MonoBehaviour
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-            // Show hourglass
+            // Show calculators
             calculatorCluster.SetActive(true);
+            t.Start();
 
             while (t.IsAlive)
             {
@@ -146,23 +184,26 @@ public class HeatmapGenerator : MonoBehaviour
             statusDisplayHUD.RemoveStatus(statusIdHUD);
             statusDisplayFar.RemoveStatus(statusIdFar);
             GeneratingHeatmaps = false;
-            string newHeatmapFilePath = heatmapDirectory + @"\" + heatmapName + ".png";
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
 
             var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+            heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
             // save colors before.
-            heatmap.SetVars(colors);
+            //heatmap.SetVars(colors);
             heatmapList.Add(heatmap);
 
             if (!referenceManager.networkGenerator.GeneratingNetworks)
                 calculatorCluster.SetActive(false);
 
-            heatmap.UpdateImage(newHeatmapFilePath);
-            heatmap.GetComponent<AudioSource>().Play();
+            //heatmap.UpdateImage(newHeatmapFilePath);
+            heatmap.BuildTexture(selection, outputFilePath);
+            //heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName;
+            heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
+            heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
             heatmapID++;
         }
     }

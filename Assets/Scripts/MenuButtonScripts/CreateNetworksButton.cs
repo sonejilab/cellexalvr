@@ -1,4 +1,7 @@
-﻿public class CreateNetworksButton : StationaryButton
+﻿/// <summary>
+/// Represents the butotn that creates networks from a selection.
+/// </summary>
+public class CreateNetworksButton : StationaryButton
 {
     private NetworkGenerator networkGenerator;
     private GameManager gameManager;

@@ -3,7 +3,7 @@ using System.IO;
 using System;
 
 /// <summary>
-/// This class generates the boxes that represents folders with input data.
+/// Generates the boxes that represents folders with input data.
 /// </summary>
 public class InputFolderGenerator : MonoBehaviour
 {

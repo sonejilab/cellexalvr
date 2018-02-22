@@ -8,7 +8,8 @@ using System;
 using TMPro;
 
 /// <summary>
-/// A class for reading data files and creating GraphPoints at the correct locations 
+/// A class for reading data files and creating objects in the virtual environment.
+/// 
 /// </summary>
 public class InputReader : MonoBehaviour
 {
@@ -181,11 +182,13 @@ public class InputReader : MonoBehaviour
                 newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
                 UpdateMinMax(newGraph, xcoords, ycoords, zcoords);
 
-                for (int i = 0; i < xcoords.Count; i += itemsThisFrame, itemsThisFrame = 0)
+                for (int i = 0; i < xcoords.Count; i += itemsThisFrame)
                 {
+                    itemsThisFrame = 0;
                     status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                     statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                     statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
+                    //print(maximumItemsPerFrame);
                     for (int j = i; j < (i + maximumItemsPerFrame) && j < xcoords.Count; ++j)
                     {
                         graphManager.AddCell(newGraph, cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
@@ -201,11 +204,12 @@ public class InputReader : MonoBehaviour
                         // we had some time over last frame
                         maximumItemsPerFrame += CellExAlConfig.GraphLoadingCellsPerFrameIncrement;
                     }
-                    else if (lastFrame > maximumDeltaTime)
+                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellExAlConfig.GraphLoadingCellsPerFrameIncrement * 2)
                     {
                         // we took too much time last frame
                         maximumItemsPerFrame -= CellExAlConfig.GraphLoadingCellsPerFrameIncrement;
                     }
+                    //UnityEditor.EditorApplication.isPlaying = false;
                 }
                 fileIndex++;
                 // tell the graph that the info text is ready to be set

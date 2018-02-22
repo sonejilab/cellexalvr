@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class rotates the text on the arcs between networks and positions the text on the middle of the arcs.
+/// Rotates the text on the arcs between networks and positions the text on the middle of the arcs.
 /// </summary>
 public class SimpleTextRotator : MonoBehaviour
 {

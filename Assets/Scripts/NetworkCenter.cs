@@ -6,7 +6,7 @@ using VRTK.GrabAttachMechanics;
 using VRTK.SecondaryControllerGrabActions;
 
 /// <summary>
-/// This class represents the center of a network. It handles the enlarging when it is pressed.
+/// Represents the center of a network. It handles the enlarging when it is pressed.
 /// </summary>
 public class NetworkCenter : MonoBehaviour
 {
@@ -236,7 +236,7 @@ public class NetworkCenter : MonoBehaviour
             //rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
             gameObject.SetActive(false);
             // calling Destroy without the time delay caused the program to crash pretty reliably
-            Destroy(gameObject, 0.1f);
+            Destroy(gameObject);
         }
         else
         {

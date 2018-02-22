@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a button that colors all graphs according to an index.
+/// Represents a button that colors all graphs according to an index.
 /// </summary>
 public class ColorByIndexButton : SolidButton
 {

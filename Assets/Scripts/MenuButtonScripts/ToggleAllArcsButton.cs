@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a button that toggle all arcs between all networks on a graph skeleton.
+/// Represents a button that toggle all arcs between all networks on a graph skeleton.
 /// </summary>
 public class ToggleAllArcsButton : SolidButton
 {

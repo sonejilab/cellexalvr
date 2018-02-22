@@ -1,10 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using BayatGames.SaveGameFree.Examples;
-using System;
 
 /// <summary>
-/// This class represent the loader.
+/// This class represent the loader. The loader reacts to cells representing dtasets that fall into it and starts loading the dataset.
 /// </summary>
 public class LoaderController : MonoBehaviour
 {

@@ -1,5 +1,6 @@
-﻿using System;
-
+﻿/// <summary>
+/// Represents the button that clears lines drawn between graphs.
+/// </summary>
 class ClearLinesBetweenGraphPointsButton : StationaryButton
 {
 

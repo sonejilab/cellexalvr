@@ -4,7 +4,7 @@ using UnityEngine;
 using VRTK;
 
 /// <summary>
-/// This class represents a collection of networks placed on a skeleton like model of a graph.
+/// Represents a collection of networks placed on a skeleton like model of a graph.
 /// </summary>
 public class NetworkHandler : MonoBehaviour
 {
@@ -117,7 +117,6 @@ public class NetworkHandler : MonoBehaviour
         {
             if (network.Enlarged)
             {
-
                 foreach (Collider c in network.GetComponentsInChildren<Collider>())
                 {
                     c.enabled = newState;

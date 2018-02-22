@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents a menu that has tabs.
+/// Represents a menu that has tabs. Tabs are meant to function much like tabs in a web browser.
 /// </summary>
 public class MenuWithTabs : MonoBehaviour
 {

@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the button that moves the folders when a controller is moved inside of it.
+/// Represents the button that moves the folders when a controller is moved inside of it.
 /// </summary>
 public class MoveFoldersDownButton : MonoBehaviour
 {

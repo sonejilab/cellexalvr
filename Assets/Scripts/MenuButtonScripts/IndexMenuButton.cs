@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Represents the button that opens the color by index menu.
+/// </summary>
 public class IndexMenuButton : StationaryButton
 {
     private GameObject indexMenu;

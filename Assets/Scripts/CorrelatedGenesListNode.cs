@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents a node in the list of correlated genes.
+/// Rrepresents a node in the list of correlated genes.
 /// </summary>
 public class CorrelatedGenesListNode : MonoBehaviour
 {

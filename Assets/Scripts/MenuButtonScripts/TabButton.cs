@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class represents the tab buttons on top of a tab.
+/// Represents the tab buttons on top of a tab.
 /// </summary>
 public class TabButton : MonoBehaviour
 {
