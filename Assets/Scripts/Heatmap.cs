@@ -74,7 +74,7 @@ public class Heatmap : MonoBehaviour
 
     void Start()
     {
-        Init();
+        //Init();
     }
 
     public void Init()
@@ -97,6 +97,12 @@ public class Heatmap : MonoBehaviour
 
         numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
         heatmapGenerator = referenceManager.heatmapGenerator;
+        highlightQuad.GetComponent<Renderer>().material.color = heatmapGenerator.HighlightMarkerColor;
+        confirmQuad.GetComponent<Renderer>().material.color = heatmapGenerator.ConfirmMarkerColor;
+        foreach (StationaryButton b in GetComponentsInChildren<StationaryButton>())
+        {
+            b.referenceManager = referenceManager;
+        }
 
     }
 
@@ -792,7 +798,7 @@ public class Heatmap : MonoBehaviour
             // figure out how many cells are inbetween the indeces. this is the same number of cells that the other part contains
             int numberOfcellsInOtherPart = Math.Abs(cellsStartIndex - cellsStartIndexToMoveTo);
             // figure out the index that the other part is moving to
-            int otherPartIndexToMoveTo = cellsStartIndex < cellsStartIndexToMoveTo ? cellsStartIndex : cellsStartIndex + totalNbrOfCells;
+            int otherPartIndexToMoveTo = cellsStartIndex < cellsStartIndexToMoveTo ? cellsStartIndex : cellsStartIndexToMoveTo + totalNbrOfCells;
             // temporary array with the cells we should move
             string[] cellsToMove = new string[totalNbrOfCells];
             // move the cells into the temporary array

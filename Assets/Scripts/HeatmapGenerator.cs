@@ -30,8 +30,8 @@ public class HeatmapGenerator : MonoBehaviour
     private int heatmapID = 1;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
-    private UnityEngine.Color HighlightMarkerColor;
-    private UnityEngine.Color ConfirmMarkerColor;
+    public UnityEngine.Color HighlightMarkerColor { get; private set; }
+    public UnityEngine.Color ConfirmMarkerColor { get; private set; }
 
     void Awake()
     {
@@ -160,7 +160,7 @@ public class HeatmapGenerator : MonoBehaviour
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
             string heatmapDirectory = home + @"\Resources";
             string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
-            string args = home + " " + selectionToolHandler.DataDir + " " + fileCreationCtr + " " + outputFilePath + " " + CellExAlConfig.HeatmapNumberOfGenes;
+            string args = home + " " + CellExAlUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellExAlConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(heatmapDirectory));
@@ -188,6 +188,7 @@ public class HeatmapGenerator : MonoBehaviour
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
 
             var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+            heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
             // save colors before.
@@ -199,7 +200,7 @@ public class HeatmapGenerator : MonoBehaviour
 
             //heatmap.UpdateImage(newHeatmapFilePath);
             heatmap.BuildTexture(selection, outputFilePath);
-            heatmap.GetComponent<AudioSource>().Play();
+            //heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;

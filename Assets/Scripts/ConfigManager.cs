@@ -244,6 +244,12 @@ public class ConfigManager : MonoBehaviour
                 case "HeatmapNumberOfGenes":
                     CellExAlConfig.HeatmapNumberOfGenes = int.Parse(value);
                     break;
+                case "HeatmapHighlightMarkerColor":
+                    CellExAlConfig.HeatmapHighlightMarkerColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapConfirmMarkerColor":
+                    CellExAlConfig.HeatmapConfirmMarkerColor = ReadColor(value, lineNbr);
+                    break;
 
                 default:
                     CellExAlLog.Log("WARNING: Unknown option in the config file. At line " + lineNbr + ": " + line);
@@ -272,13 +278,28 @@ public class ConfigManager : MonoBehaviour
             CellExAlLog.Log("WARNING: Bad line in the config file. Expected \'#\' but did not find it at line " + lineNbr + ": " + value);
             return Color.white;
         }
-        string hexcolorValue = value.Substring(hashtagIndex, 7);
+        string hexcolorValue = value.Substring(hashtagIndex);
         string r = hexcolorValue.Substring(1, 2);
         string g = hexcolorValue.Substring(3, 2);
         string b = hexcolorValue.Substring(5, 2);
         float unityR = byte.Parse(r, System.Globalization.NumberStyles.HexNumber) / 255f;
         float unityG = byte.Parse(g, System.Globalization.NumberStyles.HexNumber) / 255f;
         float unityB = byte.Parse(b, System.Globalization.NumberStyles.HexNumber) / 255f;
+        if (hexcolorValue.Length == 9)
+        {
+            // if there is an alpha value as well
+            string a = hexcolorValue.Substring(7, 2);
+            try
+            {
+                float unityA = byte.Parse(a, System.Globalization.NumberStyles.HexNumber) / 255f;
+                return new Color(unityR, unityG, unityB, unityA);
+            }
+            catch (System.FormatException e)
+            {
+                // we found something that seemed like an alpha value, but wasn't
+                return new Color(unityR, unityG, unityB);
+            }
+        }
         return new Color(unityR, unityG, unityB);
     }
 }
