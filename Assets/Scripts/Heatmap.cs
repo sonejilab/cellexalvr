@@ -289,6 +289,7 @@ public class Heatmap : MonoBehaviour
         {
             System.Drawing.SolidBrush[] heatmapBrushes = heatmapGenerator.expressionColors;
             CellExAlLog.Log("Reading " + result.Count + " results from database");
+            float lowestExpression = 0;
             float highestExpression = 0;
             graphics.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
             int genescount = 0, cellcount = 0;
@@ -299,6 +300,9 @@ public class Heatmap : MonoBehaviour
                 if (geneIds.ContainsKey(tuple.Item1))
                 {
                     // new gene
+                    lowestExpression = tuple.Item2;
+                    i++;
+                    tuple = (Tuple<string, float>)result[i];
                     highestExpression = tuple.Item2;
                     ycoord = heatmapY + genePositions[geneIds[tuple.Item1]] * ycoordInc;
                     genescount++;
@@ -315,7 +319,7 @@ public class Heatmap : MonoBehaviour
                     }
                     else
                     {
-                        graphics.FillRectangle(heatmapBrushes[(int)(expression / highestExpression * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
+                        graphics.FillRectangle(heatmapBrushes[(int)((expression - lowestExpression) / (highestExpression - lowestExpression) * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
                     }
                     cellcount++;
                 }

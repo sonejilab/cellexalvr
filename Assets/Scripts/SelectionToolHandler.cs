@@ -48,6 +48,8 @@ public class SelectionToolHandler : MonoBehaviour
     private int historyIndexOffset;
     private GameManager gameManager;
 
+    public Filter CurrentFilter { get; set; }
+
     /// <summary>
     /// Helper struct for remembering history when selecting graphpoints.
     /// </summary>
@@ -119,6 +121,7 @@ public class SelectionToolHandler : MonoBehaviour
         {
             return;
         }
+        if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
         int oldGroup = graphPoint.CurrentGroup;
 
@@ -544,6 +547,6 @@ public class SelectionToolHandler : MonoBehaviour
     {
         return Colors[index];
     }
-    
-    
+
+
 }

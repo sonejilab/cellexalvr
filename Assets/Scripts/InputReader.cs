@@ -250,10 +250,10 @@ public class InputReader : MonoBehaviour
             string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
             for (int i = 1; i < attributeTypes.Length; ++i)
             {
-                if (attributeTypes[i].Length > 10)
-                {
-                    attributeTypes[i] = attributeTypes[i].Substring(0, 10);
-                }
+                //if (attributeTypes[i].Length > 10)
+                //{
+                //    attributeTypes[i] = attributeTypes[i].Substring(0, 10);
+                //}
                 actualAttributeTypes[i - 1] = attributeTypes[i];
                 //print(attributeTypes[i]);
             }

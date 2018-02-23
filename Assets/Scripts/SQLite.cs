@@ -444,6 +444,28 @@ namespace SQLiter
         }
 
         /// <summary>
+        /// Queries the database for the expression of a gene in some cells.
+        /// </summary>
+        /// <param name="gene">The gene to query for.</param>
+        /// <param name="cells">The graphpoints representing the cells to query for.</param>
+        internal void QueryGenesInCells(string gene, List<string> cells)
+        {
+            QueryRunning = true;
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < cells.Count; ++i)
+            {
+                string cell = cells[i];
+                builder.Append("\"").Append(cell).Append("\"");
+                if (i < cells.Count - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            string cellNames = builder.ToString();
+            StartCoroutine(QueryGenesInCellsCoroutine(gene, cellNames));
+        }
+
+        /// <summary>
         /// Queries the database for the expression of a gene in some cells. This function assumes that the string <paramref name="cells"/> is already formatted the way sqlite wants.
         /// </summary>
         /// <param name="gene">The gene to query for.</param>
@@ -531,9 +553,11 @@ namespace SQLiter
             }
 
             _result.Clear();
+            float lowestExpression = float.PositiveInfinity;
             float highestExpression = 0;
             string lastGeneId = "";
-            int highestGeneExpressionIndex = 0;
+            int lowestGeneExpressionIndex = 0;
+            int highestGeneExpressionIndex = 1;
             while (_reader.Read())
             {
                 string cellName = _reader.GetString(0);
@@ -543,13 +567,23 @@ namespace SQLiter
                 {
                     // reserve this space for later
                     _result.Add(new Tuple<string, float>("", 0f));
+                    _result.Add(new Tuple<string, float>("", 0f));
                     if (highestGeneExpressionIndex != -1)
                     {
                         // replace the last reserved space with the highest expression we found
+                        int numberOfCellsFound = _result.Count - highestGeneExpressionIndex - 1;
+                        if (numberOfCellsFound < cells.Length)
+                        {
+                            // if one cell was not in the database, it has an expression of zero
+                            lowestExpression = 0;
+                        }
+                        _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
                         _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
                     }
                     highestGeneExpressionIndex = _result.Count - 1;
+                    lowestGeneExpressionIndex = _result.Count - 2;
                     highestExpression = 0f;
+                    lowestExpression = float.PositiveInfinity;
                     lastGeneId = geneId;
                 }
                 _result.Add(new Tuple<string, float>(cellName, expression));
@@ -557,8 +591,13 @@ namespace SQLiter
                 {
                     highestExpression = expression;
                 }
+                if (expression < lowestExpression)
+                {
+                    lowestExpression = expression;
+                }
             }
             // replace the last value as well
+            _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
             _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
             // the structure if _result is now a list with each gene's highest epxression followed by all the individual expressions
             QueryRunning = false;
@@ -607,6 +646,38 @@ namespace SQLiter
             }
             QueryRunning = false;
         }
+
+        /// <summary>
+        /// Query the database for a gene and set up a function to be called that reads the results
+        /// </summary>
+        /// <param name="geneName">The gene to query for</param>
+        /// <param name="action">The function to run when the results are ready</param>
+        public void QueryGene(string geneName, Action<SQLite> action)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGeneCoroutine(geneName, action));
+        }
+
+        private IEnumerator QueryGeneCoroutine(string geneName, Action<SQLite> action)
+        {
+            _result.Clear();
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+            while (_reader.Read())
+            {
+                string cellName = _reader.GetString(0);
+                float expression = _reader.GetFloat(1);
+                _result.Add(new Tuple<string, float>(cellName, expression));
+            }
+            QueryRunning = false;
+            action.Invoke(this);
+        }
+
         /// <summary>
         /// Queries the database for the expressions of a gene.
         /// </summary>
@@ -626,7 +697,7 @@ namespace SQLiter
         {
             int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where gname = \"" + geneName + "\")";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -815,7 +886,7 @@ namespace SQLiter
             }
             string genesList = builder.ToString();
             // Figure out which genes are actually in the database
-            string query = "select gname, id from genes where gname in (" + genesList + ") order by id";
+            string query = "select gname, id from genes where gname in " + genesList + " order by id";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)

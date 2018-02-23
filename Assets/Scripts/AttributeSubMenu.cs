@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// ThRepresents the sub menu that pops up when the <see cref="AttributeMenuButton"/> is pressed.
+/// Represents the sub menu that pops up when the <see cref="AttributeMenuButton"/> is pressed.
 /// </summary>
 public class AttributeSubMenu : MonoBehaviour
 {

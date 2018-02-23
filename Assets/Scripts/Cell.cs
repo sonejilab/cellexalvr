@@ -7,14 +7,15 @@ public class Cell
 {
     public List<GraphPoint> GraphPoints;
 
+    public Dictionary<string, int> Attributes { get; private set; }
+    public Dictionary<string, int> Facs { get; private set; }
+    public int ExpressionLevel { get; internal set; }
+    public string Label { get; set; }
+
     private GraphManager graphManager;
-    private Dictionary<string, int> attributes;
-    private Dictionary<string, int> facs;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
-    public int ExpressionLevel { get; internal set; }
 
-    public string Label { get; set; }
 
 
     /// <summary>
@@ -27,8 +28,8 @@ public class Cell
         this.graphManager = graphManager;
         this.Label = label;
         GraphPoints = new List<GraphPoint>();
-        attributes = new Dictionary<string, int>();
-        facs = new Dictionary<string, int>();
+        Attributes = new Dictionary<string, int>();
+        Facs = new Dictionary<string, int>();
     }
 
     /// <summary>
@@ -59,12 +60,12 @@ public class Cell
     /// <param name="color"> True if the graphpoints should be colored, false  if they should be white. (True means show this attribute, false means hide basically) </param>
     public void ColorByAttribute(string attributeType, bool color)
     {
-        if (attributes.ContainsKey(attributeType))
+        if (Attributes.ContainsKey(attributeType))
         {
             foreach (GraphPoint g in GraphPoints)
             {
                 if (color)
-                    g.Material = graphManager.AttributeMaterials[attributes[attributeType]];
+                    g.Material = graphManager.AttributeMaterials[Attributes[attributeType]];
                 else
                     g.Material = graphManager.defaultGraphPointMaterial;
             }
@@ -78,7 +79,7 @@ public class Cell
     /// <param name="color"> The color that should be used for this attribute. This corresponds to an index in <see cref="GraphManager.AttributeMaterials"/>. </param>
     public void AddAttribute(string attributeType, int color)
     {
-        attributes[attributeType] = color;
+        Attributes[attributeType] = color;
     }
 
     /// <summary>
@@ -142,7 +143,7 @@ public class Cell
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.Material = graphManager.GeneExpressionMaterials[facs[facsName]];
+            g.Material = graphManager.GeneExpressionMaterials[Facs[facsName]];
         }
     }
 
@@ -154,7 +155,7 @@ public class Cell
     internal void AddFacs(string facsName, int index)
     {
 
-        facs[facsName] = index;
+        Facs[facsName] = index;
     }
 
     /// <summary>
