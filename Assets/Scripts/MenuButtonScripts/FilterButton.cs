@@ -7,6 +7,7 @@ public class FilterButton : SolidButton
 
     public TextMesh text;
     private SelectionToolHandler selectionToolHandler;
+    private FilterMenu filterMenu;
     private Filter filter;
     private bool filterActivated = false;
 
@@ -14,6 +15,7 @@ public class FilterButton : SolidButton
     {
         base.Start();
         selectionToolHandler = referenceManager.selectionToolHandler;
+        filterMenu = referenceManager.filterMenu;
     }
 
     private void Update()
@@ -23,6 +25,7 @@ public class FilterButton : SolidButton
         {
             if (!filterActivated)
             {
+                filterMenu.DeactivateAllOtherFilters(this);
                 filter.Load();
                 filterActivated = true;
                 text.color = Color.green;

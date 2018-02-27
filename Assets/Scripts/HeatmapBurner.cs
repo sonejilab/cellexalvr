@@ -41,7 +41,7 @@ public class HeatmapBurner : MonoBehaviour
             renderer.material = transparentMaterial;
         }
         fadeHeatmap = true;
-        fire = Instantiate(firePrefab);
+        fire = Instantiate(firePrefab, gameObject.transform);
     }
 
     /// <summary>

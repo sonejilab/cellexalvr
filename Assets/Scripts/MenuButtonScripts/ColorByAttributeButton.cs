@@ -34,7 +34,9 @@ public class ColorByAttributeButton : SolidButton
     /// <param name="color"> The color that the cells in possesion of the attribute should get. </param>
     public void SetAttribute(string attribute, Color color)
     {
-        description.text = attribute;
+        string[] shorter = { attribute.Substring(0, 8), attribute.Substring(8) };
+
+        description.text = shorter[0] + "\n" + shorter[1];
         this.attribute = attribute;
         // sometimes this is done before Awake() it seems, so we use GetComponent() here
         GetComponent<Renderer>().material.color = color;

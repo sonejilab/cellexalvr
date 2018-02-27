@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 65461805522477278}
   - component: {fileID: 212553960895205308}
   - component: {fileID: 114900856164061844}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Save Heatmap Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 4221891150752330}
   - component: {fileID: 33725666399917188}
   - component: {fileID: 23247609112159624}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Moving Marker Quad Y
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 4299312697832092}
   - component: {fileID: 23281470942388526}
   - component: {fileID: 102804109275073876}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Highlight Marker Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 4941744950261152}
   - component: {fileID: 23895712931357166}
   - component: {fileID: 102248948059766378}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Buttons Description Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 114008092450855906}
   - component: {fileID: 54483924361634636}
   - component: {fileID: 64300271063794048}
+  - component: {fileID: 114172059786112338}
   m_Layer: 8
   m_Name: Heatboard
   m_TagString: HeatBoard
@@ -131,7 +132,7 @@ GameObject:
   - component: {fileID: 4837238345390544}
   - component: {fileID: 33781567092213330}
   - component: {fileID: 23476945988537276}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Confirm Marker Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +165,7 @@ GameObject:
   - component: {fileID: 65560021837603544}
   - component: {fileID: 212472031655170656}
   - component: {fileID: 114806923698322708}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Recolour Heatmap Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +183,7 @@ GameObject:
   - component: {fileID: 65827202820445754}
   - component: {fileID: 212754480679624130}
   - component: {fileID: 114749635933191596}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Create new heatmap button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +234,7 @@ GameObject:
   - component: {fileID: 4268027343346444}
   - component: {fileID: 33382916712497472}
   - component: {fileID: 23582278204048046}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Highlight Marker Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +251,7 @@ GameObject:
   - component: {fileID: 4259163770222306}
   - component: {fileID: 33420061837342780}
   - component: {fileID: 23443152591704726}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Moving Marker Quad X
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +357,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1546507171833466}
   m_LocalRotation: {x: 0.047517, y: 0.6937914, z: -0.049300216, w: 0.71691364}
-  m_LocalPosition: {x: 1.7812511, y: 1.0043757, z: -0.51755303}
+  m_LocalPosition: {x: 1.4444109, y: 1.0043753, z: 0.047567002}
   m_LocalScale: {x: 2.012399, y: 2.0123985, z: 2.0123985}
   m_Children:
   - {fileID: 4268027343346444}
@@ -1002,6 +1003,19 @@ MonoBehaviour:
   lockYAxis: 0
   lockZAxis: 0
   uniformScaling: 1
+--- !u!114 &114172059786112338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1546507171833466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d0607d6f9a14bd45965fe724dd0a6da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePrefab: {fileID: 1963720288159494, guid: 919818573d223114abd261621bf9ec04, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 3e5d2cf2507b7b24589d638e2e95c22b, type: 2}
 --- !u!114 &114329533491564300
 MonoBehaviour:
   m_ObjectHideFlags: 1

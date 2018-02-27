@@ -58,6 +58,17 @@ public class FilterMenu : MonoBehaviour
 
     }
 
+    public void DeactivateAllOtherFilters(FilterButton buttonToSkip)
+    {
+        foreach (FilterButton button in buttons)
+        {
+            if (button != buttonToSkip)
+            {
+                button.SetTextActivated(false);
+            }
+        }
+    }
+
     public void RemoveButtons()
     {
         foreach (FilterButton button in buttons)

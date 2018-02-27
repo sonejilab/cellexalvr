@@ -14,7 +14,7 @@ public class FilterManager : MonoBehaviour
         FilterParser.referenceManager = referenceManager;
         CellExAlEvents.GraphsLoaded.AddListener(ReadFilters);
         filterMenu = referenceManager.filterMenu;
-        string filterDir = @"C:\Users\vrproject\Documents\CellexalVRBeta\Data\Bertie";
+        string filterDir = @"C:\Users\vrproject\Documents\CellexalVRBeta\Data\Mouse_LSK";
         FileSystemWatcher watcher = new FileSystemWatcher(filterDir);
         watcher.NotifyFilter = NotifyFilters.LastWrite;
         watcher.Filter = "*.fil";
@@ -35,7 +35,7 @@ public class FilterManager : MonoBehaviour
         foreach (string file in Directory.GetFiles(filterDir, "*.fil"))
         {
             var filter = FilterParser.ParseFilterFromFile(file);
-            filter.Load();
+            //filter.Load();
             // find the last slash
             int lastForwardSlash = file.LastIndexOf("/");
             int lastBackwardSlash = file.LastIndexOf("\\");
@@ -44,7 +44,7 @@ public class FilterManager : MonoBehaviour
             // remove the .fil
             filterName = filterName.Substring(0, filterName.Length - 4);
             filterMenu.AddFilterButton(filter, filterName);
-            print(filter.ToString());
+            //print(filter.ToString());
         }
     }
 }
