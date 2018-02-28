@@ -10,6 +10,20 @@ public class SelectionToolCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        selectionToolHandler.AddGraphpointToSelection(other.gameObject.GetComponent<GraphPoint>());
+        print("hit something");
+        var graphpoint = other.gameObject.GetComponent<GraphPoint>();
+        if (graphpoint != null)
+        {
+            selectionToolHandler.AddGraphpointToSelection(graphpoint);
+            return;
+        }
+        print("hit cube");
+        var cubeOnLine = other.gameObject.GetComponent<Selectable>();
+        if (cubeOnLine != null)
+        {
+            selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
+            int group = selectionToolHandler.currentColorIndex;
+            cubeOnLine.GetComponent<Renderer>().material.color = selectionToolHandler.Colors[group];
+        }
     }
 }

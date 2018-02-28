@@ -41,7 +41,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     [HideInInspector]
     public int[] groups = new int[10];
-    private int currentColorIndex = 0;
+    public int currentColorIndex = 0;
     public string DataDir { get; set; }
     private List<HistoryListInfo> selectionHistory = new List<HistoryListInfo>();
     // the number of steps we have taken back in the history.

@@ -92,7 +92,7 @@ public class CellManager : MonoBehaviour
     private GameManager gameManager;
     private SelectionToolHandler selectionToolHandler;
     private GraphManager graphManager;
-    private StatusDisplay statusDisplay; 
+    private StatusDisplay statusDisplay;
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;
     private int coroutinesWaiting;
@@ -619,6 +619,8 @@ public class CellManager : MonoBehaviour
                     LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
                     line.t1 = sameCell.transform;
                     line.t2 = g.transform;
+                    line.graphPoint = g;
+                    line.selectionToolHandler = selectionToolHandler;
                     LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
                     lineRenderer.startColor = color;
                     lineRenderer.endColor = color;
