@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// This class holds the logic for burning and fading out a heatmap.
@@ -35,10 +36,24 @@ public class HeatmapBurner : MonoBehaviour
     /// </summary>
     public void BurnHeatmap()
     {
-        rend.material = transparentMaterial;
+        //rend.material = transparentMaterial;
+        //rend.material.SetTexture("_MainTex", gameObject.GetComponent<Heatmap>().texture);
+        rend.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        rend.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        rend.material.SetInt("_ZWrite", 0);
+        rend.material.DisableKeyword("_ALPHATEST_ON");
+        rend.material.EnableKeyword("_ALPHABLEND_ON");
+        rend.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        rend.material.renderQueue = 3000;
         foreach (Renderer renderer in childrenRenderers)
         {
-            renderer.material = transparentMaterial;
+            renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            renderer.material.SetInt("_ZWrite", 0);
+            renderer.material.DisableKeyword("_ALPHATEST_ON");
+            renderer.material.EnableKeyword("_ALPHABLEND_ON");
+            renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            renderer.material.renderQueue = 3000;
         }
         fadeHeatmap = true;
         fire = Instantiate(firePrefab, gameObject.transform);

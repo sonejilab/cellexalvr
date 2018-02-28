@@ -347,11 +347,12 @@ public class Heatmap : MonoBehaviour
         bitmap.Save(heatmapFilePath, ImageFormat.Png);
 
         // these yields makes the loading a little bit smoother, but still cuts a few frames.
-        Texture2D tex = new Texture2D(4096, 4096);
+        var texture = new Texture2D(4096, 4096);
         yield return null;
-        tex.LoadImage(File.ReadAllBytes(heatmapFilePath));
+        texture.LoadImage(File.ReadAllBytes(heatmapFilePath));
+        this.texture = texture;
         yield return null;
-        GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
+        GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
         yield return null;
         GetComponent<Collider>().enabled = true;
         graphics.Dispose();
