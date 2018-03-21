@@ -44,7 +44,7 @@ public class HeatmapGenerator : MonoBehaviour
         calculatorCluster = referenceManager.calculatorCluster;
         calculatorCluster.SetActive(false);
         GeneratingHeatmaps = false;
-        CellExAlEvents.ConfigLoaded.AddListener(InitColors);
+        CellexalEvents.ConfigLoaded.AddListener(InitColors);
     }
 
     /// <summary>
@@ -53,11 +53,11 @@ public class HeatmapGenerator : MonoBehaviour
     private void InitColors()
     {
 
-        int numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
+        int numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
         expressionColors = new SolidBrush[numberOfExpressionColors];
-        UnityEngine.Color low = CellExAlConfig.HeatmapLowExpressionColor;
-        UnityEngine.Color mid = CellExAlConfig.HeatmapMidExpressionColor;
-        UnityEngine.Color high = CellExAlConfig.HeatmapHighExpressionColor;
+        UnityEngine.Color low = CellexalConfig.HeatmapLowExpressionColor;
+        UnityEngine.Color mid = CellexalConfig.HeatmapMidExpressionColor;
+        UnityEngine.Color high = CellexalConfig.HeatmapHighExpressionColor;
         //print(low + " " + mid + " " + high);
 
         int dividerLowMid = numberOfExpressionColors / 2;
@@ -95,8 +95,8 @@ public class HeatmapGenerator : MonoBehaviour
             if (b < 0) b = 0;
             expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
         }
-        HighlightMarkerColor = CellExAlConfig.HeatmapHighlightMarkerColor;
-        ConfirmMarkerColor = CellExAlConfig.HeatmapConfirmMarkerColor;
+        HighlightMarkerColor = CellexalConfig.HeatmapHighlightMarkerColor;
+        ConfirmMarkerColor = CellexalConfig.HeatmapConfirmMarkerColor;
     }
 
 
@@ -116,7 +116,7 @@ public class HeatmapGenerator : MonoBehaviour
     {
         // name the heatmap "heatmap_X". Where X is some number.
         string heatmapName = "heatmap_" + (selectionToolHandler.fileCreationCtr - 1);
-        CellExAlLog.Log("Creating heatmap");
+        CellexalLog.Log("Creating heatmap");
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
     }
 
@@ -146,7 +146,7 @@ public class HeatmapGenerator : MonoBehaviour
             // Check if more than one cell is selected
             if (selection.Count < 1)
             {
-                CellExAlLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
+                CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
                 yield break;
             }
 
@@ -160,13 +160,13 @@ public class HeatmapGenerator : MonoBehaviour
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
             string heatmapDirectory = home + @"\Resources";
             string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
-            string args = home + " " + CellExAlUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellExAlConfig.HeatmapNumberOfGenes;
+            string args = home + " " + CellexalUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
-                CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(heatmapDirectory));
+                CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(heatmapDirectory));
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            CellExAlLog.Log("Running R script " + CellExAlLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
@@ -179,7 +179,7 @@ public class HeatmapGenerator : MonoBehaviour
                 yield return null;
             }
             stopwatch.Stop();
-            CellExAlLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
+            CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
             status.RemoveStatus(statusId);
             statusDisplayHUD.RemoveStatus(statusIdHUD);
             statusDisplayFar.RemoveStatus(statusIdFar);

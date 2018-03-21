@@ -8,18 +8,14 @@ public class FilterManager : MonoBehaviour
     public ReferenceManager referenceManager;
 
     private FilterMenu filterMenu;
+    private FileSystemWatcher watcher;
 
     private void Start()
     {
         FilterParser.referenceManager = referenceManager;
-        CellExAlEvents.GraphsLoaded.AddListener(ReadFilters);
+        CellexalEvents.GraphsLoaded.AddListener(ReadFilters);
         filterMenu = referenceManager.filterMenu;
-        string filterDir = @"C:\Users\vrproject\Documents\CellexalVRBeta\Data\Mouse_LSK";
-        FileSystemWatcher watcher = new FileSystemWatcher(filterDir);
-        watcher.NotifyFilter = NotifyFilters.LastWrite;
-        watcher.Filter = "*.fil";
-        watcher.Changed += new FileSystemEventHandler(ReadFilters);
-        watcher.EnableRaisingEvents = true;
+
 
     }
 
@@ -30,8 +26,16 @@ public class FilterManager : MonoBehaviour
 
     private void ReadFilters(object source, FileSystemEventArgs e)
     {
-        filterMenu.RemoveButtons();
         string filterDir = referenceManager.selectionToolHandler.DataDir;
+        if (watcher != null)
+            watcher.Dispose();
+        watcher = new FileSystemWatcher(filterDir);
+        watcher.NotifyFilter = NotifyFilters.LastWrite;
+        watcher.Filter = "*.fil";
+        watcher.Changed += new FileSystemEventHandler(ReadFilters);
+        watcher.EnableRaisingEvents = true;
+
+        filterMenu.RemoveButtons();
         foreach (string file in Directory.GetFiles(filterDir, "*.fil"))
         {
             var filter = FilterParser.ParseFilterFromFile(file);
@@ -169,7 +173,7 @@ public static class FilterParser
     /// <param name="line">The line that caused the error.</param>
     private static void LogError(string message, string filepath, int lineNbr, string line)
     {
-        CellExAlLog.Log("WARNING: " + message + ". In file " + filepath + " on line " + lineNbr + ": " + line + ".");
+        CellexalLog.Log("WARNING: " + message + ". In file " + filepath + " on line " + lineNbr + ": " + line + ".");
     }
 
     /// <summary>

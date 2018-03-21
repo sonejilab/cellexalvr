@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that closes the index menu.
 /// </summary>
-public class CloseIndexMenuButton : StationaryButton
+public class CloseIndexMenuButton : CellexalButton
 {
     private GameObject indexMenu;
     private GameObject buttons;

@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Represents the button that opens the color by gene menu.
 /// </summary>
-public class ColorByGeneMenuButton : StationaryButton
+public class ColorByGeneMenuButton : CellexalButton
 {
     public TextMesh textMeshToDarken;
 

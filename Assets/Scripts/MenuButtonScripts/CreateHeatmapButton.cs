@@ -1,7 +1,7 @@
 ///<summary>
 /// Represents a button used for creating a heatmap from a cell selection.
 ///</summary>
-public class CreateHeatmapButton : StationaryButton
+public class CreateHeatmapButton : CellexalButton
 {
 
     private HeatmapGenerator heatmapGenerator;
@@ -18,8 +18,8 @@ public class CreateHeatmapButton : StationaryButton
         heatmapGenerator = referenceManager.heatmapGenerator;
         gameManager = referenceManager.gameManager;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionConfirmed.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -30,7 +30,7 @@ public class CreateHeatmapButton : StationaryButton
             SetButtonActivated(false);
             heatmapGenerator.CreateHeatmap();
             gameManager.InformCreateHeatmap();
-            CellExAlEvents.HeatmapCreated.Invoke();
+            CellexalEvents.HeatmapCreated.Invoke();
         }
     }
 

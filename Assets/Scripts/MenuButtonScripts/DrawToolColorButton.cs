@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the buttons that make up the color wheel for choosing the draw tool's color.
 /// </summary>
-public class DrawToolColorButton : StationaryButton
+public class DrawToolColorButton : CellexalButton
 {
     protected override string Description
     {
@@ -40,24 +40,6 @@ public class DrawToolColorButton : StationaryButton
         {
             drawTool.SkipNextDraw();
             drawTool.LineColor = color;
-        }
-    }
-
-    protected override void OnTriggerEnter(Collider other)
-    {
-        base.OnTriggerEnter(other);
-        if (controllerInside)
-        {
-            buttonRenderer.color = tintedColor;
-        }
-    }
-
-    protected override void OnTriggerExit(Collider other)
-    {
-        base.OnTriggerExit(other);
-        if (!controllerInside)
-        {
-            buttonRenderer.color = color;
         }
     }
 }

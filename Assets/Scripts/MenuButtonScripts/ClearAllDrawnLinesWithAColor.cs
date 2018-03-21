@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the button that clears all lines drawn with a certain color with the draw tool.
 /// </summary>
-public class ClearAllDrawnLinesWithAColor : StationaryButton
+public class ClearAllDrawnLinesWithAColor : CellexalButton
 {
     protected override string Description
     {
@@ -41,24 +41,6 @@ public class ClearAllDrawnLinesWithAColor : StationaryButton
         {
             drawTool.SkipNextDraw();
             drawTool.ClearAllLinesWithColor(color);
-        }
-    }
-
-    protected override void OnTriggerEnter(Collider other)
-    {
-        base.OnTriggerEnter(other);
-        if (controllerInside)
-        {
-            buttonRenderer.color = tintedColor;
-        }
-    }
-
-    protected override void OnTriggerExit(Collider other)
-    {
-        base.OnTriggerExit(other);
-        if (!controllerInside)
-        {
-            buttonRenderer.color = color;
         }
     }
 }

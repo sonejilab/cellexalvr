@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the buttons that increase and decrease the number of frames between each gene expression when flashing genes.
 /// </summary>
-class ChangeFlashGenesModeButton : StationaryButton
+class ChangeFlashGenesModeButton : CellexalButton
 {
     protected override string Description
     {

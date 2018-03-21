@@ -1,7 +1,7 @@
 ///<summary>
 /// Represents a button used for confirming a cell selection.
 ///</summary>
-public class ConfirmSelectionButton : StationaryButton
+public class ConfirmSelectionButton : CellexalButton
 {
 
     private SelectionToolHandler selectionToolHandler;
@@ -18,10 +18,10 @@ public class ConfirmSelectionButton : StationaryButton
         selectionToolHandler = referenceManager.selectionToolHandler;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
-        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
-        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionStarted.AddListener(TurnOn);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellexalEvents.SelectionCanceled.AddListener(TurnOff);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

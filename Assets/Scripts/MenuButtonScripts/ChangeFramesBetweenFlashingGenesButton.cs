@@ -3,7 +3,7 @@
 /// </summary>
 namespace Assets.Scripts.MenuButtonScripts
 {
-    class ChangeFramesBetweenFlashingGenesButton : StationaryButton
+    class ChangeFramesBetweenFlashingGenesButton : CellexalButton
     {
         protected override string Description
         {

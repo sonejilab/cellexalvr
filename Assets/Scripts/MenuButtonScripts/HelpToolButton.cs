@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the button that toggles the help tool.
 /// </summary>
-public class HelpToolButton : StationaryButton
+public class HelpToolButton : CellexalButton
 {
     private ControllerModelSwitcher controllerModelSwitcher;
     private HelperTool helpTool;

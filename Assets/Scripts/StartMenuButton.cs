@@ -1,5 +1,5 @@
 ﻿
-public class StartMenuButton : StationaryButton
+public class StartMenuButton : CellexalButton
 {
     public SceneLoader sceneLoader;
 

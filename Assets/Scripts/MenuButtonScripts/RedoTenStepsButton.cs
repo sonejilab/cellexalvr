@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that redoes the 10 last undone graphpoints.
 /// </summary>
-public class RedoTenStepsButton : StationaryButton
+public class RedoTenStepsButton : CellexalButton
 {
     public Sprite grayScaleTexture;
 
@@ -17,11 +17,11 @@ public class RedoTenStepsButton : StationaryButton
     {
         base.Awake();
         SetButtonActivated(false);
-        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
-        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
-        CellExAlEvents.EndOfHistoryReached.AddListener(TurnOff);
-        CellExAlEvents.EndOfHistoryLeft.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellexalEvents.SelectionCanceled.AddListener(TurnOff);
+        CellexalEvents.EndOfHistoryReached.AddListener(TurnOff);
+        CellexalEvents.EndOfHistoryLeft.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Start()

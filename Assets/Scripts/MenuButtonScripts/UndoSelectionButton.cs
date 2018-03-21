@@ -1,7 +1,7 @@
 ///<summary>
 /// Represents a button used for undoing the current selection.
 ///</summary>
-public class UndoSelectionButton : StationaryButton
+public class UndoSelectionButton : CellexalButton
 {
     private SelectionToolHandler selectionToolHandler;
 
@@ -15,9 +15,9 @@ public class UndoSelectionButton : StationaryButton
         
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
-        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionStarted.AddListener(TurnOn);
+        CellexalEvents.SelectionCanceled.AddListener(TurnOff);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

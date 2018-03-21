@@ -2,7 +2,7 @@
 /// Represents the button that toggles all graphpoints that have an expression greater than 0
 /// </summary>
 
-public class RemoveExpressedCellsButton : StationaryButton
+public class RemoveExpressedCellsButton : CellexalButton
 {
     private CellManager cellManager;
 
@@ -15,8 +15,8 @@ public class RemoveExpressedCellsButton : StationaryButton
     {
         cellManager = referenceManager.cellManager;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsColoredByGene.AddListener(TurnOn);
-        CellExAlEvents.GraphsReset.AddListener(TurnOff);
+        CellexalEvents.GraphsColoredByGene.AddListener(TurnOn);
+        CellexalEvents.GraphsReset.AddListener(TurnOff);
     }
 
     void Update()

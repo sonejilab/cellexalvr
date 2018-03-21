@@ -2,7 +2,7 @@
 ///<summary>
 /// Represents a button used for resetting the color and position of the graphs.
 ///</summary>
-public class ResetGraphAllButton : StationaryButton
+public class ResetGraphAllButton : CellexalButton
 {
 
     private GraphManager graphManager;
@@ -19,8 +19,8 @@ public class ResetGraphAllButton : StationaryButton
     {
         graphManager = referenceManager.graphManager;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
-        CellExAlEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+        CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
+        CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
 
     void Update()

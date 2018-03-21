@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that toggles the screenshot tool.
 /// </summary>
-public class ScreenshotButton : StationaryButton
+public class ScreenshotButton : CellexalButton
 {
 
     public Camera camera;

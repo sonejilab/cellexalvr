@@ -3,13 +3,18 @@
 /// <summary>
 /// Represents a button that toggles arcs between networks.
 /// </summary>
-public class ToggleArcsButton : SolidButton
+public class ToggleArcsButton : CellexalButton
 {
     public bool toggleToState;
 
     [HideInInspector]
     public ToggleAllCombinedArcsButton combinedNetworksButton;
     private NetworkCenter network;
+
+    protected override string Description
+    {
+        get { return "Toggle all arcs connected to this network"; }
+    }
 
     void Update()
     {

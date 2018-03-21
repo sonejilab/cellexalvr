@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Static class that represents the config file and its contents.
 /// </summary>
-public static class CellExAlConfig
+public static class CellexalConfig
 {
     public static string ConfigDir { get; set; }
     public static string RscriptexePath { get; set; }
@@ -30,7 +30,7 @@ public static class CellExAlConfig
 }
 
 /// <summary>
-/// This class is a helper class that reads the config file and sets the properties in <see cref="CellExAlConfig"/>.
+/// This class is a helper class that reads the config file and sets the properties in <see cref="CellexalConfig"/>.
 /// </summary>
 public class ConfigManager : MonoBehaviour
 {
@@ -69,22 +69,22 @@ public class ConfigManager : MonoBehaviour
         if (!Directory.Exists("Config"))
         {
             Directory.CreateDirectory("Config");
-            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(configDir));
+            CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(configDir));
         }
 
         if (!File.Exists(configPath))
         {
             File.Copy(sampleConfigPath, configPath);
-            CellExAlLog.Log("WARNING: No config file found at " + configPath + ". A sample config file has been created.");
+            CellexalLog.Log("WARNING: No config file found at " + configPath + ". A sample config file has been created.");
         }
-        CellExAlLog.Log("Started reading the config file");
+        CellexalLog.Log("Started reading the config file");
 
 
         // start reading the contents.
         FileStream fileStream = new FileStream(configPath, FileMode.Open);
         StreamReader streamReader = new StreamReader(fileStream);
 
-        CellExAlConfig.ConfigDir = configPath;
+        CellexalConfig.ConfigDir = configPath;
         int lineNbr = 0;
         while (!streamReader.EndOfStream)
         {
@@ -102,7 +102,7 @@ public class ConfigManager : MonoBehaviour
             // if a '=' is not found
             if (equalIndex == -1)
             {
-                CellExAlLog.Log("WARNING: Bad line in the config file. No \"=\" found. Line " + lineNbr + ": " + line);
+                CellexalLog.Log("WARNING: Bad line in the config file. No \"=\" found. Line " + lineNbr + ": " + line);
                 continue;
             }
             string key = line.Substring(0, equalIndex).Trim();
@@ -110,28 +110,28 @@ public class ConfigManager : MonoBehaviour
 
             if (key.Length == 0)
             {
-                CellExAlLog.Log("WARNING: Bad line in the config file. No key found. Line " + lineNbr + ": " + line);
+                CellexalLog.Log("WARNING: Bad line in the config file. No key found. Line " + lineNbr + ": " + line);
                 continue;
             }
 
             if (value.Length == 0)
             {
-                CellExAlLog.Log("WARNING: Bad line in the config file. No value found. Line " + lineNbr + ": " + line);
+                CellexalLog.Log("WARNING: Bad line in the config file. No value found. Line " + lineNbr + ": " + line);
                 continue;
             }
 
             switch (key)
             {
                 case "RscriptFilePath":
-                    CellExAlConfig.RscriptexePath = value;
+                    CellexalConfig.RscriptexePath = value;
                     break;
 
                 case "GraphLoadingCellsPerFrameStartCount":
-                    CellExAlConfig.GraphLoadingCellsPerFrameStartCount = int.Parse(value);
+                    CellexalConfig.GraphLoadingCellsPerFrameStartCount = int.Parse(value);
                     break;
 
                 case "GraphLoadingCellsPerFrameIncrement":
-                    CellExAlConfig.GraphLoadingCellsPerFrameIncrement = int.Parse(value);
+                    CellexalConfig.GraphLoadingCellsPerFrameIncrement = int.Parse(value);
                     break;
 
                 case "SelectionColors":
@@ -147,7 +147,7 @@ public class ConfigManager : MonoBehaviour
                         {
                             if (streamReader.EndOfStream)
                             {
-                                CellExAlLog.Log("WARNING: Unexpected end of file when parsing list of selection colors from the config file.");
+                                CellexalLog.Log("WARNING: Unexpected end of file when parsing list of selection colors from the config file.");
                                 break;
                             }
                             lineNbr++;
@@ -161,7 +161,7 @@ public class ConfigManager : MonoBehaviour
                     Color[] selectionColorsArray = selectionColors.ToArray();
                     // the selection tool handler is not active when the config is being read
                     SelectionToolHandler selectionToolHandler = referenceManager.selectionToolHandler;
-                    CellExAlConfig.SelectionToolColors = selectionColorsArray;
+                    CellexalConfig.SelectionToolColors = selectionColorsArray;
                     selectionToolHandler.UpdateColors();
                     break;
 
@@ -178,7 +178,7 @@ public class ConfigManager : MonoBehaviour
                         {
                             if (streamReader.EndOfStream)
                             {
-                                CellExAlLog.Log("ERROR: Unexpected end of file when parsing list of attribute colors from the config file.");
+                                CellexalLog.Log("ERROR: Unexpected end of file when parsing list of attribute colors from the config file.");
                                 break;
                             }
                             lineNbr++;
@@ -189,37 +189,37 @@ public class ConfigManager : MonoBehaviour
                             break;
                         }
                     }
-                    CellExAlConfig.AttributeColors = attributeColors.ToArray();
+                    CellexalConfig.AttributeColors = attributeColors.ToArray();
                     break;
 
                 case "NumberOfExpressionColors":
                     int nColors = int.Parse(value);
                     if (nColors < 3)
                     {
-                        CellExAlLog.Log("WARNING: Number of gene expression colors is less than 3, changing it to 3.");
+                        CellexalLog.Log("WARNING: Number of gene expression colors is less than 3, changing it to 3.");
                         nColors = 3;
                     }
-                    CellExAlConfig.NumberOfExpressionColors = nColors;
+                    CellexalConfig.NumberOfExpressionColors = nColors;
                     break;
 
                 case "LowExpressionColor":
-                    CellExAlConfig.LowExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.LowExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "MidExpressionColor":
-                    CellExAlConfig.MidExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.MidExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "HighExpressionColor":
-                    CellExAlConfig.HighExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.HighExpressionColor = ReadColor(value, lineNbr);
                     break;
 
                 case "NetworkLineSmallWidth":
-                    CellExAlConfig.NetworkLineSmallWidth = float.Parse(value);
+                    CellexalConfig.NetworkLineSmallWidth = float.Parse(value);
                     break;
                 case "NetworkLineLargeWidth":
-                    CellExAlConfig.NetworkLineLargeWidth = float.Parse(value);
+                    CellexalConfig.NetworkLineLargeWidth = float.Parse(value);
                     break;
                 case "NumberOfNetworkLineColors":
-                    CellExAlConfig.NumberOfNetworkLineColors = int.Parse(value);
+                    CellexalConfig.NumberOfNetworkLineColors = int.Parse(value);
                     break;
 
 
@@ -227,32 +227,32 @@ public class ConfigManager : MonoBehaviour
                     int numberOfHeatmapColors = int.Parse(value);
                     if (numberOfHeatmapColors < 3)
                     {
-                        CellExAlLog.Log("WARNING: Number of heatmap colors is less than 3, changing it to 3.");
+                        CellexalLog.Log("WARNING: Number of heatmap colors is less than 3, changing it to 3.");
                         numberOfHeatmapColors = 3;
                     }
-                    CellExAlConfig.NumberOfHeatmapColors = numberOfHeatmapColors;
+                    CellexalConfig.NumberOfHeatmapColors = numberOfHeatmapColors;
                     break;
                 case "HeatmapLowExpressionColor":
-                    CellExAlConfig.HeatmapLowExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.HeatmapLowExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "HeatmapMidExpressionColor":
-                    CellExAlConfig.HeatmapMidExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.HeatmapMidExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "HeatmapHighExpressionColor":
-                    CellExAlConfig.HeatmapHighExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.HeatmapHighExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "HeatmapNumberOfGenes":
-                    CellExAlConfig.HeatmapNumberOfGenes = int.Parse(value);
+                    CellexalConfig.HeatmapNumberOfGenes = int.Parse(value);
                     break;
                 case "HeatmapHighlightMarkerColor":
-                    CellExAlConfig.HeatmapHighlightMarkerColor = ReadColor(value, lineNbr);
+                    CellexalConfig.HeatmapHighlightMarkerColor = ReadColor(value, lineNbr);
                     break;
                 case "HeatmapConfirmMarkerColor":
-                    CellExAlConfig.HeatmapConfirmMarkerColor = ReadColor(value, lineNbr);
+                    CellexalConfig.HeatmapConfirmMarkerColor = ReadColor(value, lineNbr);
                     break;
 
                 default:
-                    CellExAlLog.Log("WARNING: Unknown option in the config file. At line " + lineNbr + ": " + line);
+                    CellexalLog.Log("WARNING: Unknown option in the config file. At line " + lineNbr + ": " + line);
                     break;
 
             }
@@ -260,8 +260,8 @@ public class ConfigManager : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
 
-        CellExAlEvents.ConfigLoaded.Invoke();
-        CellExAlLog.Log("Finished reading the config file");
+        CellexalEvents.ConfigLoaded.Invoke();
+        CellexalLog.Log("Finished reading the config file");
     }
 
     /// <summary>
@@ -275,7 +275,7 @@ public class ConfigManager : MonoBehaviour
         int hashtagIndex = value.IndexOf('#');
         if (hashtagIndex == -1)
         {
-            CellExAlLog.Log("WARNING: Bad line in the config file. Expected \'#\' but did not find it at line " + lineNbr + ": " + value);
+            CellexalLog.Log("WARNING: Bad line in the config file. Expected \'#\' but did not find it at line " + lineNbr + ": " + value);
             return Color.white;
         }
         string hexcolorValue = value.Substring(hashtagIndex);

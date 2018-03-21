@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents a button that chooses a fitler when pressed.
 /// </summary>
-public class FilterButton : SolidButton
+public class FilterButton : CellexalButton
 {
 
     public TextMesh text;
@@ -11,9 +11,13 @@ public class FilterButton : SolidButton
     private Filter filter;
     private bool filterActivated = false;
 
-    protected override void Start()
+    protected override string Description
     {
-        base.Start();
+        get { return "Toggle this filter"; }
+    }
+
+    protected void Start()
+    {
         selectionToolHandler = referenceManager.selectionToolHandler;
         filterMenu = referenceManager.filterMenu;
     }

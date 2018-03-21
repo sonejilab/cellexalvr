@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button for turning on and off the laser pointers.
 /// </summary>
-public class LasersButton : StationaryButton
+public class LasersButton : CellexalButton
 {
 
     private ControllerModelSwitcher controllerModelSwitcher;

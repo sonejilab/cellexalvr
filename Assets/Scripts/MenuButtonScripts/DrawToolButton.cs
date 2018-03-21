@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents the button that toggles the draw tool.
 /// </summary>
-public class DrawToolButton : StationaryButton
+public class DrawToolButton : CellexalButton
 {
     protected override string Description
     {

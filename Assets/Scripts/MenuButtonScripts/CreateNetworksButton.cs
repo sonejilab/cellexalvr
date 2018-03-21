@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents the butotn that creates networks from a selection.
 /// </summary>
-public class CreateNetworksButton : StationaryButton
+public class CreateNetworksButton : CellexalButton
 {
     private NetworkGenerator networkGenerator;
     private GameManager gameManager;
@@ -20,8 +20,8 @@ public class CreateNetworksButton : StationaryButton
         networkGenerator = referenceManager.networkGenerator;
         gameManager = referenceManager.gameManager;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionConfirmed.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -32,7 +32,7 @@ public class CreateNetworksButton : StationaryButton
             SetButtonActivated(false);
             networkGenerator.GenerateNetworks();
             gameManager.InformGenerateNetworks();
-            CellExAlEvents.NetworkCreated.Invoke();
+            CellexalEvents.NetworkCreated.Invoke();
         }
     }
 

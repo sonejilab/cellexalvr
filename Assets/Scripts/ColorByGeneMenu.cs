@@ -26,8 +26,8 @@ public class ColorByGeneMenu : MonoBehaviour
     private void Awake()
     {
         menuToggler = referenceManager.menuToggler;
-        CellExAlEvents.QueryTopGenesStarted.AddListener(ShowLoadingText);
-        CellExAlEvents.QueryTopGenesFinished.AddListener(HideLoadingText);
+        CellexalEvents.QueryTopGenesStarted.AddListener(ShowLoadingText);
+        CellexalEvents.QueryTopGenesFinished.AddListener(HideLoadingText);
     }
 
     /// <summary>

@@ -80,7 +80,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
         SetSelectionToolEnabled(false);
-        CellExAlEvents.ConfigLoaded.AddListener(UpdateColors);
+        CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
     }
 
     private void Start()
@@ -91,11 +91,11 @@ public class SelectionToolHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates <see cref="Colors"/> to <see cref="CellExAlConfig.SelectionToolColors"/>.
+    /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.SelectionToolColors"/>.
     /// </summary>
     public void UpdateColors()
     {
-        Colors = CellExAlConfig.SelectionToolColors;
+        Colors = CellexalConfig.SelectionToolColors;
         selectedColor = Colors[currentColorIndex];
         groupInfoDisplay.SetColors(Colors);
         HUDGroupInfoDisplay.SetColors(Colors);
@@ -137,7 +137,7 @@ public class SelectionToolHandler : MonoBehaviour
             selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
             historyIndexOffset = 0;
             // turn off the redo buttons
-            CellExAlEvents.EndOfHistoryReached.Invoke();
+            CellexalEvents.EndOfHistoryReached.Invoke();
         }
         if (!selectionMade)
         {
@@ -148,7 +148,7 @@ public class SelectionToolHandler : MonoBehaviour
             HUDGroupInfoDisplay.ResetGroupsInfo();
             FarGroupInfoDisplay.ResetGroupsInfo();
             // turn on the undo buttons
-            CellExAlEvents.BeginningOfHistoryLeft.Invoke();
+            CellexalEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
         if (newGroup != oldGroup || newNode)
@@ -166,7 +166,7 @@ public class SelectionToolHandler : MonoBehaviour
                 gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
                 if (selectedCells.Count == 0)
                 {
-                    CellExAlEvents.SelectionStarted.Invoke();
+                    CellexalEvents.SelectionStarted.Invoke();
                 }
                 selectedCells.Add(graphPoint);
             }
@@ -192,14 +192,14 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (historyIndexOffset == 0)
         {
-            CellExAlEvents.EndOfHistoryLeft.Invoke();
+            CellexalEvents.EndOfHistoryLeft.Invoke();
         }
 
         int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
         if (indexToMoveTo == 0)
         {
             // beginning of history reached
-            CellExAlEvents.BeginningOfHistoryReached.Invoke();
+            CellexalEvents.BeginningOfHistoryReached.Invoke();
             //selectionToolMenu.UndoSelection();
         }
         else if (indexToMoveTo < 0)
@@ -239,7 +239,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (historyIndexOffset == selectionHistory.Count)
         {
-            CellExAlEvents.BeginningOfHistoryLeft.Invoke();
+            CellexalEvents.BeginningOfHistoryLeft.Invoke();
             //selectionToolMenu.SelectionStarted();
         }
 
@@ -247,7 +247,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (indexToMoveTo == selectionHistory.Count - 1)
         {
             // end of history reached
-            CellExAlEvents.EndOfHistoryReached.Invoke();
+            CellexalEvents.EndOfHistoryReached.Invoke();
         }
         else if (indexToMoveTo >= selectionHistory.Count)
         {
@@ -358,7 +358,7 @@ public class SelectionToolHandler : MonoBehaviour
             other.SetOutLined(false, -1);
         }
         selectionHistory.Clear();
-        CellExAlEvents.SelectionCanceled.Invoke();
+        CellexalEvents.SelectionCanceled.Invoke();
         selectedCells.Clear();
         selectionMade = false;
         //selectionToolMenu.RemoveSelection();
@@ -386,7 +386,7 @@ public class SelectionToolHandler : MonoBehaviour
         // clear the list since we are done with it
         selectedCells.Clear();
         selectionHistory.Clear();
-        CellExAlEvents.SelectionConfirmed.Invoke();
+        CellexalEvents.SelectionConfirmed.Invoke();
         heatmapCreated = false;
         selectionMade = false;
         selectionConfirmed = true;
@@ -398,8 +398,8 @@ public class SelectionToolHandler : MonoBehaviour
         // wait one frame to let ConfirmSelection finish.
         yield return null;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
-        string args = CellExAlUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellExAlUser.UserSpecificFolder + " " + DataDir;
-        CellExAlLog.Log("Updating R Object grouping at " + CellExAlUser.UserSpecificFolder);
+        string args = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellexalUser.UserSpecificFolder + " " + DataDir;
+        CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
@@ -409,7 +409,7 @@ public class SelectionToolHandler : MonoBehaviour
             yield return null;
         }
         stopwatch.Stop();
-        CellExAlLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+        CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
     }
 
     /// <summary>
@@ -439,7 +439,7 @@ public class SelectionToolHandler : MonoBehaviour
         {
             other.ResetColor();
         }
-        CellExAlEvents.SelectionCanceled.Invoke();
+        CellexalEvents.SelectionCanceled.Invoke();
         historyIndexOffset = selectionHistory.Count;
         selectedCells.Clear();
         selectionMade = false;
@@ -493,14 +493,14 @@ public class SelectionToolHandler : MonoBehaviour
     private void DumpData()
     {
         // print(new System.Diagnostics.StackTrace());
-        string filePath = CellExAlUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+        string filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
         using (StreamWriter file =
                    new StreamWriter(filePath))
         {
-            CellExAlLog.Log("Dumping selection data to " + CellExAlLog.FixFilePath(filePath));
-            CellExAlLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
+            CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
+            CellexalLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
             if (selectionHistory != null)
-                CellExAlLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+                CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
             foreach (GraphPoint gp in selectedCells)
             {
                 file.Write(gp.Label);

@@ -2,7 +2,7 @@ using UnityEngine;
 ///<summary>
 /// Represents a button used for toggling the keyboard.
 ///</summary>
-public class KeyboardButton : StationaryButton
+public class KeyboardButton : CellexalButton
 {
     public Sprite gray;
     public Sprite original;
@@ -19,8 +19,8 @@ public class KeyboardButton : StationaryButton
     protected override void Awake()
     {
         base.Awake();
-        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Start()

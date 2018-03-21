@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents the button that colors the other graphs after the current selection.
 /// </summary>
-class RecolorGraphsAfterLastSelectionButton : StationaryButton
+class RecolorGraphsAfterLastSelectionButton : CellexalButton
 {
     private GraphManager graphManager;
 
@@ -14,8 +14,8 @@ class RecolorGraphsAfterLastSelectionButton : StationaryButton
     {
         graphManager = referenceManager.graphManager;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionStarted.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

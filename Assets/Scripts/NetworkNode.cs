@@ -36,7 +36,7 @@ public class NetworkNode : MonoBehaviour
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool edgesAdded;
-    private float lineWidth = CellExAlConfig.NetworkLineSmallWidth;
+    private float lineWidth = CellexalConfig.NetworkLineSmallWidth;
 
     void Start()
     {
@@ -116,7 +116,7 @@ public class NetworkNode : MonoBehaviour
         foreach (LineRenderer r in connections)
         {
             r.material.color = Color.white;
-            r.startWidth = r.endWidth = CellExAlConfig.NetworkLineSmallWidth * 3;
+            r.startWidth = r.endWidth = CellexalConfig.NetworkLineSmallWidth * 3;
         }
     }
 
@@ -130,7 +130,7 @@ public class NetworkNode : MonoBehaviour
         for (int i = 0; i < connections.Count; ++i)
         {
             connections[i].material.color = connectionColors[i];
-            connections[i].startWidth = connections[i].endWidth = CellExAlConfig.NetworkLineSmallWidth;
+            connections[i].startWidth = connections[i].endWidth = CellexalConfig.NetworkLineSmallWidth;
         }
     }
 
@@ -157,7 +157,7 @@ public class NetworkNode : MonoBehaviour
                     renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
                     // The colors are just random, they mean nothing. But they look pretty.
                     renderer.sharedMaterial = networkGenerator.LineMaterials[Random.Range(0, LineMaterials.Length)];
-                    renderer.startWidth = renderer.endWidth = CellExAlConfig.NetworkLineSmallWidth;
+                    renderer.startWidth = renderer.endWidth = CellexalConfig.NetworkLineSmallWidth;
                     connections.Add(renderer);
                     connectionColors.Add(renderer.material.color);
                     buddy.connections.Add(renderer);

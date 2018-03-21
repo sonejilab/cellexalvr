@@ -66,7 +66,7 @@ namespace ExitGames.Demos.DemoAnimator
 			PhotonNetwork.playerName = value + " "; // force a trailing space string in case value is an empty string, else playerName would not be updated.
 
 			PlayerPrefs.SetString(playerNamePrefKey,value);
-            CellExAlUser.Username = value;
+            CellexalUser.Username = value;
 		}
 		
 		#endregion

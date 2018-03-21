@@ -79,7 +79,7 @@ public class CorrelatedGenesList : MonoBehaviour
     {
         string args = selectionToolHandler.DataDir + " " + geneName + " " + outputFile;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";
-        CellExAlLog.Log("Calculating correlated genes with R script " + CellExAlLog.FixFilePath(rScriptFilePath) + " with the arguments: " + args);
+        CellexalLog.Log("Calculating correlated genes with R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments: " + args);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
@@ -92,13 +92,13 @@ public class CorrelatedGenesList : MonoBehaviour
             yield return null;
         }
         stopwatch.Stop();
-        CellExAlLog.Log("Correlated genes R script finished in " + stopwatch.Elapsed.ToString());
+        CellexalLog.Log("Correlated genes R script finished in " + stopwatch.Elapsed.ToString());
         // r script is done, read the results.
         string[] lines = File.ReadAllLines(outputFile);
         // if the file is not 2 lines, something probably went wrong
         if (lines.Length != 2)
         {
-            CellExAlLog.Log("Correlated genes file at " + CellExAlLog.FixFilePath(outputFile) + " was not 2 lines long. Actual length: " + lines.Length);
+            CellexalLog.Log("Correlated genes file at " + CellexalLog.FixFilePath(outputFile) + " was not 2 lines long. Actual length: " + lines.Length);
             //Debug.LogWarning("Correlated genes file at " + outputFile + " was not 2 lines long. Actual length: " + lines.Length);
             yield break;
         }
@@ -108,12 +108,12 @@ public class CorrelatedGenesList : MonoBehaviour
         SetVisible(true);
         if (correlatedGenes.Length != 10 || anticorrelatedGenes.Length != 10)
         {
-            CellExAlLog.Log("Correlated genes file at " + CellExAlLog.FixFilePath(outputFile) + " was incorrectly formatted.",
+            CellexalLog.Log("Correlated genes file at " + CellexalLog.FixFilePath(outputFile) + " was incorrectly formatted.",
                             "\tExpected lengths: 10 plus 10 genes.",
                             "\tActual lengths: " + correlatedGenes.Length + " plus " + anticorrelatedGenes.Length + " genes");
             yield break;
         }
-        CellExAlLog.Log("Successfully calculated genes correlated to " + geneName);
+        CellexalLog.Log("Successfully calculated genes correlated to " + geneName);
         PopulateList(geneName, correlatedGenes, anticorrelatedGenes);
         // set the texture to a happy face :)
         var button = referenceManager.previousSearchesList.correlatedGenesButtons[index];

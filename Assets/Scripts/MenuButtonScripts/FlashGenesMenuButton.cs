@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Represents the button that opens the flashing genes menus.
 /// </summary>
-class FlashGenesMenuButton : StationaryButton
+class FlashGenesMenuButton : CellexalButton
 {
     protected override string Description
     {

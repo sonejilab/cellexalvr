@@ -35,8 +35,8 @@ class DesktopMenu : MonoBehaviour
     /// </summary>
     public void Quit()
     {
-        CellExAlLog.Log("Quit button pressed");
-        CellExAlLog.LogBacklog();
+        CellexalLog.Log("Quit button pressed");
+        CellexalLog.LogBacklog();
         // Application.Quit() does not work in the unity editor, only in standalone builds.
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

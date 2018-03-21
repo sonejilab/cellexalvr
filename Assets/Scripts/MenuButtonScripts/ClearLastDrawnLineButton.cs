@@ -2,7 +2,7 @@
 /// <summary>
 /// Represent the button that clears the last line drawn with the draw tool.
 /// </summary>
-public class ClearLastDrawnLineButton : StationaryButton
+public class ClearLastDrawnLineButton : CellexalButton
 {
     protected override string Description
     {

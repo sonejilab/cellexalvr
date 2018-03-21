@@ -32,11 +32,11 @@ public class CaptureScreenshot : MonoBehaviour
                 //Touchpad 
                 if (!Directory.Exists(directory))
                 {
-                    CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(directory));
+                    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
                     Directory.CreateDirectory(directory);
                 }
                 ScreenCapture.CaptureScreenshot(directory + "\\Screenshot" + screenshotCounter + ".png");
-                CellExAlLog.Log("Screenshot taken!");
+                CellexalLog.Log("Screenshot taken!");
                 elapsedTime = 0.0f;
                 screenshotCounter++;
             }

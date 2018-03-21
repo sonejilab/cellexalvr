@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents a button that opens a pop up menu.
 /// </summary>
-class SubMenuButton : StationaryButton
+public class SubMenuButton : CellexalButton
 {
     public string description;
     public GameObject buttonsToDeactivate;
@@ -15,22 +15,21 @@ class SubMenuButton : StationaryButton
         get { return description; }
     }
 
-
     private void Start()
     {
         // The gameobject should be active but the renderers and colliders should be disabled.
         // This makes the buttons in the menu able to receive events while not being shown.
         menu.SetActive(true);
         SetMenuActivated(false);
-    }
 
+    }
 
     void Update()
     {
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            foreach (StationaryButton b in buttonsToDeactivate.GetComponentsInChildren<StationaryButton>())
+            foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
             {
                 b.SetButtonActivated(false);
             }

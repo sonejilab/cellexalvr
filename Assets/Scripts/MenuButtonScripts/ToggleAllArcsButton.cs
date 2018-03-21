@@ -3,11 +3,16 @@
 /// <summary>
 /// Represents a button that toggle all arcs between all networks on a graph skeleton.
 /// </summary>
-public class ToggleAllArcsButton : SolidButton
+public class ToggleAllArcsButton : CellexalButton
 {
     public bool toggleToState;
 
     private NetworkCenter[] networks;
+
+    protected override string Description
+    {
+        get { return "Toggle all arcs"; }
+    }
 
     void Update()
     {

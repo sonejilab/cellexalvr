@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents a button that draws lines between all graphpoints that share labels.
 /// </summary>
-class DrawLinesBetweenGraphPointsButton : StationaryButton
+class DrawLinesBetweenGraphPointsButton : CellexalButton
 {
 
     private CellManager cellManager;
@@ -17,8 +17,8 @@ class DrawLinesBetweenGraphPointsButton : StationaryButton
         cellManager = referenceManager.cellManager;
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionConfirmed.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()
@@ -28,7 +28,7 @@ class DrawLinesBetweenGraphPointsButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection());
-            CellExAlEvents.LinesBetweenGraphsDrawn.Invoke();
+            CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         }
     }
 

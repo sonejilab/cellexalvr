@@ -33,7 +33,7 @@ public class NetworkGenerator : MonoBehaviour
 
     public NetworkGenerator()
     {
-        CellExAlEvents.ConfigLoaded.AddListener(CreateLineMaterials);
+        CellexalEvents.ConfigLoaded.AddListener(CreateLineMaterials);
     }
 
     private void Start()
@@ -54,10 +54,10 @@ public class NetworkGenerator : MonoBehaviour
     /// </summary>
     private void CreateLineMaterials()
     {
-        int numColors = CellExAlConfig.NumberOfNetworkLineColors;
+        int numColors = CellexalConfig.NumberOfNetworkLineColors;
         if (numColors < 1)
         {
-            CellExAlLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1");
+            CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1");
             numColors = 1;
         }
         List<Material> result = new List<Material>();
@@ -112,9 +112,9 @@ public class NetworkGenerator : MonoBehaviour
         int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
         // generate the files containing the network information
         string home = Directory.GetCurrentDirectory();
-        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellExAlUser.UserSpecificFolder;
+        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellexalUser.UserSpecificFolder;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
-        CellExAlLog.Log("Running R script " + CellExAlLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
@@ -122,7 +122,7 @@ public class NetworkGenerator : MonoBehaviour
         while (t.IsAlive)
             yield return null;
         stopwatch.Stop();
-        CellExAlLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
+        CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
         status.RemoveStatus(statusId);
         GeneratingNetworks = false;
         if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)

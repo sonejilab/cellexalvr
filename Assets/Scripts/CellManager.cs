@@ -118,8 +118,8 @@ public class CellManager : MonoBehaviour
 
     private void Start()
     {
-        CellExAlEvents.GraphsReset.AddListener(RemoveStatus);
-        CellExAlEvents.GraphsUnloaded.AddListener(RemoveStatus);
+        CellexalEvents.GraphsReset.AddListener(RemoveStatus);
+        CellexalEvents.GraphsUnloaded.AddListener(RemoveStatus);
 
         database = referenceManager.database;
         rightController = referenceManager.rightController;
@@ -236,7 +236,7 @@ public class CellManager : MonoBehaviour
         {
             // If there is already another query  waiting for the current to finish we should probably abort.
             // This is just to make sure that a bug can't create many many coroutines that will form a long queue.
-            CellExAlLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
+            CellexalLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
             yield break;
         }
         coroutinesWaiting++;
@@ -257,7 +257,7 @@ public class CellManager : MonoBehaviour
         // stop the coroutine if the gene was not in the database
         if (expressions.Count == 0)
         {
-            CellExAlLog.Log("WARNING: The gene " + geneName + " was not found in the database");
+            CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
             yield break;
         }
         foreach (Cell c in cells.Values)
@@ -283,9 +283,9 @@ public class CellManager : MonoBehaviour
         }
         if (triggerEvent)
         {
-            CellExAlEvents.GraphsColoredByGene.Invoke();
+            CellexalEvents.GraphsColoredByGene.Invoke();
         }
-        CellExAlLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+        CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
     }
 
     /// <summary>
@@ -299,7 +299,7 @@ public class CellManager : MonoBehaviour
 
     private IEnumerator QueryTopGenesCoroutine(SQLite.QueryTopGenesRankingMode mode)
     {
-        CellExAlEvents.QueryTopGenesStarted.Invoke();
+        CellexalEvents.QueryTopGenesStarted.Invoke();
         while (database.QueryRunning)
         {
             yield return null;
@@ -341,8 +341,8 @@ public class CellManager : MonoBehaviour
                 values[i + 10] = results[results.Length - (i + 1)].Second;
             }
         }
-        CellExAlLog.Log("Overwriting file: " + CellExAlUser.UserSpecificFolder + "\\gene_expr_diff.txt with new results");
-        StreamWriter stream = new StreamWriter(CellExAlUser.UserSpecificFolder + "\\gene_expr_diff.txt", false);
+        CellexalLog.Log("Overwriting file: " + CellexalUser.UserSpecificFolder + "\\gene_expr_diff.txt with new results");
+        StreamWriter stream = new StreamWriter(CellexalUser.UserSpecificFolder + "\\gene_expr_diff.txt", false);
         foreach (Pair<string, float> p in results)
         {
             stream.Write(p.First + "\t\t " + p.Second + "\n");
@@ -350,7 +350,7 @@ public class CellManager : MonoBehaviour
         stream.Flush();
         stream.Close();
 
-        CellExAlEvents.QueryTopGenesFinished.Invoke();
+        CellexalEvents.QueryTopGenesFinished.Invoke();
         referenceManager.colorByGeneMenu.CreateGeneButtons(genes, values);
     }
 
@@ -375,9 +375,9 @@ public class CellManager : MonoBehaviour
     /// A gene may be in more than one category.</param>
     private IEnumerator GetGeneExpressionsToFlashCoroutine(string[][] genes)
     {
-        CellExAlLog.Log("Querying database for genes to flash");
+        CellexalLog.Log("Querying database for genes to flash");
         loadingFlashingGenes = true;
-        CellExAlEvents.FlashGenesFileStartedLoading.Invoke();
+        CellexalEvents.FlashGenesFileStartedLoading.Invoke();
         prunedGenes.Clear();
         foreach (Cell c in cells.Values)
         {
@@ -404,7 +404,7 @@ public class CellManager : MonoBehaviour
                 yield return null;
         }
         stopwatch.Stop();
-        CellExAlLog.Log("Finished " + genes.Length + " queries in " + stopwatch.Elapsed.ToString());
+        CellexalLog.Log("Finished " + genes.Length + " queries in " + stopwatch.Elapsed.ToString());
         statusDisplay.RemoveStatus(statusid);
         statusDisplayHUD.RemoveStatus(statusidHUD);
         statusDisplayFar.RemoveStatus(statusidFar);
@@ -416,7 +416,7 @@ public class CellManager : MonoBehaviour
             break;
         }
 
-        CellExAlLog.Log("Number of genes that were present in the database:");
+        CellexalLog.Log("Number of genes that were present in the database:");
         Dictionary<string, int> categoryLengths = cell.GetCategoryLengths();
         FlashGenesCategoryFilter.Clear();
         int[] lengths = new int[categories.Length];
@@ -428,19 +428,19 @@ public class CellManager : MonoBehaviour
             {
                 percentage = percentage.Substring(0, 5);
             }
-            CellExAlLog.Log("\t" + categories[i] + ":\t" + lengths[i] + "/" + genes[i].Length + " \t(" + percentage + "%)");
+            CellexalLog.Log("\t" + categories[i] + ":\t" + lengths[i] + "/" + genes[i].Length + " \t(" + percentage + "%)");
             FlashGenesCategoryFilter[categories[i]] = true;
         }
         SavedFlashGenesCategories = categories;
         savedFlashGenesLengths = lengths;
-        CellExAlEvents.FlashGenesFileFinishedLoading.Invoke();
+        CellexalEvents.FlashGenesFileFinishedLoading.Invoke();
         loadingFlashingGenes = false;
         // StartCoroutine(FlashGenesCoroutine(categories, lengths));
     }
 
     private IEnumerator FlashGenesCoroutine()
     {
-        CellExAlLog.Log("Starting to flash genes");
+        CellexalLog.Log("Starting to flash genes");
         flashingGenes = true;
         System.Random rng = new System.Random();
         while (CurrentFlashGenesMode != FlashGenesMode.DoNotFlash)
@@ -532,7 +532,7 @@ public class CellManager : MonoBehaviour
                 }
                 else
                 {
-                    CellExAlLog.Log("Unknown flashing genes mode: " + CurrentFlashGenesMode);
+                    CellexalLog.Log("Unknown flashing genes mode: " + CurrentFlashGenesMode);
                     flashingGenes = false;
                     yield break;
                 }
@@ -564,7 +564,7 @@ public class CellManager : MonoBehaviour
     /// </summary>
     public void ColorByAttribute(string attributeType, bool color)
     {
-        CellExAlLog.Log("Colored genes by " + attributeType);
+        CellexalLog.Log("Colored genes by " + attributeType);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByAttribute(attributeType, color);
@@ -584,7 +584,7 @@ public class CellManager : MonoBehaviour
 
     internal void AddFacs(string cellName, string facs, int index)
     {
-        if (index < 0 || index >= CellExAlConfig.NumberOfExpressionColors)
+        if (index < 0 || index >= CellexalConfig.NumberOfExpressionColors)
         {
             // value hasn't been normalized correctly
             print(facs + " " + index);
@@ -597,7 +597,7 @@ public class CellManager : MonoBehaviour
     /// </summary>
     public void ColorByIndex(string name)
     {
-        CellExAlLog.Log("Colored genes by " + name);
+        CellexalLog.Log("Colored genes by " + name);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByIndex(name);

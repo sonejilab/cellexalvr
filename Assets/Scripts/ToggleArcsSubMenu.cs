@@ -20,30 +20,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
     public void Init()
     {
         // TODO CELLEXAL: come up with some more colors
-        colors = new Color[22];
-        colors[0] = new Color(1, 0, 0);     // red
-        colors[1] = new Color(0, 0, 1);     // blue
-        colors[2] = new Color(0, 1, 0);     // green
-        colors[3] = new Color(1, 1, 0);     // yellow
-        colors[4] = new Color(0, 1, 1);     // cyan
-        colors[5] = new Color(1, 0, 1);     // magenta
-        colors[6] = new Color(1f, 153f / 255f, 204f / 255f);     // pink
-        colors[7] = new Color(0.6f, 1, 0.6f);     // lime green
-        colors[8] = new Color(0.4f, 0.2f, 1);     // brown
-        colors[9] = new Color(1, 0.6f, 0.2f);     // orange
-        colors[10] = new Color(0.87f, 8f, 0.47f);     // some ugly sand color
-        colors[11] = new Color(0.3f, 0.3f, 0.3f);     // grey
-        colors[12] = new Color(0.18f, 0.69f, 0.54f);     // turquoise
-        colors[13] = new Color(0.84f, 0.36f, 0.15f);     // red panda red
-        colors[14] = new Color(0, 1, 1);     // cyan
-        colors[15] = new Color(1, 0, 1);     // magenta
-        colors[16] = new Color(1f, 153f / 255f, 204f / 255f);     // pink
-        colors[17] = new Color(0.6f, 1, 0.6f);     // lime green
-        colors[18] = new Color(0.4f, 0.2f, 1);     // brown
-        colors[19] = new Color(1, 0.6f, 0.2f);     // orange
-        colors[20] = new Color(0.87f, 8f, 0.47f);     // some ugly sand color
-        colors[21] = new Color(0.3f, 0.3f, 0.3f);     // grey
-        // gameObject.SetActive(false);
+        colors = CellexalConfig.SelectionToolColors;
     }
 
     /// <summary>
@@ -54,7 +31,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
     {
         if (networks.Length == 1)
         {
-            CellExAlLog.Log("ERROR: Tried to create buttons of a network handler with zero network centers.");
+            CellexalLog.Log("ERROR: Tried to create buttons of a network handler with zero network centers.");
             return;
         }
         TurnOffAllTabs();

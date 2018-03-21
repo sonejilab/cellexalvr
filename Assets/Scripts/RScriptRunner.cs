@@ -24,7 +24,7 @@ public class RScriptRunner
         string result = string.Empty;
         try
         {
-            string rPath = CellExAlConfig.RscriptexePath;
+            string rPath = CellexalConfig.RscriptexePath;
 
             var info = new ProcessStartInfo();
             info.FileName = rPath;
@@ -55,7 +55,7 @@ public class RScriptRunner
         }
         catch (Exception ex)
         {
-            CellExAlLog.Log("ERROR: R script failed: ", ex.ToString());
+            CellexalLog.Log("ERROR: R script failed: ", ex.ToString());
             throw new Exception("R Script failed: " + result, ex);
         }
     }

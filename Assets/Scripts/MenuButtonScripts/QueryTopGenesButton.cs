@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button on the <see cref="ColorByGeneMenu"/> that queries the database for the most differentially expressed genes.
 /// </summary>
-public class QueryTopGenesButton : StationaryButton
+public class QueryTopGenesButton : CellexalButton
 {
 
     public SQLite.QueryTopGenesRankingMode mode;

@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Represents the button that brings up the menu for coloring by attributes.
 /// </summary>
-public class AttributeMenuButton : StationaryButton
+public class AttributeMenuButton : CellexalButton
 {
     private GameObject attributeMenu;
     private GameObject buttons;
@@ -18,8 +18,8 @@ public class AttributeMenuButton : StationaryButton
         attributeMenu = referenceManager.attributeSubMenu.gameObject;
         buttons = referenceManager.leftButtons;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

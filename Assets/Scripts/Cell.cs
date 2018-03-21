@@ -94,9 +94,9 @@ public class Cell
 
         foreach (GraphPoint g in GraphPoints)
         {
-            if (expression > CellExAlConfig.NumberOfExpressionColors - 1)
+            if (expression > CellexalConfig.NumberOfExpressionColors - 1)
             {
-                expression = CellExAlConfig.NumberOfExpressionColors - 1;
+                expression = CellexalConfig.NumberOfExpressionColors - 1;
             }
             g.Material = graphManager.GeneExpressionMaterials[expression];
         }
@@ -126,9 +126,9 @@ public class Cell
 
         foreach (GraphPoint g in GraphPoints)
         {
-            if (expression >= CellExAlConfig.NumberOfExpressionColors)
+            if (expression >= CellexalConfig.NumberOfExpressionColors)
             {
-                expression = CellExAlConfig.NumberOfExpressionColors - 1;
+                expression = CellexalConfig.NumberOfExpressionColors - 1;
             }
             g.Material = graphManager.GeneExpressionMaterials[expression];
         }
@@ -198,7 +198,7 @@ public class Cell
     /// </summary>
     /// <param name="category">The name of the category that this gene is in</param>
     /// <param name="index">Which index it should be put on</param>
-    /// <param name="expression">A value between 0 and <see cref="CellExAlConfig.NumberOfExpressionColors"/></param>
+    /// <param name="expression">A value between 0 and <see cref="CellexalConfig.NumberOfExpressionColors"/></param>
     public void SaveSingleFlashingGenesExpression(string category, int index, int expression)
     {
         flashingExpressions[category][index] = expression;

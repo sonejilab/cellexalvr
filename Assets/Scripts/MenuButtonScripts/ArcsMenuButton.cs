@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that opens the toggle arcs menu
 /// </summary>
-public class ArcsMenuButton : StationaryButton
+public class ArcsMenuButton : CellexalButton
 {
 
     private GameObject buttons;

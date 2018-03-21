@@ -3,13 +3,17 @@
 /// <summary>
 /// The button for creating a new filter.
 /// </summary>
-public class NewFilterButton : SolidButton
+public class NewFilterButton : CellexalButton
 {
     private FilterMenu filterMenu;
 
-    protected override void Start()
+    protected override string Description
     {
-        base.Start();
+        get { return "Create a new filter"; }
+    }
+
+    protected void Start()
+    {
         filterMenu = referenceManager.filterMenu;
     }
 

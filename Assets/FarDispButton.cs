@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FarDispButton : StationaryButton
+public class FarDispButton : CellexalButton
 {
 
     public GameObject FarDisp;

@@ -40,7 +40,7 @@ public class FlashGenesTab : Tab
             newButton.transform.localRotation = Quaternion.identity;
             newButton.transform.localScale = Vector3.one;
             newButton.Category = category;
-            newButton.textRenderer.text = category;
+            newButton.descriptionOnButton.text = category;
             buttons.Add(newButton);
 
             if (buttons.Count % 4 == 0)

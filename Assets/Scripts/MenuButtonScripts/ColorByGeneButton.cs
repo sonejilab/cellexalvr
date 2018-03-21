@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a button that can be pressed to color all graphs based on the expression of some gene.
 /// </summary>
-public class ColorByGeneButton : SolidButton
+public class ColorByGeneButton : CellexalButton
 {
 
     public TextMesh description;
@@ -11,9 +11,13 @@ public class ColorByGeneButton : SolidButton
     private CellManager cellManager;
     private string gene;
 
-    protected override void Start()
+    protected override string Description
     {
-        base.Start();
+        get { return "Color all graphs based on a gene expression"; }
+    }
+
+    protected void Start()
+    {
         cellManager = referenceManager.cellManager;
     }
 

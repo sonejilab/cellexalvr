@@ -95,7 +95,7 @@ public class Heatmap : MonoBehaviour
 
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
-        numberOfExpressionColors = CellExAlConfig.NumberOfHeatmapColors;
+        numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
         heatmapGenerator = referenceManager.heatmapGenerator;
         highlightQuad.GetComponent<Renderer>().material.color = heatmapGenerator.HighlightMarkerColor;
         confirmQuad.GetComponent<Renderer>().material.color = heatmapGenerator.ConfirmMarkerColor;
@@ -115,7 +115,7 @@ public class Heatmap : MonoBehaviour
     {
         if (buildingTexture)
         {
-            CellExAlLog.Log("WARNING: Not building heatmap texture because it is already building");
+            CellexalLog.Log("WARNING: Not building heatmap texture because it is already building");
             return;
         }
         gameObject.SetActive(true);
@@ -168,7 +168,7 @@ public class Heatmap : MonoBehaviour
     {
         if (buildingTexture)
         {
-            CellExAlLog.Log("WARNING: Not building heatmap texture because it is already building");
+            CellexalLog.Log("WARNING: Not building heatmap texture because it is already building");
             return;
         }
         GetComponent<Collider>().enabled = false;
@@ -199,7 +199,7 @@ public class Heatmap : MonoBehaviour
     {
         if (buildingTexture)
         {
-            CellExAlLog.Log("WARNING: Not building heatmap texture because it is already building");
+            CellexalLog.Log("WARNING: Not building heatmap texture because it is already building");
             return;
         }
         cells = newCells;
@@ -213,7 +213,7 @@ public class Heatmap : MonoBehaviour
         buildingTexture = true;
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
-        CellExAlLog.Log("Started building a heatmap texture");
+        CellexalLog.Log("Started building a heatmap texture");
 
         SQLiter.SQLite database = referenceManager.database;
         bitmap = new Bitmap(bitmapWidth, bitmapHeight);
@@ -288,7 +288,7 @@ public class Heatmap : MonoBehaviour
         Thread thread = new Thread(() =>
         {
             System.Drawing.SolidBrush[] heatmapBrushes = heatmapGenerator.expressionColors;
-            CellExAlLog.Log("Reading " + result.Count + " results from database");
+            CellexalLog.Log("Reading " + result.Count + " results from database");
             float lowestExpression = 0;
             float highestExpression = 0;
             graphics.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
@@ -358,7 +358,7 @@ public class Heatmap : MonoBehaviour
         graphics.Dispose();
 
         stopwatch.Stop();
-        CellExAlLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
+        CellexalLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
         buildingTexture = false;
     }
 
@@ -935,14 +935,14 @@ public class Heatmap : MonoBehaviour
         string saveDir = Directory.GetCurrentDirectory() + @"\Saved_Images";
         if (!Directory.Exists(saveDir))
         {
-            CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(saveDir));
+            CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
             Directory.CreateDirectory(saveDir);
         }
 
-        saveDir += "\\" + CellExAlUser.Username;
+        saveDir += "\\" + CellexalUser.Username;
         if (!Directory.Exists(saveDir))
         {
-            CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(saveDir));
+            CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
             Directory.CreateDirectory(saveDir);
         }
 

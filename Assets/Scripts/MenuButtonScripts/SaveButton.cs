@@ -4,7 +4,7 @@ using BayatGames.SaveGameFree.Examples;
 /// <summary>
 /// Represents the button that saves the current scene.
 /// </summary>
-public class SaveButton : StationaryButton
+public class SaveButton : CellexalButton
 {
 
     public SaveScene saveScene;

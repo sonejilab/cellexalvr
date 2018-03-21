@@ -9,7 +9,7 @@ public class FilterMenu : MonoBehaviour
     public ReferenceManager referenceManager;
 
     public FilterButton buttonPrefab;
-    public NewFilterButton newFilterButton;
+    public SubMenuButton newFilterButton;
 
     private MenuToggler menuToggler;
     // hard coded positions :)

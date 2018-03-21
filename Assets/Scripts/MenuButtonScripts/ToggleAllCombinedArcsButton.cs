@@ -4,12 +4,17 @@
 /// Represents a buttont that toggle all the combined arcs between all networks ina  graph skeleton,
 /// The combined arcs show the number of arcs that are between two networks.
 /// </summary>
-public class ToggleAllCombinedArcsButton : SolidButton
+public class ToggleAllCombinedArcsButton : CellexalButton
 {
 
     public bool toggleToState;
 
     private NetworkCenter[] networks;
+
+    protected override string Description
+    {
+        get { return "Toggle all combined arcs"; }
+    }
 
     void Update()
     {

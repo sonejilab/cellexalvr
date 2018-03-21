@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HUDButton : StationaryButton {
+public class HUDButton : CellexalButton
+{
 
     public GameObject HUD;
     public StatusDisplay status;
@@ -14,13 +15,14 @@ public class HUDButton : StationaryButton {
     protected override void Awake()
     {
         base.Awake();
-        
+
         //controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
     // Use this for initialization
-    void Start () {
-		
-	}
+    void Start()
+    {
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -31,7 +33,7 @@ public class HUDButton : StationaryButton {
         {
             HUD.SetActive(!HUD.activeSelf);
             status.ToggleStatusDisplay();
-
+             
         }
 
     }

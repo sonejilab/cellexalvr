@@ -2,7 +2,7 @@
 /// Represents the button that stops the flashing genes.
 /// </summary>
 
-class StopButton : StationaryButton
+class StopButton : CellexalButton
 {
     public CellManager.FlashGenesMode switchToMode;
     public StationaryButton random;

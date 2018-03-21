@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents the button that toggles all graphpoints that have an expression equal to zero
 /// </summary>
-public class RemoveNonExpressedCellsButton : StationaryButton
+public class RemoveNonExpressedCellsButton : CellexalButton
 {
     private CellManager cellManager;
 
@@ -14,8 +14,8 @@ public class RemoveNonExpressedCellsButton : StationaryButton
     {
         cellManager = referenceManager.cellManager;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsColoredByGene.AddListener(TurnOn);
-        CellExAlEvents.GraphsReset.AddListener(TurnOff);
+        CellexalEvents.GraphsColoredByGene.AddListener(TurnOn);
+        CellexalEvents.GraphsReset.AddListener(TurnOff);
     }
 
     void Update()

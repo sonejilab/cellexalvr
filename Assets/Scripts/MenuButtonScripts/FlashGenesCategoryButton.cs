@@ -2,24 +2,28 @@
 /// <summary>
 /// Represents the buttons that toggles individual categories on or off when flashing genes.
 /// </summary>
-public class FlashGenesCategoryButton : SolidButton
+public class FlashGenesCategoryButton : CellexalButton
 {
-    public TextMesh textRenderer;
+    public TextMesh descriptionOnButton;
 
     public string Category { get; set; }
     public bool CategoryActivated { get; set; }
 
+    protected override string Description
+    {
+        get { return "Toggle this category"; }
+    }
+
     private CellManager cellManager;
     private bool buttonActive;
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         cellManager = referenceManager.cellManager;
-        CellExAlEvents.FlashGenesFileStartedLoading.AddListener(DeactivateButton);
-        CellExAlEvents.FlashGenesFileFinishedLoading.AddListener(ResetButton);
+        CellexalEvents.FlashGenesFileStartedLoading.AddListener(DeactivateButton);
+        CellexalEvents.FlashGenesFileFinishedLoading.AddListener(ResetButton);
         CategoryActivated = true;
-        textRenderer.GetComponent<Renderer>().material.color = Color.green;
+        descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
     }
 
     protected void Update()
@@ -31,11 +35,11 @@ public class FlashGenesCategoryButton : SolidButton
             cellManager.FlashGenesCategoryFilter[Category] = CategoryActivated;
             if (CategoryActivated)
             {
-                textRenderer.GetComponent<Renderer>().material.color = Color.green;
+                descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
             }
             else
             {
-                textRenderer.GetComponent<Renderer>().material.color = Color.red;
+                descriptionOnButton.GetComponent<Renderer>().material.color = Color.red;
             }
         }
     }
@@ -44,7 +48,7 @@ public class FlashGenesCategoryButton : SolidButton
     {
         buttonActive = true;
         CategoryActivated = true;
-        textRenderer.GetComponent<Renderer>().material.color = Color.green;
+        descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
     }
 
     private void DeactivateButton()

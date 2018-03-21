@@ -44,7 +44,7 @@ public class HelperTool : MonoBehaviour
         opaqueQuad.SetActive(false);
         transparentQuad.SetActive(true);
         SetToolActivated(false);
-        CellExAlEvents.GraphsUnloaded.AddListener(ClearGraphInfoPanels);
+        CellexalEvents.GraphsUnloaded.AddListener(ClearGraphInfoPanels);
     }
 
     private void Update()
@@ -178,7 +178,7 @@ public class HelperTool : MonoBehaviour
         // ...
         // Where [KEY] is either TAG_ followed by the name of a tag or just the name of a gameobject as it is displayed in the editor.
         // [VALUE] is the description that should be displayed when the tool touches the object
-        CellExAlLog.Log("Started reading description file.");
+        CellexalLog.Log("Started reading description file.");
         if (!File.Exists(filepath))
         {
             Debug.LogWarning("No description file found at " + filepath);
@@ -205,17 +205,17 @@ public class HelperTool : MonoBehaviour
             string[] splitString = formattedLine.Split(new char[] { ':' }, 2);
             if (splitString.Length != 2)
             {
-                CellExAlLog.Log("WARNING: No colon (:) found in description file at line " + lineNbr);
+                CellexalLog.Log("WARNING: No colon (:) found in description file at line " + lineNbr);
                 continue;
             }
             if (splitString[0].Length == 0)
             {
-                CellExAlLog.Log("WARNING: No key found in description file at line " + lineNbr);
+                CellexalLog.Log("WARNING: No key found in description file at line " + lineNbr);
                 continue;
             }
             if (splitString[1].Length == 0)
             {
-                CellExAlLog.Log("WARNING: No description found in description file at line " + lineNbr);
+                CellexalLog.Log("WARNING: No description found in description file at line " + lineNbr);
                 continue;
             }
             // tag names in the file start with "TAG_"
@@ -233,6 +233,6 @@ public class HelperTool : MonoBehaviour
         }
         streamReader.Close();
         fileStream.Close();
-        CellExAlLog.Log("Finished reading description file.");
+        CellexalLog.Log("Finished reading description file.");
     }
 }

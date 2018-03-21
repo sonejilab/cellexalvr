@@ -3,7 +3,7 @@
 /// <summary>
 /// This class contains the events that scripts can subscribe to to.
 /// </summary>
-public static class CellExAlEvents
+public static class CellexalEvents
 {
     public static UnityEvent GraphsLoaded = new UnityEvent();
     public static UnityEvent GraphsUnloaded = new UnityEvent();

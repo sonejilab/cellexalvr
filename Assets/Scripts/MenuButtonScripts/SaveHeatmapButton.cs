@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that saves the heatmap it is attached to the disk.
 /// </summary>
-class SaveHeatmapButton : StationaryButton
+class SaveHeatmapButton : CellexalButton
 {
     protected override string Description
     {

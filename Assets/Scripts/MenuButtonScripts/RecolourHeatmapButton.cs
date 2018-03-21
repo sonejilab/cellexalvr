@@ -3,7 +3,7 @@ using UnityEngine;
 ///<summary>
 /// Represents a button used the graphs from the cell selection used for this particular heatmap.
 ///</summary>
-public class RecolourHeatmapButton : StationaryButton
+public class RecolourHeatmapButton : CellexalButton
 {
     protected override string Description
     {

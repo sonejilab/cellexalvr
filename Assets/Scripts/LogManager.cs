@@ -7,7 +7,7 @@ using Valve.VR;
 /// <summary>
 /// This static class represents a log that can be written to.
 /// </summary>
-public static class CellExAlLog
+public static class CellexalLog
 {
     private static string logDirectory;
     private static string logFilePath = "";
@@ -18,7 +18,7 @@ public static class CellExAlLog
         // File names can't have colons so we only use hyphens
         var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
-        logDirectory = Directory.GetCurrentDirectory() + "\\Output\\" + CellExAlUser.Username;
+        logDirectory = Directory.GetCurrentDirectory() + "\\Output\\" + CellexalUser.Username;
         if (!Directory.Exists(logDirectory))
         {
             logThisLater.Add("\tCreated directory " + FixFilePath(logDirectory));
@@ -135,7 +135,7 @@ public static class CellExAlLog
     {
         if (logFilePath != "")
         {
-            Log("Changing user to " + CellExAlUser.Username,
+            Log("Changing user to " + CellexalUser.Username,
                 "Goodbye.");
         }
         InitNewLog();
@@ -151,14 +151,14 @@ public class LogManager : MonoBehaviour
     private void Awake()
     {
         //CellExAlLog.InitNewLog();
-        CellExAlUser.UsernameChanged.AddListener(CellExAlLog.UsernameChanged);
-        CellExAlEvents.GraphsLoaded.AddListener(CellExAlLog.InitNewLog);
+        CellexalUser.UsernameChanged.AddListener(CellexalLog.UsernameChanged);
+        CellexalEvents.GraphsLoaded.AddListener(CellexalLog.InitNewLog);
 
         string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";
 
         if (!Directory.Exists(outputDirectory))
         {
-            CellExAlLog.Log("Created directory " + CellExAlLog.FixFilePath(outputDirectory));
+            CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(outputDirectory));
             Directory.CreateDirectory(outputDirectory);
         }
     }
@@ -180,9 +180,9 @@ public class LogManager : MonoBehaviour
     private void OnRenderModelLoaded(SteamVR_RenderModel model, bool success)
     {
         if (success)
-            CellExAlLog.Log("Render model successfully loaded");
+            CellexalLog.Log("Render model successfully loaded");
         else
-            CellExAlLog.Log("ERROR: Render model not successfully loaded");
+            CellexalLog.Log("ERROR: Render model not successfully loaded");
     }
 
     private void OnDeviceConnected(int index, bool connected)
@@ -192,16 +192,16 @@ public class LogManager : MonoBehaviour
         OpenVR.System.GetStringTrackedDeviceProperty((uint)index, ETrackedDeviceProperty.Prop_RenderModelName_String, result, 64, ref error);
 
         if (connected)
-            CellExAlLog.Log("Device " + result.ToString() + " with index " + index + " connected");
+            CellexalLog.Log("Device " + result.ToString() + " with index " + index + " connected");
         else
-            CellExAlLog.Log("Device " + result.ToString() + " with index " + index + " disconnected");
+            CellexalLog.Log("Device " + result.ToString() + " with index " + index + " disconnected");
     }
 
     private void OnApplicationQuit()
     {
         string nicerTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        CellExAlLog.Log("Application quit on " + nicerTime);
-        CellExAlLog.Log("Goodbye.");
+        CellexalLog.Log("Application quit on " + nicerTime);
+        CellexalLog.Log("Goodbye.");
     }
 
     #endregion

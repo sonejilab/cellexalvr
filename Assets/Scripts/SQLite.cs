@@ -233,7 +233,7 @@ namespace SQLiter
             var list = referenceManager.selectionToolHandler.GetLastSelection();
             if (list.Count < 2)
             {
-                CellExAlLog.Log("WARNING: Not querying for genes because list of cells is too short.");
+                CellexalLog.Log("WARNING: Not querying for genes because list of cells is too short.");
                 return;
             }
             List<string> cellNames1 = new List<string>();
@@ -249,7 +249,7 @@ namespace SQLiter
                     cellNames2.Add(gp.Cell.Label);
                 }
             }
-            CellExAlLog.Log("Querying database for all gene expressions in " + (cellNames1.Count + cellNames2.Count) + " cells");
+            CellexalLog.Log("Querying database for all gene expressions in " + (cellNames1.Count + cellNames2.Count) + " cells");
             QueryRunning = true;
             StartCoroutine(QueryTopGenesCoroutine(cellNames1.ToArray(), cellNames2.ToArray(), mode));
         }
@@ -348,7 +348,7 @@ namespace SQLiter
                 i++;
             }
             stopwatch.Stop();
-            CellExAlLog.Log("Finished querying for gene expressions in " + (cellNames1.Length + cellNames2.Length) + " cells in " + stopwatch.Elapsed.ToString());
+            CellexalLog.Log("Finished querying for gene expressions in " + (cellNames1.Length + cellNames2.Length) + " cells in " + stopwatch.Elapsed.ToString());
             _reader.Close();
             _connection.Close();
             QueryRunning = false;
@@ -725,7 +725,7 @@ namespace SQLiter
                     i++;
                     _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
                 }
-                float binSize = (HighestExpression - LowestExpression) / CellExAlConfig.NumberOfExpressionColors;
+                float binSize = (HighestExpression - LowestExpression) / CellexalConfig.NumberOfExpressionColors;
                 if (DebugMode)
                 {
                     print("binsize = " + binSize);
@@ -759,7 +759,7 @@ namespace SQLiter
                 // sort the list based on gene expressions
                 result.Sort();
 
-                int binsize = result.Count / CellExAlConfig.NumberOfExpressionColors;
+                int binsize = result.Count / CellexalConfig.NumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
                     result[j].Expression = j / binsize;
@@ -864,7 +864,7 @@ namespace SQLiter
         {
             if (genes.Length < 2)
             {
-                CellExAlLog.Log("WARNING: List of genes to query database for is too short.");
+                CellexalLog.Log("WARNING: List of genes to query database for is too short.");
                 yield break;
             }
 
@@ -948,7 +948,7 @@ namespace SQLiter
                     if (lastId != -1)
                     {
                         //print(lastGeneName);
-                        binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
+                        binSize = (maxExpr - minExpr) / CellexalConfig.NumberOfExpressionColors;
                         for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
                         {
                             // Make sure there is a result to get.
@@ -992,7 +992,7 @@ namespace SQLiter
                 i++;
                 _result.Add(new CellExpressionPair(_reader.GetString(1), expr));
             }
-            binSize = (maxExpr - minExpr) / CellExAlConfig.NumberOfExpressionColors;
+            binSize = (maxExpr - minExpr) / CellexalConfig.NumberOfExpressionColors;
             for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
             {
                 // Make sure there is a result to get.

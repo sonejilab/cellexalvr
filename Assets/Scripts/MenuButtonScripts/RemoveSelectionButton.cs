@@ -1,7 +1,7 @@
 ///<summary>
 /// Represents a button used for removing the current cell selection.
 ///</summary>
-public class RemoveSelectionButton : StationaryButton
+public class RemoveSelectionButton : CellexalButton
 {
     private SelectionToolHandler selectionToolHandler;
 
@@ -15,10 +15,10 @@ public class RemoveSelectionButton : StationaryButton
         
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
-        CellExAlEvents.SelectionStarted.AddListener(TurnOn);
-        CellExAlEvents.SelectionCanceled.AddListener(TurnOff);
-        CellExAlEvents.SelectionConfirmed.AddListener(TurnOff);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.SelectionStarted.AddListener(TurnOn);
+        CellexalEvents.SelectionCanceled.AddListener(TurnOff);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

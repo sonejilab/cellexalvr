@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a button that colors all graphs according to an attribute.
 /// </summary>
-public class ColorByAttributeButton : SolidButton
+public class ColorByAttributeButton : CellexalButton
 {
     public TextMesh description;
 
@@ -11,9 +11,13 @@ public class ColorByAttributeButton : SolidButton
     private string attribute;
     private bool colored = false;
 
-    protected override void Start()
+    protected override string Description
     {
-        base.Start();
+        get { return "Color graphs according to this attribute"; }
+    }
+
+    protected void Start()
+    {
         cellManager = referenceManager.cellManager;
     }
 
@@ -40,6 +44,6 @@ public class ColorByAttributeButton : SolidButton
         this.attribute = attribute;
         // sometimes this is done before Awake() it seems, so we use GetComponent() here
         GetComponent<Renderer>().material.color = color;
-        this.color = color;
+        meshStandardColor = color;
     }
 }

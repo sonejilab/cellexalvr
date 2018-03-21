@@ -63,7 +63,7 @@ public class InputReader : MonoBehaviour
             status.gameObject.SetActive(true);
             ReadFolder(@"Bertie");
         }
-        CellExAlUser.UsernameChanged.AddListener(LoadPreviousGroupings);
+        CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
 			doLoad = true;
@@ -82,8 +82,8 @@ public class InputReader : MonoBehaviour
     {
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath = workingDirectory + "\\Data\\" + path;
-        CellExAlLog.Log("Started reading the data folder at " + CellExAlLog.FixFilePath(fullPath));
-        CellExAlUser.UserSpecificDataFolder = path;
+        CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
+        CellexalUser.UserSpecificDataFolder = path;
         LoadPreviousGroupings();
         database.InitDatabase(fullPath + "\\database.sqlite");
 
@@ -95,11 +95,11 @@ public class InputReader : MonoBehaviour
             string networkDirectory = workingDirectory + "\\Resources\\Networks";
             if (!Directory.Exists(networkDirectory))
             {
-                CellExAlLog.Log("Creating directory " + CellExAlLog.FixFilePath(networkDirectory));
+                CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(networkDirectory));
                 Directory.CreateDirectory(networkDirectory);
             }
             string[] networkFilesList = Directory.GetFiles(networkDirectory, "*");
-            CellExAlLog.Log("Deleting " + networkFilesList.Length + " files in " + CellExAlLog.FixFilePath(networkDirectory));
+            CellexalLog.Log("Deleting " + networkFilesList.Length + " files in " + CellexalLog.FixFilePath(networkDirectory));
             foreach (string f in networkFilesList)
             {
                 File.Delete(f);
@@ -107,7 +107,7 @@ public class InputReader : MonoBehaviour
         }
 
         string[] mdsFiles = Directory.GetFiles(fullPath, "*.mds");
-        CellExAlLog.Log("Reading " + mdsFiles.Length + " .mds files");
+        CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
         StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
     }
 
@@ -130,7 +130,7 @@ public class InputReader : MonoBehaviour
         //  ...
 
         float maximumDeltaTime = 0.05f; // 20 fps
-        int maximumItemsPerFrame = CellExAlConfig.GraphLoadingCellsPerFrameStartCount;
+        int maximumItemsPerFrame = CellexalConfig.GraphLoadingCellsPerFrameStartCount;
         int itemsThisFrame = 0;
         int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
@@ -141,7 +141,7 @@ public class InputReader : MonoBehaviour
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
             string graphFileName = regexResult[regexResult.Length - 1];
-            CellExAlLog.Log("Reading graph from " + graphFileName);
+            CellexalLog.Log("Reading graph from " + graphFileName);
             // remove the ".mds" at the end
             newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
             //var textmeshgraphname = Instantiate(graphName);
@@ -202,12 +202,12 @@ public class InputReader : MonoBehaviour
                     if (lastFrame < maximumDeltaTime)
                     {
                         // we had some time over last frame
-                        maximumItemsPerFrame += CellExAlConfig.GraphLoadingCellsPerFrameIncrement;
+                        maximumItemsPerFrame += CellexalConfig.GraphLoadingCellsPerFrameIncrement;
                     }
-                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellExAlConfig.GraphLoadingCellsPerFrameIncrement * 2)
+                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.GraphLoadingCellsPerFrameIncrement * 2)
                     {
                         // we took too much time last frame
-                        maximumItemsPerFrame -= CellExAlConfig.GraphLoadingCellsPerFrameIncrement;
+                        maximumItemsPerFrame -= CellexalConfig.GraphLoadingCellsPerFrameIncrement;
                     }
                     //UnityEditor.EditorApplication.isPlaying = false;
                 }
@@ -219,7 +219,7 @@ public class InputReader : MonoBehaviour
                 stopwatch.Start();
                 newGraph.CreateColliders();
                 stopwatch.Stop();
-                CellExAlLog.Log("Created " + newGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
+                CellexalLog.Log("Created " + newGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
                 if (doLoad)
                 {
                     graphManager.LoadPosition(newGraph, fileIndex);
@@ -227,7 +227,7 @@ public class InputReader : MonoBehaviour
                 //mdsFileStream.Close();
                 mdsStreamReader.Close();
             }
-            CellExAlLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
+            CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
         status.UpdateStatus(statusId, "Reading .meta.cell files");
         statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading .meta.cell files");
@@ -274,7 +274,7 @@ public class InputReader : MonoBehaviour
             }
             metacellStreamReader.Close();
             metacellFileStream.Close();
-            attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
+            attributeSubMenu.CreateButtons(actualAttributeTypes);
         }
 
         loaderController.loaderMovedDown = true;
@@ -292,7 +292,7 @@ public class InputReader : MonoBehaviour
         status.RemoveStatus(statusId);
         statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
-        CellExAlEvents.GraphsLoaded.Invoke();
+        CellexalEvents.GraphsLoaded.Invoke();
         //if (debug)
         //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
     }
@@ -360,7 +360,7 @@ public class InputReader : MonoBehaviour
         if (!File.Exists(fullpath))
         {
             print("File " + fullpath + " not found");
-            CellExAlLog.Log(".facs file not found");
+            CellexalLog.Log(".facs file not found");
             return;
         }
 
@@ -407,15 +407,15 @@ public class InputReader : MonoBehaviour
             for (int j = 0; j < values.GetLength(1); ++j)
             {
                 // normalize to the range [0, 29]
-                float colorIndexFloat = ((values[i, j] - min[j]) / (max[j] - min[j])) * (CellExAlConfig.NumberOfExpressionColors - 1);
+                float colorIndexFloat = ((values[i, j] - min[j]) / (max[j] - min[j])) * (CellexalConfig.NumberOfExpressionColors - 1);
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
                 cellManager.AddFacs(cellnames[i], header[j], colorIndex);
             }
         }
         streamReader.Close();
         fileStream.Close();
-        indexMenu.CreateColorByIndexButtons(header);
-        CellExAlLog.Log("Successfully read " + CellExAlLog.FixFilePath(fullpath));
+        indexMenu.CreateButtons(header);
+        CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullpath));
     }
 
     /// <summary>
@@ -442,11 +442,11 @@ public class InputReader : MonoBehaviour
     /// </summary>
     public void ReadNetworkFiles()
     {
-        CellExAlLog.Log("Started reading network files");
+        CellexalLog.Log("Started reading network files");
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
         if (!Directory.Exists(networkDirectory))
         {
-            CellExAlLog.Log("ERROR: No network directory at " + CellExAlLog.FixFilePath(networkDirectory));
+            CellexalLog.Log("ERROR: No network directory at " + CellexalLog.FixFilePath(networkDirectory));
             return;
         }
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
@@ -459,13 +459,13 @@ public class InputReader : MonoBehaviour
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            CellExAlLog.Log("ERROR: No .cnt file in network folder " + CellExAlLog.FixFilePath(networkDirectory));
+            CellexalLog.Log("ERROR: No .cnt file in network folder " + CellexalLog.FixFilePath(networkDirectory));
             return;
         }
 
         if (cntFilePaths.Length > 1)
         {
-            CellExAlLog.Log("ERROR: more than one .cnt file in network folder");
+            CellexalLog.Log("ERROR: more than one .cnt file in network folder");
             return;
         }
 
@@ -476,7 +476,7 @@ public class InputReader : MonoBehaviour
         if (nwkFilePaths.Length == 0)
         {
             print("no .nwk file in network folder");
-            CellExAlLog.Log("ERROR: No .nwk file in network folder " + CellExAlLog.FixFilePath(networkDirectory));
+            CellexalLog.Log("ERROR: No .nwk file in network folder " + CellexalLog.FixFilePath(networkDirectory));
             return;
         }
         FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
@@ -484,7 +484,7 @@ public class InputReader : MonoBehaviour
         // 1 MB = 1048576 B
         if (nwkFileStream.Length > 1048576)
         {
-            CellExAlLog.Log("ERROR: .nwk file is larger than 1 MB",
+            CellexalLog.Log("ERROR: .nwk file is larger than 1 MB",
                             ".nwk file size: " + nwkFileStream.Length + " B");
             nwkStreamReader.Close();
             nwkFileStream.Close();
@@ -497,7 +497,7 @@ public class InputReader : MonoBehaviour
         // make sure there is a .lay file
         if (layFilePaths.Length == 0)
         {
-            CellExAlLog.Log("ERROR: No .lay file found in network folder " + CellExAlLog.FixFilePath(networkDirectory));
+            CellexalLog.Log("ERROR: No .lay file found in network folder " + CellexalLog.FixFilePath(networkDirectory));
             return;
         }
 
@@ -531,16 +531,16 @@ public class InputReader : MonoBehaviour
                 graph = graphManager.FindGraph(graphName);
                 if (graph == null)
                 {
-                    CellExAlLog.Log("ERROR: Could not find graph " + graphName + ", aborting");
+                    CellexalLog.Log("ERROR: Could not find graph " + graphName + ", aborting");
                     return;
                 }
                 skeleton = graph.CreateConvexHull();
                 if (skeleton == null)
                 {
-                    CellExAlLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file, aborting");
+                    CellexalLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file, aborting");
                     return;
                 }
-                CellExAlLog.Log("Successfully created convex hull of " + graphName);
+                CellexalLog.Log("Successfully created convex hull of " + graphName);
                 networkHandler = skeleton.GetComponent<NetworkHandler>();
                 networkHandlerName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
                 networkHandler.NetworkHandlerName = networkHandlerName;
@@ -561,7 +561,7 @@ public class InputReader : MonoBehaviour
             networks[words[3]] = network;
         }
 
-        CellExAlLog.Log("Successfully read .cnt file");
+        CellexalLog.Log("Successfully read .cnt file");
 
         // Read the .nwk file
         // The file format should be
@@ -575,7 +575,7 @@ public class InputReader : MonoBehaviour
         // KEY_1 is the two genenames concatenated together as NODE_1 + NODE_2
         // KEY_2 is the two genenames concatenated together as NODE_2 + NODE_1
 
-        CellExAlLog.Log("Reading .nwk file with " + nwkFileStream.Length + " bytes");
+        CellexalLog.Log("Reading .nwk file with " + nwkFileStream.Length + " bytes");
         Dictionary<string, NetworkNode> nodes = new Dictionary<string, NetworkNode>(1024);
         List<NetworkKeyPair> tmp = new List<NetworkKeyPair>();
         // skip the first line as it is a header
@@ -618,7 +618,7 @@ public class InputReader : MonoBehaviour
         }
         nwkStreamReader.Close();
         nwkFileStream.Close();
-        CellExAlLog.Log("Successfully read .nwk file");
+        CellexalLog.Log("Successfully read .nwk file");
         NetworkKeyPair[] keyPairs = new NetworkKeyPair[tmp.Count];
         tmp.CopyTo(keyPairs);
         // sort the array of keypairs
@@ -632,7 +632,7 @@ public class InputReader : MonoBehaviour
         // ...
         // KEY is the hex rgb color code of the network the gene is in.
 
-        CellExAlLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
+        CellexalLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
         while (!layStreamReader.EndOfStream)
         {
             string line = layStreamReader.ReadLine();
@@ -649,7 +649,7 @@ public class InputReader : MonoBehaviour
             string nodeName = geneName + color;
             nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
         }
-        CellExAlLog.Log("Successfully read .lay file");
+        CellexalLog.Log("Successfully read .lay file");
         // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
         NetworkKeyPair lastKey = new NetworkKeyPair("", "", "", "", "");
         List<NetworkKeyPair> lastNodes = new List<NetworkKeyPair>();
@@ -723,7 +723,7 @@ public class InputReader : MonoBehaviour
         nwkFileStream.Close();
         layStreamReader.Close();
         layFileStream.Close();
-        CellExAlLog.Log("Successfully created " + j + " networks with a total of " + nodes.Values.Count + " nodes");
+        CellexalLog.Log("Successfully created " + j + " networks with a total of " + nodes.Values.Count + " nodes");
     }
 
     /// <summary>
@@ -763,12 +763,12 @@ public class InputReader : MonoBehaviour
     /// </summary>
     private void LoadPreviousGroupings()
     {
-        string dataFolder = CellExAlUser.UserSpecificFolder;
+        string dataFolder = CellexalUser.UserSpecificFolder;
         string groupingsInfoFile = dataFolder + "\\groupings_info.txt";
-        CellExAlLog.Log("Started reading the previous groupings files");
+        CellexalLog.Log("Started reading the previous groupings files");
         if (!File.Exists(groupingsInfoFile))
         {
-            CellExAlLog.Log("WARNING: No groupings info file found at " + CellExAlLog.FixFilePath(groupingsInfoFile));
+            CellexalLog.Log("WARNING: No groupings info file found at " + CellexalLog.FixFilePath(groupingsInfoFile));
             return;
         }
         FileStream fileStream = new FileStream(groupingsInfoFile, FileMode.Open);
@@ -790,7 +790,7 @@ public class InputReader : MonoBehaviour
             int indexOfLastDot = groupingName.LastIndexOf(".");
             if (indexOfLastDot == -1)
             {
-                CellExAlLog.Log("WARNING: Could not find \'.\' in \"" + words[0] + "\"");
+                CellexalLog.Log("WARNING: Could not find \'.\' in \"" + words[0] + "\"");
                 indexOfLastDot = groupingName.Length - 1;
             }
             string groupingNumber = groupingName.Substring(indexOfLastDot, groupingName.Length - indexOfLastDot);
@@ -800,7 +800,7 @@ public class InputReader : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
 
-        CellExAlLog.Log("Reading " + groupingNames.Count + " files");
+        CellexalLog.Log("Reading " + groupingNames.Count + " files");
         // initialize the arrays
         string[][] cellNames = new string[groupingNames.Count][];
         int[][] groups = new int[groupingNames.Count][];
@@ -846,7 +846,7 @@ public class InputReader : MonoBehaviour
         }
         // someone please rename this
         referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, groups);
-        CellExAlLog.Log("Successfully read " + groupingNames.Count + " files");
+        CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 
     /// <summary>

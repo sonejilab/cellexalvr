@@ -10,14 +10,14 @@ public class SelectionToolCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        print("hit something");
+        //print("hit something");
         var graphpoint = other.gameObject.GetComponent<GraphPoint>();
         if (graphpoint != null)
         {
             selectionToolHandler.AddGraphpointToSelection(graphpoint);
             return;
         }
-        print("hit cube");
+        //print("hit cube");
         var cubeOnLine = other.gameObject.GetComponent<Selectable>();
         if (cubeOnLine != null)
         {

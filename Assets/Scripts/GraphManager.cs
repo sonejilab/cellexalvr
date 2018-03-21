@@ -62,12 +62,12 @@ public class GraphManager : MonoBehaviour
 
     private void OnEnable()
     {
-        CellExAlEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+        CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
     }
 
     private void OnDisable()
     {
-        CellExAlEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
+        CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ public class GraphManager : MonoBehaviour
     private void OnConfigLoaded()
     {
         // Generate the materials needed by the selection tool.
-        Color[] selectionToolColors = CellExAlConfig.SelectionToolColors;
+        Color[] selectionToolColors = CellexalConfig.SelectionToolColors;
         int numSelectionColors = selectionToolColors.Length;
         SelectedMaterials = new Material[numSelectionColors];
         SelectedMaterialsOutline = new Material[numSelectionColors];
@@ -103,11 +103,11 @@ public class GraphManager : MonoBehaviour
         }
 
         // Generate the materials used when coloring by gene expressions
-        int nColors = CellExAlConfig.NumberOfExpressionColors;
+        int nColors = CellexalConfig.NumberOfExpressionColors;
         GeneExpressionMaterials = new Material[nColors];
-        Color low = CellExAlConfig.LowExpressionColor;
-        Color mid = CellExAlConfig.MidExpressionColor;
-        Color high = CellExAlConfig.HighExpressionColor;
+        Color low = CellexalConfig.LowExpressionColor;
+        Color mid = CellexalConfig.MidExpressionColor;
+        Color high = CellexalConfig.HighExpressionColor;
 
         int dividerLowMid = nColors / 2;
         if (dividerLowMid == 0)
@@ -148,7 +148,7 @@ public class GraphManager : MonoBehaviour
         }
 
         // Generate materials used when coloring by attribute
-        Color[] attributeColors = CellExAlConfig.AttributeColors;
+        Color[] attributeColors = CellexalConfig.AttributeColors;
         AttributeMaterials = new Material[attributeColors.Length];
         for (int i = 0; i < attributeColors.Length; ++i)
         {
@@ -210,7 +210,7 @@ public class GraphManager : MonoBehaviour
                 graph.points[point.Label].Material = point.Material;
             }
         }
-        CellExAlLog.Log("Recolored  " + selection.Count + " points in  " + graphs.Count + " graphs after current selection");
+        CellexalLog.Log("Recolored  " + selection.Count + " points in  " + graphs.Count + " graphs after current selection");
     }
 
     public void SetGraphStartPosition()
@@ -265,7 +265,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void DeleteGraphsAndNetworks()
     {
-        CellExAlLog.Log("Deleting graphs and networks");
+        CellexalLog.Log("Deleting graphs and networks");
         cellManager.DeleteCells();
         foreach (Graph g in graphs)
         {
@@ -309,7 +309,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void ResetGraphsColor()
     {
-        CellExAlEvents.GraphsReset.Invoke();
+        CellexalEvents.GraphsReset.Invoke();
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
         {
@@ -322,7 +322,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void ResetGraphs()
     {
-        CellExAlEvents.GraphsReset.Invoke();
+        CellexalEvents.GraphsReset.Invoke();
         selectionToolHandler.CancelSelection();
         foreach (Graph g in graphs)
         {

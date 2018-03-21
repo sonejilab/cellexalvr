@@ -14,12 +14,12 @@ public class UsernameManager : MonoBehaviour
     private void Start()
     {
         usernameField.onEndEdit.AddListener(OnUsernameSubmitted);
-        usernameText.text = "Current user: " + CellExAlUser.Username;
+        usernameText.text = "Current user: " + CellexalUser.Username;
     }
 
     private void OnUsernameSubmitted(string username)
     {
-        CellExAlUser.Username = username;
+        CellexalUser.Username = username;
         usernameText.text = "Current user: " + username;
     }
 }
@@ -30,7 +30,7 @@ public class UsernameChangedEvent : UnityEvent { }
 /// <summary>
 /// This static class represents a user that works with some data.
 /// </summary>
-public static class CellExAlUser
+public static class CellexalUser
 {
     private static string workingDirectory = Directory.GetCurrentDirectory();
     private static string username = "default_user";
@@ -101,14 +101,14 @@ public static class CellExAlUser
         string userFolder = workingDirectory + @"\Output\" + username;
         if (!Directory.Exists(userFolder))
         {
-            CellExAlLog.Log("Created directory " + userFolder);
+            CellexalLog.Log("Created directory " + userFolder);
             Directory.CreateDirectory(userFolder);
         }
 
         UserSpecificFolder = userFolder + @"\" + dataFolder;
         if (!Directory.Exists(UserSpecificFolder))
         {
-            CellExAlLog.Log("Created directory " + UserSpecificFolder);
+            CellexalLog.Log("Created directory " + UserSpecificFolder);
             Directory.CreateDirectory(UserSpecificFolder);
         }
     }

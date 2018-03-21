@@ -2,7 +2,7 @@
 ///<summary>
 /// Represents a button used for toggling the selection tool.
 ///</summary>
-public class SelectionToolButton : StationaryButton
+public class SelectionToolButton : CellexalButton
 {
 
     private MenuRotator rotator;
@@ -19,8 +19,8 @@ public class SelectionToolButton : StationaryButton
         rotator = referenceManager.menuRotator;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Update()

@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents the button that toggles the magnifier tool.
 /// </summary>
-class MagnifierToolButton : StationaryButton
+class MagnifierToolButton : CellexalButton
 {
     private ControllerModelSwitcher controllerModelSwitcher;
 
@@ -14,8 +14,8 @@ class MagnifierToolButton : StationaryButton
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Update()

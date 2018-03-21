@@ -2,7 +2,7 @@
 /// Represents the buttont that minimizes things
 /// </summary>
 
-class MinimizeToolButton : StationaryButton
+class MinimizeToolButton : CellexalButton
 {
 
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -17,8 +17,8 @@ class MinimizeToolButton : StationaryButton
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     private void Update()

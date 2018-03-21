@@ -3,7 +3,7 @@ using UnityEngine;
 ///<summary>
 /// Represents a button used for resetting the input data folders.
 ///</summary>
-public class ResetFolderButton : StationaryButton
+public class ResetFolderButton : CellexalButton
 {
     private GraphManager graphManager;
     private InputFolderGenerator inputFolderGenerator;
@@ -45,7 +45,7 @@ public class ResetFolderButton : StationaryButton
             loader.ResetLoaderBooleans();
             inputFolderGenerator.GenerateFolders();
             inputFolderList.gameObject.SetActive(true);
-            CellExAlEvents.GraphsUnloaded.Invoke();
+            CellexalEvents.GraphsUnloaded.Invoke();
             if (loader.loaderMovedDown)
             {
                 loader.loaderMovedDown = false;

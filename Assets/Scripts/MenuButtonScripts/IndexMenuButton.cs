@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that opens the color by index menu.
 /// </summary>
-public class IndexMenuButton : StationaryButton
+public class IndexMenuButton : CellexalButton
 {
     private GameObject indexMenu;
     private GameObject buttons;
@@ -14,8 +14,8 @@ public class IndexMenuButton : StationaryButton
     protected override void Awake()
     {
         base.Awake();
-        CellExAlEvents.GraphsLoaded.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     void Start()

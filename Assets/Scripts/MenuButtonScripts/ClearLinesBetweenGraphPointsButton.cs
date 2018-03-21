@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents the button that clears lines drawn between graphs.
 /// </summary>
-class ClearLinesBetweenGraphPointsButton : StationaryButton
+class ClearLinesBetweenGraphPointsButton : CellexalButton
 {
 
     private CellManager cellManager;
@@ -15,7 +15,7 @@ class ClearLinesBetweenGraphPointsButton : StationaryButton
     {
         cellManager = referenceManager.cellManager;
         SetButtonActivated(false);
-        CellExAlEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
+        CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
     }
 
     void Update()
@@ -25,7 +25,7 @@ class ClearLinesBetweenGraphPointsButton : StationaryButton
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             cellManager.ClearLinesBetweenGraphPoints();
-            CellExAlEvents.LinesBetweenGraphsCleared.Invoke();
+            CellexalEvents.LinesBetweenGraphsCleared.Invoke();
             SetButtonActivated(false);
         }
     }

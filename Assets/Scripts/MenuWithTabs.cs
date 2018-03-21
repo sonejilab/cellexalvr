@@ -17,7 +17,7 @@ public class MenuWithTabs : MonoBehaviour
     protected virtual void Start()
     {
         menuToggler = referenceManager.menuToggler;
-        CellExAlEvents.GraphsUnloaded.AddListener(DestroyTabs);
+        CellexalEvents.GraphsUnloaded.AddListener(DestroyTabs);
     }
 
     /// <summary>

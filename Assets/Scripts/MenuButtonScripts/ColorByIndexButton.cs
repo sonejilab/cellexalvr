@@ -3,16 +3,20 @@
 /// <summary>
 /// Represents a button that colors all graphs according to an index.
 /// </summary>
-public class ColorByIndexButton : SolidButton
+public class ColorByIndexButton : CellexalButton
 {
-    public TextMesh description;
+    public TextMesh descriptionOnButton;
 
     private CellManager cellManager;
     private string indexName;
 
-    protected override void Start()
+    protected override string Description
     {
-        base.Start();
+        get { return "Color graphs according to this facs measurement"; }
+    }
+
+    protected void Start()
+    {
         cellManager = referenceManager.cellManager;
     }
 
@@ -33,8 +37,8 @@ public class ColorByIndexButton : SolidButton
     {
         //color = network.GetComponent<Renderer>().material.color;
         //GetComponent<Renderer>().material.color = color;
-        color = GetComponent<Renderer>().material.color;
+        meshStandardColor = GetComponent<Renderer>().material.color;
         this.indexName = indexName;
-        description.text = indexName;
+        descriptionOnButton.text = indexName;
     }
 }

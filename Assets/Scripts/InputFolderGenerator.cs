@@ -38,10 +38,10 @@ public class InputFolderGenerator : MonoBehaviour
         string[] directories = Directory.GetDirectories(dataDirectory);
         if (directories.Length == 0)
         {
-            CellExAlLog.Log("No data folders found. Aborting loading.");
+            CellexalLog.Log("No data folders found. Aborting loading.");
             return;
         }
-        CellExAlLog.Log("Started generating folders from " + CellExAlLog.FixFilePath(dataDirectory));
+        CellexalLog.Log("Started generating folders from " + CellexalLog.FixFilePath(dataDirectory));
 
         var nfolder = 0;
         foreach (string directory in directories)

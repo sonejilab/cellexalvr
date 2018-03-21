@@ -5,37 +5,17 @@
 /// <summary>
 /// Abstract class for all buttons that do not rotate when pressed.
 /// </summary>
-public abstract class StationaryButton : MonoBehaviour
+public abstract class StationaryButton : CellexalButton
 {
-    public ReferenceManager referenceManager;
-    public TextMesh descriptionText;
     public Sprite standardTexture;
     public Sprite highlightedTexture;
     public Sprite deactivatedTexture;
-    // all buttons must override this variable's get property
-    /// <summary>
-    /// A string that briefly explains what this button does.
-    /// </summary>
-    abstract protected string Description
-    {
-        get;
-    }
-    protected SteamVR_TrackedObject rightController;
-    protected SteamVR_Controller.Device device;
-    [HideInInspector]
-    public bool buttonActivated = true;
-    protected bool controllerInside = false;
+
     public SpriteRenderer spriteRenderer;
 
-    // virtual so other classes may override if needed
-    protected virtual void Awake()
+    protected override void Awake()
     {
-        if (referenceManager == null)
-        {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        }
-        rightController = referenceManager.rightController;
-        device = SteamVR_Controller.Input((int)rightController.index);
+        base.Awake();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
@@ -71,7 +51,7 @@ public abstract class StationaryButton : MonoBehaviour
     /// Turns this button on or off. Buttons that are off are not clickable, but their colliders are still active.
     /// </summary>
     /// <param name="activate"> True for turning this button on, false for turning it off. </param>
-    public virtual void SetButtonActivated(bool activate)
+    public override void SetButtonActivated(bool activate)
     {
         if (activate)
         {

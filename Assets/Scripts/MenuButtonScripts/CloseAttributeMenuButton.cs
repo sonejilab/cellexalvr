@@ -2,7 +2,7 @@ using UnityEngine;
 /// <summary>
 /// Represents the button that closes the attribute menu.
 /// </summary>
-public class CloseAttributeMenuButton : StationaryButton
+public class CloseAttributeMenuButton : CellexalButton
 {
     private GameObject attributeMenu;
     private GameObject buttons;

@@ -1,7 +1,7 @@
 ///<summary>
 /// Represents a button used for toggling the burning heatmap tool.
 ///</summary>
-public class BurnHeatmapToolButton : StationaryButton
+public class BurnHeatmapToolButton : CellexalButton
 {
     private ControllerModelSwitcher controllerModelSwitcher;
 
@@ -9,8 +9,8 @@ public class BurnHeatmapToolButton : StationaryButton
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        CellExAlEvents.HeatmapCreated.AddListener(TurnOn);
-        CellExAlEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.HeatmapCreated.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     protected override string Description

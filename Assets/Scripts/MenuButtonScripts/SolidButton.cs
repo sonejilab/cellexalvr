@@ -3,18 +3,14 @@
 /// <summary>
 /// This abstract base class represents a "solid" button. Solid buttons have meshrenderers and not spriterenderers like <see cref="StationaryButton"/>
 /// </summary>
-public abstract class SolidButton : MonoBehaviour
+public abstract class SolidButton : CellexalButton
 {
-    public ReferenceManager referenceManager;
-
-    protected SteamVR_TrackedObject rightController;
-    protected SteamVR_Controller.Device device;
     protected new Renderer renderer;
-    protected bool controllerInside = false;
     protected Color color;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         renderer = GetComponent<Renderer>();
         color = renderer.material.color;
     }
@@ -28,6 +24,7 @@ public abstract class SolidButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
+            descriptionText.text = Description;
             renderer.material.color = Color.white;
             controllerInside = true;
         }
@@ -37,6 +34,10 @@ public abstract class SolidButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
+            if (descriptionText.text == Description)
+            {
+                descriptionText.text = "";
+            }
             renderer.material.color = color;
             controllerInside = false;
         }

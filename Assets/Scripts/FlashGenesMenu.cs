@@ -20,9 +20,9 @@ public class FlashGenesMenu : MenuWithTabs
     protected override void Start()
     {
         base.Start();
-        CellExAlEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
-        CellExAlEvents.FlashGenesFileStartedLoading.AddListener(ShowLoadingText);
-        CellExAlEvents.FlashGenesFileFinishedLoading.AddListener(HideLoadingText);
+        CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+        CellexalEvents.FlashGenesFileStartedLoading.AddListener(ShowLoadingText);
+        CellexalEvents.FlashGenesFileFinishedLoading.AddListener(HideLoadingText);
     }
 
     /// <summary>
