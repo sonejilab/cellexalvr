@@ -61,7 +61,7 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             status.gameObject.SetActive(true);
-            ReadFolder(@"Bertie");
+            ReadFolder(@"Mouse_LSK");
         }
         CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
@@ -275,6 +275,7 @@ public class InputReader : MonoBehaviour
             metacellStreamReader.Close();
             metacellFileStream.Close();
             attributeSubMenu.CreateButtons(actualAttributeTypes);
+            cellManager.Attributes = actualAttributeTypes;
         }
 
         loaderController.loaderMovedDown = true;
@@ -415,6 +416,7 @@ public class InputReader : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
         indexMenu.CreateButtons(header);
+        cellManager.Facs = header;
         CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullpath));
     }
 

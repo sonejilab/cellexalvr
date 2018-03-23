@@ -13,6 +13,8 @@ using System.IO;
 public class CellManager : MonoBehaviour
 {
     #region Properties
+    public string[] Attributes { get; set; }
+    public string[] Facs { get; set; }
     /// <summary>
     /// The number of frames to wait in between each shown gene expression when flashing genes.
     /// </summary>
@@ -83,6 +85,7 @@ public class CellManager : MonoBehaviour
     public ReferenceManager referenceManager;
     public VRTK_ControllerActions controllerActions;
     public GameObject lineBetweenTwoGraphPointsPrefab;
+
 
     private SQLite database;
     private SteamVR_TrackedObject rightController;

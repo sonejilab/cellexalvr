@@ -7,7 +7,7 @@ public class KeyboardButton : CellexalButton
     public Sprite gray;
     public Sprite original;
 
-    private GameObject keyboard;
+    private KeyboardSwitch keyboard;
     private ControllerModelSwitcher controllerModelSwitcher;
     private bool activateKeyboard = false;
 
@@ -25,7 +25,7 @@ public class KeyboardButton : CellexalButton
 
     private void Start()
     {
-        keyboard = referenceManager.keyboard.gameObject;
+        keyboard = referenceManager.keyboard;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
 
@@ -37,7 +37,8 @@ public class KeyboardButton : CellexalButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            activateKeyboard = !keyboard.activeSelf;
+            activateKeyboard = !keyboard.KeyboardActive;
+            keyboard.SetKeyboardVisible(activateKeyboard);
             if (activateKeyboard)
             {
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;

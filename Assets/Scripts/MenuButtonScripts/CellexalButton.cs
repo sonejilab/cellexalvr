@@ -42,8 +42,6 @@ public abstract class CellexalButton : MonoBehaviour
     public bool buttonActivated = true;
     protected bool controllerInside = false;
 
-
-
     protected virtual void Awake()
     {
         if (referenceManager == null)
@@ -59,6 +57,7 @@ public abstract class CellexalButton : MonoBehaviour
 
     public virtual void SetButtonActivated(bool activate)
     {
+
         if (!activate)
         {
             descriptionText.text = "";

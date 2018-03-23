@@ -58,7 +58,7 @@ public class ReferenceManager : MonoBehaviour
     public TextMesh frontDescription;
     public TextMesh rightDescription;
     public TextMesh backDescription;
-    public TextMesh leftDescription;  
+    public TextMesh leftDescription;
     public MenuRotator menuRotator;
     public MinimizedObjectHandler minimizedObjectHandler;
     public MenuToggler menuToggler;
@@ -83,10 +83,11 @@ public class ReferenceManager : MonoBehaviour
 
     #region Keyboard
     [Header("Keyboard")]
-    public GameObject keyboard;
+    public KeyboardSwitch keyboard;
     public CorrelatedGenesList correlatedGenesList;
     public PreviousSearchesList previousSearchesList;
     public PreviousSearchesListNode topListNode;
+    public AutoCompleteList autoCompleteList;
 
     #endregion
 

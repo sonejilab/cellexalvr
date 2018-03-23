@@ -15,6 +15,7 @@ namespace CurvedVRKeyboard
         public int maxOutputLength;
         [SerializeField]
         public GameObject targetGameObject;
+        public AutoCompleteList autoCompleteList;
 
         private ReferenceManager referenceManager;
         private CellManager cellManager;
@@ -71,6 +72,7 @@ namespace CurvedVRKeyboard
             this.referenceManager = referenceManager;
             previousSearchesList = referenceManager.previousSearchesList;
             cellManager = referenceManager.cellManager;
+            autoCompleteList = referenceManager.autoCompleteList;
         }
 
 
@@ -108,6 +110,7 @@ namespace CurvedVRKeyboard
                 textComponent = targetGameObject.GetComponent(typeHolder.GetType());
                 textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output.Remove(output.Length - 1, 1), null);
                 output = output.Remove(output.Length - 1, 1);
+                autoCompleteList.KeyboardOutput = output;
             }
         }
 
@@ -118,6 +121,7 @@ namespace CurvedVRKeyboard
                 textComponent = targetGameObject.GetComponent(typeHolder.GetType());
                 textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output + key.ToString(), null);
                 output = output + key.ToString();
+                autoCompleteList.KeyboardOutput = output;
             }
 
         }

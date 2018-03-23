@@ -6,9 +6,30 @@ using UnityEngine;
 public class KeyboardSwitch : MonoBehaviour
 {
 
+    public bool KeyboardActive { get; set; }
+
     void Start()
     {
-        gameObject.SetActive(false);
+        SetKeyboardVisible(false);
+    }
+
+    public void SetKeyboardVisible(bool visible)
+    {
+        KeyboardActive = visible;
+        foreach (Transform t in transform)
+        {
+            if (t.gameObject.GetComponent<AutoCompleteList>())
+            {
+                foreach (Transform tt in t)
+                {
+                    tt.gameObject.SetActive(visible);
+                }
+            }
+            else
+            {
+                t.gameObject.SetActive(visible);
+            }
+        }
     }
 
 }

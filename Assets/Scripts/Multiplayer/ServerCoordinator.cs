@@ -168,7 +168,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendActivateKeyboard(bool activate)
     {
-        gameManager.referenceManager.keyboard.SetActive(activate);
+        gameManager.referenceManager.keyboard.SetKeyboardVisible(activate);
     }
 
     #endregion

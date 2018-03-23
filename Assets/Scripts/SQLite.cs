@@ -466,6 +466,35 @@ namespace SQLiter
         }
 
         /// <summary>
+        /// Queries the database for all gene names.
+        /// </summary>
+        internal void QueryGeneNames()
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGenesCoroutine());
+        }
+
+        private IEnumerator QueryGenesCoroutine()
+        {
+            string query = "select gname from genes";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+
+            while (_reader.Read())
+            {
+                string geneName = _reader.GetString(0);
+                _result.Add(geneName);
+            }
+            QueryRunning = false;
+
+        }
+        /// <summary>
         /// Queries the database for the expression of a gene in some cells. This function assumes that the string <paramref name="cells"/> is already formatted the way sqlite wants.
         /// </summary>
         /// <param name="gene">The gene to query for.</param>

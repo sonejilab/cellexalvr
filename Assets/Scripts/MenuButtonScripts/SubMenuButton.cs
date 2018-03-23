@@ -31,11 +31,24 @@ public class SubMenuButton : CellexalButton
         {
             foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
             {
-                b.SetButtonActivated(false);
+                DeactivateButtonsRecursive(buttonsToDeactivate);
             }
             textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
             SetMenuActivated(true);
             descriptionText.text = "";
+        }
+    }
+
+    private void DeactivateButtonsRecursive(GameObject buttonsToDeactivate)
+    {
+        foreach (Transform t in buttonsToDeactivate.transform)
+        {
+            // skip all nested menues
+            if (t.GetComponent<DynamicButtonMenu>()) continue;
+            // if this is a button, deactivate it
+            t.GetComponent<CellexalButton>()?.SetButtonActivated(false);
+            // recursive call to include all children of children
+            DeactivateButtonsRecursive(t.gameObject);
         }
     }
 
@@ -55,6 +68,8 @@ public class SubMenuButton : CellexalButton
         // Go through all the objects in the menu
         foreach (Transform t in menu.transform)
         {
+            // skip nested menues
+            if (t.GetComponent<DynamicButtonMenu>()) continue;
             // For everything that is not a tab, just deal with it normally
             Tab tab = t.GetComponent<Tab>();
             if (!tab)

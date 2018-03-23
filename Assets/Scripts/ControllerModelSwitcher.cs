@@ -37,7 +37,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     private GameObject magnifier;
     private HelperTool helpTool;
     private GameObject drawTool;
-    private GameObject keyboard;
+    private KeyboardSwitch keyboard;
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
@@ -185,7 +185,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
         {
             rightLaser.enabled = false;
-            keyboard.SetActive(false);
+            keyboard.SetKeyboardVisible(false);
             referenceManager.gameManager.InformActivateKeyboard(false);
         }
         if (DesiredModel != Model.TwoLasers)
@@ -216,7 +216,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.Keyboard:
-                keyboard.SetActive(true);
+                keyboard.SetKeyboardVisible(true);
                 rightLaser.enabled = true;
                 referenceManager.gameManager.InformActivateKeyboard(true);
                 break;
@@ -252,7 +252,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
         rightLaser.enabled = false;
         leftLaser.enabled = false;
-        keyboard.SetActive(false);
+        keyboard.SetKeyboardVisible(false);
         referenceManager.gameManager.InformActivateKeyboard(false);
         drawTool.SetActive(false);
         if (inMenu)

@@ -29,7 +29,7 @@ public class HelpToolButton : CellexalButton
             bool helpToolActivated = helpTool.gameObject.activeSelf;
             if (helpToolActivated)
             {
-                if (referenceManager.keyboard.activeSelf)
+                if (referenceManager.keyboard.KeyboardActive)
                     controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
                 else
                     controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
