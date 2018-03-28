@@ -16383,11 +16383,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   listNodes:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 114218467928519006}
+  - {fileID: 114866391116217354}
+  - {fileID: 114910121324152286}
+  - {fileID: 114032759618921644}
+  - {fileID: 114260421456207042}
 --- !u!114 &114277775914598328
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18504,22 +18504,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  normalMaterial: {fileID: 2100000, guid: bb7654ca046610943934aa8af4730ef9, type: 2}
-  highlightedMaterial: {fileID: 2100000, guid: 30b8943c5725ffd44ba63d75bdd6babf, type: 2}
-  searchLockNormalTexture: {fileID: 2800000, guid: 0b32bc77aae344a479fa7e59ec7965b7,
-    type: 3}
-  searchLockNormalHighlightedTexture: {fileID: 2800000, guid: e4e924e9ed741aa468a0323ebb6fb9f2,
-    type: 3}
-  searchLockLockedTexture: {fileID: 2800000, guid: 656d1cb8839d5ff4aa201c084569522b,
-    type: 3}
-  searchLockLockedHighlightedTexture: {fileID: 2800000, guid: e12433ea61d11bc42b7f6214f4354a6a,
-    type: 3}
-  correlatedGenesButtonTexture: {fileID: 2800000, guid: 5c06d83e2ed301a42b9ffc77d6d7ec76,
-    type: 3}
-  correlatedGenesButtonHighlightedTexture: {fileID: 2800000, guid: c0f685c0081f3d24d97002f47191610c,
-    type: 3}
-  correlatedGenesButtonWorkingTexture: {fileID: 2800000, guid: 4df7cb746285bf9428e076e746398ad6,
-    type: 3}
   searchLocks:
   - {fileID: 114654221650051244}
   - {fileID: 114262837418030778}
@@ -18542,6 +18526,17 @@ MonoBehaviour:
   - {fileID: 114747808658281412}
   - {fileID: 114897116477833498}
   - {fileID: 114841374066243358}
+  previousSearchesListNodes:
+  - {fileID: 114821514400014144}
+  - {fileID: 114405195691773574}
+  - {fileID: 114003388110739626}
+  - {fileID: 114430014642339874}
+  - {fileID: 114796452281927448}
+  - {fileID: 114968028788933520}
+  - {fileID: 114545846284661744}
+  - {fileID: 114277775914598328}
+  - {fileID: 114933732912019846}
+  - {fileID: 114613939053741322}
 --- !u!114 &114860477299201668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -20335,7 +20330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00000018069568, y: -3}
+  m_AnchoredPosition: {x: -0.00000047252092, y: -3}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224462126096194170
@@ -20485,7 +20480,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -182.46799, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00000041911437, y: -0.99999976}
+  m_AnchoredPosition: {x: -0.00000023410246, y: -0.99999976}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224569861080045076

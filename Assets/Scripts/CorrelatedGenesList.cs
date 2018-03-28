@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using CellexalExtensions;
 using UnityEngine;
 
 /// <summary>
@@ -32,19 +33,19 @@ public class CorrelatedGenesList : MonoBehaviour
     /// </summary>
     /// <param name="correlatedGenes"> The names of the correlated genes. </param>
     /// <param name="anticorrelatedGenes"> The names of the anti correlated genes. </param>
-    public void PopulateList(string geneName, string[] correlatedGenes, string[] anticorrelatedGenes)
+    public void PopulateList(string geneName, Definitions.Measurement type, string[] correlatedGenes, string[] anticorrelatedGenes)
     {
         if (correlatedGenes.Length != 10 || anticorrelatedGenes.Length != 10)
         {
             Debug.LogWarning("Correlated genes arrays was not of length 10. Actual lengths: " + correlatedGenes.Length + " and " + anticorrelatedGenes.Length);
             return;
         }
-        sourceGeneListNode.SetText(geneName, CellexalExtensions.Definitions.Measurement.GENE);
+        sourceGeneListNode.SetText(geneName, type);
         // fill the list
         for (int i = 0; i < 10; i++)
         {
-            correlatedGenesList[i].SetText(correlatedGenes[i], CellexalExtensions.Definitions.Measurement.GENE);
-            anticorrelatedGenesList[i].SetText(anticorrelatedGenes[i], CellexalExtensions.Definitions.Measurement.GENE);
+            correlatedGenesList[i].SetText(correlatedGenes[i], Definitions.Measurement.GENE);
+            anticorrelatedGenesList[i].SetText(anticorrelatedGenes[i], Definitions.Measurement.GENE);
         }
     }
 
@@ -115,7 +116,7 @@ public class CorrelatedGenesList : MonoBehaviour
             yield break;
         }
         CellexalLog.Log("Successfully calculated genes correlated to " + name);
-        PopulateList(name, correlatedGenes, anticorrelatedGenes);
+        PopulateList(name, type, correlatedGenes, anticorrelatedGenes);
         statusDisplay.RemoveStatus(statusId);
         statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
