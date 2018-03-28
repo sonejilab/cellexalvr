@@ -108,13 +108,21 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void AddGraphpointToSelection(GraphPoint graphPoint)
     {
-        AddGraphpointToSelection(graphPoint, currentColorIndex, true);
+        AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[currentColorIndex]);
     }
 
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.
     /// </summary>
     public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback)
+    {
+        AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
+    }
+
+    /// <summary>
+    /// Adds a graphpoint to the current selection, and changes its color.
+    /// </summary>
+    public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
     {
         // print(other.gameObject.name);
         if (graphPoint == null)
@@ -124,11 +132,17 @@ public class SelectionToolHandler : MonoBehaviour
         if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
         int oldGroup = graphPoint.CurrentGroup;
-
-        graphPoint.SetOutLined(true, newGroup);
+        if (color.Equals(Colors[newGroup]))
+        {
+            graphPoint.SetOutLined(true, newGroup);
+        }
+        else
+        {
+            graphPoint.SetOutLined(true, color);
+        }
         graphPoint.CurrentGroup = newGroup;
         // renderer.material.color = Colors[newGroup];
-        gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, Colors[newGroup]);
+        gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 
         bool newNode = !selectedCells.Contains(graphPoint);
         if (historyIndexOffset != 0)
@@ -376,11 +390,14 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpData();
         lastSelectedCells.Clear();
-        StartCoroutine(UpdateRObjectGrouping());
-        foreach (GraphPoint c in selectedCells)
+        //StartCoroutine(UpdateRObjectGrouping());
+        foreach (GraphPoint gp in selectedCells)
         {
-            c.SetOutLined(false, c.CurrentGroup);
-            lastSelectedCells.Add(c);
+            if (gp.CustomColor)
+                gp.SetOutLined(false, gp.Material.color);
+            else
+                gp.SetOutLined(false, gp.CurrentGroup);
+            lastSelectedCells.Add(gp);
         }
         previousSelectionMenu.CreateButton(selectedCells);
         // clear the list since we are done with it

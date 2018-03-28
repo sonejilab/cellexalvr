@@ -29,7 +29,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
     /// <param name="names"> An array with the names of the selections. </param>
     /// <param name="selectionCellNames"> An array of arrays with the names of the cells in each selection. </param>
     /// <param name="selectionGroups"> An array of arrays with the groups that each cell in each selection belong to. </param>
-    public void CreateSelectionFromPreviousSelectionButtons(string[] graphNames, string[] names, string[][] selectionCellNames, int[][] selectionGroups)
+    public void CreateSelectionFromPreviousSelectionButtons(string[] graphNames, string[] names, string[][] selectionCellNames, int[][] selectionGroups, Dictionary<int, Color>[] groupingColors)
     {
 
         foreach (GameObject button in buttons)
@@ -53,7 +53,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
             buttonGameObject.transform.localPosition = buttonPos;
 
             var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();
-            button.SetSelection(graphNames[i], name, selectionCellNames[i], selectionGroups[i]);
+            button.SetSelection(graphNames[i], name, selectionCellNames[i], selectionGroups[i], groupingColors[i]);
             buttons.Add(buttonGameObject);
 
             // position the buttons in a 4 column grid.
@@ -77,14 +77,14 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
     {
         string[] cellnames = new string[selectedCells.Count];
         int[] cellgroups = new int[selectedCells.Count];
-        Dictionary<Color, bool> colors = new Dictionary<Color, bool>();
+        Dictionary<int, Color> colors = new Dictionary<int, Color>();
 
         for (int i = 0; i < selectedCells.Count; ++i)
         {
             GraphPoint gp = selectedCells[i];
             cellnames[i] = gp.Label;
             cellgroups[i] = gp.CurrentGroup;
-            colors[gp.Material.color] = true;
+            colors[gp.CurrentGroup] = gp.Material.color;
         }
         string name = "." + (buttons.Count + 1) + "\n" + colors.Count + "\n" + cellnames.Length;
 
@@ -95,7 +95,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
         buttonGameObject.transform.localPosition = buttonPos;
 
         var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();
-        button.SetSelection(selectedCells[0].GraphName, name, cellnames, cellgroups);
+        button.SetSelection(selectedCells[0].GraphName, name, cellnames, cellgroups, colors);
         buttons.Add(buttonGameObject);
 
         if (buttons.Count % 4 == 0)

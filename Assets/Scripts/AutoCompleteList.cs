@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CellexalExtensions;
 using UnityEngine;
 
 public class AutoCompleteList : MonoBehaviour
 {
     public ReferenceManager referenceManager;
-    public List<TextMesh> listNodes;
+    public List<ClickableTextPanel> listNodes;
 
-    private List<Tuple<string, string>> namesOfThings;
+    private List<Tuple<string, Definitions.Measurement>> namesOfThings;
 
     private string keyBoardOutput;
     public string KeyboardOutput
@@ -32,12 +33,12 @@ public class AutoCompleteList : MonoBehaviour
     private void Start()
     {
         //scoreMatrix = new int[16, 16];
-        namesOfThings = new List<Tuple<string, string>>();
+        namesOfThings = new List<Tuple<string, Definitions.Measurement>>();
         CellexalEvents.GraphsLoaded.AddListener(Init);
     }
 
     /// <summary>
-    /// Fills the list of gene names, attributes, and facs and thnn generates the BK-tree.
+    /// Fills the list of gene names, attributes, and facs and then generates the BK-tree.
     /// </summary>
     private void Init()
     {
@@ -69,13 +70,13 @@ public class AutoCompleteList : MonoBehaviour
             {
                 longestNameLength = name.Length;
             }
-            namesOfThings.Add(new Tuple<string, string>(name, "gene"));
+            namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
         }
 
         string[] attributes = referenceManager.cellManager.Attributes;
         foreach (string attribute in attributes)
         {
-            namesOfThings.Add(new Tuple<string, string>(attribute, "attribute"));
+            namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
             if (attribute.Length > longestNameLength)
             {
                 longestNameLength = attribute.Length;
@@ -85,7 +86,7 @@ public class AutoCompleteList : MonoBehaviour
         string[] facs = referenceManager.cellManager.Facs;
         foreach (string f in facs)
         {
-            namesOfThings.Add(new Tuple<string, string>(f, "facs"));
+            namesOfThings.Add(new Tuple<string, Definitions.Measurement>(f, Definitions.Measurement.FACS));
             if (f.Length > longestNameLength)
             {
                 longestNameLength = f.Length;
@@ -120,13 +121,27 @@ public class AutoCompleteList : MonoBehaviour
 
     }
 
+    public Definitions.Measurement LookUpName(string name)
+    {
+        List<Tuple<int, BKTreeNode>> result = new List<Tuple<int, BKTreeNode>>();
+        root.SearchForNode(name, 0, ref result);
+        if (result.Count == 0)
+        {
+            return Definitions.Measurement.INVALID;
+        }
+        else
+        {
+            return result[0].Item2.type;
+        }
+    }
+
     private void UpdateList(string word)
     {
         if (word == "")
         {
             for (int i = 0; i < listNodes.Count; ++i)
             {
-                listNodes[i].text = "";
+                listNodes[i].SetText("", Definitions.Measurement.INVALID);
             }
             return;
         }
@@ -136,10 +151,12 @@ public class AutoCompleteList : MonoBehaviour
         candidates.Sort((Tuple<int, BKTreeNode> a, Tuple<int, BKTreeNode> b) => (a.Item1 - b.Item1));
         for (int i = 0; i < listNodes.Count; ++i)
         {
+
+            var node = candidates[i].Item2;
             if (i < candidates.Count)
-                listNodes[i].text = candidates[i].Item2.type + " " + candidates[i].Item1 + " " + candidates[i].Item2.value;
+                listNodes[i].SetText(node.value, node.type);
             else
-                listNodes[i].text = "";
+                listNodes[i].SetText("", Definitions.Measurement.INVALID);
         }
     }
 
@@ -177,11 +194,11 @@ public class AutoCompleteList : MonoBehaviour
         // reference to outer class
         public AutoCompleteList _outer;
         public string value;
-        public string type;
+        public Definitions.Measurement type;
         public int distanceToParent;
         public List<BKTreeNode> children;
 
-        public BKTreeNode(AutoCompleteList outer, string value, string type, int distanceToParent)
+        public BKTreeNode(AutoCompleteList outer, string value, Definitions.Measurement type, int distanceToParent)
         {
             _outer = outer;
             this.value = value;
@@ -212,7 +229,7 @@ public class AutoCompleteList : MonoBehaviour
         /// Should only be called on the root of the tree.
         /// </summary>
         /// <param name="word">The word to add.</param>
-        public void AddWord(string word, string type)
+        public void AddWord(string word, Definitions.Measurement type)
         {
             int distance = _outer.LevenshteinDistance(value, word);
             int childWithSameDistance = SameDistance(distance);

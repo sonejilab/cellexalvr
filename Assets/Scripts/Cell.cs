@@ -162,12 +162,13 @@ public class Cell
     /// Sets the group and color of all graphpoints that are representing this cell.
     /// </summary>
     /// <param name="group"> The new group. </param>
-    public void SetGroup(int group)
+    public void SetGroup(int group, bool changeColor)
     {
         foreach (GraphPoint g in GraphPoints)
         {
             g.CurrentGroup = group;
-            g.Material = graphManager.SelectedMaterials[group];
+            if (changeColor)
+                g.Material = graphManager.GroupingMaterials[group];
         }
     }
 

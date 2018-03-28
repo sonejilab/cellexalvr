@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CellexalExtensions;
 using UnityEngine;
 
 /// <summary>
@@ -8,206 +9,97 @@ public class PreviousSearchesList : MonoBehaviour
 {
     public ReferenceManager referenceManager;
 
-    public Material normalMaterial;
-    public Material highlightedMaterial;
-    public Texture searchLockNormalTexture;
-    public Texture searchLockNormalHighlightedTexture;
-    public Texture searchLockLockedTexture;
-    public Texture searchLockLockedHighlightedTexture;
-    public Texture correlatedGenesButtonTexture;
-    public Texture correlatedGenesButtonHighlightedTexture;
-    public Texture correlatedGenesButtonWorkingTexture;
     public List<PreviousSearchesLock> searchLocks = new List<PreviousSearchesLock>();
     public List<CorrelatedGenesButton> correlatedGenesButtons = new List<CorrelatedGenesButton>();
+    public List<PreviousSearchesListNode> previousSearchesListNodes = new List<PreviousSearchesListNode>();
 
-    private SteamVR_TrackedObject rightController;
-    private SteamVR_Controller.Device device;
-    private CellManager cellManager;
-    private Transform raycastingSource;
-    private Ray ray;
-    private RaycastHit hit;
-    private LayerMask layer;
-    private PreviousSearchesListNode listNode;
-    private PreviousSearchesListNode lastHitListNode;
-    private PreviousSearchesLock searchLock;
-    private PreviousSearchesLock lastHitLock;
-    private CorrelatedGenesButton correlatedGenesButton;
-    private CorrelatedGenesButton lastCorrelatedGenesButton;
-    private CorrelatedGenesListNode correlatedGenesListNode;
-    private CorrelatedGenesListNode lastCorrelatedGenesListNode;
-    private ColoringOptionsButton coloringOptionsButton;
-    private ColoringOptionsButton lastColoringOptionsButton;
-    private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
     private GameManager gameManager;
 
     private void Start()
     {
-        rightController = referenceManager.rightController;
-        cellManager = referenceManager.cellManager;
         gameManager = referenceManager.gameManager;
     }
 
-    void Update()
+    /// <summary>
+    /// Checks if the list already contains an entry.
+    /// </summary>
+    /// <param name="name">THe name of the thing in the entry.</param>
+    /// <param name="type">The type of the entry.</param>
+    /// <param name="coloringMethod">The coloring method that was used.</param>
+    /// <returns>True if an entry of this kind was already in the list, false otherwise.</returns>
+    public bool Contains(string name, Definitions.Measurement type, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
-        raycastingSource = rightController.transform;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        // this method is probably responsible for too much. oh well.
-        ray = new Ray(raycastingSource.position, raycastingSource.forward);
-        if (Physics.Raycast(ray, out hit))
+        foreach (var node in previousSearchesListNodes)
         {
-            // we may hit something that is not of any use to us.
-            // so we check if we hit anything interesting.
-            listNode = hit.transform.gameObject.GetComponent<PreviousSearchesListNode>();
-            searchLock = hit.transform.gameObject.GetComponent<PreviousSearchesLock>();
-            correlatedGenesButton = hit.transform.gameObject.GetComponent<CorrelatedGenesButton>();
-            correlatedGenesListNode = hit.transform.gameObject.GetComponent<CorrelatedGenesListNode>();
-            coloringOptionsButton = hit.transform.gameObject.GetComponent<ColoringOptionsButton>();
-            // see if we hit anything
-            if (listNode != null)
-            {
-                // handle the list node
-                if (listNode != lastHitListNode)
-                {
-                    if (lastHitListNode != null)
-                        lastHitListNode.SetMaterial(normalMaterial);
-                    lastHitListNode = listNode;
-                    listNode.SetMaterial(highlightedMaterial);
-                }
-                if (device.GetPressDown(triggerButton))
-                {
-                    if (listNode.GeneName != "")
-                    {
-                        cellManager.ColorGraphsByPreviousExpression(listNode.GeneName);
-                        gameManager.InformColorGraphByPreviousExpression(listNode.GeneName);
-                    }
-                }
-            }
-            else if (searchLock != null)
-            {
-                // handle the lock
-                if (searchLock != lastHitLock)
-                {
-                    if (lastHitLock != null)
-                    {
-                        if (lastHitLock.Locked)
-                            lastHitLock.SetTexture(searchLockLockedTexture);
-                        else
-                            lastHitLock.SetTexture(searchLockNormalTexture);
-
-                    }
-                    lastHitLock = searchLock;
-                    if (searchLock.Locked)
-                        searchLock.SetTexture(searchLockLockedHighlightedTexture);
-                    else
-                        searchLock.SetTexture(searchLockNormalHighlightedTexture);
-
-                }
-                if (device.GetPressDown(triggerButton))
-                {
-                    searchLock.ToggleSearchNodeLock();
-                    gameManager.InformSearchLockToggled(searchLocks.IndexOf(searchLock));
-
-                    if (searchLock.Locked)
-                        searchLock.SetTexture(searchLockLockedHighlightedTexture);
-                    else
-                        searchLock.SetTexture(searchLockNormalHighlightedTexture);
-                }
-            }
-            else if (correlatedGenesButton != null)
-            {
-                // handle the calculate correlated genes button
-                if (lastCorrelatedGenesButton != correlatedGenesButton)
-                {
-                    if (lastCorrelatedGenesButton != null)
-                        lastCorrelatedGenesButton.SetTexture(correlatedGenesButtonTexture);
-                    lastCorrelatedGenesButton = correlatedGenesButton;
-                    correlatedGenesButton.SetTexture(correlatedGenesButtonHighlightedTexture);
-                }
-
-                if (device.GetPressDown(triggerButton))
-                {
-                    correlatedGenesButton.SetTexture(correlatedGenesButtonWorkingTexture);
-                    string geneName = correlatedGenesButton.listNode.GeneName;
-                    int index = correlatedGenesButtons.IndexOf(correlatedGenesButton);
-                    // we need to split on a space here beacause the genename will actually be "<genename> <coloring mode>"
-                    // so we have to get rid of the coloring mode, it's not interesting when calculating correlated genes
-                    referenceManager.correlatedGenesList.CalculateCorrelatedGenes(index, geneName = geneName.Split(' ')[0]);
-                    gameManager.InformCalculateCorrelatedGenes(index, geneName);
-                }
-            }
-            else if (correlatedGenesListNode != null)
-            {
-                // handle the correlated gene button
-                if (lastCorrelatedGenesListNode != correlatedGenesListNode)
-                {
-                    if (lastCorrelatedGenesListNode != null)
-                        lastCorrelatedGenesListNode.SetMaterial(normalMaterial);
-                    lastCorrelatedGenesListNode = correlatedGenesListNode;
-                    correlatedGenesListNode.SetMaterial(highlightedMaterial);
-                }
-
-                if (device.GetPressDown(triggerButton))
-                {
-                    string gene = correlatedGenesListNode.GeneName;
-                    cellManager.ColorGraphsByGene(gene);
-                    gameManager.InformColorGraphsByGene(gene);
-                }
-            }
-            else if (coloringOptionsButton != null)
-            {
-                // handle the gene expression coloring button button
-                if (lastColoringOptionsButton != coloringOptionsButton)
-                {
-                    if (lastColoringOptionsButton != null)
-                        lastColoringOptionsButton.SetMaterial(normalMaterial);
-                    lastColoringOptionsButton = coloringOptionsButton;
-                    coloringOptionsButton.SetMaterial(highlightedMaterial);
-                }
-
-                if (device.GetPressDown(triggerButton))
-                {
-                    coloringOptionsButton.PressButton();
-                }
-            }
+            if (node.NameOfThing == name && node.TextType == type && node.ColoringMethod == coloringMethod)
+                return true;
         }
-        else
+        return false;
+    }
+
+    /// <summary>
+    /// Adds an entry to the list of saved searches. New entries are added to the top of the list and all entries below that are not locked are pushed down one step. 
+    /// If the list is full, the bottom most entry will be removed from the list.
+    /// </summary>
+    /// <param name="name">The name of the thing we are adding to the list.</param>
+    /// <param name="type">The type of the thing.</param>
+    /// <param name="coloringMethod">The method of coloring that used.</param>
+    /// <returns></returns>
+    public string AddEntry(string name, Definitions.Measurement type, GraphManager.GeneExpressionColoringMethods coloringMethod)
+    {
+        bool pushingDown = false;
+        string pushDownName = "";
+        Definitions.Measurement pushDownType = Definitions.Measurement.INVALID;
+        GraphManager.GeneExpressionColoringMethods pushDownColoringMethod = GraphManager.GeneExpressionColoringMethods.Linear;
+        for (int i = 0; i < previousSearchesListNodes.Count; ++i)
         {
-            // the raycast hit nothing
-            listNode = null;
-            searchLock = null;
-            correlatedGenesButton = null;
-            correlatedGenesListNode = null;
-            coloringOptionsButton = null;
-        }
-        // when the raycaster leaves an object we must un-highlight it
-        if (listNode == null && lastHitListNode != null)
-        {
-            lastHitListNode.SetMaterial(normalMaterial);
-            lastHitListNode = null;
-        }
-        else if (searchLock == null && lastHitLock != null)
-        {
-            if (lastHitLock.Locked)
-                lastHitLock.SetTexture(searchLockLockedTexture);
+            var listNode = previousSearchesListNodes[i];
+            // if this node is locked, just move on
+            if (listNode.Locked)
+                continue;
+            // if this node is empty, insert what we are inserting and return
+            if (listNode.NameOfThing == "")
+            {
+                if (!pushingDown)
+                {
+                    listNode.ColoringMethod = coloringMethod;
+                    listNode.SetText(name, type);
+                    return "";
+                }
+                else
+                {
+                    listNode.ColoringMethod = pushDownColoringMethod;
+                    listNode.SetText(pushDownName, pushDownType);
+                    return "";
+                }
+            }
+            // if we have not started the pushing down, then insert the new entry and save the old entry so we can push it down
+            if (!pushingDown)
+            {
+                pushingDown = true;
+                pushDownName = listNode.NameOfThing;
+                pushDownType = listNode.TextType;
+                pushDownColoringMethod = listNode.ColoringMethod;
+                listNode.ColoringMethod = coloringMethod;
+                listNode.SetText(name, type);
+            }
             else
-                lastHitLock.SetTexture(searchLockNormalTexture);
-            lastHitLock = null;
+            {
+                // swap the saved entry that should be pushed down to this node
+                var tempPushDownName = listNode.NameOfThing;
+                var tempPushDownType = listNode.TextType;
+                var tempPushDownColoringMethod = listNode.ColoringMethod;
+
+                listNode.ColoringMethod = pushDownColoringMethod;
+                listNode.SetText(pushDownName, pushDownType);
+
+                pushDownName = tempPushDownName;
+                pushDownType = tempPushDownType;
+                pushDownColoringMethod = tempPushDownColoringMethod;
+            }
+
         }
-        else if (correlatedGenesButton == null && lastCorrelatedGenesButton != null)
-        {
-            lastCorrelatedGenesButton.SetTexture(correlatedGenesButtonTexture);
-            lastCorrelatedGenesButton = null;
-        }
-        else if (correlatedGenesListNode == null && lastCorrelatedGenesListNode != null)
-        {
-            lastCorrelatedGenesListNode.SetMaterial(normalMaterial);
-            lastCorrelatedGenesListNode = null;
-        }
-        else if (coloringOptionsButton == null && lastColoringOptionsButton != null)
-        {
-            lastColoringOptionsButton.SetMaterial(normalMaterial);
-            lastColoringOptionsButton = null;
-        }
+        return pushDownName;
     }
 
     /// <summary>
@@ -215,15 +107,14 @@ public class PreviousSearchesList : MonoBehaviour
     /// </summary>
     public void ClearList()
     {
-        foreach (PreviousSearchesListNode node in GetComponentsInChildren<PreviousSearchesListNode>())
+        foreach (var node in previousSearchesListNodes)
         {
             node.Locked = false;
-            node.GeneName = "";
+            node.SetText("", Definitions.Measurement.INVALID);
         }
-        foreach (PreviousSearchesLock lockButton in GetComponentsInChildren<PreviousSearchesLock>())
+        foreach (var lockButton in searchLocks)
         {
             lockButton.Locked = false;
-            lockButton.SetTexture(searchLockNormalTexture);
         }
     }
 }

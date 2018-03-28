@@ -10,15 +10,14 @@ using UnityEngine;
 public class CorrelatedGenesList : MonoBehaviour
 {
     public ReferenceManager referenceManager;
-    public CorrelatedGenesListNode sourceGeneListNode;
-    public List<CorrelatedGenesListNode> correlatedGenesList;
-    public List<CorrelatedGenesListNode> anticorrelatedGenesList;
+    public ClickableTextPanel sourceGeneListNode;
+    public List<ClickableTextPanel> correlatedGenesList;
+    public List<ClickableTextPanel> anticorrelatedGenesList;
 
     private StatusDisplay statusDisplay;
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;
     private SelectionToolHandler selectionToolHandler;
-    private string outputFile = Directory.GetCurrentDirectory() + @"\Resources\correlated_genes.txt";
 
     private void Start()
     {
@@ -40,12 +39,12 @@ public class CorrelatedGenesList : MonoBehaviour
             Debug.LogWarning("Correlated genes arrays was not of length 10. Actual lengths: " + correlatedGenes.Length + " and " + anticorrelatedGenes.Length);
             return;
         }
-        sourceGeneListNode.textMesh.text = geneName;
+        sourceGeneListNode.SetText(geneName, CellexalExtensions.Definitions.Measurement.GENE);
         // fill the list
         for (int i = 0; i < 10; i++)
         {
-            correlatedGenesList[i].GeneName = correlatedGenes[i];
-            anticorrelatedGenesList[i].GeneName = anticorrelatedGenes[i];
+            correlatedGenesList[i].SetText(correlatedGenes[i], CellexalExtensions.Definitions.Measurement.GENE);
+            anticorrelatedGenesList[i].SetText(anticorrelatedGenes[i], CellexalExtensions.Definitions.Measurement.GENE);
         }
     }
 
@@ -69,23 +68,25 @@ public class CorrelatedGenesList : MonoBehaviour
     /// Calculates the genes correlated and anti correlated to a certain gene.
     /// </summary>
     /// <param name="index"> The genes index in the list of previous searches. </param>
-    /// <param name="geneName"> The genes name. </param>
-    public void CalculateCorrelatedGenes(int index, string geneName)
+    /// <param name="name"> The genes name. </param>
+    public void CalculateCorrelatedGenes(string name, CellexalExtensions.Definitions.Measurement type)
     {
-        StartCoroutine(CalculateCorrelatedGenesCoroutine(index, geneName));
+        StartCoroutine(CalculateCorrelatedGenesCoroutine(name, type));
     }
 
-    private IEnumerator CalculateCorrelatedGenesCoroutine(int index, string geneName)
+    private IEnumerator CalculateCorrelatedGenesCoroutine(string name, CellexalExtensions.Definitions.Measurement type)
     {
-        string args = selectionToolHandler.DataDir + " " + geneName + " " + outputFile;
+        string outputFile = Directory.GetCurrentDirectory() + @"\Resources\" + name + ".correlated.txt";
+        string facsTypeArg = (type == CellexalExtensions.Definitions.Measurement.FACS) ? "T" : "F";
+        string args = selectionToolHandler.DataDir + " " + name + " " + outputFile + " " + facsTypeArg;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";
         CellexalLog.Log("Calculating correlated genes with R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments: " + args);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + geneName);
-        var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + geneName);
-        var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + geneName);
+        var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + name);
+        var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + name);
+        var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + name);
         t.Start();
         while (t.IsAlive)
         {
@@ -113,11 +114,8 @@ public class CorrelatedGenesList : MonoBehaviour
                             "\tActual lengths: " + correlatedGenes.Length + " plus " + anticorrelatedGenes.Length + " genes");
             yield break;
         }
-        CellexalLog.Log("Successfully calculated genes correlated to " + geneName);
-        PopulateList(geneName, correlatedGenes, anticorrelatedGenes);
-        // set the texture to a happy face :)
-        var button = referenceManager.previousSearchesList.correlatedGenesButtons[index];
-        button.SetTexture(GetComponentInParent<PreviousSearchesList>().correlatedGenesButtonHighlightedTexture);
+        CellexalLog.Log("Successfully calculated genes correlated to " + name);
+        PopulateList(name, correlatedGenes, anticorrelatedGenes);
         statusDisplay.RemoveStatus(statusId);
         statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);

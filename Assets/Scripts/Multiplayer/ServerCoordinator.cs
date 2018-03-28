@@ -50,15 +50,15 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendSearchLockToggled(int index)
     {
         CellexalLog.Log("Recieved message to toggle lock number " + index);
-        referenceManager.previousSearchesList.searchLocks[index].ToggleSearchNodeLock();
+        referenceManager.previousSearchesList.searchLocks[index].Click();
 
     }
 
     [PunRPC]
-    public void SendCalculateCorrelatedGenes(int index, string geneName)
+    public void SendCalculateCorrelatedGenes(string geneName)
     {
         CellexalLog.Log("Recieved message to calculate genes correlated to " + geneName);
-        referenceManager.correlatedGenesList.CalculateCorrelatedGenes(index, geneName);
+        referenceManager.correlatedGenesList.CalculateCorrelatedGenes(geneName, CellexalExtensions.Definitions.Measurement.GENE);
     }
 
     [PunRPC]

@@ -17,7 +17,7 @@ public class GraphPoint : MonoBehaviour
     public Cell Cell { get; private set; }
 
     public int CurrentGroup { get; set; }
-
+    public bool CustomColor { get; set; }
     public string GraphName
     {
         get { return Graph.GraphName; }
@@ -110,9 +110,10 @@ public class GraphPoint : MonoBehaviour
     /// <param name="group"> The group that this graphpoint belongs to. It will be colored based on that group in a selection. -1 indicates that a graphpoint does not belong to a group. </param>
     public void SetOutLined(bool outline, int group)
     {
+        CustomColor = false;
         if (outline)
         {
-            graphPointRenderer.sharedMaterial = Graph.graphManager.SelectedMaterialsOutline[group];
+            graphPointRenderer.sharedMaterial = Graph.graphManager.GroupingMaterialsOutline[group];
         }
         else
         {
@@ -122,8 +123,26 @@ public class GraphPoint : MonoBehaviour
             }
             else
             {
-                graphPointRenderer.sharedMaterial = Graph.graphManager.SelectedMaterials[group];
+                graphPointRenderer.sharedMaterial = Graph.graphManager.GroupingMaterials[group];
             }
+        }
+    }
+
+    /// <summary>
+    /// Sets the outline of the graphpoint. Should only be used for colors that are not defined in the config file, use <see cref="SetOutLined(bool, int)"/> if the color is defined in the config.
+    /// </summary>
+    /// <param name="outline">True if the graphpoint should be outliend, false if it shouldn't</param>
+    /// <param name="color">The desired color.</param>
+    public void SetOutLined(bool outline, Color color)
+    {
+        CustomColor = true;
+        if (color.Equals(Color.white))
+        {
+            graphPointRenderer.sharedMaterial = Graph.graphManager.defaultGraphPointMaterial;
+        }
+        else
+        {
+            graphPointRenderer.sharedMaterial = Graph.graphManager.GetAdditionalGroupingMaterial(color, outline);
         }
     }
 }

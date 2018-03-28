@@ -40,6 +40,7 @@ public class Heatmap : MonoBehaviour
     /// Item1: group number, Item2: group width in coordinates, Item3: number of cells in the group
     /// </summary>
     private List<Tuple<int, float, int>> groupWidths;
+    private Dictionary<int, UnityEngine.Color> groupingColors;
     private string[] genes;
     private int bitmapWidth = 4096;
     private int bitmapHeight = 4096;
@@ -123,6 +124,7 @@ public class Heatmap : MonoBehaviour
 
         cells = new string[selection.Count];
         groupWidths = new List<Tuple<int, float, int>>();
+        groupingColors = new Dictionary<int, UnityEngine.Color>();
         float cellWidth = (float)heatmapWidth / selection.Count;
         int lastGroup = -1;
         int width = 0;
@@ -131,6 +133,7 @@ public class Heatmap : MonoBehaviour
         {
             GraphPoint graphpoint = selection[i];
             int group = graphpoint.CurrentGroup;
+            groupingColors[group] = graphpoint.Material.color;
             cells[i] = graphpoint.Label;
             if (lastGroup == -1)
             {
@@ -220,11 +223,12 @@ public class Heatmap : MonoBehaviour
         System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
 
         // get the grouping colors
-        SolidBrush[] groupBrushes = new SolidBrush[graphManager.SelectedMaterials.Length];
-        for (int i = 0; i < graphManager.SelectedMaterials.Length; ++i)
+        Dictionary<int, SolidBrush> groupBrushes = new Dictionary<int, SolidBrush>();
+        foreach (var entry in groupingColors)
         {
-            UnityEngine.Color unitycolor = graphManager.SelectedMaterials[i].color;
-            groupBrushes[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
+            UnityEngine.Color unitycolor = entry.Value;
+
+            groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
         }
         // draw a white background
         graphics.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
@@ -340,12 +344,31 @@ public class Heatmap : MonoBehaviour
             yield return null;
         }
 
+        //using (MemoryStream memoryStream = new MemoryStream())
+        //{
+        //    bitmap.Save(memoryStream, ImageFormat.Png);
+        //    yield return null;
+        //    byte[] bytes = memoryStream.ToArray();
+        //    yield return null;
+        //    var texture = new Texture2D(bitmapWidth, bitmapHeight);
+        //    yield return null;
+        //    texture.LoadImage(bytes);
+        //    yield return null;
+        //    GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
+        //    yield return null;
+        //}
+
+
         // the thread is now done and the heatmap has been painted
         // copy the bitmap data over to a unity texture
         // using a memorystream here seemed like a better alternative but made the standalone crash
-        string heatmapFilePath = Directory.GetCurrentDirectory() + @"\Images\heatmap_temp.png";
+        string heatmapDirectory = Directory.GetCurrentDirectory() + @"\Images";
+        if (!Directory.Exists(heatmapDirectory))
+        {
+            Directory.CreateDirectory(heatmapDirectory);
+        }
+        string heatmapFilePath = heatmapDirectory + "\\heatmap_temp.png";
         bitmap.Save(heatmapFilePath, ImageFormat.Png);
-
         // these yields makes the loading a little bit smoother, but still cuts a few frames.
         var texture = new Texture2D(4096, 4096);
         yield return null;
@@ -354,6 +377,7 @@ public class Heatmap : MonoBehaviour
         yield return null;
         GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
         yield return null;
+
         GetComponent<Collider>().enabled = true;
         graphics.Dispose();
 
@@ -972,7 +996,7 @@ public class Heatmap : MonoBehaviour
             int numberOfCellsInGroup = groupWidths[i].Item3;
             for (int j = 0; j < numberOfCellsInGroup; ++j, ++cellIndex)
             {
-                cellManager.GetCell(cells[cellIndex]).SetGroup(group);
+                cellManager.GetCell(cells[cellIndex]).SetGroup(group, true);
             }
         }
     }

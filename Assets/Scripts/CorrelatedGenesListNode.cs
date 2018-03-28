@@ -3,20 +3,13 @@
 /// <summary>
 /// Rrepresents a node in the list of correlated genes.
 /// </summary>
-public class CorrelatedGenesListNode : MonoBehaviour
+public class CorrelatedGenesListNode : ClickableTextPanel
 {
-    public TextMesh textMesh;
     private string label;
     public string GeneName
     {
         get { return label; }
         set { label = value; textMesh.text = value; }
-    }
-    private new Renderer renderer;
-
-    private void Start()
-    {
-        renderer = GetComponent<Renderer>();
     }
 
     /// <summary>
@@ -27,4 +20,5 @@ public class CorrelatedGenesListNode : MonoBehaviour
     {
         renderer.material = newMaterial;
     }
+
 }

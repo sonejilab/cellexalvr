@@ -45,9 +45,12 @@ public class GraphManager : MonoBehaviour
     public GeneExpressionColoringMethods GeneExpressionColoringMethod = GeneExpressionColoringMethods.Linear;
 
     public Material[] GeneExpressionMaterials;
-    public Material[] SelectedMaterials;
-    public Material[] SelectedMaterialsOutline;
+    public Material[] GroupingMaterials;
+    public Material[] GroupingMaterialsOutline;
     public Material[] AttributeMaterials;
+    // if additional grouping materials need to be created because of previous groupings
+    public List<Material> AdditionalGroupingMaterials;
+    public List<Material> AdditionalGroupingMaterialsOutline;
 
     void Awake()
     {
@@ -71,6 +74,49 @@ public class GraphManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Get a material that can be used for coloring graphpoints in colors that are not defined by the config file.
+    /// </summary>
+    /// <param name="color">The desired color.</param>
+    /// <returns>An existing material with the color of <paramref name="color"/> if one exists, or a new material if none existed.</returns>
+    public Material GetAdditionalGroupingMaterial(Color color, bool outline)
+    {
+        if (outline)
+        {
+            for (int i = 0; i < AdditionalGroupingMaterialsOutline.Count; ++i)
+            {
+                if (AdditionalGroupingMaterialsOutline[i].color.Equals(color))
+                {
+                    return AdditionalGroupingMaterialsOutline[i];
+                }
+            }
+            var newMaterial = new Material(GeneExpressionMaterials[0]);
+            float outlineR = color.r + (1 - color.r) / 2;
+            float outlineG = color.g + (1 - color.g) / 2;
+            float outlineB = color.b + (1 - color.b) / 2;
+
+            newMaterial.shader = graphPointOutlineShader;
+            newMaterial.color = color;
+            newMaterial.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
+            AdditionalGroupingMaterialsOutline.Add(newMaterial);
+            return newMaterial;
+        }
+        else
+        {
+            for (int i = 0; i < AdditionalGroupingMaterials.Count; ++i)
+            {
+                if (AdditionalGroupingMaterials[i].color.Equals(color))
+                {
+                    return AdditionalGroupingMaterials[i];
+                }
+            }
+            var newMaterial = new Material(GeneExpressionMaterials[0]);
+            newMaterial.color = color;
+            AdditionalGroupingMaterials.Add(newMaterial);
+            return newMaterial;
+        }
+    }
+
+    /// <summary>
     /// Create the materials needed for recoloring graphpoints.
     /// </summary>
     private void OnConfigLoaded()
@@ -78,8 +124,8 @@ public class GraphManager : MonoBehaviour
         // Generate the materials needed by the selection tool.
         Color[] selectionToolColors = CellexalConfig.SelectionToolColors;
         int numSelectionColors = selectionToolColors.Length;
-        SelectedMaterials = new Material[numSelectionColors];
-        SelectedMaterialsOutline = new Material[numSelectionColors];
+        GroupingMaterials = new Material[numSelectionColors];
+        GroupingMaterialsOutline = new Material[numSelectionColors];
 
         for (int i = 0; i < numSelectionColors; ++i)
         {
@@ -88,7 +134,7 @@ public class GraphManager : MonoBehaviour
             Material selectedMaterial = new Material(defaultGraphPointMaterial);
             selectedMaterial.color = selectionToolColor;
             selectedMaterial.shader = graphPointNormalShader;
-            SelectedMaterials[i] = selectedMaterial;
+            GroupingMaterials[i] = selectedMaterial;
             // make the outline a bit lighter
             float outlineR = selectionToolColor.r + (1 - selectionToolColor.r) / 2;
             float outlineG = selectionToolColor.g + (1 - selectionToolColor.g) / 2;
@@ -99,7 +145,7 @@ public class GraphManager : MonoBehaviour
             selectedMaterialOutline.shader = graphPointOutlineShader;
             selectedMaterialOutline.color = selectionToolColors[i];
             selectedMaterialOutline.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
-            SelectedMaterialsOutline[i] = selectedMaterialOutline;
+            GroupingMaterialsOutline[i] = selectedMaterialOutline;
         }
 
         // Generate the materials used when coloring by gene expressions

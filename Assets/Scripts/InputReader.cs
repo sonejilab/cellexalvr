@@ -86,7 +86,14 @@ public class InputReader : MonoBehaviour
         CellexalUser.UserSpecificDataFolder = path;
         LoadPreviousGroupings();
         database.InitDatabase(fullPath + "\\database.sqlite");
-
+        if (Directory.Exists(workingDirectory + "\\Output"))
+        {
+            if (File.Exists(workingDirectory + "\\Output\\r_log.txt"))
+            {
+                CellexalLog.Log("Deleting old r log file");
+                File.Delete(workingDirectory + "\\Output\\r_log.txt");
+            }
+        }
         // print(path);
         selectionToolHandler.DataDir = fullPath;
         if (!debug)
@@ -785,7 +792,7 @@ public class InputReader : MonoBehaviour
         {
             line = streamReader.ReadLine();
             if (line == "") continue;
-            words = line.Split(null);
+            words = line.Split(new char[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             // set the grouping's name to [the grouping's number]\n[number of colors in grouping]\n[number of cells in groupings]
             string groupingName = words[0];
@@ -807,10 +814,15 @@ public class InputReader : MonoBehaviour
         string[][] cellNames = new string[groupingNames.Count][];
         int[][] groups = new int[groupingNames.Count][];
         string[] graphNames = new string[groupingNames.Count];
+        Dictionary<int, Color>[] groupingColors = new Dictionary<int, Color>[groupingNames.Count];
         for (int i = 0; i < cellNames.Length; ++i)
         {
             cellNames[i] = new string[fileLengths[i]];
             groups[i] = new int[fileLengths[i]];
+        }
+        for (int i = 0; i < groupingNames.Count; ++i)
+        {
+            groupingColors[i] = new Dictionary<int, Color>();
         }
         words = null;
 
@@ -826,9 +838,14 @@ public class InputReader : MonoBehaviour
 
                 words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 cellNames[i][j] = words[0];
+
                 try
                 {
-                    groups[i][j] = int.Parse(words[3]);
+                    int group = int.Parse(words[3]);
+                    groups[i][j] = group;
+                    Color groupColor;
+                    ColorUtility.TryParseHtmlString(words[1], out groupColor);
+                    groupingColors[i][group] = groupColor;
                 }
                 catch (FormatException e)
                 {
@@ -841,13 +858,14 @@ public class InputReader : MonoBehaviour
                     fileStream.Close();
                     return;
                 }
+
             }
             graphNames[i] = words[2];
             streamReader.Close();
             fileStream.Close();
         }
         // someone please rename this
-        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, groups);
+        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, groups, groupingColors);
         CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 

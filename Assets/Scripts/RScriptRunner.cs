@@ -43,7 +43,7 @@ public class RScriptRunner
                 result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
             }
             using (StreamWriter writetofile =
-                  new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt"))
+                  new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
             {
                 writetofile.WriteLine(result);
                 writetofile.Flush();

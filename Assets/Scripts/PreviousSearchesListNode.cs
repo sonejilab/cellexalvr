@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System;
+using CellexalExtensions;
 
 /// <summary>
 /// Represents one node in the list of the 10 previous searches.
 /// </summary>
-public class PreviousSearchesListNode : MonoBehaviour
+public class PreviousSearchesListNode : ClickableTextPanel
 {
 
     public PreviousSearchesListNode nextNode;
-    private new Renderer renderer;
     private bool locked;
     public bool Locked
     {
@@ -17,54 +17,67 @@ public class PreviousSearchesListNode : MonoBehaviour
         set
         { locked = value; }
     }
-    private string geneName;
-    public string GeneName
+    public int Index;
+
+    public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
+
+    public override void SetText(string name, Definitions.Measurement type)
     {
-        get
-        { return geneName; }
-        set
+        base.SetText(name, type);
+        if (NameOfThing != "")
         {
-            geneName = value;
-            if (textMesh != null)
-                textMesh.text = geneName;
+            Text += " " + ColoringMethod.ToString();
+            textMesh.text = Text;
         }
     }
-    public int Index;
-    private TextMesh textMesh;
 
-    void Start()
+    /// <summary>
+    /// Checks if the list already contains an entry.
+    /// </summary>
+    /// <param name="name">THe name of the thing in the entry.</param>
+    /// <param name="type">The type of the entry.</param>
+    /// <param name="coloringMethod">The coloring method that was used.</param>
+    /// <returns>True if an entry of this kind was already in the list, false otherwise.</returns>
+    [Obsolete("Use PreviousSearchesList.Contains()")]
+    public bool Contains(string name, Definitions.Measurement type, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
-        textMesh = GetComponentInChildren<TextMesh>();
-        GeneName = "";
-        renderer = GetComponent<Renderer>();
+        if (nextNode == null)
+            return name == NameOfThing && TextType == type && ColoringMethod == coloringMethod;
+        else if (name == NameOfThing && TextType == type && ColoringMethod == coloringMethod)
+            return true;
+        else
+            return nextNode.Contains(name, type, coloringMethod);
     }
 
     /// <summary>
     /// Updates the list with a new gene name, removing the bottom gene name in the list if it is full.
     /// </summary>
     /// <param name="newGeneName"> The gene name to add to the list. </param>
-    /// <returns> The gene name that was removed. </returns>
-    public string UpdateList(string newGeneName)
+    /// <returns> The gene name that was removed.</returns>
+    [Obsolete("Use PreviousSearchesList.AddEntry()")]
+    public string UpdateList(string newGeneName, Definitions.Measurement type, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
         if (nextNode != null)
         {
             if (!Locked)
             {
-                var returnGeneName = nextNode.UpdateList(GeneName);
-                GeneName = newGeneName;
+                var returnGeneName = nextNode.UpdateList(NameOfThing, TextType, coloringMethod);
+                this.ColoringMethod = coloringMethod;
+                SetText(newGeneName, type);
                 return returnGeneName;
             }
             else
             {
-                return nextNode.UpdateList(newGeneName);
+                return nextNode.UpdateList(newGeneName, type, coloringMethod);
             }
         }
         else
         {
             if (!Locked)
             {
-                var oldGeneName = GeneName;
-                GeneName = newGeneName;
+                var oldGeneName = NameOfThing;
+                this.ColoringMethod = coloringMethod;
+                SetText(newGeneName, type);
                 return oldGeneName;
             }
             else
@@ -72,10 +85,5 @@ public class PreviousSearchesListNode : MonoBehaviour
                 return newGeneName;
             }
         }
-    }
-
-    public void SetMaterial(Material material)
-    {
-        renderer.sharedMaterial = material;
     }
 }

@@ -6,6 +6,7 @@ using System;
 using VRTK;
 using TMPro;
 using System.IO;
+using CellexalExtensions;
 
 /// <summary>
 /// This class represent a manager that holds all the cells.
@@ -89,7 +90,7 @@ public class CellManager : MonoBehaviour
 
     private SQLite database;
     private SteamVR_TrackedObject rightController;
-    private PreviousSearchesListNode topListNode;
+    private PreviousSearchesList previousSearchesList;
     private Dictionary<string, Cell> cells;
     private List<GameObject> lines = new List<GameObject>();
     private GameManager gameManager;
@@ -126,7 +127,7 @@ public class CellManager : MonoBehaviour
 
         database = referenceManager.database;
         rightController = referenceManager.rightController;
-        topListNode = referenceManager.topListNode;
+        previousSearchesList = referenceManager.previousSearchesList;
         gameManager = referenceManager.gameManager;
         statusDisplay = referenceManager.statusDisplay;
         statusDisplayHUD = referenceManager.statusDisplayHUD;
@@ -163,16 +164,30 @@ public class CellManager : MonoBehaviour
     /// <param name="graphName"> The graph that the selection originated from. </param>
     /// <param name="cellnames"> An array of all the cell names (the graphpoint labels). </param>
     /// <param name="groups"> An array of all colors that the cells should have. </param>
-    public void CreateNewSelection(string graphName, string[] cellnames, int[] groups)
+    /// <param name="groupingColors">Optional parameter, used if a custom color scheme should be used. Maps groups to colors.</param>
+    public void CreateNewSelection(string graphName, string[] cellnames, int[] groups, Dictionary<int, Color> groupingColors = null)
     {
         selectionToolHandler.CancelSelection();
         Graph graph = graphManager.FindGraph(graphName);
-        for (int i = 0; i < cellnames.Length; ++i)
+        if (groupingColors == null)
         {
-            Cell cell = cells[cellnames[i]];
-            selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
-            cell.SetGroup(groups[i]);
-            graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groups[i]);
+            for (int i = 0; i < cellnames.Length; ++i)
+            {
+                Cell cell = cells[cellnames[i]];
+                //cell.SetGroup(groups[i], true);
+                selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
+                //graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groups[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < cellnames.Length; ++i)
+            {
+                Cell cell = cells[cellnames[i]];
+                //cell.SetGroup(groups[i], false);
+                selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false, groupingColors[groups[i]]);
+                //graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groupingColors[groups[i]]);
+            }
         }
     }
 
@@ -220,6 +235,23 @@ public class CellManager : MonoBehaviour
         GetComponent<AudioSource>().Play();
         //Debug.Log("FEEL THE PULSE");
         SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+    }
+
+    public void ColorGraphsBy(Definitions.Measurement type, string name)
+    {
+
+        switch (type)
+        {
+            case Definitions.Measurement.GENE:
+                ColorGraphsByGene(name);
+                break;
+            case Definitions.Measurement.ATTRIBUTE:
+                ColorByAttribute(name, true);
+                break;
+            case Definitions.Measurement.FACS:
+                ColorByIndex(name);
+                break;
+        }
     }
 
     /// <summary>
@@ -276,13 +308,17 @@ public class CellManager : MonoBehaviour
         }
         float percentInResults = (float)database._result.Count / cells.Values.Count;
         statusDisplay.RemoveStatus(coloringInfoStatusId);
-        coloringInfoStatusId = statusDisplay.AddStatus(String.Format("low: {0:0.####}, high: {1:0.####}, above 0: {2:0.##%}", database.LowestExpression, database.HighestExpression, percentInResults));
+        coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
 
-        var removedGene = topListNode.UpdateList(geneName + " " + graphManager.GeneExpressionColoringMethod);
-        //Debug.Log(topListNode.GeneName);
-        foreach (Cell c in cells.Values)
+        if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, graphManager.GeneExpressionColoringMethod))
         {
-            c.SaveExpression(geneName + " " + graphManager.GeneExpressionColoringMethod, removedGene);
+            var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, graphManager.GeneExpressionColoringMethod);
+            //Debug.Log(topListNode.GeneName);
+
+            foreach (Cell c in cells.Values)
+            {
+                c.SaveExpression(geneName + " " + graphManager.GeneExpressionColoringMethod, removedGene);
+            }
         }
         if (triggerEvent)
         {
@@ -565,13 +601,18 @@ public class CellManager : MonoBehaviour
     /// <summary>
     /// Color all cells that belong to a certain attribute.
     /// </summary>
+    /// <param name="attributeType">The name of the attribute.</param>
+    /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
     public void ColorByAttribute(string attributeType, bool color)
     {
-        CellexalLog.Log("Colored genes by " + attributeType);
+        if (!previousSearchesList.Contains(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod))
+            previousSearchesList.AddEntry(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod);
+        CellexalLog.Log("Colored graphs by " + attributeType);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByAttribute(attributeType, color);
         }
+
     }
 
     /// <summary>
@@ -600,7 +641,9 @@ public class CellManager : MonoBehaviour
     /// </summary>
     public void ColorByIndex(string name)
     {
-        CellexalLog.Log("Colored genes by " + name);
+        if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod))
+            previousSearchesList.AddEntry(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod);
+        CellexalLog.Log("Colored graphs by " + name);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByIndex(name);

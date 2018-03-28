@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Represents the buttons that are used to create new selections from old ones.
@@ -10,6 +11,7 @@ class CreateSelectionFromPreviousButton : CellexalButton
     private string graphName;
     private string[] selectionCellNames;
     private int[] selectionGroups;
+    private Dictionary<int, Color> groupingColors;
 
     protected override string Description
     {
@@ -27,7 +29,7 @@ class CreateSelectionFromPreviousButton : CellexalButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionGroups);
+            referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionGroups, groupingColors);
         }
     }
 
@@ -38,11 +40,12 @@ class CreateSelectionFromPreviousButton : CellexalButton
     /// <param name="selectionName"> The name of this selection. </param>
     /// <param name="selectionCellNames"> An array containing the cell names. </param>
     /// <param name="selectionGroups"> An array containing which groups the cells belonged to. </param>
-    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, int[] selectionGroups)
+    public void SetSelection(string graphName, string selectionName, string[] selectionCellNames, int[] selectionGroups, Dictionary<int, Color> groupingColors)
     {
         buttonDescription.text = selectionName;
         this.graphName = graphName;
         this.selectionCellNames = selectionCellNames;
         this.selectionGroups = selectionGroups;
+        this.groupingColors = groupingColors;
     }
 }

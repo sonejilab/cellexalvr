@@ -19,6 +19,8 @@ public class ColorByAttributeButton : CellexalButton
     protected void Start()
     {
         cellManager = referenceManager.cellManager;
+        CellexalEvents.GraphsColoredByGene.AddListener(ResetVars);
+        CellexalEvents.GraphsReset.AddListener(ResetVars);
     }
 
     void Update()
@@ -38,12 +40,23 @@ public class ColorByAttributeButton : CellexalButton
     /// <param name="color"> The color that the cells in possesion of the attribute should get. </param>
     public void SetAttribute(string attribute, Color color)
     {
-        string[] shorter = { attribute.Substring(0, 8), attribute.Substring(8) };
-
-        description.text = shorter[0] + "\n" + shorter[1];
+        if (attribute.Length < 8)
+        {
+            string[] shorter = { attribute.Substring(0, attribute.Length / 2), attribute.Substring(attribute.Length / 2) };
+            description.text = shorter[0] + "\n" + shorter[1];
+        }
+        else
+        {
+            description.text = attribute;
+        }
         this.attribute = attribute;
         // sometimes this is done before Awake() it seems, so we use GetComponent() here
         GetComponent<Renderer>().material.color = color;
         meshStandardColor = color;
+    }
+
+    private void ResetVars()
+    {
+        colored = false;
     }
 }

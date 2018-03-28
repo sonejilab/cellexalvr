@@ -4,32 +4,77 @@
 /// Represents the locks next to the previous searches.
 /// Pressing one of the locks makes the gene name next to it not move when a new gene is searched for.
 /// </summary>
-public class PreviousSearchesLock : MonoBehaviour
+public class PreviousSearchesLock : ClickablePanel
 {
 
     public PreviousSearchesListNode searchListNode;
-    public bool Locked { get; set; }
-
-    private new Renderer renderer;
-
-    void Start()
+    private bool locked;
+    public bool Locked
     {
-        renderer = GetComponent<Renderer>();
+        get { return locked; }
+
+        set
+        {
+            locked = value;
+            renderer.sharedMaterial = (locked ? lockedNormalMaterial : unlockedNormalMaterial);
+        }
+    }
+
+    private Material unlockedNormalMaterial;
+    private Material unlockedHighlightMaterial;
+    private Material unlockedPressedMaterial;
+    private Material lockedNormalMaterial;
+    private Material lockedHighlightMaterial;
+    private Material lockedPressedMaterial;
+
+    public override void Click()
+    {
+        Locked = !searchListNode.Locked;
+        searchListNode.Locked = Locked;
+        if (Locked)
+        {
+            renderer.sharedMaterial = lockedNormalMaterial;
+        }
+        else
+        {
+            renderer.sharedMaterial = unlockedNormalMaterial;
+        }
+
     }
 
     /// <summary>
-    /// Toggles the lock.
+    /// Do not use. Use <see cref="SetMaterials(Material, Material, Material, Material, Material, Material)"/>
     /// </summary>
-    public void ToggleSearchNodeLock()
+    public override void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
     {
-        bool newState = !searchListNode.Locked;
-        searchListNode.Locked = newState;
-        Locked = newState;
+        throw new System.InvalidOperationException("Use the other SetMaterial method");
     }
 
-    public void SetTexture(Texture newTexture)
+    public void SetMaterials(Material unlockedNormalMaterial, Material unlockedHighlightMaterial, Material unlockedPressedMaterial, Material lockedNormalMaterial, Material lockedHighlightMaterial, Material lockedPressedMaterial)
     {
-        if (renderer != null)
-            renderer.material.mainTexture = newTexture;
+        this.unlockedNormalMaterial = unlockedNormalMaterial;
+        this.unlockedHighlightMaterial = unlockedHighlightMaterial;
+        this.unlockedPressedMaterial = unlockedPressedMaterial;
+        this.lockedNormalMaterial = lockedNormalMaterial;
+        this.lockedHighlightMaterial = lockedHighlightMaterial;
+        this.lockedPressedMaterial = lockedPressedMaterial;
+    }
+
+    public override void SetHighlighted(bool highlight)
+    {
+        if (Locked)
+        {
+            if (highlight)
+                renderer.sharedMaterial = lockedHighlightMaterial;
+            else
+                renderer.sharedMaterial = lockedNormalMaterial;
+        }
+        else
+        {
+            if (highlight)
+                renderer.sharedMaterial = unlockedHighlightMaterial;
+            else
+                renderer.sharedMaterial = unlockedNormalMaterial;
+        }
     }
 }

@@ -1,28 +1,22 @@
-﻿using UnityEngine;
-
+﻿
 /// <summary>
 /// Represents the button that calculates the correlated genes.
 /// </summary>
-public class CorrelatedGenesButton : MonoBehaviour
+public class CorrelatedGenesButton : ClickablePanel
 {
-    public ReferenceManager referenceManager;
+
     public PreviousSearchesListNode listNode;
 
     private CorrelatedGenesList correlatedGenesList;
-    private new Renderer renderer;
 
-    private void Start()
+    protected override void Start()
     {
-        renderer = GetComponent<Renderer>();
         correlatedGenesList = referenceManager.correlatedGenesList;
     }
 
-    /// <summary>
-    /// Sets the texture of this button.
-    /// </summary>
-    /// <param name="newTexture"> The new texture. </param>
-    public void SetTexture(Texture newTexture)
+    public override void Click()
     {
-        renderer.material.mainTexture = newTexture;
+        // the gene name is followed by some other text
+        correlatedGenesList.CalculateCorrelatedGenes(listNode.NameOfThing, listNode.TextType);
     }
 }
