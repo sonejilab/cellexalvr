@@ -878,7 +878,7 @@ public class Heatmap : MonoBehaviour
         GameObject newHeatmap = Instantiate(gameObject);
         Heatmap heatmap = newHeatmap.GetComponent<Heatmap>();
         heatmap.transform.Translate(0.1f, 0.1f, 0.1f, Space.Self);
-
+        heatmap.groupingColors = groupingColors;
         // find out which indices the cells start and end at
         int cellsIndexStart = 0;
         for (int i = 0; i < selectedGroupLeft; ++i)

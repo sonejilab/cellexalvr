@@ -13,6 +13,10 @@ public class KeyboardSwitch : MonoBehaviour
         SetKeyboardVisible(false);
     }
 
+    /// <summary>
+    /// Sets the keyboard to be either visible or invisible.
+    /// </summary>
+    /// <param name="visible">True if the keyboard should be visible, false for invisible.</param>
     public void SetKeyboardVisible(bool visible)
     {
         KeyboardActive = visible;

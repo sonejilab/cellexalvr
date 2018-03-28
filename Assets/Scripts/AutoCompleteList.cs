@@ -121,6 +121,11 @@ public class AutoCompleteList : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Looks up if a string is a gene, facs marker or an attribute.
+    /// </summary>
+    /// <param name="name">The name of a gene, facs marker or attribute.</param>
+    /// <returns>The type of <paramref name="name"/>, or <see cref="Definitions.Measurement.INVALID"/> if <paramref name="name"/> is neither a gene, facs marker nor attribute.</returns>
     public Definitions.Measurement LookUpName(string name)
     {
         List<Tuple<int, BKTreeNode>> result = new List<Tuple<int, BKTreeNode>>();
@@ -134,7 +139,10 @@ public class AutoCompleteList : MonoBehaviour
             return result[0].Item2.type;
         }
     }
-
+    /// <summary>
+    /// Updates the list with appropriate guesses for what the user might mean when they typed something on the keyboard.
+    /// </summary>
+    /// <param name="word">The word typed on the keyboard.</param>
     private void UpdateList(string word)
     {
         if (word == "")
@@ -160,6 +168,9 @@ public class AutoCompleteList : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Clears the panels containing the suggestions.
+    /// </summary>
     public void ClearList()
     {
         foreach (var listNode in listNodes)
@@ -278,6 +289,9 @@ public class AutoCompleteList : MonoBehaviour
             }
         }
 
+        /// <summary>
+        /// Used for debugging purposes.
+        /// </summary>
         public void TreeInfo(ref int numChildren, ref int numLeaves, int depth, ref int maxDepth)
         {
             numChildren += children.Count;

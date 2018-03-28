@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using CellexalExtensions;
 
 /// <summary>
@@ -18,6 +17,11 @@ public class PreviousSearchesListNode : ClickableTextPanel
         { locked = value; }
     }
 
+    /// <summary>
+    /// Sets the text of this list node. Make sure you set the <see cref="ColoringMethod"/> property first.
+    /// </summary>
+    /// <param name="name">The name of the thing we are coloring by.</param>
+    /// <param name="type">The type of the thing we are coloring by.</param>
     public override void SetText(string name, Definitions.Measurement type)
     {
         base.SetText(name, type);

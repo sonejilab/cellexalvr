@@ -50,6 +50,9 @@ public class PreviousSearchesLock : ClickablePanel
         throw new System.InvalidOperationException("Use the other SetMaterial method");
     }
 
+    /// <summary>
+    /// Set the materials used by this lock.
+    /// </summary>
     public void SetMaterials(Material unlockedNormalMaterial, Material unlockedHighlightMaterial, Material unlockedPressedMaterial, Material lockedNormalMaterial, Material lockedHighlightMaterial, Material lockedPressedMaterial)
     {
         this.unlockedNormalMaterial = unlockedNormalMaterial;

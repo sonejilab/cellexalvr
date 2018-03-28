@@ -15,6 +15,9 @@ public class ColoringOptionsButton : ClickablePanel
         graphManager = referenceManager.graphManager;
     }
 
+    /// <summary>
+    /// Click this panel, changing the mode of coloring used.
+    /// </summary>
     public override void Click()
     {
         graphManager.GeneExpressionColoringMethod = modeToSwitchTo;
@@ -26,4 +29,3 @@ public class ColoringOptionsButton : ClickablePanel
         GetComponentInChildren<TextMesh>().color = Color.green;
     }
 }
-

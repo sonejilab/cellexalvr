@@ -237,6 +237,12 @@ public class CellManager : MonoBehaviour
         SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
     }
 
+    /// <summary>
+    /// Color all graphs by the expression of something.
+    /// </summary>
+    /// <param name="type">The type of the thing we are coloring by.</param>
+    /// <param name="name">The name of what we are coloring by.</param>
+    /// <param name="coloringMethod">The method of coloring that should be used.</param>
     public void ColorGraphsBy(Definitions.Measurement type, string name, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
 

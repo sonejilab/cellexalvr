@@ -14,6 +14,9 @@ public class CorrelatedGenesButton : ClickablePanel
         correlatedGenesList = referenceManager.correlatedGenesList;
     }
 
+    /// <summary>
+    /// Click this panel, calculating the genes correlated to another gene.
+    /// </summary>
     public override void Click()
     {
         // the gene name is followed by some other text

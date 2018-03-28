@@ -76,6 +76,12 @@ public class PanelRaycaster : MonoBehaviour
 
                 lastHit = hitPanel;
             }
+            else if (lastHit != null)
+            {
+                // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
+                lastHit.SetHighlighted(false);
+                lastHit = null;
+            }
         }
         else if (lastHit != null)
         {
