@@ -36,7 +36,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendColorGraphsByGene(string geneName)
     {
         CellexalLog.Log("Recieved message to color all graphs by " + geneName);
-        referenceManager.cellManager.ColorGraphsByGene(geneName);
+        referenceManager.cellManager.ColorGraphsByGene(geneName, referenceManager.graphManager.GeneExpressionColoringMethod);
     }
 
     [PunRPC]

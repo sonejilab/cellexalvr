@@ -430,7 +430,7 @@ public class Heatmap : MonoBehaviour
 
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
-                        referenceManager.cellManager.ColorGraphsByGene(genes[geneHit]);
+                        referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
                     }
                 }
                 else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))

@@ -17,6 +17,6 @@ public class CorrelatedGenesButton : ClickablePanel
     public override void Click()
     {
         // the gene name is followed by some other text
-        correlatedGenesList.CalculateCorrelatedGenes(listNode.NameOfThing, listNode.TextType);
+        correlatedGenesList.CalculateCorrelatedGenes(listNode.NameOfThing, listNode.Type);
     }
 }

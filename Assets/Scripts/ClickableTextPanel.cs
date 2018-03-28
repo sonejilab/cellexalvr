@@ -8,11 +8,22 @@ public class ClickableTextPanel : ClickablePanel
 {
     [HideInInspector]
     public TextMesh textMesh;
-
+    /// <summary>
+    /// The entire string of text that is displayed on the panel.
+    /// </summary>
     public string Text { get; protected set; }
-    public Definitions.Measurement TextType { get; protected set; }
-
+    /// <summary>
+    /// The type of the thing whose name is displayed.
+    /// </summary>
+    public Definitions.Measurement Type { get; protected set; }
+    /// <summary>
+    /// The name of the thing that is displayed.
+    /// </summary>
     public string NameOfThing { get; protected set; }
+    /// <summary>
+    /// The method of coloring that is used to color this thing.
+    /// </summary>
+    public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
 
     protected override void Start()
     {
@@ -27,7 +38,7 @@ public class ClickableTextPanel : ClickablePanel
     /// <param name="type">The type (gene, attribute or facs) of the text.</param>
     public virtual void SetText(string name, Definitions.Measurement type)
     {
-        TextType = type;
+        Type = type;
         if (type != Definitions.Measurement.INVALID)
         {
             Text = type.ToString() + " " + name;
@@ -42,19 +53,25 @@ public class ClickableTextPanel : ClickablePanel
         }
     }
 
+    /// <summary>
+    /// Click this panel. This will color the graphs according to what is on the panel.
+    /// </summary>
     public override void Click()
     {
-        if (TextType == Definitions.Measurement.GENE)
+        if (Type == Definitions.Measurement.GENE)
         {
-            referenceManager.cellManager.ColorGraphsByGene(NameOfThing);
+            referenceManager.cellManager.ColorGraphsByGene(NameOfThing, ColoringMethod);
         }
-        else if (TextType == Definitions.Measurement.ATTRIBUTE)
+        else if (Type == Definitions.Measurement.ATTRIBUTE)
         {
             referenceManager.cellManager.ColorByAttribute(NameOfThing, true);
         }
-        else if (TextType == Definitions.Measurement.FACS)
+        else if (Type == Definitions.Measurement.FACS)
         {
             referenceManager.cellManager.ColorByIndex(NameOfThing);
         }
+        string emptyString = "";
+        referenceManager.keyboardStatus.setOutput(ref emptyString);
+        referenceManager.autoCompleteList.ClearList();
     }
 }

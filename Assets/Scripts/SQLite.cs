@@ -712,17 +712,17 @@ namespace SQLiter
         /// </summary>
         /// <param name="geneName"> The name of the gene </param>
         /// <returns> An array of all gene expression, ordered by cell </returns>
-        public void QueryGene(string geneName)
+        public void QueryGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
             QueryRunning = true;
-            StartCoroutine(QueryGeneCoroutine(geneName));
+            StartCoroutine(QueryGeneCoroutine(geneName, coloringMethod));
         }
 
         /// <summary>
         /// Queries the database for the expression values for a gene and puts the result in _result
         /// </summary>
         /// <param name="geneName"> The gene name </param>
-        private IEnumerator QueryGeneCoroutine(string geneName)
+        private IEnumerator QueryGeneCoroutine(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
             int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
@@ -737,7 +737,7 @@ namespace SQLiter
             int i = 0;
             LowestExpression = float.MaxValue;
             HighestExpression = float.MinValue;
-            if (referenceManager.graphManager.GeneExpressionColoringMethod == GraphManager.GeneExpressionColoringMethods.Linear)
+            if (coloringMethod == GraphManager.GeneExpressionColoringMethods.Linear)
             {
                 // put results in equally sized buckets
                 while (_reader.Read())

@@ -237,13 +237,13 @@ public class CellManager : MonoBehaviour
         SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
     }
 
-    public void ColorGraphsBy(Definitions.Measurement type, string name)
+    public void ColorGraphsBy(Definitions.Measurement type, string name, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
 
         switch (type)
         {
             case Definitions.Measurement.GENE:
-                ColorGraphsByGene(name);
+                ColorGraphsByGene(name, coloringMethod);
                 break;
             case Definitions.Measurement.ATTRIBUTE:
                 ColorByAttribute(name, true);
@@ -258,14 +258,14 @@ public class CellManager : MonoBehaviour
     /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
     /// </summary>
     /// <param name="geneName"> The name of the gene. </param>
-    public void ColorGraphsByGene(string geneName, bool triggerEvent = true)
+    public void ColorGraphsByGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
     {
         //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName, triggerEvent));
+        StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
     }
 
-    private IEnumerator QueryDatabase(string geneName, bool triggerEvent)
+    private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
     {
         if (coroutinesWaiting >= 1)
         {
@@ -281,7 +281,7 @@ public class CellManager : MonoBehaviour
             yield return null;
 
         coroutinesWaiting--;
-        database.QueryGene(geneName);
+        database.QueryGene(geneName, coloringMethod);
         // now we have to wait for our query to return the results.
         while (database.QueryRunning)
             yield return null;
@@ -310,14 +310,14 @@ public class CellManager : MonoBehaviour
         statusDisplay.RemoveStatus(coloringInfoStatusId);
         coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
 
-        if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, graphManager.GeneExpressionColoringMethod))
+        if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
         {
-            var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, graphManager.GeneExpressionColoringMethod);
+            var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
             //Debug.Log(topListNode.GeneName);
 
             foreach (Cell c in cells.Values)
             {
-                c.SaveExpression(geneName + " " + graphManager.GeneExpressionColoringMethod, removedGene);
+                c.SaveExpression(geneName + " " + coloringMethod, removedGene);
             }
         }
         if (triggerEvent)

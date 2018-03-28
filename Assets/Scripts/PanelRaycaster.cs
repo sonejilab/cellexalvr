@@ -30,22 +30,22 @@ public class PanelRaycaster : MonoBehaviour
         rightController = referenceManager.rightController;
 
         // tell all the panels which materials they should use
-        foreach (var panel in GetComponentsInChildren<ClickableTextPanel>())
+        foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
         {
             panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
         }
 
-        foreach (var panel in GetComponentsInChildren<CorrelatedGenesButton>())
+        foreach (var panel in GetComponentsInChildren<CorrelatedGenesButton>(true))
         {
             panel.SetMaterials(correlatedGenesNormalMaterial, correlatedGenesHighlightMaterial, correlatedGenesPressedMaterial);
         }
 
-        foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>())
+        foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>(true))
         {
             panel.SetMaterials(unlockedNormalMaterial, unlockedHighlightMaterial, unlockedPressedMaterial, lockedNormalMaterial, lockedHighlightMaterial, lockedPressedMaterial);
         }
 
-        foreach (var panel in GetComponentsInChildren<ColoringOptionsButton>())
+        foreach (var panel in GetComponentsInChildren<ColoringOptionsButton>(true))
         {
             panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
 

@@ -1,4 +1,5 @@
-﻿using SQLiter;
+﻿using CurvedVRKeyboard;
+using SQLiter;
 using TMPro;
 using UnityEngine;
 
@@ -84,6 +85,7 @@ public class ReferenceManager : MonoBehaviour
     #region Keyboard
     [Header("Keyboard")]
     public KeyboardSwitch keyboard;
+    public KeyboardStatus keyboardStatus;
     public CorrelatedGenesList correlatedGenesList;
     public PreviousSearchesList previousSearchesList;
     public PreviousSearchesListNode topListNode;

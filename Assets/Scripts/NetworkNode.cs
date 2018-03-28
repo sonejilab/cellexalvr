@@ -53,7 +53,7 @@ public class NetworkNode : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            cellManager.ColorGraphsByGene(Label.ToLower());
+            cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
             referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
         }
     }

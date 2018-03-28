@@ -31,7 +31,7 @@ public class PreviousSearchesList : MonoBehaviour
     {
         foreach (var node in previousSearchesListNodes)
         {
-            if (node.NameOfThing == name && node.TextType == type && node.ColoringMethod == coloringMethod)
+            if (node.NameOfThing == name && node.Type == type && node.ColoringMethod == coloringMethod)
                 return true;
         }
         return false;
@@ -78,7 +78,7 @@ public class PreviousSearchesList : MonoBehaviour
             {
                 pushingDown = true;
                 pushDownName = listNode.NameOfThing;
-                pushDownType = listNode.TextType;
+                pushDownType = listNode.Type;
                 pushDownColoringMethod = listNode.ColoringMethod;
                 listNode.ColoringMethod = coloringMethod;
                 listNode.SetText(name, type);
@@ -87,7 +87,7 @@ public class PreviousSearchesList : MonoBehaviour
             {
                 // swap the saved entry that should be pushed down to this node
                 var tempPushDownName = listNode.NameOfThing;
-                var tempPushDownType = listNode.TextType;
+                var tempPushDownType = listNode.Type;
                 var tempPushDownColoringMethod = listNode.ColoringMethod;
 
                 listNode.ColoringMethod = pushDownColoringMethod;

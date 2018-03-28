@@ -52,11 +52,12 @@ namespace CurvedVRKeyboard
             else if (value.Equals(SPACE))
             {
                 var type = autoCompleteList.LookUpName(output);
-                cellManager.ColorGraphsBy(type, output);
+                cellManager.ColorGraphsBy(type, output, referenceManager.graphManager.GeneExpressionColoringMethod);
                 //referenceManager.gameManager.InformColorGraphsByGene(output);
                 output = "";
                 textComponent = targetGameObject.GetComponent(typeHolder.GetType());
                 textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
+                autoCompleteList.ClearList();
             }
             else if (value.Equals(BACK))
             {
@@ -135,6 +136,8 @@ namespace CurvedVRKeyboard
         public void setOutput(ref string stringRef)
         {
             output = stringRef;
+            textComponent = targetGameObject.GetComponent(typeHolder.GetType());
+            textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
         }
     }
 }

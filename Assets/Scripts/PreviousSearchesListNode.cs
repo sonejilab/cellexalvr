@@ -17,9 +17,6 @@ public class PreviousSearchesListNode : ClickableTextPanel
         set
         { locked = value; }
     }
-    public int Index;
-
-    public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
 
     public override void SetText(string name, Definitions.Measurement type)
     {
@@ -42,8 +39,8 @@ public class PreviousSearchesListNode : ClickableTextPanel
     public bool Contains(string name, Definitions.Measurement type, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
         if (nextNode == null)
-            return name == NameOfThing && TextType == type && ColoringMethod == coloringMethod;
-        else if (name == NameOfThing && TextType == type && ColoringMethod == coloringMethod)
+            return name == NameOfThing && Type == type && ColoringMethod == coloringMethod;
+        else if (name == NameOfThing && Type == type && ColoringMethod == coloringMethod)
             return true;
         else
             return nextNode.Contains(name, type, coloringMethod);
@@ -61,7 +58,7 @@ public class PreviousSearchesListNode : ClickableTextPanel
         {
             if (!Locked)
             {
-                var returnGeneName = nextNode.UpdateList(NameOfThing, TextType, coloringMethod);
+                var returnGeneName = nextNode.UpdateList(NameOfThing, Type, coloringMethod);
                 this.ColoringMethod = coloringMethod;
                 SetText(newGeneName, type);
                 return returnGeneName;

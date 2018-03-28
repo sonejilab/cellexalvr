@@ -160,6 +160,14 @@ public class AutoCompleteList : MonoBehaviour
         }
     }
 
+    public void ClearList()
+    {
+        foreach (var listNode in listNodes)
+        {
+            listNode.SetText("", Definitions.Measurement.INVALID);
+        }
+    }
+
     /// <summary>
     /// Calculates the Levenshtein distance between two words.
     /// </summary>

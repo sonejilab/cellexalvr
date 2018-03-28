@@ -26,7 +26,7 @@ public class ColorByGeneButton : CellexalButton
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            cellManager.ColorGraphsByGene(gene, false);
+            cellManager.ColorGraphsByGene(gene, referenceManager.graphManager.GeneExpressionColoringMethod, false);
         }
     }
 
