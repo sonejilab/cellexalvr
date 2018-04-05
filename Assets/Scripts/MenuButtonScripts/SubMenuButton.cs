@@ -44,7 +44,7 @@ public class SubMenuButton : CellexalButton
         foreach (Transform t in buttonsToDeactivate.transform)
         {
             // skip all nested menues
-            if (t.GetComponent<DynamicButtonMenu>()) continue;
+            if (t.GetComponent<DynamicButtonMenu>() || t.GetComponent<NewFilterMenu>()) continue;
             // if this is a button, deactivate it
             t.GetComponent<CellexalButton>()?.SetButtonActivated(false);
             // recursive call to include all children of children
@@ -69,7 +69,7 @@ public class SubMenuButton : CellexalButton
         foreach (Transform t in menu.transform)
         {
             // skip nested menues
-            if (t.GetComponent<DynamicButtonMenu>()) continue;
+            if (t.GetComponent<DynamicButtonMenu>() || t.GetComponent<NewFilterMenu>()) continue;
             // For everything that is not a tab, just deal with it normally
             Tab tab = t.GetComponent<Tab>();
             if (!tab)

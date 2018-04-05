@@ -1,13 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class NewFilterRuleMenu : DynamicButtonMenu
+public class NewFilterRuleMenu : MonoBehaviour
 {
-    protected override Color[] Colors
-    {
-        get
-        {
-            throw new NotImplementedException();
-        }
-    }
+
 }

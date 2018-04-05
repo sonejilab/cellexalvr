@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using static Filter.FilterRule;
 
 /// <summary>
@@ -100,16 +101,24 @@ public class Filter
 
     public override string ToString()
     {
-        string result = "";
-        foreach (FilterRule rule in rulesAll)
+        var stringbuilder = new StringBuilder();
+        if (rulesAll.Count > 0)
         {
-            result += (" ALL " + rule.filterType + " " + rule.item + " " + rule.condition + " " + rule.value + " " + rule.attributeValue);
+            stringbuilder.Append("ALL\n");
+            foreach (FilterRule rule in rulesAll)
+            {
+                stringbuilder.Append(rule.filterType + " " + rule.item + " " + rule.condition + " " + rule.value + " " + rule.attributeValue + "\n");
+            }
         }
-        foreach (FilterRule rule in rulesAny)
+        if (rulesAny.Count > 0)
         {
-            result += (" ANY " + rule.filterType + " " + rule.item + " " + rule.condition + " " + rule.value + " " + rule.attributeValue);
+            stringbuilder.Append("ANY\n");
+            foreach (FilterRule rule in rulesAny)
+            {
+                stringbuilder.Append(rule.filterType + " " + rule.item + " " + rule.condition + " " + rule.value + " " + rule.attributeValue + "\n");
+            }
         }
-        return result;
+        return stringbuilder.ToString();
     }
 
     /// <summary>
@@ -130,6 +139,17 @@ public class Filter
         public enum RuleType { Invalid, All, Any }
 
         private Dictionary<string, float> values;
+
+        /// <summary>
+        /// Use this when <see cref="ruleType"/>, <see cref="filterType"/>, <see cref="condition"/> and <see cref="value"/> are set later.
+        /// </summary>
+        public FilterRule()
+        {
+            filterType = FilterType.Invalid;
+            ruleType = RuleType.Invalid;
+            condition = Condition.Invalid;
+            values = new Dictionary<string, float>();
+        }
 
         /// <summary>
         /// Use for non-attribute filterrules

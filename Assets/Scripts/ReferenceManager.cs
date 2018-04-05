@@ -50,8 +50,8 @@ public class ReferenceManager : MonoBehaviour
     public CreateSelectionFromPreviousSelectionMenu createSelectionFromPreviousSelectionMenu;
     public ColorByGeneMenu colorByGeneMenu;
     public FilterMenu filterMenu;
+    public NewFilterMenu newFilterMenu;
     public TextMesh currentFlashedGeneText;
-    public ButtonsHandler undoButtonsHandler;
     public GameObject frontButtons;
     public GameObject rightButtons;
     public GameObject backButtons;
