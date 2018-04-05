@@ -38,6 +38,10 @@ public class ClickableTextPanel : ClickablePanel
     /// <param name="type">The type (gene, attribute or facs) of the text.</param>
     public virtual void SetText(string name, Definitions.Measurement type)
     {
+        if (!textMesh)
+        {
+            textMesh = GetComponentInChildren<TextMesh>(true);
+        }
         Type = type;
         if (type != Definitions.Measurement.INVALID)
         {

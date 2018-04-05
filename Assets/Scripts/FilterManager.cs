@@ -210,7 +210,7 @@ public static class FilterParser
 
         }
         // if nothing was found
-        cond = (Condition)(-1);
+        cond = Condition.Invalid;
         return -1;
     }
 }

@@ -30,7 +30,7 @@ private void Awake () {
 	keyboardStatus = target as KeyboardStatus;
 	ClearReflectionData();
 
-	if(keyboardStatus.targetGameObject != null) {
+	if(keyboardStatus.keyboardOutput != null) {
 		GetComponentsName();
 	}
 }
@@ -40,7 +40,7 @@ private void Awake () {
 /// gameobject. Later it changes them to array of string used in popup
 /// </summary>
 private void GetComponentsName () {
-	componentsWithText = keyboardStatus.targetGameObject.GetComponents<Component>()
+	componentsWithText = keyboardStatus.keyboardOutput.GetComponents<Component>()
 	                     .Where(x => x.GetType().GetProperty(TEXT) != null).ToArray();
 	scriptsNames = componentsWithText.Select(x => x.GetType().ToString()).ToArray<String>();
 	currentSelected = 0;
@@ -58,11 +58,11 @@ public override void OnInspectorGUI () {
 
 private void DrawTargetGameObjectFields () {
 	EditorGUI.BeginChangeCheck();
-	keyboardStatus.targetGameObject = EditorGUILayout.ObjectField(OUTPUT, keyboardStatus.targetGameObject, typeof(GameObject), true) as GameObject;
-	if(keyboardStatus.targetGameObject != null && EditorGUI.EndChangeCheck()) {         //if not null and changed this frame
+	keyboardStatus.keyboardOutput = EditorGUILayout.ObjectField(OUTPUT, keyboardStatus.keyboardOutput, typeof(KeyboardOutput), true) as KeyboardOutput;
+	if(keyboardStatus.keyboardOutput != null && EditorGUI.EndChangeCheck()) {         //if not null and changed this frame
 		GetComponentsName();
 	}
-	if(keyboardStatus.targetGameObject == null && EditorGUI.EndChangeCheck()) {        // if set to null on this frame
+	if(keyboardStatus.keyboardOutput == null && EditorGUI.EndChangeCheck()) {        // if set to null on this frame
 		ClearReflectionData();
 	}
 }
@@ -85,7 +85,7 @@ private void DrawPopupList () {
 private void GetTextParameterViaReflection () {
 	notNullTargetAndChanged = false;
 	keyboardStatus.typeHolder = componentsWithText[currentSelected];
-	keyboardStatus.targetGameObject = componentsWithText[currentSelected].gameObject;
+	keyboardStatus.keyboardOutput = componentsWithText[currentSelected].gameObject.GetComponent<KeyboardOutput>();
 	keyboardStatus.output = (string)componentsWithText[currentSelected]
 	                        .GetType().GetProperty(TEXT).GetValue(componentsWithText[currentSelected], null);
 }
@@ -96,7 +96,7 @@ private void ClearReflectionData () {
 }
 
 public bool IsReflectionPossible () {
-	return keyboardStatus.targetGameObject != null && componentsWithText.Length > 0;
+	return keyboardStatus.keyboardOutput != null && componentsWithText.Length > 0;
 }
 
 private void HandleValuesChanges () {

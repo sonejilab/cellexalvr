@@ -14,7 +14,7 @@ namespace CurvedVRKeyboard
         [SerializeField]
         public int maxOutputLength;
         [SerializeField]
-        public GameObject targetGameObject;
+        public KeyboardOutput keyboardOutput;
         public AutoCompleteList autoCompleteList;
 
         private ReferenceManager referenceManager;
@@ -52,12 +52,11 @@ namespace CurvedVRKeyboard
             else if (value.Equals(SPACE))
             {
                 var type = autoCompleteList.LookUpName(output);
-                cellManager.ColorGraphsBy(type, output, referenceManager.graphManager.GeneExpressionColoringMethod);
+                keyboardOutput.SendToTarget();
+                keyboardOutput.Clear();
+                autoCompleteList.ClearList();
                 //referenceManager.gameManager.InformColorGraphsByGene(output);
                 output = "";
-                textComponent = targetGameObject.GetComponent(typeHolder.GetType());
-                textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
-                autoCompleteList.ClearList();
             }
             else if (value.Equals(BACK))
             {
@@ -75,6 +74,7 @@ namespace CurvedVRKeyboard
             previousSearchesList = referenceManager.previousSearchesList;
             cellManager = referenceManager.cellManager;
             autoCompleteList = referenceManager.autoCompleteList;
+            keyboardOutput = referenceManager.keyboardOutput;
         }
 
 
@@ -109,8 +109,7 @@ namespace CurvedVRKeyboard
         {
             if (output.Length >= 1)
             {
-                textComponent = targetGameObject.GetComponent(typeHolder.GetType());
-                textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output.Remove(output.Length - 1, 1), null);
+                keyboardOutput.RemoveLetter();
                 output = output.Remove(output.Length - 1, 1);
                 autoCompleteList.KeyboardOutput = output;
             }
@@ -120,8 +119,7 @@ namespace CurvedVRKeyboard
         {
             if (output.Length < maxOutputLength)
             {
-                textComponent = targetGameObject.GetComponent(typeHolder.GetType());
-                textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output + key.ToString(), null);
+                keyboardOutput.AddLetter(key);
                 output = output + key.ToString();
                 autoCompleteList.KeyboardOutput = output;
             }
@@ -136,8 +134,7 @@ namespace CurvedVRKeyboard
         public void setOutput(ref string stringRef)
         {
             output = stringRef;
-            textComponent = targetGameObject.GetComponent(typeHolder.GetType());
-            textComponent.GetType().GetProperty(TEXT).SetValue(textComponent, output, null);
+            keyboardOutput.SetText(stringRef);
         }
     }
 }

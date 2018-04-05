@@ -155,6 +155,7 @@ public class CellManager : MonoBehaviour
         {
             cells[label] = new Cell(label, graphManager);
         }
+
         return cells[label];
     }
 
@@ -258,6 +259,15 @@ public class CellManager : MonoBehaviour
                 ColorByIndex(name);
                 break;
         }
+    }
+
+    /// <summary>
+    /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
+    /// </summary>
+    /// <param name="geneName"> The name of the gene. </param>
+    public void ColorGraphsByGene(string geneName, bool triggerEvent = true)
+    {
+        ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, triggerEvent);
     }
 
     /// <summary>

@@ -19,7 +19,6 @@ public class ToggleArcsSubMenu : MenuWithTabs
     /// </summary>
     public void Init()
     {
-        // TODO CELLEXAL: come up with some more colors
         colors = CellexalConfig.SelectionToolColors;
     }
 

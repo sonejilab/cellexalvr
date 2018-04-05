@@ -34,7 +34,7 @@ public class DrawToolButton : CellexalButton
                 controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DrawTool;
                 controllerModelSwitcher.ActivateDesiredTool();
                 // Tell the draw tool to skip its next draw because we used the trigger to press the button
-                drawTool.SkipNextDraw();
+                //drawTool.SkipNextDraw();
             }
         }
     }

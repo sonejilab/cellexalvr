@@ -10,7 +10,7 @@ public class AutoCompleteList : MonoBehaviour
     public List<ClickableTextPanel> listNodes;
 
     private List<Tuple<string, Definitions.Measurement>> namesOfThings;
-
+    public bool ListEnabled { get; set; } = true;
     private string keyBoardOutput;
     public string KeyboardOutput
     {

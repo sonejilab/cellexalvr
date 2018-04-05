@@ -86,6 +86,7 @@ public class ReferenceManager : MonoBehaviour
     [Header("Keyboard")]
     public KeyboardSwitch keyboard;
     public KeyboardStatus keyboardStatus;
+    public KeyboardOutput keyboardOutput;
     public CorrelatedGenesList correlatedGenesList;
     public PreviousSearchesList previousSearchesList;
     public PreviousSearchesListNode topListNode;
