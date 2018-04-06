@@ -312,82 +312,103 @@ public class Graph : MonoBehaviour
     public void CreateColliders()
     {
         // maximum number of times we allow colliders to grow in size
-        int maxColliderIncreaseIterations = 10;
+        int maxColliderIncreaseIterations = 30;
         // how many more graphpoints there must be for it to be worth exctending a collider
-        float extensionThreshold = 0.1f;
+        float extensionThreshold = CellexalConfig.GraphGrabbableCollidersExtensionThresehold;
         // copy points dictionary
-        Dictionary<string, GraphPoint> notIncluded = new Dictionary<string, GraphPoint>(points);
+        HashSet<GraphPoint> notIncluded = new HashSet<GraphPoint>(points.Values);
 
         LayerMask layerMask = LayerMask.NameToLayer("GraphLayer");
 
         while (notIncluded.Count > 0)
         {
             // get any graphpoint
-            GraphPoint point = notIncluded.Values.First();
-            Vector3 pointPosition = point.transform.position;
+            GraphPoint point = notIncluded.First();
+            Vector3 center = point.transform.position;
             Vector3 halfExtents = new Vector3(0.01f, 0.01f, 0.01f);
             Vector3 oldHalfExtents = halfExtents;
 
             for (int j = 0; j < maxColliderIncreaseIterations; ++j)
             {
                 // find the graphspoints it is near
-                Collider[] collidesWith = Physics.OverlapBox(point.transform.position, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWith = Physics.OverlapBox(center, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
                 // should we increase the size?
 
                 // centers for new boxes to check
-                Vector3[] newVectors = {
-                    new Vector3(pointPosition.x + halfExtents.x, pointPosition.y, pointPosition.z),
-                    new Vector3(pointPosition.x - halfExtents.x, pointPosition.y, pointPosition.z),
-                    new Vector3(pointPosition.x, pointPosition.y + halfExtents.y, pointPosition.z),
-                    new Vector3(pointPosition.x, pointPosition.y - halfExtents.y, pointPosition.z),
-                    new Vector3(pointPosition.x, pointPosition.y, pointPosition.z + halfExtents.z),
-                    new Vector3(pointPosition.x, pointPosition.y, pointPosition.z - halfExtents.z)
+                Vector3[] newCenters = {
+                    new Vector3(center.x + halfExtents.x + oldHalfExtents.x / 2f, center.y, center.z),
+                    new Vector3(center.x - halfExtents.x - oldHalfExtents.x / 2f, center.y, center.z),
+                    new Vector3(center.x, center.y + halfExtents.y + oldHalfExtents.y / 2f, center.z),
+                    new Vector3(center.x, center.y - halfExtents.y - oldHalfExtents.y / 2f, center.z),
+                    new Vector3(center.x, center.y, center.z + halfExtents.z + oldHalfExtents.z / 2f),
+                    new Vector3(center.x, center.y, center.z - halfExtents.z - oldHalfExtents.z / 2f)
                 };
 
                 // halfextents for new boxes
                 Vector3[] newHalfExtents = {
-                    new Vector3(oldHalfExtents.x, halfExtents.y + oldHalfExtents.y * 2, halfExtents.z + oldHalfExtents.z * 2),
-                    new Vector3(halfExtents.x + oldHalfExtents.x * 2, oldHalfExtents.y, halfExtents.z + oldHalfExtents.z * 2),
-                    new Vector3(halfExtents.x + oldHalfExtents.x * 2, halfExtents.y + oldHalfExtents.y * 2, oldHalfExtents.z),
+                    new Vector3(oldHalfExtents.x, halfExtents.y + oldHalfExtents.y, halfExtents.z + oldHalfExtents.z),
+                    new Vector3(halfExtents.x + oldHalfExtents.x, oldHalfExtents.y, halfExtents.z + oldHalfExtents.z),
+                    new Vector3(halfExtents.x + oldHalfExtents.x, halfExtents.y + oldHalfExtents.y, oldHalfExtents.z),
                 };
 
                 // check how many colliders there are surrounding us
-                Collider[] collidesWithx1 = Physics.OverlapBox(newVectors[0], newHalfExtents[0], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                Collider[] collidesWithx2 = Physics.OverlapBox(newVectors[1], newHalfExtents[0], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                int totalCollidersx = NumberOfNotIncludedColliders(collidesWithx1, notIncluded) + NumberOfNotIncludedColliders(collidesWithx2, notIncluded);
+                Collider[] collidesWithx1 = Physics.OverlapBox(newCenters[0], newHalfExtents[0], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWithx2 = Physics.OverlapBox(newCenters[1], newHalfExtents[0], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
 
-                Collider[] collidesWithy1 = Physics.OverlapBox(newVectors[2], newHalfExtents[1], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                Collider[] collidesWithy2 = Physics.OverlapBox(newVectors[3], newHalfExtents[1], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                int totalCollidersy = NumberOfNotIncludedColliders(collidesWithy1, notIncluded) + NumberOfNotIncludedColliders(collidesWithy2, notIncluded);
+                Collider[] collidesWithy1 = Physics.OverlapBox(newCenters[2], newHalfExtents[1], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWithy2 = Physics.OverlapBox(newCenters[3], newHalfExtents[1], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
 
-                Collider[] collidesWithz1 = Physics.OverlapBox(newVectors[4], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                Collider[] collidesWithz2 = Physics.OverlapBox(newVectors[5], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                int totalCollidersz = NumberOfNotIncludedColliders(collidesWithz1, notIncluded) + NumberOfNotIncludedColliders(collidesWithz2, notIncluded);
+                Collider[] collidesWithz1 = Physics.OverlapBox(newCenters[4], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                Collider[] collidesWithz2 = Physics.OverlapBox(newCenters[5], newHalfExtents[2], Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+
                 bool extended = false;
                 // increase the halfextents if it seems worth it
-                if (totalCollidersx > (int)(collidesWith.Length * extensionThreshold))
+                int currentlyCollidingWith = (int)(collidesWith.Length * extensionThreshold);
+                if (NumberOfNotIncludedColliders(collidesWithx1, notIncluded) > currentlyCollidingWith)
                 {
                     halfExtents.x += oldHalfExtents.x;
+                    center.x += oldHalfExtents.x / 2f;
                     extended = true;
                 }
-                if (totalCollidersy > (int)(collidesWith.Length * extensionThreshold))
+                if (NumberOfNotIncludedColliders(collidesWithx2, notIncluded) > currentlyCollidingWith)
+                {
+                    halfExtents.x += oldHalfExtents.x;
+                    center.x -= oldHalfExtents.x / 2f;
+                    extended = true;
+                }
+                if (NumberOfNotIncludedColliders(collidesWithy1, notIncluded) > currentlyCollidingWith)
                 {
                     halfExtents.y += oldHalfExtents.y;
+                    center.y += oldHalfExtents.y / 2f;
                     extended = true;
                 }
-                if (totalCollidersz > (int)(collidesWith.Length * extensionThreshold))
+                if (NumberOfNotIncludedColliders(collidesWithy2, notIncluded) > currentlyCollidingWith)
+                {
+                    halfExtents.y += oldHalfExtents.y;
+                    center.y -= oldHalfExtents.y / 2f;
+                    extended = true;
+                }
+                if (NumberOfNotIncludedColliders(collidesWithz1, notIncluded) > currentlyCollidingWith)
                 {
                     halfExtents.z += oldHalfExtents.z;
+                    center.z += oldHalfExtents.z / 2f;
                     extended = true;
                 }
+                if (NumberOfNotIncludedColliders(collidesWithz2, notIncluded) > currentlyCollidingWith)
+                {
+                    halfExtents.z += oldHalfExtents.z;
+                    center.z -= oldHalfExtents.z / 2f;
+                    extended = true;
+                }
+
                 // remove all the graphpoints that collide with this new collider
-                collidesWith = Physics.OverlapBox(point.transform.position, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
+                collidesWith = Physics.OverlapBox(center, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
                 RemoveGraphPointsFromDictionary(collidesWith, ref notIncluded);
                 if (!extended) break;
             }
             // add the collider
             BoxCollider newCollider = gameObject.AddComponent<BoxCollider>();
-            newCollider.center = transform.InverseTransformPoint(pointPosition);
+            newCollider.center = transform.InverseTransformPoint(center);
             newCollider.size = halfExtents * 2;
         }
     }
@@ -396,8 +417,8 @@ public class Graph : MonoBehaviour
     /// Helper method to remove graphpoints from a dictionary.
     /// </summary>
     /// <param name="colliders"> An array with colliders attached to graphpoints. </param>
-    /// <param name="dict"> A dictionary containing graphpoints. </param>
-    private void RemoveGraphPointsFromDictionary(Collider[] colliders, ref Dictionary<string, GraphPoint> dict)
+    /// <param name="set"> A hashset containing graphpoints. </param>
+    private void RemoveGraphPointsFromDictionary(Collider[] colliders, ref HashSet<GraphPoint> set)
     {
         {
             foreach (Collider c in colliders)
@@ -405,7 +426,7 @@ public class Graph : MonoBehaviour
                 GraphPoint p = c.gameObject.GetComponent<GraphPoint>();
                 if (p)
                 {
-                    dict.Remove(p.label);
+                    set.Remove(p);
                 }
             }
         }
@@ -415,9 +436,9 @@ public class Graph : MonoBehaviour
     /// Helper method to count number of not yet added grapphpoints we collided with.
     /// </summary>
     /// <param name="colliders"> An array of colliders attached to graphpoints. </param>
-    /// <param name="dict"> A dictionary containing graphpoints. </param>
+    /// <param name="points"> A hashset containing graphpoints. </param>
     /// <returns> The number of graphpoints that were present in the dictionary. </returns>
-    private int NumberOfNotIncludedColliders(Collider[] colliders, Dictionary<string, GraphPoint> dict)
+    private int NumberOfNotIncludedColliders(Collider[] colliders, HashSet<GraphPoint> points)
     {
         int total = 0;
         foreach (Collider c in colliders)
@@ -425,7 +446,7 @@ public class Graph : MonoBehaviour
             GraphPoint p = c.gameObject.GetComponent<GraphPoint>();
             if (p)
             {
-                total += dict.ContainsKey(p.label) ? 1 : 0;
+                total += points.Contains(p) ? 1 : 0;
             }
         }
         return total;

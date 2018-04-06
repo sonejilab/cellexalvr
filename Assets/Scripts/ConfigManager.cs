@@ -27,6 +27,7 @@ public static class CellexalConfig
     public static Color HeatmapHighlightMarkerColor { get; set; }
     public static Color HeatmapConfirmMarkerColor { get; set; }
     public static int HeatmapNumberOfGenes { get; set; }
+    public static float GraphGrabbableCollidersExtensionThresehold { get; set; }
 }
 
 /// <summary>
@@ -249,6 +250,9 @@ public class ConfigManager : MonoBehaviour
                     break;
                 case "HeatmapConfirmMarkerColor":
                     CellexalConfig.HeatmapConfirmMarkerColor = ReadColor(value, lineNbr);
+                    break;
+                case "GraphGrabbableCollidersExtensionThresehold":
+                    CellexalConfig.GraphGrabbableCollidersExtensionThresehold = float.Parse(value);
                     break;
 
                 default:

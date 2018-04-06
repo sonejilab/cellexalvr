@@ -6,9 +6,9 @@
 # ExampleKey = ExampleValue
 # would give the key "ExampleKey" the value "ExampleValue"
 # Lists are denoted with one item per line, starting with ={ and ending with }
-# ExampleList ={	item1
-#					item2
-#					item3 }
+# ExampleList ={ item1
+#                item2
+#                item3 }
 # Comments and blank lines should not be present in lists but can be inserted anywhere else.
 
 # The filepath to Rscript.exe
@@ -23,16 +23,16 @@ GraphLoadingCellsPerFrameStartCount = 200
 GraphLoadingCellsPerFrameIncrement = 25
 
 # The colors that is used by the selection tool
-SelectionColors ={	#FF0000
-					#0000FF
-					#00FFFF
-					#FF00FF
-					#FF99CC
-					#FFFF00
-					#00FF00
-					#800080
-					#6633FF
-					#FF9933 }
+SelectionColors ={ #FF0000
+                   #0000FF
+                   #00FFFF
+                   #FF00FF
+                   #FF99CC
+                   #FFFF00
+                   #00FF00
+                   #800080
+                   #6633FF
+                   #FF9933 }
 
 # The number of colors that will be used when coloring graphs by gene expression
 NumberOfExpressionColors = 30
@@ -47,31 +47,31 @@ HighExpressionColor = #FF0000
 
 # Colors used when coloring by attribute
 # There should probably be about 25 of these for most datasets i think, if there are more attribute then more colors have to be added.
-AttributeColors ={	#FF0000
-					#0000FF
-					#00FFFF
-					#FF00FF
-					#FF99CC
-					#FFFF00
-					#00FF00
-					#800080
-					#6633FF
-					#FF9933
-					#00FF80	
-					#A700FF
-					#FF0099
-					#9DFF00
-					#A90000
-					#00A971
-					#0016A9
-					#9100A9
-					#63FFF2
-					#FFCE63
-					#82FF63
-					#FF63CE
-					#9FFFAC
-					#2A40AC
-					#6AAC2A	}
+AttributeColors ={ #FF0000
+                   #0000FF
+                   #00FFFF
+                   #FF00FF
+                   #FF99CC
+                   #FFFF00
+                   #00FF00
+                   #800080
+                   #6633FF
+                   #FF9933
+                   #00FF80	
+                   #A700FF
+                   #FF0099
+                   #9DFF00
+                   #A90000
+                   #00A971
+                   #0016A9
+                   #9100A9
+                   #63FFF2
+                   #FFCE63
+                   #82FF63
+                   #FF63CE
+                   #9FFFAC
+                   #2A40AC
+                   #6AAC2A }
 
 # The scale of the lines between genes within networks when the networks are still small and on a graph skeleton.
 NetworkLineSmallWidth = 0.003
@@ -100,3 +100,7 @@ HeatmapConfirmMarkerColor = #00FF37C0
 
 # The number of genes that should be displayed on the heatmap
 HeatmapNumberOfGenes = 250
+
+# The proportion of graphpoints that must be present in the new collider for it to be deemed to be worth extending.
+# A bigger number makes the graphs get fewer but larger colliders, that less resemble the graph's actual shape.
+GraphGrabbableCollidersExtensionThresehold = 0.05

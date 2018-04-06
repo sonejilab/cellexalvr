@@ -35,7 +35,7 @@ public static class CellexalLog
 
 
         string nicerTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        Log("Welcome to CellExAl " + Application.version,
+        Log("Welcome to CellexalVR " + Application.version,
             "Running on Unity " + Application.unityVersion,
             "BuildGUID: " + Application.buildGUID,
             "Logfile created at " + nicerTime);
