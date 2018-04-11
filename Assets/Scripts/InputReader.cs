@@ -83,8 +83,8 @@ public class InputReader : MonoBehaviour
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath = workingDirectory + "\\Data\\" + path;
         CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
-        CellexalUser.UserSpecificDataFolder = path;
-        LoadPreviousGroupings();
+        CellexalUser.DataSourceFolder = path;
+        //LoadPreviousGroupings();
         database.InitDatabase(fullPath + "\\database.sqlite");
         if (Directory.Exists(workingDirectory + "\\Output"))
         {
@@ -253,7 +253,7 @@ public class InputReader : MonoBehaviour
 
             // first line is a header line
             string header = metacellStreamReader.ReadLine();
-            string[] attributeTypes = header.Split('\t');
+            string[] attributeTypes = header.Split(null);
             string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
             for (int i = 1; i < attributeTypes.Length; ++i)
             {
@@ -770,7 +770,7 @@ public class InputReader : MonoBehaviour
     /// <summary>
     /// Read all the user.group files which cointains the grouping information from previous sessions.
     /// </summary>
-    private void LoadPreviousGroupings()
+    public void LoadPreviousGroupings()
     {
         string dataFolder = CellexalUser.UserSpecificFolder;
         string groupingsInfoFile = dataFolder + "\\groupings_info.txt";
@@ -802,8 +802,8 @@ public class InputReader : MonoBehaviour
                 CellexalLog.Log("WARNING: Could not find \'.\' in \"" + words[0] + "\"");
                 indexOfLastDot = groupingName.Length - 1;
             }
-            string groupingNumber = groupingName.Substring(indexOfLastDot, groupingName.Length - indexOfLastDot);
-            groupingNames.Add(groupingNumber + "\n" + words[1] + "\n" + words[2]);
+            //string groupingNumber = groupingName.Substring(indexOfLastDot, groupingName.Length - indexOfLastDot);
+            groupingNames.Add(groupingName + "\n" + words[1] + "\n" + words[2]);
             fileLengths.Add(int.Parse(words[2]));
         }
         streamReader.Close();
@@ -825,10 +825,10 @@ public class InputReader : MonoBehaviour
             groupingColors[i] = new Dictionary<int, Color>();
         }
         words = null;
-
+        string[] files = Directory.GetFiles(dataFolder, "*.cgr");
         for (int i = 0; i < fileLengths.Count; ++i)
         {
-            string file = dataFolder + @"\User.group." + (i + 1) + ".txt";
+            string file = files[i];
             fileStream = new FileStream(file, FileMode.Open);
             streamReader = new StreamReader(fileStream);
 

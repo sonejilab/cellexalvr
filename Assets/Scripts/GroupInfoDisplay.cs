@@ -36,6 +36,8 @@ public class GroupInfoDisplay : MonoBehaviour
     /// <param name="n"> How much the number should change by. 1 if adding 1 cell to the color. -1 if subtracting 1 cell from the color. </param>
     public void ChangeGroupsInfo(int group, int n)
     {
+        if (!groups.ContainsKey(group))
+            return;
         groups[group] += n;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < colors.Length; i++)

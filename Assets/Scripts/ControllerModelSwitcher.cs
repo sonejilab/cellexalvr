@@ -20,8 +20,6 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
     public Material leftControllerMaterial;
-    public VRTK_StraightPointerRenderer rightLaser;
-    public VRTK_StraightPointerRenderer leftLaser;
 
     public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool };
     // what model we actually want
@@ -41,6 +39,8 @@ public class ControllerModelSwitcher : MonoBehaviour
     private MeshFilter controllerBodyMeshFilter;
     private Renderer controllerBodyRenderer;
     private Color desiredColor;
+    private VRTK_StraightPointerRenderer rightLaser;
+    private VRTK_StraightPointerRenderer leftLaser;
     // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
     // Otherwise you can't point the helptool towards the keyboard.
     public bool HelpToolShouldStayActivated { get; set; }
@@ -55,6 +55,8 @@ public class ControllerModelSwitcher : MonoBehaviour
         magnifier = referenceManager.magnifierTool.gameObject;
         keyboard = referenceManager.keyboard;
         drawTool = referenceManager.drawTool.gameObject;
+        rightLaser = referenceManager.rightLaser;
+        leftLaser = referenceManager.leftLaser;
         DesiredModel = Model.Normal;
         //if (rightControllerBody.activeSelf)
         //{

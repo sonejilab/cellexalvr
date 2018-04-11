@@ -113,17 +113,17 @@ public class GraphPoint : MonoBehaviour
         CustomColor = false;
         if (outline)
         {
-            graphPointRenderer.sharedMaterial = Graph.graphManager.GroupingMaterialsOutline[group];
+            SetAllSameGraphPointsMaterial(Graph.graphManager.GroupingMaterialsOutline[group]);
         }
         else
         {
             if (group == -1)
             {
-                graphPointRenderer.sharedMaterial = Graph.graphManager.defaultGraphPointMaterial;
+                SetAllSameGraphPointsMaterial(Graph.graphManager.defaultGraphPointMaterial);
             }
             else
             {
-                graphPointRenderer.sharedMaterial = Graph.graphManager.GroupingMaterials[group];
+                SetAllSameGraphPointsMaterial(Graph.graphManager.GroupingMaterials[group]);
             }
         }
     }
@@ -138,11 +138,23 @@ public class GraphPoint : MonoBehaviour
         CustomColor = true;
         if (color.Equals(Color.white))
         {
-            graphPointRenderer.sharedMaterial = Graph.graphManager.defaultGraphPointMaterial;
+            SetAllSameGraphPointsMaterial(Graph.graphManager.defaultGraphPointMaterial);
+
         }
         else
         {
-            graphPointRenderer.sharedMaterial = Graph.graphManager.GetAdditionalGroupingMaterial(color, outline);
+            foreach (var g in Cell.GraphPoints)
+            {
+                SetAllSameGraphPointsMaterial(Graph.graphManager.GetAdditionalGroupingMaterial(color, outline));
+            }
+        }
+    }
+
+    private void SetAllSameGraphPointsMaterial(Material mat)
+    {
+        foreach (var g in Cell.GraphPoints)
+        {
+            g.graphPointRenderer.sharedMaterial = mat;
         }
     }
 }

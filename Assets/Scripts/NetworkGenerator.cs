@@ -111,11 +111,29 @@ public class NetworkGenerator : MonoBehaviour
         int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
         int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
         // generate the files containing the network information
+
         string home = Directory.GetCurrentDirectory();
-        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellexalUser.UserSpecificFolder;
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
+        int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
+        // update the R object first
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
+        string args = CellexalUser.UserSpecificFolder + "\\selection" + fileCreationCtr + ".txt " + CellexalUser.UserSpecificFolder + " " + selectionToolHandler.DataDir;
+        CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+
+        home = Directory.GetCurrentDirectory();
+        args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellexalUser.UserSpecificFolder;
+        rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
         CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         t.Start();

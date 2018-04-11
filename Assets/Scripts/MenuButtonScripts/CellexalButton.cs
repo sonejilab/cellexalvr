@@ -40,7 +40,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected MeshRenderer meshRenderer;
     [HideInInspector]
     public bool buttonActivated = true;
-    protected bool controllerInside = false;
+    public bool controllerInside = false;
 
     protected virtual void Awake()
     {
@@ -53,7 +53,6 @@ public abstract class CellexalButton : MonoBehaviour
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
     }
-
 
     public virtual void SetButtonActivated(bool activate)
     {
@@ -110,7 +109,7 @@ public abstract class CellexalButton : MonoBehaviour
         }
     }
 
-    protected void SetHighlighted(bool highlight)
+    public void SetHighlighted(bool highlight)
     {
         if (highlight)
         {

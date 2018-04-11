@@ -60,7 +60,7 @@ public static class CellexalUser
             if (value.Equals(""))
                 return;
             username = value.ToLower();
-            UpdateUserSpecificFolder(username, UserSpecificDataFolder);
+            UpdateUserSpecificFolder(username, DataSourceFolder);
             UsernameChanged.Invoke();
         }
     }
@@ -72,7 +72,7 @@ public static class CellexalUser
     /// <example>
     /// Loading "Cellexal/Data/data_set_1" means this should be set to "data_set_1"
     /// </example>
-    public static string UserSpecificDataFolder
+    public static string DataSourceFolder
     {
         get
         {
@@ -92,7 +92,7 @@ public static class CellexalUser
     /// </summary>
     private static void UpdateUserSpecificFolder(string username, string dataFolder)
     {
-        if (Username == "" || UserSpecificDataFolder == "")
+        if (Username == "" || DataSourceFolder == "")
         {
             return;
         }

@@ -65,7 +65,7 @@ public class Cell
             foreach (GraphPoint g in GraphPoints)
             {
                 if (color)
-                    g.Material = graphManager.AttributeMaterials[Attributes[attributeType]];
+                    g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
                 else
                     g.Material = graphManager.defaultGraphPointMaterial;
             }
@@ -79,7 +79,7 @@ public class Cell
     /// <param name="color"> The color that should be used for this attribute. This corresponds to an index in <see cref="GraphManager.AttributeMaterials"/>. </param>
     public void AddAttribute(string attributeType, int color)
     {
-        Attributes[attributeType] = color;
+        Attributes[attributeType.ToLower()] = color;
     }
 
     /// <summary>
@@ -143,7 +143,7 @@ public class Cell
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.Material = graphManager.GeneExpressionMaterials[Facs[facsName]];
+            g.Material = graphManager.GeneExpressionMaterials[Facs[facsName.ToLower()]];
         }
     }
 
@@ -155,7 +155,7 @@ public class Cell
     internal void AddFacs(string facsName, int index)
     {
 
-        Facs[facsName] = index;
+        Facs[facsName.ToLower()] = index;
     }
 
     /// <summary>

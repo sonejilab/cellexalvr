@@ -15,7 +15,7 @@ public class MinimizedObjectHandler : MonoBehaviour
     private Vector3 dNextPosRow = new Vector3(.17f, 0, 0);
     private Vector3 dNextPosCol = new Vector3(0, -.17f, 0);
     private bool[,] spaceTaken = new bool[5, 5];
-    private List<Vector3> containerPositions;
+    private List<GameObject> minimizedObjects = new List<GameObject>(25);
 
     void Start()
     {
@@ -27,6 +27,7 @@ public class MinimizedObjectHandler : MonoBehaviour
             }
         }
         menuToggler = referenceManager.menuToggler;
+        CellexalEvents.GraphsUnloaded.AddListener(Clear);
     }
 
     /// <summary>
@@ -37,6 +38,7 @@ public class MinimizedObjectHandler : MonoBehaviour
     internal void MinimizeObject(GameObject objectToMinimize, string description)
     {
         var jail = Instantiate(minimizedObjectContainerPrefab);
+        minimizedObjects.Add(jail);
         jail.transform.parent = transform;
         jail.transform.localRotation = Quaternion.identity;
         jail.transform.localScale = new Vector3(.166f, .166f, .13f);
@@ -77,7 +79,27 @@ public class MinimizedObjectHandler : MonoBehaviour
     public void ContainerRemoved(MinimizedObjectContainer container)
     {
         spaceTaken[container.SpaceX, container.SpaceY] = false;
+        minimizedObjects.Remove(container.gameObject);
     }
 
+    /// <summary>
+    /// Clears the area where the minimized objects are. Does not restore any of the minimized objects.
+    /// </summary>
+    public void Clear()
+    {
+        for (int i = 0; i < minimizedObjects.Count; ++i)
+        {
+            Destroy(minimizedObjects[i]);
+        }
+        minimizedObjects.Clear();
+        for (int i = 0; i < spaceTaken.GetLength(0); ++i)
+        {
+            for (int j = 0; j < spaceTaken.GetLength(1); ++j)
+            {
+                spaceTaken[i, j] = false;
+            }
+        }
+        startPos = new Vector3(-.34f, .34f, .073f);
+    }
 }
 

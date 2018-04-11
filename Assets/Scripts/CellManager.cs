@@ -170,6 +170,10 @@ public class CellManager : MonoBehaviour
     {
         selectionToolHandler.CancelSelection();
         Graph graph = graphManager.FindGraph(graphName);
+        if (!graph)
+        {
+            graph = graphManager.FindGraph("");
+        }
         if (groupingColors == null)
         {
             for (int i = 0; i < cellnames.Length; ++i)
@@ -612,6 +616,8 @@ public class CellManager : MonoBehaviour
     {
         cells.Clear();
         SavedFlashGenesCategories = new string[0];
+        Attributes = null;
+        Facs = null;
     }
 
     /// <summary>
@@ -694,6 +700,31 @@ public class CellManager : MonoBehaviour
                         line.gameObject.SetActive(false);
                     }
                 }
+            }
+        }
+    }
+
+    public void DrawLinesBetweenGraphPoints(List<GraphPoint> points, Graph fromGraph, Graph toGraph)
+    {
+        foreach (GraphPoint g in points)
+        {
+            Color color = g.Material.color;
+            var sourceCell = fromGraph.points[g.label];
+            var toCell = toGraph.points[g.label];
+            LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
+            line.t1 = toCell.transform;
+            line.t2 = sourceCell.transform;
+            line.graphPoint = sourceCell;
+            line.selectionToolHandler = selectionToolHandler;
+            LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+            lines.Add(line.gameObject);
+            fromGraph.Lines.Add(line.gameObject);
+            toGraph.Lines.Add(line.gameObject);
+            if (!toCell.Graph.GraphActive)
+            {
+                line.gameObject.SetActive(false);
             }
         }
     }

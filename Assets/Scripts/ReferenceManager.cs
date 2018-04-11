@@ -2,6 +2,7 @@
 using SQLiter;
 using TMPro;
 using UnityEngine;
+using VRTK;
 
 /// <summary>
 /// This class just holds a lot of references to other scripts and gameobjects so they won't clutter the inspector so much.
@@ -25,6 +26,8 @@ public class ReferenceManager : MonoBehaviour
     public StatusDisplay statusDisplayFar;
     public GameObject headset;
     public BoxCollider controllerMenuCollider;
+    public VRTK_StraightPointerRenderer rightLaser;
+    public VRTK_StraightPointerRenderer leftLaser;
 
     #endregion
 

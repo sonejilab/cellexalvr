@@ -1081,7 +1081,9 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private bool WasTeleportButtonReleased( Hand hand )
 		{
-			if ( IsEligibleForTeleport( hand ) )
+            if (hand.startingHandType == Hand.HandType.Right)
+                return false;
+            if ( IsEligibleForTeleport( hand ) )
 			{
 				if ( hand.noSteamVRFallbackCamera != null )
 				{
@@ -1100,6 +1102,8 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private bool IsTeleportButtonDown( Hand hand )
 		{
+            if (hand.startingHandType == Hand.HandType.Right)
+                return false;
 			if ( IsEligibleForTeleport( hand ) )
 			{
 				if ( hand.noSteamVRFallbackCamera != null )
@@ -1119,7 +1123,9 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private bool WasTeleportButtonPressed( Hand hand )
 		{
-			if ( IsEligibleForTeleport( hand ) )
+            if (hand.startingHandType == Hand.HandType.Right)
+                return false;
+            if ( IsEligibleForTeleport( hand ) )
 			{
 				if ( hand.noSteamVRFallbackCamera != null )
 				{

@@ -194,10 +194,10 @@ public class Filter
                     }
                     break;
                 case FilterType.Facs:
-                    graphPointValue = graphPoint.Cell.Facs[item];
+                    graphPointValue = graphPoint.Cell.Facs[item.ToLower()];
                     break;
                 case FilterType.Attribute:
-                    return graphPoint.Cell.Attributes.ContainsKey(item) == attributeValue;
+                    return graphPoint.Cell.Attributes.ContainsKey(item.ToLower()) == attributeValue;
                 default:
                     return false;
             }

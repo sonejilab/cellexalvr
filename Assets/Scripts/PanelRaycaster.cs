@@ -48,7 +48,6 @@ public class PanelRaycaster : MonoBehaviour
         foreach (var panel in GetComponentsInChildren<ColoringOptionsButton>(true))
         {
             panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
-
         }
     }
 

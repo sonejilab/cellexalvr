@@ -132,13 +132,17 @@ public class SelectionToolHandler : MonoBehaviour
         if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
         int oldGroup = graphPoint.CurrentGroup;
-        if (color.Equals(Colors[newGroup]))
+        if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
         {
+
             graphPoint.SetOutLined(true, newGroup);
+
         }
         else
         {
+
             graphPoint.SetOutLined(true, color);
+
         }
         graphPoint.CurrentGroup = newGroup;
         // renderer.material.color = Colors[newGroup];
@@ -385,7 +389,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         if (selectedCells.Count == 0)
         {
-            print("0");
+            print("empty selection confirmed");
         }
         // create .txt file with latest selection
         DumpData();
