@@ -49,6 +49,7 @@ public class SelectionToolHandler : MonoBehaviour
     private GameManager gameManager;
 
     public Filter CurrentFilter { get; set; }
+    public bool RObjectUpdating { get; private set; }
 
     /// <summary>
     /// Helper struct for remembering history when selecting graphpoints.
@@ -394,7 +395,7 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpData();
         lastSelectedCells.Clear();
-        //StartCoroutine(UpdateRObjectGrouping());
+        StartCoroutine(UpdateRObjectGrouping());
         foreach (GraphPoint gp in selectedCells)
         {
             if (gp.CustomColor)
@@ -416,6 +417,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     private IEnumerator UpdateRObjectGrouping()
     {
+        RObjectUpdating = true;
         // wait one frame to let ConfirmSelection finish.
         yield return null;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
@@ -431,6 +433,7 @@ public class SelectionToolHandler : MonoBehaviour
         }
         stopwatch.Stop();
         CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+        RObjectUpdating = false;
     }
 
     /// <summary>

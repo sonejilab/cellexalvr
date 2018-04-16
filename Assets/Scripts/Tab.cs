@@ -19,7 +19,7 @@ public class Tab : MonoBehaviour
     /// <summary>
     /// Show or hides all buttons that this tab contains.
     /// </summary>
-    /// <param name="active"> True if this tab should be shown, false if hidden. </param>
+    /// <param name="active">True if this tab should be shown, false if hidden.</param>
     public virtual void SetTabActive(bool active)
     {
         Active = active;
@@ -29,8 +29,8 @@ public class Tab : MonoBehaviour
         }
         foreach (Transform child in transform)
         {
-            // We don't want to change the state of the tab buttons, they should always be turned on. 
-            if (ReferenceEquals(child.gameObject.GetComponent<TabButton>(), null))
+            // We don't want to change the state of the tab buttons, they should always be turned on.
+            if (ReferenceEquals(child.GetComponent<TabButton>(), null))
             {
                 if (menuToggler.MenuActive)
                 {
@@ -56,8 +56,49 @@ public class Tab : MonoBehaviour
             else if (!menuToggler.MenuActive)
             {
                 // set the tab button to become visible when the menu is turned back on if the submenu it is attached to is turned on
-                menuToggler.AddGameObjectToActivate(child.gameObject, child.GetComponent<TabButton>().Menu.gameObject);
+                menuToggler.AddGameObjectToActivate(child.gameObject, TabButton.Menu.gameObject);
             }
+        }
+    }
+
+    /// <summary>
+    /// Checks if a <see cref="GameObject"/> or one of the <see cref="GameObject"/>'s parents (or grandparents and so on) is a <see cref="T:TabButton"/>.
+    /// </summary>
+    private bool IsPartOfTabButton(GameObject obj)
+    {
+        if (!ReferenceEquals(obj.GetComponent<TabButton>(), null))
+        {
+            return true;
+        }
+        else if (!ReferenceEquals(obj.transform.parent, null))
+        {
+            return IsPartOfTabButton(obj.transform.parent.gameObject);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Finds a <see cref="MenuWithTabs"/> in this <see cref="GameObject"/> or one of its parents.
+    /// </summary>
+    /// <param name="obj">The <see cref="GameObject"/> to search.</param>
+    /// <returns>The <see cref="MenuWithTabs"/> if there was one, null otherwise.</returns>
+    private MenuWithTabs FindMenuInParents(GameObject obj)
+    {
+        var menu = obj.GetComponent<MenuWithTabs>();
+        if (!ReferenceEquals(menu, null))
+        {
+            return menu;
+        }
+        else if (!ReferenceEquals(obj.transform.parent, null))
+        {
+            return FindMenuInParents(obj.transform.parent.gameObject);
+        }
+        else
+        {
+            return null;
         }
     }
 

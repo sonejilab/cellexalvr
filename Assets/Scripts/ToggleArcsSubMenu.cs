@@ -6,7 +6,6 @@
 public class ToggleArcsSubMenu : MenuWithTabs
 {
     public GameObject buttonPrefab;
-    public Tab tabPrefab;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-0.3958f, 0.59f, 0.2688f);
     private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);

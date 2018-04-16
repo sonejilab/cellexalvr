@@ -13,6 +13,10 @@ namespace Valve.VR.InteractionSystem
 	//-------------------------------------------------------------------------
 	public class Teleport : MonoBehaviour
 	{
+        public ReferenceManager referenceManager;
+
+        private SteamVR_TrackedObject leftController;
+
 		public LayerMask traceLayerMask;
 		public LayerMask floorFixupTraceLayerMask;
 		public float floorFixupMaximumTraceDistance = 1.0f;
@@ -140,6 +144,7 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		void Awake()
 		{
+            leftController = referenceManager.leftController;
 			_instance = this;
 
 			chaperoneInfoInitializedAction = ChaperoneInfo.InitializedAction( OnChaperoneInfoInitialized );
@@ -1081,8 +1086,7 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private bool WasTeleportButtonReleased( Hand hand )
 		{
-            if (hand.startingHandType == Hand.HandType.Right)
-                return false;
+            
             if ( IsEligibleForTeleport( hand ) )
 			{
 				if ( hand.noSteamVRFallbackCamera != null )
@@ -1091,7 +1095,8 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
-					return hand.controller.GetPressUp( SteamVR_Controller.ButtonMask.Touchpad );
+                    var device = SteamVR_Controller.Input((int)leftController.index);
+                    return device.GetPressUp( SteamVR_Controller.ButtonMask.Touchpad );
 				}
 			}
 
@@ -1102,8 +1107,6 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private bool IsTeleportButtonDown( Hand hand )
 		{
-            if (hand.startingHandType == Hand.HandType.Right)
-                return false;
 			if ( IsEligibleForTeleport( hand ) )
 			{
 				if ( hand.noSteamVRFallbackCamera != null )
@@ -1112,8 +1115,9 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
-					return hand.controller.GetPress( SteamVR_Controller.ButtonMask.Touchpad );
-				}
+                    var device = SteamVR_Controller.Input((int)leftController.index);
+                    return device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad);
+                }
 			}
 
 			return false;
@@ -1123,8 +1127,6 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private bool WasTeleportButtonPressed( Hand hand )
 		{
-            if (hand.startingHandType == Hand.HandType.Right)
-                return false;
             if ( IsEligibleForTeleport( hand ) )
 			{
 				if ( hand.noSteamVRFallbackCamera != null )
@@ -1133,8 +1135,9 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
-					return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
-				}
+                    var device = SteamVR_Controller.Input((int)leftController.index);
+                    return device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad);
+                }
 			}
 
 			return false;

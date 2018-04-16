@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class FlashGenesMenu : MenuWithTabs
 {
-    public FlashGenesTab tabPrefab;
     public TextMesh loadingText;
 
     // used for overriding some values
@@ -34,7 +33,7 @@ public class FlashGenesMenu : MenuWithTabs
         string[] files = Directory.GetFiles(dataFolderPath, "*.fgv");
         foreach (string file in files)
         {
-            FlashGenesTab newTab = AddTab(tabPrefab);
+            FlashGenesTab newTab = (FlashGenesTab)AddTab(tabPrefab);
             newTab.GeneFilePath = file;
 
             // Read the categories from the file.

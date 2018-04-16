@@ -60,7 +60,7 @@ public class Cell
     /// <param name="color"> True if the graphpoints should be colored, false  if they should be white. (True means show this attribute, false means hide basically) </param>
     public void ColorByAttribute(string attributeType, bool color)
     {
-        if (Attributes.ContainsKey(attributeType))
+        if (Attributes.ContainsKey(attributeType.ToLower()))
         {
             foreach (GraphPoint g in GraphPoints)
             {

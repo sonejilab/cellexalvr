@@ -812,7 +812,7 @@ public class Heatmap : MonoBehaviour
             {
                 totalNbrOfCells += t.Item3;
             }
-            // the correct index to move the groups to will have changed if the groups are moved to higher indices
+            // the correct index to move the groups to will have changed if the groups are moved to higher indices 
             if (groupIndexToMoveTo > selectedGroupRight)
             {
                 groupIndexToMoveTo -= nbrOfGroups;
@@ -990,14 +990,13 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     public void ColorCells()
     {
-        for (int i = 0, cellIndex = 0; i < groupWidths.Count; ++i)
+        var selectionToolHandler = referenceManager.selectionToolHandler;
+        for (int i = 0; i < groupWidths.Count; ++i)
         {
             int group = groupWidths[i].Item1;
-            int numberOfCellsInGroup = groupWidths[i].Item3;
-            for (int j = 0; j < numberOfCellsInGroup; ++j, ++cellIndex)
-            {
-                cellManager.GetCell(cells[cellIndex]).SetGroup(group, true);
-            }
+            UnityEngine.Color groupColor = groupingColors[group];
+            var graphPoint = cellManager.GetCell(cells[i]).GraphPoints[0];
+            selectionToolHandler.AddGraphpointToSelection(graphPoint, group, false);
         }
     }
 

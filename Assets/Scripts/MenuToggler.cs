@@ -153,10 +153,6 @@ public class MenuToggler : MonoBehaviour
                     c.enabled = false;
                 }
             }
-            foreach (StationaryButton b in menu.GetComponentsInChildren<StationaryButton>())
-            {
-                b.MenuTurnedOff();
-            }
         }
     }
 

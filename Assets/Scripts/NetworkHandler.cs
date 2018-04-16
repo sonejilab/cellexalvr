@@ -20,6 +20,8 @@ public class NetworkHandler : MonoBehaviour
     private Material[] highlightedMaterials;
     private Material[] unhighlightedMaterials;
 
+    public bool layoutApplied = false;
+
     private void Start()
     {
         Replacements = new List<NetworkCenter>();
@@ -36,6 +38,14 @@ public class NetworkHandler : MonoBehaviour
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {
             gameManager.InformMoveNetwork(NetworkHandlerName, transform.position, transform.rotation, transform.localScale);
+        }
+    }
+
+    public void ApplyLayoutOnAllNetworks()
+    {
+        foreach (var network in networks)
+        {
+            network.ApplyLayout();
         }
     }
 

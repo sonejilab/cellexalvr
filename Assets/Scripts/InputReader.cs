@@ -60,7 +60,7 @@ public class InputReader : MonoBehaviour
         networkGenerator = referenceManager.networkGenerator;
         if (debug)
         {
-            status.gameObject.SetActive(true);
+            //status.gameObject.SetActive(true);
             ReadFolder(@"Mouse_LSK");
         }
         CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
@@ -276,7 +276,7 @@ public class InputReader : MonoBehaviour
                 for (int j = 1; j < words.Length; ++j)
                 {
                     if (words[j] == "1")
-                        cellManager.AddAttribute(cellname, attributeTypes[j], j - 1);
+                        cellManager.AddAttribute(cellname, attributeTypes[j], (j - 1) % CellexalConfig.AttributeColors.Length);
                 }
             }
             metacellStreamReader.Close();
@@ -451,12 +451,16 @@ public class InputReader : MonoBehaviour
     /// </summary>
     public void ReadNetworkFiles()
     {
+        StartCoroutine(ReadNetworkFilesCoroutine());
+    }
+    private IEnumerator ReadNetworkFilesCoroutine()
+    {
         CellexalLog.Log("Started reading network files");
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
         if (!Directory.Exists(networkDirectory))
         {
             CellexalLog.Log("ERROR: No network directory at " + CellexalLog.FixFilePath(networkDirectory));
-            return;
+            yield break;
         }
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
         string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
@@ -469,13 +473,13 @@ public class InputReader : MonoBehaviour
             statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             CellexalLog.Log("ERROR: No .cnt file in network folder " + CellexalLog.FixFilePath(networkDirectory));
-            return;
+            yield break;
         }
 
         if (cntFilePaths.Length > 1)
         {
             CellexalLog.Log("ERROR: more than one .cnt file in network folder");
-            return;
+            yield break;
         }
 
         FileStream cntFileStream = new FileStream(cntFilePaths[0], FileMode.Open);
@@ -486,7 +490,7 @@ public class InputReader : MonoBehaviour
         {
             print("no .nwk file in network folder");
             CellexalLog.Log("ERROR: No .nwk file in network folder " + CellexalLog.FixFilePath(networkDirectory));
-            return;
+            yield break;
         }
         FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
         StreamReader nwkStreamReader = new StreamReader(nwkFileStream);
@@ -497,7 +501,7 @@ public class InputReader : MonoBehaviour
                             ".nwk file size: " + nwkFileStream.Length + " B");
             nwkStreamReader.Close();
             nwkFileStream.Close();
-            return;
+            yield break;
         }
 
         FileStream layFileStream = new FileStream(layFilePaths[0], FileMode.Open);
@@ -507,7 +511,7 @@ public class InputReader : MonoBehaviour
         if (layFilePaths.Length == 0)
         {
             CellexalLog.Log("ERROR: No .lay file found in network folder " + CellexalLog.FixFilePath(networkDirectory));
-            return;
+            yield break;
         }
 
         // Read the .cnt file
@@ -541,13 +545,13 @@ public class InputReader : MonoBehaviour
                 if (graph == null)
                 {
                     CellexalLog.Log("ERROR: Could not find graph " + graphName + ", aborting");
-                    return;
+                    yield break;
                 }
                 skeleton = graph.CreateConvexHull();
                 if (skeleton == null)
                 {
                     CellexalLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file, aborting");
-                    return;
+                    yield break;
                 }
                 CellexalLog.Log("Successfully created convex hull of " + graphName);
                 networkHandler = skeleton.GetComponent<NetworkHandler>();
@@ -593,6 +597,8 @@ public class InputReader : MonoBehaviour
         {
             string line = nwkStreamReader.ReadLine();
             if (line == "")
+                continue;
+            if (line[0] == '#')
                 continue;
             string[] words = line.Split(null);
             string color = words[6];
@@ -641,24 +647,41 @@ public class InputReader : MonoBehaviour
         // ...
         // KEY is the hex rgb color code of the network the gene is in.
 
-        CellexalLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
-        while (!layStreamReader.EndOfStream)
-        {
-            string line = layStreamReader.ReadLine();
-            if (line == "")
-                continue;
-            string[] words = line.Split(null);
-            if (words.Length == 0)
-                continue;
+        //    CellexalLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
+        //    while (!layStreamReader.EndOfStream)
+        //    {
+        //        string line = layStreamReader.ReadLine();
+        //        if (line == "")
+        //            continue;
+        //        string[] words = line.Split(null);
+        //        if (words.Length == 0)
+        //            continue;
+        //
+        //        string geneName = words[0];
+        //        float xcoord = float.Parse(words[1]);
+        //        float ycoord = float.Parse(words[2]);
+        //        string color = words[3];
+        //        string nodeName = geneName + color;
+        //        nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
+        //    }
+        //    CellexalLog.Log("Successfully read .lay file");
 
-            string geneName = words[0];
-            float xcoord = float.Parse(words[1]);
-            float ycoord = float.Parse(words[2]);
-            string color = words[3];
-            string nodeName = geneName + color;
-            nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
+
+        // apply the layout algorithm
+
+        yield return null;
+        networkHandler.ApplyLayoutOnAllNetworks();
+
+        while (!networkHandler.layoutApplied)
+            yield return null;
+
+        // give all nodes in the networks edges
+        foreach (NetworkNode node in nodes.Values)
+        {
+            node.AddEdges();
+            node.gameObject.GetComponent<BoxCollider>().enabled = false;
         }
-        CellexalLog.Log("Successfully read .lay file");
+
         // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
         NetworkKeyPair lastKey = new NetworkKeyPair("", "", "", "", "");
         List<NetworkKeyPair> lastNodes = new List<NetworkKeyPair>();
@@ -684,12 +707,6 @@ public class InputReader : MonoBehaviour
             lastKey = keypair;
         }
 
-        // give all nodes in the networks edges
-        foreach (NetworkNode node in nodes.Values)
-        {
-            node.AddEdges();
-            node.gameObject.GetComponent<BoxCollider>().enabled = false;
-        }
 
         // copy the networks to an array
         NetworkCenter[] networkCenterArray = new NetworkCenter[networks.Count];

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
@@ -31,6 +32,7 @@ public class NetworkCenter : MonoBehaviour
     private bool enlarge = false;
     private int numColliders = 0;
     private bool isReplacement = false;
+    private List<NetworkNode> nodes = new List<NetworkNode>();
     [HideInInspector]
     public NetworkCenter replacing;
     private List<Arc> arcs = new List<Arc>();
@@ -104,6 +106,165 @@ public class NetworkCenter : MonoBehaviour
                 gameManager.InformMoveNetworkCenter(Handler.NetworkHandlerName, NetworkCenterName, transform.position, transform.rotation, transform.localScale);
             }
         }
+    }
+
+    public void AddNode(NetworkNode newNode)
+    {
+        nodes.Add(newNode);
+    }
+
+    public void ApplyLayout()
+    {
+        //     StartCoroutine(ApplyLayoutCoroutine());
+        // }
+        // private IEnumerator ApplyLayoutCoroutine()
+        // {
+        //     transform.localScale *= 10f;
+
+        float desiredSpringLength = 0.07f;
+        float maximumForce = 0.03f;
+        int iterations = 100;
+        //int groupIterations = 100;
+        float springConstant = 0.15f;
+        float nonAdjecentNeighborConstant = 0.0003f;
+        // start by giving all vertices a random position
+        var rand = new System.Random();
+        foreach (var node in nodes)
+        {
+            node.transform.localPosition = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f);
+        }
+
+        Dictionary<NetworkNode, Vector3> forces = new Dictionary<NetworkNode, Vector3>(nodes.Count);
+
+        for (int i = 0; i < iterations; ++i)
+        {
+
+            // set all forces on all vertices to zero
+            foreach (var node in nodes)
+            {
+                forces[node] = Vector3.zero;
+            }
+
+            // foreach (var node in nodes)
+            // {
+            //
+            //     // add a slight bit of gravity towards the center
+            //     forces[node] -= node.transform.localPosition * 0.0002f * nodes.Count;
+            // }
+
+            // calculate how much force is applied to each end of each spring
+            foreach (var node in nodes)
+            {
+                foreach (var neighbour in node.neighbours)
+                {
+                    var diff = (neighbour.transform.localPosition - node.transform.localPosition);
+                    var dir = diff.normalized;
+                    // the springs should be longer if there are many neighbours, spreading out crowded areas
+                    var appropriateSpringLength = desiredSpringLength /* *Mathf.Log(node.neighbours.Count + 1, 2)*/;
+                    var appliedForce = diff * Mathf.Log(diff.magnitude / appropriateSpringLength) / node.neighbours.Count;
+                    //if (appliedForce.magnitude < minimumForce)
+                    //    continue;
+                    forces[node] += appliedForce * springConstant;
+                }
+            }
+
+            // move all nonadjecent nodes away from eachother
+            foreach (var node in nodes)
+            {
+                foreach (var nonNeighbour in nodes)
+                {
+                    if (node == nonNeighbour || node.neighbours.Contains(nonNeighbour))
+                        continue;
+                    var distance = Vector3.Distance(node.transform.localPosition, nonNeighbour.transform.localPosition);
+                    if (distance > 0.1f)
+                        continue;
+                    var dir = (nonNeighbour.transform.localPosition - node.transform.localPosition);
+                    var appliedForce = dir.normalized / (distance * distance * nodes.Count);
+                    //if (appliedForce.magnitude > maximumForce)
+                    //    appliedForce = appliedForce.normalized * maximumForce;
+                    //  if (appliedForce.magnitude < minimumForce)
+                    //    continue;
+                    forces[node] -= appliedForce * nonAdjecentNeighborConstant;
+                }
+            }
+
+            //   foreach (var node1 in nodes)
+            //   {
+            //       foreach (var neighbour1 in node1.neighbours)
+            //       {
+            //           foreach (var node2 in nodes)
+            //           {
+            //               if (node1 == node2 || neighbour1 == node2)
+            //                   continue;
+            //
+            //               foreach (var neighbour2 in node2.neighbours)
+            //               {
+            //                   if (node1 == neighbour2 || neighbour1 == neighbour2)
+            //                       continue;
+            //
+            //                   float angle1  =Vector3.Angle()
+            //               }
+            //           }
+            //       }
+            //   }
+
+
+
+            // move all vertices according to the force affecting them
+            foreach (var force in forces)
+            {
+                var node = force.Key;
+                node.transform.localPosition += force.Value;
+                // move all vertices that are outside the circle to the edge
+                if (node.transform.localPosition.magnitude > 0.4f)
+                {
+                    node.transform.localPosition = node.transform.localPosition.normalized * 0.4f;
+                }
+            }
+
+            //   do
+            //       yield return null;
+            //   while (!Input.GetKey(KeyCode.T));
+        }
+        Handler.layoutApplied = true;
+    }
+
+    private class Spring<T>
+    {
+        public T item1;
+        public T item2;
+
+
+        public Spring(T item1, T item2)
+        {
+            this.item1 = item1;
+            this.item2 = item2;
+
+        }
+
+        public override bool Equals(object obj)
+        {
+            Spring<T> other = obj as Spring<T>;
+            if (other == null)
+                return false;
+            return item1.Equals(other.item1) && item2.Equals(other.item2) || item1.Equals(other.item2) && item2.Equals(other.item1);
+        }
+
+        public override int GetHashCode()
+        {
+            return item1.GetHashCode() + item2.GetHashCode();
+        }
+    }
+
+    private Vector3 MeanPosition(List<NetworkNode> nodes)
+    {
+        Vector3 result = Vector3.zero;
+        foreach (var node in nodes)
+        {
+            result += node.transform.localPosition;
+        }
+        result /= nodes.Count;
+        return result;
     }
 
     void OnTriggerEnter(Collider other)

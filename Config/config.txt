@@ -74,7 +74,7 @@ AttributeColors ={ #FF0000
                    #6AAC2A }
 
 # The scale of the lines between genes within networks when the networks are still small and on a graph skeleton.
-NetworkLineSmallWidth = 0.003
+NetworkLineSmallWidth = 0.001
 
 # The scale the lines between genes within networks get when they are enlarged and popped out of a graph skeleton.
 NetworkLineLargeWidth = 0.01

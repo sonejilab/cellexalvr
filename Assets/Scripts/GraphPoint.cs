@@ -82,7 +82,6 @@ public class GraphPoint : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// Saves this graphpoint's parent graph.
     /// </summary>
@@ -139,7 +138,6 @@ public class GraphPoint : MonoBehaviour
         if (color.Equals(Color.white))
         {
             SetAllSameGraphPointsMaterial(Graph.graphManager.defaultGraphPointMaterial);
-
         }
         else
         {
@@ -150,6 +148,10 @@ public class GraphPoint : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Helper method to set the material of all graphpoints representing the same cell.
+    /// </summary>
+    /// <param name="mat">The material to set.</param>
     private void SetAllSameGraphPointsMaterial(Material mat)
     {
         foreach (var g in Cell.GraphPoints)

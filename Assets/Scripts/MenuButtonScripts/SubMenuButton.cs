@@ -74,14 +74,7 @@ public class SubMenuButton : CellexalButton
             Tab tab = t.GetComponent<Tab>();
             if (!tab)
             {
-                foreach (Renderer r in t.GetComponentsInChildren<Renderer>())
-                {
-                    r.enabled = activate;
-                }
-                foreach (Collider c in t.GetComponentsInChildren<Collider>())
-                {
-                    c.enabled = activate;
-                }
+                SetGameObjectAndChildrenEnabled(t.gameObject, activate);
             }
             else
             {
@@ -93,26 +86,32 @@ public class SubMenuButton : CellexalButton
                     if (tab.Active)
                         activeTab = tab;
                     tab.SetTabActive(false);
-                    tab.TabButton.GetComponent<Renderer>().enabled = false;
-                    tab.TabButton.GetComponent<Collider>().enabled = false;
+                    SetGameObjectAndChildrenEnabled(tab.TabButton.gameObject, false);
                 }
                 else
                 {
                     // if we are turning on the menu
                     // skip the tab prefabs
-                    if (menu.GetComponent<ToggleArcsSubMenu>() && tab == menu.GetComponent<ToggleArcsSubMenu>().tabPrefab) continue;
-                    if (menu.GetComponent<FlashGenesMenu>() && tab == menu.GetComponent<FlashGenesMenu>().tabPrefab) continue;
+                    var menuWithTabs = menu.GetComponent<MenuWithTabs>();
+                    if (menuWithTabs && tab == menuWithTabs.tabPrefab) continue;
+
                     // if we have a saved tab that should be active, turn on that one and turn off the other ones.
                     // if there is no saved active tab, turn all tabs off
                     if (activeTab != null)
                         tab.SetTabActive(tab == activeTab);
                     else
                         tab.SetTabActive(false);
-                    tab.TabButton.GetComponent<Renderer>().enabled = true;
-                    tab.TabButton.GetComponent<Collider>().enabled = true;
+                    SetGameObjectAndChildrenEnabled(tab.TabButton.gameObject, true);
                 }
             }
         }
     }
 
+    private void SetGameObjectAndChildrenEnabled(GameObject obj, bool active)
+    {
+        foreach (var r in obj.GetComponentsInChildren<Renderer>())
+            r.enabled = active;
+        foreach (var c in obj.GetComponentsInChildren<Collider>())
+            c.enabled = active;
+    }
 }

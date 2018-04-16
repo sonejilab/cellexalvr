@@ -26,7 +26,7 @@ public class NetworkNode : MonoBehaviour
     }
 
     private ReferenceManager referenceManager;
-    private List<NetworkNode> neighbours = new List<NetworkNode>();
+    public List<NetworkNode> neighbours = new List<NetworkNode>();
     private List<LineRenderer> connections = new List<LineRenderer>();
     private List<Color> connectionColors = new List<Color>();
     private Vector3 normalScale;
@@ -56,6 +56,14 @@ public class NetworkNode : MonoBehaviour
             cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
             referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
         }
+    }
+
+    public override bool Equals(object other)
+    {
+        var node = other as NetworkNode;
+        if (node == null)
+            return false;
+        return label == node.label;
     }
 
     /// <summary>
@@ -131,6 +139,25 @@ public class NetworkNode : MonoBehaviour
         {
             connections[i].material.color = connectionColors[i];
             connections[i].startWidth = connections[i].endWidth = CellexalConfig.NetworkLineSmallWidth;
+        }
+    }
+
+    public List<NetworkNode> AllConnectedNodes()
+    {
+        List<NetworkNode> result = new List<NetworkNode>();
+        AllConnectedNodesRec(ref result);
+        return result;
+    }
+
+    private void AllConnectedNodesRec(ref List<NetworkNode> result)
+    {
+        result.Add(this);
+        foreach (var neighbour in neighbours)
+        {
+            if (!result.Contains(neighbour))
+            {
+                neighbour.AllConnectedNodesRec(ref result);
+            }
         }
     }
 

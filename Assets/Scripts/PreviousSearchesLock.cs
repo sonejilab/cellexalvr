@@ -16,6 +16,8 @@ public class PreviousSearchesLock : ClickablePanel
         set
         {
             locked = value;
+            if (!renderer)
+                renderer = gameObject.GetComponent<Renderer>();
             renderer.sharedMaterial = (locked ? lockedNormalMaterial : unlockedNormalMaterial);
         }
     }

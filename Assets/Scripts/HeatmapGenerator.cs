@@ -140,7 +140,8 @@ public class HeatmapGenerator : MonoBehaviour
         if (selectionToolHandler.selectionConfirmed)
         {
             GeneratingHeatmaps = true;
-            // make a deep copy of the arraylist
+            // Show calculators
+            calculatorCluster.SetActive(true);
             List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
 
             // Check if more than one cell is selected
@@ -153,39 +154,28 @@ public class HeatmapGenerator : MonoBehaviour
             int statusId = status.AddStatus("R script generating heatmap");
             int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
             int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
-            // Start generation of new heatmap in R
-            string home = Directory.GetCurrentDirectory();
-            int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
-            // update the R object first
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
-            string args = CellexalUser.UserSpecificFolder + "\\selection" + fileCreationCtr + ".txt " + CellexalUser.UserSpecificFolder + " " + selectionToolHandler.DataDir;
-            CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-            while (t.IsAlive)
-            {
-                yield return null;
-            }
-            stopwatch.Stop();
-            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
 
-            rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
+            // if the R object is not updated, wait
+            while (selectionToolHandler.RObjectUpdating)
+                yield return null;
+
+            // Start generation of new heatmap in R
+            int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
+            string home = Directory.GetCurrentDirectory();
+
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
             string heatmapDirectory = home + @"\Resources";
             string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
-            args = home + " " + CellexalUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+            string args = home + " " + CellexalUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(heatmapDirectory));
                 Directory.CreateDirectory(heatmapDirectory);
             }
             CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            stopwatch = new System.Diagnostics.Stopwatch();
+            var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            // Show calculators
-            calculatorCluster.SetActive(true);
             t.Start();
 
             while (t.IsAlive)

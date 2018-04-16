@@ -7,6 +7,7 @@ using UnityEngine;
 public class MenuWithTabs : MonoBehaviour
 {
     public ReferenceManager referenceManager;
+    public Tab tabPrefab;
 
     protected MenuToggler menuToggler;
     protected List<Tab> tabs = new List<Tab>();
@@ -39,7 +40,7 @@ public class MenuWithTabs : MonoBehaviour
         if (!menuToggler)
             menuToggler = referenceManager.menuToggler;
         // tell the menu toggler to activate the tab button later if the menu is not active
-        menuToggler.AddGameObjectToActivateNoChildren(newTab.TabButton.gameObject, true);
+        menuToggler.AddGameObjectToActivate(newTab.TabButton.gameObject);
         return newTab;
     }
 
