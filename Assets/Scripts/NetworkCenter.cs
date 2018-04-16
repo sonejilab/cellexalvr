@@ -115,23 +115,22 @@ public class NetworkCenter : MonoBehaviour
 
     public void ApplyLayout()
     {
-        //     StartCoroutine(ApplyLayoutCoroutine());
-        // }
-        // private IEnumerator ApplyLayoutCoroutine()
-        // {
-        //     transform.localScale *= 10f;
+        StartCoroutine(ApplyLayoutCoroutine());
+    }
+    private IEnumerator ApplyLayoutCoroutine()
+    {
 
+        int iterationsPerFrame = 1;
         float desiredSpringLength = 0.07f;
-        float maximumForce = 0.03f;
         int iterations = 100;
-        //int groupIterations = 100;
         float springConstant = 0.15f;
         float nonAdjecentNeighborConstant = 0.0003f;
+        bool pauseHalfWay = true;
         // start by giving all vertices a random position
         var rand = new System.Random();
         foreach (var node in nodes)
         {
-            node.transform.localPosition = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f);
+            node.transform.localPosition = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, 0f);
         }
 
         Dictionary<NetworkNode, Vector3> forces = new Dictionary<NetworkNode, Vector3>(nodes.Count);
@@ -160,7 +159,7 @@ public class NetworkCenter : MonoBehaviour
                     var diff = (neighbour.transform.localPosition - node.transform.localPosition);
                     var dir = diff.normalized;
                     // the springs should be longer if there are many neighbours, spreading out crowded areas
-                    var appropriateSpringLength = desiredSpringLength /* *Mathf.Log(node.neighbours.Count + 1, 2)*/;
+                    var appropriateSpringLength = desiredSpringLength;
                     var appliedForce = diff * Mathf.Log(diff.magnitude / appropriateSpringLength) / node.neighbours.Count;
                     //if (appliedForce.magnitude < minimumForce)
                     //    continue;
@@ -188,27 +187,55 @@ public class NetworkCenter : MonoBehaviour
                 }
             }
 
-            //   foreach (var node1 in nodes)
-            //   {
-            //       foreach (var neighbour1 in node1.neighbours)
-            //       {
-            //           foreach (var node2 in nodes)
-            //           {
-            //               if (node1 == node2 || neighbour1 == node2)
-            //                   continue;
-            //
-            //               foreach (var neighbour2 in node2.neighbours)
-            //               {
-            //                   if (node1 == neighbour2 || neighbour1 == neighbour2)
-            //                       continue;
-            //
-            //                   float angle1  =Vector3.Angle()
-            //               }
-            //           }
-            //       }
-            //   }
+            yield return null;
 
+            // swap positions of vertices that have edges that cross eachother
+            // only do this every fifth iteration, and only after atleast 20 iterations
+            if (i % 5 == 0 && i > 20)
+            {
+                foreach (var node1 in nodes)
+                {
+                    foreach (var neighbour1 in node1.neighbours)
+                    {
+                        foreach (var node2 in nodes)
+                        {
+                            if (node1 == node2 || neighbour1 == node2)
+                                continue;
 
+                            foreach (var neighbour2 in node2.neighbours)
+                            {
+                                if (node1 == neighbour2 || neighbour1 == neighbour2)
+                                    continue;
+                                var node1pos = node1.transform.localPosition;
+                                var neighbour1pos = neighbour1.transform.localPosition;
+                                var node2pos = node2.transform.localPosition;
+                                var neighbour2pos = neighbour2.transform.localPosition;
+
+                                float bottom = (node1pos.x - neighbour1pos.x) * (node2pos.y - neighbour2pos.y) - (node1pos.y - neighbour1pos.y) * (node2pos.x - neighbour2pos.x);
+                                if (bottom == 0f)
+                                {
+                                    // avoid division by zero
+                                    bottom = 0.00001f;
+                                }
+                                // find intersection coordinates through determinants, thanks wikipedia
+                                float top1 = (node1pos.x * neighbour1pos.y - node1pos.y * neighbour1pos.x);
+                                float top2 = (node2pos.x * neighbour2pos.y - node2pos.y * neighbour2pos.x);
+                                float intersectX = (top1 * (node2pos.x - neighbour2pos.x) - (node1pos.x - neighbour1pos.x) * top2) / bottom;
+                                float intersectY = (top1 * (node2pos.y - neighbour2pos.y) - (node1pos.y - neighbour1pos.y) * top2) / bottom;
+
+                                var intersect = new Vector3(intersectX, intersectY, 0f);
+
+                                if (Between(intersect, node1pos, neighbour1pos) && Between(intersect, node2pos, neighbour2pos))
+                                {
+                                    neighbour1.transform.localPosition = neighbour2pos;
+                                    neighbour2.transform.localPosition = neighbour1pos;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
 
             // move all vertices according to the force affecting them
             foreach (var force in forces)
@@ -222,49 +249,39 @@ public class NetworkCenter : MonoBehaviour
                 }
             }
 
-            //   do
-            //       yield return null;
-            //   while (!Input.GetKey(KeyCode.T));
+            if (i % iterationsPerFrame == 0)
+            {
+                yield return null;
+
+                if (Time.deltaTime > 0.025f)
+                {
+                    if (iterationsPerFrame > 1)
+                    {
+                        iterationsPerFrame--;
+                    }
+                }
+                else if (Time.deltaTime < 0.010f)
+                {
+                    iterationsPerFrame++;
+                }
+                //   do
+                //       yield return null;
+                //   while (!Input.GetKey(KeyCode.T));
+            }
         }
         Handler.layoutApplied = true;
     }
 
-    private class Spring<T>
+    /// <summary>
+    /// Finds if a point is between the rectangle defined whose corners are in v1 and v2
+    /// </summary>
+    private bool Between(Vector3 p, Vector3 v1, Vector3 v2)
     {
-        public T item1;
-        public T item2;
-
-
-        public Spring(T item1, T item2)
-        {
-            this.item1 = item1;
-            this.item2 = item2;
-
-        }
-
-        public override bool Equals(object obj)
-        {
-            Spring<T> other = obj as Spring<T>;
-            if (other == null)
-                return false;
-            return item1.Equals(other.item1) && item2.Equals(other.item2) || item1.Equals(other.item2) && item2.Equals(other.item1);
-        }
-
-        public override int GetHashCode()
-        {
-            return item1.GetHashCode() + item2.GetHashCode();
-        }
-    }
-
-    private Vector3 MeanPosition(List<NetworkNode> nodes)
-    {
-        Vector3 result = Vector3.zero;
-        foreach (var node in nodes)
-        {
-            result += node.transform.localPosition;
-        }
-        result /= nodes.Count;
-        return result;
+        float smallestX = Mathf.Min(v1.x, v2.x);
+        float largestX = Mathf.Max(v1.x, v2.x);
+        float smallestY = Mathf.Min(v1.y, v2.y);
+        float largestY = Mathf.Max(v1.y, v2.y);
+        return p.x > smallestX && p.x < largestX && p.y > smallestY && p.y < largestY;
     }
 
     void OnTriggerEnter(Collider other)
