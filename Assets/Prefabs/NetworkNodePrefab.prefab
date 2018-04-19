@@ -57,7 +57,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1147256446606448}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.7367521, y: 0.06564012, z: -0.30886763}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 224265354258037560}
@@ -73,6 +73,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -88,6 +89,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -105,6 +107,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -120,6 +123,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -171,6 +175,7 @@ MonoBehaviour:
     type: 2}
   standardMaterial: {fileID: 2100000, guid: 9cfe725c6e37d244a964b41189e1d31d, type: 2}
   highlightMaterial: {fileID: 2100000, guid: e333e1753c2fcf1458b8dd3da30b3466, type: 2}
+  neighbours: []
 --- !u!114 &114269250619962334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,7 +317,6 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  node: {fileID: 114252115367115154}
 --- !u!222 &222853809826507562
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -327,7 +331,7 @@ RectTransform:
   m_GameObject: {fileID: 1834449077124832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.00365}
-  m_LocalScale: {x: 0.0008592894, y: 0.0008592894, z: 0.0008592894}
+  m_LocalScale: {x: 0.0006592894, y: 0.0006592894, z: 0.0006592894}
   m_Children: []
   m_Father: {fileID: 4837893103903506}
   m_RootOrder: 0

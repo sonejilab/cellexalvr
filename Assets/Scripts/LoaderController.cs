@@ -134,7 +134,7 @@ public class LoaderController : MonoBehaviour
                     graphManager.directory = path;
                     inputReader.ReadFolder(path);
                     gameManager.InformReadFolder(path);
-                    StartCoroutine(InitialCheckCoroutine());
+
                 }
 
                 Destroy(cellParent.GetComponent<FixedJoint>());
@@ -154,25 +154,6 @@ public class LoaderController : MonoBehaviour
                 }
             }
         }
-    }
-
-    private IEnumerator InitialCheckCoroutine()
-    {
-        string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-        string userFolder = CellexalUser.UserSpecificFolder;
-        string args = dataSourceFolder + " " + userFolder;
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\initial_check.R";
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        t.Start();
-        while (t.IsAlive)
-        {
-            yield return null;
-        }
-        stopwatch.Stop();
-        CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
-        inputReader.LoadPreviousGroupings();
     }
 
     void DestroyFolderColliders()

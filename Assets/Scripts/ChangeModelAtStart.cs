@@ -17,7 +17,9 @@ class ChangeModelAtStart : MonoBehaviour
     IEnumerator ChangeModel()
     {
         while (!modelSwitcher.Ready())
-            yield return null;
+        {
+            yield return new WaitForEndOfFrame();
+        }
         modelSwitcher.SetMeshes();
     }
 }

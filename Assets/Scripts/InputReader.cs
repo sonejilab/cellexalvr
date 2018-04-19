@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
 using TMPro;
+using System.Threading;
 
 /// <summary>
 /// A class for reading data files and creating objects in the virtual environment.
@@ -61,7 +62,7 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             //status.gameObject.SetActive(true);
-            ReadFolder(@"Mouse_LSK");
+            ReadFolder(@"this_one_will_work");
         }
         CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
@@ -233,6 +234,8 @@ public class InputReader : MonoBehaviour
                 }
                 //mdsFileStream.Close();
                 mdsStreamReader.Close();
+               // if (debug)
+               //     newGraph.CreateConvexHull();
             }
             CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
@@ -301,8 +304,30 @@ public class InputReader : MonoBehaviour
         statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
         CellexalEvents.GraphsLoaded.Invoke();
+
+        StartCoroutine(InitialCheckCoroutine());
         //if (debug)
         //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
+    }
+
+    private IEnumerator InitialCheckCoroutine()
+    {
+        string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
+        string userFolder = CellexalUser.UserSpecificFolder;
+        string args = dataSourceFolder + " " + userFolder;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\initial_check.R";
+        CellexalLog.Log("Running initial check script at " + rScriptFilePath + " with the arguments " + args);
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+        LoadPreviousGroupings();
     }
 
     /// <summary>
@@ -430,7 +455,7 @@ public class InputReader : MonoBehaviour
     /// <summary>
     /// Helper struct for sorting network keys.
     /// </summary>
-    private struct NetworkKeyPair
+    public struct NetworkKeyPair
     {
         public string color, node1, node2, key1, key2;
 
@@ -593,6 +618,10 @@ public class InputReader : MonoBehaviour
         List<NetworkKeyPair> tmp = new List<NetworkKeyPair>();
         // skip the first line as it is a header
         nwkStreamReader.ReadLine();
+        float maxNegPcor = float.MinValue;
+        float minNegPcor = float.MaxValue;
+        float maxPosPcor = float.MinValue;
+        float minPosPcor = float.MaxValue;
         while (!nwkStreamReader.EndOfStream)
         {
             string line = nwkStreamReader.ReadLine();
@@ -608,6 +637,21 @@ public class InputReader : MonoBehaviour
             string node2 = geneName2 + color;
             string key1 = words[7];
             string key2 = words[8];
+            float pcor = float.Parse(words[0]);
+            if (pcor < 0)
+            {
+                if (pcor < minNegPcor)
+                    minNegPcor = pcor;
+                if (pcor > maxNegPcor)
+                    maxNegPcor = pcor;
+            }
+            else
+            {
+                if (pcor < minPosPcor)
+                    minPosPcor = pcor;
+                if (pcor > maxPosPcor)
+                    maxPosPcor = pcor;
+            }
             // add the nodes if they don't already exist
             if (!nodes.ContainsKey(node1))
             {
@@ -626,7 +670,7 @@ public class InputReader : MonoBehaviour
             nodes[node2].transform.parent = parentNetwork;
 
             // add a bidirectional connection
-            nodes[node1].AddNeighbour(nodes[node2]);
+            nodes[node1].AddNeighbour(nodes[node2], pcor);
             // add the keypair
             tmp.Add(new NetworkKeyPair(color, node1, node2, key1, key2));
 
@@ -640,108 +684,20 @@ public class InputReader : MonoBehaviour
         // if two keypairs are equal (they both contain the same key), they should be next to each other in the list, otherwise sort based on key1
         Array.Sort(keyPairs, (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
 
-        // Read the .lay file
-        // The file format should be
-        // GENENAME X_COORD Y_COORD KEY
-        // GENENAME X_COORD Y_COORD KEY
-        // ...
-        // KEY is the hex rgb color code of the network the gene is in.
+        //yield return null;
+        networkHandler.CalculateLayoutOnAllNetworks();
 
-        //    CellexalLog.Log("Reading .lay file with " + layFileStream.Length + " bytes");
-        //    while (!layStreamReader.EndOfStream)
-        //    {
-        //        string line = layStreamReader.ReadLine();
-        //        if (line == "")
-        //            continue;
-        //        string[] words = line.Split(null);
-        //        if (words.Length == 0)
-        //            continue;
-        //
-        //        string geneName = words[0];
-        //        float xcoord = float.Parse(words[1]);
-        //        float ycoord = float.Parse(words[2]);
-        //        string color = words[3];
-        //        string nodeName = geneName + color;
-        //        nodes[nodeName].transform.localPosition = new Vector3(xcoord / 2f, ycoord / 2f, 0f);
-        //    }
-        //    CellexalLog.Log("Successfully read .lay file");
-
-
-        // apply the layout algorithm
-
-        yield return null;
-        networkHandler.ApplyLayoutOnAllNetworks();
-
-        while (!networkHandler.layoutApplied)
+        // wait for all networks to finish their layout
+        while (networkHandler.layoutApplied != networks.Count)
             yield return null;
 
+        foreach (var node in nodes.Values)
+        {
+            node.ColorEdges(minNegPcor, maxNegPcor, minPosPcor, maxPosPcor);
+        }
         // give all nodes in the networks edges
-        foreach (NetworkNode node in nodes.Values)
-        {
-            node.AddEdges();
-            node.gameObject.GetComponent<BoxCollider>().enabled = false;
-        }
+        networkHandler.CreateArcs(ref keyPairs, ref nodes);
 
-        // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
-        NetworkKeyPair lastKey = new NetworkKeyPair("", "", "", "", "");
-        List<NetworkKeyPair> lastNodes = new List<NetworkKeyPair>();
-        for (int i = 0; i < keyPairs.Length; ++i)
-        {
-            NetworkKeyPair keypair = keyPairs[i];
-            // if this keypair shares a key with the last keypair
-            if (lastKey.key1 == keypair.key1 || lastKey.key1 == keypair.key2)
-            {
-                // add arcs to all previous pairs that also shared a key
-                foreach (NetworkKeyPair node in lastNodes)
-                {
-                    var center = nodes[node.node1].Center;
-                    center.AddArc(nodes[node.node1], nodes[node.node2], nodes[keypair.node1], nodes[keypair.node2]);
-                }
-            }
-            else
-            {
-                // clear the list if this key did not match the last one
-                lastNodes.Clear();
-            }
-            lastNodes.Add(keypair);
-            lastKey = keypair;
-        }
-
-
-        // copy the networks to an array
-        NetworkCenter[] networkCenterArray = new NetworkCenter[networks.Count];
-        int j = 0;
-        foreach (NetworkCenter n in networks.Values)
-        {
-            networkCenterArray[j++] = n;
-        }
-
-        // create the toggle arcs menu and its buttons
-        arcsSubMenu.CreateToggleArcsButtons(networkCenterArray);
-
-        List<int> arcsCombinedList = new List<int>();
-        foreach (NetworkCenter network in networks.Values)
-        {
-            var arcscombined = network.CreateCombinedArcs();
-            arcsCombinedList.Add(arcscombined);
-            // toggle the arcs off
-            network.SetArcsVisible(false);
-            network.SetCombinedArcsVisible(false);
-        }
-
-        // figure out how many combined arcs there are
-        var max = 0;
-        foreach (int i in arcsCombinedList)
-        {
-            if (max < i)
-                max = i;
-        }
-
-        // color all combined arcs
-        foreach (NetworkCenter network in networks.Values)
-        {
-            network.ColorCombinedArcs(max);
-        }
 
         cntStreamReader.Close();
         cntFileStream.Close();
@@ -749,7 +705,7 @@ public class InputReader : MonoBehaviour
         nwkFileStream.Close();
         layStreamReader.Close();
         layFileStream.Close();
-        CellexalLog.Log("Successfully created " + j + " networks with a total of " + nodes.Values.Count + " nodes");
+        CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
     }
 
     /// <summary>
@@ -792,6 +748,7 @@ public class InputReader : MonoBehaviour
         string dataFolder = CellexalUser.UserSpecificFolder;
         string groupingsInfoFile = dataFolder + "\\groupings_info.txt";
         CellexalLog.Log("Started reading the previous groupings files");
+        //print(groupingsInfoFile);
         if (!File.Exists(groupingsInfoFile))
         {
             CellexalLog.Log("WARNING: No groupings info file found at " + CellexalLog.FixFilePath(groupingsInfoFile));

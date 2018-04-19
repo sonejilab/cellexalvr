@@ -991,12 +991,16 @@ public class Heatmap : MonoBehaviour
     public void ColorCells()
     {
         var selectionToolHandler = referenceManager.selectionToolHandler;
-        for (int i = 0; i < groupWidths.Count; ++i)
+
+        for (int i = 0, cellIndex = 0; i < groupWidths.Count; ++i)
         {
             int group = groupWidths[i].Item1;
             UnityEngine.Color groupColor = groupingColors[group];
-            var graphPoint = cellManager.GetCell(cells[i]).GraphPoints[0];
-            selectionToolHandler.AddGraphpointToSelection(graphPoint, group, false);
+            for (int j = 0; j < groupWidths[i].Item3; ++j, ++cellIndex)
+            {
+                var graphPoint = cellManager.GetCell(cells[cellIndex]).GraphPoints[0];
+                selectionToolHandler.AddGraphpointToSelection(graphPoint, group, false);
+            }
         }
     }
 

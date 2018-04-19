@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using VRTK;
 using VRTK.GrabAttachMechanics;
@@ -40,6 +42,12 @@ public class NetworkCenter : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private NetworkGenerator networkGenerator;
     private GameManager gameManager;
+    public enum Layout { TWO_D, THREE_D }
+    private Layout currentLayout;
+    private bool[] layoutsCalculated = { false, false };
+    private bool calculatingLayout = false;
+    private bool switchingLayout = false;
+    private Dictionary<NetworkNode, Vector3> positions;
 
     void Start()
     {
@@ -106,37 +114,113 @@ public class NetworkCenter : MonoBehaviour
                 gameManager.InformMoveNetworkCenter(Handler.NetworkHandlerName, NetworkCenterName, transform.position, transform.rotation, transform.localScale);
             }
         }
+
     }
 
+    /// <summary>
+    /// Adds a node to this network.
+    /// </summary>
+    /// <param name="newNode">The node to add.</param>
     public void AddNode(NetworkNode newNode)
     {
         nodes.Add(newNode);
     }
 
-    public void ApplyLayout()
+    /// <summary>
+    /// Calcualte a new layout.
+    /// </summary>
+    /// <param name="layout">The desired type of layout.</param>
+    public void CalculateLayout(Layout layout)
     {
-        StartCoroutine(ApplyLayoutCoroutine());
-    }
-    private IEnumerator ApplyLayoutCoroutine()
-    {
+        if (calculatingLayout)
+            return;
+        currentLayout = layout;
+        StartCoroutine(CalculateLayoutCoroutine(layout));
 
-        int iterationsPerFrame = 1;
+    }
+    /// <summary>
+    /// Starts a thread that calculates the layout.
+    /// </summary>
+    /// <param name="layout">The desired layout.</param>
+    private IEnumerator CalculateLayoutCoroutine(Layout layout)
+    {
+        //var c = GetComponent<Renderer>().material.color;
+        //GetComponent<Renderer>().material.color = new Color(c.r, c.g, c.b, 0f);
+        Dictionary<NetworkNode, Vector3> positions = new Dictionary<NetworkNode, Vector3>(nodes.Count);
+        foreach (var node in nodes)
+        {
+            positions[node] = node.transform.localPosition;
+        }
+
+        Thread t = new Thread(() => CalculateLayoutThread(layout, positions));
+        t.Start();
+        while (t.IsAlive)
+            yield return null;
+        t.Join();
+        foreach (var nodePos in positions)
+        {
+            nodePos.Key.transform.localPosition = nodePos.Value;
+            nodePos.Key.RepositionEdges();
+        }
+        positions.Clear();
+    }
+
+    /// <summary>
+    /// Method that is run as a thread to calculate layout
+    /// </summary>
+    /// <param name="layout">The desired layout.</param>
+    /// <param name="positions">The variable to write the positions to.</param>
+    private void CalculateLayoutThread(Layout layout, Dictionary<NetworkNode, Vector3> positions)
+    {
+        calculatingLayout = true;
         float desiredSpringLength = 0.07f;
         int iterations = 100;
         float springConstant = 0.15f;
         float nonAdjecentNeighborConstant = 0.0003f;
-        bool pauseHalfWay = true;
+
+
+
         // start by giving all vertices a random position
         var rand = new System.Random();
-        foreach (var node in nodes)
+        if (layout == Layout.THREE_D)
         {
-            node.transform.localPosition = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, 0f);
+            foreach (var node in nodes)
+            {
+                positions[node] = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f);
+            }
+        }
+        else if (layout == Layout.TWO_D)
+        {
+            foreach (var node in nodes)
+            {
+                positions[node] = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, 0f);
+            }
         }
 
         Dictionary<NetworkNode, Vector3> forces = new Dictionary<NetworkNode, Vector3>(nodes.Count);
 
+        Dictionary<int, int> swaps = new Dictionary<int, int>(nodes.Count);
+        HashSet<NetworkNode> nodeSet = new HashSet<NetworkNode>(nodes);
+        int nGroups = 0;
+        while (nodeSet.Count > 0)
+        {
+            var group = nodeSet.First().AllConnectedNodes();
+            foreach (var node in group)
+            {
+                nodeSet.Remove(node);
+            }
+            nGroups++;
+        }
+        //print(NetworkCenterName + " " + nGroups);
+        if (nGroups < 9)
+        {
+            desiredSpringLength *= (1f / Mathf.Log(nGroups + 1, 9f));
+            //nonAdjecentNeighborConstant *= (1f / Mathf.Log(nGroups + 1, 10f));
+        }
+        List<NetworkNode> removedNodes = new List<NetworkNode>();
         for (int i = 0; i < iterations; ++i)
         {
+            float totalDistanceMoved = 0f;
 
             // set all forces on all vertices to zero
             foreach (var node in nodes)
@@ -144,111 +228,144 @@ public class NetworkCenter : MonoBehaviour
                 forces[node] = Vector3.zero;
             }
 
-            // foreach (var node in nodes)
-            // {
-            //
-            //     // add a slight bit of gravity towards the center
-            //     forces[node] -= node.transform.localPosition * 0.0002f * nodes.Count;
-            // }
-
-            // calculate how much force is applied to each end of each spring
-            foreach (var node in nodes)
+            foreach (var node1 in nodes)
             {
-                foreach (var neighbour in node.neighbours)
+                nodeSet.Remove(node1);
+                removedNodes.Add(node1);
+                // move all neighbours according to their springs
+                foreach (var neighbour in node1.neighbours)
                 {
-                    var diff = (neighbour.transform.localPosition - node.transform.localPosition);
+                    nodeSet.Remove(neighbour);
+                    removedNodes.Add(neighbour);
+
+                    var diff = (positions[neighbour] - positions[node1]);
                     var dir = diff.normalized;
-                    // the springs should be longer if there are many neighbours, spreading out crowded areas
-                    var appropriateSpringLength = desiredSpringLength;
-                    var appliedForce = diff * Mathf.Log(diff.magnitude / appropriateSpringLength) / node.neighbours.Count;
+
+                    var appliedForce = diff * Mathf.Log(diff.magnitude / (desiredSpringLength * Mathf.Log(node1.neighbours.Count + 3f, 4f))) / node1.neighbours.Count;
                     //if (appliedForce.magnitude < minimumForce)
                     //    continue;
-                    forces[node] += appliedForce * springConstant;
+                    forces[node1] += appliedForce * springConstant;
                 }
-            }
 
-            // move all nonadjecent nodes away from eachother
-            foreach (var node in nodes)
-            {
-                foreach (var nonNeighbour in nodes)
+                // move all nonadjecent nodes away from eachother
+                foreach (var node2 in nodeSet)
                 {
-                    if (node == nonNeighbour || node.neighbours.Contains(nonNeighbour))
-                        continue;
-                    var distance = Vector3.Distance(node.transform.localPosition, nonNeighbour.transform.localPosition);
+                    var distance = Vector3.Distance(positions[node1], positions[node2]);
                     if (distance > 0.1f)
                         continue;
-                    var dir = (nonNeighbour.transform.localPosition - node.transform.localPosition);
+                    if (distance < 0.001f)
+                    {
+                        distance = 0.001f;
+                    }
+                    var dir = (positions[node2] - positions[node1]);
                     var appliedForce = dir.normalized / (distance * distance * nodes.Count);
                     //if (appliedForce.magnitude > maximumForce)
                     //    appliedForce = appliedForce.normalized * maximumForce;
                     //  if (appliedForce.magnitude < minimumForce)
                     //    continue;
-                    forces[node] -= appliedForce * nonAdjecentNeighborConstant;
+                    forces[node1] -= appliedForce * nonAdjecentNeighborConstant;
                 }
+                foreach (var removedNode in removedNodes)
+                {
+                    nodeSet.Add(removedNode);
+                }
+                removedNodes.Clear();
             }
 
-            yield return null;
+            //yield return null;
 
-            // swap positions of vertices that have edges that cross eachother
-            // only do this every fifth iteration, and only after atleast 20 iterations
-            if (i % 5 == 0 && i > 20)
+            if (layout == Layout.TWO_D)
             {
-                foreach (var node1 in nodes)
+                // swap positions of vertices that have edges that cross eachother
+                // only do this every fifth iteration, and only after atleast 20 iterations
+                if (i % 5 == 0 && i > 20)
                 {
-                    foreach (var neighbour1 in node1.neighbours)
+                    foreach (var node1 in nodes)
                     {
                         foreach (var node2 in nodes)
                         {
-                            if (node1 == node2 || neighbour1 == node2)
+                            if (node1 == node2)
                                 continue;
 
-                            foreach (var neighbour2 in node2.neighbours)
+                            foreach (var neighbour1 in node1.neighbours)
                             {
-                                if (node1 == neighbour2 || neighbour1 == neighbour2)
+                                if (neighbour1 == node2)
                                     continue;
-                                var node1pos = node1.transform.localPosition;
-                                var neighbour1pos = neighbour1.transform.localPosition;
-                                var node2pos = node2.transform.localPosition;
-                                var neighbour2pos = neighbour2.transform.localPosition;
 
-                                float bottom = (node1pos.x - neighbour1pos.x) * (node2pos.y - neighbour2pos.y) - (node1pos.y - neighbour1pos.y) * (node2pos.x - neighbour2pos.x);
-                                if (bottom == 0f)
+                                foreach (var neighbour2 in node2.neighbours)
                                 {
-                                    // avoid division by zero
-                                    bottom = 0.00001f;
-                                }
-                                // find intersection coordinates through determinants, thanks wikipedia
-                                float top1 = (node1pos.x * neighbour1pos.y - node1pos.y * neighbour1pos.x);
-                                float top2 = (node2pos.x * neighbour2pos.y - node2pos.y * neighbour2pos.x);
-                                float intersectX = (top1 * (node2pos.x - neighbour2pos.x) - (node1pos.x - neighbour1pos.x) * top2) / bottom;
-                                float intersectY = (top1 * (node2pos.y - neighbour2pos.y) - (node1pos.y - neighbour1pos.y) * top2) / bottom;
+                                    if (node1 == neighbour2 || neighbour1 == neighbour2)
+                                        continue;
+                                    // only swap nodes if they have not been swapped 3 times already (to avoid swapping nodes back and forth too many times)
+                                    int hash = CombinedHashCode(node1, node2, neighbour1, neighbour2);
+                                    if (!swaps.ContainsKey(hash))
+                                    {
+                                        swaps[hash] = 0;
+                                    }
+                                    else if (swaps[hash] >= 3)
+                                    {
+                                        continue;
+                                    }
 
-                                var intersect = new Vector3(intersectX, intersectY, 0f);
+                                    var node1pos = positions[node1];
+                                    var neighbour1pos = positions[neighbour1];
+                                    var node2pos = positions[node2];
+                                    var neighbour2pos = positions[neighbour2];
 
-                                if (Between(intersect, node1pos, neighbour1pos) && Between(intersect, node2pos, neighbour2pos))
-                                {
-                                    neighbour1.transform.localPosition = neighbour2pos;
-                                    neighbour2.transform.localPosition = neighbour1pos;
+                                    float bottom = (node1pos.x - neighbour1pos.x) * (node2pos.y - neighbour2pos.y) - (node1pos.y - neighbour1pos.y) * (node2pos.x - neighbour2pos.x);
+                                    if (bottom == 0f)
+                                    {
+                                        // avoid division by zero
+                                        bottom = 0.00001f;
+                                    }
+                                    // find intersection coordinates through determinants, thanks wikipedia
+                                    float top1 = (node1pos.x * neighbour1pos.y - node1pos.y * neighbour1pos.x);
+                                    float top2 = (node2pos.x * neighbour2pos.y - node2pos.y * neighbour2pos.x);
+                                    float intersectX = (top1 * (node2pos.x - neighbour2pos.x) - (node1pos.x - neighbour1pos.x) * top2) / bottom;
+                                    float intersectY = (top1 * (node2pos.y - neighbour2pos.y) - (node1pos.y - neighbour1pos.y) * top2) / bottom;
+
+                                    var intersect = new Vector3(intersectX, intersectY, 0f);
+
+                                    if (Between(intersect, node1pos, neighbour1pos) && Between(intersect, node2pos, neighbour2pos))
+                                    {
+                                        swaps[hash]++;
+                                        positions[neighbour1] = neighbour2pos;
+                                        positions[neighbour2] = neighbour1pos;
+                                        totalDistanceMoved += (neighbour1pos - neighbour2pos).magnitude;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
             }
 
             // move all vertices according to the force affecting them
             foreach (var force in forces)
             {
                 var node = force.Key;
-                node.transform.localPosition += force.Value;
+                var pos = positions[node];
+                positions[node] += force.Value;
+                totalDistanceMoved += force.Value.magnitude;
                 // move all vertices that are outside the circle to the edge
-                if (node.transform.localPosition.magnitude > 0.4f)
+                if (positions[node].magnitude > 0.4f)
                 {
-                    node.transform.localPosition = node.transform.localPosition.normalized * 0.4f;
+                    positions[node] = positions[node].normalized * 0.4f;
                 }
+                //node.transform.localPosition = positions[node];
             }
 
+            // do
+            // {
+            //     yield return null;
+            // } while (!Input.GetKey(KeyCode.T));
+
+            // stop if the nodes have not moved very much
+            if (totalDistanceMoved / nodes.Count < 0.0002f)
+            {
+                break;
+            }
+            /*
             if (i % iterationsPerFrame == 0)
             {
                 yield return null;
@@ -264,12 +381,37 @@ public class NetworkCenter : MonoBehaviour
                 {
                     iterationsPerFrame++;
                 }
-                //   do
-                //       yield return null;
-                //   while (!Input.GetKey(KeyCode.T));
             }
+            */
         }
-        Handler.layoutApplied = true;
+
+        foreach (var node in nodes)
+        {
+            if (layout == Layout.TWO_D)
+            {
+                layoutsCalculated[0] = true;
+                node.LayoutPositions[0] = positions[node];
+            }
+            else if (layout == Layout.THREE_D)
+            {
+                layoutsCalculated[1] = true;
+                node.LayoutPositions[1] = positions[node];
+            }
+            //node.transform.localPosition = positions[node];
+
+            //node.RepositionEdges();
+            //node.gameObject.GetComponent<BoxCollider>().enabled = false;
+        }
+        calculatingLayout = false;
+        Handler.layoutApplied++;
+    }
+
+    private struct Edge
+    {
+        Vector3 v1;
+        Vector3 v2;
+
+        //public int GetHash
     }
 
     /// <summary>
@@ -282,6 +424,77 @@ public class NetworkCenter : MonoBehaviour
         float smallestY = Mathf.Min(v1.y, v2.y);
         float largestY = Mathf.Max(v1.y, v2.y);
         return p.x > smallestX && p.x < largestX && p.y > smallestY && p.y < largestY;
+    }
+
+    private int CombinedHashCode(NetworkNode node1, NetworkNode node2, NetworkNode node3, NetworkNode node4)
+    {
+        return (node1.GetHashCode() ^ node2.GetHashCode()) ^ (node3.GetHashCode() ^ node4.GetHashCode());
+    }
+
+    private class TupleComparer : IEqualityComparer<Tuple<NetworkNode, NetworkNode>>
+    {
+        public bool Equals(Tuple<NetworkNode, NetworkNode> x, Tuple<NetworkNode, NetworkNode> y)
+        {
+            return x.Item1 == y.Item1 && x.Item2 == y.Item2 || x.Item1 == y.Item2 && x.Item2 == y.Item1;
+        }
+
+        public int GetHashCode(Tuple<NetworkNode, NetworkNode> obj)
+        {
+            return obj.Item1.GetHashCode() ^ obj.Item2.GetHashCode();
+        }
+    }
+
+    public void SwitchLayout(Layout layout)
+    {
+        if (layout == currentLayout)
+            return;
+        if (calculatingLayout || switchingLayout)
+            return;
+
+        StartCoroutine(SwitchLayoutCoroutine(layout, 2f));
+    }
+
+    private IEnumerator SwitchLayoutCoroutine(Layout layout, float time)
+    {
+        int newLayoutPositionIndex;
+        int oldLayoutPositionIndex;
+        if (layout == Layout.TWO_D)
+        {
+            newLayoutPositionIndex = 0;
+            oldLayoutPositionIndex = 1;
+        }
+        else
+        {
+            newLayoutPositionIndex = 1;
+            oldLayoutPositionIndex = 0;
+        }
+
+        if (!layoutsCalculated[newLayoutPositionIndex])
+        {
+            CalculateLayout(layout);
+            yield break;
+        }
+
+
+        float t = 0f;
+        float lerpBy = 0f;
+        switchingLayout = true;
+        while (t < 1f)
+        {
+            t += (Time.deltaTime / time);
+
+            if (t > 1f)
+                t = 1f;
+            lerpBy = (Mathf.Sin(t * Mathf.PI - Mathf.PI / 2f) + 1f) / 2f;
+            foreach (var node in nodes)
+            {
+                node.transform.localPosition = Vector3.Lerp(node.LayoutPositions[oldLayoutPositionIndex], node.LayoutPositions[newLayoutPositionIndex], lerpBy);
+                node.RepositionEdges();
+            }
+            yield return null;
+        }
+        switchingLayout = false;
+        currentLayout = layout;
     }
 
     void OnTriggerEnter(Collider other)

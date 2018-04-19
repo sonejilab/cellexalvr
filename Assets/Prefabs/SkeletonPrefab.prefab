@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 2100000, guid: 8c266280f23e1c34aa706e90a9f5a1cd, type: 2}
+  layoutApplied: 0
 --- !u!114 &114610040334634022
 MonoBehaviour:
   m_ObjectHideFlags: 1

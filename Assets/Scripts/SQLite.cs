@@ -440,7 +440,7 @@ namespace SQLiter
                 }
             }
             string cellNames = builder.ToString();
-            StartCoroutine(QueryGenesInCellsCoroutine(gene, cellNames));
+            StartCoroutine(QueryGeneInCellsCoroutine(gene, cellNames));
         }
 
         /// <summary>
@@ -462,7 +462,7 @@ namespace SQLiter
                 }
             }
             string cellNames = builder.ToString();
-            StartCoroutine(QueryGenesInCellsCoroutine(gene, cellNames));
+            StartCoroutine(QueryGeneInCellsCoroutine(gene, cellNames));
         }
 
         /// <summary>
@@ -502,13 +502,13 @@ namespace SQLiter
         /// <example>
         /// QueryGenesInCells("Gata1", "\"HSPC_001\", \"HSPC_002\", \"HSPC_003\"");
         /// </example>
-        internal void QueryGenesInCells(string gene, string cells)
+        internal void QueryGeneInCells(string gene, string cells)
         {
             QueryRunning = true;
-            StartCoroutine(QueryGenesInCellsCoroutine(gene, cells));
+            StartCoroutine(QueryGeneInCellsCoroutine(gene, cells));
         }
 
-        private IEnumerator QueryGenesInCellsCoroutine(string gene, string cells)
+        private IEnumerator QueryGeneInCellsCoroutine(string gene, string cells)
         {
             string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
             Thread t = new Thread(() => QueryThread(query));

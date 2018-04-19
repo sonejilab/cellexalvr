@@ -20,7 +20,7 @@ public class NetworkHandler : MonoBehaviour
     private Material[] highlightedMaterials;
     private Material[] unhighlightedMaterials;
 
-    public bool layoutApplied = false;
+    public int layoutApplied = 0;
 
     private void Start()
     {
@@ -41,11 +41,75 @@ public class NetworkHandler : MonoBehaviour
         }
     }
 
-    public void ApplyLayoutOnAllNetworks()
+    public void CalculateLayoutOnAllNetworks()
     {
         foreach (var network in networks)
         {
-            network.ApplyLayout();
+            network.CalculateLayout(NetworkCenter.Layout.TWO_D);
+        }
+    }
+
+    public void CreateArcs(ref InputReader.NetworkKeyPair[] keyPairs, ref Dictionary<string, NetworkNode> nodes)
+    {
+        // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
+        var lastKey = new InputReader.NetworkKeyPair("", "", "", "", "");
+        List<InputReader.NetworkKeyPair> lastNodes = new List<InputReader.NetworkKeyPair>();
+        for (int i = 0; i < keyPairs.Length; ++i)
+        {
+            InputReader.NetworkKeyPair keypair = keyPairs[i];
+            // if this keypair shares a key with the last keypair
+            if (lastKey.key1 == keypair.key1 || lastKey.key1 == keypair.key2)
+            {
+                // add arcs to all previous pairs that also shared a key
+                foreach (InputReader.NetworkKeyPair node in lastNodes)
+                {
+                    var center = nodes[node.node1].Center;
+                    center.AddArc(nodes[node.node1], nodes[node.node2], nodes[keypair.node1], nodes[keypair.node2]);
+                }
+            }
+            else
+            {
+                // clear the list if this key did not match the last one
+                lastNodes.Clear();
+            }
+            lastNodes.Add(keypair);
+            lastKey = keypair;
+        }
+
+
+        // copy the networks to an array
+        NetworkCenter[] networkCenterArray = new NetworkCenter[networks.Count];
+        int j = 0;
+        foreach (NetworkCenter n in networks)
+        {
+            networkCenterArray[j++] = n;
+        }
+
+        // create the toggle arcs menu and its buttons
+        referenceManager.arcsSubMenu.CreateToggleArcsButtons(networkCenterArray);
+
+        List<int> arcsCombinedList = new List<int>();
+        foreach (NetworkCenter network in networks)
+        {
+            var arcscombined = network.CreateCombinedArcs();
+            arcsCombinedList.Add(arcscombined);
+            // toggle the arcs off
+            network.SetArcsVisible(false);
+            network.SetCombinedArcsVisible(false);
+        }
+
+        // figure out how many combined arcs there are
+        var max = 0;
+        foreach (int i in arcsCombinedList)
+        {
+            if (max < i)
+                max = i;
+        }
+
+        // color all combined arcs
+        foreach (NetworkCenter network in networks)
+        {
+            network.ColorCombinedArcs(max);
         }
     }
 

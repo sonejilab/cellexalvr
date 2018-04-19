@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using System;
 
 /// <summary>
 /// Represents one node in a network, it handles the coloring of the connections and part of the network creation process,
@@ -24,11 +25,12 @@ public class NetworkNode : MonoBehaviour
             geneName.text = value;
         }
     }
+    public Vector3[] LayoutPositions { get; set; } = new Vector3[2];
 
     private ReferenceManager referenceManager;
-    public List<NetworkNode> neighbours = new List<NetworkNode>();
-    private List<LineRenderer> connections = new List<LineRenderer>();
-    private List<Color> connectionColors = new List<Color>();
+    public HashSet<NetworkNode> neighbours = new HashSet<NetworkNode>();
+    private List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
+    private List<Color> edgeColors = new List<Color>();
     private Vector3 normalScale;
     private Vector3 largerScale;
     private bool controllerInside;
@@ -64,6 +66,11 @@ public class NetworkNode : MonoBehaviour
         if (node == null)
             return false;
         return label == node.label;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 
     /// <summary>
@@ -107,11 +114,29 @@ public class NetworkNode : MonoBehaviour
     /// A gene may have many neighbours.
     /// </summary>
     /// <param name="buddy"> The new neighbour </param>
-    public void AddNeighbour(NetworkNode buddy)
+    public void AddNeighbour(NetworkNode buddy, float pcor)
     {
         // add this connection both ways
         neighbours.Add(buddy);
         buddy.neighbours.Add(this);
+
+        NetworkGenerator networkGenerator = referenceManager.networkGenerator;
+        Material[] LineMaterials = networkGenerator.LineMaterials;
+        GameObject edge = Instantiate(edgePrefab);
+        LineRenderer renderer = edge.GetComponent<LineRenderer>();
+        edge.transform.parent = transform.parent;
+        edge.transform.localPosition = Vector3.zero;
+        edge.transform.rotation = Quaternion.identity;
+        edge.transform.localScale = Vector3.one;
+        // renderer.sharedMaterial = networkGenerator.LineMaterials[UnityEngine.Random.Range(0, LineMaterials.Length)];
+        renderer.startWidth = renderer.endWidth = CellexalConfig.NetworkLineSmallWidth;
+        renderer.enabled = false;
+        var newEdge = new Tuple<NetworkNode, NetworkNode, LineRenderer, float>(this, buddy, renderer, pcor);
+        edges.Add(newEdge);
+        //edgeColors.Add(renderer.material.color);
+        buddy.edges.Add(newEdge);
+        //buddy.edgeColors.Add(renderer.material.color);
+
     }
 
     /// <summary>
@@ -121,10 +146,11 @@ public class NetworkNode : MonoBehaviour
     {
         GetComponent<Renderer>().sharedMaterial = highlightMaterial;
         transform.localScale = largerScale;
-        foreach (LineRenderer r in connections)
+        foreach (var tuple in edges)
         {
-            r.material.color = Color.white;
-            r.startWidth = r.endWidth = CellexalConfig.NetworkLineSmallWidth * 3;
+            var line = tuple.Item3;
+            line.material.color = Color.white;
+            line.startWidth = line.endWidth = CellexalConfig.NetworkLineSmallWidth * 3;
         }
     }
 
@@ -135,10 +161,11 @@ public class NetworkNode : MonoBehaviour
     {
         GetComponent<Renderer>().sharedMaterial = standardMaterial;
         transform.localScale = normalScale;
-        for (int i = 0; i < connections.Count; ++i)
+        for (int i = 0; i < edges.Count; ++i)
         {
-            connections[i].material.color = connectionColors[i];
-            connections[i].startWidth = connections[i].endWidth = CellexalConfig.NetworkLineSmallWidth;
+            var line = edges[i].Item3;
+            line.material.color = edgeColors[i];
+            line.startWidth = line.endWidth = CellexalConfig.NetworkLineSmallWidth;
         }
     }
 
@@ -161,37 +188,35 @@ public class NetworkNode : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Adds one edge for each buddy if there is not one already.
-    /// </summary>
-    public void AddEdges()
+    public void RepositionEdges()
     {
-        if (!edgesAdded)
+        for (int i = 0; i < edges.Count; ++i)
         {
-            NetworkGenerator networkGenerator = referenceManager.networkGenerator;
-            Material[] LineMaterials = networkGenerator.LineMaterials;
-            edgesAdded = true;
-            foreach (NetworkNode buddy in neighbours)
-            {
-                if (!buddy.edgesAdded)
-                {
-                    GameObject edge = Instantiate(edgePrefab);
-                    LineRenderer renderer = edge.GetComponent<LineRenderer>();
-                    edge.transform.parent = transform.parent;
-                    edge.transform.localPosition = Vector3.zero;
-                    edge.transform.rotation = Quaternion.identity;
-                    edge.transform.localScale = Vector3.one;
-                    renderer.SetPositions(new Vector3[] { transform.localPosition, buddy.transform.localPosition });
-                    // The colors are just random, they mean nothing. But they look pretty.
-                    renderer.sharedMaterial = networkGenerator.LineMaterials[Random.Range(0, LineMaterials.Length)];
-                    renderer.startWidth = renderer.endWidth = CellexalConfig.NetworkLineSmallWidth;
-                    connections.Add(renderer);
-                    connectionColors.Add(renderer.material.color);
-                    buddy.connections.Add(renderer);
-                    buddy.connectionColors.Add(renderer.material.color);
-                }
-            }
+            edges[i].Item3.SetPositions(new Vector3[] { edges[i].Item1.transform.localPosition, edges[i].Item2.transform.localPosition });
         }
     }
 
+    public void ColorEdges(float minNegPcor, float maxNegPcor, float minPosPcor, float maxPosPcor)
+    {
+        var colors = referenceManager.graphManager.GeneExpressionMaterials;
+        foreach (var edge in edges)
+        {
+            edge.Item3.enabled = true;
+            float pcor = edge.Item4;
+            if (pcor < 0f)
+            {
+                pcor -= maxNegPcor;
+                int colorIndex = (int)(((minNegPcor - maxNegPcor - pcor) / (minNegPcor - maxNegPcor)) * 15f);
+                edge.Item3.material.color = colors[colorIndex].color;
+                edgeColors.Add(colors[colorIndex].color);
+            }
+            else
+            {
+                pcor -= minPosPcor;
+                int colorIndex = (int)((pcor / (maxPosPcor - minPosPcor)) * 15f) + 14;
+                edge.Item3.material.color = colors[colorIndex].color;
+                edgeColors.Add(colors[colorIndex].color);
+            }
+        }
+    }
 }

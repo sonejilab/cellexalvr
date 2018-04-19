@@ -212,7 +212,7 @@ public class Graph : MonoBehaviour
 
         Vector3[] vertices = new Vector3[points.Count];
         List<int> triangles = new List<int>();
-
+        CellexalLog.Log("Started reading " + path);
         for (int i = 0; i < points.Count; ++i)
         {
             vertices[i] = pointsPositions[i];
@@ -221,13 +221,13 @@ public class Graph : MonoBehaviour
         while (!streamReader.EndOfStream)
         {
 
-            string[] coords = streamReader.ReadLine().Split(null);
-            if (coords.Length < 4)
+            string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+            if (coords.Length != 3)
                 continue;
             // subtract 1 because R is 1-indexed
+            triangles.Add(int.Parse(coords[0]) - 1);
             triangles.Add(int.Parse(coords[1]) - 1);
             triangles.Add(int.Parse(coords[2]) - 1);
-            triangles.Add(int.Parse(coords[3]) - 1);
         }
 
         streamReader.Close();
@@ -255,6 +255,7 @@ public class Graph : MonoBehaviour
         convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();
+        CellexalLog.Log("Created convex hull with " + vertices.Count() + " vertices");
         return convexHull.gameObject;
     }
 

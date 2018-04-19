@@ -77,10 +77,10 @@ AttributeColors ={ #FF0000
 NetworkLineSmallWidth = 0.001
 
 # The scale the lines between genes within networks get when they are enlarged and popped out of a graph skeleton.
-NetworkLineLargeWidth = 0.01
+NetworkLineLargeWidth = 0.03
 
 # The number of color hue values used drawing the the lines between genes within networks.
-# The total number of materials created is n*(n/6)^2
+# The total number of materials created is n*(n/6)^2 rounded one way or the other if n is not divisible by 6
 NumberOfNetworkLineColors = 12
 
 # The number of colors that the heatmap should use
