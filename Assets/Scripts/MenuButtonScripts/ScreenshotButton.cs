@@ -13,30 +13,21 @@ public class ScreenshotButton : CellexalButton
         get { return "Take Snapshots"; }
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (canvas.activeSelf)
         {
-            if (canvas.activeSelf)
-            {
-                canvas.SetActive(false);
-                spriteRenderer.sprite = standardTexture;
-                camera.gameObject.SetActive(false);
-            }
-            else
-            {
-                canvas.SetActive(true);
-                spriteRenderer.sprite = deactivatedTexture;
-                camera.gameObject.SetActive(true);
-            }
-
-            camera.gameObject.GetComponent<CaptureScreenshot>().enabled = !camera.gameObject.GetComponent<CaptureScreenshot>().enabled;
+            canvas.SetActive(false);
+            spriteRenderer.sprite = standardTexture;
+            camera.gameObject.SetActive(false);
         }
+        else
+        {
+            canvas.SetActive(true);
+            spriteRenderer.sprite = deactivatedTexture;
+            camera.gameObject.SetActive(true);
+        }
+
+        camera.gameObject.GetComponent<CaptureScreenshot>().enabled = !camera.gameObject.GetComponent<CaptureScreenshot>().enabled;
     }
-
-
-
-
 }

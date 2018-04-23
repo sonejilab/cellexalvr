@@ -27,22 +27,17 @@ public class ColorByGeneMenuButton : CellexalButton
         colorByGeneMenu.SetMenuVisible(false);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-            descriptionText.text = "";
-            colorByGeneMenu.SetMenuVisible(true);
+        spriteRenderer.sprite = standardTexture;
+        controllerInside = false;
+        descriptionText.text = "";
+        colorByGeneMenu.SetMenuVisible(true);
 
-            foreach (StationaryButton b in buttons.GetComponentsInChildren<StationaryButton>())
-            {
-                b.SetButtonActivated(false);
-            }
-            textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        foreach (StationaryButton b in buttons.GetComponentsInChildren<StationaryButton>())
+        {
+            b.SetButtonActivated(false);
         }
+        textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
     }
 }

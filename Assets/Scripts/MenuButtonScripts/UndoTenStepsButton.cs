@@ -30,16 +30,11 @@ public class UndoTenStepsButton : CellexalButton
         selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        for (int i = 0; i < 10; i++)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                selectionToolHandler.GoBackOneStepInHistory();
-            }
+            selectionToolHandler.GoBackOneStepInHistory();
         }
     }
 

@@ -20,20 +20,9 @@ public class SaveButton : CellexalButton
         get { return "Save Session"; }
     }
 
-
-    // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            Debug.Log("Do Save");
-            saveScene.Save();
-            elapsedTime = 0.0f;
-            standardTexture = gray;
-            changeSprite = true;
-        }
+        base.Update();
         if (changeSprite)
         {
             if (elapsedTime < time)
@@ -46,6 +35,16 @@ public class SaveButton : CellexalButton
                 changeSprite = false;
             }
         }
+    }
+
+    // Update is called once per frame
+    protected override void Click()
+    {
+        Debug.Log("Do Save");
+        saveScene.Save();
+        elapsedTime = 0.0f;
+        standardTexture = gray;
+        changeSprite = true;
     }
     /*
 	void ChangeSprite() 

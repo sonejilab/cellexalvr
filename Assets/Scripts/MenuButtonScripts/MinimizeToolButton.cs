@@ -21,24 +21,19 @@ class MinimizeToolButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    private void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
         bool deleteToolActived = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Minimizer;
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (deleteToolActived)
         {
-            if (deleteToolActived)
-            {
-                controllerModelSwitcher.TurnOffActiveTool(true);
-                spriteRenderer.sprite = standardTexture;
-            }
-            else
-            {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Minimizer;
-                controllerModelSwitcher.ActivateDesiredTool();
-                spriteRenderer.sprite = deactivatedTexture;
-            }
+            controllerModelSwitcher.TurnOffActiveTool(true);
+            spriteRenderer.sprite = standardTexture;
+        }
+        else
+        {
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Minimizer;
+            controllerModelSwitcher.ActivateDesiredTool();
+            spriteRenderer.sprite = deactivatedTexture;
         }
     }
 

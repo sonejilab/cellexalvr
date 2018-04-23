@@ -22,24 +22,20 @@ public class FilterButton : CellexalButton
         filterMenu = referenceManager.filterMenu;
     }
 
-    private void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (!filterActivated)
         {
-            if (!filterActivated)
-            {
-                filterMenu.DeactivateAllOtherFilters(this);
-                filter.Load();
-                filterActivated = true;
-                text.color = Color.green;
-            }
-            else
-            {
-                filter.Unload();
-                filterActivated = false;
-                text.color = Color.white;
-            }
+            filterMenu.DeactivateAllOtherFilters(this);
+            filter.Load();
+            filterActivated = true;
+            text.color = Color.green;
+        }
+        else
+        {
+            filter.Unload();
+            filterActivated = false;
+            text.color = Color.white;
         }
     }
 

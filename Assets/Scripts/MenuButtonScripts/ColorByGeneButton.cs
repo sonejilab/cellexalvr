@@ -21,13 +21,9 @@ public class ColorByGeneButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    private void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            cellManager.ColorGraphsByGene(gene, referenceManager.graphManager.GeneExpressionColoringMethod, false);
-        }
+        cellManager.ColorGraphsByGene(gene, referenceManager.graphManager.GeneExpressionColoringMethod, false);
     }
 
     /// <summary>

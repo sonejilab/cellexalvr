@@ -24,18 +24,14 @@ public class ConfirmSelectionButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            selectionToolHandler.SetSelectionToolEnabled(false);
-            selectionToolHandler.ConfirmSelection();
-            referenceManager.gameManager.InformConfirmSelection();
-            controllerModelSwitcher.TurnOffActiveTool(true);
-            // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
-            //ctrlMdlSwitcher.TurnOffActiveTool();
-        }
+        selectionToolHandler.SetSelectionToolEnabled(false);
+        selectionToolHandler.ConfirmSelection();
+        referenceManager.gameManager.InformConfirmSelection();
+        controllerModelSwitcher.TurnOffActiveTool(true);
+        // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
+        //ctrlMdlSwitcher.TurnOffActiveTool();
     }
 
     private void TurnOn()

@@ -22,18 +22,14 @@ public class AttributeMenuButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-            descriptionText.text = "";
-            attributeMenu.SetActive(true);
-            buttons.SetActive(false);
-        }
+        spriteRenderer.sprite = standardTexture;
+        controllerInside = false;
+        descriptionText.text = "";
+        attributeMenu.SetActive(true);
+        buttons.SetActive(false);
+
     }
 
     private void TurnOn()

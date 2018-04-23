@@ -23,14 +23,10 @@ public class ColorByAttributeButton : CellexalButton
         CellexalEvents.GraphsReset.AddListener(ResetVars);
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            cellManager.ColorByAttribute(attribute, !colored);
-            colored = !colored;
-        }
+        cellManager.ColorByAttribute(attribute, !colored);
+        colored = !colored;
     }
 
     /// <summary>

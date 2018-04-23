@@ -26,21 +26,17 @@ public class FlashGenesCategoryButton : CellexalButton
         descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
     }
 
-    protected void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && buttonActive)
+        CategoryActivated = !CategoryActivated;
+        cellManager.FlashGenesCategoryFilter[Category] = CategoryActivated;
+        if (CategoryActivated)
         {
-            CategoryActivated = !CategoryActivated;
-            cellManager.FlashGenesCategoryFilter[Category] = CategoryActivated;
-            if (CategoryActivated)
-            {
-                descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
-            }
-            else
-            {
-                descriptionOnButton.GetComponent<Renderer>().material.color = Color.red;
-            }
+            descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
+        }
+        else
+        {
+            descriptionOnButton.GetComponent<Renderer>().material.color = Color.red;
         }
     }
 

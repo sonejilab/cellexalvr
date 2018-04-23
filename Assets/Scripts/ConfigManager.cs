@@ -11,15 +11,13 @@ public static class CellexalConfig
     public static string RscriptexePath { get; set; }
     public static int GraphLoadingCellsPerFrameStartCount { get; set; }
     public static int GraphLoadingCellsPerFrameIncrement { get; set; }
+    public static float GraphGrabbableCollidersExtensionThresehold { get; set; }
     public static Color[] SelectionToolColors { get; set; }
     public static int NumberOfExpressionColors { get; set; }
     public static Color LowExpressionColor { get; set; }
     public static Color MidExpressionColor { get; set; }
     public static Color HighExpressionColor { get; set; }
     public static Color[] AttributeColors { get; set; }
-    public static float NetworkLineSmallWidth { get; set; }
-    public static float NetworkLineLargeWidth { get; set; }
-    public static int NumberOfNetworkLineColors { get; set; }
     public static int NumberOfHeatmapColors { get; set; }
     public static Color HeatmapLowExpressionColor { get; set; }
     public static Color HeatmapMidExpressionColor { get; set; }
@@ -27,7 +25,14 @@ public static class CellexalConfig
     public static Color HeatmapHighlightMarkerColor { get; set; }
     public static Color HeatmapConfirmMarkerColor { get; set; }
     public static int HeatmapNumberOfGenes { get; set; }
-    public static float GraphGrabbableCollidersExtensionThresehold { get; set; }
+    public static float NetworkLineSmallWidth { get; set; }
+    public static float NetworkLineLargeWidth { get; set; }
+    public static int NetworkLineColoringMethod { get; set; }
+    public static int NumberOfNetworkLineColors { get; set; }
+    public static Color NetworkLineColorPositiveHigh { get; set; }
+    public static Color NetworkLineColorPositiveLow { get; set; }
+    public static Color NetworkLineColorNegativeLow { get; set; }
+    public static Color NetworkLineColorNegativeHigh { get; set; }
 }
 
 /// <summary>
@@ -218,6 +223,21 @@ public class ConfigManager : MonoBehaviour
                     break;
                 case "NetworkLineLargeWidth":
                     CellexalConfig.NetworkLineLargeWidth = float.Parse(value);
+                    break;
+                case "NetworkLineColoringMethod":
+                    CellexalConfig.NetworkLineColoringMethod = int.Parse(value);
+                    break;
+                case "NetworkLineColorPositiveHigh":
+                    CellexalConfig.NetworkLineColorPositiveHigh = ReadColor(value, lineNbr);
+                    break;
+                case "NetworkLineColorPositiveLow":
+                    CellexalConfig.NetworkLineColorPositiveLow = ReadColor(value, lineNbr);
+                    break;
+                case "NetworkLineColorNegativeLow":
+                    CellexalConfig.NetworkLineColorNegativeLow = ReadColor(value, lineNbr);
+                    break;
+                case "NetworkLineColorNegativeHigh":
+                    CellexalConfig.NetworkLineColorNegativeHigh = ReadColor(value, lineNbr);
                     break;
                 case "NumberOfNetworkLineColors":
                     CellexalConfig.NumberOfNetworkLineColors = int.Parse(value);

@@ -16,13 +16,8 @@ class SaveHeatmapButton : CellexalButton
         base.Awake();
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            gameObject.GetComponentInParent<Heatmap>().SaveImage();
-        }
+        gameObject.GetComponentInParent<Heatmap>().SaveImage();
     }
 }

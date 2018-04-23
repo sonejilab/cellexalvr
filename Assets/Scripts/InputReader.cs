@@ -234,8 +234,8 @@ public class InputReader : MonoBehaviour
                 }
                 //mdsFileStream.Close();
                 mdsStreamReader.Close();
-               // if (debug)
-               //     newGraph.CreateConvexHull();
+                // if (debug)
+                //     newGraph.CreateConvexHull();
             }
             CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
@@ -594,7 +594,10 @@ public class InputReader : MonoBehaviour
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {
-                r.material.color = color;
+                if (r.gameObject.GetComponent<CellexalButton>() == null)
+                {
+                    r.material.color = color;
+                }
             }
             networks[words[3]] = network;
         }
@@ -694,6 +697,11 @@ public class InputReader : MonoBehaviour
         foreach (var node in nodes.Values)
         {
             node.ColorEdges(minNegPcor, maxNegPcor, minPosPcor, maxPosPcor);
+        }
+        yield return null;
+        foreach (var network in networks.Values)
+        {
+            network.SaveNetworkAsImage();
         }
         // give all nodes in the networks edges
         networkHandler.CreateArcs(ref keyPairs, ref nodes);

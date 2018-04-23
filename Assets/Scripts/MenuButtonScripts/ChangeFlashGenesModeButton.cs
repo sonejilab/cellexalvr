@@ -19,15 +19,11 @@ class ChangeFlashGenesModeButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            //infoCanv.SetActive(true);
-            cellManager.CurrentFlashGenesMode = switchToMode;
-            stop.SetButtonActivated(true);
-            //stop.spriteRenderer.sprite = stop.standardTexture;
-        }
+        //infoCanv.SetActive(true);
+        cellManager.CurrentFlashGenesMode = switchToMode;
+        stop.SetButtonActivated(true);
+        //stop.spriteRenderer.sprite = stop.standardTexture;
     }
 }

@@ -13,37 +13,33 @@ public class StartMenuButton : CellexalButton
 
 
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            sceneLoader.LoadScene("SceneLoaderTest");
-        }
+        sceneLoader.LoadScene("SceneLoaderTest");
     }
-    /*
-	void Start()
-	{
-		device = SteamVR_Controller.Input((int)rightController.index);
-		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-	}
-	void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.tag == "Controller")
-		{
-			descriptionText.text = "Back to Start Menu";
-			controllerInside = true;
-		}
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		if (other.gameObject.tag == "Controller")
-		{
-			descriptionText.text = "";
-			controllerInside = false;
-		}
-	}*/
-
 }
+/*
+void Start()
+{
+    device = SteamVR_Controller.Input((int)rightController.index);
+    spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+}
+void OnTriggerEnter(Collider other)
+{
+    if (other.gameObject.tag == "Controller")
+    {
+        descriptionText.text = "Back to Start Menu";
+        controllerInside = true;
+    }
+}
+
+void OnTriggerExit(Collider other)
+{
+    if (other.gameObject.tag == "Controller")
+    {
+        descriptionText.text = "";
+        controllerInside = false;
+    }
+}*/
+
+

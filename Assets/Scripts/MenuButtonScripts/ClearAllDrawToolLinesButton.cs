@@ -15,15 +15,11 @@ public class ClearAllDrawToolLinesButton : CellexalButton
         drawTool = referenceManager.drawTool;
     }
 
-    private void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            drawTool.SkipNextDraw();
-            drawTool.ClearAllLines();
-        }
+        drawTool.SkipNextDraw();
+        drawTool.ClearAllLines();
+
     }
 }
 

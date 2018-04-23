@@ -13,12 +13,8 @@ class FlashGenesMenuButton : CellexalButton
     public GameObject menu;
 
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            menu.SetActive(true);
-        }
+        menu.SetActive(true);
     }
 }

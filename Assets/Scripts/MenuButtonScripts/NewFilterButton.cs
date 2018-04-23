@@ -17,12 +17,8 @@ public class NewFilterButton : CellexalButton
         filterMenu = referenceManager.filterMenu;
     }
 
-    private void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-        }
     }
 }
 

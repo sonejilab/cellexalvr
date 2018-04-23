@@ -17,25 +17,20 @@ public class DrawToolButton : CellexalButton
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
-    private void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        bool toolEnabled = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.DrawTool;
+        if (toolEnabled)
         {
-            bool toolEnabled = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.DrawTool;
-            if (toolEnabled)
-            {
-                controllerModelSwitcher.TurnOffActiveTool(true);
-            }
-            else
-            {
+            controllerModelSwitcher.TurnOffActiveTool(true);
+        }
+        else
+        {
 
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DrawTool;
-                controllerModelSwitcher.ActivateDesiredTool();
-                // Tell the draw tool to skip its next draw because we used the trigger to press the button
-                //drawTool.SkipNextDraw();
-            }
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DrawTool;
+            controllerModelSwitcher.ActivateDesiredTool();
+            // Tell the draw tool to skip its next draw because we used the trigger to press the button
+            //drawTool.SkipNextDraw();
         }
     }
 }

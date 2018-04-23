@@ -24,19 +24,15 @@ public class SubMenuButton : CellexalButton
 
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
         {
-            foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
-            {
-                DeactivateButtonsRecursive(buttonsToDeactivate);
-            }
-            textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
-            SetMenuActivated(true);
-            descriptionText.text = "";
+            DeactivateButtonsRecursive(buttonsToDeactivate);
         }
+        textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        SetMenuActivated(true);
+        descriptionText.text = "";
     }
 
     private void DeactivateButtonsRecursive(GameObject buttonsToDeactivate)

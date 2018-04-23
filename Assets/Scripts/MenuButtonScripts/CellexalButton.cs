@@ -42,6 +42,7 @@ public abstract class CellexalButton : MonoBehaviour
     public bool buttonActivated = true;
     public bool controllerInside = false;
 
+
     protected virtual void Awake()
     {
         if (referenceManager == null)
@@ -53,6 +54,18 @@ public abstract class CellexalButton : MonoBehaviour
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
     }
+
+    protected virtual void Update()
+    {
+        if (!buttonActivated) return;
+        device = SteamVR_Controller.Input((int)rightController.index);
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            Click();
+        }
+    }
+
+    protected abstract void Click();
 
     public virtual void SetButtonActivated(bool activate)
     {

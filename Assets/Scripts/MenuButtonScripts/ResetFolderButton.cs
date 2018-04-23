@@ -30,27 +30,22 @@ public class ResetFolderButton : CellexalButton
         heatmapGenerator = referenceManager.heatmapGenerator;
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        //var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
+        //sceneLoader.doLoad = false;
+        graphManager.DeleteGraphsAndNetworks();
+        heatmapGenerator.DeleteHeatmaps();
+        previousSearchesList.ClearList();
+        // must reset loader before generating new folders
+        loader.ResetLoaderBooleans();
+        inputFolderGenerator.GenerateFolders();
+        inputFolderList.gameObject.SetActive(true);
+        CellexalEvents.GraphsUnloaded.Invoke();
+        if (loader.loaderMovedDown)
         {
-            //var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
-            //sceneLoader.doLoad = false;
-            graphManager.DeleteGraphsAndNetworks();
-            heatmapGenerator.DeleteHeatmaps();
-            previousSearchesList.ClearList();
-            // must reset loader before generating new folders
-            loader.ResetLoaderBooleans();
-            inputFolderGenerator.GenerateFolders();
-            inputFolderList.gameObject.SetActive(true);
-            CellexalEvents.GraphsUnloaded.Invoke();
-            if (loader.loaderMovedDown)
-            {
-                loader.loaderMovedDown = false;
-                loader.MoveLoader(new Vector3(0f, 2f, 0f), 2f);
-            }
+            loader.loaderMovedDown = false;
+            loader.MoveLoader(new Vector3(0f, 2f, 0f), 2f);
         }
     }
 }

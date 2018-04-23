@@ -20,24 +20,20 @@ public class BurnHeatmapToolButton : CellexalButton
             return "Burn heatmaps tool";
         }
     }
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HeatmapDeleteTool)
         {
-            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HeatmapDeleteTool)
-            {
-                controllerModelSwitcher.TurnOffActiveTool(true);
-            }
-            else
-            {
-                //controllerModelSwitcher.TurnOffActiveTool();
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HeatmapDeleteTool;
-                controllerModelSwitcher.ActivateDesiredTool();
-            }
+            controllerModelSwitcher.TurnOffActiveTool(true);
+        }
+        else
+        {
+            //controllerModelSwitcher.TurnOffActiveTool();
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HeatmapDeleteTool;
+            controllerModelSwitcher.ActivateDesiredTool();
         }
     }
+
 
     private void TurnOn()
     {

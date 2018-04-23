@@ -35,7 +35,7 @@ public class CaptureScreenshot : MonoBehaviour
                     CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
                     Directory.CreateDirectory(directory);
                 }
-                ScreenCapture.CaptureScreenshot(directory + "\\Screenshot" + screenshotCounter + ".png");
+                ScreenCapture.CaptureScreenshot(directory + "\\Screenshot_" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png");
                 CellexalLog.Log("Screenshot taken!");
                 elapsedTime = 0.0f;
                 screenshotCounter++;

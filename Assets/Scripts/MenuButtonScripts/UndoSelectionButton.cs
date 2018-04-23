@@ -12,7 +12,7 @@ public class UndoSelectionButton : CellexalButton
 
     protected void Start()
     {
-        
+
         selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
         CellexalEvents.SelectionStarted.AddListener(TurnOn);
@@ -20,14 +20,10 @@ public class UndoSelectionButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            selectionToolHandler.CancelSelection();
-            SetButtonActivated(false);
-        }
+        selectionToolHandler.CancelSelection();
+        SetButtonActivated(false);
     }
 
     private void TurnOn()

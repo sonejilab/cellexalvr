@@ -155,42 +155,20 @@ public class GraphManager : MonoBehaviour
         Color mid = CellexalConfig.MidExpressionColor;
         Color high = CellexalConfig.HighExpressionColor;
 
-        int dividerLowMid = nColors / 2;
-        if (dividerLowMid == 0)
-            dividerLowMid = 1;
-        float lowMidDeltaR = (mid.r * mid.r - low.r * low.r) / dividerLowMid;
-        float lowMidDeltaG = (mid.g * mid.g - low.g * low.g) / dividerLowMid;
-        float lowMidDeltaB = (mid.b * mid.b - low.b * low.b) / dividerLowMid;
+        var colors = CellexalExtensions.Extensions.InterpolateColors(low, mid, nColors / 2);
 
-        int dividerMidHigh = nColors - dividerLowMid - 1;
-        if (dividerMidHigh == 0)
-            dividerMidHigh = 1;
-        float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
-        float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
-        float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
-        // from low to mid
         for (int i = 0; i < nColors / 2; ++i)
         {
-            float r = low.r * low.r + lowMidDeltaR * i;
-            float g = low.g * low.g + lowMidDeltaG * i;
-            float b = low.b * low.b + lowMidDeltaB * i;
-            if (r < 0) r = 0;
-            if (g < 0) g = 0;
-            if (b < 0) b = 0;
             GeneExpressionMaterials[i] = new Material(defaultGraphPointMaterial);
-            GeneExpressionMaterials[i].color = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
+            GeneExpressionMaterials[i].color = colors[i];
         }
-        // from mid to high
-        for (int i = nColors / 2, j = 1; i < nColors; ++i, ++j)
+
+        colors = CellexalExtensions.Extensions.InterpolateColors(mid, high, nColors - nColors / 2);
+
+        for (int i = nColors / 2, j = 0; i < nColors; ++i, ++j)
         {
-            float r = mid.r * mid.r + midHighDeltaR * j;
-            float g = mid.g * mid.g + midHighDeltaG * j;
-            float b = mid.b * mid.b + midHighDeltaB * j;
-            if (r < 0) r = 0;
-            if (g < 0) g = 0;
-            if (b < 0) b = 0;
             GeneExpressionMaterials[i] = new Material(defaultGraphPointMaterial);
-            GeneExpressionMaterials[i].color = new Color(Mathf.Sqrt(r), Mathf.Sqrt(g), Mathf.Sqrt(b));
+            GeneExpressionMaterials[i].color = colors[j];
         }
 
         // Generate materials used when coloring by attribute

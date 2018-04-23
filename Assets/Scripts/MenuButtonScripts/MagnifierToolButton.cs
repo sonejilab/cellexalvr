@@ -18,24 +18,19 @@ class MagnifierToolButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    private void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        bool magnifierToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Magnifier;
+        if (magnifierToolActivated)
         {
-            bool magnifierToolActivated = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Magnifier;
-            if (magnifierToolActivated)
-            {
-                controllerModelSwitcher.TurnOffActiveTool(true);
-                //controllerModelSwitcher.SwitchToDesiredModel();
-                //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
-            }
-            else
-            {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Magnifier;
-                controllerModelSwitcher.ActivateDesiredTool();
-            }
+            controllerModelSwitcher.TurnOffActiveTool(true);
+            //controllerModelSwitcher.SwitchToDesiredModel();
+            //controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+        }
+        else
+        {
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Magnifier;
+            controllerModelSwitcher.ActivateDesiredTool();
         }
     }
 

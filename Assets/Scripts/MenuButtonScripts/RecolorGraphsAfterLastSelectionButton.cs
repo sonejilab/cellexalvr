@@ -18,14 +18,9 @@ class RecolorGraphsAfterLastSelectionButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            graphManager.RecolorAllGraphsAfterSelection();
-        }
+        graphManager.RecolorAllGraphsAfterSelection();
     }
 
     private void TurnOn()

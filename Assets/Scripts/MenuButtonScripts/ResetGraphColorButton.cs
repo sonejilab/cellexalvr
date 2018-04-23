@@ -23,14 +23,9 @@ public class ResetGraphColorButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            graphManager.ResetGraphsColor();
-        }
+        graphManager.ResetGraphsColor();
     }
 
     private void OnGraphsLoaded()

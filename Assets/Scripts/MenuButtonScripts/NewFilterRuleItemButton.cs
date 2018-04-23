@@ -17,13 +17,8 @@ public class NewFilterRuleItemButton : CellexalButton
         keyboardOutput = referenceManager.keyboardOutput;
     }
 
-    private void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            keyboardOutput.SetNextTarget(KeyboardOutput.OutputType.FILTER_ITEM_NAME, newRule, textMesh);
-        }
+        keyboardOutput.SetNextTarget(KeyboardOutput.OutputType.FILTER_ITEM_NAME, newRule, textMesh);
     }
 }

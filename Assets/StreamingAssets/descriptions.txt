@@ -65,6 +65,7 @@ Attribute Menu Button:Shows the attribute menu. Pressing a button in the menu wi
 Index Menu Button:Show the menu to color by index. Pressing any button in this menu will color all cells based on their value of the index. I do not really know what any of that means.
 Lasers:Toggles laser pointers. The lasers can be used to press various buttons around you. The lasers will turn green when they are pointing at something that can be interacted with. The lasers can grab graphs, heatmaps and networks by pointing them at something and pressing the grip buttons.
 Close Menu Button:Close the open menu.
+
 # Arcs
 Toggle Arcs On Button:This button toggles all arcs on for the network(s) it is connected to. Use the green button to toggle all connected arcs on, and the red button to toggle them off. Buttons with a colored background toggle the arcs to the network with the same network. The buttons on the bottom toggle all arcs connected to all networks in the group, and toggle the combined arcs. The combined arcs show how many arcs there are between two networks in total.
 Toggle Arcs Off Button:This button toggles all arcs off for the network(s) it is connected to. Use the green button to toggle all connected arcs on, and the red button to toggle them off. Buttons with a colored background toggle the arcs to the network with the same network. The buttons on the bottom toggle all arcs connected to all networks in the group, and toggle the combined arcs. The combined arcs show how many arcs there are between two networks in total.
@@ -95,3 +96,9 @@ Query Top Genes Button T-Test:Press to perform a t-test on all genes. For this t
 Create new heatmap button:Press to create a new heatmap from a selection you made on the heatmap. To make a selection on the heatmap: activate the laser pointer tool on the menu and point the laser towards the heatmap. Press and hold down the trigger and move the laser pointer to select a part of the heatmap.
 Save Heatmap Button:Saves this heatmap to the disk. The image will be located where CellexalVR is installed in the Saved_Images folder. The current date and time will be appended to the file name.
 Recolour Heatmap Button:Press to color all graphs based on the selection this heatmap was created from. Cells that were not part of the selection this heatmap was created from will not be colored.
+
+#Names of buttons on the networks
+Switch To 2D button:Press to switch to a 2D layout.
+Switch to 3D button:Press to switch to a 3D layout.
+Recalculate 2D button:Press to force a recalculation of the 2D layout. The layouts are random by nature which makes means the new layout may look nothing like the previous one.
+Recalculate 3D button:Press to force a recalculation of the 3D layout. The layouts are random by nature which makes means the new layout may look nothing like the previous one.

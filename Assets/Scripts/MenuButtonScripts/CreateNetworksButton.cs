@@ -24,16 +24,12 @@ public class CreateNetworksButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            SetButtonActivated(false);
-            networkGenerator.GenerateNetworks();
-            gameManager.InformGenerateNetworks();
-            CellexalEvents.NetworkCreated.Invoke();
-        }
+        SetButtonActivated(false);
+        networkGenerator.GenerateNetworks();
+        gameManager.InformGenerateNetworks();
+        CellexalEvents.NetworkCreated.Invoke();
     }
 
     private void TurnOn()

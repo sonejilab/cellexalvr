@@ -20,31 +20,26 @@ public class HelpToolButton : CellexalButton
         helpTool = referenceManager.helpTool;
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        bool helpToolActivated = helpTool.gameObject.activeSelf;
+        if (helpToolActivated)
         {
-            bool helpToolActivated = helpTool.gameObject.activeSelf;
-            if (helpToolActivated)
-            {
-                if (referenceManager.keyboard.KeyboardActive)
-                    controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
-                else
-                    controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
-                controllerModelSwitcher.HelpToolShouldStayActivated = false;
-                // we can't use controllerModelSwitcher.TurnOffActiveTool(true); here because the tool can be
-                // changed while the actual helptool is still activated.
-                helpTool.SetToolActivated(false);
-
-            }
+            if (referenceManager.keyboard.KeyboardActive)
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
             else
-            {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
-                controllerModelSwitcher.HelpToolShouldStayActivated = true;
-                controllerModelSwitcher.ActivateDesiredTool();
-            }
+                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+            controllerModelSwitcher.HelpToolShouldStayActivated = false;
+            // we can't use controllerModelSwitcher.TurnOffActiveTool(true); here because the tool can be
+            // changed while the actual helptool is still activated.
+            helpTool.SetToolActivated(false);
+
+        }
+        else
+        {
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HelpTool;
+            controllerModelSwitcher.HelpToolShouldStayActivated = true;
+            controllerModelSwitcher.ActivateDesiredTool();
         }
     }
 }

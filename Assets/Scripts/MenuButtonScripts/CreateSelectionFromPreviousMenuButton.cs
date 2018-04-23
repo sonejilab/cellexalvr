@@ -22,17 +22,12 @@ class CreateSelectionFromPreviousMenuButton : CellexalButton
 
     }
 
-    private void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            buttons.SetActive(false);
-            menu.SetActive(true);
-            controllerInside = false;
+        buttons.SetActive(false);
+        menu.SetActive(true);
+        controllerInside = false;
 
-        }
     }
 
     private void TurnOn()

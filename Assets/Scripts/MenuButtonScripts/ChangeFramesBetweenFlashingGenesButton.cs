@@ -19,13 +19,9 @@ namespace Assets.Scripts.MenuButtonScripts
             cellManager = referenceManager.cellManager;
         }
 
-        void Update()
+        protected override void Click()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                cellManager.FramesBetweenEachFlash += change;
-            }
+            cellManager.FramesBetweenEachFlash += change;
         }
     }
 }

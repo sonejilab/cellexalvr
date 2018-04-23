@@ -16,14 +16,10 @@ public class ToggleArcsButton : CellexalButton
         get { return "Toggle all arcs connected to this network"; }
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            combinedNetworksButton.SetCombinedArcsVisible(false);
-            network.SetArcsVisible(toggleToState);
-        }
+        combinedNetworksButton.SetCombinedArcsVisible(false);
+        network.SetArcsVisible(toggleToState);
     }
 
     /// <summary>

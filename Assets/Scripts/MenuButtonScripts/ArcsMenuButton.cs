@@ -22,17 +22,13 @@ public class ArcsMenuButton : CellexalButton
         arcsMenu = referenceManager.arcsSubMenu.gameObject;
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-            arcsMenu.SetActive(true);
-            buttons.SetActive(false);
-        }
+        spriteRenderer.sprite = standardTexture;
+        controllerInside = false;
+        arcsMenu.SetActive(true);
+        buttons.SetActive(false);
     }
+
 }
 

@@ -54,45 +54,76 @@ public class NetworkGenerator : MonoBehaviour
     /// </summary>
     private void CreateLineMaterials()
     {
-        int numColors = CellexalConfig.NumberOfNetworkLineColors;
-        if (numColors < 1)
+        int coloringMethod = CellexalConfig.NetworkLineColoringMethod;
+        if (coloringMethod == 0)
         {
-            CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1");
-            numColors = 1;
-        }
-        List<Material> result = new List<Material>();
-        // Create a cuboid in a 3D color spectrum and choose the colors
-        // from the spectrum at (sort of) evenly distributed points in that cuboid.
-        float spaceBetween = 1f / numColors;
-        int sidex = numColors;
-        int sidey = numColors / 6;
-        int sidez = numColors / 6;
-        if (sidey < 1)
-        {
-            // if numcolors is too low the other for loops don't work because sidey = 0
-            for (int cubex = 0; cubex < sidex; ++cubex)
+            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            Color posHigh = CellexalConfig.NetworkLineColorPositiveHigh;
+            Color posLow = CellexalConfig.NetworkLineColorPositiveLow;
+            Color negLow = CellexalConfig.NetworkLineColorNegativeLow;
+            Color negHigh = CellexalConfig.NetworkLineColorNegativeHigh;
+
+            LineMaterials = new Material[numColors];
+
+            var colors = CellexalExtensions.Extensions.InterpolateColors(negHigh, negLow, numColors / 2);
+
+            for (int i = 0; i < numColors / 2; ++i)
             {
-                Material newMaterial = new Material(networkLineDefaultMaterial);
-                newMaterial.color = Color.HSVToRGB(1f - cubex * spaceBetween, 1f, 1f);
-                result.Add(newMaterial);
+                LineMaterials[i] = new Material(networkLineDefaultMaterial);
+                LineMaterials[i].color = colors[i];
+            }
+
+            colors = CellexalExtensions.Extensions.InterpolateColors(posLow, posHigh, numColors - numColors / 2);
+
+            for (int i = numColors / 2, j = 0; i < numColors; ++i, ++j)
+            {
+                LineMaterials[i] = new Material(networkLineDefaultMaterial);
+                LineMaterials[i].color = colors[j];
             }
         }
-        else
+        else if (coloringMethod == 1)
         {
-            for (int cubex = 0; cubex < sidex; ++cubex)
+            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            if (numColors < 1)
             {
-                for (int cubey = 0; cubey < sidey; ++cubey)
+                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1");
+                numColors = 1;
+            }
+            List<Material> result = new List<Material>();
+            // Create a cuboid in a 3D color spectrum and choose the colors
+            // from the spectrum at (sort of) evenly distributed points in that cuboid.
+            float spaceBetween = 1f / numColors;
+            int sidex = numColors;
+            int sidey = numColors / 6;
+            int sidez = numColors / 6;
+            if (sidey < 1)
+            {
+                // if numcolors is too low the other for loops don't work because sidey = 0
+                for (int cubex = 0; cubex < sidex; ++cubex)
                 {
-                    for (int cubez = 0; cubez < sidez; ++cubez)
+                    Material newMaterial = new Material(networkLineDefaultMaterial);
+                    newMaterial.color = Color.HSVToRGB(1f - cubex * spaceBetween, 1f, 1f);
+                    result.Add(newMaterial);
+                }
+            }
+            else
+            {
+                for (int cubex = 0; cubex < sidex; ++cubex)
+                {
+                    for (int cubey = 0; cubey < sidey; ++cubey)
                     {
-                        Material newMaterial = new Material(networkLineDefaultMaterial);
-                        newMaterial.color = Color.HSVToRGB(1f - cubex * spaceBetween, 1f - cubey * spaceBetween * 6, 1f - cubez * spaceBetween * 6);
-                        result.Add(newMaterial);
+                        for (int cubez = 0; cubez < sidez; ++cubez)
+                        {
+                            Material newMaterial = new Material(networkLineDefaultMaterial);
+                            newMaterial.color = Color.HSVToRGB(1f - cubex * spaceBetween, 1f - cubey * spaceBetween * 6, 1f - cubez * spaceBetween * 6);
+                            result.Add(newMaterial);
+                        }
                     }
                 }
             }
+            LineMaterials = result.ToArray();
         }
-        LineMaterials = result.ToArray();
+
     }
 
     /// <summary>

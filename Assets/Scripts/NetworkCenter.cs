@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using Color = UnityEngine.Color;
+using System.Drawing;
 using VRTK;
 using VRTK.GrabAttachMechanics;
 using VRTK.SecondaryControllerGrabActions;
+using System.IO;
+using System.Drawing.Imaging;
 
 /// <summary>
 /// Represents the center of a network. It handles the enlarging when it is pressed.
@@ -840,6 +844,82 @@ public class NetworkCenter : MonoBehaviour
             var colorIndex = (int)(Mathf.Floor(((float)(arc.nArcsCombined - 1) / max) * combinedArcsColors.Count));
             arc.renderer.startColor = combinedArcsColors[colorIndex];
             arc.renderer.endColor = combinedArcsColors[colorIndex];
+        }
+    }
+
+    public void SaveNetworkAsImage()
+    {
+        int bitmapWidth = 1024;
+        int bitmapHeight = 1024;
+        Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
+        var graphics = System.Drawing.Graphics.FromImage(bitmap);
+        var lineBrushes = new Dictionary<Color, Pen>(new ColorComparer());
+        var geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
+        Vector3 geneLocalPositionOffset = new Vector3(0.4f, 0.4f, 0f);
+
+        foreach (var entry in networkGenerator.LineMaterials)
+        {
+            Color unitycolor = entry.color;
+            lineBrushes[unitycolor] = new Pen(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)), 3f);
+        }
+
+        // draw a white background
+        graphics.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
+
+        foreach (var node in nodes)
+        {
+            foreach (var edge in node.edges)
+            {
+                var pos1 = edge.Item1.transform.localPosition.normalized;
+                var pos2 = edge.Item2.transform.localPosition.normalized;
+                var moveDir = (pos2 - pos1);
+                moveDir.z = 0;
+                moveDir.Normalize();
+                pos1 += moveDir * 0.01f;
+                pos2 -= moveDir * 0.01f;
+
+                pos1.x *= bitmapWidth;
+                pos2.x *= bitmapWidth;
+                pos1.y *= bitmapHeight;
+                pos2.y *= bitmapHeight;
+
+                //if (!lineBrushes.ContainsKey(edge.Item3.material.color))
+                //    print(edge.Item3.material.color.ToString());
+                graphics.DrawLine(lineBrushes[edge.Item3.material.color], pos1.x, pos1.y, pos2.x, pos2.y);
+
+            }
+        }
+
+        string networkImageDirectory = Directory.GetCurrentDirectory() + @"\Images";
+        if (!Directory.Exists(networkImageDirectory))
+        {
+            Directory.CreateDirectory(networkImageDirectory);
+        }
+
+        string networkFilePath = networkImageDirectory + "\\network_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+        bitmap.Save(networkFilePath, ImageFormat.Png);
+
+    }
+
+    private class ColorComparer : IEqualityComparer<Color>
+    {
+        public bool Equals(Color x, Color y)
+        {
+            int xr = Mathf.RoundToInt(x.r * 255);
+            int yr = Mathf.RoundToInt(y.r * 255);
+            int xg = Mathf.RoundToInt(x.g * 255);
+            int yg = Mathf.RoundToInt(y.g * 255);
+            int xb = Mathf.RoundToInt(x.b * 255);
+            int yb = Mathf.RoundToInt(y.b * 255);
+            return xr == yr && xg == yg && xb == yb;
+        }
+
+        public int GetHashCode(Color obj)
+        {
+            int r = Mathf.RoundToInt(obj.r * 255);
+            int g = Mathf.RoundToInt(obj.g * 255);
+            int b = Mathf.RoundToInt(obj.b * 255);
+            return r.GetHashCode() ^ g.GetHashCode() ^ b.GetHashCode();
         }
     }
 }

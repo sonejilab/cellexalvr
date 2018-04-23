@@ -25,18 +25,13 @@ public class IndexMenuButton : CellexalButton
         SetButtonActivated(false);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            spriteRenderer.sprite = standardTexture;
-            descriptionText.text = "";
-            controllerInside = false;
-            indexMenu.SetActive(true);
-            buttons.SetActive(false);
-        }
+        spriteRenderer.sprite = standardTexture;
+        descriptionText.text = "";
+        controllerInside = false;
+        indexMenu.SetActive(true);
+        buttons.SetActive(false);
     }
 
     private void TurnOn()

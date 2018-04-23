@@ -18,17 +18,13 @@ public class CloseAttributeMenuButton : CellexalButton
         buttons = referenceManager.leftButtons;
     }
 
-    void Update()
+
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-            attributeMenu.SetActive(false);
-            buttons.SetActive(true);
-        }
+        spriteRenderer.sprite = standardTexture;
+        controllerInside = false;
+        attributeMenu.SetActive(false);
+        buttons.SetActive(true);
     }
 }
 

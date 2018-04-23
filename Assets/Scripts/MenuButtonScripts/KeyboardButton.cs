@@ -31,23 +31,18 @@ public class KeyboardButton : CellexalButton
 
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        activateKeyboard = !keyboard.KeyboardActive;
+        keyboard.SetKeyboardVisible(activateKeyboard);
+        if (activateKeyboard)
         {
-            activateKeyboard = !keyboard.KeyboardActive;
-            keyboard.SetKeyboardVisible(activateKeyboard);
-            if (activateKeyboard)
-            {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
-                controllerModelSwitcher.ActivateDesiredTool();
-            }
-            else
-            {
-                controllerModelSwitcher.TurnOffActiveTool(true);
-            }
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
+            controllerModelSwitcher.ActivateDesiredTool();
+        }
+        else
+        {
+            controllerModelSwitcher.TurnOffActiveTool(true);
         }
     }
 

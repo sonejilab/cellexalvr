@@ -14,6 +14,9 @@
 # The filepath to Rscript.exe
 RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
 
+#################################
+# Graphs and selection
+
 # The number of lines that will be read between every frame from the .mds files when loading graphs
 # A higher number can make faster loading but potentially create a loss of frames when loading
 GraphLoadingCellsPerFrameStartCount = 200
@@ -21,6 +24,10 @@ GraphLoadingCellsPerFrameStartCount = 200
 # The number of lines that GraphLoadingCellsPerFrameStartCount will be incremented by if there was additional time left after the last frame or decremented by if there was not enough time left last frame
 # A higher number can make GraphLoadingCellsPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
 GraphLoadingCellsPerFrameIncrement = 25
+
+# The proportion of graphpoints that must be present in the new collider for it to be deemed to be worth extending.
+# A bigger number makes the graphs get fewer but larger colliders, that less resemble the graph's actual shape.
+GraphGrabbableCollidersExtensionThresehold = 0.05
 
 # The colors that is used by the selection tool
 SelectionColors ={ #FF0000
@@ -45,8 +52,10 @@ LowExpressionColor = #0000FF
 MidExpressionColor = #FFFF00
 HighExpressionColor = #FF0000
 
+#################################
+# Attributes
+
 # Colors used when coloring by attribute
-# There should probably be about 25 of these for most datasets i think, if there are more attribute then more colors have to be added.
 AttributeColors ={ #FF0000
                    #0000FF
                    #00FFFF
@@ -73,15 +82,37 @@ AttributeColors ={ #FF0000
                    #2A40AC
                    #6AAC2A }
 
+#################################
+# Networks
+
 # The scale of the lines between genes within networks when the networks are still small and on a graph skeleton.
 NetworkLineSmallWidth = 0.001
 
 # The scale the lines between genes within networks get when they are enlarged and popped out of a graph skeleton.
 NetworkLineLargeWidth = 0.03
 
+# The method of coloring that should be used when drawing the gene correlation networks. The options are:
+# 0: Use the four colors defined below: positive ... negative ...
+# 1: Random colors, the number of random colors is defined by NumberOfNetworkLineColors
+NetworkLineColoringMethod = 0
+
+# If NetworkLineColoringMethod is set to 0:
 # The number of color hue values used drawing the the lines between genes within networks.
 # The total number of materials created is n*(n/6)^2 rounded one way or the other if n is not divisible by 6
-NumberOfNetworkLineColors = 12
+# If NetworkLineColoringMethod is set to 1:
+# This is the total number of colors used when drawing the lines between genes within networks
+# Half of them will be used for the colors between NetworkLineColorPositiveHigh and NetworkLineColorPositiveLow, and the other half for the colors between NetworkLineColorNegativeLow and NetworkLineColorNegativeHigh.
+NumberOfNetworkLineColors = 30
+
+# If NetworkLineColoringMethod is set to 1:
+# The colors defining the networks' lines' colors.
+NetworkLineColorPositiveHigh = #FF0000
+NetworkLineColorPositiveLow = #FFFF00
+NetworkLineColorNegativeLow = #00FF00
+NetworkLineColorNegativeHigh = #0000FF
+
+#################################
+#Heatmaps
 
 # The number of colors that the heatmap should use
 NumberOfHeatmapColors = 30
@@ -92,7 +123,7 @@ HeatmapMidExpressionColor = #FFFF00
 HeatmapHighExpressionColor = #FF0000
 
 # If you change the colors above, the rectangles showing selections on the heatmap might become hard to see
-# These are 32 bit colors with the fourth byte being the alpha
+# These are 32 bit colors with the fourth byte being the transparency
 # The color used by the rectangle that show what you are pointing the laser at, and that show what you are selecting (before releasing the trigger)
 HeatmapHighlightMarkerColor = #FFFFFFC0
 # The color used by the rectangle that show what you have selected (after releasing the trigger)
@@ -100,7 +131,3 @@ HeatmapConfirmMarkerColor = #00FF37C0
 
 # The number of genes that should be displayed on the heatmap
 HeatmapNumberOfGenes = 250
-
-# The proportion of graphpoints that must be present in the new collider for it to be deemed to be worth extending.
-# A bigger number makes the graphs get fewer but larger colliders, that less resemble the graph's actual shape.
-GraphGrabbableCollidersExtensionThresehold = 0.05

@@ -18,16 +18,11 @@ class ClearLinesBetweenGraphPointsButton : CellexalButton
         CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            cellManager.ClearLinesBetweenGraphPoints();
-            CellexalEvents.LinesBetweenGraphsCleared.Invoke();
-            SetButtonActivated(false);
-        }
+        cellManager.ClearLinesBetweenGraphPoints();
+        CellexalEvents.LinesBetweenGraphsCleared.Invoke();
+        SetButtonActivated(false);
     }
 
     private void TurnOn()

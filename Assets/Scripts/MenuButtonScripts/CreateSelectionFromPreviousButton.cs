@@ -24,13 +24,9 @@ class CreateSelectionFromPreviousButton : CellexalButton
         rightController = referenceManager.rightController;
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionGroups, groupingColors);
-        }
+        referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionGroups, groupingColors);
     }
 
     /// <summary>

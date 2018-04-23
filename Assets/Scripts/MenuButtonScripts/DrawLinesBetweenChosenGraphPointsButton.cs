@@ -29,26 +29,25 @@ class DrawLinesBetweenChosenGraphPointsButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        var triggerPressed = device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger);
-        if (controllerInside && triggerPressed)
+        selecting = !selecting;
+        if (selecting)
         {
-            selecting = !selecting;
-            if (selecting)
-            {
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
-                controllerModelSwitcher.ActivateDesiredTool();
-            }
-            else
-            {
-                fromGraph = toGraph = null;
-                controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
-            }
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
+            controllerModelSwitcher.ActivateDesiredTool();
         }
-        if (selecting && triggerPressed)
+        else
+        {
+            fromGraph = toGraph = null;
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if (selecting && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             var raycastingSource = rightController.transform;
             var ray = new Ray(raycastingSource.position, raycastingSource.forward);

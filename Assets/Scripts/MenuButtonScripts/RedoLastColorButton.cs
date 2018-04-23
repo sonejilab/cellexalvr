@@ -25,14 +25,9 @@ public class RedoLastColorButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            selectionToolHandler.GoForwardOneColorInHistory();
-        }
+        selectionToolHandler.GoForwardOneColorInHistory();
     }
 
     private void TurnOff()

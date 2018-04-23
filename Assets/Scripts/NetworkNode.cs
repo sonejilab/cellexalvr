@@ -29,7 +29,7 @@ public class NetworkNode : MonoBehaviour
 
     private ReferenceManager referenceManager;
     public HashSet<NetworkNode> neighbours = new HashSet<NetworkNode>();
-    private List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
+    public List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
     private List<Color> edgeColors = new List<Color>();
     private Vector3 normalScale;
     private Vector3 largerScale;
@@ -198,22 +198,50 @@ public class NetworkNode : MonoBehaviour
 
     public void ColorEdges(float minNegPcor, float maxNegPcor, float minPosPcor, float maxPosPcor)
     {
-        var colors = referenceManager.graphManager.GeneExpressionMaterials;
-        foreach (var edge in edges)
+        var colors = referenceManager.networkGenerator.LineMaterials;
+        if (CellexalConfig.NetworkLineColoringMethod == 0)
         {
-            edge.Item3.enabled = true;
-            float pcor = edge.Item4;
-            if (pcor < 0f)
+            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            foreach (var edge in edges)
             {
-                pcor -= maxNegPcor;
-                int colorIndex = (int)(((minNegPcor - maxNegPcor - pcor) / (minNegPcor - maxNegPcor)) * 15f);
-                edge.Item3.material.color = colors[colorIndex].color;
-                edgeColors.Add(colors[colorIndex].color);
+                edge.Item3.enabled = true;
+                float pcor = edge.Item4;
+                if (pcor < 0f)
+                {
+                    int colorIndex;
+                    if (pcor == maxNegPcor)
+                    {
+                        colorIndex = 0;
+                    }
+                    else
+                    {
+                        colorIndex = (int)(((maxNegPcor - (pcor - maxNegPcor)) / (minNegPcor - maxNegPcor)) * (numColors / 2));
+                    }
+                    edge.Item3.material.color = colors[colorIndex].color;
+                    edgeColors.Add(colors[colorIndex].color);
+                }
+                else
+                {
+                    int colorIndex;
+                    if (pcor == maxPosPcor)
+                    {
+                        colorIndex = colors.Length - 1;
+                    }
+                    else
+                    {
+                        colorIndex = (int)(((pcor - minPosPcor) / (maxPosPcor - minPosPcor)) * (numColors / 2)) + (numColors / 2);
+                    }
+                    edge.Item3.material.color = colors[colorIndex].color;
+                    edgeColors.Add(colors[colorIndex].color);
+                }
             }
-            else
+        }
+        else if (CellexalConfig.NetworkLineColoringMethod == 1)
+        {
+            foreach (var edge in edges)
             {
-                pcor -= minPosPcor;
-                int colorIndex = (int)((pcor / (maxPosPcor - minPosPcor)) * 15f) + 14;
+                edge.Item3.enabled = true;
+                int colorIndex = UnityEngine.Random.Range(0, colors.Length);
                 edge.Item3.material.color = colors[colorIndex].color;
                 edgeColors.Add(colors[colorIndex].color);
             }

@@ -19,23 +19,17 @@ public class FarDispButton : CellexalButton
 
         //controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
-    // Use this for initialization
     void Start()
     {
 
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Click()
     {
-        if (!buttonActivated) return;
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            FarDisp.SetActive(!FarDisp.activeSelf);
-            status.ToggleStatusDisplay();
-
-        }
+        FarDisp.SetActive(!FarDisp.activeSelf);
+        status.ToggleStatusDisplay();
 
     }
+
 }
+

@@ -25,17 +25,13 @@ class StopButton : CellexalButton
 
 
     // Update is called once per frame
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            cellManager.CurrentFlashGenesMode = switchToMode;
-            random.spriteRenderer.sprite = random.deactivatedTexture;
-            shuffle.spriteRenderer.sprite = shuffle.deactivatedTexture;
-            ordered.spriteRenderer.sprite = ordered.deactivatedTexture;
-            spriteRenderer.sprite = deactivatedTexture;
-            //SetButtonActivated(false);
-        }
+        cellManager.CurrentFlashGenesMode = switchToMode;
+        random.spriteRenderer.sprite = random.deactivatedTexture;
+        shuffle.spriteRenderer.sprite = shuffle.deactivatedTexture;
+        ordered.spriteRenderer.sprite = ordered.deactivatedTexture;
+        spriteRenderer.sprite = deactivatedTexture;
+        //SetButtonActivated(false);
     }
 }

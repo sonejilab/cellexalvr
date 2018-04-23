@@ -20,13 +20,9 @@ public class ColorByIndexButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    void Update()
+    protected override void Click()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            cellManager.ColorByIndex(indexName);
-        }
+        cellManager.ColorByIndex(indexName);
     }
 
     /// <summary>
