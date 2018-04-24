@@ -852,36 +852,105 @@ public class NetworkCenter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Saves this network as a text file
+    /// </summary>
+    public void SaveNetworkAsTextFile()
+    {
+
+        if (nodes.Count == 0)
+            return;
+
+        string directoryPath = CellexalUser.UserSpecificFolder;
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+            CellexalLog.Log("Created directory " + directoryPath);
+        }
+
+        var stream = File.Create(directoryPath + "\\" + NetworkCenterName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt");
+        var streamWriter = new StreamWriter(stream);
+
+        Dictionary<Tuple<NetworkNode, NetworkNode>, float> included = new Dictionary<Tuple<NetworkNode, NetworkNode>, float>(new TupleComparer());
+        var nodeLocalPositionOffset = new Vector3(0.4f, 0.4f, 0f);
+
+        // write the number of nodes
+        streamWriter.WriteLine(nodes.Count);
+        // write all the nodes and their positions
+        foreach (var node in nodes)
+        {
+            var pos = node.transform.localPosition;
+            pos += nodeLocalPositionOffset;
+            streamWriter.WriteLine(node.Label + "\t" + pos.x + "\t" + pos.y);
+        }
+
+        // count and store the number of edges
+        foreach (var node in nodes)
+        {
+            foreach (var edge in node.edges)
+            {
+                var pair = new Tuple<NetworkNode, NetworkNode>(edge.Item1, edge.Item2);
+                if (included.ContainsKey(pair))
+                {
+                    continue;
+                }
+                included[pair] = edge.Item4;
+
+            }
+        }
+        // write the number of edges
+        streamWriter.WriteLine(included.Count);
+        // write the edges and their pcor
+        foreach (var edge in included)
+        {
+            streamWriter.WriteLine(edge.Key.Item1.Label + "\t" + edge.Key.Item2.Label + "\t" + edge.Value);
+        }
+
+        streamWriter.Close();
+        stream.Close();
+    }
+
+    /// <summary>
+    /// Saves this network as an .png image
+    /// </summary>
     public void SaveNetworkAsImage()
     {
+        if (nodes.Count == 0)
+            return;
+
         int bitmapWidth = 1024;
         int bitmapHeight = 1024;
         Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
         var graphics = System.Drawing.Graphics.FromImage(bitmap);
         var lineBrushes = new Dictionary<Color, Pen>(new ColorComparer());
         var geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
-        Vector3 geneLocalPositionOffset = new Vector3(0.4f, 0.4f, 0f);
+        Vector3 geneLocalPositionOffset = new Vector3(0.5f, 0.5f, 0f);
 
         foreach (var entry in networkGenerator.LineMaterials)
         {
             Color unitycolor = entry.color;
             lineBrushes[unitycolor] = new Pen(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)), 3f);
         }
+        var thickerBlackBrush = new Pen(System.Drawing.Color.Black, 5f);
+        var textFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
         // draw a white background
         graphics.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
 
+        // draw the edges
         foreach (var node in nodes)
         {
             foreach (var edge in node.edges)
             {
-                var pos1 = edge.Item1.transform.localPosition.normalized;
-                var pos2 = edge.Item2.transform.localPosition.normalized;
-                var moveDir = (pos2 - pos1);
-                moveDir.z = 0;
-                moveDir.Normalize();
-                pos1 += moveDir * 0.01f;
-                pos2 -= moveDir * 0.01f;
+                // The positions are generally between -0.4 and 0.4
+
+                var pos1 = (edge.Item1.transform.localPosition + geneLocalPositionOffset);
+                var pos2 = (edge.Item2.transform.localPosition + geneLocalPositionOffset);
+                //var moveDir = (pos2 - pos1);
+                //moveDir.z = 0;
+                //moveDir.Normalize();
+                //pos1 += moveDir * 0.005f;
+                //pos2 -= moveDir * 0.005f;
 
                 pos1.x *= bitmapWidth;
                 pos2.x *= bitmapWidth;
@@ -890,22 +959,45 @@ public class NetworkCenter : MonoBehaviour
 
                 //if (!lineBrushes.ContainsKey(edge.Item3.material.color))
                 //    print(edge.Item3.material.color.ToString());
+                graphics.DrawLine(thickerBlackBrush, pos1.x, pos1.y, pos2.x, pos2.y);
                 graphics.DrawLine(lineBrushes[edge.Item3.material.color], pos1.x, pos1.y, pos2.x, pos2.y);
 
             }
         }
+        foreach (var node in nodes)
+        {
+            var bitmapPosition = node.transform.localPosition + geneLocalPositionOffset;
+            bitmapPosition.x *= bitmapWidth;
+            bitmapPosition.y *= bitmapHeight;
+            graphics.FillEllipse(Brushes.Black, bitmapPosition.x - 5f, bitmapPosition.y - 5f, 10f, 10f);
+        }
+        // draw the gene names
+        foreach (var node in nodes)
+        {
+            string nodeName = node.Label;
+            var bitmapPosition = node.transform.localPosition + geneLocalPositionOffset;
+            bitmapPosition.x *= bitmapWidth;
+            bitmapPosition.y *= bitmapHeight;
+            graphics.DrawString(nodeName, textFont, SystemBrushes.MenuText, bitmapPosition.x, bitmapPosition.y + 5f);
+        }
 
-        string networkImageDirectory = Directory.GetCurrentDirectory() + @"\Images";
+        string networkImageDirectory = CellexalUser.UserSpecificFolder;
         if (!Directory.Exists(networkImageDirectory))
         {
             Directory.CreateDirectory(networkImageDirectory);
+            CellexalLog.Log("Created directory " + networkImageDirectory);
         }
 
-        string networkFilePath = networkImageDirectory + "\\network_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
-        bitmap.Save(networkFilePath, ImageFormat.Png);
+        string networkImageFilePath = networkImageDirectory + "\\" + NetworkCenterName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+        bitmap.Save(networkImageFilePath, ImageFormat.Png);
 
+        CellexalLog.Log("Saved " + NetworkCenterName + " as an image at " + networkImageFilePath);
     }
 
+    /// <summary>
+    /// This class looks stupid but is needed because unity represents colors with 3 floats that range from 0 to 1 
+    /// and it likes to introduce precision errors when comparing colors that originally were the same.
+    /// </summary>
     private class ColorComparer : IEqualityComparer<Color>
     {
         public bool Equals(Color x, Color y)

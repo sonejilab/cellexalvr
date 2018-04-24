@@ -717,10 +717,6 @@ public class InputReader : MonoBehaviour
             node.ColorEdges();
         }
         yield return null;
-        foreach (var network in networks.Values)
-        {
-            network.SaveNetworkAsImage();
-        }
         // give all nodes in the networks edges
         networkHandler.CreateArcs(ref keyPairs, ref nodes);
 
