@@ -637,6 +637,25 @@ public class CellManager : MonoBehaviour
 
     }
 
+    public void ColorByAttributeLogic(Tuple<string, BooleanLogic>[] attributes)
+    {
+        if (attributes.Length > 0)
+        {
+            foreach (var cell in cells.Values)
+            {
+                cell.ResetColor();
+                cell.ColorByAttributeLogic(attributes);
+            }
+        }
+        else
+        {
+            foreach (var cell in cells.Values)
+            {
+                cell.ResetColor();
+            }
+        }
+    }
+
     /// <summary>
     /// Adds an attribute to a cell. 
     /// </summary>

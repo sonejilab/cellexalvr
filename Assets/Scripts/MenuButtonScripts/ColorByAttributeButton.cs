@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalExtensions;
+using UnityEngine;
 
 /// <summary>
 /// Represents a button that colors all graphs according to an attribute.
@@ -8,8 +9,16 @@ public class ColorByAttributeButton : CellexalButton
     public TextMesh description;
 
     private CellManager cellManager;
-    private string attribute;
+    public Color booleanNotIncludedColor;
+    public Color booleanAndColor;
+    public Color booleanNotColor;
+    public string Attribute { get; set; }
     private bool colored = false;
+
+    public enum Mode { SINGLE, BOOLEAN_EXPR }
+    public Mode CurrentMode { get; set; } = Mode.SINGLE;
+    public BooleanLogic CurrentBooleanExpressionState { get; private set; } = BooleanLogic.NOT_INCLUDED;
+    public AttributeSubMenu parentMenu;
 
     protected override string Description
     {
@@ -25,8 +34,31 @@ public class ColorByAttributeButton : CellexalButton
 
     protected override void Click()
     {
-        cellManager.ColorByAttribute(attribute, !colored);
-        colored = !colored;
+        if (CurrentMode == Mode.SINGLE)
+        {
+            cellManager.ColorByAttribute(Attribute, !colored);
+            colored = !colored;
+        }
+        else if (CurrentMode == Mode.BOOLEAN_EXPR)
+        {
+            if (CurrentBooleanExpressionState == BooleanLogic.NOT_INCLUDED)
+            {
+                CurrentBooleanExpressionState = BooleanLogic.AND;
+                meshRenderer.material.color = booleanAndColor;
+            }
+            else if (CurrentBooleanExpressionState == BooleanLogic.AND)
+            {
+                CurrentBooleanExpressionState = BooleanLogic.NOT;
+                meshRenderer.material.color = booleanNotColor;
+            }
+            else if (CurrentBooleanExpressionState == BooleanLogic.NOT)
+            {
+                CurrentBooleanExpressionState = BooleanLogic.NOT_INCLUDED;
+                meshRenderer.material.color = booleanNotIncludedColor;
+            }
+
+            parentMenu.EvaluateExpression();
+        }
     }
 
     /// <summary>
@@ -56,10 +88,59 @@ public class ColorByAttributeButton : CellexalButton
         {
             description.text = displayedName;
         }
-        this.attribute = attribute;
+        this.Attribute = attribute;
         // sometimes this is done before Awake() it seems, so we use GetComponent() here
         GetComponent<Renderer>().material.color = color;
         meshStandardColor = color;
+    }
+
+    public void SwitchMode()
+    {
+        if (CurrentMode == Mode.BOOLEAN_EXPR)
+        {
+            CurrentMode = Mode.SINGLE;
+            meshRenderer.material.color = meshStandardColor;
+        }
+        else if (CurrentMode == Mode.SINGLE)
+        {
+            CurrentMode = Mode.BOOLEAN_EXPR;
+            ColorButtonBooleanExpression();
+        }
+    }
+
+    public override void SetHighlighted(bool highlight)
+    {
+        if (highlight)
+        {
+            meshRenderer.material.color = meshHighlightColor;
+        }
+        else
+        {
+            if (CurrentMode == Mode.BOOLEAN_EXPR)
+            {
+                ColorButtonBooleanExpression();
+            }
+            else if (CurrentMode == Mode.SINGLE)
+            {
+                meshRenderer.material.color = meshStandardColor;
+            }
+        }
+    }
+
+    private void ColorButtonBooleanExpression()
+    {
+        if (CurrentBooleanExpressionState == BooleanLogic.AND)
+        {
+            meshRenderer.material.color = booleanAndColor;
+        }
+        else if (CurrentBooleanExpressionState == BooleanLogic.NOT)
+        {
+            meshRenderer.material.color = booleanNotColor;
+        }
+        else if (CurrentBooleanExpressionState == BooleanLogic.NOT_INCLUDED)
+        {
+            meshRenderer.material.color = booleanNotIncludedColor;
+        }
     }
 
     private void ResetVars()

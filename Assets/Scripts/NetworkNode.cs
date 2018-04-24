@@ -196,8 +196,13 @@ public class NetworkNode : MonoBehaviour
         }
     }
 
-    public void ColorEdges(float minNegPcor, float maxNegPcor, float minPosPcor, float maxPosPcor)
+    public void ColorEdges()
     {
+        float minNegPcor = Center.MinNegPcor;
+        float maxNegPcor = Center.MaxNegPcor;
+        float minPosPcor = Center.MinPosPcor;
+        float maxPosPcor = Center.MaxPosPcor;
+
         var colors = referenceManager.networkGenerator.LineMaterials;
         if (CellexalConfig.NetworkLineColoringMethod == 0)
         {
@@ -209,13 +214,22 @@ public class NetworkNode : MonoBehaviour
                 if (pcor < 0f)
                 {
                     int colorIndex;
-                    if (pcor == maxNegPcor)
+                    // these are some special cases that can make the index go out of bounds
+                    if (pcor == minNegPcor)
                     {
                         colorIndex = 0;
                     }
+                    else if (pcor == maxNegPcor)
+                    {
+                        colorIndex = (numColors / 2) - 1;
+                        if (colorIndex < 0)
+                        {
+                            colorIndex = 0;
+                        }
+                    }
                     else
                     {
-                        colorIndex = (int)(((maxNegPcor - (pcor - maxNegPcor)) / (minNegPcor - maxNegPcor)) * (numColors / 2));
+                        colorIndex = (int)((1 - ((pcor - maxNegPcor) / (minNegPcor - maxNegPcor))) * (numColors / 2));
                     }
                     edge.Item3.material.color = colors[colorIndex].color;
                     edgeColors.Add(colors[colorIndex].color);

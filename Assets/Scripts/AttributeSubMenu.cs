@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using CellexalExtensions;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -92,10 +94,39 @@ public class AttributeSubMenu : MenuWithTabs
             b.referenceManager = referenceManager;
             int colorIndex = i % Colors.Length;
             b.SetAttribute(categoriesAndNames[i], names[i], Colors[colorIndex]);
+            b.parentMenu = this;
         }
         // turn on one of the tabs
         TurnOffAllTabs();
         newTab.SetTabActive(GetComponent<Renderer>().enabled);
 
+    }
+
+    public override void DestroyTabs()
+    {
+        base.DestroyTabs();
+        if (buttons != null)
+            buttons.Clear();
+    }
+
+    public void SwitchButtonStates()
+    {
+        foreach (var button in buttons)
+        {
+            button.SwitchMode();
+        }
+    }
+
+    public void EvaluateExpression()
+    {
+        List<Tuple<string, BooleanLogic>> result = new List<Tuple<string, BooleanLogic>>(buttons.Count / 2);
+        foreach (var button in buttons)
+        {
+            if (button.CurrentBooleanExpressionState != BooleanLogic.INVALID && button.CurrentBooleanExpressionState != BooleanLogic.NOT_INCLUDED)
+            {
+                result.Add(new Tuple<string, BooleanLogic>(button.Attribute, button.CurrentBooleanExpressionState));
+            }
+        }
+        referenceManager.cellManager.ColorByAttributeLogic(result.ToArray());
     }
 }

@@ -404,7 +404,7 @@ public class Graph : MonoBehaviour
 
                 // remove all the graphpoints that collide with this new collider
                 collidesWith = Physics.OverlapBox(center, halfExtents, Quaternion.identity, ~layerMask, QueryTriggerInteraction.Collide);
-                RemoveGraphPointsFromDictionary(collidesWith, ref notIncluded);
+                RemoveGraphPointsFromSet(collidesWith, ref notIncluded);
                 if (!extended) break;
             }
             // add the collider
@@ -419,7 +419,7 @@ public class Graph : MonoBehaviour
     /// </summary>
     /// <param name="colliders"> An array with colliders attached to graphpoints. </param>
     /// <param name="set"> A hashset containing graphpoints. </param>
-    private void RemoveGraphPointsFromDictionary(Collider[] colliders, ref HashSet<GraphPoint> set)
+    private void RemoveGraphPointsFromSet(Collider[] colliders, ref HashSet<GraphPoint> set)
     {
         {
             foreach (Collider c in colliders)

@@ -25,6 +25,11 @@ public class NetworkCenter : MonoBehaviour
     public NetworkHandler Handler { get; set; }
     public string NetworkCenterName;
 
+    public float MaxNegPcor { get; set; }
+    public float MinNegPcor { get; set; }
+    public float MaxPosPcor { get; set; }
+    public float MinPosPcor { get; set; }
+
     private ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
     private GameObject pedestal;

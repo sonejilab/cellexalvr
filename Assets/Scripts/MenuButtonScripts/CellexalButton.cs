@@ -122,7 +122,7 @@ public abstract class CellexalButton : MonoBehaviour
         }
     }
 
-    public void SetHighlighted(bool highlight)
+    public virtual void SetHighlighted(bool highlight)
     {
         if (highlight)
         {

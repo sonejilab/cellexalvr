@@ -1,4 +1,6 @@
+using CellexalExtensions;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// Represents one cell. A cell may be present in multiple graphs.
@@ -73,6 +75,27 @@ public class Cell
     }
 
     /// <summary>
+    /// Color all graphpoints that represents this cells based on some boolean expression of attributes.
+    /// </summary>
+    /// <param name="attributes">An array of <see cref="Tuple"/> where Item1 is the name of the attribute and Item2 is a <see cref="BooleanLogic"/> element of how to include or not include this attribute.</param>
+    public void ColorByAttributeLogic(Tuple<string, BooleanLogic>[] attributes)
+    {
+        foreach (var attribute in attributes)
+        {
+            string attributeName = attribute.Item1.ToLower();
+            if (attribute.Item2 == BooleanLogic.AND && !Attributes.ContainsKey(attributeName))
+                return;
+            if (attribute.Item2 == BooleanLogic.NOT && Attributes.ContainsKey(attributeName))
+                return;
+        }
+
+        foreach (GraphPoint g in GraphPoints)
+        {
+            g.Material = graphManager.AttributeMaterials[0];
+        }
+    }
+
+    /// <summary>
     /// Adds an attribute to this cell.
     /// </summary>
     /// <param name="attributeType"> The type of the attribute. </param>
@@ -99,6 +122,14 @@ public class Cell
                 expression = CellexalConfig.NumberOfExpressionColors - 1;
             }
             g.Material = graphManager.GeneExpressionMaterials[expression];
+        }
+    }
+
+    public void ResetColor()
+    {
+        foreach (GraphPoint g in GraphPoints)
+        {
+            g.ResetColor();
         }
     }
 

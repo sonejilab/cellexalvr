@@ -555,6 +555,12 @@ public class InputReader : MonoBehaviour
         GameObject skeleton = null;
         NetworkHandler networkHandler = null;
         string networkHandlerName = null;
+
+        Dictionary<string, float> maxNegPcor = new Dictionary<string, float>();
+        Dictionary<string, float> minNegPcor = new Dictionary<string, float>();
+        Dictionary<string, float> maxPosPcor = new Dictionary<string, float>();
+        Dictionary<string, float> minPosPcor = new Dictionary<string, float>();
+
         while (!cntStreamReader.EndOfStream)
         {
             string line = cntStreamReader.ReadLine();
@@ -588,9 +594,16 @@ public class InputReader : MonoBehaviour
             float z = float.Parse(words[2]);
             // the color is a hex string e.g. #FF0099
             Color color = new Color();
-            ColorUtility.TryParseHtmlString(words[3], out color);
+            string colorString = words[3];
+            ColorUtility.TryParseHtmlString(colorString, out color);
+
+            maxPosPcor[colorString] = 0f;
+            minPosPcor[colorString] = float.MaxValue;
+            maxNegPcor[colorString] = float.MinValue;
+            minNegPcor[colorString] = 0f;
+
             Vector3 position = graph.ScaleCoordinates(x, y, z);
-            NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, words[3], position);
+            NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {
@@ -599,7 +612,7 @@ public class InputReader : MonoBehaviour
                     r.material.color = color;
                 }
             }
-            networks[words[3]] = network;
+            networks[colorString] = network;
         }
 
         CellexalLog.Log("Successfully read .cnt file");
@@ -621,10 +634,7 @@ public class InputReader : MonoBehaviour
         List<NetworkKeyPair> tmp = new List<NetworkKeyPair>();
         // skip the first line as it is a header
         nwkStreamReader.ReadLine();
-        float maxNegPcor = float.MinValue;
-        float minNegPcor = float.MaxValue;
-        float maxPosPcor = float.MinValue;
-        float minPosPcor = float.MaxValue;
+
         while (!nwkStreamReader.EndOfStream)
         {
             string line = nwkStreamReader.ReadLine();
@@ -643,17 +653,17 @@ public class InputReader : MonoBehaviour
             float pcor = float.Parse(words[0]);
             if (pcor < 0)
             {
-                if (pcor < minNegPcor)
-                    minNegPcor = pcor;
-                if (pcor > maxNegPcor)
-                    maxNegPcor = pcor;
+                if (pcor < minNegPcor[color])
+                    minNegPcor[color] = pcor;
+                if (pcor > maxNegPcor[color])
+                    maxNegPcor[color] = pcor;
             }
             else
             {
-                if (pcor < minPosPcor)
-                    minPosPcor = pcor;
-                if (pcor > maxPosPcor)
-                    maxPosPcor = pcor;
+                if (pcor < minPosPcor[color])
+                    minPosPcor[color] = pcor;
+                if (pcor > maxPosPcor[color])
+                    maxPosPcor[color] = pcor;
             }
             // add the nodes if they don't already exist
             if (!nodes.ContainsKey(node1))
@@ -694,9 +704,17 @@ public class InputReader : MonoBehaviour
         while (networkHandler.layoutApplied != networks.Count)
             yield return null;
 
+        foreach (var network in networks)
+        {
+            network.Value.MaxPosPcor = maxPosPcor[network.Key];
+            network.Value.MinPosPcor = minPosPcor[network.Key];
+            network.Value.MaxNegPcor = maxNegPcor[network.Key];
+            network.Value.MinNegPcor = minNegPcor[network.Key];
+        }
+
         foreach (var node in nodes.Values)
         {
-            node.ColorEdges(minNegPcor, maxNegPcor, minPosPcor, maxPosPcor);
+            node.ColorEdges();
         }
         yield return null;
         foreach (var network in networks.Values)

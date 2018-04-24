@@ -22,6 +22,8 @@
         }
     }
 
+    public enum BooleanLogic { INVALID, NOT_INCLUDED, AND, NOT }
+
     public static class Extensions
     {
         public static UnityEngine.Color[] InterpolateColors(UnityEngine.Color color1, UnityEngine.Color color2, int numColors)
