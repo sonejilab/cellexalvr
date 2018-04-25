@@ -104,3 +104,5 @@ Switch To 2D button:Press to switch to a 2D layout.
 Switch to 3D button:Press to switch to a 3D layout.
 Recalculate 2D button:Press to force a recalculation of the 2D layout. The layouts are random by nature which makes means the new layout may look nothing like the previous one.
 Recalculate 3D button:Press to force a recalculation of the 3D layout. The layouts are random by nature which makes means the new layout may look nothing like the previous one.
+Save Network As Text File Button:Save this network as a text file. The text file will be put in a folder named "Output/<user_name>/<name_of_dataset>". The positions of the nodes in the network will be saved with 2 coordinates, even if the network is laid out in 3D.
+Save Network As Image Button:Save this network as a text file. The image file will be put in a folder named "Output/<user_name>/<name_of_dataset>". The image of your network will look like the network does now. If the network is laid out in 3D, it will be flattened.

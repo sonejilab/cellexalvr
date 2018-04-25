@@ -868,7 +868,14 @@ public class NetworkCenter : MonoBehaviour
             CellexalLog.Log("Created directory " + directoryPath);
         }
 
-        var stream = File.Create(directoryPath + "\\" + NetworkCenterName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt");
+        directoryPath += "\\Networks";
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+            CellexalLog.Log("Created directory " + directoryPath);
+        }
+        string filePath = directoryPath + "\\" + NetworkCenterName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+        var stream = File.Create(filePath);
         var streamWriter = new StreamWriter(stream);
 
         Dictionary<Tuple<NetworkNode, NetworkNode>, float> included = new Dictionary<Tuple<NetworkNode, NetworkNode>, float>(new TupleComparer());
@@ -905,9 +912,10 @@ public class NetworkCenter : MonoBehaviour
         {
             streamWriter.WriteLine(edge.Key.Item1.Label + "\t" + edge.Key.Item2.Label + "\t" + edge.Value);
         }
-
         streamWriter.Close();
         stream.Close();
+
+        CellexalLog.Log("Saved " + NetworkCenterName + " as a text file at " + filePath);
     }
 
     /// <summary>
@@ -943,22 +951,14 @@ public class NetworkCenter : MonoBehaviour
             foreach (var edge in node.edges)
             {
                 // The positions are generally between -0.4 and 0.4
-
                 var pos1 = (edge.Item1.transform.localPosition + geneLocalPositionOffset);
                 var pos2 = (edge.Item2.transform.localPosition + geneLocalPositionOffset);
-                //var moveDir = (pos2 - pos1);
-                //moveDir.z = 0;
-                //moveDir.Normalize();
-                //pos1 += moveDir * 0.005f;
-                //pos2 -= moveDir * 0.005f;
 
                 pos1.x *= bitmapWidth;
                 pos2.x *= bitmapWidth;
                 pos1.y *= bitmapHeight;
                 pos2.y *= bitmapHeight;
 
-                //if (!lineBrushes.ContainsKey(edge.Item3.material.color))
-                //    print(edge.Item3.material.color.ToString());
                 graphics.DrawLine(thickerBlackBrush, pos1.x, pos1.y, pos2.x, pos2.y);
                 graphics.DrawLine(lineBrushes[edge.Item3.material.color], pos1.x, pos1.y, pos2.x, pos2.y);
 
@@ -982,6 +982,13 @@ public class NetworkCenter : MonoBehaviour
         }
 
         string networkImageDirectory = CellexalUser.UserSpecificFolder;
+        if (!Directory.Exists(networkImageDirectory))
+        {
+            Directory.CreateDirectory(networkImageDirectory);
+            CellexalLog.Log("Created directory " + networkImageDirectory);
+        }
+
+        networkImageDirectory += "\\Networks";
         if (!Directory.Exists(networkImageDirectory))
         {
             Directory.CreateDirectory(networkImageDirectory);
