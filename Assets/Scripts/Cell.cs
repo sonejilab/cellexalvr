@@ -74,24 +74,32 @@ public class Cell
         }
     }
 
-    /// <summary>
-    /// Color all graphpoints that represents this cells based on some boolean expression of attributes.
-    /// </summary>
-    /// <param name="attributes">An array of <see cref="Tuple"/> where Item1 is the name of the attribute and Item2 is a <see cref="BooleanLogic"/> element of how to include or not include this attribute.</param>
-    public void ColorByAttributeLogic(Tuple<string, BooleanLogic>[] attributes)
+    [Obsolete]
+    public bool EvaluateAttributeLogic(Tuple<string, AttributeLogic>[] attributes)
     {
         foreach (var attribute in attributes)
         {
             string attributeName = attribute.Item1.ToLower();
-            if (attribute.Item2 == BooleanLogic.AND && !Attributes.ContainsKey(attributeName))
-                return;
-            if (attribute.Item2 == BooleanLogic.NOT && Attributes.ContainsKey(attributeName))
-                return;
+            if (attribute.Item2 == AttributeLogic.YES && !Attributes.ContainsKey(attributeName))
+                return false;
+            if (attribute.Item2 == AttributeLogic.NO && Attributes.ContainsKey(attributeName))
+                return false;
         }
+        return true;
+    }
 
-        foreach (GraphPoint g in GraphPoints)
+    /// <summary>
+    /// Color all graphpoints that represents this cells based on some boolean expression of attributes.
+    /// </summary>
+    /// <param name="attributes">The root of a tree representing a boolean expression of attribute.</param>
+    public void ColorByAttributeLogic(BooleanExpression.Expr attributes)
+    {
+        if (attributes.Eval(this))
         {
-            g.Material = graphManager.AttributeMaterials[0];
+            foreach (GraphPoint g in GraphPoints)
+            {
+                g.Material = graphManager.AttributeMaterials[0];
+            }
         }
     }
 

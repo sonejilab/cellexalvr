@@ -8,6 +8,12 @@ public class Tab : MonoBehaviour
     public ReferenceManager referenceManager;
     public TabButton TabButton;
 
+    protected int buttonIndex = 0;
+    protected Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
+    protected Vector3 buttonPosOriginal = new Vector3(-.39f, .77f, .282f);
+    protected Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
+    protected Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
+
     private MenuToggler menuToggler;
     public bool Active { get; private set; }
 
@@ -115,5 +121,30 @@ public class Tab : MonoBehaviour
         {
             c.enabled = active;
         }
+    }
+
+    public void AddButton(CellexalButton button)
+    {
+        if (!menuToggler)
+        {
+            menuToggler = referenceManager.menuToggler;
+        }
+
+        if (button.transform.childCount > 0)
+        {
+            menuToggler.AddGameObjectToActivate(button.transform.GetChild(0).gameObject, gameObject);
+        }
+        button.transform.localPosition = buttonPos;
+
+        if ((buttonIndex + 1) % 4 == 0)
+        {
+            buttonPos -= buttonPosInc * 3;
+            buttonPos += buttonPosNewRowInc;
+        }
+        else
+        {
+            buttonPos += buttonPosInc;
+        }
+        buttonIndex++;
     }
 }

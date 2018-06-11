@@ -26,7 +26,7 @@ public class ConfirmSelectionButton : CellexalButton
 
     protected override void Click()
     {
-        selectionToolHandler.SetSelectionToolEnabled(false);
+        selectionToolHandler.SetSelectionToolEnabled(false, 0);
         selectionToolHandler.ConfirmSelection();
         referenceManager.gameManager.InformConfirmSelection();
         controllerModelSwitcher.TurnOffActiveTool(true);

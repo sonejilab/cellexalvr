@@ -24,23 +24,22 @@ public class CaptureScreenshot : MonoBehaviour
 
     void Update()
     {
-        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
+
+        //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-            if (touchpad.y > 0.7f)
+            //Touchpad 
+            if (!Directory.Exists(directory))
             {
-                //Touchpad 
-                if (!Directory.Exists(directory))
-                {
-                    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
-                    Directory.CreateDirectory(directory);
-                }
-                ScreenCapture.CaptureScreenshot(directory + "\\Screenshot_" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png");
-                CellexalLog.Log("Screenshot taken!");
-                elapsedTime = 0.0f;
-                screenshotCounter++;
+                CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
+                Directory.CreateDirectory(directory);
             }
+            ScreenCapture.CaptureScreenshot(directory + "\\Screenshot_" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png");
+            CellexalLog.Log("Screenshot taken!");
+            elapsedTime = 0.0f;
+            screenshotCounter++;
         }
+
 
         if (elapsedTime < fadeTime / 2.0f)
         {

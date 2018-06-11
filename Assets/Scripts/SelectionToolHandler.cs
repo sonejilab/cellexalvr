@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using CellexalExtensions;
 using UnityEngine;
 using VRTK;
 
@@ -24,9 +26,8 @@ public class SelectionToolHandler : MonoBehaviour
     public bool heatmapGrabbed = false;
     [HideInInspector]
     public int fileCreationCtr = 0;
-    public Material graphpointNormal;
-    public Material graphpointHighlight;
     public Color[] Colors;
+    public Collider[] selectionToolColliders;
 
     private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -80,7 +81,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
-        SetSelectionToolEnabled(false);
+        SetSelectionToolEnabled(false, 0);
         CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
     }
 
@@ -550,15 +551,17 @@ public class SelectionToolHandler : MonoBehaviour
     /// Activates or deactivates all colliders on the selectiontool.
     /// </summary>
     /// <param name="enabled"> True if the selection tool should be activated, false if it should be deactivated. </param>
-    public void SetSelectionToolEnabled(bool enabled)
+    /// <param name="meshIndex">The index of the collider that should be activated, if <paramref name="enabled"/> is <code>true</code>.</param>
+    public void SetSelectionToolEnabled(bool enabled, int meshIndex)
     {
         if (enabled)
         {
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
         }
-        foreach (Collider c in GetComponentsInChildren<Collider>())
+        for (int i = 0; i < selectionToolColliders.Length; ++i)
         {
-            c.enabled = enabled;
+            // if we are turning on the selection tool, enable the collider with the corresponding index as the mesh and disable the other colliders.
+            selectionToolColliders[i].enabled = enabled && meshIndex == i;
         }
     }
 

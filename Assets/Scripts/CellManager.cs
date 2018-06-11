@@ -114,6 +114,7 @@ public class CellManager : MonoBehaviour
     private bool loadingFlashingGenes;
     private int[] savedFlashGenesLengths;
     private int coloringInfoStatusId;
+    private Dictionary<Cell, int> recolored;
 
     void Awake()
     {
@@ -122,8 +123,8 @@ public class CellManager : MonoBehaviour
 
     private void Start()
     {
-        CellexalEvents.GraphsReset.AddListener(RemoveStatus);
-        CellexalEvents.GraphsUnloaded.AddListener(RemoveStatus);
+        CellexalEvents.GraphsReset.AddListener(GraphsChanged);
+        CellexalEvents.GraphsUnloaded.AddListener(GraphsChanged);
 
         database = referenceManager.database;
         rightController = referenceManager.rightController;
@@ -142,6 +143,7 @@ public class CellManager : MonoBehaviour
         FarFlashInfo = referenceManager.FarFlashInfo;
         FarGroupInfo = referenceManager.FarGroupInfo;
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
+        recolored = new Dictionary<Cell, int>();
     }
 
     /// <summary>
@@ -637,23 +639,73 @@ public class CellManager : MonoBehaviour
 
     }
 
-    public void ColorByAttributeLogic(Tuple<string, BooleanLogic>[] attributes)
+    /// <summary>
+    /// Colors all graphs based on a boolean expression of attributes.
+    /// </summary>
+    /// <param name="expression">The root of the tree representing a boolean expression of attributes.</param>
+    public void ColorByAttributeLogic(BooleanExpression.Expr expression)
     {
-        if (attributes.Length > 0)
+        if (expression == null)
         {
             foreach (var cell in cells.Values)
             {
-                cell.ResetColor();
-                cell.ColorByAttributeLogic(attributes);
+                if (recolored.ContainsKey(cell))
+                    cell.SetGroup(recolored[cell], true);
+                else
+                    cell.ResetColor();
+
+                cell.ColorByAttributeLogic(expression);
             }
         }
         else
         {
             foreach (var cell in cells.Values)
             {
-                cell.ResetColor();
+                if (recolored.ContainsKey(cell))
+                    cell.SetGroup(recolored[cell], true);
+                else
+                    cell.ResetColor();
             }
         }
+    }
+
+    /// <summary>
+    /// Color all cells based on an expression of attributes
+    /// </summary>
+    /// <param name="expr">The root of the tree representing a boolean expression of attributes.</param>
+    public void ColorByAttributeExpression(BooleanExpression.Expr expr)
+    {
+        foreach (var cell in cells.Values)
+        {
+            if (expr.Eval(cell))
+            {
+                cell.SetGroup(selectionToolHandler.currentColorIndex, true);
+            }
+            else
+            {
+                if (recolored.ContainsKey(cell))
+                    cell.SetGroup(recolored[cell], true);
+                else
+                    cell.SetGroup(-1, true);
+            }
+        }
+    }
+
+    public void AddCellsToSelection(BooleanExpression.Expr attributes, int group)
+    {
+        if (attributes == null)
+            return;
+        int numAdded = 0;
+        foreach (var cell in cells.Values)
+        {
+            if (attributes.Eval(cell))
+            {
+                numAdded++;
+                selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], group, false);
+                recolored[cell] = selectionToolHandler.currentColorIndex;
+            }
+        }
+        CellexalLog.Log("Added " + numAdded + " cells to selection");
     }
 
     /// <summary>
@@ -784,8 +836,9 @@ public class CellManager : MonoBehaviour
         }
     }
 
-    private void RemoveStatus()
+    private void GraphsChanged()
     {
         statusDisplay.RemoveStatus(coloringInfoStatusId);
+        recolored.Clear();
     }
 }

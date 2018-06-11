@@ -22,7 +22,7 @@
         }
     }
 
-    public enum BooleanLogic { INVALID, NOT_INCLUDED, AND, NOT }
+    public enum AttributeLogic { INVALID, NOT_INCLUDED, YES, NO }
 
     public static class Extensions
     {

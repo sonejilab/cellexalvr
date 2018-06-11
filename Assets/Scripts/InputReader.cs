@@ -19,6 +19,7 @@ public class InputReader : MonoBehaviour
 
     public TextMeshPro graphName;
 
+    public GameObject lineprefab;
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -62,7 +63,7 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             //status.gameObject.SetActive(true);
-            ReadFolder(@"this_one_will_work");
+            ReadFolder(@"Mouse_HSPC");
         }
         CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
@@ -239,9 +240,42 @@ public class InputReader : MonoBehaviour
             }
             CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
-        status.UpdateStatus(statusId, "Reading .meta.cell files");
-        statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading .meta.cell files");
-        statusDisplayFar.UpdateStatus(statusIdFar, "Reading .meta.cell files");
+
+        ReadAttributeFiles(path);
+        ReadBooleanExpressionFiles(path);
+
+        loaderController.loaderMovedDown = true;
+        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
+        if (debug)
+        {
+            ReadNetworkFiles();
+            loaderController.DestroyFolders();
+        }
+        status.UpdateStatus(statusId, "Reading index.facs file");
+        statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+        statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
+        ReadFacsFiles(path, totalNbrOfCells);
+        flashGenesMenu.CreateTabs(path);
+        status.RemoveStatus(statusId);
+        statusDisplayHUD.RemoveStatus(statusIdHUD);
+        statusDisplayFar.RemoveStatus(statusIdFar);
+        CellexalEvents.GraphsLoaded.Invoke();
+
+        StartCoroutine(InitialCheckCoroutine());
+        if (debug)
+        {
+            //  yield return new WaitForSeconds(3);
+            //  database.QueryGene("gata1", DrawSomeLines);
+            //var expr = BooleanExpression.ParseFile(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + "\\expr2.ott");
+            //print(expr.ToString());
+            //cellManager.ColorByAttributeExpression(expr);
+            //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
+        }
+
+    }
+
+    public void ReadAttributeFiles(string path)
+    {
         // Read the each .meta.cell file
         // The file format should be
         //              TYPE_1  TYPE_2  ...
@@ -273,7 +307,7 @@ public class InputReader : MonoBehaviour
                 if (line == "")
                     continue;
 
-                string[] words = line.Split('\t');
+                string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
                 string cellname = words[0];
                 for (int j = 1; j < words.Length; ++j)
@@ -284,31 +318,54 @@ public class InputReader : MonoBehaviour
             }
             metacellStreamReader.Close();
             metacellFileStream.Close();
-            attributeSubMenu.CreateButtons(actualAttributeTypes);
+            attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
             cellManager.Attributes = actualAttributeTypes;
         }
-
-        loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
-        if (debug)
-        {
-            ReadNetworkFiles();
-            loaderController.DestroyFolders();
-        }
-        status.UpdateStatus(statusId, "Reading index.facs file");
-        statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
-        statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
-        ReadFacsFiles(path, totalNbrOfCells);
-        flashGenesMenu.CreateTabs(path);
-        status.RemoveStatus(statusId);
-        statusDisplayHUD.RemoveStatus(statusIdHUD);
-        statusDisplayFar.RemoveStatus(statusIdFar);
-        CellexalEvents.GraphsLoaded.Invoke();
-
-        StartCoroutine(InitialCheckCoroutine());
-        //if (debug)
-        //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
     }
+
+    public void ReadBooleanExpressionFiles(string path)
+    {
+        string[] files = Directory.GetFiles(path, "*.ott");
+        List<Tuple<string, BooleanExpression.Expr>> expressions = new List<Tuple<string, BooleanExpression.Expr>>(files.Length);
+        foreach (string file in files)
+        {
+            // TODO CELLEXAL: add aliases support and stuff to these files
+            expressions.Add(new Tuple<string, BooleanExpression.Expr>(file, BooleanExpression.ParseFile(file)));
+        }
+
+        attributeSubMenu.AddExpressionButtons(expressions.ToArray());
+    }
+
+    // public void DrawSomeLines(SQLite database)
+    // {
+    //     StartCoroutine(DrawSomeLinesCoroutine(database));
+    // }
+
+    // public IEnumerator DrawSomeLinesCoroutine(SQLite database)
+    // {
+    //     var line = Instantiate(lineprefab);
+    //     Vector3[] pos = new Vector3[database._result.Count];
+    //     Tuple<string, float>[] exprs = new Tuple<string, float>[database._result.Count];
+    //     for (int i = 0; i < database._result.Count; ++i)
+    //     {
+    //         exprs[i] = (Tuple<string, float>)(database._result[i]);
+    //     }
+    //
+    //     Array.Sort(exprs, (Tuple<string, float> x, Tuple<string, float> y) => (y.Item2.CompareTo(x.Item2)));
+    //
+    //
+    //     var lineRenderer = line.GetComponent<LineRenderer>();
+    //     lineRenderer.startColor = Color.red;
+    //     lineRenderer.endColor = Color.blue;
+    //     for (int i = 0; i < exprs.Length; ++i)
+    //     {
+    //
+    //         lineRenderer.positionCount = i + 1;
+    //         lineRenderer.SetPosition(i, graphManager.FindGraphPoint("DDRTree", exprs[i].Item1).transform.position);
+    //     }
+    //
+    //     yield return null;
+    // }
 
     private IEnumerator InitialCheckCoroutine()
     {
@@ -489,7 +546,6 @@ public class InputReader : MonoBehaviour
         }
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
         string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
-        string[] layFilePaths = Directory.GetFiles(networkDirectory, "*.lay");
 
         // make sure there is a .cnt file
         if (cntFilePaths.Length == 0)
@@ -529,15 +585,6 @@ public class InputReader : MonoBehaviour
             yield break;
         }
 
-        FileStream layFileStream = new FileStream(layFilePaths[0], FileMode.Open);
-        StreamReader layStreamReader = new StreamReader(layFileStream);
-
-        // make sure there is a .lay file
-        if (layFilePaths.Length == 0)
-        {
-            CellexalLog.Log("ERROR: No .lay file found in network folder " + CellexalLog.FixFilePath(networkDirectory));
-            yield break;
-        }
 
         // Read the .cnt file
         // The file format should be
@@ -725,8 +772,6 @@ public class InputReader : MonoBehaviour
         cntFileStream.Close();
         nwkStreamReader.Close();
         nwkFileStream.Close();
-        layStreamReader.Close();
-        layFileStream.Close();
         CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
     }
 

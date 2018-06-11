@@ -15,7 +15,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     //public Texture normalControllerTexture;
     public Mesh menuControllerMesh;
     //public Texture menuControllerTexture;
-    public Mesh selectionToolMesh;
+    public Mesh[] selectionToolMeshes;
     public Mesh deleteToolMesh;
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
@@ -41,6 +41,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     private Color desiredColor;
     private VRTK_StraightPointerRenderer rightLaser;
     private VRTK_StraightPointerRenderer leftLaser;
+    private int selectionToolMeshIndex = 0;
     // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
     // Otherwise you can't point the helptool towards the keyboard.
     public bool HelpToolShouldStayActivated { get; set; }
@@ -141,7 +142,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.SelectionTool:
-                controllerBodyMeshFilter.mesh = selectionToolMesh;
+                controllerBodyMeshFilter.mesh = selectionToolMeshes[selectionToolMeshIndex];
                 controllerBodyRenderer.material = selectionToolHandlerMaterial;
                 controllerBodyRenderer.material.color = desiredColor;
                 break;
@@ -165,7 +166,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         // Deactivate all tools that should not be active.
         if (DesiredModel != Model.SelectionTool)
         {
-            selectionToolHandler.SetSelectionToolEnabled(false);
+            selectionToolHandler.SetSelectionToolEnabled(false, 0);
         }
         if (DesiredModel != Model.HeatmapDeleteTool)
         {
@@ -202,7 +203,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         switch (DesiredModel)
         {
             case Model.SelectionTool:
-                selectionToolHandler.SetSelectionToolEnabled(true);
+                selectionToolHandler.SetSelectionToolEnabled(true, selectionToolMeshIndex);
                 break;
             case Model.Magnifier:
                 magnifier.SetActive(true);
@@ -239,7 +240,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// <param name="inMenu"> True if the controller is in the menu and we should temporarily change into the menu model, false otherwise. </param>
     public void TurnOffActiveTool(bool inMenu)
     {
-        selectionToolHandler.SetSelectionToolEnabled(false);
+        selectionToolHandler.SetSelectionToolEnabled(false, 0);
         fire.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);
@@ -285,5 +286,19 @@ public class ControllerModelSwitcher : MonoBehaviour
 
         if (ActualModel == Model.SelectionTool)
             controllerBodyRenderer.material.color = desiredColor;
+    }
+
+    public void SwitchSelectionToolMesh(bool dir)
+    {
+        if (dir)
+            selectionToolMeshIndex++;
+        else
+            selectionToolMeshIndex--;
+
+        if (selectionToolMeshIndex == -1)
+            selectionToolMeshIndex = selectionToolMeshes.Length - 1;
+        else if (selectionToolMeshIndex == selectionToolMeshes.Length)
+            selectionToolMeshIndex = 0;
+        ActivateDesiredTool();
     }
 }

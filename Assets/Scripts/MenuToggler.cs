@@ -84,7 +84,7 @@ public class MenuToggler : MonoBehaviour
         // if the menu is not shown now but the submenu was shown when the menu was hidden
         if (!MenuActive)
         {
-            bool submenuActive = renderers.ContainsKey(submenuRenderer) && renderers[submenuRenderer];
+            bool submenuActive = submenuRenderer && renderers.ContainsKey(submenuRenderer) && renderers[submenuRenderer];
             SaveAndSetVisible(item, submenuActive, false);
         }
         // if the menu is active but the submenu is not, then we should not show the new gameobject when the menu is turned back on.

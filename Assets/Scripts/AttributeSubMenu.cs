@@ -13,84 +13,73 @@ public class AttributeSubMenu : MenuWithTabs
         get { return CellexalConfig.AttributeColors; }
     }
 
-    public ColorByAttributeButton buttonPrefab;
+    public ColorByAttributeButton colorByAttributeButtonPrefab;
+    public BooleanExpressionButton booleanExpressionButtonPrefab;
+    public Tab booleanExpressionTabPrefab;
 
-    protected List<ColorByAttributeButton> buttons;
-    // hard coded positions :)
-    private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
-    private Vector3 buttonPosOriginal = new Vector3(-.39f, .77f, .282f);
-    private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
-    private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
-
+    protected List<ColorByAttributeButton> colorByAttributeButtons;
+    protected List<BooleanExpressionButton> booleanExpressionButtons;
 
     /// <summary>
     /// Fill the menu with buttons that will color graphs according to attributes when pressed.
     /// </summary>
     /// <param name="categoriesAndNames">The names of the attributes.</param>
-    public void CreateButtons(string[] categoriesAndNames)
+    public void CreateAttributeButtons(string[] categoriesAndNames)
     {
         DestroyTabs();
 
-        if (buttons == null)
-            buttons = new List<ColorByAttributeButton>();
-        foreach (var button in buttons)
+        if (colorByAttributeButtons == null)
+            colorByAttributeButtons = new List<ColorByAttributeButton>();
+        foreach (var button in colorByAttributeButtons)
         {
             // wait 0.1 seconds so we are out of the loop before we start destroying stuff
             Destroy(button.gameObject, .1f);
         }
-        buttonPos = new Vector3(-.39f, .77f, .282f);
-        buttons.Clear();
+        colorByAttributeButtons.Clear();
         //TurnOffAllTabs();
         string[] categories = new string[categoriesAndNames.Length];
         string[] names = new string[categoriesAndNames.Length];
         for (int i = 0; i < categoriesAndNames.Length; ++i)
         {
-            string[] categoryAndName = categoriesAndNames[i].Split('.');
-            categories[i] = categoryAndName[0];
-            names[i] = categoryAndName[1];
+            if (categoriesAndNames[i].Contains("."))
+            {
+                string[] categoryAndName = categoriesAndNames[i].Split('.');
+                categories[i] = categoryAndName[0];
+                names[i] = categoryAndName[1];
+            }
+            else
+            {
+                categories[i] = "";
+                names[i] = categoriesAndNames[i];
+            }
         }
 
         Tab newTab = null;
-
         for (int i = 0, buttonIndex = 0; i < names.Length; ++i, ++buttonIndex)
         {
             // add a new tab if we encounter a new category, or if the current tab is full
             if (buttonIndex % 24 == 0 || i > 0 && categories[i] != categories[i - 1])
             {
                 newTab = AddTab(tabPrefab);
-                buttonPos = buttonPosOriginal;
                 newTab.TabButton.GetComponentInChildren<TextMesh>().text = categories[i];
                 buttonIndex = 0;
+
             }
-            var newButton = Instantiate(buttonPrefab, newTab.transform);
+            var newButton = Instantiate(colorByAttributeButtonPrefab, newTab.transform);
+
             newButton.gameObject.SetActive(true);
-            if (!menuToggler)
-            {
-                menuToggler = referenceManager.menuToggler;
-            }
+
             //menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
-            if (newButton.transform.childCount > 0)
-                menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
-            newButton.transform.localPosition = buttonPos;
+
             if (buttonIndex < Colors.Length)
                 newButton.GetComponent<Renderer>().material.color = Colors[buttonIndex];
-            buttons.Add(newButton);
-            // position the buttons in a 4 column grid.
-            if ((buttonIndex + 1) % 4 == 0)
-            {
-                buttonPos -= buttonPosInc * 3;
-                buttonPos += buttonPosNewRowInc;
-            }
-            else
-            {
-                buttonPos += buttonPosInc;
-            }
-
+            colorByAttributeButtons.Add(newButton);
+            newTab.AddButton(newButton);
         }
         // set the names of the attributes after the buttons have been created.
-        for (int i = 0; i < buttons.Count; ++i)
+        for (int i = 0; i < colorByAttributeButtons.Count; ++i)
         {
-            var b = buttons[i];
+            var b = colorByAttributeButtons[i];
             b.referenceManager = referenceManager;
             int colorIndex = i % Colors.Length;
             b.SetAttribute(categoriesAndNames[i], names[i], Colors[colorIndex]);
@@ -98,35 +87,85 @@ public class AttributeSubMenu : MenuWithTabs
         }
         // turn on one of the tabs
         TurnOffAllTabs();
-        newTab.SetTabActive(GetComponent<Renderer>().enabled);
+        //newTab.SetTabActive(true);
+        //newTab.SetTabActive(GetComponent<Renderer>().enabled);
+    }
 
+
+    public void AddExpressionButtons(Tuple<string, BooleanExpression.Expr>[] expressions)
+    {
+        if (expressions.Length == 0)
+            return;
+
+        var predefinedExpressionsTab = AddTab(booleanExpressionTabPrefab);
+        foreach (var expression in expressions)
+        {
+            var newButton = Instantiate(booleanExpressionButtonPrefab);
+            predefinedExpressionsTab.AddButton(newButton);
+
+            newButton.GetComponentInChildren<TextMesh>().text = expression.Item1;
+            newButton.Expr = expression.Item2;
+        }
+        predefinedExpressionsTab.SetTabActive(false);
     }
 
     public override void DestroyTabs()
     {
         base.DestroyTabs();
-        if (buttons != null)
-            buttons.Clear();
+        if (colorByAttributeButtons != null)
+            colorByAttributeButtons.Clear();
     }
 
     public void SwitchButtonStates()
     {
-        foreach (var button in buttons)
+        foreach (var button in colorByAttributeButtons)
         {
             button.SwitchMode();
         }
     }
+    /// <summary>
+    /// Builds a tree of and expressions and not expressions that corresponds to the current state of the attribute buttons.
+    /// </summary>
+    /// <returns>A reference to the root of the tree of the resulting expression.</returns>
+    public BooleanExpression.Expr GetExpression()
+    {
+        BooleanExpression.Expr root = null;
+        // go over each button and check its state.
+        foreach (var button in colorByAttributeButtons)
+        {
+            if (button.CurrentBooleanExpressionState != AttributeLogic.INVALID && button.CurrentBooleanExpressionState != AttributeLogic.NOT_INCLUDED)
+            {
+                BooleanExpression.Expr newNode = new BooleanExpression.ValueExpr(button.Attribute);
+
+                if (button.CurrentBooleanExpressionState == AttributeLogic.NO)
+                {
+                    // wrap the new expression in a not expression
+                    newNode = new BooleanExpression.NotExpr(newNode);
+                }
+
+                if (root == null)
+                {
+                    root = newNode;
+                }
+                else
+                {
+                    // wrap the last expression and the new expression in an and expression
+                    root = new BooleanExpression.AndExpr(newNode, root);
+                }
+            }
+        }
+        return root;
+    }
 
     public void EvaluateExpression()
     {
-        List<Tuple<string, BooleanLogic>> result = new List<Tuple<string, BooleanLogic>>(buttons.Count / 2);
-        foreach (var button in buttons)
-        {
-            if (button.CurrentBooleanExpressionState != BooleanLogic.INVALID && button.CurrentBooleanExpressionState != BooleanLogic.NOT_INCLUDED)
-            {
-                result.Add(new Tuple<string, BooleanLogic>(button.Attribute, button.CurrentBooleanExpressionState));
-            }
-        }
-        referenceManager.cellManager.ColorByAttributeLogic(result.ToArray());
+
+        referenceManager.cellManager.ColorByAttributeExpression(GetExpression());
+    }
+
+    public void AddCurrentExpressionAsGroup()
+    {
+        referenceManager.cellManager.AddCellsToSelection(GetExpression(), referenceManager.selectionToolHandler.currentColorIndex);
+        referenceManager.selectionToolHandler.ChangeColor(true);
     }
 }

@@ -141,10 +141,7 @@ public class GraphPoint : MonoBehaviour
         }
         else
         {
-            foreach (var g in Cell.GraphPoints)
-            {
-                SetAllSameGraphPointsMaterial(Graph.graphManager.GetAdditionalGroupingMaterial(color, outline));
-            }
+            SetAllSameGraphPointsMaterial(Graph.graphManager.GetAdditionalGroupingMaterial(color, outline));
         }
     }
 

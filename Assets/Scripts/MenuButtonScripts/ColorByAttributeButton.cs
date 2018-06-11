@@ -10,14 +10,14 @@ public class ColorByAttributeButton : CellexalButton
 
     private CellManager cellManager;
     public Color booleanNotIncludedColor;
-    public Color booleanAndColor;
-    public Color booleanNotColor;
+    public Color booleanYesColor;
+    public Color booleanNoColor;
     public string Attribute { get; set; }
     private bool colored = false;
 
     public enum Mode { SINGLE, BOOLEAN_EXPR }
     public Mode CurrentMode { get; set; } = Mode.SINGLE;
-    public BooleanLogic CurrentBooleanExpressionState { get; private set; } = BooleanLogic.NOT_INCLUDED;
+    public AttributeLogic CurrentBooleanExpressionState { get; private set; } = AttributeLogic.NOT_INCLUDED;
     public AttributeSubMenu parentMenu;
 
     protected override string Description
@@ -41,19 +41,19 @@ public class ColorByAttributeButton : CellexalButton
         }
         else if (CurrentMode == Mode.BOOLEAN_EXPR)
         {
-            if (CurrentBooleanExpressionState == BooleanLogic.NOT_INCLUDED)
+            if (CurrentBooleanExpressionState == AttributeLogic.NOT_INCLUDED)
             {
-                CurrentBooleanExpressionState = BooleanLogic.AND;
-                meshRenderer.material.color = booleanAndColor;
+                CurrentBooleanExpressionState = AttributeLogic.YES;
+                meshRenderer.material.color = booleanYesColor;
             }
-            else if (CurrentBooleanExpressionState == BooleanLogic.AND)
+            else if (CurrentBooleanExpressionState == AttributeLogic.YES)
             {
-                CurrentBooleanExpressionState = BooleanLogic.NOT;
-                meshRenderer.material.color = booleanNotColor;
+                CurrentBooleanExpressionState = AttributeLogic.NO;
+                meshRenderer.material.color = booleanNoColor;
             }
-            else if (CurrentBooleanExpressionState == BooleanLogic.NOT)
+            else if (CurrentBooleanExpressionState == AttributeLogic.NO)
             {
-                CurrentBooleanExpressionState = BooleanLogic.NOT_INCLUDED;
+                CurrentBooleanExpressionState = AttributeLogic.NOT_INCLUDED;
                 meshRenderer.material.color = booleanNotIncludedColor;
             }
 
@@ -129,15 +129,15 @@ public class ColorByAttributeButton : CellexalButton
 
     private void ColorButtonBooleanExpression()
     {
-        if (CurrentBooleanExpressionState == BooleanLogic.AND)
+        if (CurrentBooleanExpressionState == AttributeLogic.YES)
         {
-            meshRenderer.material.color = booleanAndColor;
+            meshRenderer.material.color = booleanYesColor;
         }
-        else if (CurrentBooleanExpressionState == BooleanLogic.NOT)
+        else if (CurrentBooleanExpressionState == AttributeLogic.NO)
         {
-            meshRenderer.material.color = booleanNotColor;
+            meshRenderer.material.color = booleanNoColor;
         }
-        else if (CurrentBooleanExpressionState == BooleanLogic.NOT_INCLUDED)
+        else if (CurrentBooleanExpressionState == AttributeLogic.NOT_INCLUDED)
         {
             meshRenderer.material.color = booleanNotIncludedColor;
         }

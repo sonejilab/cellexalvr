@@ -13,14 +13,16 @@ public class FlashGenesTab : Tab
     private InputReader inputReader;
     private List<FlashGenesCategoryButton> buttons = new List<FlashGenesCategoryButton>();
     private Vector3 buttonPosStart = new Vector3(0, 0, 0);
-    private Vector3 buttonPosInc = new Vector3(2.5f, 0, 0);
-    private Vector3 buttonPosNewRowInc = new Vector3(-7.5f, -2.5f, 0);
+    //protected Vector3 buttonPosInc = new Vector3(2.5f, 0, 0);
+    //protected Vector3 buttonPosNewRowInc = new Vector3(-7.5f, -2.5f, 0);
 
     protected override void Awake()
     {
         base.Awake();
         cellManager = referenceManager.cellManager;
         inputReader = referenceManager.inputReader;
+        buttonPosInc = new Vector3(2.5f, 0, 0);
+        buttonPosNewRowInc = new Vector3(-7.5f, -2.5f, 0);
     }
 
     /// <summary>
