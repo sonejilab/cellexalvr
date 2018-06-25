@@ -219,6 +219,35 @@ namespace SQLiter
 
         #region Query
 
+        public void QueryMostExpressedGenes(int n)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryMostExpressedGenesCoroutine(n));
+        }
+
+        internal IEnumerator QueryMostExpressedGenesCoroutine(int n)
+        {
+            string query = "select avg(value), gname from datavalues left join genes on gene_id = id group by id order by - avg(value) limit " + n + ";";
+            _result.Clear();
+
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            while (_reader.Read())
+            {
+                _result.Add(_reader.GetString(1));
+            }
+            _reader.Close();
+            _connection.Close();
+            QueryRunning = false;
+
+        }
+
+
         /// <summary>
         /// Different modes to sort genes.
         /// </summary>

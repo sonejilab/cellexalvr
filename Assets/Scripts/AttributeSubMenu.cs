@@ -41,9 +41,9 @@ public class AttributeSubMenu : MenuWithTabs
         string[] names = new string[categoriesAndNames.Length];
         for (int i = 0; i < categoriesAndNames.Length; ++i)
         {
-            if (categoriesAndNames[i].Contains("."))
+            if (categoriesAndNames[i].Contains("@"))
             {
-                string[] categoryAndName = categoriesAndNames[i].Split('.');
+                string[] categoryAndName = categoriesAndNames[i].Split('@');
                 categories[i] = categoryAndName[0];
                 names[i] = categoryAndName[1];
             }
