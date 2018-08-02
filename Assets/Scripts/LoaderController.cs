@@ -62,7 +62,7 @@ public class LoaderController : MonoBehaviour
 
         if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
         {
-            helperCylinder.SetActive(false);
+            //helperCylinder.SetActive(false);
             DestroyFolderColliders();
         }
 

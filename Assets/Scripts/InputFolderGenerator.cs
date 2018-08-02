@@ -34,7 +34,16 @@ public class InputFolderGenerator : MonoBehaviour
     /// </summary>
     public void GenerateFolders()
     {
-        string dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
+        string dataDirectory;
+        if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
+        {
+            dataDirectory = Directory.GetCurrentDirectory() + "\\TutorialData";
+        }
+        else
+        {
+            dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
+        }
+
         string[] directories = Directory.GetDirectories(dataDirectory);
         if (directories.Length == 0)
         {
