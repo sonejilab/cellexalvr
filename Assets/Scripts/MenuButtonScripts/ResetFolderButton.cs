@@ -30,6 +30,12 @@ public class ResetFolderButton : CellexalButton
         heatmapGenerator = referenceManager.heatmapGenerator;
     }
 
+    // Reset everything without clicking the button.
+    public void Reset()
+    {
+        Click();
+    }
+
     protected override void Click()
     {
         //var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();

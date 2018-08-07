@@ -321,6 +321,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4511814000074954}
+  - component: {fileID: 114763316060772798}
+  - component: {fileID: 65452111267335664}
   m_Layer: 0
   m_Name: HighlightLoader
   m_TagString: Untagged
@@ -590,8 +592,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1392062289165514}
-  m_LocalRotation: {x: 0.0072433357, y: -0.007883013, z: -0.16991553, w: 0.9854005}
-  m_LocalPosition: {x: -0.6551368, y: -0.32176754, z: 0.010618219}
+  m_LocalRotation: {x: 0.007690995, y: -0.0117467325, z: -0.16860108, w: 0.9855844}
+  m_LocalPosition: {x: -0.65218073, y: -0.32224786, z: 0.011173684}
   m_LocalScale: {x: 1.0577164, y: 1.0577165, z: 1.0577165}
   m_Children:
   - {fileID: 4658680396464202}
@@ -628,8 +630,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779142177848114}
   m_LocalRotation: {x: -0.24853297, y: 0.60001177, z: 0.29099473, w: 0.7025235}
-  m_LocalPosition: {x: -0.21, y: -0.38, z: -0.08}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.4, y: -0.57, z: 0.98}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4415799874180200}
   - {fileID: 4501871303785034}
@@ -1639,6 +1641,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65452111267335664
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779142177848114}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9096785, y: 1.0063612, z: 0.9650895}
+  m_Center: {x: 0.97312737, y: 0.42542872, z: 0.017455297}
 --- !u!65 &65680899344636538
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1738,6 +1752,18 @@ MonoBehaviour:
   onGrabCollisionDelay: 0
   destroyImmediatelyOnThrow: 1
   breakForce: Infinity
+--- !u!114 &114763316060772798
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779142177848114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe20520283670a48a9066164e62c75d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialManager: {fileID: 0}
 --- !u!114 &114841672069823632
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1971,14 +1997,14 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 248382453
+  randomSeed: 567662938
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -2019,7 +2045,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.05
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -2123,7 +2149,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.1
+      scalar: 0.86
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -2367,7 +2393,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 15
+    maxNumParticles: 30
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -5332,7 +5358,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -2092006813
+  randomSeed: 1700071472
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -5484,7 +5510,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.2
+      scalar: 0.9
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5728,7 +5754,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 10
+    maxNumParticles: 3
     size3D: 0
     rotation3D: 0
     gravityModifier:
