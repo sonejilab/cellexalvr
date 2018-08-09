@@ -19,6 +19,7 @@ public static class CellexalEvents
 
     public static UnityEvent HeatmapCreated = new UnityEvent();
     public static UnityEvent NetworkCreated = new UnityEvent();
+    public static UnityEvent NetworkEnlarged = new UnityEvent();
 
     public static UnityEvent GraphsReset = new UnityEvent();
     public static UnityEvent GraphsColoredByGene = new UnityEvent();

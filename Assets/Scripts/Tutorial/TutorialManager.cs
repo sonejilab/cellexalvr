@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This class takes care of the highlighting and loading of different steps in the tutorial. 
+// It listens to events to know what buttons to highlight at what time and when to show the description for the next step.
 public class TutorialManager : MonoBehaviour {
 
     public GameObject tutorialCanvas;
     public GameObject[] stepPanels;
-    public Material highlightMat;
     public Material standardMat;
     public Color highLightStart;
     public Color highLightEnd;
     public GameObject rightControllerModel;
     public GameObject leftControllerModel;
-    public GameObject highlightSpot;
-    public GameObject highlightSpot2;
-    public GameObject highlightSpot3;
-    public GameObject highlightSpot4;
-    public GameObject portal;
+    public List<GameObject> highlightSpots;
     public GameObject mainMenu;
     public GraphManager graphManager;
 
@@ -26,7 +23,6 @@ public class TutorialManager : MonoBehaviour {
     public GameObject newSelButton;
     public GameObject confirmSelButton;
     public GameObject networksButton;
-    public GameObject cellExprButton;
     public GameObject loadMenuButton;
 
     private int currentStep = 0;
@@ -39,10 +35,23 @@ public class TutorialManager : MonoBehaviour {
     private Transform trackpadLeft;
     private Transform trackpadRight;
     private float duration = 1f;
+
+    // Object lists to control different states of highlighting
+    private List<GameObject> objList = new List<GameObject>();
+    private List<GameObject> objList2 = new List<GameObject>();
+    private List<GameObject> objList3 = new List<GameObject>();
     //private List<GameObject> steps;
 
     // Use this for initialization
     void Start () {
+        CellexalEvents.GraphsLoaded.AddListener(NextStep);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOnSpot);
+        CellexalEvents.GraphsColoredByGene.AddListener(TurnOnSpot);
+        CellexalEvents.SelectionStarted.AddListener(SelectionOn);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOnSpot);
+        CellexalEvents.SelectionConfirmed.AddListener(SelectionOff);
+        CellexalEvents.NetworkEnlarged.AddListener(TurnOnSpot);
+
         foreach (Transform child in rightControllerModel.transform)
         {
             if (child.name == "rgrip")
@@ -82,114 +91,134 @@ public class TutorialManager : MonoBehaviour {
             }
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-        // Highlight the relevant buttons for the specific tutorial step.
 
-        // When graph is loaded step 1 is completed.
-        if (GameObject.Find("Graph(Clone)") != null && currentStep == 1)
+    void SelectionOn()
+    {
+        objList3.Add(trackpadRight.gameObject);
+        newSelButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        objList2.Remove(newSelButton);
+        ResetMat(objList3);
+        objList3.Add(confirmSelButton.gameObject);
+    }
+    
+    void SelectionOff()
+    {
+        confirmSelButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        objList3.Remove(confirmSelButton);
+        ResetMat(objList3);
+        objList3.Clear();
+    }
+	
+    void TurnOnSpot()
+    {
+        highlightSpots[currentStep-2].SetActive(true);
+        highlightSpots[currentStep - 2].GetComponent<Collider>().enabled = true;
+    }
+
+    void ResetMatColor(List<GameObject> objs)
+    {
+        foreach (GameObject obj in objs)
         {
-            LoadTutorialStep(2);
+            obj.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
         }
-        if (rgripRight.GetComponent<MeshRenderer>() != null && currentStep == 0)
+        
+    }
+
+    void ResetMat(List<GameObject> objs)
+    {
+        foreach (GameObject obj in objs)
+        {
+            obj.GetComponent<Renderer>().material = standardMat;
+        }
+
+    }
+
+    void Highlight(List<GameObject> objs, float lerp)
+    {
+        foreach (GameObject obj in objs)
+        {
+            obj.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+        // Highlight the relevant buttons for the specific tutorial step. 
+        var lerp = Mathf.PingPong(Time.time, duration) / duration;
+        if (rgripRight.GetComponent<MeshRenderer>() != null && rgripLeft.GetComponent<MeshRenderer>() != null && currentStep == 0)
         {
             LoadTutorialStep(1);
         }
+
         // Highlight grip buttons on step 1 and 2
         if (currentStep == 1 || currentStep == 2)
         {
-            var lerp = Mathf.PingPong(Time.time, duration) / duration;
-            rgripRight.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-            lgripRight.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-            rgripLeft.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-            lgripLeft.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
+            Highlight(objList, lerp);
         }
         if (currentStep == 3)
         {
-            var lerp = Mathf.PingPong(Time.time, duration) / duration;
+            
             if (!mainMenu.GetComponent<MeshRenderer>().enabled)
             {
-                triggerLeft.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                trackpadLeft.GetComponent<Renderer>().material = standardMat;
-                triggerRight.GetComponent<Renderer>().material = standardMat;
+                Highlight(objList, lerp);
+                ResetMat(objList2);
             }
             else
             {
-                triggerLeft.GetComponent<Renderer>().material = standardMat;
-                trackpadLeft.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                triggerRight.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                keyboardButton.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-            }
-
-            if (cellExprButton.GetComponent<RemoveExpressedCellsButton>().buttonActivated)
-            {
-                highlightSpot2.SetActive(true);
+                Highlight(objList2, lerp);
+                ResetMat(objList);
             }
         }
 
         if (currentStep == 4)
         {
-            var lerp = Mathf.PingPong(Time.time, duration) / duration;
+            Highlight(objList3, lerp);
             if (!mainMenu.GetComponent<MeshRenderer>().enabled)
             {
-                triggerLeft.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                trackpadLeft.GetComponent<Renderer>().material = standardMat;
-                triggerRight.GetComponent<Renderer>().material = standardMat;
+                Highlight(objList, lerp);
+                ResetMat(objList2);
+            }
+            if (mainMenu.GetComponent<MeshRenderer>().enabled)
+            {
+                Highlight(objList2, lerp);
+                ResetMat(objList);
+            }
+        }
+
+        if (currentStep == 5)
+        {
+            if (networksButton.GetComponent<CreateNetworksButton>().buttonActivated)
+            {
+                Highlight(objList, lerp);
             }
             else
             {
-                triggerLeft.GetComponent<Renderer>().material = standardMat;
-                trackpadLeft.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                triggerRight.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                selToolButton.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                newSelButton.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                if (confirmSelButton.GetComponent<ConfirmSelectionButton>().buttonActivated)
-                {
-                    newSelButton.gameObject.GetComponent<Renderer>().material = standardMat;
-                    confirmSelButton.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                    trackpadRight.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
-                    trackpadLeft.GetComponent<Renderer>().material = standardMat;
-                }
-                if (networksButton.GetComponent<CreateNetworksButton>().buttonActivated)
-                {
-                    //newSelButton.gameObject.GetComponent<Renderer>().material = standardMat;
-                    //confirmSelButton.gameObject.GetComponent<Renderer>().material = standardMat;
-                    highlightSpot3.SetActive(true);
-                }
+                ResetMatColor(objList);
             }
-        }
 
-        if ((currentStep == 5 || currentStep == 6) && GameObject.Find("Enlarged Network") != null)
-        {
-            highlightSpot4.SetActive(true);
         }
-
     }
-    // Load the environment or highlight visuals you want for the specific tutorial step
+
+    // When changing step, change canvas with description aswell as removing/adding buttons to be highlighted.
     public void LoadTutorialStep(int stepNr)
     {
         Debug.Log("LOAD STEP: " + stepNr);
-
-        // Reset highlighted objects to standard material.
-        rgripRight.GetComponent<MeshRenderer>().material = standardMat;
-        lgripRight.GetComponent<MeshRenderer>().material = standardMat;
-        rgripLeft.GetComponent<MeshRenderer>().material = standardMat;
-        lgripLeft.GetComponent<MeshRenderer>().material = standardMat;
-        triggerLeft.GetComponent<MeshRenderer>().material = standardMat;
-        triggerRight.GetComponent<MeshRenderer>().material = standardMat;
-        trackpadLeft.GetComponent<MeshRenderer>().material = standardMat;
-        trackpadRight.GetComponent<MeshRenderer>().material = standardMat;
 
         switch (stepNr)
         {
             case 1:
                 currentStep = 1;
+                objList.Add(rgripRight.gameObject);
+                objList.Add(rgripLeft.gameObject);
+                objList.Add(lgripLeft.gameObject);
+                objList.Add(lgripRight.gameObject);
+                ResetMat(objList);
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[0].SetActive(true);        
+                stepPanels[0].SetActive(true);
                 break;
 
             case 2:
@@ -199,11 +228,17 @@ public class TutorialManager : MonoBehaviour {
                     obj.SetActive(false);
                 }
                 stepPanels[1].SetActive(true);
-                highlightSpot.SetActive(true);
                 break;
 
             case 3:
                 currentStep = 3;
+                ResetMat(objList);
+                objList.Clear();
+                objList.Add(triggerLeft.gameObject);
+                ResetMat(objList);
+                objList2.Add(triggerRight.gameObject);
+                objList2.Add(trackpadLeft.gameObject);
+                objList2.Add(keyboardButton);
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);
@@ -213,6 +248,10 @@ public class TutorialManager : MonoBehaviour {
 
             case 4:
                 currentStep = 4;
+                objList2.Remove(keyboardButton);
+                keyboardButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+                objList2.Add(selToolButton);
+                objList2.Add(newSelButton);
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);
@@ -223,24 +262,31 @@ public class TutorialManager : MonoBehaviour {
 
             case 5:
                 currentStep = 5;
+                ResetMat(objList2);
+                ResetMat(objList);
+                objList.Clear();
+                objList2.Clear();
+                objList.Add(networksButton);
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);
                 }
                 stepPanels[4].SetActive(true);
-                highlightSpot3.SetActive(false);
+                highlightSpots[2].SetActive(false);
                 break;
 
             case 6:
-                loadMenuButton.GetComponent<ResetFolderButton>().Reset();
                 currentStep = 6;
+                loadMenuButton.GetComponent<ResetFolderButton>().Reset();
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);
                 }
                 stepPanels[5].SetActive(true);
-                graphManager.ResetGraphs();
-                highlightSpot4.SetActive(false);
+                highlightSpots[3].SetActive(false);
+                CellexalEvents.GraphsLoaded.RemoveListener(TurnOnSpot);
+                CellexalEvents.GraphsLoaded.RemoveListener(NextStep);
+                CellexalEvents.SelectionConfirmed.RemoveListener(TurnOnSpot);
                 break;
 
             case 7:
@@ -250,9 +296,8 @@ public class TutorialManager : MonoBehaviour {
                     obj.SetActive(false);
                 }
                 stepPanels[6].SetActive(true);
-                
-                highlightSpot4.SetActive(false);
-                portal.SetActive(true);
+                highlightSpots[3].SetActive(false);
+                TurnOnSpot();
                 break;
         }
     }

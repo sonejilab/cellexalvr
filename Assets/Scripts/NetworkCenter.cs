@@ -553,6 +553,7 @@ public class NetworkCenter : MonoBehaviour
     public void EnlargeNetwork()
     {
         StartCoroutine(EnlargeNetworkCoroutine());
+        CellexalEvents.NetworkEnlarged.Invoke();
     }
 
     private IEnumerator EnlargeNetworkCoroutine()

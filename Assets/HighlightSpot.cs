@@ -28,7 +28,7 @@ public class HighlightSpot : MonoBehaviour {
             }
             tutorialManager.NextStep();
         }
-        if (other.tag == "Controller" || other.tag == "Cells")
+        if ((other.tag == "Controller" || other.tag == "Cells") && !this.name.Contains("HighlightSpot"))
         {
             foreach (ParticleSystem sys in this.GetComponentsInChildren<ParticleSystem>())
             {
@@ -41,18 +41,5 @@ public class HighlightSpot : MonoBehaviour {
             //this.gameObject.SetActive(false);
         }
 
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        //if (other.tag == "Controller")
-        //{
-        //    Debug.Log("ACTIVATE");
-        //    foreach (ParticleSystem sys in this.GetComponentsInChildren<ParticleSystem>())
-        //    {
-        //        sys.Play();
-        //    }
-
-        //}
     }
 }
