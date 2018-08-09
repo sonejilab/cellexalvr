@@ -176,8 +176,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1006872406722662}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.027, y: -0.049, z: 0.069}
-  m_LocalScale: {x: 0.18699613, y: 0.17103031, z: 0.11709702}
+  m_LocalPosition: {x: -1.24, y: -0.031, z: 0.137}
+  m_LocalScale: {x: 0.15570119, y: 0.14240734, z: 0.09750013}
   m_Children: []
   m_Father: {fileID: 4632606032341006}
   m_RootOrder: 1
@@ -279,7 +279,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -967084851
+  randomSeed: -709919086
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3640,7 +3640,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -391011850
+  randomSeed: -931130476
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7001,7 +7001,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1006583336
+  randomSeed: -1043788141
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -10368,7 +10368,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 377316494
+  randomSeed: -845136891
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -13919,7 +13919,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b0f2d4687505bf04aa2f8ebca10d3ffc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f3ca61c9c806704893e8d860ab2a522, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

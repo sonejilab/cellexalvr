@@ -96,7 +96,9 @@ public class TutorialManager : MonoBehaviour {
     {
         objList3.Add(trackpadRight.gameObject);
         newSelButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        selToolButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
         objList2.Remove(newSelButton);
+        objList2.Remove(selToolButton);
         ResetMat(objList3);
         objList3.Add(confirmSelButton.gameObject);
     }
