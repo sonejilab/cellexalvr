@@ -11,6 +11,7 @@ public class KeyboardOutput : MonoBehaviour
     private CellManager cellManager;
     private Filter.FilterRule targetFilterRule;
     private TextMesh textMeshToUpdate;
+    private GameManager gameManager;
     private OutputType nextOutputType;
     public enum OutputType { COLOR_GRAPHS_BY_GENE, FILTER_VALUE, FILTER_ITEM_NAME }
 
@@ -18,6 +19,7 @@ public class KeyboardOutput : MonoBehaviour
     {
         cellManager = referenceManager.cellManager;
         textMesh = GetComponent<TextMesh>();
+        gameManager = referenceManager.gameManager;
     }
 
     public void SetNextTarget(OutputType nextOutputType, Filter.FilterRule filterRule = null, TextMesh textMeshToUpdate = null)
