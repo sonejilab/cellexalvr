@@ -64,10 +64,8 @@ namespace ExitGames.Demos.DemoAnimator
 
                 Debug.LogError("<Color=Red><b>Missing</b></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
             }
-            else
+            if  (playerPrefab != null)
             {
-
-
                 if (PlayerManager.LocalPlayerInstance == null)
                 {
                     Debug.Log("We are Instantiating LocalPlayer from " + SceneManagerHelper.ActiveSceneName);
@@ -80,8 +78,6 @@ namespace ExitGames.Demos.DemoAnimator
 
                     Debug.Log("Ignoring scene load for " + SceneManagerHelper.ActiveSceneName);
                 }
-
-
             }
 
         }

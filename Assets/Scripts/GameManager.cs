@@ -18,6 +18,7 @@ public class GameManager : Photon.PunBehaviour
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
     public GameObject serverCoordinatorPrefab;
+    public GameObject waitingCanvas;
 
     private GraphManager graphManager;
     public CellManager cellManager;
@@ -56,6 +57,7 @@ public class GameManager : Photon.PunBehaviour
                 if (PhotonNetwork.isMasterClient)
                 {
                     serverCoordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
+                    waitingCanvas.SetActive(true);
                     // serverCoordinator.RegisterClient(this);
                 }
                 else
@@ -344,6 +346,7 @@ public class GameManager : Photon.PunBehaviour
         //Debug.Log("MASTER JOINED ROOM");
         //LoadArena();
         StartCoroutine(FindClientCoordinator());
+        waitingCanvas.SetActive(false);
 
     }
     public override void OnJoinedRoom()
