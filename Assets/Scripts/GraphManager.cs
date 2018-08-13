@@ -212,7 +212,7 @@ public class GraphManager : MonoBehaviour
     /// <param name="color"> The new color. </param>
     public void RecolorGraphPoint(string graphname, string label, Color color)
     {
-        //FindGraphPoint(graphname, label).Color = color;
+        FindGraphPoint(graphname, label).SetOutLined(true, color);
     }
 
     /// <summary>

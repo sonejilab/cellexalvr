@@ -257,6 +257,8 @@ public class CellManager : MonoBehaviour
         {
             case Definitions.Measurement.GENE:
                 ColorGraphsByGene(name, coloringMethod);
+                Debug.Log("INFORM GENE COLOR");
+                gameManager.InformColorGraphsByGene(name);
                 break;
             case Definitions.Measurement.ATTRIBUTE:
                 ColorByAttribute(name, true);

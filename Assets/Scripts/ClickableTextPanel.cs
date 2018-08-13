@@ -65,6 +65,7 @@ public class ClickableTextPanel : ClickablePanel
         if (Type == Definitions.Measurement.GENE)
         {
             referenceManager.cellManager.ColorGraphsByGene(NameOfThing, ColoringMethod);
+            referenceManager.gameManager.InformColorGraphsByGene(NameOfThing);
         }
         else if (Type == Definitions.Measurement.ATTRIBUTE)
         {

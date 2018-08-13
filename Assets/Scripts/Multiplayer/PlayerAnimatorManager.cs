@@ -58,9 +58,6 @@ namespace Com.MyCompany.MyGame
             target.position = cameraPos.position;
             target.rotation = cameraPos.rotation;
             target.Rotate(90, 0, 0);
-            // deal with Jumping
-            
-            // only allow jumping if we are running.
 
         }
 

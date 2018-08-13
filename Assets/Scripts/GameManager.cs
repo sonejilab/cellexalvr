@@ -36,7 +36,6 @@ public class GameManager : Photon.PunBehaviour
         selectionToolHandler = referenceManager.selectionToolHandler;
         heatmapGenerator = referenceManager.heatmapGenerator;
         networkGenerator = referenceManager.networkGenerator;
-
         Instance = this;
         if (!PhotonNetwork.connected) return;
         if (playerPrefab == null)
@@ -52,6 +51,8 @@ public class GameManager : Photon.PunBehaviour
                 Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                //Debug.Log("SPAWN CUBE");
+                //PhotonNetwork.Instantiate(this.objPrefab.name, new Vector3(0f, 1f, 2f), Quaternion.identity, 0);
                 if (PhotonNetwork.isMasterClient)
                 {
                     serverCoordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
@@ -108,6 +109,7 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to color graphs by " + geneName);
+        Debug.Log("Informing clients to color graphs by " + geneName);
         if (PhotonNetwork.isMasterClient)
         {
             clientCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
