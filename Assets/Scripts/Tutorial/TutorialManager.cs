@@ -8,15 +8,18 @@ public class TutorialManager : MonoBehaviour {
 
     public GameObject tutorialCanvas;
     public GameObject[] stepPanels;
-    public Material standardMat;
-    public Color highLightStart;
-    public Color highLightEnd;
+    
+
     public GameObject rightControllerModel;
     public GameObject leftControllerModel;
     public List<GameObject> highlightSpots;
     public GameObject mainMenu;
     public GraphManager graphManager;
 
+    [Header("Highlighting objects")]
+    public Color highLightStart;
+    public Material standardMat;
+    public Color highLightEnd;
     // Buttons are used to determine what buttons to highlight and if a step is completed.
     public GameObject keyboardButton;
     public GameObject selToolButton;
@@ -24,6 +27,8 @@ public class TutorialManager : MonoBehaviour {
     public GameObject confirmSelButton;
     public GameObject networksButton;
     public GameObject loadMenuButton;
+    public GameObject createHeatmapButton;
+    public GameObject burnHeatmapButton;
 
     private int currentStep = 0;
     private Transform rgripRight;
@@ -51,7 +56,9 @@ public class TutorialManager : MonoBehaviour {
         CellexalEvents.SelectionConfirmed.AddListener(TurnOnSpot);
         CellexalEvents.SelectionConfirmed.AddListener(SelectionOff);
         CellexalEvents.NetworkEnlarged.AddListener(TurnOnSpot);
-        
+        CellexalEvents.HeatmapCreated.AddListener(BurnHeatmap);
+        CellexalEvents.HeatmapBurned.AddListener(BurnHeatmap);
+        CellexalEvents.HeatmapBurned.AddListener(TurnOnSpot);
 
         foreach (Transform child in rightControllerModel.transform)
         {
@@ -93,6 +100,13 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    void BurnHeatmap()
+    {
+        createHeatmapButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+        objList.Remove(createHeatmapButton);
+        objList.Add(burnHeatmapButton);
+    }
+
     void SelectionOn()
     {
         objList3.Add(trackpadRight.gameObject);
@@ -115,6 +129,10 @@ public class TutorialManager : MonoBehaviour {
     void TurnOnSpot()
     {
         highlightSpots[currentStep-2].SetActive(true);
+        foreach (Transform child in highlightSpots[currentStep-2].transform)
+        {
+            child.GetComponent<ParticleSystem>().Play();
+        }
         highlightSpots[currentStep - 2].GetComponent<Collider>().enabled = true;
     }
 
@@ -178,7 +196,7 @@ public class TutorialManager : MonoBehaviour {
             }
         }
 
-        if (currentStep == 5)
+        if (currentStep == 4)
         {
             Highlight(objList3, lerp);
             if (!mainMenu.GetComponent<MeshRenderer>().enabled)
@@ -191,6 +209,11 @@ public class TutorialManager : MonoBehaviour {
                 Highlight(objList2, lerp);
                 ResetMat(objList);
             }
+        }
+
+        if (currentStep == 5)
+        {
+            Highlight(objList, lerp);
         }
 
         if (currentStep == 6)
@@ -226,7 +249,7 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[0].SetActive(true);
+                stepPanels[currentStep - 1].SetActive(true);
                 break;
 
             case 2:
@@ -236,7 +259,7 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[1].SetActive(true);
+                stepPanels[currentStep - 1].SetActive(true);
                 break;
 
             case 3:
@@ -255,13 +278,15 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[2].SetActive(true);
+                stepPanels[currentStep - 1].SetActive(true);
                 break;
 
 
             case 4:
                 //Selection
                 currentStep = 4;
+                triggerRight.Find("ButtonEmitter").gameObject.SetActive(false);
+                triggerLeft.Find("ButtonEmitter").gameObject.SetActive(false);
                 objList2.Remove(keyboardButton);
                 keyboardButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
                 objList2.Add(selToolButton);
@@ -270,7 +295,7 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[3].SetActive(true);
+                stepPanels[currentStep-1].SetActive(true);
                 graphManager.ResetGraphsColor();
                 break;
 
@@ -278,11 +303,22 @@ public class TutorialManager : MonoBehaviour {
             case 5:
                 //Heatmap
                 currentStep = 5;
+                //ResetMat(objList2);
+                ResetMat(objList);
+                objList.Clear();
+                //objList2.Clear();
+                objList.Add(createHeatmapButton);
+                foreach (GameObject obj in stepPanels)
+                {
+                    obj.SetActive(false);
+                }
+                stepPanels[currentStep - 1].SetActive(true);
                 break;
 
             case 6:
                 //Networks
                 currentStep = 6;
+                objList.Remove(burnHeatmapButton);
                 ResetMat(objList2);
                 ResetMat(objList);
                 objList.Clear();
@@ -292,7 +328,7 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[4].SetActive(true);
+                stepPanels[currentStep - 1].SetActive(true);
                 highlightSpots[2].SetActive(false);
                 break;
 
@@ -304,7 +340,7 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[5].SetActive(true);
+                stepPanels[currentStep - 1].SetActive(true);
                 highlightSpots[3].SetActive(false);
                 CellexalEvents.GraphsLoaded.RemoveListener(TurnOnSpot);
                 CellexalEvents.GraphsLoaded.RemoveListener(NextStep);
@@ -318,8 +354,8 @@ public class TutorialManager : MonoBehaviour {
                 {
                     obj.SetActive(false);
                 }
-                stepPanels[6].SetActive(true);
-                highlightSpots[3].SetActive(false);
+                stepPanels[currentStep - 1].SetActive(true);
+                highlightSpots[4].SetActive(false);
                 TurnOnSpot();
                 break;
         }

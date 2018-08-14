@@ -57,6 +57,7 @@ public class HeatmapBurner : MonoBehaviour
         }
         fadeHeatmap = true;
         fire = Instantiate(firePrefab, gameObject.transform);
+        CellexalEvents.HeatmapBurned.Invoke();
     }
 
     /// <summary>
