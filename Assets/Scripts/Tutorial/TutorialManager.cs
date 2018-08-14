@@ -51,6 +51,7 @@ public class TutorialManager : MonoBehaviour {
         CellexalEvents.SelectionConfirmed.AddListener(TurnOnSpot);
         CellexalEvents.SelectionConfirmed.AddListener(SelectionOff);
         CellexalEvents.NetworkEnlarged.AddListener(TurnOnSpot);
+        
 
         foreach (Transform child in rightControllerModel.transform)
         {
@@ -165,15 +166,19 @@ public class TutorialManager : MonoBehaviour {
             {
                 Highlight(objList, lerp);
                 ResetMat(objList2);
+                triggerRight.Find("ButtonEmitter").gameObject.SetActive(false);
             }
             else
             {
                 Highlight(objList2, lerp);
                 ResetMat(objList);
+                //triggerRight.Find("ButtonEmitter").gameObject.GetComponent<ParticleSystem>().Stop();
+                triggerLeft.Find("ButtonEmitter").gameObject.SetActive(false);
+                triggerRight.Find("ButtonEmitter").gameObject.SetActive(true);
             }
         }
 
-        if (currentStep == 4)
+        if (currentStep == 5)
         {
             Highlight(objList3, lerp);
             if (!mainMenu.GetComponent<MeshRenderer>().enabled)
@@ -188,7 +193,7 @@ public class TutorialManager : MonoBehaviour {
             }
         }
 
-        if (currentStep == 5)
+        if (currentStep == 6)
         {
             if (networksButton.GetComponent<CreateNetworksButton>().buttonActivated)
             {
@@ -210,6 +215,7 @@ public class TutorialManager : MonoBehaviour {
         switch (stepNr)
         {
             case 1:
+                //Loading
                 currentStep = 1;
                 objList.Add(rgripRight.gameObject);
                 objList.Add(rgripLeft.gameObject);
@@ -224,6 +230,7 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case 2:
+                //Moving
                 currentStep = 2;
                 foreach (GameObject obj in stepPanels)
                 {
@@ -233,10 +240,13 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case 3:
+                //Keyboard
                 currentStep = 3;
                 ResetMat(objList);
                 objList.Clear();
                 objList.Add(triggerLeft.gameObject);
+                //triggerRight.Find("ButtonEmitter").gameObject.GetComponent<ParticleSystem>().Play();
+                triggerLeft.Find("ButtonEmitter").gameObject.SetActive(true);
                 ResetMat(objList);
                 objList2.Add(triggerRight.gameObject);
                 objList2.Add(trackpadLeft.gameObject);
@@ -248,7 +258,9 @@ public class TutorialManager : MonoBehaviour {
                 stepPanels[2].SetActive(true);
                 break;
 
+
             case 4:
+                //Selection
                 currentStep = 4;
                 objList2.Remove(keyboardButton);
                 keyboardButton.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
@@ -262,8 +274,15 @@ public class TutorialManager : MonoBehaviour {
                 graphManager.ResetGraphsColor();
                 break;
 
+
             case 5:
+                //Heatmap
                 currentStep = 5;
+                break;
+
+            case 6:
+                //Networks
+                currentStep = 6;
                 ResetMat(objList2);
                 ResetMat(objList);
                 objList.Clear();
@@ -277,8 +296,9 @@ public class TutorialManager : MonoBehaviour {
                 highlightSpots[2].SetActive(false);
                 break;
 
-            case 6:
-                currentStep = 6;
+            case 7:
+                //From start
+                currentStep = 7;
                 loadMenuButton.GetComponent<ResetFolderButton>().Reset();
                 foreach (GameObject obj in stepPanels)
                 {
@@ -291,8 +311,9 @@ public class TutorialManager : MonoBehaviour {
                 CellexalEvents.SelectionConfirmed.RemoveListener(TurnOnSpot);
                 break;
 
-            case 7:
-                currentStep = 7;
+            case 8:
+                //Final
+                currentStep = 8;
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);
