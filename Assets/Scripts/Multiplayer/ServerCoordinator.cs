@@ -41,6 +41,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendKeyClick(CurvedVRKeyboard.KeyboardItem item)
+    {
+        CellexalLog.Log("Recieved message that" + item + "to search field");
+        Debug.Log("Recieved message to add letter" + item + "to search field");
+        referenceManager.keyboardStatus.HandleClick(item); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+    }
+
+    [PunRPC]
     public void SendColorGraphsByPreviousExpression(string geneName)
     {
         CellexalLog.Log("Recieved message to color all graphs by " + geneName);
@@ -71,10 +79,10 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendAddSelect(string graphName, string label)
+    public void SendAddSelect(string graphName, string label, int newGroup, Color color)
     {
         Debug.Log("SENDING ADD SELECT");
-        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label);
+        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, color);
     }
 
     [PunRPC]

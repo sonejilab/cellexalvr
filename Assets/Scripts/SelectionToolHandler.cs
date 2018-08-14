@@ -119,6 +119,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
+        gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
 
     /// <summary>
@@ -148,7 +149,7 @@ public class SelectionToolHandler : MonoBehaviour
         }
         graphPoint.CurrentGroup = newGroup;
         // renderer.material.color = Colors[newGroup];
-        gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
+        //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 
         bool newNode = !selectedCells.Contains(graphPoint);
         if (historyIndexOffset != 0)
@@ -183,7 +184,7 @@ public class SelectionToolHandler : MonoBehaviour
             FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
             if (newNode)
             {
-                gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
+                //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
                 if (selectedCells.Count == 0)
                 {
                     CellexalEvents.SelectionStarted.Invoke();
@@ -199,10 +200,10 @@ public class SelectionToolHandler : MonoBehaviour
         }
     }
 
-    public void DoClientSelectAdd(string graphName, string label)
+    public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
     {
         GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        selectedCells.Add(gp);
+        AddGraphpointToSelection(gp, newGroup, true, color);
     }
 
     /// <summary>

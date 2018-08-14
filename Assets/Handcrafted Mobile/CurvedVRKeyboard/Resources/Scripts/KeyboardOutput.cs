@@ -43,6 +43,7 @@ public class KeyboardOutput : MonoBehaviour
         {
             case OutputType.COLOR_GRAPHS_BY_GENE:
                 cellManager.ColorGraphsByGene(text);
+                referenceManager.gameManager.InformColorGraphsByGene(text);
                 break;
             case OutputType.FILTER_VALUE:
                 try

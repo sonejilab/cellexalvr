@@ -25,6 +25,7 @@ public class GameManager : Photon.PunBehaviour
     public SelectionToolHandler selectionToolHandler;
     public HeatmapGenerator heatmapGenerator;
     public NetworkGenerator networkGenerator;
+    private KeyboardOutput keyboardOut;
     private ServerCoordinator serverCoordinator;
     private ServerCoordinator clientCoordinator;
     private bool multiplayer = false;
@@ -37,6 +38,7 @@ public class GameManager : Photon.PunBehaviour
         selectionToolHandler = referenceManager.selectionToolHandler;
         heatmapGenerator = referenceManager.heatmapGenerator;
         networkGenerator = referenceManager.networkGenerator;
+        keyboardOut = referenceManager.keyboardOutput;
         Instance = this;
         if (!PhotonNetwork.connected) return;
         if (playerPrefab == null)
@@ -119,6 +121,20 @@ public class GameManager : Photon.PunBehaviour
         else
         {
             serverCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
+        }
+    }
+
+    public void InformKeyClicked(CurvedVRKeyboard.KeyboardItem item)
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients that" + item + "was clicked");
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
         }
     }
 
@@ -231,16 +247,16 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformSelectedAdd(string graphName, string label)
+    public void InformSelectedAdd(string graphName, string label, int newGroup, Color color)
     {
         if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label);
+            clientCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label);
+            serverCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color);
         }
     }
 

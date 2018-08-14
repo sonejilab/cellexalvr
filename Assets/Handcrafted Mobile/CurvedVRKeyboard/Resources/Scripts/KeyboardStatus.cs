@@ -66,6 +66,7 @@ namespace CurvedVRKeyboard
             {        // Normal letter
                 TypeKey(value[0]);
             }
+            referenceManager.gameManager.InformKeyClicked(clicked);
         }
 
         public void SetVars(ReferenceManager referenceManager)

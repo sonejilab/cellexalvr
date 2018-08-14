@@ -1014,7 +1014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0607d6f9a14bd45965fe724dd0a6da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePrefab: {fileID: 1963720288159494, guid: 919818573d223114abd261621bf9ec04, type: 2}
+  firePrefab: {fileID: 1939142780095840, guid: 379a88d38093b2c40ac43dc2e6e790f3, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 3e5d2cf2507b7b24589d638e2e95c22b, type: 2}
 --- !u!114 &114329533491564300
 MonoBehaviour:
@@ -1058,11 +1058,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102248948059766378}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 21300000, guid: 73d6be1c08c3d1142bbfef7a30fa19ca, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 8b663d5294a3ca140926c106a2fd533a, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: c8eb2070ae1c5e341a5a5a8ec1c67827, type: 3}
+  popupChoice: 0
   buttonActivated: 1
-  spriteRenderer: {fileID: 212754480679624130}
+  controllerInside: 0
 --- !u!114 &114793518304561086
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1095,11 +1099,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102248948059766378}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 21300000, guid: d0fccaf2d0bb72341a846598948d1eb6, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 7c88cdef3009f724296d174ee192c6d6, type: 3}
   deactivatedTexture: {fileID: 0}
+  popupChoice: 0
   buttonActivated: 1
-  spriteRenderer: {fileID: 212472031655170656}
+  controllerInside: 0
 --- !u!114 &114900856164061844
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1113,11 +1121,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102248948059766378}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2248ec72c96a8d84496a683fe3c959a6, type: 3}
   deactivatedTexture: {fileID: 0}
+  popupChoice: 0
   buttonActivated: 1
-  spriteRenderer: {fileID: 212553960895205308}
+  controllerInside: 0
 --- !u!212 &212472031655170656
 SpriteRenderer:
   m_ObjectHideFlags: 1
