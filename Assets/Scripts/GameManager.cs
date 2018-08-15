@@ -88,6 +88,8 @@ public class GameManager : Photon.PunBehaviour
         CellexalLog.Log("Informing clients to read folder " + path);
         if (PhotonNetwork.isMasterClient)
         {
+            Debug.Log(clientCoordinator == null);
+            Debug.Log(serverCoordinator == null);
             clientCoordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
         }
         else
@@ -250,13 +252,14 @@ public class GameManager : Photon.PunBehaviour
     public void InformSelectedAdd(string graphName, string label, int newGroup, Color color)
     {
         if (!multiplayer) return;
+        Debug.Log("Informing clients to add cells to selection");
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color);
+            clientCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color);
+            serverCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
         }
     }
 
@@ -362,7 +365,10 @@ public class GameManager : Photon.PunBehaviour
         //Debug.Log("MASTER JOINED ROOM");
         //LoadArena();
         StartCoroutine(FindClientCoordinator());
-        waitingCanvas.SetActive(false);
+        if (clientCoordinator != null)
+        {
+            waitingCanvas.SetActive(false);
+        }
 
     }
     public override void OnJoinedRoom()
@@ -376,15 +382,25 @@ public class GameManager : Photon.PunBehaviour
 
     private IEnumerator FindClientCoordinator()
     {
-        yield return new WaitForSeconds(1f);
-        clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
+        yield return new WaitForSeconds(2f);
+        if ((clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>()) == null)
+        {
+            StartCoroutine(FindClientCoordinator());
+        }
+        else
+        {
+            waitingCanvas.SetActive(false);
+        }
         Debug.Log("Client Coordinator Found");
     }
 
     private IEnumerator FindServerCoordinator()
     {
-        yield return new WaitForSeconds(1f);
-        serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>();
+        yield return new WaitForSeconds(2f);
+        if ((serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>()) == null)
+        {
+            StartCoroutine(FindServerCoordinator());
+        }
         Debug.Log("Server Coordinator Found");
     }
 

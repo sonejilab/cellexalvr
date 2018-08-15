@@ -111,6 +111,8 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(GraphPoint graphPoint)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[currentColorIndex]);
+        Debug.Log("Adding gp to sel. Inform clients.");
+        gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, currentColorIndex, Colors[currentColorIndex]);
     }
 
     /// <summary>
@@ -119,7 +121,8 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
-        gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
+        //Debug.Log("Adding gp to sel. Inform clients.");
+        //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
 
     /// <summary>
@@ -128,6 +131,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
     {
         // print(other.gameObject.name);
+        Debug.Log("GP: " + graphPoint.label + "newgroup: " + newGroup + "Color: " + color);
         if (graphPoint == null)
         {
             return;
@@ -203,6 +207,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
     {
         GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        Debug.Log("DoClientSelectAdd");
         AddGraphpointToSelection(gp, newGroup, true, color);
     }
 

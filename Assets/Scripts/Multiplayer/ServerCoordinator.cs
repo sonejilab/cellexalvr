@@ -79,10 +79,9 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendAddSelect(string graphName, string label, int newGroup, Color color)
+    public void SendAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
     {
-        Debug.Log("SENDING ADD SELECT");
-        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, color);
+        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r,g,b));
     }
 
     [PunRPC]
