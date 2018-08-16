@@ -57,7 +57,7 @@ namespace Com.MyCompany.MyGame
 
             target.position = cameraPos.position;
             target.rotation = cameraPos.rotation;
-            target.Rotate(90, 0, 0);
+            target.Rotate(90, 0, 20);
 
         }
 
