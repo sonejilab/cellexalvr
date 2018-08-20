@@ -83,7 +83,15 @@ public class InputReader : MonoBehaviour
     public void ReadFolder(string path)
     {
         string workingDirectory = Directory.GetCurrentDirectory();
-        string fullPath = workingDirectory + "\\Data\\" + path;
+        string fullPath;
+        if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
+        {
+            fullPath = workingDirectory + "\\TutorialData\\" + path;
+        }
+        else
+        {
+            fullPath = workingDirectory + "\\Data\\" + path;
+        }
         CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
         CellexalUser.DataSourceFolder = path;
         //LoadPreviousGroupings();

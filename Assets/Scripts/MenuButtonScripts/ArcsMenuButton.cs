@@ -29,6 +29,5 @@ public class ArcsMenuButton : CellexalButton
         arcsMenu.SetActive(true);
         buttons.SetActive(false);
     }
-
 }
 
