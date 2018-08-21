@@ -28,10 +28,12 @@ public class SelectionToolHandler : MonoBehaviour
     public int fileCreationCtr = 0;
     public Color[] Colors;
     public Collider[] selectionToolColliders;
+    public GameObject particles;
 
     private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
     private SteamVR_TrackedObject rightController;
+    private SteamVR_Controller.Device device;
     private List<GraphPoint> selectedCells = new List<GraphPoint>();
     private List<GraphPoint> lastSelectedCells = new List<GraphPoint>();
     private Color selectedColor;
@@ -39,6 +41,8 @@ public class SelectionToolHandler : MonoBehaviour
     private bool selectionMade = false;
     private GameObject grabbedObject;
     private bool heatmapCreated = true;
+    private bool selActive = false;
+    private int currentMeshIndex;
 
     [HideInInspector]
     public int[] groups = new int[10];
@@ -92,6 +96,23 @@ public class SelectionToolHandler : MonoBehaviour
         gameManager = referenceManager.gameManager;
     }
 
+    private void Update()
+    {
+        if (device == null)
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+        }
+        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            particles.SetActive(true);
+            ActivateSelection(true);
+        }
+        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            particles.SetActive(false);
+            ActivateSelection(false);
+        }
+    }
     /// <summary>
     /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.SelectionToolColors"/>.
     /// </summary>
@@ -111,7 +132,6 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(GraphPoint graphPoint)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[currentColorIndex]);
-        Debug.Log("Adding gp to sel. Inform clients.");
         gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, currentColorIndex, Colors[currentColorIndex]);
     }
 
@@ -125,13 +145,14 @@ public class SelectionToolHandler : MonoBehaviour
         //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
 
+    
+
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.
     /// </summary>
     public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
     {
         // print(other.gameObject.name);
-        Debug.Log("GP: " + graphPoint.label + "newgroup: " + newGroup + "Color: " + color);
         if (graphPoint == null)
         {
             return;
@@ -560,15 +581,28 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="meshIndex">The index of the collider that should be activated, if <paramref name="enabled"/> is <code>true</code>.</param>
     public void SetSelectionToolEnabled(bool enabled, int meshIndex)
     {
+        currentMeshIndex = meshIndex;
         if (enabled)
         {
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
         }
+        if (selActive)
+        {
+            controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex] + new Color(0, 0, 0, 0.5f));
+        }
         for (int i = 0; i < selectionToolColliders.Length; ++i)
         {
             // if we are turning on the selection tool, enable the collider with the corresponding index as the mesh and disable the other colliders.
-            selectionToolColliders[i].enabled = enabled && meshIndex == i;
+            selectionToolColliders[i].enabled = enabled && selActive && meshIndex == i;
         }
+
+    }
+
+    void ActivateSelection(bool sel)
+    {
+        selActive = sel;
+        Debug.Log("ACTIVATE");
+        SetSelectionToolEnabled(true, currentMeshIndex);
     }
 
     public bool IsSelectionToolEnabled()

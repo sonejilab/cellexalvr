@@ -404,7 +404,10 @@ public class Heatmap : MonoBehaviour
 
     void Update()
     {
-        device = SteamVR_Controller.Input((int)rightController.index);
+        if (device == null)
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+        }
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && fire.activeSelf)
         {
             gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();
