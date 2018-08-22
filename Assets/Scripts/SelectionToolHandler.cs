@@ -103,12 +103,12 @@ public class SelectionToolHandler : MonoBehaviour
         {
             device = SteamVR_Controller.Input((int)rightController.index);
         }
-        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {
             particles.SetActive(true);
             ActivateSelection(true);
         }
-        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {
             particles.SetActive(false);
             ActivateSelection(false);

@@ -31,13 +31,11 @@ public class SelectionToolButton : CellexalButton
         if (controllerModelSwitcher.DesiredModel != ControllerModelSwitcher.Model.SelectionTool)
         {
             controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.SelectionTool;
-            selectionToolHandler.gameObject.SetActive(true);
             controllerModelSwitcher.ActivateDesiredTool();
         }
         else
         {
             controllerModelSwitcher.TurnOffActiveTool(true);
-            selectionToolHandler.gameObject.SetActive(false);
         }
         if (menuActive && rotator.SideFacingPlayer == MenuRotator.Rotation.Front)
         {
