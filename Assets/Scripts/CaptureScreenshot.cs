@@ -26,7 +26,7 @@ public class CaptureScreenshot : MonoBehaviour
     {
 
         //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             //Touchpad 
             if (!Directory.Exists(directory))

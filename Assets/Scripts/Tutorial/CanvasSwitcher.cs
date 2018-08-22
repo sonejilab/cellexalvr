@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CanvasSwitcher : MonoBehaviour {
 
-    public GameObject tutorialCanvas;
-    public GameObject mainCanvas;
+    public GameObject[] canvases;
 
 	// Use this for initialization
 	void Start () {
@@ -17,17 +16,22 @@ public class CanvasSwitcher : MonoBehaviour {
 		
 	}
 
-    public void switchCanvas()
+    public void switchCanvas(int id)
     {
-        if (tutorialCanvas.gameObject.activeSelf)
+        for (int i = 0; i < canvases.Length; i++)
         {
-            tutorialCanvas.SetActive(false);
-            mainCanvas.SetActive(true);
+            bool b = i == id;
+            canvases[i].SetActive(b);
         }
-        else
-        {
-            mainCanvas.SetActive(false);
-            tutorialCanvas.SetActive(true);
-        }
+        //if (tutorialCanvas.gameObject.activeSelf)
+        //{
+        //    tutorialCanvas.SetActive(false);
+        //    obj.SetActive(true);
+        //}
+        //else
+        //{
+        //    mainCanvas.SetActive(false);
+        //    tutorialCanvas.SetActive(true);
+        //}
     }
 }

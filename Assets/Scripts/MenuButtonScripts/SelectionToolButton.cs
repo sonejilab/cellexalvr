@@ -7,6 +7,7 @@ public class SelectionToolButton : CellexalButton
 
     private MenuRotator rotator;
     private ControllerModelSwitcher controllerModelSwitcher;
+    private SelectionToolHandler selectionToolHandler;
     private bool menuActive = false;
     //private bool buttonsInitialized = false;
 
@@ -18,6 +19,7 @@ public class SelectionToolButton : CellexalButton
     {
         rotator = referenceManager.menuRotator;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+        selectionToolHandler = referenceManager.selectionToolHandler;
         SetButtonActivated(false);
         CellexalEvents.GraphsLoaded.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
@@ -29,11 +31,13 @@ public class SelectionToolButton : CellexalButton
         if (controllerModelSwitcher.DesiredModel != ControllerModelSwitcher.Model.SelectionTool)
         {
             controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.SelectionTool;
+            selectionToolHandler.gameObject.SetActive(true);
             controllerModelSwitcher.ActivateDesiredTool();
         }
         else
         {
             controllerModelSwitcher.TurnOffActiveTool(true);
+            selectionToolHandler.gameObject.SetActive(false);
         }
         if (menuActive && rotator.SideFacingPlayer == MenuRotator.Rotation.Front)
         {

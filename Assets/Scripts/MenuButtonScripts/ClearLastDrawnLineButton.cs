@@ -22,5 +22,6 @@ public class ClearLastDrawnLineButton : CellexalButton
     {
         drawTool.SkipNextDraw();
         drawTool.ClearLastLine();
+        referenceManager.gameManager.InformClearLastLine();
     }
 }

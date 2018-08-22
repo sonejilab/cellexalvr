@@ -29,8 +29,8 @@ namespace ExitGames.Demos.DemoAnimator
 
         [Tooltip("The Ui Panel to let the user enter name, connect and play")]
         public GameObject controlPanel;
-        [Tooltip("The UI Label to inform the user that the connection is in progress")]
-        public GameObject progressLabel;
+        //[Tooltip("The UI Label to inform the user that the connection is in progress")]
+        //public GameObject progressLabel;
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace ExitGames.Demos.DemoAnimator
         /// </summary>
         void Start()
         {
-            progressLabel.SetActive(false);
+            //progressLabel.SetActive(false);
             controlPanel.SetActive(true);
         }
 
@@ -118,7 +118,7 @@ namespace ExitGames.Demos.DemoAnimator
 
         public override void OnDisconnectedFromPhoton()
         {
-            progressLabel.SetActive(true);
+            //progressLabel.SetActive(true);
             controlPanel.SetActive(false);
             Debug.LogWarning("DemoAnimator/Launcer: OnDisconnectedFromPhoton() was called by PUN");
         }
@@ -154,7 +154,7 @@ namespace ExitGames.Demos.DemoAnimator
         {
             // keep track of the will to join a room, because when we come back from the game we will get a callback that we are connected, so we need to know what to do then
             isConnecting = true;
-            progressLabel.SetActive(true);
+            //progressLabel.SetActive(true);
             controlPanel.SetActive(false);
             
 

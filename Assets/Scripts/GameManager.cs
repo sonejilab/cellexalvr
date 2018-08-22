@@ -210,6 +210,47 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformClearAllLines()
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to clear all lines");
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendRemoveAllLines", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendRemoveAllLines", PhotonTargets.Others);
+        }
+    }
+
+    public void InformClearLastLine()
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to clear last line");
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendClearPrevLine", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendClearPrevLine", PhotonTargets.Others);
+        }
+    }
+
+    public void InformClearAllLinesWithColor(Color color)
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to clear all lines with color: " + color);
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendClearLinesWithColor", PhotonTargets.Others, color.r, color.g, color.b);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendClearLinesWithColor", PhotonTargets.Others, color.r, color.g, color.b);
+        }
+    }
     public void InformMoveGraph(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;

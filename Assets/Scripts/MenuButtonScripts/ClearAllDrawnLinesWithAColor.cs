@@ -37,5 +37,6 @@ public class ClearAllDrawnLinesWithAColor : CellexalButton
     {
         drawTool.SkipNextDraw();
         drawTool.ClearAllLinesWithColor(color);
+        referenceManager.gameManager.InformClearAllLinesWithColor(color);
     }
 }

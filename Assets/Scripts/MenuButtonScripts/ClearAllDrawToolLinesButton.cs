@@ -19,6 +19,7 @@ public class ClearAllDrawToolLinesButton : CellexalButton
     {
         drawTool.SkipNextDraw();
         drawTool.ClearAllLines();
+        referenceManager.gameManager.InformClearAllLines();
 
     }
 }

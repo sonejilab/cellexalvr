@@ -98,6 +98,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     private void Update()
     {
+        // Only activate selection if trigger is pressed.
         if (device == null)
         {
             device = SteamVR_Controller.Input((int)rightController.index);
@@ -228,7 +229,6 @@ public class SelectionToolHandler : MonoBehaviour
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
     {
         GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        Debug.Log("DoClientSelectAdd");
         AddGraphpointToSelection(gp, newGroup, true, color);
     }
 
@@ -601,7 +601,6 @@ public class SelectionToolHandler : MonoBehaviour
     void ActivateSelection(bool sel)
     {
         selActive = sel;
-        Debug.Log("ACTIVATE");
         SetSelectionToolEnabled(true, currentMeshIndex);
     }
 

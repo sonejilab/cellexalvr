@@ -41,11 +41,11 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendKeyClick(CurvedVRKeyboard.KeyboardItem item)
+    public void SendKeyClick(string key)
     {
-        CellexalLog.Log("Recieved message that" + item + "to search field");
-        Debug.Log("Recieved message to add letter" + item + "to search field");
-        referenceManager.keyboardStatus.HandleClick(item); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+        CellexalLog.Log("Recieved message to add" + key + "to search field");
+        Debug.Log("Recieved message to add letter" + key + "to search field");
+        referenceManager.keyboardStatus.HandleClick(null, key); //, referenceManager.graphManager.GeneExpressionColoringMethod);
     }
 
     [PunRPC]
@@ -172,6 +172,27 @@ class ServerCoordinator : Photon.MonoBehaviour
         }
         Color col = new Color(r, g, b);
         gameManager.referenceManager.drawTool.DrawNewLine(col, coords);
+    }
+
+    [PunRPC]
+    public void SendClearAllLines()
+    {
+        CellexalLog.Log("Recieved message to clear line segments");
+        gameManager.referenceManager.drawTool.ClearAllLines();
+    }
+
+    [PunRPC]
+    public void SendClearLastLine()
+    {
+        CellexalLog.Log("Recieved message to clear previous line");
+        gameManager.referenceManager.drawTool.ClearLastLine();
+    }
+
+    [PunRPC]
+    public void SendClearLinesWithColor(float r, float g, float b)
+    {
+        CellexalLog.Log("Recieved message to clear previous line");
+        gameManager.referenceManager.drawTool.ClearAllLinesWithColor(new Color(r,g,b));
     }
 
     [PunRPC]

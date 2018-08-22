@@ -37,9 +37,13 @@ namespace CurvedVRKeyboard
         /// Handles click on keyboarditem
         /// </summary>
         /// <param name="clicked">keyboard item clicked</param>
-        public void HandleClick(KeyboardItem clicked)
+        /// <param name="str">if over network then keyboard item cant be serialized to use string value directly.</param>
+        public void HandleClick(KeyboardItem clicked = null, string value = "")
         {
-            string value = clicked.GetValue();
+            if (clicked != null)
+            {
+                value = clicked.GetValue();
+            }
             // print(value);
             if (value.Equals(QEH) || value.Equals(ABC))
             {                 // special signs pressed
