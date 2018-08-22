@@ -216,11 +216,11 @@ public class GameManager : Photon.PunBehaviour
         CellexalLog.Log("Informing clients to clear all lines");
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendRemoveAllLines", PhotonTargets.Others);
+            clientCoordinator.photonView.RPC("SendClearAllLines", PhotonTargets.Others);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendRemoveAllLines", PhotonTargets.Others);
+            serverCoordinator.photonView.RPC("SendClearAllLines", PhotonTargets.Others);
         }
     }
 
@@ -230,11 +230,11 @@ public class GameManager : Photon.PunBehaviour
         CellexalLog.Log("Informing clients to clear last line");
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendClearPrevLine", PhotonTargets.Others);
+            clientCoordinator.photonView.RPC("SendClearLastLine", PhotonTargets.Others);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendClearPrevLine", PhotonTargets.Others);
+            serverCoordinator.photonView.RPC("SendClearLastLine", PhotonTargets.Others);
         }
     }
 
