@@ -103,16 +103,20 @@ public class SelectionToolHandler : MonoBehaviour
         {
             device = SteamVR_Controller.Input((int)rightController.index);
         }
-        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+        if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {
-            particles.SetActive(true);
-            ActivateSelection(true);
+            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                particles.SetActive(true);
+                ActivateSelection(true);
+            }
+            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                particles.SetActive(false);
+                ActivateSelection(false);
+            }
         }
-        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
-        {
-            particles.SetActive(false);
-            ActivateSelection(false);
-        }
+
     }
     /// <summary>
     /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.SelectionToolColors"/>.
@@ -585,6 +589,10 @@ public class SelectionToolHandler : MonoBehaviour
         if (enabled)
         {
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
+        }
+        if (!enabled)
+        {
+            particles.SetActive(false);
         }
         if (selActive)
         {

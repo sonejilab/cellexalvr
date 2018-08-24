@@ -178,27 +178,30 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendClearAllLines()
     {
         CellexalLog.Log("Recieved message to clear line segments");
-        gameManager.referenceManager.drawTool.ClearAllLines();
+        referenceManager.drawTool.SkipNextDraw();
+        referenceManager.drawTool.ClearAllLines();
     }
 
     [PunRPC]
     public void SendClearLastLine()
     {
         CellexalLog.Log("Recieved message to clear previous line");
-        gameManager.referenceManager.drawTool.ClearLastLine();
+        referenceManager.drawTool.SkipNextDraw();
+        referenceManager.drawTool.ClearLastLine();
     }
 
     [PunRPC]
     public void SendClearLinesWithColor(float r, float g, float b)
     {
         CellexalLog.Log("Recieved message to clear previous line");
-        gameManager.referenceManager.drawTool.ClearAllLinesWithColor(new Color(r,g,b));
+        referenceManager.drawTool.SkipNextDraw();
+        referenceManager.drawTool.ClearAllLinesWithColor(new Color(r,g,b));
     }
 
     [PunRPC]
     public void SendActivateKeyboard(bool activate)
     {
-        gameManager.referenceManager.keyboard.SetKeyboardVisible(activate);
+        referenceManager.keyboard.SetKeyboardVisible(activate);
     }
 
     #endregion

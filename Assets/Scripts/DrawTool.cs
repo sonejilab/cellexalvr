@@ -145,6 +145,7 @@ public class DrawTool : MonoBehaviour
         newLine.SetPositions(coords);
         newLine.startColor = col;
         newLine.endColor = col;
+        lines.Add(newLine);
     }
 
     /// <summary>
