@@ -23,7 +23,9 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendReadFolder(string path)
     {
         CellexalLog.Log("Recieved message to read folder at " + path);
-        gameManager.referenceManager.inputReader.ReadFolder(path);
+        referenceManager.inputReader.ReadFolder(path);
+        referenceManager.inputFolderGenerator.DestroyFolders();
+        
     }
 
     [PunRPC]
