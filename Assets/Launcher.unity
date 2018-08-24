@@ -709,7 +709,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1108622696}
-  - component: {fileID: 1108622695}
   - component: {fileID: 1108622697}
   m_Layer: 0
   m_Name: Scripts
@@ -718,19 +717,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1108622695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1108622694}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a02ce27e88b39fa428538620fe0335e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Skin: {fileID: 11400000, guid: 798b8fafc1a9fe74cae8837a57ccae37, type: 2}
-  WidthAndHeight: {x: 600, y: 400}
 --- !u!4 &1108622696
 Transform:
   m_ObjectHideFlags: 0
