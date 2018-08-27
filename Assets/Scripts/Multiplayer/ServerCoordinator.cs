@@ -110,9 +110,9 @@ class ServerCoordinator : Photon.MonoBehaviour
 
     [PunRPC]
     public void SendToggleMenu()
-    {
-        Debug.Log("TOGGLE MENU");
+    {   
         referenceManager.gameManager.avatarMenuActive = !referenceManager.gameManager.avatarMenuActive;
+        Debug.Log("TOGGLE MENU " + referenceManager.gameManager.avatarMenuActive);
     }
 
 
