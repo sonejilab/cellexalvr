@@ -19,6 +19,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
 
     private void Start()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
     }
 

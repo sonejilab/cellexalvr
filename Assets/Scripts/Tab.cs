@@ -19,6 +19,7 @@ public class Tab : MonoBehaviour
 
     protected virtual void Awake()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
     }
 
@@ -31,6 +32,10 @@ public class Tab : MonoBehaviour
         Active = active;
         if (!menuToggler)
         {
+            if (referenceManager == null)
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
             menuToggler = referenceManager.menuToggler;
         }
         foreach (Transform child in transform)

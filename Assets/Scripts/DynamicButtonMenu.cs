@@ -26,6 +26,7 @@ public abstract class DynamicButtonMenu : MonoBehaviour
 
     private void Start()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
     }
 

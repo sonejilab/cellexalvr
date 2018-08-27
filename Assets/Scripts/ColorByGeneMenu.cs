@@ -25,6 +25,7 @@ public class ColorByGeneMenu : MonoBehaviour
 
     private void Awake()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
         CellexalEvents.QueryTopGenesStarted.AddListener(ShowLoadingText);
         CellexalEvents.QueryTopGenesFinished.AddListener(HideLoadingText);

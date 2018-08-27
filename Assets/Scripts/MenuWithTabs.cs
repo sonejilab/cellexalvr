@@ -17,6 +17,7 @@ public class MenuWithTabs : MonoBehaviour
 
     protected virtual void Start()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
         CellexalEvents.GraphsUnloaded.AddListener(DestroyTabs);
     }

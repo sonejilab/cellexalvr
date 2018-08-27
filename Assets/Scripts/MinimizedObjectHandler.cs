@@ -26,6 +26,7 @@ public class MinimizedObjectHandler : MonoBehaviour
                 spaceTaken[i, j] = false;
             }
         }
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
         CellexalEvents.GraphsUnloaded.AddListener(Clear);
     }

@@ -21,6 +21,7 @@ public class FilterMenu : MonoBehaviour
 
     private void Awake()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
     }
 

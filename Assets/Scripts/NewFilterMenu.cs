@@ -12,6 +12,7 @@ public class NewFilterMenu : MonoBehaviour
 
     private void Start()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         filterMenu = referenceManager.filterMenu;
     }
 
