@@ -411,6 +411,7 @@ public class Heatmap : MonoBehaviour
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && fire.activeSelf)
         {
             gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();
+            gameManager.InformBurnHeatmap();
         }
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {

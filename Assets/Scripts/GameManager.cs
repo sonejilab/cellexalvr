@@ -264,6 +264,19 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformResetGraphColor()
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
+        }
+    }
+
     public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
@@ -315,6 +328,20 @@ public class GameManager : Photon.PunBehaviour
         else
         {
             serverCoordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
+        }
+    }
+
+    public void InformBurnHeatmap()
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to create heatmap");
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others);
         }
     }
 

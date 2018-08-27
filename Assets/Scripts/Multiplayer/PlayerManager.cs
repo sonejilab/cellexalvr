@@ -41,10 +41,10 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
         if (photonView.isMine)
         {
             PlayerManager.LocalPlayerInstance = this.gameObject;
-            MeshRenderer[] meshList = transform.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer m in meshList)
+            Renderer[] meshList = transform.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in meshList)
             {
-                m.enabled = false;
+                r.enabled = false;
             }
         }
         // #Critical

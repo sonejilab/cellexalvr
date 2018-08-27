@@ -103,6 +103,13 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendResetGraph()
+    {
+        referenceManager.graphManager.ResetGraphsColor();
+    }
+
+
+    [PunRPC]
     public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
@@ -116,6 +123,13 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Recieved message to create heatmap");
         referenceManager.heatmapGenerator.CreateHeatmap();
+    }
+
+    [PunRPC]
+    public void SendBurnHeatmap()
+    {
+        CellexalLog.Log("Recieved message to create heatmap");
+        referenceManager.heatmapBurner.BurnHeatmap();
     }
 
     [PunRPC]

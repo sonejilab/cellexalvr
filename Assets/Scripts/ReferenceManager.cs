@@ -74,6 +74,7 @@ public class ReferenceManager : MonoBehaviour
     public GraphManager graphManager;
     public CellManager cellManager;
     public HeatmapGenerator heatmapGenerator;
+    public HeatmapBurner heatmapBurner;
     public NetworkGenerator networkGenerator;
     public InputFolderGenerator inputFolderGenerator;
     public LoaderController loaderController;
