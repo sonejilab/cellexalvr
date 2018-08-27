@@ -108,6 +108,13 @@ class ServerCoordinator : Photon.MonoBehaviour
         referenceManager.graphManager.ResetGraphsColor();
     }
 
+    [PunRPC]
+    public void SendToggleMenu()
+    {
+        Debug.Log("TOGGLE MENU");
+        referenceManager.gameManager.avatarMenuActive = !referenceManager.gameManager.avatarMenuActive;
+    }
+
 
     [PunRPC]
     public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)

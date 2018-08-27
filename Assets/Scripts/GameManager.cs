@@ -19,6 +19,7 @@ public class GameManager : Photon.PunBehaviour
     public GameObject playerPrefab;
     public GameObject serverCoordinatorPrefab;
     public GameObject waitingCanvas;
+    public bool avatarMenuActive;
 
     private GraphManager graphManager;
     public CellManager cellManager;
@@ -167,6 +168,22 @@ public class GameManager : Photon.PunBehaviour
             serverCoordinator.photonView.RPC("SendSearchLockToggled", PhotonTargets.Others, index);
         }
     }
+
+    public void InformToggleMenu()
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to show menu");
+        if (PhotonNetwork.isMasterClient)
+        {
+            //Debug.Log("TOGGLE MENU");
+            clientCoordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
+        }
+    }
+    
 
     public void InformCalculateCorrelatedGenes(int index, string geneName)
     {

@@ -41,6 +41,7 @@ public class MenuToggler : MonoBehaviour
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
             controllerModelSwitcher.ActivateDesiredTool();
+            referenceManager.gameManager.InformToggleMenu();
 
         }
     }
