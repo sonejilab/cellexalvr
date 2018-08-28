@@ -9,7 +9,7 @@ public class ToggleArcsButton : CellexalButton
 
     [HideInInspector]
     public ToggleAllCombinedArcsButton combinedNetworksButton;
-    private NetworkCenter network;
+    public NetworkCenter network;
 
     protected override string Description
     {
@@ -20,6 +20,7 @@ public class ToggleArcsButton : CellexalButton
     {
         combinedNetworksButton.SetCombinedArcsVisible(false);
         network.SetArcsVisible(toggleToState);
+        referenceManager.gameManager.InformSetArcsVisible(toggleToState, network.name);
     }
 
     /// <summary>

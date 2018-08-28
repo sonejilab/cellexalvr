@@ -430,6 +430,19 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformSetArcsVisible(bool toggleToState, string networkName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendSetArcsVisible", PhotonTargets.Others, toggleToState, networkName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendSetArcsVisible", PhotonTargets.Others, toggleToState, networkName);
+        }
+    }
+
 
     #endregion
 

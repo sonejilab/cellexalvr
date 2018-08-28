@@ -102,6 +102,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (device == null)
         {
             device = SteamVR_Controller.Input((int)rightController.index);
+            Debug.Log(device);
         }
         if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {

@@ -185,6 +185,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendSetArcsVisible(bool toggleToState, string networkName)
+    {
+        Debug.Log("Toggle network of " + networkName);
+        // Oh god...
+        GameObject.Find(networkName).GetComponent<ToggleArcsButton>().network.SetArcsVisible(toggleToState);
+    }
+
+    [PunRPC]
     public void SendDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
     {
         CellexalLog.Log("Recieved message to draw line with " + xcoords.Length + " segments");

@@ -71,6 +71,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
             newButton.GetComponent<Renderer>().material.color = network.GetComponent<Renderer>().material.color;
             var toggleArcButtonList = newButton.GetComponentsInChildren<ToggleArcsButton>();
             newButton.transform.localPosition = buttonPos;
+            newButton.name = "ArcButton" + i;
             newButton.gameObject.SetActive(true);
             foreach (var toggleArcButton in toggleArcButtonList)
             {
