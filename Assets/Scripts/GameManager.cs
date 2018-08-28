@@ -183,7 +183,7 @@ public class GameManager : Photon.PunBehaviour
             serverCoordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
         }
     }
-    
+
 
     public void InformCalculateCorrelatedGenes(int index, string geneName)
     {

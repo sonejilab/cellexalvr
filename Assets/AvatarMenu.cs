@@ -7,6 +7,7 @@ public class AvatarMenu : Photon.MonoBehaviour
     //public float DirectionDampTime = 5f;
     public Transform target;
     public Transform menuPos;
+    public GameObject mainMenu;
 
 
     #endregion
@@ -30,11 +31,11 @@ public class AvatarMenu : Photon.MonoBehaviour
             Debug.LogError("PlayerAnimatorManager is Missing Animator Component", this);
         }
 
-        Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in meshList)
-        {
-            r.enabled = false;
-        }
+        //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
+        //foreach (Renderer r in meshList)
+        //{
+        //    r.enabled = false;
+        //}
            
     }
 
@@ -53,20 +54,22 @@ public class AvatarMenu : Photon.MonoBehaviour
             if (referenceManager.gameManager.avatarMenuActive)
             {
                 Debug.Log("MENU ACTIVE");
-                Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-                foreach (Renderer r in meshList)
-                {
-                    r.enabled = true;
-                }
+                Instantiate(mainMenu, Vector3.zero, Quaternion.identity);
+                //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
+                //foreach (Renderer r in meshList)
+                //{
+                //    r.enabled = true;
+                //}
             }
             if (!referenceManager.gameManager.avatarMenuActive)
             {
                 Debug.Log("MENU INACTIVE");
-                Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-                foreach (Renderer r in meshList)
-                {
-                    r.enabled = false;
-                }
+                Destroy(this);
+                //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
+                //foreach (Renderer r in meshList)
+                //{
+                //    r.enabled = false;
+                //}
             }
         }
 

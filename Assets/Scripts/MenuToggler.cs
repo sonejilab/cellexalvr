@@ -36,6 +36,7 @@ public class MenuToggler : MonoBehaviour
         device = SteamVR_Controller.Input((int)leftController.index);
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            Debug.Log("TOGGLE MENU");
             MenuActive = !MenuActive;
             SetMenuVisible(MenuActive);
             boxCollider.enabled = MenuActive;
