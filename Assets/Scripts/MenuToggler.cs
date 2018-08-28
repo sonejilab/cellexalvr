@@ -42,14 +42,14 @@ public class MenuToggler : MonoBehaviour
             controllerModelSwitcher.SwitchToDesiredModel();
             controllerModelSwitcher.ActivateDesiredTool();
             referenceManager.gameManager.InformToggleMenu();
-            if (MenuActive)
-            {
-                PhotonNetwork.Instantiate("Main Menu", Vector3.zero, Quaternion.identity, 0);
-            }
-            //if (!MenuActive)
+            //if (MenuActive)
             //{
-            //    PhotonNetwork.Destroy("Main Menu");
+            //    PhotonNetwork.Instantiate("Main Menu", Vector3.zero, Quaternion.identity, 0);
             //}
+            ////if (!MenuActive)
+            ////{
+            ////    PhotonNetwork.Destroy("Main Menu");
+            ////}
 
         }
     }
