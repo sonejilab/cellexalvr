@@ -2237,7 +2237,6 @@ GameObject:
   - component: {fileID: 114114594017122412}
   - component: {fileID: 114626598298508766}
   - component: {fileID: 114634223910218590}
-  - component: {fileID: 114950012369413824}
   m_Layer: 10
   m_Name: Main Menu
   m_TagString: Untagged
@@ -13275,6 +13274,7 @@ MonoBehaviour:
   controllerInside: 0
   toggleToState: 0
   combinedNetworksButton: {fileID: 114219829426613958}
+  network: {fileID: 0}
 --- !u!114 &114051006203778728
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15518,6 +15518,7 @@ MonoBehaviour:
   controllerInside: 0
   toggleToState: 1
   combinedNetworksButton: {fileID: 114219829426613958}
+  network: {fileID: 0}
 --- !u!114 &114737384245631930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15947,20 +15948,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   TabButton: {fileID: 114661210988961686}
---- !u!114 &114950012369413824
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1623899640000874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46d81223a27f35c4aadd8443f89df0e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  menuPos: {fileID: 0}
-  mainMenu: {fileID: 0}
 --- !u!114 &114954110699684156
 MonoBehaviour:
   m_ObjectHideFlags: 1

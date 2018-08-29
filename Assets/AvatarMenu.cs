@@ -15,6 +15,7 @@ public class AvatarMenu : Photon.MonoBehaviour
 
     #region Private Variables
     private ReferenceManager referenceManager;
+    private GameObject menu;
     #endregion
 
     #region MONOBEHAVIOUR MESSAGES
@@ -26,6 +27,7 @@ public class AvatarMenu : Photon.MonoBehaviour
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuPos = referenceManager.mainMenu.transform;
         target = GetComponent<Transform>();
+        //mainMenu.SetActive(false);
         if (!target)
         {
             Debug.LogError("PlayerAnimatorManager is Missing Animator Component", this);
@@ -53,8 +55,12 @@ public class AvatarMenu : Photon.MonoBehaviour
             Debug.Log("NOT MY MENU");
             if (referenceManager.gameManager.avatarMenuActive)
             {
-                Debug.Log("MENU ACTIVE");
-                Instantiate(mainMenu, Vector3.zero, Quaternion.identity);
+                Debug.Log("TOGGLE ON");
+                mainMenu.SetActive(true);
+                //if (menu == null)
+                //{
+                //    menu = Instantiate(mainMenu, Vector3.zero, Quaternion.identity);
+                //}
                 //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
                 //foreach (Renderer r in meshList)
                 //{
@@ -63,8 +69,12 @@ public class AvatarMenu : Photon.MonoBehaviour
             }
             if (!referenceManager.gameManager.avatarMenuActive)
             {
-                Debug.Log("MENU INACTIVE");
-                Destroy(this);
+                Debug.Log("TOGGLE OFF");
+                mainMenu.SetActive(false);
+                //if (menu != null)
+                //{
+                //    Destroy(menu);
+                //}
                 //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
                 //foreach (Renderer r in meshList)
                 //{
@@ -77,14 +87,14 @@ public class AvatarMenu : Photon.MonoBehaviour
         {
             return;
         }
-        if (!target)
-        {
-            target = GetComponent<Transform>();
-            return;
-        }
+        //if (!target)
+        //{
+        //    target = GetComponent<Transform>();
+        //    return;
+        //}
 
-        target.position = menuPos.position;
-        target.rotation = menuPos.rotation;
+        mainMenu.transform.position = menuPos.position;
+        mainMenu.transform.rotation = menuPos.rotation;
         //target.Rotate(0, 0, 0);
         // deal with Jumping
 
