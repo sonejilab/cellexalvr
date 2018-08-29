@@ -348,17 +348,17 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformBurnHeatmap()
+    public void InformBurnHeatmap(string name)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to create heatmap");
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others);
+            clientCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, name);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others);
+            serverCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, name);
         }
     }
 

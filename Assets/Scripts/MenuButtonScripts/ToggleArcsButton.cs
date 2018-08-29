@@ -10,6 +10,7 @@ public class ToggleArcsButton : CellexalButton
     [HideInInspector]
     public ToggleAllCombinedArcsButton combinedNetworksButton;
     public NetworkCenter network;
+    public GameObject parentNetwork;
 
     protected override string Description
     {
@@ -28,7 +29,8 @@ public class ToggleArcsButton : CellexalButton
     /// </summary>
     public void SetNetwork(NetworkCenter network)
     {
-        this.network.name = this.name;
         this.network = network;
+        string str = this.parentNetwork.name.Split('_')[0];
+        this.network.name = str;
     }
 }
