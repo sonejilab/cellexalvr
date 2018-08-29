@@ -46,6 +46,11 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
             {
                 r.enabled = false;
             }
+            Collider[] colList = transform.GetComponentsInChildren<Collider>();
+            foreach (Collider c in colList)
+            {
+                c.enabled = false;
+            }
         }
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
