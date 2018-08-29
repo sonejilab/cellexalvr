@@ -25,6 +25,7 @@ class DrawLinesBetweenGraphPointsButton : CellexalButton
     {
         cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection());
         CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
+        referenceManager.gameManager.InformDrawLinesBetweenGps();
     }
 
     private void TurnOn()

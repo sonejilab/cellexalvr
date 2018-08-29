@@ -105,7 +105,16 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendResetGraph()
     {
+        Debug.Log("Recieved message to reset graph colors");
         referenceManager.graphManager.ResetGraphsColor();
+    }
+
+    [PunRPC]
+    public void SendDrawLinesBetweenGps()
+    {
+        Debug.Log("Recieved message to draw lines between graph points");
+        referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionToolHandler.GetLastSelection());
+        CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
     }
 
     [PunRPC]

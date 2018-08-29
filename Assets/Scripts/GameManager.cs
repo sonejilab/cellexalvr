@@ -294,6 +294,19 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformDrawLinesBetweenGps()
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendDrawLinesBetweenGps", PhotonTargets.Others);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendDrawLinesBetweenGps", PhotonTargets.Others);
+        }
+    }
+
     public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
