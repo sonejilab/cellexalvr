@@ -909,6 +909,8 @@ GameObject:
   - component: {fileID: 114122970484779822}
   - component: {fileID: 114379348130739002}
   - component: {fileID: 114501117311398720}
+  - component: {fileID: 114649947540540216}
+  - component: {fileID: 114932195930763408}
   m_Layer: 0
   m_Name: PUN_MarvinAvatarNoBody_transp
   m_TagString: Untagged
@@ -5264,7 +5266,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271435505246942}
   m_LocalRotation: {x: 0.069136195, y: 0.7224705, z: -0.68360853, w: 0.07704512}
-  m_LocalPosition: {x: 1.169013, y: 0.85920167, z: -1.5199783}
+  m_LocalPosition: {x: 5.655738, y: -3.6004105, z: -3.023907}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4663833607613734}
@@ -6033,7 +6035,7 @@ Transform:
   - {fileID: 4469052834349192}
   m_Father: {fileID: 4636202266821344}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 90, y: 9, z: 9}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!4 &4726184859268312
 Transform:
   m_ObjectHideFlags: 1
@@ -16453,6 +16455,20 @@ MonoBehaviour:
   controllerInside: 0
   buttonRenderer: {fileID: 212548294089522712}
   color: {r: 0.65517235, g: 0, b: 1, a: 1}
+--- !u!114 &114649947540540216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1271435505246942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d81223a27f35c4aadd8443f89df0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  menuPos: {fileID: 0}
+  mainMenu: {fileID: 1243145921498994}
 --- !u!114 &114650604526350606
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16612,20 +16628,21 @@ MonoBehaviour:
   controllerInside: 0
   toggleToState: 1
   combinedNetworksButton: {fileID: 114953009502263080}
+  network: {fileID: 0}
 --- !u!114 &114690331018999642
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1243145921498994}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46d81223a27f35c4aadd8443f89df0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   menuPos: {fileID: 0}
-  mainMenu: {fileID: 1243145921498994}
+  mainMenu: {fileID: 0}
 --- !u!114 &114691081921257896
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16724,6 +16741,7 @@ MonoBehaviour:
   controllerInside: 0
   toggleToState: 0
   combinedNetworksButton: {fileID: 114953009502263080}
+  network: {fileID: 0}
 --- !u!114 &114733928320785654
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17311,6 +17329,20 @@ MonoBehaviour:
   menuToClose: {fileID: 1477089643396126}
   textMeshToUndarken: {fileID: 102619386617805974}
   deactivateMenu: 0
+--- !u!114 &114932195930763408
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1271435505246942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d81223a27f35c4aadd8443f89df0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  menuPos: {fileID: 0}
+  mainMenu: {fileID: 1623899640000874, guid: 125df7836718647499e55122490d1bfb, type: 2}
 --- !u!114 &114932582539362592
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -21261,7 +21293,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1871859405149796}
   m_LocalRotation: {x: 0.7071068, y: -0.0000002980232, z: -0.0000001043081, w: 0.70710677}
-  m_LocalPosition: {x: 0, y: 0, z: 0.1423}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 0.0051964694, y: 0.005190277, z: 0.004494357}
   m_Children: []
   m_Father: {fileID: 4375059438089620}
@@ -21287,7 +21319,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.9999996, y: 1}
+  m_AnchoredPosition: {x: -0.0000004172325, y: 0}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224765640315432958

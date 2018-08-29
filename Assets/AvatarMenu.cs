@@ -26,6 +26,7 @@ public class AvatarMenu : Photon.MonoBehaviour
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuPos = referenceManager.mainMenu.transform;
         target = GetComponent<Transform>();
+        //mainMenu.SetActive(false);
         if (!target)
         {
             Debug.LogError("PlayerAnimatorManager is Missing Animator Component", this);
@@ -50,46 +51,28 @@ public class AvatarMenu : Photon.MonoBehaviour
         }
         if (photonView.isMine == false)
         {
-            Debug.Log("NOT MY MENU");
             if (referenceManager.gameManager.avatarMenuActive)
             {
-                Debug.Log("MENU ACTIVE");
-                Instantiate(mainMenu, Vector3.zero, Quaternion.identity);
-                //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-                //foreach (Renderer r in meshList)
-                //{
-                //    r.enabled = true;
-                //}
+                mainMenu.SetActive(true);
             }
             if (!referenceManager.gameManager.avatarMenuActive)
             {
-                Debug.Log("MENU INACTIVE");
-                Destroy(this);
-                //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-                //foreach (Renderer r in meshList)
-                //{
-                //    r.enabled = false;
-                //}
+                mainMenu.SetActive(false);
             }
         }
+
 
         if (photonView.isMine == false && PhotonNetwork.connected == true)
         {
             return;
         }
-        if (!target)
+        if (!mainMenu)
         {
-            target = GetComponent<Transform>();
             return;
         }
 
-        target.position = menuPos.position;
-        target.rotation = menuPos.rotation;
-        //target.Rotate(0, 0, 0);
-        // deal with Jumping
-
-        // only allow jumping if we are running.
-
+        mainMenu.transform.position = menuPos.position;
+        mainMenu.transform.rotation = menuPos.rotation;
     }
 
 
