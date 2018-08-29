@@ -28,7 +28,7 @@ public class ToggleArcsButton : CellexalButton
     /// </summary>
     public void SetNetwork(NetworkCenter network)
     {
-        this.network.name = this.name;
         this.network = network;
+        this.network.name = this.name;
     }
 }

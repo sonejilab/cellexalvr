@@ -133,10 +133,11 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendBurnHeatmap()
+    public void SendBurnHeatmap(string name)
     {
-        CellexalLog.Log("Recieved message to create heatmap");
-        referenceManager.heatmapBurner.BurnHeatmap();
+        CellexalLog.Log("Recieved message to burn heatmap with name: " + name);
+        GameObject.Find(name).GetComponent<HeatmapBurner>().BurnHeatmap();
+        //referenceManager.heatmapBurner.BurnHeatmap();
     }
 
     [PunRPC]
