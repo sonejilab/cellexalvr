@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -67,6 +68,101 @@ public class ConfigManager : MonoBehaviour
         // Make the ReadConfigFile execute in the main thread
         SQLiter.LoomManager.Loom.QueueOnMainThread(() => ReadConfigFile());
 
+    }
+
+
+
+    private static IEnumerable<String> FindAccessableFiles(string path, string file_pattern, bool recurse)
+    {
+        Console.WriteLine(path);
+        var list = new List<string>();
+        var required_extension = "mp4";
+
+        if (File.Exists(path))
+        {
+            yield return path;
+            yield break;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            yield break;
+        }
+
+        if (null == file_pattern)
+            file_pattern = "*." + required_extension;
+
+        var top_directory = new DirectoryInfo(path);
+
+        // Enumerate the files just in the top directory.
+        IEnumerator<FileInfo> files;
+        try
+        {
+            files = top_directory.EnumerateFiles(file_pattern).GetEnumerator();
+        }
+        catch (Exception ex)
+        {
+            files = null;
+        }
+
+        while (true)
+        {
+            FileInfo file = null;
+            try
+            {
+                if (files != null && files.MoveNext())
+                    file = files.Current;
+                else
+                    break;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                continue;
+            }
+            catch (PathTooLongException)
+            {
+                continue;
+            }
+
+            yield return file.FullName;
+        }
+
+        if (!recurse)
+            yield break;
+
+        IEnumerator<DirectoryInfo> dirs;
+        try
+        {
+            dirs = top_directory.EnumerateDirectories("*").GetEnumerator();
+        }
+        catch (Exception ex)
+        {
+            dirs = null;
+        }
+
+
+        while (true)
+        {
+            DirectoryInfo dir = null;
+            try
+            {
+                if (dirs != null && dirs.MoveNext())
+                    dir = dirs.Current;
+                else
+                    break;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                continue;
+            }
+            catch (PathTooLongException)
+            {
+                continue;
+            }
+
+            foreach (var subpath in FindAccessableFiles(dir.FullName, file_pattern, recurse))
+                yield return subpath;
+        }
     }
 
     private void ReadConfigFile()
@@ -287,7 +383,25 @@ public class ConfigManager : MonoBehaviour
         CellexalEvents.ConfigLoaded.Invoke();
         CellexalLog.Log("Finished reading the config file");
     }
-
+    /// <summary>
+    /// Method to search through the drivers on the computer for the Rscript.
+    /// Assigns the path to the config rscriptpath.
+    /// </summary>
+    private void SearchForRscript()
+    {
+        string mask = "Rscript.exe";
+        string[] drives = Directory.GetLogicalDrives();
+        foreach (string dr in drives)
+        {
+            var files = FindAccessableFiles(dr, mask, true);
+            foreach (string file in files)
+            {
+                CellexalConfig.RscriptexePath = file;
+                break;
+            }
+        }
+    }
+      
     /// <summary>
     /// Helper method to extract a hexadecimal value from a string
     /// </summary>
