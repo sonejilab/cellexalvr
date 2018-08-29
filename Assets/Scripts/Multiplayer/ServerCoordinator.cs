@@ -137,7 +137,6 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Recieved message to burn heatmap with name: " + name);
         GameObject.Find(name).GetComponent<HeatmapBurner>().BurnHeatmap();
-        //referenceManager.heatmapBurner.BurnHeatmap();
     }
 
     [PunRPC]
@@ -188,9 +187,9 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendSetArcsVisible(bool toggleToState, string networkName)
     {
-        Debug.Log("Toggle network of " + networkName);
+        Debug.Log("Toggle arcs of " + networkName);
         // Oh god...
-        GameObject.Find(networkName).GetComponent<ToggleArcsButton>().network.SetArcsVisible(toggleToState);
+        GameObject.Find(networkName).GetComponent<NetworkCenter>().SetArcsVisible(toggleToState);
     }
 
     [PunRPC]

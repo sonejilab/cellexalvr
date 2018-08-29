@@ -52,11 +52,13 @@ public class AvatarMenu : Photon.MonoBehaviour
         }
         if (photonView.isMine == false)
         {
-            Debug.Log("NOT MY MENU");
             if (referenceManager.gameManager.avatarMenuActive)
             {
-                Debug.Log("TOGGLE ON");
                 mainMenu.SetActive(true);
+            }
+            if (!referenceManager.gameManager.avatarMenuActive)
+            {
+                mainMenu.SetActive(false);
                 //if (menu == null)
                 //{
                 //    menu = Instantiate(mainMenu, Vector3.zero, Quaternion.identity);
@@ -69,7 +71,6 @@ public class AvatarMenu : Photon.MonoBehaviour
             }
             if (!referenceManager.gameManager.avatarMenuActive)
             {
-                Debug.Log("TOGGLE OFF");
                 mainMenu.SetActive(false);
                 //if (menu != null)
                 //{
@@ -83,22 +84,18 @@ public class AvatarMenu : Photon.MonoBehaviour
             }
         }
 
+
         if (photonView.isMine == false && PhotonNetwork.connected == true)
         {
             return;
         }
-        //if (!target)
-        //{
-        //    target = GetComponent<Transform>();
-        //    return;
-        //}
+        if (!mainMenu)
+        {
+            return;
+        }
 
         mainMenu.transform.position = menuPos.position;
         mainMenu.transform.rotation = menuPos.rotation;
-        //target.Rotate(0, 0, 0);
-        // deal with Jumping
-
-        // only allow jumping if we are running.
 
     }
 
