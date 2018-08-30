@@ -25,7 +25,7 @@ class ServerCoordinator : Photon.MonoBehaviour
         CellexalLog.Log("Recieved message to read folder at " + path);
         referenceManager.inputReader.ReadFolder(path);
         referenceManager.inputFolderGenerator.DestroyFolders();
-        
+
     }
 
     [PunRPC]
@@ -83,7 +83,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
     {
-        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r,g,b));
+        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
     }
 
     [PunRPC]
@@ -243,13 +243,49 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Recieved message to clear previous line");
         referenceManager.drawTool.SkipNextDraw();
-        referenceManager.drawTool.ClearAllLinesWithColor(new Color(r,g,b));
+        referenceManager.drawTool.ClearAllLinesWithColor(new Color(r, g, b));
     }
 
     [PunRPC]
     public void SendActivateKeyboard(bool activate)
     {
         referenceManager.keyboard.SetKeyboardVisible(activate);
+    }
+
+    [PunRPC]
+    public void SendMinimizeGraph(string graphName)
+    {
+        GameObject.Find(graphName).GetComponent<Graph>().HideGraph();
+        referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
+    }
+
+    [PunRPC]
+    public void SendMinimizeNetwork(string networkName)
+    {
+        GameObject.Find(networkName).GetComponent<NetworkHandler>().HideNetworks();
+        referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(networkName), networkName);
+    }
+
+    [PunRPC]
+    public void SendShowGraph(string graphName, string jailName)
+    {
+        Graph g = GameObject.Find(graphName).GetComponent<Graph>();
+        GameObject jail = GameObject.Find(jailName);
+        MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
+        g.ShowGraph();
+        handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+        Destroy(jail);
+    }
+
+    [PunRPC]
+    public void SendShowNetwork(string networkName, string jailName)
+    {
+        NetworkHandler nh = GameObject.Find(networkName).GetComponent<NetworkHandler>();
+        GameObject jail = GameObject.Find(jailName);
+        MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
+        nh.ShowNetworks();
+        handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+        Destroy(jail);
     }
 
     #endregion

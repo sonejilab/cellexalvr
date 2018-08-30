@@ -38,7 +38,9 @@ public class MinimizeTool : MonoBehaviour
                     return;
                 }
                 graph.GetComponent<Graph>().HideGraph();
-                jail.MinimizeObject(graph.gameObject, graph.GetComponent<Graph>().GraphName);
+                string graphName = graph.GetComponent<Graph>().GraphName;
+                jail.MinimizeObject(graph.gameObject, graphName);
+                referenceManager.gameManager.InformMinimizeGraph(graphName);
             }
             else if (collidingWith.CompareTag("Network"))
             {
@@ -48,7 +50,9 @@ public class MinimizeTool : MonoBehaviour
                 if (networkHandler != null)
                 {
                     networkHandler.HideNetworks();
-                    jail.MinimizeObject(collidingWith, collidingWith.GetComponent<NetworkHandler>().NetworkHandlerName);
+                    string networkName = collidingWith.GetComponent<NetworkHandler>().NetworkHandlerName;
+                    jail.MinimizeObject(collidingWith, networkName);
+                    referenceManager.gameManager.InformMinimizeNetwork(networkName);
                 }
             }
         }

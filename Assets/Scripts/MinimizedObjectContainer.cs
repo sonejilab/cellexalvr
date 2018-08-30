@@ -21,11 +21,13 @@ public class MinimizedObjectContainer : MonoBehaviour
     public int SpaceY { get; set; }
 
     private bool controllerInside = false;
-
+    
+    
 
     private void Start()
     {
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+        this.name = "Jail_" + MinimizedObject.name;
     }
 
     private void Update()
@@ -36,10 +38,12 @@ public class MinimizedObjectContainer : MonoBehaviour
             if (MinimizedObject.CompareTag("Graph"))
             {
                 MinimizedObject.GetComponent<Graph>().ShowGraph();
+                Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
             }
             if (MinimizedObject.CompareTag("Network"))
             {
                 MinimizedObject.GetComponent<NetworkHandler>().ShowNetworks();
+                Handler.referenceManager.gameManager.InformShowNetwork(MinimizedObject.name, this.name);
             }
             Handler.ContainerRemoved(this);
             Destroy(gameObject);

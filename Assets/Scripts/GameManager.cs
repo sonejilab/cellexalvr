@@ -320,18 +320,7 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
-    {
-        if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
-    }
+
 
     public void InformActivateKeyboard(bool activate)
     {
@@ -357,6 +346,20 @@ public class GameManager : Photon.PunBehaviour
         else
         {
             serverCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
+        }
+    }
+
+    // HEATMAP
+    public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
     }
 
@@ -388,6 +391,8 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+
+    // NETWORKS
     public void InformGenerateNetworks()
     {
         if (!multiplayer) return;
@@ -469,6 +474,57 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    public void InformMinimizeGraph(string graphName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendMinimizeGraph", PhotonTargets.Others, graphName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendMinimizeGraph", PhotonTargets.Others, graphName);
+        }
+    }
+
+    public void InformMinimizeNetwork(string networkName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
+        }
+    }
+
+    public void InformShowGraph(string graphName, string jailName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, graphName, jailName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, graphName, jailName);
+        }
+    }
+
+    public void InformShowNetwork(string networkName, string jailName)
+    {
+        if (!multiplayer) return;
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
+        }
+    }
 
     #endregion
 
