@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using System;
+using System.Linq;
 
 /// <summary>
 /// Represents one node in a network, it handles the coloring of the connections and part of the network creation process,
@@ -46,6 +47,8 @@ public class NetworkNode : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         normalScale = transform.localScale;
         largerScale = normalScale * 2f;
+
+        this.name = geneName.text;
     }
 
     void Update()
@@ -86,8 +89,13 @@ public class NetworkNode : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
+            var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
             controllerInside = true;
-            Highlight();
+            foreach (GameObject obj in objects)
+            {
+                NetworkNode nn = obj.GetComponent<NetworkNode>();
+                nn.Highlight();
+            }
         }
     }
 
@@ -95,8 +103,14 @@ public class NetworkNode : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
+            var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
             controllerInside = false;
-            UnHighlight();
+            foreach (GameObject obj in objects)
+            {
+                NetworkNode nn = obj.GetComponent<NetworkNode>();
+                nn.UnHighlight();
+            }
+           
         }
 
     }
