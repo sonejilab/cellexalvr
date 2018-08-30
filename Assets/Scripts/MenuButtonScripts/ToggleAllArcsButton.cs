@@ -7,7 +7,8 @@ public class ToggleAllArcsButton : CellexalButton
 {
     public bool toggleToState;
 
-    private NetworkCenter[] networks;
+    public NetworkCenter[] networks;
+    public GameObject[] parentNetworks;
 
     protected override string Description
     {
@@ -21,7 +22,7 @@ public class ToggleAllArcsButton : CellexalButton
         {
             network.SetCombinedArcsVisible(false);
             network.SetArcsVisible(toggleToState);
-            //referenceManager.gameManager.InformSetArcsVisible(toggleToState, networkName)
+            referenceManager.gameManager.InformSetArcsVisible(toggleToState, network.name);
         }
     }
 

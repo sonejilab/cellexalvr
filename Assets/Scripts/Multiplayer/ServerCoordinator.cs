@@ -118,6 +118,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendClearLinesBetweenGps()
+    {
+        Debug.Log("Recieved message to clear lines between graph points");
+        referenceManager.cellManager.ClearLinesBetweenGraphPoints();
+        CellexalEvents.LinesBetweenGraphsCleared.Invoke();
+    }
+
+    [PunRPC]
     public void SendToggleMenu()
     {
         referenceManager.gameManager.avatarMenuActive = !referenceManager.gameManager.avatarMenuActive;

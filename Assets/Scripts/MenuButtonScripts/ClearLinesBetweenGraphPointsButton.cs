@@ -23,6 +23,7 @@ class ClearLinesBetweenGraphPointsButton : CellexalButton
         cellManager.ClearLinesBetweenGraphPoints();
         CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         SetButtonActivated(false);
+        referenceManager.gameManager.InformClearLinesBetweenGps();
     }
 
     private void TurnOn()
