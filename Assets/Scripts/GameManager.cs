@@ -77,6 +77,17 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (PhotonNetwork.isMasterClient && clientCoordinator == null)
+        {
+            clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
+        }
+        if (!PhotonNetwork.isMasterClient && serverCoordinator == null)
+        {
+            serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>();
+        }
+    }
 
     #region Photon Messages
 
@@ -162,11 +173,11 @@ public class GameManager : Photon.PunBehaviour
         string value = item.GetValue();
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, value);
+            clientCoordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
         else
         {
-            serverCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, value);
+            serverCoordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
     }
 
@@ -200,17 +211,17 @@ public class GameManager : Photon.PunBehaviour
     }
 
 
-    public void InformCalculateCorrelatedGenes(int index, string geneName)
+    public void InformCalculateCorrelatedGenes(string geneName)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to calculate genes correlated to " + geneName);
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, index, geneName);
+            clientCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, index, geneName);
+            serverCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
     }
 
