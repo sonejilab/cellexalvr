@@ -59,8 +59,8 @@ namespace CurvedVRKeyboard
                 keyboardOutput.SendToTarget();
                 keyboardOutput.Clear();
                 autoCompleteList.ClearList();
-                //referenceManager.gameManager.InformColorGraphsByGene(output);
                 output = "";
+                //referenceManager.gameManager.InformKeyClicked("space");
             }
             else if (value.Equals(BACK))
             {
@@ -70,7 +70,7 @@ namespace CurvedVRKeyboard
             {        // Normal letter
                 TypeKey(value[0]);
             }
-            referenceManager.gameManager.InformKeyClicked(clicked);
+            //referenceManager.gameManager.InformKeyClicked(clicked);
         }
 
         public void SetVars(ReferenceManager referenceManager)
@@ -117,6 +117,7 @@ namespace CurvedVRKeyboard
                 keyboardOutput.RemoveLetter();
                 output = output.Remove(output.Length - 1, 1);
                 autoCompleteList.KeyboardOutput = output;
+                //referenceManager.gameManager.InformKeyClicked("backspace");
             }
         }
 
@@ -127,6 +128,7 @@ namespace CurvedVRKeyboard
                 keyboardOutput.AddLetter(key);
                 output = output + key.ToString();
                 autoCompleteList.KeyboardOutput = output;
+                //referenceManager.gameManager.InformKeyClicked(key.ToString());
             }
 
         }

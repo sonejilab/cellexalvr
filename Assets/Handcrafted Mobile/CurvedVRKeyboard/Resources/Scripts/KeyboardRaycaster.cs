@@ -67,6 +67,7 @@ namespace CurvedVRKeyboard
 #endif
                         keyItemCurrent.Click();
                         keyboardStatus.HandleClick(keyItemCurrent);
+                        referenceManager.gameManager.InformKeyClicked(keyItemCurrent);
                     }
                 }
             }

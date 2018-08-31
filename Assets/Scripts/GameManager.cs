@@ -159,13 +159,14 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients that" + item + "was clicked");
+        string value = item.GetValue();
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
+            clientCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, value);
         }
         else
         {
-            serverCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
+            serverCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, value);
         }
     }
 
