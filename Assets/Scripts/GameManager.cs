@@ -86,7 +86,7 @@ public class GameManager : Photon.PunBehaviour
         if (!PhotonNetwork.isMasterClient && serverCoordinator == null)
         {
 
-            serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>();
+            serverCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         }
     }
 
