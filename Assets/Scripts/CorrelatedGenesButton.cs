@@ -21,5 +21,6 @@ public class CorrelatedGenesButton : ClickablePanel
     {
         // the gene name is followed by some other text
         correlatedGenesList.CalculateCorrelatedGenes(listNode.NameOfThing, listNode.Type);
+        referenceManager.gameManager.InformCalculateCorrelatedGenes(listNode.NameOfThing);
     }
 }

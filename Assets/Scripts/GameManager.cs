@@ -85,7 +85,8 @@ public class GameManager : Photon.PunBehaviour
         }
         if (!PhotonNetwork.isMasterClient && serverCoordinator == null)
         {
-            serverCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
+
+            serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>();
         }
     }
 
@@ -211,17 +212,17 @@ public class GameManager : Photon.PunBehaviour
     }
 
 
-    public void InformCalculateCorrelatedGenes(int index, string geneName)
+    public void InformCalculateCorrelatedGenes(string geneName)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to calculate genes correlated to " + geneName);
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, index, geneName);
+            clientCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, index, geneName);
+            serverCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
     }
 
