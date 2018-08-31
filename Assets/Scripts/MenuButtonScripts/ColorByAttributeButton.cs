@@ -37,6 +37,7 @@ public class ColorByAttributeButton : CellexalButton
         if (CurrentMode == Mode.SINGLE)
         {
             cellManager.ColorByAttribute(Attribute, !colored);
+            referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
             colored = !colored;
         }
         else if (CurrentMode == Mode.BOOLEAN_EXPR)

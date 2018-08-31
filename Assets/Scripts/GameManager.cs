@@ -79,14 +79,13 @@ public class GameManager : Photon.PunBehaviour
 
     private void Update()
     {
-        if (PhotonNetwork.isMasterClient && clientCoordinator == null)
+        if (!PhotonNetwork.isMasterClient && clientCoordinator == null)
         {
             clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         }
-        if (!PhotonNetwork.isMasterClient && serverCoordinator == null)
+        if (PhotonNetwork.isMasterClient && serverCoordinator == null)
         {
-
-            serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>();
+            serverCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         }
     }
 
@@ -153,17 +152,17 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformColorByAttribute(string attributeType, bool color)
+    public void InformColorByAttribute(string attributeType, bool colored)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType);
+            clientCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType, colored);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType);
+            serverCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType, colored);
         }
     }
 
