@@ -127,20 +127,6 @@ public class GameManager : Photon.PunBehaviour
         }
     }
 
-    public void InformKeyClicked(CurvedVRKeyboard.KeyboardItem item)
-    {
-        if (!multiplayer) return;
-        CellexalLog.Log("Informing clients that" + item + "was clicked");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
-        }
-    }
-
     public void InformColorGraphByPreviousExpression(string geneName)
     {
         if (!multiplayer) return;
@@ -152,6 +138,34 @@ public class GameManager : Photon.PunBehaviour
         else
         {
             serverCoordinator.photonView.RPC("SendColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
+        }
+    }
+
+    public void InformColorByAttribute(string attributeType, bool color)
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType);
+        }
+    }
+
+    public void InformKeyClicked(CurvedVRKeyboard.KeyboardItem item)
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients that" + item + "was clicked");
+        if (PhotonNetwork.isMasterClient)
+        {
+            clientCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
+        }
+        else
+        {
+            serverCoordinator.photonView.RPC("KeyClick", PhotonTargets.Others, item);
         }
     }
 
@@ -505,11 +519,11 @@ public class GameManager : Photon.PunBehaviour
         if (!multiplayer) return;
         if (PhotonNetwork.isMasterClient)
         {
-            clientCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, graphName, jailName);
+            clientCoordinator.photonView.RPC("SendShowGraph", PhotonTargets.Others, graphName, jailName);
         }
         else
         {
-            serverCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, graphName, jailName);
+            serverCoordinator.photonView.RPC("SendShowGraph", PhotonTargets.Others, graphName, jailName);
         }
     }
 

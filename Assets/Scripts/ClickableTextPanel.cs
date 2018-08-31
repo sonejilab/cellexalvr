@@ -70,6 +70,7 @@ public class ClickableTextPanel : ClickablePanel
         else if (Type == Definitions.Measurement.ATTRIBUTE)
         {
             referenceManager.cellManager.ColorByAttribute(NameOfThing, true);
+            referenceManager.gameManager.InformColorByAttribute(NameOfThing, true);
         }
         else if (Type == Definitions.Measurement.FACS)
         {

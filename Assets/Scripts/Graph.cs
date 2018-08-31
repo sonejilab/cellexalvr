@@ -46,6 +46,7 @@ public class Graph : MonoBehaviour
         {
             graphName = value;
             graphNameText.text = value;
+            this.name = graphName;
         }
     }
 
@@ -234,6 +235,7 @@ public class Graph : MonoBehaviour
         fileStream.Close();
 
         var convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
+        convexHull.gameObject.name = "ConvexHull_" + this.name;
         convexHull.mesh = new Mesh()
         {
             vertices = vertices,

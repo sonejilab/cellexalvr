@@ -2,7 +2,9 @@
 using UnityEngine;
 
 /// <summary>
-/// This class holds the remote-callable commands that are sent over between to connected clients.
+/// This class holds the remote-callable commands that are sent over network between to connected clients.
+/// To synchronize the scenes in multiplayer it means when a function is called on one client the same has to be done on the others. 
+/// Each function in this class represent one such function to synchronize the scenes.
 /// </summary>
 class ServerCoordinator : Photon.MonoBehaviour
 {
@@ -76,8 +78,8 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendColorGraphsByAttribute(string attributeType, float r, float g, float b)
     {
         CellexalLog.Log("Recieved message to color all graphs by attribute " + attributeType);
-        Color col = new Color(r, g, b);
-        //referenceManager.cellManager.ColorByAttribute(attributeType, col);
+        //Color col = new Color(r, g, b);
+        referenceManager.cellManager.ColorByAttribute(attributeType, true);
     }
 
     [PunRPC]
@@ -131,7 +133,6 @@ class ServerCoordinator : Photon.MonoBehaviour
         referenceManager.gameManager.avatarMenuActive = !referenceManager.gameManager.avatarMenuActive;
         Debug.Log("TOGGLE MENU " + referenceManager.gameManager.avatarMenuActive);
     }
-
 
     [PunRPC]
     public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
@@ -255,6 +256,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMinimizeGraph(string graphName)
     {
+        Debug.Log("MINIMIZING: " + graphName);
         GameObject.Find(graphName).GetComponent<Graph>().HideGraph();
         referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
     }

@@ -50,7 +50,8 @@ public class MinimizeTool : MonoBehaviour
                 if (networkHandler != null)
                 {
                     networkHandler.HideNetworks();
-                    string networkName = collidingWith.GetComponent<NetworkHandler>().NetworkHandlerName;
+                    string networkName = collidingWith.gameObject.name;
+                    Debug.Log("COLLIDING WITH: " + networkName);
                     jail.MinimizeObject(collidingWith, networkName);
                     referenceManager.gameManager.InformMinimizeNetwork(networkName);
                 }

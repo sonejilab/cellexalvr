@@ -99,11 +99,12 @@ public class SelectionToolHandler : MonoBehaviour
     private void Update()
     {
         // Only activate selection if trigger is pressed.
-        if (device == null)
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            Debug.Log(device);
-        }
+        device = SteamVR_Controller.Input((int)rightController.index);
+        //if (device == null)
+        //{
+        //    device = SteamVR_Controller.Input((int)rightController.index);
+        //    Debug.Log(device);
+        //}
         if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))

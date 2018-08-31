@@ -36,7 +36,6 @@ public class MenuToggler : MonoBehaviour
         device = SteamVR_Controller.Input((int)leftController.index);
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            Debug.Log("TOGGLE MENU");
             MenuActive = !MenuActive;
             SetMenuVisible(MenuActive);
             boxCollider.enabled = MenuActive;
@@ -45,12 +44,12 @@ public class MenuToggler : MonoBehaviour
             referenceManager.gameManager.InformToggleMenu();
             //if (MenuActive)
             //{
-            //    PhotonNetwork.Instantiate("Main Menu", Vector3.zero, Quaternion.identity, 0);
+            //    PhotonNetwork.Instantiate("Main Menu", new Vector3(0, 1, 0), Quaternion.identity, 0);
             //}
-            ////if (!MenuActive)
-            ////{
-            ////    PhotonNetwork.Destroy("Main Menu");
-            ////}
+            //if (!MenuActive)
+            //{
+            //    PhotonNetwork.Destroy("Main Menu");
+            //}
 
         }
     }
