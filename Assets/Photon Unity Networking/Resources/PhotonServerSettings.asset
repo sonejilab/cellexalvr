@@ -64,9 +64,17 @@ MonoBehaviour:
   - SendSearchLockToggled
   - SendCalculateCorrelatedGenes
   - SendKeyClick
-  - SendRemoveAllLines
-  - SendRemovePrevLine
   - SendClearAllLines
   - SendClearLastLine
   - SendClearLinesWithColor
+  - SendBurnHeatmap
+  - SendResetGraph
+  - SendToggleMenu
+  - SendSetArcsVisible
+  - SendDrawLinesBetweenGps
+  - SendClearLinesBetweenGps
+  - SendMinimizeGraph
+  - SendMinimizeNetwork
+  - SendShowGraph
+  - SendShowNetwork
   DisableAutoOpenWizard: 1
