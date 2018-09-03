@@ -260,11 +260,11 @@ public class GameManager : Photon.PunBehaviour
 
 
     // NETWORKS
-    public void InformGenerateNetworks()
+    public void InformGenerateNetworks(int layoutSeed)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to generate networks");
-        coordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
+        coordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others, layoutSeed);
     }
 
     public void InformMoveNetwork(string moveNetworkName, Vector3 pos, Quaternion rot, Vector3 scale)
@@ -400,8 +400,6 @@ public class GameManager : Photon.PunBehaviour
     #endregion
 
     #region Public Methods
-
-
 
 
     public void LeaveRoom()

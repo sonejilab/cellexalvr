@@ -257,7 +257,7 @@ public class InputReader : MonoBehaviour
         loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
         if (debug)
         {
-            ReadNetworkFiles();
+            ReadNetworkFiles(0);
             loaderController.DestroyFolders();
         }
         status.UpdateStatus(statusId, "Reading index.facs file");
@@ -540,11 +540,11 @@ public class InputReader : MonoBehaviour
     /// <summary>
     /// Reads the files containg networks.
     /// </summary>
-    public void ReadNetworkFiles()
+    public void ReadNetworkFiles(int layoutSeed)
     {
-        StartCoroutine(ReadNetworkFilesCoroutine());
+        StartCoroutine(ReadNetworkFilesCoroutine(layoutSeed));
     }
-    private IEnumerator ReadNetworkFilesCoroutine()
+    private IEnumerator ReadNetworkFilesCoroutine(int layoutSeed)
     {
         CellexalLog.Log("Started reading network files");
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
@@ -659,7 +659,7 @@ public class InputReader : MonoBehaviour
             minNegPcor[colorString] = 0f;
 
             Vector3 position = graph.ScaleCoordinates(x, y, z);
-            NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position);
+            NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
             {

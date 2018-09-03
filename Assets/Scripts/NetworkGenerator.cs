@@ -129,12 +129,12 @@ public class NetworkGenerator : MonoBehaviour
     /// <summary>
     /// Generates networks based on the selectiontoolhandler's last selection.
     /// </summary>
-    public void GenerateNetworks()
+    public void GenerateNetworks(int layoutSeed)
     {
-        StartCoroutine(GenerateNetworksCoroutine());
+        StartCoroutine(GenerateNetworksCoroutine(layoutSeed));
     }
 
-    IEnumerator GenerateNetworksCoroutine()
+    IEnumerator GenerateNetworksCoroutine(int layoutSeed)
     {
         GeneratingNetworks = true;
         calculatorCluster.SetActive(true);
@@ -167,7 +167,7 @@ public class NetworkGenerator : MonoBehaviour
             calculatorCluster.SetActive(false);
         //statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
-        inputReader.ReadNetworkFiles();
+        inputReader.ReadNetworkFiles(layoutSeed);
 
 
     }
@@ -196,7 +196,7 @@ public class NetworkGenerator : MonoBehaviour
     /// <param name="name"> The name of the center. </param>
     /// <param name="position"> The position it should sit at. Should be from <see cref="Graph.ScaleCoordinates(float, float, float)"/>. </param>
     /// <returns> The new network center. </returns>
-    public NetworkCenter CreateNetworkCenter(NetworkHandler handler, string name, Vector3 position)
+    public NetworkCenter CreateNetworkCenter(NetworkHandler handler, string name, Vector3 position, int layoutSeed)
     {
         NetworkCenter network = Instantiate(networkCenterPrefab);
         network.transform.parent = handler.gameObject.transform;
@@ -206,6 +206,7 @@ public class NetworkGenerator : MonoBehaviour
         network.NetworkCenterName = handler.NetworkHandlerName + name;
         graphManager.AddNetwork(handler);
         networkList.Add(handler);
+        network.LayoutSeed = layoutSeed;
         return network;
     }
 

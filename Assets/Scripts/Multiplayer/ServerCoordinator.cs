@@ -169,10 +169,10 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendGenerateNetworks()
+    public void SendGenerateNetworks(int layoutSeed)
     {
         CellexalLog.Log("Recieved message to generate networks");
-        gameManager.networkGenerator.GenerateNetworks();
+        gameManager.networkGenerator.GenerateNetworks(layoutSeed);
     }
 
     [PunRPC]

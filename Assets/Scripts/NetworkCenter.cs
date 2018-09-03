@@ -25,10 +25,21 @@ public class NetworkCenter : MonoBehaviour
     public NetworkHandler Handler { get; set; }
     public string NetworkCenterName;
 
+
     public float MaxNegPcor { get; set; }
     public float MinNegPcor { get; set; }
     public float MaxPosPcor { get; set; }
     public float MinPosPcor { get; set; }
+    private int layoutSeed;
+    public int LayoutSeed
+    {
+        get { return layoutSeed; }
+        set
+        {
+            layoutSeed = value;
+            rand = new System.Random(value);
+        }
+    }
 
     private ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
@@ -57,6 +68,7 @@ public class NetworkCenter : MonoBehaviour
     private bool calculatingLayout = false;
     private bool switchingLayout = false;
     private Dictionary<NetworkNode, Vector3> positions;
+    private System.Random rand;
 
     void Start()
     {
@@ -190,7 +202,6 @@ public class NetworkCenter : MonoBehaviour
 
 
         // start by giving all vertices a random position
-        var rand = new System.Random();
         if (layout == Layout.THREE_D)
         {
             foreach (var node in nodes)

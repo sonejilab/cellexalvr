@@ -27,8 +27,11 @@ public class CreateNetworksButton : CellexalButton
     protected override void Click()
     {
         SetButtonActivated(false);
-        networkGenerator.GenerateNetworks();
-        gameManager.InformGenerateNetworks();
+        var rand = new System.Random();
+        var layoutSeed = rand.Next();
+        print(layoutSeed);
+        networkGenerator.GenerateNetworks(layoutSeed);
+        gameManager.InformGenerateNetworks(layoutSeed);
         CellexalEvents.NetworkCreated.Invoke();
     }
 
