@@ -331,6 +331,18 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
     }
 
+    public void InformToggleExpressedCells()
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendToggleExpressedCells", PhotonTargets.Others);
+    }
+
+    public void InformToggleNonExpressedCells()
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendToggleNonExpressedCells", PhotonTargets.Others);
+    }
+
     #endregion
 
     /// <summary>
