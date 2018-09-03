@@ -75,7 +75,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendColorGraphsByAttribute(string attributeType, bool colored)
+    public void SendColorByAttribute(string attributeType, bool colored)
     {
         CellexalLog.Log("Recieved message to color all graphs by attribute " + attributeType);
         //Color col = new Color(r, g, b);
