@@ -176,7 +176,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendSwitchNetworkLayout(int layout, string networkName, string networkHandlerName)
+    public void SendSwitchNetworkLayout(int layout, string networkHandlerName, string networkName)
     {
         CellexalLog.Log("Recieved message to generate networks");
         print("network names:" + networkName + " " + networkHandlerName);
