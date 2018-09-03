@@ -52,7 +52,7 @@ public class NetworkCenter : MonoBehaviour
     public bool Enlarged { get; private set; }
     private bool enlarge = false;
     private int numColliders = 0;
-    private bool isReplacement = false;
+    public bool isReplacement = false;
     private List<NetworkNode> nodes = new List<NetworkNode>();
     [HideInInspector]
     public NetworkCenter replacing;
@@ -86,7 +86,7 @@ public class NetworkCenter : MonoBehaviour
         if (enlarge)
         {
             enlarge = false;
-            if (!isReplacement)
+            if (!isReplacement && !Enlarged)
             {
                 gameManager.InformEnlargeNetwork(Handler.name, name);
                 EnlargeNetwork();
