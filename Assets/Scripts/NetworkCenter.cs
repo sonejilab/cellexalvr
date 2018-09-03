@@ -23,7 +23,6 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
-    public string NetworkCenterName;
 
 
     public float MaxNegPcor { get; set; }
@@ -88,12 +87,12 @@ public class NetworkCenter : MonoBehaviour
             enlarge = false;
             if (!isReplacement && gameObject.name != "Enlarged Network")
             {
-                gameManager.InformEnlargeNetwork(Handler.NetworkHandlerName, NetworkCenterName);
+                gameManager.InformEnlargeNetwork(Handler.NetworkHandlerName, name);
                 EnlargeNetwork();
             }
             else if (isReplacement && gameObject.name == "EmptyNetworkPrefab 1(Clone)")
             {
-                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, replacing.NetworkCenterName);
+                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, replacing.name);
                 BringBackOriginal();
             }
         }
@@ -132,7 +131,7 @@ public class NetworkCenter : MonoBehaviour
         {
             if (interactableObject.enabled)
             {
-                gameManager.InformMoveNetworkCenter(Handler.NetworkHandlerName, NetworkCenterName, transform.position, transform.rotation, transform.localScale);
+                gameManager.InformMoveNetworkCenter(Handler.NetworkHandlerName, name, transform.position, transform.rotation, transform.localScale);
             }
         }
 
@@ -886,7 +885,7 @@ public class NetworkCenter : MonoBehaviour
             Directory.CreateDirectory(directoryPath);
             CellexalLog.Log("Created directory " + directoryPath);
         }
-        string filePath = directoryPath + "\\" + NetworkCenterName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+        string filePath = directoryPath + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
         var stream = File.Create(filePath);
         var streamWriter = new StreamWriter(stream);
 
@@ -927,7 +926,7 @@ public class NetworkCenter : MonoBehaviour
         streamWriter.Close();
         stream.Close();
 
-        CellexalLog.Log("Saved " + NetworkCenterName + " as a text file at " + filePath);
+        CellexalLog.Log("Saved " + name + " as a text file at " + filePath);
     }
 
     /// <summary>
@@ -1007,10 +1006,10 @@ public class NetworkCenter : MonoBehaviour
             CellexalLog.Log("Created directory " + networkImageDirectory);
         }
 
-        string networkImageFilePath = networkImageDirectory + "\\" + NetworkCenterName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+        string networkImageFilePath = networkImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
         bitmap.Save(networkImageFilePath, ImageFormat.Png);
 
-        CellexalLog.Log("Saved " + NetworkCenterName + " as an image at " + networkImageFilePath);
+        CellexalLog.Log("Saved " + name + " as an image at " + networkImageFilePath);
     }
 
     /// <summary>

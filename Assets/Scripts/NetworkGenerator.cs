@@ -203,7 +203,7 @@ public class NetworkGenerator : MonoBehaviour
         network.transform.localPosition = position;
         handler.AddNetwork(network);
         network.Handler = handler;
-        network.NetworkCenterName = handler.NetworkHandlerName + name;
+        network.name = handler.NetworkHandlerName + name;
         graphManager.AddNetwork(handler);
         networkList.Add(handler);
         network.LayoutSeed = layoutSeed;

@@ -26,7 +26,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Recieved message to read folder at " + path);
         referenceManager.inputReader.ReadFolder(path);
-        referenceManager.inputFolderGenerator.DestroyFolders(); 
+        referenceManager.inputFolderGenerator.DestroyFolders();
 
     }
 
@@ -179,11 +179,12 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendSwitchNetworkLayout(int layout, string networkName, string networkHandlerName)
     {
         CellexalLog.Log("Recieved message to generate networks");
+        print("network names:" + networkName + " " + networkHandlerName);
         var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
         var network = handler.FindNetworkCenter(networkName);
         network.SwitchLayout((NetworkCenter.Layout)layout);
     }
-    
+
 
     [PunRPC]
     public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
