@@ -77,4 +77,5 @@ MonoBehaviour:
   - SendMinimizeNetwork
   - SendShowGraph
   - SendShowNetwork
+  - SendColorByAttribute
   DisableAutoOpenWizard: 1

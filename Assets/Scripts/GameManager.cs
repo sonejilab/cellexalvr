@@ -27,8 +27,9 @@ public class GameManager : Photon.PunBehaviour
     public HeatmapGenerator heatmapGenerator;
     public NetworkGenerator networkGenerator;
     private KeyboardOutput keyboardOut;
-    private ServerCoordinator serverCoordinator;
-    private ServerCoordinator clientCoordinator;
+    //private ServerCoordinator serverCoordinator;
+    //private ServerCoordinator clientCoordinator;
+    private ServerCoordinator coordinator;
     private bool multiplayer = false;
 
     #endregion
@@ -59,13 +60,13 @@ public class GameManager : Photon.PunBehaviour
                 //PhotonNetwork.Instantiate(this.objPrefab.name, new Vector3(0f, 1f, 2f), Quaternion.identity, 0);
                 if (PhotonNetwork.isMasterClient)
                 {
-                    serverCoordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
+                    coordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
                     waitingCanvas.SetActive(true);
                     // serverCoordinator.RegisterClient(this);
                 }
                 else
                 {
-                    PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0);
+                    coordinator = PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
 
                     //GameObject.Find("ServerCoordinator").GetComponent<ServerCoordinator>().RegisterClient(this);
                 }
@@ -79,13 +80,9 @@ public class GameManager : Photon.PunBehaviour
 
     private void Update()
     {
-        if (!PhotonNetwork.isMasterClient && clientCoordinator == null)
+        if (coordinator == null)
         {
-            clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
-        }
-        if (PhotonNetwork.isMasterClient && serverCoordinator == null)
-        {
-            serverCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
+            coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         }
     }
 
@@ -98,29 +95,13 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to read folder " + path);
-        if (PhotonNetwork.isMasterClient)
-        {
-            Debug.Log(clientCoordinator == null);
-            Debug.Log(serverCoordinator == null);
-            clientCoordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
-        }
+        coordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
     }
 
     public void InformGraphPointChangedColor(string graphname, string label, Color color)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
-        }
+        coordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
     }
 
     public void InformColorGraphsByGene(string geneName)
@@ -128,42 +109,22 @@ public class GameManager : Photon.PunBehaviour
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to color graphs by " + geneName);
         Debug.Log("Informing clients to color graphs by " + geneName);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
-        }
+        coordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
+
     }
 
     public void InformColorGraphByPreviousExpression(string geneName)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to color graphs by previous gene " + geneName);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
-        }
+        coordinator.photonView.RPC("SendColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
     }
 
     public void InformColorByAttribute(string attributeType, bool colored)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType, colored);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType, colored);
-        }
+        coordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType, colored);
     }
 
     public void InformKeyClicked(CurvedVRKeyboard.KeyboardItem item)
@@ -171,43 +132,21 @@ public class GameManager : Photon.PunBehaviour
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients that" + item + "was clicked");
         string value = item.GetValue();
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
-        }
+        coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
     }
 
     public void InformSearchLockToggled(int index)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to toggle lock number " + index);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendSearchLockToggled", PhotonTargets.Others, index);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendSearchLockToggled", PhotonTargets.Others, index);
-        }
+        coordinator.photonView.RPC("SendSearchLockToggled", PhotonTargets.Others, index);
     }
 
     public void InformToggleMenu()
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to show menu");
-        if (PhotonNetwork.isMasterClient)
-        {
-            //Debug.Log("TOGGLE MENU");
-            clientCoordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
     }
 
 
@@ -215,135 +154,65 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to calculate genes correlated to " + geneName);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
-        }
+        coordinator.photonView.RPC("SendCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
     }
 
     public void InformConfirmSelection()
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to confirm selection");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendConfirmSelection", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendConfirmSelection", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendConfirmSelection", PhotonTargets.Others);
     }
 
     public void InformDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to draw line with " + xcoords.Length);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords, zcoords);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords, zcoords);
-        }
+        coordinator.photonView.RPC("SendDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords, zcoords);
     }
 
     public void InformClearAllLines()
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to clear all lines");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendClearAllLines", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendClearAllLines", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendClearAllLines", PhotonTargets.Others);
     }
 
     public void InformClearLastLine()
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to clear last line");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendClearLastLine", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendClearLastLine", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendClearLastLine", PhotonTargets.Others);
     }
 
     public void InformClearAllLinesWithColor(Color color)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to clear all lines with color: " + color);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendClearLinesWithColor", PhotonTargets.Others, color.r, color.g, color.b);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendClearLinesWithColor", PhotonTargets.Others, color.r, color.g, color.b);
-        }
+        coordinator.photonView.RPC("SendClearLinesWithColor", PhotonTargets.Others, color.r, color.g, color.b);
     }
     public void InformMoveGraph(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
+        coordinator.photonView.RPC("SendMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
     }
 
     public void InformResetGraphColor()
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
     }
 
     public void InformDrawLinesBetweenGps()
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendDrawLinesBetweenGps", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendDrawLinesBetweenGps", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendDrawLinesBetweenGps", PhotonTargets.Others);
     }
 
     public void InformClearLinesBetweenGps()
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendClearLinesBetweenGps", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendClearLinesBetweenGps", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendClearLinesBetweenGps", PhotonTargets.Others);
     }
 
 
@@ -351,70 +220,35 @@ public class GameManager : Photon.PunBehaviour
     public void InformActivateKeyboard(bool activate)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendActivateKeyboard", PhotonTargets.Others, activate);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendActivateKeyboard", PhotonTargets.Others, activate);
-        }
+        coordinator.photonView.RPC("SendActivateKeyboard", PhotonTargets.Others, activate);
     }
 
     public void InformSelectedAdd(string graphName, string label, int newGroup, Color color)
     {
         if (!multiplayer) return;
         Debug.Log("Informing clients to add cells to selection");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
-        }
+        coordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
     }
 
     // HEATMAP
     public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
+        coordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
     }
 
     public void InformCreateHeatmap()
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to create heatmap");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
     }
 
     public void InformBurnHeatmap(string name)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to create heatmap");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, name);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, name);
-        }
+        coordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, name);
     }
 
 
@@ -423,133 +257,63 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to generate networks");
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
-        }
+        coordinator.photonView.RPC("SendGenerateNetworks", PhotonTargets.Others);
     }
 
     public void InformMoveNetwork(string moveNetworkName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
+        coordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
     }
 
     public void InformEnlargeNetwork(string networkHandlerName, string networkName)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to enalarge network " + networkName + " in handler + " + networkHandlerName);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
-        }
+        coordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
     }
 
     public void InformBringBackNetwork(string networkHandlerName, string networkName)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to bring back network " + networkName + " in handler " + networkHandlerName);
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendBringBackNetwork", PhotonTargets.Others, networkHandlerName, networkName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendBringBackNetwork", PhotonTargets.Others, networkHandlerName, networkName);
-        }
+        coordinator.photonView.RPC("SendBringBackNetwork", PhotonTargets.Others, networkHandlerName, networkName);
     }
 
     public void InformMoveNetworkCenter(string networkHandlerName, string networkCenterName, Vector3 pos, Quaternion rot, Vector3 scale)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkHandlerName, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkHandlerName, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
-        }
+        coordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkHandlerName, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
     }
 
     public void InformSetArcsVisible(bool toggleToState, string networkName)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendSetArcsVisible", PhotonTargets.Others, toggleToState, networkName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendSetArcsVisible", PhotonTargets.Others, toggleToState, networkName);
-        }
+        coordinator.photonView.RPC("SendSetArcsVisible", PhotonTargets.Others, toggleToState, networkName);
     }
 
     public void InformMinimizeGraph(string graphName)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMinimizeGraph", PhotonTargets.Others, graphName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMinimizeGraph", PhotonTargets.Others, graphName);
-        }
+        coordinator.photonView.RPC("SendMinimizeGraph", PhotonTargets.Others, graphName);
     }
 
     public void InformMinimizeNetwork(string networkName)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
-        }
+        coordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
     }
 
     public void InformShowGraph(string graphName, string jailName)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendShowGraph", PhotonTargets.Others, graphName, jailName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendShowGraph", PhotonTargets.Others, graphName, jailName);
-        }
+        coordinator.photonView.RPC("SendShowGraph", PhotonTargets.Others, graphName, jailName);
     }
 
     public void InformShowNetwork(string networkName, string jailName)
     {
         if (!multiplayer) return;
-        if (PhotonNetwork.isMasterClient)
-        {
-            clientCoordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
-        }
-        else
-        {
-            serverCoordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
-        }
+        coordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
     }
 
     #endregion
@@ -571,7 +335,7 @@ public class GameManager : Photon.PunBehaviour
         //Debug.Log("MASTER JOINED ROOM");
         //LoadArena();
         StartCoroutine(FindClientCoordinator());
-        if (clientCoordinator != null)
+        if (coordinator != null)
         {
             waitingCanvas.SetActive(false);
         }
@@ -589,7 +353,7 @@ public class GameManager : Photon.PunBehaviour
     private IEnumerator FindClientCoordinator()
     {
         yield return new WaitForSeconds(2f);
-        if ((clientCoordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>()) == null)
+        if ((coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>()) == null)
         {
             StartCoroutine(FindClientCoordinator());
         }
@@ -603,7 +367,7 @@ public class GameManager : Photon.PunBehaviour
     private IEnumerator FindServerCoordinator()
     {
         yield return new WaitForSeconds(2f);
-        if ((serverCoordinator = GameObject.Find("ServerCoordinator(Clone)").GetComponent<ServerCoordinator>()) == null)
+        if ((coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>()) == null)
         {
             StartCoroutine(FindServerCoordinator());
         }
