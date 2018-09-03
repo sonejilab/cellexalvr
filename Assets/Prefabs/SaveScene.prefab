@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1162700487958258}
+  m_IsPrefabParent: 1
+--- !u!1 &1162700487958258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4510768176686512}
+  - component: {fileID: 114964501317792302}
+  m_Layer: 0
+  m_Name: SaveScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4510768176686512
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1162700487958258}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.900013, y: 19.399998, z: 58}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114964501317792302
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1162700487958258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de66ddacc0a813a4f95336e082c1964e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PosIdentifier1: SaveGraphPos1.dat
+  PosIdentifier2: SaveGraphPos2.dat
+  RotIdentifier1: SaveGraphRot1.dat
+  RotIdentifier2: SaveGraphRot2.dat
+  DataIdentifier: SaveData.dat
+  targetDir: 
+  target1: {fileID: 0}
+  target2: {fileID: 0}
+  graphManager: {fileID: 0}
+  loadOnStart: 1
+  graphPrefab: {fileID: 114827269215865622, guid: dfbe2cb759078df48b6b7f0c5e2046ec,
+    type: 2}
