@@ -26,7 +26,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Recieved message to read folder at " + path);
         referenceManager.inputReader.ReadFolder(path);
-        referenceManager.inputFolderGenerator.DestroyFolders();
+        referenceManager.inputFolderGenerator.DestroyFolders(); 
 
     }
 
@@ -42,6 +42,9 @@ class ServerCoordinator : Photon.MonoBehaviour
         CellexalLog.Log("Recieved message to color all graphs by " + geneName);
         Debug.Log("Recieved message to color all graphs by " + geneName);
         referenceManager.cellManager.ColorGraphsByGene(geneName); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+        string emptyString = "";
+        referenceManager.keyboardStatus.setOutput(ref emptyString);
+        referenceManager.autoCompleteList.ClearList();
     }
 
     [PunRPC]
