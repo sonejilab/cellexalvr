@@ -127,6 +127,13 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendColorByAttribute", PhotonTargets.Others, attributeType, colored);
     }
 
+    public void InformColorByIndex(string indexName)
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to color graphs by index " + indexName);
+        coordinator.photonView.RPC("SendColorByIndex", PhotonTargets.Others, indexName);
+    }
+
     public void InformKeyClicked(CurvedVRKeyboard.KeyboardItem item)
     {
         if (!multiplayer) return;
