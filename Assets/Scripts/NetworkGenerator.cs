@@ -219,7 +219,7 @@ public class NetworkGenerator : MonoBehaviour
     {
         foreach (NetworkHandler nh in networkList)
         {
-            if (nh.NetworkHandlerName == networkName)
+            if (nh.name == networkName)
             {
                 return nh;
             }

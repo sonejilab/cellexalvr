@@ -68,6 +68,7 @@ public class NetworkCenter : MonoBehaviour
     private bool switchingLayout = false;
     private Dictionary<NetworkNode, Vector3> positions;
     private System.Random rand;
+    private string oldName;
 
     void Start()
     {
@@ -568,6 +569,7 @@ public class NetworkCenter : MonoBehaviour
 
     private IEnumerator EnlargeNetworkCoroutine()
     {
+        oldName = name;
         name = "Enlarged_" + name;
         Enlarged = true;
         GetComponent<Renderer>().enabled = false;
@@ -651,13 +653,13 @@ public class NetworkCenter : MonoBehaviour
         else
         {
             Enlarged = false;
-            name = name.Substring(9);
             StartCoroutine(BringBackOriginalCoroutine());
         }
     }
 
     private IEnumerator BringBackOriginalCoroutine()
     {
+        name = oldName;
         // the ForceStopInteracting waits until the end of the frame before it stops interacting
         // so we also have to wait one frame until proceeding
         gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
