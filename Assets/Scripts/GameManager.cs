@@ -350,6 +350,48 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendToggleNonExpressedCells", PhotonTargets.Others);
     }
 
+    public void InformHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendHandleBoxSelection", PhotonTargets.Others, heatmapName, hitx, hity, selectionStartX, selectionStartY);
+    }
+
+    public void InformConfirmSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendConfirmSelection", PhotonTargets.Others, heatmapName, hitx, hity, selectionStartX, selectionStartY);
+    }
+
+    public void InformHandleMovingSelection(string heatmapName, int hitx, int hity)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendHandleMovingSelection", PhotonTargets.Others, heatmapName, hitx, hity);
+    }
+
+    public void InformMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendMoveSelection", PhotonTargets.Others, HeatmapName, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+    }
+
+    public void InformHandleHitHeatmap(string HeatmapName, int hitx, int hity)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendHandleHitHeatmap", PhotonTargets.Others, HeatmapName, hitx, hity);
+    }
+
+    public void InformResetHeatmapHighlight(string HeatmapName)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendResetHeatmapHighlight", PhotonTargets.Others, HeatmapName);
+    }
+
+    public void InformResetSelecting(string HeatmapName)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendResetSelecting", PhotonTargets.Others, HeatmapName);
+    }
+
     #endregion
 
     /// <summary>

@@ -435,6 +435,7 @@ public class Heatmap : MonoBehaviour
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
                         referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
+                        gameManager.InformColorGraphsByGene(genes[geneHit]);
                     }
                 }
                 else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
@@ -465,50 +466,68 @@ public class Heatmap : MonoBehaviour
                     {
                         // called when choosing a box selection
                         HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+                        gameManager.InformHandleBoxSelection(HeatmapName, hitx, hity, selectionStartX, selectionStartY);
                     }
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
                     {
                         // called when letting go of the trigger to finalize a box selection
                         selecting = false;
                         ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+                        gameManager.InformConfirmSelection(HeatmapName, hitx, hity, selectionStartX, selectionStartY);
                     }
                     else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
                     {
                         // called when moving a selection
                         HandleMovingSelection(hitx, hity);
+                        gameManager.InformHandleMovingSelection(HeatmapName, hitx, hity);
                     }
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
                     {
                         // called when letting go of the trigger to move the selection
                         movingSelection = false;
                         MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+                        gameManager.InformMoveSelection(HeatmapName, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+
                     }
                     else
                     {
                         // handle when the raycast just hits the heatmap
                         HandleHitHeatmap(hitx, hity);
+                        gameManager.InformHandleHitHeatmap(HeatmapName, hitx, hity);
                     }
                 }
                 else
                 {
                     // if we hit the heatmap but not any area of interest, like the borders or any space in between
-                    highlightQuad.SetActive(false);
-                    highlightInfoText.text = "";
+                    ResetHeatmapHighlight();
+                    gameManager.InformResetHeatmapHighlight(HeatmapName);
                 }
             }
             else
             {
                 // if we don't hit the heatmap at all
-                highlightQuad.SetActive(false);
-                highlightInfoText.text = "";
+                ResetHeatmapHighlight();
+                gameManager.InformResetHeatmapHighlight(HeatmapName);
             }
             if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
                 // if the raycast leaves the heatmap and the user lets go of the trigger
-                selecting = false;
-                movingSelection = false;
+                ResetSelecting();
+                gameManager.InformResetSelecting(HeatmapName);
             }
         }
+    }
+
+    public void ResetHeatmapHighlight()
+    {
+        highlightQuad.SetActive(false);
+        highlightInfoText.text = "";
+    }
+
+    public void ResetSelecting()
+    {
+        selecting = false;
+        movingSelection = false;
     }
 
     /// <summary>
@@ -516,7 +535,7 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     /// <param name="hitx"> The x coordinate of the hit. Measured in pixels of the texture.</param>
     /// <param name="hity">The x coordinate if the hit. Meaured in pixels of the texture.</param>
-    private void HandleHitHeatmap(int hitx, int hity)
+    public void HandleHitHeatmap(int hitx, int hity)
     {
         // get this groups width and xcoordinate
         float groupX, groupWidth;
@@ -567,7 +586,7 @@ public class Heatmap : MonoBehaviour
     /// The grouping bar is only 1 item tall and thus we do not care about the y coorindate.
     /// </summary>
     /// <param name="hitx"> The xcoordinate of the hit.</param>
-    private void HandleHitGroupingBar(int hitx)
+    public void HandleHitGroupingBar(int hitx)
     {
         // get this groups width and xcoordinate
         float groupX, groupWidth;
@@ -591,7 +610,7 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     /// <param name="hity">The y coordinate of the hit.</param>
     /// <returns>An index of the gene that was hit.</returns>
-    private int HandleHitGeneList(int hity)
+    public int HandleHitGeneList(int hity)
     {
         int geneHit = (int)((float)((bitmapHeight - hity) - heatmapY) / heatmapHeight * genes.Length);
 
@@ -615,7 +634,7 @@ public class Heatmap : MonoBehaviour
     /// <param name="hity">The last y coordinate that the raycast hit.</param>
     /// <param name="selectionStartX">The first x coordinate that the raycast hit.</param>
     /// <param name="selectionStartY">The first y coordinate that the raycast hit.</param>
-    private void HandleBoxSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
+    public void HandleBoxSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
     {
         // since the groupings have irregular widths we need to iterate over the list of widths
         float boxX = heatmapX;
@@ -674,7 +693,7 @@ public class Heatmap : MonoBehaviour
     /// <param name="hity">The last y coordinate that the raycast hit.</param>
     /// <param name="selectionStartX">The first x coordinate that the raycast hit when the user first pressed the trigger.</param>
     /// <param name="selectionStartY">The first y coordinate that the raycast hit when the user first pressed the trigger.</param>
-    private void ConfirmSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
+    public void ConfirmSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
     {
         // since the groupings have irregular widths we need to iterate over the list of widths
         selectedBoxX = heatmapX;
@@ -735,7 +754,7 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     /// <param name="hitx">The x coordinate where the raycast hit the heatmap</param>
     /// <param name="hity">The y coordinate where the raycast hit the heatmap</param>
-    private void HandleMovingSelection(int hitx, int hity)
+    public void HandleMovingSelection(int hitx, int hity)
     {
         if (hitx < selectedBoxX || hitx > selectedBoxX + selectedBoxWidth)
         {
@@ -776,8 +795,8 @@ public class Heatmap : MonoBehaviour
     /// <param name="selectedGroupLeft">The lower index of the groups that should be moved.</param>
     /// <param name="selectedGroupRight">The higher index of the groups that should be moved.</param>
     /// <param name="selectedGeneTop">The lower index of the genes that should be moved.</param>
-    /// <param name="selectedGeneBottom">The higher index of the gnees that should be moved.</param>
-    private void MoveSelection(int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+    /// <param name="selectedGeneBottom">The higher index of the genes that should be moved.</param>
+    public void MoveSelection(int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
     {
         bool recalculate = false;
         if (hitx < selectedBoxX || hitx > selectedBoxX + selectedBoxWidth)

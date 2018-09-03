@@ -331,5 +331,47 @@ class ServerCoordinator : Photon.MonoBehaviour
         referenceManager.cellManager.ToggleNonExpressedCells();
     }
 
+    [PunRPC]
+    public void SendHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+    }
+
+    [PunRPC]
+    public void SendConfirmSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(heatmapName).ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+    }
+
+    [PunRPC]
+    public void SendHandleMovingSelection(string heatmapName, int hitx, int hity)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HandleMovingSelection(hitx, hity);
+    }
+
+    [PunRPC]
+    public void SendMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+    }
+
+    [PunRPC]
+    public void SendHandleHitHeatmap(string HeatmapName, int hitx, int hity)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).HandleHitHeatmap(hitx, hity);
+    }
+
+    [PunRPC]
+    public void SendResetHeatmapHighlight(string HeatmapName)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetHeatmapHighlight();
+    }
+
+    [PunRPC]
+    public void SendResetSelecting(string HeatmapName)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetSelecting();
+    }
+
     #endregion
 }
