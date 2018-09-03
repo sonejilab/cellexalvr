@@ -643,7 +643,7 @@ public class InputReader : MonoBehaviour
                 CellexalLog.Log("Successfully created convex hull of " + graphName);
                 networkHandler = skeleton.GetComponent<NetworkHandler>();
                 networkHandlerName = "network_" + (selectionToolHandler.fileCreationCtr - 1);
-                networkHandler.NetworkHandlerName = networkHandlerName;
+                networkHandler.name = networkHandlerName;
             }
             float x = float.Parse(words[0]);
             float y = float.Parse(words[1]);

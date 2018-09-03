@@ -11,7 +11,7 @@ public class NetworkHandler : MonoBehaviour
 
     public Material highlightMaterial;
     public List<NetworkCenter> Replacements { get; private set; }
-    public string NetworkHandlerName { get; internal set; }
+    //public string NetworkHandlerName { get; internal set; }
 
     private List<NetworkCenter> networks = new List<NetworkCenter>();
     private ReferenceManager referenceManager;
@@ -37,7 +37,7 @@ public class NetworkHandler : MonoBehaviour
     {
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {
-            gameManager.InformMoveNetwork(NetworkHandlerName, transform.position, transform.rotation, transform.localScale);
+            gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
         }
     }
 

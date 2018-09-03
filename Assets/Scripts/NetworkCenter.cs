@@ -86,14 +86,14 @@ public class NetworkCenter : MonoBehaviour
         if (enlarge)
         {
             enlarge = false;
-            if (!isReplacement && gameObject.name != "Enlarged Network")
+            if (!isReplacement)
             {
-                gameManager.InformEnlargeNetwork(Handler.NetworkHandlerName, name);
+                gameManager.InformEnlargeNetwork(Handler.name, name);
                 EnlargeNetwork();
             }
-            else if (isReplacement && gameObject.name == "EmptyNetworkPrefab 1(Clone)")
+            if (isReplacement)
             {
-                gameManager.InformBringBackNetwork(Handler.NetworkHandlerName, replacing.name);
+                gameManager.InformBringBackNetwork(Handler.name, replacing.name);
                 BringBackOriginal();
             }
         }
@@ -132,7 +132,7 @@ public class NetworkCenter : MonoBehaviour
         {
             if (interactableObject.enabled)
             {
-                gameManager.InformMoveNetworkCenter(Handler.NetworkHandlerName, name, transform.position, transform.rotation, transform.localScale);
+                gameManager.InformMoveNetworkCenter(Handler.name, name, transform.position, transform.rotation, transform.localScale);
             }
         }
 

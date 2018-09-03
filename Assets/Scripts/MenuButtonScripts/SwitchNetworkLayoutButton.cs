@@ -13,6 +13,6 @@ public class SwitchNetworkLayoutButton : CellexalButton
     protected override void Click()
     {
         center.SwitchLayout(layout);
-        referenceManager.gameManager.InformSwitchNetworkLayout((int)layout, center.name, center.Handler.NetworkHandlerName);
+        referenceManager.gameManager.InformSwitchNetworkLayout((int)layout, center.name, center.Handler.name);
     }
 }
