@@ -280,6 +280,14 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendEnlargeNetwork", PhotonTargets.Others, networkHandlerName, networkName);
     }
 
+    public void InformSwitchNetworkLayout(int layout, string networkName, string networkHandlerName)
+    {
+        if (!multiplayer) return;
+        CellexalLog.Log("Informing clients to switch network layout: " + layout);
+        coordinator.photonView.RPC("SendSwitchNetworkLayout", PhotonTargets.Others, layout, networkName, networkHandlerName);
+    }
+    
+
     public void InformBringBackNetwork(string networkHandlerName, string networkName)
     {
         if (!multiplayer) return;
