@@ -75,6 +75,7 @@ public class ClickableTextPanel : ClickablePanel
         else if (Type == Definitions.Measurement.FACS)
         {
             referenceManager.cellManager.ColorByIndex(NameOfThing);
+            referenceManager.gameManager.InformColorByIndex(NameOfThing);
         }
         string emptyString = "";
         referenceManager.keyboardStatus.setOutput(ref emptyString);

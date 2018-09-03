@@ -86,6 +86,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendColorByIndex(string indexName)
+    {
+        CellexalLog.Log("Recieved message to color all graphs by index " + indexName);
+        //Color col = new Color(r, g, b);
+        referenceManager.cellManager.ColorByIndex(indexName);
+    }
+
+    [PunRPC]
     public void SendAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
     {
         referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
