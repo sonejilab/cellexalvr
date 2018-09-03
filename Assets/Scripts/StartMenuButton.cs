@@ -16,6 +16,7 @@ public class StartMenuButton : CellexalButton
     protected override void Click()
     {
         sceneLoader.LoadScene("SceneLoaderTest");
+        referenceManager.gameManager.InformLoadingMenu();
     }
 }
 /*

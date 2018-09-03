@@ -210,6 +210,13 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
     }
 
+    public void InformLoadingMenu()
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendLoadingMenu", PhotonTargets.Others);
+    }
+
+
     public void InformDrawLinesBetweenGps()
     {
         if (!multiplayer) return;

@@ -123,6 +123,13 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendLoadingMenu()
+    {
+        Debug.Log("Recieved message to reset to loading dataset scene");
+        referenceManager.loaderController.ResetFolders();
+    }
+
+    [PunRPC]
     public void SendDrawLinesBetweenGps()
     {
         Debug.Log("Recieved message to draw lines between graph points");
