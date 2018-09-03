@@ -568,7 +568,7 @@ public class NetworkCenter : MonoBehaviour
 
     private IEnumerator EnlargeNetworkCoroutine()
     {
-        this.name = "Enlarged Network";
+        name = "Enlarged_" + name;
         Enlarged = true;
         GetComponent<Renderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
@@ -636,7 +636,6 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     public void BringBackOriginal()
     {
-        this.name = "Original Network";
         if (isReplacement)
         {
             replacing.BringBackOriginal();
@@ -652,6 +651,7 @@ public class NetworkCenter : MonoBehaviour
         else
         {
             Enlarged = false;
+            name = name.Substring(9);
             StartCoroutine(BringBackOriginalCoroutine());
         }
     }
