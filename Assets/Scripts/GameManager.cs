@@ -80,7 +80,7 @@ public class GameManager : Photon.PunBehaviour
 
     private void Update()
     {
-        if (coordinator == null)
+        if (coordinator == null && multiplayer)
         {
             coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
         }
