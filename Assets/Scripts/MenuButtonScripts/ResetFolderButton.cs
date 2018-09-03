@@ -1,16 +1,17 @@
 using UnityEngine;
 
 ///<summary>
-/// Represents a button used for resetting the input data folders.
+/// Represents a button used for resetting the input data folders. 
+/// It is spawned on a confirm submenu (which is spawned by the "Loading Menu Sub button" and if it is pressed closes this submenu.
 ///</summary>
 public class ResetFolderButton : CellexalButton
 {
-    //private GraphManager graphManager;
-    //private InputFolderGenerator inputFolderGenerator;
-    //private LoaderController loader;
-    //private PreviousSearchesList previousSearchesList;
-    //private GameObject inputFolderList;
-    //private HeatmapGenerator heatmapGenerator;
+    //public GameObject subMenu;
+    public GameObject buttonsToActivate;
+    public GameObject menuToClose;
+    public TextMesh textMeshToUndarken;
+
+    public bool deactivateMenu = false;
 
     protected override string Description
     {
@@ -22,12 +23,7 @@ public class ResetFolderButton : CellexalButton
 
     private void Start()
     {
-        //graphManager = referenceManager.graphManager;
-        //inputFolderGenerator = referenceManager.inputFolderGenerator;
-        //loader = referenceManager.loaderController;
-        //previousSearchesList = referenceManager.previousSearchesList;
-        //inputFolderList = referenceManager.inputFolderGenerator.gameObject;
-        //heatmapGenerator = referenceManager.heatmapGenerator;
+
     }
 
     // Reset everything without clicking the button.
@@ -38,23 +34,31 @@ public class ResetFolderButton : CellexalButton
 
     protected override void Click()
     {
-        //var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
-        //sceneLoader.doLoad = false;
         referenceManager.loaderController.ResetFolders();
         referenceManager.gameManager.InformLoadingMenu();
-        //loader.ResetFolders();
-        //graphManager.DeleteGraphsAndNetworks();
-        //heatmapGenerator.DeleteHeatmaps();
-        //previousSearchesList.ClearList();
-        //// must reset loader before generating new folders
-        //loader.ResetLoaderBooleans();
-        //inputFolderGenerator.GenerateFolders();
-        //inputFolderList.gameObject.SetActive(true);
-        //CellexalEvents.GraphsUnloaded.Invoke();
-        //if (loader.loaderMovedDown)
-        //{
-        //    loader.loaderMovedDown = false;
-        //    loader.MoveLoader(new Vector3(0f, 2f, 0f), 2f);
-        //}
+        CloseSubMenu();
+    }
+
+    void CloseSubMenu()
+    {
+        spriteRenderer.sprite = standardTexture;
+        controllerInside = false;
+        descriptionText.text = "";
+        if (deactivateMenu)
+        {
+            menuToClose.SetActive(false);
+        }
+        else
+        {
+            foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+            foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
+                c.enabled = false;
+        }
+        textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+        foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
+        {
+            b.SetButtonActivated(true);
+        }
     }
 }
