@@ -78,4 +78,7 @@ MonoBehaviour:
   - SendShowGraph
   - SendShowNetwork
   - SendColorByAttribute
+  - SendColorByIndex
+  - SendSwitchNetworkLayout
+  - SendLoadingMenu
   DisableAutoOpenWizard: 1
