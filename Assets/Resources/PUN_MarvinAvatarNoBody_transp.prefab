@@ -911,6 +911,7 @@ GameObject:
   - component: {fileID: 114501117311398720}
   - component: {fileID: 114649947540540216}
   - component: {fileID: 114932195930763408}
+  - component: {fileID: 114838927334206834}
   m_Layer: 0
   m_Name: PUN_MarvinAvatarNoBody_transp
   m_TagString: Untagged
@@ -15348,6 +15349,8 @@ MonoBehaviour:
   buttonActivated: 1
   controllerInside: 0
   toggleToState: 1
+  networks: []
+  parentNetworks: []
 --- !u!114 &114378661665990974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16177,6 +16180,8 @@ MonoBehaviour:
   buttonActivated: 1
   controllerInside: 0
   toggleToState: 0
+  networks: []
+  parentNetworks: []
 --- !u!114 &114567697301656644
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16629,6 +16634,7 @@ MonoBehaviour:
   toggleToState: 1
   combinedNetworksButton: {fileID: 114953009502263080}
   network: {fileID: 0}
+  parentNetwork: {fileID: 0}
 --- !u!114 &114690331018999642
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16742,6 +16748,7 @@ MonoBehaviour:
   toggleToState: 0
   combinedNetworksButton: {fileID: 114953009502263080}
   network: {fileID: 0}
+  parentNetwork: {fileID: 0}
 --- !u!114 &114733928320785654
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17057,7 +17064,7 @@ MonoBehaviour:
   stop: {fileID: 114809807757598472}
 --- !u!114 &114838927334206834
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271435505246942}

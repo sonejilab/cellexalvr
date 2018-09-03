@@ -2243,7 +2243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1630164908235270
 GameObject:
   m_ObjectHideFlags: 1
@@ -6264,8 +6264,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1623899640000874}
-  m_LocalRotation: {x: -0.154468, y: -0.4480841, z: 0.046724077, w: 0.87930495}
-  m_LocalPosition: {x: -1.4219029, y: 0.75094986, z: -1.3638045}
+  m_LocalRotation: {x: -0.1312739, y: 0.9831212, z: 0.12704581, w: 0.0099590225}
+  m_LocalPosition: {x: 1.8329972, y: 0.8684151, z: -1.6409239}
   m_LocalScale: {x: 0.25170156, y: 0.25170168, z: 0.31661904}
   m_Children:
   - {fileID: 4327669914158096}
@@ -13275,6 +13275,7 @@ MonoBehaviour:
   toggleToState: 0
   combinedNetworksButton: {fileID: 114219829426613958}
   network: {fileID: 0}
+  parentNetwork: {fileID: 0}
 --- !u!114 &114051006203778728
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15181,6 +15182,8 @@ MonoBehaviour:
   buttonActivated: 1
   controllerInside: 0
   toggleToState: 1
+  networks: []
+  parentNetworks: []
 --- !u!114 &114634223910218590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15354,6 +15357,8 @@ MonoBehaviour:
   buttonActivated: 1
   controllerInside: 0
   toggleToState: 0
+  networks: []
+  parentNetworks: []
 --- !u!114 &114685288721392576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15519,6 +15524,7 @@ MonoBehaviour:
   toggleToState: 1
   combinedNetworksButton: {fileID: 114219829426613958}
   network: {fileID: 0}
+  parentNetwork: {fileID: 0}
 --- !u!114 &114737384245631930
 MonoBehaviour:
   m_ObjectHideFlags: 1
