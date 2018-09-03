@@ -199,4 +199,21 @@ public class LoaderController : MonoBehaviour
     {
         inputFolderGenerator.DestroyFolders();
     }
+
+    public void ResetFolders()
+    {
+        graphManager.DeleteGraphsAndNetworks();
+        referenceManager.heatmapGenerator.DeleteHeatmaps();
+        referenceManager.previousSearchesList.ClearList();
+        // must reset loader before generating new folders
+        ResetLoaderBooleans();
+        inputFolderGenerator.GenerateFolders();
+        referenceManager.inputFolderGenerator.gameObject.SetActive(true);
+        CellexalEvents.GraphsUnloaded.Invoke();
+        if (loaderMovedDown)
+        {
+            loaderMovedDown = false;
+            MoveLoader(new Vector3(0f, 2f, 0f), 2f);
+        }
+    }
 }
