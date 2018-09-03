@@ -319,5 +319,17 @@ class ServerCoordinator : Photon.MonoBehaviour
         Destroy(jail);
     }
 
+    [PunRPC]
+    public void SendToggleExpressedCells()
+    {
+        referenceManager.cellManager.ToggleExpressedCells();
+    }
+
+    [PunRPC]
+    public void SendToggleNonExpressedCells()
+    {
+        referenceManager.cellManager.ToggleNonExpressedCells();
+    }
+
     #endregion
 }
