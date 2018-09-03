@@ -60,6 +60,7 @@ public class InputReader : MonoBehaviour
         statusDisplayHUD = referenceManager.statusDisplayHUD;
         statusDisplayFar = referenceManager.statusDisplayFar;
         networkGenerator = referenceManager.networkGenerator;
+
         if (debug)
         {
             //status.gameObject.SetActive(true);
