@@ -21,6 +21,7 @@ public class RemoveExpressedCellsButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformToggleExpressedCells();
         cellManager.ToggleExpressedCells();
     }
 

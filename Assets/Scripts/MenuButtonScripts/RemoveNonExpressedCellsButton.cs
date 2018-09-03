@@ -20,6 +20,7 @@ public class RemoveNonExpressedCellsButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformToggleNonExpressedCells();
         cellManager.ToggleNonExpressedCells();
     }
 
