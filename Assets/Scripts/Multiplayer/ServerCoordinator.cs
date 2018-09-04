@@ -373,5 +373,11 @@ class ServerCoordinator : Photon.MonoBehaviour
         referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetSelecting();
     }
 
+    [PunRPC]
+    public void SendHandlePressDown(string heatmapName, int hitx, int hity)
+    {
+        referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HandlePressDown(hitx, hity);
+    }
+
     #endregion
 }

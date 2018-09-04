@@ -368,28 +368,34 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendHandleMovingSelection", PhotonTargets.Others, heatmapName, hitx, hity);
     }
 
-    public void InformMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+    public void InformMoveSelection(string heatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
     {
         if (!multiplayer) return;
-        coordinator.photonView.RPC("SendMoveSelection", PhotonTargets.Others, HeatmapName, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+        coordinator.photonView.RPC("SendMoveSelection", PhotonTargets.Others, heatmapName, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
     }
 
-    public void InformHandleHitHeatmap(string HeatmapName, int hitx, int hity)
+    public void InformHandleHitHeatmap(string heatmapName, int hitx, int hity)
     {
         if (!multiplayer) return;
-        coordinator.photonView.RPC("SendHandleHitHeatmap", PhotonTargets.Others, HeatmapName, hitx, hity);
+        coordinator.photonView.RPC("SendHandleHitHeatmap", PhotonTargets.Others, heatmapName, hitx, hity);
     }
 
-    public void InformResetHeatmapHighlight(string HeatmapName)
+    public void InformResetHeatmapHighlight(string heatmapName)
     {
         if (!multiplayer) return;
-        coordinator.photonView.RPC("SendResetHeatmapHighlight", PhotonTargets.Others, HeatmapName);
+        coordinator.photonView.RPC("SendResetHeatmapHighlight", PhotonTargets.Others, heatmapName);
     }
 
-    public void InformResetSelecting(string HeatmapName)
+    public void InformResetSelecting(string heatmapName)
     {
         if (!multiplayer) return;
-        coordinator.photonView.RPC("SendResetSelecting", PhotonTargets.Others, HeatmapName);
+        coordinator.photonView.RPC("SendResetSelecting", PhotonTargets.Others, heatmapName);
+    }
+
+    public void InformHandlePressDown(string heatmapName, int hitx, int hity)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendHandlePressDown", PhotonTargets.Others, heatmapName, hitx, hity);
     }
 
     #endregion

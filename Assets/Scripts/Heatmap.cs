@@ -448,18 +448,8 @@ public class Heatmap : MonoBehaviour
                     // if we hit the actual heatmap
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
-                        if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
-                        {
-                            // if we hit a confirmed selection
-                            movingSelection = true;
-                        }
-                        else
-                        {
-                            // if we hit something else
-                            selecting = true;
-                            selectionStartX = hitx;
-                            selectionStartY = hity;
-                        }
+                        HandlePressDown(hitx, hity);
+                        gameManager.InformHandlePressDown(HeatmapName, hitx, hity);
                     }
 
                     if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
@@ -515,6 +505,22 @@ public class Heatmap : MonoBehaviour
                 ResetSelecting();
                 gameManager.InformResetSelecting(HeatmapName);
             }
+        }
+    }
+
+    public void HandlePressDown(int hitx, int hity)
+    {
+        if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
+        {
+            // if we hit a confirmed selection
+            movingSelection = true;
+        }
+        else
+        {
+            // if we hit something else
+            selecting = true;
+            selectionStartX = hitx;
+            selectionStartY = hity;
         }
     }
 
