@@ -908,6 +908,8 @@ public class Heatmap : MonoBehaviour
         // create a copy of this
         GameObject newHeatmap = Instantiate(gameObject);
         Heatmap heatmap = newHeatmap.GetComponent<Heatmap>();
+        heatmap.GetComponentInChildren<CreateNewHeatmapButton>().controllerInside = false;
+        heatmapGenerator.AddHeatmapToList(heatmap);
         heatmap.name = name + "_" + heatmapsCreated;
         heatmapsCreated++;
         heatmap.transform.Translate(0.1f, 0.1f, 0.1f, Space.Self);

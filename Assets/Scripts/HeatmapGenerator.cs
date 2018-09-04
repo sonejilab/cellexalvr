@@ -212,4 +212,9 @@ public class HeatmapGenerator : MonoBehaviour
         }
     }
 
+    public void AddHeatmapToList(Heatmap heatmap)
+    {
+        heatmapList.Add(heatmap);
+    }
+
 }
