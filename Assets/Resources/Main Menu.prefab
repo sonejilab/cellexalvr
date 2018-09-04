@@ -6264,8 +6264,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1623899640000874}
-  m_LocalRotation: {x: -0.1312739, y: 0.9831212, z: 0.12704581, w: 0.0099590225}
-  m_LocalPosition: {x: 1.8329972, y: 0.8684151, z: -1.6409239}
+  m_LocalRotation: {x: -0.106861666, y: 0.79116774, z: 0.07317828, w: 0.5977284}
+  m_LocalPosition: {x: 1.8706982, y: 0.7841428, z: -1.4003807}
   m_LocalScale: {x: 0.25170156, y: 0.25170168, z: 0.31661904}
   m_Children:
   - {fileID: 4327669914158096}
@@ -14310,6 +14310,10 @@ MonoBehaviour:
   popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
+  buttonsToActivate: {fileID: 0}
+  menuToClose: {fileID: 0}
+  textMeshToUndarken: {fileID: 0}
+  deactivateMenu: 0
 --- !u!114 &114334511996173036
 MonoBehaviour:
   m_ObjectHideFlags: 1
