@@ -11,10 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
-  AppID: 3d33bc49-d1ec-4ed9-9148-be6f0fa143c9
+  AppID: 
   VoiceAppID: 
   ChatAppID: 
-  HostType: 1
+  HostType: 0
   PreferredRegion: 0
   EnabledRegions: -1
   Protocol: 0
@@ -26,68 +26,5 @@ MonoBehaviour:
   PunLogging: 0
   NetworkLogging: 1
   RunInBackground: 1
-  RpcList:
-  - Chat
-  - ColorRpc
-  - DestroyRpc
-  - DoJump
-  - Flash
-  - InstantiateRpc
-  - Marco
-  - PickupItemInit
-  - Polo
-  - PunPickup
-  - PunPickupSimple
-  - PunRespawn
-  - RequestForPickupItems
-  - RequestForPickupTimes
-  - TaggedPlayer
-  - SendAddSelect
-  - SendColorGraphsByAttribute
-  - SendColorGraphsByGene
-  - SendConfirmSelection
-  - SendCreateHeatmap
-  - SendGraphpointChangedColor
-  - SendMoveGraph
-  - SendMoveHeatmap
-  - ConfirmSelectionClient
-  - SendLoadData
-  - SendReadFolder
-  - SendGenerateNetworks
-  - SendMoveNetwork
-  - SendBringBackNetwork
-  - SendEnlargeNetwork
-  - SendMoveNetworkCenter
-  - SendDrawLine
-  - SendActivateKeyboard
-  - SendColorGraphsByPreviousExpression
-  - SendSearchLockToggled
-  - SendCalculateCorrelatedGenes
-  - SendKeyClick
-  - SendClearAllLines
-  - SendClearLastLine
-  - SendClearLinesWithColor
-  - SendBurnHeatmap
-  - SendResetGraph
-  - SendToggleMenu
-  - SendSetArcsVisible
-  - SendDrawLinesBetweenGps
-  - SendClearLinesBetweenGps
-  - SendMinimizeGraph
-  - SendMinimizeNetwork
-  - SendShowGraph
-  - SendShowNetwork
-  - SendColorByAttribute
-  - SendColorByIndex
-  - SendSwitchNetworkLayout
-  - SendLoadingMenu
-  - SendToggleExpressedCells
-  - SendToggleNonExpressedCells
-  - SendHandleBoxSelection
-  - SendHandleHitHeatmap
-  - SendHandleMovingSelection
-  - SendMoveSelection
-  - SendResetHeatmapHighlight
-  - SendResetSelecting
-  - SendHandlePressDown
-  DisableAutoOpenWizard: 1
+  RpcList: []
+  DisableAutoOpenWizard: 0

@@ -92,16 +92,16 @@ NetworkLineSmallWidth = 0.001
 NetworkLineLargeWidth = 0.03
 
 # The method of coloring that should be used when drawing the gene correlation networks. The options are:
-# 0: Use the four colors defined below: positive ... negative ...
+# 0: Use the four colors defined below: NetworkLineColorPositiveHigh, NetworkLineColorPositiveLow, NetworkLineColorNegativeLow and NetworkLineColorNegativeHigh
 # 1: Random colors, the number of random colors is defined by NumberOfNetworkLineColors
 NetworkLineColoringMethod = 0
 
 # If NetworkLineColoringMethod is set to 0:
-# The number of color hue values used drawing the the lines between genes within networks.
-# The total number of materials created is n*(n/6)^2 rounded one way or the other if n is not divisible by 6
-# If NetworkLineColoringMethod is set to 1:
 # This is the total number of colors used when drawing the lines between genes within networks
 # Half of them will be used for the colors between NetworkLineColorPositiveHigh and NetworkLineColorPositiveLow, and the other half for the colors between NetworkLineColorNegativeLow and NetworkLineColorNegativeHigh.
+# If NetworkLineColoringMethod is set to 1:
+# The number of color hue values used drawing the the lines between genes within networks.
+# The total number of materials created is n*(n/6)^2 rounded one way or the other if n is not divisible by 6
 NumberOfNetworkLineColors = 30
 
 # If NetworkLineColoringMethod is set to 1:
