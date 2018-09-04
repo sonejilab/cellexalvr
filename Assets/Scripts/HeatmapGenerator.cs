@@ -27,7 +27,7 @@ public class HeatmapGenerator : MonoBehaviour
     private ArrayList data;
     private Thread t;
     private SteamVR_Controller.Device device;
-    private int heatmapID = 1;
+    private int heatmapsCreated = 0;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
     public UnityEngine.Color HighlightMarkerColor { get; private set; }
@@ -124,7 +124,7 @@ public class HeatmapGenerator : MonoBehaviour
     {
         foreach (Heatmap hm in heatmapList)
         {
-            if (hm.HeatmapName == heatmapName)
+            if (hm.name == heatmapName)
             {
                 return hm;
             }
@@ -205,10 +205,10 @@ public class HeatmapGenerator : MonoBehaviour
             //heatmap.UpdateImage(newHeatmapFilePath);
             heatmap.BuildTexture(selection, outputFilePath);
             //heatmap.GetComponent<AudioSource>().Play();
-            heatmap.name = heatmapName;
+            heatmap.name = "heatmap_" + heatmapsCreated;
+            heatmapsCreated++;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-            heatmapID++;
         }
     }
 

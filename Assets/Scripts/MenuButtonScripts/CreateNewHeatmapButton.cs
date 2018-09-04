@@ -11,7 +11,7 @@ class CreateNewHeatmapButton : CellexalButton
     protected override void Click()
     {
         var heatmap = GetComponentInParent<Heatmap>();
-        referenceManager.gameManager.InformCreateNewHeatmapFromSelection(heatmap.HeatmapName);
+        referenceManager.gameManager.InformCreateNewHeatmapFromSelection(heatmap.name);
         heatmap.CreateNewHeatmapFromSelection();
     }
 }
