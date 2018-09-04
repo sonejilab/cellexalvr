@@ -82,6 +82,7 @@ public class Heatmap : MonoBehaviour
     public void Init()
     {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        GetComponent<VRTK.GrabAttachMechanics.HeatmapGrab>().referenceManager = referenceManager;
         rightController = referenceManager.rightController;
         graphManager = referenceManager.graphManager;
         cellManager = referenceManager.cellManager;

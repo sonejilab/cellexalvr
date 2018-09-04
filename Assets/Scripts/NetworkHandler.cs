@@ -26,6 +26,7 @@ public class NetworkHandler : MonoBehaviour
     {
         Replacements = new List<NetworkCenter>();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        GetComponent<NetworkHandlerInteract>().referenceManager = referenceManager;
         gameManager = referenceManager.gameManager;
         meshRenderer = GetComponent<MeshRenderer>();
         highlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(highlightMaterial) };

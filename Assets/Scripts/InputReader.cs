@@ -198,6 +198,7 @@ public class InputReader : MonoBehaviour
                 while (!newGraph.Ready())
                     yield return null;
                 newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
+                newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
                 UpdateMinMax(newGraph, xcoords, ycoords, zcoords);
 
                 for (int i = 0; i < xcoords.Count; i += itemsThisFrame)
