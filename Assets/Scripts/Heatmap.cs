@@ -461,7 +461,6 @@ public class Heatmap : MonoBehaviour
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
                     {
                         // called when letting go of the trigger to finalize a box selection
-                        selecting = false;
                         ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
                         gameManager.InformConfirmSelection(HeatmapName, hitx, hity, selectionStartX, selectionStartY);
                     }
@@ -474,7 +473,6 @@ public class Heatmap : MonoBehaviour
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
                     {
                         // called when letting go of the trigger to move the selection
-                        movingSelection = false;
                         MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
                         gameManager.InformMoveSelection(HeatmapName, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
 
@@ -701,6 +699,7 @@ public class Heatmap : MonoBehaviour
     /// <param name="selectionStartY">The first y coordinate that the raycast hit when the user first pressed the trigger.</param>
     public void ConfirmSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
     {
+        selecting = false;
         // since the groupings have irregular widths we need to iterate over the list of widths
         selectedBoxX = heatmapX;
         selectedBoxWidth = 0;
@@ -804,6 +803,8 @@ public class Heatmap : MonoBehaviour
     /// <param name="selectedGeneBottom">The higher index of the genes that should be moved.</param>
     public void MoveSelection(int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
     {
+        print("move selection; " + hitx + " " + hity + " " + selectedGroupLeft + " " + selectedGroupRight + " " + selectedGeneTop + " " + selectedGeneBottom);
+        movingSelection = false;
         bool recalculate = false;
         if (hitx < selectedBoxX || hitx > selectedBoxX + selectedBoxWidth)
         {
