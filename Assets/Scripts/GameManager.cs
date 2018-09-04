@@ -398,6 +398,12 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendHandlePressDown", PhotonTargets.Others, heatmapName, hitx, hity);
     }
 
+    public void InformCreateNewHeatmapFromSelection(string heatmapName)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName);
+    }
+
     #endregion
 
     /// <summary>

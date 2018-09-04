@@ -81,4 +81,14 @@ MonoBehaviour:
   - SendColorByIndex
   - SendSwitchNetworkLayout
   - SendLoadingMenu
+  - SendCreateNewHeatmapFromSelection
+  - SendHandleBoxSelection
+  - SendHandleHitHeatmap
+  - SendHandleMovingSelection
+  - SendHandlePressDown
+  - SendMoveSelection
+  - SendResetHeatmapHighlight
+  - SendResetSelecting
+  - SendToggleExpressedCells
+  - SendToggleNonExpressedCells
   DisableAutoOpenWizard: 1
