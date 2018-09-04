@@ -110,10 +110,30 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
-        g.GetComponent<Collider>().enabled = false;
+
         g.transform.position = new Vector3(posX, posY, posZ);
         g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
         g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+    }
+
+    [PunRPC]
+    public void SendDisableColliders(string name)
+    {
+        GameObject obj = GameObject.Find(name);
+        foreach (var collider in obj.GetComponents<Collider>())
+        {
+            collider.enabled = false;
+        }
+    }
+
+    [PunRPC]
+    public void SendEnableColliders(string name)
+    {
+        GameObject obj = GameObject.Find(name);
+        foreach (var collider in obj.GetComponents<Collider>())
+        {
+            collider.enabled = true;
+        }
     }
 
     [PunRPC]

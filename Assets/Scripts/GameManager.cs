@@ -251,6 +251,18 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
     }
 
+    public void InformDisableColliders(string name)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendDisableColliders", PhotonTargets.Others, name);
+    }
+
+    public void InformEnableColliders(string name)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendEnableColliders", PhotonTargets.Others, name);
+    }
+
     public void InformCreateHeatmap()
     {
         if (!multiplayer) return;

@@ -6,6 +6,7 @@ using VRTK;
 /// </summary>
 class NetworkHandlerInteract : VRTK_InteractableObject
 {
+    public ReferenceManager referenceManager;
 
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
@@ -20,6 +21,7 @@ class NetworkHandlerInteract : VRTK_InteractableObject
         }
         GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
         base.OnInteractableObjectGrabbed(e);
+        referenceManager.gameManager.InformDisableColliders(gameObject.name);
     }
 
     public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
@@ -33,5 +35,6 @@ class NetworkHandlerInteract : VRTK_InteractableObject
         }
         GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
         base.OnInteractableObjectUngrabbed(e);
+        referenceManager.gameManager.InformEnableColliders(gameObject.name);
     }
 }

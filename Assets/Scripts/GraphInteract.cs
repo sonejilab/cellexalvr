@@ -7,6 +7,7 @@ using VRTK;
 class GraphInteract : VRTK_InteractableObject
 {
     public MagnifierTool magnifier;
+    public ReferenceManager referenceManager;
 
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
@@ -18,6 +19,7 @@ class GraphInteract : VRTK_InteractableObject
             c.enabled = false;
         }
         base.OnInteractableObjectGrabbed(e);
+        referenceManager.gameManager.InformDisableColliders(gameObject.name);
     }
 
     public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
@@ -28,5 +30,6 @@ class GraphInteract : VRTK_InteractableObject
             c.enabled = true;
         }
         base.OnInteractableObjectUngrabbed(e);
+        referenceManager.gameManager.InformEnableColliders(gameObject.name);
     }
 }
