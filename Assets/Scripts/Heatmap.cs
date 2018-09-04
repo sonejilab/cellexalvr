@@ -101,7 +101,7 @@ public class Heatmap : MonoBehaviour
         heatmapGenerator = referenceManager.heatmapGenerator;
         highlightQuad.GetComponent<Renderer>().material.color = heatmapGenerator.HighlightMarkerColor;
         confirmQuad.GetComponent<Renderer>().material.color = heatmapGenerator.ConfirmMarkerColor;
-        foreach (StationaryButton b in GetComponentsInChildren<StationaryButton>())
+        foreach (CellexalButton b in GetComponentsInChildren<CellexalButton>())
         {
             b.referenceManager = referenceManager;
         }
@@ -218,6 +218,11 @@ public class Heatmap : MonoBehaviour
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         CellexalLog.Log("Started building a heatmap texture");
+
+        foreach (var button in GetComponentsInChildren<CellexalButton>())
+        {
+            button.SetButtonActivated(false);
+        }
 
         SQLiter.SQLite database = referenceManager.database;
         bitmap = new Bitmap(bitmapWidth, bitmapHeight);
@@ -381,6 +386,11 @@ public class Heatmap : MonoBehaviour
 
         GetComponent<Collider>().enabled = true;
         graphics.Dispose();
+
+        foreach (var button in GetComponentsInChildren<CellexalButton>())
+        {
+            button.SetButtonActivated(true);
+        }
 
         stopwatch.Stop();
         CellexalLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
@@ -905,10 +915,13 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     public void CreateNewHeatmapFromSelection()
     {
+        if (selectedBoxWidth == 0 || selectedBoxHeight == 0)
+            return;
+
         // create a copy of this
         GameObject newHeatmap = Instantiate(gameObject);
         Heatmap heatmap = newHeatmap.GetComponent<Heatmap>();
-        heatmap.GetComponentInChildren<CreateNewHeatmapButton>().controllerInside = false;
+
         heatmapGenerator.AddHeatmapToList(heatmap);
         heatmap.name = name + "_" + heatmapsCreated;
         heatmapsCreated++;
@@ -950,7 +963,6 @@ public class Heatmap : MonoBehaviour
 
         heatmap.Init();
         heatmap.BuildTexture(newCells, newGenes, newGroupWidths);
-
     }
 
     /// <summary>
