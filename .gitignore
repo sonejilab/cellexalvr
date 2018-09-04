@@ -15,6 +15,10 @@
 /Output/
 /Saved_Images/
 
+*.prefab
+*.ide*
+*.lock
+
 
 # Images and stuff
 *.png
