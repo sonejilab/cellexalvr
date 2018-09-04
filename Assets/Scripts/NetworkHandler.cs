@@ -39,6 +39,11 @@ public class NetworkHandler : MonoBehaviour
         {
             gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
         }
+
+        if (!GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<Collider>().enabled)
+        {
+            GetComponent<Collider>().enabled = true;
+        }
     }
 
     public void CalculateLayoutOnAllNetworks()

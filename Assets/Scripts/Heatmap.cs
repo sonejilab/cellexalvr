@@ -418,6 +418,10 @@ public class Heatmap : MonoBehaviour
         {
             gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
         }
+        if (!GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<Collider>().enabled)
+        {
+            GetComponent<Collider>().enabled = true;
+        }
 
         if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
         {

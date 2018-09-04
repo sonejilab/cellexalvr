@@ -70,6 +70,10 @@ public class Graph : MonoBehaviour
         {
             gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
+        if (!GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<Collider>().enabled)
+        {
+            GetComponent<Collider>().enabled = true;
+        }
     }
     /// <summary>
     /// Turns on all renderers and colliders for this graph.
