@@ -124,7 +124,11 @@ class ServerCoordinator : Photon.MonoBehaviour
         print(list.Length);
         foreach (var collider in list)
         {
-            print("DISABLING COLLIDER");
+            collider.enabled = false;
+        }
+        Collider[] children = obj.GetComponentsInChildren<Collider>();
+        foreach (var collider in children)
+        {
             collider.enabled = false;
         }
     }
@@ -137,9 +141,12 @@ class ServerCoordinator : Photon.MonoBehaviour
         print(list.Length);
         foreach (var collider in list)
         {
-            print("ENABLING COLLIDER");
             collider.enabled = true;
-            print("Send enable collider: " + collider.enabled);
+        }
+        Collider[] children = obj.GetComponentsInChildren<Collider>();
+        foreach (var collider in children)
+        {
+            collider.enabled = true;
         }
     }
 
@@ -184,7 +191,6 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
-        hm.GetComponent<Collider>().enabled = false;
         hm.transform.position = new Vector3(posX, posY, posZ);
         hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
         hm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
@@ -226,7 +232,6 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
-        nh.GetComponent<Collider>().enabled = false;
         nh.transform.position = new Vector3(posX, posY, posZ);
         nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
         nh.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);

@@ -10,7 +10,6 @@ class NetworkHandlerInteract : VRTK_InteractableObject
 
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
-        print("GRABBING NETWORK");
         referenceManager.gameManager.InformDisableColliders(gameObject.name);
         // moving many triggers really pushes what unity is capable of
         foreach (Collider c in GetComponentsInChildren<Collider>())

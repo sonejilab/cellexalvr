@@ -9,7 +9,6 @@ namespace VRTK.GrabAttachMechanics
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-            print("GRABBING NETWORK");
             referenceManager.gameManager.InformDisableColliders(gameObject.name);
             GetComponent<MeshCollider>().convex = true;
             base.OnInteractableObjectGrabbed(e);
@@ -17,7 +16,6 @@ namespace VRTK.GrabAttachMechanics
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            print("UNGRABBING NETWORK");
             referenceManager.gameManager.InformEnableColliders(gameObject.name);
             if (grabbingObjects.Count == 0)
                 GetComponent<MeshCollider>().convex = false;
