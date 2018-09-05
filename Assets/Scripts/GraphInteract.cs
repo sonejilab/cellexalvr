@@ -18,8 +18,8 @@ class GraphInteract : VRTK_InteractableObject
         {
             c.enabled = false;
         }
-        base.OnInteractableObjectGrabbed(e);
         referenceManager.gameManager.InformDisableColliders(gameObject.name);
+        base.OnInteractableObjectGrabbed(e);
     }
 
     public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
@@ -29,7 +29,7 @@ class GraphInteract : VRTK_InteractableObject
         {
             c.enabled = true;
         }
-        base.OnInteractableObjectUngrabbed(e);
         referenceManager.gameManager.InformEnableColliders(gameObject.name);
+        base.OnInteractableObjectUngrabbed(e);
     }
 }

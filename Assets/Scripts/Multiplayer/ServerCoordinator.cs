@@ -120,8 +120,11 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendDisableColliders(string name)
     {
         GameObject obj = GameObject.Find(name);
-        foreach (var collider in obj.GetComponents<Collider>())
+        Collider[] list = obj.GetComponents<Collider>();
+        print(list.Length);
+        foreach (var collider in list)
         {
+            print("DISABLING COLLIDER");
             collider.enabled = false;
         }
     }
@@ -130,9 +133,13 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendEnableColliders(string name)
     {
         GameObject obj = GameObject.Find(name);
-        foreach (var collider in obj.GetComponents<Collider>())
+        Collider[] list = obj.GetComponents<Collider>();
+        print(list.Length);
+        foreach (var collider in list)
         {
+            print("ENABLING COLLIDER");
             collider.enabled = true;
+            print("Send enable collider: " + collider.enabled);
         }
     }
 

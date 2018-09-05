@@ -404,6 +404,7 @@ public class Heatmap : MonoBehaviour
         {
             controllerInside = true;
         }
+        print("COLLIDER ENTER: " + GetComponent<Collider>().enabled);
     }
 
     private void OnTriggerExit(Collider other)
@@ -412,6 +413,7 @@ public class Heatmap : MonoBehaviour
         {
             controllerInside = false;
         }
+        print("COLLIDER EXIT: " + GetComponent<Collider>().enabled);
     }
 
     void Update()
