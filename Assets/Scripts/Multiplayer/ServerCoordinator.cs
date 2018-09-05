@@ -116,37 +116,46 @@ class ServerCoordinator : Photon.MonoBehaviour
         g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
     }
 
+    private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
     [PunRPC]
     public void SendDisableColliders(string name)
     {
         GameObject obj = GameObject.Find(name);
-        Collider[] list = obj.GetComponents<Collider>();
-        print(list.Length);
-        foreach (var collider in list)
-        {
-            collider.enabled = false;
-        }
+        //Collider[] list = obj.GetComponents<Collider>();
         Collider[] children = obj.GetComponentsInChildren<Collider>();
-        foreach (var collider in children)
+        //print(list.Length);
+        //foreach (var collider in list)
+        //{
+        //    collider.enabled = false;
+        //}
+        foreach (Collider c in children)
         {
-            collider.enabled = false;
+            if (c)
+            {
+                colliders[c] = c.enabled;
+                c.enabled = false;
+            }
         }
+
     }
 
     [PunRPC]
     public void SendEnableColliders(string name)
     {
         GameObject obj = GameObject.Find(name);
-        Collider[] list = obj.GetComponents<Collider>();
-        print(list.Length);
-        foreach (var collider in list)
-        {
-            collider.enabled = true;
-        }
+        //Collider[] list = obj.GetComponents<Collider>();
         Collider[] children = obj.GetComponentsInChildren<Collider>();
-        foreach (var collider in children)
+        //print(list.Length);
+        //foreach (var collider in list)
+        //{
+        //    collider.enabled = true;
+        //}
+        foreach (KeyValuePair<Collider, bool> pair in colliders)
         {
-            collider.enabled = true;
+            if (pair.Key)
+            {
+                pair.Key.enabled = pair.Value;
+            }
         }
     }
 
