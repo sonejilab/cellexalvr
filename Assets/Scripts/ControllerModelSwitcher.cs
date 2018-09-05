@@ -221,7 +221,6 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Keyboard:
                 keyboard.SetKeyboardVisible(true);
                 rightLaser.enabled = true;
-                referenceManager.gameManager.InformActivateKeyboard(true);
                 break;
             case Model.TwoLasers:
                 rightLaser.enabled = true;

@@ -42,7 +42,11 @@ namespace CurvedVRKeyboard
             // * sum of all scales so keys are never to far
             rayLength = Vector3.Distance(raycastingSource.position, target.transform.position) * (minRaylengthMultipler +
                                                                                                   (Mathf.Abs(target.transform.lossyScale.x) + Mathf.Abs(target.transform.lossyScale.y) + Mathf.Abs(target.transform.lossyScale.z)));
-            RayCastKeyboard();
+            if ((referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            {
+                RayCastKeyboard();
+            }
         }
 
         /// <summary>
