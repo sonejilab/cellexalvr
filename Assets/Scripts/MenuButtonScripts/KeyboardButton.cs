@@ -34,6 +34,7 @@ public class KeyboardButton : CellexalButton
     protected override void Click()
     {
         activateKeyboard = !keyboard.KeyboardActive;
+        referenceManager.gameManager.InformActivateKeyboard(activateKeyboard);
         keyboard.SetKeyboardVisible(activateKeyboard);
         if (activateKeyboard)
         {

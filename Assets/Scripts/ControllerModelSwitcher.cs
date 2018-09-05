@@ -188,7 +188,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
         {
             rightLaser.enabled = false;
-            keyboard.SetKeyboardVisible(false);
+            //keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
         }
         if (DesiredModel != Model.TwoLasers)
