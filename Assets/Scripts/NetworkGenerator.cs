@@ -201,6 +201,7 @@ public class NetworkGenerator : MonoBehaviour
         NetworkCenter network = Instantiate(networkCenterPrefab);
         network.transform.parent = handler.gameObject.transform;
         network.transform.localPosition = position;
+        network.referenceManager = referenceManager;
         handler.AddNetwork(network);
         network.Handler = handler;
         network.name = handler.name + name;

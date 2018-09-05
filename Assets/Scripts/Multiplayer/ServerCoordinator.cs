@@ -117,6 +117,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
+
     [PunRPC]
     public void SendDisableColliders(string name)
     {
@@ -128,14 +129,17 @@ class ServerCoordinator : Photon.MonoBehaviour
         //{
         //    collider.enabled = false;
         //}
+        int i = 0;
         foreach (Collider c in children)
         {
             if (c)
             {
+                i++;
                 colliders[c] = c.enabled;
                 c.enabled = false;
             }
         }
+        print(string.Format("disabled {0} of {1} colliders ", i, children.Length));
 
     }
 
@@ -150,13 +154,17 @@ class ServerCoordinator : Photon.MonoBehaviour
         //{
         //    collider.enabled = true;
         //}
+        int i = 0;
+
         foreach (KeyValuePair<Collider, bool> pair in colliders)
         {
             if (pair.Key)
             {
+                i++;
                 pair.Key.enabled = pair.Value;
             }
         }
+        print(string.Format("enabled {0} of {1} colliders ", i, children.Length));
     }
 
     [PunRPC]

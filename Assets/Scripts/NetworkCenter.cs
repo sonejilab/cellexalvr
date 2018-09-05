@@ -23,6 +23,7 @@ public class NetworkCenter : MonoBehaviour
     public GameObject simpleArcDescriptionPrefab;
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
+    public ReferenceManager referenceManager;
 
 
     public float MaxNegPcor { get; set; }
@@ -583,6 +584,7 @@ public class NetworkCenter : MonoBehaviour
         rigidbody.isKinematic = true;
         rigidbody.angularDrag = float.PositiveInfinity;
         var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
+        interactableObject.referenceManager = referenceManager;
         interactableObject.isGrabbable = true;
         interactableObject.isUsable = false;
         var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();

@@ -6,8 +6,11 @@ using VRTK;
 /// </summary>
 class NetworkCenterInteract : VRTK_InteractableObject
 {
+    public ReferenceManager referenceManager;
+
     public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
     {
+        referenceManager.gameManager.InformDisableColliders(name);
         if (grabbingObjects.Count == 1)
         {
             // moving many triggers really pushes what unity is capable of
@@ -28,6 +31,7 @@ class NetworkCenterInteract : VRTK_InteractableObject
 
     public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
     {
+        referenceManager.gameManager.InformEnableColliders(name);
         if (grabbingObjects.Count == 0)
         {
             foreach (Collider c in GetComponentsInChildren<Collider>())
