@@ -255,8 +255,8 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
         rightLaser.enabled = false;
         leftLaser.enabled = false;
-        keyboard.SetKeyboardVisible(false);
-        referenceManager.gameManager.InformActivateKeyboard(false);
+        //keyboard.SetKeyboardVisible(false);
+        //referenceManager.gameManager.InformActivateKeyboard(false);
         drawTool.SetActive(false);
         if (inMenu)
         {

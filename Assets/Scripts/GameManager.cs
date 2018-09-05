@@ -244,6 +244,27 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
     }
 
+    public void InformGoBackOneColor()
+    {
+        if (!multiplayer) return;
+        Debug.Log("Informing clients to undo last color");
+        coordinator.photonView.RPC("SendGoBackOneColor", PhotonTargets.Others);
+    }
+
+    public void InformGoBackSteps(int k)
+    {
+        if (!multiplayer) return;
+        Debug.Log("Informing clients to undo last color");
+        coordinator.photonView.RPC("SendGoBackSteps", PhotonTargets.Others, k);
+    }
+
+    public void InformCancelSelection()
+    {
+        if (!multiplayer) return;
+        Debug.Log("Informing clients to undo last color");
+        coordinator.photonView.RPC("SendCancelSelection", PhotonTargets.Others);
+    }
+
     // HEATMAP
     public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
     {

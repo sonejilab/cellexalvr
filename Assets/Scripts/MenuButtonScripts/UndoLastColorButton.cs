@@ -32,6 +32,7 @@ public class UndoLastColorButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformGoBackOneColor();
         selectionToolHandler.GoBackOneColorInHistory();
     }
 

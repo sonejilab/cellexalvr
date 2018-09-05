@@ -22,6 +22,7 @@ public class UndoSelectionButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformCancelSelection();
         selectionToolHandler.CancelSelection();
         SetButtonActivated(false);
     }

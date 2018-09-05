@@ -100,6 +100,27 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendGoBackOneColor()
+    {
+        referenceManager.selectionToolHandler.GoBackOneColorInHistory();
+    }
+
+    [PunRPC]
+    public void SendGoBackSteps(int k)
+    {
+        for (int i = 0; i < k; i++)
+        {
+            referenceManager.selectionToolHandler.GoBackOneStepInHistory();
+        }
+    }
+
+    [PunRPC]
+    public void SendCancelSelection()
+    {
+        referenceManager.selectionToolHandler.CancelSelection();
+    }
+
+    [PunRPC]
     public void SendConfirmSelection()
     {
         CellexalLog.Log("Recieved message to confirm selection");
@@ -122,13 +143,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendDisableColliders(string name)
     {
         GameObject obj = GameObject.Find(name);
-        //Collider[] list = obj.GetComponents<Collider>();
         Collider[] children = obj.GetComponentsInChildren<Collider>();
-        //print(list.Length);
-        //foreach (var collider in list)
-        //{
-        //    collider.enabled = false;
-        //}
         int i = 0;
         foreach (Collider c in children)
         {
@@ -147,13 +162,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendEnableColliders(string name)
     {
         GameObject obj = GameObject.Find(name);
-        //Collider[] list = obj.GetComponents<Collider>();
         Collider[] children = obj.GetComponentsInChildren<Collider>();
-        //print(list.Length);
-        //foreach (var collider in list)
-        //{
-        //    collider.enabled = true;
-        //}
         int i = 0;
 
         foreach (KeyValuePair<Collider, bool> pair in colliders)
