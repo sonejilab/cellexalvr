@@ -31,6 +31,7 @@ public class RedoTenStepsButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformRedoSteps(10);
         for (int i = 0; i < 10; i++)
         {
             selectionToolHandler.GoForwardOneStepInHistory();

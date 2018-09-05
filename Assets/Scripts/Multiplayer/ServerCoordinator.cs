@@ -115,6 +115,22 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendRedoOneColor()
+    {
+        referenceManager.selectionToolHandler.GoForwardOneColorInHistory();
+    }
+
+    [PunRPC]
+    public void SendRedoSteps(int k)
+    {
+        for (int i = 0; i < k; i++)
+        {
+            referenceManager.selectionToolHandler.GoForwardOneStepInHistory();
+        }
+    }
+
+
+    [PunRPC]
     public void SendCancelSelection()
     {
         referenceManager.selectionToolHandler.CancelSelection();

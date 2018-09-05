@@ -27,6 +27,7 @@ public class RedoLastColorButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformRedoOneColor();
         selectionToolHandler.GoForwardOneColorInHistory();
     }
 
