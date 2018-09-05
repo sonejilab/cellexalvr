@@ -24,10 +24,12 @@ public class PanelRaycaster : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private ClickablePanel lastHit = null;
+    private ControllerModelSwitcher controllerModelSwitcher;
 
     private void Start()
     {
         rightController = referenceManager.rightController;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 
         // tell all the panels which materials they should use
         foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
@@ -56,38 +58,41 @@ public class PanelRaycaster : MonoBehaviour
         var raycastingSource = rightController.transform;
         var device = SteamVR_Controller.Input((int)rightController.index);
         var ray = new Ray(raycastingSource.position, raycastingSource.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
+            || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
         {
-            // if we hit something this frame.
-            var hitPanel = hit.transform.gameObject.GetComponent<ClickablePanel>();
-            if (hitPanel != null)
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                if (lastHit != null && lastHit != hitPanel)
+                // if we hit something this frame.
+                var hitPanel = hit.transform.gameObject.GetComponent<ClickablePanel>();
+                if (hitPanel != null)
                 {
-                    lastHit.SetHighlighted(false);
-                }
-                hitPanel.SetHighlighted(true);
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    hitPanel.Click();
-                }
+                    if (lastHit != null && lastHit != hitPanel)
+                    {
+                        lastHit.SetHighlighted(false);
+                    }
+                    hitPanel.SetHighlighted(true);
+                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    {
+                        hitPanel.Click();
+                    }
 
-                lastHit = hitPanel;
+                    lastHit = hitPanel;
+                }
+                else if (lastHit != null)
+                {
+                    // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
+                    lastHit.SetHighlighted(false);
+                    lastHit = null;
+                }
             }
             else if (lastHit != null)
             {
-                // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
+                // if we hit nothing this frame, but hit something last frame.
                 lastHit.SetHighlighted(false);
                 lastHit = null;
             }
         }
-        else if (lastHit != null)
-        {
-            // if we hit nothing this frame, but hit something last frame.
-            lastHit.SetHighlighted(false);
-            lastHit = null;
-        }
     }
 }
-

@@ -152,7 +152,7 @@ public class SelectionToolHandler : MonoBehaviour
         //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
 
-    
+
 
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.

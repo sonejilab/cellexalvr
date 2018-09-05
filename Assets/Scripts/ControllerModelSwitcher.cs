@@ -219,7 +219,6 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.Keyboard:
-                keyboard.SetKeyboardVisible(true);
                 rightLaser.enabled = true;
                 break;
             case Model.TwoLasers:
