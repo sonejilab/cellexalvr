@@ -160,10 +160,10 @@ public class HelperTool : MonoBehaviour
         controllerHelpTextsRight.SetActive(activate);
         controllerHelpTextsLeft.SetActive(activate);
         helpToolActivator.SwitchText(activate);
-        foreach (GameObject panel in GraphInfoPanels)
-        {
-            panel.SetActive(activate);
-        }
+        //foreach (GameObject panel in GraphInfoPanels)
+        //{
+        //    panel.SetActive(activate);
+        //}
     }
 
     /// <summary>
