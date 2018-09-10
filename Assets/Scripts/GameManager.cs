@@ -279,6 +279,14 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendRedoSteps", PhotonTargets.Others, k);
     }
 
+    public void InformRemoveCells()
+    {
+        if (!multiplayer) return;
+        Debug.Log("Informing clients to remove selected cells");
+        coordinator.photonView.RPC("SendRemoveCells", PhotonTargets.Others);
+    }
+    
+
     // HEATMAP
     public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
     {

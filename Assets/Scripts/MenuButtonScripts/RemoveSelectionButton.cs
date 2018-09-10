@@ -23,6 +23,7 @@ public class RemoveSelectionButton : CellexalButton
 
     protected override void Click()
     {
+        referenceManager.gameManager.InformRemoveCells();
         SetButtonActivated(false);
         selectionToolHandler.ConfirmRemove();
     }
