@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using VRTK;
 
@@ -16,8 +17,8 @@ public class Graph : MonoBehaviour
     public List<GameObject> Lines { get; set; }
     [HideInInspector]
     public GraphManager graphManager;
-    public TextMesh graphNameText;
-    public TextMesh graphInfoText;
+    public TextMeshPro graphNameText;
+    public TextMeshPro graphInfoText;
 
     public Boolean GraphActive = true;
 
@@ -71,6 +72,22 @@ public class Graph : MonoBehaviour
             gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.tag == "Controller")
+    //    {
+    //        SetInfoTextVisible(false);
+    //    }
+    //}
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.tag == "Controller")
+    //    {
+    //        SetInfoTextVisible(true);
+    //    }
+    //}
     /// <summary>
     /// Turns on all renderers and colliders for this graph.
     /// </summary>
@@ -269,7 +286,8 @@ public class Graph : MonoBehaviour
         graphInfoText.transform.parent.localPosition = ScaleCoordinates(maxCoordValues.x - (maxCoordValues.x - minCoordValues.x) / 2, maxCoordValues.y, maxCoordValues.z);
         graphInfoText.text = "Points: " + points.Count;
         // the info panels should only be shown when the help tool is activated
-        SetInfoTextVisible(controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool);
+        //SetInfoTextVisible(controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool);
+        SetInfoTextVisible(true);
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ public class TutorialManager : MonoBehaviour {
 
     public GameObject tutorialCanvas;
     public GameObject[] stepPanels;
-    
+    public ReferenceManager referenceManager;
 
     public GameObject rightControllerModel;
     public GameObject leftControllerModel;
@@ -26,7 +26,7 @@ public class TutorialManager : MonoBehaviour {
     public GameObject newSelButton;
     public GameObject confirmSelButton;
     public GameObject networksButton;
-    public GameObject loadMenuButton;
+    //public GameObject loadMenuButton;
     public GameObject createHeatmapButton;
     public GameObject burnHeatmapButton;
 
@@ -335,7 +335,8 @@ public class TutorialManager : MonoBehaviour {
             case 7:
                 //From start
                 currentStep = 7;
-                loadMenuButton.GetComponent<ResetFolderButton>().Reset();
+                referenceManager.loaderController.ResetFolders();
+                //loadMenuButton.GetComponent<ResetFolderButton>().Reset();
                 foreach (GameObject obj in stepPanels)
                 {
                     obj.SetActive(false);

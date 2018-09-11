@@ -30,7 +30,8 @@ public class SubMenuButton : CellexalButton
         {
             DeactivateButtonsRecursive(buttonsToDeactivate);
         }
-        textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        //textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
         SetMenuActivated(true);
         descriptionText.text = "";
     }
