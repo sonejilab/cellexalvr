@@ -73,13 +73,13 @@ public class Graph : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Controller")
-        {
-            SetInfoTextVisible(false);
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.tag == "Controller")
+    //    {
+    //        SetInfoTextVisible(false);
+    //    }
+    //}
 
     //private void OnTriggerExit(Collider other)
     //{

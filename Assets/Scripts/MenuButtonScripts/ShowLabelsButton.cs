@@ -4,27 +4,28 @@ using UnityEngine;
 
 public class ShowLabelsButton : CellexalButton
 {
-
-    private ReferenceManager referenceManager;
     private GraphManager graphManager;
+    private bool activate;
 
     void Start()
     {
-        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         graphManager = referenceManager.graphManager;
+        //GetComponent<SimpleTextRotator>().SetTransforms(this.transform, this.transform);
+        activate = false;
     }
 
     protected override string Description
     {
         get
         {
-             return "Show labels of objects";
+             return "Show labels of object";
         }
     }
 
     protected override void Click()
     {
-        graphManager.SetInfoPanelsVisible(true);
+        graphManager.SetInfoPanelsVisible(activate);
+        activate = !activate;
     }
 
 
