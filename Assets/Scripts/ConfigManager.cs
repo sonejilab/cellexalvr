@@ -249,7 +249,7 @@ public class ConfigManager : MonoBehaviour
                         {
                             if (streamReader.EndOfStream)
                             {
-                                CellexalLog.Log("WARNING: Unexpected end of file when parsing list of selection colors from the config file.");
+                                CellexalError.SpawnError("Error in config file", "Unexpected end of file when parsing list of selection colors from the config file. File: " + configPath + " at line " + lineNbr);
                                 break;
                             }
                             lineNbr++;
@@ -280,7 +280,7 @@ public class ConfigManager : MonoBehaviour
                         {
                             if (streamReader.EndOfStream)
                             {
-                                CellexalLog.Log("ERROR: Unexpected end of file when parsing list of attribute colors from the config file.");
+                                CellexalError.SpawnError("Error in config file", "Unexpected end of file when parsing list of attribute colors from the config file. File: " + configPath + " at line " + lineNbr);
                                 break;
                             }
                             lineNbr++;
@@ -372,7 +372,7 @@ public class ConfigManager : MonoBehaviour
                     break;
 
                 default:
-                    CellexalLog.Log("WARNING: Unknown option in the config file. At line " + lineNbr + ": " + line);
+                    CellexalError.SpawnError("Error in config file", "Unknown option " + key + " in file " + configPath + " at line " + lineNbr);
                     break;
 
             }
@@ -401,7 +401,7 @@ public class ConfigManager : MonoBehaviour
             }
         }
     }
-      
+
     /// <summary>
     /// Helper method to extract a hexadecimal value from a string
     /// </summary>

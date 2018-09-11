@@ -31,7 +31,7 @@
             var colors = new UnityEngine.Color[numColors];
             if (numColors == 0)
             {
-                CellexalLog.Log("ERROR: Can't create 0 colors");
+                CellexalError.SpawnError("Error when interpolating colors", "Could not interpolate 0 colors.");
                 return null;
             }
 

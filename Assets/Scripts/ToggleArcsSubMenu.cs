@@ -27,9 +27,8 @@ public class ToggleArcsSubMenu : MenuWithTabs
     /// <param name="networks"> An array containing the networks. </param>
     public void CreateToggleArcsButtons(NetworkCenter[] networks)
     {
-        if (networks.Length == 1)
+        if (networks.Length < 1)
         {
-            CellexalLog.Log("ERROR: Tried to create buttons of a network handler with zero network centers.");
             return;
         }
         TurnOffAllTabs();
