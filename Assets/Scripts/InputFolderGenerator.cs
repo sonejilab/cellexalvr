@@ -48,7 +48,10 @@ public class InputFolderGenerator : MonoBehaviour
         string[] directories = Directory.GetDirectories(dataDirectory);
         if (directories.Length == 0)
         {
-            CellexalLog.Log("No data folders found. Aborting loading.");
+            if (directories.Length == 0)
+            {
+                CellexalError.SpawnError(new Vector3(0, 1, 0), "Error in data folder", "Error in data folder\nNo datasets found.\nMake sure you have placed your dataset(s) in the correct folder. They should be in serperate folders inside the \'Data\' folder, located where you installed CellexalVR.");
+            }
             return;
         }
         CellexalLog.Log("Started generating folders from " + CellexalLog.FixFilePath(dataDirectory));

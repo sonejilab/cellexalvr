@@ -125,6 +125,10 @@ public class InputReader : MonoBehaviour
         }
 
         string[] mdsFiles = Directory.GetFiles(fullPath, "*.mds");
+        if (mdsFiles.Length == 0)
+        {
+            CellexalError.SpawnError("Empty dataset", "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
+        }
         CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
         StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
     }
@@ -551,7 +555,7 @@ public class InputReader : MonoBehaviour
         string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
         if (!Directory.Exists(networkDirectory))
         {
-            CellexalLog.Log("ERROR: No network directory at " + CellexalLog.FixFilePath(networkDirectory));
+            CellexalError.SpawnError("Error when generating networks", string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
             yield break;
         }
         string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
@@ -563,13 +567,13 @@ public class InputReader : MonoBehaviour
             status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
             statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            CellexalLog.Log("ERROR: No .cnt file in network folder " + CellexalLog.FixFilePath(networkDirectory));
+            CellexalError.SpawnError("Error when generating networks", string.Format("No .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
             yield break;
         }
 
         if (cntFilePaths.Length > 1)
         {
-            CellexalLog.Log("ERROR: more than one .cnt file in network folder");
+            CellexalError.SpawnError("Error when generating networks", string.Format("More than one .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
             yield break;
         }
 
@@ -579,8 +583,7 @@ public class InputReader : MonoBehaviour
         // make sure there is a .nwk file
         if (nwkFilePaths.Length == 0)
         {
-            print("no .nwk file in network folder");
-            CellexalLog.Log("ERROR: No .nwk file in network folder " + CellexalLog.FixFilePath(networkDirectory));
+            CellexalError.SpawnError("Error when generating networks", string.Format("No .nwk file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
             yield break;
         }
         FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
@@ -588,8 +591,7 @@ public class InputReader : MonoBehaviour
         // 1 MB = 1048576 B
         if (nwkFileStream.Length > 1048576)
         {
-            CellexalLog.Log("ERROR: .nwk file is larger than 1 MB",
-                            ".nwk file size: " + nwkFileStream.Length + " B");
+            CellexalError.SpawnError("Error when generating networks", string.Format(".nwk file is larger than 1 MB. .nwk file size: {0} B", nwkFileStream.Length));
             nwkStreamReader.Close();
             nwkFileStream.Close();
             yield break;
@@ -632,13 +634,13 @@ public class InputReader : MonoBehaviour
                 graph = graphManager.FindGraph(graphName);
                 if (graph == null)
                 {
-                    CellexalLog.Log("ERROR: Could not find graph " + graphName + ", aborting");
+                    CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sire there is a .mds and .hull file with the same name in the dataset.", graphName));
                     yield break;
                 }
                 skeleton = graph.CreateConvexHull();
                 if (skeleton == null)
                 {
-                    CellexalLog.Log("ERROR: Could not create convex hull of " + graphName + " this might be because the graph does not have a correct .hull file, aborting");
+                    CellexalError.SpawnError("Error when generating networks", string.Format("Could not create a convex hull for the graph named {0}, this could be because the convex hull file is incorrect", graphName));
                     yield break;
                 }
                 CellexalLog.Log("Successfully created convex hull of " + graphName);

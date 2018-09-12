@@ -659,6 +659,7 @@ GameObject:
   - component: {fileID: 136}
   - component: {fileID: 137}
   - component: {fileID: 138}
+  - component: {fileID: 139}
   m_Layer: 0
   m_Name: InputReader
   m_TagString: Untagged
@@ -820,6 +821,20 @@ MonoBehaviour:
   plotGameObjectPrefab: {fileID: 1470793697894608, guid: 1a877c0b376e7e444bbfbe9d3b56622c,
     type: 2}
   gradientBoxPrefab: {fileID: 1811183715331362, guid: f736c30b84b0a44468b775ef47dfcf6f,
+    type: 2}
+--- !u!114 &139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45352ce3eb34c374f9df7479e243f5d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 133}
+  errorMessagePrefab: {fileID: 1404416386239028, guid: 35f780e3b0f5c574084b5ac0c64c0206,
     type: 2}
 --- !u!114 &146 stripped
 MonoBehaviour:
@@ -5552,7 +5567,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.008670008, g: 0.016088381, b: 0.032362044, a: 1}
+  m_IndirectSpecularColor: {r: 0.008669812, g: 0.01608792, b: 0.032361142, a: 1}
 --- !u!108 &896
 Light:
   m_ObjectHideFlags: 0

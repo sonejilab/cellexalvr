@@ -165,7 +165,7 @@ public static class FilterParser
     }
 
     /// <summary>
-    /// Logs a error message.
+    /// Logs a error message. Use <see cref="CellexalError.SpawnError(string, string)"/> to show the user an error message.
     /// </summary>
     /// <param name="message">The error message.</param>
     /// <param name="filepath">The file the error occured in.</param>
