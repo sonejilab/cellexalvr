@@ -160,6 +160,16 @@ class ServerCoordinator : Photon.MonoBehaviour
         g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
     }
 
+    [PunRPC]
+    public void SendMoveCells(string cellsName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    {
+        GameObject c = referenceManager.inputFolderGenerator.FindCells(cellsName);
+
+        c.transform.position = new Vector3(posX, posY, posZ);
+        c.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        //g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+    }
+
     private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
 
     [PunRPC]
@@ -253,10 +263,10 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendBurnHeatmap(string name)
+    public void SendBurnHeatmap(string name, Transform target)
     {
         CellexalLog.Log("Recieved message to burn heatmap with name: " + name);
-        GameObject.Find(name).GetComponent<HeatmapBurner>().BurnHeatmap();
+        GameObject.Find(name).GetComponent<HeatmapBurner>().BurnHeatmap(target);
     }
 
     [PunRPC]
