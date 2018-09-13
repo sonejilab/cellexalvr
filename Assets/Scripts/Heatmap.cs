@@ -25,7 +25,7 @@ public class Heatmap : MonoBehaviour
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
-    private GameObject fire;
+    private GameObject deleteTool;
     private SteamVR_TrackedObject rightController;
     private Transform raycastingSource;
     private GameManager gameManager;
@@ -60,6 +60,13 @@ public class Heatmap : MonoBehaviour
     private int selectionStartY;
     private bool selecting = false;
     private bool movingSelection = false;
+
+    // For creation animation
+    private bool createAnim = false;
+    private float targetScale;
+    private float speed;
+    private float enlargeSpeed;
+    private Vector3 target;
     // these are numbers ranging [0, groupWidths.Length)
     private int selectedGroupLeft;
     private int selectedGroupRight;
@@ -77,18 +84,25 @@ public class Heatmap : MonoBehaviour
     void Start()
     {
         //Init();
+        targetScale = 2f;
+        speed = 0.5f;
+        enlargeSpeed = 3f;
+        transform.localScale = new Vector3(0f, 0f, 0f);
+        target = new Vector3(1.4f, 1f, 0.05f);
+
     }
 
     public void Init()
     {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        //referenceManager = heatmapGenerator.referenceManager;
         GetComponent<VRTK.GrabAttachMechanics.HeatmapGrab>().referenceManager = referenceManager;
         rightController = referenceManager.rightController;
         graphManager = referenceManager.graphManager;
         cellManager = referenceManager.cellManager;
         raycastingSource = rightController.transform;
         gameManager = referenceManager.gameManager;
-        fire = referenceManager.fire;
+        deleteTool = referenceManager.deleteTool;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         highlightQuad.SetActive(false);
         confirmQuad.SetActive(false);
@@ -396,6 +410,7 @@ public class Heatmap : MonoBehaviour
         stopwatch.Stop();
         CellexalLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
         buildingTexture = false;
+        createAnim = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -404,7 +419,6 @@ public class Heatmap : MonoBehaviour
         {
             controllerInside = true;
         }
-        print("COLLIDER ENTER: " + GetComponent<Collider>().enabled);
     }
 
     private void OnTriggerExit(Collider other)
@@ -413,20 +427,30 @@ public class Heatmap : MonoBehaviour
         {
             controllerInside = false;
         }
-        print("COLLIDER EXIT: " + GetComponent<Collider>().enabled);
+    }
+
+    private void CreateHeatmapAnimation()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, target, step);
+        transform.localScale += Vector3.one * Time.deltaTime * enlargeSpeed;
+        if (transform.localScale.x >= targetScale)
+        {
+            createAnim = false;
+        }
     }
 
     void Update()
     {
+        if (createAnim)
+        {
+            CreateHeatmapAnimation();
+        }
         if (device == null)
         {
             device = SteamVR_Controller.Input((int)rightController.index);
         }
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && fire.activeSelf)
-        {
-            gameObject.GetComponent<HeatmapBurner>().BurnHeatmap();
-            gameManager.InformBurnHeatmap(this.name);
-        }
+
         if (GetComponent<VRTK_InteractableObject>().enabled)
         {
             gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);

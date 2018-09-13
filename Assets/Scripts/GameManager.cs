@@ -204,6 +204,12 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
     }
 
+    public void InformMoveCells(string cellsName, Vector3 pos, Quaternion rot)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendMoveCells", PhotonTargets.Others, cellsName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w);
+    }
+
     public void InformResetGraphColor()
     {
         if (!multiplayer) return;
@@ -313,11 +319,11 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
     }
 
-    public void InformBurnHeatmap(string name)
+    public void InformBurnHeatmap(string heatmapName, Transform target)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to create heatmap");
-        coordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, name);
+        coordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, heatmapName, target);
     }
 
 

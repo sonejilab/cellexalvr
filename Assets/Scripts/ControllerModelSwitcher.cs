@@ -30,7 +30,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Model ActualModel;
 
     private SelectionToolHandler selectionToolHandler;
-    private GameObject fire;
+    private GameObject deleteTool;
     private GameObject minimizer;
     private GameObject magnifier;
     private HelperTool helpTool;
@@ -51,7 +51,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         helpTool = referenceManager.helpTool;
         helpTool.SaveLayersToIgnore();
         selectionToolHandler = referenceManager.selectionToolHandler;
-        fire = referenceManager.fire;
+        deleteTool = referenceManager.deleteTool;
         minimizer = referenceManager.minimizeTool.gameObject;
         magnifier = referenceManager.magnifierTool.gameObject;
         keyboard = referenceManager.keyboard;
@@ -101,7 +101,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             if (controllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
-            fire.SetActive(false);
+            deleteTool.SetActive(false);
             minimizer.SetActive(false);
             magnifier.SetActive(false);
         }
@@ -170,7 +170,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
         if (DesiredModel != Model.HeatmapDeleteTool)
         {
-            fire.SetActive(false);
+            deleteTool.SetActive(false);
         }
         if (DesiredModel != Model.Magnifier)
         {
@@ -209,7 +209,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 magnifier.SetActive(true);
                 break;
             case Model.HeatmapDeleteTool:
-                fire.SetActive(true);
+                deleteTool.SetActive(true);
                 break;
             case Model.Minimizer:
                 minimizer.SetActive(true);
@@ -239,7 +239,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public void TurnOffActiveTool(bool inMenu)
     {
         selectionToolHandler.SetSelectionToolEnabled(false, 0);
-        fire.SetActive(false);
+        deleteTool.SetActive(false);
         magnifier.SetActive(false);
         minimizer.SetActive(false);
         if (!HelpToolShouldStayActivated)

@@ -9,7 +9,7 @@ public class BurnHeatmapToolButton : CellexalButton
     {
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         SetButtonActivated(false);
-        CellexalEvents.HeatmapCreated.AddListener(TurnOn);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 

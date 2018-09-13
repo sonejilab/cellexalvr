@@ -34,7 +34,7 @@ public class ReferenceManager : MonoBehaviour
     #region Tools
     [Header("Tools")]
     public SelectionToolHandler selectionToolHandler;
-    public GameObject fire;
+    public GameObject deleteTool;
     public MinimizeTool minimizeTool;
     public HelperTool helpTool;
     public GameObject helpMenu;

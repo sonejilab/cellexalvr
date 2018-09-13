@@ -9,6 +9,7 @@ public class InputFolderGenerator : MonoBehaviour
 {
 
     public GameObject folderPrefab;
+    public ReferenceManager referenceManager;
     // 6 is the number of boxes on each "floor"
     private Vector3[] folderBaseCoords = new Vector3[6];
 
@@ -58,6 +59,7 @@ public class InputFolderGenerator : MonoBehaviour
         var nfolder = 0;
         foreach (string directory in directories)
         {
+            
             Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
             GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector, Quaternion.identity);
             newFolder.transform.parent = transform;
@@ -68,7 +70,7 @@ public class InputFolderGenerator : MonoBehaviour
             int forwardSlashIndex = directory.LastIndexOf('/');
             int backwardSlashIndex = directory.LastIndexOf('\\');
             string croppedDirectoryName;
-
+            
             // Handle both forwardslash and backwardslash
             if (backwardSlashIndex > forwardSlashIndex)
             {
@@ -82,7 +84,23 @@ public class InputFolderGenerator : MonoBehaviour
             // Set text on folder box
             newFolder.GetComponentInChildren<TextMesh>().text = croppedDirectoryName;
             newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
+            newFolder.gameObject.name = croppedDirectoryName + "_box";
         }
+    }
+
+    /// <summary>
+    /// Find the cells object of a given name.
+    /// </summary>
+    public GameObject FindCells(string name)
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.name == (name + "_box"))
+            {
+                return gameObject;
+            }
+        }
+        return null;
     }
 
     /// <summary>

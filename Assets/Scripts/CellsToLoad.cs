@@ -1,4 +1,5 @@
 using UnityEngine;
+using VRTK;
 
 /// <summary>
 /// Holds the directory name that the cells in the boxes should represent.
@@ -10,6 +11,7 @@ public class CellsToLoad : MonoBehaviour
     private bool graphsLoaded = false;
     private Vector3 defaultPosition;
     private Quaternion defaultRotation;
+    private ReferenceManager referenceManager;
 
     public string Directory
     {
@@ -21,6 +23,22 @@ public class CellsToLoad : MonoBehaviour
         set
         {
             directory = value;
+        }
+    }
+
+    private void Start()
+    {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        this.gameObject.name = directory;
+    }
+
+    private void Update()
+    {
+        if (GetComponent<VRTK_InteractableObject>().enabled)
+        {
+            referenceManager.gameManager.InformMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
+            referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
+            
         }
     }
 
