@@ -125,8 +125,9 @@ public class ErrorMessage : MonoBehaviour
     /// <summary>
     /// Shows the error message and not just the title.
     /// </summary>
-    private void ShowErrorMessage()
+    public void ShowErrorMessage()
     {
+
         errorMessageShown = true;
         errorMessageGameObject.SetActive(true);
         if (!backgroundQuadInitialised)
@@ -137,35 +138,28 @@ public class ErrorMessage : MonoBehaviour
             var fontSize = errorMessage.fontSize;
             var textHeight = errorMessage.renderedHeight / fontSize;
             var scale = new Vector3(0.72f, textHeight / 2f, 1f);
-            var position = new Vector3(0f, 0.285f - textHeight / 4f, 0f);
+            var position = new Vector3(0f, 0.315f - textHeight / 4f, 0f);
             errorMessageBackground.transform.localPosition = position;
             errorMessageBackground.transform.localScale = scale;
         }
+        //errorMessageAnimator.ResetTrigger("Close");
         errorMessageAnimator.SetTrigger("Open");
-        StopCoroutine("DisableWhenAnimationFinish");
     }
 
     /// <summary>
     /// Hides the error message and shows just the title.
     /// </summary>
-    private void HideErrorMessage()
+    public void HideErrorMessage()
     {
+        //errorMessageAnimator.ResetTrigger("Open");
         errorMessageAnimator.SetTrigger("Close");
-        StartCoroutine(DisableWhenAnimationFinish());
     }
 
     /// <summary>
     /// Waits until the close error message animation has finished and then deactivates the error message game object
     /// </summary>
-    private IEnumerator DisableWhenAnimationFinish()
+    public void DeactivateErrorMessage()
     {
-        do
-        {
-            yield return null;
-            // keep looping until there is no animation playing
-        }
-        while (errorMessageAnimator.GetCurrentAnimatorClipInfo(0).Length > 0);
-
         errorMessageShown = false;
         errorMessageGameObject.SetActive(false);
     }
