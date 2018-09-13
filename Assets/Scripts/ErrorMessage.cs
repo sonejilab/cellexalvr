@@ -65,6 +65,7 @@ public class ErrorMessage : MonoBehaviour
     private bool controllerInside;
     private bool errorMessageShown = false;
     private bool backgroundQuadInitialised = false;
+    private Animator errorMessageAnimator;
 
     private void Start()
     {
@@ -74,7 +75,8 @@ public class ErrorMessage : MonoBehaviour
         }
         rightController = referenceManager.rightController;
         transform.LookAt(referenceManager.headset.transform.position);
-        transform.Rotate(0, -90, 0);
+        transform.Rotate(0, 90, 90);
+        errorMessageAnimator = errorMessageGameObject.GetComponent<Animator>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -116,7 +118,7 @@ public class ErrorMessage : MonoBehaviour
     {
         errorTitle.text = "Click for more information\n" + title;
         errorMessage.text = message;
-
+        backgroundQuadInitialised = false;
         //ShowErrorMessage();
     }
 
@@ -134,12 +136,13 @@ public class ErrorMessage : MonoBehaviour
 
             var fontSize = errorMessage.fontSize;
             var textHeight = errorMessage.renderedHeight / fontSize;
-            var scale = new Vector3(1f, textHeight / 2f, 1f);
-            var position = new Vector3(0f, 0.295f - textHeight / 4f, 0.01f);
+            var scale = new Vector3(0.72f, textHeight / 2f, 1f);
+            var position = new Vector3(0f, 0.285f - textHeight / 4f, 0f);
             errorMessageBackground.transform.localPosition = position;
             errorMessageBackground.transform.localScale = scale;
-
         }
+        errorMessageAnimator.SetTrigger("Open");
+        StopCoroutine("DisableWhenAnimationFinish");
     }
 
     /// <summary>
@@ -147,6 +150,22 @@ public class ErrorMessage : MonoBehaviour
     /// </summary>
     private void HideErrorMessage()
     {
+        errorMessageAnimator.SetTrigger("Close");
+        StartCoroutine(DisableWhenAnimationFinish());
+    }
+
+    /// <summary>
+    /// Waits until the close error message animation has finished and then deactivates the error message game object
+    /// </summary>
+    private IEnumerator DisableWhenAnimationFinish()
+    {
+        do
+        {
+            yield return null;
+            // keep looping until there is no animation playing
+        }
+        while (errorMessageAnimator.GetCurrentAnimatorClipInfo(0).Length > 0);
+
         errorMessageShown = false;
         errorMessageGameObject.SetActive(false);
     }
