@@ -10,20 +10,24 @@ public class MinimizeTool : MonoBehaviour
     public ReferenceManager referenceManager;
 
     private SteamVR_TrackedObject rightController;
+    private SteamVR_TrackedObject leftController;
     private MinimizedObjectHandler jail;
     private ControllerModelSwitcher controllerModelSwitcher;
     private bool controllerInside = false;
     private GameObject collidingWith;
     private int numberColliders;
+    
 
-    private void Start()
+    void Start()
     {
         rightController = referenceManager.rightController;
+        leftController = referenceManager.leftController;
         jail = referenceManager.minimizedObjectHandler;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+
     }
 
-    private void Update()
+    void Update()
     {
         var device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -32,7 +36,7 @@ public class MinimizeTool : MonoBehaviour
             if (collidingWith.CompareTag("Graph"))
             {
                 // the collider is a graphpoint
-                var graph = collidingWith.transform.parent;
+                var graph = collidingWith.transform;
                 if (graph == null)
                 {
                     return;
@@ -40,9 +44,10 @@ public class MinimizeTool : MonoBehaviour
                 graph.GetComponent<Graph>().HideGraph();
                 string graphName = graph.GetComponent<Graph>().GraphName;
                 jail.MinimizeObject(graph.gameObject, graphName);
+                //minimize = true;
                 referenceManager.gameManager.InformMinimizeGraph(graphName);
             }
-            else if (collidingWith.CompareTag("Network"))
+            if (collidingWith.CompareTag("Network"))
             {
                 if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Minimizer)
                     return;
@@ -51,17 +56,37 @@ public class MinimizeTool : MonoBehaviour
                 {
                     networkHandler.HideNetworks();
                     string networkName = collidingWith.gameObject.name;
-                    Debug.Log("COLLIDING WITH: " + networkName);
                     jail.MinimizeObject(collidingWith, networkName);
                     referenceManager.gameManager.InformMinimizeNetwork(networkName);
                 }
             }
+            if (collidingWith.CompareTag("HeatBoard"))
+            {
+                if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Minimizer)
+                    return;
+                var heatmap = collidingWith.GetComponent<Heatmap>();
+                if (heatmap != null)
+                {
+                    heatmap.HideHeatmap();
+                    string heatmapName = heatmap.gameObject.name;
+                    jail.MinimizeObject(heatmap.gameObject, heatmapName);
+                    controllerInside = false;
+                    //referenceManager.gameManager.InformMinimizeHeatmap(heatmapName);
+                }
+            }
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
+
         numberColliders++;
+        if (other.CompareTag("Graph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
+        {
+            GetComponent<Light>().range = 0.08f;
+            GetComponent<Light>().intensity = 1.1f;
+        }
         collidingWith = other.gameObject;
         controllerInside = true;
     }
@@ -69,6 +94,11 @@ public class MinimizeTool : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         numberColliders--;
+        if (other.CompareTag("Graph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
+        {
+            GetComponent<Light>().range = 0.04f;
+            GetComponent<Light>().intensity = 0.8f;
+        }
         if (numberColliders == 0)
         {
             controllerInside = false;

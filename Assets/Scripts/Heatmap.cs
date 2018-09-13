@@ -24,7 +24,7 @@ public class Heatmap : MonoBehaviour
     private GraphManager graphManager;
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
-    private bool controllerInside = false;
+    public bool controllerInside = false;
     private GameObject deleteTool;
     private SteamVR_TrackedObject rightController;
     private Transform raycastingSource;
@@ -65,8 +65,16 @@ public class Heatmap : MonoBehaviour
     private bool createAnim = false;
     private float targetScale;
     private float speed;
-    private float enlargeSpeed;
+    private float scaleSpeed;
     private Vector3 target;
+    // Minimizing
+    private Vector3 originalPos;
+    private Quaternion originalRot;
+    private Vector3 originalScale;
+    private float targetMinScale;
+    private bool minimize;
+    private bool maximize;
+
     // these are numbers ranging [0, groupWidths.Length)
     private int selectedGroupLeft;
     private int selectedGroupRight;
@@ -85,10 +93,12 @@ public class Heatmap : MonoBehaviour
     {
         //Init();
         targetScale = 2f;
-        speed = 0.5f;
-        enlargeSpeed = 3f;
+        speed = 2f;
+        scaleSpeed = 3f;
         transform.localScale = new Vector3(0f, 0f, 0f);
         target = new Vector3(1.4f, 1f, 0.05f);
+        originalPos = originalScale = new Vector3();
+        originalRot = new Quaternion();
 
     }
 
@@ -121,6 +131,118 @@ public class Heatmap : MonoBehaviour
             b.referenceManager = referenceManager;
         }
 
+    }
+
+    void Update()
+    {
+        if (device == null)
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+        }
+        if (createAnim)
+        {
+            CreateHeatmapAnimation();
+        }
+        if (minimize)
+        {
+            Minimize();
+        }
+        if (maximize)
+        {
+            Maximize();
+        }
+
+        if (GetComponent<VRTK_InteractableObject>().enabled)
+        {
+            gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
+        }
+
+        if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+        {
+            raycastingSource = rightController.transform;
+            Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.transform == transform)
+            {
+                int hitx = (int)(hit.textureCoord.x * bitmapWidth);
+                int hity = (int)(hit.textureCoord.y * bitmapHeight);
+                if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
+                {
+                    // if we hit the list of genes
+                    int geneHit = HandleHitGeneList(hity);
+
+                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    {
+                        gameManager.InformColorGraphsByGene(genes[geneHit]);
+                        referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
+                    }
+                }
+                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
+                {
+                    // if we hit the grouping bar
+                    HandleHitGroupingBar(hitx);
+                }
+                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
+                {
+                    // if we hit the actual heatmap
+                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    {
+                        gameManager.InformHandlePressDown(name, hitx, hity);
+                        HandlePressDown(hitx, hity);
+                    }
+
+                    if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    {
+                        // called when choosing a box selection
+                        gameManager.InformHandleBoxSelection(name, hitx, hity, selectionStartX, selectionStartY);
+                        HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+                    }
+                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    {
+                        // called when letting go of the trigger to finalize a box selection
+                        gameManager.InformConfirmSelection(name, hitx, hity, selectionStartX, selectionStartY);
+                        ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+                    }
+                    else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    {
+                        // called when moving a selection
+                        gameManager.InformHandleMovingSelection(name, hitx, hity);
+                        HandleMovingSelection(hitx, hity);
+                    }
+                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    {
+                        // called when letting go of the trigger to move the selection
+                        gameManager.InformMoveSelection(name, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+                        MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+
+                    }
+                    else
+                    {
+                        // handle when the raycast just hits the heatmap
+                        gameManager.InformHandleHitHeatmap(name, hitx, hity);
+                        HandleHitHeatmap(hitx, hity);
+                    }
+                }
+                else
+                {
+                    // if we hit the heatmap but not any area of interest, like the borders or any space in between
+                    gameManager.InformResetHeatmapHighlight(name);
+                    ResetHeatmapHighlight();
+                }
+            }
+            else
+            {
+                // if we don't hit the heatmap at all
+                gameManager.InformResetHeatmapHighlight(name);
+                ResetHeatmapHighlight();
+            }
+            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                // if the raycast leaves the heatmap and the user lets go of the trigger
+                gameManager.InformResetSelecting(name);
+                ResetSelecting();
+            }
+        }
     }
 
     /// <summary>
@@ -433,116 +555,72 @@ public class Heatmap : MonoBehaviour
     {
         float step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target, step);
-        transform.localScale += Vector3.one * Time.deltaTime * enlargeSpeed;
+        transform.localScale += Vector3.one * Time.deltaTime * scaleSpeed;
         if (transform.localScale.x >= targetScale)
         {
             createAnim = false;
         }
     }
 
-    void Update()
+    internal void HideHeatmap()
     {
-        if (createAnim)
+        originalPos = transform.position;
+        originalRot = transform.localRotation;
+        originalScale = transform.localScale;
+        foreach (Collider c in GetComponentsInChildren<Collider>())
         {
-            CreateHeatmapAnimation();
+            c.enabled = false;
         }
-        if (device == null)
+        minimize = true;
+    }
+
+    private void Minimize()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+        transform.localScale -= Vector3.one * Time.deltaTime * scaleSpeed;
+        transform.Rotate(Vector3.one * Time.deltaTime * 50);
+        if (transform.localScale.x <= targetMinScale)
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-        }
-
-        if (GetComponent<VRTK_InteractableObject>().enabled)
-        {
-            gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
-        }
-
-        if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-        {
-            raycastingSource = rightController.transform;
-            Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit) && hit.transform == transform)
-            {
-                int hitx = (int)(hit.textureCoord.x * bitmapWidth);
-                int hity = (int)(hit.textureCoord.y * bitmapHeight);
-                if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
-                {
-                    // if we hit the list of genes
-                    int geneHit = HandleHitGeneList(hity);
-
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    {
-                        gameManager.InformColorGraphsByGene(genes[geneHit]);
-                        referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
-                    }
-                }
-                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
-                {
-                    // if we hit the grouping bar
-                    HandleHitGroupingBar(hitx);
-                }
-                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
-                {
-                    // if we hit the actual heatmap
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    {
-                        gameManager.InformHandlePressDown(name, hitx, hity);
-                        HandlePressDown(hitx, hity);
-                    }
-
-                    if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
-                    {
-                        // called when choosing a box selection
-                        gameManager.InformHandleBoxSelection(name, hitx, hity, selectionStartX, selectionStartY);
-                        HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
-                    }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
-                    {
-                        // called when letting go of the trigger to finalize a box selection
-                        gameManager.InformConfirmSelection(name, hitx, hity, selectionStartX, selectionStartY);
-                        ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
-                    }
-                    else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
-                    {
-                        // called when moving a selection
-                        gameManager.InformHandleMovingSelection(name, hitx, hity);
-                        HandleMovingSelection(hitx, hity);
-                    }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
-                    {
-                        // called when letting go of the trigger to move the selection
-                        gameManager.InformMoveSelection(name, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
-                        MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
-
-                    }
-                    else
-                    {
-                        // handle when the raycast just hits the heatmap
-                        gameManager.InformHandleHitHeatmap(name, hitx, hity);
-                        HandleHitHeatmap(hitx, hity);
-                    }
-                }
-                else
-                {
-                    // if we hit the heatmap but not any area of interest, like the borders or any space in between
-                    gameManager.InformResetHeatmapHighlight(name);
-                    ResetHeatmapHighlight();
-                }
-            }
-            else
-            {
-                // if we don't hit the heatmap at all
-                gameManager.InformResetHeatmapHighlight(name);
-                ResetHeatmapHighlight();
-            }
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                // if the raycast leaves the heatmap and the user lets go of the trigger
-                gameManager.InformResetSelecting(name);
-                ResetSelecting();
-            }
+            minimize = false;
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+            GetComponent<Renderer>().enabled = false;
+            referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+            referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
         }
     }
+
+    internal void ShowHeatmap()
+    {
+        transform.position = referenceManager.minimizedObjectHandler.transform.position;
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = true;
+        }
+        GetComponent<Renderer>().enabled = true;
+        maximize = true;
+    }
+
+    private void Maximize()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
+        transform.localScale += Vector3.one * Time.deltaTime * scaleSpeed;
+        transform.Rotate(Vector3.one * Time.deltaTime * -50);
+        if (transform.localScale.x >= originalScale.x)
+        {
+            transform.localScale = originalScale;
+            transform.position = originalPos;
+            transform.rotation = originalRot;
+            maximize = false;
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+                c.enabled = true;
+        }
+    }
+
+
+    
 
     public void HandlePressDown(int hitx, int hity)
     {

@@ -785,7 +785,9 @@ public class InputReader : MonoBehaviour
         nwkStreamReader.Close();
         nwkFileStream.Close();
         CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
+        networkHandler.CreateNetworkAnimation(networkHandler.transform.position, graph.transform.position);
     }
+
 
     /// <summary>
     /// Determines the maximum and the minimum values of the dataset.

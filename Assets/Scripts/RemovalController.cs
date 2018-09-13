@@ -23,12 +23,10 @@ public class RemovalController : MonoBehaviour {
 
     void Start()
     {
-        
         rightController = referenceManager.rightController;
         speed = 1.5f;
         shrinkSpeed = 2f;
-        targetScale = 0.05f;
-        //target = transform;
+        targetScale = 0.1f;
     }
 
     // Update is called once per frame
@@ -56,7 +54,10 @@ public class RemovalController : MonoBehaviour {
         {
             controllerInside = true;
             objectToDelete = other.gameObject;
+            GetComponent<Light>().color = Color.red;
+            GetComponent<Light>().range = 0.05f;
             GetComponent<MeshRenderer>().material = activeMat;
+            transform.localScale = Vector3.one * 0.04f;
         }
         if (other.CompareTag("HeatBoard"))
         {
@@ -67,21 +68,14 @@ public class RemovalController : MonoBehaviour {
     private void OnTriggerExit(Collider other)
     {
         GetComponent<MeshRenderer>().material = inactiveMat;
+        GetComponent<Light>().color = Color.white;
+        transform.localScale = Vector3.one * 0.03f;
+        GetComponent<Light>().range = 0.04f;
         controllerInside = false;
     }
 
     void DeleteObject(GameObject obj)
     {
-        //anim.enabled = true;
-        //anim.Play("remove_heatmap");
-        //anim.SetFloat()
-        //Color c = rend.material.color;
-        //rend.material.color = new Color(c.r, c.g, c.b, 1 - fade);
-        //foreach (Renderer renderer in childrenRenderers)
-        //{
-        //    renderer.material.color = new Color(c.r, c.g, c.b, 1 - fade);
-        //}
-        //fade = fade + fadingSpeed * Time.deltaTime;
         if (!obj)
         {
             delete = false;
@@ -89,17 +83,18 @@ public class RemovalController : MonoBehaviour {
             return;
         }
         float step = speed * Time.deltaTime;
-        obj.transform.position = Vector3.MoveTowards(transform.position, obj.transform.position, step);
+        obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
         obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
+        obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
         if (obj.transform.localScale.x <= targetScale)
         {
             CellexalLog.Log("DELETED OBJECT " + obj.name);
             delete = false;
             Destroy(obj);
             GetComponent<MeshRenderer>().material = inactiveMat;
-            //anim.Play("New State");
-            //Destroy(fire);
-            //fade = 0;
+            GetComponent<Light>().color = Color.white;
+            transform.localScale = Vector3.one * 0.03f;
+            GetComponent<Light>().range = 0.04f;
         }
     }
 }
