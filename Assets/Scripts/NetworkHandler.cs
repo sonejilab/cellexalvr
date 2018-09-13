@@ -20,10 +20,31 @@ public class NetworkHandler : MonoBehaviour
     private Material[] highlightedMaterials;
     private Material[] unhighlightedMaterials;
 
+    // For minimization animation
+    private bool minimize;
+    private bool maximize;
+    private float speed;
+    private float targetMinScale;
+    private float targetMaxScale;
+    private float shrinkSpeed;
+    private Vector3 originalPos;
+    private Quaternion originalRot;
+    private Vector3 originalScale;
+
+    private bool createAnim;
+    private Vector3 targetPos;
+    private float targetScale;
+
     public int layoutApplied = 0;
 
     private void Start()
     {
+        speed = 1.5f;
+        shrinkSpeed = 2f;
+        targetMinScale = 0.05f;
+        targetMaxScale = targetScale = 1f;
+        targetPos = originalPos = originalScale = new Vector3();
+        originalRot = new Quaternion();
         Replacements = new List<NetworkCenter>();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         GetComponent<NetworkHandlerInteract>().referenceManager = referenceManager;
@@ -32,6 +53,7 @@ public class NetworkHandler : MonoBehaviour
         highlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(highlightMaterial) };
         highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
         unhighlightedMaterials = new Material[] { meshRenderer.materials[0], null };
+        this.transform.localScale = Vector3.zero;
     }
 
     private void Update()
@@ -40,6 +62,19 @@ public class NetworkHandler : MonoBehaviour
         {
             gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
         }
+        if (minimize)
+        {
+            Minimize();
+        }
+        if (maximize)
+        {
+            Maximize();
+        }
+        if (createAnim)
+        {
+            NetworkAnimation();
+        }
+
     }
 
     public void CalculateLayoutOnAllNetworks()
@@ -145,27 +180,58 @@ public class NetworkHandler : MonoBehaviour
     /// </summary>
     internal void ShowNetworks()
     {
+        transform.position = referenceManager.minimizedObjectHandler.transform.position;
         foreach (NetworkCenter network in Replacements)
         {
             network.GetComponent<Renderer>().enabled = true;
-            network.GetComponent<Collider>().enabled = true;
             network.HideSphereIfEnlarged();
         }
         foreach (NetworkCenter network in networks)
         {
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                 r.enabled = true;
-            network.GetComponent<Collider>().enabled = true;
             if (network.Enlarged)
             {
                 network.gameObject.GetComponent<Renderer>().enabled = false;
-                foreach (Collider c in network.GetComponentsInChildren<Collider>())
-                    c.enabled = true;
             }
 
         }
         GetComponent<Renderer>().enabled = true;
         GetComponent<Collider>().enabled = true;
+        maximize = true;
+    }
+
+    /// <summary>
+    /// Animation for showing network.
+    /// </summary>
+    void Maximize()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
+        transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
+        transform.Rotate(Vector3.one * Time.deltaTime * -100);
+        if (transform.localScale.x >= originalScale.x)
+        {
+            transform.localScale = originalScale;
+            transform.localPosition = originalPos;
+            foreach (NetworkCenter network in Replacements)
+            {
+                network.GetComponent<Collider>().enabled = true;
+            }
+            foreach (NetworkCenter network in networks)
+            {
+
+                network.GetComponent<Collider>().enabled = true;
+                if (network.Enlarged)
+                {
+                    foreach (Collider c in network.GetComponentsInChildren<Collider>())
+                        c.enabled = true;
+                }
+
+            }
+            GetComponent<Collider>().enabled = true;
+            maximize = false;
+        }
     }
 
     /// <summary>
@@ -175,15 +241,57 @@ public class NetworkHandler : MonoBehaviour
     {
         foreach (NetworkCenter network in networks)
         {
-            foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
-                r.enabled = false;
             foreach (Collider c in network.GetComponentsInChildren<Collider>())
                 c.enabled = false;
         }
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
-            r.enabled = false;
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = false;
+        originalPos = transform.position;
+        originalRot = transform.localRotation;
+        originalScale = transform.localScale;
+        minimize = true;
+    }
+
+    /// <summary>
+    /// Animation for hiding network.
+    /// </summary>
+    void Minimize()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+        transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
+        transform.Rotate(Vector3.one * Time.deltaTime * 100);
+        if (transform.localScale.x <= targetMinScale)
+        {
+            foreach (NetworkCenter network in networks)
+            {
+                foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
+                    r.enabled = false;
+            }
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+            minimize = false;
+            referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+            referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+        }
+    }
+
+    public void CreateNetworkAnimation(Vector3 nhPos, Vector3 gPos)
+    {
+        transform.position = gPos;
+        targetPos = nhPos;
+        createAnim = true;
+    }
+
+    void NetworkAnimation()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+        transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
+        if (transform.localScale.x >= targetScale)
+        {
+            createAnim = false;
+        }
     }
 
     internal void ToggleNetworkColliders(bool newState)

@@ -7,6 +7,7 @@ public class MinimizedObjectContainer : MonoBehaviour
 {
 
     private SteamVR_TrackedObject rightController;
+    private MinimizeTool minimizeTool;
     public GameObject MinimizedObject { get; set; }
     public MinimizedObjectHandler Handler { get; set; }
     /// <summary>
@@ -28,6 +29,7 @@ public class MinimizedObjectContainer : MonoBehaviour
     {
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         this.name = "Jail_" + MinimizedObject.name;
+        minimizeTool = Handler.referenceManager.minimizeTool;
     }
 
     private void Update()
@@ -38,12 +40,20 @@ public class MinimizedObjectContainer : MonoBehaviour
             if (MinimizedObject.CompareTag("Graph"))
             {
                 MinimizedObject.GetComponent<Graph>().ShowGraph();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Graph");
                 Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
             }
             if (MinimizedObject.CompareTag("Network"))
             {
                 MinimizedObject.GetComponent<NetworkHandler>().ShowNetworks();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
                 Handler.referenceManager.gameManager.InformShowNetwork(MinimizedObject.name, this.name);
+            }
+            if (MinimizedObject.CompareTag("HeatBoard"))
+            {
+                MinimizedObject.GetComponent<Heatmap>().ShowHeatmap();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
+                //Handler.referenceManager.gameManager.InformShowNetwork(MinimizedObject.name, this.name);
             }
             Handler.ContainerRemoved(this);
             Destroy(gameObject);

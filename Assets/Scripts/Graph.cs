@@ -36,6 +36,18 @@ public class Graph : MonoBehaviour
     private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
 
+    // For minimization animation
+    private bool minimize;
+    private bool maximize;
+    private Transform target;
+    private float speed;
+    private float targetMinScale;
+    private float targetMaxScale;
+    private float shrinkSpeed;
+    private Vector3 originalPos;
+    private Quaternion originalRot;
+    private Vector3 originalScale;
+
     private string graphName;
     /// <summary>
     /// The name of this graph. Should just be the filename that the graph came from.
@@ -55,6 +67,11 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
+        speed = 1.5f;
+        shrinkSpeed = 2f;
+        targetMinScale = 0.05f;
+        targetMaxScale = 1f;
+        originalPos = new Vector3();
         points = new Dictionary<string, GraphPoint>(1024);
         defaultPos = transform.position;
         pointsPositions = new List<Vector3>();
@@ -71,49 +88,85 @@ public class Graph : MonoBehaviour
         {
             gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
+        if (minimize)
+        {
+            Minimize();
+        }
+        if (maximize)
+        {
+            Maximize();
+        }
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.tag == "Controller")
-    //    {
-    //        SetInfoTextVisible(false);
-    //    }
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.tag == "Controller")
-    //    {
-    //        SetInfoTextVisible(true);
-    //    }
-    //}
-    /// <summary>
-    /// Turns on all renderers and colliders for this graph.
-    /// </summary>
     internal void ShowGraph()
     {
+        transform.position = referenceManager.minimizedObjectHandler.transform.position;
         GraphActive = true;
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
             r.enabled = true;
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-            c.enabled = true;
+
         foreach (GameObject line in Lines)
             line.SetActive(true);
+        maximize = true;
     }
 
+    /// <summary>
+    /// Animation for showing graph.
+    /// </summary>
+    void Maximize()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
+        transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
+        transform.Rotate(Vector3.one * Time.deltaTime * -100);
+        if (transform.localScale.x >= targetMaxScale)
+        {
+            transform.localScale = originalScale;
+            transform.localPosition = originalPos;
+            CellexalLog.Log("Maximized object" + name);
+            maximize = false;
+            GraphActive = true;
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+                c.enabled = true;
+            foreach (GameObject line in Lines)
+                line.SetActive(true);
+        }
+    }
     /// <summary>
     /// Turns off all renderers and colliders for this graph.
     /// </summary>
     internal void HideGraph()
     {
         GraphActive = false;
-        foreach (Renderer r in GetComponentsInChildren<Renderer>())
-            r.enabled = false;
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = false;
         foreach (GameObject line in Lines)
             line.SetActive(false);
+        originalPos = transform.position;
+        originalScale = transform.localScale;
+        minimize = true;
+    }
+
+    /// <summary>
+    /// Animation for hiding graph.
+    /// </summary>
+    void Minimize()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+        transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
+        transform.Rotate(Vector3.one * Time.deltaTime * 100);
+        if (transform.localScale.x <= targetMinScale)
+        {
+            minimize = false;
+            GraphActive = false;
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+            foreach (GameObject line in Lines)
+                line.SetActive(false);
+            referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+            referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+        }
     }
 
     /// <summary>
