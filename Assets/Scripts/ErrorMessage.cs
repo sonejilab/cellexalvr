@@ -65,6 +65,7 @@ public class ErrorMessage : MonoBehaviour
     private bool controllerInside;
     private bool errorMessageShown = false;
     private bool backgroundQuadInitialised = false;
+    private Animator errorMessageAnimator;
 
     private void Start()
     {
@@ -74,7 +75,8 @@ public class ErrorMessage : MonoBehaviour
         }
         rightController = referenceManager.rightController;
         transform.LookAt(referenceManager.headset.transform.position);
-        transform.Rotate(0, -90, 0);
+        transform.Rotate(0, 90, 90);
+        errorMessageAnimator = errorMessageGameObject.GetComponent<Animator>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -116,15 +118,16 @@ public class ErrorMessage : MonoBehaviour
     {
         errorTitle.text = "Click for more information\n" + title;
         errorMessage.text = message;
-
+        backgroundQuadInitialised = false;
         //ShowErrorMessage();
     }
 
     /// <summary>
     /// Shows the error message and not just the title.
     /// </summary>
-    private void ShowErrorMessage()
+    public void ShowErrorMessage()
     {
+
         errorMessageShown = true;
         errorMessageGameObject.SetActive(true);
         if (!backgroundQuadInitialised)
@@ -134,18 +137,28 @@ public class ErrorMessage : MonoBehaviour
 
             var fontSize = errorMessage.fontSize;
             var textHeight = errorMessage.renderedHeight / fontSize;
-            var scale = new Vector3(1f, textHeight / 2f, 1f);
-            var position = new Vector3(0f, 0.295f - textHeight / 4f, 0.01f);
+            var scale = new Vector3(0.72f, textHeight / 2f, 1f);
+            var position = new Vector3(0f, 0.315f - textHeight / 4f, 0f);
             errorMessageBackground.transform.localPosition = position;
             errorMessageBackground.transform.localScale = scale;
-
         }
+        //errorMessageAnimator.ResetTrigger("Close");
+        errorMessageAnimator.SetTrigger("Open");
     }
 
     /// <summary>
     /// Hides the error message and shows just the title.
     /// </summary>
-    private void HideErrorMessage()
+    public void HideErrorMessage()
+    {
+        //errorMessageAnimator.ResetTrigger("Open");
+        errorMessageAnimator.SetTrigger("Close");
+    }
+
+    /// <summary>
+    /// Waits until the close error message animation has finished and then deactivates the error message game object
+    /// </summary>
+    public void DeactivateErrorMessage()
     {
         errorMessageShown = false;
         errorMessageGameObject.SetActive(false);

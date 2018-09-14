@@ -964,7 +964,7 @@ public class InputReader : MonoBehaviour
             this.s = s;
             this.f = f;
         }
-
+        
         public int CompareTo(StringFloatPair other)
         {
             return f.CompareTo(other.f);
