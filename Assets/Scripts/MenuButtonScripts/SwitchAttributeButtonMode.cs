@@ -3,7 +3,7 @@ public class SwitchAttributeButtonMode : CellexalButton
 {
     protected override string Description
     {
-        get { return "Switch the modes of the attribute coloring"; }
+        get { return "Switch button appearance"; }
     }
 
     protected AttributeSubMenu attributeMenu;

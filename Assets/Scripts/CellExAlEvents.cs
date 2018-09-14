@@ -36,5 +36,6 @@ public static class CellexalEvents
     public static UnityEvent QueryTopGenesStarted = new UnityEvent();
     public static UnityEvent QueryTopGenesFinished = new UnityEvent();
 
+    public static UnityEvent MenuClosed = new UnityEvent();
     //public static UnityEvent FlashGenesCategoryToggled
 }

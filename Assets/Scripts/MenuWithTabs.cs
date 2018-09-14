@@ -11,9 +11,9 @@ public class MenuWithTabs : MonoBehaviour
 
     protected MenuToggler menuToggler;
     protected List<Tab> tabs = new List<Tab>();
-    protected Vector3 tabButtonPos = new Vector3(-0.433f, 0, 0.517f);
-    protected Vector3 tabButtonPosOriginal = new Vector3(-0.433f, 0, 0.517f);
-    protected Vector3 tabButtonPosInc = new Vector3(0.1f, 0, 0);
+    protected Vector3 tabButtonPos = new Vector3(-0.367f, 1f, 0.35f);
+    protected Vector3 tabButtonPosOriginal = new Vector3(-0.367f, 1f, 0.35f);
+    protected Vector3 tabButtonPosInc = new Vector3(0.25f, 0, 0);
 
     protected virtual void Start()
     {

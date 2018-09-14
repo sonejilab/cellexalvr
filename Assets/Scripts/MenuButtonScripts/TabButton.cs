@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 /// <summary>
 /// Represents the tab buttons on top of a tab.
@@ -13,12 +14,14 @@ public class TabButton : MonoBehaviour
     protected bool controllerInside = false;
     protected SteamVR_Controller.Device device;
     private MeshRenderer meshRenderer;
-    private Color standardColor = Color.gray;
-    private Color highlightColor = Color.white;
+    private Color standardColor = Color.black;
+    private Color highlightColor = Color.blue;
+    public bool highlight;
 
     protected virtual void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer.material.color = standardColor;
         rightController = referenceManager.rightController;
 
     }
@@ -30,6 +33,13 @@ public class TabButton : MonoBehaviour
         {
             Menu.TurnOffAllTabs();
             tab.SetTabActive(true);
+            highlight = true;
+            SetHighlighted(highlight);
+        }
+        if (!tab.Active && highlight && !controllerInside)
+        {
+            highlight = false;
+            SetHighlighted(highlight);
         }
     }
 
@@ -37,8 +47,9 @@ public class TabButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
+            highlight = true;
             controllerInside = true;
-            SetHighlighted(true);
+            SetHighlighted(highlight);
         }
     }
 
@@ -47,7 +58,11 @@ public class TabButton : MonoBehaviour
         if (other.gameObject.CompareTag("Menu Controller Collider"))
         {
             controllerInside = false;
-            SetHighlighted(false);
+            if (!tab.Active)
+            {
+                highlight = false;
+                SetHighlighted(highlight);
+            }
         }
     }
 
@@ -55,9 +70,9 @@ public class TabButton : MonoBehaviour
     /// Changes the color of the button to either its highlighted color or standard color.
     /// </summary>
     /// <param name="highlight"> True if the button should be highlighted, false otherwise. </param>
-    public virtual void SetHighlighted(bool highlight)
+    public virtual void SetHighlighted(bool h)
     {
-        if (highlight)
+        if (h)
         {
             meshRenderer.material.color = highlightColor;
         }

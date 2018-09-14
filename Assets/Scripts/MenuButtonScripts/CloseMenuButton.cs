@@ -41,6 +41,7 @@ public class CloseMenuButton : CellexalButton
         {
             b.SetButtonActivated(true);
         }
+        CellexalEvents.MenuClosed.Invoke();
     }
 }
 

@@ -20,6 +20,8 @@ public class AttributeSubMenu : MenuWithTabs
     protected List<ColorByAttributeButton> colorByAttributeButtons;
     protected List<BooleanExpressionButton> booleanExpressionButtons;
 
+    private int buttonsPerTab = 20;
+
     /// <summary>
     /// Fill the menu with buttons that will color graphs according to attributes when pressed.
     /// </summary>
@@ -58,7 +60,7 @@ public class AttributeSubMenu : MenuWithTabs
         for (int i = 0, buttonIndex = 0; i < names.Length; ++i, ++buttonIndex)
         {
             // add a new tab if we encounter a new category, or if the current tab is full
-            if (buttonIndex % 24 == 0 || i > 0 && categories[i] != categories[i - 1])
+            if (buttonIndex % buttonsPerTab == 0 || i > 0 && categories[i] != categories[i - 1])
             {
                 newTab = AddTab(tabPrefab);
                 newTab.TabButton.GetComponentInChildren<TextMesh>().text = categories[i];

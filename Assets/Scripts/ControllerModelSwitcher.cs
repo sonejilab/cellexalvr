@@ -36,8 +36,10 @@ public class ControllerModelSwitcher : MonoBehaviour
     private HelperTool helpTool;
     private GameObject drawTool;
     private KeyboardSwitch keyboard;
-    private MeshFilter controllerBodyMeshFilter;
-    private Renderer controllerBodyRenderer;
+    private MeshFilter rightControllerBodyMeshFilter;
+    private Renderer rightControllerBodyRenderer;
+    private MeshFilter leftControllerBodyMeshFilter;
+    private Renderer leftControllerBodyRenderer;
     private Color desiredColor;
     private VRTK_StraightPointerRenderer rightLaser;
     private VRTK_StraightPointerRenderer leftLaser;
@@ -78,12 +80,16 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     public void SetMeshes()
     {
-        controllerBodyMeshFilter = rightControllerBody.GetComponent<MeshFilter>();
-        controllerBodyMeshFilter.mesh = normalControllerMesh;
-        controllerBodyRenderer = rightControllerBody.GetComponent<Renderer>();
-        controllerBodyRenderer.material = normalMaterial;
-        var leftBody = leftControllerBody.GetComponent<Renderer>();
-        leftBody.material = leftControllerMaterial;
+        rightControllerBodyMeshFilter = rightControllerBody.GetComponent<MeshFilter>();
+        rightControllerBodyMeshFilter.mesh = normalControllerMesh;
+        rightControllerBodyRenderer = rightControllerBody.GetComponent<Renderer>();
+        rightControllerBodyRenderer.material = normalMaterial;
+        leftControllerBodyMeshFilter = leftControllerBody.GetComponent<MeshFilter>();
+        leftControllerBodyMeshFilter.mesh = normalControllerMesh;
+        leftControllerBodyRenderer = leftControllerBody.GetComponent<Renderer>();
+        leftControllerBodyRenderer.material = normalMaterial;
+        //var leftBody = leftControllerBody.GetComponent<Renderer>();
+        //leftBody.material = leftControllerMaterial;
 
     }
 
@@ -99,7 +105,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     {
         if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
-            if (controllerBodyMeshFilter == null) return;
+            if (rightControllerBodyMeshFilter == null) return;
             SwitchToModel(Model.Menu);
             deleteTool.SetActive(false);
             minimizer.SetActive(false);
@@ -111,7 +117,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     {
         if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
-            if (controllerBodyMeshFilter == null) return;
+            if (rightControllerBodyMeshFilter == null) return;
             ActivateDesiredTool();
         }
     }
@@ -132,23 +138,23 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.TwoLasers:
             case Model.DrawTool:
             case Model.HeatmapDeleteTool:
-                controllerBodyMeshFilter.mesh = normalControllerMesh;
-                controllerBodyRenderer.material = normalMaterial;
+                rightControllerBodyMeshFilter.mesh = normalControllerMesh;
+                rightControllerBodyRenderer.material = normalMaterial;
                 break;
 
             case Model.Menu:
-                controllerBodyMeshFilter.mesh = menuControllerMesh;
-                controllerBodyRenderer.material = normalMaterial;
+                rightControllerBodyMeshFilter.mesh = menuControllerMesh;
+                rightControllerBodyRenderer.material = normalMaterial;
                 break;
 
             case Model.SelectionTool:
-                controllerBodyMeshFilter.mesh = selectionToolMeshes[selectionToolMeshIndex];
-                controllerBodyRenderer.material = selectionToolHandlerMaterial;
-                controllerBodyRenderer.material.color = desiredColor;
+                rightControllerBodyMeshFilter.mesh = selectionToolMeshes[selectionToolMeshIndex];
+                rightControllerBodyRenderer.material = selectionToolHandlerMaterial;
+                rightControllerBodyRenderer.material.color = desiredColor;
                 break;
 
             case Model.Minimizer:
-                controllerBodyMeshFilter.mesh = deleteToolMesh;
+                rightControllerBodyMeshFilter.mesh = deleteToolMesh;
                 break;
         }
     }
@@ -283,7 +289,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         desiredColor = color;
 
         if (ActualModel == Model.SelectionTool)
-            controllerBodyRenderer.material.color = desiredColor;
+            rightControllerBodyRenderer.material.color = desiredColor;
     }
 
     public void SwitchSelectionToolMesh(bool dir)

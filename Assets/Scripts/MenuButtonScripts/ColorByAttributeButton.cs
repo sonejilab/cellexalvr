@@ -22,7 +22,7 @@ public class ColorByAttributeButton : CellexalButton
 
     protected override string Description
     {
-        get { return "Color graphs according to this attribute"; }
+        get { return "Color graphs by attribute"; }
     }
 
     protected void Start()

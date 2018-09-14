@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 /// <summary>
 /// A base class that can be used with <see cref="MenuWithTabs"/> to create menus with tabs.
@@ -7,22 +8,30 @@ public class Tab : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public TabButton TabButton;
+    public bool Active { get; private set; }
 
     protected int buttonIndex = 0;
-    protected Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
-    protected Vector3 buttonPosOriginal = new Vector3(-.39f, .77f, .282f);
+    protected Vector3 buttonPos = new Vector3(-.396f, .77f, .182f);
+    protected Vector3 buttonPosOriginal = new Vector3(-.396f, .77f, .182f);
     protected Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
     protected Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
 
     private MenuToggler menuToggler;
-    public bool Active { get; private set; }
+
+    public TextMesh TabName;
+    //public string TabName { get; set; }
 
     protected virtual void Awake()
     {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
+        CellexalEvents.MenuClosed.AddListener(Inactivate);
     }
 
+    void Inactivate()
+    {
+        SetTabActive(false);
+    }
     /// <summary>
     /// Show or hides all buttons that this tab contains.
     /// </summary>

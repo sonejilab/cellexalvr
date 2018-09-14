@@ -20,7 +20,7 @@ public abstract class DynamicButtonMenu : MonoBehaviour
 
     private MenuToggler menuToggler;
     // hard coded positions :)
-    private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
+    private Vector3 buttonPos = new Vector3(-.39f, .77f, .247f);
     private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
 

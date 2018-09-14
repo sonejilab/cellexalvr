@@ -12,7 +12,7 @@ public class ColorByIndexButton : CellexalButton
 
     protected override string Description
     {
-        get { return "Color graphs according to this facs measurement"; }
+        get { return "Color graphs by facs"; }
     }
 
     protected void Start()

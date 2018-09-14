@@ -7,7 +7,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
 {
     public GameObject buttonPrefab;
     // hard coded positions :)
-    private Vector3 buttonPos = new Vector3(-0.3958f, 0.59f, 0.2688f);
+    private Vector3 buttonPos = new Vector3(-0.396f, 0.59f, 0.163f);
     private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -0.15f);
 
@@ -38,7 +38,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
         tabButton.referenceManager = referenceManager;
         tabButton.tab = newTab;
         tabButton.Handler = networks[0].Handler;
-
+        newTab.TabName.text = networks[0].Handler.gameObject.name.Split('_')[1];
         //newTab.tab = newTab.transform.parent.gameObject;
         if (colors == null)
         {
