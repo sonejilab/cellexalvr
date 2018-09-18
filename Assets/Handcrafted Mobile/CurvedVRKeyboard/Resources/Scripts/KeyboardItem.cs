@@ -45,6 +45,7 @@ namespace CurvedVRKeyboard
             {          // Check if initialized
                 letter = gameObject.GetComponentInChildren<Text>();
                 quadFront = transform.Find(QUAD_FRONT).GetComponent<Renderer>();
+                this.tag = "Keyboard";
             }
         }
 

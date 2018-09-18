@@ -12,6 +12,7 @@ public class CorrelatedGenesButton : ClickablePanel
     protected override void Start()
     {
         correlatedGenesList = referenceManager.correlatedGenesList;
+        this.tag = "Keyboard";
     }
 
     /// <summary>

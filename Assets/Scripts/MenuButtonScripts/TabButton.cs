@@ -23,6 +23,7 @@ public class TabButton : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material.color = standardColor;
         rightController = referenceManager.rightController;
+        this.tag = "Menu Controller Collider";
 
     }
 
@@ -45,7 +46,7 @@ public class TabButton : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
         {
             highlight = true;
             controllerInside = true;
@@ -55,7 +56,7 @@ public class TabButton : MonoBehaviour
 
     protected void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
         {
             controllerInside = false;
             if (!tab.Active)

@@ -41,6 +41,8 @@ public class TutorialManager : MonoBehaviour {
     private Transform trackpadRight;
     private float duration = 1f;
 
+    private GameObject graph;
+
     // Object lists to control different states of highlighting
     private List<GameObject> objList = new List<GameObject>();
     private List<GameObject> objList2 = new List<GameObject>();
@@ -59,6 +61,7 @@ public class TutorialManager : MonoBehaviour {
         CellexalEvents.HeatmapCreated.AddListener(BurnHeatmap);
         CellexalEvents.HeatmapBurned.AddListener(BurnHeatmap);
         CellexalEvents.HeatmapBurned.AddListener(TurnOnSpot);
+
 
         foreach (Transform child in rightControllerModel.transform)
         {
@@ -128,6 +131,11 @@ public class TutorialManager : MonoBehaviour {
 	
     void TurnOnSpot()
     {
+        BoxCollider col = highlightSpots[currentStep - 2].GetComponent<BoxCollider>();
+        if (Physics.OverlapBox(highlightSpots[currentStep - 2].transform.position + col.center, col.size / 2).Length > 0)
+        {
+            highlightSpots[currentStep - 2].transform.position = highlightSpots[currentStep - 1].transform.position;
+        }
         highlightSpots[currentStep-2].SetActive(true);
         foreach (Transform child in highlightSpots[currentStep-2].transform)
         {
@@ -366,6 +374,10 @@ public class TutorialManager : MonoBehaviour {
     {
         currentStep += 1;
         LoadTutorialStep(currentStep);
+        if (!graph)
+        {
+            graph = GameObject.Find("DDRtree");
+        }
     }
 
 }

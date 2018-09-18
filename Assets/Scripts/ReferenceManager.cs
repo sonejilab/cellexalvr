@@ -26,7 +26,7 @@ public class ReferenceManager : MonoBehaviour
     public StatusDisplay statusDisplayFar;
     public GameObject headset;
     public BoxCollider controllerMenuCollider;
-    public VRTK_StraightPointerRenderer rightLaser;
+    public LaserPointerController rightLaser;
     public VRTK_StraightPointerRenderer leftLaser;
 
     #endregion

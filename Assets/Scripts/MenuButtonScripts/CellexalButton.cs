@@ -53,6 +53,7 @@ public abstract class CellexalButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        this.tag = "Menu Controller Collider";
     }
 
     protected virtual void Update()
@@ -100,7 +101,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerEnter(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
         {
             descriptionText.text = Description;
             controllerInside = true;
@@ -111,7 +112,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerExit(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
         {
             if (descriptionText.text == Description)
             {

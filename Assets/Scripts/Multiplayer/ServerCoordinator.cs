@@ -187,7 +187,6 @@ class ServerCoordinator : Photon.MonoBehaviour
                 c.enabled = false;
             }
         }
-        print(string.Format("disabled {0} of {1} colliders ", i, children.Length));
 
     }
 
@@ -206,7 +205,6 @@ class ServerCoordinator : Photon.MonoBehaviour
                 pair.Key.enabled = pair.Value;
             }
         }
-        print(string.Format("enabled {0} of {1} colliders ", i, children.Length));
     }
 
     [PunRPC]

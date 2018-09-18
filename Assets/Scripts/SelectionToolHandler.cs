@@ -28,7 +28,6 @@ public class SelectionToolHandler : MonoBehaviour
     public int fileCreationCtr = 0;
     public Color[] Colors;
     public Collider[] selectionToolColliders;
-    public GameObject particles;
 
     private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -43,6 +42,7 @@ public class SelectionToolHandler : MonoBehaviour
     private bool heatmapCreated = true;
     private bool selActive = false;
     private int currentMeshIndex;
+    public ParticleSystem particles;
 
     [HideInInspector]
     public int[] groups = new int[10];
@@ -109,12 +109,12 @@ public class SelectionToolHandler : MonoBehaviour
         {
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
-                particles.SetActive(true);
+                particles.gameObject.SetActive(true);
                 ActivateSelection(true);
             }
             if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
-                particles.SetActive(false);
+                particles.gameObject.SetActive(false);
                 ActivateSelection(false);
             }
         }
@@ -594,11 +594,16 @@ public class SelectionToolHandler : MonoBehaviour
         }
         if (!enabled)
         {
-            particles.SetActive(false);
+            particles.gameObject.SetActive(false);
+            //controllerModelSwitcher.rightControllerBody.GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
         }
         if (selActive)
         {
-            controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex] + new Color(0, 0, 0, 0.5f));
+            particles.gameObject.SetActive(true);
+            var main = particles.main;
+            main.startColor = Colors[currentColorIndex];
+            //controllerModelSwitcher.rightControllerBody.GetComponent<Renderer>().material.SetColor("_EmissionColor", Colors[currentColorIndex]);
+            //controllerModelSwitcher.rightControllerBody.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
         }
         for (int i = 0; i < selectionToolColliders.Length; ++i)
         {

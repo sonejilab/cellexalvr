@@ -7,7 +7,7 @@ public class MenuRaycaster : MonoBehaviour
 
     private ControllerModelSwitcher modelSwitcher;
     private SteamVR_TrackedObject rightController;
-    private VRTK_StraightPointerRenderer laser;
+    private LaserPointerController laser;
     private CellexalButton lastHit = null;
     private LayerMask layersToIgnore;
 
@@ -73,7 +73,7 @@ public class MenuRaycaster : MonoBehaviour
             && modelSwitcher.ActualModel != ControllerModelSwitcher.Model.TwoLasers)
         {
             laser.enabled = active;
-            laser.Toggle(active, active);
+            //laser.Toggle(active, active);
             if (active)
             {
                 modelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);

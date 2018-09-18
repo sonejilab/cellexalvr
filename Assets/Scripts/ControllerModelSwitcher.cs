@@ -41,7 +41,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     private MeshFilter leftControllerBodyMeshFilter;
     private Renderer leftControllerBodyRenderer;
     private Color desiredColor;
-    private VRTK_StraightPointerRenderer rightLaser;
+    private LaserPointerController rightLaser;
     private VRTK_StraightPointerRenderer leftLaser;
     private int selectionToolMeshIndex = 0;
     // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
@@ -193,13 +193,13 @@ public class ControllerModelSwitcher : MonoBehaviour
         // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
         if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
         {
-            rightLaser.enabled = false;
+            //rightLaser.enabled = false;
             //keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
         }
         if (DesiredModel != Model.TwoLasers)
         {
-            rightLaser.enabled = false;
+            rightLaser.ToggleLaser(false);
             leftLaser.enabled = false;
         }
         if (DesiredModel != Model.DrawTool)
@@ -228,7 +228,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.TwoLasers:
-                rightLaser.enabled = true;
+                rightLaser.ToggleLaser(true);
                 leftLaser.enabled = true;
                 break;
             case Model.DrawTool:
@@ -257,7 +257,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             DesiredModel = Model.HelpTool;
         }
-        rightLaser.enabled = false;
+        rightLaser.ToggleLaser(false);
         leftLaser.enabled = false;
         //keyboard.SetKeyboardVisible(false);
         //referenceManager.gameManager.InformActivateKeyboard(false);
@@ -289,7 +289,9 @@ public class ControllerModelSwitcher : MonoBehaviour
         desiredColor = color;
 
         if (ActualModel == Model.SelectionTool)
+        {
             rightControllerBodyRenderer.material.color = desiredColor;
+        }
     }
 
     public void SwitchSelectionToolMesh(bool dir)

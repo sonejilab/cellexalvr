@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VRTK;
 /// <summary>
 /// Represents the button for turning on and off the laser pointers.
 /// </summary>
@@ -21,6 +22,7 @@ public class LasersButton : CellexalButton
     protected override void Click()
     {
         // turn both off only if both are on, otherwise turn both on.
+        //laser1.enabled = !laser1.enabled;
         bool enabled = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers;
         if (enabled)
         {
