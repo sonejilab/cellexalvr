@@ -11,65 +11,62 @@ public class LaserPointerController : MonoBehaviour
     private int layerMaskKeyboard;
     private int layerMask;
     private bool alwaysActive;
+    private ControllerModelSwitcher controllerModelSwitcher;
 
+    public ReferenceManager referenceManager;
     // Use this for initialization
     void Start()
     {
         frame = 0;
         tempHit = null;
         GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
-        layerMaskMenu = 1 << 10;
-        layerMaskKeyboard = 1 << 16;
+        layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
+        layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
         layerMask = layerMaskMenu | layerMaskKeyboard;
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+
     }
     private void Update()
     {
         frame++;
-        if (frame % 5 == 0)
+        if (frame % 3 == 0)
         {
             Frame5Update();
         }
     }
 
-    // Call every 5th frame.
+    // Call every 3rd frame.
     private void Frame5Update()
     {
         RaycastHit hit;
+        transform.localRotation = Quaternion.Euler(15f, 0, 0);
         Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
-        if (hit.collider && (hit.collider.gameObject.CompareTag("Menu Controller Collider") || hit.collider.gameObject.CompareTag("Controller")))
+        if (hit.collider)
         {
-            GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
-            transform.localRotation = Quaternion.Euler(15f, 0, 0);
             tempHit = hit.collider.gameObject;
+            if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+            {
+                //controllerModelSwitcher.TurnOffActiveTool(true);
+                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
+            }
         }
         if (alwaysActive)
         {
             if (!hit.collider || hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode"))
             {
-                GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
-                transform.localRotation = Quaternion.identity;
+                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
             }
         }
         if (!alwaysActive)
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            // When to activate laser. When hitting menu or keyboard.
-            if (hit.collider)
-            {
-                if (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode"))
-                {
-                    GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
-                    transform.localRotation = Quaternion.identity;
-                }
-                // When to shut off the laser. Laser still needs to be active even though it hits tool collider layers on controller.
-                if (!(hit.collider.gameObject.CompareTag("Menu Controller Collider") || hit.collider.gameObject.CompareTag("Controller")
-                    || hit.collider.gameObject.CompareTag("PreviousSearchesListNode") || hit.collider.gameObject.CompareTag("Keyboard")))
-                {
-                    GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
-                }
-            }
+            // When to switch back to previous model. 
             if (!hit.collider)
             {
+                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                {
+                    controllerModelSwitcher.ActivateDesiredTool();
+                }
                 GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
                 if (tempHit && tempHit.GetComponent<CellexalButton>())
                 {

@@ -16,12 +16,12 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Mesh menuControllerMesh;
     //public Texture menuControllerTexture;
     public Mesh[] selectionToolMeshes;
-    public Mesh deleteToolMesh;
+    public Mesh minimizeMesh;
     public Material normalMaterial;
     public Material selectionToolHandlerMaterial;
     public Material leftControllerMaterial;
 
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, HeatmapDeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool };
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool  };
     // what model we actually want
     public Model DesiredModel { get; set; }
     // what model is actually displayed, useful for when we want to change the model temporarily
@@ -106,7 +106,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         if (other.gameObject.name.Equals("Menu Selecter Collider"))
         {
             if (rightControllerBodyMeshFilter == null) return;
-            SwitchToModel(Model.Menu);
+            //SwitchToModel(Model.Menu);
             deleteTool.SetActive(false);
             minimizer.SetActive(false);
             magnifier.SetActive(false);
@@ -134,16 +134,21 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Normal:
             case Model.Magnifier:
             case Model.HelpTool:
-            case Model.Keyboard:
             case Model.TwoLasers:
             case Model.DrawTool:
-            case Model.HeatmapDeleteTool:
+            case Model.DeleteTool:
                 rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                 rightControllerBodyRenderer.material = normalMaterial;
                 break;
 
+            case Model.Keyboard:
+                rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
+                rightLaser.transform.localRotation = Quaternion.identity;
+                break;
+
             case Model.Menu:
-                rightControllerBodyMeshFilter.mesh = menuControllerMesh;
+                rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
+                rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                 rightControllerBodyRenderer.material = normalMaterial;
                 break;
 
@@ -154,8 +159,9 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.Minimizer:
-                rightControllerBodyMeshFilter.mesh = deleteToolMesh;
+                rightControllerBodyMeshFilter.mesh = minimizeMesh;
                 break;
+
         }
     }
 
@@ -174,7 +180,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             selectionToolHandler.SetSelectionToolEnabled(false, 0);
         }
-        if (DesiredModel != Model.HeatmapDeleteTool)
+        if (DesiredModel != Model.DeleteTool)
         {
             deleteTool.SetActive(false);
         }
@@ -193,8 +199,10 @@ public class ControllerModelSwitcher : MonoBehaviour
         // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
         if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
         {
+            rightLaser.ToggleLaser(false);
+            leftLaser.enabled = false;
+            keyboard.SetKeyboardVisible(false);
             //rightLaser.enabled = false;
-            //keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
         }
         if (DesiredModel != Model.TwoLasers)
@@ -214,7 +222,7 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Magnifier:
                 magnifier.SetActive(true);
                 break;
-            case Model.HeatmapDeleteTool:
+            case Model.DeleteTool:
                 deleteTool.SetActive(true);
                 break;
             case Model.Minimizer:
@@ -225,7 +233,9 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.Keyboard:
-                rightLaser.enabled = true;
+                keyboard.SetKeyboardVisible(true);
+                //rightLaser.enabled = true;
+                rightLaser.ToggleLaser(true);
                 break;
             case Model.TwoLasers:
                 rightLaser.ToggleLaser(true);

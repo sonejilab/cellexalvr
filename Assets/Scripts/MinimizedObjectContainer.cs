@@ -8,6 +8,7 @@ public class MinimizedObjectContainer : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private MinimizeTool minimizeTool;
+    private Color orgColor;
     public GameObject MinimizedObject { get; set; }
     public MinimizedObjectHandler Handler { get; set; }
     /// <summary>
@@ -30,6 +31,7 @@ public class MinimizedObjectContainer : MonoBehaviour
         rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         this.name = "Jail_" + MinimizedObject.name;
         minimizeTool = Handler.referenceManager.minimizeTool;
+        orgColor = GetComponent<Renderer>().material.color;
     }
 
     private void Update()
@@ -64,13 +66,19 @@ public class MinimizedObjectContainer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+        {
             controllerInside = true;
+            GetComponent<Renderer>().material.color = Color.cyan;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+        {
             controllerInside = false;
+            GetComponent<Renderer>().material.color = orgColor;
+        }
     }
 }

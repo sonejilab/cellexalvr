@@ -22,14 +22,14 @@ public class BurnHeatmapToolButton : CellexalButton
     }
     protected override void Click()
     {
-        if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HeatmapDeleteTool)
+        if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.DeleteTool)
         {
             controllerModelSwitcher.TurnOffActiveTool(true);
         }
         else
         {
             //controllerModelSwitcher.TurnOffActiveTool();
-            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.HeatmapDeleteTool;
+            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DeleteTool;
             controllerModelSwitcher.ActivateDesiredTool();
         }
     }
