@@ -76,6 +76,7 @@ public class LaserPointerController : MonoBehaviour
                 }
                 if (tempHit && tempHit.GetComponent<TabButton>())
                 {
+                    print("turn off highlight tab button");
                     tempHit.GetComponent<CellexalButton>().controllerInside = false;
                     tempHit.GetComponent<CellexalButton>().SetHighlighted(false);
                 }

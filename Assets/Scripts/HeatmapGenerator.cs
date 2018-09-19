@@ -161,12 +161,12 @@ public class HeatmapGenerator : MonoBehaviour
 
             // Start generation of new heatmap in R
             int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
-            string home = Directory.GetCurrentDirectory();
+            //string home = Directory.GetCurrentDirectory();
 
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
-            string heatmapDirectory = home + @"\Resources";
+            string heatmapDirectory = CellexalUser.UserSpecificFolder + @"\Output";
             string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
-            string args = home + " " + CellexalUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(heatmapDirectory));

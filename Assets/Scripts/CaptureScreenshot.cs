@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 using System.Threading;
+using System.Collections;
 
 /// <summary>
 /// This class takes screenshots of what the user sees in the virtual environment.
@@ -52,24 +53,11 @@ public class CaptureScreenshot : MonoBehaviour
             //    Directory.CreateDirectory(directory);
             //}
             ScreenCapture.CaptureScreenshot(screenshotImageFilePath);
-            // R logging function
-            string args = screenshotImageFilePath;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\log.R";
-            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-
-            while (t.IsAlive)
-            {
-                yield return null;
-            }
-            stopwatch.Stop();
-            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
             CellexalLog.Log("Screenshot taken!");
+            StartCoroutine(LogScreenshot(screenshotImageFilePath));
             elapsedTime = 0.0f;
             screenshotCounter++;
+
         }
 
 
@@ -85,6 +73,28 @@ public class CaptureScreenshot : MonoBehaviour
             colorAlpha -= 0.05f;
             fadeScreen.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
         }
+    }
+
+    /// <summary>
+    /// Calls R logging function to save screenshot for session report.
+    /// </summary
+
+    IEnumerator LogScreenshot(string screenshotImageFilePath)
+    {
+        string args = screenshotImageFilePath;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\screenshot_report.R";
+        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
     }
 
 }

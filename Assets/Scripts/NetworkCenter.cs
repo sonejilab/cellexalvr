@@ -1013,9 +1013,31 @@ public class NetworkCenter : MonoBehaviour
         string networkImageFilePath = networkImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
         bitmap.Save(networkImageFilePath, ImageFormat.Png);
         CellexalLog.Log("Saved " + name + " as an image at " + networkImageFilePath);
+        StartCoroutine(LogHeatmap(networkImageFilePath));
 
-        heatmapImageFilePath
+
     }
+    /// <summary>
+    /// Calls R logging function to save network for session report.
+    /// </summary>
+    IEnumerator LogHeatmap(string networkImageFilePath)
+    {
+        string args = networkImageFilePath;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\heatmap_report.R";
+        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+    }
+
 
     /// <summary>
     /// This class looks stupid but is needed because unity represents colors with 3 floats that range from 0 to 1 
