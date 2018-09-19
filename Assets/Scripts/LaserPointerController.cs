@@ -70,6 +70,12 @@ public class LaserPointerController : MonoBehaviour
                 GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
                 if (tempHit && tempHit.GetComponent<CellexalButton>())
                 {
+                    print("turn off highlight");
+                    tempHit.GetComponent<CellexalButton>().controllerInside = false;
+                    tempHit.GetComponent<CellexalButton>().SetHighlighted(false);
+                }
+                if (tempHit && tempHit.GetComponent<TabButton>())
+                {
                     tempHit.GetComponent<CellexalButton>().controllerInside = false;
                     tempHit.GetComponent<CellexalButton>().SetHighlighted(false);
                 }

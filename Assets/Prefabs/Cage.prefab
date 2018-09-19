@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65037312073891782}
   - component: {fileID: 23272047597708768}
   - component: {fileID: 114366509196200848}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: Cage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 33063404958546986}
   - component: {fileID: 135232878480625108}
   - component: {fileID: 23315561040630106}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 4138468308730152}
   - component: {fileID: 23122284228737308}
   - component: {fileID: 102072356290882592}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}

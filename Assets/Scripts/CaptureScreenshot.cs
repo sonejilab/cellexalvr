@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using System;
+using System.Threading;
 
 /// <summary>
 /// This class takes screenshots of what the user sees in the virtual environment.
@@ -14,7 +16,7 @@ public class CaptureScreenshot : MonoBehaviour
     private float elapsedTime = 0.0f;
     private float colorAlpha;
     private int screenshotCounter;
-    private string directory = Directory.GetCurrentDirectory() + "\\Screenshots";
+    //private string directory = Directory.GetCurrentDirectory() + "\\Output\";
 
     void Start()
     {
@@ -28,13 +30,43 @@ public class CaptureScreenshot : MonoBehaviour
         //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            //Touchpad 
-            if (!Directory.Exists(directory))
+            string screenshotImageDirectory = CellexalUser.UserSpecificFolder;
+            if (!Directory.Exists(screenshotImageDirectory))
             {
-                CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(screenshotImageDirectory);
+                CellexalLog.Log("Created directory " + screenshotImageDirectory);
             }
-            ScreenCapture.CaptureScreenshot(directory + "\\Screenshot_" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png");
+
+            screenshotImageDirectory += "\\Screenshot";
+            if (!Directory.Exists(screenshotImageDirectory))
+            {
+                Directory.CreateDirectory(screenshotImageDirectory);
+                CellexalLog.Log("Created directory " + screenshotImageDirectory);
+            }
+
+            string screenshotImageFilePath = screenshotImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+            //Touchpad 
+            //if (!Directory.Exists(directory))
+            //{
+            //    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
+            //    Directory.CreateDirectory(directory);
+            //}
+            ScreenCapture.CaptureScreenshot(screenshotImageFilePath);
+            // R logging function
+            string args = screenshotImageFilePath;
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\log.R";
+            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            t.Start();
+
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+            stopwatch.Stop();
+            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
             CellexalLog.Log("Screenshot taken!");
             elapsedTime = 0.0f;
             screenshotCounter++;

@@ -830,7 +830,7 @@ MonoBehaviour:
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: 09f97bbb75cf4fb4abc6f388ad19cf2c, type: 3}
+  standardTexture: {fileID: 21300000, guid: 338b5dfcad7447f44ae3b06352522c41, type: 3}
   highlightedTexture: {fileID: 21300000, guid: fee3c30603c6bf449a516ea0f4ee294d, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: d97d3203e6e209443ad12a8cb393fec6, type: 3}
   popupChoice: 1
@@ -867,7 +867,8 @@ MonoBehaviour:
   - {r: 1, g: 0.57254905, b: 0, a: 1}
   - {r: 1, g: 0.35686272, b: 0, a: 1}
   - {r: 1, g: 0.14117643, b: 0, a: 1}
-  NetworkCenterName: 
+  referenceManager: {fileID: 0}
+  isReplacement: 0
   replacing: {fileID: 0}
 --- !u!114 &114235242178268010
 MonoBehaviour:
@@ -1173,7 +1174,7 @@ MonoBehaviour:
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: 4e392a27939582240a9fd219dd711f34, type: 3}
+  standardTexture: {fileID: 21300000, guid: 4cd26138215f5974a8185acac6b26844, type: 3}
   highlightedTexture: {fileID: 21300000, guid: cdacd292563558d4f9c7c26084a3820a, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: 558eaab2067d14b478c2d97875dc1ef5, type: 3}
   popupChoice: 1
@@ -1197,7 +1198,7 @@ MonoBehaviour:
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: db9e5616d35f7f748b043d2e4d8c4268, type: 3}
+  standardTexture: {fileID: 21300000, guid: 9c31cadd8e4316a418a48ea159ee2414, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 0c9d6b86336bf84489dabe134b17557c, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: fdda7df0396363c4c8c900bfe576e317, type: 3}
   popupChoice: 1
@@ -1412,7 +1413,7 @@ MonoBehaviour:
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: 922bba66ddf49604687b3e9b76290838, type: 3}
+  standardTexture: {fileID: 21300000, guid: 5f9bb32b7e04b09499934c1764bcaae6, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 9bce74b7a6537514da2b610edfe464f6, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: 576f778443358894db5b6f78aacf630d, type: 3}
   popupChoice: 1
@@ -1495,7 +1496,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
 --- !u!212 &212061106907495026
 SpriteRenderer:
@@ -1583,7 +1584,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
 --- !u!212 &212670547573808694
 SpriteRenderer:
@@ -1627,7 +1628,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
 --- !u!212 &212810201733297996
 SpriteRenderer:
@@ -1671,7 +1672,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
 --- !u!212 &212811960020666842
 SpriteRenderer:
@@ -1715,7 +1716,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
 --- !u!212 &212976537025818506
 SpriteRenderer:
@@ -1759,7 +1760,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
 --- !u!222 &222119872287490604
 CanvasRenderer:

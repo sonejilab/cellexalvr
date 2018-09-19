@@ -15,6 +15,7 @@ TagManager:
   - Graph
   - Cells
   - Sphere
+  - Keyboard
   layers:
   - Default
   - TransparentFX
@@ -32,7 +33,7 @@ TagManager:
   - GraphPointLayer
   - SelectionToolLayer
   - SelectableLayer
-  - 
+  - KeyboardLayer
   - 
   - 
   - 

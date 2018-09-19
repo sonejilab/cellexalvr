@@ -11,10 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
-  AppID: 
+  AppID: 3d33bc49-d1ec-4ed9-9148-be6f0fa143c9
   VoiceAppID: 
   ChatAppID: 
-  HostType: 0
+  HostType: 1
   PreferredRegion: 0
   EnabledRegions: -1
   Protocol: 0
@@ -23,8 +23,78 @@ MonoBehaviour:
   VoiceServerPort: 5055
   JoinLobby: 0
   EnableLobbyStatistics: 0
-  PunLogging: 0
+  PunLogging: 1
   NetworkLogging: 1
   RunInBackground: 1
-  RpcList: []
-  DisableAutoOpenWizard: 0
+  RpcList:
+  - Chat
+  - ColorRpc
+  - DestroyRpc
+  - DoJump
+  - Flash
+  - InstantiateRpc
+  - Marco
+  - PickupItemInit
+  - Polo
+  - PunPickup
+  - PunPickupSimple
+  - PunRespawn
+  - RequestForPickupItems
+  - RequestForPickupTimes
+  - SendActivateKeyboard
+  - SendAddSelect
+  - SendBringBackNetwork
+  - SendBurnHeatmap
+  - SendCalculateCorrelatedGenes
+  - SendCancelSelection
+  - SendClearAllLines
+  - SendClearLastLine
+  - SendClearLinesBetweenGps
+  - SendClearLinesWithColor
+  - SendColorByAttribute
+  - SendColorByIndex
+  - SendColorGraphsByGene
+  - SendColorGraphsByPreviousExpression
+  - SendConfirmSelection
+  - SendCreateHeatmap
+  - SendCreateNewHeatmapFromSelection
+  - SendDisableColliders
+  - SendDrawLine
+  - SendDrawLinesBetweenGps
+  - SendEnableColliders
+  - SendEnlargeNetwork
+  - SendGenerateNetworks
+  - SendGoBackOneColor
+  - SendGoBackSteps
+  - SendGraphpointChangedColor
+  - SendHandleBoxSelection
+  - SendHandleHitHeatmap
+  - SendHandleMovingSelection
+  - SendHandlePressDown
+  - SendKeyClick
+  - SendLoadingMenu
+  - SendMinimizeGraph
+  - SendMinimizeNetwork
+  - SendMoveCells
+  - SendMoveGraph
+  - SendMoveHeatmap
+  - SendMoveNetwork
+  - SendMoveNetworkCenter
+  - SendMoveSelection
+  - SendReadFolder
+  - SendRedoOneColor
+  - SendRedoSteps
+  - SendRemoveCells
+  - SendResetGraph
+  - SendResetHeatmapHighlight
+  - SendResetSelecting
+  - SendSearchLockToggled
+  - SendSetArcsVisible
+  - SendShowGraph
+  - SendShowNetwork
+  - SendSwitchNetworkLayout
+  - SendToggleExpressedCells
+  - SendToggleMenu
+  - SendToggleNonExpressedCells
+  - TaggedPlayer
+  DisableAutoOpenWizard: 1

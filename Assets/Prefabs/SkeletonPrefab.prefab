@@ -23,10 +23,10 @@ GameObject:
   - component: {fileID: 114028151767601336}
   - component: {fileID: 114610040334634022}
   - component: {fileID: 23423498432608762}
-  - component: {fileID: 64780885050579716}
   - component: {fileID: 54438818171834790}
   - component: {fileID: 82763685626725728}
   - component: {fileID: 114070940930869060}
+  - component: {fileID: 64158319052388702}
   m_Layer: 11
   m_Name: SkeletonPrefab
   m_TagString: Network
@@ -104,7 +104,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &64780885050579716
+--- !u!64 &64158319052388702
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -227,6 +227,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+  referenceManager: {fileID: 0}
 --- !u!114 &114070940930869060
 MonoBehaviour:
   m_ObjectHideFlags: 1

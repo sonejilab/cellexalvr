@@ -4,11 +4,12 @@
 /[Bb]uild/
 /[Bb]uilds*/
 /Assets/AssetStoreTools*
+/Assets/Images
 /Data/
 /TutorialData/
 /html/
 /Images/
-/Assets/Prefabs/
+/Assets/Prefabs/*
 /Resources/
 /Screenshots/
 /*_Data/

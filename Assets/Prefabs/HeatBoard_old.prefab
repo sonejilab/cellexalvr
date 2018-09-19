@@ -1050,7 +1050,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePrefab: {fileID: 1963720288159494, guid: 919818573d223114abd261621bf9ec04, type: 2}
-  originalMaterial: {fileID: 2100000, guid: 0fbc9b13a5fbae94797b0c91da7e93c5, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 3e5d2cf2507b7b24589d638e2e95c22b, type: 2}
 --- !u!114 &114293863390322444
 MonoBehaviour:
@@ -1065,11 +1064,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102745345987954150}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 2248ec72c96a8d84496a683fe3c959a6, type: 3}
   deactivatedTexture: {fileID: 0}
+  popupChoice: 0
   buttonActivated: 1
-  spriteRenderer: {fileID: 0}
+  controllerInside: 0
 --- !u!114 &114301323195685804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1110,7 +1113,7 @@ MonoBehaviour:
   grabAttachMechanicScript: {fileID: 114506243733495470}
   secondaryGrabActionScript: {fileID: 114690386252471788}
   isUsable: 0
-  holdButtonToUse: 0
+  holdButtonToUse: 1
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
   useOverrideButton: 0
@@ -1226,11 +1229,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102464530803225886}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 21300000, guid: d0fccaf2d0bb72341a846598948d1eb6, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 7c88cdef3009f724296d174ee192c6d6, type: 3}
   deactivatedTexture: {fileID: 0}
+  popupChoice: 0
   buttonActivated: 1
-  spriteRenderer: {fileID: 0}
+  controllerInside: 0
 --- !u!114 &114822383232603606
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1242,13 +1249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5641df53a3ea59d4f88cc0d812892ae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   texture: {fileID: 0}
   infoText: {fileID: 102500470805281082}
   highlightQuad: {fileID: 0}
   confirmQuad: {fileID: 0}
   movingQuadX: {fileID: 0}
   movingQuadY: {fileID: 0}
-  HeatmapName: 
 --- !u!212 &212423360249279334
 SpriteRenderer:
   m_ObjectHideFlags: 1

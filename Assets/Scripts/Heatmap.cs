@@ -1108,32 +1108,62 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     public void SaveImage()
     {
-        string saveDir = Directory.GetCurrentDirectory() + @"\Saved_Images";
-        if (!Directory.Exists(saveDir))
+        string heatmapImageDirectory = CellexalUser.UserSpecificFolder;
+        if (!Directory.Exists(heatmapImageDirectory))
         {
-            CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
-            Directory.CreateDirectory(saveDir);
+            Directory.CreateDirectory(heatmapImageDirectory);
+            CellexalLog.Log("Created directory " + heatmapImageDirectory);
         }
 
-        saveDir += "\\" + CellexalUser.Username;
-        if (!Directory.Exists(saveDir))
+        heatmapImageDirectory += "\\Heatmap";
+        if (!Directory.Exists(heatmapImageDirectory))
         {
-            CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
-            Directory.CreateDirectory(saveDir);
+            Directory.CreateDirectory(heatmapImageDirectory);
+            CellexalLog.Log("Created directory " + heatmapImageDirectory);
         }
 
-        // this is the only acceptable date time format, order-wise
-        var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-        string saveFileName = saveDir + @"\heatmap_" + time + ".png";
-        // if the button is pressed twice the same second, the filenames will collide.
-        while (File.Exists(saveFileName))
+        string heatmapImageFilePath = heatmapImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+        while (File.Exists(heatmapImageFilePath))
         {
             // append "_d" until the filenames no longer collide.
             // microsoft is removing the 260 character filename limit so this shouldn't run into too many problems
             // unless you press this button way too many times the same second
-            saveFileName += "_d";
+            heatmapImageFilePath += "_d";
         }
-        bitmap.Save(saveFileName);
+        bitmap.Save(heatmapImageFilePath);
+        // R logging function
+        string args = heatmapImageFilePath;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\log.R";
+        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+        //string saveDir = Directory.GetCurrentDirectory() + @"\Output\";
+        //if (!Directory.Exists(saveDir))
+        //{
+        //    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
+        //    Directory.CreateDirectory(saveDir);
+        //}
+
+        //saveDir += "\\" + CellexalUser.Username;
+        //if (!Directory.Exists(saveDir))
+        //{
+        //    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
+        //    Directory.CreateDirectory(saveDir);
+        //}
+
+        // this is the only acceptable date time format, order-wise
+        //var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        //string saveFileName = saveDir + @"\heatmap_" + time + ".png";
+        // if the button is pressed twice the same second, the filenames will collide.
     }
 
     /// <summary>

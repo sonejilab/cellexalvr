@@ -1012,8 +1012,9 @@ public class NetworkCenter : MonoBehaviour
 
         string networkImageFilePath = networkImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
         bitmap.Save(networkImageFilePath, ImageFormat.Png);
-
         CellexalLog.Log("Saved " + name + " as an image at " + networkImageFilePath);
+
+        heatmapImageFilePath
     }
 
     /// <summary>

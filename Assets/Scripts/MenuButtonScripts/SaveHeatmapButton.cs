@@ -6,7 +6,7 @@ class SaveHeatmapButton : CellexalButton
 {
     protected override string Description
     {
-        get { return "Save heatma\nimage to disk"; }
+        get { return "Save heatmap\nimage to disk"; }
     }
 
     protected override void Awake()

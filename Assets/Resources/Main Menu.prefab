@@ -13396,6 +13396,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1589562289889966}
   menu: {fileID: 1067712266554274}
   textMeshToDarken: {fileID: 102856695960845604}
+  standardText: 
 --- !u!114 &114076110129465078
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13518,6 +13519,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1170743180108840}
   menu: {fileID: 1186076421137112}
   textMeshToDarken: {fileID: 102923636396685008}
+  standardText: 
 --- !u!114 &114093144291536204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13558,6 +13560,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114337393024725092}
   Menu: {fileID: 114713936086022252}
+  highlight: 0
 --- !u!114 &114101815406389570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13786,6 +13789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   TabButton: {fileID: 114876638139618548}
+  TabName: {fileID: 0}
 --- !u!114 &114194879243494974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13812,6 +13816,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1589562289889966}
   menu: {fileID: 1491022090283900}
   textMeshToDarken: {fileID: 102856695960845604}
+  standardText: 
 --- !u!114 &114209689560901582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13901,6 +13906,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1326862056096222}
   menu: {fileID: 1284924270120108}
   textMeshToDarken: {fileID: 102201791310153916}
+  standardText: 
 --- !u!114 &114230353511949432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14107,6 +14113,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1589562289889966}
   menu: {fileID: 1839398312535716}
   textMeshToDarken: {fileID: 102856695960845604}
+  standardText: 
 --- !u!114 &114308157276278472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14373,6 +14380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   TabButton: {fileID: 114096571068393108}
+  TabName: {fileID: 0}
 --- !u!114 &114338195882173892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14583,6 +14591,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1840246127800222}
   menu: {fileID: 1183347344886880}
   textMeshToDarken: {fileID: 102928386188371010}
+  standardText: 
 --- !u!114 &114407167292125482
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14659,6 +14668,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1813980611093982}
   menu: {fileID: 1201261580187892}
   textMeshToDarken: {fileID: 102722920641474884}
+  standardText: 
 --- !u!114 &114452698709744996
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14708,6 +14718,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1589562289889966}
   menu: {fileID: 1194856676267196}
   textMeshToDarken: {fileID: 102856695960845604}
+  standardText: 
 --- !u!114 &114476875975537788
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15337,6 +15348,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114944204602425016}
   Menu: {fileID: 114514593962385578}
+  highlight: 0
   Handler: {fileID: 0}
 --- !u!114 &114679470693225144
 MonoBehaviour:
@@ -15376,6 +15388,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   TabButton: {fileID: 114803102074647494}
+  TabName: {fileID: 0}
   buttonPrefab: {fileID: 114230353511949432}
 --- !u!114 &114691396657006646
 MonoBehaviour:
@@ -15503,6 +15516,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1952401628006496}
   menu: {fileID: 1840246127800222}
   textMeshToDarken: {fileID: 102923636396685008}
+  standardText: 
 --- !u!114 &114734369455991374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15656,6 +15670,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114685288721392576}
   Menu: {fileID: 114715523655521598}
+  highlight: 0
 --- !u!114 &114829671704269926
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15786,6 +15801,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114192967732739754}
   Menu: {fileID: 114713936086022252}
+  highlight: 0
 --- !u!114 &114879442286701098
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15945,6 +15961,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1170743180108840}
   menu: {fileID: 1326862056096222}
   textMeshToDarken: {fileID: 102923636396685008}
+  standardText: 
 --- !u!114 &114944204602425016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15958,6 +15975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   TabButton: {fileID: 114661210988961686}
+  TabName: {fileID: 0}
 --- !u!114 &114954110699684156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16020,6 +16038,7 @@ MonoBehaviour:
   buttonsToDeactivate: {fileID: 1589562289889966}
   menu: {fileID: 1353145070716862}
   textMeshToDarken: {fileID: 102856695960845604}
+  standardText: 
 --- !u!114 &114973359496439480
 MonoBehaviour:
   m_ObjectHideFlags: 1
