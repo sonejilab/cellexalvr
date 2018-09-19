@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 65461805522477278}
   - component: {fileID: 212553960895205308}
   - component: {fileID: 114900856164061844}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Save Heatmap Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 65560021837603544}
   - component: {fileID: 212472031655170656}
   - component: {fileID: 114806923698322708}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Recolour Heatmap Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 65827202820445754}
   - component: {fileID: 212754480679624130}
   - component: {fileID: 114749635933191596}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Create new heatmap button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1105,10 +1105,10 @@ MonoBehaviour:
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: d0fccaf2d0bb72341a846598948d1eb6, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: 7c88cdef3009f724296d174ee192c6d6, type: 3}
-  deactivatedTexture: {fileID: 0}
-  popupChoice: 0
+  standardTexture: {fileID: 21300000, guid: 58f5d0112451eea47b7c2f05e82ee841, type: 3}
+  highlightedTexture: {fileID: 21300000, guid: b62fc120a220fd445b7ff5dc61754e2c, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 4e0fda7f20429fd4e98ce6fdc830e034, type: 3}
+  popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
 --- !u!114 &114900856164061844
@@ -1167,15 +1167,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d0fccaf2d0bb72341a846598948d1eb6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 58f5d0112451eea47b7c2f05e82ee841, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.46, y: 5.46}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
 --- !u!212 &212553960895205308
 SpriteRenderer:
@@ -1211,15 +1211,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b33f8eb186324a2409f250b7b72bbead, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 12e2f21b1c66f3848af7681c28cd69df, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.46, y: 5.46}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
 --- !u!212 &212754480679624130
 SpriteRenderer:
@@ -1255,13 +1255,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 73d6be1c08c3d1142bbfef7a30fa19ca, type: 3}
+  m_Sprite: {fileID: 21300000, guid: be6da4e386115144ca7b1da5aa1de2f9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.46, y: 5.46}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
