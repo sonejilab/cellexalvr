@@ -8,7 +8,8 @@ public abstract class CellexalButton : MonoBehaviour
     public ReferenceManager referenceManager;
     public TextMesh descriptionText;
 
-
+    private int frameCount;
+    private string laserColliderName = "[RightController]BasePointerRenderer_ObjectInteractor_Collider";
     // all buttons must override this variable's get property
     /// <summary>
     /// A string that briefly explains what this button does.
@@ -58,11 +59,35 @@ public abstract class CellexalButton : MonoBehaviour
 
     protected virtual void Update()
     {
+        frameCount++;
         if (!buttonActivated) return;
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             Click();
+        }
+        // Button sometimes stays active even though ontriggerexit should have been called.
+        // To deactivate button again check every 10th frame if laser pointer collider is colliding.
+        if (frameCount % 10 == 0)
+        {
+            bool inside = false;
+            Collider[] collidesWith = Physics.OverlapBox(transform.position, new Vector3(5.5f, 5.5f, 5.5f)/2, Quaternion.identity);
+            foreach(Collider col in collidesWith)
+            {
+                if (col.gameObject.name == laserColliderName)
+                {
+                    inside = true;
+                    return;
+                }
+            }
+            if (descriptionText.text == Description)
+            {
+                descriptionText.text = "";
+            }
+
+            controllerInside = inside;
+            SetHighlighted(inside);
+            frameCount = 0;
         }
     }
 
@@ -101,7 +126,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerEnter(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+        if (other.gameObject.name == laserColliderName)
         {
             descriptionText.text = Description;
             controllerInside = true;
@@ -112,7 +137,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerExit(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+        if (other.gameObject.name == laserColliderName)
         {
             if (descriptionText.text == Description)
             {
