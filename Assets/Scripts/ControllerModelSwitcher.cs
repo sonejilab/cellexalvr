@@ -246,6 +246,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
         }
         SwitchToDesiredModel();
+        CellexalEvents.ModelChanged.Invoke();
     }
 
     /// <summary>

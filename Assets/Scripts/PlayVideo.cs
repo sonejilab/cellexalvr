@@ -5,22 +5,34 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 [RequireComponent (typeof(AudioSource))]
 
-public class PlayVideo : MonoBehaviour {
+public class PlayVideo : CellexalButton {
 
     //public MovieTexture movie;
-    public VideoClip videoClip;
-    public RawImage image;
+    //public VideoClip videoClip;
+    //public RawImage image;
     private AudioSource audioSource;
     private VideoSource videoSource;
 
-    private VideoPlayer videoPlayer;
+    public VideoPlayer videoPlayer;
+    public GameObject videoCanv;
+
+    protected override string Description
+    {
+        get { return "Play Video"; }
+    }
 
     // Use this for initialization
     void Start()
     {
         Application.runInBackground = true;
-        StartCoroutine(playVideo());
+        StartCoroutine(PlayVid());
         //videoPlayer.Pause();
+    }
+
+    protected override void Click()
+    {
+        videoCanv.SetActive(true);
+        StartVideo();
     }
 
     public void StartVideo()
@@ -33,7 +45,7 @@ public class PlayVideo : MonoBehaviour {
         if (!videoPlayer.isPlaying)
         {
             Application.runInBackground = true;
-            StartCoroutine(playVideo());
+            StartCoroutine(PlayVid());
         }
         //videoPlayer.Pause();
 
@@ -51,11 +63,11 @@ public class PlayVideo : MonoBehaviour {
         audioSource.Stop();
     }
 
-    IEnumerator playVideo()
+    IEnumerator PlayVid()
     {
 
         //Add VideoPlayer to the GameObject
-        videoPlayer = gameObject.AddComponent<VideoPlayer>();
+        //videoPlayer = gameObject.AddComponent<VideoPlayer>();
 
         //Add AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();
@@ -77,7 +89,7 @@ public class PlayVideo : MonoBehaviour {
         videoPlayer.SetTargetAudioSource(0, audioSource);
 
         //Set video To Play then prepare Audio to prevent Buffering
-        videoPlayer.clip = videoClip;
+        //videoPlayer.clip = videoClip;
         videoPlayer.Prepare();
 
         //Wait until video is prepared
@@ -94,7 +106,7 @@ public class PlayVideo : MonoBehaviour {
         Debug.Log("Done Preparing Video");
 
         //Assign the Texture from Video to RawImage to be displayed
-        image.texture = videoPlayer.texture;
+        //image.texture = videoPlayer.texture;
 
         //Play Video
         //videoPlayer.Play();

@@ -83,7 +83,7 @@ public abstract class CellexalButton : MonoBehaviour
                 meshRenderer.material.color = meshDeactivatedColor;
             }
         }
-        else
+        if (activate)
         {
             if (spriteRenderer != null)
             {
@@ -101,7 +101,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerEnter(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+        if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
         {
             descriptionText.text = Description;
             controllerInside = true;
@@ -112,7 +112,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerExit(Collider other)
     {
         if (!buttonActivated) return;
-        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+        if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
         {
             if (descriptionText.text == Description)
             {
@@ -136,7 +136,7 @@ public abstract class CellexalButton : MonoBehaviour
                 meshRenderer.material.color = meshHighlightColor;
             }
         }
-        else
+        if(!highlight)
         {
             if (spriteRenderer != null)
             {

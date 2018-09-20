@@ -2,54 +2,14 @@
 ///<summary>
 /// Represents a button used for toggling the selection tool.
 ///</summary>
-public class SelectionToolButton : CellexalButton
+public class SelectionToolButton : CellexalToolButton
 {
-
-    private MenuRotator rotator;
-    private ControllerModelSwitcher controllerModelSwitcher;
-    private SelectionToolHandler selectionToolHandler;
-    private bool menuActive = false;
-    //private bool buttonsInitialized = false;
-
     protected override string Description
     {
         get { return "Toggle selection tool"; }
     }
-    private void Start()
+    protected override ControllerModelSwitcher.Model ControllerModel
     {
-        rotator = referenceManager.menuRotator;
-        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        selectionToolHandler = referenceManager.selectionToolHandler;
-        SetButtonActivated(false);
-        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
-        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
-    }
-
-    protected override void Click()
-    {
-
-        if (controllerModelSwitcher.DesiredModel != ControllerModelSwitcher.Model.SelectionTool)
-        {
-            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.SelectionTool;
-            controllerModelSwitcher.ActivateDesiredTool();
-        }
-        else
-        {
-            controllerModelSwitcher.TurnOffActiveTool(true);
-        }
-        if (menuActive && rotator.SideFacingPlayer == MenuRotator.Rotation.Front)
-        {
-            rotator.RotateLeft();
-        }
-    }
-
-    private void TurnOn()
-    {
-        SetButtonActivated(true);
-    }
-
-    private void TurnOff()
-    {
-        SetButtonActivated(false);
+        get { return ControllerModelSwitcher.Model.SelectionTool; }
     }
 }

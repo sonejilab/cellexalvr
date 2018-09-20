@@ -1,47 +1,20 @@
 ///<summary>
-/// Represents a button used for toggling the burning heatmap tool.
+/// Represents a button used for toggling the delete tool. Delete tool does not delete graphs.
 ///</summary>
-public class BurnHeatmapToolButton : CellexalButton
+public class BurnHeatmapToolButton : CellexalToolButton
 {
-    private ControllerModelSwitcher controllerModelSwitcher;
-
-    private void Start()
-    {
-        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        SetButtonActivated(false);
-        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
-        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
-    }
-
     protected override string Description
     {
         get
         {
-            return "Burn heatmaps tool";
-        }
-    }
-    protected override void Click()
-    {
-        if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.DeleteTool)
-        {
-            controllerModelSwitcher.TurnOffActiveTool(true);
-        }
-        else
-        {
-            //controllerModelSwitcher.TurnOffActiveTool();
-            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.DeleteTool;
-            controllerModelSwitcher.ActivateDesiredTool();
+            return "Delete tool";
         }
     }
 
-
-    private void TurnOn()
+    protected override ControllerModelSwitcher.Model ControllerModel
     {
-        SetButtonActivated(true);
+        get { return ControllerModelSwitcher.Model.DeleteTool; }
     }
 
-    private void TurnOff()
-    {
-        SetButtonActivated(false);
-    }
+
 }

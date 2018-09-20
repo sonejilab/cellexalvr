@@ -3,36 +3,15 @@ using VRTK;
 /// <summary>
 /// Represents the button for turning on and off the laser pointers.
 /// </summary>
-public class LasersButton : CellexalButton
+public class LasersButton : CellexalToolButton
 {
-
-    private ControllerModelSwitcher controllerModelSwitcher;
-
     protected override string Description
     {
         get { return "Toggle Lasers"; }
     }
-
-    protected override void Awake()
+    protected override ControllerModelSwitcher.Model ControllerModel
     {
-        base.Awake();
-        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-    }
-
-    protected override void Click()
-    {
-        // turn both off only if both are on, otherwise turn both on.
-        //laser1.enabled = !laser1.enabled;
-        bool enabled = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers;
-        if (enabled)
-        {
-            controllerModelSwitcher.TurnOffActiveTool(true);
-        }
-        else
-        {
-            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.TwoLasers;
-            controllerModelSwitcher.ActivateDesiredTool();
-        }
+        get { return ControllerModelSwitcher.Model.TwoLasers; }
     }
 
 }

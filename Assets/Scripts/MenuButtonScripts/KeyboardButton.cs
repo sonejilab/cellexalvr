@@ -2,13 +2,8 @@ using UnityEngine;
 ///<summary>
 /// Represents a button used for toggling the keyboard.
 ///</summary>
-public class KeyboardButton : CellexalButton
+public class KeyboardButton : CellexalToolButton
 {
-    public Sprite gray;
-    public Sprite original;
-
-    private KeyboardSwitch keyboard;
-    private ControllerModelSwitcher controllerModelSwitcher;
     private bool activateKeyboard = false;
 
     protected override string Description
@@ -16,44 +11,11 @@ public class KeyboardButton : CellexalButton
         get { return "Toggle keyboard"; }
     }
 
-    protected override void Awake()
+    protected override ControllerModelSwitcher.Model ControllerModel
     {
-        base.Awake();
-        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
-        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
+        get { return ControllerModelSwitcher.Model.Keyboard; }
     }
 
-    private void Start()
-    {
-        keyboard = referenceManager.keyboard;
-        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        SetButtonActivated(false);
 
-    }
 
-    protected override void Click()
-    {
-        activateKeyboard = !keyboard.KeyboardActive;
-        referenceManager.gameManager.InformActivateKeyboard(activateKeyboard);
-        keyboard.SetKeyboardVisible(activateKeyboard);
-        if (activateKeyboard)
-        {
-            controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Keyboard;
-            controllerModelSwitcher.ActivateDesiredTool();
-        }
-        else
-        {
-            controllerModelSwitcher.TurnOffActiveTool(true);
-        }
-    }
-
-    private void TurnOn()
-    {
-        SetButtonActivated(true);
-    }
-
-    private void TurnOff()
-    {
-        SetButtonActivated(false);
-    }
 }
