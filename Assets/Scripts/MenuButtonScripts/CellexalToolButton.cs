@@ -143,9 +143,18 @@ public abstract class CellexalToolButton : CellexalButton
 
     private void UpdateButton()
     {
+
         if (controllerModelSwitcher.ActualModel != ControllerModel)
         {
-            spriteRenderer.sprite = standardTexture;
+            if (buttonActivated)
+            {
+                spriteRenderer.sprite = standardTexture;
+            }
+            if (!buttonActivated)
+            {
+                spriteRenderer.sprite = deactivatedTexture;
+            }
+
             toolActivated = false;
         }
     }

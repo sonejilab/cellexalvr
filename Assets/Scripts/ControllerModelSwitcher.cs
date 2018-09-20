@@ -201,7 +201,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             rightLaser.ToggleLaser(false);
             leftLaser.enabled = false;
-            keyboard.SetKeyboardVisible(false);
+            //keyboard.SetKeyboardVisible(false);
             //rightLaser.enabled = false;
             //referenceManager.gameManager.InformActivateKeyboard(false);
         }
@@ -233,7 +233,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.Keyboard:
-                keyboard.SetKeyboardVisible(true);
+                //keyboard.SetKeyboardVisible(true);
                 //rightLaser.enabled = true;
                 rightLaser.ToggleLaser(true);
                 break;

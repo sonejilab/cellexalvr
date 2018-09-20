@@ -13,7 +13,9 @@ public class NetworkHandler : MonoBehaviour
     public List<NetworkCenter> Replacements { get; private set; }
     //public string NetworkHandlerName { get; internal set; }
 
-    private List<NetworkCenter> networks = new List<NetworkCenter>();
+    [HideInInspector]
+    public List<NetworkCenter> networks = new List<NetworkCenter>();
+
     private ReferenceManager referenceManager;
     private GameManager gameManager;
     private MeshRenderer meshRenderer;

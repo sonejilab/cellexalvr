@@ -39,6 +39,13 @@ public class RemovalController : MonoBehaviour {
         }
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            if (objectToDelete.GetComponent<NetworkHandler>())
+            {
+                foreach (NetworkCenter nc in objectToDelete.GetComponent<NetworkHandler>().networks)
+                {
+                    nc.BringBackOriginal();
+                }
+            }
             delete = true;
         }
         if (delete)
@@ -50,7 +57,7 @@ public class RemovalController : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
 
-        if (other.tag == "HeatBoard" || other.gameObject.GetComponent<NetworkHandler>())
+        if (other.CompareTag("HeatBoard") || other.gameObject.GetComponent<NetworkHandler>())
         {
             controllerInside = true;
             objectToDelete = other.gameObject;
@@ -82,19 +89,21 @@ public class RemovalController : MonoBehaviour {
             GetComponent<MeshRenderer>().material = inactiveMat;
             return;
         }
+
         float step = speed * Time.deltaTime;
         obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
         obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
         obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
         if (obj.transform.localScale.x <= targetScale)
         {
-            CellexalLog.Log("DELETED OBJECT " + obj.name);
+            CellexalLog.Log("Deleted object: " + obj.name);
             delete = false;
             Destroy(obj);
             GetComponent<MeshRenderer>().material = inactiveMat;
             GetComponent<Light>().color = Color.white;
             transform.localScale = Vector3.one * 0.03f;
             GetComponent<Light>().range = 0.04f;
+            referenceManager.gameManager.InformDeleteObject(obj.name);
         }
     }
 }

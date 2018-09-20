@@ -312,11 +312,11 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendEnableColliders", PhotonTargets.Others, name);
     }
 
-    public void InformCreateHeatmap()
+    public void InformCreateHeatmap(string hmName)
     {
         if (!multiplayer) return;
         CellexalLog.Log("Informing clients to create heatmap");
-        coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others);
+        coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others, hmName);
     }
 
     public void InformBurnHeatmap(string heatmapName, Transform target)
@@ -385,6 +385,12 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         coordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
+    }
+
+    public void InformDeleteObject(string objName)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendDeleteObject", PhotonTargets.Others, objName);
     }
 
     public void InformShowGraph(string graphName, string jailName)

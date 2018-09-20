@@ -22,7 +22,7 @@ public class LaserPointerController : MonoBehaviour
         GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
         layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
         layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
-        layerMask = layerMaskMenu | layerMaskKeyboard;
+        layerMask = layerMaskMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 
     }
@@ -84,5 +84,13 @@ public class LaserPointerController : MonoBehaviour
         alwaysActive = active;
         GetComponent<VRTK_StraightPointerRenderer>().enabled = alwaysActive;
         transform.localRotation = Quaternion.identity;
+        if (alwaysActive)
+        {
+            layerMask = layerMaskMenu | layerMaskKeyboard;
+        }
+        if (!alwaysActive)
+        {
+            layerMask = layerMaskMenu;
+        }
     }
 }

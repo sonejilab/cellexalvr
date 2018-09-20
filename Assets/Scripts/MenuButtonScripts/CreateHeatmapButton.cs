@@ -26,7 +26,6 @@ public class CreateHeatmapButton : CellexalButton
     {
         SetButtonActivated(false);
         heatmapGenerator.CreateHeatmap();
-        gameManager.InformCreateHeatmap();
         CellexalEvents.HeatmapCreated.Invoke();
     }
 

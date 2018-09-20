@@ -112,10 +112,22 @@ public class HeatmapGenerator : MonoBehaviour
         heatmapList.Clear();
     }
 
-    public void CreateHeatmap()
+    /// <summary>
+    /// If created via multiplayer. Name it the same as on other client.
+    /// </summary>
+    public void CreateHeatmap(string name="")
     {
         // name the heatmap "heatmap_X". Where X is some number.
-        string heatmapName = "heatmap_" + (selectionToolHandler.fileCreationCtr - 1);
+        string heatmapName = "";
+        if (name.Equals(string.Empty))
+        {
+            heatmapName = "heatmap_" + System.DateTime.Now.ToString("HH-mm-ss");
+            referenceManager.gameManager.InformCreateHeatmap(heatmapName);
+        }
+        else
+        {
+            heatmapName = name;
+        }
         CellexalLog.Log("Creating heatmap");
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
     }
@@ -205,7 +217,7 @@ public class HeatmapGenerator : MonoBehaviour
             //heatmap.UpdateImage(newHeatmapFilePath);
             heatmap.BuildTexture(selection, outputFilePath);
             //heatmap.GetComponent<AudioSource>().Play();
-            heatmap.name = "heatmap_" + heatmapsCreated;
+            heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmapsCreated++;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
