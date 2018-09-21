@@ -68,27 +68,27 @@ public abstract class CellexalButton : MonoBehaviour
         }
         // Button sometimes stays active even though ontriggerexit should have been called.
         // To deactivate button again check every 10th frame if laser pointer collider is colliding.
-        if (frameCount % 10 == 0)
-        {
-            bool inside = false;
-            Collider[] collidesWith = Physics.OverlapBox(transform.position, new Vector3(5.5f, 5.5f, 5.5f)/2, Quaternion.identity);
-            foreach(Collider col in collidesWith)
-            {
-                if (col.gameObject.name == laserColliderName)
-                {
-                    inside = true;
-                    return;
-                }
-            }
-            if (descriptionText.text == Description)
-            {
-                descriptionText.text = "";
-            }
+        //if (frameCount % 10 == 0)
+        //{
+        //    bool inside = false;
+        //    Collider[] collidesWith = Physics.OverlapBox(transform.position, new Vector3(5.5f, 5.5f, 5.5f)/2, Quaternion.identity);
+        //    foreach(Collider col in collidesWith)
+        //    {
+        //        if (col.gameObject.name == laserColliderName)
+        //        {
+        //            inside = true;
+        //            return;
+        //        }
+        //    }
+        //    if (descriptionText.text == Description)
+        //    {
+        //        descriptionText.text = "";
+        //    }
 
-            controllerInside = inside;
-            SetHighlighted(inside);
-            frameCount = 0;
-        }
+        //    controllerInside = inside;
+        //    SetHighlighted(inside);
+        //    frameCount = 0;
+        //}
     }
 
     protected abstract void Click();
