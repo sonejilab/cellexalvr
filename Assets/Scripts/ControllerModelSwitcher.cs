@@ -134,7 +134,6 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Normal:
             case Model.Magnifier:
             case Model.HelpTool:
-            case Model.TwoLasers:
             case Model.DrawTool:
             case Model.DeleteTool:
                 rightControllerBodyMeshFilter.mesh = normalControllerMesh;
@@ -142,6 +141,11 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.Keyboard:
+                rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
+                rightLaser.transform.localRotation = Quaternion.identity;
+                break;
+
+            case Model.TwoLasers:
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightLaser.transform.localRotation = Quaternion.identity;
                 break;
@@ -194,7 +198,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
         if (DesiredModel != Model.HelpTool && !HelpToolShouldStayActivated)
         {
-            helpTool.SetToolActivated(false);
+            //helpTool.SetToolActivated(false);
         }
         // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
         if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)

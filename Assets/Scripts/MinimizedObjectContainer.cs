@@ -23,8 +23,10 @@ public class MinimizedObjectContainer : MonoBehaviour
     public int SpaceY { get; set; }
 
     private bool controllerInside = false;
-    
-    
+    private string laserColliderName = "[RightController]BasePointerRenderer_ObjectInteractor_Collider";
+    private int frameCount;
+    private int layerMask;
+
 
     private void Start()
     {
@@ -32,6 +34,8 @@ public class MinimizedObjectContainer : MonoBehaviour
         this.name = "Jail_" + MinimizedObject.name;
         minimizeTool = Handler.referenceManager.minimizeTool;
         orgColor = GetComponent<Renderer>().material.color;
+        frameCount = 0;
+        layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
     }
 
     private void Update()
@@ -59,6 +63,28 @@ public class MinimizedObjectContainer : MonoBehaviour
             }
             Handler.ContainerRemoved(this);
             Destroy(gameObject);
+        }
+
+        frameCount++;
+        // Button sometimes stays active even though ontriggerexit should have been called.
+        // To deactivate button again check every 10th frame if laser pointer collider is colliding.
+        if (frameCount % 30 == 0)
+        {
+            bool inside = false;
+            Collider[] collidesWith = Physics.OverlapBox(transform.position, transform.localScale, Quaternion.identity, layerMask);
+
+            foreach (Collider col in collidesWith)
+            {
+                if (col.gameObject.name == laserColliderName)
+                {
+                    inside = true;
+                    return;
+                }
+            }
+
+            controllerInside = inside;
+            GetComponent<Renderer>().material.color = orgColor;
+            frameCount = 0;
         }
     }
 

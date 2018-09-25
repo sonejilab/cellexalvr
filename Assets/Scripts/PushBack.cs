@@ -57,16 +57,18 @@ public class PushBack : MonoBehaviour
 
         if (push)
         {
+            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
             raycastingSource = rightController.transform;
-            ray = new Ray(raycastingSource.position, raycastingSource.forward);
-            if (Physics.Raycast(ray, out hit) && push)
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
+            //ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            if (hit.collider && push)
             {
-                Vector3 newScale = transform.localScale + orgScale * scaleMultiplier;
-                if (newScale.x > orgScale.x * maxScale)
-                {
-                    //print("not pulling back " + newScale.x + " " + orgScale.x);
-                    return;
-                }
+                //Vector3 newScale = transform.localScale + orgScale * scaleMultiplier;
+                //if (newScale.x > orgScale.x * maxScale)
+                //{
+                //    //print("not pulling back " + newScale.x + " " + orgScale.x);
+                //    return;
+                //}
                 if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     transform.LookAt(Vector3.zero);
@@ -76,30 +78,34 @@ public class PushBack : MonoBehaviour
                     transform.LookAt(Vector3.zero);
                     transform.Rotate(90f, 0, 0);
                 }
-                Vector3 dir = hit.transform.position - device.transform.pos;
+                Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = dir.normalized;
                 transform.position += dir * distanceMultiplier;
-                transform.localScale = newScale;
+                //transform.localScale = newScale;
             }
         }
         if (pull)
         {
             raycastingSource = rightController.transform;
-            ray = new Ray(raycastingSource.position, raycastingSource.forward);
-            if (Physics.Raycast(ray, out hit) && pull)
+            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
+            raycastingSource = rightController.transform;
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
+            //ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            if (hit.collider && pull)
             {
-                Vector3 newScale = transform.localScale - orgScale * scaleMultiplier;
+                //Vector3 newScale = transform.localScale - orgScale * scaleMultiplier;
                 // don't let the thing become smaller than what it was originally
                 // this could cause some problems if the user rescales the objects while they are far away
-                if (newScale.x < orgScale.x * minScale)
+                if (Vector3.Distance(hit.transform.position, raycastingSource.position) < 0.5f)
                 {
                     //print("not pulling back " + newScale.x + " " + orgScale.x);
+                    pull = false;
                     return;
                 }
-                Vector3 dir = hit.transform.position - device.transform.pos;
+                Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = -dir.normalized;
                 transform.position += dir * distanceMultiplier;
-                transform.localScale = newScale;
+                //transform.localScale = newScale;
             }
         }
 

@@ -7,6 +7,7 @@ public abstract class CellexalButton : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public TextMesh descriptionText;
+    public GameObject infoMenu;
 
     private int frameCount;
     private string laserColliderName = "[RightController]BasePointerRenderer_ObjectInteractor_Collider";
@@ -42,6 +43,7 @@ public abstract class CellexalButton : MonoBehaviour
     [HideInInspector]
     public bool buttonActivated = true;
     public bool controllerInside = false;
+    private int layerMask;
 
 
     protected virtual void Awake()
@@ -55,6 +57,7 @@ public abstract class CellexalButton : MonoBehaviour
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         this.tag = "Menu Controller Collider";
+        layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
     }
 
     protected virtual void Update()
@@ -66,32 +69,45 @@ public abstract class CellexalButton : MonoBehaviour
         {
             Click();
         }
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y > 0.7f)
+        {
+            HelpClick();
+        }
         // Button sometimes stays active even though ontriggerexit should have been called.
         // To deactivate button again check every 10th frame if laser pointer collider is colliding.
-        //if (frameCount % 10 == 0)
-        //{
-        //    bool inside = false;
-        //    Collider[] collidesWith = Physics.OverlapBox(transform.position, new Vector3(5.5f, 5.5f, 5.5f)/2, Quaternion.identity);
-        //    foreach(Collider col in collidesWith)
-        //    {
-        //        if (col.gameObject.name == laserColliderName)
-        //        {
-        //            inside = true;
-        //            return;
-        //        }
-        //    }
-        //    if (descriptionText.text == Description)
-        //    {
-        //        descriptionText.text = "";
-        //    }
+        if (frameCount % 30 == 0)
+        {
+            bool inside = false;
+            Collider[] collidesWith = Physics.OverlapBox(transform.position, transform.localScale, Quaternion.identity, layerMask);
 
-        //    controllerInside = inside;
-        //    SetHighlighted(inside);
-        //    frameCount = 0;
-        //}
+            foreach (Collider col in collidesWith)
+            {
+                if (col.gameObject.name == laserColliderName)
+                {
+                    inside = true;
+                    //descriptionText.text = Description;
+                    return;
+                }
+            }
+            if (descriptionText.text == Description)
+            {
+                descriptionText.text = "";
+            }
+
+            controllerInside = inside;
+            SetHighlighted(inside);
+            frameCount = 0;
+        }
     }
 
     protected abstract void Click();
+
+    protected virtual void HelpClick()
+    {
+        if (!infoMenu) return;
+
+        infoMenu.GetComponent<VideoButton>().StartVideo();
+    }
 
     public virtual void SetButtonActivated(bool activate)
     {
@@ -131,7 +147,29 @@ public abstract class CellexalButton : MonoBehaviour
             descriptionText.text = Description;
             controllerInside = true;
             SetHighlighted(true);
+            if (infoMenu)
+            {
+                infoMenu.SetActive(true);
+            }
         }
+    }
+
+    // In case OnTriggerExit doesnt get called by laser pointer we need to manually do the unhighlighting.
+    protected void Exit()
+    {
+        if (!buttonActivated) return;
+
+        if (descriptionText.text == Description)
+        {
+            descriptionText.text = "";
+        }
+        controllerInside = false;
+        SetHighlighted(false);
+        if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
+        {
+            infoMenu.SetActive(false);
+        }
+        
     }
 
     protected void OnTriggerExit(Collider other)
@@ -145,6 +183,11 @@ public abstract class CellexalButton : MonoBehaviour
             }
             controllerInside = false;
             SetHighlighted(false);
+            if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
+            {
+                //infoMenu.GetComponent<InfoMenu>().SetA(false);
+                infoMenu.SetActive(false);
+            }
         }
     }
 
@@ -161,7 +204,7 @@ public abstract class CellexalButton : MonoBehaviour
                 meshRenderer.material.color = meshHighlightColor;
             }
         }
-        if(!highlight)
+        if (!highlight)
         {
             if (spriteRenderer != null)
             {

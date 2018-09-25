@@ -9,7 +9,6 @@ public class SubMenuButton : CellexalButton
     public GameObject menu;
     public TextMesh textMeshToDarken;
     private Tab activeTab;
-    public string standardText;
 
     protected override string Description
     {

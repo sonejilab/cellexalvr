@@ -5,7 +5,7 @@ public class ClearAllDrawToolLinesButton : CellexalButton
 {
     protected override string Description
     {
-        get { return "Toggles the draw tool"; }
+        get { return "Clear all lines"; }
     }
 
     private DrawTool drawTool;

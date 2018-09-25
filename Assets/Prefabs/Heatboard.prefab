@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 65461805522477278}
   - component: {fileID: 212553960895205308}
   - component: {fileID: 114900856164061844}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Save Heatmap Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 65560021837603544}
   - component: {fileID: 212472031655170656}
   - component: {fileID: 114806923698322708}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Recolour Heatmap Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 65827202820445754}
   - component: {fileID: 212754480679624130}
   - component: {fileID: 114749635933191596}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Create new heatmap button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1061,6 +1061,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102248948059766378}
+  infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -1102,6 +1103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102248948059766378}
+  infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -1124,6 +1126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102248948059766378}
+  infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

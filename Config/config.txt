@@ -125,7 +125,7 @@ HeatmapHighExpressionColor = #FF0000
 # If you change the colors above, the rectangles showing selections on the heatmap might become hard to see
 # These are 32 bit colors with the fourth byte being the transparency
 # The color used by the rectangle that show what you are pointing the laser at, and that show what you are selecting (before releasing the trigger)
-HeatmapHighlightMarkerColor = #FFFFFFC0
+HeatmapHighlightMarkerColor = #6FB0E222
 # The color used by the rectangle that show what you have selected (after releasing the trigger)
 HeatmapConfirmMarkerColor = #00FF37C0
 

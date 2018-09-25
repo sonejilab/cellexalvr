@@ -5,38 +5,34 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 [RequireComponent (typeof(AudioSource))]
 
-public class PlayVideo : CellexalButton {
+public class PlayVideo : MonoBehaviour {
 
     //public MovieTexture movie;
     //public VideoClip videoClip;
     //public RawImage image;
+    public GameObject videoCanv;
     private AudioSource audioSource;
     private VideoSource videoSource;
+    private VideoClip videoClip;
+    private VideoPlayer videoPlayer;
 
-    public VideoPlayer videoPlayer;
-    public GameObject videoCanv;
+    //public GameObject videoCanv;
+    //public string buttonDescr;
 
-    protected override string Description
-    {
-        get { return "Play Video"; }
-    }
 
     // Use this for initialization
     void Start()
     {
         Application.runInBackground = true;
-        StartCoroutine(PlayVid());
+        videoPlayer = GetComponent<VideoPlayer>();
+        //videoPlayer.clip = videoClip;
+        //StartCoroutine(PlayVid());
         //videoPlayer.Pause();
     }
 
-    protected override void Click()
+    public void StartVideo(VideoClip clip)
     {
-        videoCanv.SetActive(true);
-        StartVideo();
-    }
-
-    public void StartVideo()
-    {
+        videoClip = clip;
         if (!videoPlayer.isPlaying && videoPlayer.isPrepared)
         {
             videoPlayer.Play();
@@ -48,8 +44,6 @@ public class PlayVideo : CellexalButton {
             StartCoroutine(PlayVid());
         }
         //videoPlayer.Pause();
-
-
     }
     public void PauseVideo()
     {
@@ -76,7 +70,7 @@ public class PlayVideo : CellexalButton {
         videoPlayer.playOnAwake = false;
         audioSource.playOnAwake = false;
         audioSource.Pause();
-        
+
 
         videoPlayer.source = VideoSource.VideoClip;
 
@@ -89,7 +83,7 @@ public class PlayVideo : CellexalButton {
         videoPlayer.SetTargetAudioSource(0, audioSource);
 
         //Set video To Play then prepare Audio to prevent Buffering
-        //videoPlayer.clip = videoClip;
+        videoPlayer.clip = videoClip;
         videoPlayer.Prepare();
 
         //Wait until video is prepared
@@ -109,10 +103,10 @@ public class PlayVideo : CellexalButton {
         //image.texture = videoPlayer.texture;
 
         //Play Video
-        //videoPlayer.Play();
+        videoPlayer.Play();
 
         //Play Sound
-        //audioSource.Play();
+        audioSource.Play();
 
         Debug.Log("Playing Video");
         while (videoPlayer.isPlaying)
@@ -121,5 +115,6 @@ public class PlayVideo : CellexalButton {
             yield return null;
         }
         Debug.Log("Done Playing Video");
+        videoCanv.SetActive(false);
     }
 }

@@ -155,7 +155,7 @@ public class HelperTool : MonoBehaviour
         pointerRenderer.enabled = activate;
         activated = activate;
         gameObject.SetActive(activate);
-        helpMenu.SetActive(activate);
+        //helpMenu.SetActive(activate);
         otherControllerHelpTool.SetActive(activate);
         controllerHelpTextsRight.SetActive(activate);
         controllerHelpTextsLeft.SetActive(activate);

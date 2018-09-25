@@ -9,8 +9,10 @@ public class LaserPointerController : MonoBehaviour
     private GameObject tempHit;
     private int layerMaskMenu;
     private int layerMaskKeyboard;
+    private int layerMaskGraph;
     private int layerMask;
     private bool alwaysActive;
+    private bool keyboardActive;
     private ControllerModelSwitcher controllerModelSwitcher;
 
     public ReferenceManager referenceManager;
@@ -22,6 +24,7 @@ public class LaserPointerController : MonoBehaviour
         GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
         layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
         layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
+        layerMaskGraph = 1 << LayerMask.NameToLayer("GraphLayer");
         layerMask = layerMaskMenu;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 
@@ -29,7 +32,7 @@ public class LaserPointerController : MonoBehaviour
     private void Update()
     {
         frame++;
-        if (frame % 3 == 0)
+        if (frame % 5 == 0)
         {
             Frame5Update();
         }
@@ -52,9 +55,13 @@ public class LaserPointerController : MonoBehaviour
         }
         if (alwaysActive)
         {
-            if (!hit.collider || hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode"))
+            if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
             {
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+            }
+            if (!hit.collider)
+            {
+                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
             }
         }
         if (!alwaysActive)
@@ -68,11 +75,7 @@ public class LaserPointerController : MonoBehaviour
                     controllerModelSwitcher.ActivateDesiredTool();
                 }
                 GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
-                if (tempHit && tempHit.GetComponent<CellexalButton>())
-                {
-                    tempHit.GetComponent<CellexalButton>().controllerInside = false;
-                    tempHit.GetComponent<CellexalButton>().SetHighlighted(false);
-                }
+
 
             }
         }

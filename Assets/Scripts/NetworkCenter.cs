@@ -757,6 +757,7 @@ public class NetworkCenter : MonoBehaviour
         GameObject edge = Instantiate(edgePrefab);
         LineRenderer renderer = edge.GetComponent<LineRenderer>();
         edge.transform.parent = transform.parent;
+        edge.transform.localScale = Vector3.one;
         Vector3 midPoint1 = (n1.transform.position + n2.transform.position) / 2f;
         Vector3 midPoint2 = (n3.transform.position + n4.transform.position) / 2f;
         renderer.useWorldSpace = true;
@@ -769,6 +770,7 @@ public class NetworkCenter : MonoBehaviour
         GameObject arcText = Instantiate(arcDescriptionPrefab);
         arcText.transform.parent = edge.transform;
         arcText.transform.position = (midPoint1 + midPoint2) / 2f;
+        arcText.transform.localScale = Vector3.one * 0.0015f;
         arcText.GetComponent<TextRotator>().SetTransforms(n1.transform, n2.transform, n3.transform, n4.transform);
         arcText.GetComponent<TextMesh>().text = n1.geneName.text + " <-> " + n2.geneName.text;
     }

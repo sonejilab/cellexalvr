@@ -5,7 +5,6 @@
 class MinimizeToolButton : CellexalToolButton
 {
     private bool changeSprite;
-    public GameObject infoMenu;
 
     protected override string Description
     {
@@ -17,9 +16,11 @@ class MinimizeToolButton : CellexalToolButton
         get { return ControllerModelSwitcher.Model.Minimizer; }
     }
 
-    //public override void SetHighlighted(bool highlight)
-    //{
-    //    base.SetHighlighted(highlight);
-    //    infoMenu.SetActive(highlight);
-    //}
+    public override void SetHighlighted(bool highlight)
+    {
+        base.SetHighlighted(highlight);
+        //infoMenu.SetActive(highlight);
+    }
+
+
 }

@@ -19,7 +19,7 @@ public class MenuCube : MonoBehaviour {
         if (!mainMenu.GetComponent<MeshRenderer>().enabled)
         {
             GetComponent<MeshRenderer>().enabled = true;
-            transform.Rotate(0, 1, 0);
+            transform.Rotate(0, 0, 1);
         }
 	}
 }

@@ -59,28 +59,10 @@ public class AvatarMenu : Photon.MonoBehaviour
             if (!referenceManager.gameManager.avatarMenuActive)
             {
                 mainMenu.SetActive(false);
-                //if (menu == null)
-                //{
-                //    menu = Instantiate(mainMenu, Vector3.zero, Quaternion.identity);
-                //}
-                //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-                //foreach (Renderer r in meshList)
-                //{
-                //    r.enabled = true;
-                //}
             }
             if (!referenceManager.gameManager.avatarMenuActive)
             {
                 mainMenu.SetActive(false);
-                //if (menu != null)
-                //{
-                //    Destroy(menu);
-                //}
-                //Renderer[] meshList = this.transform.GetComponentsInChildren<Renderer>();
-                //foreach (Renderer r in meshList)
-                //{
-                //    r.enabled = false;
-                //}
             }
         }
 
