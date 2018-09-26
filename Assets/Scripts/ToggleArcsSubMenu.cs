@@ -7,7 +7,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
 {
     public GameObject buttonPrefab;
     // hard coded positions :)
-    private Vector3 buttonPos = new Vector3(-0.396f, 0.59f, 0.163f);
+    private Vector3 buttonPos = new Vector3(-0.38f, 0.59f, 0.22f);
     private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -0.15f);
 
@@ -38,7 +38,9 @@ public class ToggleArcsSubMenu : MenuWithTabs
         tabButton.referenceManager = referenceManager;
         tabButton.tab = newTab;
         tabButton.Handler = networks[0].Handler;
-        newTab.TabName.text = networks[0].Handler.gameObject.name.Split('_')[1];
+        string tabName = networks[0].Handler.gameObject.name.Split('_')[1];
+        newTab.gameObject.name = "Tab_" + tabName;
+        newTab.TabName.text = tabName;
         //newTab.tab = newTab.transform.parent.gameObject;
         if (colors == null)
         {
@@ -68,6 +70,7 @@ public class ToggleArcsSubMenu : MenuWithTabs
             var network = networks[i];
             var newButton = Instantiate(buttonPrefab, newTab.transform);
             newButton.GetComponent<Renderer>().material.color = network.GetComponent<Renderer>().material.color;
+            newButton.GetComponent<Renderer>().material.color -= new Color(0, 0, 0, 0.1f);
             var toggleArcButtonList = newButton.GetComponentsInChildren<ToggleArcsButton>();
             newButton.transform.localPosition = buttonPos;
             newButton.name = "Network" + i + "_ArcButton";

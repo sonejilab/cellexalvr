@@ -24,7 +24,6 @@ public class TabButton : MonoBehaviour
         meshRenderer.material.color = standardColor;
         rightController = referenceManager.rightController;
         this.tag = "Menu Controller Collider";
-
     }
 
     protected virtual void Update()

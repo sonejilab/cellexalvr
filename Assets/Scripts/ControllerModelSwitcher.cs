@@ -141,6 +141,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.Keyboard:
+                //keyboard.SetKeyboardVisible(true);
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightLaser.transform.localRotation = Quaternion.identity;
                 break;

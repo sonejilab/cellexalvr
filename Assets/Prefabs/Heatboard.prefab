@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 65461805522477278}
   - component: {fileID: 212553960895205308}
   - component: {fileID: 114900856164061844}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Save Heatmap Button
-  m_TagString: Untagged
+  m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -165,9 +165,9 @@ GameObject:
   - component: {fileID: 65560021837603544}
   - component: {fileID: 212472031655170656}
   - component: {fileID: 114806923698322708}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Recolour Heatmap Button
-  m_TagString: Untagged
+  m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -183,9 +183,9 @@ GameObject:
   - component: {fileID: 65827202820445754}
   - component: {fileID: 212754480679624130}
   - component: {fileID: 114749635933191596}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Create new heatmap button
-  m_TagString: Untagged
+  m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,7 +240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1969411457497442
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,8 +317,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1909688672033302}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.34283084, y: -0.41965038, z: -0.001}
-  m_LocalScale: {x: 0.19226801, y: 0.0035117187, z: 1}
+  m_LocalPosition: {x: 0, y: -0.28620508, z: -0.001}
+  m_LocalScale: {x: 0.8779297, y: 0.0035117187, z: 1}
   m_Children:
   - {fileID: 4299312697832092}
   m_Father: {fileID: 4498471690257498}
@@ -332,7 +332,7 @@ Transform:
   m_GameObject: {fileID: 1180041564275266}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.001, y: -0.04, z: -0.0093}
-  m_LocalScale: {x: 0.015603219, y: 0.85428256, z: 0.003}
+  m_LocalScale: {x: 0.00341713, y: 0.85428256, z: 0.003}
   m_Children: []
   m_Father: {fileID: 4268027343346444}
   m_RootOrder: 0
@@ -356,9 +356,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1546507171833466}
-  m_LocalRotation: {x: 0.047517, y: 0.6937914, z: -0.049300216, w: 0.71691364}
-  m_LocalPosition: {x: 1.444411, y: 1.004375, z: 0.047567}
-  m_LocalScale: {x: 2.012399, y: 2.0123985, z: 2.0123985}
+  m_LocalRotation: {x: 0.023138115, y: 0.70672816, z: -0.023138115, w: 0.70672816}
+  m_LocalPosition: {x: 1.4669849, y: 1.1995323, z: -0.4735655}
+  m_LocalScale: {x: 2.0600271, y: 2.0600271, z: 2.0600271}
   m_Children:
   - {fileID: 4268027343346444}
   - {fileID: 4837238345390544}
@@ -368,7 +368,7 @@ Transform:
   - {fileID: 4310061517961730}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 7.8480005, y: 88.103004, z: -0.275}
+  m_LocalEulerAnglesHint: {x: 3.7500002, y: 90.00001, z: 0}
 --- !u!4 &4562163557657150
 Transform:
   m_ObjectHideFlags: 1
@@ -467,7 +467,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: e2c60433e2b404b48869dc779cde8c0f, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -637,7 +637,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 6f42e149700d9dc4ebd40c98835eee37, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -671,7 +671,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: a725a8970f5538143b8cf652c85ea6b5, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -954,7 +954,9 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1180041564275266}
-  m_Text: 
+  m_Text: 'Group: 0
+
+    Gene: Hspa5'
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -1016,8 +1018,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deletePrefab: {fileID: 0}
   transparentMaterial: {fileID: 2100000, guid: 3e5d2cf2507b7b24589d638e2e95c22b, type: 2}
-  targetScale: 0.1
-  shrinkSpeed: 0.1
+  targetScale: 0.05
+  shrinkSpeed: 3
 --- !u!114 &114329533491564300
 MonoBehaviour:
   m_ObjectHideFlags: 1

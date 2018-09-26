@@ -10,7 +10,8 @@ public class LaserPointerController : MonoBehaviour
     private int layerMaskMenu;
     private int layerMaskKeyboard;
     private int layerMaskGraph;
-    private int layerMask;
+    private int layerMaskNetwork;
+    private int layerMaskOther;
     private bool alwaysActive;
     private bool keyboardActive;
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -25,7 +26,8 @@ public class LaserPointerController : MonoBehaviour
         layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
         layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
         layerMaskGraph = 1 << LayerMask.NameToLayer("GraphLayer");
-        layerMask = layerMaskMenu;
+        layerMaskNetwork = 1 << LayerMask.NameToLayer("NetworkLayer");
+        //layerMaskOther = layerMaskKeyboard | layerMaskSel;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 
     }
@@ -41,9 +43,10 @@ public class LaserPointerController : MonoBehaviour
     // Call every 3rd frame.
     private void Frame5Update()
     {
+        print("Always active = " + alwaysActive);
         RaycastHit hit;
         transform.localRotation = Quaternion.Euler(15f, 0, 0);
-        Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
+        Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskMenu);
         if (hit.collider)
         {
             tempHit = hit.collider.gameObject;
@@ -53,20 +56,21 @@ public class LaserPointerController : MonoBehaviour
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             }
         }
-        if (alwaysActive)
+        if (!hit.collider && alwaysActive)
         {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
             if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
             {
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
             }
-            if (!hit.collider)
+            else
             {
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
             }
         }
         if (!alwaysActive)
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             // When to switch back to previous model. 
             if (!hit.collider)
             {
@@ -87,13 +91,13 @@ public class LaserPointerController : MonoBehaviour
         alwaysActive = active;
         GetComponent<VRTK_StraightPointerRenderer>().enabled = alwaysActive;
         transform.localRotation = Quaternion.identity;
-        if (alwaysActive)
-        {
-            layerMask = layerMaskMenu | layerMaskKeyboard;
-        }
-        if (!alwaysActive)
-        {
-            layerMask = layerMaskMenu;
-        }
+        //if (alwaysActive)
+        //{
+        //    layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskGraph | layerMaskNetwork;
+        //}
+        //if (!alwaysActive)
+        //{
+        //    layerMask = layerMaskMenu;
+        //}
     }
 }

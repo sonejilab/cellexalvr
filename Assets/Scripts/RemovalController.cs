@@ -45,6 +45,7 @@ public class RemovalController : MonoBehaviour {
                 {
                     nc.BringBackOriginal();
                 }
+                referenceManager.arcsSubMenu.DestroyTab(objectToDelete.GetComponent<NetworkHandler>().name.Split('_')[1]); // Get last part of nw name   
             }
             delete = true;
         }
@@ -66,10 +67,7 @@ public class RemovalController : MonoBehaviour {
             GetComponent<MeshRenderer>().material = activeMat;
             transform.localScale = Vector3.one * 0.04f;
         }
-        if (other.CompareTag("HeatBoard"))
-        {
-            CellexalEvents.HeatmapBurned.Invoke();
-        }
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -89,7 +87,10 @@ public class RemovalController : MonoBehaviour {
             GetComponent<MeshRenderer>().material = inactiveMat;
             return;
         }
-
+        if (obj.CompareTag("HeatBoard"))
+        {
+            CellexalEvents.HeatmapBurned.Invoke();
+        }
         float step = speed * Time.deltaTime;
         obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
         obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;

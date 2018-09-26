@@ -681,7 +681,6 @@ public class NetworkCenter : MonoBehaviour
 
         if (transform.localScale.x > 5)
         {
-            Debug.Log("DECREASE OBJ IN SKY");
             networkGenerator.objectsInSky--;
         }
         // we must wait one more frame here or VRTK_InteractTouch gets a bunch of null exceptions.
@@ -841,11 +840,12 @@ public class NetworkCenter : MonoBehaviour
                 edge.transform.parent = transform.parent;
                 renderer.useWorldSpace = true;
                 renderer.SetPositions(new Vector3[] { transform.position, pair.Key.transform.position });
+                edge.transform.localScale = Vector3.one;
 
                 GameObject arcText = Instantiate(simpleArcDescriptionPrefab);
                 arcText.transform.parent = edge.transform;
                 arcText.transform.position = (transform.position + pair.Key.transform.position) / 2f;
-                arcText.transform.localScale = arcText.transform.localScale * 2f;
+                arcText.transform.localScale = Vector3.one * 0.003f;
                 arcText.GetComponent<SimpleTextRotator>().SetTransforms(transform, pair.Key.transform);
                 arcText.GetComponent<TextMesh>().text = "" + pair.Value;
                 CombinedArc newArc = new CombinedArc(renderer, transform, pair.Key.transform, pair.Value, edge);

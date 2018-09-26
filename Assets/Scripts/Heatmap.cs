@@ -159,24 +159,22 @@ public class Heatmap : MonoBehaviour
 
         if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
         {
-            print("HM IN TWO LASERS");
-            raycastingSource = rightController.transform;
-            Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            raycastingSource = referenceManager.rightLaser.transform;
+            //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit) && hit.transform == transform)
+            int layerMask = 1 << LayerMask.NameToLayer("KeyboardLayer");
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
+            if (hit.collider && hit.transform == transform)
             {
-                print("HIT");
                 int hitx = (int)(hit.textureCoord.x * bitmapWidth);
                 int hity = (int)(hit.textureCoord.y * bitmapHeight);
                 if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
                 {
-                    print("GENEHIT");
                     // if we hit the list of genes
                     int geneHit = HandleHitGeneList(hity);
 
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
-                        print("COLOR GENE");
                         gameManager.InformColorGraphsByGene(genes[geneHit]);
                         referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
                     }

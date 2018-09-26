@@ -46,13 +46,13 @@ namespace SQLiter
             _loom = null;
         }
 
-        void Update()
-        {
-            if (Application.isPlaying)
-            {
-                _loom.Update();
-            }
-        }
+        //void Update()
+        //{
+        //    if (Application.isPlaying)
+        //    {
+        //        _loom.Update();
+        //    }
+        //}
 
         private class NullLoom : ILoom
         {
