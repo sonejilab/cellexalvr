@@ -10,7 +10,8 @@ namespace Com.MyCompany.MyGame
         //public float DirectionDampTime = 5f;
         public Transform target;
         public Transform cameraPos;
-        
+        public Transform menu;
+        public Transform menuTarget;
 
         private GraphPoint selectedPoint;
         #endregion
@@ -28,6 +29,8 @@ namespace Com.MyCompany.MyGame
         {
             cameraPos = GameObject.Find("Camera (eye)").GetComponent<Transform>();
             target = GetComponent<Transform>();
+            menu = GameObject.Find("Main Menu").GetComponent<Transform>();
+
             if (!target)
             {
                 Debug.LogError("PlayerAnimatorManager is Missing Animator Component", this);
@@ -58,6 +61,10 @@ namespace Com.MyCompany.MyGame
             target.position = cameraPos.position;
             target.rotation = cameraPos.rotation;
             target.Rotate(90, 0, 0);
+
+            menuTarget.position = menu.position;
+            menuTarget.rotation = menu.rotation;
+            //menuTarget.Rotate(90, 0, 0);
 
         }
 

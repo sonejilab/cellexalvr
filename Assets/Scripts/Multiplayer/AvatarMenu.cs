@@ -66,18 +66,18 @@ public class AvatarMenu : Photon.MonoBehaviour
             }
         }
 
-
-        if (photonView.isMine == false && PhotonNetwork.connected == true)
-        {
-            return;
-        }
         if (!mainMenu)
         {
             return;
         }
-
+        if (!photonView.isMine && PhotonNetwork.connected == true)
+        {
+            return;
+        }
+        print("ROTATE");
         mainMenu.transform.position = menuPos.position;
-        mainMenu.transform.rotation = menuPos.rotation;
+        mainMenu.transform.localRotation = Quaternion.Euler(90, 0, 0);
+
 
     }
 

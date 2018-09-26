@@ -1418,7 +1418,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1611546204485326}
-  m_LocalRotation: {x: 0.7070394, y: 0.00023183221, z: -0.00027081365, w: 0.7071741}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.05546897, y: -1.9239714, z: -0.8728323}
   m_LocalScale: {x: 2.517001, y: 2.5170004, z: 3.1662016}
   m_Children:
@@ -3045,8 +3045,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114511774641040060}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 1
+  instantiationId: 1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114122970484779822
@@ -3201,8 +3201,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114122970484779822}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 5
+  instantiationId: 5
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114293974986198682
@@ -3227,8 +3227,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114621021018163798}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 2
+  instantiationId: 2
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114307670833463820
@@ -3298,6 +3298,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4477240162172066}
   cameraPos: {fileID: 0}
+  menu: {fileID: 0}
+  menuTarget: {fileID: 4424994594586772}
 --- !u!114 &114396644212876720
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3495,8 +3497,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114404143882322270}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 4
+  instantiationId: 4
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114621021018163798
@@ -3583,7 +3585,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271435505246942}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46d81223a27f35c4aadd8443f89df0e1, type: 3}
   m_Name: 
@@ -3626,8 +3628,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114134331859269142}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 3
+  instantiationId: 3
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114817891955258832
