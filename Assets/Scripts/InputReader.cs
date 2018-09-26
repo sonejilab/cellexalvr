@@ -16,6 +16,7 @@ public class InputReader : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public NetworkCenter networkPrefab;
+    public CombinedGraph combinedGraphPrefab;
 
     public TextMeshPro graphName;
 
@@ -157,8 +158,9 @@ public class InputReader : MonoBehaviour
         int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
         {
-            Graph newGraph = graphManager.CreateGraph();
-            newGraph.GetComponent<GraphInteract>().isGrabbable = false;
+            //Graph newGraph = graphManager.CreateGraph();
+            CombinedGraph newGraph = Instantiate(combinedGraphPrefab);
+            // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
@@ -190,20 +192,23 @@ public class InputReader : MonoBehaviour
                         continue;
                     }
                     cellnames.Add(words[0]);
-                    xcoords.Add(float.Parse(words[1]));
-                    ycoords.Add(float.Parse(words[2]));
-                    zcoords.Add(float.Parse(words[3]));
+                    float x = float.Parse(words[1]);
+                    float y = float.Parse(words[2]);
+                    float z = float.Parse(words[3]);
+                    xcoords.Add(x);
+                    ycoords.Add(y);
+                    zcoords.Add(z);
+                    newGraph.UpdateMinMaxCoords(x, y, z);
                 }
                 if (fileIndex == 0)
                 {
                     totalNbrOfCells = xcoords.Count;
                 }
                 // we must wait for the graph to fully initialize before adding stuff to it
-                while (!newGraph.Ready())
-                    yield return null;
-                newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
-                newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
-                UpdateMinMax(newGraph, xcoords, ycoords, zcoords);
+                // more_cells while (!newGraph.Ready())
+                // more_cells   yield return null;
+                // more_cells newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
+                // more_cells newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
 
                 for (int i = 0; i < xcoords.Count; i += itemsThisFrame)
                 {
@@ -214,7 +219,8 @@ public class InputReader : MonoBehaviour
                     //print(maximumItemsPerFrame);
                     for (int j = i; j < (i + maximumItemsPerFrame) && j < xcoords.Count; ++j)
                     {
-                        graphManager.AddCell(newGraph, cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
+                        //graphManager.AddCell(newGraph, cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
+                        newGraph.AddGraphPoint(cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
                         itemsThisFrame++;
                     }
                     // wait for end of frame
@@ -236,30 +242,38 @@ public class InputReader : MonoBehaviour
                 }
                 fileIndex++;
                 // tell the graph that the info text is ready to be set
-                newGraph.SetInfoText();
-                newGraph.GetComponent<GraphInteract>().isGrabbable = true;
+                // more_cells newGraph.SetInfoText();
+                // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = true;
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                newGraph.CreateColliders();
+                // more_cells newGraph.CreateColliders();
                 stopwatch.Stop();
                 CellexalLog.Log("Created " + newGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
-                if (doLoad)
-                {
-                    graphManager.LoadPosition(newGraph, fileIndex);
-                }
+                // more_cells if (doLoad)
+                // more_cells {
+                // more_cells     graphManager.LoadPosition(newGraph, fileIndex);
+                // more_cells }
                 //mdsFileStream.Close();
                 mdsStreamReader.Close();
                 // if (debug)
                 //     newGraph.CreateConvexHull();
             }
+            // more_cells
+
+            newGraph.SliceClustering();
+           
             CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
 
+        // more_cells
+        CellexalEvents.GraphsLoaded.Invoke();
+        loaderController.loaderMovedDown = true;
+        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
+        // more_cells
+        yield break;
         ReadAttributeFiles(path);
         ReadBooleanExpressionFiles(path);
 
-        loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
         if (debug)
         {
             ReadNetworkFiles(0);
@@ -964,7 +978,7 @@ public class InputReader : MonoBehaviour
             this.s = s;
             this.f = f;
         }
-        
+
         public int CompareTo(StringFloatPair other)
         {
             return f.CompareTo(other.f);
