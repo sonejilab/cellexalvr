@@ -43,7 +43,6 @@ public class LaserPointerController : MonoBehaviour
     // Call every 3rd frame.
     private void Frame5Update()
     {
-        print("Always active = " + alwaysActive);
         RaycastHit hit;
         transform.localRotation = Quaternion.Euler(15f, 0, 0);
         Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskMenu);

@@ -240,7 +240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1969411457497442
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +317,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1909688672033302}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.28620508, z: -0.001}
+  m_LocalPosition: {x: 0, y: 0.04389649, z: -0.001}
   m_LocalScale: {x: 0.8779297, y: 0.0035117187, z: 1}
   m_Children:
   - {fileID: 4299312697832092}
@@ -356,9 +356,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1546507171833466}
-  m_LocalRotation: {x: 0.023138115, y: 0.70672816, z: -0.023138115, w: 0.70672816}
-  m_LocalPosition: {x: 1.4669849, y: 1.1995323, z: -0.4735655}
-  m_LocalScale: {x: 2.0600271, y: 2.0600271, z: 2.0600271}
+  m_LocalRotation: {x: 0.021046689, y: 0.70679355, z: -0.021046689, w: 0.70679355}
+  m_LocalPosition: {x: 1.683, y: 1.2, z: 0}
+  m_LocalScale: {x: 2.0029879, y: 2.0029879, z: 2.0029879}
   m_Children:
   - {fileID: 4268027343346444}
   - {fileID: 4837238345390544}
@@ -368,7 +368,7 @@ Transform:
   - {fileID: 4310061517961730}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 3.7500002, y: 90.00001, z: 0}
+  m_LocalEulerAnglesHint: {x: 3.4110003, y: 90.00001, z: 0}
 --- !u!4 &4562163557657150
 Transform:
   m_ObjectHideFlags: 1
@@ -954,9 +954,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1180041564275266}
-  m_Text: 'Group: 0
-
-    Gene: Hspa5'
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1

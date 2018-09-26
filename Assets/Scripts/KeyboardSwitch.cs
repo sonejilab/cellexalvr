@@ -10,7 +10,7 @@ public class KeyboardSwitch : MonoBehaviour
 
     void Start()
     {
-        SetKeyboardVisible(true);
+        SetKeyboardVisible(false);
     }
 
     /// <summary>

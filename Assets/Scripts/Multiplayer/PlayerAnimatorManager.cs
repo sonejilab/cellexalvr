@@ -62,8 +62,8 @@ namespace Com.MyCompany.MyGame
             target.rotation = cameraPos.rotation;
             target.Rotate(90, 0, 0);
 
-            menuTarget.position = menu.position;
-            menuTarget.rotation = menu.rotation;
+            //menuTarget.position = menu.position;
+            //menuTarget.rotation = menu.rotation;
             //menuTarget.Rotate(90, 0, 0);
 
         }

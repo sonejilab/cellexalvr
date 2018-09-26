@@ -15731,6 +15731,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4501932576513024}
   cameraPos: {fileID: 0}
+  menu: {fileID: 0}
+  menuTarget: {fileID: 0}
 --- !u!114 &114493260904390758
 MonoBehaviour:
   m_ObjectHideFlags: 1

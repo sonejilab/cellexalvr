@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VRTK;
 
 /// <summary>
 /// Abstract general purpose class that represents a button on the menu.
@@ -90,8 +91,10 @@ public abstract class CellexalButton : MonoBehaviour
             RaycastHit hit;
             raycastingSource = referenceManager.rightLaser.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
-            if (hit.collider && hit.transform == transform)
+            //if (hit.collider) print(hit.collider.transform.gameObject.name);
+            if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled)
             {
+
                 inside = true;
                 frameCount = 0;
                 controllerInside = inside;

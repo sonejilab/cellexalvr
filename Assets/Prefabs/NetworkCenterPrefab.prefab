@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 65426757975555904}
   - component: {fileID: 212670547573808694}
   - component: {fileID: 114601644599353228}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Recalculate 3D button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 65132475085316250}
   - component: {fileID: 212050481961902904}
   - component: {fileID: 114946724007853856}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Recalculate 2D button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 65663185343727662}
   - component: {fileID: 212595322109270854}
   - component: {fileID: 114633175378518256}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Switch To 3D button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 65985393791794690}
   - component: {fileID: 212976537025818506}
   - component: {fileID: 114164701368190424}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Switch To 2D button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}

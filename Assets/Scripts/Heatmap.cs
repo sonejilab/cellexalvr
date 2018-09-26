@@ -162,7 +162,7 @@ public class Heatmap : MonoBehaviour
             raycastingSource = referenceManager.rightLaser.transform;
             //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
             RaycastHit hit;
-            int layerMask = 1 << LayerMask.NameToLayer("KeyboardLayer");
+            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
             if (hit.collider && hit.transform == transform)
             {

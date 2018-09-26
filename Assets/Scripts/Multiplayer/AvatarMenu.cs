@@ -76,7 +76,8 @@ public class AvatarMenu : Photon.MonoBehaviour
         }
         print("ROTATE");
         mainMenu.transform.position = menuPos.position;
-        mainMenu.transform.localRotation = Quaternion.Euler(90, 0, 0);
+        mainMenu.transform.Rotate(90, 0, 0);
+        //mainMenu.transform.localRotation = Quaternion.Euler(90, 0, 0);
 
 
     }

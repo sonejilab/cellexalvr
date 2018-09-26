@@ -141,7 +141,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.Keyboard:
-                //keyboard.SetKeyboardVisible(true);
+                keyboard.SetKeyboardVisible(true);
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightLaser.transform.localRotation = Quaternion.identity;
                 break;
@@ -206,7 +206,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         {
             rightLaser.ToggleLaser(false);
             leftLaser.enabled = false;
-            //keyboard.SetKeyboardVisible(false);
+            keyboard.SetKeyboardVisible(false);
             //rightLaser.enabled = false;
             //referenceManager.gameManager.InformActivateKeyboard(false);
         }
@@ -238,7 +238,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.enabled = true;
                 break;
             case Model.Keyboard:
-                //keyboard.SetKeyboardVisible(true);
+                keyboard.SetKeyboardVisible(true);
                 //rightLaser.enabled = true;
                 rightLaser.ToggleLaser(true);
                 break;
@@ -275,7 +275,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         }
         rightLaser.ToggleLaser(false);
         leftLaser.enabled = false;
-        //keyboard.SetKeyboardVisible(false);
+        keyboard.SetKeyboardVisible(false);
         //referenceManager.gameManager.InformActivateKeyboard(false);
         drawTool.SetActive(false);
         if (inMenu)

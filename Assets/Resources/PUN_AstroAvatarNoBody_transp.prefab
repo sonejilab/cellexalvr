@@ -669,7 +669,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1661536725163316
 GameObject:
   m_ObjectHideFlags: 1
@@ -3045,8 +3045,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114511774641040060}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 1
-  instantiationId: 1
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114122970484779822
@@ -3201,8 +3201,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114122970484779822}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 5
-  instantiationId: 5
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114293974986198682
@@ -3227,8 +3227,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114621021018163798}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 2
-  instantiationId: 2
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114307670833463820
@@ -3497,8 +3497,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114404143882322270}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 4
-  instantiationId: 4
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114621021018163798
@@ -3628,8 +3628,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114134331859269142}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 3
-  instantiationId: 3
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114817891955258832
