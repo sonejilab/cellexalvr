@@ -5,6 +5,11 @@ using VRTK;
 /// </summary>
 public class LasersButton : CellexalToolButton
 {
+    protected override void Awake()
+    {
+        base.Awake();
+        TurnOn();
+    }
     protected override string Description
     {
         get { return "Toggle Lasers"; }

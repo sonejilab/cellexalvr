@@ -24,6 +24,7 @@ public class NetworkCenter : MonoBehaviour
     public List<Color> combinedArcsColors;
     public NetworkHandler Handler { get; set; }
     public ReferenceManager referenceManager;
+    public int selectionNr;
 
 
     public float MaxNegPcor { get; set; }
@@ -40,6 +41,9 @@ public class NetworkCenter : MonoBehaviour
             rand = new System.Random(value);
         }
     }
+    public bool Enlarged { get; private set; }
+    public bool isReplacement = false;
+    public enum Layout { TWO_D, THREE_D }
 
     private ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up above the pedestal gameobject when it's enlarged.
@@ -50,10 +54,8 @@ public class NetworkCenter : MonoBehaviour
     private Vector3 oldScale;
     private Quaternion oldRotation;
     private Transform oldParent;
-    public bool Enlarged { get; private set; }
     private bool enlarge = false;
     private int numColliders = 0;
-    public bool isReplacement = false;
     private List<NetworkNode> nodes = new List<NetworkNode>();
     [HideInInspector]
     public NetworkCenter replacing;
@@ -62,7 +64,6 @@ public class NetworkCenter : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private NetworkGenerator networkGenerator;
     private GameManager gameManager;
-    public enum Layout { TWO_D, THREE_D }
     private Layout currentLayout;
     private bool[] layoutsCalculated = { false, false };
     private bool calculatingLayout = false;
@@ -1015,17 +1016,18 @@ public class NetworkCenter : MonoBehaviour
         string networkImageFilePath = networkImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
         bitmap.Save(networkImageFilePath, ImageFormat.Png);
         CellexalLog.Log("Saved " + name + " as an image at " + networkImageFilePath);
-        StartCoroutine(LogHeatmap(networkImageFilePath));
+        StartCoroutine(LogNetwork(networkImageFilePath));
 
 
     }
     /// <summary>
     /// Calls R logging function to save network for session report.
     /// </summary>
-    IEnumerator LogHeatmap(string networkImageFilePath)
+    IEnumerator LogNetwork(string networkImageFilePath)
     {
-        string args = networkImageFilePath;
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\heatmap_report.R";
+        string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
+        string args = CellexalUser.UserSpecificFolder + " " + networkImageFilePath + " " + groupingsFilepath;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
         CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();

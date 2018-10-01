@@ -26,6 +26,6 @@ if ( is.na( topNodes) ) {
 	topNodes = 20
 }
 
-cellexalObj <- loadObj(file.path(datadir, "cellexalObj.RData"))
+cellexalObj <- loadObject(file.path(datadir, "cellexalObj.RData"))
 
 logNetwork(cellexalObj, genes, heatmap_png, grouping, ontology = ontology, topNodes = topNodes )

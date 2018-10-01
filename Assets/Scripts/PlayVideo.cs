@@ -53,8 +53,11 @@ public class PlayVideo : MonoBehaviour {
 
     public void StopVideo()
     {
+        if(audioSource)
+        {
+            audioSource.Stop();
+        }
         videoPlayer.Stop();
-        audioSource.Stop();
     }
 
     IEnumerator PlayVid()

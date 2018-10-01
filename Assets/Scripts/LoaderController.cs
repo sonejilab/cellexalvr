@@ -32,6 +32,7 @@ public class LoaderController : MonoBehaviour
     [HideInInspector]
     public bool loaderMovedDown = false;
     public SaveScene savescene;
+    public GameObject keyboard;
     private GameManager gameManager;
 
     void Start()
@@ -113,6 +114,7 @@ public class LoaderController : MonoBehaviour
         {
             finalPosition = transform.position + distance;
         }
+        keyboard.SetActive(false);
         moving = true;
     }
 
@@ -215,5 +217,6 @@ public class LoaderController : MonoBehaviour
             loaderMovedDown = false;
             MoveLoader(new Vector3(0f, 2f, 0f), 2f);
         }
+        keyboard.SetActive(true);
     }
 }

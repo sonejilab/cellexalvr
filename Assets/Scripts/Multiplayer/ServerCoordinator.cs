@@ -43,7 +43,7 @@ class ServerCoordinator : Photon.MonoBehaviour
         Debug.Log("Recieved message to color all graphs by " + geneName);
         referenceManager.cellManager.ColorGraphsByGene(geneName); //, referenceManager.graphManager.GeneExpressionColoringMethod);
         string emptyString = "";
-        referenceManager.keyboardStatus.setOutput(ref emptyString);
+        referenceManager.keyboardStatus.SetOutput(ref emptyString);
         referenceManager.autoCompleteList.ClearList();
     }
 

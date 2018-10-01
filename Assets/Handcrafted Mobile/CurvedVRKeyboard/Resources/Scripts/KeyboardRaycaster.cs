@@ -23,6 +23,7 @@ namespace CurvedVRKeyboard
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
         private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+        private CurvedVRKeyboard.KeyboardItem lastHitKey = null;
 
         [SerializeField, HideInInspector]
         private string clickInputName;
@@ -43,7 +44,7 @@ namespace CurvedVRKeyboard
             rayLength = Vector3.Distance(raycastingSource.position, target.transform.position) * (minRaylengthMultipler +
                                                                                                   (Mathf.Abs(target.transform.lossyScale.x) + Mathf.Abs(target.transform.lossyScale.y) + Mathf.Abs(target.transform.lossyScale.z)));
             if ((referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers || this.gameObject.name == "FolderKeyboard")
             {
                 RayCastKeyboard();
             }
@@ -55,6 +56,7 @@ namespace CurvedVRKeyboard
         /// </summary>
         private void RayCastKeyboard()
         {
+            raycastingSource = referenceManager.rightLaser.transform;
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit, rayLength, layer))
             {         // If any key was hit
@@ -63,6 +65,7 @@ namespace CurvedVRKeyboard
                 {         // Hit may occur on item without script
                     ChangeCurrentKeyItem(focusedKeyItem);
                     keyItemCurrent.Hovering();
+                    lastHitKey = keyItemCurrent;
 #if !UNITY_HAS_GOOGLEVR
                     if (device.GetPressDown(triggerButton))
                     {        // If key clicked
@@ -73,6 +76,10 @@ namespace CurvedVRKeyboard
                         keyboardStatus.HandleClick(keyItemCurrent);
                         referenceManager.gameManager.InformKeyClicked(keyItemCurrent);
                     }
+                }
+                if (focusedKeyItem == null)
+                {
+                    lastHitKey.StopHovering();
                 }
             }
             else if (keyItemCurrent != null)

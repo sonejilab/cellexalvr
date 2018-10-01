@@ -24,6 +24,7 @@ public class PanelRaycaster : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private ClickablePanel lastHit = null;
+    
     private ControllerModelSwitcher controllerModelSwitcher;
 
     private void Start()
@@ -55,17 +56,18 @@ public class PanelRaycaster : MonoBehaviour
 
     private void Update()
     {
-        var raycastingSource = rightController.transform;
-        var device = SteamVR_Controller.Input((int)rightController.index);
-        var ray = new Ray(raycastingSource.position, raycastingSource.forward);
         if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
-            || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers || this.gameObject.name == "Keyboard Folder Search")
         {
+            var raycastingSource = referenceManager.rightLaser.transform;
+            var device = SteamVR_Controller.Input((int)rightController.index);
+            var ray = new Ray(raycastingSource.position, raycastingSource.forward);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
                 // if we hit something this frame.
                 var hitPanel = hit.transform.gameObject.GetComponent<ClickablePanel>();
+                var hitKey = hit.transform.gameObject.GetComponent<CurvedVRKeyboard.KeyboardItem>();
                 if (hitPanel != null)
                 {
                     if (lastHit != null && lastHit != hitPanel)
@@ -86,6 +88,7 @@ public class PanelRaycaster : MonoBehaviour
                     lastHit.SetHighlighted(false);
                     lastHit = null;
                 }
+
             }
             else if (lastHit != null)
             {

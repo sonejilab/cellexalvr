@@ -13,6 +13,7 @@ public class HeatmapGenerator : MonoBehaviour
     public ReferenceManager referenceManager;
     public GameObject heatmapPrefab;
     public ErrorMessageController errorMessageController;
+    public int selectionNr;
 
     public bool GeneratingHeatmaps { get; private set; }
 
@@ -27,7 +28,6 @@ public class HeatmapGenerator : MonoBehaviour
     private ArrayList data;
     private Thread t;
     private SteamVR_Controller.Device device;
-    private int heatmapsCreated = 0;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
     public UnityEngine.Color HighlightMarkerColor { get; private set; }
@@ -172,13 +172,13 @@ public class HeatmapGenerator : MonoBehaviour
                 yield return null;
 
             // Start generation of new heatmap in R
-            int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
+            selectionNr = selectionToolHandler.fileCreationCtr - 1;
             //string home = Directory.GetCurrentDirectory();
 
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
-            string heatmapDirectory = CellexalUser.UserSpecificFolder + @"\Output";
+            string heatmapDirectory = CellexalUser.UserSpecificFolder + @"\Heatmap";
             string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
-            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + fileCreationCtr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(heatmapDirectory));
@@ -218,7 +218,6 @@ public class HeatmapGenerator : MonoBehaviour
             heatmap.BuildTexture(selection, outputFilePath);
             //heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
-            heatmapsCreated++;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
         }
@@ -227,6 +226,7 @@ public class HeatmapGenerator : MonoBehaviour
     public void AddHeatmapToList(Heatmap heatmap)
     {
         heatmapList.Add(heatmap);
+        heatmap.selectionNr = selectionNr;
     }
 
 }

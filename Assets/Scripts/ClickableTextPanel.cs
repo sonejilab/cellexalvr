@@ -77,8 +77,12 @@ public class ClickableTextPanel : ClickablePanel
             referenceManager.cellManager.ColorByIndex(NameOfThing);
             referenceManager.gameManager.InformColorByIndex(NameOfThing);
         }
+        else if (name == "Clear")
+        {
+            referenceManager.keyboardStatusFolder.ClearKey();
+        }
         string emptyString = "";
-        referenceManager.keyboardStatus.setOutput(ref emptyString);
+        referenceManager.keyboardStatus.SetOutput(ref emptyString);
         referenceManager.autoCompleteList.ClearList();
     }
 }

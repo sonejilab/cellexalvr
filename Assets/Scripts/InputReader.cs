@@ -134,6 +134,27 @@ public class InputReader : MonoBehaviour
     }
 
     /// <summary>
+    /// Calls R logging function to start the logging session.
+    /// </summary>
+    IEnumerator LogStart()
+    {
+        string args = CellexalUser.UserSpecificFolder;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
+        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+    }
+
+    /// <summary>
     /// Coroutine to create graphs.
     /// </summary>
     /// <param name="path"> The path to the folder where the files are. </param>
@@ -399,6 +420,7 @@ public class InputReader : MonoBehaviour
         stopwatch.Stop();
         CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
         LoadPreviousGroupings();
+        StartCoroutine(LogStart());
     }
 
     /// <summary>

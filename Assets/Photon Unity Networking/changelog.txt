@@ -905,7 +905,7 @@ Added: RoomInfo class, as base for Room. The RoomInfo is what you get in room li
 Added: Room.SetCustomProperties() and PhotonPlayer.SetCustomProperties() to add/update custom properties to players or rooms. The key of those must be string! You can't currently delete customProperties from the server (but set them null). This is likely to change.
 Added: Room.customProperties and PhotonPlayer.customProperties as getter for the custom properties you set. These sync once set.
 Changed: Custom room properties are no longer automatically listed in the lobby! see CreateRoom() note below.
-Added: CreateRoom() overload that takes string[] propsToListInLobby as last parameter. This defines which custom properties of your room get into the lobby. By default no other props get listed. So if you want to set "map" and have that in the lobby, apply it by CreateRoom().
+Added: CreateRoom() overload that takes string[] propsToListInLobby as last parameter. This defines which custom properties of your room get into the lobby. By default no other props get listed. So if you want to set "map" and have that in the lobby, f it by CreateRoom().
 Added: Check if values are changed more than a minimum before they are sent. Floating point precision for positions and rotations cause many updates and messages, so these thresholds help skip updates that are too tiny to notice. See note below.
 Added: PhotonNetwork precisionForVectorSynchronization, precisionForQuaternionSynchronization, precisionForFloatSynchronization properties.
 Added: Option to not join the lobby and respective callback. Use PhotonNetwork.autoJoinLobby to set and implement OnConnectedToMaster() instead of OnJoinedLobby(). You can join random games, create or join named games just fine, without the lobby.

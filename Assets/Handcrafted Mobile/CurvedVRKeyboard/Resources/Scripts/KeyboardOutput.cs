@@ -5,7 +5,7 @@ public class KeyboardOutput : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public KeyboardItem spaceBar;
-    private TextMesh textMesh;
+    public TextMesh textMesh;
     private string text;
 
     private CellManager cellManager;
@@ -37,7 +37,7 @@ public class KeyboardOutput : MonoBehaviour
         }
     }
 
-    public void SendToTarget()
+    public virtual void SendToTarget()
     {
         switch (nextOutputType)
         {

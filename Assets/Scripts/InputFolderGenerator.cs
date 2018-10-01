@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System;
+using System.Linq;
 
 /// <summary>
 /// Generates the boxes that represents folders with input data.
@@ -33,8 +34,11 @@ public class InputFolderGenerator : MonoBehaviour
     /// <summary>
     /// Generates the boxes that represent folders.
     /// </summary>
-    public void GenerateFolders()
+    /// <param name="filter">String filter to search for specific data folder directory.</param>
+    public void GenerateFolders(string filter = "")
     {
+        DestroyFolders();
+        
         string dataDirectory;
         if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
         {
@@ -55,22 +59,14 @@ public class InputFolderGenerator : MonoBehaviour
             return;
         }
         CellexalLog.Log("Started generating folders from " + CellexalLog.FixFilePath(dataDirectory));
-
         var nfolder = 0;
         foreach (string directory in directories)
         {
-            
-            Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
-            GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector, Quaternion.identity);
-            newFolder.transform.parent = transform;
-            newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
-            newFolder.transform.Rotate(0, -90f, 0);
-            newFolder.GetComponentInChildren<CellsToLoad>().SavePosition();
-            nfolder++;
+
             int forwardSlashIndex = directory.LastIndexOf('/');
             int backwardSlashIndex = directory.LastIndexOf('\\');
             string croppedDirectoryName;
-            
+
             // Handle both forwardslash and backwardslash
             if (backwardSlashIndex > forwardSlashIndex)
             {
@@ -80,11 +76,21 @@ public class InputFolderGenerator : MonoBehaviour
             {
                 croppedDirectoryName = directory.Substring(forwardSlashIndex + 1);
             }
+            if (croppedDirectoryName.ToLower().Contains(filter))
+            {
+                Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
+                GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector, Quaternion.identity);
+                newFolder.transform.parent = transform;
+                newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
+                newFolder.transform.Rotate(0, -90f, 0);
+                newFolder.GetComponentInChildren<CellsToLoad>().SavePosition();
+                nfolder++;
 
-            // Set text on folder box
-            newFolder.GetComponentInChildren<TextMesh>().text = croppedDirectoryName;
-            newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
-            newFolder.gameObject.name = croppedDirectoryName + "_box";
+                // Set text on folder box
+                newFolder.GetComponentInChildren<TextMesh>().text = croppedDirectoryName;
+                newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
+                newFolder.gameObject.name = croppedDirectoryName + "_box";
+            }
         }
     }
 

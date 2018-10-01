@@ -159,12 +159,12 @@ public abstract class CellexalToolButton : CellexalButton
         }
     }
 
-    private void TurnOn()
+    protected void TurnOn()
     {
         SetButtonActivated(true);
     }
 
-    private void TurnOff()
+    protected void TurnOff()
     {
         SetButtonActivated(false);
     }

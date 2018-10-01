@@ -20,6 +20,7 @@ public class Heatmap : MonoBehaviour
     public GameObject confirmQuad;
     public GameObject movingQuadX;
     public GameObject movingQuadY;
+    public int selectionNr;
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -1179,11 +1180,10 @@ public class Heatmap : MonoBehaviour
     IEnumerator LogHeatmap(string heatmapImageDirectory)
     {
         string genesFilePath = heatmapImageDirectory + "\\" + name + ".txt";
-        string nr = name.Split('_')[1];
-        string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + nr + ".txt";
+        string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
         string heatmapImageFilePath = heatmapImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
-        string args = genesFilePath + " " + heatmapImageFilePath + " " + groupingsFilepath;
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\heatmap_report.R";
+        string args = CellexalUser.UserSpecificFolder + " " + genesFilePath + " " + heatmapImageFilePath + " " + groupingsFilepath;
+        string rScriptFilePath = Application.streamingAssetsPath + @"\R\logHeatmap.R";
         CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();

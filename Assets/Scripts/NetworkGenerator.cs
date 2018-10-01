@@ -16,6 +16,7 @@ public class NetworkGenerator : MonoBehaviour
     public Material networkLineDefaultMaterial;
     public List<NetworkHandler> networkList = new List<NetworkHandler>();
     public int objectsInSky;
+    public int selectionNr;
 
     public bool GeneratingNetworks { get; private set; }
 
@@ -149,8 +150,8 @@ public class NetworkGenerator : MonoBehaviour
 
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
         string home = Directory.GetCurrentDirectory();
-        int fileCreationCtr = selectionToolHandler.fileCreationCtr - 1;
-        string args = home + " " + selectionToolHandler.DataDir + " " + (selectionToolHandler.fileCreationCtr - 1) + " " + CellexalUser.UserSpecificFolder;
+        selectionNr = selectionToolHandler.fileCreationCtr - 1;
+        string args = home + " " + selectionToolHandler.DataDir + " " + selectionNr + " " + CellexalUser.UserSpecificFolder;
         rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
         CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
@@ -205,6 +206,7 @@ public class NetworkGenerator : MonoBehaviour
         handler.AddNetwork(network);
         network.Handler = handler;
         network.name = handler.name + name;
+        network.selectionNr = selectionNr;
         graphManager.AddNetwork(handler);
         networkList.Add(handler);
         network.LayoutSeed = layoutSeed;

@@ -7,7 +7,7 @@ public class ClearAllDrawnLinesWithAColor : CellexalButton
 {
     protected override string Description
     {
-        get { return "Change the color of the draw tool"; }
+        get { return ""; }
     }
 
     public SpriteRenderer buttonRenderer;

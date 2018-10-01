@@ -86,8 +86,8 @@ public class ReferenceManager : MonoBehaviour
     public GameObject calculatorCluster;
     #endregion
 
-    #region Keyboard
-    [Header("Keyboard")]
+    #region GeneKeyboard
+    [Header("Gene Keyboard")]
     public KeyboardSwitch keyboard;
     public KeyboardStatus keyboardStatus;
     public KeyboardOutput keyboardOutput;
@@ -98,4 +98,10 @@ public class ReferenceManager : MonoBehaviour
 
     #endregion
 
+    #region FolderKeyboard
+    [Header("Folder Keyboard")]
+    public KeyboardStatus keyboardStatusFolder;
+    public KeyboardOutput keyboardOutputFolder;
+
+    #endregion
 }

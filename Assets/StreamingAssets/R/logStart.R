@@ -10,7 +10,7 @@ if ( is.na(sessionString ) ){
 	sessionString = NULL
 }
 
-cellexalObj <- loadObj(file.path(datadir, "cellexalObj.RData"))
+cellexalObj <- loadObject(file.path(datadir, "cellexalObj.RData"))
 
 cellexalObj = sessionPath(cellexalObj, sessionString )
 lockedSave(cellexalObj)
