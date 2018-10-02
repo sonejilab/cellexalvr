@@ -6,6 +6,7 @@ public class KeyboardOutput : MonoBehaviour
     public ReferenceManager referenceManager;
     public KeyboardItem spaceBar;
     public TextMesh textMesh;
+    public GameObject description;
     private string text;
 
     private CellManager cellManager;
@@ -71,12 +72,20 @@ public class KeyboardOutput : MonoBehaviour
     {
         text += c;
         textMesh.text += c;
+        if (description.activeSelf)
+        {
+            description.SetActive(false);
+        }
     }
 
     public void RemoveLetter()
     {
         text = text.Remove(text.Length - 1, 1);
         textMesh.text = text;
+        if (textMesh.text.Equals(string.Empty))
+        {
+            description.SetActive(true);
+        }
     }
 
     public void SetText(string text)
@@ -89,6 +98,7 @@ public class KeyboardOutput : MonoBehaviour
     {
         text = "";
         textMesh.text = "";
+        description.SetActive(true);
     }
 }
 
