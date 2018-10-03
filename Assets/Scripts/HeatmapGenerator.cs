@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CellexalExtensions;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -175,16 +176,16 @@ public class HeatmapGenerator : MonoBehaviour
             selectionNr = selectionToolHandler.fileCreationCtr - 1;
             //string home = Directory.GetCurrentDirectory();
 
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\make_heatmap.R";
-            string heatmapDirectory = CellexalUser.UserSpecificFolder + @"\Heatmap";
-            string outputFilePath = heatmapDirectory + @"\" + heatmapName + ".txt";
+            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
+            string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
+            string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
             string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
-                CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(heatmapDirectory));
+                CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+            CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));

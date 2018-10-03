@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CellexalExtensions;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -148,13 +149,14 @@ public class NetworkGenerator : MonoBehaviour
 
         // generate the files containing the network information
 
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
-        string home = Directory.GetCurrentDirectory();
-        string groupingFilePath = CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt";
-        selectionNr = selectionToolHandler.fileCreationCtr - 1;
-        string args = groupingFilePath + " " + CellexalUser.UserSpecificFolder + " " + " " + CellexalUser.UserSpecificFolder + @"\Resources\Networks";
-        rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
-        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        //string home = Directory.GetCurrentDirectory();
+        //selectionNr = selectionToolHandler.fileCreationCtr - 1;
+        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
+        string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").FixFilePath();
+        string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").FixFilePath();
+        string args = groupingFilePath + " " + CellexalUser.UserSpecificFolder + " " + " " + networkResources;
+        rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_networks.R").FixFilePath();
+        CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));

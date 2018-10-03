@@ -1,4 +1,6 @@
-﻿namespace CellexalExtensions
+﻿using System.IO;
+
+namespace CellexalExtensions
 {
 
     public static class Definitions
@@ -52,6 +54,13 @@
             }
 
             return colors;
+        }
+        public static string FixFilePath(this string s)
+        {
+            char directorySeparatorChar = Path.DirectorySeparatorChar;
+            s = s.Replace('/', directorySeparatorChar);
+            s = s.Replace('\\', directorySeparatorChar);
+            return s;
         }
     }
 }

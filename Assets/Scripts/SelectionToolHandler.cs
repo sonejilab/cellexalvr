@@ -454,7 +454,7 @@ public class SelectionToolHandler : MonoBehaviour
         RObjectUpdating = true;
         // wait one frame to let ConfirmSelection finish.
         yield return null;
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
+        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
         string args = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellexalUser.UserSpecificFolder + " " + DataDir;
         CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
