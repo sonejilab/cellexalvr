@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
-[RequireComponent (typeof(AudioSource))]
 
 public class PlayVideo : MonoBehaviour {
 
@@ -11,10 +10,11 @@ public class PlayVideo : MonoBehaviour {
     //public VideoClip videoClip;
     //public RawImage image;
     public GameObject videoCanv;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private VideoSource videoSource;
-    private VideoClip videoClip;
     private VideoPlayer videoPlayer;
+    private string videoURL;
+    private AudioClip audioClip;
 
     //public GameObject videoCanv;
     //public string buttonDescr;
@@ -23,16 +23,20 @@ public class PlayVideo : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        Application.runInBackground = true;
+        //Application.runInBackground = true;
         videoPlayer = GetComponent<VideoPlayer>();
+        Application.targetFrameRate = (int)GetComponent<UnityEngine.Video.VideoPlayer>().frameRate;
         //videoPlayer.clip = videoClip;
         //StartCoroutine(PlayVid());
         //videoPlayer.Pause();
     }
 
-    public void StartVideo(VideoClip clip)
+    public void StartVideo(string url, AudioClip audio)
     {
-        videoClip = clip;
+        //videoClip = clip;
+        videoURL = url;
+        print(videoURL);
+        audioSource.clip = audio;
         if (!videoPlayer.isPlaying && videoPlayer.isPrepared)
         {
             videoPlayer.Play();
@@ -40,7 +44,7 @@ public class PlayVideo : MonoBehaviour {
         }
         if (!videoPlayer.isPlaying)
         {
-            Application.runInBackground = true;
+            //Application.runInBackground = true;
             StartCoroutine(PlayVid());
         }
         //videoPlayer.Pause();
@@ -53,8 +57,10 @@ public class PlayVideo : MonoBehaviour {
 
     public void StopVideo()
     {
-        if(audioSource)
+        print("STOP VIDEO");
+        if(audioSource != null)
         {
+            print("STOP AUDIO");
             audioSource.Stop();
         }
         videoPlayer.Stop();
@@ -65,29 +71,33 @@ public class PlayVideo : MonoBehaviour {
 
         //Add VideoPlayer to the GameObject
         //videoPlayer = gameObject.AddComponent<VideoPlayer>();
-
         //Add AudioSource
-        audioSource = gameObject.AddComponent<AudioSource>();
+        //audioSource = gameObject.AddComponent<AudioSource>();
+        //if (!audioSource)
+        //{
+        //    audioSource = gameObject.AddComponent<AudioSource>();
+        //}
 
         //Disable Play on Awake for both Video and Audio
         videoPlayer.playOnAwake = false;
-        audioSource.playOnAwake = false;
-        audioSource.Pause();
+        //audioSource.playOnAwake = false;
+        //audioSource.Pause();
+        //audioSource.clip = audioClip;
 
 
-        videoPlayer.source = VideoSource.VideoClip;
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.url = videoURL;
+        videoPlayer.Prepare();
 
 
         //Set Audio Output to AudioSource
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-
+        //videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
         //Assign the Audio from Video to AudioSource to be played
-        videoPlayer.EnableAudioTrack(0, true);
-        videoPlayer.SetTargetAudioSource(0, audioSource);
+        //videoPlayer.EnableAudioTrack(0, true);
+        //videoPlayer.SetTargetAudioSource(0, audioSource);
 
         //Set video To Play then prepare Audio to prevent Buffering
-        videoPlayer.clip = videoClip;
-        videoPlayer.Prepare();
+        //videoPlayer.clip = videoClip;
 
         //Wait until video is prepared
         WaitForSeconds waitTime = new WaitForSeconds(1);
@@ -107,14 +117,18 @@ public class PlayVideo : MonoBehaviour {
 
         //Play Video
         videoPlayer.Play();
-
-        //Play Sound
         audioSource.Play();
-
+        //Play Sound
+        //audioSource.Play();
         Debug.Log("Playing Video");
         while (videoPlayer.isPlaying)
         {
             Debug.LogWarning("Video Time: " + Mathf.FloorToInt((float)videoPlayer.time));
+            if (!videoCanv.activeSelf)
+            {
+                videoPlayer.Stop();
+                audioSource.Stop();
+            }
             yield return null;
         }
         Debug.Log("Done Playing Video");

@@ -79,7 +79,7 @@ public abstract class CellexalButton : MonoBehaviour
         {
             Click();
         }
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y > 0.7f)
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y < 0.5f)
         {
             HelpClick();
         }

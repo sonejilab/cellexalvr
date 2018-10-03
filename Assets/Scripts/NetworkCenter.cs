@@ -865,6 +865,7 @@ public class NetworkCenter : MonoBehaviour
         foreach (CombinedArc arc in combinedArcs)
         {
             var colorIndex = (int)(Mathf.Floor(((float)(arc.nArcsCombined - 1) / max) * combinedArcsColors.Count));
+            arc.gameObject.transform.localScale = Vector3.one * colorIndex;
             arc.renderer.startColor = combinedArcsColors[colorIndex];
             arc.renderer.endColor = combinedArcsColors[colorIndex];
         }

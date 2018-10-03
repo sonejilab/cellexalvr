@@ -150,8 +150,9 @@ public class NetworkGenerator : MonoBehaviour
 
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\update_grouping.R";
         string home = Directory.GetCurrentDirectory();
+        string groupingFilePath = CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt";
         selectionNr = selectionToolHandler.fileCreationCtr - 1;
-        string args = home + " " + selectionToolHandler.DataDir + " " + selectionNr + " " + CellexalUser.UserSpecificFolder;
+        string args = groupingFilePath + " " + CellexalUser.UserSpecificFolder + " " + " " + CellexalUser.UserSpecificFolder + @"\Resources\Networks";
         rScriptFilePath = Application.streamingAssetsPath + @"\R\make_networks.R";
         CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();

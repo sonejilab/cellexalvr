@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
-[RequireComponent(typeof(AudioSource))]
 
 public class VideoButton : CellexalButton
 {
@@ -14,7 +13,8 @@ public class VideoButton : CellexalButton
 
     //public VideoPlayer videoPlayer;
     public GameObject videoCanv;
-    public VideoClip clip;
+    public AudioClip audioClip;
+    public string url;
     public string buttonDescr;
     public GameObject videoManager;
     
@@ -36,8 +36,9 @@ public class VideoButton : CellexalButton
 
     public void StartVideo()
     {
+        print("Activate");
         videoCanv.SetActive(true);
-        videoManager.GetComponent<PlayVideo>().StartVideo(clip);
+        videoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
         infoMenu.SetActive(false);
         Exit();
     }
@@ -45,7 +46,6 @@ public class VideoButton : CellexalButton
     public void StopVideo()
     {
         videoCanv.SetActive(false);
-        videoManager.GetComponent<PlayVideo>().StopVideo();
         Exit();
     }
 
@@ -54,14 +54,16 @@ public class VideoButton : CellexalButton
     {
         if (buttonDescr.Equals("Close Video"))
         {
-            videoCanv.SetActive(false);
-            videoManager.GetComponent<PlayVideo>().StopVideo();
+            StopVideo();
+            print("Stop clicked");
             Exit();
         }
         if (buttonDescr.Equals("Play Video"))
         {
-            videoCanv.SetActive(true);
-            videoManager.GetComponent<PlayVideo>().StartVideo(clip);
+            //videoCanv.SetActive(true);
+            //videoManager.GetComponent<PlayVideo>().StartVideo(clip);
+            print("Start Video");
+            StartVideo();
             infoMenu.SetActive(false);
             Exit();
         }

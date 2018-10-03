@@ -16013,6 +16013,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoCanv: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!114 &114486224514559570
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -40,6 +40,10 @@ public class SubMenuButton : CellexalButton
     {
         foreach (Transform t in buttonsToDeactivate.transform)
         {
+            if (infoMenu != null)
+            {
+                infoMenu.SetActive(false);
+            }
             // skip all nested menues
             if (t.GetComponent<DynamicButtonMenu>() || t.GetComponent<NewFilterMenu>()) continue;
             // if this is a button, deactivate it

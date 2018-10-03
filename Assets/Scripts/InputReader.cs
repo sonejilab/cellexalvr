@@ -280,7 +280,7 @@ public class InputReader : MonoBehaviour
         ReadBooleanExpressionFiles(path);
 
         loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
+        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 4f);
         if (debug)
         {
             ReadNetworkFiles(0);
@@ -574,7 +574,7 @@ public class InputReader : MonoBehaviour
     private IEnumerator ReadNetworkFilesCoroutine(int layoutSeed)
     {
         CellexalLog.Log("Started reading network files");
-        string networkDirectory = Directory.GetCurrentDirectory() + @"\Resources\Networks";
+        string networkDirectory = CellexalUser.UserSpecificFolder + @"\Resources\Networks";
         if (!Directory.Exists(networkDirectory))
         {
             CellexalError.SpawnError("Error when generating networks", string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));

@@ -77,7 +77,7 @@ namespace CurvedVRKeyboard
                         referenceManager.gameManager.InformKeyClicked(keyItemCurrent);
                     }
                 }
-                if (focusedKeyItem == null)
+                if (focusedKeyItem == null && lastHitKey != null)
                 {
                     lastHitKey.StopHovering();
                 }
