@@ -857,7 +857,7 @@ public class NetworkCenter : MonoBehaviour
     }
 
     /// <summary>
-    /// Colors the combined arcs based on the their combined amount of arcs
+    /// Colors the combined arcs based on the their combined amount of arcs. Line width is also based on amount of arcs.
     /// </summary>
     /// <param name="max"> The number of arcs that were combined at most. </param>
     internal void ColorCombinedArcs(int max)
@@ -865,9 +865,10 @@ public class NetworkCenter : MonoBehaviour
         foreach (CombinedArc arc in combinedArcs)
         {
             var colorIndex = (int)(Mathf.Floor(((float)(arc.nArcsCombined - 1) / max) * combinedArcsColors.Count));
-            arc.gameObject.transform.localScale = Vector3.one * colorIndex;
-            arc.renderer.startColor = combinedArcsColors[colorIndex];
-            arc.renderer.endColor = combinedArcsColors[colorIndex];
+            arc.renderer.startWidth = colorIndex * 0.001f;
+            arc.renderer.endWidth = colorIndex * 0.001f;
+            //arc.renderer.startColor = combinedArcsColors[colorIndex];
+            //arc.renderer.endColor = combinedArcsColors[colorIndex];
         }
     }
 

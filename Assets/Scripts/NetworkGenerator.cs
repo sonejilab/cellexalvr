@@ -211,6 +211,7 @@ public class NetworkGenerator : MonoBehaviour
         network.name = handler.name + name;
         network.selectionNr = selectionNr;
         graphManager.AddNetwork(handler);
+        networkList.RemoveAll(item => item == null);
         networkList.Add(handler);
         network.LayoutSeed = layoutSeed;
         return network;

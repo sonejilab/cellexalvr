@@ -577,6 +577,7 @@ public class InputReader : MonoBehaviour
         string networkDirectory = CellexalUser.UserSpecificFolder + @"\Resources\Networks";
         if (!Directory.Exists(networkDirectory))
         {
+            print(string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
             CellexalError.SpawnError("Error when generating networks", string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
             yield break;
         }

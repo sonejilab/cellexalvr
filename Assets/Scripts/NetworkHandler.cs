@@ -12,8 +12,7 @@ public class NetworkHandler : MonoBehaviour
     public Material highlightMaterial;
     public List<NetworkCenter> Replacements { get; private set; }
     //public string NetworkHandlerName { get; internal set; }
-
-    [HideInInspector]
+    
     public List<NetworkCenter> networks = new List<NetworkCenter>();
 
     private ReferenceManager referenceManager;
@@ -158,6 +157,7 @@ public class NetworkHandler : MonoBehaviour
     internal void AddNetwork(NetworkCenter network)
     {
         networks.Add(network);
+        networks.RemoveAll(item => item == null);
     }
 
     /// <summary>

@@ -55,7 +55,9 @@ public class MenuWithTabs : MonoBehaviour
         {
             if (t.gameObject.name.Split('_')[1] == networkName)
             {
+                tabs.Remove(t);
                 Destroy(t.gameObject, 0.1f);
+
             }
         }
         //ResetTabButtonPosition();
