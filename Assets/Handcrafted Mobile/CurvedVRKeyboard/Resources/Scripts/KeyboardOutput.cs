@@ -72,7 +72,7 @@ public class KeyboardOutput : MonoBehaviour
     {
         text += c;
         textMesh.text += c;
-        if (description.activeSelf)
+        if (description && description.activeSelf)
         {
             description.SetActive(false);
         }
