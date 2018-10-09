@@ -841,5 +841,8 @@ public class CellManager : MonoBehaviour
     {
         statusDisplay.RemoveStatus(coloringInfoStatusId);
         recolored.Clear();
+        ClearLinesBetweenGraphPoints();
+
+
     }
 }

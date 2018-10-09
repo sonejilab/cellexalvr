@@ -24,9 +24,10 @@ public class CreateHeatmapButton : CellexalButton
 
     protected override void Click()
     {
-        SetButtonActivated(false);
+        Exit();
         heatmapGenerator.CreateHeatmap();
         CellexalEvents.HeatmapCreated.Invoke();
+        SetButtonActivated(false);
     }
 
     private void TurnOn()
