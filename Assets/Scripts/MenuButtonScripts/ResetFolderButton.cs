@@ -34,9 +34,9 @@ public class ResetFolderButton : CellexalButton
 
     protected override void Click()
     {
+        CloseSubMenu();
         referenceManager.loaderController.ResetFolders();
         referenceManager.gameManager.InformLoadingMenu();
-        CloseSubMenu();
     }
 
     void CloseSubMenu()
@@ -55,7 +55,8 @@ public class ResetFolderButton : CellexalButton
             foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
                 c.enabled = false;
         }
-        textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+        //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+        textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
         foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
         {
             b.SetButtonActivated(true);
