@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// This class represents the sub menu that pops up when the ToggleArcsButton is pressed.
@@ -92,7 +94,25 @@ public class ToggleArcsSubMenu : MenuWithTabs
             }
         }
         TurnOffAllTabs();
-        newTab.SetTabActive(GetComponent<Renderer>().enabled);
+        //newTab.SetTabActive(GetComponent<Renderer>().enabled);
         buttonPos = buttonPosOrigin;
     }
+
+    /// <summary>
+    /// Removes all tab buttons and creates new ones from the list of network handlers active in the scene.
+    /// 
+    /// </summary>
+    public void RefreshTabs()
+    {
+        var nhs = referenceManager.networkGenerator.networkList.FindAll(nh => nh != null);
+        print("nr of nhs: " + nhs.Count);
+        tabButtonPos = tabButtonPosOriginal;
+        foreach (NetworkHandler nh in nhs)
+        {
+            print("Destroying tab: " + nh.name.Split('_')[1]);
+            DestroyTab(nh.name.Split('_')[1]);
+            CreateToggleArcsButtons(nh.networks.ToArray());
+        }
+    }
 }
+

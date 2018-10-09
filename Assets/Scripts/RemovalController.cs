@@ -46,6 +46,7 @@ public class RemovalController : MonoBehaviour {
                     nc.BringBackOriginal();
                 }
                 referenceManager.arcsSubMenu.DestroyTab(objectToDelete.GetComponent<NetworkHandler>().name.Split('_')[1]); // Get last part of nw name   
+                referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             }
             delete = true;
         }

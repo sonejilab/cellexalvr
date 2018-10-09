@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -212,7 +213,7 @@ public class NetworkGenerator : MonoBehaviour
         network.selectionNr = selectionNr;
         graphManager.AddNetwork(handler);
         networkList.RemoveAll(item => item == null);
-        networkList.Add(handler);
+        if (!networkList.Contains(handler)) networkList.Add(handler);
         network.LayoutSeed = layoutSeed;
         return network;
     }

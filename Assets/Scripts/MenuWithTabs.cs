@@ -51,15 +51,19 @@ public class MenuWithTabs : MonoBehaviour
     /// <param name=""> The name of the tab to be destroyed (same as the network name corresponding to the tab). </param>
     public virtual void DestroyTab(string networkName)
     {
-        foreach (Tab t in tabs)
-        {
-            if (t.gameObject.name.Split('_')[1] == networkName)
-            {
-                tabs.Remove(t);
-                Destroy(t.gameObject, 0.1f);
+        Tab t = tabs.Find(tab => tab.gameObject.name.Split('_')[1].Equals(networkName));
+        print(t.name);
+        tabs.Remove(t);
+        Destroy(t.gameObject, 0.1f);
+        //foreach (Tab t in tabs)
+        //{
+        //    if (t.gameObject.name.Split('_')[1] == networkName)
+        //    {
+        //        tabs.Remove(t);
+        //        Destroy(t.gameObject, 0.1f);
 
-            }
-        }
+        //    }
+        //}
         //ResetTabButtonPosition();
         //tabs.Clear();
     }

@@ -175,7 +175,6 @@ MonoBehaviour:
     type: 2}
   standardMaterial: {fileID: 2100000, guid: 9cfe725c6e37d244a964b41189e1d31d, type: 2}
   highlightMaterial: {fileID: 2100000, guid: e333e1753c2fcf1458b8dd3da30b3466, type: 2}
-  neighbours: []
 --- !u!114 &114269250619962334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,6 +316,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+  referenceManager: {fileID: 0}
 --- !u!222 &222853809826507562
 CanvasRenderer:
   m_ObjectHideFlags: 1

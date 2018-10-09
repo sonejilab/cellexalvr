@@ -57,7 +57,7 @@ public class SubMenuButton : CellexalButton
     /// Show or hides the submenu
     /// </summary>
     /// <param name="activate"> True for showing the submenu, false for hiding. </param>
-    private void SetMenuActivated(bool activate)
+    public void SetMenuActivated(bool activate)
     {
         // Turn on or off the menu it self
         Renderer menuRenderer = menu.GetComponent<Renderer>();

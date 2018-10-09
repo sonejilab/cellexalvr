@@ -280,7 +280,7 @@ public class InputReader : MonoBehaviour
         ReadBooleanExpressionFiles(path);
 
         loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 4f);
+        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
         if (debug)
         {
             ReadNetworkFiles(0);
