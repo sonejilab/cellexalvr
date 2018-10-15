@@ -13,5 +13,6 @@ class CreateNewHeatmapButton : CellexalButton
         var heatmap = GetComponentInParent<Heatmap>();
         referenceManager.gameManager.InformCreateNewHeatmapFromSelection(heatmap.name);
         heatmap.CreateNewHeatmapFromSelection();
+        device.TriggerHapticPulse(2000);
     }
 }

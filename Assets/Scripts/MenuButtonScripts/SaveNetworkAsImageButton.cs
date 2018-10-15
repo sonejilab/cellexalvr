@@ -10,6 +10,7 @@
     protected override void Click()
     {
         parent.SaveNetworkAsImage();
+        device.TriggerHapticPulse(2000);
     }
 }
 

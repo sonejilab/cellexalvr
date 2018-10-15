@@ -14,6 +14,8 @@ public class GameMenu : MonoBehaviour
     public GUISkin Skin;
     public Vector2 WidthAndHeight = new Vector2(600, 400);
     private string roomName = "myLab";
+    private string password = "";
+    private string roomAndPass = "";
 
     private Vector2 scrollPos = Vector2.zero;
 
@@ -103,7 +105,7 @@ public class GameMenu : MonoBehaviour
 
         // Player name
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Player name:", GUILayout.Width(150));
+        GUILayout.Label("Player name:", GUILayout.Width(200));
         PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName);
         GUILayout.Space(158);
         if (GUI.changed)
@@ -115,25 +117,45 @@ public class GameMenu : MonoBehaviour
 
         GUILayout.Space(15);
 
-        // Join room by title
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Roomname:", GUILayout.Width(150));
+        GUILayout.Label("Roomname:", GUILayout.Width(200));
         this.roomName = GUILayout.TextField(this.roomName);
+        GUILayout.Space(158);
 
-        if (GUILayout.Button("Create Room", GUILayout.Width(150)))
-        {
-            PhotonNetwork.CreateRoom(this.roomName, new RoomOptions() { MaxPlayers = 10 }, null);
-        }
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Password(4 digit code):", GUILayout.Width(200));
+
+        this.password = GUILayout.PasswordField(this.password, "*"[0], 4, GUILayout.Width(100));
+
+        this.roomAndPass = this.roomName + this.password;
 
         GUILayout.EndHorizontal();
 
-        // Create a room (fails if exist!)
         GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
+        //GUILayout.FlexibleSpace();
         //this.roomName = GUILayout.TextField(this.roomName);
+        // Join room by title
+        // Create a room (fails if exist or if password does not comply with rules!)
+        if (GUILayout.Button("Create Room", GUILayout.Width(150)))
+        {
+            print(this.roomAndPass);
+            int n;
+            if (this.password.Length == 4 && int.TryParse(this.password, out n))
+            {
+                print("Create room: " + this.roomAndPass);
+                PhotonNetwork.CreateRoom(this.roomAndPass.ToLower(), new RoomOptions() { MaxPlayers = 10 }, null);
+            }
+            if (!(this.password.Length == 4) || !int.TryParse(this.password, out n))
+            {
+                print("Wrong");
+                ErrorDialog = "Password has to be of length 4 and contain only digits.";
+
+            }
+        }
         if (GUILayout.Button("Join Room", GUILayout.Width(150)))
         {
-            PhotonNetwork.JoinRoom(this.roomName);
+            PhotonNetwork.JoinRoom(this.roomAndPass);
         }
 
         GUILayout.EndHorizontal();
@@ -153,44 +175,44 @@ public class GameMenu : MonoBehaviour
         GUILayout.Space(15);
 
         // Join random room
-        GUILayout.BeginHorizontal();
+        //GUILayout.BeginHorizontal();
 
-        GUILayout.Label(PhotonNetwork.countOfPlayers + " users are online in " + PhotonNetwork.countOfRooms + " rooms.");
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Join Random", GUILayout.Width(150)))
-        {
-            PhotonNetwork.JoinRandomRoom();
-        }
+        //GUILayout.Label(PhotonNetwork.countOfPlayers + " users are online in " + PhotonNetwork.countOfRooms + " rooms.");
+        //GUILayout.FlexibleSpace();
+        //if (GUILayout.Button("Join Random", GUILayout.Width(150)))
+        //{
+        //    PhotonNetwork.JoinRandomRoom();
+        //}
 
 
-        GUILayout.EndHorizontal();
+        //GUILayout.EndHorizontal();
 
-        GUILayout.Space(15);
-        if (PhotonNetwork.GetRoomList().Length == 0)
-        {
-            GUILayout.Label("Currently no games are available.");
-            GUILayout.Label("Rooms will be listed here, when they become available.");
-        }
-        else
-        {
-            GUILayout.Label(PhotonNetwork.GetRoomList().Length + " rooms available:");
+        //GUILayout.Space(15);
+        //if (PhotonNetwork.GetRoomList().Length == 0)
+        //{
+        //    GUILayout.Label("Currently no games are available.");
+        //    GUILayout.Label("Rooms will be listed here, when they become available.");
+        //}
+        //else
+        //{
+        //    GUILayout.Label(PhotonNetwork.GetRoomList().Length + " rooms available:");
 
-            // Room listing: simply call GetRoomList: no need to fetch/poll whatever!
-            this.scrollPos = GUILayout.BeginScrollView(this.scrollPos);
-            foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
-            {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(roomInfo.Name + " " + roomInfo.PlayerCount + "/" + roomInfo.MaxPlayers);
-                if (GUILayout.Button("Join", GUILayout.Width(150)))
-                {
-                    PhotonNetwork.JoinRoom(roomInfo.Name);
-                }
+        //    // Room listing: simply call GetRoomList: no need to fetch/poll whatever!
+        //    this.scrollPos = GUILayout.BeginScrollView(this.scrollPos);
+        //    foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
+        //    {
+        //        GUILayout.BeginHorizontal();
+        //        GUILayout.Label(roomInfo.Name + " " + roomInfo.PlayerCount + "/" + roomInfo.MaxPlayers);
+        //        if (GUILayout.Button("Join", GUILayout.Width(150)))
+        //        {
+        //            PhotonNetwork.JoinRoom(roomInfo.Name);
+        //        }
 
-                GUILayout.EndHorizontal();
-            }
+        //        GUILayout.EndHorizontal();
+        //    }
 
-            GUILayout.EndScrollView();
-        }
+        //    GUILayout.EndScrollView();
+        //}
 
         GUILayout.EndArea();
     }
@@ -209,13 +231,13 @@ public class GameMenu : MonoBehaviour
 
     public void OnPhotonJoinRoomFailed(object[] cause)
     {
-        ErrorDialog = "Error: Can't join room (full or unknown room name). " + cause[1];
+        ErrorDialog = "Error: Can't join room (room name or password is incorrect). " + cause[1];
         Debug.Log("OnPhotonJoinRoomFailed got called. This can happen if the room is not existing or full or closed.");
     }
 
     public void OnPhotonRandomJoinFailed()
     {
-        ErrorDialog = "Error: Can't join random room (none found).";
+        ErrorDialog = "Error: Can't join room (room name or password is incorrect).";
         Debug.Log("OnPhotonRandomJoinFailed got called. Happens if no room is available (or all full or invisible or closed). JoinrRandom filter-options can limit available rooms.");
     }
 

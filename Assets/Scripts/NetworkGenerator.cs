@@ -144,18 +144,23 @@ public class NetworkGenerator : MonoBehaviour
         int statusId = status.AddStatus("R script generating networks");
         int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
         int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
-
+        
         while (selectionToolHandler.RObjectUpdating)
             yield return null;
 
         // generate the files containing the network information
 
         //string home = Directory.GetCurrentDirectory();
-        //selectionNr = selectionToolHandler.fileCreationCtr - 1;
+        selectionNr = selectionToolHandler.fileCreationCtr - 1;
         string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
         string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").FixFilePath();
         string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").FixFilePath();
         string args = groupingFilePath + " " + CellexalUser.UserSpecificFolder + " " + " " + networkResources;
+        if (!Directory.Exists(networkResources))
+        {
+            CellexalLog.Log("Creating directory " + networkResources.FixFilePath());
+            Directory.CreateDirectory(networkResources);
+        }
         rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_networks.R").FixFilePath();
         CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();

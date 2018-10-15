@@ -19,5 +19,6 @@ class SaveHeatmapButton : CellexalButton
     protected override void Click()
     {
         gameObject.GetComponentInParent<Heatmap>().SaveImage();
+        device.TriggerHapticPulse(2000);
     }
 }

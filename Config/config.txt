@@ -12,7 +12,7 @@
 # Comments and blank lines should not be present in lists but can be inserted anywhere else.
 
 # The filepath to Rscript.exe
-RscriptFilePath = C:\Program Files\R\R-3.4.0\bin\x64\Rscript.exe
+RscriptFilePath = C:\Program Files\R\R-3.5.1\bin\x64\Rscript.exe
 
 #################################
 # Graphs and selection

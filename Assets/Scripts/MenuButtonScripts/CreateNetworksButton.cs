@@ -26,7 +26,6 @@ public class CreateNetworksButton : CellexalButton
 
     protected override void Click()
     {
-        Exit();
         var rand = new System.Random();
         var layoutSeed = rand.Next();
         print(layoutSeed);
@@ -34,6 +33,7 @@ public class CreateNetworksButton : CellexalButton
         gameManager.InformGenerateNetworks(layoutSeed);
         CellexalEvents.NetworkCreated.Invoke();
         SetButtonActivated(false);
+        Exit();
     }
 
     private void TurnOn()
@@ -44,5 +44,6 @@ public class CreateNetworksButton : CellexalButton
     private void TurnOff()
     {
         SetButtonActivated(false);
+        Exit();
     }
 }

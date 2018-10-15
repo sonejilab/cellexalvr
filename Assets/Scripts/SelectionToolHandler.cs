@@ -427,9 +427,8 @@ public class SelectionToolHandler : MonoBehaviour
             print("empty selection confirmed");
         }
         // create .txt file with latest selection
-        DumpData();
+        DumpSelectionToTextFile();
         lastSelectedCells.Clear();
-        StartCoroutine(UpdateRObjectGrouping());
         foreach (GraphPoint gp in selectedCells)
         {
             if (gp.CustomColor)
@@ -548,18 +547,27 @@ public class SelectionToolHandler : MonoBehaviour
     /// <summary>
     /// Dumps the current selection to a .txt file.
     /// </summary>
-    private void DumpData()
+    public void DumpSelectionToTextFile()
+    {
+        DumpSelectionToTextFile(selectedCells);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="selection"></param>
+    public void DumpSelectionToTextFile(List<GraphPoint> selection)
     {
         // print(new System.Diagnostics.StackTrace());
         string filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+        print("Creating new selection file: " + fileCreationCtr);
         using (StreamWriter file =
                    new StreamWriter(filePath))
         {
             CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-            CellexalLog.Log("\tSelection consists of  " + selectedCells.Count + " points");
+            CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
             if (selectionHistory != null)
                 CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
-            foreach (GraphPoint gp in selectedCells)
+            foreach (GraphPoint gp in selection)
             {
                 file.Write(gp.Label);
                 file.Write("\t");
@@ -578,6 +586,7 @@ public class SelectionToolHandler : MonoBehaviour
             file.Flush();
             file.Close();
         }
+        StartCoroutine(UpdateRObjectGrouping());
     }
 
     /// <summary>

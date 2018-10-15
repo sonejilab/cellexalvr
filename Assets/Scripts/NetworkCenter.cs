@@ -965,6 +965,11 @@ public class NetworkCenter : MonoBehaviour
         // draw a white background
         graphics.Clear(System.Drawing.Color.FromArgb(255, 255, 255));
 
+        // draw a frame around the image with the network's color (the color of the group that the network stems from)
+        Color col = GetComponent<Renderer>().material.color;
+        Pen selectionPen = new Pen(System.Drawing.Color.FromArgb((int)(col.r * 255), (int)(col.g * 255), (int)(col.b * 255)), 20f);
+        graphics.DrawRectangle(selectionPen, 0, 0, bitmapWidth, bitmapHeight);
+
         // draw the edges
         foreach (var node in nodes)
         {

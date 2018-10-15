@@ -21,7 +21,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material selectionToolHandlerMaterial;
     public Material leftControllerMaterial;
 
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool  };
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool, WebBrowser  };
     // what model we actually want
     public Model DesiredModel { get; set; }
     // what model is actually displayed, useful for when we want to change the model temporarily
@@ -36,6 +36,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     private HelperTool helpTool;
     private GameObject drawTool;
     private KeyboardSwitch keyboard;
+    private GameObject webBrowser;
     private MeshFilter rightControllerBodyMeshFilter;
     private Renderer rightControllerBodyRenderer;
     private MeshFilter leftControllerBodyMeshFilter;
@@ -60,6 +61,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         drawTool = referenceManager.drawTool.gameObject;
         rightLaser = referenceManager.rightLaser;
         leftLaser = referenceManager.leftLaser;
+        webBrowser = referenceManager.webBrowser;
         DesiredModel = Model.Normal;
         //if (rightControllerBody.activeSelf)
         //{
@@ -142,6 +144,12 @@ public class ControllerModelSwitcher : MonoBehaviour
 
             case Model.Keyboard:
                 keyboard.SetKeyboardVisible(true);
+                rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
+                rightLaser.transform.localRotation = Quaternion.identity;
+                break;
+
+            case Model.WebBrowser:
+                webBrowser.SetActive(true);
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightLaser.transform.localRotation = Quaternion.identity;
                 break;
@@ -240,6 +248,10 @@ public class ControllerModelSwitcher : MonoBehaviour
             case Model.Keyboard:
                 keyboard.SetKeyboardVisible(true);
                 //rightLaser.enabled = true;
+                rightLaser.ToggleLaser(true);
+                break;
+            case Model.WebBrowser:
+                webBrowser.SetActive(true);
                 rightLaser.ToggleLaser(true);
                 break;
             case Model.TwoLasers:

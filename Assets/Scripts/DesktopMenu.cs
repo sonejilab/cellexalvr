@@ -40,32 +40,33 @@ class DesktopMenu : MonoBehaviour
         CellexalLog.Log("Quit button pressed");
         CellexalLog.LogBacklog();
         // Application.Quit() does not work in the unity editor, only in standalone builds.
-        StartCoroutine(LogStop());
+        //StartCoroutine(LogStop());
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
     }
 
     /// <summary>
     /// Calls R logging function to stop the logging session.
     /// </summary>
-    IEnumerator LogStop()
-    {
-        string args = "";
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
-        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-        var stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        t.Start();
+    //IEnumerator LogStop()
+    //{
+    //    string args = CellexalUser.UserSpecificFolder;
+    //    string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
+    //    CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+    //    var stopwatch = new System.Diagnostics.Stopwatch();
+    //    stopwatch.Start();
+    //    Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+    //    t.Start();
 
-        while (t.IsAlive)
-        {
-            yield return null;
-        }
-        stopwatch.Stop();
-        CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-    #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-    #else
-            Application.Quit();
-    #endif
-    }
+    //    while (t.IsAlive)
+    //    {
+    //        yield return null;
+    //    }
+    //    stopwatch.Stop();
+    //    CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+
+    //}
 }

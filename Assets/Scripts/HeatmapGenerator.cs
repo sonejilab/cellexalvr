@@ -208,6 +208,7 @@ public class HeatmapGenerator : MonoBehaviour
             heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
+            heatmap.selectionNr = selectionNr;
             // save colors before.
             //heatmap.SetVars(colors);
             heatmapList.Add(heatmap);

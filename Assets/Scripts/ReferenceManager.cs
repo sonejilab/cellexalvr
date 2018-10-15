@@ -40,6 +40,7 @@ public class ReferenceManager : MonoBehaviour
     public GameObject helpMenu;
     public MagnifierTool magnifierTool;
     public DrawTool drawTool;
+    public GameObject webBrowser;
 
     #endregion
 
@@ -104,4 +105,5 @@ public class ReferenceManager : MonoBehaviour
     public KeyboardOutput keyboardOutputFolder;
 
     #endregion
+
 }

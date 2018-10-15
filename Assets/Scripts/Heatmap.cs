@@ -1049,9 +1049,11 @@ public class Heatmap : MonoBehaviour
         }
 
         string[] newCells = new string[numberOfCells];
+        List<GraphPoint> newGps = new List<GraphPoint>();  
         for (int i = 0, j = cellsIndexStart; i < numberOfCells; ++i, ++j)
         {
             newCells[i] = cells[j];
+            newGps.Add(cellManager.GetCell(cells[j]).GraphPoints[0]);
         }
 
         string[] newGenes = new string[selectedGeneBottom - selectedGeneTop + 1];
@@ -1068,9 +1070,11 @@ public class Heatmap : MonoBehaviour
             Tuple<int, float, int> old = groupWidths[i];
             newGroupWidths.Add(new Tuple<int, float, int>(old.Item1, old.Item3 * newXCoordInc, old.Item3));
         }
-
+        referenceManager.selectionToolHandler.DumpSelectionToTextFile(newGps);
         heatmap.Init();
         heatmap.BuildTexture(newCells, newGenes, newGroupWidths);
+        heatmapGenerator.selectionNr += 1;
+        heatmap.selectionNr = heatmapGenerator.selectionNr;
     }
 
     /// <summary>
@@ -1134,7 +1138,7 @@ public class Heatmap : MonoBehaviour
             heatmapImageFilePath += "_d";
         }
         bitmap.Save(heatmapImageFilePath);
-        StartCoroutine(LogHeatmap(heatmapImageDirectory));
+        StartCoroutine(LogHeatmap(heatmapImageDirectory, heatmapImageFilePath));
         // R logging function
         //string genesFilePath = heatmapImageDirectory + "\\" + name + ".txt";
         //string nr = name.Split('_')[1];
@@ -1177,11 +1181,10 @@ public class Heatmap : MonoBehaviour
     /// <summary>
     /// Calls R logging function to save heatmap for session report.
     /// </summary>
-    IEnumerator LogHeatmap(string heatmapImageDirectory)
+    IEnumerator LogHeatmap(string heatmapImageDirectory, string heatmapImageFilePath)
     {
         string genesFilePath = heatmapImageDirectory + "\\" + name + ".txt";
         string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
-        string heatmapImageFilePath = heatmapImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
         string args = CellexalUser.UserSpecificFolder + " " + genesFilePath + " " + heatmapImageFilePath + " " + groupingsFilepath;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\logHeatmap.R";
         CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");

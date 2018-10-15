@@ -630,8 +630,8 @@ public class CellManager : MonoBehaviour
     /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
     public void ColorByAttribute(string attributeType, bool color)
     {
-        if (!previousSearchesList.Contains(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod))
-            previousSearchesList.AddEntry(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod);
+        //if (!previousSearchesList.Contains(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod))
+        //    previousSearchesList.AddEntry(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod);
         CellexalLog.Log("Colored graphs by " + attributeType);
         foreach (Cell cell in cells.Values)
         {
