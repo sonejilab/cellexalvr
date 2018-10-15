@@ -1,6 +1,7 @@
 #print("start R")
 
-library(cellexalvrR)
+
+suppressMessages(library(cellexalvrR))
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -14,3 +15,6 @@ output_file  <- args[3] # the output path
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
 cellexalvrObj <- make.cellexalvr.network(expression_data_filepath, input_file,  output_file)
+
+lockedSave(cellexalObj)
+

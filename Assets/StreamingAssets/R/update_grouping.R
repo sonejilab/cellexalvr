@@ -4,7 +4,10 @@ selectionfile <- args[1]
 userfolder <- args[2]
 datafolder <- args[3]
 
-library( cellexalvrR )
+suppressMessages(library( cellexalvrR ))
+
+message( paste("update grouping with grouping file",selectionfile ))
+
 #print("started")
 if ( file.exists( file.path( userfolder, 'cellexalObj.RData' )) ){
 	load(  file.path( userfolder, 'cellexalObj.RData' ))

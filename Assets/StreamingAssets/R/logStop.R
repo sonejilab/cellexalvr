@@ -1,4 +1,5 @@
-library(cellexalvrR)
+suppressMessages(library(cellexalvrR))
+message( "Stop the logging")
 
 args <- commandArgs(trailingOnly = TRUE)
 

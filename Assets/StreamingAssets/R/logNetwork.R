@@ -1,5 +1,4 @@
-library(cellexalvrR)
-
+suppressMessages(library(cellexalvrR))
 args <- commandArgs(trailingOnly = TRUE)
 
 datadir <- args[1] ## please give me the user spcific analysis path here!!!!
@@ -9,6 +8,8 @@ heatmap_png <- args[2]
 grouping <- args[3]
 
 genes <- args[4] ## the heatmap_<x>.txt file
+
+message(paste( "log Network with grouping file ", grouping) )
 
 if ( is.na(genes) ) {
 	genes = NULL
@@ -28,4 +29,4 @@ if ( is.na( topNodes) ) {
 
 cellexalObj <- loadObject(file.path(datadir, "cellexalObj.RData"))
 
-logNetwork(cellexalObj, genes, heatmap_png, grouping, ontology = ontology, topNodes = topNodes )
+cellexalObj = logNetwork(cellexalObj, genes, heatmap_png, grouping, ontology = ontology, topNodes = topNodes )
