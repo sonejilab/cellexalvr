@@ -14,6 +14,7 @@ public class LaserPointerController : MonoBehaviour
     private int layerMaskOther;
     private bool alwaysActive;
     private bool keyboardActive;
+    private bool hitLastFrame;
     private ControllerModelSwitcher controllerModelSwitcher;
 
     public ReferenceManager referenceManager;
@@ -34,8 +35,9 @@ public class LaserPointerController : MonoBehaviour
     private void Update()
     {
         frame++;
-        if (frame % 5 == 0)
+        if (frame >= 5)
         {
+            frame = 0;
             Frame5Update();
         }
     }
@@ -46,7 +48,8 @@ public class LaserPointerController : MonoBehaviour
         RaycastHit hit;
         transform.localRotation = Quaternion.Euler(15f, 0, 0);
         Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskMenu);
-        if (hit.collider)
+        bool hitSomething = hit.collider != null;
+        if (hitSomething)
         {
             tempHit = hit.collider.gameObject;
             if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
@@ -55,7 +58,7 @@ public class LaserPointerController : MonoBehaviour
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             }
         }
-        if (!hit.collider && alwaysActive)
+        if (!hitSomething && alwaysActive)
         {
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
@@ -82,6 +85,15 @@ public class LaserPointerController : MonoBehaviour
 
             }
         }
+        if (!hitSomething && hitLastFrame)
+        {
+            foreach (var button in referenceManager.mainMenu.GetComponentsInChildren<CellexalButton>())
+            {
+                button.SetHighlighted(false);
+            }
+        }
+
+        hitLastFrame = hitSomething;
     }
 
     // Toggle Laser from laser button. Laser should then be active until toggled off.

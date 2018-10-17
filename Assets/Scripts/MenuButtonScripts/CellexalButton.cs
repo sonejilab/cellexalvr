@@ -66,8 +66,8 @@ public abstract class CellexalButton : MonoBehaviour
         layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
         layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
         layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
-        layerMask =  layerMaskMenu | layerMaskKeyboard;
-        
+        layerMask = layerMaskMenu | layerMaskKeyboard;
+
     }
 
     protected virtual void Update()
@@ -85,39 +85,39 @@ public abstract class CellexalButton : MonoBehaviour
         }
         // Button sometimes stays active even though ontriggerexit should have been called.
         // To deactivate button again check every 10th frame if laser pointer collider is colliding.
-        if (frameCount % 10 == 0)
-        {
-            bool inside = false;
-            RaycastHit hit;
-            raycastingSource = referenceManager.rightLaser.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
-            //if (hit.collider) print(hit.collider.transform.gameObject.name);
-            if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled)
-            {
+        //if (frameCount % 10 == 0)
+        //{
+        //    bool inside = false;
+        //    RaycastHit hit;
+        //    raycastingSource = referenceManager.rightLaser.transform;
+        //    Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
+        //    //if (hit.collider) print(hit.collider.transform.gameObject.name);
+        //    if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled)
+        //    {
 
-                inside = true;
-                frameCount = 0;
-                controllerInside = inside;
-                SetHighlighted(inside);
-                if (infoMenu) infoMenu.SetActive(inside);
-                return;
-            }
-            if (!(hit.collider || hit.transform == transform))
-            {
-                inside = false;
-                controllerInside = inside;
-                SetHighlighted(inside);
-                if (infoMenu) infoMenu.SetActive(inside);
-            }
-            controllerInside = inside;
-            SetHighlighted(inside);
-            //infoMenu.SetActive(inside);
-            if (descriptionText.text == Description)
-            {
-                descriptionText.text = "";
-            }
-            frameCount = 0;
-        }
+        //        inside = true;
+        //        frameCount = 0;
+        //        controllerInside = inside;
+        //        SetHighlighted(inside);
+        //        if (infoMenu) infoMenu.SetActive(inside);
+        //        return;
+        //    }
+        //    if (!(hit.collider || hit.transform == transform))
+        //    {
+        //        inside = false;
+        //        controllerInside = inside;
+        //        SetHighlighted(inside);
+        //        if (infoMenu) infoMenu.SetActive(inside);
+        //    }
+        //    controllerInside = inside;
+        //    SetHighlighted(inside);
+        //    //infoMenu.SetActive(inside);
+        //    if (descriptionText.text == Description)
+        //    {
+        //        descriptionText.text = "";
+        //    }
+        //    frameCount = 0;
+        //}
     }
 
     protected abstract void Click();
@@ -131,7 +131,7 @@ public abstract class CellexalButton : MonoBehaviour
 
     public virtual void SetButtonActivated(bool activate)
     {
-
+        //print(name + " setbuttonactivated");
         if (!activate)
         {
             descriptionText.text = "";
@@ -142,6 +142,10 @@ public abstract class CellexalButton : MonoBehaviour
             else if (meshRenderer != null)
             {
                 meshRenderer.material.color = meshDeactivatedColor;
+            }
+            if (infoMenu)
+            {
+                infoMenu.SetActive(false);
             }
         }
         if (activate)
@@ -162,29 +166,32 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerEnter(Collider other)
     {
         if (!buttonActivated) return;
+        //print(name + " ontriggerenter");
         if (other.gameObject.name == laserColliderName)
         {
             descriptionText.text = Description;
             controllerInside = true;
             SetHighlighted(true);
-            if (infoMenu)
-            {
-                infoMenu.SetActive(true);
-            }
         }
     }
 
     // In case OnTriggerExit doesnt get called by laser pointer we need to manually do the unhighlighting.
     protected void Exit()
     {
-        if (!buttonActivated) return;
-
+        //print(name + " exit");
         if (descriptionText.text == Description)
         {
             descriptionText.text = "";
         }
         controllerInside = false;
-        SetHighlighted(false);
+        if (buttonActivated)
+        {
+            SetHighlighted(false);
+        }
+        else
+        {
+            SetButtonActivated(false);
+        }
         if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
         {
             infoMenu.SetActive(false);
@@ -194,6 +201,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected void OnTriggerExit(Collider other)
     {
         if (!buttonActivated) return;
+        //print(name + " ontriggerexit");
         if (other.gameObject.name == laserColliderName)
         {
             if (descriptionText.text == Description)
@@ -232,6 +240,10 @@ public abstract class CellexalButton : MonoBehaviour
             {
                 meshRenderer.material.color = meshStandardColor;
             }
+        }
+        if (infoMenu)
+        {
+            infoMenu.SetActive(highlight);
         }
     }
 }
