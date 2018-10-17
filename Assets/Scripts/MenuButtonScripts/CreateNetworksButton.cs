@@ -44,6 +44,6 @@ public class CreateNetworksButton : CellexalButton
     private void TurnOff()
     {
         SetButtonActivated(false);
-        Exit();
+        spriteRenderer.sprite = deactivatedTexture;
     }
 }

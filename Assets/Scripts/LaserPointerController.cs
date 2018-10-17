@@ -17,6 +17,7 @@ public class LaserPointerController : MonoBehaviour
     private ControllerModelSwitcher controllerModelSwitcher;
 
     public ReferenceManager referenceManager;
+    public GameObject panel;
     // Use this for initialization
     void Start()
     {
@@ -53,6 +54,8 @@ public class LaserPointerController : MonoBehaviour
             {
                 //controllerModelSwitcher.TurnOffActiveTool(true);
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
+                panel.transform.localPosition = new Vector3(0.0f, 0.0f, 0.01f);
+                panel.transform.localRotation = Quaternion.Euler(-15, 5, 1);
             }
         }
         if (!hit.collider && alwaysActive)
@@ -66,6 +69,8 @@ public class LaserPointerController : MonoBehaviour
             else
             {
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
+                panel.transform.localPosition = new Vector3(0, 0, 0);
+                panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
             }
         }
         if (!alwaysActive)
