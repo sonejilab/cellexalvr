@@ -8,10 +8,7 @@ public class CreateNetworksButton : CellexalButton
 
     protected override string Description
     {
-        get
-        {
-            return "Create Networks";
-        }
+        get { return "Create Networks"; }
     }
 
     protected void Start()
@@ -28,12 +25,11 @@ public class CreateNetworksButton : CellexalButton
     {
         var rand = new System.Random();
         var layoutSeed = rand.Next();
-        print(layoutSeed);
+        //print(layoutSeed);
         networkGenerator.GenerateNetworks(layoutSeed);
         gameManager.InformGenerateNetworks(layoutSeed);
         CellexalEvents.NetworkCreated.Invoke();
-        SetButtonActivated(false);
-        Exit();
+        TurnOff();
     }
 
     private void TurnOn()

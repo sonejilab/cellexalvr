@@ -26,8 +26,7 @@ public class CreateHeatmapButton : CellexalButton
     {
         heatmapGenerator.CreateHeatmap();
         CellexalEvents.HeatmapCreated.Invoke();
-        SetButtonActivated(false);
-        Exit();
+        TurnOff();
     }
 
     private void TurnOn()
