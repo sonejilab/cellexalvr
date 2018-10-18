@@ -250,6 +250,13 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
     }
 
+    public void InformCubeColoured(string graphName, string label, int newGroup, Color color)
+    {
+        if (!multiplayer) return;
+        Debug.Log("Informing clients to colour selected cube");
+        coordinator.photonView.RPC("SendCubeColoured", PhotonTargets.Others, graphName, label, color.r, color.g, color.b);
+    }
+
     public void InformGoBackOneColor()
     {
         if (!multiplayer) return;

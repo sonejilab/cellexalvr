@@ -90,16 +90,22 @@ public class LaserPointerController : MonoBehaviour
 
             }
         }
-        if (!hitSomething && hitLastFrame)
-        {
-            foreach (var button in referenceManager.mainMenu.GetComponentsInChildren<CellexalButton>())
-            {
-                button.SetHighlighted(false);
-            }
-        }
+        //if (!hitSomething && hitLastFrame)
+        //{
+        //    print("Unhighlight");
+        //    UnhighlightAllButtons();
+        //}
 
-        hitLastFrame = hitSomething;
+        //hitLastFrame = hitSomething;
     }
+
+    //private void UnhighlightAllButtons()
+    //{
+    //    foreach (var button in referenceManager.mainMenu.GetComponentsInChildren<CellexalButton>())
+    //    {
+    //        button.SetHighlighted(false);
+    //    }
+    //}
 
     // Toggle Laser from laser button. Laser should then be active until toggled off.
     public void ToggleLaser(bool active)

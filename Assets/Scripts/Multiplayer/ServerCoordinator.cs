@@ -27,7 +27,6 @@ class ServerCoordinator : Photon.MonoBehaviour
         CellexalLog.Log("Recieved message to read folder at " + path);
         referenceManager.inputReader.ReadFolder(path);
         referenceManager.inputFolderGenerator.DestroyFolders();
-
     }
 
     [PunRPC]
@@ -97,6 +96,12 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
     {
         referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
+    }
+
+    [PunRPC]
+    public void SendCubeColoured(string graphName, string label, int newGroup, float r, float g, float b)
+    {
+        referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b), true);
     }
 
     [PunRPC]

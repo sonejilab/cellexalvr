@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-class Selectable : MonoBehaviour
+public class Selectable : MonoBehaviour
 {
 
     public SelectionToolHandler selectionToolHandler;

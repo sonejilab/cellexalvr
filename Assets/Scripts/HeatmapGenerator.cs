@@ -193,6 +193,7 @@ public class HeatmapGenerator : MonoBehaviour
 
             while (t.IsAlive)
             {
+
                 yield return null;
             }
             stopwatch.Stop();

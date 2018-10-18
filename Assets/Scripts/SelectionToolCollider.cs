@@ -10,20 +10,19 @@ public class SelectionToolCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        //print("hit something");
-        var graphpoint = other.gameObject.GetComponent<GraphPoint>();
-        if (graphpoint != null)
+        var graphPoint = other.gameObject.GetComponent<GraphPoint>();
+        if (graphPoint != null)
         {
-            selectionToolHandler.AddGraphpointToSelection(graphpoint);
+            selectionToolHandler.AddGraphpointToSelection(graphPoint);
             return;
         }
-        //print("hit cube");
         var cubeOnLine = other.gameObject.GetComponent<Selectable>();
         if (cubeOnLine != null)
         {
             selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
             int group = selectionToolHandler.currentColorIndex;
             cubeOnLine.GetComponent<Renderer>().material.color = selectionToolHandler.Colors[group];
+            selectionToolHandler.referenceManager.gameManager.InformCubeColoured(graphPoint.GraphName, graphPoint.label, group, selectionToolHandler.Colors[group]);
         }
     }
 }

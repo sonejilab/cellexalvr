@@ -148,14 +148,13 @@ public class GameMenu : MonoBehaviour
             }
             if (!(this.password.Length == 4) || !int.TryParse(this.password, out n))
             {
-                print("Wrong");
                 ErrorDialog = "Password has to be of length 4 and contain only digits.";
 
             }
         }
         if (GUILayout.Button("Join Room", GUILayout.Width(150)))
         {
-            PhotonNetwork.JoinRoom(this.roomAndPass);
+            PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
         }
 
         GUILayout.EndHorizontal();

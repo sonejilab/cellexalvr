@@ -98,4 +98,5 @@ MonoBehaviour:
   - SendToggleNonExpressedCells
   - TaggedPlayer
   - SendDeleteObject
+  - SendCubeColoured
   DisableAutoOpenWizard: 1

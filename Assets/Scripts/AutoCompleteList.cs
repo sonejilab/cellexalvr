@@ -48,6 +48,9 @@ public class AutoCompleteList : MonoBehaviour
 
     private IEnumerator InitCoroutine()
     {
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        CellexalLog.Log("Started building autocomplete list bk-tree");
         namesOfThings.Clear();
         SQLiter.SQLite database = referenceManager.database;
         int longestNameLength = 0;
@@ -118,7 +121,8 @@ public class AutoCompleteList : MonoBehaviour
         //root.TreeInfo(ref numChildren, ref numLeaves, 0, ref depth);
         //float avgChildren = numChildren / ((float)namesOfThings.Count - numLeaves);
         //print(avgChildren + " " + depth);
-
+        stopwatch.Stop();
+        CellexalLog.Log(string.Format("Successfully built autocomplete list bk-tree in {0}", stopwatch.Elapsed.ToString()));
     }
 
     /// <summary>
@@ -157,9 +161,8 @@ public class AutoCompleteList : MonoBehaviour
         root.SearchForNode(word, radius, ref candidates);
         //print(candidates.Count);
         candidates.Sort((Tuple<int, BKTreeNode> a, Tuple<int, BKTreeNode> b) => (a.Item1 - b.Item1));
-        for (int i = 0; i < listNodes.Count; ++i)
+        for (int i = 0; i < listNodes.Count && i < candidates.Count; ++i)
         {
-
             var node = candidates[i].Item2;
             if (i < candidates.Count)
                 listNodes[i].SetText(node.value, node.type);

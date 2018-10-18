@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Collections;
 using System.Drawing.Imaging;
 using System.Threading;
+using CellexalExtensions;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -16,6 +17,8 @@ public class Heatmap : MonoBehaviour
     public ReferenceManager referenceManager;
     public Texture texture;
     public TextMesh infoText;
+    public CellexalButton saveImageButton;
+    public CellexalButton goAnalysisButton;
     public GameObject highlightQuad;
     public GameObject confirmQuad;
     public GameObject movingQuadX;
@@ -89,6 +92,7 @@ public class Heatmap : MonoBehaviour
     private float selectedBoxHeight;
     // number of heatmaps created from this heatmap
     private int heatmapsCreated = 0;
+    private bool heatmapSaved; 
 
     void Start()
     {
@@ -1138,68 +1142,93 @@ public class Heatmap : MonoBehaviour
             heatmapImageFilePath += "_d";
         }
         bitmap.Save(heatmapImageFilePath);
-        StartCoroutine(LogHeatmap(heatmapImageDirectory, heatmapImageFilePath));
-        // R logging function
-        //string genesFilePath = heatmapImageDirectory + "\\" + name + ".txt";
-        //string nr = name.Split('_')[1];
-        //string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + nr + ".txt";
-
-        //string args = genesFilePath + " " + heatmapImageFilePath + " " + groupingsFilepath;
-        //string rScriptFilePath = Application.streamingAssetsPath + @"\R\heatmap_report.R";
-        //CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-        //var stopwatch = new System.Diagnostics.Stopwatch();
-        //stopwatch.Start();
-        //Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        //t.Start();
-
-        //while (t.IsAlive)
-        //{
-        //    yield return null;
-        //}
-        //stopwatch.Stop();
-        //CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-        //string saveDir = Directory.GetCurrentDirectory() + @"\Output\";
-        //if (!Directory.Exists(saveDir))
-        //{
-        //    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
-        //    Directory.CreateDirectory(saveDir);
-        //}
-
-        //saveDir += "\\" + CellexalUser.Username;
-        //if (!Directory.Exists(saveDir))
-        //{
-        //    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(saveDir));
-        //    Directory.CreateDirectory(saveDir);
-        //}
-
-        // this is the only acceptable date time format, order-wise
-        //var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-        //string saveFileName = saveDir + @"\heatmap_" + time + ".png";
-        // if the button is pressed twice the same second, the filenames will collide.
+        StartCoroutine(LogHeatmap(heatmapImageFilePath));
     }
 
     /// <summary>
     /// Calls R logging function to save heatmap for session report.
     /// </summary>
-    IEnumerator LogHeatmap(string heatmapImageDirectory, string heatmapImageFilePath)
+    IEnumerator LogHeatmap(string heatmapImageFilePath)
     {
-        string genesFilePath = heatmapImageDirectory + "\\" + name + ".txt";
-        string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
-        string args = CellexalUser.UserSpecificFolder + " " + genesFilePath + " " + heatmapImageFilePath + " " + groupingsFilepath;
-        string rScriptFilePath = Application.streamingAssetsPath + @"\R\logHeatmap.R";
-        CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        saveImageButton.SetButtonActivated(false);
+        string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
+        string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
+        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
+        string args = CellexalUser.UserSpecificFolder.FixFilePath() + " " + genesFilePath + " " + heatmapImageFilePath.FixFilePath() + " " + groupingsFilepath;
+        CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         t.Start();
-
+        
         while (t.IsAlive)
         {
             yield return null;
         }
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+        heatmapSaved = true;
+        saveImageButton.SetButtonActivated(true);
     }
+
+    /// <summary>
+    /// Does a GO analysis of the genes on the heatmap. The Rscript does this and needs the genelist to do it.
+    /// </summary>
+    public void GOanalysis()
+    {
+        goAnalysisButton.SetButtonActivated(false);
+        string goAnalysisDirectory = CellexalUser.UserSpecificFolder;
+        if (!Directory.Exists(goAnalysisDirectory))
+        {
+            Directory.CreateDirectory(goAnalysisDirectory);
+            CellexalLog.Log("Created directory " + goAnalysisDirectory);
+        }
+
+        goAnalysisDirectory += "\\Heatmap";
+        if (!Directory.Exists(goAnalysisDirectory))
+        {
+            Directory.CreateDirectory(goAnalysisDirectory);
+            CellexalLog.Log("Created directory " + goAnalysisDirectory);
+        }
+        StartCoroutine(GOAnalysis(goAnalysisDirectory));
+    }
+
+    /// <summary>
+    /// Calls the R function with the filepath to the genes to analyse (this is the same as the heatmap directory).
+    /// </summary>
+    /// <param name="goAnalysisDirectory"></param>
+    /// <returns></returns>
+    IEnumerator GOAnalysis(string goAnalysisDirectory)
+    {
+        if (!heatmapSaved)
+        {
+            SaveImage();
+            while (!heatmapSaved)
+            {
+                print("heatmap not saved yet");
+                yield return null;
+            }
+        }
+        string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
+        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\GOanalysis.R").FixFilePath();
+        string args = CellexalUser.UserSpecificFolder.FixFilePath() + " " + genesFilePath;
+        Debug.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
+        CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+        
+        while (t.IsAlive)
+        {
+            print("Still alive - " + stopwatch.Elapsed.Minutes);
+            yield return null;
+        }
+        stopwatch.Stop();
+        CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+        goAnalysisButton.SetButtonActivated(true);
+    }
+
 
     /// <summary>
     /// Recolours all graphs with the colors that the cells had when this heatmap was created.

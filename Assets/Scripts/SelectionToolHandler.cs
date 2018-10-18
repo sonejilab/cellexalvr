@@ -231,12 +231,34 @@ public class SelectionToolHandler : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// If selecting from client then graphpoint to be added needs to be found by searching since it has not collided with selection tool.
+    /// </summary>
+    /// <param name="graphName">The name of the graph that the point is in.</param>
+    /// <param name="label">The label of the cell (graphpoint)</param>
+    /// <param name="newGroup">The group which the cell is to be added to. </param>
+    /// <param name="color">Colour that the graphpoint should be coloured by.</param>
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
     {
         GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
         AddGraphpointToSelection(gp, newGroup, true, color);
     }
+
+    /// <summary>
+    /// Same as above but this function is called when coluring the cubes between same cells in different graphs.
+    /// </summary>
+    /// <param name="graphName"></param>
+    /// <param name="label"></param>
+    /// <param name="newGroup"></param>
+    /// <param name="color"></param>
+    /// <param name="cube">If a cube should be coloured as well as the graphpoint.</param>
+    public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color, bool cube)
+    {
+        GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        AddGraphpointToSelection(gp, newGroup, true, color);
+        gp.lineBetweenCellsCube.gameObject.GetComponent<Renderer>().material.color = color;
+    }
+
 
     /// <summary>
     /// Goes back one step in the history of selecting cells.

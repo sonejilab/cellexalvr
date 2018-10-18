@@ -42,5 +42,6 @@ public class ConfirmSelectionButton : CellexalButton
     private void TurnOff()
     {
         SetButtonActivated(false);
+        spriteRenderer.sprite = deactivatedTexture;
     }
 }

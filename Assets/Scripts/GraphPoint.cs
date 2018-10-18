@@ -7,6 +7,8 @@ public class GraphPoint : MonoBehaviour
 {
     public Graph Graph;
 
+    public Selectable lineBetweenCellsCube;
+
     private float x, y, z;
     public string label;
     private MeshRenderer graphPointRenderer;

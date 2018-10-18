@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using UnityEngine;
 
 /// <summary>
 /// This class runs R code from a file using the console.
 /// </summary>
 public class RScriptRunner
 {
+
     /// <summary>
     /// Runs an R script from a file using Rscript.exe.
     /// Example:
@@ -35,6 +37,7 @@ public class RScriptRunner
             info.RedirectStandardError = true;
             info.UseShellExecute = false;
             info.CreateNoWindow = true;
+            
 
             using (var proc = new Process())
             {
@@ -49,6 +52,7 @@ public class RScriptRunner
                 writetofile.Flush();
                 writetofile.Close();
             }
+            //UnityEngine.Debug.Log("RESULT : " + result + " - Exit thread: " + result.Contains("Execution"));
             return result;
 
 

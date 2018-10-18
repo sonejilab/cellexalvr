@@ -46,8 +46,7 @@ public class SaveButton : CellexalButton
         //saveScene.Save();
         StartCoroutine(LogStop());
         //elapsedTime = 0.0f;
-        standardTexture = gray;
-        changeSprite = true;
+        SetButtonActivated(false);
 
     }
 
@@ -72,7 +71,7 @@ public class SaveButton : CellexalButton
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         changeSprite = false;
-        standardTexture = original;
+        SetButtonActivated(true);
         /*
         void ChangeSprite() 
         {

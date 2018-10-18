@@ -35,19 +35,19 @@ public abstract class CellexalToolButton : CellexalButton
 
     protected override void Click()
     {
-        bool deleteToolActivated = controllerModelSwitcher.DesiredModel == ControllerModel;
-        if (deleteToolActivated)
+        bool toolActivated = controllerModelSwitcher.DesiredModel == ControllerModel;
+        if (toolActivated)
         {
             controllerModelSwitcher.TurnOffActiveTool(true);
             spriteRenderer.sprite = standardTexture;
-            toolActivated = false;
+            this.toolActivated = false;
         }
         else
         {
             controllerModelSwitcher.DesiredModel = ControllerModel;
             controllerModelSwitcher.ActivateDesiredTool();
             spriteRenderer.sprite = activatedTexture;
-            toolActivated = true;
+            this.toolActivated = true;
             SetHighlighted(false);
         }
     }

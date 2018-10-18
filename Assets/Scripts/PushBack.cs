@@ -8,6 +8,7 @@ public class PushBack : MonoBehaviour
     public float scaleMultiplier = 0.5f;
     public float maxScale;
     public float minScale;
+    public ReferenceManager referenceManager;
 
     private SteamVR_Controller.Device device;
     private Ray ray;
@@ -21,7 +22,8 @@ public class PushBack : MonoBehaviour
 
     void Start()
     {
-        rightController = GameObject.Find("InputReader").GetComponent<ReferenceManager>().rightController;
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        rightController = referenceManager.rightController;
         device = SteamVR_Controller.Input((int)rightController.index);
         orgPos = transform.position;
         orgRot = transform.rotation;
@@ -36,11 +38,10 @@ public class PushBack : MonoBehaviour
         }
 
         device = SteamVR_Controller.Input((int)rightController.index);
-        if (GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<VRTK_InteractableObject>().IsGrabbed())
+        bool active = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled
+            && !GetComponent<VRTK_InteractableObject>().IsGrabbed() && referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers;
+        if (active)
         {
-
-            //Debug.Log("scale: " + transform.localScale + " pos: " + transform.position);
-            //Debug.Log("pos: " + orgPos + " scale: " + orgScale);
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
             {
                 Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
@@ -63,12 +64,6 @@ public class PushBack : MonoBehaviour
             //ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (hit.collider && push)
             {
-                //Vector3 newScale = transform.localScale + orgScale * scaleMultiplier;
-                //if (newScale.x > orgScale.x * maxScale)
-                //{
-                //    //print("not pulling back " + newScale.x + " " + orgScale.x);
-                //    return;
-                //}
                 if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     transform.LookAt(Vector3.zero);
@@ -76,7 +71,6 @@ public class PushBack : MonoBehaviour
                 else if (hit.transform.GetComponent<Heatmap>())
                 {
                     transform.LookAt(Vector3.zero);
-                    transform.Rotate(90f, 0, 0);
                 }
                 Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = dir.normalized;
@@ -89,11 +83,9 @@ public class PushBack : MonoBehaviour
             raycastingSource = rightController.transform;
             int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
             raycastingSource = rightController.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
-            //ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
             if (hit.collider && pull)
             {
-                //Vector3 newScale = transform.localScale - orgScale * scaleMultiplier;
                 // don't let the thing become smaller than what it was originally
                 // this could cause some problems if the user rescales the objects while they are far away
                 if (Vector3.Distance(hit.transform.position, raycastingSource.position) < 0.5f)
@@ -105,7 +97,6 @@ public class PushBack : MonoBehaviour
                 Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = -dir.normalized;
                 transform.position += dir * distanceMultiplier;
-                //transform.localScale = newScale;
             }
         }
 
