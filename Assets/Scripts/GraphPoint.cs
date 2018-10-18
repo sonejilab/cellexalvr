@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,7 +8,7 @@ public class GraphPoint : MonoBehaviour
 {
     public Graph Graph;
 
-    public Selectable lineBetweenCellsCube;
+    public List<Selectable> lineBetweenCellsCube;
 
     private float x, y, z;
     public string label;
