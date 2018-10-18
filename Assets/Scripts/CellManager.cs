@@ -771,6 +771,7 @@ public class CellManager : MonoBehaviour
                     {
                         line.gameObject.SetActive(false);
                     }
+                    g.lineBetweenCellsCube = line.cube;
                 }
             }
         }

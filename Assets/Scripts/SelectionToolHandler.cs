@@ -256,7 +256,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
         AddGraphpointToSelection(gp, newGroup, true, color);
-        gp.lineBetweenCellsCube.gameObject.GetComponent<Renderer>().material.color = color;
+        gp.lineBetweenCellsCube.GetComponent<Renderer>().material.color = color;
     }
 
 
