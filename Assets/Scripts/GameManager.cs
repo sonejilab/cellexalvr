@@ -254,7 +254,7 @@ public class GameManager : Photon.PunBehaviour
     {
         if (!multiplayer) return;
         Debug.Log("Informing clients to colour selected cube");
-        coordinator.photonView.RPC("SendCubeColoured", PhotonTargets.Others, graphName, label, color.r, color.g, color.b);
+        coordinator.photonView.RPC("SendCubeColoured", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
     }
 
     public void InformGoBackOneColor()
