@@ -21,8 +21,14 @@ public class SelectionToolCollider : MonoBehaviour
         {
             selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
             int group = selectionToolHandler.currentColorIndex;
-            cubeOnLine.GetComponent<Renderer>().material.color = selectionToolHandler.Colors[group];
-            selectionToolHandler.referenceManager.gameManager.InformCubeColoured(cubeOnLine.graphPoint.GraphName, cubeOnLine.graphPoint.label, group, selectionToolHandler.Colors[group]);
+            print("list of cubes- " + cubeOnLine.graphPoint.lineBetweenCellsCubes.Count);
+            foreach(Selectable sel in cubeOnLine.graphPoint.lineBetweenCellsCubes)
+            {
+                print("color " + sel);
+                sel.GetComponent<Renderer>().material.color = selectionToolHandler.Colors[group];
+            }
+            selectionToolHandler.referenceManager.gameManager.InformCubeColoured(cubeOnLine.graphPoint.GraphName,
+                                                                                    cubeOnLine.graphPoint.label, group, selectionToolHandler.Colors[group]);
         }
     }
 }

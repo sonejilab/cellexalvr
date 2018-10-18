@@ -8,7 +8,7 @@ public class GraphPoint : MonoBehaviour
 {
     public Graph Graph;
 
-    public List<Selectable> lineBetweenCellsCube;
+    public List<Selectable> lineBetweenCellsCubes;
 
     private float x, y, z;
     public string label;

@@ -771,7 +771,7 @@ public class CellManager : MonoBehaviour
                     {
                         line.gameObject.SetActive(false);
                     }
-                    g.lineBetweenCellsCube.Add(line.cube);
+                    g.lineBetweenCellsCubes.Add(line.cube);
                 }
             }
         }
@@ -800,7 +800,7 @@ public class CellManager : MonoBehaviour
                 line.gameObject.SetActive(false);
             }
 
-            g.lineBetweenCellsCube.Add(line.cube);
+            g.lineBetweenCellsCubes.Add(line.cube);
         }
     }
 
