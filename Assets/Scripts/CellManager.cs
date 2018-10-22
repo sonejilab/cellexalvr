@@ -812,8 +812,8 @@ public class CellManager : MonoBehaviour
         foreach (GameObject line in lines)
         {
             Destroy(line, 0.05f);
+            line.GetComponent<LineBetweenTwoPoints>().graphPoint.lineBetweenCellsCubes.Clear();
         }
-
         lines.Clear();
         graphManager.ClearLinesBetweenGraphs();
     }
