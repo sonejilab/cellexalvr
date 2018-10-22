@@ -34,12 +34,12 @@ public class CellsToLoad : MonoBehaviour
 
     private void Update()
     {
-        if (GetComponent<VRTK_InteractableObject>().enabled)
-        {
-            referenceManager.gameManager.InformMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
-            referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
+        //if (GetComponent<VRTK_InteractableObject>().enabled)
+        //{
+        //    referenceManager.gameManager.InformMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
+        //    referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
             
-        }
+        //}
     }
 
     public bool GraphsLoaded()

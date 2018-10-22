@@ -8,6 +8,7 @@ using System.Collections;
 using System.Drawing.Imaging;
 using System.Threading;
 using CellexalExtensions;
+using TMPro;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -24,6 +25,7 @@ public class Heatmap : MonoBehaviour
     public GameObject movingQuadX;
     public GameObject movingQuadY;
     public int selectionNr;
+    public GameObject highlightGene;
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -164,91 +166,97 @@ public class Heatmap : MonoBehaviour
 
         if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
         {
-            raycastingSource = referenceManager.rightLaser.transform;
-            //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
-            RaycastHit hit;
-            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
-            if (hit.collider && hit.transform == transform)
+            HeatmapRaycast();
+        }
+            
+    }
+
+    void HeatmapRaycast()
+    {
+        raycastingSource = referenceManager.rightLaser.transform;
+        //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
+        RaycastHit hit;
+        int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
+        Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
+        if (hit.collider && hit.transform == transform)
+        {
+            int hitx = (int)(hit.textureCoord.x * bitmapWidth);
+            int hity = (int)(hit.textureCoord.y * bitmapHeight);
+            if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
             {
-                int hitx = (int)(hit.textureCoord.x * bitmapWidth);
-                int hity = (int)(hit.textureCoord.y * bitmapHeight);
-                if (CoordinatesInsideRect(hitx, hity, geneListX, heatmapY, geneListWidth, heatmapHeight))
-                {
-                    // if we hit the list of genes
-                    int geneHit = HandleHitGeneList(hity);
+                // if we hit the list of genes
+                int geneHit = HandleHitGeneList(hity);
 
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    {
-                        gameManager.InformColorGraphsByGene(genes[geneHit]);
-                        referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
-                    }
+                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                {
+                    gameManager.InformColorGraphsByGene(genes[geneHit]);
+                    referenceManager.cellManager.ColorGraphsByGene(genes[geneHit], graphManager.GeneExpressionColoringMethod);
                 }
-                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
+            }
+            else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, groupBarY, heatmapWidth, groupBarHeight))
+            {
+                // if we hit the grouping bar
+                HandleHitGroupingBar(hitx);
+            }
+            else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
+            {
+                // if we hit the actual heatmap
+                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
-                    // if we hit the grouping bar
-                    HandleHitGroupingBar(hitx);
+                    gameManager.InformHandlePressDown(name, hitx, hity);
+                    HandlePressDown(hitx, hity);
                 }
-                else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
+
+                if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
                 {
-                    // if we hit the actual heatmap
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    {
-                        gameManager.InformHandlePressDown(name, hitx, hity);
-                        HandlePressDown(hitx, hity);
-                    }
+                    // called when choosing a box selection
+                    gameManager.InformHandleBoxSelection(name, hitx, hity, selectionStartX, selectionStartY);
+                    HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+                }
+                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                {
+                    // called when letting go of the trigger to finalize a box selection
+                    gameManager.InformConfirmSelection(name, hitx, hity, selectionStartX, selectionStartY);
+                    ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+                }
+                else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                {
+                    // called when moving a selection
+                    gameManager.InformHandleMovingSelection(name, hitx, hity);
+                    HandleMovingSelection(hitx, hity);
+                }
+                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                {
+                    // called when letting go of the trigger to move the selection
+                    gameManager.InformMoveSelection(name, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+                    MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
 
-                    if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
-                    {
-                        // called when choosing a box selection
-                        gameManager.InformHandleBoxSelection(name, hitx, hity, selectionStartX, selectionStartY);
-                        HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
-                    }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
-                    {
-                        // called when letting go of the trigger to finalize a box selection
-                        gameManager.InformConfirmSelection(name, hitx, hity, selectionStartX, selectionStartY);
-                        ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
-                    }
-                    else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
-                    {
-                        // called when moving a selection
-                        gameManager.InformHandleMovingSelection(name, hitx, hity);
-                        HandleMovingSelection(hitx, hity);
-                    }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
-                    {
-                        // called when letting go of the trigger to move the selection
-                        gameManager.InformMoveSelection(name, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
-                        MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
-
-                    }
-                    else
-                    {
-                        // handle when the raycast just hits the heatmap
-                        gameManager.InformHandleHitHeatmap(name, hitx, hity);
-                        HandleHitHeatmap(hitx, hity);
-                    }
                 }
                 else
                 {
-                    // if we hit the heatmap but not any area of interest, like the borders or any space in between
-                    gameManager.InformResetHeatmapHighlight(name);
-                    ResetHeatmapHighlight();
+                    // handle when the raycast just hits the heatmap
+                    gameManager.InformHandleHitHeatmap(name, hitx, hity);
+                    HandleHitHeatmap(hitx, hity);
                 }
             }
             else
             {
-                // if we don't hit the heatmap at all
+                // if we hit the heatmap but not any area of interest, like the borders or any space in between
                 gameManager.InformResetHeatmapHighlight(name);
                 ResetHeatmapHighlight();
             }
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                // if the raycast leaves the heatmap and the user lets go of the trigger
-                gameManager.InformResetSelecting(name);
-                ResetSelecting();
-            }
+        }
+        else
+        {
+            // if we don't hit the heatmap at all
+            gameManager.InformResetHeatmapHighlight(name);
+            ResetHeatmapHighlight();
+        }
+        if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            // if the raycast leaves the heatmap and the user lets go of the trigger
+            gameManager.InformResetSelecting(name);
+            ResetSelecting();
         }
     }
 
@@ -750,6 +758,7 @@ public class Heatmap : MonoBehaviour
         highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
         highlightQuad.SetActive(true);
         highlightInfoText.text = "";
+        highlightGene.GetComponent<TextMeshPro>().text = genes[geneHit];
         return geneHit;
     }
 

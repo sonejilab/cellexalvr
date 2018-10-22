@@ -98,6 +98,10 @@ public abstract class CellexalToolButton : CellexalButton
                 meshRenderer.material.color = meshActivatedColor;
             }
         }
+        if (infoMenu)
+        {
+            infoMenu.SetActive(highlight);
+        }
     }
 
     public override void SetButtonActivated(bool activate)

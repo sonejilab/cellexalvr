@@ -68,10 +68,10 @@ public class PushBack : MonoBehaviour
                 {
                     transform.LookAt(Vector3.zero);
                 }
-                else if (hit.transform.GetComponent<Heatmap>())
-                {
-                    transform.LookAt(Vector3.zero);
-                }
+                //else if (hit.transform.GetComponent<Heatmap>())
+                //{
+                //    transform.LookAt(Vector3.zero);
+                //}
                 Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = dir.normalized;
                 transform.position += dir * distanceMultiplier;

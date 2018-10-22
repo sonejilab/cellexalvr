@@ -5,7 +5,7 @@ public class SwitchNetworkLayoutButton : CellexalButton
 {
     protected override string Description
     {
-        get { return "Switch layout"; }
+        get { return "Switch layout - " + layout.ToString(); }
     }
     public NetworkCenter center;
     public NetworkCenter.Layout layout;

@@ -87,7 +87,7 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name.Equals("[RightController]BasePointerRenderer_ObjectInteractor_Collider"))
         {
             var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
             controllerInside = true;
@@ -101,7 +101,7 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name.Equals("[RightController]BasePointerRenderer_ObjectInteractor_Collider"))
         {
             var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
             controllerInside = false;

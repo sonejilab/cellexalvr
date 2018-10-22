@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 23003621475484474}
   - component: {fileID: 114190743744166870}
   - component: {fileID: 114492706860786364}
-  m_Layer: 11
+  m_Layer: 2
   m_Name: NetworkCenterPrefab
   m_TagString: Network
   m_Icon: {fileID: 0}
@@ -870,6 +870,8 @@ MonoBehaviour:
   - {r: 1, g: 0.35686272, b: 0, a: 1}
   - {r: 1, g: 0.14117643, b: 0, a: 1}
   referenceManager: {fileID: 0}
+  selectionNr: 0
+  saveImageButton: {fileID: 114705351725496864}
   isReplacement: 0
   replacing: {fileID: 0}
 --- !u!114 &114235242178268010
@@ -1160,6 +1162,7 @@ MonoBehaviour:
   scaleMultiplier: 3
   maxScale: 85
   minScale: 0.95
+  referenceManager: {fileID: 0}
 --- !u!114 &114601644599353228
 MonoBehaviour:
   m_ObjectHideFlags: 1

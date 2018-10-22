@@ -99,7 +99,7 @@ public abstract class CellexalButton : MonoBehaviour
                 frameCount = 0;
                 controllerInside = inside;
                 SetHighlighted(inside);
-                if (infoMenu) infoMenu.SetActive(inside);
+                //if (infoMenu) infoMenu.SetActive(inside);
                 return;
             }
             if (!(hit.collider || hit.transform == transform))
@@ -107,11 +107,10 @@ public abstract class CellexalButton : MonoBehaviour
                 inside = false;
                 controllerInside = inside;
                 SetHighlighted(inside);
-                if (infoMenu) infoMenu.SetActive(inside);
+                //if (infoMenu) infoMenu.SetActive(inside);
             }
             controllerInside = inside;
             SetHighlighted(inside);
-            //infoMenu.SetActive(inside);
             if (descriptionText.text == Description)
             {
                 descriptionText.text = "";
@@ -142,10 +141,6 @@ public abstract class CellexalButton : MonoBehaviour
             else if (meshRenderer != null)
             {
                 meshRenderer.material.color = meshDeactivatedColor;
-            }
-            if (infoMenu)
-            {
-                infoMenu.SetActive(false);
             }
         }
         if (activate)
@@ -210,10 +205,10 @@ public abstract class CellexalButton : MonoBehaviour
             }
             controllerInside = false;
             SetHighlighted(false);
-            if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
-            {
-                infoMenu.SetActive(false);
-            }
+            //if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
+            //{
+            //    infoMenu.SetActive(false);
+            //}
         }
     }
 

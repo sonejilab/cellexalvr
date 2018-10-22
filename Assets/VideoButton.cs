@@ -33,10 +33,13 @@ public class VideoButton : CellexalButton
         //videoPlayer.Pause();
     }
 
+    public override void SetHighlighted(bool highlight)
+    {
+        // do nothing
+    }
 
     public void StartVideo()
     {
-        print("Activate");
         videoCanv.SetActive(true);
         videoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
         infoMenu.SetActive(false);
@@ -60,9 +63,6 @@ public class VideoButton : CellexalButton
         }
         if (buttonDescr.Equals("Play Video"))
         {
-            //videoCanv.SetActive(true);
-            //videoManager.GetComponent<PlayVideo>().StartVideo(clip);
-            print("Start Video");
             StartVideo();
             infoMenu.SetActive(false);
             Exit();

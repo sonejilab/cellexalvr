@@ -8,7 +8,7 @@ class ClearLinesBetweenGraphPointsButton : CellexalButton
 
     protected override string Description
     {
-        get { return "Draw lines between all cells with the same label in other graphs"; }
+        get { return "Clear lines between all cells with the same label in other graphs"; }
     }
 
     private void Start()

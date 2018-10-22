@@ -11,6 +11,7 @@ public abstract class ClickablePanel : MonoBehaviour
     protected Material keyNormalMaterial;
     protected Material keyHighlightMaterial;
     protected Material keyPressedMaterial;
+    private bool isPressed;
 
     protected virtual void Start()
     {
@@ -42,9 +43,30 @@ public abstract class ClickablePanel : MonoBehaviour
         {
             renderer = gameObject.GetComponent<Renderer>();
         }
-        if (highlight)
+        if (highlight && !isPressed)
         {
             renderer.sharedMaterial = keyHighlightMaterial;
+        }
+        else if (!highlight && isPressed)
+        {
+            renderer.sharedMaterial = keyPressedMaterial;
+        }
+        else if (!highlight)
+        {
+            renderer.sharedMaterial = keyNormalMaterial;
+        }
+    }
+
+    public virtual void SetPressed(bool pressed)
+    {
+        isPressed = pressed;
+        if (!renderer)
+        {
+            renderer = gameObject.GetComponent<Renderer>();
+        }
+        if (pressed)
+        {
+            renderer.sharedMaterial = keyPressedMaterial;
         }
         else
         {

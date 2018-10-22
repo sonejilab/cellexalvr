@@ -25,6 +25,7 @@ public class NetworkCenter : MonoBehaviour
     public NetworkHandler Handler { get; set; }
     public ReferenceManager referenceManager;
     public int selectionNr;
+    public CellexalButton saveImageButton;
 
 
     public float MaxNegPcor { get; set; }
@@ -1032,6 +1033,7 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     IEnumerator LogNetwork(string networkImageFilePath)
     {
+        saveImageButton.SetButtonActivated(false);
         string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
         string args = CellexalUser.UserSpecificFolder + " " + networkImageFilePath + " " + groupingsFilepath;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
@@ -1047,6 +1049,7 @@ public class NetworkCenter : MonoBehaviour
         }
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+        saveImageButton.SetButtonActivated(true);
     }
 
 

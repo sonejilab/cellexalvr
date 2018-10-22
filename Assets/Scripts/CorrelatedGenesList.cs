@@ -19,6 +19,7 @@ public class CorrelatedGenesList : MonoBehaviour
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;
     private SelectionToolHandler selectionToolHandler;
+    private PreviousSearchesListNode listNode;
 
     private void Start()
     {
@@ -66,28 +67,41 @@ public class CorrelatedGenesList : MonoBehaviour
     }
 
     /// <summary>
+    /// For multiplayer use. Listnode cant be sent as RPC call so send name of node directly.
+    /// </summary>
+    /// <param name="nodeName"></param>
+    /// <param name="type"></param>
+    public void CalculateCorrelatedGenes(string nodeName, CellexalExtensions.Definitions.Measurement type)
+    {
+        StartCoroutine(CalculateCorrelatedGenesCoroutine(nodeName, type));
+    }
+
+    /// <summary>
     /// Calculates the genes correlated and anti correlated to a certain gene.
     /// </summary>
     /// <param name="index"> The genes index in the list of previous searches. </param>
     /// <param name="name"> The genes name. </param>
-    public void CalculateCorrelatedGenes(string name, CellexalExtensions.Definitions.Measurement type)
+    public void CalculateCorrelatedGenes(PreviousSearchesListNode node, CellexalExtensions.Definitions.Measurement type)
     {
-        StartCoroutine(CalculateCorrelatedGenesCoroutine(name, type));
+        listNode = node;
+        listNode.GetComponentInChildren<CorrelatedGenesButton>().SetPressed(true);
+        listNode.SetPressed(true);
+        StartCoroutine(CalculateCorrelatedGenesCoroutine(listNode.NameOfThing, type));
     }
 
-    private IEnumerator CalculateCorrelatedGenesCoroutine(string name, CellexalExtensions.Definitions.Measurement type)
+    private IEnumerator CalculateCorrelatedGenesCoroutine(string nodeName, CellexalExtensions.Definitions.Measurement type)
     {
-        string outputFile = Directory.GetCurrentDirectory() + @"\Resources\" + name + ".correlated.txt";
+        string outputFile = Directory.GetCurrentDirectory() + @"\Resources\" + nodeName + ".correlated.txt";
         string facsTypeArg = (type == CellexalExtensions.Definitions.Measurement.FACS) ? "T" : "F";
-        string args = selectionToolHandler.DataDir + " " + name + " " + outputFile + " " + facsTypeArg;
+        string args = selectionToolHandler.DataDir + " " + nodeName + " " + outputFile + " " + facsTypeArg;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";
         CellexalLog.Log("Calculating correlated genes with R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments: " + args);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + name);
-        var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + name);
-        var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + name);
+        var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + nodeName);
+        var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + nodeName);
+        var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + nodeName);
         t.Start();
         while (t.IsAlive)
         {
@@ -115,11 +129,16 @@ public class CorrelatedGenesList : MonoBehaviour
                             "\tActual lengths: " + correlatedGenes.Length + " plus " + anticorrelatedGenes.Length + " genes");
             yield break;
         }
-        CellexalLog.Log("Successfully calculated genes correlated to " + name);
-        PopulateList(name, type, correlatedGenes, anticorrelatedGenes);
+        CellexalLog.Log("Successfully calculated genes correlated to " + nodeName);
+        PopulateList(nodeName, type, correlatedGenes, anticorrelatedGenes);
         statusDisplay.RemoveStatus(statusId);
         statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
+        if (listNode)
+        {
+            listNode.SetPressed(false);
+            listNode.GetComponentInChildren<CorrelatedGenesButton>().SetPressed(false);
+        }
     }
 
 
