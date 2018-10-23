@@ -73,7 +73,12 @@ public abstract class CellexalButton : MonoBehaviour
     protected virtual void Update()
     {
         frameCount++;
-        if (!buttonActivated) return;
+        CheckForClick();
+        CheckForHit();
+    }
+
+    private void CheckForClick()
+    {
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
@@ -83,8 +88,15 @@ public abstract class CellexalButton : MonoBehaviour
         {
             HelpClick();
         }
-        // Button sometimes stays active even though ontriggerexit should have been called.
-        // To deactivate button again check every 10th frame if laser pointer collider is colliding.
+    }
+
+    /// <summary>
+    /// Button sometimes stays active even though ontriggerexit should have been called.
+    /// To deactivate button again check every 10th frame if laser pointer collider is colliding.
+    /// </summary>
+    private void CheckForHit()
+    {
+        if (!buttonActivated) return;
         if (frameCount % 10 == 0)
         {
             bool inside = false;
@@ -92,7 +104,7 @@ public abstract class CellexalButton : MonoBehaviour
             raycastingSource = referenceManager.rightLaser.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
             //if (hit.collider) print(hit.collider.transform.gameObject.name);
-            if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled)
+            if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled && buttonActivated)
             {
 
                 inside = true;
