@@ -584,7 +584,6 @@ public class SelectionToolHandler : MonoBehaviour
     {
         // print(new System.Diagnostics.StackTrace());
         string filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
-        print("Creating new selection file: " + fileCreationCtr);
         using (StreamWriter file =
                    new StreamWriter(filePath))
         {
