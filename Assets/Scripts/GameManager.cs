@@ -382,6 +382,12 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendSetArcsVisible", PhotonTargets.Others, toggleToState, networkName);
     }
 
+    public void InformSetCombinedArcsVisible(bool toggleToState, string networkName)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendSetCombinedArcsVisible", PhotonTargets.Others, toggleToState, networkName);
+    }
+
     public void InformMinimizeGraph(string graphName)
     {
         if (!multiplayer) return;

@@ -24,6 +24,7 @@ public class ToggleAllCombinedArcsButton : CellexalButton
         {
             network.SetArcsVisible(false);
             network.SetCombinedArcsVisible(toggleToState);
+            referenceManager.gameManager.InformSetCombinedArcsVisible(toggleToState, network.name);
         }
     }
 

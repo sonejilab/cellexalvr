@@ -99,4 +99,5 @@ MonoBehaviour:
   - TaggedPlayer
   - SendDeleteObject
   - SendCubeColoured
+  - SendSetCombinedArcsVisible
   DisableAutoOpenWizard: 1

@@ -331,9 +331,19 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendSetArcsVisible(bool toggleToState, string networkName)
     {
-        Debug.Log("Toggle arcs of " + networkName);
-        // Oh god...
-        GameObject.Find(networkName).GetComponent<NetworkCenter>().SetArcsVisible(toggleToState);
+        CellexalLog.Log("Toggle arcs of " + networkName);
+        NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
+        network.SetCombinedArcsVisible(!toggleToState);
+        network.SetArcsVisible(toggleToState);
+    }
+
+    [PunRPC]
+    public void SendSetCombinedArcsVisible(bool toggleToState, string networkName)
+    {
+        CellexalLog.Log("Toggle combined arcs of " + networkName);
+        NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
+        network.SetArcsVisible(!toggleToState);
+        network.SetCombinedArcsVisible(toggleToState);
     }
 
     [PunRPC]
