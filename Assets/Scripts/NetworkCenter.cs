@@ -659,6 +659,7 @@ public class NetworkCenter : MonoBehaviour
             Enlarged = false;
             StartCoroutine(BringBackOriginalCoroutine());
         }
+        CellexalEvents.NetworkUnEnlarged.Invoke();
     }
 
     private IEnumerator BringBackOriginalCoroutine()
