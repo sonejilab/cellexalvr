@@ -23,7 +23,7 @@ public class MenuRotator : MonoBehaviour
     /// <summary>
     /// Rotates the menu 90 degrees to the right.
     /// </summary>
-    public void RotateRight()
+    public void RotateRight(int times = 1)
     {
         if (!isRotating)
         {
@@ -43,15 +43,16 @@ public class MenuRotator : MonoBehaviour
                     break;
             }
 
-            StartCoroutine(RotateMe(-90f, 0.15f));
+            StartCoroutine(RotateMe(-90f * times, 0.15f));
         }
     }
 
     /// <summary>
     /// Rotates the menu 90 degrees to the left.
     /// </summary>
-    public void RotateLeft()
+    public void RotateLeft(int times = 1)
     {
+        print("Do rotate");
         if (!isRotating)
         {
             switch (SideFacingPlayer)
@@ -69,7 +70,7 @@ public class MenuRotator : MonoBehaviour
                     SideFacingPlayer = Rotation.Front;
                     break;
             }
-            StartCoroutine(RotateMe(90f, 0.15f));
+            StartCoroutine(RotateMe(90f * times, 0.15f));
         }
     }
 

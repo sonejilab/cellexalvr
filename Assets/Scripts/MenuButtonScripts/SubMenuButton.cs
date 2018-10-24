@@ -26,6 +26,11 @@ public class SubMenuButton : CellexalButton
 
     protected override void Click()
     {
+        OpenMenu();
+    }
+
+    public void OpenMenu()
+    {
         foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
         {
             DeactivateButtonsRecursive(buttonsToDeactivate);

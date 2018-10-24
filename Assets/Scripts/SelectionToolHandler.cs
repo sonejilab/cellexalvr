@@ -45,7 +45,6 @@ public class SelectionToolHandler : MonoBehaviour
     public ParticleSystem particles;
 
     [HideInInspector]
-    public int[] groups = new int[10];
     public int currentColorIndex = 0;
     public string DataDir { get; set; }
     private List<HistoryListInfo> selectionHistory = new List<HistoryListInfo>();
@@ -148,6 +147,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
+        print("Add nr - " + selectedCells.Count + " - to group - " + newGroup);
         //Debug.Log("Adding gp to sel. Inform clients.");
         //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
@@ -223,8 +223,11 @@ public class SelectionToolHandler : MonoBehaviour
                 }
                 selectedCells.Add(graphPoint);
             }
-            else
+            else 
             {
+                // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
+                selectedCells.Remove(graphPoint);
+                selectedCells.Add(graphPoint);
                 groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
                 HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
                 FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);

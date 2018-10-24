@@ -115,6 +115,8 @@ public class CellManager : MonoBehaviour
     private int[] savedFlashGenesLengths;
     private int coloringInfoStatusId;
     private Dictionary<Cell, int> recolored;
+    private List<KeyValuePair<GraphPoint,int>> selectionList;
+
 
     void Awake()
     {
@@ -144,6 +146,7 @@ public class CellManager : MonoBehaviour
         FarGroupInfo = referenceManager.FarGroupInfo;
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
         recolored = new Dictionary<Cell, int>();
+        selectionList = new List<KeyValuePair<GraphPoint, int>>();
     }
 
     /// <summary>
@@ -636,8 +639,30 @@ public class CellManager : MonoBehaviour
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByAttribute(attributeType, color);
+            GraphPoint gp = cell.GraphPoints[0];
+            if (cell.Attributes.ContainsKey(attributeType.ToLower()))
+            {
+                if (color)
+                {
+                    selectionList.Add(new KeyValuePair<GraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                    //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], cell.Attributes[attributeType.ToLower()], false, g.Material.color);
+                }
+                if (!color)
+                {
+                    selectionList.Remove(new KeyValuePair<GraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                }
+            }
         }
 
+    }
+
+    public void SendToSelection()
+    {
+        print("Sending to selection - " + selectionList.Count);
+        foreach (KeyValuePair<GraphPoint, int> entry in selectionList)
+        {
+            graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false, graphManager.AttributeMaterials[entry.Value].color);
+        }
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 using CellexalExtensions;
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 /// <summary>
 /// Represents one cell. A cell may be present in multiple graphs.
@@ -67,9 +68,16 @@ public class Cell
             foreach (GraphPoint g in GraphPoints)
             {
                 if (color)
+                {
                     g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
+                    //Debug.Log("ADD GROUP - " + Attributes[attributeType.ToLower()]);
+                    //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(GraphPoints[0], Attributes[attributeType.ToLower()], false, g.Material.color);
+                }
+                    
                 else
+                {
                     g.Material = graphManager.defaultGraphPointMaterial;
+                }
             }
         }
     }
