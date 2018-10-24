@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using ExitGames.Demos.DemoAnimator;
 using System;
+using TMPro;
 
 /// <summary>
 /// Player manager. 
@@ -19,7 +20,7 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
     #region Public Variables
     [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static GameObject LocalPlayerInstance;
-
+    public GameObject username;
     #endregion
 
     #region Private Variables
@@ -64,6 +65,7 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
     /// </summary>
     void Start()
     {
+        username.GetComponent<TextMeshPro>().text = gameObject.name;
 
 
 

@@ -62,7 +62,7 @@ public abstract class CellexalButton : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        this.tag = "Menu Controller Collider";
+        //this.tag = "Menu Controller Collider";
         layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
         layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
         layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -159,10 +160,26 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
+        bool graphExists = g != null;
+        if (graphExists)
+        {
+            try
+            {
+                g.transform.position = new Vector3(posX, posY, posZ);
+                g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Could not move graph - Error: " + e);
+            }
+        }
+        else
+        {
+            CellexalLog.Log("Could not find graph to move");
 
-        g.transform.position = new Vector3(posX, posY, posZ);
-        g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-        g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+        }
+
     }
 
     [PunRPC]
@@ -253,9 +270,24 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
-        hm.transform.position = new Vector3(posX, posY, posZ);
-        hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-        hm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+        bool heatmapExists = hm != null;
+        if (heatmapExists)
+        {
+            try
+            {
+                hm.transform.position = new Vector3(posX, posY, posZ);
+                hm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                hm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Could not move heatmap - Error: " + e);
+            }
+        }
+        else
+        {
+            CellexalLog.Log("Could not find heatmap to move");
+        }
     }
 
     [PunRPC]
@@ -266,7 +298,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendDeleteObject(string name, Transform target)
+    public void SendDeleteObject(string name)
     {
         CellexalLog.Log("Recieved message to delete object with name: " + name);
         Destroy(GameObject.Find(name));
@@ -294,9 +326,24 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
-        nh.transform.position = new Vector3(posX, posY, posZ);
-        nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-        nh.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+        bool networkExists = nh != null;
+        if (networkExists)
+        {
+            try
+            {
+                nh.transform.position = new Vector3(posX, posY, posZ);
+                nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                nh.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Could not move network to move - Error: " + e);
+            }
+        }
+        else
+        {
+            CellexalLog.Log("Could not find network to move");
+        }
     }
 
     [PunRPC]
@@ -318,14 +365,22 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
-        Vector3 pos = new Vector3(posX, posY, posZ);
-        Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
-        Vector3 scale = new Vector3(scaleX, scaleY, scaleZ);
         var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
         var center = handler.FindNetworkCenter(networkCenterName);
-        center.transform.position = pos;
-        center.transform.rotation = rot;
-        center.transform.localScale = scale;
+        bool networkExists = (handler != null && center != null);
+        if (networkExists)
+        {
+            Vector3 pos = new Vector3(posX, posY, posZ);
+            Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
+            Vector3 scale = new Vector3(scaleX, scaleY, scaleZ);
+            center.transform.position = pos;
+            center.transform.rotation = rot;
+            center.transform.localScale = scale;
+        }
+        else
+        {
+            CellexalLog.Log("Could not find networkcenter to move");
+        }
     }
 
     [PunRPC]
@@ -333,7 +388,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Toggle arcs of " + networkName);
         NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
-        network.SetCombinedArcsVisible(!toggleToState);
+        network.SetCombinedArcsVisible(false);
         network.SetArcsVisible(toggleToState);
     }
 
@@ -342,7 +397,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     {
         CellexalLog.Log("Toggle combined arcs of " + networkName);
         NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
-        network.SetArcsVisible(!toggleToState);
+        network.SetArcsVisible(false);
         network.SetCombinedArcsVisible(toggleToState);
     }
 
