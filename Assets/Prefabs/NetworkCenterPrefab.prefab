@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 65426757975555904}
   - component: {fileID: 212670547573808694}
   - component: {fileID: 114601644599353228}
-  m_Layer: 16
+  m_Layer: 11
   m_Name: Recalculate 3D button
-  m_TagString: Menu Controller Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,9 +75,9 @@ GameObject:
   - component: {fileID: 65132475085316250}
   - component: {fileID: 212050481961902904}
   - component: {fileID: 114946724007853856}
-  m_Layer: 16
+  m_Layer: 11
   m_Name: Recalculate 2D button
-  m_TagString: Menu Controller Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,9 +111,9 @@ GameObject:
   - component: {fileID: 65309455570216738}
   - component: {fileID: 212811960020666842}
   - component: {fileID: 114705351725496864}
-  m_Layer: 16
+  m_Layer: 11
   m_Name: Save Network As Image Button
-  m_TagString: Menu Controller Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,9 +180,9 @@ GameObject:
   - component: {fileID: 65537345504442360}
   - component: {fileID: 212810201733297996}
   - component: {fileID: 114136589334105450}
-  m_Layer: 16
+  m_Layer: 11
   m_Name: Save Network As Text File Button
-  m_TagString: Menu Controller Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,9 +271,9 @@ GameObject:
   - component: {fileID: 65663185343727662}
   - component: {fileID: 212595322109270854}
   - component: {fileID: 114633175378518256}
-  m_Layer: 16
+  m_Layer: 11
   m_Name: Switch To 3D button
-  m_TagString: Menu Controller Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -289,9 +289,9 @@ GameObject:
   - component: {fileID: 65985393791794690}
   - component: {fileID: 212976537025818506}
   - component: {fileID: 114164701368190424}
-  m_Layer: 16
+  m_Layer: 11
   m_Name: Switch To 2D button
-  m_TagString: Menu Controller Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -363,9 +363,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758485399609656}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1876276, y: 0.06564012, z: 2.693766}
-  m_LocalScale: {x: 0.122256, y: 0.122256, z: 0.122256}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.0605702, y: 1.383362, z: 7.7428827}
+  m_LocalScale: {x: 0.12256, y: 0.12256, z: 0.12256}
   m_Children:
   - {fileID: 4863051668717822}
   - {fileID: 4151404759430638}

@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114940603741624592}
   m_Layer: 11
   m_Name: NetworkNodePrefab
-  m_TagString: Untagged
+  m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
