@@ -3,12 +3,12 @@ using UnityEngine;
 using System.IO;
 using System;
 using VRTK;
-using System.Drawing;
 using System.Collections;
 using System.Drawing.Imaging;
 using System.Threading;
 using CellexalExtensions;
 using TMPro;
+using System.Drawing;
 
 /// <summary>
 /// This class represents a heatmap.
@@ -18,14 +18,15 @@ public class Heatmap : MonoBehaviour
     public ReferenceManager referenceManager;
     public Texture texture;
     public TextMesh infoText;
-    public CellexalButton saveImageButton;
-    public CellexalButton goAnalysisButton;
+    public TextMeshPro statusText;
+    public SaveHeatmapButton saveImageButton;
+    public GOanalysisButton goAnalysisButton;
     public GameObject highlightQuad;
     public GameObject confirmQuad;
     public GameObject movingQuadX;
     public GameObject movingQuadY;
     public int selectionNr;
-    public GameObject highlightGene;
+    public TextMeshPro highlightGene;
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -126,7 +127,6 @@ public class Heatmap : MonoBehaviour
         movingQuadX.SetActive(false);
         movingQuadY.SetActive(false);
         highlightInfoText = highlightQuad.GetComponentInChildren<TextMesh>();
-
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
         numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
@@ -197,6 +197,7 @@ public class Heatmap : MonoBehaviour
             {
                 // if we hit the grouping bar
                 HandleHitGroupingBar(hitx);
+                highlightGene.text = "";
             }
             else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
             {
@@ -238,12 +239,14 @@ public class Heatmap : MonoBehaviour
                     gameManager.InformHandleHitHeatmap(name, hitx, hity);
                     HandleHitHeatmap(hitx, hity);
                 }
+                highlightGene.text = "";
             }
             else
             {
                 // if we hit the heatmap but not any area of interest, like the borders or any space in between
                 gameManager.InformResetHeatmapHighlight(name);
                 ResetHeatmapHighlight();
+                highlightGene.text = "";
             }
         }
         else
@@ -306,16 +309,25 @@ public class Heatmap : MonoBehaviour
         groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, width));
         if (genes == null || genes.Length == 0)
         {
-            StreamReader streamReader = new StreamReader(filepath);
-            int numberOfGenes = int.Parse(streamReader.ReadLine());
-            genes = new string[numberOfGenes];
-            int i = 0;
-            while (!streamReader.EndOfStream)
+            try
             {
-                genes[i] = streamReader.ReadLine();
-                i++;
+                StreamReader streamReader = new StreamReader(filepath);
+                int numberOfGenes = int.Parse(streamReader.ReadLine());
+                genes = new string[numberOfGenes];
+                int i = 0;
+                while (!streamReader.EndOfStream)
+                {
+                    genes[i] = streamReader.ReadLine();
+                    i++;
+                }
+                streamReader.Close();
             }
-            streamReader.Close();
+            catch (FileNotFoundException e)
+            {
+                Debug.Log("File - " + filepath + " - not found.");
+                CellexalLog.Log("File - " + filepath + " - not found.");
+            }
+
         }
         StartCoroutine(BuildTextureCoroutine(groupWidths));
     }
@@ -758,7 +770,7 @@ public class Heatmap : MonoBehaviour
         highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
         highlightQuad.SetActive(true);
         highlightInfoText.text = "";
-        highlightGene.GetComponent<TextMeshPro>().text = genes[geneHit];
+        highlightGene.text = genes[geneHit];
         return geneHit;
     }
 
@@ -1160,6 +1172,7 @@ public class Heatmap : MonoBehaviour
     IEnumerator LogHeatmap(string heatmapImageFilePath)
     {
         saveImageButton.SetButtonActivated(false);
+        statusText.text = "Saving Heatmap...";
         string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
         string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
         string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
@@ -1177,7 +1190,9 @@ public class Heatmap : MonoBehaviour
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         heatmapSaved = true;
-        saveImageButton.SetButtonActivated(true);
+        saveImageButton.FinishedButton();
+        statusText.text = "";
+        //saveImageButton.SetButtonActivated(true);
     }
 
     /// <summary>
@@ -1209,6 +1224,7 @@ public class Heatmap : MonoBehaviour
     /// <returns></returns>
     IEnumerator GOAnalysis(string goAnalysisDirectory)
     {
+        statusText.text = "Doing GO Analysis...";
         if (!heatmapSaved)
         {
             SaveImage();
@@ -1235,7 +1251,9 @@ public class Heatmap : MonoBehaviour
         }
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-        goAnalysisButton.SetButtonActivated(true);
+        statusText.text = "";
+        goAnalysisButton.FinishedButton();
+        //goAnalysisButton.SetButtonActivated(true);
     }
 
 

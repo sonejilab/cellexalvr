@@ -135,6 +135,7 @@ public class LoaderController : MonoBehaviour
                     string path = cellParent.GetComponent<CellsToLoad>().Directory;
                     graphManager.directory = path;
                     inputReader.ReadFolder(path);
+                    referenceManager.keyboardStatusFolder.ClearKey();
                     gameManager.InformReadFolder(path);
 
                 }

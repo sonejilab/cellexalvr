@@ -173,6 +173,7 @@ public class NetworkGenerator : MonoBehaviour
         CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
         status.RemoveStatus(statusId);
         GeneratingNetworks = false;
+        CellexalEvents.NetworkCreated.Invoke();
         if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)
             calculatorCluster.SetActive(false);
         //statusDisplayHUD.RemoveStatus(statusIdHUD);

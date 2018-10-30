@@ -193,7 +193,6 @@ public class HeatmapGenerator : MonoBehaviour
 
             while (t.IsAlive)
             {
-
                 yield return null;
             }
             stopwatch.Stop();
@@ -223,6 +222,8 @@ public class HeatmapGenerator : MonoBehaviour
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+
+            CellexalEvents.HeatmapCreated.Invoke();
         }
     }
 
