@@ -160,6 +160,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.Menu:
+                drawTool.SetActive(false);
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                 rightControllerBodyRenderer.material = normalMaterial;
