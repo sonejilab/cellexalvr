@@ -2,7 +2,7 @@
 /// <summary>
 /// Represents the button that opens the menu for coloring graphs based on a previous selection.
 /// </summary>
-class CreateSelectionFromPreviousMenuButton : CellexalButton
+class SelectionFromPreviousMenuButton : CellexalButton
 {
     public GameObject menu;
     public GameObject buttons;
@@ -14,7 +14,7 @@ class CreateSelectionFromPreviousMenuButton : CellexalButton
 
     void Start()
     {
-        menu = referenceManager.createSelectionFromPreviousSelectionMenu.gameObject;
+        menu = referenceManager.selectionFromPreviousMenu.gameObject;
         buttons = referenceManager.rightButtons;
         SetButtonActivated(false);
         CellexalEvents.GraphsLoaded.AddListener(TurnOn);

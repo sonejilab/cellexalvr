@@ -4,11 +4,10 @@ using UnityEngine;
 /// <summary>
 /// Represents the sub menu that pops up when the <see cref="ColorByIndexButton"/> is pressed.
 /// </summary>
-public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
+public class SelectionFromPreviousMenu : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public GameObject buttonPrefab;
-
     private MenuToggler menuToggler;
     // hard coded positions :)
     private Vector3 buttonPos = new Vector3(-.39f, .77f, .282f);
@@ -30,7 +29,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
     /// <param name="names"> An array with the names of the selections. </param>
     /// <param name="selectionCellNames"> An array of arrays with the names of the cells in each selection. </param>
     /// <param name="selectionGroups"> An array of arrays with the groups that each cell in each selection belong to. </param>
-    public void CreateSelectionFromPreviousSelectionButtons(string[] graphNames, string[] names, string[][] selectionCellNames, int[][] selectionGroups, Dictionary<int, Color>[] groupingColors)
+    public void SelectionFromPreviousButton(string[] graphNames, string[] names, string[][] selectionCellNames, int[][] selectionGroups, Dictionary<int, Color>[] groupingColors)
     {
 
         foreach (GameObject button in buttons)
@@ -53,7 +52,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
             menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
             buttonGameObject.transform.localPosition = buttonPos;
 
-            var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();
+            var button = buttonGameObject.GetComponent<SelectionFromPreviousButton>();
             button.SetSelection(graphNames[i], name, selectionCellNames[i], selectionGroups[i], groupingColors[i]);
             buttons.Add(buttonGameObject);
 
@@ -95,7 +94,7 @@ public class CreateSelectionFromPreviousSelectionMenu : MonoBehaviour
         menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
         buttonGameObject.transform.localPosition = buttonPos;
 
-        var button = buttonGameObject.GetComponent<CreateSelectionFromPreviousButton>();
+        var button = buttonGameObject.GetComponent<SelectionFromPreviousButton>();
         button.SetSelection(selectedCells[0].GraphName, name, cellnames, cellgroups, colors);
         buttons.Add(buttonGameObject);
 

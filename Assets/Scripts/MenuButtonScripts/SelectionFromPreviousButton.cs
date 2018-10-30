@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Represents the buttons that are used to create new selections from old ones.
 /// </summary>
-class CreateSelectionFromPreviousButton : CellexalButton
+public class SelectionFromPreviousButton : CellexalButton
 {
 
     public TextMesh buttonDescription;
