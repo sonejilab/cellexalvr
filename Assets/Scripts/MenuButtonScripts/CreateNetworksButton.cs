@@ -25,10 +25,9 @@ public class CreateNetworksButton : CellexalButton
     {
         var rand = new System.Random();
         var layoutSeed = rand.Next();
-        //print(layoutSeed);
         networkGenerator.GenerateNetworks(layoutSeed);
         gameManager.InformGenerateNetworks(layoutSeed);
-        CellexalEvents.NetworkCreated.Invoke();
+        CellexalEvents.CreatingNetworks.Invoke();
         TurnOff();
     }
 

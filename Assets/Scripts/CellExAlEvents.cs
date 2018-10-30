@@ -17,8 +17,10 @@ public static class CellexalEvents
     public static UnityEvent EndOfHistoryReached = new UnityEvent();
     public static UnityEvent EndOfHistoryLeft = new UnityEvent();
 
+    public static UnityEvent CreatingHeatmap = new UnityEvent();
     public static UnityEvent HeatmapCreated = new UnityEvent();
     public static UnityEvent HeatmapBurned = new UnityEvent();
+    public static UnityEvent CreatingNetworks = new UnityEvent();
     public static UnityEvent NetworkCreated = new UnityEvent();
     public static UnityEvent NetworkEnlarged = new UnityEvent();
     public static UnityEvent NetworkUnEnlarged = new UnityEvent();
