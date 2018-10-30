@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using BayatGames.SaveGameFree.Examples;
 using System.Collections;
 using System.Threading;
-
+using System;
+using System.Net.Mail;
 /// <summary>
 /// Represents the button that saves the current scene.
 /// </summary>
@@ -42,11 +42,10 @@ public class SaveButton : CellexalButton
     // Update is called once per frame
     protected override void Click()
     {
-        Debug.Log("Do Save");
-        //saveScene.Save();
+        SetButtonActivated(false);
         StartCoroutine(LogStop());
         //elapsedTime = 0.0f;
-        SetButtonActivated(false);
+
 
     }
 
@@ -70,20 +69,36 @@ public class SaveButton : CellexalButton
         }
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+        //SendIt();
+
+        //string startPath = @"c:\example\start";
+        //string zipPath = @"c:\example\result.zip";
+
+        //ZipFile.CreateFromDirectory(startPath, zipPath);
         changeSprite = false;
         SetButtonActivated(true);
-        /*
-        void ChangeSprite() 
-        {
-            spriteRenderer.sprite = gray;
-            float elapsedTime = 0.0f;
-            if (elapsedTime > time) 
-            {
-                spriteRenderer.sprite = original;
-            } else {
-                elapsedTime += Time.deltaTime;
-            }
-        }*/
-
     }
+
+//    public static void SendIt()
+//    {
+//        MailMessage mail = new MailMessage();
+//        mail.From = new MailAddress("cellexalvr@gmail.com");
+//        mail.To.Add("cellexalvr@gmail.com");
+//        mail.Subject = "Test Mail - 1";
+//        mail.Body = "mail with attachment";
+
+//        System.Net.Mail.Attachment attachment;
+//        attachment = new System.Net.Mail.Attachment("your attachment file");
+//        mail.Attachments.Add(attachment);
+
+//#pragma warning disable CS0618 // Type or member is obsolete
+//        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com")
+//#pragma warning restore CS0618 // Type or member is obsolete
+//        {
+//            Port = 587,
+//            EnableSsl = true
+//        };
+
+//        SmtpServer.Send(mail);
+//    }
 }
