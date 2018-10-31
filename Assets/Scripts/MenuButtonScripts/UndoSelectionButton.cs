@@ -17,6 +17,7 @@ public class UndoSelectionButton : CellexalButton
         SetButtonActivated(false);
         CellexalEvents.SelectionStarted.AddListener(TurnOn);
         CellexalEvents.SelectionCanceled.AddListener(TurnOff);
+        CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 

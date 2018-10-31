@@ -106,7 +106,6 @@ public abstract class CellexalButton : MonoBehaviour
             //if (hit.collider) print(hit.collider.transform.gameObject.name);
             if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled && buttonActivated)
             {
-
                 inside = true;
                 frameCount = 0;
                 controllerInside = inside;

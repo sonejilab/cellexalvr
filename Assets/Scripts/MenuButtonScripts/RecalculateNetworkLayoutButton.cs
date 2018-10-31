@@ -13,8 +13,8 @@ public class RecalculateNetworkLayoutButton : CellexalButton
     protected override void Awake()
     {
         base.Awake();
-        CellexalEvents.NetworkEnlarged.AddListener(TurnOn);
-        CellexalEvents.NetworkUnEnlarged.AddListener(TurnOff);
+        //CellexalEvents.NetworkEnlarged.AddListener(TurnOn);
+        //CellexalEvents.NetworkUnEnlarged.AddListener(TurnOff);
         TurnOff();
     }
 

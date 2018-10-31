@@ -19,7 +19,7 @@ public class SaveButton : CellexalButton
     // Use this for initialization
     protected override string Description
     {
-        get { return "Save Session"; }
+        get { return "Save Session/Create Report"; }
     }
 
     protected override void Update()
