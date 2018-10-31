@@ -77,23 +77,37 @@ public class AutoCompleteList : MonoBehaviour
         }
 
         string[] attributes = referenceManager.cellManager.Attributes;
-        foreach (string attribute in attributes)
+        try
         {
-            namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
-            if (attribute.Length > longestNameLength)
+            foreach (string attribute in attributes)
             {
-                longestNameLength = attribute.Length;
+                namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
+                if (attribute.Length > longestNameLength)
+                {
+                    longestNameLength = attribute.Length;
+                }
             }
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
         }
 
         string[] facs = referenceManager.cellManager.Facs;
-        foreach (string f in facs)
+        try
         {
-            namesOfThings.Add(new Tuple<string, Definitions.Measurement>(f, Definitions.Measurement.FACS));
-            if (f.Length > longestNameLength)
+            foreach (string f in facs)
             {
-                longestNameLength = f.Length;
+                namesOfThings.Add(new Tuple<string, Definitions.Measurement>(f, Definitions.Measurement.FACS));
+                if (f.Length > longestNameLength)
+                {
+                    longestNameLength = f.Length;
+                }
             }
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Could not read facs. Caught error - " + e.StackTrace);
         }
         scoreMatrix = new int[longestNameLength + 1, longestNameLength + 1];
         // two sides of the score matrix are always the same
