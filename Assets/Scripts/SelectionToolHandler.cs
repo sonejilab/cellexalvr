@@ -29,7 +29,7 @@ public class SelectionToolHandler : MonoBehaviour
     public Color[] Colors;
     public Collider[] selectionToolColliders;
 
-    private CreateSelectionFromPreviousSelectionMenu previousSelectionMenu;
+    private SelectionFromPreviousMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
@@ -83,7 +83,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
-        previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
+        previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
         SetSelectionToolEnabled(false, 0);
         CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
     }
