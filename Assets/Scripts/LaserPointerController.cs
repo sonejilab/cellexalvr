@@ -9,9 +9,9 @@ public class LaserPointerController : MonoBehaviour
     private GameObject tempHit;
     private int layerMaskMenu;
     private int layerMaskKeyboard;
-    private int layerMaskGraph;
-    private int layerMaskNetwork;
-    private int layerMaskOther;
+    //private int layerMaskGraph;
+    //private int layerMaskNetwork;
+    //private int layerMaskOther;
     private bool alwaysActive;
     private bool keyboardActive;
     private bool hitLastFrame;
@@ -27,8 +27,8 @@ public class LaserPointerController : MonoBehaviour
         GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
         layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
         layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
-        layerMaskGraph = 1 << LayerMask.NameToLayer("GraphLayer");
-        layerMaskNetwork = 1 << LayerMask.NameToLayer("NetworkLayer");
+        //layerMaskGraph = 1 << LayerMask.NameToLayer("GraphLayer");
+        //layerMaskNetwork = 1 << LayerMask.NameToLayer("NetworkLayer");
         //layerMaskOther = layerMaskKeyboard | layerMaskSel;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 

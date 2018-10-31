@@ -47,7 +47,7 @@ public class NetworkCenter : MonoBehaviour
     public enum Layout { TWO_D, THREE_D }
 
     private ControllerModelSwitcher controllerModelSwitcher;
-    // The network will pop up above the pedestal gameobject when it's enlarged.
+    // The network will pop up infront of the user when it's enlarged.
     private GameObject pedestal;
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
@@ -526,10 +526,6 @@ public class NetworkCenter : MonoBehaviour
         {
             controllerInside = true;
             numColliders++;
-            // i think this sometimes gets called before start
-            // so let's make sure that the controllermodelswitcher is set
-            if (controllerModelSwitcher != null)
-                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
         }
     }
 
@@ -567,7 +563,6 @@ public class NetworkCenter : MonoBehaviour
     public void EnlargeNetwork()
     {
         StartCoroutine(EnlargeNetworkCoroutine());
-        CellexalEvents.NetworkEnlarged.Invoke();
     }
 
     private IEnumerator EnlargeNetworkCoroutine()
@@ -605,10 +600,11 @@ public class NetworkCenter : MonoBehaviour
         oldRotation = transform.rotation;
 
         transform.parent = null;
-        transform.position = pedestal.transform.position + new Vector3(0, 1, 0);
+        transform.position = referenceManager.headset.transform.position;
+        transform.rotation = referenceManager.headset.transform.rotation;
+        transform.position += referenceManager.headset.transform.forward * 1f;
         transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-        transform.rotation = pedestal.transform.rotation;
-        transform.Rotate(-90f, 0, 0);
+        transform.Rotate(20f, 0, 0);
 
         // instantiate a replacement in our place
         var replacement = Instantiate(replacementPrefab);
@@ -635,6 +631,11 @@ public class NetworkCenter : MonoBehaviour
 
         // tell our network handler that we have a replacement
         Handler.Replacements.Add(replacementScript);
+        CellexalEvents.NetworkEnlarged.Invoke();
+        foreach (CellexalButton button in GetComponentsInChildren<CellexalButton>())
+        {
+            button.SetButtonActivated(true);
+        }
     }
 
     /// <summary>
@@ -659,7 +660,6 @@ public class NetworkCenter : MonoBehaviour
             Enlarged = false;
             StartCoroutine(BringBackOriginalCoroutine());
         }
-        CellexalEvents.NetworkUnEnlarged.Invoke();
     }
 
     private IEnumerator BringBackOriginalCoroutine()
@@ -699,6 +699,11 @@ public class NetworkCenter : MonoBehaviour
                 node.GetComponent<BoxCollider>().enabled = false;
             }
         }
+        foreach (CellexalButton button in GetComponentsInChildren<CellexalButton>())
+        {
+            button.SetButtonActivated(false);
+        }
+        CellexalEvents.NetworkUnEnlarged.Invoke();
     }
 
     /// <summary>

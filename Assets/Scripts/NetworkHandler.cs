@@ -278,17 +278,22 @@ public class NetworkHandler : MonoBehaviour
         }
     }
 
-    public void CreateNetworkAnimation(Vector3 nhPos, Vector3 gPos)
+    /// <summary>
+    /// Spawn network infront of user. Use reference to headset to determine position of user.
+    /// </summary>
+    public void CreateNetworkAnimation()
     {
-        transform.position = gPos;
-        targetPos = nhPos;
+        transform.position = referenceManager.headset.transform.position;
+        transform.rotation = referenceManager.headset.transform.rotation;
+        transform.position += transform.forward * 1f;
+        targetPos = transform.position;
         createAnim = true;
     }
 
     void NetworkAnimation()
     {
         float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+        //transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
         transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
         if (transform.localScale.x >= targetScale)
         {

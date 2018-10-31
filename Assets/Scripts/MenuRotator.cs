@@ -52,7 +52,6 @@ public class MenuRotator : MonoBehaviour
     /// </summary>
     public void RotateLeft(int times = 1)
     {
-        print("Do rotate");
         if (!isRotating)
         {
             switch (SideFacingPlayer)

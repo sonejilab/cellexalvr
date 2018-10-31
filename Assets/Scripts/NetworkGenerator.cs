@@ -179,8 +179,6 @@ public class NetworkGenerator : MonoBehaviour
         //statusDisplayHUD.RemoveStatus(statusIdHUD);
         statusDisplayFar.RemoveStatus(statusIdFar);
         inputReader.ReadNetworkFiles(layoutSeed);
-
-
     }
 
     /// <summary>

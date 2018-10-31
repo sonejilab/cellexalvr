@@ -55,12 +55,6 @@ public class NetworkNode : MonoBehaviour
     {
         // some math make the text not be mirrored
         transform.LookAt(2 * transform.position - CameraToLookAt.position);
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
-            referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
-        }
     }
 
     public override bool Equals(object other)
@@ -87,7 +81,9 @@ public class NetworkNode : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name.Equals("[RightController]BasePointerRenderer_ObjectInteractor_Collider"))
+        bool active = Center.Enlarged;
+        bool touched = other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name.Equals("[RightController]BasePointerRenderer_ObjectInteractor_Collider");
+        if (active && touched)
         {
             var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
             controllerInside = true;
@@ -96,6 +92,17 @@ public class NetworkNode : MonoBehaviour
                 NetworkNode nn = obj.GetComponent<NetworkNode>();
                 nn.Highlight();
             }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        device = SteamVR_Controller.Input((int)rightController.index);
+        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
+            referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
+            controllerInside = false;
         }
     }
 

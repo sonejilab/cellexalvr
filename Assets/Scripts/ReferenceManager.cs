@@ -51,7 +51,7 @@ public class ReferenceManager : MonoBehaviour
     public ToggleArcsSubMenu arcsSubMenu;
     public AttributeSubMenu attributeSubMenu;
     public ColorByIndexMenu indexMenu;
-    public CreateSelectionFromPreviousSelectionMenu createSelectionFromPreviousSelectionMenu;
+    public SelectionFromPreviousMenu selectionFromPreviousMenu;
     public ColorByGeneMenu colorByGeneMenu;
     public FilterMenu filterMenu;
     public NewFilterMenu newFilterMenu;

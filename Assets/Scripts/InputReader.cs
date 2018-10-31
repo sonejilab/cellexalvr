@@ -657,7 +657,7 @@ public class InputReader : MonoBehaviour
                 graph = graphManager.FindGraph(graphName);
                 if (graph == null)
                 {
-                    CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sire there is a .mds and .hull file with the same name in the dataset.", graphName));
+                    CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.", graphName));
                     yield break;
                 }
                 skeleton = graph.CreateConvexHull();
@@ -683,7 +683,6 @@ public class InputReader : MonoBehaviour
             minPosPcor[colorString] = float.MaxValue;
             maxNegPcor[colorString] = float.MinValue;
             minNegPcor[colorString] = 0f;
-
             Vector3 position = graph.ScaleCoordinates(x, y, z);
             NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
             //network.transform.localPosition -= graph.transform.position;
@@ -808,7 +807,7 @@ public class InputReader : MonoBehaviour
         nwkStreamReader.Close();
         nwkFileStream.Close();
         CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
-        networkHandler.CreateNetworkAnimation(networkHandler.transform.position, graph.transform.position);
+        networkHandler.CreateNetworkAnimation();
     }
 
 
@@ -942,8 +941,7 @@ public class InputReader : MonoBehaviour
             streamReader.Close();
             fileStream.Close();
         }
-        // someone please rename this
-        referenceManager.createSelectionFromPreviousSelectionMenu.CreateSelectionFromPreviousSelectionButtons(graphNames, groupingNames.ToArray(), cellNames, groups, groupingColors);
+        referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(), cellNames, groups, groupingColors);
         CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 

@@ -215,27 +215,6 @@ public class GraphManager : MonoBehaviour
         FindGraphPoint(graphname, label).SetOutLined(true, color);
     }
 
-    /// <summary>
-    /// Colors all graphs based on the graphpoints in the current selection.
-    /// </summary>
-    public void RecolorAllGraphsAfterSelection()
-    {
-        var selection = selectionToolHandler.GetCurrentSelection();
-        if (selection.Count == 0)
-        {
-            // if the user has pressed the confirm selection button, but started a new selection yet
-            // the graphs should be colored based on the previous selection
-            selection = selectionToolHandler.GetLastSelection();
-        }
-        foreach (Graph graph in graphs)
-        {
-            foreach (GraphPoint point in selection)
-            {
-                graph.points[point.Label].Material = point.Material;
-            }
-        }
-        CellexalLog.Log("Recolored  " + selection.Count + " points in  " + graphs.Count + " graphs after current selection");
-    }
 
     public void SetGraphStartPosition()
     {

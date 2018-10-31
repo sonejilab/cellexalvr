@@ -38,7 +38,7 @@ public class CaptureScreenshot : MonoBehaviour
                 CellexalLog.Log("Created directory " + screenshotImageDirectory);
             }
 
-            screenshotImageDirectory += "\\Screenshot";
+            screenshotImageDirectory += "\\Screenshots";
             if (!Directory.Exists(screenshotImageDirectory))
             {
                 Directory.CreateDirectory(screenshotImageDirectory);
@@ -54,7 +54,7 @@ public class CaptureScreenshot : MonoBehaviour
             //}
             ScreenCapture.CaptureScreenshot(screenshotImageFilePath);
             CellexalLog.Log("Screenshot taken!");
-            StartCoroutine(LogScreenshot(screenshotImageFilePath));
+            //StartCoroutine(LogScreenshot(screenshotImageFilePath));
             elapsedTime = 0.0f;
             screenshotCounter++;
 

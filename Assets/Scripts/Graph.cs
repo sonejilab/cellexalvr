@@ -30,7 +30,7 @@ public class Graph : MonoBehaviour
     private Vector3 diffCoordValues;
     private float longestAxis;
     private Vector3 scaledOffset;
-    private Vector3 defaultPos;
+    public Vector3 defaultPos;
     private Vector3 defaultScale;
     private ReferenceManager referenceManager;
     private ControllerModelSwitcher controllerModelSwitcher;
@@ -84,10 +84,25 @@ public class Graph : MonoBehaviour
 
     private void Update()
     {
-        if (GetComponent<VRTK_InteractableObject>().enabled)
+        if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
         {
+            //graphNameText.fontSize = 56;
+            //graphNameText.outlineColor = Color.blue;
+            //graphNameText.outlineWidth = 0.2f;
+            //graphInfoText.fontSize = 56;
+            //graphInfoText.outlineColor = Color.blue;
+            //graphInfoText.outlineWidth = 0.2f;
             gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
+        //if (!GetComponent<VRTK_InteractableObject>().enabled)
+        //{
+        //    graphNameText.fontSize = 36;
+        //    graphNameText.outlineColor = Color.black;
+        //    graphNameText.outlineWidth = 0.2f;
+        //    graphInfoText.fontSize = 36;
+        //    graphInfoText.outlineColor = Color.black;
+        //    graphInfoText.outlineWidth = 0.2f;
+        //}
         if (minimize)
         {
             Minimize();
@@ -312,18 +327,18 @@ public class Graph : MonoBehaviour
             triangles = triangles.ToArray()
         };
 
-        convexHull.transform.position = transform.position;
+        convexHull.transform.position = referenceManager.rightController.transform.position;
         // move the convexhull slightly out of the way of the graph
         // in a direction sort of pointing towards the middle.
         // otherwise it lags really bad when the skeleton is first 
         // moved out of the original graph
-        Vector3 moveDist = new Vector3(.2f, 0, .2f);
-        if (transform.position.x > 0) moveDist.x = -.2f;
-        if (transform.position.z > 0) moveDist.z = -.2f;
-        convexHull.transform.Translate(moveDist);
-
-        convexHull.transform.rotation = transform.rotation;
-        convexHull.transform.localScale = transform.localScale;
+        //Vector3 moveDist = new Vector3(0f, 0.3f, 0f);
+        //if (transform.position.x > 0) moveDist.x = -.2f;
+        //if (transform.position.z > 0) moveDist.z = -.2f;
+        //convexHull.transform.Translate(moveDist);
+        //convexHull.transform.position += referenceManager.rightController.transform.forward * 1f;
+        //convexHull.transform.rotation = transform.rotation;
+        //convexHull.transform.localScale = transform.localScale;
         convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();

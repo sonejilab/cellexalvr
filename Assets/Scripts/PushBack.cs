@@ -60,7 +60,7 @@ public class PushBack : MonoBehaviour
         {
             int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
             raycastingSource = rightController.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
             //ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (hit.collider && push)
             {
