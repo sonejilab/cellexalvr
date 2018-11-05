@@ -326,8 +326,14 @@ public class Graph : MonoBehaviour
             vertices = vertices,
             triangles = triangles.ToArray()
         };
-
-        convexHull.transform.position = referenceManager.rightController.transform.position;
+        if (gameManager.multiplayer)
+        {
+            convexHull.transform.position = new Vector3(0, 1f, 0);
+        }
+        if (!gameManager.multiplayer)
+        {
+            convexHull.transform.position = referenceManager.rightController.transform.position;
+        }
         // move the convexhull slightly out of the way of the graph
         // in a direction sort of pointing towards the middle.
         // otherwise it lags really bad when the skeleton is first 

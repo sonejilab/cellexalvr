@@ -48,7 +48,6 @@ public class NetworkCenter : MonoBehaviour
 
     private ControllerModelSwitcher controllerModelSwitcher;
     // The network will pop up infront of the user when it's enlarged.
-    private GameObject pedestal;
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
     private Vector3 oldLocalPosition;
@@ -76,7 +75,6 @@ public class NetworkCenter : MonoBehaviour
     void Start()
     {
         var referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        pedestal = GameObject.Find("Pedestal");
         rightController = referenceManager.rightController;
         networkGenerator = referenceManager.networkGenerator;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
@@ -133,7 +131,7 @@ public class NetworkCenter : MonoBehaviour
         var interactableObject = GetComponent<VRTK_InteractableObject>();
         if (interactableObject)
         {
-            if (interactableObject.enabled)
+            if (interactableObject.IsGrabbed())
             {
                 gameManager.InformMoveNetworkCenter(Handler.name, name, transform.position, transform.rotation, transform.localScale);
             }
@@ -600,9 +598,16 @@ public class NetworkCenter : MonoBehaviour
         oldRotation = transform.rotation;
 
         transform.parent = null;
-        transform.position = referenceManager.headset.transform.position;
-        transform.rotation = referenceManager.headset.transform.rotation;
-        transform.position += referenceManager.headset.transform.forward * 1f;
+        if (gameManager.multiplayer)
+        {
+            transform.position = new Vector3(0, 1f, 0);
+        }
+        if (!gameManager.multiplayer)
+        {
+            transform.position = referenceManager.headset.transform.position;
+            transform.rotation = referenceManager.headset.transform.rotation;
+            transform.position += referenceManager.headset.transform.forward * 1f;
+        }
         transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         transform.Rotate(20f, 0, 0);
 

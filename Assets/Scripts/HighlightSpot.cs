@@ -36,7 +36,7 @@ public class HighlightSpot : MonoBehaviour {
             }
             if (this.name == "Portal")
             {
-                SceneManager.LoadScene("SceneLoaderTest");
+                SceneManager.LoadScene("vrjeans_scene1");
             }
             //this.gameObject.SetActive(false);
         }

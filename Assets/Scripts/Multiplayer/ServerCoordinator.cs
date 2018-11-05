@@ -308,7 +308,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendGenerateNetworks(int layoutSeed)
     {
         CellexalLog.Log("Recieved message to generate networks");
-        gameManager.networkGenerator.GenerateNetworks(layoutSeed);
+        referenceManager.networkGenerator.GenerateNetworks(layoutSeed);
     }
 
     [PunRPC]
@@ -350,14 +350,14 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendEnlargeNetwork(string networkHandlerName, string networkCenterName)
     {
         CellexalLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
-        gameManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
+        referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
     }
 
     [PunRPC]
     public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
     {
         CellexalLog.Log("Recieved message to bring back network " + networkCenterName + " in handler " + networkHandlerName);
-        var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+        var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
         var center = handler.FindNetworkCenter(networkCenterName);
         center.BringBackOriginal();
     }
@@ -365,7 +365,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
-        var handler = gameManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+        var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
         var center = handler.FindNetworkCenter(networkCenterName);
         bool networkExists = (handler != null && center != null);
         if (networkExists)

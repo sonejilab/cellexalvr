@@ -339,8 +339,6 @@ public class CellManager : MonoBehaviour
         if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
         {
             var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
-            //Debug.Log(topListNode.GeneName);
-
             foreach (Cell c in cells.Values)
             {
                 c.SaveExpression(geneName + " " + coloringMethod, removedGene);

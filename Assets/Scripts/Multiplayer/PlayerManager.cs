@@ -41,6 +41,7 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.isMine)
         {
+            PhotonNetwork.player.NickName = PhotonNetwork.playerName;
             PlayerManager.LocalPlayerInstance = this.gameObject;
             Renderer[] meshList = transform.GetComponentsInChildren<Renderer>();
             foreach (Renderer r in meshList)
@@ -65,7 +66,7 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
     /// </summary>
     void Start()
     {
-        username.GetComponent<TextMeshPro>().text = gameObject.name;
+        username.GetComponent<TextMeshPro>().text = GetComponent<PhotonView>().owner.NickName;
 
 
 

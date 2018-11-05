@@ -159,7 +159,7 @@ public class Heatmap : MonoBehaviour
             Maximize();
         }
 
-        if (GetComponent<VRTK_InteractableObject>().enabled)
+        if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
         {
             gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
         }

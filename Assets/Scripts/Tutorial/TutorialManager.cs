@@ -132,7 +132,7 @@ public class TutorialManager : MonoBehaviour {
     void TurnOnSpot()
     {
         BoxCollider col = highlightSpots[currentStep - 2].GetComponent<BoxCollider>();
-        if (Physics.OverlapBox(highlightSpots[currentStep - 2].transform.position + col.center, col.size / 2).Length > 0)
+        if (currentStep != 8 && Physics.OverlapBox(highlightSpots[currentStep - 2].transform.position + col.center, col.size / 2).Length > 0)
         {
             highlightSpots[currentStep - 2].transform.position = highlightSpots[currentStep - 1].transform.position;
         }

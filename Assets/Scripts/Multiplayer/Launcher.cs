@@ -173,7 +173,12 @@ namespace ExitGames.Demos.DemoAnimator
 
         public void ConnectSinglePlayer()
         {
-            SceneManager.LoadScene("SceneLoaderTest");
+            SceneManager.LoadScene("vrjeans_scene1");
+        }
+
+        public void ConnectTutorialScene()
+        {
+            SceneManager.LoadScene("Tutorial");
         }
 
 

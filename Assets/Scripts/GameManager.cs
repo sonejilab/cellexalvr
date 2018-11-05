@@ -21,26 +21,26 @@ public class GameManager : Photon.PunBehaviour
     public GameObject waitingCanvas;
     public bool avatarMenuActive;
 
-    private GraphManager graphManager;
-    public CellManager cellManager;
-    public SelectionToolHandler selectionToolHandler;
-    public HeatmapGenerator heatmapGenerator;
-    public NetworkGenerator networkGenerator;
-    private KeyboardOutput keyboardOut;
+    //private GraphManager graphManager;
+    //public CellManager cellManager;
+    //public SelectionToolHandler selectionToolHandler;
+    //public HeatmapGenerator heatmapGenerator;
+    //public NetworkGenerator networkGenerator;
+    //private KeyboardOutput keyboardOut;
     //private ServerCoordinator serverCoordinator;
     //private ServerCoordinator clientCoordinator;
     private ServerCoordinator coordinator;
-    private bool multiplayer = false;
+    public bool multiplayer = false;
 
     #endregion
     private void Start()
     {
-        graphManager = referenceManager.graphManager;
-        cellManager = referenceManager.cellManager;
-        selectionToolHandler = referenceManager.selectionToolHandler;
-        heatmapGenerator = referenceManager.heatmapGenerator;
-        networkGenerator = referenceManager.networkGenerator;
-        keyboardOut = referenceManager.keyboardOutput;
+        //graphManager = referenceManager.graphManager;
+        //cellManager = referenceManager.cellManager;
+        //selectionToolHandler = referenceManager.selectionToolHandler;
+        //heatmapGenerator = referenceManager.heatmapGenerator;
+        //networkGenerator = referenceManager.networkGenerator;
+        //keyboardOut = referenceManager.keyboardOutput;
         Instance = this;
         if (!PhotonNetwork.connected) return;
         if (playerPrefab == null)

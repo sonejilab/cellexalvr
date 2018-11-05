@@ -59,7 +59,7 @@ public class NetworkHandler : MonoBehaviour
 
     private void Update()
     {
-        if (GetComponent<VRTK_InteractableObject>().enabled)
+        if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
         {
             gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
         }
@@ -283,9 +283,16 @@ public class NetworkHandler : MonoBehaviour
     /// </summary>
     public void CreateNetworkAnimation()
     {
-        transform.position = referenceManager.headset.transform.position;
-        transform.rotation = referenceManager.headset.transform.rotation;
-        transform.position += transform.forward * 1f;
+        if (gameManager.multiplayer)
+        {
+            transform.position = new Vector3(0, 1, 0);
+        }
+        if (!gameManager.multiplayer)
+        {
+            transform.position = referenceManager.headset.transform.position;
+            transform.rotation = referenceManager.headset.transform.rotation;
+            transform.position += transform.forward * 1f;
+        }
         targetPos = transform.position;
         createAnim = true;
     }
