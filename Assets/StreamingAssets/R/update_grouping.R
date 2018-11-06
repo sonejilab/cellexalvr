@@ -26,6 +26,7 @@ if ( isS4(cellexalObj) ) {
 }else {
 	file.copy(selectionfile, file.path( userfolder,paste(sep='.', cellexalObj$usedObj$lastGroup,'txt' ) ) )
 }
-lockedSave ( cellexalObj, userfolder)
+message( "Save updated cellexalvrR object" )
+lockedSave ( cellexalObj, path= userfolder)
 
 #print("done")
