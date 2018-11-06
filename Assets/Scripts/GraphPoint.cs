@@ -9,6 +9,8 @@ public class GraphPoint : MonoBehaviour
     public Graph Graph;
 
     public List<Selectable> lineBetweenCellsCubes;
+    public Material transparentMaterial;
+    public Material particleMat;
 
     private float x, y, z;
     public string label;

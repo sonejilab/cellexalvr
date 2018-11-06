@@ -1,5 +1,6 @@
 ﻿using SQLiter;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -324,14 +325,28 @@ public class CellManager : MonoBehaviour
         foreach (Cell c in cells.Values)
         {
             c.ColorByExpression(0);
+            c.MakeTransparent();
         }
 
+        Dictionary<string, int> sortedCells = new Dictionary<string, int>();
         for (int i = 0; i < expressions.Count; ++i)
         {
             Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
-            cell.Show();
+            //cell.Hide();
             cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
+            sortedCells.Add(((CellExpressionPair)expressions[i]).Cell, (int)((CellExpressionPair)expressions[i]).Expression);
         }
+
+        int n = (int)Math.Round(0.01 * cells.Count);
+        HighlightTopExpressedCells(sortedCells, n);
+
+        yield return new WaitForSeconds(2);
+
+        foreach (Cell c in cells.Values)
+        {
+            c.Show();
+        }
+
         float percentInResults = (float)database._result.Count / cells.Values.Count;
         statusDisplay.RemoveStatus(coloringInfoStatusId);
         coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
@@ -349,6 +364,30 @@ public class CellManager : MonoBehaviour
             CellexalEvents.GraphsColoredByGene.Invoke();
         }
         CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+    }
+
+    /// <summary>
+    /// Draws attention to the top expressed cells of the queried gene. 
+    /// </summary>
+    /// <param name="sortedCells">Sorted list of cells so the top ones can be picked.</param>
+    /// <param name="nrOfCells">Nr of cells to highlight. E.g. Top 100 cells or top 10 cells.</param>
+    private void HighlightTopExpressedCells(Dictionary<string, int> sortedCells, int nrOfCells)
+    {
+        var items = from pair in sortedCells
+                    orderby pair.Value descending
+                    select pair;
+
+        var topCells = items.Take(nrOfCells);
+        foreach (KeyValuePair<string, int> pair in topCells)
+        {
+            Cell cell = cells[pair.Key];
+            cell.ColorByExpression(pair.Value);
+            if (pair.Value > 0)
+            {
+                cell.Highlight();
+            }
+            //print(String.Format("{0}: {1}", pair.Key, pair.Value));
+        }
     }
 
     /// <summary>

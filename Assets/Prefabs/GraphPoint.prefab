@@ -52,6 +52,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 2
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -67,6 +68,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -106,4 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Graph: {fileID: 0}
+  lineBetweenCellsCubes: []
+  transparentMaterial: {fileID: 2100000, guid: 9a954001242a1ce44841bed80afe615d, type: 2}
+  particleMat: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  ps: {fileID: 198270782395290292, guid: 22e9d73efdc8b1049aaaf0f341a9e9a1, type: 2}
   label: 

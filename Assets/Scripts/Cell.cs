@@ -18,7 +18,7 @@ public class Cell
     private GraphManager graphManager;
     private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
     private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
-
+    private Material tempMat;
 
 
     /// <summary>
@@ -33,6 +33,7 @@ public class Cell
         GraphPoints = new List<GraphPoint>();
         Attributes = new Dictionary<string, int>();
         Facs = new Dictionary<string, int>();
+        tempMat = null;
     }
 
     /// <summary>
@@ -177,7 +178,9 @@ public class Cell
             {
                 expression = CellexalConfig.NumberOfExpressionColors - 1;
             }
-            g.Material = graphManager.GeneExpressionMaterials[expression];
+
+            tempMat = graphManager.GeneExpressionMaterials[expression];
+            g.Material = g.transparentMaterial;
         }
     }
 
@@ -227,6 +230,69 @@ public class Cell
         foreach (GraphPoint g in GraphPoints)
         {
             g.gameObject.SetActive(true);
+            g.Material = tempMat;
+            var l = g.gameObject.GetComponent<ParticleSystem>();
+            if (l != null)
+            {
+                GameObject.Destroy(l);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Turns all graphpoints representing this cell off.
+    /// </summary>
+    internal void Hide()
+    {
+        foreach (GraphPoint g in GraphPoints)
+        {
+            g.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Makes the graphpoints transparent. Used when showing the top expressed cells.
+    /// </summary>
+    internal void MakeTransparent()
+    {
+        foreach (GraphPoint g in GraphPoints)
+        {
+            g.Material = g.transparentMaterial;
+        }
+    }
+
+    /// <summary>
+    /// Highlights cells of choice to stick out among the others (e.g. top expressed ones).
+    /// </summary>
+    internal void Highlight()
+    {
+        foreach (GraphPoint g in GraphPoints)
+        {
+            g.Material = tempMat;
+
+            // Highlighting via particle effects.
+            ParticleSystem ps = g.gameObject.AddComponent<ParticleSystem>();
+            var main = ps.main;
+            main.startSize = 0.02f;
+            main.startLifetime = 0.5f;
+            main.startSpeed = 0;
+            main.startColor = g.Material.color;
+            main.maxParticles = 1;
+            var shape = ps.shape;
+
+            var renderer = g.gameObject.GetComponent<ParticleSystemRenderer>();
+            renderer.material = g.particleMat;
+
+            shape.enabled = false;
+
+            // pulsating effect
+            var sz = ps.sizeOverLifetime;
+            sz.enabled = true;
+            AnimationCurve curve = new AnimationCurve();
+            curve.AddKey(0.0f, 0.0f);
+            curve.AddKey(0.5f, 1.0f);
+            curve.AddKey(1.0f, 0.0f);
+            sz.size = new ParticleSystem.MinMaxCurve(1.0f, curve);
         }
     }
 
