@@ -10,6 +10,9 @@ if ( is.na(sessionString ) ){
 	sessionString = NULL
 }
 
+if (! file.exists (file.path(datadir, "cellexalObj.RData")) ) {
+	stop(paste("critical error: no cellexalObject found:", file.path(datadir, "cellexalObj.RData") ) )
+}
 cellexalObj <- loadObject(file.path(datadir, "cellexalObj.RData"))
 
 if ( !is.null(cellexalObj@usedObj$sessionPath) ) {
