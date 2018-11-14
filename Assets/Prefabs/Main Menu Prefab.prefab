@@ -16110,15 +16110,39 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102536813443357636}
   infoMenu: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
+  meshDeactivatedColor:
+    r: 0.5
+    g: 0.5
+    b: 0.5
+    a: 1
   standardTexture: {fileID: 21300000, guid: 2404f270c54e9ca4fbafd6b5f9ab4c5d, type: 3}
   highlightedTexture: {fileID: 21300000, guid: f9604c669dce7df408641c7e25c7d5bb, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: e47c31a38238976478fedb9a145971b7, type: 3}
   popupChoice: 1
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
+  graphManager: {fileID: 0}
 --- !u!114 &114106841769093688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16712,6 +16736,7 @@ MonoBehaviour:
   controllerInside: 0
   gray: {fileID: 21300000, guid: 4ff0b9181fd409f4da181d0817abfa6a, type: 3}
   original: {fileID: 21300000, guid: d86608844a3c5f5489af0b60e1747e22, type: 3}
+  reportList: {fileID: 0}
 --- !u!114 &114276000863704626
 MonoBehaviour:
   m_ObjectHideFlags: 1

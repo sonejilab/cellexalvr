@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 65426757975555904}
   - component: {fileID: 212670547573808694}
   - component: {fileID: 114601644599353228}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Recalculate 3D button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,8 @@ GameObject:
   - component: {fileID: 33453337135627904}
   - component: {fileID: 23259352955223570}
   - component: {fileID: 64684723448277922}
-  m_Layer: 11
+  - component: {fileID: 65682365470606058}
+  m_Layer: 16
   m_Name: Ring
   m_TagString: Network
   m_Icon: {fileID: 0}
@@ -57,7 +58,7 @@ GameObject:
   - component: {fileID: 224451971760373060}
   - component: {fileID: 222504405785792032}
   - component: {fileID: 114284830985778830}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Other (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +76,7 @@ GameObject:
   - component: {fileID: 65132475085316250}
   - component: {fileID: 212050481961902904}
   - component: {fileID: 114946724007853856}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Recalculate 2D button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +94,7 @@ GameObject:
   - component: {fileID: 223365399342761644}
   - component: {fileID: 114955523793224592}
   - component: {fileID: 114147774324732390}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: InfoCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +112,7 @@ GameObject:
   - component: {fileID: 65309455570216738}
   - component: {fileID: 212811960020666842}
   - component: {fileID: 114705351725496864}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Save Network As Image Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +129,7 @@ GameObject:
   - component: {fileID: 224038655832818268}
   - component: {fileID: 222918310312127076}
   - component: {fileID: 114365614648660516}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Other
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +146,7 @@ GameObject:
   - component: {fileID: 224012938525598962}
   - component: {fileID: 222179741933623920}
   - component: {fileID: 114878040427955872}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: NrOfCells
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +163,7 @@ GameObject:
   - component: {fileID: 4744217800694044}
   - component: {fileID: 23173023934885936}
   - component: {fileID: 102352249397475126}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Button Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +181,7 @@ GameObject:
   - component: {fileID: 65537345504442360}
   - component: {fileID: 212810201733297996}
   - component: {fileID: 114136589334105450}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Save Network As Text File Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +198,7 @@ GameObject:
   - component: {fileID: 224725753253782520}
   - component: {fileID: 222213335965301940}
   - component: {fileID: 114900868009569264}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +216,7 @@ GameObject:
   - component: {fileID: 65265384985586142}
   - component: {fileID: 212061106907495026}
   - component: {fileID: 114052418412184118}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Show Info Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -253,13 +254,13 @@ GameObject:
   - component: {fileID: 223134929994599350}
   - component: {fileID: 114408320813177340}
   - component: {fileID: 114913109776281252}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: ButtonCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1819456009492400
 GameObject:
   m_ObjectHideFlags: 1
@@ -271,7 +272,7 @@ GameObject:
   - component: {fileID: 65663185343727662}
   - component: {fileID: 212595322109270854}
   - component: {fileID: 114633175378518256}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Switch To 3D button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +290,7 @@ GameObject:
   - component: {fileID: 65985393791794690}
   - component: {fileID: 212976537025818506}
   - component: {fileID: 114164701368190424}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Switch To 2D button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +308,7 @@ GameObject:
   - component: {fileID: 222119872287490604}
   - component: {fileID: 114235242178268010}
   - component: {fileID: 114705517376298638}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: ButtonPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,8 +339,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1340058733961262}
   m_LocalRotation: {x: 1, y: 0, z: -0.0000001872535, w: 0}
-  m_LocalPosition: {x: 0.886, y: 0.005, z: 0.073}
-  m_LocalScale: {x: 0.026417613, y: 0.026781157, z: 0.035271544}
+  m_LocalPosition: {x: 0.886839, y: 0.048620045, z: 0.09220646}
+  m_LocalScale: {x: 0.0213877, y: 0.021682028, z: 0.028555848}
   m_Children: []
   m_Father: {fileID: 4863051668717822}
   m_RootOrder: 5
@@ -351,8 +352,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1859634643192638}
   m_LocalRotation: {x: 1, y: 0, z: -0.0000001872535, w: 0}
-  m_LocalPosition: {x: 0.813, y: 0.351, z: 0.073014006}
-  m_LocalScale: {x: 0.026436687, y: 0.026774084, z: 0.035071798}
+  m_LocalPosition: {x: 0.827739, y: 0.32874006, z: 0.09219545}
+  m_LocalScale: {x: 0.021403141, y: 0.021676302, z: 0.028394131}
   m_Children: []
   m_Father: {fileID: 4863051668717822}
   m_RootOrder: 3
@@ -364,7 +365,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758485399609656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.0605702, y: 1.383362, z: 7.7428827}
+  m_LocalPosition: {x: 5.0602, y: 1.3834, z: 7.7429}
   m_LocalScale: {x: 0.12256, y: 0.12256, z: 0.12256}
   m_Children:
   - {fileID: 4863051668717822}
@@ -391,22 +392,22 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1604312293519794}
-  m_LocalRotation: {x: -5.2023097e-10, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0.093194224, y: -41.58, z: 1.2438114}
-  m_LocalScale: {x: 0.76880413, y: 0.7688043, z: 0.17667317}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 39.9, y: -10.8, z: 0.83}
+  m_LocalScale: {x: 0.8967332, y: 0.8967334, z: 0.2060716}
   m_Children: []
   m_Father: {fileID: 224990311796337588}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
 --- !u!4 &4416269315853694
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1478651919038926}
-  m_LocalRotation: {x: 1, y: -0, z: -0.0000001872535, w: 0}
-  m_LocalPosition: {x: -0.88320017, y: 0.13109998, z: 0.07299854}
-  m_LocalScale: {x: 0.026417613, y: 0.026781157, z: 0.035271544}
+  m_LocalRotation: {x: 1, y: 0, z: -0.0000001872535, w: 0}
+  m_LocalPosition: {x: 0.671, y: 0.578, z: 0.093}
+  m_LocalScale: {x: 0.021403141, y: 0.021676302, z: 0.028394131}
   m_Children: []
   m_Father: {fileID: 4863051668717822}
   m_RootOrder: 7
@@ -417,9 +418,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1373111933240884}
-  m_LocalRotation: {x: 1, y: -0, z: -0.0000001872535, w: 0}
-  m_LocalPosition: {x: -0.8827, y: -0.0339, z: 0.07299854}
-  m_LocalScale: {x: 0.026417613, y: 0.026781157, z: 0.035271544}
+  m_LocalRotation: {x: 1, y: 0, z: -0.0000001872535, w: 0}
+  m_LocalPosition: {x: 0.76710665, y: 0.4588005, z: 0.09219545}
+  m_LocalScale: {x: 0.021403141, y: 0.021676302, z: 0.028394131}
   m_Children: []
   m_Father: {fileID: 4863051668717822}
   m_RootOrder: 8
@@ -431,8 +432,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1819456009492400}
   m_LocalRotation: {x: 1, y: 0, z: -0.0000001872535, w: 0}
-  m_LocalPosition: {x: 0.872, y: 0.178, z: 0.073014215}
-  m_LocalScale: {x: 0.026417613, y: 0.026781157, z: 0.035271544}
+  m_LocalPosition: {x: 0.87549895, y: 0.18868005, z: 0.09219545}
+  m_LocalScale: {x: 0.0213877, y: 0.021682028, z: 0.028555848}
   m_Children: []
   m_Father: {fileID: 4863051668717822}
   m_RootOrder: 4
@@ -479,8 +480,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1105327809699056}
   m_LocalRotation: {x: 1, y: 0, z: -0.0000001872535, w: 0}
-  m_LocalPosition: {x: 0.872, y: -0.16, z: 0.07300167}
-  m_LocalScale: {x: 0.026417613, y: 0.026781157, z: 0.035271544}
+  m_LocalPosition: {x: 0.883, y: -0.088, z: 0.08}
+  m_LocalScale: {x: 0.0213877, y: 0.021682028, z: 0.028555848}
   m_Children: []
   m_Father: {fileID: 4863051668717822}
   m_RootOrder: 6
@@ -630,10 +631,10 @@ MeshCollider:
   m_GameObject: {fileID: 1184040499242908}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
+  m_Convex: 1
+  m_CookingOptions: -1
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
 --- !u!65 &65132475085316250
@@ -708,6 +709,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.7286177, y: 4.7772727, z: 3.69704}
   m_Center: {x: -0.05553097, y: -0.101264685, z: -1.2420876}
+--- !u!65 &65682365470606058
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1184040499242908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.8957967, y: 1.8957967, z: 0.060351584}
+  m_Center: {x: 0.0000038146973, y: 0.0000019073486, z: 0.030175792}
 --- !u!65 &65985393791794690
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -752,29 +765,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a674fd210dc3f5747afe3ca60864db8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableWhenIdle: 1
-  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
-  allowedTouchControllers: 0
-  isGrabbable: 0
-  holdButtonToGrab: 1
-  stayGrabbedOnTeleport: 1
-  validDrop: 1
-  grabOverrideButton: 0
-  allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
-  isUsable: 0
-  holdButtonToUse: 1
-  useOnlyIfGrabbed: 0
-  pointerActivatesUseAction: 0
-  useOverrideButton: 0
-  allowedUseControllers: 0
-  usingState: 0
-  spriteRenderer: {fileID: 212061106907495026}
-  rightController: {fileID: 0}
+  referenceManager: {fileID: 0}
+  descriptionText: {fileID: 0}
+  infoMenu: {fileID: 0}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 21300000, guid: 96fa607cb06dc3d4a9afca790516f0df, type: 3}
   highlightedTexture: {fileID: 21300000, guid: 3e535ae0b13d0b14b95ed52dca57e338, type: 3}
-  canvas: {fileID: 1357681130736924}
+  deactivatedTexture: {fileID: 0}
+  popupChoice: 0
+  buttonActivated: 1
+  controllerInside: 0
+  infoCanvas: {fileID: 0}
 --- !u!114 &114136589334105450
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -922,8 +925,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 'More Information:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1034,8 +1037,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 'Other information:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1275,8 +1278,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 'Nr of cells in group:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
