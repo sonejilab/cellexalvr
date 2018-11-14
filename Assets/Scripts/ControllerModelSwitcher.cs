@@ -164,7 +164,6 @@ public class ControllerModelSwitcher : MonoBehaviour
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                 rightControllerBodyRenderer.material = normalMaterial;
-                print("Switch to menu model");
                 break;
 
             case Model.SelectionTool:
@@ -292,6 +291,7 @@ public class ControllerModelSwitcher : MonoBehaviour
         keyboard.SetKeyboardVisible(false);
         //referenceManager.gameManager.InformActivateKeyboard(false);
         drawTool.SetActive(false);
+        webBrowser.SetActive(false);
         if (inMenu)
         {
             SwitchToModel(Model.Menu);

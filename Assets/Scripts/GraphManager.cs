@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
+using System;
 
 /// <summary>
 /// Represents a manager that holds all graphs.
@@ -282,7 +283,14 @@ public class GraphManager : MonoBehaviour
         {
             foreach (NetworkCenter networkReplacement in network.Replacements)
             {
-                Destroy(networkReplacement.replacing.gameObject);
+                try
+                {
+                    Destroy(networkReplacement.replacing.gameObject);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
             Destroy(network.gameObject);
         }

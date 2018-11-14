@@ -38,18 +38,22 @@ public class PushBack : MonoBehaviour
         }
 
         device = SteamVR_Controller.Input((int)rightController.index);
-        bool active = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled
-            && !GetComponent<VRTK_InteractableObject>().IsGrabbed() && referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers;
-        if (active)
+        bool objectPointedAt = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<VRTK_InteractableObject>().IsGrabbed();
+        bool correctControllerModel = referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers ||
+            referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard;
+        //bool active = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled
+        //    && !GetComponent<VRTK_InteractableObject>().IsGrabbed() && (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers ||
+        //    referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard);
+        if (objectPointedAt && correctControllerModel)
         {
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
             {
                 Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-                if (touchpad.y > 0.7f)
+                if (touchpad.y > 0.6f)
                 {
                     push = true;
                 }
-                if (touchpad.y < -0.7f)
+                if (touchpad.y < -0.6f)
                 {
                     pull = true;
                 }

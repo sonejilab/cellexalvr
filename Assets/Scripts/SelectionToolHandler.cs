@@ -98,12 +98,11 @@ public class SelectionToolHandler : MonoBehaviour
     private void Update()
     {
         // Only activate selection if trigger is pressed.
-        device = SteamVR_Controller.Input((int)rightController.index);
-        //if (device == null)
-        //{
-        //    device = SteamVR_Controller.Input((int)rightController.index);
-        //    Debug.Log(device);
-        //}
+        //device = SteamVR_Controller.Input((int)rightController.index);
+        if (device == null)
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+        }
         if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -117,6 +116,9 @@ public class SelectionToolHandler : MonoBehaviour
                 ActivateSelection(false);
             }
         }
+        // Sometimes the a bug occurs where particles stays active even when selection tool is off... Keep this line 
+        // until you know why.
+        particles.gameObject.SetActive(IsSelectionToolEnabled()); 
 
     }
     /// <summary>
@@ -465,7 +467,7 @@ public class SelectionToolHandler : MonoBehaviour
                 gp.SetOutLined(false, gp.CurrentGroup);
             lastSelectedCells.Add(gp);
         }
-        previousSelectionMenu.CreateButton(selectedCells);
+        //previousSelectionMenu.CreateButton(selectedCells);
         // clear the list since we are done with it
         selectedCells.Clear();
         selectionHistory.Clear();

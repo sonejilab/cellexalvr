@@ -134,7 +134,16 @@ public class LoaderController : MonoBehaviour
                 {
                     string path = cellParent.GetComponent<CellsToLoad>().Directory;
                     graphManager.directory = path;
-                    inputReader.ReadFolder(path);
+                    try
+                    {
+                        inputReader.ReadFolder(path);
+                    }
+                    catch (System.InvalidOperationException e)
+                    {
+                        CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
+                        ResetFolders();
+                    }
+
                     referenceManager.keyboardStatusFolder.ClearKey();
                     gameManager.InformReadFolder(path);
 

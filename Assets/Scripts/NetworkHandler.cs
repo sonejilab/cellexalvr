@@ -11,6 +11,7 @@ public class NetworkHandler : MonoBehaviour
 
     public Material highlightMaterial;
     public List<NetworkCenter> Replacements { get; private set; }
+    public bool removable;
     //public string NetworkHandlerName { get; internal set; }
     
     public List<NetworkCenter> networks = new List<NetworkCenter>();
@@ -55,6 +56,18 @@ public class NetworkHandler : MonoBehaviour
         highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
         unhighlightedMaterials = new Material[] { meshRenderer.materials[0], null };
         this.transform.localScale = Vector3.zero;
+        CellexalEvents.ScriptFinished.AddListener(SetRemovable);
+        CellexalEvents.ScriptRunning.AddListener(SetUnRemovable);
+    }
+
+    private void SetUnRemovable()
+    {
+        removable = true;
+    }
+
+    private void SetRemovable()
+    {
+        removable = false;
     }
 
     private void Update()
@@ -293,6 +306,7 @@ public class NetworkHandler : MonoBehaviour
             transform.rotation = referenceManager.headset.transform.rotation;
             transform.position += transform.forward * 1f;
         }
+        transform.Rotate(-20, 0, 0);
         targetPos = transform.position;
         createAnim = true;
     }

@@ -47,7 +47,6 @@ public class NetworkCenter : MonoBehaviour
     public enum Layout { TWO_D, THREE_D }
 
     private ControllerModelSwitcher controllerModelSwitcher;
-    // The network will pop up infront of the user when it's enlarged.
     private SteamVR_Controller.Device device;
     private bool controllerInside = false;
     private Vector3 oldLocalPosition;
@@ -71,6 +70,7 @@ public class NetworkCenter : MonoBehaviour
     private Dictionary<NetworkNode, Vector3> positions;
     private System.Random rand;
     private string oldName;
+    private NetworkHandler handler;
 
     void Start()
     {
@@ -79,6 +79,7 @@ public class NetworkCenter : MonoBehaviour
         networkGenerator = referenceManager.networkGenerator;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         gameManager = referenceManager.gameManager;
+        handler = GetComponentInParent<NetworkHandler>();
     }
 
     void FixedUpdate()
@@ -103,13 +104,13 @@ public class NetworkCenter : MonoBehaviour
     void Update()
     {
         // handle input
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            controllerInside = false;
-            numColliders = 0;
-            enlarge = true;
-        }
+        //device = SteamVR_Controller.Input((int)rightController.index);
+        //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        //{
+        //    controllerInside = false;
+        //    numColliders = 0;
+        //    enlarge = true;
+        //}
         if (gameObject.transform.hasChanged)
         {
             foreach (Arc a in arcs)
@@ -138,6 +139,56 @@ public class NetworkCenter : MonoBehaviour
         }
 
     }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        {
+            controllerInside = true;
+            numColliders++;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        {
+            numColliders--;
+        }
+        // We might collide with the network nodes' colliders. So OnTriggerExit is called a little too often,
+        // so we must make sure we have exited all colliders.
+        if (numColliders == 0)
+        {
+            controllerInside = false;
+            controllerModelSwitcher.SwitchToDesiredModel();
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Menu Controller Collider"))
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && controllerInside)
+            {
+                numColliders = 0;
+                controllerInside = false;
+                enlarge = true;
+                //if (!isReplacement && !Enlarged)
+                //{
+                //    gameManager.InformEnlargeNetwork(Handler.name, name);
+                //    EnlargeNetwork();
+                //}
+                //if (isReplacement)
+                //{
+                //    gameManager.InformBringBackNetwork(Handler.name, replacing.name);
+                //    BringBackOriginal();
+                //}
+            }
+        }
+    }
+
 
     /// <summary>
     /// Adds a node to this network.
@@ -477,6 +528,8 @@ public class NetworkCenter : MonoBehaviour
 
     private IEnumerator SwitchLayoutCoroutine(Layout layout, float time)
     {
+        //handler.runningScript = true;
+        CellexalEvents.ScriptRunning.Invoke();
         int newLayoutPositionIndex;
         int oldLayoutPositionIndex;
         if (layout == Layout.TWO_D)
@@ -516,31 +569,11 @@ public class NetworkCenter : MonoBehaviour
         }
         switchingLayout = false;
         currentLayout = layout;
+        //handler.runningScript = false;
+        CellexalEvents.ScriptFinished.Invoke();
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            controllerInside = true;
-            numColliders++;
-        }
-    }
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Menu Controller Collider"))
-        {
-            numColliders--;
-        }
-        // We might collide with the network nodes' colliders. So OnTriggerExit is called a little too often,
-        // so we must make sure we have exited all colliders.
-        if (numColliders == 0)
-        {
-            controllerInside = false;
-            controllerModelSwitcher.SwitchToDesiredModel();
-        }
-    }
 
     /// <summary>
     /// Hides the large sphere around the network if the network is enlarged. 
@@ -565,6 +598,8 @@ public class NetworkCenter : MonoBehaviour
 
     private IEnumerator EnlargeNetworkCoroutine()
     {
+        //handler.runningScript = true;
+        CellexalEvents.ScriptRunning.Invoke();
         oldName = name;
         name = "Enlarged_" + name;
         Enlarged = true;
@@ -609,7 +644,11 @@ public class NetworkCenter : MonoBehaviour
             transform.position += referenceManager.headset.transform.forward * 1f;
         }
         transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-        transform.Rotate(20f, 0, 0);
+        transform.Rotate(-20f, 180, 180);
+
+        // wait a couple of frames before turning on the colliders, otherwise they all get triggered if
+        // the controller is inside them and the spehere will be brought back directly.
+        yield return new WaitForSeconds(0.3f);
 
         // instantiate a replacement in our place
         var replacement = Instantiate(replacementPrefab);
@@ -625,9 +664,6 @@ public class NetworkCenter : MonoBehaviour
         replacementScript.replacing = this;
         replacementScript.Handler = Handler;
 
-        // wait 1 frame before turning on the colliders, otherwise they all get triggered if
-        // the controller is inside them
-        yield return null;
         // turn on the colliders on the nodes so they can be highlighted
         foreach (BoxCollider b in GetComponentsInChildren<BoxCollider>())
         {
@@ -641,6 +677,8 @@ public class NetworkCenter : MonoBehaviour
         {
             button.SetButtonActivated(true);
         }
+        //handler.runningScript = false;
+        CellexalEvents.ScriptFinished.Invoke();
     }
 
     /// <summary>
@@ -658,6 +696,7 @@ public class NetworkCenter : MonoBehaviour
             //rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
             gameObject.SetActive(false);
             // calling Destroy without the time delay caused the program to crash pretty reliably
+            new WaitForSeconds(0.1f);
             Destroy(gameObject);
         }
         else
@@ -669,6 +708,8 @@ public class NetworkCenter : MonoBehaviour
 
     private IEnumerator BringBackOriginalCoroutine()
     {
+        //handler.runningScript = true;
+        CellexalEvents.ScriptRunning.Invoke();
         name = oldName;
         // the ForceStopInteracting waits until the end of the frame before it stops interacting
         // so we also have to wait one frame until proceeding
@@ -687,13 +728,9 @@ public class NetworkCenter : MonoBehaviour
         Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
         Destroy(gameObject.GetComponent<Rigidbody>());
 
-        if (transform.localScale.x > 5)
-        {
-            networkGenerator.objectsInSky--;
-        }
         // we must wait one more frame here or VRTK_InteractTouch gets a bunch of null exceptions.
         // probably because it is still using these colliders
-        yield return null;
+        yield return new WaitForSeconds(0.3f);
         // Disable the network nodes' colliders
         foreach (Transform child in transform)
         {
@@ -709,6 +746,8 @@ public class NetworkCenter : MonoBehaviour
             button.SetButtonActivated(false);
         }
         CellexalEvents.NetworkUnEnlarged.Invoke();
+        CellexalEvents.ScriptFinished.Invoke();
+        //handler.runningScript = false;
     }
 
     /// <summary>
@@ -1044,7 +1083,10 @@ public class NetworkCenter : MonoBehaviour
     /// </summary>
     IEnumerator LogNetwork(string networkImageFilePath)
     {
+        //handler.runningScript = true;
+        CellexalEvents.ScriptRunning.Invoke();
         saveImageButton.SetButtonActivated(false);
+        saveImageButton.descriptionText.text = "Saving image...";
         string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
         string args = CellexalUser.UserSpecificFolder + " " + networkImageFilePath + " " + groupingsFilepath;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
@@ -1061,6 +1103,9 @@ public class NetworkCenter : MonoBehaviour
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         saveImageButton.SetButtonActivated(true);
+        //handler.runningScript = false;
+        CellexalEvents.ScriptFinished.Invoke();
+        saveImageButton.descriptionText.text = "";
     }
 
 

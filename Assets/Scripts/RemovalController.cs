@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class RemovalController : MonoBehaviour {
     private float targetScale;
     private float shrinkSpeed;
     private GameObject objectToDelete;
+    private bool runningScript;
 
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
@@ -27,7 +29,19 @@ public class RemovalController : MonoBehaviour {
         speed = 1.5f;
         shrinkSpeed = 2f;
         targetScale = 0.1f;
+        //CellexalEvents.ScriptRunning.AddListener(SetScriptRunning);
+        //CellexalEvents.ScriptFinished.AddListener(SetScriptFinished);
     }
+
+    //private void SetScriptRunning()
+    //{
+    //    runningScript = true;
+    //}
+
+    //private void SetScriptFinished()
+    //{
+    //    runningScript = false;
+    //}
 
     // Update is called once per frame
     void Update()
@@ -39,8 +53,22 @@ public class RemovalController : MonoBehaviour {
         }
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            if (objectToDelete.GetComponent<Heatmap>() && objectToDelete.GetComponent<Heatmap>().removable)
+            {
+                Debug.Log("Script is running");
+                CellexalError.SpawnError("Delete failed", "Can not delete heatmap yet. Wait for script to finish before removing it.");
+                controllerInside = false;
+                return;
+            }
             if (objectToDelete.GetComponent<NetworkHandler>())
             {
+                if (objectToDelete.GetComponent<NetworkHandler>().removable)
+                {
+                    Debug.Log("Script is running");
+                    CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
+                    controllerInside = false;
+                    return;
+                }
                 foreach (NetworkCenter nc in objectToDelete.GetComponent<NetworkHandler>().networks)
                 {
                     nc.BringBackOriginal();
@@ -58,7 +86,6 @@ public class RemovalController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.CompareTag("HeatBoard") || other.gameObject.GetComponent<NetworkHandler>())
         {
             controllerInside = true;

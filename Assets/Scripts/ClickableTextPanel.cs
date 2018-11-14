@@ -24,6 +24,7 @@ public class ClickableTextPanel : ClickablePanel
     /// The method of coloring that is used to color this thing.
     /// </summary>
     public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
+    public CurvedVRKeyboard.KeyboardStatus keyboardOutput;
 
     protected override void Start()
     {
@@ -79,7 +80,12 @@ public class ClickableTextPanel : ClickablePanel
         }
         else if (name == "Clear")
         {
-            referenceManager.keyboardStatusFolder.ClearKey();
+            keyboardOutput.ClearKey();
+        }
+
+        else if (name == "Enter")
+        {
+            keyboardOutput.EnterKey();
         }
         string emptyString = "";
         referenceManager.keyboardStatus.SetOutput(ref emptyString);

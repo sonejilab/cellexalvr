@@ -12,13 +12,13 @@ class NetworkHandlerInteract : VRTK_InteractableObject
     {
         referenceManager.gameManager.InformDisableColliders(gameObject.name);
         // moving many triggers really pushes what unity is capable of
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-        {
-            if (c.gameObject.name == "Ring")
-            {
-                ((MeshCollider)c).convex = true;
-            }
-        }
+        //foreach (Collider c in GetComponentsInChildren<Collider>())
+        //{
+        //    if (c.gameObject.name == "Ring")
+        //    {
+        //        ((MeshCollider)c).convex = true;
+        //    }
+        //}
         GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
         base.OnInteractableObjectGrabbed(e);
     }
@@ -26,13 +26,13 @@ class NetworkHandlerInteract : VRTK_InteractableObject
     public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
     {
         referenceManager.gameManager.InformEnableColliders(gameObject.name);
-        foreach (Collider c in GetComponentsInChildren<Collider>())
-        {
-            if (c.gameObject.name == "Ring")
-            {
-                ((MeshCollider)c).convex = false;
-            }
-        }
+        //foreach (Collider c in GetComponentsInChildren<Collider>())
+        //{
+        //    if (c.gameObject.name == "Ring")
+        //    {
+        //        ((MeshCollider)c).convex = false;
+        //    }
+        //}
         GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
         base.OnInteractableObjectUngrabbed(e);
     }

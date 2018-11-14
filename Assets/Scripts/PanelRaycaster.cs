@@ -29,11 +29,20 @@ public class PanelRaycaster : MonoBehaviour
 
     private void Start()
     {
+        if (referenceManager == null)
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
         rightController = referenceManager.rightController;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 
         // tell all the panels which materials they should use
         foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
+        {
+            panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+        }
+
+        foreach (var panel in GetComponentsInChildren<ClickableReportPanel>(true))
         {
             panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
         }
@@ -57,7 +66,8 @@ public class PanelRaycaster : MonoBehaviour
     private void Update()
     {
         if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
-            || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers || this.gameObject.name == "Keyboard Folder Search")
+            || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser 
+            || this.gameObject.name == "Keyboard Folder Search")
         {
             var raycastingSource = referenceManager.rightLaser.transform;
             var device = SteamVR_Controller.Input((int)rightController.index);
@@ -66,7 +76,7 @@ public class PanelRaycaster : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 // if we hit something this frame.
-                var hitPanel = hit.transform.gameObject.GetComponent<ClickablePanel>();
+                var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
                 var hitKey = hit.transform.gameObject.GetComponent<CurvedVRKeyboard.KeyboardItem>();
                 if (hitPanel != null)
                 {

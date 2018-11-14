@@ -20,10 +20,10 @@ class NetworkCenterInteract : VRTK_InteractableObject
                 {
                     c.enabled = false;
                 }
-                else if (c.gameObject.name == "Ring")
-                {
-                    ((MeshCollider)c).convex = true;
-                }
+                //else if (c.gameObject.name == "Ring")
+                //{
+                //    ((MeshCollider)c).convex = true;
+                //}
             }
         }
         base.OnInteractableObjectGrabbed(e);
@@ -40,10 +40,10 @@ class NetworkCenterInteract : VRTK_InteractableObject
                 {
                     c.enabled = true;
                 }
-                else if (c.gameObject.name == "Ring")
-                {
-                    ((MeshCollider)c).convex = false;
-                }
+                //else if (c.gameObject.name == "Ring")
+                //{
+                //    ((MeshCollider)c).convex = false;
+                //}
 
             }
         }

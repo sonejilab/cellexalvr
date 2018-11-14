@@ -27,6 +27,7 @@ public class Heatmap : MonoBehaviour
     public GameObject movingQuadY;
     public int selectionNr;
     public TextMeshPro highlightGene;
+    public bool removable;
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -95,7 +96,7 @@ public class Heatmap : MonoBehaviour
     private float selectedBoxHeight;
     // number of heatmaps created from this heatmap
     private int heatmapsCreated = 0;
-    private bool heatmapSaved; 
+    //private bool heatmapSaved; 
 
     void Start()
     {
@@ -532,7 +533,7 @@ public class Heatmap : MonoBehaviour
         // the thread is now done and the heatmap has been painted
         // copy the bitmap data over to a unity texture
         // using a memorystream here seemed like a better alternative but made the standalone crash
-        string heatmapDirectory = Directory.GetCurrentDirectory() + @"\Images";
+        string heatmapDirectory = Directory.GetCurrentDirectory() + @"\Output\Images";
         if (!Directory.Exists(heatmapDirectory))
         {
             Directory.CreateDirectory(heatmapDirectory);
@@ -1097,7 +1098,14 @@ public class Heatmap : MonoBehaviour
         }
         referenceManager.selectionToolHandler.DumpSelectionToTextFile(newGps);
         heatmap.Init();
-        heatmap.BuildTexture(newCells, newGenes, newGroupWidths);
+        try
+        {
+            heatmap.BuildTexture(newCells, newGenes, newGroupWidths);
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Could not create heatmap. " + e.StackTrace);
+        }
         heatmapGenerator.selectionNr += 1;
         heatmap.selectionNr = heatmapGenerator.selectionNr;
     }
@@ -1171,6 +1179,8 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     IEnumerator LogHeatmap(string heatmapImageFilePath)
     {
+        removable = true;
+        //CellexalEvents.ScriptRunning.Invoke();
         saveImageButton.SetButtonActivated(false);
         statusText.text = "Saving Heatmap...";
         string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
@@ -1189,9 +1199,10 @@ public class Heatmap : MonoBehaviour
         }
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-        heatmapSaved = true;
         saveImageButton.FinishedButton();
         statusText.text = "";
+        //CellexalEvents.ScriptFinished.Invoke();
+        removable = false;
         //saveImageButton.SetButtonActivated(true);
     }
 
@@ -1225,18 +1236,21 @@ public class Heatmap : MonoBehaviour
     IEnumerator GOAnalysis(string goAnalysisDirectory)
     {
         statusText.text = "Doing GO Analysis...";
-        if (!heatmapSaved)
-        {
-            SaveImage();
-            while (!heatmapSaved)
-            {
-                print("heatmap not saved yet");
-                yield return null;
-            }
-        }
+        removable = true;
+        //CellexalEvents.ScriptRunning.Invoke();
+        //if (!heatmapSaved)
+        //{
+        //    SaveImage();
+        //    while (!heatmapSaved)
+        //    {
+        //        print("heatmap not saved yet");
+        //        yield return null;
+        //    }
+        //}
         string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
         string rScriptFilePath = (Application.streamingAssetsPath + @"\R\GOanalysis.R").FixFilePath();
-        string args = CellexalUser.UserSpecificFolder.FixFilePath() + " " + genesFilePath;
+        string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
+        string args = CellexalUser.UserSpecificFolder.FixFilePath() + " " + genesFilePath + " " + groupingsFilepath;
         Debug.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
         CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
         var stopwatch = new System.Diagnostics.Stopwatch();
@@ -1246,13 +1260,14 @@ public class Heatmap : MonoBehaviour
         
         while (t.IsAlive)
         {
-            print("Still alive - " + stopwatch.Elapsed.Minutes);
             yield return null;
         }
         stopwatch.Stop();
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         statusText.text = "";
         goAnalysisButton.FinishedButton();
+        removable = false;
+        //CellexalEvents.ScriptFinished.Invoke();
         //goAnalysisButton.SetButtonActivated(true);
     }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System;
 using TMPro;
 using System.Threading;
+using CellexalExtensions;
 
 /// <summary>
 /// A class for reading data files and creating objects in the virtual environment.
@@ -110,7 +111,7 @@ public class InputReader : MonoBehaviour
         if (!debug)
         {
             // clear the network folder
-            string networkDirectory = workingDirectory + "\\Resources\\Networks";
+            string networkDirectory = (CellexalUser.UserSpecificFolder + "\\Resources\\Networks").FixFilePath();
             if (!Directory.Exists(networkDirectory))
             {
                 CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(networkDirectory));
@@ -128,6 +129,7 @@ public class InputReader : MonoBehaviour
         if (mdsFiles.Length == 0)
         {
             CellexalError.SpawnError("Empty dataset", "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
+            throw new System.InvalidOperationException("Empty dataset");
         }
         CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
         StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));

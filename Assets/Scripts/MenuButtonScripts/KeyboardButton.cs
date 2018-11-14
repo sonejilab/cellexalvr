@@ -16,6 +16,12 @@ public class KeyboardButton : CellexalToolButton
         get { return ControllerModelSwitcher.Model.Keyboard; }
     }
 
+    protected override void Click()
+    {
+        base.Click();
+        referenceManager.gameManager.InformActivateKeyboard(toolActivated);
+    }
+
 
 
 }

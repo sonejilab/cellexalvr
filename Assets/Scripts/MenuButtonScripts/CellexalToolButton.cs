@@ -38,6 +38,7 @@ public abstract class CellexalToolButton : CellexalButton
         bool toolActivated = controllerModelSwitcher.DesiredModel == ControllerModel;
         if (toolActivated)
         {
+            print("turn off tool");
             controllerModelSwitcher.TurnOffActiveTool(true);
             spriteRenderer.sprite = standardTexture;
             this.toolActivated = false;

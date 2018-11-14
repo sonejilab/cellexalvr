@@ -178,7 +178,7 @@ namespace ExitGames.Demos.DemoAnimator
 
         public void ConnectTutorialScene()
         {
-            SceneManager.LoadScene("Tutorial");
+            SceneManager.LoadScene("TutorialScene");
         }
 
 

@@ -12,11 +12,19 @@ public class SaveButton : CellexalButton
     //public SaveScene saveScene;
     public Sprite gray;
     public Sprite original;
+    public ReportListGenerator reportList;
     //private float elapsedTime;
     private float time = 1.0f;
     private bool changeSprite;
 
     // Use this for initialization
+    protected override void Awake()
+    {
+        base.Awake();
+        CellexalEvents.ScriptRunning.AddListener(TurnOff);
+        CellexalEvents.ScriptRunning.AddListener(TurnOn);
+    }
+
     protected override string Description
     {
         get { return "Save Session/Create Report"; }
@@ -54,6 +62,7 @@ public class SaveButton : CellexalButton
     /// </summary>
     IEnumerator LogStop()
     {
+        descriptionText.text = "Compiling report..";
         string args = CellexalUser.UserSpecificFolder;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
         Debug.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
@@ -76,29 +85,41 @@ public class SaveButton : CellexalButton
 
         //ZipFile.CreateFromDirectory(startPath, zipPath);
         changeSprite = false;
+        descriptionText.text = "";
+        SetButtonActivated(true);
+        //reportList.GenerateList();
+    }
+
+    void TurnOff()
+    {
+        SetButtonActivated(false);
+    }
+
+    void TurnOn()
+    {
         SetButtonActivated(true);
     }
 
-//    public static void SendIt()
-//    {
-//        MailMessage mail = new MailMessage();
-//        mail.From = new MailAddress("cellexalvr@gmail.com");
-//        mail.To.Add("cellexalvr@gmail.com");
-//        mail.Subject = "Test Mail - 1";
-//        mail.Body = "mail with attachment";
+    //    public static void SendIt()
+    //    {
+    //        MailMessage mail = new MailMessage();
+    //        mail.From = new MailAddress("cellexalvr@gmail.com");
+    //        mail.To.Add("cellexalvr@gmail.com");
+    //        mail.Subject = "Test Mail - 1";
+    //        mail.Body = "mail with attachment";
 
-//        System.Net.Mail.Attachment attachment;
-//        attachment = new System.Net.Mail.Attachment("your attachment file");
-//        mail.Attachments.Add(attachment);
+    //        System.Net.Mail.Attachment attachment;
+    //        attachment = new System.Net.Mail.Attachment("your attachment file");
+    //        mail.Attachments.Add(attachment);
 
-//#pragma warning disable CS0618 // Type or member is obsolete
-//        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com")
-//#pragma warning restore CS0618 // Type or member is obsolete
-//        {
-//            Port = 587,
-//            EnableSsl = true
-//        };
+    //#pragma warning disable CS0618 // Type or member is obsolete
+    //        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com")
+    //#pragma warning restore CS0618 // Type or member is obsolete
+    //        {
+    //            Port = 587,
+    //            EnableSsl = true
+    //        };
 
-//        SmtpServer.Send(mail);
-//    }
+    //        SmtpServer.Send(mail);
+    //    }
 }
