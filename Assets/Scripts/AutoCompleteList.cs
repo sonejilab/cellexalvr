@@ -157,7 +157,7 @@ public class AutoCompleteList : MonoBehaviour
         root.SearchForNode(word, radius, ref candidates);
         //print(candidates.Count);
         candidates.Sort((Tuple<int, BKTreeNode> a, Tuple<int, BKTreeNode> b) => (a.Item1 - b.Item1));
-        for (int i = 0; i < listNodes.Count; ++i)
+        for (int i = 0; i < listNodes.Count && i < candidates.Count; ++i)
         {
 
             var node = candidates[i].Item2;

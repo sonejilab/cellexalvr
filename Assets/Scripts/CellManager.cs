@@ -323,12 +323,8 @@ public class CellManager : MonoBehaviour
             c.ColorByExpression(0);
         }
 
-        for (int i = 0; i < expressions.Count; ++i)
-        {
-            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
-            cell.Show();
-            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
-        }
+        graphManager.ColorAllGraphsByGeneExpression(expressions);
+
         float percentInResults = (float)database._result.Count / cells.Values.Count;
         statusDisplay.RemoveStatus(coloringInfoStatusId);
         coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));

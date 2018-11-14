@@ -820,7 +820,7 @@ namespace SQLiter
                 int binsize = result.Count / CellexalConfig.NumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
-                    result[j].Expression = j / binsize;
+                    result[j].Color = j / binsize;
                 }
                 _result.AddRange(result);
             }

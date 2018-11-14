@@ -16,6 +16,7 @@ TagManager:
   - Cells
   - Sphere
   - Keyboard
+  - SelectionTool
   layers:
   - Default
   - TransparentFX

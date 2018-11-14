@@ -273,7 +273,10 @@ public class GraphManager : MonoBehaviour
     //[ConsoleCommand("graphManager", "cg")]
     public void RecolorGraphPoint(string label, int i)
     {
-        CombinedGraphs[0].RecolorGraphPoint(label, selectionToolHandler.Colors[i]);
+        foreach (var graph in CombinedGraphs)
+        {
+            graph.RecolorGraphPoint(label, selectionToolHandler.Colors[i]);
+        }
     }
 
     /// <summary>
