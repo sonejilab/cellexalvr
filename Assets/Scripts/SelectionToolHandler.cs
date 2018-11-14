@@ -43,6 +43,13 @@ public class SelectionToolHandler : MonoBehaviour
     private bool selActive = false;
     private int currentMeshIndex;
     public ParticleSystem particles;
+    public CombinedGraph TouchingGraph { get; set; }
+    private Vector3[] selectionToolTipPos = new Vector3[] {
+        new Vector3(0f, -0.0503f, 0.1202f),
+        new Vector3(0f, -0.0829f, 0.0566f),
+        new Vector3(0f, 0.0216f, 0.0905f),
+        new Vector3(0f, -0.0243f, 0.0515f),
+        new Vector3(0f,-0.0043f, -0.0017f) };
 
     [HideInInspector]
     public int[] groups = new int[10];
@@ -86,6 +93,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.createSelectionFromPreviousSelectionMenu;
         SetSelectionToolEnabled(false, 0);
+
         CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
     }
 
@@ -112,7 +120,18 @@ public class SelectionToolHandler : MonoBehaviour
                 particles.gameObject.SetActive(true);
                 ActivateSelection(true);
             }
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && TouchingGraph != null)
+            {
+                Vector3 boundsMin = selectionToolColliders[currentMeshIndex].bounds.center;
+                Vector3 boundsMax = selectionToolColliders[currentMeshIndex].bounds.extents;
+                var closestPoints = TouchingGraph.MinkowskiDetection(transform.position, boundsMin, boundsMax, currentColorIndex);
+                foreach (var point in closestPoints)
+                {
+                    AddGraphpointToSelection(point, currentColorIndex);
+                }
+
+            }
+            else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
                 particles.gameObject.SetActive(false);
                 ActivateSelection(false);
@@ -120,6 +139,7 @@ public class SelectionToolHandler : MonoBehaviour
         }
 
     }
+
     /// <summary>
     /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.SelectionToolColors"/>.
     /// </summary>
@@ -130,6 +150,11 @@ public class SelectionToolHandler : MonoBehaviour
         groupInfoDisplay.SetColors(Colors);
         HUDGroupInfoDisplay.SetColors(Colors);
         FarGroupInfoDisplay.SetColors(Colors);
+    }
+
+    public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int group)
+    {
+        graphPoint.Recolor(graphPoint, selectedColor, group);
     }
 
     /// <summary>
@@ -420,6 +445,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// <summary>
     /// Confirms a selection and dumps the relevant data to a .txt file.
     /// </summary>
+    //[ConsoleCommand("selectionToolHandler", "confirmselection", "confirm")]
     public void ConfirmSelection()
     {
         if (selectedCells.Count == 0)

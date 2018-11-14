@@ -781,7 +781,7 @@ namespace SQLiter
                         LowestExpression = expr;
                     }
                     i++;
-                    _result.Add(new CellExpressionPair(_reader.GetString(0), expr));
+                    _result.Add(new CellExpressionPair(_reader.GetString(0), expr, -1));
                 }
                 float binSize = (HighestExpression - LowestExpression) / CellexalConfig.NumberOfExpressionColors;
                 if (DebugMode)
@@ -790,7 +790,7 @@ namespace SQLiter
                 }
                 foreach (CellExpressionPair pair in _result)
                 {
-                    pair.Expression = (pair.Expression - LowestExpression) / binSize;
+                    pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
                 }
             }
             else
@@ -801,7 +801,7 @@ namespace SQLiter
                 // put the same number of results in each bucket, ordered
                 while (_reader.Read())
                 {
-                    CellExpressionPair newPair = new CellExpressionPair(_reader.GetString(0), _reader.GetFloat(1));
+                    CellExpressionPair newPair = new CellExpressionPair(_reader.GetString(0), _reader.GetFloat(1), -1);
                     result.Add(newPair);
                     float expr = newPair.Expression;
                     if (expr > HighestExpression)
@@ -1048,7 +1048,7 @@ namespace SQLiter
                     minExpr = expr;
                 }
                 i++;
-                _result.Add(new CellExpressionPair(_reader.GetString(1), expr));
+                _result.Add(new CellExpressionPair(_reader.GetString(1), expr, -1));
             }
             binSize = (maxExpr - minExpr) / CellexalConfig.NumberOfExpressionColors;
             for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
@@ -1185,16 +1185,18 @@ namespace SQLiter
     {
         public string Cell { get; set; }
         public float Expression { get; set; }
+        public int Color { get; set; }
 
-        public CellExpressionPair(string Cell, float Expression)
+        public CellExpressionPair(string Cell, float Expression, int Color)
         {
             this.Cell = Cell;
             this.Expression = Expression;
+            this.Color = Color;
         }
 
         public int CompareTo(CellExpressionPair other)
         {
-            return (int)(Expression * 1000 - other.Expression * 1000);
+            return (int)(Expression - other.Expression);
         }
     }
 }

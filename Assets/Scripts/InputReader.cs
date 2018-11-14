@@ -1,12 +1,14 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using SQLiter;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
 using TMPro;
 using System.Threading;
+using System.Threading.Tasks;
 
 /// <summary>
 /// A class for reading data files and creating objects in the virtual environment.
@@ -21,6 +23,8 @@ public class InputReader : MonoBehaviour
     public TextMeshPro graphName;
 
     public GameObject lineprefab;
+
+    private char[] separators = new char[] { ' ', '\t' };
 
     private GraphManager graphManager;
     private CellManager cellManager;
@@ -65,7 +69,8 @@ public class InputReader : MonoBehaviour
         if (debug)
         {
             //status.gameObject.SetActive(true);
-            ReadFolder(@"Mouse_HSPC");
+            //ReadFolder(@"CyTOF_150k");
+            ReadFolder(@"CyTOF_150k");
         }
         CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
@@ -82,6 +87,7 @@ public class InputReader : MonoBehaviour
     /// Reads one folder of data and creates the graphs described by the data.
     /// </summary>
     /// <param name="path"> The path to the folder. </param>
+    //[ConsoleCommand("inputReader", "readfolder", "rf")]
     public void ReadFolder(string path)
     {
         string workingDirectory = Directory.GetCurrentDirectory();
@@ -160,6 +166,7 @@ public class InputReader : MonoBehaviour
         {
             //Graph newGraph = graphManager.CreateGraph();
             CombinedGraph newGraph = Instantiate(combinedGraphPrefab);
+            newGraph.referenceManager = referenceManager;
             // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
@@ -175,54 +182,40 @@ public class InputReader : MonoBehaviour
             //textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
             //textmeshgraphname.transform.Rotate(0f, 180f, 0f);
             newGraph.DirectoryName = regexResult[regexResult.Length - 2];
-
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
             using (StreamReader mdsStreamReader = new StreamReader(file))
             {
-                List<string> cellnames = new List<string>();
-                List<float> xcoords = new List<float>();
-                List<float> ycoords = new List<float>();
-                List<float> zcoords = new List<float>();
-
+                //List<string> cellnames = new List<string>();
+                //List<float> xcoords = new List<float>();
+                //List<float> ycoords = new List<float>();
+                //List<float> zcoords = new List<float>();
+                int i = 0;
                 while (!mdsStreamReader.EndOfStream)
                 {
-                    string[] words = mdsStreamReader.ReadLine().Split(null);
-                    if (words.Length != 4)
-                    {
-                        continue;
-                    }
-                    cellnames.Add(words[0]);
-                    float x = float.Parse(words[1]);
-                    float y = float.Parse(words[2]);
-                    float z = float.Parse(words[3]);
-                    xcoords.Add(x);
-                    ycoords.Add(y);
-                    zcoords.Add(z);
-                    newGraph.UpdateMinMaxCoords(x, y, z);
-                }
-                if (fileIndex == 0)
-                {
-                    totalNbrOfCells = xcoords.Count;
-                }
-                // we must wait for the graph to fully initialize before adding stuff to it
-                // more_cells while (!newGraph.Ready())
-                // more_cells   yield return null;
-                // more_cells newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
-                // more_cells newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
-
-                for (int i = 0; i < xcoords.Count; i += itemsThisFrame)
-                {
                     itemsThisFrame = 0;
-                    status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
-                    statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
-                    statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
+                    //  status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
+                    //  statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
+                    //  statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                     //print(maximumItemsPerFrame);
-                    for (int j = i; j < (i + maximumItemsPerFrame) && j < xcoords.Count; ++j)
+                    for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
                     {
-                        //graphManager.AddCell(newGraph, cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
-                        newGraph.AddGraphPoint(cellnames[j], xcoords[j], ycoords[j], zcoords[j]);
+                        string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                        if (words.Length != 4)
+                        {
+                            continue;
+                        }
+                        string cellname = words[0];
+                        float x = float.Parse(words[1]);
+                        float y = float.Parse(words[2]);
+                        float z = float.Parse(words[3]);
+                        //newGraph.UpdateMinMaxCoords(x, y, z);
+
+                        cellManager.AddCell(cellname);
+                        newGraph.AddGraphPoint(cellname, x, y, z);
                         itemsThisFrame++;
                     }
+                    i += itemsThisFrame;
+                    totalNbrOfCells += itemsThisFrame;
                     // wait for end of frame
                     yield return null;
 
@@ -238,8 +231,13 @@ public class InputReader : MonoBehaviour
                         // we took too much time last frame
                         maximumItemsPerFrame -= CellexalConfig.GraphLoadingCellsPerFrameIncrement;
                     }
-                    //UnityEditor.EditorApplication.isPlaying = false;
                 }
+                // we must wait for the graph to fully initialize before adding stuff to it
+                // more_cells while (!newGraph.Ready())
+                // more_cells   yield return null;
+                // more_cells newGraph.GetComponent<GraphInteract>().magnifier = magnifier;
+                // more_cells newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
+
                 fileIndex++;
                 // tell the graph that the info text is ready to be set
                 // more_cells newGraph.SetInfoText();
@@ -257,25 +255,33 @@ public class InputReader : MonoBehaviour
                 mdsStreamReader.Close();
                 // if (debug)
                 //     newGraph.CreateConvexHull();
+
             }
             // more_cells
 
             newGraph.SliceClustering();
-           
+            graphManager.CombinedGraphs.Add(newGraph);
+
+            //newGraph.transform.Translate(Vector3.up * 5);
+
+            if (debug)
+            {
+                //newGraph.transform.Translate(Vector3.forward * fileIndex);
+            }
             CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
         }
 
         // more_cells
-        CellexalEvents.GraphsLoaded.Invoke();
+        //CellexalEvents.GraphsLoaded.Invoke();
         loaderController.loaderMovedDown = true;
         loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
         // more_cells
-        yield break;
         ReadAttributeFiles(path);
         ReadBooleanExpressionFiles(path);
 
         if (debug)
         {
+
             ReadNetworkFiles(0);
             loaderController.DestroyFolders();
         }
@@ -299,7 +305,6 @@ public class InputReader : MonoBehaviour
             //cellManager.ColorByAttributeExpression(expr);
             //    cellManager.SaveFlashGenesData(ReadFlashingGenesFiles("Data/Bertie/flashing_genes_cell_cycle.fgv"));
         }
-
     }
 
     public void ReadAttributeFiles(string path)
@@ -310,6 +315,8 @@ public class InputReader : MonoBehaviour
         //  CELLNAME_1  [0,1]   [0,1]
         //  CELLNAME_2  [0,1]   [0,1]
         // ...
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
         foreach (string metacellfile in metacellfiles)
         {
@@ -349,6 +356,8 @@ public class InputReader : MonoBehaviour
             attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
             cellManager.Attributes = actualAttributeTypes;
         }
+        stopwatch.Stop();
+        CellexalLog.Log("read attributes in " + stopwatch.Elapsed.ToString());
     }
 
     public void ReadBooleanExpressionFiles(string path)
@@ -473,6 +482,9 @@ public class InputReader : MonoBehaviour
     /// </summary>
     private void ReadFacsFiles(string path, int nbrOfCells)
     {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
         string fullpath = path + "\\index.facs";
 
         if (!File.Exists(fullpath))
@@ -495,39 +507,50 @@ public class InputReader : MonoBehaviour
         string[] header = headerline.Split(new string[] { "\t", " " }, StringSplitOptions.RemoveEmptyEntries);
         float[] min = new float[header.Length];
         float[] max = new float[header.Length];
+        string[] values = new string[header.Length + 1];
         int i = 0;
         for (; i < min.Length; ++i)
         {
             min[i] = float.MaxValue;
             max[i] = float.MinValue;
         }
-        string[] cellnames = new string[nbrOfCells];
-        float[,] values = new float[nbrOfCells, header.Length];
+
+        // string[] cellnames = new string[nbrOfCells];
+        // float[,] values = new float[nbrOfCells, header.Length];
 
         // read the file, calculate the min and max values and save all values
         for (i = 0; !streamReader.EndOfStream; ++i)
         {
-            string[] line = streamReader.ReadLine().Split(null);
-            for (int j = 0; j < line.Length - 1; ++j)
+            string line = streamReader.ReadLine();
+            SplitValues(line, ref values, separators);
+            string cellName = values[0];
+            for (int j = 0; j < values.Length - 1; ++j)
             {
-                float value = float.Parse(line[j + 1]);
-                cellnames[i] = line[0];
-                values[i, j] = value;
+
+                float value = float.Parse(values[j + 1]);
                 if (value < min[j])
                     min[j] = value;
                 if (value > max[j])
                     max[j] = value;
+
             }
         }
         // now that we know the min and max values we can iterate over the values once again
-        for (i = 0; i < values.GetLength(0); ++i)
+        streamReader.DiscardBufferedData();
+        streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+        // read header line
+        streamReader.ReadLine();
+        for (i = 0; !streamReader.EndOfStream; ++i)
         {
-            for (int j = 0; j < values.GetLength(1); ++j)
+            string line = streamReader.ReadLine();
+            SplitValues(line, ref values, separators);
+            string cellName = values[0];
+            for (int j = 0; j < values.Length - 1; ++j)
             {
                 // normalize to the range [0, 29]
-                float colorIndexFloat = ((values[i, j] - min[j]) / (max[j] - min[j])) * (CellexalConfig.NumberOfExpressionColors - 1);
+                float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.NumberOfExpressionColors - 1);
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
-                cellManager.AddFacs(cellnames[i], header[j], colorIndex);
+                cellManager.AddFacs(cellName, header[j], colorIndex);
             }
         }
         streamReader.Close();
@@ -535,6 +558,27 @@ public class InputReader : MonoBehaviour
         indexMenu.CreateButtons(header);
         cellManager.Facs = header;
         CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullpath));
+
+        stopwatch.Stop();
+        return;
+    }
+
+    private void SplitValues(string line, ref string[] values, char[] seperators)
+    {
+        int charIndex = 0;
+        for (int i = 0; i < values.Length; ++i)
+        {
+            int nextSeperator = line.IndexOfAny(seperators, charIndex);
+            if (nextSeperator >= 0)
+            {
+                values[i] = line.Substring(charIndex, nextSeperator - charIndex);
+            }
+            else
+            {
+                values[i] = line.Substring(charIndex);
+            }
+            charIndex = nextSeperator + 1;
+        }
     }
 
     /// <summary>
@@ -553,8 +597,6 @@ public class InputReader : MonoBehaviour
             node2 = n2;
         }
     }
-
-
 
     /// <summary>
     /// Reads the files containg networks.
@@ -648,7 +690,7 @@ public class InputReader : MonoBehaviour
                 graph = graphManager.FindGraph(graphName);
                 if (graph == null)
                 {
-                    CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sire there is a .mds and .hull file with the same name in the dataset.", graphName));
+                    CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.", graphName));
                     yield break;
                 }
                 skeleton = graph.CreateConvexHull();

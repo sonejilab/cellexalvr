@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using BayatGames.SaveGameFree.Examples;
+using System.Collections;
+using System.Drawing;
 
 /// <summary>
 /// Represents a manager that holds all graphs.
@@ -17,6 +19,8 @@ public class GraphManager : MonoBehaviour
     public Material defaultGraphPointMaterial;
     public Shader graphPointNormalShader;
     public Shader graphPointOutlineShader;
+
+    public List<CombinedGraph> CombinedGraphs { get; set; }
 
     private CellManager cellManager;
     private SelectionToolHandler selectionToolHandler;
@@ -45,6 +49,7 @@ public class GraphManager : MonoBehaviour
     public GeneExpressionColoringMethods GeneExpressionColoringMethod = GeneExpressionColoringMethods.Linear;
 
     public Material[] GeneExpressionMaterials;
+    public Brush[] GeneExpressionBrushes;
     public Material[] GroupingMaterials;
     public Material[] GroupingMaterialsOutline;
     public Material[] AttributeMaterials;
@@ -52,9 +57,15 @@ public class GraphManager : MonoBehaviour
     public List<Material> AdditionalGroupingMaterials;
     public List<Material> AdditionalGroupingMaterialsOutline;
 
+    public bool drawDebugCubes = false;
+    public bool drawDebugLines = false;
+    public bool drawSelectionToolDebugLines = false;
+    public bool drawDebugRaycast = false;
+
     void Awake()
     {
         graphs = new List<Graph>();
+        CombinedGraphs = new List<CombinedGraph>();
     }
 
     private void Start()
@@ -73,12 +84,67 @@ public class GraphManager : MonoBehaviour
         CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
     }
 
+    //[ConsoleCommand("graphManager", "drawdebugcubes", "ddc")]
+    public void DrawDebugGizmos(int i)
+    {
+        if (i == 1)
+        {
+            drawDebugCubes = true;
+        }
+        else if (i == 0)
+        {
+            drawDebugCubes = false;
+        }
+    }
+
+    //[ConsoleCommand("graphManager", "drawdebuglines", "ddl")]
+    public void DrawDebugLines(int i)
+    {
+        if (i == 1)
+        {
+            drawDebugLines = true;
+        }
+        else if (i == 0)
+        {
+            drawDebugLines = false;
+        }
+    }
+
+    //[ConsoleCommand("graphManager", "drawselectiontooldebuglines", "dstdl")]
+    public void DrawSelectionToolDebugLines(int i)
+    {
+        if (i == 1)
+        {
+            drawSelectionToolDebugLines = true;
+        }
+        else if (i == 0)
+        {
+            drawSelectionToolDebugLines = false;
+        }
+    }
+
+    //[ConsoleCommand("graphManager", "drawraycast", "drc")]
+    public void DrawDebugRaycast(int i)
+    {
+        if (i == 1)
+        {
+            drawDebugRaycast = true;
+        }
+        else if (i == 0)
+        {
+            drawDebugRaycast = false;
+        }
+    }
+
+
+
+
     /// <summary>
     /// Get a material that can be used for coloring graphpoints in colors that are not defined by the config file.
     /// </summary>
     /// <param name="color">The desired color.</param>
     /// <returns>An existing material with the color of <paramref name="color"/> if one exists, or a new material if none existed.</returns>
-    public Material GetAdditionalGroupingMaterial(Color color, bool outline)
+    public Material GetAdditionalGroupingMaterial(UnityEngine.Color color, bool outline)
     {
         if (outline)
         {
@@ -96,7 +162,7 @@ public class GraphManager : MonoBehaviour
 
             newMaterial.shader = graphPointOutlineShader;
             newMaterial.color = color;
-            newMaterial.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
+            newMaterial.SetColor("_OutlineColor", new UnityEngine.Color(outlineR, outlineG, outlineB));
             AdditionalGroupingMaterialsOutline.Add(newMaterial);
             return newMaterial;
         }
@@ -122,7 +188,7 @@ public class GraphManager : MonoBehaviour
     private void OnConfigLoaded()
     {
         // Generate the materials needed by the selection tool.
-        Color[] selectionToolColors = CellexalConfig.SelectionToolColors;
+        UnityEngine.Color[] selectionToolColors = CellexalConfig.SelectionToolColors;
         int numSelectionColors = selectionToolColors.Length;
         GroupingMaterials = new Material[numSelectionColors];
         GroupingMaterialsOutline = new Material[numSelectionColors];
@@ -130,7 +196,7 @@ public class GraphManager : MonoBehaviour
         for (int i = 0; i < numSelectionColors; ++i)
         {
             // Non-outlined version
-            Color selectionToolColor = selectionToolColors[i];
+            UnityEngine.Color selectionToolColor = selectionToolColors[i];
             Material selectedMaterial = new Material(defaultGraphPointMaterial);
             selectedMaterial.color = selectionToolColor;
             selectedMaterial.shader = graphPointNormalShader;
@@ -144,16 +210,16 @@ public class GraphManager : MonoBehaviour
             Material selectedMaterialOutline = new Material(defaultGraphPointMaterial);
             selectedMaterialOutline.shader = graphPointOutlineShader;
             selectedMaterialOutline.color = selectionToolColors[i];
-            selectedMaterialOutline.SetColor("_OutlineColor", new Color(outlineR, outlineG, outlineB));
+            selectedMaterialOutline.SetColor("_OutlineColor", new UnityEngine.Color(outlineR, outlineG, outlineB));
             GroupingMaterialsOutline[i] = selectedMaterialOutline;
         }
 
         // Generate the materials used when coloring by gene expressions
         int nColors = CellexalConfig.NumberOfExpressionColors;
         GeneExpressionMaterials = new Material[nColors];
-        Color low = CellexalConfig.LowExpressionColor;
-        Color mid = CellexalConfig.MidExpressionColor;
-        Color high = CellexalConfig.HighExpressionColor;
+        UnityEngine.Color low = CellexalConfig.LowExpressionColor;
+        UnityEngine.Color mid = CellexalConfig.MidExpressionColor;
+        UnityEngine.Color high = CellexalConfig.HighExpressionColor;
 
         var colors = CellexalExtensions.Extensions.InterpolateColors(low, mid, nColors / 2);
 
@@ -172,7 +238,7 @@ public class GraphManager : MonoBehaviour
         }
 
         // Generate materials used when coloring by attribute
-        Color[] attributeColors = CellexalConfig.AttributeColors;
+        UnityEngine.Color[] attributeColors = CellexalConfig.AttributeColors;
         AttributeMaterials = new Material[attributeColors.Length];
         for (int i = 0; i < attributeColors.Length; ++i)
         {
@@ -204,15 +270,29 @@ public class GraphManager : MonoBehaviour
         return null;
     }
 
+    //[ConsoleCommand("graphManager", "cg")]
+    public void RecolorGraphPoint(string label, int i)
+    {
+        CombinedGraphs[0].RecolorGraphPoint(label, selectionToolHandler.Colors[i]);
+    }
+
     /// <summary>
     /// Recolors a graphpoint.
     /// </summary>
     /// <param name="graphname"> The name of the graph. </param>
     /// <param name="label"> The graphpoint's label. </param>
     /// <param name="color"> The new color. </param>
-    public void RecolorGraphPoint(string graphname, string label, Color color)
+    public void RecolorGraphPoint(string graphname, string label, UnityEngine.Color color)
     {
         FindGraphPoint(graphname, label).SetOutLined(true, color);
+    }
+
+    public void ColorAllGraphsByGeneExpression(ArrayList expressions)
+    {
+        foreach (CombinedGraph graph in CombinedGraphs)
+        {
+            graph.ColorByGeneExpression(expressions);
+        }
     }
 
     /// <summary>
@@ -331,6 +411,7 @@ public class GraphManager : MonoBehaviour
     /// <summary>
     /// Resets all graphpoints' in all graphs colors to white.
     /// </summary>
+    //[ConsoleCommand("graphManager", "resetcolor", "rc")]
     public void ResetGraphsColor()
     {
         CellexalEvents.GraphsReset.Invoke();
@@ -338,6 +419,10 @@ public class GraphManager : MonoBehaviour
         foreach (Graph g in graphs)
         {
             g.ResetGraphColors();
+        }
+        foreach (var g in CombinedGraphs)
+        {
+            g.ResetColors();
         }
     }
 
