@@ -733,6 +733,7 @@ GameObject:
   - component: {fileID: 33090675222867110}
   - component: {fileID: 222614828698860356}
   - component: {fileID: 114974968920518958}
+  - component: {fileID: 114260699001772504}
   m_Layer: 0
   m_Name: Username
   m_TagString: Untagged
@@ -3266,6 +3267,56 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114260699001772504
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1679576020159010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3eef864a10f51045a7530e2afe7c179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VertexCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0.0041739345
+      value: 0.009513058
+      inSlope: 0.5104667
+      outSlope: 0.5104667
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.10454558
+      value: 0.0424549
+      inSlope: 0.40601605
+      outSlope: 0.40601605
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.50051826
+      value: 0.1307913
+      inSlope: -0.0016431365
+      outSlope: -0.0016431365
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9000459
+      value: 0.052448362
+      inSlope: -0.4765596
+      outSlope: -0.4765596
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1.0048172
+      value: 0.005093311
+      inSlope: -0.40756252
+      outSlope: -0.40756252
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  AngleMultiplier: 0
+  SpeedMultiplier: 0
+  CurveScale: 1
 --- !u!114 &114293974986198682
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3764,9 +3815,9 @@ MonoBehaviour:
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 1
   m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
+  m_paragraphSpacing: 1
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
@@ -5040,7 +5091,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1679576020159010}
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -4.34}
+  m_LocalPosition: {x: 0, y: 0, z: -2.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4477240162172066}
