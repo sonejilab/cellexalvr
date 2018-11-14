@@ -70,6 +70,7 @@ public class KeyboardOutput : MonoBehaviour
 
     public void AddLetter(char c)
     {
+        print("Add letter to keyboard - " + this.transform.parent.gameObject.name);
         text += c;
         textMesh.text += c;
         if (description && description.activeSelf)

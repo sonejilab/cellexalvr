@@ -15,7 +15,7 @@ namespace CurvedVRKeyboard
         public int maxOutputLength;
         [SerializeField]
         public KeyboardOutput keyboardOutput;
-        public AutoCompleteList autoCompleteList;
+        //public AutoCompleteList autoCompleteList;
 
         protected ReferenceManager referenceManager;
         private CellManager cellManager;
@@ -111,10 +111,10 @@ namespace CurvedVRKeyboard
 
         protected virtual void SpaceKey()
         {
-            var type = autoCompleteList.LookUpName(output);
+            //var type = autoCompleteList.LookUpName(output);
+            //autoCompleteList.ClearList();
             keyboardOutput.SendToTarget();
             keyboardOutput.Clear();
-            autoCompleteList.ClearList();
             output = "";
             //referenceManager.gameManager.InformKeyClicked("space");
         }
@@ -125,7 +125,7 @@ namespace CurvedVRKeyboard
             {
                 keyboardOutput.RemoveLetter();
                 output = output.Remove(output.Length - 1, 1);
-                autoCompleteList.KeyboardOutput = output;
+                //autoCompleteList.KeyboardOutput = output;
                 //autoCompleteList.KeyboardOutput = output;
                 //referenceManager.gameManager.InformKeyClicked("backspace");
             }
@@ -137,7 +137,7 @@ namespace CurvedVRKeyboard
             {
                 keyboardOutput.AddLetter(key);
                 output = output + key.ToString();
-                autoCompleteList.KeyboardOutput = output;
+                //autoCompleteList.KeyboardOutput = output;
                 //referenceManager.gameManager.InformKeyClicked(key.ToString());
             }
 
@@ -146,6 +146,11 @@ namespace CurvedVRKeyboard
         public virtual void ClearKey()
         {
             keyboardOutput.Clear();
+        }
+
+        public virtual void EnterKey()
+        {
+            return;
         }
 
         public void SetKeys(KeyboardItem[] keys)

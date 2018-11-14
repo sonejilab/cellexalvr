@@ -44,7 +44,9 @@ namespace CurvedVRKeyboard
             rayLength = Vector3.Distance(raycastingSource.position, target.transform.position) * (minRaylengthMultipler +
                                                                                                   (Mathf.Abs(target.transform.lossyScale.x) + Mathf.Abs(target.transform.lossyScale.y) + Mathf.Abs(target.transform.lossyScale.z)));
             if ((referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers || this.gameObject.name == "FolderKeyboard")
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || this.gameObject.name == "WebKeyboard" 
+                || this.gameObject.name == "FolderKeyboard")
             {
                 RayCastKeyboard();
             }
@@ -60,7 +62,8 @@ namespace CurvedVRKeyboard
             ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out hit, rayLength, layer))
             {         // If any key was hit
-                KeyboardItem focusedKeyItem = hit.transform.gameObject.GetComponent<KeyboardItem>();
+                //print(hit.collider.transform.gameObject.name);
+                KeyboardItem focusedKeyItem = hit.collider.transform.gameObject.GetComponent<KeyboardItem>();
                 if (focusedKeyItem != null)
                 {         // Hit may occur on item without script
                     ChangeCurrentKeyItem(focusedKeyItem);
