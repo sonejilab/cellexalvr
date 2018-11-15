@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Button that calls the refresh tabs function which adds new tabs to the menu if a new network has been created.
+/// </summary>
 public class RefreshTabsButton : CellexalButton
 {
 

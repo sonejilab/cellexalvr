@@ -41,7 +41,6 @@ public class KeyboardGene : CurvedVRKeyboard.KeyboardStatus
         {
             keyboardOutput.AddLetter(key);
             output = output + key.ToString();
-            print("autocomplete list");
             autoCompleteList.KeyboardOutput = output;
             //referenceManager.gameManager.InformKeyClicked(key.ToString());
         }

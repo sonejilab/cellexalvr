@@ -672,6 +672,7 @@ public class InputReader : MonoBehaviour
                 networkHandler = skeleton.GetComponent<NetworkHandler>();
                 networkHandlerName = "NetworkHandler_" + graphName + "-" + (selectionToolHandler.fileCreationCtr + 1);
                 networkHandler.name = networkHandlerName;
+                networkHandler.gameObject.AddComponent<PushBack>();
             }
             float x = float.Parse(words[0]);
             float y = float.Parse(words[1]);
@@ -809,7 +810,7 @@ public class InputReader : MonoBehaviour
         nwkStreamReader.Close();
         nwkFileStream.Close();
         CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
-        networkHandler.CreateNetworkAnimation();
+        networkHandler.CreateNetworkAnimation(graph.transform);
     }
 
 

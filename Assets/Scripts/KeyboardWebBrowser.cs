@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
+/// <summary>
+/// Keyboard for web browser. Enter key sends output to navigate function in web browser.
+/// </summary>
 public class KeyboardWebBrowser : CurvedVRKeyboard.KeyboardStatus {
 
     public SimpleWebBrowser.WebBrowser webBrowser;

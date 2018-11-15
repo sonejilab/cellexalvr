@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Used in tutorial scene to mark out specific spots of interest.
+/// </summary>
 public class HighlightSpot : MonoBehaviour {
 
     public TutorialManager tutorialManager;

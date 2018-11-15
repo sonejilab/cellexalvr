@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 /// <summary>
-/// Represents the button that saves the heatmap it is attached to the disk.
+/// Represents the button that saves the heatmap as an image. If user wants to create a report
+/// the image is included in it.
 /// </summary>
 public class SaveHeatmapButton : CellexalButton
 {

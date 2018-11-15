@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Represents the button that toggles the help tool.
+/// Represents the button that plays the relevant help video for a function.
 /// </summary>
 public class HelpVideoButton : CellexalButton
 {

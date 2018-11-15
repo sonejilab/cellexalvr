@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿/// <summary>
+/// Looks for new reports in the user specific folder. If there is one that is not yet in the list it is added.
+/// </summary>
 public class RefreshListButton : CellexalButton
 {
     private ReportListGenerator reportListGenerator;

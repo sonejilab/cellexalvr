@@ -3,10 +3,8 @@
 ///</summary>
 public class CreateHeatmapButton : CellexalButton
 {
-
     private HeatmapGenerator heatmapGenerator;
     private GameManager gameManager;
-
 
     protected override string Description
     {

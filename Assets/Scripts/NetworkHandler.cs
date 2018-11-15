@@ -292,9 +292,9 @@ public class NetworkHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Spawn network infront of user. Use reference to headset to determine position of user.
+    /// Spawn network beside graph it was created from.
     /// </summary>
-    public void CreateNetworkAnimation()
+    public void CreateNetworkAnimation(Transform graph)
     {
         if (gameManager.multiplayer)
         {
@@ -302,11 +302,14 @@ public class NetworkHandler : MonoBehaviour
         }
         if (!gameManager.multiplayer)
         {
-            transform.position = referenceManager.headset.transform.position;
-            transform.rotation = referenceManager.headset.transform.rotation;
-            transform.position += transform.forward * 1f;
+            transform.position = graph.position;
+            transform.rotation = graph.rotation;
+            transform.position += transform.forward * 0.3f;
+            //transform.position = referenceManager.headset.transform.position;
+            //transform.rotation = referenceManager.headset.transform.rotation;
+            //transform.position += transform.forward * 1f;
         }
-        transform.Rotate(-20, 0, 0);
+        //transform.Rotate(-20, 0, 0);
         targetPos = transform.position;
         createAnim = true;
     }

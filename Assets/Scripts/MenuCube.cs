@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents small cube to indicate menu controller.
+/// </summary>
 public class MenuCube : MonoBehaviour {
     public GameObject mainMenu;
 

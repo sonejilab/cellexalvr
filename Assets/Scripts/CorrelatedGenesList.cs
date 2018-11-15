@@ -91,7 +91,7 @@ public class CorrelatedGenesList : MonoBehaviour
 
     private IEnumerator CalculateCorrelatedGenesCoroutine(string nodeName, CellexalExtensions.Definitions.Measurement type)
     {
-        string outputFile = Directory.GetCurrentDirectory() + @"\Resources\" + nodeName + ".correlated.txt";
+        string outputFile = CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt";
         string facsTypeArg = (type == CellexalExtensions.Definitions.Measurement.FACS) ? "T" : "F";
         string args = selectionToolHandler.DataDir + " " + nodeName + " " + outputFile + " " + facsTypeArg;
         string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";

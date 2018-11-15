@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 /// <summary>
-/// Represents the button that calls the Rscript doing a GO analysis of the genes on the heatmap.
+/// Represents the GO analysis-button. When clicked calls the Rscript doing a GO analysis of the genes on the heatmap.
 /// </summary>
 public class GOanalysisButton : CellexalButton
 {

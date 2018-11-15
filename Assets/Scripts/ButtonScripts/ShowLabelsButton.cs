@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Toggles graph information labels on/off.
+/// </summary>
 public class ShowLabelsButton : CellexalButton
 {
     private GraphManager graphManager;

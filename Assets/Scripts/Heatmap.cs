@@ -11,7 +11,7 @@ using TMPro;
 using System.Drawing;
 
 /// <summary>
-/// This class represents a heatmap.
+/// This class represents a heatmap. Contains methods for calling r-script, building texture and interaction methods etc.
 /// </summary>
 public class Heatmap : MonoBehaviour
 {
@@ -330,7 +330,15 @@ public class Heatmap : MonoBehaviour
             }
 
         }
-        StartCoroutine(BuildTextureCoroutine(groupWidths));
+        try
+        {
+            StartCoroutine(BuildTextureCoroutine(groupWidths));
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
+            CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+        }
     }
 
     private void BuildTexture(List<Tuple<int, float, int>> groupWidths)
@@ -355,7 +363,15 @@ public class Heatmap : MonoBehaviour
                 groupWidths.RemoveAt(i + 1);
             }
         }
-        StartCoroutine(BuildTextureCoroutine(groupWidths));
+        try
+        {
+            StartCoroutine(BuildTextureCoroutine(groupWidths));
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
+            CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+        }
     }
 
     /// <summary>
@@ -374,7 +390,15 @@ public class Heatmap : MonoBehaviour
         cells = newCells;
         genes = newGenes;
         groupWidths = newGroupWidths;
-        StartCoroutine(BuildTextureCoroutine(groupWidths));
+        try
+        {
+            StartCoroutine(BuildTextureCoroutine(groupWidths));
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
+            CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+        }
     }
 
     private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths)

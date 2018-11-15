@@ -287,9 +287,16 @@ public class CellManager : MonoBehaviour
     /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
     {
-        //SteamVR_Controller.Input((int)right.controllerIndex).TriggerHapticPulse(2000);
         controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
-        StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+        try
+        {
+            StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+        }
+        catch (Exception e)
+        {
+            CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
+            CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+        }
     }
 
     private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)

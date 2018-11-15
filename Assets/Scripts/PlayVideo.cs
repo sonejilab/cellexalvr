@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+
+/// <summary>
+/// Video player used for helpvideos. The helpvideos are placed throughout the scene often together with toolbuttons.
+/// </summary>
 public class PlayVideo : MonoBehaviour {
 
     //public MovieTexture movie;

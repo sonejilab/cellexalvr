@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-// This class takes care of the highlighting and loading of different steps in the tutorial. 
-// It listens to events to know what buttons to highlight at what time and when to show the description for the next step.
+/// <summary>
+/// This class takes care of the highlighting and loading of different steps in the tutorial. 
+/// It listens to events to know what buttons to highlight at what time and when to show the description for the next step.
+/// </summary>
 public class TutorialManager : MonoBehaviour {
 
     public GameObject tutorialCanvas;

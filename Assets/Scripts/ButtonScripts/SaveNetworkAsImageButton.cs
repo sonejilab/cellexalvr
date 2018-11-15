@@ -1,4 +1,8 @@
-﻿public class SaveNetworkAsImageButton : CellexalButton
+﻿/// <summary>
+/// For reporting function. Network is saved as image to the user specific folder. If user wants to create a report
+/// the image is included in it.
+/// </summary>
+public class SaveNetworkAsImageButton : CellexalButton
 {
     public NetworkCenter parent;
 

@@ -4,7 +4,8 @@ using System.Threading;
 using System;
 using System.Net.Mail;
 /// <summary>
-/// Represents the button that saves the current scene.
+/// Represents the button that compiles a report and includes statistical analaysis and objects the user has saved 
+/// during the session.
 /// </summary>
 public class SaveButton : CellexalButton
 {

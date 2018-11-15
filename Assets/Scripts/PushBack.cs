@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using VRTK;
 
+/// <summary>
+/// Use to push object away from user and pull it back. 
+/// </summary>
 public class PushBack : MonoBehaviour
 {
     public SteamVR_TrackedObject rightController;
@@ -19,6 +22,7 @@ public class PushBack : MonoBehaviour
     private Vector3 orgPos;
     private Vector3 orgScale;
     private Quaternion orgRot;
+    private int maxDist = 10;
 
     void Start()
     {
@@ -36,14 +40,13 @@ public class PushBack : MonoBehaviour
         {
             rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
         }
-
-        device = SteamVR_Controller.Input((int)rightController.index);
+        if (device == null)
+        {
+            device = SteamVR_Controller.Input((int)rightController.index);
+        }
         bool objectPointedAt = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<VRTK_InteractableObject>().IsGrabbed();
         bool correctControllerModel = referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers ||
             referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard;
-        //bool active = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled
-        //    && !GetComponent<VRTK_InteractableObject>().IsGrabbed() && (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers ||
-        //    referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard);
         if (objectPointedAt && correctControllerModel)
         {
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
@@ -62,9 +65,9 @@ public class PushBack : MonoBehaviour
 
         if (push)
         {
-            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
+            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");
             raycastingSource = rightController.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
             //ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (hit.collider && push)
             {
@@ -85,9 +88,9 @@ public class PushBack : MonoBehaviour
         if (pull)
         {
             raycastingSource = rightController.transform;
-            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
+            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");
             raycastingSource = rightController.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 12, layerMask);
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist+1, layerMask);
             if (hit.collider && pull)
             {
                 // don't let the thing become smaller than what it was originally

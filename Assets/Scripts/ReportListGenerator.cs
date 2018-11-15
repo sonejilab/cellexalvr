@@ -3,7 +3,9 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
-
+/// <summary>
+/// Looks for html files in the user folder. Stores them in list together with browser. 
+/// </summary>
 public class ReportListGenerator : MonoBehaviour
 {
     public string[] htmlFiles;
@@ -21,6 +23,10 @@ public class ReportListGenerator : MonoBehaviour
         GenerateList();
     }
 
+    /// <summary>
+    /// Generates report list. Each html file is represented by a clickable text panel. When panel is clicked web navigates
+    /// to that url.
+    /// </summary>
     public void GenerateList()
     {
         //ClearList();

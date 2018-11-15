@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// To remove objects in the scene. Graphs can not be deleted. Delete tool is activated by the delete tool button.
+/// </summary>
 public class RemovalController : MonoBehaviour {
 
     public Material inactiveMat;
