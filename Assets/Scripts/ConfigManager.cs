@@ -36,6 +36,7 @@ public static class CellexalConfig
     public static Color NetworkLineColorPositiveLow { get; set; }
     public static Color NetworkLineColorNegativeLow { get; set; }
     public static Color NetworkLineColorNegativeHigh { get; set; }
+    public static int ConsoleMaxBufferLines { get; set; }
 }
 
 /// <summary>
@@ -379,6 +380,9 @@ public class ConfigManager : MonoBehaviour
                     break;
                 case "GraphGrabbableCollidersExtensionThresehold":
                     CellexalConfig.GraphGrabbableCollidersExtensionThresehold = float.Parse(value);
+                    break;
+                case "ConsoleMaxBufferLines":
+                    CellexalConfig.ConsoleMaxBufferLines = int.Parse(value);
                     break;
 
                 default:

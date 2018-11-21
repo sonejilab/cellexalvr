@@ -9,6 +9,8 @@ using Valve.VR;
 /// </summary>
 public static class CellexalLog
 {
+    public static ConsoleManager consoleManager;
+
     private static string logDirectory;
     private static string logFilePath = "";
     private static List<string> logThisLater = new List<string>();
@@ -73,6 +75,7 @@ public static class CellexalLog
     /// <param name="message"> The string that should be written to the log. </param>
     public static void Log(string message)
     {
+        consoleManager.AppendOutput(message);
         if (logFilePath == "")
         {
             logThisLater.Add("\t" + message);
@@ -98,6 +101,7 @@ public static class CellexalLog
             foreach (string s in message)
             {
                 logThisLater.Add("\t" + s);
+                consoleManager.AppendOutput(s);
             }
         }
         else
@@ -106,6 +110,7 @@ public static class CellexalLog
             {
                 foreach (string s in message)
                 {
+                    consoleManager.AppendOutput(s);
                     logWriter.WriteLine(s);
                 }
                 logWriter.Flush();
@@ -147,6 +152,7 @@ public static class CellexalLog
 /// </summary>
 public class LogManager : MonoBehaviour
 {
+    public ReferenceManager referenceManager;
 
     private void Awake()
     {
@@ -161,6 +167,8 @@ public class LogManager : MonoBehaviour
             CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(outputDirectory));
             Directory.CreateDirectory(outputDirectory);
         }
+
+        CellexalLog.consoleManager = referenceManager.consoleManager;
     }
 
     #region Events

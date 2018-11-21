@@ -87,7 +87,7 @@ public class InputReader : MonoBehaviour
     /// Reads one folder of data and creates the graphs described by the data.
     /// </summary>
     /// <param name="path"> The path to the folder. </param>
-    //[ConsoleCommand("inputReader", "readfolder", "rf")]
+    [ConsoleCommand("inputReader", "readfolder", "rf")]
     public void ReadFolder(string path)
     {
         string workingDirectory = Directory.GetCurrentDirectory();

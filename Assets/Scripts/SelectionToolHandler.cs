@@ -445,7 +445,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// <summary>
     /// Confirms a selection and dumps the relevant data to a .txt file.
     /// </summary>
-    //[ConsoleCommand("selectionToolHandler", "confirmselection", "confirm")]
+    [ConsoleCommand("selectionToolHandler", "confirmselection", "confirm")]
     public void ConfirmSelection()
     {
         if (selectedCells.Count == 0)
