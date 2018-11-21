@@ -79,5 +79,14 @@ EditorBuildSettings:
     path: Assets/SceneLoaderTest.unity
     guid: 00cde3259dd216d46b968f5e350b1925
   - enabled: 0
-    path: Assets/TutorialScene.unity
+    path: Assets/TutorialScene_old.unity
     guid: 26cc0d09629f1e247a4e21a5c5cb2c2a
+  - enabled: 1
+    path: Assets/TutorialScene.unity
+    guid: e0e83b4506115704b87e5bd1317fcb9f
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000

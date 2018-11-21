@@ -198,7 +198,7 @@ public abstract class CellexalButton : MonoBehaviour
         {
             SetButtonActivated(false);
         }
-        if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
+        if (infoMenu)
         {
             infoMenu.SetActive(false);
         }

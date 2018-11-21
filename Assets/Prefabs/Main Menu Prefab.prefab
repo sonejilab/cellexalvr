@@ -16157,15 +16157,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102232124222749808}
   infoMenu: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
+  meshDeactivatedColor:
+    r: 0.5
+    g: 0.5
+    b: 0.5
+    a: 1
   standardTexture: {fileID: 21300000, guid: e031aa44f5c5fac48af7d0f07999bc8c, type: 3}
   highlightedTexture: {fileID: 21300000, guid: b232b3a266a26274a8e4a4d3a6919e10, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
   popupChoice: 1
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   HUD: {fileID: 0}
   status: {fileID: 0}
 --- !u!114 &114109871571855578
@@ -16182,15 +16205,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102232124222749808}
   infoMenu: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
+  meshDeactivatedColor:
+    r: 0.5
+    g: 0.5
+    b: 0.5
+    a: 1
   standardTexture: {fileID: 21300000, guid: e031aa44f5c5fac48af7d0f07999bc8c, type: 3}
   highlightedTexture: {fileID: 21300000, guid: b232b3a266a26274a8e4a4d3a6919e10, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
   popupChoice: 1
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   FarDisp: {fileID: 0}
   status: {fileID: 0}
 --- !u!114 &114117463429927900
@@ -16207,15 +16253,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1320603380090762}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: fb29d8ea1932ee44c8bc2362d1193a35, type: 3}
   url: https://cellexalvr.med.lu.se/videos/DrawTool-converted.mp4
@@ -16559,15 +16628,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1893605410370618}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: a7d3fae3686634e46884b316480ea4e7, type: 3}
   url: https://cellexalvr.med.lu.se/videos/LaserTool-converted.mp4
@@ -17036,15 +17128,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1088596352560000}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 4ce4cd9d50d8eda42902abde33d7dd30, type: 3}
   url: https://cellexalvr.med.lu.se/videos/SelectionTool-converted.mp4
@@ -17328,15 +17443,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1493143415159324}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 0}
   url: 
@@ -18047,15 +18185,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1096738337014818}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 5b05a30f1c2ec9e4fa47b88fd67a5002, type: 3}
   url: https://cellexalvr.med.lu.se/videos/Keyboard-converted.mp4
@@ -18199,15 +18360,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1585558334406092}
-  meshStandardColor: {r: 0.07352942, g: 0.07352942, b: 0.07352942, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0.07352942
+    g: 0.07352942
+    b: 0.07352942
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 426a876be15d16047b6f4ff794b6cdd0, type: 3}
   url: https://cellexalvr.med.lu.se/videos/DeleteTool-converted.mp4
@@ -18275,15 +18459,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102232124222749808}
   infoMenu: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
+  meshDeactivatedColor:
+    r: 0.5
+    g: 0.5
+    b: 0.5
+    a: 1
   standardTexture: {fileID: 21300000, guid: e031aa44f5c5fac48af7d0f07999bc8c, type: 3}
   highlightedTexture: {fileID: 21300000, guid: b232b3a266a26274a8e4a4d3a6919e10, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
   popupChoice: 1
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   FarDisp: {fileID: 0}
   status: {fileID: 0}
 --- !u!114 &114759793525737548
@@ -19073,15 +19280,38 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 102080517038186312}
   infoMenu: {fileID: 1089405817799522}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  frameCount: 0
+  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
+  meshStandardColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshHighlightColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
+  meshDeactivatedColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
+  rightController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
+  raycastingSource: {fileID: 0}
+  layerMaskNetwork: 0
+  layerMaskGraph: 0
+  layerMaskMenu: 0
+  layerMaskKeyboard: 0
+  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d137a8cfda4e4dc478533764ea5f2756, type: 3}
   url: https://cellexalvr.med.lu.se/videos/HideTool-converted.mp4

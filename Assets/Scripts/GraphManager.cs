@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using BayatGames.SaveGameFree.Examples;
 using System;
 
 /// <summary>
@@ -13,7 +12,6 @@ public class GraphManager : MonoBehaviour
     public Graph graphPrefab;
     public AudioSource goodSound;
     public AudioSource badSound;
-    public SaveScene saveScene;
     public string directory;
     public Material defaultGraphPointMaterial;
     public Shader graphPointNormalShader;
@@ -242,27 +240,27 @@ public class GraphManager : MonoBehaviour
         return newGraph;
     }
 
-    public void LoadPosition(Graph graph, int graphNr)
-    {
-        saveScene.SetGraph(graph, graphNr);
-        saveScene.LoadPositions();
-        if (graphNr == 1)
-        {
-            graph.transform.position = saveScene.target1.position;
-            graph.transform.rotation = saveScene.target1.rotation;
-        }
-        else if (graphNr == 2)
-        {
-            graph.transform.position = saveScene.target2.position;
-            graph.transform.rotation = saveScene.target2.rotation;
-        }
-    }
-    public void LoadDirectory()
-    {
-        saveScene.LoadDirectory();
-        directory = saveScene.targetDir;
-        Debug.Log("GM DIR: " + directory);
-    }
+    //public void LoadPosition(Graph graph, int graphNr)
+    //{
+    //    saveScene.SetGraph(graph, graphNr);
+    //    saveScene.LoadPositions();
+    //    if (graphNr == 1)
+    //    {
+    //        graph.transform.position = saveScene.target1.position;
+    //        graph.transform.rotation = saveScene.target1.rotation;
+    //    }
+    //    else if (graphNr == 2)
+    //    {
+    //        graph.transform.position = saveScene.target2.position;
+    //        graph.transform.rotation = saveScene.target2.rotation;
+    //    }
+    //}
+    //public void LoadDirectory()
+    //{
+    //    saveScene.LoadDirectory();
+    //    directory = saveScene.targetDir;
+    //    Debug.Log("GM DIR: " + directory);
+    //}
 
     /// <summary>
     /// Deletes all graphs and networks in the scene.

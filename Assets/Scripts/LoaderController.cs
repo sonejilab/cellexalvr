@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using BayatGames.SaveGameFree.Examples;
 using System.IO;
 using System.Threading;
 
@@ -31,7 +30,6 @@ public class LoaderController : MonoBehaviour
     private float arrivalTime;
     [HideInInspector]
     public bool loaderMovedDown = false;
-    public SaveScene savescene;
     public GameObject keyboard;
     private GameManager gameManager;
 

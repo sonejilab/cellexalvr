@@ -266,10 +266,10 @@ public class InputReader : MonoBehaviour
                 newGraph.CreateColliders();
                 stopwatch.Stop();
                 CellexalLog.Log("Created " + newGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
-                if (doLoad)
-                {
-                    graphManager.LoadPosition(newGraph, fileIndex);
-                }
+                //if (doLoad)
+                //{
+                //    graphManager.LoadPosition(newGraph, fileIndex);
+                //}
                 //mdsFileStream.Close();
                 mdsStreamReader.Close();
                 // if (debug)

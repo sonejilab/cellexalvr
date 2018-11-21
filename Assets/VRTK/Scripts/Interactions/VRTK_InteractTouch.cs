@@ -220,7 +220,10 @@ namespace VRTK
         {
             var colliderInteractableObject = TriggerStart(collider);
             //If the new collider is not part of the existing touched object (and the object isn't being grabbed) then start touching the new object
-            if (touchedObject != null && colliderInteractableObject && touchedObject != colliderInteractableObject && !touchedObject.GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (touchedObject != null
+                && colliderInteractableObject
+                && touchedObject != colliderInteractableObject
+                && (touchedObject.GetComponent<VRTK_InteractableObject>() && !touchedObject.GetComponent<VRTK_InteractableObject>().IsGrabbed()))
             {
                 CancelInvoke("ResetTriggerRumble");
                 ResetTriggerRumble();

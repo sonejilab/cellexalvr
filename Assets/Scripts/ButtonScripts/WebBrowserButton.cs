@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Steamworks;
 
 /// <summary>
 /// Toggle on/off the web browser tool. This also activates the laser on the right hand so that one can interact with the browser.
