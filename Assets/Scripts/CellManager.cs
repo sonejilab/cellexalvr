@@ -272,6 +272,12 @@ public class CellManager : MonoBehaviour
         }
     }
 
+    [ConsoleCommand("cellManager", "colorbygene", "cbg")]
+    public void ColorGraphsByGene(string geneName)
+    {
+        ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+    }
+
     /// <summary>
     /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
     /// </summary>
@@ -676,6 +682,7 @@ public class CellManager : MonoBehaviour
     /// </summary>
     /// <param name="attributeType">The name of the attribute.</param>
     /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
+    [ConsoleCommand("cellManager", "colorbyattribute", "cba")]
     public void ColorByAttribute(string attributeType, bool color)
     {
         //if (!previousSearchesList.Contains(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod))
@@ -802,6 +809,7 @@ public class CellManager : MonoBehaviour
     /// <summary>
     /// Color all graphpoints according to a column in the index.facs file.
     /// </summary>
+    [ConsoleCommand("cellManager", "colorbyindex", "cbi")]
     public void ColorByIndex(string name)
     {
         if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod))

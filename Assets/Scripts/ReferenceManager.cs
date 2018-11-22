@@ -85,6 +85,7 @@ public class ReferenceManager : MonoBehaviour
     public LogManager logManager;
     public GameManager gameManager;
     public GameObject calculatorCluster;
+    public ConsoleManager consoleManager;
     #endregion
 
     #region GeneKeyboard

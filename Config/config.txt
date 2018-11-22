@@ -25,8 +25,12 @@ GraphLoadingCellsPerFrameStartCount = 200
 # A higher number can make GraphLoadingCellsPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
 GraphLoadingCellsPerFrameIncrement = 25
 
+# The amount of clusters to instantiate each frame to start with
+# A higher number can make faster loading but potentially create a loss of frames when loading
 GraphClustersPerFrameStartCount = 5
 
+# The number of clusters that GraphClustersPerFrameStartCount will be incremented by if there was additional time left after the last frame or decremented by if there was not enough time left last frame
+# A higher number can make GraphClustersPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
 GraphClustersPerFrameIncrement = 2
 
 # The proportion of graphpoints that must be present in the new collider for it to be deemed to be worth extending.
@@ -135,3 +139,6 @@ HeatmapConfirmMarkerColor = #00FF37C0
 
 # The number of genes that should be displayed on the heatmap
 HeatmapNumberOfGenes = 250
+
+# The maximum number of lines that should be saved in the console window (summon with F12)
+ConsoleMaxBufferLines = 256

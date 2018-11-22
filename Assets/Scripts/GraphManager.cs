@@ -84,7 +84,7 @@ public class GraphManager : MonoBehaviour
         CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
     }
 
-    //[ConsoleCommand("graphManager", "drawdebugcubes", "ddc")]
+    [ConsoleCommand("graphManager", "drawdebugcubes", "ddc")]
     public void DrawDebugGizmos(int i)
     {
         if (i == 1)
@@ -97,7 +97,7 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    //[ConsoleCommand("graphManager", "drawdebuglines", "ddl")]
+    [ConsoleCommand("graphManager", "drawdebuglines", "ddl")]
     public void DrawDebugLines(int i)
     {
         if (i == 1)
@@ -110,7 +110,7 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    //[ConsoleCommand("graphManager", "drawselectiontooldebuglines", "dstdl")]
+    [ConsoleCommand("graphManager", "drawselectiontooldebuglines", "dstdl")]
     public void DrawSelectionToolDebugLines(int i)
     {
         if (i == 1)
@@ -123,7 +123,7 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    //[ConsoleCommand("graphManager", "drawraycast", "drc")]
+    [ConsoleCommand("graphManager", "drawraycast", "drc")]
     public void DrawDebugRaycast(int i)
     {
         if (i == 1)
@@ -270,7 +270,7 @@ public class GraphManager : MonoBehaviour
         return null;
     }
 
-    //[ConsoleCommand("graphManager", "cg")]
+    [ConsoleCommand("graphManager", "cg")]
     public void RecolorGraphPoint(string label, int i)
     {
         foreach (var graph in CombinedGraphs)
@@ -421,7 +421,7 @@ public class GraphManager : MonoBehaviour
     /// <summary>
     /// Resets all graphpoints' in all graphs colors to white.
     /// </summary>
-    //[ConsoleCommand("graphManager", "resetcolor", "rc")]
+    [ConsoleCommand("graphManager", "resetcolor", "rc")]
     public void ResetGraphsColor()
     {
         CellexalEvents.GraphsReset.Invoke();
