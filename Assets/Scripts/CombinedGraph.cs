@@ -478,7 +478,9 @@ public class CombinedGraph : MonoBehaviour
 
         ScaleAllCoordinates();
 
-        nbrOfMaxPointsPerClusters = 65534 / graphPointMesh.vertexCount;
+        // unty meshes can have a max of 65534 vertices
+        int maxVerticesPerMesh = 65534;
+        nbrOfMaxPointsPerClusters = maxVerticesPerMesh / graphPointMesh.vertexCount;
         // place all points in one big cluster
         var firstCluster = new HashSet<CombinedGraphPoint>();
         foreach (var point in points.Values)

@@ -161,18 +161,20 @@ public class ConsoleManager : MonoBehaviour
             currentNumberOfLines -= nbrOfExcessLines;
         }
 
-
         outputField.text = outputBufferString;
+        outputField.MoveTextEnd(false);
+        outputField.textComponent.ForceMeshUpdate();
+        Canvas.ForceUpdateCanvases();
 
         // scroll the output to the end
-        outputField.MoveTextEnd(false);
         //outputField.verticalScrollbar.value = 1;
-        float bottomYCoordinate = currentNumberOfLines * outputField.fontAsset.fontInfo.LineHeight - outputTextAreaTransform.rect.size.y;
-        print(string.Format("{0} * {1} - {2} = {3}", currentNumberOfLines, outputField.fontAsset.fontInfo.LineHeight, outputTextAreaTransform.rect.size.y, bottomYCoordinate));
-        if (bottomYCoordinate > 0)
-        {
-            outputTextAreaTransform.position = new Vector3(0f, bottomYCoordinate, 0f);
-        }
+        float yCoordinate = outputField.textComponent.textBounds.size.y + outputTextAreaTransform.rect.height;
+
+        print(string.Format("outputField.textComponent.textBounds.size.y: {0} outputTextAreaTransform.rect.size.y {1} yCoordinate: {2}", outputField.textComponent.textBounds.size.y, outputTextAreaTransform.rect.size.y, yCoordinate));
+
+        outputTextAreaTransform.position = new Vector3(0f, yCoordinate, 0f);
+
+        Canvas.ForceUpdateCanvases();
         //outputTextAreaTransform.offsetMin = new Vector2(0f, -bottomYCoordinate);
         //outputTextAreaTransform.offsetMax = new Vector2(0f, bottomYCoordinate);
         //outputTextAreaTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, bottomYCoordinate, outputTextAreaTransform.rect.size.y);
@@ -346,6 +348,14 @@ public class ConsoleManager : MonoBehaviour
         {
             AppendOutput(parameterInfoString);
         }
+    }
+
+    [ConsoleCommand("consoleManager", "clear", "cls")]
+    public void ClearConsole()
+    {
+        currentNumberOfLines = 0;
+        outputBufferString = "";
+        outputField.text = "";
     }
 
 }
