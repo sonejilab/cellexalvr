@@ -12,6 +12,8 @@ public static class CellexalConfig
     public static string RscriptexePath { get; set; }
     public static int GraphLoadingCellsPerFrameStartCount { get; set; }
     public static int GraphLoadingCellsPerFrameIncrement { get; set; }
+    public static int GraphClustersPerFrameStartCount { get; set; }
+    public static int GraphClustersPerFrameIncrement { get; set; }
     public static float GraphGrabbableCollidersExtensionThresehold { get; set; }
     public static Color[] SelectionToolColors { get; set; }
     public static int NumberOfExpressionColors { get; set; }
@@ -234,6 +236,14 @@ public class ConfigManager : MonoBehaviour
 
                 case "GraphLoadingCellsPerFrameIncrement":
                     CellexalConfig.GraphLoadingCellsPerFrameIncrement = int.Parse(value);
+                    break;
+
+                case "GraphClustersPerFrameStartCount":
+                    CellexalConfig.GraphClustersPerFrameStartCount = int.Parse(value);
+                    break;
+
+                case "GraphClustersPerFrameIncrement":
+                    CellexalConfig.GraphClustersPerFrameIncrement = int.Parse(value);
                     break;
 
                 case "SelectionColors":

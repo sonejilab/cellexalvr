@@ -25,6 +25,10 @@ GraphLoadingCellsPerFrameStartCount = 200
 # A higher number can make GraphLoadingCellsPerFrameStartCount adjust to a sensible value faster but potentially create a greater loss of frames when loading
 GraphLoadingCellsPerFrameIncrement = 25
 
+GraphClustersPerFrameStartCount = 5
+
+GraphClustersPerFrameIncrement = 2
+
 # The proportion of graphpoints that must be present in the new collider for it to be deemed to be worth extending.
 # A bigger number makes the graphs get fewer but larger colliders, that less resemble the graph's actual shape.
 GraphGrabbableCollidersExtensionThresehold = 0.05

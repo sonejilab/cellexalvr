@@ -9,7 +9,7 @@
 // ----------------------------------------------------------------------------
 
 
-#if UNITY_5 && !UNITY_5_0 && !UNITY_5_1 && !UNITY_5_2 || UNITY_5_4_OR_NEWER
+#if UNITY_5 && !UNITY_5_0 && !UNITY_5_1 && !UNITY_5_2 || UNITY_5_4_OR_NEWER || UNITY_2018
 #define UNITY_MIN_5_3
 #endif
 
@@ -166,7 +166,7 @@ public class PhotonAnimatorViewEditor : Editor
 
     private int GetParameterCount()
     {
-        #if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
         return (this.m_Controller == null) ? 0 : this.m_Controller.parameterCount;
 		#elif UNITY_5 || UNITY_5_0 || UNITY_5_3_OR_NEWER
         return (this.m_Controller == null) ? 0 : this.m_Controller.parameters.Length;
@@ -177,7 +177,7 @@ public class PhotonAnimatorViewEditor : Editor
 
     private AnimatorControllerParameter GetAnimatorControllerParameter(int i)
     {
-        #if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
         return this.m_Controller.GetParameter(i);
 		#elif UNITY_5 || UNITY_5_0 || UNITY_5_3_OR_NEWER
         return this.m_Controller.parameters[i];

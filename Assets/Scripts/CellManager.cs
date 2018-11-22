@@ -335,24 +335,25 @@ public class CellManager : MonoBehaviour
             c.MakeTransparent();
         }
 
-        Dictionary<string, int> sortedCells = new Dictionary<string, int>();
-        for (int i = 0; i < expressions.Count; ++i)
-        {
-            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
-            //cell.Hide();
-            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
-            sortedCells.Add(((CellExpressionPair)expressions[i]).Cell, (int)((CellExpressionPair)expressions[i]).Expression);
-        }
-
-        int n = (int)Math.Round(0.01 * cells.Count);
-        HighlightTopExpressedCells(sortedCells, n);
-
-        yield return new WaitForSeconds(2);
-
-        foreach (Cell c in cells.Values)
-        {
-            c.Show();
-        }
+//        Dictionary<string, int> sortedCells = new Dictionary<string, int>();
+//        for (int i = 0; i < expressions.Count; ++i)
+//        {
+//            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
+//            //cell.Hide();
+//            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
+//            sortedCells.Add(((CellExpressionPair)expressions[i]).Cell, (int)((CellExpressionPair)expressions[i]).Expression);
+//        }
+//
+//        int n = (int)Math.Round(0.01 * cells.Count);
+//        HighlightTopExpressedCells(sortedCells, n);
+//
+//        yield return new WaitForSeconds(2);
+//
+//        foreach (Cell c in cells.Values)
+//        {
+//            c.Show();
+//        }
+        graphManager.ColorAllGraphsByGeneExpression(expressions);
 
         float percentInResults = (float)database._result.Count / cells.Values.Count;
         statusDisplay.RemoveStatus(coloringInfoStatusId);
