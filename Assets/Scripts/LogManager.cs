@@ -162,13 +162,13 @@ public class LogManager : MonoBehaviour
 
         string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";
 
+        CellexalLog.consoleManager = referenceManager.consoleManager;
         if (!Directory.Exists(outputDirectory))
         {
             CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(outputDirectory));
             Directory.CreateDirectory(outputDirectory);
         }
 
-        CellexalLog.consoleManager = referenceManager.consoleManager;
     }
 
     #region Events

@@ -55,6 +55,10 @@ public class ConfigManager : MonoBehaviour
         configDir = Directory.GetCurrentDirectory() + @"\Config";
         configPath = configDir + @"\config.txt";
         sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.txt";
+        if (CellexalLog.consoleManager == null)
+        {
+            CellexalLog.consoleManager = referenceManager.consoleManager;
+        }
         ReadConfigFile();
 
         // set up a filesystemwatcher that notifies us if the file is changed and we should reload it
