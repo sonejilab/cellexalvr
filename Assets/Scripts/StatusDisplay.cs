@@ -109,7 +109,10 @@ public class StatusDisplay : MonoBehaviour
     /// <param name="color"> The status' color. </param>
     public void ShowStatusForTime(string text, float time, Color color)
     {
-        StartCoroutine(ShowStatusForTimeCoroutine(text, time, color));
+        if (active)
+        {
+            StartCoroutine(ShowStatusForTimeCoroutine(text, time, color));
+        }
     }
 
     /// <summary>

@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -23,19 +23,14 @@ MonoBehaviour:
   VoiceServerPort: 5055
   JoinLobby: 0
   EnableLobbyStatistics: 0
-  PunLogging: 1
+  PunLogging: 0
   NetworkLogging: 1
   RunInBackground: 1
   RpcList:
   - Chat
-  - ColorRpc
   - DestroyRpc
-  - DoJump
-  - Flash
   - InstantiateRpc
-  - Marco
   - PickupItemInit
-  - Polo
   - PunPickup
   - PunPickupSimple
   - PunRespawn
@@ -44,7 +39,6 @@ MonoBehaviour:
   - SendActivateKeyboard
   - SendAddSelect
   - SendBringBackNetwork
-  - SendBurnHeatmap
   - SendCalculateCorrelatedGenes
   - SendCancelSelection
   - SendClearAllLines
@@ -58,6 +52,8 @@ MonoBehaviour:
   - SendConfirmSelection
   - SendCreateHeatmap
   - SendCreateNewHeatmapFromSelection
+  - SendCubeColoured
+  - SendDeleteObject
   - SendDisableColliders
   - SendDrawLine
   - SendDrawLinesBetweenGps
@@ -90,14 +86,11 @@ MonoBehaviour:
   - SendResetSelecting
   - SendSearchLockToggled
   - SendSetArcsVisible
+  - SendSetCombinedArcsVisible
   - SendShowGraph
   - SendShowNetwork
   - SendSwitchNetworkLayout
   - SendToggleExpressedCells
   - SendToggleMenu
   - SendToggleNonExpressedCells
-  - TaggedPlayer
-  - SendDeleteObject
-  - SendCubeColoured
-  - SendSetCombinedArcsVisible
   DisableAutoOpenWizard: 1

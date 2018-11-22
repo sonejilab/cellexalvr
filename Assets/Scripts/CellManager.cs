@@ -702,7 +702,6 @@ public class CellManager : MonoBehaviour
 
     public void SendToSelection()
     {
-        print("Sending to selection - " + selectionList.Count);
         foreach (KeyValuePair<GraphPoint, int> entry in selectionList)
         {
             graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false, graphManager.AttributeMaterials[entry.Value].color);
