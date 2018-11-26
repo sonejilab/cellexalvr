@@ -12,6 +12,7 @@ public class GraphManager : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public Graph graphPrefab;
+    public CombinedGraph combinedGraphPrefab;
     public AudioSource goodSound;
     public AudioSource badSound;
     public string directory;
@@ -343,7 +344,7 @@ public class GraphManager : MonoBehaviour
 
         return newGraph;
     }
-
+    
     //public void LoadPosition(Graph graph, int graphNr)
     //{
     //    saveScene.SetGraph(graph, graphNr);

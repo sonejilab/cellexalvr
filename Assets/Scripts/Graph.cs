@@ -359,8 +359,6 @@ public class Graph : MonoBehaviour
     {
         graphInfoText.transform.parent.localPosition = ScaleCoordinates(maxCoordValues.x - (maxCoordValues.x - minCoordValues.x) / 2, maxCoordValues.y, maxCoordValues.z);
         graphInfoText.text = "Points: " + points.Count;
-        // the info panels should only be shown when the help tool is activated
-        //SetInfoTextVisible(controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.HelpTool);
         SetInfoTextVisible(true);
     }
 

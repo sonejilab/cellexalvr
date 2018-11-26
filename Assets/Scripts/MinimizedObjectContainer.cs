@@ -45,8 +45,7 @@ public class MinimizedObjectContainer : MonoBehaviour
         {
             if (MinimizedObject.CompareTag("Graph"))
             {
-                MinimizedObject.GetComponent<Graph>().ShowGraph();
-                //minimizeTool.MaximizeObject(MinimizedObject, this, "Graph");
+                MinimizedObject.GetComponent<CombinedGraph>().ShowGraph();
                 Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
             }
             if (MinimizedObject.CompareTag("Network"))

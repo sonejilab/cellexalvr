@@ -77,6 +77,7 @@ public class ReferenceManager : MonoBehaviour
     public HeatmapGenerator heatmapGenerator;
     public HeatmapBurner heatmapBurner;
     public NetworkGenerator networkGenerator;
+    public CombinedGraphGenerator combinedGraphGenerator;
     public InputFolderGenerator inputFolderGenerator;
     public LoaderController loaderController;
     public GameObject helperCylinder;

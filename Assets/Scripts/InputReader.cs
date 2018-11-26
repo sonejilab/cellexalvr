@@ -19,7 +19,6 @@ public class InputReader : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public NetworkCenter networkPrefab;
-    public CombinedGraph combinedGraphPrefab;
 
     public TextMeshPro graphName;
 
@@ -42,6 +41,7 @@ public class InputReader : MonoBehaviour
     private StatusDisplay statusDisplayFar;
     private GameManager gameManager;
     private NetworkGenerator networkGenerator;
+    private CombinedGraphGenerator combinedGraphGenerator;
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -66,6 +66,7 @@ public class InputReader : MonoBehaviour
         statusDisplayHUD = referenceManager.statusDisplayHUD;
         statusDisplayFar = referenceManager.statusDisplayFar;
         networkGenerator = referenceManager.networkGenerator;
+        combinedGraphGenerator = referenceManager.combinedGraphGenerator;
 
         if (debug)
         {
@@ -140,6 +141,8 @@ public class InputReader : MonoBehaviour
         }
         CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
         StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
+
+        combinedGraphGenerator.isCreating = true;
     }
 
     /// <summary>
@@ -187,24 +190,29 @@ public class InputReader : MonoBehaviour
         int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
         {
+            while (combinedGraphGenerator.isCreating)
+            {
+                yield return null;
+            }
             //Graph newGraph = graphManager.CreateGraph();
-            CombinedGraph newGraph = Instantiate(combinedGraphPrefab);
-            newGraph.referenceManager = referenceManager;
+            CombinedGraph combGraph = combinedGraphGenerator.CreateCombinedGraph();
+            // CombinedGraph newGraph = Instantiate(combinedGraphPrefab);
+            //newGraph.referenceManager = referenceManager;
             // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
-            string graphFileName = regexResult[regexResult.Length - 1];
-            CellexalLog.Log("Reading graph from " + graphFileName);
-            // remove the ".mds" at the end
-            newGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            string graphFileName = regexResult[regexResult.Length - 2] + "/" + regexResult[regexResult.Length - 1];
+            //// remove the ".mds" at the end
+            combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            combGraph.gameObject.name = combGraph.GraphName;
             //var textmeshgraphname = Instantiate(graphName);
             //textmeshgraphname.transform.position = newGraph.transform.position;
             //textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
             //textmeshgraphname.text = newGraph.GraphName;
             //textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
             //textmeshgraphname.transform.Rotate(0f, 180f, 0f);
-            newGraph.DirectoryName = regexResult[regexResult.Length - 2];
+            combGraph.DirectoryName = regexResult[regexResult.Length - 2];
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
             using (StreamReader mdsStreamReader = new StreamReader(file))
             {
@@ -234,7 +242,7 @@ public class InputReader : MonoBehaviour
                         //newGraph.UpdateMinMaxCoords(x, y, z);
 
                         cellManager.AddCell(cellname);
-                        newGraph.AddGraphPoint(cellname, x, y, z);
+                        combinedGraphGenerator.AddGraphPoint(cellname, x, y, z);
                         itemsThisFrame++;
                     }
                     i += itemsThisFrame;
@@ -263,13 +271,13 @@ public class InputReader : MonoBehaviour
 
                 fileIndex++;
                 // tell the graph that the info text is ready to be set
-                // more_cells newGraph.SetInfoText();
+                combGraph.SetInfoText();
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = true;
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
                 // more_cells newGraph.CreateColliders();
                 stopwatch.Stop();
-                CellexalLog.Log("Created " + newGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
+                CellexalLog.Log("Created " + combGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
                 //if (doLoad)
                 //{
                 //    graphManager.LoadPosition(newGraph, fileIndex);
@@ -281,18 +289,21 @@ public class InputReader : MonoBehaviour
 
             }
             // more_cells
-
-            newGraph.SliceClustering();
-            graphManager.CombinedGraphs.Add(newGraph);
-
-            //newGraph.transform.Translate(Vector3.up * 5);
-
+            print("slice it - " + combGraph.gameObject.name);
+            combinedGraphGenerator.SliceClustering();
+            graphManager.CombinedGraphs.Add(combGraph);
             if (debug)
             {
                 //newGraph.transform.Translate(Vector3.forward * fileIndex);
             }
             CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
+            //combinedGraphGenerator.isCreating = false;
         }
+
+        //newGraph.transform.Translate(Vector3.up * 5);
+
+
+        //}
 
         // more_cells
         //CellexalEvents.GraphsLoaded.Invoke();

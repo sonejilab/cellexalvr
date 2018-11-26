@@ -293,15 +293,19 @@ public class CellManager : MonoBehaviour
     /// <param name="geneName"> The name of the gene. </param>
     public void ColorGraphsByGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
     {
-        controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
         try
         {
             StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+            
         }
         catch (Exception e)
         {
             CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
             CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+        }
+        if (rightController.isActiveAndEnabled)
+        {
+            controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
         }
     }
 
