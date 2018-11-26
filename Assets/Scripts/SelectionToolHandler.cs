@@ -137,7 +137,7 @@ public class SelectionToolHandler : MonoBehaviour
         }
         // Sometimes the a bug occurs where particles stays active even when selection tool is off... Keep this line 
         // until you know why.
-        particles.gameObject.SetActive(IsSelectionToolEnabled()); 
+        particles.gameObject.SetActive(IsSelectionToolEnabled());
 
     }
 
@@ -155,7 +155,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int group)
     {
-        graphPoint.Recolor(graphPoint, selectedColor, group);
+        graphPoint.Recolor(selectedColor, group);
     }
 
     /// <summary>
@@ -250,7 +250,7 @@ public class SelectionToolHandler : MonoBehaviour
                 }
                 selectedCells.Add(graphPoint);
             }
-            else 
+            else
             {
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
                 selectedCells.Remove(graphPoint);
