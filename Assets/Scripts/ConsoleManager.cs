@@ -91,11 +91,6 @@ public class ConsoleManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (history.First.Value == "")
-            {
-                // save what is currently in the console
-                history.First.Value = inputField.text;
-            }
             TraverseHistory(true);
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -116,19 +111,24 @@ public class ConsoleManager : MonoBehaviour
     /// <summary>
     /// Goes one step forward or backward in the history of all written commands.
     /// </summary>
-    /// <param name="goBack">True for going back in history, false for goind forward.</param>
+    /// <param name="goBack">True for going back in history, false for going forward.</param>
     public void TraverseHistory(bool goBack)
     {
-        if (goBack && currentHistoryNode.Previous != null)
+        if (goBack && currentHistoryNode.Next != null)
+        {
+            if (currentHistoryNode == history.First)
+            {
+                currentHistoryNode.Value = inputField.text;
+            }
+            currentHistoryNode = currentHistoryNode.Next;
+        }
+        else if (!goBack && currentHistoryNode.Previous != null)
         {
             currentHistoryNode = currentHistoryNode.Previous;
         }
-        else if (!goBack && currentHistoryNode.Next != null)
-        {
-            currentHistoryNode = currentHistoryNode.Next;
-        }
 
         inputField.text = currentHistoryNode.Value;
+        inputField.MoveTextEnd(false);
     }
 
     /// <summary>
@@ -196,6 +196,7 @@ public class ConsoleManager : MonoBehaviour
 
         inputField.ActivateInputField();
         inputField.Select();
+
 
         if (command == "")
         {
