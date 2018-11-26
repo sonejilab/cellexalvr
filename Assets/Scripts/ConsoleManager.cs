@@ -170,7 +170,7 @@ public class ConsoleManager : MonoBehaviour
         //outputField.verticalScrollbar.value = 1;
         float yCoordinate = outputField.textComponent.textBounds.size.y + outputTextAreaTransform.rect.height;
 
-        print(string.Format("outputField.textComponent.textBounds.size.y: {0} outputTextAreaTransform.rect.size.y {1} yCoordinate: {2}", outputField.textComponent.textBounds.size.y, outputTextAreaTransform.rect.size.y, yCoordinate));
+        //print(string.Format("outputField.textComponent.textBounds.size.y: {0} outputTextAreaTransform.rect.size.y {1} yCoordinate: {2}", outputField.textComponent.textBounds.size.y, outputTextAreaTransform.rect.size.y, yCoordinate));
 
         outputTextAreaTransform.position = new Vector3(0f, yCoordinate, 0f);
 

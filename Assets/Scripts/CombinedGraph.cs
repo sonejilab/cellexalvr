@@ -132,7 +132,7 @@ public class CombinedGraph : MonoBehaviour
             textureCoord = newPos;
         }
 
-        public void Recolor(CombinedGraphPoint graphPoint, Color color, int group)
+        public void Recolor(Color color, int group)
         {
             parent.RecolorGraphPoint(this, color);
             this.group = group;
@@ -145,9 +145,18 @@ public class CombinedGraph : MonoBehaviour
     private class OctreeNode
     {
         public OctreeNode parent;
+        /// <summary>
+        /// Not always of length 8. Empty children are removed when the octree is constructed to save some memory.
+        /// </summary>
         public OctreeNode[] children;
+        /// <summary>
+        /// Null if this is not a leaf. Only leaves represents points in the graph.
+        /// </summary>
         public CombinedGraphPoint point;
         public Vector3 pos;
+        /// <summary>
+        /// Not the geometrical center, just a point inside the node that defines corners for its children, unless this is a leaf node.
+        /// </summary>
         public Vector3 center;
         public Vector3 size;
         private int group = -1;
@@ -157,9 +166,14 @@ public class CombinedGraph : MonoBehaviour
             get { return group; }
             set { SetGroup(value); }
         }
+        public bool rejected;
+        public bool completelyInside;
 
         public OctreeNode() { }
 
+        /// <summary>
+        /// Returns a string representation of this node and all its children. May produce very long strings for very large trees.
+        /// </summary>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -215,7 +229,7 @@ public class CombinedGraph : MonoBehaviour
         }
 
         /// <summary>
-        /// Returns the smallest node that contains a point, might not be a leaf.
+        /// Returns the smallest node that contains a point. The retured node might not be a leaf.
         /// </summary>
         /// <param name="point">The point to look for a node around.</param>
         /// <returns>The that contains the point.</returns>
@@ -235,7 +249,43 @@ public class CombinedGraph : MonoBehaviour
             return this;
         }
 
-        public void DrawDebugCubes(Vector3 gameobjectPos, bool onlyLeaves, int i)
+        /// <summary>
+        /// Checks if a point is inside this node.
+        /// </summary>
+        public bool PointInside(Vector3 point)
+        {
+            return point.x >= pos.x && point.x <= pos.x + size.x
+                && point.y >= pos.y && point.y <= pos.y + size.y
+                && point.z >= pos.z && point.z <= pos.z + size.z;
+        }
+
+        /// <summary>
+        /// Checks if a point is inside the selection tool by raycasting.
+        /// </summary>
+        /// <param name="selectionToolCenter">The selection tool's position in world space.</param>
+        /// <param name="pointPosWorldSpace">This node's position in world space. (use Transform.TransformPoint(node.splitCenter) )</param>
+        /// <returns>True if <paramref name="pointPosWorldSpace"/> is inside the selection tool.</returns>
+        public bool PointInsideSelectionTool(Vector3 selectionToolCenter, Vector3 pointPosWorldSpace)
+        {
+            raycasted = true;
+            Vector3 difference = selectionToolCenter - pointPosWorldSpace;
+            return !Physics.Raycast(pointPosWorldSpace, difference, difference.magnitude, CombinedGraph.selectionToolLayerMask);
+        }
+
+        #region DEBUG_FUNCTIONS
+        public void DebugColorLeaves(Color color)
+        {
+            if (point != null)
+            {
+                point.Recolor(color, 1);
+            }
+            foreach (var child in children)
+            {
+                child.DebugColorLeaves(color);
+            }
+        }
+
+        public void DrawDebugCubesRecursive(Vector3 gameobjectPos, bool onlyLeaves, int i)
         {
             Gizmos.color = GizmoColors(i++);
             if (!onlyLeaves || children.Length == 0 && onlyLeaves)
@@ -244,9 +294,17 @@ public class CombinedGraph : MonoBehaviour
             }
             foreach (var child in children)
             {
-                child.DrawDebugCubes(gameobjectPos, onlyLeaves, i);
+                child.DrawDebugCubesRecursive(gameobjectPos, onlyLeaves, i);
             }
 
+        }
+
+        public void DrawDebugCube(Vector3 gameobjetcPos)
+        {
+            if (rejected)
+            {
+
+            }
         }
 
         public void DrawDebugLines(Vector3 gameobjectPos)
@@ -301,29 +359,7 @@ public class CombinedGraph : MonoBehaviour
                     return Color.white;
             }
         }
-
-        /// <summary>
-        /// Checks if a point is inside this node.
-        /// </summary>
-        public bool PointInside(Vector3 point)
-        {
-            return point.x >= pos.x && point.x <= pos.x + size.x
-                && point.y >= pos.y && point.y <= pos.y + size.y
-                && point.z >= pos.z && point.z <= pos.z + size.z;
-        }
-
-        /// <summary>
-        /// Checks if a point is inside the selection tool by raycasting.
-        /// </summary>
-        /// <param name="selectionToolCenter">The selection tool's position in world space.</param>
-        /// <param name="pointPosWorldSpace">This node's position in world space. (use Transform.TransformPoint(node.splitCenter) )</param>
-        /// <returns>True if <paramref name="pointPosWorldSpace"/> is inside the selection tool.</returns>
-        public bool PointInsideSelectionTool(Vector3 selectionToolCenter, Vector3 pointPosWorldSpace)
-        {
-            raycasted = true;
-            Vector3 difference = selectionToolCenter - pointPosWorldSpace;
-            return !Physics.Raycast(pointPosWorldSpace, difference, difference.magnitude, CombinedGraph.selectionToolLayerMask);
-        }
+        #endregion
     }
 
     public void OnDrawGizmos()
@@ -332,7 +368,7 @@ public class CombinedGraph : MonoBehaviour
         {
             if (graphManager.drawDebugCubes)
             {
-                octreeRoot.DrawDebugCubes(transform.position, false, 0);
+                octreeRoot.DrawDebugCubesRecursive(transform.position, false, 0);
             }
             if (graphManager.drawDebugLines)
             {
@@ -342,16 +378,66 @@ public class CombinedGraph : MonoBehaviour
         }
         if (graphManager.drawSelectionToolDebugLines)
         {
-            Gizmos.color = Color.green;
-            Vector3 debugGizmosSize = debugGizmosMax - debugGizmosMin;
-            Gizmos.DrawWireCube(transform.TransformPoint(debugGizmosMin + debugGizmosSize / 2), debugGizmosSize);
-            Gizmos.DrawSphere(debugGizmosMin, 0.01f);
-            Gizmos.DrawSphere(debugGizmosMax, 0.01f);
-            //print("debug lines: " + debugGizmosMin.ToString() + " " + debugGizmosMax.ToString());
+            DrawDebugCube(Color.green, transform.TransformPoint(debugGizmosMin), transform.TransformPoint(debugGizmosMax));
         }
         if (graphManager.drawDebugRaycast)
         {
             octreeRoot.DrawDebugRaycasts(transform.position, debugGizmosPos);
+        }
+        if (graphManager.drawDebugRejectionApprovedCubes)
+        {
+            DrawRejectionApproveCubes(octreeRoot);
+        }
+    }
+
+    private void DrawDebugCube(Color color, Vector3 min, Vector3 max)
+    {
+        min += transform.position;
+        max += transform.position;
+        Gizmos.color = color;
+        Vector3[] corners = new Vector3[]
+        {
+           min,
+           new Vector3(max.x, min.y, min.z),
+           new Vector3(min.x, max.y, min.z),
+           new Vector3(min.x, min.y, max.z),
+           new Vector3(max.x, max.y, min.z),
+           new Vector3(max.x, min.y, max.z),
+           new Vector3(min.x, max.y, max.z),
+           max
+        };
+
+        Gizmos.DrawLine(corners[0], corners[1]);
+        Gizmos.DrawLine(corners[0], corners[2]);
+        Gizmos.DrawLine(corners[0], corners[3]);
+        Gizmos.DrawLine(corners[1], corners[4]);
+        Gizmos.DrawLine(corners[1], corners[5]);
+        Gizmos.DrawLine(corners[2], corners[4]);
+        Gizmos.DrawLine(corners[2], corners[6]);
+        Gizmos.DrawLine(corners[3], corners[5]);
+        Gizmos.DrawLine(corners[3], corners[6]);
+        Gizmos.DrawLine(corners[4], corners[7]);
+        Gizmos.DrawLine(corners[5], corners[7]);
+        Gizmos.DrawLine(corners[6], corners[7]);
+
+    }
+
+    private void DrawRejectionApproveCubes(OctreeNode node)
+    {
+        if (node.rejected)
+        {
+            node.rejected = false;
+            DrawDebugCube(Color.red, node.pos, node.pos + node.size);
+        }
+        else if (node.completelyInside)
+        {
+            node.completelyInside = false;
+            DrawDebugCube(Color.green, node.pos, node.pos + node.size);
+        }
+
+        foreach (var child in node.children)
+        {
+            DrawRejectionApproveCubes(child);
         }
     }
 
@@ -470,12 +556,6 @@ public class CombinedGraph : MonoBehaviour
     /// </summary>
     public void SliceClustering()
     {
-        //    SliceClusteringCoroutine();
-        //}
-
-        //private void SliceClusteringCoroutine()
-        //{
-
         ScaleAllCoordinates();
 
         // unty meshes can have a max of 65534 vertices
@@ -507,7 +587,7 @@ public class CombinedGraph : MonoBehaviour
         octreeRoot.size = new Vector3(1f, 1f, 1f);
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
-        clusters = SplitClusterRecursive(cluster, octreeRoot, true);
+        SplitClusterRecursive(cluster, octreeRoot, true, ref clusters);
         nbrOfClusters = clusters.Count;
         stopwatch.Stop();
         CellexalLog.Log(string.Format("clustered {0} in {1}. nbr of clusters: {2}", GraphName, stopwatch.Elapsed.ToString(), nbrOfClusters));
@@ -520,10 +600,10 @@ public class CombinedGraph : MonoBehaviour
     /// </summary>
     /// <param name="cluster">The cluster to split.</param>
     /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
-    private List<HashSet<CombinedGraphPoint>> SplitClusterRecursive(HashSet<CombinedGraphPoint> cluster, OctreeNode node, bool addClusters)
+    private void SplitClusterRecursive(HashSet<CombinedGraphPoint> cluster, OctreeNode node, bool addClusters, ref List<HashSet<CombinedGraphPoint>> result)
     {
-
-        if (cluster.Count == 1)
+        int nbrOfCellsInCluster = cluster.Count;
+        if (nbrOfCellsInCluster == 1)
         {
             node.children = new OctreeNode[0];
             var point = cluster.First();
@@ -532,11 +612,10 @@ public class CombinedGraph : MonoBehaviour
             //node.size = new Vector3(0.03f, 0.03f, 0.03f);
             node.pos = point.Position - node.size / 2;
             node.center = point.Position;
-            return null;
+            return;
         }
 
-        var result = new List<HashSet<CombinedGraphPoint>>();
-        if (cluster.Count <= nbrOfMaxPointsPerClusters && addClusters)
+        if (nbrOfCellsInCluster <= nbrOfMaxPointsPerClusters && addClusters)
         {
             result.Add(cluster);
             addClusters = false;
@@ -544,15 +623,20 @@ public class CombinedGraph : MonoBehaviour
 
         // cluster is too big, split it
         // calculate center
-        Vector3 splitCenter = Vector3.zero;
-        Vector3 nodePos = node.pos;
-        Vector3 nodeSize = node.size;
+        float splitCenterx = 0f;
+        float splitCentery = 0f;
+        float splitCenterz = 0f;
         foreach (var point in cluster)
         {
-            splitCenter += point.Position;
+            splitCenterx += point.Position.x;
+            splitCentery += point.Position.y;
+            splitCenterz += point.Position.z;
         }
-        splitCenter /= cluster.Count;
+
+        Vector3 splitCenter = new Vector3(splitCenterx / nbrOfCellsInCluster, splitCentery / nbrOfCellsInCluster, splitCenterz / nbrOfCellsInCluster);
         node.center = splitCenter;
+        Vector3 nodePos = node.pos;
+        Vector3 nodeSize = node.size;
 
         // initialise new clusters
         List<HashSet<CombinedGraphPoint>> newClusters = new List<HashSet<CombinedGraphPoint>>(8);
@@ -564,6 +648,15 @@ public class CombinedGraph : MonoBehaviour
         // assign points to the new clusters
         foreach (var point in cluster)
         {
+            // indices chosen according to the following:
+            // 0: x < center, y < center, z < center
+            // 1: x > center, y < center, z < center
+            // 2: x < center, y > center, z < center
+            // 3: x > center, y > center, z < center
+            // 4: x < center, y < center, z > center
+            // 5: x > center, y < center, z > center
+            // 6: x < center, y > center, z > center
+            // 7: x > center, y > center, z > center
             int chosenClusterIndex = 0;
             Vector3 position = point.Position;
             if (position.x > splitCenter.x)
@@ -586,7 +679,7 @@ public class CombinedGraph : MonoBehaviour
             nodePos,
             new Vector3(splitCenter.x,  nodePos.y,      nodePos.z),
             new Vector3(nodePos.x,      splitCenter.y,  nodePos.z),
-            new Vector3(splitCenter.x,  splitCenter.y,  node.pos.z),
+            new Vector3(splitCenter.x,  splitCenter.y,  nodePos.z),
             new Vector3(nodePos.x,      nodePos.y ,     splitCenter.z),
             new Vector3(splitCenter.x,  nodePos.y,      splitCenter.z),
             new Vector3(nodePos.x,      splitCenter.y,  splitCenter.z),
@@ -625,13 +718,8 @@ public class CombinedGraph : MonoBehaviour
         // call recursively for each new cluster
         for (int i = 0; i < newClusters.Count; ++i)
         {
-            var returnedClusters = SplitClusterRecursive(newClusters[i], node.children[i], addClusters);
-            if (returnedClusters != null)
-            {
-                result.AddRange(returnedClusters);
-            }
+            SplitClusterRecursive(newClusters[i], node.children[i], addClusters, ref result);
         }
-        return result;
     }
 
     /// <summary>
@@ -1079,21 +1167,23 @@ public class CombinedGraph : MonoBehaviour
     /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="CombinedGraphPoint"/> that are inside the selecion tool.</returns>
     public List<CombinedGraphPoint> MinkowskiDetection(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group)
     {
-        List<CombinedGraphPoint> result = new List<CombinedGraphPoint>(64);
-        int calls = 0;
-        int callsEntirelyInside = 0;
 
+        List<CombinedGraphPoint> result = new List<CombinedGraphPoint>(64);
+        //int calls = 0;
+        //int callsEntirelyInside = 0;
+
+        // calculate a new (non-minimal) bounding box for the selection tool, in the graph's local space
         Vector3 center = transform.InverseTransformPoint(selectionToolBoundsCenter);
-        Vector3 extents = Vector3.zero;
 
         Vector3 axisX = transform.InverseTransformVector(selectionToolBoundsExtents.x, 0, 0);
         Vector3 axisY = transform.InverseTransformVector(0, selectionToolBoundsExtents.y, 0);
         Vector3 axisZ = transform.InverseTransformVector(0, 0, selectionToolBoundsExtents.z);
 
-        extents.x = Mathf.Abs(axisX.x) + Mathf.Abs(axisY.x) + Mathf.Abs(axisZ.x);
-        extents.y = Mathf.Abs(axisX.y) + Mathf.Abs(axisY.y) + Mathf.Abs(axisZ.y);
-        extents.z = Mathf.Abs(axisX.z) + Mathf.Abs(axisY.z) + Mathf.Abs(axisZ.z);
+        float extentsx = Mathf.Abs(axisX.x) + Mathf.Abs(axisY.x) + Mathf.Abs(axisZ.x);
+        float extentsy = Mathf.Abs(axisX.y) + Mathf.Abs(axisY.y) + Mathf.Abs(axisZ.y);
+        float extentsz = Mathf.Abs(axisX.z) + Mathf.Abs(axisY.z) + Mathf.Abs(axisZ.z);
 
+        Vector3 extents = new Vector3(extentsx, extentsy, extentsz);
         Vector3 min = center - extents;
         Vector3 max = center + extents;
 
@@ -1102,8 +1192,8 @@ public class CombinedGraph : MonoBehaviour
 
         debugGizmosPos = selectionToolPos;
 
-        MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result, ref calls, ref callsEntirelyInside);
-        print("minkowski calls:  " + calls + " entirely inside: " + callsEntirelyInside);
+        MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result/*, ref calls, ref callsEntirelyInside*/);
+        //print("minkowski calls:  " + calls + " entirely inside: " + callsEntirelyInside);
         return result;
     }
 
@@ -1113,13 +1203,14 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="selectionToolWorldPos">The selection tool's position in world space.</param>
     /// <param name="boundingBoxMin">A <see cref="Vector3"/> comprised of the smallest x, y and z coordinates of the selection tool's bounding box.</param>
     /// <param name="boundingBoxMax">A <see cref="Vector3"/> comprised of the largest x, y and z coordinates of the selection tool's bounding box.</param>
-    /// <param name="node">The to evaluate.</param>
+    /// <param name="node">The <see cref="OctreeNode"/> to evaluate.</param>
     /// <param name="group">The group to assign the node.</param>
     /// <param name="result">All leaf nodes found so far.</param>
-    private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<CombinedGraphPoint> result, ref int calls, ref int callsEntirelyInside)
+    private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<CombinedGraphPoint> result/*, ref int calls, ref int callsEntirelyInside*/)
     {
-        calls++;
-        // minkowski difference selection tool and node
+        //calls++;
+        // minkowski difference selection tool bounding box and node
+        // take advantage of both being AABB
         // check if result contains (0,0,0)
         if (boundingBoxMin.x - node.pos.x - node.size.x <= 0
             && boundingBoxMax.x - node.pos.x >= 0
@@ -1136,7 +1227,8 @@ public class CombinedGraph : MonoBehaviour
                 // just find the leaves and check if they are inside
                 if (node.Group != group)
                 {
-                    CheckIfLeavesInside(selectionToolWorldPos, node, group, ref result, ref callsEntirelyInside);
+                    node.completelyInside = true;
+                    CheckIfLeavesInside(selectionToolWorldPos, node, group, ref result/*, ref callsEntirelyInside*/);
                 }
                 return;
             }
@@ -1154,10 +1246,14 @@ public class CombinedGraph : MonoBehaviour
                 {
                     if (child.Group != group)
                     {
-                        MinkowskiDetectionRecursive(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result, ref calls, ref callsEntirelyInside);
+                        MinkowskiDetectionRecursive(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result/*, ref calls, ref callsEntirelyInside*/);
                     }
                 }
             }
+        }
+        else
+        {
+            node.rejected = true;
         }
     }
 
@@ -1168,9 +1264,9 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="node">The to evaluate.</param>
     /// <param name="group">The group to assign the node.</param>
     /// <param name="result">All leaf nodes found so far.</param>
-    private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<CombinedGraphPoint> result, ref int callsEntirelyInside)
+    private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<CombinedGraphPoint> result/*, ref int callsEntirelyInside*/)
     {
-        callsEntirelyInside++;
+        //callsEntirelyInside++;
         foreach (var child in node.children)
         {
             if (child.Group == group)
@@ -1184,7 +1280,7 @@ public class CombinedGraph : MonoBehaviour
             }
             else
             {
-                CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result, ref callsEntirelyInside);
+                CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result/*, ref callsEntirelyInside*/);
             }
         }
     }

@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 65330844451376376}
   m_Layer: 8
   m_Name: Combined Graph Prefab
-  m_TagString: Untagged
+  m_TagString: Graph
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

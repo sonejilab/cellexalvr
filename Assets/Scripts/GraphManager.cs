@@ -60,6 +60,7 @@ public class GraphManager : MonoBehaviour
     public bool drawDebugLines = false;
     public bool drawSelectionToolDebugLines = false;
     public bool drawDebugRaycast = false;
+    public bool drawDebugRejectionApprovedCubes = false;
 
     void Awake()
     {
@@ -132,6 +133,19 @@ public class GraphManager : MonoBehaviour
         else if (i == 0)
         {
             drawDebugRaycast = false;
+        }
+    }
+
+    [ConsoleCommand("graphManager", "drawrejectionapprovecubes", "drac")]
+    public void DrawDebugRejectionApproveCubes(int i)
+    {
+        if (i == 1)
+        {
+            drawDebugRejectionApprovedCubes = true;
+        }
+        else if (i == 0)
+        {
+            drawDebugRejectionApprovedCubes = false;
         }
     }
 
