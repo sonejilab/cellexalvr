@@ -73,7 +73,7 @@ public class CombinedGraph : MonoBehaviour
     private static LayerMask selectionToolLayerMask;
 
     public OctreeNode octreeRoot;
-    private CombinedGraphGenerator combinedGraphGenerator;    
+    private CombinedGraphGenerator combinedGraphGenerator;
     public List<GameObject> combinedGraphPointClusters = new List<GameObject>();
     void Start()
     {
@@ -83,6 +83,7 @@ public class CombinedGraph : MonoBehaviour
         targetMaxScale = 1f;
         originalPos = new Vector3();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
         Lines = new List<GameObject>();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
@@ -99,9 +100,9 @@ public class CombinedGraph : MonoBehaviour
 
         if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
         {
-           gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+            gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
-       if (minimize)
+        if (minimize)
         {
             Minimize();
         }
@@ -679,18 +680,18 @@ public class CombinedGraph : MonoBehaviour
     /// <summary>
     /// Resets this graphs position, scale and color.
     /// </summary>
-//    public void ResetGraph()
-//    {
-//        transform.localScale = defaultScale;
-//        transform.position = defaultPos;
-//        transform.rotation = Quaternion.identity;
-//        foreach (GraphPoint point in points.Values)
-//        {
-//            point.gameObject.SetActive(true);
-//            point.ResetCoords();
-//            point.ResetColor();
-//        }
-//    }
+    //    public void ResetGraph()
+    //    {
+    //        transform.localScale = defaultScale;
+    //        transform.position = defaultPos;
+    //        transform.rotation = Quaternion.identity;
+    //        foreach (GraphPoint point in points.Values)
+    //        {
+    //            point.gameObject.SetActive(true);
+    //            point.ResetCoords();
+    //            point.ResetColor();
+    //        }
+    //    }
 
     /// <summary>
     /// Recolors a single graphpoint.
@@ -712,7 +713,7 @@ public class CombinedGraph : MonoBehaviour
         texture.SetPixel(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, color);
         textureChanged = true;
     }
-   
+
     /// <summary>
     /// Color all graphpoints in this graph with the expression of some gene.
     /// </summary>

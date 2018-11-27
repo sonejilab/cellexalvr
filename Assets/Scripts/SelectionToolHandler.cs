@@ -120,9 +120,9 @@ public class SelectionToolHandler : MonoBehaviour
             }
             else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && TouchingGraph != null)
             {
-                Vector3 boundsMin = selectionToolColliders[currentMeshIndex].bounds.center;
-                Vector3 boundsMax = selectionToolColliders[currentMeshIndex].bounds.extents;
-                var closestPoints = TouchingGraph.MinkowskiDetection(transform.position, boundsMin, boundsMax, currentColorIndex);
+                Vector3 boundsCenter = selectionToolColliders[currentMeshIndex].bounds.center;
+                Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
+                var closestPoints = TouchingGraph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex);
                 foreach (var point in closestPoints)
                 {
                     AddGraphpointToSelection(point, currentColorIndex);

@@ -28,20 +28,16 @@ public class CombinedGraphGenerator : MonoBehaviour
     public string DirectoryName { get; set; }
     public bool isCreating;
 
-    private Material combinedGraphPointMaterial;
     private CombinedGraph newGraph;
     private GraphManager graphManager;
     private int nbrOfClusters;
     private int nbrOfMaxPointsPerClusters;
-    private static LayerMask selectionToolLayerMask;
 
-    private GameManager gameManager;    
+    private GameManager gameManager;
 
     private void Start()
     {
         graphManager = referenceManager.graphManager;
-        combinedGraphPointMaterial = Instantiate(combinedGraphPointMaterialPrefab);
-        selectionToolLayerMask.value = 1 << LayerMask.NameToLayer("SelectionToolLayer");
         gameManager = referenceManager.gameManager;
     }
     public CombinedGraph CreateCombinedGraph()
@@ -149,14 +145,36 @@ public class CombinedGraphGenerator : MonoBehaviour
         // cluster is too big, split it
         // calculate center
         Vector3 splitCenter = Vector3.zero;
-        Vector3 nodePos = node.pos;
-        Vector3 nodeSize = node.size;
+        float minX = float.MaxValue;
+        float minY = float.MaxValue;
+        float minZ = float.MaxValue;
+        float maxX = float.MinValue;
+        float maxY = float.MinValue;
+        float maxZ = float.MinValue;
         foreach (var point in cluster)
         {
-            splitCenter += point.Position;
+            Vector3 pos = point.Position;
+            splitCenter += pos;
+            if (pos.x < minX)
+                minX = pos.x;
+            if (pos.x > maxX)
+                maxX = pos.x;
+            if (pos.y < minY)
+                minY = pos.y;
+            if (pos.y > maxY)
+                maxY = pos.y;
+            if (pos.z < minZ)
+                minZ = pos.z;
+            if (pos.z > maxZ)
+                maxZ = pos.z;
         }
         splitCenter /= cluster.Count;
         node.center = splitCenter;
+        node.pos = new Vector3(minX, minY, minZ);
+        Vector3 nodePos = node.pos;
+        node.size = new Vector3(maxX - minX, maxY - minY, maxZ - minZ);
+        Vector3 nodeSize = node.size;
+
 
         // initialise new clusters
         List<HashSet<CombinedGraph.CombinedGraphPoint>> newClusters = new List<HashSet<CombinedGraph.CombinedGraphPoint>>(8);
@@ -228,13 +246,13 @@ public class CombinedGraphGenerator : MonoBehaviour
         //print(newClusters.Count);
         //call recursively for each new cluster
         for (int i = 0; i < newClusters.Count; ++i)
+        {
+            var returnedClusters = SplitClusterRecursive(newClusters[i], node.children[i], addClusters);
+            if (returnedClusters != null)
             {
-                var returnedClusters = SplitClusterRecursive(newClusters[i], node.children[i], addClusters);
-                if (returnedClusters != null)
-                {
-                    result.AddRange(returnedClusters);
-                }
+                result.AddRange(returnedClusters);
             }
+        }
         return result;
     }
 
@@ -279,6 +297,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         emptyCombineInstance.mesh = new Mesh();
         int graphPointMeshVertexCount = graphPointMesh.vertexCount;
         int graphPointMeshTriangleCount = graphPointMesh.triangles.Length;
+        Material combinedGraphPointMaterial = Instantiate(combinedGraphPointMaterialPrefab);
 
         NativeArray<Vector3> graphPointMeshVertices = new NativeArray<Vector3>(graphPointMesh.vertices, Allocator.TempJob);
         NativeArray<int> graphPointMeshTriangles = new NativeArray<int>(graphPointMesh.triangles, Allocator.TempJob);
@@ -336,8 +355,7 @@ public class CombinedGraphGenerator : MonoBehaviour
 
         for (int i = 0; i < nbrOfClusters; ++i)
         {
-            var newPart = Instantiate(combinedGraphpointsPrefab, transform);
-            newPart.transform.parent = newGraph.transform;
+            var newPart = Instantiate(combinedGraphpointsPrefab, newGraph.transform);
             var newMesh = new Mesh();
             int clusterOffset = clusterOffsets[i];
             int clusterSize = 0;
