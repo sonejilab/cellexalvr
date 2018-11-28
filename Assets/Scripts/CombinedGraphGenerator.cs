@@ -60,9 +60,11 @@ public class CombinedGraphGenerator : MonoBehaviour
     /// <param name="x">The x-coordinate.</param>
     /// <param name="y">The y-coordinate.</param>
     /// <param name="z">The z-coordinate.</param>
-    public void AddGraphPoint(string label, float x, float y, float z)
+    public void AddGraphPoint(Cell cell, float x, float y, float z)
     {
-        newGraph.points[label] = (new CombinedGraph.CombinedGraphPoint(label, x, y, z, newGraph));
+        CombinedGraph.CombinedGraphPoint gp = new CombinedGraph.CombinedGraphPoint(cell.Label, x, y, z, newGraph);
+        newGraph.points[cell.Label] = gp;
+        cell.AddGraphPoint(gp);
         UpdateMinMaxCoords(x, y, z);
         //print("adding points to - " + newGraph.gameObject.name + " - " + newGraph.points.Count);
     }

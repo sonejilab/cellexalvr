@@ -241,8 +241,10 @@ public class InputReader : MonoBehaviour
                         float z = float.Parse(words[3]);
                         //newGraph.UpdateMinMaxCoords(x, y, z);
 
-                        cellManager.AddCell(cellname);
-                        combinedGraphGenerator.AddGraphPoint(cellname, x, y, z);
+                        //cellManager.AddCell(cellname);
+                        //combinedGraphGenerator.AddGraphPoint(cellname, x, y, z);
+                        Cell cell = cellManager.AddCell(cellname);
+                        combinedGraphGenerator.AddGraphPoint(cell, x, y, z);
                         itemsThisFrame++;
                     }
                     i += itemsThisFrame;
@@ -289,7 +291,6 @@ public class InputReader : MonoBehaviour
 
             }
             // more_cells
-            print("slice it - " + combGraph.gameObject.name);
             combinedGraphGenerator.SliceClustering();
             graphManager.CombinedGraphs.Add(combGraph);
             if (debug)

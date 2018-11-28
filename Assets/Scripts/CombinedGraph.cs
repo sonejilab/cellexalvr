@@ -84,6 +84,7 @@ public class CombinedGraph : MonoBehaviour
         originalPos = new Vector3();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         gameManager = referenceManager.gameManager;
+        graphManager = referenceManager.graphManager;
         Lines = new List<GameObject>();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         combinedGraphGenerator = GetComponent<CombinedGraphGenerator>();
