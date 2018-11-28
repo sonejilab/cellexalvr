@@ -267,15 +267,15 @@ namespace SQLiter
             }
             List<string> cellNames1 = new List<string>();
             List<string> cellNames2 = new List<string>();
-            foreach (GraphPoint gp in list)
+            foreach (CombinedGraph.CombinedGraphPoint gp in list)
             {
-                if (gp.CurrentGroup == 0)
+                if (gp.group == 0)
                 {
-                    cellNames1.Add(gp.Cell.Label);
+                    cellNames1.Add(gp.Label);
                 }
                 else
                 {
-                    cellNames2.Add(gp.Cell.Label);
+                    cellNames2.Add(gp.Label);
                 }
             }
             CellexalLog.Log("Querying database for all gene expressions in " + (cellNames1.Count + cellNames2.Count) + " cells");

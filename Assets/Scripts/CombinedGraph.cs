@@ -235,6 +235,11 @@ public class CombinedGraph : MonoBehaviour
             parent.RecolorGraphPoint(this, color);
             this.group = group;
         }
+
+        public Color GetColor()
+        {
+            return parent.GetGraphPointColor(this);
+        }
     }
 
     /// <summary>
@@ -690,6 +695,12 @@ public class CombinedGraph : MonoBehaviour
         }
         octreeRoot.Group = -1;
     }
+
+    public Color GetGraphPointColor(CombinedGraphPoint gp)
+    {
+        return texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y);
+    }
+
     /// <summary>
     /// Resets this graphs position, scale and color.
     /// </summary>

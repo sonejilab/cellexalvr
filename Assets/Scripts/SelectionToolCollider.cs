@@ -10,18 +10,13 @@ public class SelectionToolCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        var graphPoint = other.gameObject.GetComponent<GraphPoint>();
-        if (graphPoint != null)
-        {
-            selectionToolHandler.AddGraphpointToSelection(graphPoint);
-            return;
-        }
+
         var cubeOnLine = other.gameObject.GetComponent<Selectable>();
         if (cubeOnLine != null)
         {
-            selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
+            // more_cells selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
             int group = selectionToolHandler.currentColorIndex;
-            foreach(Selectable sel in cubeOnLine.graphPoint.lineBetweenCellsCubes)
+            foreach (Selectable sel in cubeOnLine.graphPoint.lineBetweenCellsCubes)
             {
                 sel.GetComponent<Renderer>().material.color = selectionToolHandler.Colors[group];
             }
@@ -29,4 +24,5 @@ public class SelectionToolCollider : MonoBehaviour
                                                                                     cubeOnLine.graphPoint.label, group, selectionToolHandler.Colors[group]);
         }
     }
+
 }

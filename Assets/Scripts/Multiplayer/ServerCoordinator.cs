@@ -153,7 +153,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendRemoveCells()
     {
         CellexalLog.Log("Recieved message to remove selected selection");
-        referenceManager.selectionToolHandler.ConfirmRemove();
+        // more_cells   referenceManager.selectionToolHandler.ConfirmRemove();
     }
 
     [PunRPC]
@@ -247,7 +247,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendDrawLinesBetweenGps()
     {
         Debug.Log("Recieved message to draw lines between graph points");
-        referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionToolHandler.GetLastSelection());
+        // more_cells referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionToolHandler.GetLastSelection());
         CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
     }
 

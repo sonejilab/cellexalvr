@@ -116,7 +116,7 @@ public class CellManager : MonoBehaviour
     private int[] savedFlashGenesLengths;
     private int coloringInfoStatusId;
     private Dictionary<Cell, int> recolored;
-    private List<KeyValuePair<GraphPoint,int>> selectionList;
+    private List<KeyValuePair<GraphPoint, int>> selectionList;
 
 
     void Awake()
@@ -296,7 +296,7 @@ public class CellManager : MonoBehaviour
         try
         {
             StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
-            
+
         }
         catch (Exception e)
         {
@@ -345,24 +345,24 @@ public class CellManager : MonoBehaviour
             c.MakeTransparent();
         }
 
-//        Dictionary<string, int> sortedCells = new Dictionary<string, int>();
-//        for (int i = 0; i < expressions.Count; ++i)
-//        {
-//            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
-//            //cell.Hide();
-//            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
-//            sortedCells.Add(((CellExpressionPair)expressions[i]).Cell, (int)((CellExpressionPair)expressions[i]).Expression);
-//        }
-//
-//        int n = (int)Math.Round(0.01 * cells.Count);
-//        HighlightTopExpressedCells(sortedCells, n);
-//
-//        yield return new WaitForSeconds(2);
-//
-//        foreach (Cell c in cells.Values)
-//        {
-//            c.Show();
-//        }
+        //        Dictionary<string, int> sortedCells = new Dictionary<string, int>();
+        //        for (int i = 0; i < expressions.Count; ++i)
+        //        {
+        //            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
+        //            //cell.Hide();
+        //            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
+        //            sortedCells.Add(((CellExpressionPair)expressions[i]).Cell, (int)((CellExpressionPair)expressions[i]).Expression);
+        //        }
+        //
+        //        int n = (int)Math.Round(0.01 * cells.Count);
+        //        HighlightTopExpressedCells(sortedCells, n);
+        //
+        //        yield return new WaitForSeconds(2);
+        //
+        //        foreach (Cell c in cells.Values)
+        //        {
+        //            c.Show();
+        //        }
         graphManager.ColorAllGraphsByGeneExpression(expressions);
 
         float percentInResults = (float)database._result.Count / cells.Values.Count;
@@ -782,7 +782,7 @@ public class CellManager : MonoBehaviour
             if (attributes.Eval(cell))
             {
                 numAdded++;
-                selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], group, false);
+                // more_cells selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], group, false);
                 recolored[cell] = selectionToolHandler.currentColorIndex;
             }
         }
@@ -824,38 +824,39 @@ public class CellManager : MonoBehaviour
             cell.ColorByIndex(name);
         }
     }
+
     /// <summary>
     /// Draws lines between all points that share the same label.
     /// </summary>
     /// <param name="points"> The graphpoints to draw the lines from. </param>
-    public void DrawLinesBetweenGraphPoints(List<GraphPoint> points)
+    public void DrawLinesBetweenGraphPoints(List<CombinedGraph.CombinedGraphPoint> points)
     {
-        foreach (GraphPoint g in points)
-        {
-            Color color = g.Material.color;
-            foreach (GraphPoint sameCell in g.Cell.GraphPoints)
-            {
-                if (sameCell != g)
-                {
-                    LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-                    line.t1 = sameCell.transform;
-                    line.t2 = g.transform;
-                    line.graphPoint = g;
-                    line.selectionToolHandler = selectionToolHandler;
-                    LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-                    lineRenderer.startColor = color;
-                    lineRenderer.endColor = color;
-                    lines.Add(line.gameObject);
-                    sameCell.Graph.Lines.Add(line.gameObject);
-                    g.Graph.Lines.Add(line.gameObject);
-                    if (!sameCell.Graph.GraphActive)
-                    {
-                        line.gameObject.SetActive(false);
-                    }
-                    g.lineBetweenCellsCubes.Add(line.cube);
-                }
-            }
-        }
+        // more_cells   foreach (GraphPoint g in points)
+        // more_cells   {
+        // more_cells       Color color = g.Material.color;
+        // more_cells       foreach (GraphPoint sameCell in g.Cell.GraphPoints)
+        // more_cells       {
+        // more_cells           if (sameCell != g)
+        // more_cells           {
+        // more_cells               LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
+        // more_cells               line.t1 = sameCell.transform;
+        // more_cells               line.t2 = g.transform;
+        // more_cells               line.graphPoint = g;
+        // more_cells               line.selectionToolHandler = selectionToolHandler;
+        // more_cells               LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+        // more_cells               lineRenderer.startColor = color;
+        // more_cells               lineRenderer.endColor = color;
+        // more_cells               lines.Add(line.gameObject);
+        // more_cells               sameCell.Graph.Lines.Add(line.gameObject);
+        // more_cells               g.Graph.Lines.Add(line.gameObject);
+        // more_cells               if (!sameCell.Graph.GraphActive)
+        // more_cells               {
+        // more_cells                   line.gameObject.SetActive(false);
+        // more_cells               }
+        // more_cells               g.lineBetweenCellsCubes.Add(line.cube);
+        // more_cells           }
+        // more_cells       }
+        // more_cells   }
     }
 
     public void DrawLinesBetweenGraphPoints(List<GraphPoint> points, Graph fromGraph, Graph toGraph)

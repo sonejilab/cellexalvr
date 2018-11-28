@@ -35,7 +35,7 @@ public class SelectionToolHandler : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private List<CombinedGraph.CombinedGraphPoint> selectedCells = new List<CombinedGraph.CombinedGraphPoint>();
-    private List<GraphPoint> lastSelectedCells = new List<GraphPoint>();
+    private List<CombinedGraph.CombinedGraphPoint> lastSelectedCells = new List<CombinedGraph.CombinedGraphPoint>();
     private Color selectedColor;
     private PlanePicker planePicker;
     private bool selectionMade = false;
@@ -62,7 +62,7 @@ public class SelectionToolHandler : MonoBehaviour
     private struct HistoryListInfo
     {
         // the graphpoint this affects
-        public GraphPoint graphPoint;
+        public CombinedGraph.CombinedGraphPoint graphPoint;
         // the group it was given, -1 means no group
         public int toGroup;
         // the group it had before, -1 means no group
@@ -70,7 +70,7 @@ public class SelectionToolHandler : MonoBehaviour
         // true if this graphpoint was previously not in the list of selected graphpoints
         public bool newNode;
 
-        public HistoryListInfo(GraphPoint graphPoint, int toGroup, int fromGroup, bool newNode)
+        public HistoryListInfo(CombinedGraph.CombinedGraphPoint graphPoint, int toGroup, int fromGroup, bool newNode)
         {
             this.graphPoint = graphPoint;
             this.toGroup = toGroup;
@@ -190,13 +190,13 @@ public class SelectionToolHandler : MonoBehaviour
         if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
         {
 
-            graphPoint.SetOutLined(true, newGroup);
+            // more_cells graphPoint.SetOutLined(true, newGroup);
 
         }
         else
         {
 
-            graphPoint.SetOutLined(true, color);
+            // more_cells graphPoint.SetOutLined(true, color);
 
         }
         graphPoint.group = newGroup;
@@ -263,8 +263,8 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="color">Colour that the graphpoint should be coloured by.</param>
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
     {
-        GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        AddGraphpointToSelection(gp, newGroup, true, color);
+        // more_cells    GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        // more_cells    AddGraphpointToSelection(gp, newGroup, true, color);
     }
 
     /// <summary>
@@ -277,12 +277,12 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="cube">If a cube should be coloured as well as the graphpoint.</param>
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color, bool cube)
     {
-        GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        AddGraphpointToSelection(gp, newGroup, true, color);
-        foreach (Selectable sel in gp.lineBetweenCellsCubes)
-        {
-            sel.GetComponent<Renderer>().material.color = color;
-        }
+        // more_cells   GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        // more_cells   AddGraphpointToSelection(gp, newGroup, true, color);
+        // more_cells   foreach (Selectable sel in gp.lineBetweenCellsCubes)
+        // more_cells   {
+        // more_cells       sel.GetComponent<Renderer>().material.color = color;
+        // more_cells   }
     }
 
 
@@ -309,10 +309,10 @@ public class SelectionToolHandler : MonoBehaviour
             return;
         }
         HistoryListInfo info = selectionHistory[indexToMoveTo];
-        info.graphPoint.CurrentGroup = info.fromGroup;
+        info.graphPoint.group = info.fromGroup;
 
         // if info.fromGroup != 1 then the outline should be drawn
-        info.graphPoint.SetOutLined(info.fromGroup != -1, info.fromGroup);
+        // more_cells info.graphPoint.SetOutLined(info.fromGroup != -1, info.fromGroup);
 
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
@@ -320,14 +320,14 @@ public class SelectionToolHandler : MonoBehaviour
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
-            info.graphPoint.SetOutLined(false, -1);
+            // more_cells   info.graphPoint.SetOutLined(false, -1);
         }
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-            info.graphPoint.SetOutLined(true, info.fromGroup);
+            // more_cells   info.graphPoint.SetOutLined(true, info.fromGroup);
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -357,8 +357,8 @@ public class SelectionToolHandler : MonoBehaviour
         }
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
-        info.graphPoint.CurrentGroup = info.toGroup;
-        info.graphPoint.SetOutLined(info.toGroup != -1, info.toGroup);
+        info.graphPoint.group = info.toGroup;
+        // more_cells   info.graphPoint.SetOutLined(info.toGroup != -1, info.toGroup);
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
@@ -427,43 +427,43 @@ public class SelectionToolHandler : MonoBehaviour
         } while (color.Equals(nextColor));
     }
 
-    public void SingleSelect(Collider other)
-    {
-        Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
-        other.gameObject.GetComponent<Renderer>().material.color = transparentColor;
-        GraphPoint gp = other.GetComponent<GraphPoint>();
-        if (!selectedCells.Contains(gp))
-        {
-            selectedCells.Add(gp);
-        }
-        if (!selectionMade)
-        {
-            selectionMade = true;
-            //UpdateButtonIcons();
-        }
-    }
+    // more_cells   public void SingleSelect(Collider other)
+    // more_cells   {
+    // more_cells       Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
+    // more_cells       other.gameObject.GetComponent<Renderer>().material.color = transparentColor;
+    // more_cells       GraphPoint gp = other.GetComponent<CombinedGraph.CombinedGraphPoint>();
+    // more_cells       if (!selectedCells.Contains(gp))
+    // more_cells       {
+    // more_cells           selectedCells.Add(gp);
+    // more_cells       }
+    // more_cells       if (!selectionMade)
+    // more_cells       {
+    // more_cells           selectionMade = true;
+    // more_cells           //UpdateButtonIcons();
+    // more_cells       }
+    // more_cells   }
 
     /// <summary>
     /// Adds rigidbody to all selected cells, making them fall to the ground.
     /// </summary>
-    public void ConfirmRemove()
-    {
-        //GetComponent<AudioSource>().Play();
-        foreach (GraphPoint other in selectedCells)
-        {
-            other.transform.parent = null;
-            other.gameObject.AddComponent<Rigidbody>();
-            other.GetComponent<Rigidbody>().useGravity = true;
-            other.GetComponent<Rigidbody>().isKinematic = false;
-            other.GetComponent<Collider>().isTrigger = false;
-            other.SetOutLined(false, -1);
-        }
-        selectionHistory.Clear();
-        CellexalEvents.SelectionCanceled.Invoke();
-        selectedCells.Clear();
-        selectionMade = false;
-        //selectionToolMenu.RemoveSelection();
-    }
+    // more_cells   public void ConfirmRemove()
+    // more_cells   {
+    // more_cells       //GetComponent<AudioSource>().Play();
+    // more_cells       foreach (GraphPoint other in selectedCells)
+    // more_cells       {
+    // more_cells           other.transform.parent = null;
+    // more_cells           other.gameObject.AddComponent<Rigidbody>();
+    // more_cells           other.GetComponent<Rigidbody>().useGravity = true;
+    // more_cells           other.GetComponent<Rigidbody>().isKinematic = false;
+    // more_cells           other.GetComponent<Collider>().isTrigger = false;
+    // more_cells           other.SetOutLined(false, -1);
+    // more_cells       }
+    // more_cells       selectionHistory.Clear();
+    // more_cells       CellexalEvents.SelectionCanceled.Invoke();
+    // more_cells       selectedCells.Clear();
+    // more_cells       selectionMade = false;
+    // more_cells       //selectionToolMenu.RemoveSelection();
+    // more_cells   }
 
     /// <summary>
     /// Confirms a selection and dumps the relevant data to a .txt file.
@@ -478,12 +478,12 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpSelectionToTextFile();
         lastSelectedCells.Clear();
-        foreach (GraphPoint gp in selectedCells)
+        foreach (CombinedGraph.CombinedGraphPoint gp in selectedCells)
         {
-            if (gp.CustomColor)
-                gp.SetOutLined(false, gp.Material.color);
-            else
-                gp.SetOutLined(false, gp.CurrentGroup);
+            // more_cells   if (gp.CustomColor)
+            // more_cells       gp.SetOutLined(false, gp.Material.color);
+            // more_cells   else
+            // more_cells       gp.SetOutLined(false, gp.CurrentGroup);
             lastSelectedCells.Add(gp);
         }
         //previousSelectionMenu.CreateButton(selectedCells);
@@ -522,7 +522,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// Gets the last selection that was confirmed.
     /// </summary>
     /// <returns> A List of all graphpoints that were selected. </returns>
-    public List<GraphPoint> GetLastSelection()
+    public List<CombinedGraph.CombinedGraphPoint> GetLastSelection()
     {
         return lastSelectedCells;
     }
@@ -531,7 +531,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// Get the current (not yet confirmed) selection.
     /// </summary>
     /// <returns> A List of all graphpoints currently selected. </returns>
-    public List<GraphPoint> GetCurrentSelection()
+    public List<CombinedGraph.CombinedGraphPoint> GetCurrentSelection()
     {
         return selectedCells;
     }
@@ -541,9 +541,9 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void CancelSelection()
     {
-        foreach (GraphPoint other in selectedCells)
+        foreach (CombinedGraph.CombinedGraphPoint other in selectedCells)
         {
-            other.ResetColor();
+            other.Recolor(Color.white, -1);
         }
         CellexalEvents.SelectionCanceled.Invoke();
         historyIndexOffset = selectionHistory.Count;
@@ -604,31 +604,31 @@ public class SelectionToolHandler : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="selection"></param>
-    public void DumpSelectionToTextFile(List<GraphPoint> selection)
+    public void DumpSelectionToTextFile(List<CombinedGraph.CombinedGraphPoint> selection)
     {
         // print(new System.Diagnostics.StackTrace());
         string filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
         using (StreamWriter file =
-                   new StreamWriter(filePath))
+                    new StreamWriter(filePath))
         {
             CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
             CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
             if (selectionHistory != null)
                 CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
-            foreach (GraphPoint gp in selection)
+            foreach (CombinedGraph.CombinedGraphPoint gp in selection)
             {
                 file.Write(gp.Label);
                 file.Write("\t");
-                Color c = gp.Material.color;
+                Color c = gp.GetColor();
                 int r = (int)(c.r * 255);
                 int g = (int)(c.g * 255);
                 int b = (int)(c.b * 255);
                 // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
                 file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
                 file.Write("\t");
-                file.Write(gp.GraphName);
+                file.Write(gp.parent.GraphName);
                 file.Write("\t");
-                file.Write(gp.CurrentGroup);
+                file.Write(gp.group);
                 file.WriteLine();
             }
             file.Flush();
