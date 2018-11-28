@@ -31,9 +31,10 @@ public class SelectionToolHandler : MonoBehaviour
 
     private SelectionFromPreviousMenu previousSelectionMenu;
     private ControllerModelSwitcher controllerModelSwitcher;
+    private GraphManager graphManager;
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
-    private List<GraphPoint> selectedCells = new List<GraphPoint>();
+    private List<CombinedGraph.CombinedGraphPoint> selectedCells = new List<CombinedGraph.CombinedGraphPoint>();
     private List<GraphPoint> lastSelectedCells = new List<GraphPoint>();
     private Color selectedColor;
     private PlanePicker planePicker;
@@ -43,13 +44,6 @@ public class SelectionToolHandler : MonoBehaviour
     private bool selActive = false;
     private int currentMeshIndex;
     public ParticleSystem particles;
-    public CombinedGraph TouchingGraph { get; set; }
-    private Vector3[] selectionToolTipPos = new Vector3[] {
-        new Vector3(0f, -0.0503f, 0.1202f),
-        new Vector3(0f, -0.0829f, 0.0566f),
-        new Vector3(0f, 0.0216f, 0.0905f),
-        new Vector3(0f, -0.0243f, 0.0515f),
-        new Vector3(0f,-0.0043f, -0.0017f) };
 
     [HideInInspector]
     public int currentColorIndex = 0;
@@ -91,6 +85,7 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
         radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
+        graphManager = referenceManager.graphManager;
         SetSelectionToolEnabled(false, 0);
 
         CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
@@ -118,14 +113,17 @@ public class SelectionToolHandler : MonoBehaviour
                 particles.gameObject.SetActive(true);
                 ActivateSelection(true);
             }
-            else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && TouchingGraph != null)
+            else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
             {
                 Vector3 boundsCenter = selectionToolColliders[currentMeshIndex].bounds.center;
                 Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
-                var closestPoints = TouchingGraph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex);
-                foreach (var point in closestPoints)
+                foreach (var graph in graphManager.CombinedGraphs)
                 {
-                    AddGraphpointToSelection(point, currentColorIndex);
+                    var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex);
+                    foreach (var point in closestPoints)
+                    {
+                        AddGraphpointToSelection(point, currentColorIndex, true);
+                    }
                 }
 
             }
@@ -153,25 +151,20 @@ public class SelectionToolHandler : MonoBehaviour
         FarGroupInfoDisplay.SetColors(Colors);
     }
 
-    public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int group)
-    {
-        graphPoint.Recolor(selectedColor, group);
-    }
-
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color to the current color of the selection tool.
     /// This method is called by a child object that holds the collider.
     /// </summary>
-    public void AddGraphpointToSelection(GraphPoint graphPoint)
+    public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[currentColorIndex]);
-        gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, currentColorIndex, Colors[currentColorIndex]);
+        // more_cells gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, currentColorIndex, Colors[currentColorIndex]);
     }
 
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.
     /// </summary>
-    public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback)
+    public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
         print("Add nr - " + selectedCells.Count + " - to group - " + newGroup);
@@ -184,16 +177,16 @@ public class SelectionToolHandler : MonoBehaviour
     /// <summary>
     /// Adds a graphpoint to the current selection, and changes its color.
     /// </summary>
-    public void AddGraphpointToSelection(GraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
+    public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
     {
         // print(other.gameObject.name);
         if (graphPoint == null)
         {
             return;
         }
-        if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
+        // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
-        int oldGroup = graphPoint.CurrentGroup;
+        int oldGroup = graphPoint.group;
         if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
         {
 
@@ -206,7 +199,7 @@ public class SelectionToolHandler : MonoBehaviour
             graphPoint.SetOutLined(true, color);
 
         }
-        graphPoint.CurrentGroup = newGroup;
+        graphPoint.group = newGroup;
         // renderer.material.color = Colors[newGroup];
         //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 

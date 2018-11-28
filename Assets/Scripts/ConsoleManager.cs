@@ -39,7 +39,7 @@ public class ConsoleManager : MonoBehaviour
             {
                 foreach (var method in type.GetMethods())
                 {
-                    var attribute = method.GetCustomAttribute<ConsoleCommand>();
+                    var attribute = method.GetCustomAttribute<ConsoleCommandAttribute>();
                     if (attribute != null)
                     {
                         accessors[method] = attribute.Access;
@@ -351,7 +351,10 @@ public class ConsoleManager : MonoBehaviour
         }
     }
 
-    [ConsoleCommand("consoleManager", "clear", "cls")]
+    /// <summary>
+    /// Clears the console.
+    /// </summary>
+    [ConsoleCommand("consoleManager", "clear", "clr", "cls")]
     public void ClearConsole()
     {
         currentNumberOfLines = 0;
@@ -361,13 +364,21 @@ public class ConsoleManager : MonoBehaviour
 
 }
 
+/// <summary>
+/// Attribute to mark methods as runnable using the in-app console interface.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
-public class ConsoleCommand : Attribute
+public class ConsoleCommandAttribute : Attribute
 {
     public string Access { get; private set; }
     public string[] Aliases { get; private set; }
 
-    public ConsoleCommand(string access, params string[] aliases)
+    /// <summary>
+    /// Marks a method as runnable in the console.
+    /// </summary>
+    /// <param name="access">The name of a field in the <see cref="ReferenceManager"/> to access this method from. Case sensitive.</param>
+    /// <param name="aliases">One or more ways to refer to this method from the console.</param>
+    public ConsoleCommandAttribute(string access, params string[] aliases)
     {
         Access = access;
         Aliases = aliases;

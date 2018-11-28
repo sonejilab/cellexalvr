@@ -358,7 +358,7 @@ public class GraphManager : MonoBehaviour
 
         return newGraph;
     }
-    
+
     //public void LoadPosition(Graph graph, int graphNr)
     //{
     //    saveScene.SetGraph(graph, graphNr);
