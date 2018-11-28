@@ -9,6 +9,7 @@ using UnityEngine;
 public class Cell
 {
     public List<GraphPoint> GraphPoints;
+    public List<CombinedGraph.CombinedGraphPoint> CombinedGraphPoints;
 
     public Dictionary<string, int> Attributes { get; private set; }
     public Dictionary<string, int> Facs { get; private set; }
@@ -31,6 +32,7 @@ public class Cell
         this.graphManager = graphManager;
         this.Label = label;
         GraphPoints = new List<GraphPoint>();
+        CombinedGraphPoints = new List<CombinedGraph.CombinedGraphPoint>();
         Attributes = new Dictionary<string, int>();
         Facs = new Dictionary<string, int>();
         tempMat = null;
@@ -44,6 +46,11 @@ public class Cell
     public void AddGraphPoint(GraphPoint g)
     {
         GraphPoints.Add(g);
+    }
+
+    public void AddGraphPoint(CombinedGraph.CombinedGraphPoint g)
+    {
+        CombinedGraphPoints.Add(g);
     }
 
     /// <summary>
@@ -66,18 +73,20 @@ public class Cell
     {
         if (Attributes.ContainsKey(attributeType.ToLower()))
         {
-            foreach (GraphPoint g in GraphPoints)
+            foreach (CombinedGraph.CombinedGraphPoint g in CombinedGraphPoints)
             {
                 if (color)
                 {
-                    g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
+                    g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
+                    //g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
                     //Debug.Log("ADD GROUP - " + Attributes[attributeType.ToLower()]);
                     //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(GraphPoints[0], Attributes[attributeType.ToLower()], false, g.Material.color);
                 }
                     
                 else
                 {
-                    g.Material = graphManager.defaultGraphPointMaterial;
+                    //g.Material = graphManager.defaultGraphPointMaterial;
+                    g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
                 }
             }
         }

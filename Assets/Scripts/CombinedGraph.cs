@@ -85,6 +85,7 @@ public class CombinedGraph : MonoBehaviour
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
+        graphManager = referenceManager.graphManager;
         Lines = new List<GameObject>();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         combinedGraphGenerator = GetComponent<CombinedGraphGenerator>();
