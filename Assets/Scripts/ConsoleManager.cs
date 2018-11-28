@@ -39,7 +39,7 @@ public class ConsoleManager : MonoBehaviour
             {
                 foreach (var method in type.GetMethods())
                 {
-                    var attribute = method.GetCustomAttribute<ConsoleCommand>();
+                    var attribute = method.GetCustomAttribute<ConsoleCommandAttribute>();
                     if (attribute != null)
                     {
                         accessors[method] = attribute.Access;
@@ -91,11 +91,6 @@ public class ConsoleManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (history.First.Value == "")
-            {
-                // save what is currently in the console
-                history.First.Value = inputField.text;
-            }
             TraverseHistory(true);
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -116,19 +111,24 @@ public class ConsoleManager : MonoBehaviour
     /// <summary>
     /// Goes one step forward or backward in the history of all written commands.
     /// </summary>
-    /// <param name="goBack">True for going back in history, false for goind forward.</param>
+    /// <param name="goBack">True for going back in history, false for going forward.</param>
     public void TraverseHistory(bool goBack)
     {
-        if (goBack && currentHistoryNode.Previous != null)
+        if (goBack && currentHistoryNode.Next != null)
+        {
+            if (currentHistoryNode == history.First)
+            {
+                currentHistoryNode.Value = inputField.text;
+            }
+            currentHistoryNode = currentHistoryNode.Next;
+        }
+        else if (!goBack && currentHistoryNode.Previous != null)
         {
             currentHistoryNode = currentHistoryNode.Previous;
         }
-        else if (!goBack && currentHistoryNode.Next != null)
-        {
-            currentHistoryNode = currentHistoryNode.Next;
-        }
 
         inputField.text = currentHistoryNode.Value;
+        inputField.MoveTextEnd(false);
     }
 
     /// <summary>
@@ -196,6 +196,7 @@ public class ConsoleManager : MonoBehaviour
 
         inputField.ActivateInputField();
         inputField.Select();
+
 
         if (command == "")
         {
@@ -350,7 +351,10 @@ public class ConsoleManager : MonoBehaviour
         }
     }
 
-    [ConsoleCommand("consoleManager", "clear", "cls")]
+    /// <summary>
+    /// Clears the console.
+    /// </summary>
+    [ConsoleCommand("consoleManager", "clear", "clr", "cls")]
     public void ClearConsole()
     {
         currentNumberOfLines = 0;
@@ -360,13 +364,21 @@ public class ConsoleManager : MonoBehaviour
 
 }
 
+/// <summary>
+/// Attribute to mark methods as runnable using the in-app console interface.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
-public class ConsoleCommand : Attribute
+public class ConsoleCommandAttribute : Attribute
 {
     public string Access { get; private set; }
     public string[] Aliases { get; private set; }
 
-    public ConsoleCommand(string access, params string[] aliases)
+    /// <summary>
+    /// Marks a method as runnable in the console.
+    /// </summary>
+    /// <param name="access">The name of a field in the <see cref="ReferenceManager"/> to access this method from. Case sensitive.</param>
+    /// <param name="aliases">One or more ways to refer to this method from the console.</param>
+    public ConsoleCommandAttribute(string access, params string[] aliases)
     {
         Access = access;
         Aliases = aliases;

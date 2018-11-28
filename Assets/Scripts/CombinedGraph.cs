@@ -73,7 +73,7 @@ public class CombinedGraph : MonoBehaviour
     private static LayerMask selectionToolLayerMask;
 
     public OctreeNode octreeRoot;
-    private CombinedGraphGenerator combinedGraphGenerator;    
+    private CombinedGraphGenerator combinedGraphGenerator;
     public List<GameObject> combinedGraphPointClusters = new List<GameObject>();
     void Start()
     {
@@ -83,11 +83,13 @@ public class CombinedGraph : MonoBehaviour
         targetMaxScale = 1f;
         originalPos = new Vector3();
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
         graphManager = referenceManager.graphManager;
         Lines = new List<GameObject>();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         combinedGraphGenerator = GetComponent<CombinedGraphGenerator>();
+        selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
     }
 
     private void Update()
@@ -100,9 +102,9 @@ public class CombinedGraph : MonoBehaviour
 
         if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
         {
-           gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+            gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         }
-       if (minimize)
+        if (minimize)
         {
             Minimize();
         }
@@ -111,22 +113,6 @@ public class CombinedGraph : MonoBehaviour
             Maximize();
         }
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("SelectionTool"))
-        {
-            referenceManager.selectionToolHandler.TouchingGraph = this;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("SelectionTool") && referenceManager.selectionToolHandler.TouchingGraph == this)
-        {
-            referenceManager.selectionToolHandler.TouchingGraph = null;
-        }
-    }
-
 
     internal void ShowGraph()
     {
@@ -198,6 +184,7 @@ public class CombinedGraph : MonoBehaviour
             referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
         }
     }
+
     public class CombinedGraphPoint
     {
         private static int indexCounter = 0;
@@ -273,6 +260,11 @@ public class CombinedGraph : MonoBehaviour
         public Vector3 size;
         private int group = -1;
         private bool raycasted;
+        /// <summary>
+        /// The group that this node belongs to. -1 means no group, 0 or a positive number means some group.
+        /// If this is a leaf node, this should be the same as the group that the selection tool has given the <see cref="CombinedGraphPoint"/>.
+        /// If this is not a leaf node, this is not -1 if all its children are of that group.
+        /// </summary>
         public int Group
         {
             get { return group; }
@@ -301,14 +293,17 @@ public class CombinedGraph : MonoBehaviour
             }
             else
             {
-                sb.Append("(");
-                foreach (var child in children)
+                if (children.Length > 0)
                 {
-                    child.ToStringRec(ref sb);
-                    sb.Append(", ");
+                    sb.Append("(");
+                    foreach (var child in children)
+                    {
+                        child.ToStringRec(ref sb);
+                        sb.Append(", ");
+                    }
+                    sb.Remove(sb.Length - 2, 2);
+                    sb.Append(")");
                 }
-                sb.Remove(sb.Length - 2, 2);
-                sb.Append(")");
             }
         }
 
@@ -328,15 +323,34 @@ public class CombinedGraph : MonoBehaviour
 
         private void NotifyGroupChange(int group)
         {
+            int setGroupTo = group;
+            // only set this node's group if all children are also of that group
             foreach (var child in children)
             {
                 if (child.group != group)
-                    return;
+                {
+                    // not all children were of that group, set this node's group to -1
+                    setGroupTo = -1;
+                    break;
+                }
             }
-            this.group = group;
+            this.group = setGroupTo;
             if (parent != null && parent.group != group)
             {
                 parent.NotifyGroupChange(group);
+            }
+        }
+
+        /// <summary>
+        /// Changes the group of this node and all of its children (and grand-children and so on) recursively.
+        /// </summary>
+        /// <param name="group">The new group.</param>
+        public void ChangeGroupRecursively(int group)
+        {
+            this.group = group;
+            foreach (var child in children)
+            {
+                child.ChangeGroupRecursively(group);
             }
         }
 
@@ -680,18 +694,18 @@ public class CombinedGraph : MonoBehaviour
     /// <summary>
     /// Resets this graphs position, scale and color.
     /// </summary>
-//    public void ResetGraph()
-//    {
-//        transform.localScale = defaultScale;
-//        transform.position = defaultPos;
-//        transform.rotation = Quaternion.identity;
-//        foreach (GraphPoint point in points.Values)
-//        {
-//            point.gameObject.SetActive(true);
-//            point.ResetCoords();
-//            point.ResetColor();
-//        }
-//    }
+    //    public void ResetGraph()
+    //    {
+    //        transform.localScale = defaultScale;
+    //        transform.position = defaultPos;
+    //        transform.rotation = Quaternion.identity;
+    //        foreach (GraphPoint point in points.Values)
+    //        {
+    //            point.gameObject.SetActive(true);
+    //            point.ResetCoords();
+    //            point.ResetColor();
+    //        }
+    //    }
 
     /// <summary>
     /// Recolors a single graphpoint.
@@ -713,7 +727,7 @@ public class CombinedGraph : MonoBehaviour
         texture.SetPixel(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, color);
         textureChanged = true;
     }
-   
+
     /// <summary>
     /// Color all graphpoints in this graph with the expression of some gene.
     /// </summary>
