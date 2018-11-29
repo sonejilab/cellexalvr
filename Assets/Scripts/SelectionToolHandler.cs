@@ -229,7 +229,8 @@ public class SelectionToolHandler : MonoBehaviour
         // renderer.material.color = Colors[newGroup];
         //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 
-        bool newNode = !selectedCells.Contains(graphPoint);
+        bool newNode = !graphPoint.unconfirmedInSelection;
+        graphPoint.unconfirmedInSelection = true;
         if (historyIndexOffset != 0)
         {
             // if we have undone some selected graphpoints, then they should be removed from the history
@@ -514,6 +515,7 @@ public class SelectionToolHandler : MonoBehaviour
             // more_cells   else
             // more_cells       gp.SetOutLined(false, gp.CurrentGroup);
             lastSelectedCells.Add(gp);
+            gp.unconfirmedInSelection = false;
         }
         //previousSelectionMenu.CreateButton(selectedCells);
         // clear the list since we are done with it

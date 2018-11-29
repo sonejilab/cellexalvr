@@ -212,8 +212,8 @@ public class CombinedGraph : MonoBehaviour
         public int index;
         public Vector2Int textureCoord;
         public CombinedGraph parent;
-        public Collider collider;
         public int group;
+        public bool unconfirmedInSelection;
 
         public CombinedGraphPoint(string label, float x, float y, float z, CombinedGraph parent)
         {
@@ -222,7 +222,7 @@ public class CombinedGraph : MonoBehaviour
             this.parent = parent;
             index = indexCounter;
             group = -1;
-
+            unconfirmedInSelection = false;
             indexCounter++;
         }
 

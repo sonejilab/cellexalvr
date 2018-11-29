@@ -10,8 +10,24 @@ public class GroupInfoDisplay : MonoBehaviour
     public SelectionToolHandler selectionToolHandler;
     public TextMesh status;
     public List<MeshRenderer> coloredSquares;
-    private Dictionary<int, int> groups = new Dictionary<int, int>();
+    private int[] groups;
     private Color[] colors;
+    private bool groupsChanged = false;
+
+
+    private void Update()
+    {
+        if (groupsChanged)
+        {
+            groupsChanged = false;
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < colors.Length; i++)
+            {
+                builder.Append(groups[i]).Append('\n');
+            }
+            status.text = builder.ToString();
+        }
+    }
 
     /// <summary>
     /// Sets the colors that should be used. Must be called once before any calls to ChangeGroupsInfo.
@@ -20,6 +36,7 @@ public class GroupInfoDisplay : MonoBehaviour
     public void SetColors(Color[] colors)
     {
         this.colors = colors;
+        groups = new int[colors.Length];
         for (int i = 0; i < colors.Length; i++)
         {
             Color col = colors[i];
@@ -36,15 +53,11 @@ public class GroupInfoDisplay : MonoBehaviour
     /// <param name="n"> How much the number should change by. 1 if adding 1 cell to the color. -1 if subtracting 1 cell from the color. </param>
     public void ChangeGroupsInfo(int group, int n)
     {
-        if (!groups.ContainsKey(group))
-            return;
-        groups[group] += n;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < colors.Length; i++)
+        if (group >= 0 && group < groups.Length)
         {
-            builder.Append(groups[i]).Append('\n');
+            groups[group] += n;
+            groupsChanged = true;
         }
-        status.text = builder.ToString();
     }
 
     /// <summary>
