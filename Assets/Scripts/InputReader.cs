@@ -202,7 +202,7 @@ public class InputReader : MonoBehaviour
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
-            string graphFileName = regexResult[regexResult.Length - 2] + "/" + regexResult[regexResult.Length - 1];
+            string graphFileName = /*regexResult[regexResult.Length - 2] + "/" + */regexResult[regexResult.Length - 1];
             //// remove the ".mds" at the end
             combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
             combGraph.gameObject.name = combGraph.GraphName;

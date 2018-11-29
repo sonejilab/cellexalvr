@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using CellexalExtensions;
 using UnityEngine;
@@ -276,7 +277,7 @@ public class SelectionToolHandler : MonoBehaviour
             else
             {
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
-                selectedCells.Remove(graphPoint);
+                //selectedCells.Remove(graphPoint);
                 selectedCells.Add(graphPoint);
                 groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
                 HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
@@ -508,7 +509,8 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpSelectionToTextFile();
         lastSelectedCells.Clear();
-        foreach (CombinedGraph.CombinedGraphPoint gp in selectedCells)
+        IEnumerable<CombinedGraph.CombinedGraphPoint> uniqueCells = selectedCells.Reverse<CombinedGraph.CombinedGraphPoint>().Distinct().Reverse() ;
+        foreach (CombinedGraph.CombinedGraphPoint gp in uniqueCells)
         {
             // more_cells   if (gp.CustomColor)
             // more_cells       gp.SetOutLined(false, gp.Material.color);

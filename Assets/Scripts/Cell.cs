@@ -200,9 +200,9 @@ public class Cell
     /// <param name="facsName"> The index. </param>
     public void ColorByIndex(string facsName)
     {
-        foreach (GraphPoint g in GraphPoints)
+        foreach (CombinedGraph.CombinedGraphPoint g in CombinedGraphPoints)
         {
-            g.Material = graphManager.GeneExpressionMaterials[Facs[facsName.ToLower()]];
+            g.Recolor(graphManager.GeneExpressionMaterials[Facs[facsName.ToLower()]].color);
         }
     }
 

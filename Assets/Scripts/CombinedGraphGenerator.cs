@@ -32,6 +32,8 @@ public class CombinedGraphGenerator : MonoBehaviour
     private GraphManager graphManager;
     private int nbrOfClusters;
     private int nbrOfMaxPointsPerClusters;
+    private Vector3[] graphPositions;
+    private int graphCount;
 
     private GameManager gameManager;
 
@@ -39,12 +41,22 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
+        graphPositions = new Vector3[4];
+        graphPositions[0] = new Vector3(0, 1, -1);
+        graphPositions[1] = new Vector3(-0.5f, 1, 0);
+        graphPositions[2] = new Vector3(0, 1, 1);
+        graphPositions[3] = new Vector3(1, 1, 1);
     }
     public CombinedGraph CreateCombinedGraph()
     {
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
+        newGraph.transform.position = graphPositions[graphCount];
         newGraph.referenceManager = referenceManager;
         isCreating = true;
+        if (!(graphCount >= graphPositions.Length - 1))
+        {
+            graphCount++;
+        }
 
         return newGraph;
     }
