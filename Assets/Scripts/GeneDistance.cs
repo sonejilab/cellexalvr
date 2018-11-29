@@ -12,7 +12,7 @@ public class GeneDistance : MonoBehaviour
     public GameObject gradientBoxPrefab;
 
     private List<GameObject> plots = new List<GameObject>();
-    private Graph graph;
+    private CombinedGraph graph;
     private bool smoothing;
     private bool invert;
 
@@ -286,7 +286,7 @@ public class GeneDistance : MonoBehaviour
         for (int i = numNotInDatabase + 1; i < expressions.Count; ++i)
         {
             var point2 = graph.points[expressions[i].Item1];
-            var newDist = /*Mathf.Log(*/Vector3.Distance(point1.transform.position, point2.transform.position)/*, 2f)*/;
+            var newDist = /*Mathf.Log(*/Vector3.Distance(point1.Position, point2.Position)/*, 2f)*/;
             point1 = point2;
             distances.Add(newDist);
             if (newDist < lowest)

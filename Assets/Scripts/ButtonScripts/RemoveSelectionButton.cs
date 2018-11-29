@@ -25,7 +25,7 @@ public class RemoveSelectionButton : CellexalButton
     {
         referenceManager.gameManager.InformRemoveCells();
         SetButtonActivated(false);
-        selectionToolHandler.ConfirmRemove();
+        // more_cells selectionToolHandler.ConfirmRemove();
     }
 
     private void TurnOn()

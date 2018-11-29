@@ -155,7 +155,7 @@ public class HeatmapGenerator : MonoBehaviour
             GeneratingHeatmaps = true;
             // Show calculators
             calculatorCluster.SetActive(true);
-            List<GraphPoint> selection = selectionToolHandler.GetLastSelection();
+            List<CombinedGraph.CombinedGraphPoint> selection = selectionToolHandler.GetLastSelection();
 
             // Check if more than one cell is selected
             if (selection.Count < 1)

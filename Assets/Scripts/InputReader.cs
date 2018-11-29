@@ -292,7 +292,7 @@ public class InputReader : MonoBehaviour
             }
             // more_cells
             combinedGraphGenerator.SliceClustering();
-            graphManager.CombinedGraphs.Add(combGraph);
+            graphManager.graphs.Add(combGraph);
             if (debug)
             {
                 //newGraph.transform.Translate(Vector3.forward * fileIndex);
@@ -705,7 +705,7 @@ public class InputReader : MonoBehaviour
         bool firstLine = true;
         Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
         // these variables are set when the first line is read
-        Graph graph = null;
+        CombinedGraph graph = null;
         GameObject skeleton = null;
         NetworkHandler networkHandler = null;
         string networkHandlerName = null;
@@ -756,7 +756,7 @@ public class InputReader : MonoBehaviour
             minPosPcor[colorString] = float.MaxValue;
             maxNegPcor[colorString] = float.MinValue;
             minNegPcor[colorString] = 0f;
-            Vector3 position = graph.ScaleCoordinates(x, y, z);
+            Vector3 position = graph.ScaleCoordinates(new Vector3(x, y, z));
             NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
             //network.transform.localPosition -= graph.transform.position;
             foreach (Renderer r in network.GetComponentsInChildren<Renderer>())

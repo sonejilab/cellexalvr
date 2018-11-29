@@ -112,6 +112,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         stopwatch.Start();
         clusters = SplitClusterRecursive(cluster, newGraph.octreeRoot, true);
         nbrOfClusters = clusters.Count;
+        newGraph.GetComponent<BoxCollider>().size = newGraph.octreeRoot.size;
         stopwatch.Stop();
         CellexalLog.Log(string.Format("clustered {0} in {1}. nbr of clusters: {2}", newGraph.GraphName, stopwatch.Elapsed.ToString(), newGraph.nbrOfClusters));
         return clusters;
@@ -125,6 +126,8 @@ public class CombinedGraphGenerator : MonoBehaviour
     /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
     private List<HashSet<CombinedGraph.CombinedGraphPoint>> SplitClusterRecursive(HashSet<CombinedGraph.CombinedGraphPoint> cluster, CombinedGraph.OctreeNode node, bool addClusters)
     {
+
+        float graphpointMeshExtent = graphPointMesh.bounds.size.x / 2f;
         if (cluster.Count == 1)
         {
             node.children = new CombinedGraph.OctreeNode[0];
@@ -172,9 +175,9 @@ public class CombinedGraphGenerator : MonoBehaviour
         }
         splitCenter /= cluster.Count;
         node.center = splitCenter;
-        node.pos = new Vector3(minX, minY, minZ);
+        node.pos = new Vector3(minX - graphpointMeshExtent, minY - graphpointMeshExtent, minZ - graphpointMeshExtent);
         Vector3 nodePos = node.pos;
-        node.size = new Vector3(maxX - minX, maxY - minY, maxZ - minZ);
+        node.size = new Vector3(maxX - minX + graphpointMeshExtent, maxY - minY + graphpointMeshExtent, maxZ - minZ + graphpointMeshExtent);
         Vector3 nodeSize = node.size;
 
 

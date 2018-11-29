@@ -159,7 +159,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
-        Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
+        CombinedGraph g = referenceManager.graphManager.FindGraph(moveGraphName);
         bool graphExists = g != null;
         if (graphExists)
         {

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using SQLiter;
 using TMPro;
 using UnityEngine;
@@ -27,6 +29,7 @@ public class CombinedGraph : MonoBehaviour
     public ReferenceManager referenceManager;
     private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
+    private Vector3 startPosition;
 
     // For minimization animation
     private bool minimize;
@@ -90,6 +93,7 @@ public class CombinedGraph : MonoBehaviour
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         combinedGraphGenerator = GetComponent<CombinedGraphGenerator>();
         selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
+        startPosition = transform.position;
     }
 
     private void Update()
@@ -185,6 +189,20 @@ public class CombinedGraph : MonoBehaviour
         }
     }
 
+    public Vector3 ScaleCoordinates(Vector3 coords)
+    {
+        // move one of the graph's corners to origo
+        coords -= minCoordValues;
+
+        // uniformly scale all axes down based on the longest axis
+        // this makes the longest axis have length 1 and keeps the proportions of the graph
+        coords /= longestAxis;
+
+        // move the graph a bit so (0, 0, 0) is the center point
+        coords -= scaledOffset;
+        return coords;
+    }
+
     public class CombinedGraphPoint
     {
         private static int indexCounter = 0;
@@ -229,6 +247,11 @@ public class CombinedGraph : MonoBehaviour
         public void SetTextureCoord(Vector2Int newPos)
         {
             textureCoord = newPos;
+        }
+
+        public void Recolor(Color color)
+        {
+            parent.RecolorGraphPoint(this, color);
         }
 
         public void Recolor(Color color, int group)
@@ -676,6 +699,12 @@ public class CombinedGraph : MonoBehaviour
         graphInfoText.transform.parent.gameObject.SetActive(visible);
     }
 
+    public void ResetColorsAndPosition()
+    {
+        ResetColors();
+        transform.position = startPosition;
+    }
+
     /// <summary>
     /// Resets the color of all graphpoints in this graph to white.
     /// </summary>
@@ -832,9 +861,8 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="selectionToolBoundsExtents">The selection tool's bounding box's extents in world space.</param>
     /// <param name="group">The group that the selection tool is set to color the graphpoints by.</param>
     /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="CombinedGraphPoint"/> that are inside the selecion tool.</returns>
-    public List<CombinedGraphPoint> MinkowskiDetection(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group)
+    public List<CombinedGraphPoint> MinkowskiDetection(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group, float ms)
     {
-
         List<CombinedGraphPoint> result = new List<CombinedGraphPoint>(64);
         //int calls = 0;
         //int callsEntirelyInside = 0;
@@ -859,8 +887,7 @@ public class CombinedGraph : MonoBehaviour
 
         //debugGizmosPos = selectionToolPos;
 
-        MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result/*, ref calls, ref callsEntirelyInside*/);
-        //print("minkowski calls:  " + calls + " entirely inside: " + callsEntirelyInside);
+        MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result, ms);
         return result;
     }
 
@@ -873,8 +900,14 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="node">The <see cref="OctreeNode"/> to evaluate.</param>
     /// <param name="group">The group to assign the node.</param>
     /// <param name="result">All leaf nodes found so far.</param>
-    private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<CombinedGraphPoint> result/*, ref int calls, ref int callsEntirelyInside*/)
+    private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<CombinedGraphPoint> result, float ms)
     {
+        //print(Time.realtimeSinceStartup);
+        if (Time.realtimeSinceStartup - ms > 25)
+        {
+            print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
+            return;
+        }
         //calls++;
         // minkowski difference selection tool bounding box and node
         // take advantage of both being AABB
@@ -892,10 +925,11 @@ public class CombinedGraph : MonoBehaviour
                 boundingBoxMin.z < node.pos.z && boundingBoxMax.z > node.pos.z + node.size.z)
             {
                 // just find the leaves and check if they are inside
+
                 if (node.Group != group)
                 {
                     node.completelyInside = true;
-                    CheckIfLeavesInside(selectionToolWorldPos, node, group, ref result/*, ref callsEntirelyInside*/);
+                    CheckIfLeavesInside(selectionToolWorldPos, node, group, ref result, ms);
                 }
                 return;
             }
@@ -913,7 +947,7 @@ public class CombinedGraph : MonoBehaviour
                 {
                     if (child.Group != group)
                     {
-                        MinkowskiDetectionRecursive(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result/*, ref calls, ref callsEntirelyInside*/);
+                        MinkowskiDetectionRecursive(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result, ms);
                     }
                 }
             }
@@ -931,8 +965,13 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="node">The to evaluate.</param>
     /// <param name="group">The group to assign the node.</param>
     /// <param name="result">All leaf nodes found so far.</param>
-    private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<CombinedGraphPoint> result/*, ref int callsEntirelyInside*/)
+    private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<CombinedGraphPoint> result, float ms)
     {
+        if (Time.realtimeSinceStartup - ms > 250)
+        {
+            print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
+            return;
+        }
         //callsEntirelyInside++;
         foreach (var child in node.children)
         {
@@ -947,7 +986,7 @@ public class CombinedGraph : MonoBehaviour
             }
             else
             {
-                CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result/*, ref callsEntirelyInside*/);
+                CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result, ms);
             }
         }
     }

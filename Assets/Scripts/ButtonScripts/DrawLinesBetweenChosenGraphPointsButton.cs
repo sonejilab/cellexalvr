@@ -65,7 +65,7 @@ class DrawLinesBetweenChosenGraphPointsButton : CellexalButton
                 {
                     //print("drawing");
                     toGraph = hitGraph;
-                    cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection(), fromGraph, toGraph);
+                    // more_cells cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection(), fromGraph, toGraph);
                     fromGraph = toGraph = null;
                     CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
                 }

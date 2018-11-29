@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using CellexalExtensions;
@@ -44,6 +45,8 @@ public class SelectionToolHandler : MonoBehaviour
     private bool selActive = false;
     private int currentMeshIndex;
     public ParticleSystem particles;
+    private bool hapticFeedbackThisFrame = true;
+    private Stopwatch minkowskiTimeoutStopwatch = new Stopwatch();
 
     [HideInInspector]
     public int currentColorIndex = 0;
@@ -100,12 +103,11 @@ public class SelectionToolHandler : MonoBehaviour
 
     private void Update()
     {
+        device = SteamVR_Controller.Input((int)rightController.index);
         // Only activate selection if trigger is pressed.
         //device = SteamVR_Controller.Input((int)rightController.index);
-        if (device == null)
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-        }
+        // more_cells device = SteamVR_Controller.Input((int)rightController.index);
+        //device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
         {
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -113,19 +115,23 @@ public class SelectionToolHandler : MonoBehaviour
                 particles.gameObject.SetActive(true);
                 ActivateSelection(true);
             }
-            else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+            if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
             {
+                hapticFeedbackThisFrame = true;
+
                 Vector3 boundsCenter = selectionToolColliders[currentMeshIndex].bounds.center;
                 Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
-                foreach (var graph in graphManager.CombinedGraphs)
+                minkowskiTimeoutStopwatch.Stop();
+                minkowskiTimeoutStopwatch.Start();
+                float millisecond = Time.realtimeSinceStartup;
+                foreach (var graph in graphManager.graphs)
                 {
-                    var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex);
+                    var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex, millisecond);
                     foreach (var point in closestPoints)
                     {
                         AddGraphpointToSelection(point, currentColorIndex, true);
                     }
                 }
-
             }
             else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
@@ -138,6 +144,31 @@ public class SelectionToolHandler : MonoBehaviour
         particles.gameObject.SetActive(IsSelectionToolEnabled());
 
     }
+
+    //private void FixedUpdate()
+    //{
+    //    if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+    //    {
+    //        if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+    //        {
+    //            hapticFeedbackThisFrame = true;
+
+    //            Vector3 boundsCenter = selectionToolColliders[currentMeshIndex].bounds.center;
+    //            Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
+    //            minkowskiTimeoutStopwatch.Stop();
+    //            minkowskiTimeoutStopwatch.Start();
+    //            int millisecond = Environment.TickCount;
+    //            foreach (var graph in graphManager.graphs)
+    //            {
+    //                var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex, millisecond);
+    //                foreach (var point in closestPoints)
+    //                {
+    //                    AddGraphpointToSelection(point, currentColorIndex, true);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.SelectionToolColors"/>.
@@ -167,7 +198,6 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
-        print("Add nr - " + selectedCells.Count + " - to group - " + newGroup);
         //Debug.Log("Adding gp to sel. Inform clients.");
         //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
@@ -189,15 +219,11 @@ public class SelectionToolHandler : MonoBehaviour
         int oldGroup = graphPoint.group;
         if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
         {
-
-            // more_cells graphPoint.SetOutLined(true, newGroup);
-
+            graphPoint.Recolor(Colors[newGroup], newGroup);
         }
         else
         {
-
-            // more_cells graphPoint.SetOutLined(true, color);
-
+            graphPoint.Recolor(color);
         }
         graphPoint.group = newGroup;
         // renderer.material.color = Colors[newGroup];
@@ -228,8 +254,11 @@ public class SelectionToolHandler : MonoBehaviour
         {
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
-            if (hapticFeedback)
+            if (hapticFeedback && hapticFeedbackThisFrame)
+            {
+                hapticFeedbackThisFrame = false;
                 SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
+            }
 
             groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
             HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);

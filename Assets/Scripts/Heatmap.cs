@@ -269,7 +269,7 @@ public class Heatmap : MonoBehaviour
     /// </summary>
     /// <param name="selection">An array containing the <see cref="GraphPoint"/> that are in the heatmap</param>
     /// <param name="filepath">A path to the file containing the gene names</param>
-    public void BuildTexture(List<GraphPoint> selection, string filepath)
+    public void BuildTexture(List<CombinedGraph.CombinedGraphPoint> selection, string filepath)
     {
         if (buildingTexture)
         {
@@ -288,9 +288,9 @@ public class Heatmap : MonoBehaviour
         // read the cells and their groups
         for (int i = 0; i < selection.Count; ++i)
         {
-            GraphPoint graphpoint = selection[i];
-            int group = graphpoint.CurrentGroup;
-            groupingColors[group] = graphpoint.Material.color;
+            CombinedGraph.CombinedGraphPoint graphpoint = selection[i];
+            int group = graphpoint.group;
+            groupingColors[group] = graphpoint.GetColor();
             cells[i] = graphpoint.Label;
             if (lastGroup == -1)
             {
@@ -1099,11 +1099,11 @@ public class Heatmap : MonoBehaviour
         }
 
         string[] newCells = new string[numberOfCells];
-        List<GraphPoint> newGps = new List<GraphPoint>();  
+        List<CombinedGraph.CombinedGraphPoint> newGps = new List<CombinedGraph.CombinedGraphPoint>();  
         for (int i = 0, j = cellsIndexStart; i < numberOfCells; ++i, ++j)
         {
             newCells[i] = cells[j];
-            newGps.Add(cellManager.GetCell(cells[j]).GraphPoints[0]);
+            newGps.Add(cellManager.GetCell(cells[j]).CombinedGraphPoints[0]);
         }
 
         string[] newGenes = new string[selectedGeneBottom - selectedGeneTop + 1];
@@ -1310,7 +1310,7 @@ public class Heatmap : MonoBehaviour
             UnityEngine.Color groupColor = groupingColors[group];
             for (int j = 0; j < groupWidths[i].Item3; ++j, ++cellIndex)
             {
-                var graphPoint = cellManager.GetCell(cells[cellIndex]).GraphPoints[0];
+                var graphPoint = cellManager.GetCell(cells[cellIndex]).CombinedGraphPoints[0];
                 selectionToolHandler.AddGraphpointToSelection(graphPoint, group, false);
             }
         }

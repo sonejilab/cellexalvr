@@ -8,7 +8,7 @@ public class Geodesic : MonoBehaviour
     public ReferenceManager referenceManager;
 
     private LayerMask layerMask;
-    private Dictionary<GraphPoint, Node> nodes;
+    private Dictionary<CombinedGraph.CombinedGraphPoint, Node> nodes;
 
     private void Start()
     {
@@ -24,13 +24,13 @@ public class Geodesic : MonoBehaviour
 
         print("path:");
         foreach (var node in path)
-            print(node.thisPoint.label);
+            print(node.thisPoint.Label);
     }
 
-    public void Init(Graph graph)
+    public void Init(CombinedGraph graph)
     {
         layerMask = LayerMask.NameToLayer("GraphPointLayer");
-        nodes = new Dictionary<GraphPoint, Node>();
+        nodes = new Dictionary<CombinedGraph.CombinedGraphPoint, Node>();
 
         foreach (var point in graph.points.Values)
         {
@@ -41,15 +41,15 @@ public class Geodesic : MonoBehaviour
         foreach (var point in graph.points.Values)
         {
             var radius = 0.05f;
-            var closeGraphPoints = Physics.OverlapSphere(point.transform.position, radius, ~layerMask, QueryTriggerInteraction.Collide);
+            var closeGraphPoints = Physics.OverlapSphere(point.Position, radius, ~layerMask, QueryTriggerInteraction.Collide);
             while (closeGraphPoints.Length < 5)
             {
                 radius += 0.03f;
-                closeGraphPoints = Physics.OverlapSphere(point.transform.position, radius, ~layerMask, QueryTriggerInteraction.Collide);
+                closeGraphPoints = Physics.OverlapSphere(point.Position, radius, ~layerMask, QueryTriggerInteraction.Collide);
             }
             foreach (var closePoint in closeGraphPoints)
             {
-                var graphPoint = closePoint.gameObject.GetComponent<GraphPoint>();
+                var graphPoint = closePoint.gameObject.GetComponent<CombinedGraph.CombinedGraphPoint>();
                 if (graphPoint != null)
                 {
                     nodes[point].neighbours.Add(nodes[graphPoint]);
@@ -60,18 +60,18 @@ public class Geodesic : MonoBehaviour
 
     private class Node
     {
-        public GraphPoint thisPoint;
+        public CombinedGraph.CombinedGraphPoint thisPoint;
         public List<Node> neighbours;
         public Vector3 pos;
-        public Node(GraphPoint thisPoint)
+        public Node(CombinedGraph.CombinedGraphPoint thisPoint)
         {
             this.thisPoint = thisPoint;
-            pos = thisPoint.transform.position;
+            pos = thisPoint.Position;
             neighbours = new List<Node>();
         }
     }
 
-    private List<Node> AStar(GraphPoint from, GraphPoint to)
+    private List<Node> AStar(CombinedGraph.CombinedGraphPoint from, CombinedGraph.CombinedGraphPoint to)
     {
         var start = nodes[from];
         var goal = nodes[to];
@@ -102,7 +102,7 @@ public class Geodesic : MonoBehaviour
                     current = node;
                 }
             }
-            print("eval " + current.thisPoint.label);
+            print("eval " + current.thisPoint.Label);
 
             if (ReferenceEquals(current, goal))
             {
