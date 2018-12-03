@@ -1,5 +1,4 @@
-﻿using SQLiter;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,10 +7,6 @@ using Unity.Jobs;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Jobs;
-using System.Text;
-using System.Text.RegularExpressions;
-using VRTK;
-using TMPro;
 
 /// <summary>
 /// A graph that contain one or more <see cref="CombinedCluster"/> that in turn contain one or more <see cref="CombinedGraphPoint"/>.
@@ -32,7 +27,11 @@ public class CombinedGraphGenerator : MonoBehaviour
     private GraphManager graphManager;
     private int nbrOfClusters;
     private int nbrOfMaxPointsPerClusters;
-    private Vector3[] graphPositions;
+    private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
+                                            new Vector3(-0.9f, 1.1f, -0.4f),
+                                            new Vector3(-0.9f, 1.1f, 0.4f),
+                                            new Vector3(-0.2f, 1.1f, 0.95f)
+                                        };
     private int graphCount;
 
     private GameManager gameManager;
@@ -41,23 +40,14 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
-        graphPositions = new Vector3[4];
-        graphPositions[0] = new Vector3(0, 1, -1);
-        graphPositions[1] = new Vector3(-0.5f, 1, 0);
-        graphPositions[2] = new Vector3(0, 1, 1);
-        graphPositions[3] = new Vector3(1, 1, 1);
     }
     public CombinedGraph CreateCombinedGraph()
     {
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
-        newGraph.transform.position = graphPositions[graphCount];
+        newGraph.transform.position = startPositions[graphCount % 4];
         newGraph.referenceManager = referenceManager;
         isCreating = true;
-        if (!(graphCount >= graphPositions.Length - 1))
-        {
-            graphCount++;
-        }
-
+        graphCount++;
         return newGraph;
     }
 
@@ -72,6 +62,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         CombinedGraph.CombinedGraphPoint gp = new CombinedGraph.CombinedGraphPoint(cell.Label, x, y, z, newGraph);
         newGraph.points[cell.Label] = gp;
+        newGraph.pointsPositions.Add(new Vector3(x, y, z));
         cell.AddGraphPoint(gp);
         UpdateMinMaxCoords(x, y, z);
         //print("adding points to - " + newGraph.gameObject.name + " - " + newGraph.points.Count);

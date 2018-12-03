@@ -4,7 +4,7 @@ public class Selectable : MonoBehaviour
 {
 
     public SelectionToolHandler selectionToolHandler;
-    public GraphPoint graphPoint;
+    public CombinedGraph.CombinedGraphPoint graphPoint;
 
     //private void OnTriggerEnter(Collider other)
     //{

@@ -102,7 +102,7 @@ public class LoaderController : MonoBehaviour
         }
         else
         {
-            finalScale = new Vector3(3f, startScale.y, 3f);
+            finalScale = new Vector3(1f, startScale.y, 1f);
         }
         if (moving)
         {

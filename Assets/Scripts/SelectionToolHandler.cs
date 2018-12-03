@@ -220,7 +220,12 @@ public class SelectionToolHandler : MonoBehaviour
         int oldGroup = graphPoint.group;
         if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
         {
-            graphPoint.Recolor(Colors[newGroup], newGroup);
+            foreach (CombinedGraph graph in graphManager.graphs)
+            {
+                CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
+                gp.Recolor(Colors[newGroup], newGroup);
+            }
+            //graphPoint.Recolor(Colors[newGroup], newGroup);
         }
         else
         {

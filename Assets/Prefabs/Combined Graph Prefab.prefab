@@ -351,11 +351,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a727b1e637cd1a942874ac7080c88fa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonPrefab: {fileID: 0}
+  skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
+    type: 2}
   graphManager: {fileID: 0}
   graphNameText: {fileID: 114566603823957088}
   graphInfoText: {fileID: 114460485008951306}
   GraphActive: 1
+  pointsPositions: []
   referenceManager: {fileID: 0}
   textureWidth: 0
   textureHeight: 0

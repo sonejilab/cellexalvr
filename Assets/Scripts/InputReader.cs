@@ -306,11 +306,6 @@ public class InputReader : MonoBehaviour
 
         //}
 
-        // more_cells
-        //CellexalEvents.GraphsLoaded.Invoke();
-        loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 8f);
-        // more_cells
         ReadAttributeFiles(path);
         ReadBooleanExpressionFiles(path);
 
@@ -318,7 +313,6 @@ public class InputReader : MonoBehaviour
         loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
         if (debug)
         {
-
             ReadNetworkFiles(0);
             loaderController.DestroyFolders();
         }

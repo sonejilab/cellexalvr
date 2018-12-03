@@ -14,14 +14,14 @@ public class SelectionToolCollider : MonoBehaviour
         var cubeOnLine = other.gameObject.GetComponent<Selectable>();
         if (cubeOnLine != null)
         {
-            // more_cells selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
+            selectionToolHandler.AddGraphpointToSelection(cubeOnLine.graphPoint);
             int group = selectionToolHandler.currentColorIndex;
             foreach (Selectable sel in cubeOnLine.graphPoint.lineBetweenCellsCubes)
             {
                 sel.GetComponent<Renderer>().material.color = selectionToolHandler.Colors[group];
             }
-            selectionToolHandler.referenceManager.gameManager.InformCubeColoured(cubeOnLine.graphPoint.GraphName,
-                                                                                    cubeOnLine.graphPoint.label, group, selectionToolHandler.Colors[group]);
+            selectionToolHandler.referenceManager.gameManager.InformCubeColoured(cubeOnLine.graphPoint.parent.name,
+                                                                                    cubeOnLine.graphPoint.Label, group, selectionToolHandler.Colors[group]);
         }
     }
 

@@ -5,7 +5,7 @@
 public class ScreenshotButton : CellexalButton
 {
 
-    public Camera camera;
+    public GameObject camera;
     public GameObject canvas;
 
     protected override string Description

@@ -25,8 +25,9 @@ public class CombinedGraph : MonoBehaviour
     public TextMeshPro graphInfoText;
     public Boolean GraphActive = true;
     public Dictionary<string, CombinedGraphPoint> points = new Dictionary<string, CombinedGraphPoint>();
-    private List<Vector3> pointsPositions;
+    public List<Vector3> pointsPositions;
     public ReferenceManager referenceManager;
+
     private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
     private Vector3 startPosition;
@@ -214,6 +215,8 @@ public class CombinedGraph : MonoBehaviour
         public CombinedGraph parent;
         public int group;
         public bool unconfirmedInSelection;
+        public List<Selectable> lineBetweenCellsCubes;
+        public Vector3 WorldPosition;
 
         public CombinedGraphPoint(string label, float x, float y, float z, CombinedGraph parent)
         {
@@ -224,6 +227,7 @@ public class CombinedGraph : MonoBehaviour
             group = -1;
             unconfirmedInSelection = false;
             indexCounter++;
+            lineBetweenCellsCubes = new List<Selectable>();
         }
 
         public override string ToString()
@@ -576,7 +580,7 @@ public class CombinedGraph : MonoBehaviour
         CellexalLog.Log("Started reading " + path);
         for (int i = 0; i < points.Count; ++i)
         {
-            vertices[i] = pointsPositions[i];
+            vertices[i] = ScaleCoordinates(pointsPositions[i]);
         }
 
         while (!streamReader.EndOfStream)
