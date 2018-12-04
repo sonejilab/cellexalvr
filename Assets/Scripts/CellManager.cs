@@ -697,18 +697,18 @@ public class CellManager : MonoBehaviour
             cell.ColorByAttribute(attributeType, color);
             //GraphPoint gp = cell.GraphPoints[0];
             CombinedGraph.CombinedGraphPoint gp = cell.CombinedGraphPoints[0];
-            //if (cell.Attributes.ContainsKey(attributeType.ToLower()))
-            //{
-            //    if (color)
-            //    {
-            //        selectionList.Add(new KeyValuePair<GraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
-            //        //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], cell.Attributes[attributeType.ToLower()], false, g.Material.color);
-            //    }
-            //    if (!color)
-            //    {
-            //        selectionList.Remove(new KeyValuePair<GraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
-            //    }
-            //}
+            if (cell.Attributes.ContainsKey(attributeType.ToLower()))
+            {
+                if (color)
+                {
+                    selectionList.Add(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                    //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], cell.Attributes[attributeType.ToLower()], false, g.Material.color);
+                }
+                if (!color)
+                {
+                    selectionList.Remove(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                }
+            }
         }
 
     }
@@ -717,7 +717,7 @@ public class CellManager : MonoBehaviour
     {
         foreach (KeyValuePair<CombinedGraph.CombinedGraphPoint, int> entry in selectionList)
         {
-            graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false, graphManager.AttributeMaterials[entry.Value].color);
+            //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false, graphManager.AttributeMaterials[entry.Value].color);
         }
     }
 

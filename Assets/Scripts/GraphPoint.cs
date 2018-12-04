@@ -117,7 +117,7 @@ public class GraphPoint : MonoBehaviour
         CustomColor = false;
         if (outline)
         {
-            SetAllSameGraphPointsMaterial(Graph.graphManager.GroupingMaterialsOutline[group]);
+            //SetAllSameGraphPointsMaterial(Graph.graphManager.GroupingMaterialsOutline[group]);
         }
         else
         {
@@ -127,7 +127,7 @@ public class GraphPoint : MonoBehaviour
             }
             else
             {
-                SetAllSameGraphPointsMaterial(Graph.graphManager.GroupingMaterials[group]);
+                //SetAllSameGraphPointsMaterial(Graph.graphManager.GroupingMaterials[group]);
             }
         }
     }
@@ -146,7 +146,7 @@ public class GraphPoint : MonoBehaviour
         }
         else
         {
-            SetAllSameGraphPointsMaterial(Graph.graphManager.GetAdditionalGroupingMaterial(color, outline));
+            //SetAllSameGraphPointsMaterial(Graph.graphManager.GetAdditionalGroupingMaterial(color, outline));
         }
     }
 

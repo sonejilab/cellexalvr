@@ -32,21 +32,58 @@ public class CombinedGraphGenerator : MonoBehaviour
     private GraphManager graphManager;
     private int nbrOfClusters;
     private int nbrOfMaxPointsPerClusters;
+    private Color[] graphpointColors;
+    //private Texture2D expressionColorTexture;
 
     private GameManager gameManager;
 
-    private void Start()
+    private void Awake()
     {
         graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
+        CellexalEvents.ConfigLoaded.AddListener(CreateShaderColors);
     }
     public CombinedGraph CreateCombinedGraph()
     {
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
         newGraph.referenceManager = referenceManager;
         isCreating = true;
-
         return newGraph;
+    }
+
+    private void CreateShaderColors()
+    {
+        Color lowColor = CellexalConfig.LowExpressionColor;
+        Color midColor = CellexalConfig.MidExpressionColor;
+        Color highColor = CellexalConfig.HighExpressionColor;
+        int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
+        int nbrOfSelectionColors = CellexalConfig.SelectionToolColors.Length;
+
+        if (nbrOfExpressionColors + nbrOfSelectionColors > 255)
+        {
+            CellexalLog.Log("ERROR: Can not have more than 255 graphpoint colors. Reducing to 255. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.");
+            nbrOfExpressionColors = 255 - nbrOfSelectionColors;
+        }
+        else if (nbrOfExpressionColors < 3)
+        {
+            CellexalLog.Log("ERROR: Can not have less than 3 gene expression colors. Defaulting to 30. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.");
+            nbrOfExpressionColors = 30;
+        }
+        int halfNbrOfExpressionColors = nbrOfExpressionColors / 2;
+
+        Color[] lowMidExpressionColors = CellexalExtensions.Extensions.InterpolateColors(lowColor, midColor, halfNbrOfExpressionColors);
+        Color[] midHighExpressionColors = CellexalExtensions.Extensions.InterpolateColors(midColor, highColor, nbrOfExpressionColors - halfNbrOfExpressionColors);
+
+
+        graphpointColors = new Color[256];
+        Array.Copy(lowMidExpressionColors, graphpointColors, halfNbrOfExpressionColors);
+        Array.Copy(midHighExpressionColors, 0, graphpointColors, halfNbrOfExpressionColors, nbrOfExpressionColors - halfNbrOfExpressionColors);
+        Array.Copy(CellexalConfig.SelectionToolColors, 0, graphpointColors, nbrOfExpressionColors, nbrOfSelectionColors);
+
+        // reservered colors
+        graphpointColors[255] = Color.white;
+
+
     }
 
     /// <summary>
@@ -430,8 +467,24 @@ public class CombinedGraphGenerator : MonoBehaviour
 
         newGraph.textureWidth = nbrOfMaxPointsPerClusters;
         newGraph.textureHeight = nbrOfClusters;
-        newGraph.texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
-        newGraph.combinedGraphPointClusters[0].GetComponent<Renderer>().sharedMaterial.mainTexture = newGraph.texture;
+        Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
+
+        for (int i = 0; i < texture.width; ++i)
+        {
+            for (int j = 0; j < texture.height; ++j)
+            {
+                texture.SetPixel(i, j, Color.red);
+            }
+        }
+        texture.Apply();
+        newGraph.texture = texture;
+        var sharedMaterial = newGraph.combinedGraphPointClusters[0].GetComponent<Renderer>().sharedMaterial;
+        sharedMaterial.mainTexture = newGraph.texture;
+
+        Shader combinedGraphpointShader = sharedMaterial.shader;
+
+        //sharedMaterial.SetTexture("_ExpressionColorTexture", expressionColorTexture);
+        sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
 
         stopwatch.Stop();
         CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName, stopwatch.Elapsed.ToString()));

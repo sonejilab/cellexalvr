@@ -217,14 +217,7 @@ public class SelectionToolHandler : MonoBehaviour
         // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
         int oldGroup = graphPoint.group;
-        if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
-        {
-            graphPoint.Recolor(Colors[newGroup], newGroup);
-        }
-        else
-        {
-            graphPoint.Recolor(color);
-        }
+        graphPoint.RecolorSelectionColor(newGroup, true);
         graphPoint.group = newGroup;
         // renderer.material.color = Colors[newGroup];
         //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
@@ -574,7 +567,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         foreach (CombinedGraph.CombinedGraphPoint other in selectedCells)
         {
-            other.Recolor(Color.white, -1);
+            other.ResetColor();
         }
         CellexalEvents.SelectionCanceled.Invoke();
         historyIndexOffset = selectionHistory.Count;

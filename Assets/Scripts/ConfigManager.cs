@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 
 /// <summary>
-/// Static class that represents the config file and its contents.
+/// Static class that represents the config file and its contents. To properly get a value from the config when the program is started, subscribe to the <see cref="CellexalEvents.ConfigLoaded"/> event in Awake.
 /// </summary>
 public static class CellexalConfig
 {

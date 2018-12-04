@@ -77,16 +77,16 @@ public class Cell
             {
                 if (color)
                 {
-                    g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
+                    //g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
                     //g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
                     //Debug.Log("ADD GROUP - " + Attributes[attributeType.ToLower()]);
                     //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(GraphPoints[0], Attributes[attributeType.ToLower()], false, g.Material.color);
                 }
-                    
+
                 else
                 {
                     //g.Material = graphManager.defaultGraphPointMaterial;
-                    g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
+                    //g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
                 }
             }
         }
@@ -116,7 +116,7 @@ public class Cell
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.Material = graphManager.AttributeMaterials[0];
+                //g.Material = graphManager.AttributeMaterials[0];
             }
         }
     }
@@ -147,7 +147,7 @@ public class Cell
             {
                 expression = CellexalConfig.NumberOfExpressionColors - 1;
             }
-            g.Material = graphManager.GeneExpressionMaterials[expression];
+            //g.Material = graphManager.GeneExpressionMaterials[expression];
         }
     }
 
@@ -188,7 +188,7 @@ public class Cell
                 expression = CellexalConfig.NumberOfExpressionColors - 1;
             }
 
-            tempMat = graphManager.GeneExpressionMaterials[expression];
+            //tempMat = graphManager.GeneExpressionMaterials[expression];
             g.Material = g.transparentMaterial;
         }
     }
@@ -202,7 +202,7 @@ public class Cell
     {
         foreach (GraphPoint g in GraphPoints)
         {
-            g.Material = graphManager.GeneExpressionMaterials[Facs[facsName.ToLower()]];
+            //g.Material = graphManager.GeneExpressionMaterials[Facs[facsName.ToLower()]];
         }
     }
 
@@ -226,8 +226,8 @@ public class Cell
         foreach (GraphPoint g in GraphPoints)
         {
             g.CurrentGroup = group;
-            if (changeColor)
-                g.Material = graphManager.GroupingMaterials[group];
+            if (changeColor) { }
+            //g.Material = graphManager.GroupingMaterials[group];
         }
     }
 
@@ -353,14 +353,14 @@ public class Cell
                 {
                     expression = 29;
                 }
-                g.Material = graphManager.GeneExpressionMaterials[expression];
+                //g.Material = graphManager.GeneExpressionMaterials[expression];
             }
         }
         else
         {
             foreach (GraphPoint g in GraphPoints)
             {
-                g.Material = graphManager.GeneExpressionMaterials[0];
+                //g.Material = graphManager.GeneExpressionMaterials[0];
             }
         }
     }

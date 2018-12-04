@@ -31,16 +31,17 @@ namespace CellexalExtensions
         public static UnityEngine.Color[] InterpolateColors(UnityEngine.Color color1, UnityEngine.Color color2, int numColors)
         {
             var colors = new UnityEngine.Color[numColors];
-            if (numColors == 0)
+            if (numColors < 2)
             {
-                CellexalError.SpawnError("Error when interpolating colors", "Could not interpolate 0 colors.");
+                CellexalError.SpawnError("Error when interpolating colors", "Can not interpolate less than 2 colors.");
                 return null;
             }
 
-            float lowMidDeltaR = (color2.r * color2.r - color1.r * color1.r) / numColors;
-            float lowMidDeltaG = (color2.g * color2.g - color1.g * color1.g) / numColors;
-            float lowMidDeltaB = (color2.b * color2.b - color1.b * color1.b) / numColors;
+            int divider = numColors - 1;
 
+            float lowMidDeltaR = (color2.r * color2.r - color1.r * color1.r) / divider;
+            float lowMidDeltaG = (color2.g * color2.g - color1.g * color1.g) / divider;
+            float lowMidDeltaB = (color2.b * color2.b - color1.b * color1.b) / divider;
 
             for (int i = 0; i < numColors; ++i)
             {

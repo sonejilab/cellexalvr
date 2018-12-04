@@ -66,6 +66,7 @@ public class CombinedGraph : MonoBehaviour
     public int textureHeight;
     public Texture2D texture;
     private bool textureChanged;
+    private int nbrOfExpressionColors;
     public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
     public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
     public Vector3 diffCoordValues;
@@ -94,6 +95,7 @@ public class CombinedGraph : MonoBehaviour
         combinedGraphGenerator = GetComponent<CombinedGraphGenerator>();
         selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
         startPosition = transform.position;
+        nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
     }
 
     private void Update()
@@ -249,15 +251,20 @@ public class CombinedGraph : MonoBehaviour
             textureCoord = newPos;
         }
 
-        public void Recolor(Color color)
+        public void RecolorGeneExpression(int i, bool outline)
         {
-            parent.RecolorGraphPoint(this, color);
+            parent.RecolorGraphPointGeneExpression(this, i, outline);
         }
 
-        public void Recolor(Color color, int group)
+        public void RecolorSelectionColor(int i, bool outline)
         {
-            parent.RecolorGraphPoint(this, color);
-            this.group = group;
+            parent.RecolorGraphPointSelectionColor(this, i, outline);
+            group = i;
+        }
+
+        public void ResetColor()
+        {
+            parent.ResetGraphPointColor(this);
         }
 
         public Color GetColor()
@@ -431,7 +438,7 @@ public class CombinedGraph : MonoBehaviour
         {
             if (point != null)
             {
-                point.Recolor(color, 1);
+                point.RecolorSelectionColor(0, false);
             }
             foreach (var child in children)
             {
@@ -750,22 +757,42 @@ public class CombinedGraph : MonoBehaviour
     /// <summary>
     /// Recolors a single graphpoint.
     /// </summary>
-    /// <param name="label">The graphpoint's label (the cell's name).</param>
-    /// <param name="color">The graphpoint's new color.</param>
-    public void RecolorGraphPoint(string label, Color color)
-    {
-        RecolorGraphPoint(points[label], color);
-    }
-
-    /// <summary>
-    /// Recolors a single graphpoint.
-    /// </summary>
     /// <param name="combinedGraphPoint">The graphpoint to recolor.</param>
     /// <param name="color">The graphpoint's new color.</param>
-    public void RecolorGraphPoint(CombinedGraphPoint combinedGraphPoint, Color color)
+    public void RecolorGraphPointGeneExpression(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        texture.SetPixel(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, color);
+        byte greenChannel = (byte)(outline ? 1 : 0);
+        if (i == -1)
+        {
+            i = 255;
+        }
+        Color32 finalColor = new Color32((byte)i, greenChannel, 0, 255);
+        texture.SetPixels32(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
         textureChanged = true;
+    }
+
+    public void RecolorGraphPointSelectionColor(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
+    {
+        byte greenChannel = (byte)(outline ? 1 : 0);
+        if (i == -1)
+        {
+            i = 255;
+        }
+        byte redChannel = (byte)(nbrOfExpressionColors + i);
+        Color32 finalColor = new Color32(redChannel, greenChannel, 0, 255);
+        texture.SetPixels32(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
+        textureChanged = true;
+    }
+
+    public void ResetGraphPointColor(CombinedGraphPoint combinedGraphPoint)
+    {
+        texture.SetPixels32(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
+        textureChanged = true;
+    }
+
+    public CombinedGraphPoint FindGraphPoint(string label)
+    {
+        return points[label];
     }
 
     /// <summary>
@@ -778,39 +805,57 @@ public class CombinedGraph : MonoBehaviour
         // Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
         // System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
 
-        UnityEngine.Color lowColor = CellexalConfig.LowExpressionColor;
-        UnityEngine.Color midColor = CellexalConfig.MidExpressionColor;
-        UnityEngine.Color highColor = CellexalConfig.HighExpressionColor;
-        int numExpressionColors = CellexalConfig.NumberOfExpressionColors;
+        //UnityEngine.Color lowColor = CellexalConfig.LowExpressionColor;
+        //UnityEngine.Color midColor = CellexalConfig.MidExpressionColor;
+        //UnityEngine.Color highColor = CellexalConfig.HighExpressionColor;
+        //int numExpressionColors = CellexalConfig.NumberOfExpressionColors;
 
-        Color[] lowMidExpressionBrushes = CellexalExtensions.Extensions.InterpolateColors(lowColor, midColor, numExpressionColors / 2);
-        Color[] midHighExpressionBrushes = CellexalExtensions.Extensions.InterpolateColors(midColor, highColor, numExpressionColors - numExpressionColors / 2);
-        Color[] expressionBrushes = new Color[numExpressionColors];
-        Array.Copy(lowMidExpressionBrushes, expressionBrushes, numExpressionColors / 2);
-        Array.Copy(midHighExpressionBrushes, 0, expressionBrushes, numExpressionColors / 2, numExpressionColors - numExpressionColors / 2);
+        //Color[] lowMidExpressionBrushes = CellexalExtensions.Extensions.InterpolateColors(lowColor, midColor, numExpressionColors / 2);
+        //Color[] midHighExpressionBrushes = CellexalExtensions.Extensions.InterpolateColors(midColor, highColor, numExpressionColors - numExpressionColors / 2);
+        //Color[] expressionBrushes = new Color[numExpressionColors];
+        //Array.Copy(lowMidExpressionBrushes, expressionBrushes, numExpressionColors / 2);
+        //Array.Copy(midHighExpressionBrushes, 0, expressionBrushes, numExpressionColors / 2, numExpressionColors - numExpressionColors / 2);
 
         // cells that have 0 (or whatever the lowest is) expression are not in the results
         // fill entire background with the lowest expression color
-        //graphics.FillRectangle(expressionBrushes[0], 0f, 0f, bitmapWidth, bitmapHeight);
+
+
         for (int i = 0; i < textureWidth; ++i)
         {
             for (int j = 0; j < textureHeight; ++j)
             {
-                texture.SetPixel(i, j, expressionBrushes[0]);
+                texture.SetPixel(i, j, Color.black);
             }
+        }
+        int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
+        Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
+        for (byte i = 0; i < nbrOfExpressionColors; ++i)
+        {
+            colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
         }
 
         foreach (CellExpressionPair pair in expressions)
         {
             Vector2Int pos = points[pair.Cell].textureCoord;
-            if (pair.Color >= expressionBrushes.Length)
+            int expressionColorIndex = pair.Color;
+            float outlined = 0;
+            if (pair.Color >= nbrOfExpressionColors)
             {
-                pair.Color = expressionBrushes.Length - 1;
+                outlined = 1 / 255f;
+                expressionColorIndex = nbrOfExpressionColors - 1;
             }
-            texture.SetPixel(pos.x, pos.y, expressionBrushes[pair.Color]);
+
+            texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
         }
 
         texture.Apply();
+        //var pixels = texture.GetPixels32(0);
+        //int[] hist = new int[nbrOfExpressionColors];
+        //for (int i = 0; i < pixels.Length; ++i)
+        //{
+        //    hist[pixels[i].r]++;
+        //}
+
         combinedGraphPointClusters[0].GetComponent<Renderer>().sharedMaterial.mainTexture = texture;
     }
 
