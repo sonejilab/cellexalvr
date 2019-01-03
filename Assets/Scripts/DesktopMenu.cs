@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The class represents the menu that opens when a user presses escape on their keyboard.
 /// </summary>
-class DesktopMenu : MonoBehaviour
+public class DesktopMenu : MonoBehaviour
 {
 
     public GameObject menu;

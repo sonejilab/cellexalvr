@@ -77,7 +77,7 @@ public class Cell
             {
                 if (color)
                 {
-                    //g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
+                    g.RecolorSelectionColor(Attributes[attributeType.ToLower()], false);
                     //g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
                     //Debug.Log("ADD GROUP - " + Attributes[attributeType.ToLower()]);
                     //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(GraphPoints[0], Attributes[attributeType.ToLower()], false, g.Material.color);
@@ -86,7 +86,7 @@ public class Cell
                 else
                 {
                     //g.Material = graphManager.defaultGraphPointMaterial;
-                    //g.Recolor(graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]].color, Attributes[attributeType.ToLower()]);
+                    g.ResetColor();
                 }
             }
         }
@@ -200,9 +200,9 @@ public class Cell
     /// <param name="facsName"> The index. </param>
     public void ColorByIndex(string facsName)
     {
-        foreach (GraphPoint g in GraphPoints)
+        foreach (CombinedGraph.CombinedGraphPoint g in CombinedGraphPoints)
         {
-            //g.Material = graphManager.GeneExpressionMaterials[Facs[facsName.ToLower()]];
+            g.RecolorGeneExpression(Facs[facsName.ToLower()], false);
         }
     }
 

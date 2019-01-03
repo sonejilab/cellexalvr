@@ -6,30 +6,36 @@ class LineBetweenTwoPoints : MonoBehaviour
 {
 
     public Transform t1, t2;
-    public GraphPoint graphPoint;
+    public CombinedGraph.CombinedGraphPoint graphPoint1;
+    public CombinedGraph.CombinedGraphPoint graphPoint2;
     public SelectionToolHandler selectionToolHandler;
     public Selectable cube;
 
     private LineRenderer lineRenderer;
     private Vector3 middle;
+    private Vector3 pos1, pos2; 
 
     private void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.SetPositions(new Vector3[] { t1.position, t2.position });
-        middle = (t1.position + t2.position) / 2f;
+        pos1 = t1.TransformPoint(graphPoint1.Position);
+        pos2 = t2.TransformPoint(graphPoint2.Position);
+        lineRenderer.SetPositions(new Vector3[] { pos1, pos2 });
+        middle = (pos1 + pos2) / 2f;
         cube.transform.position = middle;
         cube.selectionToolHandler = selectionToolHandler;
-        cube.graphPoint = graphPoint;
+        cube.graphPoint = graphPoint1;
     }
 
     private void Update()
     {
         if (t1.hasChanged || t2.hasChanged)
         {
-            lineRenderer.SetPosition(0, t1.position);
-            lineRenderer.SetPosition(1, t2.position);
-            middle = (t1.position + t2.position) / 2f;
+            pos1 = t1.TransformPoint(graphPoint1.Position);
+            pos2 = t2.TransformPoint(graphPoint2.Position);
+            lineRenderer.SetPosition(0, pos1);
+            lineRenderer.SetPosition(1, pos2);
+            middle = (pos1 + pos2) / 2f;
             cube.transform.position = middle;
         }
     }

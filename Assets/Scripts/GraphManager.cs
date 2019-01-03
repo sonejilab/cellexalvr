@@ -146,7 +146,24 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-
+    [ConsoleCommand("graphManager", "party")]
+    public void Party(int i)
+    {
+        if (i == 1)
+        {
+            foreach (CombinedGraph graph in graphs)
+            {
+                graph.Party();
+            }
+        }
+        else if (i == 0)
+        {
+            foreach (CombinedGraph graph in graphs)
+            {
+                graph.ResetColors();
+            }
+        }
+    }
 
 
     /// <summary>

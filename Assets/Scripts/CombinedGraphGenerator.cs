@@ -1,5 +1,4 @@
-﻿using SQLiter;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,10 +7,6 @@ using Unity.Jobs;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Jobs;
-using System.Text;
-using System.Text.RegularExpressions;
-using VRTK;
-using TMPro;
 
 /// <summary>
 /// A graph that contain one or more <see cref="CombinedCluster"/> that in turn contain one or more <see cref="CombinedGraphPoint"/>.
@@ -32,8 +27,14 @@ public class CombinedGraphGenerator : MonoBehaviour
     private GraphManager graphManager;
     private int nbrOfClusters;
     private int nbrOfMaxPointsPerClusters;
-    private Color[] graphpointColors;
-    //private Texture2D expressionColorTexture;
+    //private Color[] graphpointColors;
+    private Texture2D graphPointColors;
+    private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
+                                            new Vector3(-0.9f, 1.1f, -0.4f),
+                                            new Vector3(-0.9f, 1.1f, 0.4f),
+                                            new Vector3(-0.2f, 1.1f, 0.95f)
+                                        };
+    private int graphCount;
 
     private GameManager gameManager;
 
@@ -43,11 +44,23 @@ public class CombinedGraphGenerator : MonoBehaviour
         gameManager = referenceManager.gameManager;
         CellexalEvents.ConfigLoaded.AddListener(CreateShaderColors);
     }
+
+    private void Update()
+    {
+        foreach (CombinedGraph graph in graphManager.graphs)
+        {
+            //graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
+            graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+        }
+    }
+
     public CombinedGraph CreateCombinedGraph()
     {
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
+        newGraph.transform.position = startPositions[graphCount % 4];
         newGraph.referenceManager = referenceManager;
         isCreating = true;
+        graphCount++;
         return newGraph;
     }
 
@@ -75,15 +88,35 @@ public class CombinedGraphGenerator : MonoBehaviour
         Color[] midHighExpressionColors = CellexalExtensions.Extensions.InterpolateColors(midColor, highColor, nbrOfExpressionColors - halfNbrOfExpressionColors);
 
 
-        graphpointColors = new Color[256];
-        Array.Copy(lowMidExpressionColors, graphpointColors, halfNbrOfExpressionColors);
-        Array.Copy(midHighExpressionColors, 0, graphpointColors, halfNbrOfExpressionColors, nbrOfExpressionColors - halfNbrOfExpressionColors);
-        Array.Copy(CellexalConfig.SelectionToolColors, 0, graphpointColors, nbrOfExpressionColors, nbrOfSelectionColors);
+        //graphpointColors = new Color[256];
+        //Array.Copy(lowMidExpressionColors, graphpointColors, halfNbrOfExpressionColors);
+        //Array.Copy(midHighExpressionColors, 0, graphpointColors, halfNbrOfExpressionColors, nbrOfExpressionColors - halfNbrOfExpressionColors);
+        //Array.Copy(CellexalConfig.SelectionToolColors, 0, graphpointColors, nbrOfExpressionColors, nbrOfSelectionColors);
 
-        // reservered colors
-        graphpointColors[255] = Color.white;
+        //// reservered colors
+        //graphpointColors[255] = Color.white;
 
+        graphPointColors = new Texture2D(256, 1, TextureFormat.ARGB32, false);
+        int pixel = 0;
+        for (int i = 0; i < halfNbrOfExpressionColors; ++i)
+        {
+            graphPointColors.SetPixel(pixel, 0, lowMidExpressionColors[i]);
+            pixel++;
+        }
+        for (int i = 0; i < nbrOfExpressionColors - halfNbrOfExpressionColors; ++i)
+        {
+            graphPointColors.SetPixel(pixel, 0, midHighExpressionColors[i]);
+            pixel++;
+        }
+        for (int i = 0; i < nbrOfSelectionColors; ++i)
+        {
+            graphPointColors.SetPixel(pixel, 0, CellexalConfig.SelectionToolColors[i]);
+            pixel++;
+        }
 
+        graphPointColors.SetPixel(255, 0, Color.white);
+        graphPointColors.filterMode = FilterMode.Point;
+        graphPointColors.Apply();
     }
 
     /// <summary>
@@ -97,6 +130,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         CombinedGraph.CombinedGraphPoint gp = new CombinedGraph.CombinedGraphPoint(cell.Label, x, y, z, newGraph);
         newGraph.points[cell.Label] = gp;
+        newGraph.pointsPositions.Add(new Vector3(x, y, z));
         cell.AddGraphPoint(gp);
         UpdateMinMaxCoords(x, y, z);
         //print("adding points to - " + newGraph.gameObject.name + " - " + newGraph.points.Count);
@@ -468,6 +502,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         newGraph.textureWidth = nbrOfMaxPointsPerClusters;
         newGraph.textureHeight = nbrOfClusters;
         Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
+        texture.filterMode = FilterMode.Point;
 
         for (int i = 0; i < texture.width; ++i)
         {
@@ -483,8 +518,8 @@ public class CombinedGraphGenerator : MonoBehaviour
 
         Shader combinedGraphpointShader = sharedMaterial.shader;
 
-        //sharedMaterial.SetTexture("_ExpressionColorTexture", expressionColorTexture);
-        sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
+        sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+        //sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
 
         stopwatch.Stop();
         CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName, stopwatch.Elapsed.ToString()));

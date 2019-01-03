@@ -88,6 +88,7 @@ public class ReferenceManager : MonoBehaviour
     public GameObject calculatorCluster;
     public ConsoleManager consoleManager;
     public TurnOffThoseLights turnOffThoseLights;
+    public DesktopMenu desktopMenu;
     #endregion
 
     #region GeneKeyboard

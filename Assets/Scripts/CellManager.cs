@@ -717,7 +717,7 @@ public class CellManager : MonoBehaviour
     {
         foreach (KeyValuePair<CombinedGraph.CombinedGraphPoint, int> entry in selectionList)
         {
-            //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false, graphManager.AttributeMaterials[entry.Value].color);
+            selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false);
         }
     }
 
@@ -832,45 +832,48 @@ public class CellManager : MonoBehaviour
     /// <param name="points"> The graphpoints to draw the lines from. </param>
     public void DrawLinesBetweenGraphPoints(List<CombinedGraph.CombinedGraphPoint> points)
     {
-        // more_cells   foreach (GraphPoint g in points)
-        // more_cells   {
-        // more_cells       Color color = g.Material.color;
-        // more_cells       foreach (GraphPoint sameCell in g.Cell.GraphPoints)
-        // more_cells       {
-        // more_cells           if (sameCell != g)
-        // more_cells           {
-        // more_cells               LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-        // more_cells               line.t1 = sameCell.transform;
-        // more_cells               line.t2 = g.transform;
-        // more_cells               line.graphPoint = g;
-        // more_cells               line.selectionToolHandler = selectionToolHandler;
-        // more_cells               LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-        // more_cells               lineRenderer.startColor = color;
-        // more_cells               lineRenderer.endColor = color;
-        // more_cells               lines.Add(line.gameObject);
-        // more_cells               sameCell.Graph.Lines.Add(line.gameObject);
-        // more_cells               g.Graph.Lines.Add(line.gameObject);
-        // more_cells               if (!sameCell.Graph.GraphActive)
-        // more_cells               {
-        // more_cells                   line.gameObject.SetActive(false);
-        // more_cells               }
-        // more_cells               g.lineBetweenCellsCubes.Add(line.cube);
-        // more_cells           }
-        // more_cells       }
-        // more_cells   }
+        foreach (CombinedGraph.CombinedGraphPoint g in points)
+        {
+            Color color = g.GetColor();
+            foreach (CombinedGraph.CombinedGraphPoint sameCell in cells[g.Label].CombinedGraphPoints)
+            {
+                if (sameCell != g)
+                {
+                    LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
+                    line.graphPoint1 = g;
+                    line.graphPoint2 = sameCell;
+                    line.selectionToolHandler = selectionToolHandler;
+                    LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+                    //lineRenderer.useWorldSpace = false;
+                    line.t1 = g.parent.transform;
+                    line.t2 = sameCell.parent.transform;
+                    lineRenderer.startColor = color;
+                    lineRenderer.endColor = color;
+                    lines.Add(line.gameObject);
+                    sameCell.parent.Lines.Add(line.gameObject);
+                    g.parent.Lines.Add(line.gameObject);
+                    if (!sameCell.parent.GraphActive)
+                    {
+                        line.gameObject.SetActive(false);
+                    }
+                    g.lineBetweenCellsCubes.Add(line.cube);
+                }
+            }
+        }
     }
 
-    public void DrawLinesBetweenGraphPoints(List<GraphPoint> points, Graph fromGraph, Graph toGraph)
+    public void DrawLinesBetweenGraphPoints(List<CombinedGraph.CombinedGraphPoint> points, CombinedGraph fromGraph, CombinedGraph toGraph)
     {
-        foreach (GraphPoint g in points)
+        foreach (CombinedGraph.CombinedGraphPoint g in points)
         {
-            Color color = g.Material.color;
-            var sourceCell = fromGraph.points[g.label];
-            var toCell = toGraph.points[g.label];
+            Color color = g.GetColor();
+            var sourceCell = fromGraph.points[g.Label];
+            var targetCell = toGraph.points[g.Label];
             LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-            line.t1 = toCell.transform;
-            line.t2 = sourceCell.transform;
-            line.graphPoint = sourceCell;
+            line.t1 = targetCell.parent.transform;
+            line.t2 = sourceCell.parent.transform;
+            line.graphPoint1 = sourceCell;
+            line.graphPoint2 = targetCell;
             line.selectionToolHandler = selectionToolHandler;
             LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
             lineRenderer.startColor = color;
@@ -878,11 +881,10 @@ public class CellManager : MonoBehaviour
             lines.Add(line.gameObject);
             fromGraph.Lines.Add(line.gameObject);
             toGraph.Lines.Add(line.gameObject);
-            if (!toCell.Graph.GraphActive)
+            if (!targetCell.parent.GraphActive)
             {
                 line.gameObject.SetActive(false);
             }
-
             g.lineBetweenCellsCubes.Add(line.cube);
         }
     }
@@ -895,7 +897,7 @@ public class CellManager : MonoBehaviour
         foreach (GameObject line in lines)
         {
             Destroy(line, 0.05f);
-            line.GetComponent<LineBetweenTwoPoints>().graphPoint.lineBetweenCellsCubes.Clear();
+            line.GetComponent<LineBetweenTwoPoints>().graphPoint1.lineBetweenCellsCubes.Clear();
         }
         lines.Clear();
         graphManager.ClearLinesBetweenGraphs();

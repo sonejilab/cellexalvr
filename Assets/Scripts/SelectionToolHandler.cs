@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using CellexalExtensions;
 using UnityEngine;
@@ -217,7 +218,20 @@ public class SelectionToolHandler : MonoBehaviour
         // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
         int oldGroup = graphPoint.group;
-        graphPoint.RecolorSelectionColor(newGroup, true);
+
+        if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
+        {
+            foreach (CombinedGraph graph in graphManager.graphs)
+            {
+                CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
+                graphPoint.RecolorSelectionColor(newGroup, true);
+            }
+            //graphPoint.Recolor(Colors[newGroup], newGroup);
+        }
+        else
+        {
+            graphPoint.RecolorSelectionColor(newGroup, true);
+        }
         graphPoint.group = newGroup;
         // renderer.material.color = Colors[newGroup];
         //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
@@ -269,7 +283,7 @@ public class SelectionToolHandler : MonoBehaviour
             else
             {
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
-                selectedCells.Remove(graphPoint);
+                //selectedCells.Remove(graphPoint);
                 selectedCells.Add(graphPoint);
                 groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
                 HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
@@ -501,7 +515,8 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpSelectionToTextFile();
         lastSelectedCells.Clear();
-        foreach (CombinedGraph.CombinedGraphPoint gp in selectedCells)
+        IEnumerable<CombinedGraph.CombinedGraphPoint> uniqueCells = selectedCells.Reverse<CombinedGraph.CombinedGraphPoint>().Distinct().Reverse() ;
+        foreach (CombinedGraph.CombinedGraphPoint gp in uniqueCells)
         {
             // more_cells   if (gp.CustomColor)
             // more_cells       gp.SetOutLined(false, gp.Material.color);

@@ -23,10 +23,11 @@ public class CombinedGraph : MonoBehaviour
     public GraphManager graphManager;
     public TextMeshPro graphNameText;
     public TextMeshPro graphInfoText;
-    public Boolean GraphActive = true;
+    public bool GraphActive = true;
     public Dictionary<string, CombinedGraphPoint> points = new Dictionary<string, CombinedGraphPoint>();
-    private List<Vector3> pointsPositions;
+    public List<Vector3> pointsPositions;
     public ReferenceManager referenceManager;
+
     private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
     private Vector3 startPosition;
@@ -216,6 +217,8 @@ public class CombinedGraph : MonoBehaviour
         public CombinedGraph parent;
         public int group;
         public bool unconfirmedInSelection;
+        public List<Selectable> lineBetweenCellsCubes;
+        public Vector3 WorldPosition;
 
         public CombinedGraphPoint(string label, float x, float y, float z, CombinedGraph parent)
         {
@@ -226,6 +229,7 @@ public class CombinedGraph : MonoBehaviour
             group = -1;
             unconfirmedInSelection = false;
             indexCounter++;
+            lineBetweenCellsCubes = new List<Selectable>();
         }
 
         public override string ToString()
@@ -583,7 +587,7 @@ public class CombinedGraph : MonoBehaviour
         CellexalLog.Log("Started reading " + path);
         for (int i = 0; i < points.Count; ++i)
         {
-            vertices[i] = pointsPositions[i];
+            vertices[i] = ScaleCoordinates(pointsPositions[i]);
         }
 
         while (!streamReader.EndOfStream)
@@ -721,7 +725,7 @@ public class CombinedGraph : MonoBehaviour
         {
             for (int j = 0; j < textureHeight; ++j)
             {
-                texture.SetPixel(i, j, Color.white);
+                texture.SetPixel(i, j, Color.red);
             }
         }
         texture.Apply();
@@ -736,6 +740,18 @@ public class CombinedGraph : MonoBehaviour
     public Color GetGraphPointColor(CombinedGraphPoint gp)
     {
         return texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y);
+    }
+
+    public void Party()
+    {
+        for (int i = 0; i < textureWidth; ++i)
+        {
+            for (int j = 0; j < textureHeight; ++j)
+            {
+                texture.SetPixel(i, j, Color.blue);
+            }
+        }
+        texture.Apply();
     }
 
     /// <summary>
@@ -761,7 +777,7 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="color">The graphpoint's new color.</param>
     public void RecolorGraphPointGeneExpression(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        byte greenChannel = (byte)(outline ? 1 : 0);
+        byte greenChannel = (byte)(outline ? 5 : 0);
         if (i == -1)
         {
             i = 255;
@@ -773,7 +789,7 @@ public class CombinedGraph : MonoBehaviour
 
     public void RecolorGraphPointSelectionColor(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        byte greenChannel = (byte)(outline ? 1 : 0);
+        byte greenChannel = (byte)(outline ? 27 : 0);
         if (i == -1)
         {
             i = 255;
@@ -801,25 +817,9 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="expressions">An arraylist with <see cref="CellExpressionPair"/>.</param>
     public void ColorByGeneExpression(ArrayList expressions)
     {
-
-        // Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
-        // System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
-
-        //UnityEngine.Color lowColor = CellexalConfig.LowExpressionColor;
-        //UnityEngine.Color midColor = CellexalConfig.MidExpressionColor;
-        //UnityEngine.Color highColor = CellexalConfig.HighExpressionColor;
-        //int numExpressionColors = CellexalConfig.NumberOfExpressionColors;
-
-        //Color[] lowMidExpressionBrushes = CellexalExtensions.Extensions.InterpolateColors(lowColor, midColor, numExpressionColors / 2);
-        //Color[] midHighExpressionBrushes = CellexalExtensions.Extensions.InterpolateColors(midColor, highColor, numExpressionColors - numExpressionColors / 2);
-        //Color[] expressionBrushes = new Color[numExpressionColors];
-        //Array.Copy(lowMidExpressionBrushes, expressionBrushes, numExpressionColors / 2);
-        //Array.Copy(midHighExpressionBrushes, 0, expressionBrushes, numExpressionColors / 2, numExpressionColors - numExpressionColors / 2);
-
+        // expression values are saved in the textures red channel
         // cells that have 0 (or whatever the lowest is) expression are not in the results
         // fill entire background with the lowest expression color
-
-
         for (int i = 0; i < textureWidth; ++i)
         {
             for (int j = 0; j < textureHeight; ++j)
@@ -827,6 +827,7 @@ public class CombinedGraph : MonoBehaviour
                 texture.SetPixel(i, j, Color.black);
             }
         }
+
         int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
         Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
         for (byte i = 0; i < nbrOfExpressionColors; ++i)
@@ -838,10 +839,8 @@ public class CombinedGraph : MonoBehaviour
         {
             Vector2Int pos = points[pair.Cell].textureCoord;
             int expressionColorIndex = pair.Color;
-            float outlined = 0;
             if (pair.Color >= nbrOfExpressionColors)
             {
-                outlined = 1 / 255f;
                 expressionColorIndex = nbrOfExpressionColors - 1;
             }
 

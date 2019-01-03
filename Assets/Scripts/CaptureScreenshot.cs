@@ -27,7 +27,7 @@ public class CaptureScreenshot : MonoBehaviour
 
     void Update()
     {
-
+        device = SteamVR_Controller.Input((int)rightController.index);
         //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {

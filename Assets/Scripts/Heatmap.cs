@@ -169,7 +169,7 @@ public class Heatmap : MonoBehaviour
         {
             HeatmapRaycast();
         }
-            
+
     }
 
     void HeatmapRaycast()
@@ -484,10 +484,10 @@ public class Heatmap : MonoBehaviour
         }
         result = database._result;
 
+        CellexalLog.Log("Reading " + result.Count + " results from database");
         Thread thread = new Thread(() =>
         {
             System.Drawing.SolidBrush[] heatmapBrushes = heatmapGenerator.expressionColors;
-            CellexalLog.Log("Reading " + result.Count + " results from database");
             float lowestExpression = 0;
             float highestExpression = 0;
             graphics.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
@@ -672,7 +672,7 @@ public class Heatmap : MonoBehaviour
     }
 
 
-    
+
 
     public void HandlePressDown(int hitx, int hity)
     {
@@ -1099,7 +1099,7 @@ public class Heatmap : MonoBehaviour
         }
 
         string[] newCells = new string[numberOfCells];
-        List<CombinedGraph.CombinedGraphPoint> newGps = new List<CombinedGraph.CombinedGraphPoint>();  
+        List<CombinedGraph.CombinedGraphPoint> newGps = new List<CombinedGraph.CombinedGraphPoint>();
         for (int i = 0, j = cellsIndexStart; i < numberOfCells; ++i, ++j)
         {
             newCells[i] = cells[j];
@@ -1216,7 +1216,7 @@ public class Heatmap : MonoBehaviour
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         t.Start();
-        
+
         while (t.IsAlive)
         {
             yield return null;
@@ -1281,7 +1281,7 @@ public class Heatmap : MonoBehaviour
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         t.Start();
-        
+
         while (t.IsAlive)
         {
             yield return null;

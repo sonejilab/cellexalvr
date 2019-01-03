@@ -52,7 +52,6 @@ public class MenuWithTabs : MonoBehaviour
     public virtual void DestroyTab(string networkName)
     {
         Tab t = tabs.Find(tab => tab.gameObject.name.Split('_')[1].Equals(networkName));
-        print(t.name);
         tabs.Remove(t);
         Destroy(t.gameObject, 0.1f);
         //foreach (Tab t in tabs)

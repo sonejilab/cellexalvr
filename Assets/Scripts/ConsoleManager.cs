@@ -29,6 +29,7 @@ public class ConsoleManager : MonoBehaviour
     private int maxBufferLines = 64;
     private int currentNumberOfLines = 0;
     private string outputBufferString = "";
+    private bool awaitingConfirm = false;
 
     private void Start()
     {
@@ -85,7 +86,7 @@ public class ConsoleManager : MonoBehaviour
             return;
 
         // only if the console is active
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (!awaitingConfirm && Input.GetKeyDown(KeyCode.Return))
         {
             CommandEntered();
         }
@@ -146,7 +147,7 @@ public class ConsoleManager : MonoBehaviour
         {
             int nbrOfExcessLines = currentNumberOfLines - maxBufferLines;
             // remove the oldest line
-            // find how may characters that is
+            // find how many characters that is
             int lineBreakIndex = 0;
             for (int i = 0; i < nbrOfExcessLines; ++i)
             {
@@ -300,7 +301,7 @@ public class ConsoleManager : MonoBehaviour
     {
         if (info.Length == 0)
         {
-            return "";
+            return "Command has no arguments";
         }
         StringBuilder sb = new StringBuilder();
         sb.Append(info[0].ParameterType).Append(" ").Append(info[0].Name);
@@ -358,8 +359,45 @@ public class ConsoleManager : MonoBehaviour
     public void ClearConsole()
     {
         currentNumberOfLines = 0;
-        outputBufferString = "";
-        outputField.text = "";
+        outputBufferString = string.Empty;
+        outputField.text = string.Empty;
+    }
+
+    /// <summary>
+    /// Asks for a confirmation and eventually quits CellexalVR.
+    /// </summary>
+    [ConsoleCommand("consoleManager", "quit", "goodbye")]
+    public void Quit()
+    {
+        StartCoroutine(QuitCoroutine());
+    }
+
+    /// <summary>
+    /// Helper coroutine for quitting.
+    /// </summary>
+    private IEnumerator QuitCoroutine()
+    {
+        AppendOutput("Really quit CellexalVR?\ny/n");
+        awaitingConfirm = true;
+        do
+        {
+            yield return null;
+        }
+        while (!Input.GetKeyDown(KeyCode.Return));
+
+        awaitingConfirm = false;
+        string input = inputField.text;
+        if (input == "y")
+        {
+            CellexalLog.Log("Quit command issued");
+            CellexalLog.LogBacklog();
+            // Application.Quit() does not work in the unity editor, only in standalone builds.
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     }
 
 }

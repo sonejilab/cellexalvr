@@ -496,7 +496,7 @@ GameObject:
   - component: {fileID: 33336465871087178}
   - component: {fileID: 65747681347309234}
   - component: {fileID: 23541042781432654}
-  - component: {fileID: 114155596881014808}
+  - component: {fileID: 114195013915920878}
   m_Layer: 10
   m_Name: InfoMenu
   m_TagString: Untagged
@@ -4716,8 +4716,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1342702567463908}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.3958, y: 0.59, z: 0.26881}
-  m_LocalScale: {x: 0.07697616, y: 0.0675996, z: 0.090130255}
+  m_LocalPosition: {x: -0.3933575, y: 0.8, z: 0.27}
+  m_LocalScale: {x: 0.099807285, y: 0.08764964, z: 0.116862886}
   m_Children:
   - {fileID: 4792788022706820}
   m_Father: {fileID: 4039008504571620}
@@ -5577,7 +5577,7 @@ Transform:
   m_GameObject: {fileID: 1050621776309980}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0.39335752, y: 0.7835096, z: 0.28102767}
-  m_LocalScale: {x: 0.054609995, y: 0.050332915, z: 0.090126485}
+  m_LocalScale: {x: 0.07652739, y: 0.07053373, z: 0.1262982}
   m_Children:
   - {fileID: 4599079537438612}
   m_Father: {fileID: 4086813326203944}
@@ -6525,7 +6525,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1909730639138842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06, y: 0.76, z: -1.1}
+  m_LocalPosition: {x: -0.06, y: 0.55, z: -1.1}
   m_LocalScale: {x: 0.095, y: 0.095, z: 0.09600019}
   m_Children: []
   m_Father: {fileID: 4343788885444798}
@@ -12170,7 +12170,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: c4c49db829ea56440b44e101d6396970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12455,7 +12455,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1050621776309980}
-  m_Mesh: {fileID: 4300004, guid: ef6178546f77bc546af127fb4c56da0c, type: 3}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &33089702675082174
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -12658,7 +12658,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1342702567463908}
-  m_Mesh: {fileID: 4300004, guid: ef6178546f77bc546af127fb4c56da0c, type: 3}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &33538278159426332
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -14052,8 +14052,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.9999998, y: 2.0000007, z: 2.0000002}
-  m_Center: {x: 0.0000009536743, y: 1.0000013, z: -7.1054274e-15}
+  m_Size: {x: 1.9999998, y: 1.8464919, z: 2.0000002}
+  m_Center: {x: 0.0000010488152, y: 0.31503814, z: 0.00000008552971}
 --- !u!65 &65668975350773778
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -14280,8 +14280,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.0157282, y: 2.0369294, z: 6.1812143}
-  m_Center: {x: 0.015892752, y: 1.0060848, z: 0.00000019200756}
+  m_Size: {x: 2.0157282, y: 2.2051182, z: 6.1812143}
+  m_Center: {x: 0.01588735, y: 0.5742431, z: -0.000038127077}
 --- !u!65 &65908449608992658
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -14593,7 +14593,7 @@ TextMesh:
   m_Anchor: 7
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 64
+  m_FontSize: 48
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 6b06f866e18444249b2b6944f56f4663, type: 3}
@@ -15714,10 +15714,10 @@ TextMesh:
   m_Anchor: 1
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 64
+  m_FontSize: 48
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 6b06f866e18444249b2b6944f56f4663, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -16149,44 +16149,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1365308557194328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87c44037378fde541813629faf3939f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2df86710decfb7647aec4ab6e2a60f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102232124222749808}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
-  frameCount: 0
-  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
-  meshStandardColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  meshHighlightColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  meshDeactivatedColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  standardTexture: {fileID: 21300000, guid: e031aa44f5c5fac48af7d0f07999bc8c, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: b232b3a266a26274a8e4a4d3a6919e10, type: 3}
-  deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
-  popupChoice: 1
-  rightController: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  meshRenderer: {fileID: 0}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  standardTexture: {fileID: 0}
+  highlightedTexture: {fileID: 0}
+  deactivatedTexture: {fileID: 0}
+  popupChoice: 0
   buttonActivated: 1
   controllerInside: 0
-  raycastingSource: {fileID: 0}
-  layerMaskNetwork: 0
-  layerMaskGraph: 0
-  layerMaskMenu: 0
-  layerMaskKeyboard: 0
-  layerMask: 0
   HUD: {fileID: 0}
   status: {fileID: 0}
 --- !u!114 &114109871571855578
@@ -16197,44 +16174,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1032796664725318}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b41a1c0e086414c8e7a160f93836a0, type: 3}
+  m_Script: {fileID: 11500000, guid: d652263aec8c0c4488be4b7f42e80118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102232124222749808}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
-  frameCount: 0
-  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
-  meshStandardColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  meshHighlightColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  meshDeactivatedColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  standardTexture: {fileID: 21300000, guid: e031aa44f5c5fac48af7d0f07999bc8c, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: b232b3a266a26274a8e4a4d3a6919e10, type: 3}
-  deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
-  popupChoice: 1
-  rightController: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  meshRenderer: {fileID: 0}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  standardTexture: {fileID: 0}
+  highlightedTexture: {fileID: 0}
+  deactivatedTexture: {fileID: 0}
+  popupChoice: 0
   buttonActivated: 1
   controllerInside: 0
-  raycastingSource: {fileID: 0}
-  layerMaskNetwork: 0
-  layerMaskGraph: 0
-  layerMaskMenu: 0
-  layerMaskKeyboard: 0
-  layerMask: 0
   FarDisp: {fileID: 0}
   status: {fileID: 0}
 --- !u!114 &114117463429927900
@@ -16378,34 +16332,6 @@ MonoBehaviour:
   buttonActivated: 1
   controllerInside: 0
   buttonDescription: {fileID: 102567698223724554}
---- !u!114 &114155596881014808
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1089405817799522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
-  infoMenu: {fileID: 1089405817799522}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
-  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
-  standardTexture: {fileID: 0}
-  highlightedTexture: {fileID: 0}
-  deactivatedTexture: {fileID: 0}
-  popupChoice: 0
-  buttonActivated: 1
-  controllerInside: 0
-  videoCanv: {fileID: 0}
-  audioClip: {fileID: 8300000, guid: d137a8cfda4e4dc478533764ea5f2756, type: 3}
-  url: https://cellexalvr.med.lu.se/videos/HideTool-converted.mp4
-  buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114165265445657358
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16538,6 +16464,34 @@ MonoBehaviour:
     type: 3}
   meshActivatedColor: {r: 0, g: 0, b: 1, a: 1}
   toolActivated: 0
+--- !u!114 &114195013915920878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1089405817799522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  descriptionText: {fileID: 102080517038186312}
+  infoMenu: {fileID: 1089405817799522}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
+  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 1}
+  standardTexture: {fileID: 0}
+  highlightedTexture: {fileID: 0}
+  deactivatedTexture: {fileID: 0}
+  popupChoice: 0
+  buttonActivated: 1
+  controllerInside: 0
+  videoCanv: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: d137a8cfda4e4dc478533764ea5f2756, type: 3}
+  url: https://cellexalvr.med.lu.se/videos/HideTool-converted.mp4
+  buttonDescr: Play Video
+  videoManager: {fileID: 0}
 --- !u!114 &114202788325429640
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18090,44 +18044,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1096738337014818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa434015108a0bf4ab3ad5f03e8da35c, type: 3}
+  m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 102536813443357636}
   infoMenu: {fileID: 1096738337014818}
-  frameCount: 0
-  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
-  meshStandardColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  meshHighlightColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  meshDeactivatedColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  rightController: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  meshRenderer: {fileID: 0}
   buttonActivated: 1
   controllerInside: 0
-  raycastingSource: {fileID: 0}
-  layerMaskNetwork: 0
-  layerMaskGraph: 0
-  layerMaskMenu: 0
-  layerMaskKeyboard: 0
-  layerMask: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 5b05a30f1c2ec9e4fa47b88fd67a5002, type: 3}
   url: https://cellexalvr.med.lu.se/videos/Keyboard-converted.mp4
@@ -18341,46 +18272,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1260968932566010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b41a1c0e086414c8e7a160f93836a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bc551779b9324841912c620500b8655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102232124222749808}
-  infoMenu: {fileID: 0}
-  frameCount: 0
-  laserColliderName: '[RightController]BasePointerRenderer_ObjectInteractor_Collider'
-  meshStandardColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  meshHighlightColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  meshDeactivatedColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  standardTexture: {fileID: 21300000, guid: e031aa44f5c5fac48af7d0f07999bc8c, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: b232b3a266a26274a8e4a4d3a6919e10, type: 3}
-  deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
-  popupChoice: 1
-  rightController: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  buttonActivated: 1
-  controllerInside: 0
-  raycastingSource: {fileID: 0}
-  layerMaskNetwork: 0
-  layerMaskGraph: 0
-  layerMaskMenu: 0
-  layerMaskKeyboard: 0
-  layerMask: 0
-  FarDisp: {fileID: 0}
+  selectionToolHandler: {fileID: 0}
   status: {fileID: 0}
+  coloredSquares: []
 --- !u!114 &114759793525737548
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19392,7 +19289,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212034958143294398
@@ -19668,7 +19565,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212098569786975720
@@ -19990,7 +19887,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212130128560867712
@@ -23302,7 +23199,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212894133396472476
