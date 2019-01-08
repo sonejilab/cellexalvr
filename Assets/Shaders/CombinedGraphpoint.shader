@@ -85,7 +85,7 @@ Shader "Custom/CombinedGraphpoint" {
                             unity_4LightPosY0[index], 
                             unity_4LightPosZ0[index], 1.0);
             
-                        float3 vertexToLightSource = float3(lightPosition - worldPos);     
+                        float3 vertexToLightSource = float3(lightPosition.xyz - worldPos);     
                         
                         float3 lightDirection = normalize(vertexToLightSource);
                         
@@ -94,8 +94,8 @@ Shader "Custom/CombinedGraphpoint" {
                         // float attenuation = 1.0 / (1.0  + unity_4LightAtten0[index] * squaredDistance);
                         float attenuation = 1.0;
 
-                        float3 diffuseReflection = attenuation * float3(unity_LightColor[index]) 
-                            * float3(_Color) * max(0.0, dot(worldN, lightDirection));         
+                        float3 diffuseReflection = attenuation * float3(unity_LightColor[index].xyz) 
+                            * float3(_Color.rgb) * max(0.0, dot(worldN, lightDirection));
             
                         o.vertexLighting = o.vertexLighting + diffuseReflection * 2;
 		            }
@@ -286,10 +286,11 @@ Shader "Custom/CombinedGraphpoint" {
                 // OUT.color = LinearToGammaSpace(_Color);
                 OUT.texcoord = IN.texcoord;
                 OUT.normal = IN.normal;
-                OUT.viewDir = ObjSpaceViewDir(IN.vertex);
+                OUT.viewDir = WorldSpaceViewDir(IN.vertex);
                 return OUT;
             }
 
+            // creates an outline around a cell
             void outline(v2g start, v2g end, inout TriangleStream<v2g> triStream)
             {
                 float width = _Thickness;// / 100;
@@ -299,7 +300,7 @@ Shader "Custom/CombinedGraphpoint" {
                 float4 v2 = end.pos + parallel;
                 v2g OUT;
                 float4 uvAndMip = float4(start.texcoord.x, start.texcoord.y, 0, 0);
-                float3 expressionColorData = LinearToGammaSpace(tex2Dlod(_MainTex, uvAndMip));
+                float3 expressionColorData = start.color;
                 // float3 expressionColorData = start.color;
                 // OUT.color = _ExpressionColors[round(expressionColorData.x * 255)];
                 uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
@@ -317,33 +318,38 @@ Shader "Custom/CombinedGraphpoint" {
                 triStream.Append(OUT);
             }
 
+            // creates a moving circle around a cell
             void flashCell(v2g start, v2g end, inout TriangleStream<v2g> triStream)
             {
-                float width = _FlashCellThickness * (abs(sin(_Time.w)) + 1);
-                float4 viewDir = float4(start.viewDir, 0);
-                float4 parallel = (end.pos - start.pos) * width;
-                float4 perpendicular = normalize(float4(parallel.y, -parallel.x, 0, 0)) * width;
-                perpendicular *= length(cross(normalize(start.normal), normalize(viewDir)));
-                float4 v1 = start.pos - parallel;
-                float4 v2 = end.pos + parallel;
-                v2g OUT;
-                float4 uvAndMip = float4(start.texcoord.x, start.texcoord.y, 0, 0);
-                float3 expressionColorData = LinearToGammaSpace(tex2Dlod(_MainTex, uvAndMip));
-                // float3 expressionColorData = start.color;
-                // OUT.color = _ExpressionColors[round(expressionColorData.x * 255)];
-                uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
-                OUT.color = tex2Dlod(_GraphpointColorTex, uvAndMip);
-                OUT.normal = start.normal;
-                OUT.viewDir = start.viewDir;
-                OUT.texcoord = start.texcoord;
-                OUT.pos = v1 + perpendicular * 0.95;
-                triStream.Append(OUT);
-                OUT.pos = v1 + perpendicular;
-                triStream.Append(OUT);
-                OUT.pos = v2 + perpendicular * 0.95;
-                triStream.Append(OUT);
-                OUT.pos = v2 + perpendicular;
-                triStream.Append(OUT);
+            //    float width = _FlashCellThickness  * (abs(sin(_Time.w)) + 1);
+            //    float4 viewDir = float4(start.viewDir, 0);
+            //    float4 parallel = (end.pos - start.pos) * width;
+            //    float3 normal = start.normal + end.normal;
+            //    // parallel *= saturate(length(1 / cross(parallel, viewDir)));
+            //    // float4 perpendicular = normalize(float4(parallel.y, -parallel.x, 0, 0)) * width;
+            //    // float4 perpendicular = float4(normalize(cross(normal, viewDir)), 0) * width;
+            //    float4 perpendicular = float4(normal - (dot(normal, viewDir) / dot(viewDir, viewDir)) * viewDir ,0 ) * width;
+            //    // perpendicular *= dot(normalize(normal), normalize(viewDir));
+            //    float4 smallerPerpendicular = perpendicular * 0.95;
+            //    // float4 normalCrossViewDir = float4(cross(perpendicular, start.viewDir), 0);
+            //    float4 v1 = start.pos - parallel;
+            //    float4 v2 = end.pos + parallel;
+            //    v2g OUT;
+            //    float4 uvAndMip = float4(start.texcoord.x, start.texcoord.y, 0, 0);
+            //    float3 expressionColorData = start.color;
+            //    uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
+            //    OUT.color = tex2Dlod(_GraphpointColorTex, uvAndMip);
+            //    OUT.normal = start.normal;
+            //    OUT.viewDir = start.viewDir;
+            //    OUT.texcoord = start.texcoord;
+            //    OUT.pos = v1 + smallerPerpendicular;
+            //    triStream.Append(OUT);
+            //    OUT.pos = v1 + perpendicular;
+            //    triStream.Append(OUT);
+            //    OUT.pos = v2 + smallerPerpendicular;
+            //    triStream.Append(OUT);
+            //    OUT.pos = v2 + perpendicular;
+            //    triStream.Append(OUT);
             }
 
             [maxvertexcount(8)]
