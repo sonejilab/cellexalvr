@@ -130,7 +130,7 @@ public abstract class CellexalButton : MonoBehaviour
         }
     }
 
-    protected abstract void Click();
+    public abstract void Click();
 
     protected virtual void HelpClick()
     {

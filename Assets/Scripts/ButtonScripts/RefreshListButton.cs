@@ -19,7 +19,7 @@ public class RefreshListButton : CellexalButton
         reportListGenerator = referenceManager.webBrowser.GetComponentInChildren<ReportListGenerator>();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         reportListGenerator.GenerateList();
     }

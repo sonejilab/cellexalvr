@@ -17,7 +17,7 @@ public class ToggleArcsButton : CellexalButton
         get { return "Toggle all arcs connected to this network"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         combinedNetworksButton.SetCombinedArcsVisible(false);
         network.SetArcsVisible(toggleToState);

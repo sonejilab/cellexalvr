@@ -13,7 +13,7 @@ public class ScreenshotButton : CellexalButton
         get { return "Take Snapshots"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         if (canvas.activeSelf)
         {

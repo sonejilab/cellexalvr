@@ -24,7 +24,7 @@ public class ShowLabelsButton : CellexalButton
         }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         graphManager.SetInfoPanelsVisible(activate);
         activate = !activate;

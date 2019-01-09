@@ -53,7 +53,7 @@ public class VideoButton : CellexalButton
     }
 
 
-    protected override void Click()
+    public override void Click()
     {
         if (buttonDescr.Equals("Close Video"))
         {

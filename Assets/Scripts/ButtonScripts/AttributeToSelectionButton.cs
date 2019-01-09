@@ -22,7 +22,7 @@ public class AttributeToSelectionButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.SendToSelection();
         referenceManager.menuRotator.RotateLeft(2);

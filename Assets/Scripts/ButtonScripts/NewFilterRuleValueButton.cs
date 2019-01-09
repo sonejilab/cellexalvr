@@ -18,7 +18,7 @@ public class NewFilterRuleValueButton : CellexalButton
 
 
 
-    protected override void Click()
+    public override void Click()
     {
         keyboardOutput.SetNextTarget(KeyboardOutput.OutputType.FILTER_VALUE, newRule, textMesh);
     }

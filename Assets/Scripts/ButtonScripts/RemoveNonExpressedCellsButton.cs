@@ -18,7 +18,7 @@ public class RemoveNonExpressedCellsButton : CellexalButton
         CellexalEvents.GraphsReset.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.gameManager.InformToggleNonExpressedCells();
         cellManager.ToggleNonExpressedCells();

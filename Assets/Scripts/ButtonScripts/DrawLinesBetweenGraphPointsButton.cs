@@ -22,7 +22,7 @@ class DrawLinesBetweenGraphPointsButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection());
         CellexalEvents.LinesBetweenGraphsDrawn.Invoke();

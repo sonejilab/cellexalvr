@@ -15,7 +15,7 @@
         TurnOff();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         parent.SaveNetworkAsTextFile();
         device.TriggerHapticPulse(2000);

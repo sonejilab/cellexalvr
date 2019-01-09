@@ -1012,6 +1012,50 @@ public class InputReader : MonoBehaviour
         CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
     }
 
+
+    [ConsoleCommand("inputReader", "selectfromprevious", "sfp")]
+    public void ReadAndSelectPreviousSelection(int index)
+    {
+        string dataFolder = CellexalUser.UserSpecificFolder;
+        string[] files = Directory.GetFiles(dataFolder, "user.group.*.txt");
+        if (index < 0 || index >= files.Length)
+        {
+            CellexalLog.Log(string.Format("Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index, files.Length));
+            return;
+        }
+
+        FileStream fileStream = new FileStream(files[index], FileMode.Open);
+        StreamReader streamReader = new StreamReader(fileStream);
+        var selectionToolHandler = referenceManager.selectionToolHandler;
+        GraphManager graphManager = referenceManager.graphManager;
+        int numPointsAdded = 0;
+        while (!streamReader.EndOfStream)
+        {
+            string line = streamReader.ReadLine();
+            string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            int group = 0;
+            Color groupColor;
+
+            try
+            {
+                group = int.Parse(words[3]);
+                ColorUtility.TryParseHtmlString(words[1], out groupColor);
+            }
+            catch (FormatException)
+            {
+                CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1, files[index]));
+                streamReader.Close();
+                fileStream.Close();
+                return;
+            }
+            selectionToolHandler.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false, groupColor);
+            numPointsAdded++;
+        }
+        CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+        streamReader.Close();
+        fileStream.Close();
+    }
+
     /// <summary>
     /// Sorts a list of gene expressions based on the mean expression level.
     /// </summary>

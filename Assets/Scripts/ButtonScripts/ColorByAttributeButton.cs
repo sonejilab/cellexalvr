@@ -32,7 +32,7 @@ public class ColorByAttributeButton : CellexalButton
         CellexalEvents.GraphsReset.AddListener(ResetVars);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         if (CurrentMode == Mode.SINGLE)
         {

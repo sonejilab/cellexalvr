@@ -20,7 +20,7 @@ public class HelpToolButton : CellexalButton
         helpTool = referenceManager.helpTool;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         bool helpToolActivated = helpTool.gameObject.activeSelf;
         if (helpToolActivated)

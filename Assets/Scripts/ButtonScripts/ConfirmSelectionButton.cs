@@ -24,7 +24,7 @@ public class ConfirmSelectionButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         selectionToolHandler.SetSelectionToolEnabled(false, 0);
         selectionToolHandler.ConfirmSelection();

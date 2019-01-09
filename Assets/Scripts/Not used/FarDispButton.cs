@@ -24,7 +24,7 @@ public class FarDispButton : CellexalButton
 
     }
 
-    protected override void Click()
+    public override void Click()
     {
         FarDisp.SetActive(!FarDisp.activeSelf);
         status.ToggleStatusDisplay();

@@ -30,7 +30,7 @@ public class UndoOneStepButton : CellexalButton
         selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.gameManager.InformGoBackSteps(1);
         selectionToolHandler.GoBackOneStepInHistory();

@@ -25,7 +25,7 @@ public class IndexMenuButton : CellexalButton
         SetButtonActivated(false);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         spriteRenderer.sprite = standardTexture;
         descriptionText.text = "";

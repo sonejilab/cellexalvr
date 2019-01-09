@@ -16,7 +16,7 @@ public class GOanalysisButton : CellexalButton
         base.Awake();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         gameObject.GetComponentInParent<Heatmap>().GOanalysis();
         device.TriggerHapticPulse(2000);

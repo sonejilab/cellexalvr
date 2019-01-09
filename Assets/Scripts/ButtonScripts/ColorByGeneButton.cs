@@ -21,7 +21,7 @@ public class ColorByGeneButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.ColorGraphsByGene(gene, referenceManager.graphManager.GeneExpressionColoringMethod, false);
     }

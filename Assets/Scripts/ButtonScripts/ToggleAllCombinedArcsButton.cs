@@ -16,7 +16,7 @@ public class ToggleAllCombinedArcsButton : CellexalButton
         get { return "Toggle all combined arcs"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         if (networks == null) return;
 

@@ -5,7 +5,7 @@
 class SelectionFromPreviousMenuButton : CellexalButton
 {
     public GameObject menu;
-    public GameObject buttons;
+    public GameObject selectionMenu;
 
     protected override string Description
     {
@@ -15,19 +15,21 @@ class SelectionFromPreviousMenuButton : CellexalButton
     void Start()
     {
         menu = referenceManager.selectionFromPreviousMenu.gameObject;
-        buttons = referenceManager.rightButtons;
+        selectionMenu = referenceManager.selectionMenu;
         SetButtonActivated(false);
         CellexalEvents.GraphsLoaded.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
 
     }
 
-    protected override void Click()
+    public override void Click()
     {
-        buttons.SetActive(false);
+        foreach (var button in selectionMenu.GetComponentsInChildren<CellexalButton>())
+        {
+            button.SetButtonActivated(false);
+        }
         menu.SetActive(true);
         controllerInside = false;
-
     }
 
     private void TurnOn()

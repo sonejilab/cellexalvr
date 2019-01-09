@@ -19,7 +19,7 @@ public class RefreshTabsButton : CellexalButton
         SetButtonActivated(true);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.arcsSubMenu.RefreshTabs();
         foreach (Renderer r in toggleArcsMenu.GetComponentsInChildren<Renderer>())

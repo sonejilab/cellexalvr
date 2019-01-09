@@ -8,7 +8,7 @@ public class AddAttributeLogicToSelectionButton : CellexalButton
         get { return "Add the currently shown attributes as a new group"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.attributeSubMenu.AddCurrentExpressionAsGroup();
     }

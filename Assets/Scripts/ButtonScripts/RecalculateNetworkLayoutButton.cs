@@ -18,7 +18,7 @@ public class RecalculateNetworkLayoutButton : CellexalButton
         TurnOff();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         center.CalculateLayout(layout);
     }

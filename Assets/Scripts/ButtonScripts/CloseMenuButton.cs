@@ -19,7 +19,7 @@ public class CloseMenuButton : CellexalButton
         }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         spriteRenderer.sprite = standardTexture;
         controllerInside = false;

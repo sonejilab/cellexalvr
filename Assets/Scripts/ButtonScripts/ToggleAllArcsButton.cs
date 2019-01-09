@@ -15,7 +15,7 @@ public class ToggleAllArcsButton : CellexalButton
         get { return "Toggle all arcs"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         if (networks == null) return;
         foreach (NetworkCenter network in networks)

@@ -777,7 +777,7 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="color">The graphpoint's new color.</param>
     public void RecolorGraphPointGeneExpression(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        byte greenChannel = (byte)(outline ? 5 : 0);
+        byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
         if (i == -1)
         {
             i = 255;
@@ -789,7 +789,7 @@ public class CombinedGraph : MonoBehaviour
 
     public void RecolorGraphPointSelectionColor(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        byte greenChannel = (byte)(outline ? 27 : 0);
+        byte greenChannel = (byte)(outline ? 5 : 0);
         if (i == -1)
         {
             i = 255;
@@ -830,9 +830,14 @@ public class CombinedGraph : MonoBehaviour
 
         int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
         Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
-        for (byte i = 0; i < nbrOfExpressionColors; ++i)
+        for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
         {
             colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
+        }
+        for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors ; ++i)
+        {
+            // the highest expression levels get 27 (somewhere between 0.1 and 0.2 when converted to a float) in the green channel to get an outline by the shader
+            colorValues[i] = new Color32[] { new Color32(i, 27, 0, 1) };
         }
 
         foreach (CellExpressionPair pair in expressions)
@@ -843,7 +848,7 @@ public class CombinedGraph : MonoBehaviour
             {
                 expressionColorIndex = nbrOfExpressionColors - 1;
             }
-
+            
             texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
         }
 

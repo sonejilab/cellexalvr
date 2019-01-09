@@ -10,7 +10,7 @@ public class BooleanExpressionButton : CellexalButton
         get { return "Color cells according to this expression"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.ColorByAttributeExpression(Expr);
     }

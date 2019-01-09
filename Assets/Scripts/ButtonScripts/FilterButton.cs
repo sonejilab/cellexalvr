@@ -22,7 +22,7 @@ public class FilterButton : CellexalButton
         filterMenu = referenceManager.filterMenu;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         if (!filterActivated)
         {

@@ -19,7 +19,7 @@ public class RemoveExpressedCellsButton : CellexalButton
         CellexalEvents.GraphsReset.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.gameManager.InformToggleExpressedCells();
         cellManager.ToggleExpressedCells();

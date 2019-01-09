@@ -18,7 +18,7 @@ public class ClearLastDrawnLineButton : CellexalButton
         drawTool = referenceManager.drawTool;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         drawTool.SkipNextDraw();
         drawTool.ClearLastLine();

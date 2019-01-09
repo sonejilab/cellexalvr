@@ -33,7 +33,7 @@ public abstract class CellexalToolButton : CellexalButton
         SetButtonActivated(false);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         bool toolActivated = controllerModelSwitcher.DesiredModel == ControllerModel;
         if (toolActivated)

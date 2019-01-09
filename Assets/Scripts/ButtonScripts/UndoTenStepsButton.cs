@@ -30,7 +30,7 @@ public class UndoTenStepsButton : CellexalButton
         selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.gameManager.InformGoBackSteps(10);
         for (int i = 0; i < 10; i++)

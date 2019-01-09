@@ -32,7 +32,7 @@ public class ResetFolderButton : CellexalButton
         Click();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         CloseSubMenu();
         referenceManager.loaderController.ResetFolders();

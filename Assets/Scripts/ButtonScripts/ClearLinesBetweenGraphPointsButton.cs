@@ -18,7 +18,7 @@ class ClearLinesBetweenGraphPointsButton : CellexalButton
         CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.ClearLinesBetweenGraphPoints();
         CellexalEvents.LinesBetweenGraphsCleared.Invoke();

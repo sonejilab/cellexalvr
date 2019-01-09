@@ -13,7 +13,7 @@ public class HelpVideoButton : CellexalButton
         get { return ""; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         base.HelpClick();
     }

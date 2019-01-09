@@ -24,7 +24,7 @@ public class ResetGraphAllButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         graphManager.ResetGraphs();
     }

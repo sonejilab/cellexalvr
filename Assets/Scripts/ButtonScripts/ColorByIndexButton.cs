@@ -20,7 +20,7 @@ public class ColorByIndexButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.ColorByIndex(indexName);
         referenceManager.gameManager.InformColorByIndex(indexName);

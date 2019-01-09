@@ -49,7 +49,7 @@ public class SaveButton : CellexalButton
     }
 
     // Update is called once per frame
-    protected override void Click()
+    public override void Click()
     {
         SetButtonActivated(false);
         StartCoroutine(LogStop());

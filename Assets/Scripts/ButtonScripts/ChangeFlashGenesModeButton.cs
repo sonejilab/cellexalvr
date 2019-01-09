@@ -19,7 +19,7 @@ class ChangeFlashGenesModeButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         //infoCanv.SetActive(true);
         cellManager.CurrentFlashGenesMode = switchToMode;

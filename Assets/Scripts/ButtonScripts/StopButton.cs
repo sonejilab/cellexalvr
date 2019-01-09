@@ -25,7 +25,7 @@ class StopButton : CellexalButton
 
 
     // Update is called once per frame
-    protected override void Click()
+    public override void Click()
     {
         cellManager.CurrentFlashGenesMode = switchToMode;
         random.spriteRenderer.sprite = random.deactivatedTexture;

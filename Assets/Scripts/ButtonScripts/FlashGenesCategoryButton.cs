@@ -26,7 +26,7 @@ public class FlashGenesCategoryButton : CellexalButton
         descriptionOnButton.GetComponent<Renderer>().material.color = Color.green;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         CategoryActivated = !CategoryActivated;
         cellManager.FlashGenesCategoryFilter[Category] = CategoryActivated;

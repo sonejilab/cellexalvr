@@ -13,7 +13,7 @@ public class SwitchAttributeButtonMode : CellexalButton
         attributeMenu = referenceManager.attributeSubMenu;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         attributeMenu.SwitchButtonStates();
     }

@@ -21,7 +21,7 @@ public class CreateNetworksButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         var rand = new System.Random();
         var layoutSeed = rand.Next();

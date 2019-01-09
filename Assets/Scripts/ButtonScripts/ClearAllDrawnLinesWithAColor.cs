@@ -33,7 +33,7 @@ public class ClearAllDrawnLinesWithAColor : CellexalButton
         OnValidate();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         drawTool.SkipNextDraw();
         drawTool.ClearAllLinesWithColor(color);

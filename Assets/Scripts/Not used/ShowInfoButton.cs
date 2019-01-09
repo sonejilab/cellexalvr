@@ -18,7 +18,7 @@ public class ShowInfoButton : CellexalButton
         TurnOff();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         infoCanvas.SetActive(!infoCanvas.activeSelf);
     }

@@ -19,7 +19,7 @@ public class SaveNetworkAsImageButton : CellexalButton
         TurnOff();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         parent.SaveNetworkAsImage();
         device.TriggerHapticPulse(2000);

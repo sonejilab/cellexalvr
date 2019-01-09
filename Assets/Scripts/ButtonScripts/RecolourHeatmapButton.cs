@@ -18,7 +18,7 @@ public class RecolourHeatmapButton : CellexalButton
         base.Awake();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         gameObject.GetComponentInParent<Heatmap>().ColorCells();
     }

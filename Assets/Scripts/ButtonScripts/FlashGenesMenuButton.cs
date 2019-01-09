@@ -13,7 +13,7 @@ class FlashGenesMenuButton : CellexalButton
     public GameObject menu;
 
 
-    protected override void Click()
+    public override void Click()
     {
         menu.SetActive(true);
     }

@@ -24,7 +24,7 @@ public class SubMenuButton : CellexalButton
 
     }
 
-    protected override void Click()
+    public override void Click()
     {
         OpenMenu();
     }

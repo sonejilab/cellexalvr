@@ -47,11 +47,11 @@ public class CombinedGraphGenerator : MonoBehaviour
 
     private void Update()
     {
-        foreach (CombinedGraph graph in graphManager.graphs)
-        {
-            //graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
-            graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
-        }
+        // foreach (CombinedGraph graph in graphManager.graphs)
+        // {
+        //     graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
+        //     graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+        // }
     }
 
     public CombinedGraph CreateCombinedGraph()
@@ -374,6 +374,8 @@ public class CombinedGraphGenerator : MonoBehaviour
         int graphPointMeshVertexCount = graphPointMesh.vertexCount;
         int graphPointMeshTriangleCount = graphPointMesh.triangles.Length;
         Material combinedGraphPointMaterial = Instantiate(combinedGraphPointMaterialPrefab);
+        //List<Vector3> graphpointMeshNormals = new List<Vector3>(graphPointMeshVertexCount);
+        //graphPointMesh.GetNormals(graphpointMeshNormals);
 
         NativeArray<Vector3> graphPointMeshVertices = new NativeArray<Vector3>(graphPointMesh.vertices, Allocator.TempJob);
         NativeArray<int> graphPointMeshTriangles = new NativeArray<int>(graphPointMesh.triangles, Allocator.TempJob);
@@ -453,6 +455,13 @@ public class CombinedGraphGenerator : MonoBehaviour
             newMesh.uv = new NativeSlice<Vector2>(job.resultUVs, vertexOffset, nbrOfVerticesInCluster).ToArray();
             newMesh.triangles = new NativeSlice<int>(job.resultTriangles, triangleOffset, nbrOfTrianglesInCluster).ToArray();
 
+            //List<Vector3> newMeshNormals = new List<Vector3>(clusterSize * graphpointMeshNormals.Count);
+            //for (int j = 0; j < clusterSize; ++j)
+            //{
+            //    newMeshNormals.AddRange(graphpointMeshNormals);
+            //}
+
+            //newMesh.SetNormals(newMeshNormals);
             //newMesh.vertices = new Vector3[nbrOfVerticesInCluster];
             //newMesh.uv = new Vector2[nbrOfVerticesInCluster];
             //newMesh.triangles = new int[nbrOfTrianglesInCluster];

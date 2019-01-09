@@ -578,6 +578,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// <summary>
     /// Unselects anything selected.
     /// </summary>
+    [ConsoleCommand("selectionToolHandler", "cancelselection", "cs")]
     public void CancelSelection()
     {
         foreach (CombinedGraph.CombinedGraphPoint other in selectedCells)

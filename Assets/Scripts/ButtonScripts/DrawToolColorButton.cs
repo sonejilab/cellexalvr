@@ -32,7 +32,7 @@ public class DrawToolColorButton : CellexalButton
         OnValidate();
     }
 
-    protected override void Click()
+    public override void Click()
     {
         drawTool.SkipNextDraw();
         drawTool.LineColor = color;

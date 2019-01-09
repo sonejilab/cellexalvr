@@ -21,7 +21,7 @@ public class CloseIndexMenuButton : CellexalButton
         buttons = referenceManager.leftButtons;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         spriteRenderer.sprite = standardTexture;
         controllerInside = false;

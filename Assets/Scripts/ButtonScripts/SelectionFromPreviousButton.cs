@@ -24,7 +24,7 @@ public class SelectionFromPreviousButton : CellexalButton
         rightController = referenceManager.rightController;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         referenceManager.cellManager.CreateNewSelection(graphName, selectionCellNames, selectionGroups, groupingColors);
     }

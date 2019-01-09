@@ -14,7 +14,7 @@ public class AddFilterButton : CellexalButton
     }
 
 
-    protected override void Click()
+    public override void Click()
     {
         newFilterMenu.AddFilter();
     }

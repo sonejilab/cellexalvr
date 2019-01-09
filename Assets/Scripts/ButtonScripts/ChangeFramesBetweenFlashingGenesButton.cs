@@ -17,7 +17,7 @@ class ChangeFramesBetweenFlashingGenesButton : CellexalButton
         cellManager = referenceManager.cellManager;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellManager.FramesBetweenEachFlash += change;
     }

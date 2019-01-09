@@ -25,7 +25,7 @@ public class HUDButton : CellexalButton
     }
 
     // Update is called once per frame
-    protected override void Click()
+    public override void Click()
     {
         HUD.SetActive(!HUD.activeSelf);
         status.ToggleStatusDisplay();

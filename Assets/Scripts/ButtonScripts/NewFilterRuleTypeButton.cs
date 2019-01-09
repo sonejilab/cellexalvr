@@ -13,7 +13,7 @@ class NewFilterRuleTypeButton : CellexalButton
     public Filter.FilterRule.FilterType type;
     private int index = 0;
 
-    protected override void Click()
+    public override void Click()
     {
         var enumValues = (Filter.FilterRule.FilterType[])Enum.GetValues(type.GetType());
         index++;

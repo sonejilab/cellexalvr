@@ -16,7 +16,7 @@ public class WebGoBackForward : CellexalButton
         get { if (forward) { return "Go Forward"; } else return "Go Back"; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         webBrowser.GoBackForward(forward);
     }

@@ -23,7 +23,7 @@ public class ResetGraphColorButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         graphManager.ResetGraphsColor();
         referenceManager.gameManager.InformResetGraphColor();

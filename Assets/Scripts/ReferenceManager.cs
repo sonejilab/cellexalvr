@@ -55,6 +55,7 @@ public class ReferenceManager : MonoBehaviour
     public ColorByGeneMenu colorByGeneMenu;
     public FilterMenu filterMenu;
     public NewFilterMenu newFilterMenu;
+    public GameObject selectionMenu;
     public TextMesh currentFlashedGeneText;
     public GameObject frontButtons;
     public GameObject rightButtons;

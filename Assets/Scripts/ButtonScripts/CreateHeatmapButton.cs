@@ -20,7 +20,7 @@ public class CreateHeatmapButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         heatmapGenerator.CreateHeatmap();
         CellexalEvents.CreatingHeatmap.Invoke();

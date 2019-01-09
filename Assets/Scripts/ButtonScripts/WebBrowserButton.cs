@@ -25,7 +25,7 @@ public class WebBrowserButton : CellexalToolButton
         get { return ControllerModelSwitcher.Model.WebBrowser; }
     }
 
-    protected override void Click()
+    public override void Click()
     {
         base.Click();
 

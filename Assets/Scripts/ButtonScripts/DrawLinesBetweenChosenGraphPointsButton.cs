@@ -29,7 +29,7 @@ class DrawLinesBetweenChosenGraphPointsButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         selecting = !selecting;
         if (selecting)

@@ -10,7 +10,7 @@ public class NewFilterRuleButton : CellexalButton
     public GameObject filterRulePrefab;
     public Filter.FilterRule.RuleType ruleType;
 
-    protected override void Click()
+    public override void Click()
     {
         Filter.FilterRule newFilterRule = new Filter.FilterRule();
         newFilterRule.ruleType = ruleType;

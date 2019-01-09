@@ -22,7 +22,7 @@ public class AttributeMenuButton : CellexalButton
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
-    protected override void Click()
+    public override void Click()
     {
         spriteRenderer.sprite = standardTexture;
         controllerInside = false;

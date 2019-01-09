@@ -22,7 +22,7 @@ public class QueryTopGenesButton : CellexalButton
         cellmanager = referenceManager.cellManager;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         cellmanager.QueryTopGenes(mode);
     }

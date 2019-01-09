@@ -22,7 +22,7 @@ public class ArcsMenuButton : CellexalButton
         arcsMenu = referenceManager.arcsSubMenu.gameObject;
     }
 
-    protected override void Click()
+    public override void Click()
     {
         spriteRenderer.sprite = standardTexture;
         controllerInside = false;
