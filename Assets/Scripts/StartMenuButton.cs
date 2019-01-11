@@ -11,7 +11,10 @@ public class StartMenuButton : CellexalButton
         }
     }
 
-
+    void Start()
+    {
+        SetButtonActivated(false);
+    }
 
     public override void Click()
     {

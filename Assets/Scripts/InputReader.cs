@@ -292,7 +292,7 @@ public class InputReader : MonoBehaviour
             }
             // more_cells
             combinedGraphGenerator.SliceClustering();
-            graphManager.graphs.Add(combGraph);
+            graphManager.Graphs.Add(combGraph);
             if (debug)
             {
                 //newGraph.transform.Translate(Vector3.forward * fileIndex);
