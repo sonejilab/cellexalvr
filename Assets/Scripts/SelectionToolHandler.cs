@@ -198,7 +198,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
-        AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
+        AddGraphpointToSelection(graphPoint, newGroup, true, Colors[newGroup]);
         //Debug.Log("Adding gp to sel. Inform clients.");
         //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }

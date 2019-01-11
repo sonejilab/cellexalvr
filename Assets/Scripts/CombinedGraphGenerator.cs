@@ -28,7 +28,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     private int nbrOfClusters;
     private int nbrOfMaxPointsPerClusters;
     //private Color[] graphpointColors;
-    private Texture2D graphPointColors;
+    public Texture2D graphPointColors;
     private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
                                             new Vector3(-0.9f, 1.1f, -0.4f),
                                             new Vector3(-0.9f, 1.1f, 0.4f),
