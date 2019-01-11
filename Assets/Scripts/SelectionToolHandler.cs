@@ -357,14 +357,14 @@ public class SelectionToolHandler : MonoBehaviour
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
-            // more_cells   info.graphPoint.SetOutLined(false, -1);
+            info.graphPoint.ResetColor();
         }
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-            // more_cells   info.graphPoint.SetOutLined(true, info.fromGroup);
+            info.graphPoint.ResetColor();
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -395,7 +395,7 @@ public class SelectionToolHandler : MonoBehaviour
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.group = info.toGroup;
-        // more_cells   info.graphPoint.SetOutLined(info.toGroup != -1, info.toGroup);
+        info.graphPoint.RecolorSelectionColor(info.toGroup, info.toGroup != -1);
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
