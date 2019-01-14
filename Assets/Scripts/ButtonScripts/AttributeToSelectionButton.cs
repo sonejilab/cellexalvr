@@ -20,6 +20,7 @@ public class AttributeToSelectionButton : CellexalButton
         cellManager = referenceManager.cellManager;
         SetButtonActivated(true);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
     }
 
     public override void Click()

@@ -105,11 +105,9 @@ public class ToggleArcsSubMenu : MenuWithTabs
     public void RefreshTabs()
     {
         var nhs = referenceManager.networkGenerator.networkList.FindAll(nh => nh != null);
-        print("nr of nhs: " + nhs.Count);
         tabButtonPos = tabButtonPosOriginal;
         foreach (NetworkHandler nh in nhs)
         {
-            print("Destroying tab: " + nh.name.Split('_')[1]);
             DestroyTab(nh.name.Split('_')[1]);
             CreateToggleArcsButtons(nh.networks.ToArray());
         }
