@@ -59,6 +59,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
         newGraph.transform.position = startPositions[graphCount % 4];
         newGraph.referenceManager = referenceManager;
+        newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
         isCreating = true;
         graphCount++;
         return newGraph;

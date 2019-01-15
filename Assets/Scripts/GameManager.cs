@@ -320,6 +320,12 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendEnableColliders", PhotonTargets.Others, name);
     }
 
+    public void InformToggleGrabbable(string name, bool b)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendToggleGrabbable", PhotonTargets.Others, name, b);
+    }
+
     public void InformCreateHeatmap(string hmName)
     {
         if (!multiplayer) return;

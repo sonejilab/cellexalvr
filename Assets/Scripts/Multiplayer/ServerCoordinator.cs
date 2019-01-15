@@ -160,6 +160,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         CombinedGraph g = referenceManager.graphManager.FindGraph(moveGraphName);
+        g.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = false;
         bool graphExists = g != null;
         if (graphExists)
         {
@@ -227,6 +228,12 @@ class ServerCoordinator : Photon.MonoBehaviour
                 pair.Key.enabled = pair.Value;
             }
         }
+    }
+
+    [PunRPC]
+    public void SendToggleGrabbable(string name, bool b)
+    {
+        referenceManager.graphManager.FindGraph(name).GetComponent<GraphInteract>().isGrabbable = b;
     }
 
     [PunRPC]

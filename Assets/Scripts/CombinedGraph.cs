@@ -87,7 +87,6 @@ public class CombinedGraph : MonoBehaviour
         targetMinScale = 0.05f;
         targetMaxScale = 1f;
         originalPos = new Vector3();
-        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
         graphManager = referenceManager.graphManager;
