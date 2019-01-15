@@ -264,7 +264,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendDrawLinesBetweenGps()
     {
         Debug.Log("Recieved message to draw lines between graph points");
-        // more_cells referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionToolHandler.GetLastSelection());
+        referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionToolHandler.GetLastSelection());
         CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
     }
 
