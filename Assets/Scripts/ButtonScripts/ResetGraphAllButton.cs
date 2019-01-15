@@ -26,7 +26,7 @@ public class ResetGraphAllButton : CellexalButton
     public override void Click()
     {
         graphManager.ResetGraphs();
-        referenceManager.gameManager.InformResetGraphsAll();
+        referenceManager.gameManager.InformResetGraphAll();
     }
 
     private void OnGraphsLoaded()
