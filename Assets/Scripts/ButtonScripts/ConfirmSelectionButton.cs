@@ -22,6 +22,8 @@ public class ConfirmSelectionButton : CellexalButton
         CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
         CellexalEvents.SelectionCanceled.AddListener(TurnOff);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.BeginningOfHistoryReached.AddListener(TurnOff);
+        CellexalEvents.BeginningOfHistoryLeft.AddListener(TurnOn);
     }
 
     public override void Click()

@@ -282,32 +282,32 @@ public class ConfigManager : MonoBehaviour
                     selectionToolHandler.UpdateColors();
                     break;
 
-                case "AttributeColors":
-                    List<Color> attributeColors = new List<Color>();
-                    while (true)
-                    {
-                        Color newColor = ReadColor(value, lineNbr);
-                        newColor.a = 0.5f;
-                        attributeColors.Add(newColor);
+                //case "AttributeColors":
+                //    List<Color> attributeColors = new List<Color>();
+                //    while (true)
+                //    {
+                //        Color newColor = ReadColor(value, lineNbr);
+                //        newColor.a = 0.5f;
+                //        attributeColors.Add(newColor);
 
-                        // a '}' denotes the end of the list
-                        if (!value.Contains("}"))
-                        {
-                            if (streamReader.EndOfStream)
-                            {
-                                CellexalError.SpawnError("Error in config file", "Unexpected end of file when parsing list of attribute colors from the config file. File: " + configPath + " at line " + lineNbr);
-                                break;
-                            }
-                            lineNbr++;
-                            value = streamReader.ReadLine();
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    CellexalConfig.AttributeColors = attributeColors.ToArray();
-                    break;
+                //        // a '}' denotes the end of the list
+                //        if (!value.Contains("}"))
+                //        {
+                //            if (streamReader.EndOfStream)
+                //            {
+                //                CellexalError.SpawnError("Error in config file", "Unexpected end of file when parsing list of attribute colors from the config file. File: " + configPath + " at line " + lineNbr);
+                //                break;
+                //            }
+                //            lineNbr++;
+                //            value = streamReader.ReadLine();
+                //        }
+                //        else
+                //        {
+                //            break;
+                //        }
+                //    }
+                //    CellexalConfig.AttributeColors = attributeColors.ToArray();
+                //    break;
 
                 case "NumberOfExpressionColors":
                     int nColors = int.Parse(value);

@@ -20,6 +20,7 @@
 *.prefab
 *.ide*
 *.lock
+*.meta
 
 
 # Images and stuff

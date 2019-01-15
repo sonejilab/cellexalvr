@@ -292,7 +292,7 @@ public class InputReader : MonoBehaviour
             }
             // more_cells
             combinedGraphGenerator.SliceClustering();
-            graphManager.graphs.Add(combGraph);
+            graphManager.Graphs.Add(combGraph);
             if (debug)
             {
                 //newGraph.transform.Translate(Vector3.forward * fileIndex);
@@ -379,7 +379,7 @@ public class InputReader : MonoBehaviour
                 for (int j = 1; j < words.Length; ++j)
                 {
                     if (words[j] == "1")
-                        cellManager.AddAttribute(cellname, attributeTypes[j], (j - 1) % CellexalConfig.AttributeColors.Length);
+                        cellManager.AddAttribute(cellname, attributeTypes[j], (j - 1) % CellexalConfig.SelectionToolColors.Length);
                 }
             }
             metacellStreamReader.Close();

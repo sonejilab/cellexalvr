@@ -1306,11 +1306,13 @@ public class Heatmap : MonoBehaviour
 
         for (int i = 0, cellIndex = 0; i < groupWidths.Count; ++i)
         {
+
             int group = groupWidths[i].Item1;
             UnityEngine.Color groupColor = groupingColors[group];
             for (int j = 0; j < groupWidths[i].Item3; ++j, ++cellIndex)
             {
                 var graphPoint = cellManager.GetCell(cells[cellIndex]).CombinedGraphPoints[0];
+
                 selectionToolHandler.AddGraphpointToSelection(graphPoint, group, false);
             }
         }

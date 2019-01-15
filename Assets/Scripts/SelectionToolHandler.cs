@@ -18,7 +18,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public ushort hapticIntensity = 2000;
     public RadialMenu radialMenu;
-    public Sprite[] buttonIcons;
+    public Sprite buttonIcons;
     public GroupInfoDisplay groupInfoDisplay;
     public GroupInfoDisplay HUDGroupInfoDisplay;
     public GroupInfoDisplay FarGroupInfoDisplay;
@@ -85,9 +85,6 @@ public class SelectionToolHandler : MonoBehaviour
 
     void Awake()
     {
-        radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
-        radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
-        radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
         graphManager = referenceManager.graphManager;
         SetSelectionToolEnabled(false, 0);
@@ -125,7 +122,7 @@ public class SelectionToolHandler : MonoBehaviour
                 minkowskiTimeoutStopwatch.Stop();
                 minkowskiTimeoutStopwatch.Start();
                 float millisecond = Time.realtimeSinceStartup;
-                foreach (var graph in graphManager.graphs)
+                foreach (var graph in graphManager.Graphs)
                 {
                     var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex, millisecond);
                     foreach (var point in closestPoints)
@@ -176,7 +173,17 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void UpdateColors()
     {
+        currentColorIndex = 0;
+        radialMenu.buttons[1].ButtonIcon = buttonIcons;
+        radialMenu.buttons[3].ButtonIcon = buttonIcons;
         Colors = CellexalConfig.SelectionToolColors;
+        for (int i = 0; i < Colors.Length; i++)
+        {
+            Colors[i].a = 1;
+        }
+        radialMenu.buttons[1].color = Colors[Colors.Length - 1];
+        radialMenu.buttons[3].color = Colors[1];
+        radialMenu.RegenerateButtons();
         selectedColor = Colors[currentColorIndex];
         groupInfoDisplay.SetColors(Colors);
         HUDGroupInfoDisplay.SetColors(Colors);
@@ -198,7 +205,7 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint, int newGroup, bool hapticFeedback)
     {
-        AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[newGroup]);
+        AddGraphpointToSelection(graphPoint, newGroup, true, Colors[newGroup]);
         //Debug.Log("Adding gp to sel. Inform clients.");
         //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
     }
@@ -221,10 +228,10 @@ public class SelectionToolHandler : MonoBehaviour
 
         if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
         {
-            foreach (CombinedGraph graph in graphManager.graphs)
+            foreach (CombinedGraph graph in graphManager.Graphs)
             {
                 CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
-                graphPoint.RecolorSelectionColor(newGroup, true);
+                gp.RecolorSelectionColor(newGroup, true);
             }
             //graphPoint.Recolor(Colors[newGroup], newGroup);
         }
@@ -349,7 +356,11 @@ public class SelectionToolHandler : MonoBehaviour
         info.graphPoint.group = info.fromGroup;
 
         // if info.fromGroup != 1 then the outline should be drawn
-        // more_cells info.graphPoint.SetOutLined(info.fromGroup != -1, info.fromGroup);
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
+            gp.RecolorSelectionColor(info.fromGroup, info.fromGroup != -1);
+        }
 
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
@@ -357,14 +368,19 @@ public class SelectionToolHandler : MonoBehaviour
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
-            // more_cells   info.graphPoint.SetOutLined(false, -1);
+            foreach (CombinedGraph graph in graphManager.Graphs)
+            {
+                CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
+                gp.ResetColor();
+            }
+            //info.graphPoint.ResetColor();
         }
         else
         {
             groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-            // more_cells   info.graphPoint.SetOutLined(true, info.fromGroup);
+            //info.graphPoint.ResetColor();
         }
         historyIndexOffset++;
         selectionMade = false;
@@ -395,7 +411,11 @@ public class SelectionToolHandler : MonoBehaviour
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
         info.graphPoint.group = info.toGroup;
-        // more_cells   info.graphPoint.SetOutLined(info.toGroup != -1, info.toGroup);
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
+            gp.RecolorSelectionColor(info.toGroup, info.toGroup != -1);
+        }
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
@@ -518,10 +538,16 @@ public class SelectionToolHandler : MonoBehaviour
         IEnumerable<CombinedGraph.CombinedGraphPoint> uniqueCells = selectedCells.Reverse<CombinedGraph.CombinedGraphPoint>().Distinct().Reverse() ;
         foreach (CombinedGraph.CombinedGraphPoint gp in uniqueCells)
         {
-            // more_cells   if (gp.CustomColor)
-            // more_cells       gp.SetOutLined(false, gp.Material.color);
-            // more_cells   else
-            // more_cells       gp.SetOutLined(false, gp.CurrentGroup);
+            //if (gp.CustomColor)
+            //    gp.SetOutLined(false, gp.Material.color);
+            //else
+            //    gp.SetOutLined(false, gp.CurrentGroup);
+            //gp.RecolorSelectionColor(gp.group, false);
+            foreach (CombinedGraph graph in graphManager.Graphs)
+            {
+                CombinedGraph.CombinedGraphPoint graphPoint = graphManager.FindGraphPoint(graph.GraphName, gp.Label);
+                graphPoint.RecolorSelectionColor(gp.group, false);
+            }
             lastSelectedCells.Add(gp);
             gp.unconfirmedInSelection = false;
         }
@@ -616,8 +642,8 @@ public class SelectionToolHandler : MonoBehaviour
         }
         int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
         int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
-        radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIndexLeft];
-        radialMenu.buttons[3].ButtonIcon = buttonIcons[buttonIndexRight];
+        radialMenu.buttons[1].color = Colors[buttonIndexLeft];
+        radialMenu.buttons[3].color = Colors[buttonIndexRight];
         radialMenu.RegenerateButtons();
         selectedColor = Colors[currentColorIndex];
         controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);

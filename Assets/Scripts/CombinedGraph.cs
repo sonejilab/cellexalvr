@@ -93,7 +93,7 @@ public class CombinedGraph : MonoBehaviour
         graphManager = referenceManager.graphManager;
         Lines = new List<GameObject>();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        combinedGraphGenerator = GetComponent<CombinedGraphGenerator>();
+        combinedGraphGenerator = referenceManager.combinedGraphGenerator;
         selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
         startPosition = transform.position;
         nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
@@ -739,7 +739,8 @@ public class CombinedGraph : MonoBehaviour
 
     public Color GetGraphPointColor(CombinedGraphPoint gp)
     {
-        return texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y);
+        int group = (int)(255 * texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y).r);
+        return combinedGraphGenerator.graphPointColors.GetPixel(group, 0);
     }
 
     public void Party()

@@ -11,7 +11,10 @@ public class StartMenuButton : CellexalButton
         }
     }
 
-
+    void Start()
+    {
+        SetButtonActivated(false);
+    }
 
     public override void Click()
     {
@@ -19,28 +22,28 @@ public class StartMenuButton : CellexalButton
         referenceManager.gameManager.InformLoadingMenu();
     }
 }
-/*
-void Start()
-{
-    device = SteamVR_Controller.Input((int)rightController.index);
-    spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-}
-void OnTriggerEnter(Collider other)
-{
-    if (other.gameObject.tag == "Controller")
-    {
-        descriptionText.text = "Back to Start Menu";
-        controllerInside = true;
-    }
-}
 
-void OnTriggerExit(Collider other)
-{
-    if (other.gameObject.tag == "Controller")
-    {
-        descriptionText.text = "";
-        controllerInside = false;
-    }
-}*/
+//void Start()
+//{
+//    device = SteamVR_Controller.Input((int)rightController.index);
+//    spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+//}
+//void OnTriggerEnter(Collider other)
+//{
+//    if (other.gameObject.tag == "Controller")
+//    {
+//        descriptionText.text = "Back to Start Menu";
+//        controllerInside = true;
+//    }
+//}
+
+//void OnTriggerExit(Collider other)
+//{
+//    if (other.gameObject.tag == "Controller")
+//    {
+//        descriptionText.text = "";
+//        controllerInside = false;
+//    }
+//}
 
 

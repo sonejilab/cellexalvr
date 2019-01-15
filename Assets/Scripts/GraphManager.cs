@@ -19,7 +19,7 @@ public class GraphManager : MonoBehaviour
     public Shader graphPointNormalShader;
     public Shader graphPointOutlineShader;
 
-    public List<CombinedGraph> graphs { get; set; }
+    public List<CombinedGraph> Graphs { get; set; }
 
     private CellManager cellManager;
     private SelectionToolHandler selectionToolHandler;
@@ -62,7 +62,7 @@ public class GraphManager : MonoBehaviour
 
     void Awake()
     {
-        graphs = new List<CombinedGraph>();
+        Graphs = new List<CombinedGraph>();
     }
 
     private void Start()
@@ -151,14 +151,14 @@ public class GraphManager : MonoBehaviour
     {
         if (i == 1)
         {
-            foreach (CombinedGraph graph in graphs)
+            foreach (CombinedGraph graph in Graphs)
             {
                 graph.Party();
             }
         }
         else if (i == 0)
         {
-            foreach (CombinedGraph graph in graphs)
+            foreach (CombinedGraph graph in Graphs)
             {
                 graph.ResetColors();
             }
@@ -284,7 +284,7 @@ public class GraphManager : MonoBehaviour
     /// <returns> A reference to the graphpoint, or null if it was not found. </returns>
     public CombinedGraph.CombinedGraphPoint FindGraphPoint(string graphName, string label)
     {
-        foreach (CombinedGraph g in graphs)
+        foreach (CombinedGraph g in Graphs)
         {
             if (g.GraphName.Equals(graphName))
             {
@@ -300,7 +300,7 @@ public class GraphManager : MonoBehaviour
     [ConsoleCommand("graphManager", "cg")]
     public void RecolorGraphPoint(string label, int i)
     {
-        foreach (var graph in graphs)
+        foreach (var graph in Graphs)
         {
             graph.RecolorGraphPointSelectionColor(graph.FindGraphPoint(label), i, false);
         }
@@ -319,7 +319,7 @@ public class GraphManager : MonoBehaviour
 
     public void ColorAllGraphsByGeneExpression(ArrayList expressions)
     {
-        foreach (CombinedGraph graph in graphs)
+        foreach (CombinedGraph graph in Graphs)
         {
             graph.ColorByGeneExpression(expressions);
         }
@@ -327,9 +327,9 @@ public class GraphManager : MonoBehaviour
 
     public void SetGraphStartPosition()
     {
-        for (int i = 0; i < graphs.Count; ++i)
+        for (int i = 0; i < Graphs.Count; ++i)
         {
-            graphs[i].transform.position = startPositions[i % 4];
+            Graphs[i].transform.position = startPositions[i % 4];
         }
     }
 
@@ -340,14 +340,14 @@ public class GraphManager : MonoBehaviour
     {
         CellexalLog.Log("Deleting graphs and networks");
         cellManager.DeleteCells();
-        foreach (CombinedGraph g in graphs)
+        foreach (CombinedGraph g in Graphs)
         {
             if (g != null)
             {
                 Destroy(g.gameObject);
             }
         }
-        graphs.Clear();
+        Graphs.Clear();
         foreach (NetworkHandler network in networks)
         {
             foreach (NetworkCenter networkReplacement in network.Replacements)
@@ -392,7 +392,7 @@ public class GraphManager : MonoBehaviour
     {
         CellexalEvents.GraphsReset.Invoke();
         selectionToolHandler.CancelSelection();
-        foreach (var g in graphs)
+        foreach (var g in Graphs)
         {
             g.ResetColors();
         }
@@ -405,7 +405,7 @@ public class GraphManager : MonoBehaviour
     {
         CellexalEvents.GraphsReset.Invoke();
         selectionToolHandler.CancelSelection();
-        foreach (CombinedGraph g in graphs)
+        foreach (CombinedGraph g in Graphs)
         {
             g.ResetColorsAndPosition();
         }
@@ -427,11 +427,11 @@ public class GraphManager : MonoBehaviour
     /// <returns> A reference to the graph, or null if no graph was found </returns>
     public CombinedGraph FindGraph(string graphName)
     {
-        if (graphName == "" && graphs.Count > 0)
+        if (graphName == "" && Graphs.Count > 0)
         {
-            return graphs[0];
+            return Graphs[0];
         }
-        foreach (CombinedGraph g in graphs)
+        foreach (CombinedGraph g in Graphs)
         {
             if (g.GraphName == graphName)
             {
@@ -447,7 +447,7 @@ public class GraphManager : MonoBehaviour
     /// </summary>
     public void ClearLinesBetweenGraphs()
     {
-        foreach (CombinedGraph g in graphs)
+        foreach (CombinedGraph g in Graphs)
         {
             g.Lines.Clear();
         }
@@ -459,7 +459,7 @@ public class GraphManager : MonoBehaviour
     /// <param name="visible"> TRue for visible, false for invisible </param>
     public void SetInfoPanelsVisible(bool visible)
     {
-        foreach (CombinedGraph g in graphs)
+        foreach (CombinedGraph g in Graphs)
         {
             g.SetInfoTextVisible(visible);
         }
