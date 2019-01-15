@@ -213,6 +213,8 @@ class ServerCoordinator : Photon.MonoBehaviour
 
     }
 
+
+
     [PunRPC]
     public void SendEnableColliders(string name)
     {
@@ -233,7 +235,8 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendToggleGrabbable(string name, bool b)
     {
-        referenceManager.graphManager.FindGraph(name).GetComponent<GraphInteract>().isGrabbable = b;
+        //referenceManager.graphManager.FindGraph(name).GetComponent<GraphInteract>().isGrabbable = b;
+        referenceManager.graphManager.FindGraph(name).GetComponent<Collider>().enabled = b;
     }
 
     [PunRPC]
