@@ -18,7 +18,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public ushort hapticIntensity = 2000;
     public RadialMenu radialMenu;
-    public Sprite[] buttonIcons;
+    public Sprite buttonIcons;
     public GroupInfoDisplay groupInfoDisplay;
     public GroupInfoDisplay HUDGroupInfoDisplay;
     public GroupInfoDisplay FarGroupInfoDisplay;
@@ -85,9 +85,6 @@ public class SelectionToolHandler : MonoBehaviour
 
     void Awake()
     {
-        radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIcons.Length - 1];
-        radialMenu.buttons[3].ButtonIcon = buttonIcons[1];
-        radialMenu.RegenerateButtons();
         previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
         graphManager = referenceManager.graphManager;
         SetSelectionToolEnabled(false, 0);
@@ -176,7 +173,17 @@ public class SelectionToolHandler : MonoBehaviour
     /// </summary>
     public void UpdateColors()
     {
+        currentColorIndex = 0;
+        radialMenu.buttons[1].ButtonIcon = buttonIcons;
+        radialMenu.buttons[3].ButtonIcon = buttonIcons;
         Colors = CellexalConfig.SelectionToolColors;
+        for (int i = 0; i < Colors.Length; i++)
+        {
+            Colors[i].a = 1;
+        }
+        radialMenu.buttons[1].color = Colors[Colors.Length - 1];
+        radialMenu.buttons[3].color = Colors[1];
+        radialMenu.RegenerateButtons();
         selectedColor = Colors[currentColorIndex];
         groupInfoDisplay.SetColors(Colors);
         HUDGroupInfoDisplay.SetColors(Colors);
@@ -635,8 +642,8 @@ public class SelectionToolHandler : MonoBehaviour
         }
         int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
         int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
-        radialMenu.buttons[1].ButtonIcon = buttonIcons[buttonIndexLeft];
-        radialMenu.buttons[3].ButtonIcon = buttonIcons[buttonIndexRight];
+        radialMenu.buttons[1].color = Colors[buttonIndexLeft];
+        radialMenu.buttons[3].color = Colors[buttonIndexRight];
         radialMenu.RegenerateButtons();
         selectedColor = Colors[currentColorIndex];
         controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);

@@ -302,6 +302,7 @@ namespace VRTK
                 else
                 {
                     buttonIcon.GetComponent<Image>().sprite = buttons[i].ButtonIcon;
+                    buttonIcon.GetComponent<Image>().color = buttons[i].color;
                     buttonIcon.transform.localPosition = new Vector2(-1 * ((newButton.GetComponent<RectTransform>().rect.width / 2f) - (circle.thickness / 2f)), 0);
                     //Min icon size from thickness and arc
                     float scale1 = Mathf.Abs(circle.thickness);
@@ -361,10 +362,13 @@ namespace VRTK
     public class RadialMenuButton
     {
         public Sprite ButtonIcon;
+        public Color color;
+
         public UnityEvent OnClick = new UnityEvent();
         public UnityEvent OnHold = new UnityEvent();
         public UnityEvent OnHoverEnter = new UnityEvent();
         public UnityEvent OnHoverExit = new UnityEvent();
+
     }
 
     public enum ButtonEvent

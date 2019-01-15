@@ -41,7 +41,9 @@ public class GroupInfoDisplay : MonoBehaviour
         {
             Color col = colors[i];
             groups[i] = 0;
-            coloredSquares[i].material.color = col;
+            // Line below is for color groups on status display. Not used at the moment. 
+            // Size needs to match nr of selection tool colours.
+            //coloredSquares[i].material.color = col;
             //print("Color added " + col.r + " " + col.g + " " + col.b + " ints: " + ColorComparer.Bits(col.r) + " " + ColorComparer.Bits(col.g) + " " + ColorComparer.Bits(col.b));
         }
     }

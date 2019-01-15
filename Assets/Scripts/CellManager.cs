@@ -689,20 +689,16 @@ public class CellManager : MonoBehaviour
     [ConsoleCommand("cellManager", "colorbyattribute", "cba")]
     public void ColorByAttribute(string attributeType, bool color)
     {
-        //if (!previousSearchesList.Contains(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod))
-        //    previousSearchesList.AddEntry(attributeType, Definitions.Measurement.ATTRIBUTE, graphManager.GeneExpressionColoringMethod);
         CellexalLog.Log("Colored graphs by " + attributeType);
         foreach (Cell cell in cells.Values)
         {
             cell.ColorByAttribute(attributeType, color);
-            //GraphPoint gp = cell.GraphPoints[0];
             CombinedGraph.CombinedGraphPoint gp = cell.CombinedGraphPoints[0];
             if (cell.Attributes.ContainsKey(attributeType.ToLower()))
             {
                 if (color)
                 {
                     selectionList.Add(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
-                    //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], cell.Attributes[attributeType.ToLower()], false, g.Material.color);
                 }
                 if (!color)
                 {
