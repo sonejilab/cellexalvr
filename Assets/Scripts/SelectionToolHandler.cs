@@ -197,7 +197,7 @@ public class SelectionToolHandler : MonoBehaviour
     public void AddGraphpointToSelection(CombinedGraph.CombinedGraphPoint graphPoint)
     {
         AddGraphpointToSelection(graphPoint, currentColorIndex, true, Colors[currentColorIndex]);
-        // more_cells gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, currentColorIndex, Colors[currentColorIndex]);
+        gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, currentColorIndex, Colors[currentColorIndex]);
     }
 
     /// <summary>
@@ -207,7 +207,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         AddGraphpointToSelection(graphPoint, newGroup, true, Colors[newGroup]);
         //Debug.Log("Adding gp to sel. Inform clients.");
-        //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.label, newGroup, Colors[newGroup]);
+        gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, Colors[newGroup]);
     }
 
 
@@ -307,8 +307,8 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="color">Colour that the graphpoint should be coloured by.</param>
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
     {
-        // more_cells    GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        // more_cells    AddGraphpointToSelection(gp, newGroup, true, color);
+        CombinedGraph.CombinedGraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        AddGraphpointToSelection(gp, newGroup, true, color);
     }
 
     /// <summary>
@@ -321,12 +321,12 @@ public class SelectionToolHandler : MonoBehaviour
     /// <param name="cube">If a cube should be coloured as well as the graphpoint.</param>
     public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color, bool cube)
     {
-        // more_cells   GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-        // more_cells   AddGraphpointToSelection(gp, newGroup, true, color);
-        // more_cells   foreach (Selectable sel in gp.lineBetweenCellsCubes)
-        // more_cells   {
-        // more_cells       sel.GetComponent<Renderer>().material.color = color;
-        // more_cells   }
+        CombinedGraph.CombinedGraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+        AddGraphpointToSelection(gp, newGroup, true, color);
+        foreach (Selectable sel in gp.lineBetweenCellsCubes)
+        {
+            sel.GetComponent<Renderer>().material.color = color;
+        }
     }
 
 
