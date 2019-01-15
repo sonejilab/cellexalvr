@@ -217,6 +217,12 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
     }
 
+    public void InformResetGraphAll()
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendResetGraphAll", PhotonTargets.Others);
+    }
+
     public void InformLoadingMenu()
     {
         if (!multiplayer) return;

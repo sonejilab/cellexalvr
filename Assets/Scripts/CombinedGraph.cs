@@ -40,9 +40,9 @@ public class CombinedGraph : MonoBehaviour
     private float targetMinScale;
     private float targetMaxScale;
     private float shrinkSpeed;
-    private Vector3 originalPos;
-    private Quaternion originalRot;
-    private Vector3 originalScale;
+    private Vector3 oldPos;
+    private Quaternion oldRot;
+    private Vector3 oldScale;
 
     // Debug stuff
     private Vector3 debugGizmosPos;
@@ -86,7 +86,7 @@ public class CombinedGraph : MonoBehaviour
         shrinkSpeed = 2f;
         targetMinScale = 0.05f;
         targetMaxScale = 1f;
-        originalPos = new Vector3();
+        oldPos = new Vector3();
         graphManager = referenceManager.graphManager;
         gameManager = referenceManager.gameManager;
         graphManager = referenceManager.graphManager;
@@ -138,13 +138,13 @@ public class CombinedGraph : MonoBehaviour
     void Maximize()
     {
         float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
+        transform.position = Vector3.MoveTowards(transform.position, oldPos, step);
         transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
         transform.Rotate(Vector3.one * Time.deltaTime * -100);
         if (transform.localScale.x >= targetMaxScale)
         {
-            transform.localScale = originalScale;
-            transform.localPosition = originalPos;
+            transform.localScale = oldScale;
+            transform.localPosition = oldPos;
             CellexalLog.Log("Maximized object" + name);
             maximize = false;
             GraphActive = true;
@@ -164,8 +164,8 @@ public class CombinedGraph : MonoBehaviour
             c.enabled = false;
         foreach (GameObject line in Lines)
             line.SetActive(false);
-        originalPos = transform.position;
-        originalScale = transform.localScale;
+        oldPos = transform.position;
+        oldScale = transform.localScale;
         minimize = true;
     }
 
@@ -713,6 +713,12 @@ public class CombinedGraph : MonoBehaviour
     {
         ResetColors();
         transform.position = startPosition;
+    }
+
+    public void ResetSizeAndRotation()
+    {
+        transform.localScale = Vector3.one;
+        transform.localRotation = Quaternion.identity;
     }
 
     /// <summary>

@@ -408,6 +408,7 @@ public class GraphManager : MonoBehaviour
         foreach (CombinedGraph g in Graphs)
         {
             g.ResetColorsAndPosition();
+            g.ResetSizeAndRotation();
         }
         //SetGraphStartPosition();
     }

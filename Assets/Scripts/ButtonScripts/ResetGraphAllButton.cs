@@ -19,7 +19,6 @@ public class ResetGraphAllButton : CellexalButton
     {
         graphManager = referenceManager.graphManager;
         SetButtonActivated(false);
-        referenceManager.gameManager.InformResetGraphColor();
         CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
         CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
     }
@@ -27,6 +26,7 @@ public class ResetGraphAllButton : CellexalButton
     public override void Click()
     {
         graphManager.ResetGraphs();
+        referenceManager.gameManager.InformResetGraphsAll();
     }
 
     private void OnGraphsLoaded()
