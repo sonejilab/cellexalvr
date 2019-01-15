@@ -247,6 +247,13 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendResetGraphAll()
+    {
+        Debug.Log("Recieved message to reset graph colors, position, scale and rotation");
+        referenceManager.graphManager.ResetGraphs();
+    }
+
+    [PunRPC]
     public void SendLoadingMenu()
     {
         Debug.Log("Recieved message to reset to loading dataset scene");
