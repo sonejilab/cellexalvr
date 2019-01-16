@@ -20,12 +20,12 @@ class DrawLinesBetweenGraphPointsButton : CellexalButton
         CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
         CellexalEvents.LinesBetweenGraphsCleared.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOff);
     }
 
     public override void Click()
     {
         cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection());
-        CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         referenceManager.gameManager.InformDrawLinesBetweenGps();
         TurnOff();
     }

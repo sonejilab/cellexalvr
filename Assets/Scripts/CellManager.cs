@@ -856,6 +856,7 @@ public class CellManager : MonoBehaviour
                 }
             }
         }
+        CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
     }
 
     public void DrawLinesBetweenGraphPoints(List<CombinedGraph.CombinedGraphPoint> points, CombinedGraph fromGraph, CombinedGraph toGraph)

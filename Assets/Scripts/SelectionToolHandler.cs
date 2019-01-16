@@ -615,7 +615,6 @@ public class SelectionToolHandler : MonoBehaviour
         historyIndexOffset = selectionHistory.Count;
         selectedCells.Clear();
         selectionMade = false;
-        //selectionToolMenu.UndoSelection();
     }
 
     /// <summary>
