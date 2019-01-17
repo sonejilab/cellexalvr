@@ -134,6 +134,7 @@ public class NetworkGenerator : MonoBehaviour
     /// </summary>
     public void GenerateNetworks(int layoutSeed)
     {
+        CellexalEvents.CreatingNetworks.Invoke();
         StartCoroutine(GenerateNetworksCoroutine(layoutSeed));
     }
 

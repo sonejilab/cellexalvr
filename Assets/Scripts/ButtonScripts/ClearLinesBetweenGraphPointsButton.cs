@@ -16,12 +16,12 @@ class ClearLinesBetweenGraphPointsButton : CellexalButton
         cellManager = referenceManager.cellManager;
         SetButtonActivated(false);
         CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
+        CellexalEvents.LinesBetweenGraphsCleared.AddListener(TurnOn);
     }
 
     public override void Click()
     {
         cellManager.ClearLinesBetweenGraphPoints();
-        CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         SetButtonActivated(false);
         referenceManager.gameManager.InformClearLinesBetweenGps();
     }

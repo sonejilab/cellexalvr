@@ -898,6 +898,7 @@ public class CellManager : MonoBehaviour
         }
         lines.Clear();
         graphManager.ClearLinesBetweenGraphs();
+        CellexalEvents.LinesBetweenGraphsCleared.Invoke();
     }
 
     /// <summary>
