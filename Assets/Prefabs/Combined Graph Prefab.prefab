@@ -548,14 +548,14 @@ MonoBehaviour:
   disableWhenIdle: 1
   touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   allowedTouchControllers: 0
-  isGrabbable: 0
+  isGrabbable: 1
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
   validDrop: 1
   grabOverrideButton: 0
   allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
+  grabAttachMechanicScript: {fileID: 114356468590826636}
+  secondaryGrabActionScript: {fileID: 114212794373154340}
   isUsable: 0
   holdButtonToUse: 1
   useOnlyIfGrabbed: 0
@@ -563,7 +563,6 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  magnifier: {fileID: 0}
   referenceManager: {fileID: 0}
 --- !u!114 &114566603823957088
 MonoBehaviour:
