@@ -420,6 +420,12 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendDeleteObject", PhotonTargets.Others, objName);
     }
 
+    public void InformDeleteNetwork(string objName)
+    {
+        if (!multiplayer) return;
+        coordinator.photonView.RPC("SendDeleteNetwork", PhotonTargets.Others, objName);
+    }
+
     public void InformShowGraph(string graphName, string jailName)
     {
         if (!multiplayer) return;

@@ -110,6 +110,7 @@ public class RemovalController : MonoBehaviour {
         controllerInside = false;
     }
 
+
     void DeleteObject(GameObject obj)
     {
         if (!obj)
@@ -135,7 +136,14 @@ public class RemovalController : MonoBehaviour {
             GetComponent<Light>().color = Color.white;
             transform.localScale = Vector3.one * 0.03f;
             GetComponent<Light>().range = 0.04f;
-            referenceManager.gameManager.InformDeleteObject(obj.name);
+            if (obj.GetComponent<NetworkHandler>())
+            {
+                referenceManager.gameManager.InformDeleteNetwork(obj.name);
+            }
+            else
+            {
+                referenceManager.gameManager.InformDeleteObject(obj.name);
+            }
         }
     }
 }
