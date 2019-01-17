@@ -130,6 +130,7 @@ public class HeatmapGenerator : MonoBehaviour
             heatmapName = name;
         }
         CellexalLog.Log("Creating heatmap");
+        CellexalEvents.CreatingHeatmap.Invoke();
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
     }
 

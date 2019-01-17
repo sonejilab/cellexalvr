@@ -328,7 +328,7 @@ class ServerCoordinator : Photon.MonoBehaviour
         NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
         foreach (NetworkCenter nc in nh.networks)
         {
-            nc.BringBackOriginal();
+            Destroy(nc.gameObject);
         }
         Destroy(nh.gameObject);
     }

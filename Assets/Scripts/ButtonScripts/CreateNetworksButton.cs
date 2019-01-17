@@ -19,6 +19,7 @@ public class CreateNetworksButton : CellexalButton
         SetButtonActivated(false);
         CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.CreatingNetworks.AddListener(TurnOff);
     }
 
     public override void Click()
@@ -27,8 +28,6 @@ public class CreateNetworksButton : CellexalButton
         var layoutSeed = rand.Next();
         networkGenerator.GenerateNetworks(layoutSeed);
         gameManager.InformGenerateNetworks(layoutSeed);
-        CellexalEvents.CreatingNetworks.Invoke();
-        TurnOff();
     }
 
     private void TurnOn()
