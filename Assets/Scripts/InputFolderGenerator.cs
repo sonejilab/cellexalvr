@@ -11,6 +11,8 @@ public class InputFolderGenerator : MonoBehaviour
 
     public GameObject folderPrefab;
     public ReferenceManager referenceManager;
+
+    
     // 6 is the number of boxes on each "floor"
     private Vector3[] folderBaseCoords = new Vector3[6];
 
@@ -29,6 +31,8 @@ public class InputFolderGenerator : MonoBehaviour
             folderBaseCoords[i] = new Vector3(folderBaseCoords[i - j].x, 0, -folderBaseCoords[i - j].z);
         }
         GenerateFolders();
+
+        CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyFolderColliders);
     }
 
     /// <summary>
@@ -93,6 +97,7 @@ public class InputFolderGenerator : MonoBehaviour
             }
         }
     }
+
 
     /// <summary>
     /// Find the cells object of a given name.

@@ -12,10 +12,11 @@ using ExitGames.Client.Photon;
 public class GameMenu : MonoBehaviour
 {
     public GUISkin Skin;
-    public Vector2 WidthAndHeight = new Vector2(600, 400);
+    public Vector2 WidthAndHeight = new Vector2(1200, 800);
     private string roomName = "myLab";
     private string password = "";
     private string roomAndPass = "";
+    private bool spectator = false;
 
     private Vector2 scrollPos = Vector2.zero;
 
@@ -24,6 +25,8 @@ public class GameMenu : MonoBehaviour
     public static readonly string SceneNameMenu = "Launcher";
 
     public static readonly string SceneNameGame = "vrjeans_scene1";
+
+    public static readonly string SpectatorScene = "spectator_scene";
 
     private string errorDialog;
     private double timeToClearDialog;
@@ -111,7 +114,15 @@ public class GameMenu : MonoBehaviour
         if (GUI.changed)
         {
             // Save name
-            PlayerPrefs.SetString("playerName", PhotonNetwork.playerName);
+            if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
+            {
+                
+                PlayerPrefs.SetString("playerName", "Spectator_" + PhotonNetwork.playerName);
+            }
+            else
+            {
+                PlayerPrefs.SetString("playerName", PhotonNetwork.playerName);
+            }
         }
         GUILayout.EndHorizontal();
 
@@ -139,8 +150,11 @@ public class GameMenu : MonoBehaviour
         // Create a room (fails if exist or if password does not comply with rules!)
         if (GUILayout.Button("Create Room", GUILayout.Width(150)))
         {
-            print(this.roomAndPass);
             int n;
+            if (spectator)
+            {
+                PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+            }
             if (this.password.Length == 4 && int.TryParse(this.password, out n))
             {
                 print("Create room: " + this.roomAndPass);
@@ -156,6 +170,8 @@ public class GameMenu : MonoBehaviour
         {
             PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
         }
+
+        spectator = GUILayout.Toggle(spectator, "Spectator View");
 
         GUILayout.EndHorizontal();
 

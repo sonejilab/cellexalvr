@@ -31,7 +31,7 @@ namespace ExitGames.Demos.DemoAnimator
         public GameObject controlPanel;
         //[Tooltip("The UI Label to inform the user that the connection is in progress")]
         //public GameObject progressLabel;
-
+        
         #endregion
 
 

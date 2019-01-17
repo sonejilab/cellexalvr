@@ -17,30 +17,19 @@ public class GameManager : Photon.PunBehaviour
     static public GameManager Instance;
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
+    public GameObject spectatorPrefab;
     public GameObject serverCoordinatorPrefab;
     public GameObject waitingCanvas;
+    public GameObject spectatorRig;
+    public GameObject VRRig;
     public bool avatarMenuActive;
 
-    //private GraphManager graphManager;
-    //public CellManager cellManager;
-    //public SelectionToolHandler selectionToolHandler;
-    //public HeatmapGenerator heatmapGenerator;
-    //public NetworkGenerator networkGenerator;
-    //private KeyboardOutput keyboardOut;
-    //private ServerCoordinator serverCoordinator;
-    //private ServerCoordinator clientCoordinator;
     private ServerCoordinator coordinator;
     public bool multiplayer = false;
 
     #endregion
     private void Start()
     {
-        //graphManager = referenceManager.graphManager;
-        //cellManager = referenceManager.cellManager;
-        //selectionToolHandler = referenceManager.selectionToolHandler;
-        //heatmapGenerator = referenceManager.heatmapGenerator;
-        //networkGenerator = referenceManager.networkGenerator;
-        //keyboardOut = referenceManager.keyboardOutput;
         Instance = this;
         if (!PhotonNetwork.connected) return;
         if (playerPrefab == null)
@@ -55,17 +44,29 @@ public class GameManager : Photon.PunBehaviour
             {
                 Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-                player.gameObject.name = PhotonNetwork.playerName;
-                //Debug.Log("SPAWN CUBE");
+                
+                if (PhotonNetwork.playerName.Contains("Spectator"))
+                {
+                    GameObject player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                    player.gameObject.name = PhotonNetwork.playerName;
+                    spectatorRig.SetActive(true);
+                    VRRig.SetActive(false);
+                }
+                if (!PhotonNetwork.playerName.Contains("Spectator"))
+                {
+                    GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                    player.gameObject.name = PhotonNetwork.playerName;
+                }
+
                 //PhotonNetwork.Instantiate(this.objPrefab.name, new Vector3(0f, 1f, 2f), Quaternion.identity, 0);
                 if (PhotonNetwork.isMasterClient)
                 {
                     coordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
-                    waitingCanvas.SetActive(true);
+
+                    //waitingCanvas.SetActive(true);
                     // serverCoordinator.RegisterClient(this);
                 }
-                else
+                if (!PhotonNetwork.isMasterClient)
                 {
                     coordinator = PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
 
