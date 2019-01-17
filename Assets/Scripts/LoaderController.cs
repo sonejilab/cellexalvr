@@ -67,7 +67,7 @@ public class LoaderController : MonoBehaviour
 
         if (timeEntered + 5 < Time.time && collidersDestroyed)
         {
-            inputFolderGenerator.DestroyFolders();
+            //inputFolderGenerator.DestroyFolders();
             DestroyCells();
         }
     }
@@ -166,7 +166,7 @@ public class LoaderController : MonoBehaviour
         }
     }
 
-    void DestroyFolderColliders()
+    public void DestroyFolderColliders()
     {
         // foreach (Collider c in GetComponentsInChildren<Collider>()) {
         //  Destroy(c);

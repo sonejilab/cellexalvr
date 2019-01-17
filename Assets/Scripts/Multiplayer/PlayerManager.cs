@@ -76,8 +76,6 @@ public class PlayerManager : Photon.PunBehaviour, IPunObservable
             this.CalledOnLevelWasLoaded(scene.buildIndex);
         };
 #endif
-
-
     }
 
     /// <summary>

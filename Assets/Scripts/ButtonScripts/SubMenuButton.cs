@@ -21,7 +21,8 @@ public class SubMenuButton : CellexalButton
         // This makes the buttons in the menu able to receive events while not being shown.
         menu.SetActive(true);
         SetMenuActivated(false);
-
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
     }
 
     public override void Click()
@@ -119,5 +120,15 @@ public class SubMenuButton : CellexalButton
             r.enabled = active;
         foreach (var c in obj.GetComponentsInChildren<Collider>())
             c.enabled = active;
+    }
+
+    void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
+    
+    void TurnOff()
+    {
+        SetButtonActivated(false);
     }
 }

@@ -90,7 +90,7 @@ public class PushBack : MonoBehaviour
             raycastingSource = rightController.transform;
             int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");
             raycastingSource = rightController.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist+1, layerMask);
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist+5, layerMask);
             if (hit.collider && pull)
             {
                 // don't let the thing become smaller than what it was originally

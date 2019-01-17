@@ -14,6 +14,8 @@ public class ShowLabelsButton : CellexalButton
         graphManager = referenceManager.graphManager;
         //GetComponent<SimpleTextRotator>().SetTransforms(this.transform, this.transform);
         activate = false;
+        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 
     protected override string Description
@@ -30,5 +32,13 @@ public class ShowLabelsButton : CellexalButton
         activate = !activate;
     }
 
+    void TurnOn()
+    {
+        SetButtonActivated(true);
+    }
 
+    void TurnOff()
+    {
+        SetButtonActivated(false);
+    }
 }
