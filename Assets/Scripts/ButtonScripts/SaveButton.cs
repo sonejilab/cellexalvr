@@ -23,7 +23,7 @@ public class SaveButton : CellexalButton
     {
         base.Awake();
         CellexalEvents.ScriptRunning.AddListener(TurnOff);
-        CellexalEvents.ScriptRunning.AddListener(TurnOn);
+        CellexalEvents.ScriptFinished.AddListener(TurnOn);
     }
 
     protected override string Description

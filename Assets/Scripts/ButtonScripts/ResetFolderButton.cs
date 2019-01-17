@@ -57,9 +57,13 @@ public class ResetFolderButton : CellexalButton
         }
         //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
         textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
-        foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
-        {
-            b.SetButtonActivated(true);
-        }
+        buttonsToActivate.GetComponent<CellexalButton>().SetButtonActivated(true);
+        //foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
+        //{
+        //    if (b.gameObject.name == "Help Tool Button" || b.gameObject.name == "Web Browser Button")
+        //    {
+        //        b.SetButtonActivated(true);
+        //    }
+        //}
     }
 }

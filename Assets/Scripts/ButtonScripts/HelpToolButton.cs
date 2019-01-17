@@ -18,6 +18,7 @@ public class HelpToolButton : CellexalButton
         base.Awake();
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         helpTool = referenceManager.helpTool;
+        SetButtonActivated(false);
     }
 
     public override void Click()
