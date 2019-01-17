@@ -322,6 +322,19 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
+    public void SendDeleteNetwork(string name)
+    {
+        CellexalLog.Log("Recieved message to delete object with name: " + name);
+        NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
+        foreach (NetworkCenter nc in nh.networks)
+        {
+            nc.BringBackOriginal();
+        }
+        Destroy(nh.gameObject);
+    }
+
+
+    [PunRPC]
     public void SendGenerateNetworks(int layoutSeed)
     {
         CellexalLog.Log("Recieved message to generate networks");
@@ -464,8 +477,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMinimizeGraph(string graphName)
     {
-        Debug.Log("MINIMIZING: " + graphName);
-        GameObject.Find(graphName).GetComponent<Graph>().HideGraph();
+        GameObject.Find(graphName).GetComponent<CombinedGraph>().HideGraph();
         referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
     }
 
@@ -479,7 +491,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendShowGraph(string graphName, string jailName)
     {
-        Graph g = GameObject.Find(graphName).GetComponent<Graph>();
+        CombinedGraph g = GameObject.Find(graphName).GetComponent<CombinedGraph>();
         GameObject jail = GameObject.Find(jailName);
         MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
         g.ShowGraph();
