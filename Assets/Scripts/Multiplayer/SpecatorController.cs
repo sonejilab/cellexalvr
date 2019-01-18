@@ -16,13 +16,13 @@ public class SpecatorController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             CtrlsCanvas.SetActive(true);
             TextCanvas.SetActive(false);
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(KeyCode.Tab))
         {
             CtrlsCanvas.SetActive(false);
             TextCanvas.SetActive(true);

@@ -13,5 +13,10 @@ class MagnifierToolButton : CellexalToolButton
     {
         get { return "Toggle magnifier tool"; }
     }
+
+    private void Start()
+    {
+        SetButtonActivated(false);
+    }
 }
 

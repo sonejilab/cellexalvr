@@ -916,8 +916,8 @@ public class NetworkCenter : MonoBehaviour
         foreach (CombinedArc arc in combinedArcs)
         {
             var colorIndex = (int)(Mathf.Floor(((float)(arc.nArcsCombined - 1) / max) * combinedArcsColors.Count));
-            arc.renderer.startWidth = colorIndex * 0.002f;
-            arc.renderer.endWidth = colorIndex * 0.002f;
+            arc.renderer.startWidth = colorIndex * 0.0015f;
+            arc.renderer.endWidth = colorIndex * 0.0015f;
             //arc.renderer.startColor = combinedArcsColors[colorIndex];
             //arc.renderer.endColor = combinedArcsColors[colorIndex];
         }

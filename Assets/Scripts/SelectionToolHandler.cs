@@ -137,9 +137,12 @@ public class SelectionToolHandler : MonoBehaviour
                 ActivateSelection(false);
             }
         }
-        // Sometimes the a bug occurs where particles stays active even when selection tool is off... Keep this line 
-        // until you know why.
-        particles.gameObject.SetActive(IsSelectionToolEnabled());
+        // Sometimes the a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
+        // if selection tool is inactive.
+        if (particles)
+        {
+            particles.gameObject.SetActive(IsSelectionToolEnabled());
+        }
 
     }
 
@@ -714,18 +717,15 @@ public class SelectionToolHandler : MonoBehaviour
         {
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
         }
-        if (!enabled)
+        if (!enabled && particles != null)
         {
             particles.gameObject.SetActive(false);
-            //controllerModelSwitcher.rightControllerBody.GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
         }
         if (selActive)
         {
             particles.gameObject.SetActive(true);
             var main = particles.main;
             main.startColor = Colors[currentColorIndex];
-            //controllerModelSwitcher.rightControllerBody.GetComponent<Renderer>().material.SetColor("_EmissionColor", Colors[currentColorIndex]);
-            //controllerModelSwitcher.rightControllerBody.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
         }
         for (int i = 0; i < selectionToolColliders.Length; ++i)
         {

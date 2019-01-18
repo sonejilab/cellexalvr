@@ -12,7 +12,8 @@ using ExitGames.Client.Photon;
 public class GameMenu : MonoBehaviour
 {
     public GUISkin Skin;
-    public Vector2 WidthAndHeight = new Vector2(1200, 800);
+    public GameObject mainMenu;
+    public Vector2 WidthAndHeight = new Vector2(600, 500);
     private string roomName = "myLab";
     private string password = "";
     private string roomAndPass = "";
@@ -87,7 +88,7 @@ public class GameMenu : MonoBehaviour
             if (this.connectFailed)
             {
                 GUILayout.Label("Connection failed. Check setup and use Setup Wizard to fix configuration.");
-                GUILayout.Label(String.Format("Server: {0}", new object[] {PhotonNetwork.ServerAddress}));
+                GUILayout.Label(String.Format("Server: {0}", new object[] { PhotonNetwork.ServerAddress }));
                 GUILayout.Label("AppId: " + PhotonNetwork.PhotonServerSettings.AppID.Substring(0, 8) + "****"); // only show/log first 8 characters. never log the full AppId.
 
                 if (GUILayout.Button("Try Again", GUILayout.Width(100)))
@@ -100,15 +101,15 @@ public class GameMenu : MonoBehaviour
             return;
         }
 
-        Rect content = new Rect((Screen.width - this.WidthAndHeight.x)/2, (Screen.height - this.WidthAndHeight.y)/2, this.WidthAndHeight.x, this.WidthAndHeight.y);
+        Rect content = new Rect((Screen.width - this.WidthAndHeight.x) / 2, (Screen.height - this.WidthAndHeight.y) / 2, this.WidthAndHeight.x, this.WidthAndHeight.y);
         GUI.Box(content, "Join or Create Room");
         GUILayout.BeginArea(content);
 
-        GUILayout.Space(40);
+        GUILayout.Space(80);
 
         // Player name
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Player name:", GUILayout.Width(200));
+        GUILayout.Label("Player Name:", GUILayout.Width(200));
         PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName);
         GUILayout.Space(158);
         if (GUI.changed)
@@ -116,7 +117,7 @@ public class GameMenu : MonoBehaviour
             // Save name
             if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
             {
-                
+
                 PlayerPrefs.SetString("playerName", "Spectator_" + PhotonNetwork.playerName);
             }
             else
@@ -129,31 +130,36 @@ public class GameMenu : MonoBehaviour
         GUILayout.Space(15);
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Roomname:", GUILayout.Width(200));
+        GUILayout.Label("Room Name:", GUILayout.Width(200));
         this.roomName = GUILayout.TextField(this.roomName);
         GUILayout.Space(158);
 
         GUILayout.EndHorizontal();
+        GUILayout.Space(15);
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Password(4 digit code):", GUILayout.Width(200));
+        GUILayout.Label("Password: \n(4 digit code)", GUILayout.Width(200));
 
         this.password = GUILayout.PasswordField(this.password, "*"[0], 4, GUILayout.Width(100));
 
         this.roomAndPass = this.roomName + this.password;
 
         GUILayout.EndHorizontal();
-
+        GUILayout.Space(30);
         GUILayout.BeginHorizontal();
         //GUILayout.FlexibleSpace();
         //this.roomName = GUILayout.TextField(this.roomName);
         // Join room by title
         // Create a room (fails if exist or if password does not comply with rules!)
-        if (GUILayout.Button("Create Room", GUILayout.Width(150)))
+        if (GUILayout.Button("Create Room", GUILayout.Width(200)))
         {
             int n;
-            if (spectator)
+            if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
             {
                 PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+            }
+            if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
+            {
+                PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
             }
             if (this.password.Length == 4 && int.TryParse(this.password, out n))
             {
@@ -166,15 +172,14 @@ public class GameMenu : MonoBehaviour
 
             }
         }
-        if (GUILayout.Button("Join Room", GUILayout.Width(150)))
+        if (GUILayout.Button("Join Room", GUILayout.Width(200)))
         {
             PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
         }
 
-        spectator = GUILayout.Toggle(spectator, "Spectator View");
+        spectator = GUILayout.Toggle(spectator, "Spectator View \n (Non-VR)");
 
         GUILayout.EndHorizontal();
-
 
         if (!string.IsNullOrEmpty(ErrorDialog))
         {
@@ -187,7 +192,13 @@ public class GameMenu : MonoBehaviour
             }
         }
 
-        GUILayout.Space(15);
+        GUILayout.Space(20);
+
+        if (GUILayout.Button("Go Back", GUILayout.Width(200)))
+        {
+            this.gameObject.SetActive(false);
+            mainMenu.SetActive(true);
+        }
 
         // Join random room
         //GUILayout.BeginHorizontal();
