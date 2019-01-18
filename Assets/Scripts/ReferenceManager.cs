@@ -90,6 +90,7 @@ public class ReferenceManager : MonoBehaviour
     public ConsoleManager consoleManager;
     public TurnOffThoseLights turnOffThoseLights;
     public DesktopMenu desktopMenu;
+    public GameObject fpsCounter;
     #endregion
 
     #region GeneKeyboard

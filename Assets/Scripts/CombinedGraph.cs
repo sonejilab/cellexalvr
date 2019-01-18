@@ -463,14 +463,6 @@ public class CombinedGraph : MonoBehaviour
 
         }
 
-        public void DrawDebugCube(Vector3 gameobjetcPos)
-        {
-            if (rejected)
-            {
-
-            }
-        }
-
         public void DrawDebugLines(Vector3 gameobjectPos)
         {
             if (children.Length != 0)
@@ -783,7 +775,7 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="color">The graphpoint's new color.</param>
     public void RecolorGraphPointGeneExpression(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        byte greenChannel = 0; //(byte)(outline || i > 27 ? 27 : 0);
+        byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
         if (i == -1)
         {
             i = 255;

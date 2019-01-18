@@ -312,6 +312,7 @@ public class ConsoleManager : MonoBehaviour
         return sb.ToString();
     }
 
+    #region GENERAL COMMANDS
     /// <summary>
     /// Lists all available commands.
     /// </summary>
@@ -399,6 +400,14 @@ public class ConsoleManager : MonoBehaviour
 #endif
         }
     }
+
+    [ConsoleCommand("consoleManager", "fps")]
+    public void ShowFPS(bool b)
+    {
+        referenceManager.fpsCounter.SetActive(b);
+    }
+
+    #endregion
 
 }
 
