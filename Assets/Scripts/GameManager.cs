@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This class is responsible for passing commands that are about to be sent to a connected client.
+/// It also spawns the players and objects handling the client-server coordination.
 /// </summary>
 public class GameManager : Photon.PunBehaviour
 {
@@ -45,20 +46,21 @@ public class GameManager : Photon.PunBehaviour
                 Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 
+                // If the user checked the spectator option the name prefix will be Spectator. If spectator spawn an invisible avatar instead.
                 if (PhotonNetwork.playerName.Contains("Spectator"))
                 {
                     GameObject player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                     player.gameObject.name = PhotonNetwork.playerName;
                     spectatorRig.SetActive(true);
                     VRRig.SetActive(false);
+                    referenceManager.selectionToolHandler = spectatorRig.GetComponent<SelectionToolHandler>();
                 }
                 if (!PhotonNetwork.playerName.Contains("Spectator"))
                 {
                     GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                     player.gameObject.name = PhotonNetwork.playerName;
                 }
-
-                //PhotonNetwork.Instantiate(this.objPrefab.name, new Vector3(0f, 1f, 2f), Quaternion.identity, 0);
+                
                 if (PhotonNetwork.isMasterClient)
                 {
                     coordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
@@ -69,8 +71,6 @@ public class GameManager : Photon.PunBehaviour
                 if (!PhotonNetwork.isMasterClient)
                 {
                     coordinator = PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
-
-                    //GameObject.Find("ServerCoordinator").GetComponent<ServerCoordinator>().RegisterClient(this);
                 }
             }
             else

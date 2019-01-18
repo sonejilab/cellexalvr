@@ -21,7 +21,15 @@ public class FilterManager : MonoBehaviour
 
     private void ReadFilters()
     {
-        ReadFilters(null, null);
+        try
+        {
+            ReadFilters(null, null);
+        }
+        catch (ArgumentNullException e)
+        {
+            CellexalLog.Log("Could not Read filters.");
+            return;
+        }
     }
 
     private void ReadFilters(object source, FileSystemEventArgs e)
