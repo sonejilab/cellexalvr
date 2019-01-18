@@ -10,12 +10,15 @@
 
 Shader "Custom/CombinedGraphpoint" {
     Properties {
-        _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _GraphpointColorTex("Graphpoint Colors", 2D) = "white" {}
-        _Thickness("Thickness", float) = 0.005
-        _FlashCellRadius("Flash Cell Radius", float) = 3
-        _FlashCellThickness("Flash Cell Thickness", float) = 1.05
+        _OutlineThickness("Thickness", float) = 0.005
+        _MovingOutlineOuterRadius("Moving Outline Outer Radius", float) = 3
+        _MovingOutlineInnerRadius("Moving Outline Inner Radius", Range(0, 1)) = 0.9
+        _TestPar("test", float) = 0
+        _OuterClipRadius("Outer Clip Radius", float) = 0
+        _InnerClipRadius("Inner Clip Radius", float) = 0
+        [Toggle] _TestClipping("Clip", float) = 0
     }
 
     SubShader {
@@ -58,7 +61,6 @@ Shader "Custom/CombinedGraphpoint" {
                 sampler2D _MainTex;
                 sampler2D _GraphpointColorTex;
                 float4 _MainTex_ST;
-                fixed4 _Color;
                 fixed4 _LightColor0;
                 // float4 _ExpressionColors[256];
                 
@@ -95,8 +97,7 @@ Shader "Custom/CombinedGraphpoint" {
                         // float attenuation = 1.0 / (1.0  + unity_4LightAtten0[index] * squaredDistance);
                         float attenuation = 1.0;
 
-                        float3 diffuseReflection = attenuation * float3(unity_LightColor[index].xyz) 
-                            * float3(_Color.rgb) * max(0.0, dot(worldN, lightDirection));
+                        float3 diffuseReflection = attenuation * float3(unity_LightColor[index].xyz) * max(0.0, dot(worldN, lightDirection));
             
                         o.vertexLighting = o.vertexLighting + diffuseReflection * 2;
 		            }
@@ -111,11 +112,7 @@ Shader "Custom/CombinedGraphpoint" {
                     i.lightDir = normalize(i.lightDir);
                     fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
                     
-                    // fixed4 tex = tex2D(_MainTex, i.uv);
-                    // tex *= _Color + fixed4(i.vertexLighting, 1.0);
-                    // float3 expressionColorData = LinearToGammaSpace(_Color);
                     float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
-                    // float4 color = _ExpressionColors[round(expressionColorData.x * 255)];
                     float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
                     float4 color = tex2D(_GraphpointColorTex, colorTexUV);
                     color *= fixed4(i.vertexLighting, 1.0);
@@ -169,7 +166,6 @@ Shader "Custom/CombinedGraphpoint" {
  
                 sampler2D _MainTex;
                 sampler2D _GraphpointColorTex;
-                fixed4 _Color;
                 // float4 _ExpressionColors[256];
 
                 fixed4 _LightColor0; // Colour of the light used in this pass.
@@ -255,12 +251,15 @@ Shader "Custom/CombinedGraphpoint" {
             #pragma fragment frag
             #include "UnityCG.cginc"
 
-            float _Thickness;
-            float _FlashCellRadius;
-            float _FlashCellThickness;
+            float _OutlineThickness;
+            float _MovingOutlineOuterRadius;
+            float _MovingOutlineInnerRadius;
             sampler2D_float _MainTex;
             sampler2D _GraphpointColorTex;
-            fixed4 _Color;
+            float _TestPar;
+            float _OuterClipRadius;
+            float _InnerClipRadius;
+            float _TestClipping;
             // float3 _ExpressionColors[256];
 
             struct appdata
@@ -276,20 +275,19 @@ Shader "Custom/CombinedGraphpoint" {
                 float3 normal : NORMAL;
                 float3 texcoord : TEXCOORD0;
                 float3 viewDir : TEXCOORD1;
-                float4 worldPos : TEXCOORD2;
+                float4 radius : TEXCOORD2;
                 float3 color : COLOR;
             };
 
             v2g vert(in appdata_base IN)
             {
                 v2g OUT;
-                OUT.pos = UnityObjectToClipPos(IN.vertex);
-                OUT.worldPos = IN.vertex;
+                OUT.pos = UnityObjectToClipPos(IN.vertex + normalize(IN.normal) * _TestPar);
                 float4 uvAndMip = float4(IN.texcoord.x, IN.texcoord.y, 0, 0);
                 OUT.color = LinearToGammaSpace(tex2Dlod(_MainTex, uvAndMip));
-                // OUT.color = LinearToGammaSpace(_Color);
                 OUT.texcoord = IN.texcoord;
                 OUT.normal = IN.normal;
+                OUT.radius = float4(0,0,0,0);
                 OUT.viewDir = ObjSpaceViewDir(IN.vertex);
                 return OUT;
             }
@@ -297,22 +295,19 @@ Shader "Custom/CombinedGraphpoint" {
             // creates an outline around a cell
             void outline(v2g start, v2g end, inout TriangleStream<v2g> triStream)
             {
-                float width = _Thickness;// / 100;
+                float width = _OutlineThickness;// / 100;
                 float4 parallel = (end.pos - start.pos) * width;
                 float4 perpendicular = normalize(float4(parallel.y, -parallel.x, 0, 0)) * width;
                 float4 v1 = start.pos - parallel;
                 float4 v2 = end.pos + parallel;
                 v2g OUT;
-                float4 uvAndMip = float4(start.texcoord.x, start.texcoord.y, 0, 0);
                 float3 expressionColorData = start.color;
-                // float3 expressionColorData = start.color;
-                // OUT.color = _ExpressionColors[round(expressionColorData.x * 255)];
-                uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
+                float4 uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
                 OUT.color = tex2Dlod(_GraphpointColorTex, uvAndMip);
-                OUT.normal = start.normal;
+                OUT.normal = start.pos;
                 OUT.viewDir = start.viewDir;
                 OUT.texcoord = start.texcoord;
-                OUT.worldPos = start.worldPos;
+                OUT.radius = float4(0,0,0,0);
                 OUT.pos = v1 - perpendicular;
                 triStream.Append(OUT);
                 OUT.pos = v1 + perpendicular;
@@ -324,57 +319,63 @@ Shader "Custom/CombinedGraphpoint" {
             }
 
             // creates a moving circle around a cell
-            void flashCell(v2g start, v2g end, inout TriangleStream<v2g> triStream)
+            void movingOutline(v2g start, v2g end, inout TriangleStream<v2g> triStream)
             {
                 float3 viewDir = start.viewDir;
                 float4 startpos = start.pos;
                 float4 endpos = end.pos;
                 float3 normal = normalize(start.normal + end.normal);
-                
-                float cosAngle = dot(normal, viewDir) / (length(normal) * length(viewDir));
+
                 // don't do anything for the vertices too close or too far away
                 // this avoids weird lines going straight over the circle
-                if (cosAngle > 0.7 || cosAngle < -0.7)
-                {
-                    return;
-                }
-                float radius = (abs(sin(_Time.w)) * 10 + _FlashCellRadius);
-                float4 normalClipPos = UnityObjectToClipPos(normal);
-                float4 rejection = normalClipPos * radius * 0.01;
-                float4 parallel = (end.pos - start.pos) * 2.2 * radius;
-                float4 thickness = rejection * _FlashCellThickness;
+                // float cosAngle = dot(normal, viewDir) / (length(normal) * length(viewDir));
+                // if (cosAngle > 0.8 || cosAngle < -0.8)
+                // {
+                //     return;
+                // }
+                float radius = (abs(sin(_Time.w * 0.7)) * 25 + _MovingOutlineOuterRadius) * 0.01;
+                // float4 normalClipPos = UnityObjectToClipPos(normal);
+                float4 parallel = normalize(end.pos - start.pos) * radius;
+                float4 perpendicular = normalize(float4(parallel.y, -parallel.x, 0, 0)) * radius;
+                // float4 normal = normalize(start.normal + end.normal);
+                float4 inner = float4(normal, 1) * radius /** _TestPar*/;
 
-                // float angleStartNormal = dot(start.pos, normal) / (length(start.pos) * length(normal));
-                // float angleEndNormal = dot(end.pos, normal) / (length(end.pos) * length(normal));
-
-                // float3 startProjectedOntoNormal = dot(startpos, normalClipPos) * normalClipPos;
-                // float3 endProjectedOntoNormal = dot(endpos, normalClipPos) * normalClipPos;
-                // float lengthDiff = length(startProjectedOntoNormal) - length(endProjectedOntoNormal);
-                // parallel += normalClipPos * lengthDiff / 2;
-
-                cosAngle = dot(rejection, parallel) / (length(rejection) * length(parallel));
-                if (cosAngle > 0.5 || cosAngle < -0.5)
-                {
-                    return;
-                }
-                float4 v1 = startpos - parallel;
-                float4 v2 = endpos + parallel;
-                float4 uvAndMip = float4(start.texcoord.x, start.texcoord.y, 0, 0);
+                // cosAngle = dot(inner, parallel) / (length(inner) * length(parallel));
+                // if (cosAngle > 0.7 || cosAngle < -0.7)
+                // {
+                //     return;
+                // }
+                float4 outer = perpendicular * _MovingOutlineInnerRadius;
+                float4 v1 = startpos; // + parallel;
+                float4 v2 = endpos; // - parallel;
                 float3 expressionColorData = start.color;
-                uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
+                float4 uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
                 v2g OUT;
-                OUT.color = tex2Dlod(_GraphpointColorTex, uvAndMip);
-                OUT.normal = normal;
-                OUT.viewDir = viewDir;
-                OUT.texcoord = start.texcoord;
-                OUT.worldPos = start.worldPos;
-                OUT.pos = v1 + rejection;
+                // make the color of the outline a slightly brighter version of the color of the graphpoint
+                float3 color = tex2Dlod(_GraphpointColorTex, uvAndMip);
+                OUT.color = /*(float3(1, 1, 1) - (color)) / 4 +*/ color;
+                OUT.radius = float4(radius * _OuterClipRadius, radius * _MovingOutlineInnerRadius * _InnerClipRadius, 0, 0);
+                OUT.normal = normal.xyz;
+                OUT.viewDir = (startpos + endpos) / 2;
+
+                OUT.pos = v1 + perpendicular;
+                OUT.texcoord = OUT.pos;
+                // OUT.texcoord.z = length(OUT.pos - startpos);
                 triStream.Append(OUT);
-                OUT.pos = v1 + thickness;
+
+                OUT.pos = v1 - perpendicular;
+                OUT.texcoord = OUT.pos;
+                // OUT.texcoord.z = length(OUT.pos - startpos);
                 triStream.Append(OUT);
-                OUT.pos = v2 + rejection;
+
+                OUT.pos = v2 + perpendicular;
+                OUT.texcoord = OUT.pos;
+                // OUT.texcoord.z = length(OUT.pos - startpos);
                 triStream.Append(OUT);
-                OUT.pos = v2 + thickness;
+
+                OUT.pos = v2 - perpendicular;
+                OUT.texcoord = OUT.pos;
+                // OUT.texcoord.z = length(OUT.pos - startpos);
                 triStream.Append(OUT);
             }
 
@@ -382,39 +383,41 @@ Shader "Custom/CombinedGraphpoint" {
             void geom(triangle v2g IN[3], inout TriangleStream<v2g> triStream)
             {
                 float3 color = IN[0].color;
-                if (color.b != 0)
-                {
-                    return;
-                }
-
                 // green channel values determines the outline state.
                 // g == 0: no outline
                 // 0 < g <= 0.1: outline
-                // 0.1 < g <= 0.2: flashing outline
+                // 0.1 < g <= 0.2: moving outline 
+                // 0.2 < g <= 0.3: big shrinking outline
                 if (color.g == 0)
                 {
                     return;
                 }
-                else if (color.g > 0 && color.g <= 0.1)
+                else if (color.g <= 0.1)
                 {
                     outline(IN[0], IN[1], triStream);
                     outline(IN[1], IN[2], triStream);
                     outline(IN[2], IN[0], triStream);
                 }
-                else if (color.g > 0.1 && color.g <= 0.2)
+                else if (color.g <= 0.3)
                 {
-                    flashCell(IN[0], IN[1], triStream);
-                    flashCell(IN[1], IN[2], triStream);
-                    flashCell(IN[2], IN[0], triStream);
+                    movingOutline(IN[0], IN[1], triStream);
+                    movingOutline(IN[1], IN[2], triStream);
+                    movingOutline(IN[2], IN[0], triStream);
                 }
-
             }
 
-            fixed4 frag(v2g i) : COLOR {
-                // make the color of the outline a slightly brighter version of the color of the graphpoint
-                float3 finalColor = (float3(1,1,1) - (i.color)) / 4 + i.color;
-                return fixed4(finalColor.rgb, 1);
-                // return fixed4(0,1,1,1);
+            fixed4 frag(v2g i) : COLOR
+            {
+                float4 posScreenPos = ComputeScreenPos(float4(i.texcoord.xy, 0, 0));
+                float4 startPosScreenPos = ComputeScreenPos(float4(i.viewDir.xy, 0, 0));
+                float pos = length(posScreenPos - startPosScreenPos);
+                // if (_TestClipping == 1)
+                // {
+                    clip(pos - i.radius.y);
+                    clip(i.radius.x - pos);
+                // }
+
+                return fixed4(i.color, 1);
             }
 
             ENDCG
