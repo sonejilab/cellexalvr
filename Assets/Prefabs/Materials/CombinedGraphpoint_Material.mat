@@ -68,11 +68,14 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.231
     - _GlossyReflections: 0
+    - _InnerClipRadius: 0.31
     - _Metallic: 0
     - _Mode: 0
-    - _MovingOutlineInnerRadius: 0.9
-    - _MovingOutlineOuterRadius: 25
+    - _MovingOutlineInnerRadius: 0.98
+    - _MovingOutlineOuterRadius: 0
     - _OcclusionStrength: 1
+    - _OuterClipRadius: 0.31
+    - _OutlineThickness: 0.005
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
