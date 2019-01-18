@@ -75,13 +75,13 @@ public class CombinedGraphGenerator : MonoBehaviour
 
         if (nbrOfExpressionColors + nbrOfSelectionColors > 255)
         {
-            CellexalLog.Log("ERROR: Can not have more than 255 graphpoint colors. Reducing to 255. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.");
             nbrOfExpressionColors = 255 - nbrOfSelectionColors;
+            CellexalLog.Log(string.Format("ERROR: Can not have more than 255 total expression and selection colors. Reducing expression colors to {0}. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.", nbrOfExpressionColors));
         }
         else if (nbrOfExpressionColors < 3)
         {
-            CellexalLog.Log("ERROR: Can not have less than 3 gene expression colors. Defaulting to 30. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.");
-            nbrOfExpressionColors = 30;
+            CellexalLog.Log("ERROR: Can not have less than 3 gene expression colors. Increasing to 3. Change NumberOfExpressionColors in the config.txt.");
+            nbrOfExpressionColors = 3;
         }
         int halfNbrOfExpressionColors = nbrOfExpressionColors / 2;
 
