@@ -160,12 +160,12 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
     {
         CombinedGraph g = referenceManager.graphManager.FindGraph(moveGraphName);
-        g.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = false;
         bool graphExists = g != null;
         if (graphExists)
         {
             try
             {
+                g.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = false;
                 g.transform.position = new Vector3(posX, posY, posZ);
                 g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                 g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
@@ -280,7 +280,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     public void SendToggleMenu()
     {
         referenceManager.gameManager.avatarMenuActive = !referenceManager.gameManager.avatarMenuActive;
-        Debug.Log("TOGGLE MENU " + referenceManager.gameManager.avatarMenuActive);
+        //Debug.Log("TOGGLE MENU " + referenceManager.gameManager.avatarMenuActive);
     }
 
     [PunRPC]
