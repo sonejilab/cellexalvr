@@ -1,15 +1,14 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Shader used by the combined graphpoints.
+﻿// Shader used by the combined graphpoints.
 // The idea is to encode rendering information in the main texture.
 // The red channel chooses the gene color of the graphpoint, the values [0-x)
 // (x is the number of available colors) chooses a color from the
 // _ExpressionColors array. The value 255 is reserved for white.
 // The green channel is 0 for no outline, 1 for outline.
 
-Shader "Custom/CombinedGraphpoint" {
-    Properties {
+Shader "Custom/CombinedGraphpoint"
+{
+    Properties
+    {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _GraphpointColorTex("Graphpoint Colors", 2D) = "white" {}
         _OutlineThickness("Thickness", float) = 0.005
@@ -21,8 +20,10 @@ Shader "Custom/CombinedGraphpoint" {
         [Toggle] _TestClipping("Clip", float) = 0
     }
 
-    SubShader {
-        Tags {
+    SubShader
+    {
+        Tags
+        {
             "Queue" = "Geometry"
             "RenderType" = "Opaque"
             // "IgnoreProjector" = "True"
@@ -32,98 +33,95 @@ Shader "Custom/CombinedGraphpoint" {
         // draws the graphpoint mesh lit by directional light
         Pass 
         {
-            Tags {"LightMode" = "ForwardBase"}                      // This Pass tag is important or Unity may not give it the correct light information.
-           		CGPROGRAM
-                #pragma vertex vert
-                #pragma fragment frag
-                #pragma multi_compile_fwdbase                       // This line tells Unity to compile this pass for forward base.
-                
-                #include "UnityCG.cginc"
-                #include "AutoLight.cginc"
+            Tags
+            {
+               "LightMode" = "ForwardBase"
+            }                     
+          	CGPROGRAM
+               #pragma vertex vert
+               #pragma fragment frag
+               #pragma multi_compile_fwdbase                       // This line tells Unity to compile this pass for forward base.
                
-               	struct vertex_input
-               	{
-               		float4 vertex : POSITION;
-               		float3 normal : NORMAL;
-               		float2 texcoord : TEXCOORD0;
-               	};
-                
-                struct vertex_output
-                {
-                    float4  pos         : SV_POSITION;
-                    float2  uv          : TEXCOORD0;
-                    float3  lightDir    : TEXCOORD1;
-                    float3  normal		: TEXCOORD2;
-                    LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
-                	float3  vertexLighting : TEXCOORD5;
-                };
-                
-                sampler2D _MainTex;
-                sampler2D _GraphpointColorTex;
-                float4 _MainTex_ST;
-                fixed4 _LightColor0;
-                // float4 _ExpressionColors[256];
-                
-                vertex_output vert (vertex_input v)
-                {
-                    vertex_output o;
-                    o.pos = UnityObjectToClipPos(v.vertex);
-                    o.uv = v.texcoord.xy;
-					o.lightDir = ObjSpaceLightDir(v.vertex);
-					
-					o.normal = v.normal;
-                    
-                    TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
-                    
-                    o.vertexLighting = float3(0.0, 0.0, 0.0);
+               #include "UnityCG.cginc"
+               #include "AutoLight.cginc"
+              
+              	struct vertex_input
+              	{
+              		float4 vertex : POSITION;
+              		float3 normal : NORMAL;
+              		float2 texcoord : TEXCOORD0;
+              	};
+               
+               struct vertex_output
+               {
+                   float4  pos         : SV_POSITION;
+                   float2  uv          : TEXCOORD0;
+                   float3  lightDir    : TEXCOORD1;
+                   float3  normal		: TEXCOORD2;
+                   LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
+               };
+               
+               sampler2D _MainTex;
+               sampler2D _GraphpointColorTex;
+               float4 _MainTex_ST;
+               fixed4 _LightColor0;
+               
+               vertex_output vert (vertex_input v)
+               {
+                   vertex_output o;
+                   o.pos = UnityObjectToClipPos(v.vertex);
+                   o.uv = v.texcoord.xy;
+				   o.lightDir = ObjSpaceLightDir(v.vertex);
+				   
+				   o.normal = v.normal;
+                   
+                   TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
+                   
+		           
+		           // #ifdef VERTEXLIGHT_ON
+  				   // float3 worldN = mul((float3x3)unity_ObjectToWorld, SCALED_NORMAL);
+		           // float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
 		            
-		            #ifdef VERTEXLIGHT_ON
-  					
-  					float3 worldN = mul((float3x3)unity_ObjectToWorld, SCALED_NORMAL);
-		          	float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
-		            
-		            for (int index = 0; index < 4; index++)
-		            {    
-                        float4 lightPosition = float4(unity_4LightPosX0[index], 
-                            unity_4LightPosY0[index], 
-                            unity_4LightPosZ0[index], 1.0);
-            
-                        float3 vertexToLightSource = float3(lightPosition.xyz - worldPos);     
+		           // for (int index = 0; index < 4; index++)
+		           // {    
+                   //     float4 lightPosition = float4(unity_4LightPosX0[index], 
+                   //         unity_4LightPosY0[index], 
+                   //         unity_4LightPosZ0[index], 1.0);
+                   
+                   //     float3 vertexToLightSource = float3(lightPosition.xyz - worldPos);     
                         
-                        float3 lightDirection = normalize(vertexToLightSource);
-                        
-                        float squaredDistance = dot(vertexToLightSource, vertexToLightSource);
-                        
-                        // float attenuation = 1.0 / (1.0  + unity_4LightAtten0[index] * squaredDistance);
-                        float attenuation = 1.0;
+                   //     float3 lightDirection = normalize(vertexToLightSource);
+                   
+                   //     float squaredDistance = dot(vertexToLightSource, vertexToLightSource);
+                   
+                   //     // float attenuation = 1.0 / (1.0  + unity_4LightAtten0[index] * squaredDistance);
+                   //     float attenuation = 1.0;
+                   
+                   //     float3 diffuseReflection = attenuation * float3(unity_LightColor[index].xyz) * max(0.0, dot(worldN, lightDirection));
+                   
+                   //     o.vertexLighting = o.vertexLighting + diffuseReflection * 2;
+		           // }
+		           // #endif
+                   return o;
+               }
+               
+               fixed4 frag(vertex_output i) : COLOR
+               {
+                   i.lightDir = normalize(i.lightDir);
+                   //fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
+                   
+                   float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
+                   float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
+                   float4 color = tex2D(_GraphpointColorTex, colorTexUV);
+                   //color *= fixed4(i.vertexLighting, 1.0);
+                   fixed diff = saturate(dot(i.normal, i.lightDir));
 
-                        float3 diffuseReflection = attenuation * float3(unity_LightColor[index].xyz) * max(0.0, dot(worldN, lightDirection));
-            
-                        o.vertexLighting = o.vertexLighting + diffuseReflection * 2;
-		            }
-		                  
-    
-		            #endif
-                    return o;
-                }
-                
-                fixed4 frag(vertex_output i) : COLOR
-                {
-                    i.lightDir = normalize(i.lightDir);
-                    fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
-                    
-                    float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
-                    float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
-                    float4 color = tex2D(_GraphpointColorTex, colorTexUV);
-                    color *= fixed4(i.vertexLighting, 1.0);
-                    fixed diff = saturate(dot(i.normal, i.lightDir));
-
-                    color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 2 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
-                    color.rgb += (color.rgb * _LightColor0.rgb * diff) * (atten * 2); // Diffuse and specular.
-                    color.a = color.a + _LightColor0.a * atten;
-                    return color;
-                }
-            ENDCG
+                   color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 2 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
+                   color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
+                   color.a = 1;// color.a + _LightColor0.a * atten;
+                   return color;
+               }
+           ENDCG
         }
  
         // graphpoint pass forward add
@@ -207,7 +205,6 @@ Shader "Custom/CombinedGraphpoint" {
                     }
 
                     i.lightDir = normalize(i.lightDir);
-                    fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
                     float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
                     // float4 color = _ExpressionColors[round(expressionColorData.x * 255)];
                     float4 color = tex2D(_GraphpointColorTex, colorTexUV);
@@ -215,8 +212,8 @@ Shader "Custom/CombinedGraphpoint" {
                     fixed diff = saturate(dot(normal, i.lightDir));
                     
                     fixed4 c;
-                    c.rgb = (color.rgb * _LightColor0.rgb * diff) * (atten * 2); // Diffuse and specular.
-                    c.a = color.a;
+                    c.rgb = (color.rgb * _LightColor0.rgb * diff); // Diffuse and specular.
+                    c.a = 1;
                     return c;
                 }
             ENDCG
@@ -398,23 +395,23 @@ Shader "Custom/CombinedGraphpoint" {
                     outline(IN[1], IN[2], triStream);
                     outline(IN[2], IN[0], triStream);
                 }
-                else if (color.g <= 0.3)
-                {
-                    movingOutline(IN[0], IN[1], triStream);
-                    movingOutline(IN[1], IN[2], triStream);
-                    movingOutline(IN[2], IN[0], triStream);
-                }
+                // else if (color.g <= 0.3)
+                // {
+                //     movingOutline(IN[0], IN[1], triStream);
+                //     movingOutline(IN[1], IN[2], triStream);
+                //     movingOutline(IN[2], IN[0], triStream);
+                // }
             }
 
             fixed4 frag(v2g i) : COLOR
             {
-                float4 posScreenPos = ComputeScreenPos(float4(i.texcoord.xy, 0, 0));
-                float4 startPosScreenPos = ComputeScreenPos(float4(i.viewDir.xy, 0, 0));
-                float pos = length(posScreenPos - startPosScreenPos);
+                // float4 posScreenPos = ComputeScreenPos(float4(i.texcoord.xy, 0, 0));
+                // float4 startPosScreenPos = ComputeScreenPos(float4(i.viewDir.xy, 0, 0));
+                // float pos = length(posScreenPos - startPosScreenPos);
                 // if (_TestClipping == 1)
                 // {
-                    clip(pos - i.radius.y);
-                    clip(i.radius.x - pos);
+                    // clip(pos - i.radius.y);
+                    // clip(i.radius.x - pos);
                 // }
 
                 return fixed4(i.color, 1);
