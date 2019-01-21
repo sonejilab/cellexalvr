@@ -361,6 +361,7 @@ public class GraphManager : MonoBehaviour
 
                 }
             }
+            Destroy(network);
         }
         networks.Clear();
     }
