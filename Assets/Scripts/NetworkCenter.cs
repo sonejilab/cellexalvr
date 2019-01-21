@@ -529,7 +529,6 @@ public class NetworkCenter : MonoBehaviour
     private IEnumerator SwitchLayoutCoroutine(Layout layout, float time)
     {
         //handler.runningScript = true;
-        CellexalEvents.ScriptRunning.Invoke();
         int newLayoutPositionIndex;
         int oldLayoutPositionIndex;
         if (layout == Layout.TWO_D)
@@ -570,7 +569,6 @@ public class NetworkCenter : MonoBehaviour
         switchingLayout = false;
         currentLayout = layout;
         //handler.runningScript = false;
-        CellexalEvents.ScriptFinished.Invoke();
     }
 
 
@@ -599,7 +597,7 @@ public class NetworkCenter : MonoBehaviour
     private IEnumerator EnlargeNetworkCoroutine()
     {
         //handler.runningScript = true;
-        CellexalEvents.ScriptRunning.Invoke();
+        //CellexalEvents.ScriptRunning.Invoke();
         oldName = name;
         name = "Enlarged_" + name;
         Enlarged = true;
@@ -678,7 +676,7 @@ public class NetworkCenter : MonoBehaviour
             button.SetButtonActivated(true);
         }
         //handler.runningScript = false;
-        CellexalEvents.ScriptFinished.Invoke();
+        //CellexalEvents.ScriptFinished.Invoke();
     }
 
     /// <summary>
@@ -709,7 +707,7 @@ public class NetworkCenter : MonoBehaviour
     private IEnumerator BringBackOriginalCoroutine()
     {
         //handler.runningScript = true;
-        CellexalEvents.ScriptRunning.Invoke();
+        //CellexalEvents.ScriptRunning.Invoke();
         name = oldName;
         // the ForceStopInteracting waits until the end of the frame before it stops interacting
         // so we also have to wait one frame until proceeding
@@ -746,7 +744,7 @@ public class NetworkCenter : MonoBehaviour
             button.SetButtonActivated(false);
         }
         CellexalEvents.NetworkUnEnlarged.Invoke();
-        CellexalEvents.ScriptFinished.Invoke();
+        //CellexalEvents.ScriptFinished.Invoke();
         //handler.runningScript = false;
     }
 
