@@ -261,9 +261,16 @@ public class SelectionToolHandler : MonoBehaviour
             // if this is a new selection we should reset some stuff
             selectionMade = true;
             //selectionToolMenu.SelectionStarted();
-            groupInfoDisplay.ResetGroupsInfo();
-            HUDGroupInfoDisplay.ResetGroupsInfo();
-            FarGroupInfoDisplay.ResetGroupsInfo();
+            try
+            {
+                groupInfoDisplay.ResetGroupsInfo();
+                HUDGroupInfoDisplay.ResetGroupsInfo();
+                FarGroupInfoDisplay.ResetGroupsInfo();
+            }
+            catch (NullReferenceException e)
+            {
+                //Debug.Log("Could not update group info display");
+            }
             // turn on the undo buttons
             CellexalEvents.BeginningOfHistoryLeft.Invoke();
         }
@@ -277,10 +284,17 @@ public class SelectionToolHandler : MonoBehaviour
                 hapticFeedbackThisFrame = false;
                 SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
             }
+            try
+            {
+                groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+                HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+                FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+            }
+            catch (NullReferenceException e)
+            {
+                //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
+            }
 
-            groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
             if (newNode)
             {
                 //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
@@ -295,9 +309,16 @@ public class SelectionToolHandler : MonoBehaviour
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
                 //selectedCells.Remove(graphPoint);
                 selectedCells.Add(graphPoint);
-                groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                try
+                {
+                    groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                    HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                    FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                }
+                catch (NullReferenceException e)
+                {
+                    //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
+                }
             }
         }
     }

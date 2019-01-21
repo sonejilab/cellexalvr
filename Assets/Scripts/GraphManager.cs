@@ -361,7 +361,6 @@ public class GraphManager : MonoBehaviour
 
                 }
             }
-            Destroy(network.gameObject);
         }
         networks.Clear();
     }
@@ -382,6 +381,11 @@ public class GraphManager : MonoBehaviour
     public void AddNetwork(NetworkHandler handler)
     {
         networks.Add(handler);
+    }
+
+    public void RemoveNetwork(NetworkHandler handler)
+    {
+        networks.Remove(handler);
     }
 
     /// <summary>

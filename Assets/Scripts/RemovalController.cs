@@ -63,7 +63,8 @@ public class RemovalController : MonoBehaviour {
                 controllerInside = false;
                 return;
             }
-            if (objectToDelete.GetComponent<NetworkHandler>())
+            NetworkHandler nh = objectToDelete.GetComponent<NetworkHandler>();
+            if (nh)
             {
                 if (objectToDelete.GetComponent<NetworkHandler>().removable)
                 {
@@ -76,8 +77,9 @@ public class RemovalController : MonoBehaviour {
                 {
                     nc.BringBackOriginal();
                 }
-                referenceManager.arcsSubMenu.DestroyTab(objectToDelete.GetComponent<NetworkHandler>().name.Split('_')[1]); // Get last part of nw name   
+                referenceManager.arcsSubMenu.DestroyTab(nh.name.Split('_')[1]); // Get last part of nw name   
                 referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
+                referenceManager.graphManager.RemoveNetwork(nh);
             }
             delete = true;
         }
