@@ -353,6 +353,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 2}
+  movingOutlineCircle: {fileID: 1620093671004734, guid: af243d0027e2aee429dc005410fa0833,
+    type: 2}
   graphManager: {fileID: 0}
   graphNameText: {fileID: 114566603823957088}
   graphInfoText: {fileID: 114460485008951306}

@@ -17,6 +17,7 @@ using VRTK;
 public class CombinedGraph : MonoBehaviour
 {
     public GameObject skeletonPrefab;
+    public GameObject movingOutlineCircle;
     public string DirectoryName { get; set; }
     public List<GameObject> Lines { get; set; }
     [HideInInspector]
@@ -217,7 +218,7 @@ public class CombinedGraph : MonoBehaviour
         public int group;
         public bool unconfirmedInSelection;
         public List<Selectable> lineBetweenCellsCubes;
-        public Vector3 WorldPosition;
+        public Vector3 WorldPosition { get { return parent.transform.TransformPoint(Position); } }
 
         public CombinedGraphPoint(string label, float x, float y, float z, CombinedGraph parent)
         {
@@ -496,24 +497,8 @@ public class CombinedGraph : MonoBehaviour
 
         private Color GizmoColors(int i)
         {
-            i = i % 5;
-            switch (i)
-            {
-                case 0:
-                    return Color.red;
-                case 1:
-                    return Color.blue;
-                case 2:
-                    return Color.green;
-                case 3:
-                    return Color.cyan;
-                case 4:
-                    return Color.magenta;
-                case 5:
-                    return Color.yellow;
-                default:
-                    return Color.white;
-            }
+            i = i % CellexalConfig.SelectionToolColors.Length;
+            return CellexalConfig.SelectionToolColors[i];
         }
         #endregion
     }
@@ -776,12 +761,18 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="color">The graphpoint's new color.</param>
     public void RecolorGraphPointGeneExpression(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
-        byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
-        if (i == -1)
+        //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
+        if (i > 27)
+        {
+            var circle = Instantiate(movingOutlineCircle);
+            circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
+            circle.transform.position = combinedGraphPoint.WorldPosition;
+        }
+        else if (i == -1)
         {
             i = 255;
         }
-        Color32 finalColor = new Color32((byte)i, greenChannel, 0, 255);
+        Color32 finalColor = new Color32((byte)i, 0, 0, 255);
         texture.SetPixels32(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
         textureChanged = true;
     }
@@ -833,10 +824,10 @@ public class CombinedGraph : MonoBehaviour
         {
             colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
         }
-        for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors ; ++i)
+        for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
         {
             // the highest expression levels get 27 (somewhere between 0.1 and 0.2 when converted to a float) in the green channel to get an outline by the shader
-            colorValues[i] = new Color32[] { new Color32(i, 27, 0, 1) };
+            colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
         }
 
         foreach (CellExpressionPair pair in expressions)
@@ -847,7 +838,13 @@ public class CombinedGraph : MonoBehaviour
             {
                 expressionColorIndex = nbrOfExpressionColors - 1;
             }
-            
+            if (pair.Color > 27)
+            {
+                var circle = Instantiate(movingOutlineCircle);
+                circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
+                circle.transform.position = points[pair.Cell].WorldPosition;
+            }
+
             texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
         }
 
