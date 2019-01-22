@@ -32,7 +32,9 @@ public class CombinedGraphGenerator : MonoBehaviour
     private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
                                             new Vector3(-0.9f, 1.1f, -0.4f),
                                             new Vector3(-0.9f, 1.1f, 0.4f),
-                                            new Vector3(-0.2f, 1.1f, 0.95f)
+                                            new Vector3(-0.2f, 1.1f, 0.95f),
+                                            new Vector3(0.8f, 1.1f, -0.4f),
+                                            new Vector3(0.5f, 1.1f, 0.7f)
                                         };
     private int graphCount;
 
@@ -57,7 +59,8 @@ public class CombinedGraphGenerator : MonoBehaviour
     public CombinedGraph CreateCombinedGraph()
     {
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
-        newGraph.transform.position = startPositions[graphCount % 4];
+        //graphManager.SetGraphStartPosition();
+        newGraph.transform.position = startPositions[graphCount % 6];
         newGraph.referenceManager = referenceManager;
         newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
         isCreating = true;

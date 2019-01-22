@@ -117,7 +117,7 @@ public class GameMenu : MonoBehaviour
             // Save name
             if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
             {
-
+                print("IN SPEC");
                 PlayerPrefs.SetString("playerName", "Spectator_" + PhotonNetwork.playerName);
             }
             else
@@ -174,6 +174,14 @@ public class GameMenu : MonoBehaviour
         }
         if (GUILayout.Button("Join Room", GUILayout.Width(200)))
         {
+            if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
+            {
+                PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+            }
+            if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
+            {
+                PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
+            }
             PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
         }
 

@@ -466,12 +466,12 @@ public class CombinedGraph : MonoBehaviour
 
         public void DrawDebugLines(Vector3 gameobjectPos)
         {
-            if (children.Length != 0)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(gameobjectPos + center, 0.03f);
-                Gizmos.color = Color.white;
-            }
+            //if (children.Length != 0)
+            //{
+            //    Gizmos.color = Color.red;
+            //    Gizmos.DrawWireSphere(gameobjectPos + center, 0.03f);
+            //    Gizmos.color = Color.white;
+            //}
             foreach (var child in children)
             {
                 Gizmos.DrawLine(gameobjectPos + center, gameobjectPos + child.center);
@@ -495,8 +495,22 @@ public class CombinedGraph : MonoBehaviour
             }
         }
 
+        public void DrawDebugGroups(Vector3 gameobjectPos)
+        {
+            Gizmos.color = GizmoColors(group);
+            Gizmos.DrawWireCube(gameobjectPos + pos + size / 2, size / 0.95f);
+            foreach (var child in children)
+            {
+                child.DrawDebugGroups(gameobjectPos);
+            }
+        }
+
         private Color GizmoColors(int i)
         {
+            if (i == -1)
+            {
+                return Color.white;
+            }
             i = i % CellexalConfig.SelectionToolColors.Length;
             return CellexalConfig.SelectionToolColors[i];
         }
@@ -533,6 +547,10 @@ public class CombinedGraph : MonoBehaviour
         if (graphManager.drawDebugRejectionApprovedCubes)
         {
             DrawRejectionApproveCubes(octreeRoot);
+        }
+        if (graphManager.drawDebugGroups)
+        {
+            octreeRoot.DrawDebugGroups(transform.position);
         }
 
     }
@@ -673,8 +691,9 @@ public class CombinedGraph : MonoBehaviour
     public void SetInfoText()
     {
         //graphInfoText.transform.parent.localPosition = ScaleCoordinates(maxCoordValues.x - (maxCoordValues.x - minCoordValues.x) / 2, maxCoordValues.y, maxCoordValues.z);
-        graphInfoText.text = "Points: " + points.Count;
-        SetInfoTextVisible(true);
+        //graphInfoText.text = "Points: " + points.Count;
+        graphNameText.text += "\n Points: " + points.Count;
+        //SetInfoTextVisible(true);
     }
 
     /// <summary>
@@ -929,7 +948,7 @@ public class CombinedGraph : MonoBehaviour
         //debugGizmosMin = min;
         //debugGizmosMax = max;
 
-        //debugGizmosPos = selectionToolPos;
+        debugGizmosPos = selectionToolPos;
 
         MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result, ms);
         return result;
@@ -947,11 +966,11 @@ public class CombinedGraph : MonoBehaviour
     private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<CombinedGraphPoint> result, float ms)
     {
         //print(Time.realtimeSinceStartup);
-        if (Time.realtimeSinceStartup - ms > 25)
-        {
-            print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
-            return;
-        }
+        //if (Time.realtimeSinceStartup - ms > 25)
+        //{
+        //    print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
+        //    return;
+        //}
         //calls++;
         // minkowski difference selection tool bounding box and node
         // take advantage of both being AABB
@@ -1011,12 +1030,18 @@ public class CombinedGraph : MonoBehaviour
     /// <param name="result">All leaf nodes found so far.</param>
     private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<CombinedGraphPoint> result, float ms)
     {
-        if (Time.realtimeSinceStartup - ms > 250)
+        //if (Time.realtimeSinceStartup - ms > 250)
+        //{
+        //    print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
+        //    return;
+        //}
+        //callsEntirelyInside++;
+        if (node.point != null && node.PointInsideSelectionTool(selectionToolWorldPos, transform.TransformPoint(node.center)))
         {
-            print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
+            node.Group = group;
+            result.Add(node.point);
             return;
         }
-        //callsEntirelyInside++;
         foreach (var child in node.children)
         {
             if (child.Group == group)

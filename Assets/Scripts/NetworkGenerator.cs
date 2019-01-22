@@ -25,7 +25,7 @@ public class NetworkGenerator : MonoBehaviour
     public Material[] LineMaterials;
 
     private GameObject calculatorCluster;
-    private SelectionToolHandler selectionToolHandler;
+    public SelectionToolHandler selectionToolHandler;
     private InputReader inputReader;
     private GraphManager graphManager;
     private GameObject headset;

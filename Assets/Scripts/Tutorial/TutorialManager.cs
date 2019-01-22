@@ -344,7 +344,7 @@ public class TutorialManager : MonoBehaviour {
             case 7:
                 //From start
                 currentStep = 7;
-                referenceManager.loaderController.ResetFolders();
+                referenceManager.loaderController.ResetFolders(true);
                 //loadMenuButton.GetComponent<ResetFolderButton>().Reset();
                 foreach (GameObject obj in stepPanels)
                 {

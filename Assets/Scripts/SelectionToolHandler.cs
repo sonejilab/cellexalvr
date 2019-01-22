@@ -234,7 +234,10 @@ public class SelectionToolHandler : MonoBehaviour
             foreach (CombinedGraph graph in graphManager.Graphs)
             {
                 CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
-                gp.RecolorSelectionColor(newGroup, true);
+                if (gp != null)
+                {
+                    gp.RecolorSelectionColor(newGroup, true);
+                }
             }
             //graphPoint.Recolor(Colors[newGroup], newGroup);
         }
@@ -570,7 +573,10 @@ public class SelectionToolHandler : MonoBehaviour
             foreach (CombinedGraph graph in graphManager.Graphs)
             {
                 CombinedGraph.CombinedGraphPoint graphPoint = graphManager.FindGraphPoint(graph.GraphName, gp.Label);
-                graphPoint.RecolorSelectionColor(gp.group, false);
+                if (graphPoint != null)
+                {
+                    graphPoint.RecolorSelectionColor(gp.group, false);
+                }
             }
             lastSelectedCells.Add(gp);
             gp.unconfirmedInSelection = false;

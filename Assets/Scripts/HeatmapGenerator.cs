@@ -22,7 +22,7 @@ public class HeatmapGenerator : MonoBehaviour
 
 
     private GameObject calculatorCluster;
-    private SelectionToolHandler selectionToolHandler;
+    public SelectionToolHandler selectionToolHandler;
     private StatusDisplay status;
     private StatusDisplay statusDisplayHUD;
     private StatusDisplay statusDisplayFar;

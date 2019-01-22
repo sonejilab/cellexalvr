@@ -254,10 +254,10 @@ class ServerCoordinator : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    public void SendLoadingMenu()
+    public void SendLoadingMenu(bool delete)
     {
         Debug.Log("Recieved message to reset to loading dataset scene");
-        referenceManager.loaderController.ResetFolders();
+        referenceManager.loaderController.ResetFolders(delete);
     }
 
     [PunRPC]

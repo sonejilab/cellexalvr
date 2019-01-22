@@ -14,21 +14,16 @@ public class GraphManager : MonoBehaviour
     public CombinedGraph combinedGraphPrefab;
     public AudioSource goodSound;
     public AudioSource badSound;
-    public string directory;
+    public List<string> directories;
     public Material defaultGraphPointMaterial;
     public Shader graphPointNormalShader;
     public Shader graphPointOutlineShader;
+    public SelectionToolHandler selectionToolHandler;
 
-    public List<CombinedGraph> Graphs { get; set; }
+    public List<CombinedGraph> Graphs;
 
     private CellManager cellManager;
-    private SelectionToolHandler selectionToolHandler;
     private List<NetworkHandler> networks = new List<NetworkHandler>();
-    private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
-                                            new Vector3(-0.9f, 1.1f, -0.4f),
-                                            new Vector3(-0.9f, 1.1f, 0.4f),
-                                            new Vector3(-0.2f, 1.1f, 0.95f)
-                                        };
 
     /// <summary>
     /// The different methods for coloring graphs by gene expression. The different options are:
@@ -59,6 +54,7 @@ public class GraphManager : MonoBehaviour
     public bool drawSelectionToolDebugLines = false;
     public bool drawDebugRaycast = false;
     public bool drawDebugRejectionApprovedCubes = false;
+    public bool drawDebugGroups = false;
 
     void Awake()
     {
@@ -163,6 +159,12 @@ public class GraphManager : MonoBehaviour
                 graph.ResetColors();
             }
         }
+    }
+
+    [ConsoleCommand("graphManager", "drawdebuggroups", "ddg")]
+    public void DrawDebugGroups(bool b)
+    {
+        drawDebugGroups = b;
     }
 
 
@@ -325,14 +327,6 @@ public class GraphManager : MonoBehaviour
         }
     }
 
-    public void SetGraphStartPosition()
-    {
-        for (int i = 0; i < Graphs.Count; ++i)
-        {
-            Graphs[i].transform.position = startPositions[i % 4];
-        }
-    }
-
     /// <summary>
     /// Deletes all graphs and networks in the scene.
     /// </summary>
@@ -361,7 +355,7 @@ public class GraphManager : MonoBehaviour
 
                 }
             }
-            Destroy(network);
+            Destroy(network.gameObject);
         }
         networks.Clear();
     }

@@ -16031,6 +16031,7 @@ MonoBehaviour:
   menuToClose: {fileID: 1640709649760356}
   textMeshToUndarken: {fileID: 102333440239550814}
   deactivateMenu: 0
+  deleteSceneObjs: 0
 --- !u!114 &114085970965995968
 MonoBehaviour:
   m_ObjectHideFlags: 1

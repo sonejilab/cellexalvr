@@ -224,10 +224,11 @@ public class GameManager : Photon.PunBehaviour
         coordinator.photonView.RPC("SendResetGraphAll", PhotonTargets.Others);
     }
 
-    public void InformLoadingMenu()
+    public void InformLoadingMenu(bool delete)
     {
         if (!multiplayer) return;
-        coordinator.photonView.RPC("SendLoadingMenu", PhotonTargets.Others);
+        print("Sending to client to reset folders");
+        coordinator.photonView.RPC("SendLoadingMenu", PhotonTargets.Others, delete);
     }
 
 
