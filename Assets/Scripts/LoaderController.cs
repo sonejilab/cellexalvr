@@ -10,6 +10,11 @@ public class LoaderController : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public Transform cylinder;
+    
+    [HideInInspector]
+    public bool loaderMovedDown = false;
+    public GameObject keyboard;
+    public bool loadingComplete = false;
 
     private InputReader inputReader;
     private InputFolderGenerator inputFolderGenerator;
@@ -24,14 +29,10 @@ public class LoaderController : MonoBehaviour
     private Vector3 startScale;
     private Vector3 finalScale;
     private bool moving = false;
-    [HideInInspector]
-    public bool loadingComplete = false;
     private float currentTime;
     private float arrivalTime;
-    [HideInInspector]
-    public bool loaderMovedDown = false;
-    public GameObject keyboard;
     private GameManager gameManager;
+
 
     void Start()
     {
@@ -121,6 +122,7 @@ public class LoaderController : MonoBehaviour
         if (collider.gameObject.CompareTag("Sphere"))
         {
             Transform cellParent = collider.transform.parent;
+
             if (cellParent != null)
             {
                 if (timeEntered == 0)

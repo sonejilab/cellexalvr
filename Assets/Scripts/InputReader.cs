@@ -218,11 +218,11 @@ public class InputReader : MonoBehaviour
 
             combGraph.DirectoryName = regexResult[regexResult.Length - 2];
             //combGraph.GraphName = combGraph.DirectoryName + "\n" + graphFileName.Substring(0, graphFileName.Length - 4);
-            combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            combGraph.GraphName = combGraph.DirectoryName + "_" + graphFileName.Substring(0, graphFileName.Length - 4);
             combGraph.gameObject.name = combGraph.GraphName;
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
 
-            image1 = new Bitmap(400, 400);
+            //image1 = new Bitmap(400, 400);
             //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
             //int i, j;
 
@@ -252,23 +252,23 @@ public class InputReader : MonoBehaviour
                         float y = float.Parse(words[2]);
                         float z = float.Parse(words[3]);
                         //newGraph.UpdateMinMaxCoords(x, y, z);
-                        try
-                        {
-                            //System.Drawing.Color pixelColor = image1.GetPixel((int)x, (int)y);
-                            System.Drawing.Color newColor = System.Drawing.Color.FromArgb(255, 0, 0);
-                            image1.SetPixel((int)x+100, (int)y+100, newColor);
-                        }
+                        //try
+                        //{
+                        //    //System.Drawing.Color pixelColor = image1.GetPixel((int)x, (int)y);
+                        //    System.Drawing.Color newColor = System.Drawing.Color.FromArgb(255, 0, 0);
+                        //    image1.SetPixel((int)x+100, (int)y+100, newColor);
+                        //}
 
                         // Set the PictureBox to display the image.
                         //PictureBox1.Image = image1;
 
                         // Display the pixel format in Label1.
 
-                        catch (ArgumentException)
-                        {
-                            Debug.Log("There was an error." +
-                                "Check the path to the image file.");
-                        }
+                        //catch (ArgumentException)
+                        //{
+                        //    Debug.Log("There was an error." +
+                        //        "Check the path to the image file.");
+                        //}
                         //cellManager.AddCell(cellname);
                         //combinedGraphGenerator.AddGraphPoint(cellname, x, y, z);
                         Cell cell = cellManager.AddCell(cellname);
@@ -321,7 +321,7 @@ public class InputReader : MonoBehaviour
 
             }
             // more_cells
-            image1.Save(Directory.GetCurrentDirectory() + "\\test" + fileIndex + ".png", ImageFormat.Png);
+            //image1.Save(Directory.GetCurrentDirectory() + "\\test" + fileIndex + ".png", ImageFormat.Png);
             combinedGraphGenerator.SliceClustering();
             graphManager.Graphs.Add(combGraph);
             if (debug)

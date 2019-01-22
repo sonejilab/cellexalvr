@@ -18,11 +18,11 @@ public class GraphManager : MonoBehaviour
     public Material defaultGraphPointMaterial;
     public Shader graphPointNormalShader;
     public Shader graphPointOutlineShader;
+    public SelectionToolHandler selectionToolHandler;
 
-    public List<CombinedGraph> Graphs { get; set; }
+    public List<CombinedGraph> Graphs;
 
     private CellManager cellManager;
-    private SelectionToolHandler selectionToolHandler;
     private List<NetworkHandler> networks = new List<NetworkHandler>();
     private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
                                             new Vector3(-0.9f, 1.1f, -0.4f),
@@ -59,6 +59,7 @@ public class GraphManager : MonoBehaviour
     public bool drawSelectionToolDebugLines = false;
     public bool drawDebugRaycast = false;
     public bool drawDebugRejectionApprovedCubes = false;
+    public bool drawDebugGroups = false;
 
     void Awake()
     {
@@ -163,6 +164,12 @@ public class GraphManager : MonoBehaviour
                 graph.ResetColors();
             }
         }
+    }
+
+    [ConsoleCommand("graphManager", "drawdebuggroups", "ddg")]
+    public void DrawDebugGroups(bool b)
+    {
+        drawDebugGroups = b;
     }
 
 
@@ -361,7 +368,7 @@ public class GraphManager : MonoBehaviour
 
                 }
             }
-            Destroy(network);
+            Destroy(network.gameObject);
         }
         networks.Clear();
     }

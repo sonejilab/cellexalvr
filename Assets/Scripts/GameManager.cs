@@ -227,6 +227,7 @@ public class GameManager : Photon.PunBehaviour
     public void InformLoadingMenu()
     {
         if (!multiplayer) return;
+        print("Sending to client to reset folders");
         coordinator.photonView.RPC("SendLoadingMenu", PhotonTargets.Others);
     }
 
