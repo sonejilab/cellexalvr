@@ -10,6 +10,8 @@ using TMPro;
 using System.Threading;
 using CellexalExtensions;
 using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 /// <summary>
 /// A class for reading data files and creating objects in the virtual environment.
@@ -42,6 +44,9 @@ public class InputReader : MonoBehaviour
     private GameManager gameManager;
     private NetworkGenerator networkGenerator;
     private CombinedGraphGenerator combinedGraphGenerator;
+
+    private Bitmap image1;
+    
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -92,6 +97,7 @@ public class InputReader : MonoBehaviour
     [ConsoleCommand("inputReader", "readfolder", "rf")]
     public void ReadFolder(string path)
     {
+        UpdateSelectionToolHandler();
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath;
         if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
@@ -145,6 +151,14 @@ public class InputReader : MonoBehaviour
         combinedGraphGenerator.isCreating = true;
     }
 
+    void UpdateSelectionToolHandler()
+    {
+        print(selectionToolHandler.gameObject.name);
+        referenceManager.heatmapGenerator.selectionToolHandler = referenceManager.selectionToolHandler;
+        referenceManager.networkGenerator.selectionToolHandler = referenceManager.selectionToolHandler;
+        referenceManager.graphManager.selectionToolHandler = referenceManager.selectionToolHandler;
+    }
+
     /// <summary>
     /// Calls R logging function to start the logging session.
     /// </summary>
@@ -196,24 +210,22 @@ public class InputReader : MonoBehaviour
             }
             //Graph newGraph = graphManager.CreateGraph();
             CombinedGraph combGraph = combinedGraphGenerator.CreateCombinedGraph();
-            // CombinedGraph newGraph = Instantiate(combinedGraphPrefab);
-            //newGraph.referenceManager = referenceManager;
             // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
             string graphFileName = /*regexResult[regexResult.Length - 2] + "/" + */regexResult[regexResult.Length - 1];
-            //// remove the ".mds" at the end
+
+            combGraph.DirectoryName = regexResult[regexResult.Length - 2];
+            //combGraph.GraphName = combGraph.DirectoryName + "\n" + graphFileName.Substring(0, graphFileName.Length - 4);
             combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
             combGraph.gameObject.name = combGraph.GraphName;
-            //var textmeshgraphname = Instantiate(graphName);
-            //textmeshgraphname.transform.position = newGraph.transform.position;
-            //textmeshgraphname.transform.Translate(0f, 0.6f, 0f);
-            //textmeshgraphname.text = newGraph.GraphName;
-            //textmeshgraphname.transform.LookAt(referenceManager.headset.transform.position);
-            //textmeshgraphname.transform.Rotate(0f, 180f, 0f);
-            combGraph.DirectoryName = regexResult[regexResult.Length - 2];
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
+
+            image1 = new Bitmap(400, 400);
+            //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
+            //int i, j;
+
             using (StreamReader mdsStreamReader = new StreamReader(file))
             {
                 //List<string> cellnames = new List<string>();
@@ -240,13 +252,30 @@ public class InputReader : MonoBehaviour
                         float y = float.Parse(words[2]);
                         float z = float.Parse(words[3]);
                         //newGraph.UpdateMinMaxCoords(x, y, z);
+                        try
+                        {
+                            //System.Drawing.Color pixelColor = image1.GetPixel((int)x, (int)y);
+                            System.Drawing.Color newColor = System.Drawing.Color.FromArgb(255, 0, 0);
+                            image1.SetPixel((int)x+100, (int)y+100, newColor);
+                        }
 
+                        // Set the PictureBox to display the image.
+                        //PictureBox1.Image = image1;
+
+                        // Display the pixel format in Label1.
+
+                        catch (ArgumentException)
+                        {
+                            Debug.Log("There was an error." +
+                                "Check the path to the image file.");
+                        }
                         //cellManager.AddCell(cellname);
                         //combinedGraphGenerator.AddGraphPoint(cellname, x, y, z);
                         Cell cell = cellManager.AddCell(cellname);
                         combinedGraphGenerator.AddGraphPoint(cell, x, y, z);
                         itemsThisFrame++;
                     }
+
                     i += itemsThisFrame;
                     totalNbrOfCells += itemsThisFrame;
                     // wait for end of frame
@@ -265,6 +294,7 @@ public class InputReader : MonoBehaviour
                         maximumItemsPerFrame -= CellexalConfig.GraphLoadingCellsPerFrameIncrement;
                     }
                 }
+
                 // we must wait for the graph to fully initialize before adding stuff to it
                 // more_cells while (!newGraph.Ready())
                 // more_cells   yield return null;
@@ -291,6 +321,7 @@ public class InputReader : MonoBehaviour
 
             }
             // more_cells
+            image1.Save(Directory.GetCurrentDirectory() + "\\test" + fileIndex + ".png", ImageFormat.Png);
             combinedGraphGenerator.SliceClustering();
             graphManager.Graphs.Add(combGraph);
             if (debug)
@@ -653,9 +684,9 @@ public class InputReader : MonoBehaviour
         // make sure there is a .cnt file
         if (cntFilePaths.Length == 0)
         {
-            status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
-            statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, Color.red);
+            status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
+            statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
+            statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
             CellexalError.SpawnError("Error when generating networks", string.Format("No .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
             yield break;
         }
@@ -742,7 +773,7 @@ public class InputReader : MonoBehaviour
             float y = float.Parse(words[1]);
             float z = float.Parse(words[2]);
             // the color is a hex string e.g. #FF0099
-            Color color = new Color();
+            UnityEngine.Color color = new UnityEngine.Color();
             string colorString = words[3];
             ColorUtility.TryParseHtmlString(colorString, out color);
 
@@ -958,7 +989,7 @@ public class InputReader : MonoBehaviour
         string[][] cellNames = new string[groupingNames.Count][];
         int[][] groups = new int[groupingNames.Count][];
         string[] graphNames = new string[groupingNames.Count];
-        Dictionary<int, Color>[] groupingColors = new Dictionary<int, Color>[groupingNames.Count];
+        Dictionary<int, UnityEngine.Color>[] groupingColors = new Dictionary<int, UnityEngine.Color>[groupingNames.Count];
         for (int i = 0; i < cellNames.Length; ++i)
         {
             cellNames[i] = new string[fileLengths[i]];
@@ -966,7 +997,7 @@ public class InputReader : MonoBehaviour
         }
         for (int i = 0; i < groupingNames.Count; ++i)
         {
-            groupingColors[i] = new Dictionary<int, Color>();
+            groupingColors[i] = new Dictionary<int, UnityEngine.Color>();
         }
         words = null;
         string[] files = Directory.GetFiles(dataFolder, "*.cgr");
@@ -987,7 +1018,7 @@ public class InputReader : MonoBehaviour
                 {
                     int group = int.Parse(words[3]);
                     groups[i][j] = group;
-                    Color groupColor;
+                    UnityEngine.Color groupColor;
                     ColorUtility.TryParseHtmlString(words[1], out groupColor);
                     groupingColors[i][group] = groupColor;
                 }
@@ -1034,7 +1065,7 @@ public class InputReader : MonoBehaviour
             string line = streamReader.ReadLine();
             string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             int group = 0;
-            Color groupColor;
+            UnityEngine.Color groupColor;
 
             try
             {

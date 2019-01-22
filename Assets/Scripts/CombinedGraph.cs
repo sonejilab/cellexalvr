@@ -688,8 +688,9 @@ public class CombinedGraph : MonoBehaviour
     public void SetInfoText()
     {
         //graphInfoText.transform.parent.localPosition = ScaleCoordinates(maxCoordValues.x - (maxCoordValues.x - minCoordValues.x) / 2, maxCoordValues.y, maxCoordValues.z);
-        graphInfoText.text = "Points: " + points.Count;
-        SetInfoTextVisible(true);
+        //graphInfoText.text = "Points: " + points.Count;
+        graphNameText.text += "\n Points: " + points.Count;
+        //SetInfoTextVisible(true);
     }
 
     /// <summary>
