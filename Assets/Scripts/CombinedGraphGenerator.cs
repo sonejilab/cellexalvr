@@ -153,7 +153,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         ScaleAllCoordinates();
 
-        // unty meshes can have a max of 65534 vertices
+        // meshes in unity can have a max of 65534 vertices
         int maxVerticesPerMesh = 65534;
         nbrOfMaxPointsPerClusters = maxVerticesPerMesh / graphPointMesh.vertexCount;
         // place all points in one big cluster
@@ -342,7 +342,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         newGraph.minCoordValues -= graphPointMesh.bounds.size;
         newGraph.diffCoordValues = newGraph.maxCoordValues - newGraph.minCoordValues;
         newGraph.longestAxis = Mathf.Max(newGraph.diffCoordValues.x, newGraph.diffCoordValues.y, newGraph.diffCoordValues.z);
-        // making the largest axis longer by the length of two graphpoint meshes makes no part of the graphpoints peak out of the 1x1x1 meter bounding cube when positioned close to the borders
+        // making the largest axis longer by the length of two graphpoint meshes makes no part of the graphpoints peek out of the 1x1x1 meter bounding cube when positioned close to the borders
         //var graphPointMeshBounds = graphPointMesh.bounds;
         //float longestAxisGraphPointMesh = Mathf.Max(graphPointMeshBounds.size.x, graphPointMeshBounds.size.y, graphPointMeshBounds.size.z);
         //longestAxis += longestAxisGraphPointMesh;

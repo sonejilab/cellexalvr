@@ -58,7 +58,7 @@ Shader "Custom/CombinedGraphpoint"
                    float2  uv          : TEXCOORD0;
                    float3  lightDir    : TEXCOORD1;
                    float3  normal		: TEXCOORD2;
-                   LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
+                //    LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
                };
                
                sampler2D _MainTex;
@@ -75,7 +75,7 @@ Shader "Custom/CombinedGraphpoint"
 				   
 				   o.normal = v.normal;
                    
-                   TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
+                   // TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
                    
 		           
 		           // #ifdef VERTEXLIGHT_ON
@@ -117,7 +117,7 @@ Shader "Custom/CombinedGraphpoint"
                    fixed diff = saturate(dot(i.normal, i.lightDir));
 
                    color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 2 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
-                   color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
+                   // color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
                    color.a = 1;// color.a + _LightColor0.a * atten;
                    return color;
                }
@@ -143,7 +143,7 @@ Shader "Custom/CombinedGraphpoint"
                     float2  uv          : TEXCOORD0;
                     float3  normal		: TEXCOORD1;
                     float3  lightDir    : TEXCOORD2;
-                    LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
+                    // LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
                     float3  worldPos    : TEXCOORD5;
                 };
  
@@ -158,7 +158,7 @@ Shader "Custom/CombinedGraphpoint"
 					o.lightDir = ObjSpaceLightDir(v.vertex);
 					
 					o.normal =  v.normal;
-                    TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
+                    // TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
                     return o;
                 }
  
@@ -166,7 +166,7 @@ Shader "Custom/CombinedGraphpoint"
                 sampler2D _GraphpointColorTex;
                 // float4 _ExpressionColors[256];
 
-                fixed4 _LightColor0; // Colour of the light used in this pass.
+                // fixed4 _LightColor0; // Colour of the light used in this pass.
 
                 float3 hsv_to_rgb(float3 HSV)
                 {
@@ -205,14 +205,14 @@ Shader "Custom/CombinedGraphpoint"
                     }
 
                     i.lightDir = normalize(i.lightDir);
-                    float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
+                    float2 colorTexUV = float2(expressionColorData.x/* + 1/512*/, 0.5);
                     // float4 color = _ExpressionColors[round(expressionColorData.x * 255)];
                     float4 color = tex2D(_GraphpointColorTex, colorTexUV);
 					fixed3 normal = i.normal;                    
                     fixed diff = saturate(dot(normal, i.lightDir));
                     
                     fixed4 c;
-                    c.rgb = (color.rgb * _LightColor0.rgb * diff); // Diffuse and specular.
+                    c.rgb = (color.rgb /** _LightColor0.rgb*/ * diff); // Diffuse and specular.
                     c.a = 1;
                     return c;
                 }
@@ -300,7 +300,8 @@ Shader "Custom/CombinedGraphpoint"
                 v2g OUT;
                 float3 expressionColorData = start.color;
                 float4 uvAndMip = float4(expressionColorData.x + 1/512, 0.5, 0, 0);
-                OUT.color = tex2Dlod(_GraphpointColorTex, uvAndMip);
+                float3 color = tex2Dlod(_GraphpointColorTex, uvAndMip);
+                OUT.color = (float3(1, 1, 1) - (color)) / 4 + color;
                 OUT.normal = start.pos;
                 OUT.viewDir = start.viewDir;
                 OUT.texcoord = start.texcoord;

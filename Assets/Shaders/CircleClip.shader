@@ -52,8 +52,8 @@
                 fixed4 frag(v2f IN) : SV_TARGET
                 {
                     float radius = length(IN.vertexPos);
-                    clip(radius - _OuterClipRadius);
-                    clip(_InnerClipRadius - radius);
+                    // clip(radius - _OuterClipRadius);
+                    // clip(_InnerClipRadius - radius);
                     fixed4 color = _Color;
                     return color;
                 }

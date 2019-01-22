@@ -75,7 +75,7 @@ Material:
     - _MovingOutlineOuterRadius: 0
     - _OcclusionStrength: 1
     - _OuterClipRadius: 0.31
-    - _OutlineThickness: 0.005
+    - _OutlineThickness: 0.001
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0

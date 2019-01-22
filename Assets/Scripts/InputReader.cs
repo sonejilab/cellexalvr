@@ -1018,9 +1018,14 @@ public class InputReader : MonoBehaviour
     {
         string dataFolder = CellexalUser.UserSpecificFolder;
         string[] files = Directory.GetFiles(dataFolder, "user.group.*.txt");
-        if (index < 0 || index >= files.Length)
+        if (files.Length == 0)
         {
-            CellexalLog.Log(string.Format("Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index, files.Length));
+            CellexalLog.Log("No previous selections found.");
+            return;
+        }
+        else if (index < 0 || index >= files.Length)
+        {
+            CellexalLog.Log(string.Format("Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index, files.Length - 1));
             return;
         }
 
