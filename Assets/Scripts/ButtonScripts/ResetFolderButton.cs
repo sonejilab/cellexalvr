@@ -12,6 +12,7 @@ public class ResetFolderButton : CellexalButton
     public TextMesh textMeshToUndarken;
 
     public bool deactivateMenu = false;
+    public bool deleteSceneObjs = false; // If total reset is to be done. If false don't delete anything, only bring back folders.
 
     protected override string Description
     {
@@ -34,9 +35,12 @@ public class ResetFolderButton : CellexalButton
 
     public override void Click()
     {
-        CloseSubMenu();
-        referenceManager.loaderController.ResetFolders();
-        referenceManager.gameManager.InformLoadingMenu();
+        if (deleteSceneObjs)
+        {
+            CloseSubMenu();
+        }
+        referenceManager.loaderController.ResetFolders(deleteSceneObjs);
+        referenceManager.gameManager.InformLoadingMenu(deleteSceneObjs);
     }
 
     void CloseSubMenu()

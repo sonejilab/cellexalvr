@@ -18,8 +18,8 @@ public class StartMenuButton : CellexalButton
 
     public override void Click()
     {
-        sceneLoader.LoadScene("SceneLoaderTest");
-        referenceManager.gameManager.InformLoadingMenu();
+        //sceneLoader.LoadScene("SceneLoaderTest");
+        //referenceManager.gameManager.InformLoadingMenu();
     }
 }
 

@@ -14,7 +14,7 @@ public class GraphManager : MonoBehaviour
     public CombinedGraph combinedGraphPrefab;
     public AudioSource goodSound;
     public AudioSource badSound;
-    public string directory;
+    public List<string> directories;
     public Material defaultGraphPointMaterial;
     public Shader graphPointNormalShader;
     public Shader graphPointOutlineShader;
@@ -24,11 +24,6 @@ public class GraphManager : MonoBehaviour
 
     private CellManager cellManager;
     private List<NetworkHandler> networks = new List<NetworkHandler>();
-    private Vector3[] startPositions =  {   new Vector3(-0.2f, 1.1f, -0.95f),
-                                            new Vector3(-0.9f, 1.1f, -0.4f),
-                                            new Vector3(-0.9f, 1.1f, 0.4f),
-                                            new Vector3(-0.2f, 1.1f, 0.95f)
-                                        };
 
     /// <summary>
     /// The different methods for coloring graphs by gene expression. The different options are:
@@ -329,14 +324,6 @@ public class GraphManager : MonoBehaviour
         foreach (CombinedGraph graph in Graphs)
         {
             graph.ColorByGeneExpression(expressions);
-        }
-    }
-
-    public void SetGraphStartPosition()
-    {
-        for (int i = 0; i < Graphs.Count; ++i)
-        {
-            Graphs[i].transform.position = startPositions[i % 4];
         }
     }
 

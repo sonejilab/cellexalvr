@@ -153,7 +153,6 @@ public class InputReader : MonoBehaviour
 
     void UpdateSelectionToolHandler()
     {
-        print(selectionToolHandler.gameObject.name);
         referenceManager.heatmapGenerator.selectionToolHandler = referenceManager.selectionToolHandler;
         referenceManager.networkGenerator.selectionToolHandler = referenceManager.selectionToolHandler;
         referenceManager.graphManager.selectionToolHandler = referenceManager.selectionToolHandler;

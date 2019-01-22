@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 /// <summary>
 /// This class represent the loader. The loader reacts to cells representing dtasets that fall into it and starts loading the dataset.
@@ -10,6 +11,7 @@ public class LoaderController : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public Transform cylinder;
+    public GameObject helpVideoObj;
     
     [HideInInspector]
     public bool loaderMovedDown = false;
@@ -32,12 +34,14 @@ public class LoaderController : MonoBehaviour
     private float currentTime;
     private float arrivalTime;
     private GameManager gameManager;
+    public List<string> pathsToLoad;
 
 
     void Start()
     {
         gameManager = referenceManager.gameManager;
         cellsToDestroy = new ArrayList();
+        pathsToLoad = new List<string>();
         inputReader = referenceManager.inputReader;
         inputFolderGenerator = referenceManager.inputFolderGenerator;
         graphManager = referenceManager.graphManager;
@@ -114,6 +118,7 @@ public class LoaderController : MonoBehaviour
             finalPosition = transform.position + distance;
         }
         keyboard.SetActive(false);
+        helpVideoObj.SetActive(false);
         moving = true;
     }
 
@@ -122,49 +127,58 @@ public class LoaderController : MonoBehaviour
         if (collider.gameObject.CompareTag("Sphere"))
         {
             Transform cellParent = collider.transform.parent;
-
             if (cellParent != null)
             {
-                if (timeEntered == 0)
-                {
-                    timeEntered = Time.time;
-                    cellsEntered = true;
-                }
                 if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded())
                 {
-                    string path = cellParent.GetComponent<CellsToLoad>().Directory;
-                    graphManager.directory = path;
-                    try
-                    {
-                        inputReader.ReadFolder(path);
-                    }
-                    catch (System.InvalidOperationException e)
-                    {
-                        CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
-                        ResetFolders();
-                    }
-
-                    referenceManager.keyboardStatusFolder.ClearKey();
-                    gameManager.InformReadFolder(path);
+                    pathsToLoad.Add(cellParent.GetComponent<CellsToLoad>().Directory);
 
                 }
-
                 Destroy(cellParent.GetComponent<FixedJoint>());
                 Destroy(cellParent.GetComponent<Rigidbody>());
                 foreach (Transform child in cellParent)
                 {
-                    // if (child.gameObject.GetComponent<Rigidbody>() == null)
-                    child.gameObject.AddComponent<Rigidbody>();
+                    if (child.gameObject.GetComponent<Rigidbody>() == null)
+                    {
+                        child.gameObject.AddComponent<Rigidbody>();
+                    }
                     cellsToDestroy.Add(child);
                 }
-                // must pass over list again to remove the parents. doing so in the
-                // above loop messes with the iterator somehow and only removes every
-                // second child's parent reference
-                foreach (Transform child in cellsToDestroy)
-                {
-                    child.parent = null;
-                }
             }
+        }
+    }
+
+    [ConsoleCommand("loaderController", "loadallcells", "lac")]
+    public void LoadAllCells()
+    {
+        if (timeEntered == 0)
+        {
+            timeEntered = Time.time;
+            cellsEntered = true;
+        }
+        foreach (string path in pathsToLoad)
+        {
+            graphManager.directories.Add(path);
+            try
+            {
+                inputReader.ReadFolder(path);
+            }
+            catch (System.InvalidOperationException e)
+            {
+                CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
+                ResetFolders(false);
+            }
+
+            referenceManager.keyboardStatusFolder.ClearKey();
+            gameManager.InformReadFolder(path);
+
+        }
+        // must pass over list again to remove the parents. doing so in the
+        // above loop messes with the iterator somehow and only removes every
+        // second child's parent reference
+        foreach (Transform child in cellsToDestroy)
+        {
+            child.parent = null;
         }
     }
 
@@ -212,21 +226,25 @@ public class LoaderController : MonoBehaviour
         inputFolderGenerator.DestroyFolders();
     }
 
-    public void ResetFolders()
+    public void ResetFolders(bool reset)
     {
-        graphManager.DeleteGraphsAndNetworks();
-        referenceManager.heatmapGenerator.DeleteHeatmaps();
-        referenceManager.previousSearchesList.ClearList();
+        if (reset)
+        {
+            graphManager.DeleteGraphsAndNetworks();
+            referenceManager.heatmapGenerator.DeleteHeatmaps();
+            referenceManager.previousSearchesList.ClearList();
+            CellexalEvents.GraphsUnloaded.Invoke();
+        }
         // must reset loader before generating new folders
         ResetLoaderBooleans();
         inputFolderGenerator.GenerateFolders();
         referenceManager.inputFolderGenerator.gameObject.SetActive(true);
-        CellexalEvents.GraphsUnloaded.Invoke();
         if (loaderMovedDown)
         {
             loaderMovedDown = false;
             MoveLoader(new Vector3(0f, 2f, 0f), 2f);
         }
         keyboard.SetActive(true);
+        helpVideoObj.SetActive(true);
     }
 }
