@@ -55,7 +55,7 @@ public class LoaderController : MonoBehaviour
             gameObject.transform.position = Vector3.Lerp(startPosition, finalPosition, currentTime / arrivalTime);
             cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
             currentTime += Time.deltaTime;
-            if (currentTime > arrivalTime)
+            if (currentTime > arrivalTime || gameObject.transform.position.y > 0)
             {
                 moving = false;
                 loadingComplete = true;
@@ -151,6 +151,10 @@ public class LoaderController : MonoBehaviour
     [ConsoleCommand("loaderController", "loadallcells", "lac")]
     public void LoadAllCells()
     {
+        if (pathsToLoad.Count == 0)
+        {
+            return;
+        }
         if (timeEntered == 0)
         {
             timeEntered = Time.time;
@@ -180,6 +184,7 @@ public class LoaderController : MonoBehaviour
         {
             child.parent = null;
         }
+        pathsToLoad.Clear();
     }
 
     public void DestroyFolderColliders()

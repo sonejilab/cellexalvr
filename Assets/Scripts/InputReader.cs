@@ -339,8 +339,12 @@ public class InputReader : MonoBehaviour
         ReadAttributeFiles(path);
         ReadBooleanExpressionFiles(path);
 
-        loaderController.loaderMovedDown = true;
-        loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+        //loaderController.loaderMovedDown = true;
+        if (!loaderController.loaderMovedDown)
+        {
+            loaderController.loaderMovedDown = true;
+            loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+        }
         if (debug)
         {
             ReadNetworkFiles(0);
