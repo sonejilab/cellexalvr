@@ -111,6 +111,7 @@ public class SelectionToolHandler : MonoBehaviour
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 particles.gameObject.SetActive(true);
+                print("Activate particles");
                 ActivateSelection(true);
             }
             if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
@@ -139,9 +140,10 @@ public class SelectionToolHandler : MonoBehaviour
         }
         // Sometimes the a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
         // if selection tool is inactive.
-        if (particles)
+        if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
         {
-            particles.gameObject.SetActive(IsSelectionToolEnabled());
+            print("deactivate");
+            particles.gameObject.SetActive(false);
         }
 
     }
@@ -770,7 +772,7 @@ public class SelectionToolHandler : MonoBehaviour
 
     public bool IsSelectionToolEnabled()
     {
-        return GetComponentInChildren<Collider>().enabled;
+        return GetComponentsInChildren<Collider>().Any(x => x.enabled);
     }
 
     public Color GetColor(int index)
