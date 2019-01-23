@@ -311,7 +311,12 @@ namespace VRTK
             if (EnabledPointerRenderer())
             {
                 controllerIndex = e.controllerIndex;
-                Toggle(true);
+                SteamVR_Controller.Device device = SteamVR_Controller.Input((int)controllerIndex);
+                Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+                if (touchpad.y >= 0.5)
+                {
+                    Toggle(true);
+                }
             }
         }
 
