@@ -55,7 +55,7 @@ public class LoaderController : MonoBehaviour
             gameObject.transform.position = Vector3.Lerp(startPosition, finalPosition, currentTime / arrivalTime);
             cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
             currentTime += Time.deltaTime;
-            if (currentTime > arrivalTime || gameObject.transform.position.y > 0)
+            if (Mathf.Abs(transform.position.y - finalPosition.y) <= 0.005)
             {
                 moving = false;
                 loadingComplete = true;
@@ -111,7 +111,7 @@ public class LoaderController : MonoBehaviour
         }
         if (moving)
         {
-            finalPosition = finalPosition + distance;
+            finalPosition = distance;
         }
         else
         {
@@ -247,7 +247,7 @@ public class LoaderController : MonoBehaviour
         if (loaderMovedDown)
         {
             loaderMovedDown = false;
-            MoveLoader(new Vector3(0f, 2f, 0f), 2f);
+            MoveLoader(new Vector3(0f, 2f, 0f), 2);
         }
         keyboard.SetActive(true);
         helpVideoObj.SetActive(true);
