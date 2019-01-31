@@ -269,7 +269,7 @@ namespace SQLiter
             List<string> cellNames2 = new List<string>();
             foreach (CombinedGraph.CombinedGraphPoint gp in list)
             {
-                if (gp.group == 0)
+                if (gp.Group == 0)
                 {
                     cellNames1.Add(gp.Label);
                 }

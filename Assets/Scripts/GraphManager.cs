@@ -77,82 +77,49 @@ public class GraphManager : MonoBehaviour
         //CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
     }
 
+    #region DEBUG_FUNCTIONS
+
     [ConsoleCommand("graphManager", "drawdebugcubes", "ddc")]
-    public void DrawDebugGizmos(int i)
+    public void DrawDebugGizmos(bool b)
     {
-        if (i == 1)
-        {
-            drawDebugCubes = true;
-        }
-        else if (i == 0)
-        {
-            drawDebugCubes = false;
-        }
+        drawDebugCubes = b;
     }
 
     [ConsoleCommand("graphManager", "drawdebuglines", "ddl")]
-    public void DrawDebugLines(int i)
+    public void DrawDebugLines(bool b)
     {
-        if (i == 1)
-        {
-            drawDebugLines = true;
-        }
-        else if (i == 0)
-        {
-            drawDebugLines = false;
-        }
+        drawDebugLines = b;
     }
 
     [ConsoleCommand("graphManager", "drawselectiontooldebuglines", "dstdl")]
-    public void DrawSelectionToolDebugLines(int i)
+    public void DrawSelectionToolDebugLines(bool b)
     {
-        if (i == 1)
-        {
-            drawSelectionToolDebugLines = true;
-        }
-        else if (i == 0)
-        {
-            drawSelectionToolDebugLines = false;
-        }
+        drawSelectionToolDebugLines = b;
     }
 
     [ConsoleCommand("graphManager", "drawraycast", "drc")]
-    public void DrawDebugRaycast(int i)
+    public void DrawDebugRaycast(bool b)
     {
-        if (i == 1)
-        {
-            drawDebugRaycast = true;
-        }
-        else if (i == 0)
-        {
-            drawDebugRaycast = false;
-        }
+        drawDebugRaycast = b;
     }
 
     [ConsoleCommand("graphManager", "drawrejectionapprovecubes", "drac")]
-    public void DrawDebugRejectionApproveCubes(int i)
+    public void DrawDebugRejectionApproveCubes(bool b)
     {
-        if (i == 1)
-        {
-            drawDebugRejectionApprovedCubes = true;
-        }
-        else if (i == 0)
-        {
-            drawDebugRejectionApprovedCubes = false;
-        }
+        drawDebugRejectionApprovedCubes = b;
     }
 
     [ConsoleCommand("graphManager", "party")]
-    public void Party(int i)
+    public void Party(bool b)
     {
-        if (i == 1)
+        if (b)
         {
             foreach (CombinedGraph graph in Graphs)
             {
                 graph.Party();
             }
         }
-        else if (i == 0)
+        else
         {
             foreach (CombinedGraph graph in Graphs)
             {
@@ -166,6 +133,8 @@ public class GraphManager : MonoBehaviour
     {
         drawDebugGroups = b;
     }
+
+    #endregion
 
 
     /// <summary>

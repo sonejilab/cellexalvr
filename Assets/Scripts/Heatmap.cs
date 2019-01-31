@@ -289,7 +289,7 @@ public class Heatmap : MonoBehaviour
         for (int i = 0; i < selection.Count; ++i)
         {
             CombinedGraph.CombinedGraphPoint graphpoint = selection[i];
-            int group = graphpoint.group;
+            int group = graphpoint.Group;
             groupingColors[group] = graphpoint.GetColor();
             cells[i] = graphpoint.Label;
             if (lastGroup == -1)

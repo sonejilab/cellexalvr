@@ -229,25 +229,18 @@ public class SelectionToolHandler : MonoBehaviour
         }
         // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
-        int oldGroup = graphPoint.group;
+        int oldGroup = graphPoint.Group;
 
-        if (newGroup < Colors.Length && color.Equals(Colors[newGroup]))
+        foreach (CombinedGraph graph in graphManager.Graphs)
         {
-            foreach (CombinedGraph graph in graphManager.Graphs)
+            CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
+            if (gp != null)
             {
-                CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
-                if (gp != null)
-                {
-                    gp.RecolorSelectionColor(newGroup, true);
-                }
+                gp.RecolorSelectionColor(newGroup, true);
             }
-            //graphPoint.Recolor(Colors[newGroup], newGroup);
         }
-        else
-        {
-            graphPoint.RecolorSelectionColor(newGroup, true);
-        }
-        graphPoint.group = newGroup;
+        //graphPoint.Recolor(Colors[newGroup], newGroup);
+        graphPoint.Group = newGroup;
         // renderer.material.color = Colors[newGroup];
         //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 
@@ -382,13 +375,13 @@ public class SelectionToolHandler : MonoBehaviour
             return;
         }
         HistoryListInfo info = selectionHistory[indexToMoveTo];
-        info.graphPoint.group = info.fromGroup;
+        //info.graphPoint.Group = info.fromGroup;
 
         // if info.fromGroup != 1 then the outline should be drawn
         foreach (CombinedGraph graph in graphManager.Graphs)
         {
             CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
-            gp.RecolorSelectionColor(info.fromGroup, info.fromGroup != -1);
+            gp.RecolorSelectionColor(info.fromGroup, !info.newNode);
         }
 
         groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
@@ -397,11 +390,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
-            foreach (CombinedGraph graph in graphManager.Graphs)
-            {
-                CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
-                gp.ResetColor();
-            }
+            info.graphPoint.unconfirmedInSelection = false;
             //info.graphPoint.ResetColor();
         }
         else
@@ -439,7 +428,7 @@ public class SelectionToolHandler : MonoBehaviour
         }
 
         HistoryListInfo info = selectionHistory[indexToMoveTo];
-        info.graphPoint.group = info.toGroup;
+        //info.graphPoint.Group = info.toGroup;
         foreach (CombinedGraph graph in graphManager.Graphs)
         {
             CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
@@ -451,6 +440,7 @@ public class SelectionToolHandler : MonoBehaviour
         if (info.newNode)
         {
             selectedCells.Add(info.graphPoint);
+            info.graphPoint.unconfirmedInSelection = true;
         }
         else
         {
@@ -564,7 +554,7 @@ public class SelectionToolHandler : MonoBehaviour
         // create .txt file with latest selection
         DumpSelectionToTextFile();
         lastSelectedCells.Clear();
-        IEnumerable<CombinedGraph.CombinedGraphPoint> uniqueCells = selectedCells.Reverse<CombinedGraph.CombinedGraphPoint>().Distinct().Reverse() ;
+        IEnumerable<CombinedGraph.CombinedGraphPoint> uniqueCells = selectedCells.Reverse<CombinedGraph.CombinedGraphPoint>().Distinct().Reverse();
         foreach (CombinedGraph.CombinedGraphPoint gp in uniqueCells)
         {
             //if (gp.CustomColor)
@@ -577,7 +567,7 @@ public class SelectionToolHandler : MonoBehaviour
                 CombinedGraph.CombinedGraphPoint graphPoint = graphManager.FindGraphPoint(graph.GraphName, gp.Label);
                 if (graphPoint != null)
                 {
-                    graphPoint.RecolorSelectionColor(gp.group, false);
+                    graphPoint.RecolorSelectionColor(gp.Group, false);
                 }
             }
             lastSelectedCells.Add(gp);
@@ -725,7 +715,7 @@ public class SelectionToolHandler : MonoBehaviour
                 file.Write("\t");
                 file.Write(gp.parent.GraphName);
                 file.Write("\t");
-                file.Write(gp.group);
+                file.Write(gp.Group);
                 file.WriteLine();
             }
             file.Flush();
