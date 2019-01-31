@@ -111,7 +111,6 @@ public class SelectionToolHandler : MonoBehaviour
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 particles.gameObject.SetActive(true);
-                print("Activate particles");
                 ActivateSelection(true);
             }
             if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
@@ -705,8 +704,7 @@ public class SelectionToolHandler : MonoBehaviour
     {
         // print(new System.Diagnostics.StackTrace());
         string filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
-        using (StreamWriter file =
-                    new StreamWriter(filePath))
+        using (StreamWriter file = new StreamWriter(filePath))
         {
             CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
             CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
