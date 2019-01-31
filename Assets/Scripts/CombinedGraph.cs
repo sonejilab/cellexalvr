@@ -226,10 +226,16 @@ public class CombinedGraph : MonoBehaviour
         public int index;
         public Vector2Int textureCoord;
         public CombinedGraph parent;
-        public int group;
+        private int group;
+        public int Group
+        {
+            get { return group; }
+            set { SetGroup(value); }
+        }
         public bool unconfirmedInSelection;
         public List<Selectable> lineBetweenCellsCubes;
         public Vector3 WorldPosition { get { return parent.transform.TransformPoint(Position); } }
+        public OctreeNode node;
 
         public CombinedGraphPoint(string label, float x, float y, float z, CombinedGraph parent)
         {
@@ -274,17 +280,25 @@ public class CombinedGraph : MonoBehaviour
         public void RecolorSelectionColor(int i, bool outline)
         {
             parent.RecolorGraphPointSelectionColor(this, i, outline);
-            group = i;
+            Group = i;
         }
 
         public void ResetColor()
         {
             parent.ResetGraphPointColor(this);
+            Group = -1;
         }
 
         public Color GetColor()
         {
             return parent.GetGraphPointColor(this);
+        }
+
+        private void SetGroup(int group)
+        {
+            this.group = group;
+            if (node.Group != group)
+                node.Group = group;
         }
     }
 
@@ -359,6 +373,10 @@ public class CombinedGraph : MonoBehaviour
 
         private void SetGroup(int group)
         {
+            //if (point != null && point.Group != group)
+            //{
+            //    point.Group = group;
+            //}
             this.group = group;
             foreach (var child in children)
             {
@@ -385,7 +403,7 @@ public class CombinedGraph : MonoBehaviour
                 }
             }
             this.group = setGroupTo;
-            if (parent != null && parent.group != group)
+            if (parent != null)
             {
                 parent.NotifyGroupChange(group);
             }
@@ -742,10 +760,10 @@ public class CombinedGraph : MonoBehaviour
         }
         texture.Apply();
 
-        foreach (CombinedGraphPoint p in points.Values)
-        {
-            p.group = -1;
-        }
+        //foreach (CombinedGraphPoint p in points.Values)
+        //{
+        //    p.Group = -1;
+        //}
         octreeRoot.Group = -1;
     }
 
@@ -809,11 +827,15 @@ public class CombinedGraph : MonoBehaviour
     public void RecolorGraphPointSelectionColor(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
         byte greenChannel = (byte)(outline ? 5 : 0);
+        byte redChannel;
         if (i == -1)
         {
-            i = 255;
+            redChannel = 255;
         }
-        byte redChannel = (byte)(nbrOfExpressionColors + i);
+        else
+        {
+            redChannel = (byte)(nbrOfExpressionColors + i);
+        }
         Color32 finalColor = new Color32(redChannel, greenChannel, 0, 255);
         texture.SetPixels32(combinedGraphPoint.textureCoord.x, combinedGraphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
         textureChanged = true;

@@ -201,13 +201,14 @@ public class CombinedGraphGenerator : MonoBehaviour
     /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
     private List<HashSet<CombinedGraph.CombinedGraphPoint>> SplitClusterRecursive(HashSet<CombinedGraph.CombinedGraphPoint> cluster, CombinedGraph.OctreeNode node, bool addClusters)
     {
-
-        float graphpointMeshExtent = graphPointMesh.bounds.size.x / 2f;
+        float graphpointMeshSize = graphPointMesh.bounds.size.x;
+        float graphpointMeshExtent = graphpointMeshSize / 2f;
         if (cluster.Count == 1)
         {
             node.children = new CombinedGraph.OctreeNode[0];
             var point = cluster.First();
             node.point = point;
+            point.node = node;
             node.size = graphPointMesh.bounds.size;
             //node.size = new Vector3(0.03f, 0.03f, 0.03f);
             node.pos = point.Position - node.size / 2;
@@ -252,7 +253,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         node.center = splitCenter;
         node.pos = new Vector3(minX - graphpointMeshExtent, minY - graphpointMeshExtent, minZ - graphpointMeshExtent);
         Vector3 nodePos = node.pos;
-        node.size = new Vector3(maxX - minX + graphpointMeshExtent, maxY - minY + graphpointMeshExtent, maxZ - minZ + graphpointMeshExtent);
+        node.size = new Vector3(maxX - minX + graphpointMeshSize, maxY - minY + graphpointMeshSize, maxZ - minZ + graphpointMeshSize);
         Vector3 nodeSize = node.size;
 
 
