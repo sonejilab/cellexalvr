@@ -32,7 +32,7 @@ public class Lever : MonoBehaviour
             {
                 animateDown = false;
                 animateUp = true;
-                PullLever();
+                // multiple_exp PullLever();
             }
         }
         if (animateUp)
@@ -73,8 +73,8 @@ public class Lever : MonoBehaviour
         controllerInside = false;
     }
 
-    public void PullLever()
-    {
-        referenceManager.loaderController.LoadAllCells();
-    }
+    // multiple_exp   public void PullLever()
+    // multiple_exp   {
+    // multiple_exp       referenceManager.loaderController.LoadAllCells();
+    // multiple_exp   }
 }

@@ -28,6 +28,37 @@ public class CombinedGraph : MonoBehaviour
     public Dictionary<string, CombinedGraphPoint> points = new Dictionary<string, CombinedGraphPoint>();
     public List<Vector3> pointsPositions;
     public ReferenceManager referenceManager;
+    public List<GameObject> combinedGraphPointClusters = new List<GameObject>();
+    public int textureWidth;
+    public int textureHeight;
+    public Texture2D texture;
+    private bool textureChanged;
+    public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+    public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+    public Vector3 diffCoordValues;
+    public float longestAxis;
+    public Vector3 scaledOffset;
+    public int nbrOfClusters;
+    public string GraphName
+    {
+        get { return graphName; }
+        set
+        {
+            graphName = value;
+            graphNameText.text = folderName + "_" + value;
+            this.name = folderName + "_" + graphName;
+            this.gameObject.name = folderName + "_" + graphName;
+        }
+    }
+    public string FolderName
+    {
+        get { return folderName; }
+        set
+        {
+            folderName = value;
+            //graphNameText.text = value;
+        }
+    }
 
     private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
@@ -50,37 +81,17 @@ public class CombinedGraph : MonoBehaviour
     private Vector3 debugGizmosMin;
     private Vector3 debugGizmosMax;
     private string graphName;
+    private string folderName;
+    private int nbrOfExpressionColors;
     /// <summary>
     /// The name of this graph. Should just be the filename that the graph came from.
     /// </summary>
-    public string GraphName
-    {
-        get { return graphName; }
-        set
-        {
-            graphName = value;
-            graphNameText.text = value;
-            this.name = graphName;
-            this.gameObject.name = graphName;
-        }
-    }
-    public int textureWidth;
-    public int textureHeight;
-    public Texture2D texture;
-    private bool textureChanged;
-    private int nbrOfExpressionColors;
-    public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-    public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-    public Vector3 diffCoordValues;
-    public float longestAxis;
-    public Vector3 scaledOffset;
-    public int nbrOfClusters;
+
 
     private static LayerMask selectionToolLayerMask;
 
     public OctreeNode octreeRoot;
     private CombinedGraphGenerator combinedGraphGenerator;
-    public List<GameObject> combinedGraphPointClusters = new List<GameObject>();
     void Start()
     {
         speed = 1.5f;

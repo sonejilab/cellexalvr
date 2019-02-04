@@ -17,6 +17,7 @@ public class LoaderController : MonoBehaviour
     public bool loaderMovedDown = false;
     public GameObject keyboard;
     public bool loadingComplete = false;
+    public List<string> pathsToLoad;
 
     private InputReader inputReader;
     private InputFolderGenerator inputFolderGenerator;
@@ -34,7 +35,7 @@ public class LoaderController : MonoBehaviour
     private float currentTime;
     private float arrivalTime;
     private GameManager gameManager;
-    public List<string> pathsToLoad;
+    // multiple_exp private DatasetList datasetList;
 
 
     void Start()
@@ -46,6 +47,7 @@ public class LoaderController : MonoBehaviour
         inputFolderGenerator = referenceManager.inputFolderGenerator;
         graphManager = referenceManager.graphManager;
         helperCylinder = referenceManager.helperCylinder;
+        // multiple_exp datasetList = GetComponentInChildren<DatasetList>();
     }
 
     void Update()
@@ -119,6 +121,7 @@ public class LoaderController : MonoBehaviour
         }
         keyboard.SetActive(false);
         helpVideoObj.SetActive(false);
+        // multiple_exp datasetList.gameObject.SetActive(false);
         moving = true;
     }
 
@@ -127,65 +130,84 @@ public class LoaderController : MonoBehaviour
         if (collider.gameObject.CompareTag("Sphere"))
         {
             Transform cellParent = collider.transform.parent;
+
             if (cellParent != null)
             {
+                if (timeEntered == 0)
+                {
+                    timeEntered = Time.time;
+                    cellsEntered = true;
+                }
                 if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded())
                 {
-                    pathsToLoad.Add(cellParent.GetComponent<CellsToLoad>().Directory);
+                    string path = cellParent.GetComponent<CellsToLoad>().Directory;
+                    graphManager.directories.Add(path);
+                    try
+                    {
+                        inputReader.ReadFolder(path);
+                    }
+                    catch (System.InvalidOperationException e)
+                    {
+                        CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
+                        ResetFolders(true);
+                    }
 
+                    referenceManager.keyboardStatusFolder.ClearKey();
+                    gameManager.InformReadFolder(path);
                 }
                 Destroy(cellParent.GetComponent<FixedJoint>());
                 Destroy(cellParent.GetComponent<Rigidbody>());
                 foreach (Transform child in cellParent)
                 {
-                    if (child.gameObject.GetComponent<Rigidbody>() == null)
-                    {
-                        child.gameObject.AddComponent<Rigidbody>();
-                    }
+                    child.gameObject.AddComponent<Rigidbody>();
                     cellsToDestroy.Add(child);
+                }
+                foreach (Transform child in cellsToDestroy)
+                {
+                    child.parent = null;
                 }
             }
         }
     }
 
     [ConsoleCommand("loaderController", "loadallcells", "lac")]
-    public void LoadAllCells()
-    {
-        if (pathsToLoad.Count == 0)
-        {
-            return;
-        }
-        if (timeEntered == 0)
-        {
-            timeEntered = Time.time;
-            cellsEntered = true;
-        }
-        foreach (string path in pathsToLoad)
-        {
-            graphManager.directories.Add(path);
-            try
-            {
-                inputReader.ReadFolder(path);
-            }
-            catch (System.InvalidOperationException e)
-            {
-                CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
-                ResetFolders(false);
-            }
-
-            referenceManager.keyboardStatusFolder.ClearKey();
-            gameManager.InformReadFolder(path);
-
-        }
-        // must pass over list again to remove the parents. doing so in the
-        // above loop messes with the iterator somehow and only removes every
-        // second child's parent reference
-        foreach (Transform child in cellsToDestroy)
-        {
-            child.parent = null;
-        }
-        pathsToLoad.Clear();
-    }
+    // multiple_exp     public void LoadAllCells()
+    // multiple_exp     {
+    // multiple_exp         if (pathsToLoad.Count == 0)
+    // multiple_exp         {
+    // multiple_exp             return;
+    // multiple_exp         }
+    // multiple_exp         if (timeEntered == 0)
+    // multiple_exp         {
+    // multiple_exp             timeEntered = Time.time;
+    // multiple_exp             cellsEntered = true;
+    // multiple_exp         }
+    // multiple_exp         foreach (string path in pathsToLoad)
+    // multiple_exp         {
+    // multiple_exp             graphManager.directories.Add(path);
+    // multiple_exp             try
+    // multiple_exp             {
+    // multiple_exp                 inputReader.ReadFolder(path);
+    // multiple_exp             }
+    // multiple_exp             catch (System.InvalidOperationException e)
+    // multiple_exp             {
+    // multiple_exp                 CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
+    // multiple_exp                 ResetFolders(false);
+    // multiple_exp             }
+    // multiple_exp 
+    // multiple_exp             referenceManager.keyboardStatusFolder.ClearKey();
+    // multiple_exp             gameManager.InformReadFolder(path);
+    // multiple_exp 
+    // multiple_exp         }
+    // multiple_exp         // must pass over list again to remove the parents. doing so in the
+    // multiple_exp         // above loop messes with the iterator somehow and only removes every
+    // multiple_exp         // second child's parent reference
+    // multiple_exp         foreach (Transform child in cellsToDestroy)
+    // multiple_exp         {
+    // multiple_exp             child.parent = null;
+    // multiple_exp         }
+    // multiple_exp         pathsToLoad.Clear();
+    // multiple_exp     }
 
     public void DestroyFolderColliders()
     {
@@ -251,5 +273,7 @@ public class LoaderController : MonoBehaviour
         }
         keyboard.SetActive(true);
         helpVideoObj.SetActive(true);
+        // multiple_exp datasetList.gameObject.SetActive(true);
+        // multiple_exp datasetList.ClearList();
     }
 }

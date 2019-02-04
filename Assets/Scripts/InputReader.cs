@@ -44,6 +44,7 @@ public class InputReader : MonoBehaviour
     private GameManager gameManager;
     private NetworkGenerator networkGenerator;
     private CombinedGraphGenerator combinedGraphGenerator;
+    private string currentPath;
 
     private Bitmap image1;
     
@@ -72,6 +73,7 @@ public class InputReader : MonoBehaviour
         statusDisplayFar = referenceManager.statusDisplayFar;
         networkGenerator = referenceManager.networkGenerator;
         combinedGraphGenerator = referenceManager.combinedGraphGenerator;
+        currentPath = "";
 
         if (debug)
         {
@@ -98,6 +100,11 @@ public class InputReader : MonoBehaviour
     public void ReadFolder(string path)
     {
         UpdateSelectionToolHandler();
+        if (currentPath.Length > 0)
+        {
+            currentPath += "+";
+        }
+        currentPath += path;
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath;
         if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
@@ -109,7 +116,7 @@ public class InputReader : MonoBehaviour
             fullPath = workingDirectory + "\\Data\\" + path;
         }
         CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
-        CellexalUser.DataSourceFolder = path;
+        CellexalUser.DataSourceFolder = currentPath;
         //LoadPreviousGroupings();
         database.InitDatabase(fullPath + "\\database.sqlite");
         if (Directory.Exists(workingDirectory + "\\Output"))
@@ -120,7 +127,6 @@ public class InputReader : MonoBehaviour
                 File.Delete(workingDirectory + "\\Output\\r_log.txt");
             }
         }
-        // print(path);
         selectionToolHandler.DataDir = fullPath;
         if (!debug)
         {
@@ -213,12 +219,13 @@ public class InputReader : MonoBehaviour
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
-            string graphFileName = /*regexResult[regexResult.Length - 2] + "/" + */regexResult[regexResult.Length - 1];
+            string graphFileName = regexResult[regexResult.Length - 1];
 
             combGraph.DirectoryName = regexResult[regexResult.Length - 2];
             //combGraph.GraphName = combGraph.DirectoryName + "\n" + graphFileName.Substring(0, graphFileName.Length - 4);
-            combGraph.GraphName = combGraph.DirectoryName + "_" + graphFileName.Substring(0, graphFileName.Length - 4);
-            combGraph.gameObject.name = combGraph.GraphName;
+            combGraph.FolderName = combGraph.DirectoryName;
+            combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            //combGraph.gameObject.name = combGraph.GraphName;
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
 
             //image1 = new Bitmap(400, 400);

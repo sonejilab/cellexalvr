@@ -9,7 +9,7 @@ public class RefreshListButton : CellexalButton
     {
         get
         {
-            return "Refresh report list";
+            return "";
         }
     }
 

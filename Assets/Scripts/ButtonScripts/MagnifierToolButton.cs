@@ -6,12 +6,12 @@ class MagnifierToolButton : CellexalToolButton
 
     protected override ControllerModelSwitcher.Model ControllerModel
     {
-        get { return ControllerModelSwitcher.Model.Magnifier; }
+        get { return ControllerModelSwitcher.Model.Normal; }
     }
 
     protected override string Description
     {
-        get { return "Toggle magnifier tool"; }
+        get { return ""; }
     }
 
     private void Start()
