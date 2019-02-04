@@ -273,52 +273,52 @@ public class SelectionToolHandler : MonoBehaviour
             CellexalEvents.BeginningOfHistoryLeft.Invoke();
         }
         // The user might select cells that already have that color
-        if (newGroup != oldGroup || newNode)
-        {
-            selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
+        //if (newGroup != oldGroup || newNode)
+        //{
+        selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
-            if (hapticFeedback && hapticFeedbackThisFrame)
+        if (hapticFeedback && hapticFeedbackThisFrame)
+        {
+            hapticFeedbackThisFrame = false;
+            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
+        }
+        try
+        {
+            groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+            HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+            FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+        }
+        catch (NullReferenceException e)
+        {
+            //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
+        }
+
+        if (newNode)
+        {
+            //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
+            if (selectedCells.Count == 0)
             {
-                hapticFeedbackThisFrame = false;
-                SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
+                CellexalEvents.SelectionStarted.Invoke();
             }
+            selectedCells.Add(graphPoint);
+        }
+        else
+        {
+            // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
+            //selectedCells.Remove(graphPoint);
+            selectedCells.Add(graphPoint);
             try
             {
-                groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-                HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-                FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+                groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+                FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
             }
             catch (NullReferenceException e)
             {
                 //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
             }
-
-            if (newNode)
-            {
-                //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
-                if (selectedCells.Count == 0)
-                {
-                    CellexalEvents.SelectionStarted.Invoke();
-                }
-                selectedCells.Add(graphPoint);
-            }
-            else
-            {
-                // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
-                //selectedCells.Remove(graphPoint);
-                selectedCells.Add(graphPoint);
-                try
-                {
-                    groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                    HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                    FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                }
-                catch (NullReferenceException e)
-                {
-                    //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
-                }
-            }
         }
+        //}
     }
     /// <summary>
     /// If selecting from client then graphpoint to be added needs to be found by searching since it has not collided with selection tool.
@@ -547,6 +547,11 @@ public class SelectionToolHandler : MonoBehaviour
     [ConsoleCommand("selectionToolHandler", "confirmselection", "confirm")]
     public void ConfirmSelection()
     {
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            graph.octreeRoot.Group = -1;
+        }
+
         if (selectedCells.Count == 0)
         {
             print("empty selection confirmed");

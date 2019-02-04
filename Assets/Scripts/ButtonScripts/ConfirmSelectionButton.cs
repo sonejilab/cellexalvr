@@ -31,7 +31,7 @@ public class ConfirmSelectionButton : CellexalButton
         selectionToolHandler.SetSelectionToolEnabled(false, 0);
         selectionToolHandler.ConfirmSelection();
         referenceManager.gameManager.InformConfirmSelection();
-        controllerModelSwitcher.TurnOffActiveTool(true);
+        //controllerModelSwitcher.TurnOffActiveTool(true);
         // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
         //ctrlMdlSwitcher.TurnOffActiveTool();
     }
