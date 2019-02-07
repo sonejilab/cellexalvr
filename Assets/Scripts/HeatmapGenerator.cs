@@ -165,9 +165,9 @@ public class HeatmapGenerator : MonoBehaviour
                 yield break;
             }
 
-            int statusId = status.AddStatus("R script generating heatmap");
-            int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
-            int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
+            //int statusId = status.AddStatus("R script generating heatmap");
+            //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
+            //int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
 
             // if the R object is not updated, wait
             while (selectionToolHandler.RObjectUpdating)
@@ -198,9 +198,9 @@ public class HeatmapGenerator : MonoBehaviour
             }
             stopwatch.Stop();
             CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
-            status.RemoveStatus(statusId);
-            statusDisplayHUD.RemoveStatus(statusIdHUD);
-            statusDisplayFar.RemoveStatus(statusIdFar);
+            //status.RemoveStatus(statusId);
+            //statusDisplayHUD.RemoveStatus(statusIdHUD);
+            //statusDisplayFar.RemoveStatus(statusIdFar);
             GeneratingHeatmaps = false;
             //File.Delete(newHeatmapFilePath);
             //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);

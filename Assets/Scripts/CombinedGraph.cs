@@ -373,15 +373,10 @@ public class CombinedGraph : MonoBehaviour
 
         private void SetGroup(int group)
         {
-            //if (point != null && point.Group != group)
-            //{
-            //    point.Group = group;
-            //}
             this.group = group;
             foreach (var child in children)
             {
-                if (child.group != group)
-                    child.SetGroup(group);
+                child.SetGroup(group);
             }
             if (parent != null && parent.group != group)
             {

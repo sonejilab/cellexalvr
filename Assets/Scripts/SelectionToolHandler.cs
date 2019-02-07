@@ -19,9 +19,9 @@ public class SelectionToolHandler : MonoBehaviour
     public ushort hapticIntensity = 2000;
     public RadialMenu radialMenu;
     public Sprite buttonIcons;
-    public GroupInfoDisplay groupInfoDisplay;
-    public GroupInfoDisplay HUDGroupInfoDisplay;
-    public GroupInfoDisplay FarGroupInfoDisplay;
+    //public GroupInfoDisplay groupInfoDisplay;
+    //public GroupInfoDisplay HUDGroupInfoDisplay;
+    //public GroupInfoDisplay FarGroupInfoDisplay;
     [HideInInspector]
     public bool selectionConfirmed = false;
     [HideInInspector]
@@ -189,9 +189,9 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[3].color = Colors[1];
         radialMenu.RegenerateButtons();
         selectedColor = Colors[currentColorIndex];
-        groupInfoDisplay.SetColors(Colors);
-        HUDGroupInfoDisplay.SetColors(Colors);
-        FarGroupInfoDisplay.SetColors(Colors);
+        //groupInfoDisplay.SetColors(Colors);
+        //HUDGroupInfoDisplay.SetColors(Colors);
+        //FarGroupInfoDisplay.SetColors(Colors);
     }
 
     /// <summary>
@@ -258,16 +258,16 @@ public class SelectionToolHandler : MonoBehaviour
             // if this is a new selection we should reset some stuff
             selectionMade = true;
             //selectionToolMenu.SelectionStarted();
-            try
-            {
-                groupInfoDisplay.ResetGroupsInfo();
-                HUDGroupInfoDisplay.ResetGroupsInfo();
-                FarGroupInfoDisplay.ResetGroupsInfo();
-            }
-            catch (NullReferenceException e)
-            {
-                //Debug.Log("Could not update group info display");
-            }
+            //try
+            //{
+            //    groupInfoDisplay.ResetGroupsInfo();
+            //    HUDGroupInfoDisplay.ResetGroupsInfo();
+            //    FarGroupInfoDisplay.ResetGroupsInfo();
+            //}
+            //catch (NullReferenceException e)
+            //{
+            //Debug.Log("Could not update group info display");
+            //}
             // turn on the undo buttons
             CellexalEvents.BeginningOfHistoryLeft.Invoke();
         }
@@ -281,16 +281,16 @@ public class SelectionToolHandler : MonoBehaviour
             hapticFeedbackThisFrame = false;
             SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
         }
-        try
-        {
-            groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-        }
-        catch (NullReferenceException e)
-        {
-            //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
-        }
+        //try
+        //{
+        //    groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+        //    HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+        //    FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
+        //}
+        //catch (NullReferenceException e)
+        //{
+        //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
+        //}
 
         if (newNode)
         {
@@ -306,16 +306,16 @@ public class SelectionToolHandler : MonoBehaviour
             // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
             //selectedCells.Remove(graphPoint);
             selectedCells.Add(graphPoint);
-            try
-            {
-                groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-            }
-            catch (NullReferenceException e)
-            {
-                //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
-            }
+            //try
+            //{
+            //    groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+            //    HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+            //    FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
+            //}
+            //catch (NullReferenceException e)
+            //{
+            //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
+            //}
         }
         //}
     }
@@ -383,9 +383,9 @@ public class SelectionToolHandler : MonoBehaviour
             gp.RecolorSelectionColor(info.fromGroup, !info.newNode);
         }
 
-        groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
-        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
-        FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
+        //groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
+        //HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
+        //FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
         if (info.newNode)
         {
             selectedCells.Remove(info.graphPoint);
@@ -394,9 +394,9 @@ public class SelectionToolHandler : MonoBehaviour
         }
         else
         {
-            groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
+            //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
+            //HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
+            //FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
             //info.graphPoint.ResetColor();
         }
         historyIndexOffset++;
@@ -433,9 +433,9 @@ public class SelectionToolHandler : MonoBehaviour
             CombinedGraph.CombinedGraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
             gp.RecolorSelectionColor(info.toGroup, info.toGroup != -1);
         }
-        groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
-        HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
-        FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
+        //groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
+        //HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
+        //FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
         if (info.newNode)
         {
             selectedCells.Add(info.graphPoint);
@@ -443,9 +443,9 @@ public class SelectionToolHandler : MonoBehaviour
         }
         else
         {
-            groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
-            HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
-            FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
+            //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
+            //HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
+            //FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
         }
         historyIndexOffset--;
         selectionMade = false;

@@ -753,7 +753,7 @@ namespace SQLiter
         /// <param name="geneName"> The gene name </param>
         private IEnumerator QueryGeneCoroutine(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
-            int statusId = status.AddStatus("Querying database for gene " + geneName);
+            //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
             string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
@@ -828,7 +828,7 @@ namespace SQLiter
                 print("Number of columns returned from database: " + i);
             _reader.Close();
             _connection.Close();
-            status.RemoveStatus(statusId);
+            //status.RemoveStatus(statusId);
             QueryRunning = false;
         }
 

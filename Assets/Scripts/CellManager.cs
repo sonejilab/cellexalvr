@@ -367,7 +367,7 @@ public class CellManager : MonoBehaviour
 
         float percentInResults = (float)database._result.Count / cells.Values.Count;
         statusDisplay.RemoveStatus(coloringInfoStatusId);
-        coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
+        //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
 
         if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
         {
@@ -505,16 +505,16 @@ public class CellManager : MonoBehaviour
         }
         string[] categories = new string[genes.Length];
         int i = 0;
-        int statusid = statusDisplay.AddStatus("");
-        int statusidHUD = statusDisplayHUD.AddStatus("");
-        int statusidFar = statusDisplayFar.AddStatus("");
+        //int statusid = statusDisplay.AddStatus("");
+        //int statusidHUD = statusDisplayHUD.AddStatus("");
+        //int statusidFar = statusDisplayFar.AddStatus("");
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         for (; i < genes.Length; ++i)
         {
-            statusDisplay.UpdateStatus(statusid, "Query " + (i + 1) + "/" + genes.Length + " in progress");
-            statusDisplayHUD.UpdateStatus(statusidHUD, "Query " + (i + 1) + "/" + genes.Length + " in progress");
-            statusDisplayFar.UpdateStatus(statusidFar, "Query " + (i + 1) + "/" + genes.Length + " in progress");
+            //statusDisplay.UpdateStatus(statusid, "Query " + (i + 1) + "/" + genes.Length + " in progress");
+            //statusDisplayHUD.UpdateStatus(statusidHUD, "Query " + (i + 1) + "/" + genes.Length + " in progress");
+            //statusDisplayFar.UpdateStatus(statusidFar, "Query " + (i + 1) + "/" + genes.Length + " in progress");
             string[] categoryOfGenes = genes[i];
             categories[i] = categoryOfGenes[0];
             database.QueryMultipleGenesFlashingExpression(categoryOfGenes);
@@ -525,9 +525,9 @@ public class CellManager : MonoBehaviour
         }
         stopwatch.Stop();
         CellexalLog.Log("Finished " + genes.Length + " queries in " + stopwatch.Elapsed.ToString());
-        statusDisplay.RemoveStatus(statusid);
-        statusDisplayHUD.RemoveStatus(statusidHUD);
-        statusDisplayFar.RemoveStatus(statusidFar);
+        //statusDisplay.RemoveStatus(statusid);
+        //statusDisplayHUD.RemoveStatus(statusidHUD);
+        //statusDisplayFar.RemoveStatus(statusidFar);
         Cell cell = null;
         foreach (Cell c in cells.Values)
         {

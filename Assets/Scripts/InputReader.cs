@@ -192,9 +192,9 @@ public class InputReader : MonoBehaviour
     /// <param name="mdsFiles"> The filenames. </param>
     IEnumerator ReadMDSFiles(string path, string[] mdsFiles)
     {
-        int statusId = status.AddStatus("Reading folder " + path);
-        int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
-        int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
+        //int statusId = status.AddStatus("Reading folder " + path);
+        //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
+        //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
         int fileIndex = 0;
         var magnifier = referenceManager.magnifierTool;
         //  Read each .mds file
@@ -357,14 +357,14 @@ public class InputReader : MonoBehaviour
             ReadNetworkFiles(0);
             loaderController.DestroyFolders();
         }
-        status.UpdateStatus(statusId, "Reading index.facs file");
-        statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
-        statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
+        //status.UpdateStatus(statusId, "Reading index.facs file");
+        //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+        //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
         ReadFacsFiles(path, totalNbrOfCells);
         flashGenesMenu.CreateTabs(path);
-        status.RemoveStatus(statusId);
-        statusDisplayHUD.RemoveStatus(statusIdHUD);
-        statusDisplayFar.RemoveStatus(statusIdFar);
+        //status.RemoveStatus(statusId);
+        //statusDisplayHUD.RemoveStatus(statusIdHUD);
+        //statusDisplayFar.RemoveStatus(statusIdFar);
         CellexalEvents.GraphsLoaded.Invoke();
 
         StartCoroutine(InitialCheckCoroutine());

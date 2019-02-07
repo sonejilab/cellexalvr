@@ -99,9 +99,9 @@ public class CorrelatedGenesList : MonoBehaviour
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + nodeName);
-        var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + nodeName);
-        var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + nodeName);
+        //var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + nodeName);
+        //var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + nodeName);
+        //var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + nodeName);
         t.Start();
         while (t.IsAlive)
         {
@@ -131,9 +131,9 @@ public class CorrelatedGenesList : MonoBehaviour
         }
         CellexalLog.Log("Successfully calculated genes correlated to " + nodeName);
         PopulateList(nodeName, type, correlatedGenes, anticorrelatedGenes);
-        statusDisplay.RemoveStatus(statusId);
-        statusDisplayHUD.RemoveStatus(statusIdHUD);
-        statusDisplayFar.RemoveStatus(statusIdFar);
+        //statusDisplay.RemoveStatus(statusId);
+        //statusDisplayHUD.RemoveStatus(statusIdHUD);
+        //statusDisplayFar.RemoveStatus(statusIdFar);
         if (listNode)
         {
             listNode.SetPressed(false);

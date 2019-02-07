@@ -142,9 +142,9 @@ public class NetworkGenerator : MonoBehaviour
     {
         GeneratingNetworks = true;
         calculatorCluster.SetActive(true);
-        int statusId = status.AddStatus("R script generating networks");
-        int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
-        int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
+        //int statusId = status.AddStatus("R script generating networks");
+        //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
+        //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
         
         while (selectionToolHandler.RObjectUpdating)
             yield return null;
@@ -172,13 +172,13 @@ public class NetworkGenerator : MonoBehaviour
             yield return null;
         stopwatch.Stop();
         CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
-        status.RemoveStatus(statusId);
+        //status.RemoveStatus(statusId);
         GeneratingNetworks = false;
         CellexalEvents.NetworkCreated.Invoke();
         if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)
             calculatorCluster.SetActive(false);
         //statusDisplayHUD.RemoveStatus(statusIdHUD);
-        statusDisplayFar.RemoveStatus(statusIdFar);
+        //statusDisplayFar.RemoveStatus(statusIdFar);
         inputReader.ReadNetworkFiles(layoutSeed);
     }
 
