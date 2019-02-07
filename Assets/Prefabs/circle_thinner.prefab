@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4454919274376770}
   - component: {fileID: 33431008769069128}
   - component: {fileID: 23205164376987556}
-  - component: {fileID: 114483327366853604}
+  - component: {fileID: 114739985440992966}
   m_Layer: 0
   m_Name: circle_thinner
   m_TagString: Untagged
@@ -84,7 +84,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1620093671004734}
   m_Mesh: {fileID: 4300000, guid: 84b457c623e2b6144b60fd86b83be351, type: 3}
---- !u!114 &114483327366853604
+--- !u!114 &114739985440992966
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1620093671004734}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2607efc890b6cf4e99f317f0b7a04da, type: 3}
+  m_Script: {fileID: 11500000, guid: 90c8afcc54d4a14478174dca2954ef4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
