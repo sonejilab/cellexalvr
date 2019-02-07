@@ -353,7 +353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 2}
-  movingOutlineCircle: {fileID: 1620093671004734, guid: af243d0027e2aee429dc005410fa0833,
+  movingOutlineCircle: {fileID: 1620093671004734, guid: b2489140aeb8ccb45b637b27fbf44833,
     type: 2}
   graphManager: {fileID: 0}
   graphNameText: {fileID: 114566603823957088}
@@ -361,6 +361,7 @@ MonoBehaviour:
   GraphActive: 1
   pointsPositions: []
   referenceManager: {fileID: 0}
+  combinedGraphPointClusters: []
   textureWidth: 0
   textureHeight: 0
   texture: {fileID: 0}
@@ -370,7 +371,6 @@ MonoBehaviour:
   longestAxis: 0
   scaledOffset: {x: 0, y: 0, z: 0}
   nbrOfClusters: 0
-  combinedGraphPointClusters: []
 --- !u!114 &114212794373154340
 MonoBehaviour:
   m_ObjectHideFlags: 1

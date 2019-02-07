@@ -57,7 +57,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 3fd0a4c23b04c7a4989de37f442ffb42, type: 2}
+  - {fileID: 2100000, guid: 5489cf750451b5746981e5675b2a2861, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,7 +83,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1620093671004734}
-  m_Mesh: {fileID: 4300000, guid: 35343e8eeb47f4c46a0fb155ead8bbd0, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 84b457c623e2b6144b60fd86b83be351, type: 3}
 --- !u!114 &114483327366853604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1620093671004734}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a7f50239f2190c4281b185c1b90b794, type: 3}
+  m_Script: {fileID: 11500000, guid: b2607efc890b6cf4e99f317f0b7a04da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}

@@ -82,6 +82,7 @@ MonoBehaviour:
   - SendRedoSteps
   - SendRemoveCells
   - SendResetGraph
+  - SendResetGraphAll
   - SendResetHeatmapHighlight
   - SendResetSelecting
   - SendSearchLockToggled
@@ -91,6 +92,8 @@ MonoBehaviour:
   - SendShowNetwork
   - SendSwitchNetworkLayout
   - SendToggleExpressedCells
+  - SendToggleGrabbable
   - SendToggleMenu
   - SendToggleNonExpressedCells
+  - SendDeleteNetwork
   DisableAutoOpenWizard: 1
