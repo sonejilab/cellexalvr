@@ -67,8 +67,8 @@ public class CombinedGraph : MonoBehaviour
     // For minimization animation
     private bool minimize;
     private bool maximize;
-    private Transform target;
     private float speed;
+    private Vector3 targetPos;
     private float targetMinScale;
     private float targetMaxScale;
     private float shrinkSpeed;
@@ -95,6 +95,7 @@ public class CombinedGraph : MonoBehaviour
     void Start()
     {
         speed = 1.5f;
+        targetPos = Vector3.zero;
         shrinkSpeed = 2f;
         targetMinScale = 0.05f;
         targetMaxScale = 1f;
@@ -167,11 +168,33 @@ public class CombinedGraph : MonoBehaviour
         }
     }
     /// <summary>
-    /// Turns off all renderers and colliders for this graph.
+    /// Turns off all renderers and colliders for this graph. And starts the minimazation process by sett minimize to true.
     /// </summary>
     internal void HideGraph()
     {
         GraphActive = false;
+        targetPos = referenceManager.minimizedObjectHandler.transform.position;
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+            c.enabled = false;
+        foreach (GameObject line in Lines)
+            line.SetActive(false);
+        oldPos = transform.position;
+        oldScale = transform.localScale;
+        minimize = true;
+    }
+
+
+
+    /// <summary>
+    /// Same as above but called with arguments when you want to modify the pos and min scale.
+    /// </summary>
+    /// <param name="pos">Position to minimize towards.</param>
+    /// <param name="targetScale">Minimum scale before hiding object completely.</param>
+    internal void HideGraph(Vector3 pos, float targetScale)
+    {
+        GraphActive = false;
+        targetMinScale = targetScale;
+        targetPos = pos;
         foreach (Collider c in GetComponentsInChildren<Collider>())
             c.enabled = false;
         foreach (GameObject line in Lines)
@@ -187,7 +210,7 @@ public class CombinedGraph : MonoBehaviour
     void Minimize()
     {
         float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
         transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
         transform.Rotate(Vector3.one * Time.deltaTime * 100);
         if (transform.localScale.x <= targetMinScale)
