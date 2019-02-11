@@ -832,6 +832,7 @@ public class CombinedGraph : MonoBehaviour
             var circle = Instantiate(movingOutlineCircle);
             circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
             circle.transform.position = combinedGraphPoint.WorldPosition;
+            circle.transform.parent = transform;
         }
         else if (i == -1)
         {
@@ -912,6 +913,7 @@ public class CombinedGraph : MonoBehaviour
                 var circle = Instantiate(movingOutlineCircle);
                 circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
                 circle.transform.position = points[pair.Cell].WorldPosition;
+                circle.transform.parent = transform;
             }
 
             texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
