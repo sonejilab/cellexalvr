@@ -58,7 +58,7 @@ public class TutorialManager : MonoBehaviour {
         CellexalEvents.SelectionStarted.AddListener(SelectionOn);
         CellexalEvents.SelectionConfirmed.AddListener(TurnOnSpot);
         CellexalEvents.SelectionConfirmed.AddListener(SelectionOff);
-        CellexalEvents.NetworkEnlarged.AddListener(TurnOnSpot);
+        CellexalEvents.NetworkUnEnlarged.AddListener(TurnOnSpot);
         CellexalEvents.HeatmapCreated.AddListener(BurnHeatmap);
         CellexalEvents.HeatmapBurned.AddListener(BurnHeatmap);
         CellexalEvents.HeatmapBurned.AddListener(TurnOnSpot);
@@ -343,6 +343,9 @@ public class TutorialManager : MonoBehaviour {
 
             case 7:
                 //From start
+                CellexalEvents.GraphsLoaded.RemoveListener(TurnOnSpot);
+                CellexalEvents.GraphsLoaded.RemoveListener(NextStep);
+                CellexalEvents.SelectionConfirmed.RemoveListener(TurnOnSpot);
                 currentStep = 7;
                 referenceManager.loaderController.ResetFolders(true);
                 //loadMenuButton.GetComponent<ResetFolderButton>().Reset();
@@ -352,9 +355,6 @@ public class TutorialManager : MonoBehaviour {
                 }
                 stepPanels[currentStep - 1].SetActive(true);
                 highlightSpots[3].SetActive(false);
-                CellexalEvents.GraphsLoaded.RemoveListener(TurnOnSpot);
-                CellexalEvents.GraphsLoaded.RemoveListener(NextStep);
-                CellexalEvents.SelectionConfirmed.RemoveListener(TurnOnSpot);
                 break;
 
             case 8:
