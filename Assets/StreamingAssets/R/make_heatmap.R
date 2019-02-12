@@ -12,6 +12,10 @@ output_filepath <- args[4] # <homedir>/<heatmapName>.txt
 
 top_genes_number <- args[5] # integer norm 250
 
+stats_method <- args[6] # method to use for stats
+
+
+
 suppressMessages(library(cellexalvrR))
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
@@ -26,11 +30,11 @@ if ( ! file.exists(group_selection_filepath)) {
 
 #generated_image_filepath <- file.path(homedir, "Images", paste("heatmap_", latest_version, ".png", sep=""))
 
-message( paste("make_heatmap using grouping file", group_selection_filepath  ) )
+message( paste("make_heatmap using grouping file", group_selection_filepath, " and stats method ", stats_method  ) )
 
 CO <- loadObject ( expression_data_filepath )
 
-cellexalvrObj <- make.cellexalvr.heatmap.list(CO,group_selection_filepath,top_genes_number,output_filepath)
+make.cellexalvr.heatmap.list(CO,group_selection_filepath,top_genes_number,output_filepath, stats_method )
 
 message( "Heatmap - no object save: grouping should already be stored" )
 
