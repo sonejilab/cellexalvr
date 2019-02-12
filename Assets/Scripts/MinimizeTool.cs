@@ -37,7 +37,6 @@ public class MinimizeTool : MonoBehaviour
             {
                 // the collider is a graphpoint
                 var graph = collidingWith.transform;
-                print(graph.gameObject.name);
                 if (graph == null)
                 {
                     return;
