@@ -13,7 +13,6 @@ public class HeatmapGenerator : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public GameObject heatmapPrefab;
-    public ErrorMessageController errorMessageController;
     public int selectionNr;
 
     public bool GeneratingHeatmaps { get; private set; }
@@ -116,7 +115,7 @@ public class HeatmapGenerator : MonoBehaviour
     /// <summary>
     /// If created via multiplayer. Name it the same as on other client.
     /// </summary>
-    public void CreateHeatmap(string name="")
+    public void CreateHeatmap(string name="", string statsMethod="anova")
     {
         // name the heatmap "heatmap_X". Where X is some number.
         string heatmapName = "";
@@ -180,7 +179,8 @@ public class HeatmapGenerator : MonoBehaviour
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
             string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
-            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath +
+                            " " + CellexalConfig.HeatmapNumberOfGenes + " " + "Seurat";
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
@@ -213,18 +213,12 @@ public class HeatmapGenerator : MonoBehaviour
             // save colors before.
             //heatmap.SetVars(colors);
             heatmapList.Add(heatmap);
-
-            if (!referenceManager.networkGenerator.GeneratingNetworks)
-                calculatorCluster.SetActive(false);
-
             //heatmap.UpdateImage(newHeatmapFilePath);
             heatmap.BuildTexture(selection, outputFilePath);
             //heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-
-            CellexalEvents.HeatmapCreated.Invoke();
         }
     }
 

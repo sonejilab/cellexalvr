@@ -585,6 +585,10 @@ public class Heatmap : MonoBehaviour
         CellexalLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
         buildingTexture = false;
         createAnim = true;
+
+        CellexalEvents.HeatmapCreated.Invoke();
+        if (!referenceManager.networkGenerator.GeneratingNetworks)
+            referenceManager.calculatorCluster.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
