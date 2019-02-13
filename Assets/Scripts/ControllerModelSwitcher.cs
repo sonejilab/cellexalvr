@@ -326,15 +326,18 @@ public class ControllerModelSwitcher : MonoBehaviour
 
     public void SwitchSelectionToolMesh(bool dir)
     {
-        if (dir)
-            selectionToolMeshIndex++;
-        else
-            selectionToolMeshIndex--;
+        if (ActualModel == Model.SelectionTool)
+        { 
+            if (dir)
+                selectionToolMeshIndex++;
+            else
+                selectionToolMeshIndex--;
 
-        if (selectionToolMeshIndex == -1)
-            selectionToolMeshIndex = selectionToolMeshes.Length - 1;
-        else if (selectionToolMeshIndex == selectionToolMeshes.Length)
-            selectionToolMeshIndex = 0;
-        ActivateDesiredTool();
+            if (selectionToolMeshIndex == -1)
+                selectionToolMeshIndex = selectionToolMeshes.Length - 1;
+            else if (selectionToolMeshIndex == selectionToolMeshes.Length)
+                selectionToolMeshIndex = 0;
+            ActivateDesiredTool();
+        }
     }
 }

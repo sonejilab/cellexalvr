@@ -18,7 +18,7 @@ public class CreateHeatmapButton : CellexalButton
         SetButtonActivated(false);
         CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
-        CellexalEvents.CreatingHeatmap.AddListener(TurnOff);
+        //CellexalEvents.CreatingHeatmap.AddListener(TurnOff);
     }
 
     public override void Click()

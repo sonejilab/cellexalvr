@@ -14,6 +14,9 @@ public class ResetFolderButton : CellexalButton
     public bool deactivateMenu = false;
     public bool deleteSceneObjs = false; // If total reset is to be done. If false don't delete anything, only bring back folders.
 
+
+    private ControllerModelSwitcher controllerModelSwitcher;
+
     protected override string Description
     {
         get
@@ -24,7 +27,7 @@ public class ResetFolderButton : CellexalButton
 
     private void Start()
     {
-
+        controllerModelSwitcher = referenceManager.controllerModelSwitcher;
     }
 
     // Reset everything without clicking the button.
@@ -39,6 +42,8 @@ public class ResetFolderButton : CellexalButton
         {
             CloseSubMenu();
         }
+        controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
+        controllerModelSwitcher.ActivateDesiredTool();
         referenceManager.loaderController.ResetFolders(deleteSceneObjs);
         referenceManager.gameManager.InformLoadingMenu(deleteSceneObjs);
     }

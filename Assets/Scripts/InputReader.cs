@@ -100,11 +100,11 @@ public class InputReader : MonoBehaviour
     public void ReadFolder(string path)
     {
         UpdateSelectionToolHandler();
-        if (currentPath.Length > 0)
-        {
-            currentPath += "+";
-        }
-        currentPath += path;
+        // multiple_exp if (currentPath.Length > 0)
+        // multiple_exp {
+        // multiple_exp     currentPath += "+" + path;
+        // multiple_exp }
+        currentPath = path;
         string workingDirectory = Directory.GetCurrentDirectory();
         string fullPath;
         if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
