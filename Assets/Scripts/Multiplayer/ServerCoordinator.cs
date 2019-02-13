@@ -477,6 +477,7 @@ class ServerCoordinator : Photon.MonoBehaviour
     [PunRPC]
     public void SendMinimizeGraph(string graphName)
     {
+        print("Hide : " + graphName);
         GameObject.Find(graphName).GetComponent<CombinedGraph>().HideGraph();
         referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
     }

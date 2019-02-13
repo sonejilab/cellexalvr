@@ -85,6 +85,10 @@ public class RemovalController : MonoBehaviour {
         }
         if (delete)
         {
+            if (objectToDelete.CompareTag("HeatBoard"))
+            {
+                CellexalEvents.HeatmapBurned.Invoke();
+            }
             DeleteObject(objectToDelete);
         }
     }
@@ -123,12 +127,17 @@ public class RemovalController : MonoBehaviour {
         }
         if (obj.CompareTag("HeatBoard"))
         {
-            CellexalEvents.HeatmapBurned.Invoke();
+            referenceManager.gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
+        }
+        if (obj.CompareTag("NetworkHandler"))
+        {
+            referenceManager.gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
         }
         float step = speed * Time.deltaTime;
         obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
         obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
         obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
+
         if (obj.transform.localScale.x <= targetScale)
         {
             CellexalLog.Log("Deleted object: " + obj.name);

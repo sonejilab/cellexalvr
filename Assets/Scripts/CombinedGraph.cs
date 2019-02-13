@@ -154,6 +154,7 @@ public class CombinedGraph : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, oldPos, step);
         transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
         transform.Rotate(Vector3.one * Time.deltaTime * -100);
+        //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         if (transform.localScale.x >= targetMaxScale)
         {
             transform.localScale = oldScale;
@@ -213,6 +214,7 @@ public class CombinedGraph : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
         transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
         transform.Rotate(Vector3.one * Time.deltaTime * 100);
+        //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
         if (transform.localScale.x <= targetMinScale)
         {
             minimize = false;
