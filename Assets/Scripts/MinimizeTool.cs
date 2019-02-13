@@ -42,7 +42,7 @@ public class MinimizeTool : MonoBehaviour
                     return;
                 }
                 graph.GetComponent<CombinedGraph>().HideGraph();
-                string graphName = graph.GetComponent<CombinedGraph>().GraphName;
+                string graphName = graph.GetComponent<CombinedGraph>().gameObject.name;
                 jail.MinimizeObject(graph.gameObject, graphName);
                 //minimize = true;
                 referenceManager.gameManager.InformMinimizeGraph(graphName);

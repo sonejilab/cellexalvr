@@ -68,7 +68,7 @@ public class CombinedGraph : MonoBehaviour
     private bool minimize;
     private bool maximize;
     private float speed;
-    private Vector3 targetPos;
+    //private Vector3 targetPos;
     private float targetMinScale;
     private float targetMaxScale;
     private float shrinkSpeed;
@@ -95,7 +95,7 @@ public class CombinedGraph : MonoBehaviour
     void Start()
     {
         speed = 1.5f;
-        targetPos = Vector3.zero;
+        //targetPos = Vector3.zero;
         shrinkSpeed = 2f;
         targetMinScale = 0.05f;
         targetMaxScale = 1f;
@@ -135,7 +135,7 @@ public class CombinedGraph : MonoBehaviour
 
     internal void ShowGraph()
     {
-        transform.position = referenceManager.minimizedObjectHandler.transform.position;
+        transform.position = referenceManager.rightController.transform.position;
         GraphActive = true;
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
             r.enabled = true;
@@ -211,7 +211,7 @@ public class CombinedGraph : MonoBehaviour
     void Minimize()
     {
         float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+        transform.position = Vector3.MoveTowards(transform.position, referenceManager.rightController.transform.position, step);
         transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
         transform.Rotate(Vector3.one * Time.deltaTime * 100);
         //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);

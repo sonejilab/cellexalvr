@@ -125,18 +125,19 @@ public class RemovalController : MonoBehaviour {
             GetComponent<MeshRenderer>().material = inactiveMat;
             return;
         }
-        if (obj.CompareTag("HeatBoard"))
-        {
-            referenceManager.gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
-        }
-        if (obj.CompareTag("NetworkHandler"))
-        {
-            referenceManager.gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
-        }
         float step = speed * Time.deltaTime;
         obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
         obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
         obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
+        if (obj.CompareTag("HeatBoard"))
+        {
+            print("Inform Move heatmap : " + obj.name);
+            referenceManager.gameManager.InformMoveHeatmap(obj.name, transform.position, transform.rotation, transform.localScale);
+        }
+        if (obj.CompareTag("Network"))
+        {
+            referenceManager.gameManager.InformMoveNetwork(obj.name, transform.position, transform.rotation, transform.localScale);
+        }
 
         if (obj.transform.localScale.x <= targetScale)
         {
