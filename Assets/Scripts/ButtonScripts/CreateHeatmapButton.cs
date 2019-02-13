@@ -6,6 +6,8 @@ public class CreateHeatmapButton : CellexalButton
     private HeatmapGenerator heatmapGenerator;
     private GameManager gameManager;
 
+    public string statsMethod;
+
     protected override string Description
     {
         get { return "Create heatmap"; }
@@ -18,7 +20,7 @@ public class CreateHeatmapButton : CellexalButton
         SetButtonActivated(false);
         CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
-        //CellexalEvents.CreatingHeatmap.AddListener(TurnOff);
+        //CellexalEvents.CreatingHeatmap.AddListener(TurnOff);z
     }
 
     public override void Click()

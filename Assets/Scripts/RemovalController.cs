@@ -131,12 +131,11 @@ public class RemovalController : MonoBehaviour {
         obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
         if (obj.CompareTag("HeatBoard"))
         {
-            print("Inform Move heatmap : " + obj.name);
-            referenceManager.gameManager.InformMoveHeatmap(obj.name, transform.position, transform.rotation, transform.localScale);
+            referenceManager.gameManager.InformMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
         }
         if (obj.CompareTag("Network"))
         {
-            referenceManager.gameManager.InformMoveNetwork(obj.name, transform.position, transform.rotation, transform.localScale);
+            referenceManager.gameManager.InformMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
         }
 
         if (obj.transform.localScale.x <= targetScale)
