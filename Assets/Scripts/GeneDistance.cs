@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using CellexalExtensions;
+using System.Threading;
+using System.IO;
 
 public class GeneDistance : MonoBehaviour
 {
@@ -10,6 +13,7 @@ public class GeneDistance : MonoBehaviour
     public SQLiter.SQLite database;
     public GameObject plotGameObjectPrefab;
     public GameObject gradientBoxPrefab;
+    public GameObject parentGameObjectPrefab;
 
     private List<GameObject> plots = new List<GameObject>();
     private CombinedGraph graph;
@@ -20,6 +24,8 @@ public class GeneDistance : MonoBehaviour
     private Vector3 posInc = new Vector3(0f, 0f, 0.1f);
 
     private List<List<float>> allDistances = new List<List<float>>();
+    private GameObject currentParent;
+
 
     private void Start()
     {
@@ -33,11 +39,76 @@ public class GeneDistance : MonoBehaviour
 
     public void CreateManyPlots()
     {
-        StartCoroutine(CreateManyPlotsCoroutine());
+        //StartCoroutine(CreateManyPlotsCoroutine(null));
+        StartCoroutine(CreateManyPlotsCoroutineHeatmap());
+    }
+
+    public IEnumerator CreateManyPlotsCoroutineHeatmap()
+    {
+        while (referenceManager.selectionToolHandler.RObjectUpdating)
+            yield return null;
+
+        // Start generation of new heatmap in R
+
+        int selectionNr = referenceManager.selectionToolHandler.fileCreationCtr - 1;
+        List<CombinedGraph.CombinedGraphPoint> selection = referenceManager.selectionToolHandler.GetLastSelection();
+        string heatmapName = "heatmap3d.txt";
+        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
+        string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
+        string outputFilePath = (heatmapDirectory + @"\" + heatmapName).FixFilePath();
+        string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+        if (!Directory.Exists(heatmapDirectory))
+        {
+            CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
+            Directory.CreateDirectory(heatmapDirectory);
+        }
+        CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        t.Start();
+
+        while (t.IsAlive)
+        {
+            yield return null;
+        }
+
+        StreamReader streamReader = new StreamReader(outputFilePath);
+        int numberOfGenes = int.Parse(streamReader.ReadLine());
+        string[] genes = new string[numberOfGenes];
+        int i = 0;
+        while (!streamReader.EndOfStream)
+        {
+            genes[i] = streamReader.ReadLine();
+            i++;
+        }
+        streamReader.Close();
+
+        currentParent = Instantiate(parentGameObjectPrefab);
+        foreach (var gene in genes)
+        {
+            //if (i > 500)
+            //    break;
+            CreateDistancePlot(gene, selection);
+            while (database.QueryRunning)
+                yield return null;
+        }
+
+        i = 0;
+        foreach (GameObject plot in plots)
+        {
+            plot.transform.localPosition = posInc * i;
+            i++;
+        }
+
+        currentParent.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
+        currentParent.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+
     }
 
     public IEnumerator CreateManyPlotsCoroutine()
     {
+
         database.QueryMostExpressedGenes(250);
 
         while (database.QueryRunning)
@@ -50,6 +121,7 @@ public class GeneDistance : MonoBehaviour
         }
 
         int i = 0;
+        currentParent = Instantiate(parentGameObjectPrefab);
         foreach (var gene in geneNames)
         {
             i++;
@@ -171,10 +243,11 @@ public class GeneDistance : MonoBehaviour
 
             clusters.Add(newCluster);
         }
-
         // reorder the plots
         ReorderPlots(clusters.First());
 
+        currentParent.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
+        currentParent.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
         //yield break;
     }
 
@@ -245,18 +318,25 @@ public class GeneDistance : MonoBehaviour
 
         if (clust.child1 == null && clust.child2 == null)
         {
-            plots[clust.index].transform.position = startPos;
+            plots[clust.index].transform.localPosition = startPos;
             startPos += posInc;
         }
     }
 
-    public void CreateDistancePlot(string geneName)
+    public void CreateDistancePlot(string geneName, List<CombinedGraph.CombinedGraphPoint> cells = null)
     {
         graph = referenceManager.graphManager.FindGraph("DDRtree");
         smoothing = true;
         invert = false;
 
-        database.QueryGene(geneName, CollectResultAndCreatePlot);
+        //database.QueryGene(geneName, CollectResultAndCreatePlot);
+        var cellNames = new string[cells.Count];
+        for (int i = 0; i < cells.Count; ++i)
+        {
+            cellNames[i] = cells[i].Label;
+        }
+
+        database.QueryGenesInCells(geneName, cellNames, CollectResultAndCreatePlot);
     }
 
     public void CollectResultAndCreatePlot(SQLiter.SQLite database)
@@ -451,7 +531,7 @@ public class GeneDistance : MonoBehaviour
         mesh.normals = normals;
         mesh.uv = uvs;
 
-        var data = Instantiate(plotGameObjectPrefab, startPos, Quaternion.identity);
+        var data = Instantiate(plotGameObjectPrefab, startPos, Quaternion.identity, currentParent.transform);
         plots.Add(data);
         //startPos += posInc;
         mesh.RecalculateBounds();

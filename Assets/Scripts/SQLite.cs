@@ -455,7 +455,7 @@ namespace SQLiter
         /// </summary>
         /// <param name="gene">The gene to query for.</param>
         /// <param name="cells">The cells to query for.</param>
-        internal void QueryGenesInCells(string gene, string[] cells)
+        internal void QueryGenesInCells(string gene, string[] cells, Action<SQLite> action = null)
         {
             QueryRunning = true;
             StringBuilder builder = new StringBuilder();
@@ -469,7 +469,7 @@ namespace SQLiter
                 }
             }
             string cellNames = builder.ToString();
-            StartCoroutine(QueryGeneInCellsCoroutine(gene, cellNames));
+            StartCoroutine(QueryGeneInCellsCoroutine(gene, cellNames, action));
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace SQLiter
             StartCoroutine(QueryGeneInCellsCoroutine(gene, cells));
         }
 
-        private IEnumerator QueryGeneInCellsCoroutine(string gene, string cells)
+        private IEnumerator QueryGeneInCellsCoroutine(string gene, string cells, Action<SQLite> action = null)
         {
             string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
             Thread t = new Thread(() => QueryThread(query));
@@ -556,6 +556,10 @@ namespace SQLiter
                 _result.Add(new Tuple<string, float>(cellName, expression));
             }
             QueryRunning = false;
+            if (action != null)
+            {
+                action.Invoke(this);
+            }
         }
 
         /// <summary>
@@ -783,7 +787,7 @@ namespace SQLiter
                     i++;
                     _result.Add(new CellExpressionPair(_reader.GetString(0), expr, -1));
                 }
-                float binSize = (HighestExpression - LowestExpression) / CellexalConfig.NumberOfExpressionColors;
+                float binSize = (HighestExpression - LowestExpression) / CellexalConfig.GraphNumberOfExpressionColors;
                 if (DebugMode)
                 {
                     print("binsize = " + binSize);
@@ -817,7 +821,7 @@ namespace SQLiter
                 // sort the list based on gene expressions
                 result.Sort();
 
-                int binsize = result.Count / CellexalConfig.NumberOfExpressionColors;
+                int binsize = result.Count / CellexalConfig.GraphNumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
                     result[j].Color = j / binsize;
@@ -1006,7 +1010,7 @@ namespace SQLiter
                     if (lastId != -1)
                     {
                         //print(lastGeneName);
-                        binSize = (maxExpr - minExpr) / CellexalConfig.NumberOfExpressionColors;
+                        binSize = (maxExpr - minExpr) / CellexalConfig.GraphNumberOfExpressionColors;
                         for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
                         {
                             // Make sure there is a result to get.
@@ -1050,7 +1054,7 @@ namespace SQLiter
                 i++;
                 _result.Add(new CellExpressionPair(_reader.GetString(1), expr, -1));
             }
-            binSize = (maxExpr - minExpr) / CellexalConfig.NumberOfExpressionColors;
+            binSize = (maxExpr - minExpr) / CellexalConfig.GraphNumberOfExpressionColors;
             for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
             {
                 // Make sure there is a result to get.

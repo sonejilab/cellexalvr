@@ -621,7 +621,7 @@ public class InputReader : MonoBehaviour
             for (int j = 0; j < values.Length - 1; ++j)
             {
                 // normalize to the range [0, 29]
-                float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.NumberOfExpressionColors - 1);
+                float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.GraphNumberOfExpressionColors - 1);
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
                 cellManager.AddFacs(cellName, header[j], colorIndex);
             }

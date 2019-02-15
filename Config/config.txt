@@ -12,7 +12,7 @@
 # Comments and blank lines should not be present in lists but can be inserted anywhere else.
 
 # The filepath to Rscript.exe
-RscriptFilePath = C:\Program Files\R\R-3.5.1\bin\x64\Rscript.exe
+RscriptFilePath = C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe
 
 #################################
 # Graphs and selection
@@ -37,6 +37,9 @@ GraphClustersPerFrameIncrement = 2
 # A bigger number makes the graphs get fewer but larger colliders, that less resemble the graph's actual shape.
 GraphGrabbableCollidersExtensionThresehold = 0.05
 
+# The default color that points in graphs should have. Points have their default color when they are not selected, or colored by a gene expression, surface marker or attribute
+GraphDefaultColor = #FFFFFF
+
 # The colors that is used by the selection tool
 SelectionColors ={ #FF0000
                    #0000FF
@@ -48,7 +51,7 @@ SelectionColors ={ #FF0000
                    #800080
                    #6633FF
                    #FF9933
-				   #00FF80	
+		   #00FF80	
                    #A700FF
                    #FF0099
                    #9DFF00
@@ -124,6 +127,11 @@ HeatmapConfirmMarkerColor = #00FF37C0
 
 # The number of genes that should be displayed on the heatmap
 HeatmapNumberOfGenes = 250
+
+#HeatmapAlgorithm = ANOVA
+
+#################################
+# Misc.
 
 # The maximum number of lines that should be saved in the console window (summon with F12)
 ConsoleMaxBufferLines = 256

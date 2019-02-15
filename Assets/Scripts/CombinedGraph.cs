@@ -108,7 +108,7 @@ public class CombinedGraph : MonoBehaviour
         combinedGraphGenerator = referenceManager.combinedGraphGenerator;
         selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
         startPosition = transform.position;
-        nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
+        nbrOfExpressionColors = CellexalConfig.GraphNumberOfExpressionColors;
     }
 
     private void Update()
@@ -890,7 +890,7 @@ public class CombinedGraph : MonoBehaviour
             }
         }
 
-        int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
+        int nbrOfExpressionColors = CellexalConfig.GraphNumberOfExpressionColors;
         Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
         for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
         {

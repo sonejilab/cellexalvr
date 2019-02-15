@@ -16,10 +16,11 @@ public static class CellexalConfig
     public static int GraphClustersPerFrameIncrement { get; set; }
     public static float GraphGrabbableCollidersExtensionThresehold { get; set; }
     public static Color[] SelectionToolColors { get; set; }
-    public static int NumberOfExpressionColors { get; set; }
-    public static Color LowExpressionColor { get; set; }
-    public static Color MidExpressionColor { get; set; }
-    public static Color HighExpressionColor { get; set; }
+    public static Color GraphDefaultColor { get; set; }
+    public static int GraphNumberOfExpressionColors { get; set; }
+    public static Color GraphLowExpressionColor { get; set; }
+    public static Color GraphMidExpressionColor { get; set; }
+    public static Color GraphHighExpressionColor { get; set; }
     public static Color[] AttributeColors { get; set; }
     public static int NumberOfHeatmapColors { get; set; }
     public static Color HeatmapLowExpressionColor { get; set; }
@@ -27,6 +28,7 @@ public static class CellexalConfig
     public static Color HeatmapHighExpressionColor { get; set; }
     public static Color HeatmapHighlightMarkerColor { get; set; }
     public static Color HeatmapConfirmMarkerColor { get; set; }
+    public static string HeatmapAlgorithm { get; set; }
     public static int HeatmapNumberOfGenes { get; set; }
     public static float NetworkLineSmallWidth { get; set; }
     public static float NetworkLineLargeWidth { get; set; }
@@ -309,6 +311,9 @@ public class ConfigManager : MonoBehaviour
                 //    CellexalConfig.AttributeColors = attributeColors.ToArray();
                 //    break;
 
+                case "GraphDefaultColor":
+                    CellexalConfig.GraphDefaultColor = ReadColor(value, lineNbr);
+                    break;
                 case "NumberOfExpressionColors":
                     int nColors = int.Parse(value);
                     if (nColors < 3)
@@ -316,17 +321,17 @@ public class ConfigManager : MonoBehaviour
                         CellexalLog.Log("WARNING: Number of gene expression colors is less than 3, changing it to 3.");
                         nColors = 3;
                     }
-                    CellexalConfig.NumberOfExpressionColors = nColors;
+                    CellexalConfig.GraphNumberOfExpressionColors = nColors;
                     break;
 
                 case "LowExpressionColor":
-                    CellexalConfig.LowExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.GraphLowExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "MidExpressionColor":
-                    CellexalConfig.MidExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.GraphMidExpressionColor = ReadColor(value, lineNbr);
                     break;
                 case "HighExpressionColor":
-                    CellexalConfig.HighExpressionColor = ReadColor(value, lineNbr);
+                    CellexalConfig.GraphHighExpressionColor = ReadColor(value, lineNbr);
                     break;
 
                 case "NetworkLineSmallWidth":
@@ -381,6 +386,9 @@ public class ConfigManager : MonoBehaviour
                     break;
                 case "HeatmapConfirmMarkerColor":
                     CellexalConfig.HeatmapConfirmMarkerColor = ReadColor(value, lineNbr);
+                    break;
+                case "HeatmapAlgorithm":
+                    CellexalConfig.HeatmapAlgorithm = value;
                     break;
                 case "GraphGrabbableCollidersExtensionThresehold":
                     CellexalConfig.GraphGrabbableCollidersExtensionThresehold = float.Parse(value);

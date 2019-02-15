@@ -55,7 +55,7 @@ public class NetworkGenerator : MonoBehaviour
     /// <summary>
     /// Creates the materials used when drawing the lines between genes in networks.
     /// </summary>
-    private void CreateLineMaterials()
+    public void CreateLineMaterials()
     {
         int coloringMethod = CellexalConfig.NetworkLineColoringMethod;
         if (coloringMethod == 0)
@@ -145,7 +145,7 @@ public class NetworkGenerator : MonoBehaviour
         //int statusId = status.AddStatus("R script generating networks");
         //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
         //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
-        
+
         while (selectionToolHandler.RObjectUpdating)
             yield return null;
 

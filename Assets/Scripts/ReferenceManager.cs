@@ -112,4 +112,9 @@ public class ReferenceManager : MonoBehaviour
 
     #endregion
 
+    #region SettingsMenu
+    [Header("Settings Menu")]
+    public SettingsMenu settingsMenu;
+    public ColorPicker colorPicker;
+    #endregion
 }

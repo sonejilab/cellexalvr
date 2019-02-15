@@ -68,12 +68,15 @@ public class CombinedGraphGenerator : MonoBehaviour
         return newGraph;
     }
 
-    private void CreateShaderColors()
+    /// <summary>
+    /// Creates the texture that the CombinedGraph shader uses to fetch colors for the graphpoints.
+    /// </summary>
+    public void CreateShaderColors()
     {
-        Color lowColor = CellexalConfig.LowExpressionColor;
-        Color midColor = CellexalConfig.MidExpressionColor;
-        Color highColor = CellexalConfig.HighExpressionColor;
-        int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
+        Color lowColor = CellexalConfig.GraphLowExpressionColor;
+        Color midColor = CellexalConfig.GraphMidExpressionColor;
+        Color highColor = CellexalConfig.GraphHighExpressionColor;
+        int nbrOfExpressionColors = CellexalConfig.GraphNumberOfExpressionColors;
         int nbrOfSelectionColors = CellexalConfig.SelectionToolColors.Length;
 
         if (nbrOfExpressionColors + nbrOfSelectionColors > 255)
@@ -118,9 +121,14 @@ public class CombinedGraphGenerator : MonoBehaviour
             pixel++;
         }
 
-        graphPointColors.SetPixel(255, 0, Color.white);
+        graphPointColors.SetPixel(255, 0, CellexalConfig.GraphDefaultColor);
         graphPointColors.filterMode = FilterMode.Point;
         graphPointColors.Apply();
+
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            graph.combinedGraphPointClusters[0].GetComponent<Renderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+        }
     }
 
     /// <summary>

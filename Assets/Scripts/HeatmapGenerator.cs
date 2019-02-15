@@ -51,7 +51,7 @@ public class HeatmapGenerator : MonoBehaviour
     /// <summary>
     /// Initializes <see cref="expressionColors"/> with the colors in the config file.
     /// </summary>
-    private void InitColors()
+    public void InitColors()
     {
 
         int numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
@@ -116,7 +116,7 @@ public class HeatmapGenerator : MonoBehaviour
     /// <summary>
     /// If created via multiplayer. Name it the same as on other client.
     /// </summary>
-    public void CreateHeatmap(string name="")
+    public void CreateHeatmap(string name = "")
     {
         // name the heatmap "heatmap_X". Where X is some number.
         string heatmapName = "";

@@ -799,7 +799,7 @@ public class CellManager : MonoBehaviour
 
     internal void AddFacs(string cellName, string facs, int index)
     {
-        if (index < 0 || index >= CellexalConfig.NumberOfExpressionColors)
+        if (index < 0 || index >= CellexalConfig.GraphNumberOfExpressionColors)
         {
             // value hasn't been normalized correctly
             print(facs + " " + index);
