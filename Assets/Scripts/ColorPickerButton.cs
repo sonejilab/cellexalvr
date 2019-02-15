@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -20,11 +21,13 @@ public class ColorPickerButton : MonoBehaviour
         NETWORK_POSITIVE_HIGH, NETWORK_POSITIVE_LOW, NETWORK_NEGATIVE_HIGH, NETWORK_NEGATIVE_LOW
     }
     public ConfigColor colorField;
+    public int selectionToolColorIndex;
 
     private ColorPicker colorPicker;
     private HeatmapGenerator heatmapGenerator;
     private CombinedGraphGenerator combinedGraphGenerator;
     private NetworkGenerator networkGenerator;
+    private SelectionToolHandler selectionToolHandler;
 
     private void Start()
     {
@@ -33,6 +36,7 @@ public class ColorPickerButton : MonoBehaviour
         heatmapGenerator = referenceManager.heatmapGenerator;
         combinedGraphGenerator = referenceManager.combinedGraphGenerator;
         networkGenerator = referenceManager.networkGenerator;
+        selectionToolHandler = referenceManager.selectionToolHandler;
     }
 
     /// <summary>
@@ -45,7 +49,7 @@ public class ColorPickerButton : MonoBehaviour
             colorPicker.gameObject.SetActive(true);
         }
         colorPicker.activeButton = this;
-        colorPicker.MoveToDesiredPosition(transform.position + new Vector3(50, 0, 0));
+        colorPicker.MoveToDesiredPosition(new Vector3(550, transform.position.y, 0));
         colorPicker.SetColor(image.color);
     }
 
@@ -72,6 +76,9 @@ public class ColorPickerButton : MonoBehaviour
             case ConfigColor.NETWORK_NEGATIVE_HIGH:
             case ConfigColor.NETWORK_NEGATIVE_LOW:
                 networkGenerator.CreateLineMaterials();
+                break;
+            case ConfigColor.SELECTION:
+                selectionToolHandler.UpdateColors();
                 break;
 
         }
@@ -119,6 +126,14 @@ public class ColorPickerButton : MonoBehaviour
                 break;
             case ConfigColor.NETWORK_NEGATIVE_LOW:
                 CellexalConfig.NetworkLineColorNegativeLow = color;
+                break;
+            case ConfigColor.SELECTION:
+                if (CellexalConfig.SelectionToolColors.Length <= selectionToolColorIndex)
+                {
+                    Color[] newArray = new Color[selectionToolColorIndex + 1];
+                    Array.Copy(CellexalConfig.SelectionToolColors, newArray, selectionToolColorIndex + 1);
+                }
+                CellexalConfig.SelectionToolColors[selectionToolColorIndex] = color;
                 break;
         }
     }

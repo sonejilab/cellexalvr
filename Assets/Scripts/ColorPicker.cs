@@ -55,6 +55,13 @@ public class ColorPicker : MonoBehaviour
                 {
                     activeComponent = ColorPickerComponent.HUEBOX;
                 }
+                else if (pos.x < 0 || pos.x > 250 || pos.y < 0 || pos.y > 250)
+                {
+                    // user clicked outside the color picker window
+                    activeComponent = ColorPickerComponent.NONE;
+                    // move the colorpicker off screen
+                    transform.position = new Vector3(-250, 0, 0);
+                }
             }
             // handle the active component
             if (activeComponent == ColorPickerComponent.SATVALBOX)
@@ -71,7 +78,7 @@ public class ColorPicker : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && activeComponent != ColorPickerComponent.NONE)
         {
             activeComponent = ColorPickerComponent.NONE;
             Cursor.visible = true;
@@ -139,7 +146,7 @@ public class ColorPicker : MonoBehaviour
             hue = 0.9999f;
         }
 
-        if (val < .5)
+        if (val < 0.5f)
         {
             satValMarkerImage.color = Color.white;
         }
@@ -156,7 +163,7 @@ public class ColorPicker : MonoBehaviour
         satValMarker.transform.localPosition = new Vector3(10 + sat * 190, 50 + val * 190, oldZ);
         hueMarker.transform.localPosition = new Vector3(225, 50 + hue * 190, 0);
         rgbCodeBox.text = ColorUtility.ToHtmlStringRGB(newColor);
-        previewColorBoxMaterial.color = Color.HSVToRGB(hue, sat, val);
+        previewColorBoxMaterial.color = newColor;
 
         if (activeButton != null)
         {

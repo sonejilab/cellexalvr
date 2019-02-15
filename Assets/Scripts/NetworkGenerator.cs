@@ -61,6 +61,11 @@ public class NetworkGenerator : MonoBehaviour
         if (coloringMethod == 0)
         {
             int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            if (numColors < 4)
+            {
+                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 4 when NetworkLineColoringMethod is set to 0. Defaulting to 4.");
+                numColors = 4;
+            }
             Color posHigh = CellexalConfig.NetworkLineColorPositiveHigh;
             Color posLow = CellexalConfig.NetworkLineColorPositiveLow;
             Color negLow = CellexalConfig.NetworkLineColorNegativeLow;
@@ -89,7 +94,7 @@ public class NetworkGenerator : MonoBehaviour
             int numColors = CellexalConfig.NumberOfNetworkLineColors;
             if (numColors < 1)
             {
-                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1");
+                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1 when NetworkLineColoringMethod is set to 1. Defaulting to 1.");
                 numColors = 1;
             }
             List<Material> result = new List<Material>();

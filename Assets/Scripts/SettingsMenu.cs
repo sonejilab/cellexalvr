@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 /// <summary>
 /// Controls the settings menu and its components.
@@ -32,6 +33,10 @@ public class SettingsMenu : MonoBehaviour
     public ColorPickerButton networkLinePositiveLow;
     public ColorPickerButton networkLineNegativeHigh;
     public ColorPickerButton networkLineNegativeLow;
+    // selection
+    public GameObject selectionColorGroup;
+    public GameObject selectionColorButtonPrefab;
+    public GameObject addSelectionColorButton;
     // visual
     public TMPro.TMP_Dropdown skyboxDropdown;
 
@@ -53,7 +58,7 @@ public class SettingsMenu : MonoBehaviour
             skyboxOptions.Add(new TMPro.TMP_Dropdown.OptionData(mat.name));
         }
         skyboxDropdown.options = skyboxOptions;
-        
+
     }
 
     void Update()
@@ -87,6 +92,15 @@ public class SettingsMenu : MonoBehaviour
         networkLinePositiveLow.SetColor(CellexalConfig.NetworkLineColorPositiveLow);
         networkLineNegativeHigh.SetColor(CellexalConfig.NetworkLineColorNegativeHigh);
         networkLineNegativeLow.SetColor(CellexalConfig.NetworkLineColorNegativeLow);
+        for (int i = 0; i < CellexalConfig.SelectionToolColors.Length; ++i)
+        {
+            GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
+            newButton.SetActive(true);
+            newButton.GetComponentInChildren<ColorPickerButton>().SetColor(CellexalConfig.SelectionToolColors[i]);
+            addSelectionColorButton.transform.SetAsLastSibling();
+        }
+
+        LayoutRebuilder.MarkLayoutForRebuild((RectTransform)selectionColorGroup.transform);
     }
 
     public void SetUser()
@@ -124,5 +138,17 @@ public class SettingsMenu : MonoBehaviour
     {
         int selected = skyboxDropdown.value;
         RenderSettings.skybox = skyboxes[selected];
+    }
+
+    public void AddSelectionColor()
+    {
+        GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
+        newButton.SetActive(true);
+        addSelectionColorButton.transform.SetAsLastSibling();
+    }
+
+    public void RemoveSelectionColor(GameObject button)
+    {
+        Destroy(button);
     }
 }
