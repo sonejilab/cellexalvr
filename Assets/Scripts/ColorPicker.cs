@@ -12,10 +12,10 @@ public class ColorPicker : MonoBehaviour
     public TMPro.TMP_InputField rgbCodeBox;
     public GameObject satValMarker;
     public GameObject hueMarker;
-    public UnityEngine.UI.Image satValMarkerImage;
 
     private Material satValBoxMaterial;
     private Material previewColorBoxMaterial;
+    private UnityEngine.UI.Image satValMarkerImage;
     private float hue = 0f;
     private float sat = 0f;
     private float val = 0f;
@@ -28,7 +28,7 @@ public class ColorPicker : MonoBehaviour
     {
         satValBoxMaterial = satValBox.GetComponent<UnityEngine.UI.Image>().material;
         previewColorBoxMaterial = previewColorBox.GetComponent<UnityEngine.UI.Image>().material;
-
+        satValMarkerImage = satValMarker.GetComponent<UnityEngine.UI.Image>();
         satValBoxMaterial.SetFloat("_Hue", hue);
         Color newColor = Color.HSVToRGB(hue, sat, val);
         previewColorBoxMaterial.color = newColor;
@@ -84,7 +84,7 @@ public class ColorPicker : MonoBehaviour
             Cursor.visible = true;
             if (activeButton != null)
             {
-                activeButton.ChooseColor();
+                activeButton.FinalizeChoice();
             }
         }
 
@@ -167,7 +167,7 @@ public class ColorPicker : MonoBehaviour
 
         if (activeButton != null)
         {
-            activeButton.SetColor(newColor);
+            activeButton.Color = newColor;
         }
     }
 
@@ -181,6 +181,7 @@ public class ColorPicker : MonoBehaviour
         ColorUtility.TryParseHtmlString(text, out newColor);
         Color.RGBToHSV(newColor, out hue, out sat, out val);
         UpdateComponents();
+        activeButton.FinalizeChoice();
     }
 
     /// <summary>

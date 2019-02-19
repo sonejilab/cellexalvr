@@ -13,12 +13,18 @@ public static class CellexalLog
 
     private static string logDirectory;
     private static string logFilePath = "";
+    public static string LogFilePath
+    {
+        get { return logFilePath; }
+        private set { logFilePath = value; }
+    }
     private static List<string> logThisLater = new List<string>();
 
     public static void InitNewLog()
     {
         // File names can't have colons so we only use hyphens
-        var time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        var now = DateTime.Now;
+        var time = now.ToString("yyyy-MM-dd-HH-mm-ss");
 
         logDirectory = Directory.GetCurrentDirectory() + "\\Output\\" + CellexalUser.Username;
         if (!Directory.Exists(logDirectory))
@@ -27,16 +33,16 @@ public static class CellexalLog
             Directory.CreateDirectory(logDirectory);
         }
 
-        logFilePath = logDirectory + "\\cellexal-log-" + time + ".txt";
+        LogFilePath = logDirectory + "\\cellexal-log-" + time + ".txt";
         // this will most likely always happen
-        if (!File.Exists(logFilePath))
+        if (!File.Exists(LogFilePath))
         {
-            logThisLater.Add("\tCreated file " + logFilePath);
-            File.Create(logFilePath).Dispose();
+            logThisLater.Add("\tCreated file " + LogFilePath);
+            File.Create(LogFilePath).Dispose();
         }
 
 
-        string nicerTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        string nicerTime = now.ToString("yyyy-MM-dd HH:mm:ss");
         Log("Welcome to CellexalVR " + Application.version,
             "Running on Unity " + Application.unityVersion,
             "BuildGUID: " + Application.buildGUID,
@@ -56,6 +62,8 @@ public static class CellexalLog
             Log("\tEnd of what was generated before the log file existed.");
             logThisLater.Clear();
         }
+
+        CellexalEvents.LogInitialized.Invoke();
     }
 
     /// <summary>
@@ -76,13 +84,13 @@ public static class CellexalLog
     public static void Log(string message)
     {
         consoleManager.AppendOutput(message);
-        if (logFilePath == "")
+        if (LogFilePath == "")
         {
             logThisLater.Add("\t" + message);
         }
         else
         {
-            using (StreamWriter logWriter = new StreamWriter(new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+            using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
             {
                 logWriter.WriteLine(message);
                 logWriter.Flush();
@@ -96,7 +104,7 @@ public static class CellexalLog
     /// <param name="message"> The messages that should be written to the log. </param>
     public static void Log(params string[] message)
     {
-        if (logFilePath == "")
+        if (LogFilePath == "")
         {
             foreach (string s in message)
             {
@@ -106,7 +114,7 @@ public static class CellexalLog
         }
         else
         {
-            using (StreamWriter logWriter = new StreamWriter(new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+            using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
             {
                 foreach (string s in message)
                 {
@@ -138,7 +146,7 @@ public static class CellexalLog
     /// </summary>
     public static void UsernameChanged()
     {
-        if (logFilePath != "")
+        if (LogFilePath != "")
         {
             Log("Changing user to " + CellexalUser.Username,
                 "Goodbye.");
@@ -157,7 +165,7 @@ public class LogManager : MonoBehaviour
     private void Awake()
     {
         //CellExAlLog.InitNewLog();
-        CellexalUser.UsernameChanged.AddListener(CellexalLog.UsernameChanged);
+        CellexalEvents.UsernameChanged.AddListener(CellexalLog.UsernameChanged);
         CellexalEvents.GraphsLoaded.AddListener(CellexalLog.InitNewLog);
 
         string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";

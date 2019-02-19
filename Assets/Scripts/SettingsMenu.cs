@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 /// <summary>
 /// Controls the settings menu and its components.
@@ -11,6 +12,8 @@ public class SettingsMenu : MonoBehaviour
 
     public GameObject settingsMenuGameObject;
     public ReferenceManager referenceManager;
+    public GameObject unsavedChangesPrompt;
+    public GameObject resetAllSettingsPrompt;
     [Header("Menu items")]
     // username
     public TMPro.TMP_InputField usernameInputField;
@@ -27,15 +30,19 @@ public class SettingsMenu : MonoBehaviour
     public ColorPickerButton graphLowExpression;
     public TMPro.TMP_InputField numberOfGraphColorsInputField;
     public ColorPickerButton graphDefaultColor;
+    public UnityEngine.UI.Toggle graphHightestExpressedMarker;
     //networks
     public UnityEngine.UI.Dropdown networkLineColoringMethod;
     public ColorPickerButton networkLinePositiveHigh;
     public ColorPickerButton networkLinePositiveLow;
     public ColorPickerButton networkLineNegativeHigh;
     public ColorPickerButton networkLineNegativeLow;
+    public TMPro.TMP_InputField networkNumberOfNetworkColors;
+    public TMPro.TMP_InputField networkLineWidth;
     // selection
     public GameObject selectionColorGroup;
     public GameObject selectionColorButtonPrefab;
+    private List<ColorPickerButton> selectionColorButtons;
     public GameObject addSelectionColorButton;
     // visual
     public TMPro.TMP_Dropdown skyboxDropdown;
@@ -43,21 +50,20 @@ public class SettingsMenu : MonoBehaviour
     public Material[] skyboxes;
 
     private ColorPicker colorPicker;
-
-
-    //public string[] configFields;
-    private Object source;
+    private Config beforeChanges;
+    private bool unsavedChanges;
 
     private void Awake()
     {
         CellexalEvents.ConfigLoaded.AddListener(SetValues);
         colorPicker = referenceManager.colorPicker;
-        var skyboxOptions = new System.Collections.Generic.List<TMPro.TMP_Dropdown.OptionData>();
+        var skyboxOptions = new List<TMPro.TMP_Dropdown.OptionData>();
         foreach (Material mat in skyboxes)
         {
             skyboxOptions.Add(new TMPro.TMP_Dropdown.OptionData(mat.name));
         }
         skyboxDropdown.options = skyboxOptions;
+        selectionColorButtons = new List<ColorPickerButton>();
 
     }
 
@@ -66,8 +72,16 @@ public class SettingsMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             bool newState = !settingsMenuGameObject.activeSelf;
-            settingsMenuGameObject.SetActive(newState);
-            colorPicker.gameObject.SetActive(newState);
+            if (!unsavedChanges)
+            {
+                settingsMenuGameObject.SetActive(newState);
+                colorPicker.gameObject.SetActive(newState);
+            }
+            if (!newState && unsavedChanges)
+            {
+                unsavedChangesPrompt.SetActive(true);
+                colorPicker.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -77,34 +91,53 @@ public class SettingsMenu : MonoBehaviour
     private void SetValues()
     {
         usernameText.text = "Current user: " + CellexalUser.Username;
-        heatmapHighExpression.SetColor(CellexalConfig.HeatmapHighExpressionColor);
-        heatmapMidExpression.SetColor(CellexalConfig.HeatmapMidExpressionColor);
-        heatmapLowExpression.SetColor(CellexalConfig.HeatmapLowExpressionColor);
-        numberOfHeatmapColorsInputField.text = "" + CellexalConfig.NumberOfHeatmapColors;
-        graphHighExpression.SetColor(CellexalConfig.GraphHighExpressionColor);
-        graphMidExpression.SetColor(CellexalConfig.GraphMidExpressionColor);
-        graphLowExpression.SetColor(CellexalConfig.GraphLowExpressionColor);
-        numberOfGraphColorsInputField.text = "" + CellexalConfig.GraphNumberOfExpressionColors;
-        graphDefaultColor.SetColor(CellexalConfig.GraphDefaultColor);
-        networkLineColoringMethod.value = CellexalConfig.NetworkLineColoringMethod;
-        UpdateNetworkLineColorButtonsActive();
-        networkLinePositiveHigh.SetColor(CellexalConfig.NetworkLineColorPositiveHigh);
-        networkLinePositiveLow.SetColor(CellexalConfig.NetworkLineColorPositiveLow);
-        networkLineNegativeHigh.SetColor(CellexalConfig.NetworkLineColorNegativeHigh);
-        networkLineNegativeLow.SetColor(CellexalConfig.NetworkLineColorNegativeLow);
-        for (int i = 0; i < CellexalConfig.SelectionToolColors.Length; ++i)
+        heatmapHighExpression.Color = CellexalConfig.Config.HeatmapHighExpressionColor;
+        heatmapMidExpression.Color = CellexalConfig.Config.HeatmapMidExpressionColor;
+        heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
+        numberOfHeatmapColorsInputField.text = "" + CellexalConfig.Config.NumberOfHeatmapColors;
+        graphHighExpression.Color = CellexalConfig.Config.GraphHighExpressionColor;
+        graphMidExpression.Color = CellexalConfig.Config.GraphMidExpressionColor;
+        graphLowExpression.Color = CellexalConfig.Config.GraphLowExpressionColor;
+        numberOfGraphColorsInputField.text = "" + CellexalConfig.Config.GraphNumberOfExpressionColors;
+        graphDefaultColor.Color = CellexalConfig.Config.GraphDefaultColor;
+        graphHightestExpressedMarker.isOn = CellexalConfig.Config.GraphMostExpressedMarker;
+        networkLineColoringMethod.value = CellexalConfig.Config.NetworkLineColoringMethod;
+        SetNetworkColoringMethod();
+        networkLinePositiveHigh.Color = CellexalConfig.Config.NetworkLineColorPositiveHigh;
+        networkLinePositiveLow.Color = CellexalConfig.Config.NetworkLineColorPositiveLow;
+        networkLineNegativeHigh.Color = CellexalConfig.Config.NetworkLineColorNegativeHigh;
+        networkLineNegativeLow.Color = CellexalConfig.Config.NetworkLineColorNegativeLow;
+        networkNumberOfNetworkColors.text = "" + CellexalConfig.Config.NumberOfNetworkLineColors;
+        networkLineWidth.text = "" + CellexalConfig.Config.NetworkLineWidth;
+
+        for (int i = 0; i < CellexalConfig.Config.SelectionToolColors.Length; ++i)
         {
-            GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
-            newButton.SetActive(true);
-            newButton.GetComponentInChildren<ColorPickerButton>().SetColor(CellexalConfig.SelectionToolColors[i]);
-            addSelectionColorButton.transform.SetAsLastSibling();
+            if (i < selectionColorButtons.Count)
+            {
+                // there is already a button in the menu, change its color
+                selectionColorButtons[i].Color = CellexalConfig.Config.SelectionToolColors[i];
+            }
+            else
+            {
+                // no more buttons, create one
+                GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
+                newButton.SetActive(true);
+                ColorPickerButton button = newButton.GetComponentInChildren<ColorPickerButton>();
+                button.Color = CellexalConfig.Config.SelectionToolColors[i];
+                button.selectionToolColorIndex = i;
+                addSelectionColorButton.transform.SetAsLastSibling();
+                selectionColorButtons.Add(button);
+            }
         }
 
-        LayoutRebuilder.MarkLayoutForRebuild((RectTransform)selectionColorGroup.transform);
+        //LayoutRebuilder.MarkLayoutForRebuild((RectTransform)selectionColorGroup.transform);
+        unsavedChanges = false;
+        beforeChanges = new Config(CellexalConfig.Config);
     }
 
     public void SetUser()
     {
+        unsavedChanges = true;
         string name = usernameInputField.text;
         CellexalUser.Username = name;
         usernameText.text = "Current user: " + name;
@@ -112,43 +145,121 @@ public class SettingsMenu : MonoBehaviour
 
     public void SetNumberOfHeatmapColors()
     {
+        unsavedChanges = true;
         int nColors = int.Parse(numberOfHeatmapColorsInputField.text);
-        CellexalConfig.NumberOfHeatmapColors = nColors;
+        CellexalConfig.Config.NumberOfHeatmapColors = nColors;
         referenceManager.heatmapGenerator.InitColors();
     }
 
     public void SetNumberOfGraphColors()
     {
+        unsavedChanges = true;
         int nColors = int.Parse(numberOfGraphColorsInputField.text);
-        CellexalConfig.GraphNumberOfExpressionColors = nColors;
+        CellexalConfig.Config.GraphNumberOfExpressionColors = nColors;
         referenceManager.combinedGraphGenerator.CreateShaderColors();
     }
 
-    public void UpdateNetworkLineColorButtonsActive()
+    public void SetNetworkColoringMethod()
     {
-        bool active = networkLineColoringMethod.value == 0;
+        unsavedChanges = true;
+        int newMethod = networkLineColoringMethod.value;
+        CellexalConfig.Config.NetworkLineColoringMethod = newMethod;
 
+        bool active = newMethod == 0;
         networkLinePositiveHigh.parentGroup.SetActive(active);
         networkLinePositiveLow.parentGroup.SetActive(active);
         networkLineNegativeHigh.parentGroup.SetActive(active);
         networkLineNegativeLow.parentGroup.SetActive(active);
     }
 
+    public void SetNetworkLineWidth()
+    {
+        unsavedChanges = true;
+        float newValue = float.Parse(networkLineWidth.text);
+        if (newValue <= 0)
+        {
+            CellexalLog.Log("WARNING: Network line width may not be a negative value. Defaulting to 0.001.");
+            newValue = 0.001f;
+            networkLineWidth.text = "" + newValue;
+        }
+        CellexalConfig.Config.NetworkLineWidth = newValue;
+    }
+
     public void SetSkyBox()
     {
+        unsavedChanges = true;
         int selected = skyboxDropdown.value;
         RenderSettings.skybox = skyboxes[selected];
     }
 
     public void AddSelectionColor()
     {
+        unsavedChanges = true;
         GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
         newButton.SetActive(true);
         addSelectionColorButton.transform.SetAsLastSibling();
+        selectionColorButtons.Add(newButton.GetComponentInChildren<ColorPickerButton>());
+        UpdateSelectionToolColors();
     }
 
     public void RemoveSelectionColor(GameObject button)
     {
+        unsavedChanges = true;
+        selectionColorButtons.Remove(button.GetComponentInChildren<ColorPickerButton>());
         Destroy(button);
+        UpdateSelectionToolColors();
     }
+
+    public void UpdateSelectionToolColors()
+    {
+        Color[] colors = new Color[selectionColorButtons.Count];
+        for (int i = 0; i < selectionColorButtons.Count; ++i)
+        {
+            selectionColorButtons[i].selectionToolColorIndex = i;
+            colors[i] = selectionColorButtons[i].Color;
+        }
+        CellexalConfig.Config.SelectionToolColors = colors;
+        referenceManager.selectionToolHandler.UpdateColors();
+    }
+
+    public void SetGraphHighestExpressionMarker(bool active)
+    {
+        CellexalConfig.Config.GraphMostExpressedMarker = active;
+    }
+
+    public void ChangeMade()
+    {
+        unsavedChanges = true;
+    }
+
+    public void SaveAndClose()
+    {
+        CellexalLog.Log("Saved changes made in the settings menu.");
+        unsavedChanges = false;
+        referenceManager.configManager.SaveConfigFile();
+        unsavedChangesPrompt.SetActive(false);
+        settingsMenuGameObject.SetActive(false);
+        colorPicker.gameObject.SetActive(false);
+    }
+
+
+    public void ShowResetAllSettings(bool show)
+    {
+        resetAllSettingsPrompt.SetActive(show);
+    }
+
+    public void ResetSettingsToFile()
+    {
+        referenceManager.configManager.ResetToDefault();
+        resetAllSettingsPrompt.SetActive(false);
+    }
+
+    public void ResetSettingsToBefore()
+    {
+        CellexalLog.Log("Reset changes made in settings menu to what they were before.");
+        CellexalConfig.Config = new Config(beforeChanges);
+        SetValues();
+        unsavedChangesPrompt.SetActive(false);
+    }
+
 }

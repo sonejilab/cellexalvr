@@ -73,11 +73,11 @@ public class CombinedGraphGenerator : MonoBehaviour
     /// </summary>
     public void CreateShaderColors()
     {
-        Color lowColor = CellexalConfig.GraphLowExpressionColor;
-        Color midColor = CellexalConfig.GraphMidExpressionColor;
-        Color highColor = CellexalConfig.GraphHighExpressionColor;
-        int nbrOfExpressionColors = CellexalConfig.GraphNumberOfExpressionColors;
-        int nbrOfSelectionColors = CellexalConfig.SelectionToolColors.Length;
+        Color lowColor = CellexalConfig.Config.GraphLowExpressionColor;
+        Color midColor = CellexalConfig.Config.GraphMidExpressionColor;
+        Color highColor = CellexalConfig.Config.GraphHighExpressionColor;
+        int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+        int nbrOfSelectionColors = CellexalConfig.Config.SelectionToolColors.Length;
 
         if (nbrOfExpressionColors + nbrOfSelectionColors > 255)
         {
@@ -117,11 +117,11 @@ public class CombinedGraphGenerator : MonoBehaviour
         }
         for (int i = 0; i < nbrOfSelectionColors; ++i)
         {
-            graphPointColors.SetPixel(pixel, 0, CellexalConfig.SelectionToolColors[i]);
+            graphPointColors.SetPixel(pixel, 0, CellexalConfig.Config.SelectionToolColors[i]);
             pixel++;
         }
 
-        graphPointColors.SetPixel(255, 0, CellexalConfig.GraphDefaultColor);
+        graphPointColors.SetPixel(255, 0, CellexalConfig.Config.GraphDefaultColor);
         graphPointColors.filterMode = FilterMode.Point;
         graphPointColors.Apply();
 
@@ -440,8 +440,8 @@ public class CombinedGraphGenerator : MonoBehaviour
         handle.Complete();
 
         int itemsThisFrame = 0;
-        int maximumItemsPerFrame = CellexalConfig.GraphClustersPerFrameStartCount;
-        int maximumItemsPerFrameInc = CellexalConfig.GraphClustersPerFrameIncrement;
+        int maximumItemsPerFrame = CellexalConfig.Config.GraphClustersPerFrameStartCount;
+        int maximumItemsPerFrameInc = CellexalConfig.Config.GraphClustersPerFrameIncrement;
         float maximumDeltaTime = 0.05f;
 
         for (int i = 0; i < nbrOfClusters; ++i)

@@ -787,7 +787,7 @@ namespace SQLiter
                     i++;
                     _result.Add(new CellExpressionPair(_reader.GetString(0), expr, -1));
                 }
-                float binSize = (HighestExpression - LowestExpression) / CellexalConfig.GraphNumberOfExpressionColors;
+                float binSize = (HighestExpression - LowestExpression) / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 if (DebugMode)
                 {
                     print("binsize = " + binSize);
@@ -821,7 +821,7 @@ namespace SQLiter
                 // sort the list based on gene expressions
                 result.Sort();
 
-                int binsize = result.Count / CellexalConfig.GraphNumberOfExpressionColors;
+                int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
                     result[j].Color = j / binsize;
@@ -1010,7 +1010,7 @@ namespace SQLiter
                     if (lastId != -1)
                     {
                         //print(lastGeneName);
-                        binSize = (maxExpr - minExpr) / CellexalConfig.GraphNumberOfExpressionColors;
+                        binSize = (maxExpr - minExpr) / CellexalConfig.Config.GraphNumberOfExpressionColors;
                         for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
                         {
                             // Make sure there is a result to get.
@@ -1054,7 +1054,7 @@ namespace SQLiter
                 i++;
                 _result.Add(new CellExpressionPair(_reader.GetString(1), expr, -1));
             }
-            binSize = (maxExpr - minExpr) / CellexalConfig.GraphNumberOfExpressionColors;
+            binSize = (maxExpr - minExpr) / CellexalConfig.Config.GraphNumberOfExpressionColors;
             for (int cellNbr = 0, k = 0; cellNbr < cellNames.Count; ++k)
             {
                 // Make sure there is a result to get.

@@ -407,7 +407,7 @@ public class Graph : MonoBehaviour
         // maximum number of times we allow colliders to grow in size
         int maxColliderIncreaseIterations = 10;
         // how many more graphpoints there must be for it to be worth exctending a collider
-        float extensionThreshold = CellexalConfig.GraphGrabbableCollidersExtensionThresehold;
+        float extensionThreshold = CellexalConfig.Config.GraphGrabbableCollidersExtensionThresehold;
         // copy points dictionary
         HashSet<GraphPoint> notIncluded = new HashSet<GraphPoint>(points.Values);
 

@@ -81,6 +81,7 @@ public class ReferenceManager : MonoBehaviour
     public CombinedGraphGenerator combinedGraphGenerator;
     public InputFolderGenerator inputFolderGenerator;
     public LoaderController loaderController;
+    public ConfigManager configManager;
     public GameObject helperCylinder;
     public InputReader inputReader;
     public SQLite database;
@@ -117,4 +118,5 @@ public class ReferenceManager : MonoBehaviour
     public SettingsMenu settingsMenu;
     public ColorPicker colorPicker;
     #endregion
+
 }

@@ -147,40 +147,15 @@ public class SelectionToolHandler : MonoBehaviour
 
     }
 
-    //private void FixedUpdate()
-    //{
-    //    if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
-    //    {
-    //        if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
-    //        {
-    //            hapticFeedbackThisFrame = true;
-
-    //            Vector3 boundsCenter = selectionToolColliders[currentMeshIndex].bounds.center;
-    //            Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
-    //            minkowskiTimeoutStopwatch.Stop();
-    //            minkowskiTimeoutStopwatch.Start();
-    //            int millisecond = Environment.TickCount;
-    //            foreach (var graph in graphManager.graphs)
-    //            {
-    //                var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex, millisecond);
-    //                foreach (var point in closestPoints)
-    //                {
-    //                    AddGraphpointToSelection(point, currentColorIndex, true);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
     /// <summary>
-    /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.SelectionToolColors"/>.
+    /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.Config.SelectionToolColors"/>.
     /// </summary>
     public void UpdateColors()
     {
         currentColorIndex = 0;
         radialMenu.buttons[1].ButtonIcon = buttonIcons;
         radialMenu.buttons[3].ButtonIcon = buttonIcons;
-        Colors = CellexalConfig.SelectionToolColors;
+        Colors = CellexalConfig.Config.SelectionToolColors;
         for (int i = 0; i < Colors.Length; i++)
         {
             Colors[i].a = 1;
@@ -189,9 +164,6 @@ public class SelectionToolHandler : MonoBehaviour
         radialMenu.buttons[3].color = Colors[1];
         radialMenu.RegenerateButtons();
         selectedColor = Colors[currentColorIndex];
-        //groupInfoDisplay.SetColors(Colors);
-        //HUDGroupInfoDisplay.SetColors(Colors);
-        //FarGroupInfoDisplay.SetColors(Colors);
     }
 
     /// <summary>

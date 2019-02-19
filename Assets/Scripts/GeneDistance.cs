@@ -56,7 +56,7 @@ public class GeneDistance : MonoBehaviour
         string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
         string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
         string outputFilePath = (heatmapDirectory + @"\" + heatmapName).FixFilePath();
-        string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+        string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.Config.HeatmapNumberOfGenes;
         if (!Directory.Exists(heatmapDirectory))
         {
             CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());

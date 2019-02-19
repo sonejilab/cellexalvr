@@ -47,7 +47,7 @@ public class InputReader : MonoBehaviour
     private string currentPath;
 
     private Bitmap image1;
-    
+
 
     [Tooltip("Automatically loads the Bertie dataset")]
     public bool debug = false;
@@ -81,7 +81,7 @@ public class InputReader : MonoBehaviour
             //ReadFolder(@"CyTOF_150k");
             ReadFolder(@"CyTOF_150k");
         }
-        CellexalUser.UsernameChanged.AddListener(LoadPreviousGroupings);
+        CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
 		if (sceneLoader.doLoad) {
 			doLoad = true;
@@ -204,7 +204,7 @@ public class InputReader : MonoBehaviour
         //  ...
 
         float maximumDeltaTime = 0.05f; // 20 fps
-        int maximumItemsPerFrame = CellexalConfig.GraphLoadingCellsPerFrameStartCount;
+        int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
         int itemsThisFrame = 0;
         int totalNbrOfCells = 0;
         foreach (string file in mdsFiles)
@@ -292,12 +292,12 @@ public class InputReader : MonoBehaviour
                     if (lastFrame < maximumDeltaTime)
                     {
                         // we had some time over last frame
-                        maximumItemsPerFrame += CellexalConfig.GraphLoadingCellsPerFrameIncrement;
+                        maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                     }
-                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.GraphLoadingCellsPerFrameIncrement * 2)
+                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
                     {
                         // we took too much time last frame
-                        maximumItemsPerFrame -= CellexalConfig.GraphLoadingCellsPerFrameIncrement;
+                        maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                     }
                 }
 
@@ -420,7 +420,7 @@ public class InputReader : MonoBehaviour
                 for (int j = 1; j < words.Length; ++j)
                 {
                     if (words[j] == "1")
-                        cellManager.AddAttribute(cellname, attributeTypes[j], (j - 1) % CellexalConfig.SelectionToolColors.Length);
+                        cellManager.AddAttribute(cellname, attributeTypes[j], (j - 1) % CellexalConfig.Config.SelectionToolColors.Length);
                 }
             }
             metacellStreamReader.Close();
@@ -621,7 +621,7 @@ public class InputReader : MonoBehaviour
             for (int j = 0; j < values.Length - 1; ++j)
             {
                 // normalize to the range [0, 29]
-                float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.GraphNumberOfExpressionColors - 1);
+                float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.Config.GraphNumberOfExpressionColors - 1);
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
                 cellManager.AddFacs(cellName, header[j], colorIndex);
             }

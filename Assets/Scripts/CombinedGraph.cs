@@ -108,7 +108,7 @@ public class CombinedGraph : MonoBehaviour
         combinedGraphGenerator = referenceManager.combinedGraphGenerator;
         selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
         startPosition = transform.position;
-        nbrOfExpressionColors = CellexalConfig.GraphNumberOfExpressionColors;
+        nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
     }
 
     private void Update()
@@ -560,8 +560,8 @@ public class CombinedGraph : MonoBehaviour
             {
                 return Color.white;
             }
-            i = i % CellexalConfig.SelectionToolColors.Length;
-            return CellexalConfig.SelectionToolColors[i];
+            i = i % CellexalConfig.Config.SelectionToolColors.Length;
+            return CellexalConfig.Config.SelectionToolColors[i];
         }
         #endregion
     }
@@ -890,7 +890,7 @@ public class CombinedGraph : MonoBehaviour
             }
         }
 
-        int nbrOfExpressionColors = CellexalConfig.GraphNumberOfExpressionColors;
+        int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
         Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
         for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
         {
@@ -910,7 +910,7 @@ public class CombinedGraph : MonoBehaviour
             {
                 expressionColorIndex = nbrOfExpressionColors - 1;
             }
-            if (pair.Color > 27)
+            if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color > 27)
             {
                 var circle = Instantiate(movingOutlineCircle);
                 circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;

@@ -57,19 +57,19 @@ public class NetworkGenerator : MonoBehaviour
     /// </summary>
     public void CreateLineMaterials()
     {
-        int coloringMethod = CellexalConfig.NetworkLineColoringMethod;
+        int coloringMethod = CellexalConfig.Config.NetworkLineColoringMethod;
         if (coloringMethod == 0)
         {
-            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            int numColors = CellexalConfig.Config.NumberOfNetworkLineColors;
             if (numColors < 4)
             {
                 CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 4 when NetworkLineColoringMethod is set to 0. Defaulting to 4.");
                 numColors = 4;
             }
-            Color posHigh = CellexalConfig.NetworkLineColorPositiveHigh;
-            Color posLow = CellexalConfig.NetworkLineColorPositiveLow;
-            Color negLow = CellexalConfig.NetworkLineColorNegativeLow;
-            Color negHigh = CellexalConfig.NetworkLineColorNegativeHigh;
+            Color posHigh = CellexalConfig.Config.NetworkLineColorPositiveHigh;
+            Color posLow = CellexalConfig.Config.NetworkLineColorPositiveLow;
+            Color negLow = CellexalConfig.Config.NetworkLineColorNegativeLow;
+            Color negHigh = CellexalConfig.Config.NetworkLineColorNegativeHigh;
 
             LineMaterials = new Material[numColors];
 
@@ -91,7 +91,7 @@ public class NetworkGenerator : MonoBehaviour
         }
         else if (coloringMethod == 1)
         {
-            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            int numColors = CellexalConfig.Config.NumberOfNetworkLineColors;
             if (numColors < 1)
             {
                 CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1 when NetworkLineColoringMethod is set to 1. Defaulting to 1.");

@@ -130,7 +130,7 @@ public class Heatmap : MonoBehaviour
         highlightInfoText = highlightQuad.GetComponentInChildren<TextMesh>();
         geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
-        numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
+        numberOfExpressionColors = CellexalConfig.Config.NumberOfHeatmapColors;
         heatmapGenerator = referenceManager.heatmapGenerator;
         highlightQuad.GetComponent<Renderer>().material.color = heatmapGenerator.HighlightMarkerColor;
         confirmQuad.GetComponent<Renderer>().material.color = heatmapGenerator.ConfirmMarkerColor;

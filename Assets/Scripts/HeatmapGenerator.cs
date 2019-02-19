@@ -54,11 +54,11 @@ public class HeatmapGenerator : MonoBehaviour
     public void InitColors()
     {
 
-        int numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
+        int numberOfExpressionColors = CellexalConfig.Config.NumberOfHeatmapColors;
         expressionColors = new SolidBrush[numberOfExpressionColors];
-        UnityEngine.Color low = CellexalConfig.HeatmapLowExpressionColor;
-        UnityEngine.Color mid = CellexalConfig.HeatmapMidExpressionColor;
-        UnityEngine.Color high = CellexalConfig.HeatmapHighExpressionColor;
+        UnityEngine.Color low = CellexalConfig.Config.HeatmapLowExpressionColor;
+        UnityEngine.Color mid = CellexalConfig.Config.HeatmapMidExpressionColor;
+        UnityEngine.Color high = CellexalConfig.Config.HeatmapHighExpressionColor;
         //print(low + " " + mid + " " + high);
 
         int dividerLowMid = numberOfExpressionColors / 2;
@@ -96,8 +96,8 @@ public class HeatmapGenerator : MonoBehaviour
             if (b < 0) b = 0;
             expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
         }
-        HighlightMarkerColor = CellexalConfig.HeatmapHighlightMarkerColor;
-        ConfirmMarkerColor = CellexalConfig.HeatmapConfirmMarkerColor;
+        HighlightMarkerColor = CellexalConfig.Config.HeatmapHighlightMarkerColor;
+        ConfirmMarkerColor = CellexalConfig.Config.HeatmapConfirmMarkerColor;
     }
 
 
@@ -180,7 +180,7 @@ public class HeatmapGenerator : MonoBehaviour
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
             string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
-            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.HeatmapNumberOfGenes;
+            string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath + " " + CellexalConfig.Config.HeatmapNumberOfGenes;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
