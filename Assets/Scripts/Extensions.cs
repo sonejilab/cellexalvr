@@ -36,10 +36,14 @@ namespace CellexalExtensions
     {
         public static UnityEngine.Color[] InterpolateColors(UnityEngine.Color color1, UnityEngine.Color color2, int numColors)
         {
-            var colors = new UnityEngine.Color[numColors];
-            if (numColors < 2)
+            if (numColors == 1)
             {
-                CellexalError.SpawnError("Error when interpolating colors", "Can not interpolate less than 2 colors.");
+                return new UnityEngine.Color[] { color1 };
+            }
+            var colors = new UnityEngine.Color[numColors];
+            if (numColors < 1)
+            {
+                CellexalError.SpawnError("Error when interpolating colors", "Can not interpolate less than 1 color.");
                 return null;
             }
 

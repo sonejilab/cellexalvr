@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -14,37 +12,42 @@ public class SettingsMenu : MonoBehaviour
     public ReferenceManager referenceManager;
     public GameObject unsavedChangesPrompt;
     public GameObject resetAllSettingsPrompt;
-    [Header("Menu items")]
-    // username
+    public HinterController hinterController;
+    //[Header("Menu items")]
+    [Header("Username")]
     public TMPro.TMP_InputField usernameInputField;
     public TMPro.TMP_Text usernameText;
-    // heatmap
+    [Header("Heatmap")]
     public ColorPickerButton heatmapHighExpression;
     public ColorPickerButton heatmapMidExpression;
     public ColorPickerButton heatmapLowExpression;
+    public Image heatmapGradient;
     public TMPro.TMP_InputField numberOfHeatmapColorsInputField;
     //public UnityEngine.UI.Dropdown heatmapAlgorithm;
-    // graphs
+    [Header("Graphs")]
     public ColorPickerButton graphHighExpression;
     public ColorPickerButton graphMidExpression;
     public ColorPickerButton graphLowExpression;
+    public Image graphGradient;
     public TMPro.TMP_InputField numberOfGraphColorsInputField;
     public ColorPickerButton graphDefaultColor;
-    public UnityEngine.UI.Toggle graphHightestExpressedMarker;
-    //networks
-    public UnityEngine.UI.Dropdown networkLineColoringMethod;
+    public Toggle graphHightestExpressedMarker;
+    [Header("Networks")]
+    public Dropdown networkLineColoringMethod;
     public ColorPickerButton networkLinePositiveHigh;
     public ColorPickerButton networkLinePositiveLow;
+    public Image networkPositiveGradient;
     public ColorPickerButton networkLineNegativeHigh;
     public ColorPickerButton networkLineNegativeLow;
+    public Image networkNegativeGradient;
     public TMPro.TMP_InputField networkNumberOfNetworkColors;
     public TMPro.TMP_InputField networkLineWidth;
-    // selection
+    [Header("Selection")]
     public GameObject selectionColorGroup;
     public GameObject selectionColorButtonPrefab;
     private List<ColorPickerButton> selectionColorButtons;
     public GameObject addSelectionColorButton;
-    // visual
+    [Header("Visual")]
     public TMPro.TMP_Dropdown skyboxDropdown;
 
     public Material[] skyboxes;
@@ -72,6 +75,10 @@ public class SettingsMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             bool newState = !settingsMenuGameObject.activeSelf;
+            if (hinterController.hinter.activeSelf)
+            {
+                hinterController.HideHinter();
+            }
             if (!unsavedChanges)
             {
                 settingsMenuGameObject.SetActive(newState);
@@ -102,7 +109,6 @@ public class SettingsMenu : MonoBehaviour
         graphDefaultColor.Color = CellexalConfig.Config.GraphDefaultColor;
         graphHightestExpressedMarker.isOn = CellexalConfig.Config.GraphMostExpressedMarker;
         networkLineColoringMethod.value = CellexalConfig.Config.NetworkLineColoringMethod;
-        SetNetworkColoringMethod();
         networkLinePositiveHigh.Color = CellexalConfig.Config.NetworkLineColorPositiveHigh;
         networkLinePositiveLow.Color = CellexalConfig.Config.NetworkLineColorPositiveLow;
         networkLineNegativeHigh.Color = CellexalConfig.Config.NetworkLineColorNegativeHigh;
@@ -130,9 +136,29 @@ public class SettingsMenu : MonoBehaviour
             }
         }
 
+        SetNetworkColoringMethod();
+
         //LayoutRebuilder.MarkLayoutForRebuild((RectTransform)selectionColorGroup.transform);
         unsavedChanges = false;
         beforeChanges = new Config(CellexalConfig.Config);
+    }
+
+    private int TryParse(string s, int defaultValue)
+    {
+        if (s == null || s == "")
+        {
+            return defaultValue;
+        }
+        return int.Parse(s);
+    }
+
+    private float TryParse(string s, float defaultValue)
+    {
+        if (s == null || s == "")
+        {
+            return defaultValue;
+        }
+        return float.Parse(s);
     }
 
     public void SetUser()
@@ -146,17 +172,31 @@ public class SettingsMenu : MonoBehaviour
     public void SetNumberOfHeatmapColors()
     {
         unsavedChanges = true;
-        int nColors = int.Parse(numberOfHeatmapColorsInputField.text);
+        int nColors = TryParse(numberOfHeatmapColorsInputField.text, 3);
+        if (nColors < 3)
+        {
+            CellexalLog.Log("WARNING: Number of heatmap expression colors must be at least 3. Defaulting to 3.");
+            nColors = 3;
+        }
+        numberOfHeatmapColorsInputField.text = "" + nColors;
         CellexalConfig.Config.NumberOfHeatmapColors = nColors;
         referenceManager.heatmapGenerator.InitColors();
+        heatmapGradient.material.SetInt("_NColors", nColors);
     }
 
     public void SetNumberOfGraphColors()
     {
         unsavedChanges = true;
-        int nColors = int.Parse(numberOfGraphColorsInputField.text);
+        int nColors = TryParse(numberOfGraphColorsInputField.text, 3);
+        if (nColors < 3)
+        {
+            CellexalLog.Log("WARNING: Number of graph expression colors must be at least 3. Defaulting to 3.");
+            nColors = 3;
+        }
+        numberOfGraphColorsInputField.text = "" + nColors;
         CellexalConfig.Config.GraphNumberOfExpressionColors = nColors;
         referenceManager.combinedGraphGenerator.CreateShaderColors();
+        graphGradient.material.SetInt("_NColors", nColors);
     }
 
     public void SetNetworkColoringMethod()
@@ -170,12 +210,38 @@ public class SettingsMenu : MonoBehaviour
         networkLinePositiveLow.parentGroup.SetActive(active);
         networkLineNegativeHigh.parentGroup.SetActive(active);
         networkLineNegativeLow.parentGroup.SetActive(active);
+        SetNumberOfNetworkColors();
+    }
+
+    public void SetNumberOfNetworkColors()
+    {
+        unsavedChanges = true;
+        int nColors = TryParse(networkNumberOfNetworkColors.text, 1);
+        if (CellexalConfig.Config.NetworkLineColoringMethod == 0 &&
+            nColors < 4)
+        {
+            CellexalLog.Log("WARNING: Number of network line colors must be at least 4 when coloring method is set to by correlation. Defaulting to 4.");
+            nColors = 4;
+        }
+        else if (CellexalConfig.Config.NetworkLineColoringMethod == 1 &&
+            nColors < 1)
+        {
+            CellexalLog.Log("WARNING: Number of network line colors must be at least 1 when coloring method is set to random. Defaulting to 1.");
+            nColors = 1;
+
+        }
+        networkNumberOfNetworkColors.text = "" + nColors;
+        CellexalConfig.Config.NumberOfNetworkLineColors = nColors;
+        referenceManager.networkGenerator.CreateLineMaterials();
+        int halfColors = nColors / 2;
+        networkPositiveGradient.material.SetInt("_NColors", halfColors);
+        networkNegativeGradient.material.SetInt("_NColors", nColors - halfColors);
     }
 
     public void SetNetworkLineWidth()
     {
         unsavedChanges = true;
-        float newValue = float.Parse(networkLineWidth.text);
+        float newValue = TryParse(networkLineWidth.text, 0.001f);
         if (newValue <= 0)
         {
             CellexalLog.Log("WARNING: Network line width may not be a negative value. Defaulting to 0.001.");
@@ -260,6 +326,21 @@ public class SettingsMenu : MonoBehaviour
         CellexalConfig.Config = new Config(beforeChanges);
         SetValues();
         unsavedChangesPrompt.SetActive(false);
+    }
+
+    /// <summary>
+    /// Quits the program.
+    /// </summary>
+    public void Quit()
+    {
+        CellexalLog.Log("Quit button pressed");
+        CellexalLog.LogBacklog();
+        // Application.Quit() does not work in the unity editor, only in standalone builds.
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
     }
 
 }

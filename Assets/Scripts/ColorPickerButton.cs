@@ -9,7 +9,10 @@ public class ColorPickerButton : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public GameObject parentGroup;
-
+    public UnityEngine.UI.Image image;
+    public enum GradientColor { COLOR1, COLOR2, COLOR3 }
+    public GradientColor gradientColor;
+    public GameObject gradient;
     public enum ConfigColor
     {
         NONE,
@@ -20,6 +23,7 @@ public class ColorPickerButton : MonoBehaviour
     }
     public ConfigColor colorField;
     private Color color;
+    private Material gradientMaterial;
     /// <summary>
     /// Updates the choice of color. Setting this property does not update the internal value. Make sure to call <see cref="FinalizeChoice"/> for that.
     /// </summary>
@@ -34,12 +38,26 @@ public class ColorPickerButton : MonoBehaviour
         {
             color = value;
             image.color = value;
+            if (gradientMaterial != null)
+            {
+                if (gradientColor == GradientColor.COLOR1)
+                {
+                    gradientMaterial.SetColor("_Color1", value);
+                }
+                else if (gradientColor == GradientColor.COLOR2)
+                {
+                    gradientMaterial.SetColor("_Color2", value);
+                }
+                else if (gradientColor == GradientColor.COLOR3)
+                {
+                    gradientMaterial.SetColor("_Color3", value);
+                }
+            }
         }
     }
     [HideInInspector]
     public int selectionToolColorIndex;
 
-    private UnityEngine.UI.Image image;
     private ColorPicker colorPicker;
     private HeatmapGenerator heatmapGenerator;
     private CombinedGraphGenerator combinedGraphGenerator;
@@ -50,6 +68,10 @@ public class ColorPickerButton : MonoBehaviour
     private void Awake()
     {
         image = gameObject.GetComponent<UnityEngine.UI.Image>();
+        if (gradient != null)
+        {
+            gradientMaterial = gradient.GetComponent<UnityEngine.UI.Image>().material;
+        }
     }
 
     private void Start()

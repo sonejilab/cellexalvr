@@ -829,7 +829,7 @@ public class CombinedGraph : MonoBehaviour
     public void RecolorGraphPointGeneExpression(CombinedGraphPoint combinedGraphPoint, int i, bool outline)
     {
         //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
-        if (i > 27)
+        if (i > 27 && CellexalConfig.Config.GraphMostExpressedMarker)
         {
             var circle = Instantiate(movingOutlineCircle);
             circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;

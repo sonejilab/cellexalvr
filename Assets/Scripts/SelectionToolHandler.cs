@@ -89,6 +89,7 @@ public class SelectionToolHandler : MonoBehaviour
         graphManager = referenceManager.graphManager;
         SetSelectionToolEnabled(false, 0);
 
+        UpdateColors();
         CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
     }
 

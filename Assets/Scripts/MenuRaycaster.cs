@@ -17,7 +17,7 @@ public class MenuRaycaster : MonoBehaviour
         modelSwitcher = referenceManager.controllerModelSwitcher;
         laser = referenceManager.rightLaser;
         layersToIgnore = (1 << LayerMask.NameToLayer("Controller") + 1 << LayerMask.NameToLayer("Ignore Raycast"));
-        print((int)layersToIgnore);
+        //print((int)layersToIgnore);
     }
 
     private void Update()

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System;
 
 public class OpenFolderButton : MonoBehaviour
 {
@@ -13,6 +14,14 @@ public class OpenFolderButton : MonoBehaviour
         {
             CellexalLog.LogBacklog();
             fullPath = CellexalLog.LogFilePath;
+        }
+        else if (path == "$UNITY_LOG")
+        {
+#if UNITY_EDITOR
+            fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "Local", "Unity", "Editor", "Editor.log");
+#else
+            fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "LocalLow", Application.companyName, Application.productName, "output_log.txt");
+#endif
         }
         System.Diagnostics.Process.Start(fullPath);
     }

@@ -577,6 +577,12 @@ public class InputReader : MonoBehaviour
         // ...
 
         string headerline = streamReader.ReadLine();
+        if (headerline == null)
+        {
+            // empty file
+            CellexalLog.Log("Empty index.facs file");
+            return;
+        }
         string[] header = headerline.Split(new string[] { "\t", " " }, StringSplitOptions.RemoveEmptyEntries);
         float[] min = new float[header.Length];
         float[] max = new float[header.Length];

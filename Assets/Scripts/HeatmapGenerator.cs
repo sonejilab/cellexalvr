@@ -114,8 +114,9 @@ public class HeatmapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// If created via multiplayer. Name it the same as on other client.
+    /// Creates a new heatmap using the last confirmed selection.
     /// </summary>
+    /// <param name="name">If created via multiplayer. Name it the same as on other client.</param>
     public void CreateHeatmap(string name = "")
     {
         // name the heatmap "heatmap_X". Where X is some number.
