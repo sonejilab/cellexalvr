@@ -223,11 +223,9 @@ public class Cell
     /// <param name="group"> The new group. </param>
     public void SetGroup(int group, bool changeColor)
     {
-        foreach (GraphPoint g in GraphPoints)
+        foreach (var g in CombinedGraphPoints)
         {
-            g.CurrentGroup = group;
-            if (changeColor) { }
-            //g.Material = graphManager.GroupingMaterials[group];
+            g.RecolorSelectionColor(group, false);
         }
     }
 
