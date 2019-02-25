@@ -44,5 +44,8 @@ public static class CellexalEvents
     public static UnityEvent MenuClosed = new UnityEvent();
     public static UnityEvent ModelChanged = new UnityEvent();
 
+    public static UnityEvent UsernameChanged = new UnityEvent();
+    public static UnityEvent LogInitialized = new UnityEvent();
+
     //public static UnityEvent FlashGenesCategoryToggled
 }
