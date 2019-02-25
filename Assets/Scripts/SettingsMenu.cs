@@ -56,6 +56,11 @@ public class SettingsMenu : MonoBehaviour
     private Config beforeChanges;
     private bool unsavedChanges;
 
+    private void OnValidate()
+    {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+    }
+
     private void Awake()
     {
         CellexalEvents.ConfigLoaded.AddListener(SetValues);

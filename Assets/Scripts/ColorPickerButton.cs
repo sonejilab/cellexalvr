@@ -65,6 +65,11 @@ public class ColorPickerButton : MonoBehaviour
     private SelectionToolHandler selectionToolHandler;
     private SettingsMenu settingsMenu;
 
+    private void OnValidate()
+    {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+    }
+
     private void Awake()
     {
         image = gameObject.GetComponent<UnityEngine.UI.Image>();
