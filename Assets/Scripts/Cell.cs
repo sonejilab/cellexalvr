@@ -143,9 +143,9 @@ public class Cell
 
         foreach (GraphPoint g in GraphPoints)
         {
-            if (expression > CellexalConfig.NumberOfExpressionColors - 1)
+            if (expression > CellexalConfig.Config.GraphNumberOfExpressionColors - 1)
             {
-                expression = CellexalConfig.NumberOfExpressionColors - 1;
+                expression = CellexalConfig.Config.GraphNumberOfExpressionColors - 1;
             }
             //g.Material = graphManager.GeneExpressionMaterials[expression];
         }
@@ -183,9 +183,9 @@ public class Cell
 
         foreach (GraphPoint g in GraphPoints)
         {
-            if (expression >= CellexalConfig.NumberOfExpressionColors)
+            if (expression >= CellexalConfig.Config.GraphNumberOfExpressionColors)
             {
-                expression = CellexalConfig.NumberOfExpressionColors - 1;
+                expression = CellexalConfig.Config.GraphNumberOfExpressionColors - 1;
             }
 
             //tempMat = graphManager.GeneExpressionMaterials[expression];
@@ -223,11 +223,9 @@ public class Cell
     /// <param name="group"> The new group. </param>
     public void SetGroup(int group, bool changeColor)
     {
-        foreach (GraphPoint g in GraphPoints)
+        foreach (var g in CombinedGraphPoints)
         {
-            g.CurrentGroup = group;
-            if (changeColor) { }
-            //g.Material = graphManager.GroupingMaterials[group];
+            g.RecolorSelectionColor(group, false);
         }
     }
 
@@ -321,7 +319,7 @@ public class Cell
     /// </summary>
     /// <param name="category">The name of the category that this gene is in</param>
     /// <param name="index">Which index it should be put on</param>
-    /// <param name="expression">A value between 0 and <see cref="CellexalConfig.NumberOfExpressionColors"/></param>
+    /// <param name="expression">A value between 0 and <see cref="CellexalConfig.Config.GraphNumberOfExpressionColors"/></param>
     public void SaveSingleFlashingGenesExpression(string category, int index, int expression)
     {
         flashingExpressions[category][index] = expression;

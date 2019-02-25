@@ -753,6 +753,10 @@ public class CellManager : MonoBehaviour
     /// <param name="expr">The root of the tree representing a boolean expression of attributes.</param>
     public void ColorByAttributeExpression(BooleanExpression.Expr expr)
     {
+        if (expr == null)
+        {
+            graphManager.ResetGraphsColor();
+        }
         foreach (var cell in cells.Values)
         {
             if (expr.Eval(cell))
@@ -799,7 +803,7 @@ public class CellManager : MonoBehaviour
 
     internal void AddFacs(string cellName, string facs, int index)
     {
-        if (index < 0 || index >= CellexalConfig.NumberOfExpressionColors)
+        if (index < 0 || index >= CellexalConfig.Config.GraphNumberOfExpressionColors)
         {
             // value hasn't been normalized correctly
             print(facs + " " + index);

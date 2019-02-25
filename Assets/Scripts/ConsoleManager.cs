@@ -31,6 +31,11 @@ public class ConsoleManager : MonoBehaviour
     private string outputBufferString = "";
     private bool awaitingConfirm = false;
 
+    private void Awake()
+    {
+        CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+    }
+
     private void Start()
     {
         // scan everything for methods that are marked as console commands
@@ -59,7 +64,6 @@ public class ConsoleManager : MonoBehaviour
         }
         history.AddFirst("");
         currentHistoryNode = history.First;
-        maxBufferLines = CellexalConfig.ConsoleMaxBufferLines;
     }
 
     private void Update()
@@ -98,6 +102,11 @@ public class ConsoleManager : MonoBehaviour
         {
             TraverseHistory(false);
         }
+    }
+
+    private void OnConfigLoaded()
+    {
+        maxBufferLines = CellexalConfig.Config.ConsoleMaxBufferLines;
     }
 
     /// <summary>

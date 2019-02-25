@@ -3,6 +3,7 @@
 ///</summary>
 public class CreateHeatmapButton : CellexalButton
 {
+    //public GeneDistance gd;
     private HeatmapGenerator heatmapGenerator;
     private GameManager gameManager;
 
@@ -26,6 +27,7 @@ public class CreateHeatmapButton : CellexalButton
     public override void Click()
     {
         heatmapGenerator.CreateHeatmap();
+        //gd.CreateManyPlots();
     }
 
     private void TurnOn()

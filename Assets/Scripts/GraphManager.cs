@@ -322,4 +322,5 @@ public class GraphManager : MonoBehaviour
             g.SetInfoTextVisible(visible);
         }
     }
+
 }

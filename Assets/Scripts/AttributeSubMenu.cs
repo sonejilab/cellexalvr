@@ -10,7 +10,7 @@ public class AttributeSubMenu : MenuWithTabs
 {
     protected Color[] Colors
     {
-        get { return CellexalConfig.SelectionToolColors; }
+        get { return CellexalConfig.Config.SelectionToolColors; }
     }
 
     public ColorByAttributeButton colorByAttributeButtonPrefab;

@@ -68,13 +68,16 @@ public class CombinedGraphGenerator : MonoBehaviour
         return newGraph;
     }
 
-    private void CreateShaderColors()
+    /// <summary>
+    /// Creates the texture that the CombinedGraph shader uses to fetch colors for the graphpoints.
+    /// </summary>
+    public void CreateShaderColors()
     {
-        Color lowColor = CellexalConfig.LowExpressionColor;
-        Color midColor = CellexalConfig.MidExpressionColor;
-        Color highColor = CellexalConfig.HighExpressionColor;
-        int nbrOfExpressionColors = CellexalConfig.NumberOfExpressionColors;
-        int nbrOfSelectionColors = CellexalConfig.SelectionToolColors.Length;
+        Color lowColor = CellexalConfig.Config.GraphLowExpressionColor;
+        Color midColor = CellexalConfig.Config.GraphMidExpressionColor;
+        Color highColor = CellexalConfig.Config.GraphHighExpressionColor;
+        int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+        int nbrOfSelectionColors = CellexalConfig.Config.SelectionToolColors.Length;
 
         if (nbrOfExpressionColors + nbrOfSelectionColors > 255)
         {
@@ -114,13 +117,18 @@ public class CombinedGraphGenerator : MonoBehaviour
         }
         for (int i = 0; i < nbrOfSelectionColors; ++i)
         {
-            graphPointColors.SetPixel(pixel, 0, CellexalConfig.SelectionToolColors[i]);
+            graphPointColors.SetPixel(pixel, 0, CellexalConfig.Config.SelectionToolColors[i]);
             pixel++;
         }
 
-        graphPointColors.SetPixel(255, 0, Color.white);
+        graphPointColors.SetPixel(255, 0, CellexalConfig.Config.GraphDefaultColor);
         graphPointColors.filterMode = FilterMode.Point;
         graphPointColors.Apply();
+
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            graph.combinedGraphPointClusters[0].GetComponent<Renderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+        }
     }
 
     /// <summary>
@@ -432,8 +440,8 @@ public class CombinedGraphGenerator : MonoBehaviour
         handle.Complete();
 
         int itemsThisFrame = 0;
-        int maximumItemsPerFrame = CellexalConfig.GraphClustersPerFrameStartCount;
-        int maximumItemsPerFrameInc = CellexalConfig.GraphClustersPerFrameIncrement;
+        int maximumItemsPerFrame = CellexalConfig.Config.GraphClustersPerFrameStartCount;
+        int maximumItemsPerFrameInc = CellexalConfig.Config.GraphClustersPerFrameIncrement;
         float maximumDeltaTime = 0.05f;
 
         for (int i = 0; i < nbrOfClusters; ++i)

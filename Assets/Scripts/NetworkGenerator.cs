@@ -55,16 +55,21 @@ public class NetworkGenerator : MonoBehaviour
     /// <summary>
     /// Creates the materials used when drawing the lines between genes in networks.
     /// </summary>
-    private void CreateLineMaterials()
+    public void CreateLineMaterials()
     {
-        int coloringMethod = CellexalConfig.NetworkLineColoringMethod;
+        int coloringMethod = CellexalConfig.Config.NetworkLineColoringMethod;
         if (coloringMethod == 0)
         {
-            int numColors = CellexalConfig.NumberOfNetworkLineColors;
-            Color posHigh = CellexalConfig.NetworkLineColorPositiveHigh;
-            Color posLow = CellexalConfig.NetworkLineColorPositiveLow;
-            Color negLow = CellexalConfig.NetworkLineColorNegativeLow;
-            Color negHigh = CellexalConfig.NetworkLineColorNegativeHigh;
+            int numColors = CellexalConfig.Config.NumberOfNetworkLineColors;
+            if (numColors < 4)
+            {
+                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 4 when NetworkLineColoringMethod is set to 0. Defaulting to 4.");
+                numColors = 4;
+            }
+            Color posHigh = CellexalConfig.Config.NetworkLineColorPositiveHigh;
+            Color posLow = CellexalConfig.Config.NetworkLineColorPositiveLow;
+            Color negLow = CellexalConfig.Config.NetworkLineColorNegativeLow;
+            Color negHigh = CellexalConfig.Config.NetworkLineColorNegativeHigh;
 
             LineMaterials = new Material[numColors];
 
@@ -86,10 +91,10 @@ public class NetworkGenerator : MonoBehaviour
         }
         else if (coloringMethod == 1)
         {
-            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            int numColors = CellexalConfig.Config.NumberOfNetworkLineColors;
             if (numColors < 1)
             {
-                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1");
+                CellexalLog.Log("WARNING: NumberOfNetworkLineColors in config file must be atleast 1 when NetworkLineColoringMethod is set to 1. Defaulting to 1.");
                 numColors = 1;
             }
             List<Material> result = new List<Material>();
@@ -145,7 +150,7 @@ public class NetworkGenerator : MonoBehaviour
         //int statusId = status.AddStatus("R script generating networks");
         //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
         //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
-        
+
         while (selectionToolHandler.RObjectUpdating)
             yield return null;
 

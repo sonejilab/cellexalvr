@@ -39,7 +39,7 @@ public class NetworkNode : MonoBehaviour
     private CellManager cellManager;
     private SteamVR_Controller.Device device;
     private bool edgesAdded;
-    private float lineWidth = CellexalConfig.NetworkLineSmallWidth;
+    private float lineWidth;
 
     void Start()
     {
@@ -117,7 +117,7 @@ public class NetworkNode : MonoBehaviour
                 NetworkNode nn = obj.GetComponent<NetworkNode>();
                 nn.UnHighlight();
             }
-           
+
         }
 
     }
@@ -150,7 +150,7 @@ public class NetworkNode : MonoBehaviour
         edge.transform.rotation = Quaternion.identity;
         edge.transform.localScale = Vector3.one;
         // renderer.sharedMaterial = networkGenerator.LineMaterials[UnityEngine.Random.Range(0, LineMaterials.Length)];
-        renderer.startWidth = renderer.endWidth = CellexalConfig.NetworkLineSmallWidth;
+        renderer.startWidth = renderer.endWidth = CellexalConfig.Config.NetworkLineWidth;
         renderer.enabled = false;
         var newEdge = new Tuple<NetworkNode, NetworkNode, LineRenderer, float>(this, buddy, renderer, pcor);
         edges.Add(newEdge);
@@ -171,7 +171,7 @@ public class NetworkNode : MonoBehaviour
         {
             var line = tuple.Item3;
             line.material.color = Color.white;
-            line.startWidth = line.endWidth = CellexalConfig.NetworkLineSmallWidth * 3;
+            line.startWidth = line.endWidth = CellexalConfig.Config.NetworkLineWidth * 3;
         }
     }
 
@@ -186,7 +186,7 @@ public class NetworkNode : MonoBehaviour
         {
             var line = edges[i].Item3;
             line.material.color = edgeColors[i];
-            line.startWidth = line.endWidth = CellexalConfig.NetworkLineSmallWidth;
+            line.startWidth = line.endWidth = CellexalConfig.Config.NetworkLineWidth;
         }
     }
 
@@ -225,9 +225,9 @@ public class NetworkNode : MonoBehaviour
         float maxPosPcor = Center.MaxPosPcor;
 
         var colors = referenceManager.networkGenerator.LineMaterials;
-        if (CellexalConfig.NetworkLineColoringMethod == 0)
+        if (CellexalConfig.Config.NetworkLineColoringMethod == 0)
         {
-            int numColors = CellexalConfig.NumberOfNetworkLineColors;
+            int numColors = CellexalConfig.Config.NumberOfNetworkLineColors;
             foreach (var edge in edges)
             {
                 edge.Item3.enabled = true;
@@ -271,7 +271,7 @@ public class NetworkNode : MonoBehaviour
                 }
             }
         }
-        else if (CellexalConfig.NetworkLineColoringMethod == 1)
+        else if (CellexalConfig.Config.NetworkLineColoringMethod == 1)
         {
             foreach (var edge in edges)
             {

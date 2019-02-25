@@ -24,8 +24,6 @@ public class UsernameManager : MonoBehaviour
     }
 }
 
-[System.Serializable]
-public class UsernameChangedEvent : UnityEvent { }
 
 /// <summary>
 /// This static class represents a user that works with some data.
@@ -35,11 +33,6 @@ public static class CellexalUser
     private static string workingDirectory = Directory.GetCurrentDirectory();
     private static string username = "default_user";
     private static string dataFolder;
-
-    /// <summary>
-    /// An event that is triggered when the username is changed.
-    /// </summary>
-    public static UnityEvent UsernameChanged = new UsernameChangedEvent();
 
     /// <summary>
     /// Path to a folder unique to the current user and the currently loaded dataset.
@@ -61,7 +54,7 @@ public static class CellexalUser
                 return;
             username = value.ToLower();
             UpdateUserSpecificFolder(username, DataSourceFolder);
-            UsernameChanged.Invoke();
+            CellexalEvents.UsernameChanged.Invoke();
         }
     }
 

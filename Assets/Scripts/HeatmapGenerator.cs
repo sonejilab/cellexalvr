@@ -50,14 +50,14 @@ public class HeatmapGenerator : MonoBehaviour
     /// <summary>
     /// Initializes <see cref="expressionColors"/> with the colors in the config file.
     /// </summary>
-    private void InitColors()
+    public void InitColors()
     {
 
-        int numberOfExpressionColors = CellexalConfig.NumberOfHeatmapColors;
+        int numberOfExpressionColors = CellexalConfig.Config.NumberOfHeatmapColors;
         expressionColors = new SolidBrush[numberOfExpressionColors];
-        UnityEngine.Color low = CellexalConfig.HeatmapLowExpressionColor;
-        UnityEngine.Color mid = CellexalConfig.HeatmapMidExpressionColor;
-        UnityEngine.Color high = CellexalConfig.HeatmapHighExpressionColor;
+        UnityEngine.Color low = CellexalConfig.Config.HeatmapLowExpressionColor;
+        UnityEngine.Color mid = CellexalConfig.Config.HeatmapMidExpressionColor;
+        UnityEngine.Color high = CellexalConfig.Config.HeatmapHighExpressionColor;
         //print(low + " " + mid + " " + high);
 
         int dividerLowMid = numberOfExpressionColors / 2;
@@ -95,8 +95,8 @@ public class HeatmapGenerator : MonoBehaviour
             if (b < 0) b = 0;
             expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255), (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
         }
-        HighlightMarkerColor = CellexalConfig.HeatmapHighlightMarkerColor;
-        ConfirmMarkerColor = CellexalConfig.HeatmapConfirmMarkerColor;
+        HighlightMarkerColor = CellexalConfig.Config.HeatmapHighlightMarkerColor;
+        ConfirmMarkerColor = CellexalConfig.Config.HeatmapConfirmMarkerColor;
     }
 
 
@@ -113,8 +113,9 @@ public class HeatmapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// If created via multiplayer. Name it the same as on other client.
+    /// Creates a new heatmap using the last confirmed selection.
     /// </summary>
+    /// <param name="name">If created via multiplayer. Name it the same as on other client.</param>
     public void CreateHeatmap(string name="", string statsMethod="anova")
     {
         // name the heatmap "heatmap_X". Where X is some number.
@@ -180,7 +181,7 @@ public class HeatmapGenerator : MonoBehaviour
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
             string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
             string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath +
-                            " " + CellexalConfig.HeatmapNumberOfGenes + " " + "Seurat";
+                            " " + CellexalConfig.Config.HeatmapNumberOfGenes + " " + "Seurat";
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
