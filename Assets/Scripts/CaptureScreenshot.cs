@@ -12,6 +12,7 @@ public class CaptureScreenshot : MonoBehaviour
 {
     public SteamVR_TrackedObject rightController;
     public GameObject fadeScreen;
+    public GameObject panel;
     private SteamVR_Controller.Device device;
     private float fadeTime = 0.7f;
     private float elapsedTime = 0.0f;
@@ -52,11 +53,13 @@ public class CaptureScreenshot : MonoBehaviour
             //    CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(directory));
             //    Directory.CreateDirectory(directory);
             //}
+            panel.SetActive(false);
             ScreenCapture.CaptureScreenshot(screenshotImageFilePath);
             CellexalLog.Log("Screenshot taken!");
             //StartCoroutine(LogScreenshot(screenshotImageFilePath));
             elapsedTime = 0.0f;
             screenshotCounter++;
+            
 
         }
 
@@ -72,6 +75,7 @@ public class CaptureScreenshot : MonoBehaviour
             elapsedTime += Time.deltaTime;
             colorAlpha -= 0.05f;
             fadeScreen.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
+            panel.SetActive(true);
         }
     }
 
