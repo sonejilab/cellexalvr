@@ -1083,7 +1083,7 @@ public class Heatmap : MonoBehaviour
         // create a copy of this
         GameObject newHeatmap = Instantiate(gameObject);
         Heatmap heatmap = newHeatmap.GetComponent<Heatmap>();
-
+        heatmap.transform.parent = referenceManager.heatmapGenerator.transform;
         heatmapGenerator.AddHeatmapToList(heatmap);
         heatmap.name = name + "_" + heatmapsCreated;
         heatmapsCreated++;
@@ -1124,11 +1124,15 @@ public class Heatmap : MonoBehaviour
             Tuple<int, float, int> old = groupWidths[i];
             newGroupWidths.Add(new Tuple<int, float, int>(old.Item1, old.Item3 * newXCoordInc, old.Item3));
         }
+        // need to dump selection to txt file for GO analysis script. But file creation counter should not increment
+        // in case networks should be created on the selection that created the original heatmap.
         referenceManager.selectionToolHandler.DumpSelectionToTextFile(newGps);
+        referenceManager.selectionToolHandler.fileCreationCtr--;
         heatmap.Init();
         try
         {
             heatmap.BuildTexture(newCells, newGenes, newGroupWidths);
+            DumpGenesToTextFile(newGenes, heatmap.name);
         }
         catch (Exception e)
         {
@@ -1136,6 +1140,27 @@ public class Heatmap : MonoBehaviour
         }
         heatmapGenerator.selectionNr += 1;
         heatmap.selectionNr = heatmapGenerator.selectionNr;
+    }
+
+
+    /// <summary>
+    /// Dumps the genes into a text file. 
+    /// </summary>
+    private void DumpGenesToTextFile(string[] genes, string name)
+    {
+        string filePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
+        using (StreamWriter file = new StreamWriter(filePath))
+        {
+            foreach (string gene in genes)
+            {
+                file.Write(gene);
+                file.WriteLine();
+            }
+            file.Flush();
+            file.Close();
+        }
+
+
     }
 
     /// <summary>
@@ -1266,15 +1291,6 @@ public class Heatmap : MonoBehaviour
         statusText.text = "Doing GO Analysis...";
         removable = true;
         //CellexalEvents.ScriptRunning.Invoke();
-        //if (!heatmapSaved)
-        //{
-        //    SaveImage();
-        //    while (!heatmapSaved)
-        //    {
-        //        print("heatmap not saved yet");
-        //        yield return null;
-        //    }
-        //}
         string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
         string rScriptFilePath = (Application.streamingAssetsPath + @"\R\GOanalysis.R").FixFilePath();
         string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
