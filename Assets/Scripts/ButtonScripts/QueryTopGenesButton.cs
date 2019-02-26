@@ -13,7 +13,7 @@ public class QueryTopGenesButton : CellexalButton
     {
         get
         {
-            return "Calculate top genes";
+            return this.gameObject.name;
         }
     }
 

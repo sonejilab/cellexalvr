@@ -13,6 +13,7 @@ public class ColorByAttributeButton : CellexalButton
     public Color booleanYesColor;
     public Color booleanNoColor;
     public string Attribute { get; set; }
+    public GameObject activeOutline;
     private bool colored = false;
 
     public enum Mode { SINGLE, BOOLEAN_EXPR }
@@ -39,6 +40,7 @@ public class ColorByAttributeButton : CellexalButton
             cellManager.ColorByAttribute(Attribute, !colored);
             referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
             colored = !colored;
+            activeOutline.SetActive(colored);
         }
         else if (CurrentMode == Mode.BOOLEAN_EXPR)
         {
