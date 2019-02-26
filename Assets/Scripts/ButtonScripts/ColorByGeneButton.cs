@@ -13,7 +13,7 @@ public class ColorByGeneButton : CellexalButton
 
     protected override string Description
     {
-        get { return "Color all graphs based on a gene expression"; }
+        get { return "Color graphs by " + gene; }
     }
 
     protected void Start()
