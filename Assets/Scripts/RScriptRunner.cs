@@ -59,7 +59,7 @@ public class RScriptRunner
         }
         catch (Exception ex)
         {
-            CellexalError.SpawnError("Error, R script failed.", string.Format("The R script at {0} failed with the message {1}", rCodeFilePath, ex.ToString()));
+            CellexalLog.Log("Error, R script failed.", string.Format("The R script at {0} failed with the message {1}", rCodeFilePath, ex.ToString()));
             throw new Exception("R Script failed: " + result, ex);
         }
     }
