@@ -134,9 +134,20 @@ public class NetworkGenerator : MonoBehaviour
 
     }
 
+
+    [ConsoleCommand("networkGenerator", "generatenetworks", "gn")]
+    public void GenerateNetworks()
+    {
+        var rand = new System.Random();
+        var layoutSeed = rand.Next();
+        GenerateNetworks(layoutSeed);
+    }
+
+
     /// <summary>
     /// Generates networks based on the selectiontoolhandler's last selection.
     /// </summary>
+
     public void GenerateNetworks(int layoutSeed)
     {
         CellexalEvents.CreatingNetworks.Invoke();
