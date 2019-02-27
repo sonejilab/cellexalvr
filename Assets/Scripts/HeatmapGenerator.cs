@@ -30,6 +30,7 @@ public class HeatmapGenerator : MonoBehaviour
     private SteamVR_Controller.Device device;
     private Vector3 heatmapPosition;
     private List<Heatmap> heatmapList = new List<Heatmap>();
+    private string statsMethod;
     public UnityEngine.Color HighlightMarkerColor { get; private set; }
     public UnityEngine.Color ConfirmMarkerColor { get; private set; }
 
@@ -112,11 +113,21 @@ public class HeatmapGenerator : MonoBehaviour
         heatmapList.Clear();
     }
 
+    [ConsoleCommand("heatmapGenerator", "generateheatmap", "gh")]
+    public void CreateHeatmap()
+    {
+        statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
+        CellexalLog.Log("Creating heatmap");
+        CellexalEvents.CreatingHeatmap.Invoke();
+        string heatmapName = "heatmap_" + System.DateTime.Now.ToString("HH-mm-ss");
+        StartCoroutine(GenerateHeatmapRoutine(heatmapName));
+    }
+
     /// <summary>
     /// Creates a new heatmap using the last confirmed selection.
     /// </summary>
     /// <param name="name">If created via multiplayer. Name it the same as on other client.</param>
-    public void CreateHeatmap(string name="", string statsMethod="anova")
+    public void CreateHeatmap(string name="")
     {
         // name the heatmap "heatmap_X". Where X is some number.
         string heatmapName = "";
@@ -129,6 +140,7 @@ public class HeatmapGenerator : MonoBehaviour
         {
             heatmapName = name;
         }
+        statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
         CellexalLog.Log("Creating heatmap");
         CellexalEvents.CreatingHeatmap.Invoke();
         StartCoroutine(GenerateHeatmapRoutine(heatmapName));
@@ -181,7 +193,7 @@ public class HeatmapGenerator : MonoBehaviour
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
             string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
             string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath +
-                            " " + CellexalConfig.Config.HeatmapNumberOfGenes + " " + "Seurat";
+                            " " + CellexalConfig.Config.HeatmapNumberOfGenes + " " + statsMethod;
             if (!Directory.Exists(heatmapDirectory))
             {
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());

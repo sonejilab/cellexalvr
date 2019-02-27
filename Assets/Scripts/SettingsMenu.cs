@@ -23,6 +23,7 @@ public class SettingsMenu : MonoBehaviour
     public ColorPickerButton heatmapLowExpression;
     public Image heatmapGradient;
     public TMPro.TMP_InputField numberOfHeatmapColorsInputField;
+    public Dropdown heatmapAlgorithm;
     //public UnityEngine.UI.Dropdown heatmapAlgorithm;
     [Header("Graphs")]
     public ColorPickerButton graphHighExpression;
@@ -187,6 +188,15 @@ public class SettingsMenu : MonoBehaviour
         CellexalConfig.Config.NumberOfHeatmapColors = nColors;
         referenceManager.heatmapGenerator.InitColors();
         heatmapGradient.material.SetInt("_NColors", nColors);
+    }
+
+    public void SetHeatmapAlgorithm()
+    {
+        unsavedChanges = true;
+        int val = heatmapAlgorithm.value;
+        string algorithm = heatmapAlgorithm.options[val].text;
+        CellexalConfig.Config.HeatmapAlgorithm = algorithm;
+        referenceManager.heatmapGenerator.InitColors();
     }
 
     public void SetNumberOfGraphColors()

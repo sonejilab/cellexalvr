@@ -26,7 +26,7 @@ public class CreateHeatmapButton : CellexalButton
 
     public override void Click()
     {
-        heatmapGenerator.CreateHeatmap();
+        heatmapGenerator.CreateHeatmap("");
         TurnOff();
         //gd.CreateManyPlots();
     }
