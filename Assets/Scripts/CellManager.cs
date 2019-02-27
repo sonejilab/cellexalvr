@@ -116,7 +116,8 @@ public class CellManager : MonoBehaviour
     private int[] savedFlashGenesLengths;
     private int coloringInfoStatusId;
     private Dictionary<Cell, int> recolored;
-    private List<KeyValuePair<CombinedGraph.CombinedGraphPoint, int>> selectionList;
+    //private List<KeyValuePair<CombinedGraph.CombinedGraphPoint, int>> selectionList;
+    private Dictionary<CombinedGraph.CombinedGraphPoint, int> selectionList;
 
 
     void Awake()
@@ -147,7 +148,7 @@ public class CellManager : MonoBehaviour
         FarGroupInfo = referenceManager.FarGroupInfo;
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
         recolored = new Dictionary<Cell, int>();
-        selectionList = new List<KeyValuePair<CombinedGraph.CombinedGraphPoint, int>>();
+        selectionList = new Dictionary<CombinedGraph.CombinedGraphPoint, int>();
     }
 
     /// <summary>
@@ -698,11 +699,11 @@ public class CellManager : MonoBehaviour
             {
                 if (color)
                 {
-                    selectionList.Add(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                    selectionList.Add(gp, cell.Attributes[attributeType.ToLower()]);
                 }
                 if (!color)
                 {
-                    selectionList.Remove(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                    selectionList.Remove(gp);
                 }
             }
         }
