@@ -9,7 +9,7 @@ public class ColorByGeneMenu : MonoBehaviour
     public ReferenceManager referenceManager;
 
     public ColorByGeneButton buttonPrefab;
-    public TextMesh loadingText;
+    public GameObject loadingText;
 
     private MenuToggler menuToggler;
     // hard coded positions :)
@@ -100,11 +100,11 @@ public class ColorByGeneMenu : MonoBehaviour
 
     private void ShowLoadingText()
     {
-        loadingText.gameObject.SetActive(true);
+        loadingText.SetActive(true);
     }
 
     private void HideLoadingText()
     {
-        loadingText.gameObject.SetActive(false);
+        loadingText.SetActive(false);
     }
 }

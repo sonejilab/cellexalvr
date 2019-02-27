@@ -13,10 +13,11 @@ class NetworkCenterInteract : VRTK_InteractableObject
         referenceManager.gameManager.InformDisableColliders(gameObject.name);
         if (grabbingObjects.Count == 1)
         {
+            print("Grabbing network center");
             // moving many triggers really pushes what unity is capable of
             foreach (Collider c in GetComponentsInChildren<Collider>())
             {
-                if (c.gameObject.name != "Ring" && c.gameObject.name != "Enlarged Network")
+                if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
                 {
                     c.enabled = false;
                 }
@@ -36,7 +37,7 @@ class NetworkCenterInteract : VRTK_InteractableObject
         {
             foreach (Collider c in GetComponentsInChildren<Collider>())
             {
-                if (c.gameObject.name != "Ring" && c.gameObject.name != "Enlarged Network")
+                if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
                 {
                     c.enabled = true;
                 }

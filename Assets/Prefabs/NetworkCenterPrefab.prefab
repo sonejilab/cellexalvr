@@ -39,7 +39,6 @@ GameObject:
   - component: {fileID: 4863051668717822}
   - component: {fileID: 33453337135627904}
   - component: {fileID: 23259352955223570}
-  - component: {fileID: 64684723448277922}
   - component: {fileID: 65682365470606058}
   m_Layer: 16
   m_Name: Ring
@@ -215,7 +214,6 @@ GameObject:
   - component: {fileID: 4207019318882038}
   - component: {fileID: 65265384985586142}
   - component: {fileID: 212061106907495026}
-  - component: {fileID: 114052418412184118}
   m_Layer: 16
   m_Name: Show Info Button
   m_TagString: Untagged
@@ -307,27 +305,9 @@ GameObject:
   - component: {fileID: 224990311796337588}
   - component: {fileID: 222119872287490604}
   - component: {fileID: 114235242178268010}
-  - component: {fileID: 114705517376298638}
   m_Layer: 16
   m_Name: ButtonPanel
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1989720891023956
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4151404759430638}
-  - component: {fileID: 33141155334007098}
-  - component: {fileID: 64510857593938476}
-  m_Layer: 11
-  m_Name: Ring2
-  m_TagString: Network
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -369,22 +349,8 @@ Transform:
   m_LocalScale: {x: 0.12256, y: 0.12256, z: 0.12256}
   m_Children:
   - {fileID: 4863051668717822}
-  - {fileID: 4151404759430638}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4151404759430638
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1989720891023956}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6749771, y: 0.6749771, z: 0.15541159}
-  m_Children: []
-  m_Father: {fileID: 4093310850249956}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4207019318882038
 Transform:
@@ -598,47 +564,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758485399609656}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!33 &33141155334007098
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1989720891023956}
-  m_Mesh: {fileID: 4300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
 --- !u!33 &33453337135627904
 MeshFilter:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1184040499242908}
-  m_Mesh: {fileID: 4300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
---- !u!64 &64510857593938476
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1989720891023956}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
---- !u!64 &64684723448277922
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1184040499242908}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: -1
-  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
 --- !u!65 &65132475085316250
 BoxCollider:
@@ -719,7 +650,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1184040499242908}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.8957967, y: 1.8957967, z: 0.060351584}
@@ -757,30 +688,6 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
---- !u!114 &114052418412184118
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1604312293519794}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a674fd210dc3f5747afe3ca60864db8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  descriptionText: {fileID: 0}
-  infoMenu: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: 96fa607cb06dc3d4a9afca790516f0df, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: 3e535ae0b13d0b14b95ed52dca57e338, type: 3}
-  deactivatedTexture: {fileID: 0}
-  popupChoice: 0
-  buttonActivated: 1
-  controllerInside: 0
-  infoCanvas: {fileID: 0}
 --- !u!114 &114136589334105450
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -974,6 +881,7 @@ MonoBehaviour:
   m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
+  m_isTextTruncated: 0
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
@@ -1086,6 +994,7 @@ MonoBehaviour:
   m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
+  m_isTextTruncated: 0
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
@@ -1243,23 +1152,6 @@ MonoBehaviour:
   buttonActivated: 1
   controllerInside: 0
   parent: {fileID: 114190743744166870}
---- !u!114 &114705517376298638
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1962224334658770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b564982d891268448de83c2af86d255, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkCenter: {fileID: 4093310850249956}
-  parents:
-  - {fileID: 224990311796337588}
-  - {fileID: 224180360605458224}
-  - {fileID: 4863051668717822}
-  - {fileID: 4093310850249956}
 --- !u!114 &114878040427955872
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1327,6 +1219,7 @@ MonoBehaviour:
   m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
+  m_isTextTruncated: 0
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
@@ -1999,6 +1892,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.19999999}
+  m_AnchoredPosition: {x: 0, y: 0.20000076}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

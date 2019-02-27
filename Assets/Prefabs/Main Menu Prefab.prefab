@@ -16099,6 +16099,7 @@ MonoBehaviour:
   popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
+  statsMethod: 
 --- !u!114 &114090744481098160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17866,6 +17867,7 @@ MonoBehaviour:
   booleanNotIncludedColor: {r: 0, g: 0, b: 0, a: 0}
   booleanYesColor: {r: 0, g: 1, b: 0.0043610195, a: 0}
   booleanNoColor: {r: 1, g: 0, b: 0, a: 0}
+  activeOutline: {fileID: 0}
   parentMenu: {fileID: 114414439271308984}
 --- !u!114 &114631926619560194
 MonoBehaviour:
