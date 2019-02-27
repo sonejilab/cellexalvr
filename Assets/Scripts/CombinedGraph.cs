@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using SQLiter;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using VRTK;
 
@@ -17,6 +18,7 @@ using VRTK;
 public class CombinedGraph : MonoBehaviour
 {
     public GameObject skeletonPrefab;
+    public GameObject emptySkeletonPrefab;
     public GameObject movingOutlineCircle;
     public string DirectoryName { get; set; }
     public List<GameObject> Lines { get; set; }
@@ -248,6 +250,7 @@ public class CombinedGraph : MonoBehaviour
 
         public string Label;
         public Vector3 Position;
+        public GameObject cluster;
         public int index;
         public Vector2Int textureCoord;
         public CombinedGraph parent;
@@ -604,7 +607,7 @@ public class CombinedGraph : MonoBehaviour
 
     }
 
-    public GameObject CreateConvexHull()
+    public GameObject CreateConvexHull(bool empty = false)
     {
 
         // Read the .hull file
@@ -649,7 +652,15 @@ public class CombinedGraph : MonoBehaviour
         streamReader.Close();
         fileStream.Close();
 
-        var convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
+        MeshFilter convexHull = null;
+        if (!empty)
+        {
+            convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
+        }
+        else
+        {
+            convexHull = Instantiate(emptySkeletonPrefab).GetComponent<MeshFilter>();
+        }
         convexHull.gameObject.name = "ConvexHull_" + this.name;
         convexHull.mesh = new Mesh()
         {
@@ -676,9 +687,11 @@ public class CombinedGraph : MonoBehaviour
         //convexHull.transform.rotation = transform.rotation;
         //convexHull.transform.localScale = transform.localScale;
         convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+
         convexHull.mesh.RecalculateBounds();
         convexHull.mesh.RecalculateNormals();
         CellexalLog.Log("Created convex hull with " + vertices.Count() + " vertices");
+        convexHull.transform.localScale = Vector3.one;
         return convexHull.gameObject;
 
     }
@@ -970,6 +983,7 @@ public class CombinedGraph : MonoBehaviour
         }
         return total;
     }
+
     /// <summary>
     /// Finds all <see cref="CombinedGraphPoint"/> that are inside the selection tool. This is done by traversing the generated Octree and dismissing subtrees using Minkowski differences.
     /// Ultimately, raycasting is used to find collisions because the selection tool is not a box.
