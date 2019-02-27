@@ -215,6 +215,7 @@ public class CellManager : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Toggles all cells which have an expression level == 0 by showing / hiding them from the graphs.
     /// </summary>
@@ -934,5 +935,18 @@ public class CellManager : MonoBehaviour
         ClearLinesBetweenGraphPoints();
 
 
+    }
+
+    public List<Cell> SubSet(BooleanExpression.Expr expr)
+    {
+        List<Cell> result = new List<Cell>();
+        foreach (Cell cell in cells.Values)
+        {
+            if (expr.Eval(cell))
+            {
+                result.Add(cell);
+            }
+        }
+        return result;
     }
 }
