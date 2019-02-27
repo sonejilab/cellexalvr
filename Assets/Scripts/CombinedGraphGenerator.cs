@@ -374,7 +374,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     /// <summary>
     /// Coroutine that makes some meshes every frame. Uses the new job system to do things parallel.
     /// </summary>
-    private IEnumerator MakeMeshesCoroutine(List<HashSet<CombinedGraph.CombinedGraphPoint>> clusters)
+    private IEnumerator MakeMeshesCoroutine(List<HashSet<CombinedGraph.CombinedGraphPoint>> clusters, BooleanExpression.Expr expr = null)
     {
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
@@ -447,6 +447,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         for (int i = 0; i < nbrOfClusters; ++i)
         {
             var newPart = Instantiate(combinedGraphpointsPrefab, newGraph.transform);
+            //clusters[i].All((CombinedGraph.CombinedGraphPoint point) => (point.cluster = newPart));
             var newMesh = new Mesh();
             int clusterOffset = clusterOffsets[i];
             int clusterSize = 0;
@@ -634,6 +635,42 @@ public class CombinedGraphGenerator : MonoBehaviour
             newGraph.maxCoordValues.y = y;
         if (z > newGraph.maxCoordValues.z)
             newGraph.maxCoordValues.z = z;
+    }
+
+    [ConsoleCommand("combinedGraphGenerator", "csg")]
+    public void CreateSubGraphs()
+    {
+        CreateSubGraphs(new BooleanExpression.OrExpr(new BooleanExpression.ValueExpr("celltype@Epiblast"), new BooleanExpression.ValueExpr("celltype@Primitive.Streak")));
+    }
+
+    public void CreateSubGraphs(BooleanExpression.Expr expr)
+    {
+        StartCoroutine(CreateSubGraphsCoroutine(expr));
+    }
+
+    private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr)
+    {
+        List<Cell> subset = referenceManager.cellManager.SubSet(expr);
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            CreateCombinedGraph();
+            newGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
+            newGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
+            foreach (Cell cell in subset)
+            {
+                var point = graph.FindGraphPoint(cell.Label).Position;
+                AddGraphPoint(cell, point.x, point.y, point.z);
+            }
+            SliceClustering();
+            var hull = graph.CreateConvexHull(true);
+            hull.transform.parent = newGraph.transform;
+            hull.transform.localPosition = Vector3.zero;
+            hull.transform.localScale = Vector3.one;
+            while (isCreating)
+            {
+                yield return null;
+            }
+        }
     }
 
     /// <summary>
