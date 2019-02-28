@@ -16,6 +16,7 @@ public class AttributeSubMenu : MenuWithTabs
     public ColorByAttributeButton colorByAttributeButtonPrefab;
     public BooleanExpressionButton booleanExpressionButtonPrefab;
     public Tab booleanExpressionTabPrefab;
+    public List<string> attributes;
 
     protected List<ColorByAttributeButton> colorByAttributeButtons;
     protected List<BooleanExpressionButton> booleanExpressionButtons;
