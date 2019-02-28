@@ -698,7 +698,7 @@ public class CellManager : MonoBehaviour
             CombinedGraph.CombinedGraphPoint gp = cell.CombinedGraphPoints[0];
             if (cell.Attributes.ContainsKey(attributeType.ToLower()))
             {
-                if (color)
+                if (color && !selectionList.ContainsKey(gp))
                 {
                     selectionList.Add(gp, cell.Attributes[attributeType.ToLower()]);
                 }

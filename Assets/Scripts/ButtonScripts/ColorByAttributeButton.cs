@@ -40,6 +40,14 @@ public class ColorByAttributeButton : CellexalButton
             cellManager.ColorByAttribute(Attribute, !colored);
             referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
             colored = !colored;
+            if (colored)
+            {
+                parentMenu.attributes.Add(Attribute);
+            }
+            else
+            {
+                parentMenu.attributes.Remove(Attribute);
+            }
             activeOutline.SetActive(colored);
         }
         else if (CurrentMode == Mode.BOOLEAN_EXPR)

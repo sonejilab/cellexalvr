@@ -29,7 +29,7 @@ public class AttributeToSelectionButton : CellexalButton
         referenceManager.menuRotator.RotateLeft(2);
         closeMenuButton.CloseMenu();
         selectionToolButton.OpenMenu();
-        TurnOff();
+        //TurnOff();
     }
 
     private void TurnOn()

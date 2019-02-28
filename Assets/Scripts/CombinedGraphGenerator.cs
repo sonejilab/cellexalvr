@@ -39,6 +39,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     private int graphCount;
 
     private GameManager gameManager;
+    private CombinedGraph subGraph;
 
     private void Awake()
     {
@@ -640,7 +641,19 @@ public class CombinedGraphGenerator : MonoBehaviour
     [ConsoleCommand("combinedGraphGenerator", "csg")]
     public void CreateSubGraphs()
     {
-        CreateSubGraphs(new BooleanExpression.OrExpr(new BooleanExpression.ValueExpr("celltype@Epiblast"), new BooleanExpression.ValueExpr("celltype@Primitive.Streak")));
+        CreateSubGraphs(new BooleanExpression.OrExpr(new BooleanExpression.ValueExpr("celltype@Caudal.Mesoderm"), new BooleanExpression.ValueExpr("celltype@Primitive.Streak")));
+    }
+
+    public void CreateSubGraphs(List<string> attributes)
+    {
+        BooleanExpression.Expr expr = new BooleanExpression.ValueExpr(attributes[0]);
+        for (int i = 1; i < attributes.Count; i++)
+        {
+            BooleanExpression.Expr tempExpr = expr;
+            expr = new BooleanExpression.OrExpr(tempExpr,
+                                                new BooleanExpression.ValueExpr(attributes[i]));
+        }
+        CreateSubGraphs(expr);
     }
 
     public void CreateSubGraphs(BooleanExpression.Expr expr)
@@ -653,30 +666,69 @@ public class CombinedGraphGenerator : MonoBehaviour
         List<Cell> subset = referenceManager.cellManager.SubSet(expr);
         foreach (CombinedGraph graph in graphManager.Graphs)
         {
-            CreateCombinedGraph();
-            newGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
-            newGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
+            CombinedGraph g = CreateCombinedGraph();
+            g.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
+            g.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
             foreach (Cell cell in subset)
             {
                 var point = graph.FindGraphPoint(cell.Label).Position;
                 AddGraphPoint(cell, point.x, point.y, point.z);
             }
             SliceClustering();
-            var hull = graph.CreateConvexHull(true);
-            hull.transform.parent = newGraph.transform;
-            hull.transform.localPosition = Vector3.zero;
-            hull.transform.localScale = Vector3.one;
+            //var hull = graph.CreateConvexHull(true);
+            //hull.transform.parent = newGraph.transform;
+            //hull.transform.localPosition = Vector3.zero;
+            //hull.transform.localScale = Vector3.one;
             while (isCreating)
             {
                 yield return null;
             }
+            subGraph = g;
+        }
+        if (!isCreating)
+        {
+            foreach (string attribute in referenceManager.attributeSubMenu.attributes)
+            {
+                referenceManager.cellManager.ColorByAttribute(attribute, true);
+            }
         }
     }
 
-    /// <summary>
-    /// Adds many boxcolliders to this graph. The idea is that when grabbing graphs we do not want to collide with all the small colliders on the graphpoints, so we put many boxcolliders that cover the graph instead.
-    /// </summary>
-    public void CreateColliders()
+    [ConsoleCommand("combinedGraphGenerator", "asg")]
+    public void AddToGraph()
+    {
+        StartCoroutine(AddToSubGraphCoroutine(new BooleanExpression.ValueExpr("celltype@Epiblast")));
+    }
+
+    private IEnumerator AddToSubGraphCoroutine(BooleanExpression.Expr expr)
+    {
+        List<Cell> subset = referenceManager.cellManager.SubSet(expr);
+        foreach (CombinedGraph graph in graphManager.Graphs)
+        {
+            //CombinedGraph g = CreateCombinedGraph();
+            subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
+            subGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
+            foreach (Cell cell in subset)
+            {
+                var point = graph.FindGraphPoint(cell.Label).Position;
+                AddGraphPoint(cell, point.x, point.y, point.z);
+            }
+            SliceClustering();
+            //var hull = graph.CreateConvexHull(true);
+            //hull.transform.parent = newGraph.transform;
+            //hull.transform.localPosition = Vector3.zero;
+            //hull.transform.localScale = Vector3.one;
+            while (isCreating)
+            {
+                yield return null;
+            }
+            //subGraph = g;
+        }
+    }
+        /// <summary>
+        /// Adds many boxcolliders to this graph. The idea is that when grabbing graphs we do not want to collide with all the small colliders on the graphpoints, so we put many boxcolliders that cover the graph instead.
+        /// </summary>
+        public void CreateColliders()
     {
         // maximum number of times we allow colliders to grow in size
         int maxColliderIncreaseIterations = 10;
