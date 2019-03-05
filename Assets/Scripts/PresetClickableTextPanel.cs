@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using CellexalExtensions;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 /// <summary>
 /// Represents a clickable text panel with some preset values. The preset values are set in the Unity Inspector.
@@ -15,6 +18,14 @@ public class PresetClickableTextPanel : ClickablePanel
     public Material normalMaterial;
     public Material highlightedMaterial;
     public Material pressedMaterial;
+
+    private void OnValidate()
+    {
+        if (gameObject.activeInHierarchy)
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
 
     protected override void Start()
     {

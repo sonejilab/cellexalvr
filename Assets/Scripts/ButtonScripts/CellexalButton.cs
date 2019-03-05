@@ -53,6 +53,12 @@ public abstract class CellexalButton : MonoBehaviour
     private int layerMask;
 
 
+    private void OnValidate()
+    {
+        if (gameObject.activeInHierarchy)
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+    }
+
     protected virtual void Awake()
     {
         if (referenceManager == null)

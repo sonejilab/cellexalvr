@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// Raycasts from the right controller onto a group of <see cref="PresetClickableTextPanel"/>.
@@ -10,28 +9,31 @@ public class PresetClickablePanelRaycaster : MonoBehaviour
 
     private SteamVR_TrackedObject rightController;
     private ClickablePanel lastHit = null;
+    private bool hitDemoPanelLastFrame = false;
     private ControllerModelSwitcher controllerModelSwitcher;
-    private int keyboardLayer;
-    private int keyboardLayerMask;
+    private int panelLayerMask;
 
     private void Start()
     {
         rightController = referenceManager.rightController;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        keyboardLayer = LayerMask.NameToLayer("KeyboardLayer");
-        keyboardLayerMask = 1 << keyboardLayer;
+        panelLayerMask = 1 << LayerMask.NameToLayer("SelectableLayer");
     }
 
     private void Update()
     {
         var raycastingSource = referenceManager.rightLaser.transform;
         var device = SteamVR_Controller.Input((int)rightController.index);
-        var ray = new Ray(raycastingSource.position, raycastingSource.forward);
+        var ray = new Ray(raycastingSource.position, referenceManager.rightController.transform.forward);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 10f, ~keyboardLayerMask))
+        if (Physics.Raycast(ray, out hit, 10f, panelLayerMask))
         {
             // if we hit something this frame.
-            SetLaserActivated(true);
+            if (!hitDemoPanelLastFrame)
+            {
+                hitDemoPanelLastFrame = true;
+                SetLaserActivated(true);
+            }
             var hitPanel = hit.collider.transform.gameObject.GetComponent<PresetClickableTextPanel>();
             if (hitPanel != null)
             {
@@ -58,6 +60,11 @@ public class PresetClickablePanelRaycaster : MonoBehaviour
             // if we hit nothing this frame, but hit something last frame.
             lastHit.SetHighlighted(false);
             lastHit = null;
+        }
+        else if (hitDemoPanelLastFrame)
+        {
+            // if we hit nothing this frame and hit the panels last frame
+            hitDemoPanelLastFrame = false;
             SetLaserActivated(false);
         }
     }
@@ -68,7 +75,8 @@ public class PresetClickablePanelRaycaster : MonoBehaviour
             controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.TwoLasers ||
             controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
         {
-            referenceManager.rightLaser.enabled = active;
+            //referenceManager.rightLaser.enabled = active;
+            referenceManager.laserPointerController.Override = active;
             if (active)
             {
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
@@ -76,6 +84,7 @@ public class PresetClickablePanelRaycaster : MonoBehaviour
             else
             {
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
+                //controllerModelSwitcher.ActivateDesiredTool();
             }
         }
     }
