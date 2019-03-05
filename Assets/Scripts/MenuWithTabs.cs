@@ -15,6 +15,15 @@ public class MenuWithTabs : MonoBehaviour
     protected Vector3 tabButtonPosOriginal = new Vector3(-0.367f, 1f, 0.35f);
     protected Vector3 tabButtonPosInc = new Vector3(0.25f, 0, 0);
 
+    public CellexalButton prefab;
+
+    protected List<CellexalButton> buttons;
+
+
+    protected int buttonsPerTab = 20;
+    protected string[] names;
+    protected string[] categories;
+
     protected virtual void Start()
     {
         referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -22,6 +31,72 @@ public class MenuWithTabs : MonoBehaviour
         CellexalEvents.GraphsUnloaded.AddListener(DestroyTabs);
     }
 
+    public virtual void CreateButtons(string[] categoriesAndNames)
+    {
+        DestroyTabs();
+
+        if (buttons == null)
+            buttons = new List<CellexalButton>();
+        foreach (var button in buttons)
+        {
+            // wait 0.1 seconds so we are out of the loop before we start destroying stuff
+            Destroy(button.gameObject, .1f);
+        }
+        buttons.Clear();
+        //TurnOffAllTabs();
+        categories = new string[categoriesAndNames.Length];
+        names = new string[categoriesAndNames.Length];
+        for (int i = 0; i < categoriesAndNames.Length; ++i)
+        {
+            if (categoriesAndNames[i].Contains("@"))
+            {
+                string[] categoryAndName = categoriesAndNames[i].Split('@');
+                categories[i] = categoryAndName[0];
+                names[i] = categoryAndName[1];
+            }
+            else
+            {
+                categories[i] = "";
+                names[i] = categoriesAndNames[i];
+            }
+        }
+
+        Tab newTab = null;
+        for (int i = 0, buttonIndex = 0; i < names.Length; ++i, ++buttonIndex)
+        {
+            // add a new tab if we encounter a new category, or if the current tab is full
+            if (buttonIndex % buttonsPerTab == 0 || i > 0 && categories[i] != categories[i - 1])
+            {
+                newTab = AddTab(tabPrefab);
+                newTab.TabButton.GetComponentInChildren<TextMesh>().text = categories[i];
+                buttonIndex = 0;
+
+            }
+            var newButton = Instantiate(prefab, newTab.transform);
+
+            newButton.gameObject.SetActive(true);
+
+            //menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
+
+            //if (buttonIndex < Colors.Length)
+            //    newButton.GetComponent<Renderer>().material.color = Colors[buttonIndex];
+            buttons.Add(newButton);
+            newTab.AddButton(newButton);
+        }
+        // set the names of the attributes after the buttons have been created.
+        //for (int i = 0; i < buttons.Count; ++i)
+        //{
+        //    var b = buttons[i];
+        //    b.referenceManager = referenceManager;
+        //    //int colorIndex = i % Colors.Length;
+        //    b.SetIndex(names[i]);
+        //    b.parentMenu = this;
+        //}
+        // turn on one of the tabs
+        TurnOffAllTabs();
+        //newTab.SetTabActive(true);
+        //newTab.SetTabActive(GetComponent<Renderer>().enabled);
+    }
     /// <summary>
     /// Adds a tab to this menu.
     /// </summary>

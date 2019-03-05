@@ -13,6 +13,7 @@ public class Cell
 
     public Dictionary<string, int> Attributes { get; private set; }
     public Dictionary<string, int> Facs { get; private set; }
+    public Dictionary<string, string> FacsValue { get; private set; }
     public int ExpressionLevel { get; internal set; }
     public string Label { get; set; }
 
@@ -35,6 +36,7 @@ public class Cell
         CombinedGraphPoints = new List<CombinedGraph.CombinedGraphPoint>();
         Attributes = new Dictionary<string, int>();
         Facs = new Dictionary<string, int>();
+        FacsValue = new Dictionary<string, string>();
         tempMat = null;
     }
 
@@ -207,7 +209,7 @@ public class Cell
     }
 
     /// <summary>
-    /// Adds a .facs thing to this cell.
+    /// Adds a .facs bin index to this cell.
     /// </summary>
     /// <param name="facsName"> The thing's name. </param>
     /// <param name="index"> The value of the thing. </param>
@@ -215,6 +217,17 @@ public class Cell
     {
 
         Facs[facsName.ToLower()] = index;
+    }
+
+
+    /// <summary>
+    /// Adds a .facs original value to this cell.
+    /// </summary>
+    /// <param name="facsName"> The thing's name. </param>
+    /// <param name="index"> The value of the thing. </param>
+    internal void AddFacsValue(string facsName, string value)
+    {
+        FacsValue[facsName.ToLower()] = value;
     }
 
     /// <summary>

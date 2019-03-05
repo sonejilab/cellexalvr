@@ -17,6 +17,7 @@ public class CellManager : MonoBehaviour
     #region Properties
     public string[] Attributes { get; set; }
     public string[] Facs { get; set; }
+    public string[] Facs_values { get; set; }
     /// <summary>
     /// The number of frames to wait in between each shown gene expression when flashing genes.
     /// </summary>
@@ -116,7 +117,8 @@ public class CellManager : MonoBehaviour
     private int[] savedFlashGenesLengths;
     private int coloringInfoStatusId;
     private Dictionary<Cell, int> recolored;
-    private List<KeyValuePair<CombinedGraph.CombinedGraphPoint, int>> selectionList;
+    //private List<KeyValuePair<CombinedGraph.CombinedGraphPoint, int>> selectionList;
+    private Dictionary<CombinedGraph.CombinedGraphPoint, int> selectionList;
 
 
     void Awake()
@@ -147,7 +149,7 @@ public class CellManager : MonoBehaviour
         FarGroupInfo = referenceManager.FarGroupInfo;
         FlashGenesCategoryFilter = new Dictionary<string, bool>();
         recolored = new Dictionary<Cell, int>();
-        selectionList = new List<KeyValuePair<CombinedGraph.CombinedGraphPoint, int>>();
+        selectionList = new Dictionary<CombinedGraph.CombinedGraphPoint, int>();
     }
 
     /// <summary>
@@ -697,13 +699,13 @@ public class CellManager : MonoBehaviour
             CombinedGraph.CombinedGraphPoint gp = cell.CombinedGraphPoints[0];
             if (cell.Attributes.ContainsKey(attributeType.ToLower()))
             {
-                if (color)
+                if (color && !selectionList.ContainsKey(gp))
                 {
-                    selectionList.Add(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                    selectionList.Add(gp, cell.Attributes[attributeType.ToLower()]);
                 }
                 if (!color)
                 {
-                    selectionList.Remove(new KeyValuePair<CombinedGraph.CombinedGraphPoint, int>(gp, cell.Attributes[attributeType.ToLower()]));
+                    selectionList.Remove(gp);
                 }
             }
         }
@@ -811,6 +813,12 @@ public class CellManager : MonoBehaviour
         }
         cells[cellName].AddFacs(facs, index);
     }
+
+    internal void AddFacsValue(string cellName, string facs, string value)
+    {
+        cells[cellName].AddFacsValue(facs, value);
+    }
+
 
     /// <summary>
     /// Color all graphpoints according to a column in the index.facs file.

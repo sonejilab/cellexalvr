@@ -52,6 +52,7 @@ public class ReferenceManager : MonoBehaviour
     public ToggleArcsSubMenu arcsSubMenu;
     public AttributeSubMenu attributeSubMenu;
     public ColorByIndexMenu indexMenu;
+    public GraphFromMarkersMenu createFromMarkerMenu;
     public SelectionFromPreviousMenu selectionFromPreviousMenu;
     public ColorByGeneMenu colorByGeneMenu;
     public FilterMenu filterMenu;
@@ -94,6 +95,7 @@ public class ReferenceManager : MonoBehaviour
     public DesktopMenu desktopMenu;
     public GameObject fpsCounter;
     public DemoManager demoManager;
+    public NewGraphFromMarkers newGraphFromMarkers;
     #endregion
 
     #region GeneKeyboard
