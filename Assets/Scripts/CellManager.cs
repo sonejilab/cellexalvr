@@ -17,6 +17,7 @@ public class CellManager : MonoBehaviour
     #region Properties
     public string[] Attributes { get; set; }
     public string[] Facs { get; set; }
+    public string[] Facs_values { get; set; }
     /// <summary>
     /// The number of frames to wait in between each shown gene expression when flashing genes.
     /// </summary>
@@ -812,6 +813,12 @@ public class CellManager : MonoBehaviour
         }
         cells[cellName].AddFacs(facs, index);
     }
+
+    internal void AddFacsValue(string cellName, string facs, string value)
+    {
+        cells[cellName].AddFacsValue(facs, value);
+    }
+
 
     /// <summary>
     /// Color all graphpoints according to a column in the index.facs file.
