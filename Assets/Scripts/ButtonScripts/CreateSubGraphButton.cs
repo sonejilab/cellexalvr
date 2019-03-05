@@ -1,5 +1,6 @@
 ﻿public class CreateSubGraphButton : CellexalButton
 {
+
     private CombinedGraphGenerator combinedGraphGenerator;
     private GameManager gameManager;
 

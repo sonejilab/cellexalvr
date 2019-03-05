@@ -6,6 +6,7 @@
 public class ColorByIndexButton : CellexalButton
 {
     public TextMesh descriptionOnButton;
+    public ColorByIndexMenu parentMenu;
 
     private CellManager cellManager;
     private string indexName;
