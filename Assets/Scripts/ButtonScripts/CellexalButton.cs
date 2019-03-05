@@ -43,6 +43,7 @@ public abstract class CellexalButton : MonoBehaviour
     protected MeshRenderer meshRenderer;
     [HideInInspector]
     public bool buttonActivated = true;
+    public bool storedState;
     public bool controllerInside = false;
     private Transform raycastingSource;
     private int layerMaskNetwork;
@@ -167,6 +168,11 @@ public abstract class CellexalButton : MonoBehaviour
         }
         buttonActivated = activate;
         controllerInside = false;
+    }
+
+    public void StoreState()
+    {
+        storedState = buttonActivated;
     }
 
     protected void OnTriggerEnter(Collider other)
