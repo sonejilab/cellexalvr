@@ -19,6 +19,7 @@ public class LaserPointerController : MonoBehaviour
 
     public ReferenceManager referenceManager;
     public GameObject panel;
+    public bool Override { get; set; }
     // Use this for initialization
     void Start()
     {
@@ -76,7 +77,7 @@ public class LaserPointerController : MonoBehaviour
                 panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
             }
         }
-        if (!alwaysActive)
+        if (!alwaysActive && !Override)
         {
             // When to switch back to previous model. 
             if (!hit.collider)

@@ -75,6 +75,7 @@ public class ColorPickerButton : MonoBehaviour
 
     private void Awake()
     {
+        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         image = gameObject.GetComponent<UnityEngine.UI.Image>();
         if (gradient != null)
         {
