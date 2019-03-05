@@ -67,7 +67,10 @@ public class ColorPickerButton : MonoBehaviour
 
     private void OnValidate()
     {
-        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        if (gameObject.activeInHierarchy)
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
     }
 
     private void Awake()

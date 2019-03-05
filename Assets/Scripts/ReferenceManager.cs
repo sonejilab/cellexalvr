@@ -28,6 +28,7 @@ public class ReferenceManager : MonoBehaviour
     public BoxCollider controllerMenuCollider;
     public LaserPointerController rightLaser;
     public VRTK_StraightPointerRenderer leftLaser;
+    public LaserPointerController laserPointerController;
 
     #endregion
 

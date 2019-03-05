@@ -21,7 +21,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public Material selectionToolHandlerMaterial;
     public Material leftControllerMaterial;
 
-    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool, WebBrowser  };
+    public enum Model { Normal, SelectionTool, Menu, Minimizer, Magnifier, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool, WebBrowser };
     // what model we actually want
     public Model DesiredModel { get; set; }
     // what model is actually displayed, useful for when we want to change the model temporarily
@@ -129,7 +129,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// </summary>
     public void SwitchToModel(Model model)
     {
-        //print ("switching to " + model);
+        print("switching to " + model);
         ActualModel = model;
         switch (model)
         {
@@ -160,6 +160,7 @@ public class ControllerModelSwitcher : MonoBehaviour
                 break;
 
             case Model.Menu:
+                //print("switched to menu");
                 drawTool.SetActive(false);
                 rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                 rightControllerBodyMeshFilter.mesh = normalControllerMesh;
@@ -327,7 +328,7 @@ public class ControllerModelSwitcher : MonoBehaviour
     public void SwitchSelectionToolMesh(bool dir)
     {
         if (ActualModel == Model.SelectionTool)
-        { 
+        {
             if (dir)
                 selectionToolMeshIndex++;
             else
