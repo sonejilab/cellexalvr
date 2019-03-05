@@ -26,8 +26,10 @@ public class CombinedGraph : MonoBehaviour
     public GraphManager graphManager;
     public TextMeshPro graphNameText;
     public TextMeshPro graphInfoText;
+    public TextMeshPro graphNrText;
     public bool GraphActive = true;
     public Dictionary<string, CombinedGraphPoint> points = new Dictionary<string, CombinedGraphPoint>();
+    public Dictionary<string, CombinedGraphPoint> subSelectionPoints = new Dictionary<string, CombinedGraphPoint>();
     public List<Vector3> pointsPositions;
     public ReferenceManager referenceManager;
     public List<GameObject> combinedGraphPointClusters = new List<GameObject>();
@@ -47,9 +49,9 @@ public class CombinedGraph : MonoBehaviour
         set
         {
             graphName = value;
-            graphNameText.text = folderName + "_" + value;
-            this.name = folderName + "_" + graphName;
-            this.gameObject.name = folderName + "_" + graphName;
+            graphNameText.text = value;
+            this.name = graphName;
+            this.gameObject.name =  graphName;
         }
     }
     public string FolderName
@@ -61,6 +63,17 @@ public class CombinedGraph : MonoBehaviour
             //graphNameText.text = value;
         }
     }
+    public int GraphNumber
+    {
+        get { return graphNr;  }
+        set
+        {
+            graphNr = value;
+            graphNrText.text = value.ToString();
+        }
+    }
+
+    public List<string> axisNames;
 
     private ControllerModelSwitcher controllerModelSwitcher;
     private GameManager gameManager;
@@ -84,6 +97,7 @@ public class CombinedGraph : MonoBehaviour
     private Vector3 debugGizmosMax;
     private string graphName;
     private string folderName;
+    private int graphNr;
     private int nbrOfExpressionColors;
     /// <summary>
     /// The name of this graph. Should just be the filename that the graph came from.
@@ -111,6 +125,7 @@ public class CombinedGraph : MonoBehaviour
         selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
         startPosition = transform.position;
         nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+        axisNames = new List<string>();
     }
 
     private void Update()
