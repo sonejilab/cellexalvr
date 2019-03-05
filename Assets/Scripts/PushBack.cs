@@ -7,8 +7,8 @@ using VRTK;
 public class PushBack : MonoBehaviour
 {
     public SteamVR_TrackedObject rightController;
-    public float distanceMultiplier = 0.5f;
-    public float scaleMultiplier = 0.5f;
+    public float distanceMultiplier = 0.1f;
+    public float scaleMultiplier = 0.4f;
     public float maxScale;
     public float minScale;
     public ReferenceManager referenceManager;

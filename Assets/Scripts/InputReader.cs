@@ -37,6 +37,7 @@ public class InputReader : MonoBehaviour
     private AttributeSubMenu attributeSubMenu;
     private ToggleArcsSubMenu arcsSubMenu;
     private ColorByIndexMenu indexMenu;
+    private GraphFromMarkersMenu createFromMarkerMenu;
     private GameObject headset;
     private StatusDisplay status;
     private StatusDisplay statusDisplayHUD;
@@ -45,6 +46,7 @@ public class InputReader : MonoBehaviour
     private NetworkGenerator networkGenerator;
     private CombinedGraphGenerator combinedGraphGenerator;
     private string currentPath;
+    private int facsGraphCounter;
 
     private Bitmap image1;
 
@@ -67,6 +69,7 @@ public class InputReader : MonoBehaviour
         attributeSubMenu = referenceManager.attributeSubMenu;
         arcsSubMenu = referenceManager.arcsSubMenu;
         indexMenu = referenceManager.indexMenu;
+        createFromMarkerMenu = referenceManager.createFromMarkerMenu;
         headset = referenceManager.headset;
         status = referenceManager.statusDisplay;
         statusDisplayHUD = referenceManager.statusDisplayHUD;
@@ -74,22 +77,9 @@ public class InputReader : MonoBehaviour
         networkGenerator = referenceManager.networkGenerator;
         combinedGraphGenerator = referenceManager.combinedGraphGenerator;
         currentPath = "";
+        facsGraphCounter = 0;
 
-        if (debug)
-        {
-            //status.gameObject.SetActive(true);
-            //ReadFolder(@"CyTOF_150k");
-            ReadFolder(@"CyTOF_150k");
-        }
         CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
-        /*var sceneLoader = GameObject.Find ("Load").GetComponent<Loading> ();
-		if (sceneLoader.doLoad) {
-			doLoad = true;
-			GameObject.Find ("InputFolderList").gameObject.SetActive (false);
-			graphManager.LoadDirectory ();
-			Debug.Log ("Read Folder: " + graphManager.directory);
-			ReadFolder (@graphManager.directory);
-		}*/
     }
 
     /// <summary>
@@ -185,12 +175,20 @@ public class InputReader : MonoBehaviour
         CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
     }
 
+
+    public void ReadCoordinates(string path, string[] files)
+    {
+        facsGraphCounter++;
+        
+        StartCoroutine(ReadMDSFiles(path, files, false));
+    }
+
     /// <summary>
     /// Coroutine to create graphs.
     /// </summary>
     /// <param name="path"> The path to the folder where the files are. </param>
     /// <param name="mdsFiles"> The filenames. </param>
-    IEnumerator ReadMDSFiles(string path, string[] mdsFiles)
+    IEnumerator ReadMDSFiles(string path, string[] mdsFiles, bool mds=true)
     {
         //int statusId = status.AddStatus("Reading folder " + path);
         //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -220,18 +218,29 @@ public class InputReader : MonoBehaviour
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
             string graphFileName = regexResult[regexResult.Length - 1];
-
-            combGraph.DirectoryName = regexResult[regexResult.Length - 2];
-            //combGraph.GraphName = combGraph.DirectoryName + "\n" + graphFileName.Substring(0, graphFileName.Length - 4);
-            combGraph.FolderName = combGraph.DirectoryName;
-            combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+            //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
+            if (mds)
+            {
+                combGraph.FolderName = regexResult[regexResult.Length - 2];
+                combGraph.GraphName = combGraph.FolderName + "_" + graphFileName.Substring(0, graphFileName.Length - 4);
+            }
+            else
+            {
+                string name = "";
+                foreach (string s in referenceManager.newGraphFromMarkers.markers)
+                {
+                    name += s + " - ";
+                }
+                combGraph.GraphNumber = facsGraphCounter;
+                combGraph.GraphName = name;
+            }
             //combGraph.gameObject.name = combGraph.GraphName;
             //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
 
             //image1 = new Bitmap(400, 400);
             //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
             //int i, j;
-
+            string[] axes = new string[3];
             using (StreamReader mdsStreamReader = new StreamReader(file))
             {
                 //List<string> cellnames = new List<string>();
@@ -239,6 +248,9 @@ public class InputReader : MonoBehaviour
                 //List<float> ycoords = new List<float>();
                 //List<float> zcoords = new List<float>();
                 int i = 0;
+                // first line is a header
+                string header = mdsStreamReader.ReadLine();
+                axes = header.Split(null).Skip(1).ToArray();
                 while (!mdsStreamReader.EndOfStream)
                 {
                     itemsThisFrame = 0;
@@ -246,6 +258,8 @@ public class InputReader : MonoBehaviour
                     //  statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                     //  statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                     //print(maximumItemsPerFrame);
+
+
                     for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
                     {
                         string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -326,9 +340,17 @@ public class InputReader : MonoBehaviour
                 //     newGraph.CreateConvexHull();
 
             }
-            // more_cells
-            //image1.Save(Directory.GetCurrentDirectory() + "\\test" + fileIndex + ".png", ImageFormat.Png);
-            combinedGraphGenerator.SliceClustering();
+
+            // Add axes in bottom corner of graph and scale points differently
+            if (!mds)
+            {
+                combinedGraphGenerator.SliceClustering(2);
+                combinedGraphGenerator.AddAxes(axes);
+            }
+            else
+            {
+                combinedGraphGenerator.SliceClustering();
+            }
             graphManager.Graphs.Add(combGraph);
             if (debug)
             {
@@ -342,9 +364,12 @@ public class InputReader : MonoBehaviour
 
 
         //}
-
-        ReadAttributeFiles(path);
-        ReadBooleanExpressionFiles(path);
+        if (mds)
+        {
+            ReadAttributeFiles(path);
+            ReadBooleanExpressionFiles(path);
+            ReadFacsFiles(path, totalNbrOfCells);
+        }
 
         //loaderController.loaderMovedDown = true;
         if (!loaderController.loaderMovedDown)
@@ -360,7 +385,6 @@ public class InputReader : MonoBehaviour
         //status.UpdateStatus(statusId, "Reading index.facs file");
         //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
         //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
-        ReadFacsFiles(path, totalNbrOfCells);
         flashGenesMenu.CreateTabs(path);
         //status.RemoveStatus(statusId);
         //statusDisplayHUD.RemoveStatus(statusIdHUD);
@@ -425,7 +449,7 @@ public class InputReader : MonoBehaviour
             }
             metacellStreamReader.Close();
             metacellFileStream.Close();
-            attributeSubMenu.CreateAttributeButtons(actualAttributeTypes);
+            attributeSubMenu.CreateButtons(actualAttributeTypes);
             cellManager.Attributes = actualAttributeTypes;
         }
         stopwatch.Stop();
@@ -630,11 +654,14 @@ public class InputReader : MonoBehaviour
                 float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.Config.GraphNumberOfExpressionColors - 1);
                 int colorIndex = Mathf.FloorToInt(colorIndexFloat);
                 cellManager.AddFacs(cellName, header[j], colorIndex);
+                cellManager.AddFacsValue(cellName, header[j], values[j + 1]);
+                //print(values[j + 1]);
             }
         }
         streamReader.Close();
         fileStream.Close();
         indexMenu.CreateButtons(header);
+        createFromMarkerMenu.CreateButtons(header);
         cellManager.Facs = header;
         CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullpath));
 
@@ -922,39 +949,6 @@ public class InputReader : MonoBehaviour
         nwkFileStream.Close();
         CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
         networkHandler.CreateNetworkAnimation(graph.transform);
-    }
-
-
-    /// <summary>
-    /// Determines the maximum and the minimum values of the dataset.
-    /// Will be used for the scaling part onto the graphArea.
-    ///</summary>
-    void UpdateMinMax(Graph graph, List<float> xcoords, List<float> ycoords, List<float> zcoords)
-    {
-        Vector3 maxCoordValues = new Vector3();
-        maxCoordValues.x = maxCoordValues.y = maxCoordValues.z = float.MinValue;
-        Vector3 minCoordValues = new Vector3();
-        minCoordValues.x = minCoordValues.y = minCoordValues.z = float.MaxValue;
-        for (int i = 0; i < xcoords.Count; ++i)
-        {
-            // the coordinates are split with whitespace characters
-            if (xcoords[i] < minCoordValues.x)
-                minCoordValues.x = xcoords[i];
-            if (xcoords[i] > maxCoordValues.x)
-                maxCoordValues.x = xcoords[i];
-
-            if (ycoords[i] < minCoordValues.y)
-                minCoordValues.y = ycoords[i];
-            if (ycoords[i] > maxCoordValues.y)
-                maxCoordValues.y = ycoords[i];
-
-            if (zcoords[i] < minCoordValues.z)
-                minCoordValues.z = zcoords[i];
-            if (zcoords[i] > maxCoordValues.z)
-                maxCoordValues.z = zcoords[i];
-
-        }
-        graph.SetMinMaxCoords(minCoordValues, maxCoordValues);
     }
 
     /// <summary>
