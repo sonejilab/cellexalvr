@@ -1073,8 +1073,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rightController: {fileID: 0}
-  distanceMultiplier: 0.4
-  scaleMultiplier: 3
+  distanceMultiplier: 0.1
+  scaleMultiplier: 0.4
   maxScale: 85
   minScale: 0.95
   referenceManager: {fileID: 0}
