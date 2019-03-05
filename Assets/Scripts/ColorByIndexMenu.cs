@@ -3,10 +3,10 @@
 /// <summary>
 /// Represents the sub menu that pops up when the <see cref="ColorByIndexButton"/> is pressed.
 /// </summary>
-public class ColorByIndexMenu : DynamicButtonMenu
+public class ColorByIndexMenu : MenuWithTabs
 {
     protected Color[] colors = new Color[0];
-    protected override Color[] Colors
+    protected Color[] Colors
     {
         get
         {
@@ -27,6 +27,7 @@ public class ColorByIndexMenu : DynamicButtonMenu
             var b = buttons[i].GetComponent<ColorByIndexButton>();
             b.referenceManager = referenceManager;
             b.SetIndex(names[i]);
+            b.parentMenu = this;
         }
     }
 }
