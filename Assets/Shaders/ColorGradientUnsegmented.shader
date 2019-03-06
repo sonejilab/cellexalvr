@@ -24,13 +24,13 @@ Shader "Custom/ColorGradientUnsegmented" {
 
 				struct Input {
 					float4 vertex : POSITION;
-					float4 color : COLOR;
+					float2 uv : TEXCOORD0;
 				};
 
 				struct v2f 
 				{
 					float4 pos : POSITION;
-					float4 color : COLOR;
+					float2 uv : TEXCOORD0;
 				};
 
 				fixed4 _Color1;
@@ -40,7 +40,7 @@ Shader "Custom/ColorGradientUnsegmented" {
 				{
 					v2f OUT;
 					OUT.pos = UnityObjectToClipPos(IN.vertex);
-					OUT.color =  lerp(_Color1, _Color2, (IN.vertex.z + 1) / 2);
+					OUT.uv = IN.uv;
 					return OUT;
 				}
 
@@ -48,7 +48,8 @@ Shader "Custom/ColorGradientUnsegmented" {
 				{
 					// float4 finalColor = lerp(_Color1, _Color2, (IN.originalPos.z + 1) / 2);
 					// float4 finalColor = float4(GammaToLinearSpace(lerp(_Color1, _Color2, (IN.originalPos.z + 1) / 2)), 1);
-					return IN.color;
+					fixed4 color =  lerp(_Color1, _Color2, IN.uv.y);
+					return color;
 				}
 			ENDCG
 		}
