@@ -1,7 +1,10 @@
 Shader "Custom/ColorGradientUnsegmented" {
 	Properties {
-		_Color1 ("Color 1", Color) = (1,1,1,1)
-		_Color2 ("Color 2", Color) = (1,1,1,1)
+		_Color1 ("Color 1", Color) = (0,0,1,1)
+		_Color2 ("Color 2", Color) = (1,1,0,1)
+		_Color3 ("Color 3", Color) = (1,0,0,1)
+		_MinVal("Minimum Value", Range(0, 1)) = 0
+		_MaxVal("Maximum Value", Range(0, 1)) = 1
 	}
 
 	SubShader {
@@ -35,6 +38,9 @@ Shader "Custom/ColorGradientUnsegmented" {
 
 				fixed4 _Color1;
 				fixed4 _Color2;
+				fixed4 _Color3;
+				float _MinVal;
+				float _MaxVal;
 
 				v2f vert(Input IN)
 				{
@@ -46,9 +52,18 @@ Shader "Custom/ColorGradientUnsegmented" {
 
 				fixed4 frag(v2f IN) : SV_TARGET
 				{
-					// float4 finalColor = lerp(_Color1, _Color2, (IN.originalPos.z + 1) / 2);
-					// float4 finalColor = float4(GammaToLinearSpace(lerp(_Color1, _Color2, (IN.originalPos.z + 1) / 2)), 1);
-					fixed4 color =  lerp(_Color1, _Color2, IN.uv.y);
+					float value = (IN.uv.y) * (_MaxVal - _MinVal) + _MinVal;
+					fixed4 color;
+					if (value < 0.5)
+					{
+						// value is in the range (0, 0.5)
+						color = lerp(_Color1, _Color2, value * 2);
+					}
+					else
+					{
+						// value is in the range (0.5, 1)
+						color = lerp(_Color2, _Color3, value * 2 - 1);
+					}
 					return color;
 				}
 			ENDCG
