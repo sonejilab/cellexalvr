@@ -165,6 +165,7 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         Vector3 position = newGraph.ScaleCoordinates(newGraph.minCoordValues);
         GameObject axes = Instantiate(AxesPrefab, newGraph.transform);
+        axes.GetComponent<AxesArrow>().SetColors(axisNames, newGraph.minCoordValues, newGraph.maxCoordValues);
         axes.transform.localPosition = new Vector3(0, position.y, position.z);
         TextMeshPro[] texts = axes.GetComponentsInChildren<TextMeshPro>();
         for (int i = 0; i < texts.Length; i++)
