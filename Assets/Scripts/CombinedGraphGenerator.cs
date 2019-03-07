@@ -172,6 +172,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         Vector3 size = newGraph.GetComponent<BoxCollider>().size;
         float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
         axes.transform.localScale = Vector3.one * (longestAx * 0.6f);
+        axes.GetComponent<AxesArrow>().SetColors(axisNames, newGraph.minCoordValues, newGraph.maxCoordValues);
         TextMeshPro[] texts = axes.GetComponentsInChildren<TextMeshPro>();
         for (int i = 0; i < texts.Length; i++)
         {
