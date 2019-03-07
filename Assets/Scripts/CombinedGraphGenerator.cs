@@ -707,10 +707,22 @@ public class CombinedGraphGenerator : MonoBehaviour
     public void CreateSubGraphs(List<string> attributes)
     {
         BooleanExpression.Expr expr = new BooleanExpression.ValueExpr(attributes[0]);
-        string name = attributes[0].Split('@')[1];
+
+        string name = attributes[0];
+        if (name.Contains('@'))
+        {
+            name = name.Split('@')[1];
+        }
         for (int i = 1; i < attributes.Count; i++)
         {
-            name += " - " + attributes[i].Split('@')[1];
+            if (attributes[i].Contains('@'))
+            {
+                name += " - " + attributes[i].Split('@')[1];
+            }
+            else
+            {
+                name += " - " + attributes[i];
+            }
             BooleanExpression.Expr tempExpr = expr;
             expr = new BooleanExpression.OrExpr(tempExpr,
                                                 new BooleanExpression.ValueExpr(attributes[i]));
