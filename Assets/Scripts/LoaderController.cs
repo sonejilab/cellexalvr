@@ -260,6 +260,7 @@ public class LoaderController : MonoBehaviour
             graphManager.DeleteGraphsAndNetworks();
             referenceManager.heatmapGenerator.DeleteHeatmaps();
             referenceManager.previousSearchesList.ClearList();
+            referenceManager.drawTool.ClearAllLines();
             CellexalEvents.GraphsUnloaded.Invoke();
         }
         // must reset loader before generating new folders

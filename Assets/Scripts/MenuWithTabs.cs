@@ -8,6 +8,7 @@ public class MenuWithTabs : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public Tab tabPrefab;
+    //public Dictionary<CellexalButton, bool> savedButtonStates = new Dictionary<CellexalButton, bool>();
 
     protected MenuToggler menuToggler;
     protected List<Tab> tabs = new List<Tab>();

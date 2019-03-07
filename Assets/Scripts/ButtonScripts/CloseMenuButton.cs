@@ -51,6 +51,7 @@ public class CloseMenuButton : CellexalButton
         {
             menuToClose.SetActive(false);
         }
+
         else
         {
             foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
@@ -59,10 +60,11 @@ public class CloseMenuButton : CellexalButton
                 c.enabled = false;
         }
         //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+        //MenuWithTabs subMenu = menuToClose.GetComponent<MenuWithTabs>();
         textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
         foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
         {
-            b.SetButtonActivated(true);
+            b.SetButtonActivated(b.storedState);
         }
         CellexalEvents.MenuClosed.Invoke();
     }

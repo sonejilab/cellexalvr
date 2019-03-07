@@ -11,10 +11,13 @@ public class NewGraphFromMarkers : MonoBehaviour
     public List<string> markers;
 
     private string filePath;
+    private bool useSelection;
 
     private void Start()
     {
         markers = new List<string>();
+        CellexalEvents.SelectionConfirmed.AddListener(SwitchMode);
+        CellexalEvents.GraphsReset.AddListener(SwitchMode);
     }
 
     private void Update()
@@ -22,10 +25,23 @@ public class NewGraphFromMarkers : MonoBehaviour
         
     }
 
-    [ConsoleCommand("newGraphFromMarkers", "newGraphFromMarkers", "ngfm")]
-    public void CreateMarkerGraph()
+    private void SwitchMode()
     {
-        DumpSelectionToTextFile(referenceManager.selectionToolHandler.GetLastSelection(), markers[0], markers[1], markers[2]);
+        useSelection = !useSelection;
+    }
+
+    [ConsoleCommand("newGraphFromMarkers", "newGraphFromMarkers", "ngfm")]
+    public void CreateMarkerGraph(bool selection=false)
+    {
+        if (referenceManager.selectionToolHandler.GetLastSelection().Count > 0)
+        {
+            DumpSelectionToTextFile(referenceManager.selectionToolHandler.GetLastSelection(), markers[0], markers[1], markers[2]);
+        }
+        else
+        {
+            List<CombinedGraph.CombinedGraphPoint> cellList = new List<CombinedGraph.CombinedGraphPoint>(referenceManager.graphManager.Graphs[0].points.Values);
+            DumpSelectionToTextFile(cellList, markers[0], markers[1], markers[2]);
+        }
         string[] files = new string[1];
         files[0] = filePath;
         referenceManager.inputReader.ReadCoordinates(CellexalUser.UserSpecificFolder, files);
@@ -37,10 +53,10 @@ public class NewGraphFromMarkers : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Dumping the selection with ids and facs values on the same format as the mds files so it can be read in by the inputreader.
     /// </summary>
-    /// <param name="selection"></param>
-    public void DumpSelectionToTextFile(List<CombinedGraph.CombinedGraphPoint> selection, string first_marker,
+    /// <param name="points">The points to save to the file. Either a selection or all the points in the graph.</param>
+    public void DumpSelectionToTextFile(List<CombinedGraph.CombinedGraphPoint> points, string first_marker,
                                         string second_marker, string third_marker)
     {
         // print(new System.Diagnostics.StackTrace());
@@ -49,12 +65,12 @@ public class NewGraphFromMarkers : MonoBehaviour
         using (StreamWriter file = new StreamWriter(filePath))
         {
             CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-            CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
+            CellexalLog.Log("\tSelection consists of  " + points.Count + " points");
             string header = "\t" + first_marker + "\t" + second_marker + "\t" + third_marker;
             file.WriteLine(header);
-            for (int i = 0; i < selection.Count; i++)
+            for (int i = 0; i < points.Count; i++)
             {
-                string label = selection[i].Label;
+                string label = points[i].Label;
                 Cell cell = referenceManager.cellManager.GetCell(label);
                 // Add returns true if it was actually added,
                 // false if it was already there

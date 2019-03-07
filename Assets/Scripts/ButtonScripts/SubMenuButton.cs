@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 /// <summary>
 /// Represents a button that opens a pop up menu.
 /// </summary>
@@ -8,7 +9,9 @@ public class SubMenuButton : CellexalButton
     public GameObject buttonsToDeactivate;
     public GameObject menu;
     public TextMesh textMeshToDarken;
+
     private Tab activeTab;
+    //private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
 
     protected override string Description
     {
@@ -23,6 +26,14 @@ public class SubMenuButton : CellexalButton
         SetMenuActivated(false);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        //if (gameObject.name.Equals("Graph From Markers Button"))
+        //{
+        //    TurnOff();
+        //    CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
+        //}
+        //else
+        //{
+        //}
     }
 
     public override void Click()
@@ -32,10 +43,10 @@ public class SubMenuButton : CellexalButton
 
     public void OpenMenu()
     {
-        foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
-        {
-            DeactivateButtonsRecursive(buttonsToDeactivate);
-        }
+        DeactivateButtonsRecursive(buttonsToDeactivate);
+        //foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
+        //{
+        //}
         //textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
         textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
         SetMenuActivated(true);
@@ -53,7 +64,16 @@ public class SubMenuButton : CellexalButton
             // skip all nested menues
             if (t.GetComponent<DynamicButtonMenu>() || t.GetComponent<NewFilterMenu>()) continue;
             // if this is a button, deactivate it
-            t.GetComponent<CellexalButton>()?.SetButtonActivated(false);
+            CellexalButton b = t.GetComponent<CellexalButton>();
+            if (b != null)
+            {
+                //    if (menu.GetComponent<MenuWithTabs>())
+                //    {
+                //        menu.GetComponent<MenuWithTabs>().savedButtonStates[b] = b.buttonActivated;
+                //    }
+                b.StoreState();
+                b.SetButtonActivated(false);
+            }
             // recursive call to include all children of children
             DeactivateButtonsRecursive(t.gameObject);
         }

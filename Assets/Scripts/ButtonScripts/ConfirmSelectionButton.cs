@@ -39,6 +39,7 @@ public class ConfirmSelectionButton : CellexalButton
     private void TurnOn()
     {
         SetButtonActivated(true);
+        StoreState();
     }
 
     private void TurnOff()

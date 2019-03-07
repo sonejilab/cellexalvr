@@ -787,6 +787,10 @@ namespace SQLiter
                     i++;
                     _result.Add(new CellExpressionPair(_reader.GetString(0), expr, -1));
                 }
+                if (HighestExpression == LowestExpression)
+                {
+                    HighestExpression += 1;
+                }
                 float binSize = (HighestExpression - LowestExpression) / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 if (DebugMode)
                 {
@@ -818,6 +822,10 @@ namespace SQLiter
                     }
                 }
 
+                if (HighestExpression == LowestExpression)
+                {
+                    HighestExpression += 1;
+                }
                 // sort the list based on gene expressions
                 result.Sort();
 

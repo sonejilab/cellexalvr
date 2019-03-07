@@ -180,7 +180,7 @@ public class InputReader : MonoBehaviour
     {
         facsGraphCounter++;
         
-        StartCoroutine(ReadMDSFiles(path, files, false));
+        StartCoroutine(ReadMDSFiles(path, files, CombinedGraphGenerator.GraphType.FACS));
     }
 
     /// <summary>
@@ -188,7 +188,7 @@ public class InputReader : MonoBehaviour
     /// </summary>
     /// <param name="path"> The path to the folder where the files are. </param>
     /// <param name="mdsFiles"> The filenames. </param>
-    IEnumerator ReadMDSFiles(string path, string[] mdsFiles, bool mds=true)
+    IEnumerator ReadMDSFiles(string path, string[] mdsFiles, CombinedGraphGenerator.GraphType type = CombinedGraphGenerator.GraphType.MDS)
     {
         //int statusId = status.AddStatus("Reading folder " + path);
         //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -196,7 +196,8 @@ public class InputReader : MonoBehaviour
         int fileIndex = 0;
         var magnifier = referenceManager.magnifierTool;
         //  Read each .mds file
-        // The file format should be
+        //  The file format should be
+        //  id  x   y   z
         //  CELLNAME_1 X_COORD Y_COORD Z_COORD
         //  CELLNAME_2 X_COORD Y_COORD Z_COORD
         //  ...
@@ -211,18 +212,17 @@ public class InputReader : MonoBehaviour
             {
                 yield return null;
             }
-            //Graph newGraph = graphManager.CreateGraph();
-            CombinedGraph combGraph = combinedGraphGenerator.CreateCombinedGraph();
+            CombinedGraph combGraph = combinedGraphGenerator.CreateCombinedGraph(type);
             // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
             // file will be the full file name e.g C:\...\graph1.mds
             // good programming habits have left us with a nice mix of forward and backward slashes
             string[] regexResult = Regex.Split(file, @"[\\/]");
             string graphFileName = regexResult[regexResult.Length - 1];
             //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
-            if (mds)
+            if (type.Equals(CombinedGraphGenerator.GraphType.MDS))
             {
+                combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
                 combGraph.FolderName = regexResult[regexResult.Length - 2];
-                combGraph.GraphName = combGraph.FolderName + "_" + graphFileName.Substring(0, graphFileName.Length - 4);
             }
             else
             {
@@ -342,15 +342,8 @@ public class InputReader : MonoBehaviour
             }
 
             // Add axes in bottom corner of graph and scale points differently
-            if (!mds)
-            {
-                combinedGraphGenerator.SliceClustering(2);
-                combinedGraphGenerator.AddAxes(axes);
-            }
-            else
-            {
-                combinedGraphGenerator.SliceClustering();
-            }
+            combinedGraphGenerator.SliceClustering();
+            combinedGraphGenerator.AddAxes(axes);
             graphManager.Graphs.Add(combGraph);
             if (debug)
             {
@@ -364,7 +357,7 @@ public class InputReader : MonoBehaviour
 
 
         //}
-        if (mds)
+        if (type.Equals(CombinedGraphGenerator.GraphType.MDS))
         {
             ReadAttributeFiles(path);
             ReadBooleanExpressionFiles(path);

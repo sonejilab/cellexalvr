@@ -25,7 +25,9 @@ public class CombinedGraphGenerator : MonoBehaviour
     public string DirectoryName { get; set; }
     public bool isCreating;
     public bool addingToExisting;
+    public enum GraphType { MDS, FACS, ATTRIBUTE };
 
+    private GraphType graphType;
     private CombinedGraph newGraph;
     private GraphManager graphManager;
     private int nbrOfClusters;
@@ -60,8 +62,9 @@ public class CombinedGraphGenerator : MonoBehaviour
         // }
     }
 
-    public CombinedGraph CreateCombinedGraph()
+    public CombinedGraph CreateCombinedGraph(GraphType type)
     {
+        graphType = type;
         newGraph = Instantiate(combinedGraphPrefab).GetComponent<CombinedGraph>();
         //graphManager.SetGraphStartPosition();
         newGraph.transform.position = startPositions[graphCount % 6];
@@ -165,35 +168,61 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         Vector3 position = newGraph.ScaleCoordinates(newGraph.minCoordValues);
         GameObject axes = Instantiate(AxesPrefab, newGraph.transform);
-        axes.transform.localPosition = new Vector3(0, position.y, position.z);
+        axes.transform.localPosition = position - (Vector3.one * 0.1f);
+        Vector3 size = newGraph.GetComponent<BoxCollider>().size;
+        float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
+        axes.transform.localScale = Vector3.one * (longestAx * 0.6f);
         TextMeshPro[] texts = axes.GetComponentsInChildren<TextMeshPro>();
         for (int i = 0; i < texts.Length; i++)
         {
             texts[i].text = axisNames[i];
+        }
+        if (graphType == GraphType.MDS)
+        {
+            axes.SetActive(false);
         }
     }
 
     /// <summary>
     /// Divides the graph into clusters. The graph starts out as one large cluster and is recursively divided into smaller and smaller clusters until all clusters can be rendered in Unity using a single mesh.
     /// </summary>
-    public void SliceClustering(int scale = 1)
+    public void SliceClustering(Dictionary<string, CombinedGraph.CombinedGraphPoint> points = null)
     {
-        ScaleAllCoordinates(scale);
+        ScaleAllCoordinates();
 
         // meshes in unity can have a max of 65534 vertices
         int maxVerticesPerMesh = 65534;
         nbrOfMaxPointsPerClusters = maxVerticesPerMesh / graphPointMesh.vertexCount;
         // place all points in one big cluster
         var firstCluster = new HashSet<CombinedGraph.CombinedGraphPoint>();
-        foreach (var point in newGraph.points.Values)
+        if (points == null)
         {
-            firstCluster.Add(point);
+            foreach (var point in newGraph.points.Values)
+            {
+                firstCluster.Add(point);
+            }
         }
-        firstCluster.IntersectWith(newGraph.points.Values);
+        else
+        {
+            print("slice with points " + points.Values.Count);
+            foreach (var point in points.Values)
+            {
+                firstCluster.Add(point);
+            }
+
+        }
+        //firstCluster.IntersectWith(newGraph.points.Values);
 
         List<HashSet<CombinedGraph.CombinedGraphPoint>> clusters = new List<HashSet<CombinedGraph.CombinedGraphPoint>>();
         clusters = SplitCluster(firstCluster);
         MakeMeshes(clusters);
+        //if (graphType == GraphType.ATTRIBUTE)
+        //{
+        //}
+        //else
+        //{
+        //    MakeMeshes(clusters);
+        //}
         //CreateColliders();
     }
 
@@ -366,12 +395,22 @@ public class CombinedGraphGenerator : MonoBehaviour
     /// <summary>
     /// Scales the coordinates of all graphpoints to fit inside a 1x1x1 meter cube. Should be called before <see cref="MakeMeshes(List{HashSet{CombinedGraphPoint}})"/>.
     /// </summary>
-    private void ScaleAllCoordinates(int scale = 1)
+    private void ScaleAllCoordinates()
     {
         newGraph.maxCoordValues += graphPointMesh.bounds.size;
         newGraph.minCoordValues -= graphPointMesh.bounds.size;
         newGraph.diffCoordValues = newGraph.maxCoordValues - newGraph.minCoordValues;
-        newGraph.longestAxis = Mathf.Max(newGraph.diffCoordValues.x, newGraph.diffCoordValues.y, newGraph.diffCoordValues.z) * scale;
+        switch (graphType)
+        {
+            case GraphType.MDS:
+            case GraphType.ATTRIBUTE:
+                newGraph.longestAxis = Mathf.Max(newGraph.diffCoordValues.x, newGraph.diffCoordValues.y, newGraph.diffCoordValues.z);
+                break;
+            case GraphType.FACS:
+                newGraph.longestAxis = Mathf.Max(newGraph.diffCoordValues.x, newGraph.diffCoordValues.y, newGraph.diffCoordValues.z) * 2;
+                break;
+
+        }
         // making the largest axis longer by the length of two graphpoint meshes makes no part of the graphpoints peek out of the 1x1x1 meter bounding cube when positioned close to the borders
         //var graphPointMeshBounds = graphPointMesh.bounds;
         //float longestAxisGraphPointMesh = Mathf.Max(graphPointMeshBounds.size.x, graphPointMeshBounds.size.y, graphPointMeshBounds.size.z);
@@ -461,7 +500,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         int maximumItemsPerFrame = CellexalConfig.Config.GraphClustersPerFrameStartCount;
         int maximumItemsPerFrameInc = CellexalConfig.Config.GraphClustersPerFrameIncrement;
         float maximumDeltaTime = 0.05f;
-
+        
         for (int i = 0; i < nbrOfClusters; ++i)
         {
             var newPart = Instantiate(combinedGraphpointsPrefab, newGraph.transform);
@@ -668,31 +707,19 @@ public class CombinedGraphGenerator : MonoBehaviour
     public void CreateSubGraphs(List<string> attributes)
     {
         BooleanExpression.Expr expr = new BooleanExpression.ValueExpr(attributes[0]);
-        string name = attributes[0];
+        string name = attributes[0].Split('@')[1];
         for (int i = 1; i < attributes.Count; i++)
         {
-            name += " - " + attributes[i];
+            name += " - " + attributes[i].Split('@')[1];
             BooleanExpression.Expr tempExpr = expr;
             expr = new BooleanExpression.OrExpr(tempExpr,
                                                 new BooleanExpression.ValueExpr(attributes[i]));
         }
-        subGraph = CreateCombinedGraph();
+        subGraph = CreateCombinedGraph(GraphType.ATTRIBUTE);
         subGraph.GraphName = name;
         StartCoroutine(CreateSubGraphsCoroutine(expr));
         //CreateSubGraphs(expr, attributes);
     }
-
-    //public void CreateSubGraphs(BooleanExpression.Expr expr, List<string> attributes)
-    //{
-    //    subGraph = CreateCombinedGraph();
-    //    string name = "";
-    //    foreach (string s in attributes)
-    //    {
-    //        name += s + " - ";
-    //    }
-    //    subGraph.GraphName = name; 
-    //    StartCoroutine(CreateSubGraphsCoroutine(expr));
-    //}
 
 
     private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr)
@@ -724,6 +751,7 @@ public class CombinedGraphGenerator : MonoBehaviour
         {
             referenceManager.cellManager.ColorByAttribute(attrbibute, true);
         }
+        graphManager.Graphs.Add(subGraph);
     }
 
     [ConsoleCommand("combinedGraphGenerator", "asg")]
@@ -740,9 +768,8 @@ public class CombinedGraphGenerator : MonoBehaviour
     private IEnumerator AddToSubGraphCoroutine(string expr)
     {
         isCreating = true;
-        print("In add to graph");
         List<Cell> subset = referenceManager.cellManager.SubSet(new BooleanExpression.ValueExpr(expr));
-        print(subset.Count);
+        print("subset size " + subset.Count);
         //foreach (CombinedGraph graph in graphManager.Graphs)
         //{
         CombinedGraph graph = graphManager.Graphs[0];
@@ -753,9 +780,10 @@ public class CombinedGraphGenerator : MonoBehaviour
         {
             var point = graph.FindGraphPoint(cell.Label).Position;
             AddGraphPoint(cell, point.x, point.y, point.z);
-            //newPoints[cell.Label] = new CombinedGraph.CombinedGraphPoint(cell.Label, point.x, point.y, point.z, subGraph);
+            newPoints[cell.Label] = new CombinedGraph.CombinedGraphPoint(cell.Label, point.x, point.y, point.z, subGraph);
         }
-        SliceClustering();
+        print("new points size " + newPoints.Count);
+        SliceClustering(newPoints);
         while (isCreating)
         {
             yield return null;

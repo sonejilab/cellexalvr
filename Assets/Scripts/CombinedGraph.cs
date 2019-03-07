@@ -20,7 +20,7 @@ public class CombinedGraph : MonoBehaviour
     public GameObject skeletonPrefab;
     public GameObject emptySkeletonPrefab;
     public GameObject movingOutlineCircle;
-    public string DirectoryName { get; set; }
+    //public string DirectoryName { get; set; }
     public List<GameObject> Lines { get; set; }
     [HideInInspector]
     public GraphManager graphManager;
@@ -51,7 +51,7 @@ public class CombinedGraph : MonoBehaviour
             graphName = value;
             graphNameText.text = value;
             this.name = graphName;
-            this.gameObject.name =  graphName;
+            this.gameObject.name = graphName;
         }
     }
     public string FolderName
@@ -60,12 +60,13 @@ public class CombinedGraph : MonoBehaviour
         set
         {
             folderName = value;
+            graphNameText.text = folderName + "_" + graphName;
             //graphNameText.text = value;
         }
     }
     public int GraphNumber
     {
-        get { return graphNr;  }
+        get { return graphNr; }
         set
         {
             graphNr = value;
@@ -639,7 +640,7 @@ public class CombinedGraph : MonoBehaviour
         // which way of the triangle is in and which is out, it's pretty much random what the result is.
         // The "solution" was to place a shader which does not cull the backside of the triangles, so 
         // both sides are always rendered.
-        string path = Directory.GetCurrentDirectory() + @"\Data\" + DirectoryName + @"\" + GraphName + ".hull";
+        string path = Directory.GetCurrentDirectory() + @"\Data\" + FolderName + @"\" + GraphName + ".hull";
         FileStream fileStream = new FileStream(path, FileMode.Open);
         StreamReader streamReader = new StreamReader(fileStream);
 
@@ -932,21 +933,24 @@ public class CombinedGraph : MonoBehaviour
 
         foreach (CellExpressionPair pair in expressions)
         {
-            Vector2Int pos = points[pair.Cell].textureCoord;
-            int expressionColorIndex = pair.Color;
-            if (pair.Color >= nbrOfExpressionColors)
+            // If this is a subgraph it does not contain all cells...
+            if (points.ContainsKey(pair.Cell))
             {
-                expressionColorIndex = nbrOfExpressionColors - 1;
+                Vector2Int pos = points[pair.Cell].textureCoord;
+                int expressionColorIndex = pair.Color;
+                if (pair.Color >= nbrOfExpressionColors)
+                {
+                    expressionColorIndex = nbrOfExpressionColors - 1;
+                }
+                if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color > 27)
+                {
+                    var circle = Instantiate(movingOutlineCircle);
+                    circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
+                    circle.transform.position = points[pair.Cell].WorldPosition;
+                    circle.transform.parent = transform;
+                }
+                texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
             }
-            if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color > 27)
-            {
-                var circle = Instantiate(movingOutlineCircle);
-                circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
-                circle.transform.position = points[pair.Cell].WorldPosition;
-                circle.transform.parent = transform;
-            }
-
-            texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
         }
 
         texture.Apply();

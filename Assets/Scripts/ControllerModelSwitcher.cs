@@ -129,7 +129,6 @@ public class ControllerModelSwitcher : MonoBehaviour
     /// </summary>
     public void SwitchToModel(Model model)
     {
-        print("switching to " + model);
         ActualModel = model;
         switch (model)
         {
