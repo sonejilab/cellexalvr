@@ -17385,6 +17385,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4bee24e135e59c3439ca9fccce32af3b, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: b30c3f8256a287a43afac4b6feea5f71, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: fa83fe1caafbac244bdc6fe2b223b5ee,
@@ -17441,6 +17442,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 21145c9cdb9854e4b90ffaf09fc8f69b, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Flash Genes Menu
   buttonsToDeactivate: {fileID: 1323486803358588}
@@ -17468,6 +17470,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212783678828292894}
   color: {r: 1, g: 0, b: 0, a: 1}
@@ -17493,6 +17496,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 212c926504249db4f95d32a4685d35da, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonsToActivate: {fileID: 1432252269728652}
   menuToClose: {fileID: 1640709649760356}
@@ -17521,6 +17525,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 35e83d16205150941ab65f69e3f47075, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   statsMethod: 
 --- !u!114 &114090263320692342
@@ -17545,6 +17550,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: aac3258cd96fa7e4382464bfb102d52a, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114090744481098160
 MonoBehaviour:
@@ -17568,6 +17574,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 6a19612412155ae409b3815503cd9850, type: 3}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   change: 1
 --- !u!114 &114096793799011546
@@ -17592,6 +17599,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 97fcecd5faee0de40830f6938c51707d, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   mode: 1
 --- !u!114 &114100572582054876
@@ -17616,6 +17624,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   filterRulePrefab: {fileID: 1265204336235914}
   ruleType: 1
@@ -17656,6 +17665,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   HUD: {fileID: 0}
   status: {fileID: 0}
@@ -17681,6 +17691,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   FarDisp: {fileID: 0}
   status: {fileID: 0}
@@ -17706,6 +17717,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: fb29d8ea1932ee44c8bc2362d1193a35, type: 3}
@@ -17734,6 +17746,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 03ef3400b94ba4c41be12bc64828a872, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114122246049388694
 MonoBehaviour:
@@ -17772,6 +17785,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   descriptionOnButton: {fileID: 102863579610058584}
   activeOutline: {fileID: 1920721293312574}
@@ -17798,8 +17812,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 0341c947e7c0a2445ae9ef4587e1c554, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1932669653785010}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1640709649760356}
   textMeshToUndarken: {fileID: 102333440239550814}
   deactivateMenu: 0
@@ -17825,6 +17840,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: bf1687c975bfc9a4695cecb138bdcde5, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Show menu for coloring by index
   buttonsToDeactivate: {fileID: 1323486803358588}
@@ -17852,6 +17868,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   textMesh: {fileID: 102416699870835266}
 --- !u!114 &114155300215558140
@@ -17876,6 +17893,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonDescription: {fileID: 102567698223724554}
 --- !u!114 &114165265445657358
@@ -17900,6 +17918,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   chosonOptionTextMesh: {fileID: 102511290693726032}
   type: 1
@@ -17925,6 +17944,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 43a612dd1bb83e448a7cf9cb9276d523, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Show menu for coloring by attribute
   buttonsToDeactivate: {fileID: 1323486803358588}
@@ -17952,6 +17972,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 1
   combinedNetworksButton: {fileID: 0}
@@ -17979,6 +18000,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212489011996148296}
   color: {r: 0.65517235, g: 0, b: 1, a: 1}
@@ -18004,6 +18026,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 5de3617568a6e39479a9ace3cc452f8e, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: 5de3617568a6e39479a9ace3cc452f8e, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: ad4fd255600c9764e9d298fdf65faacb,
@@ -18032,6 +18055,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d137a8cfda4e4dc478533764ea5f2756, type: 3}
@@ -18060,6 +18084,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 583b4535f1d18c14c9b5b31a9f8de6eb, type: 3}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   switchToMode: 2
   stop: {fileID: 114737311883918026}
@@ -18085,6 +18110,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Create a new filter
   buttonsToDeactivate: {fileID: 1863777342347622}
@@ -18112,8 +18138,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1162799493022370}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1196752946215734}
   textMeshToUndarken: {fileID: 102257924879063074}
   deactivateMenu: 0
@@ -18139,6 +18166,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: a7d3fae3686634e46884b316480ea4e7, type: 3}
@@ -18167,6 +18195,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: eeee555e05f7a234bbd4a4b223bd860e, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   camera: {fileID: 0}
   canvas: {fileID: 0}
@@ -18192,6 +18221,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7b09dd29b57723845ad48ed813584e6d, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114243344669379136
 MonoBehaviour:
@@ -18257,6 +18287,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212838336770414606}
   color: {r: 0.11724126, g: 1, b: 0, a: 1}
@@ -18282,6 +18313,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4ff0b9181fd409f4da181d0817abfa6a, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   gray: {fileID: 21300000, guid: 4ff0b9181fd409f4da181d0817abfa6a, type: 3}
   original: {fileID: 21300000, guid: d86608844a3c5f5489af0b60e1747e22, type: 3}
@@ -18322,6 +18354,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: b73581e635f69cf42ad546f5d29f23a8, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114278976576927790
 MonoBehaviour:
@@ -18386,6 +18419,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 5c5ebe946eab40b4b9038a4015a7025c, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: 
   buttonsToDeactivate: {fileID: 1047610745354992}
@@ -18413,6 +18447,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   descriptionOnButton: {fileID: 102138996956420518}
 --- !u!114 &114315317657012068
@@ -18437,6 +18472,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212238548036348912}
   color: {r: 1, g: 0, b: 0, a: 1}
@@ -18575,6 +18611,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 9a2d1be26fcf9c84ebd9b29e557f55fb, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Draw Tool
   buttonsToDeactivate: {fileID: 1162799493022370}
@@ -18602,6 +18639,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 1
   networks: []
@@ -18652,6 +18690,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: e0a458ae56f510345976ada2d941dd96, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Selection Tool
   buttonsToDeactivate: {fileID: 1162799493022370}
@@ -18679,6 +18718,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 1ee7d78aac6da2c48a47895a00c1c631, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 0}
@@ -18707,6 +18747,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: c4313c8110fda9d42850bc0f3d1d01cb, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Open menu for toggling arcs
   buttonsToDeactivate: {fileID: 1162799493022370}
@@ -18734,8 +18775,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1162799493022370}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1649558066926658}
   textMeshToUndarken: {fileID: 102257924879063074}
   deactivateMenu: 0
@@ -18761,6 +18803,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 4ce4cd9d50d8eda42902abde33d7dd30, type: 3}
@@ -18918,6 +18961,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: be85e503f7fc6b744a10f8c1294b341d, type: 3}
   popupChoice: 1
   buttonActivated: 0
+  storedState: 0
   controllerInside: 0
   switchToMode: 0
   random: {fileID: 0}
@@ -18960,6 +19004,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 2f34e4e3d03427443a16ecf26ab1e839, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: 7690f9e2cf7eeb543985bb4befafa855, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: a1e50d8c5633cd2458b8603473401252,
@@ -18988,8 +19033,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1323486803358588}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1171988040913754}
   textMeshToUndarken: {fileID: 102800395748740580}
   deactivateMenu: 0
@@ -19015,8 +19061,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1323486803358588}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1854142440672472}
   textMeshToUndarken: {fileID: 102800395748740580}
   deactivateMenu: 0
@@ -19042,6 +19089,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114406034807220576
 MonoBehaviour:
@@ -19065,8 +19113,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1932669653785010}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1466735352237352}
   textMeshToUndarken: {fileID: 102333440239550814}
   deactivateMenu: 0
@@ -19130,6 +19179,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 0
   networks: []
@@ -19156,6 +19206,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: cac31b5bfb63b534da93f38cc0a349ba, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Filter Menu
   buttonsToDeactivate: {fileID: 1911179800590158}
@@ -19183,6 +19234,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 0}
@@ -19224,6 +19276,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: cff52cafa94ae5a4d95e427294261a95, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114486224514559570
 MonoBehaviour:
@@ -19247,8 +19300,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1911179800590158}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1863777342347622}
   textMeshToUndarken: {fileID: 102800395748740580}
   deactivateMenu: 0
@@ -19301,6 +19355,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 0
 --- !u!114 &114519908402103690
@@ -19337,6 +19392,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7f03786d2d520164bb9d4f86e37c7de8, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: b474a1ac76f7f064e95cf14a9ed65cd6, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: 2437df42172ed0a4ba767c0c40387689,
@@ -19365,6 +19421,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212233594496071924}
   color: {r: 1, g: 1, b: 0, a: 1}
@@ -19390,6 +19447,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: f4d6c6af3e17a81489647f5ef1f47a2b, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: f63a098b06c46e9428f84e295e7495f2, type: 3}
 --- !u!114 &114540502375656440
@@ -19428,6 +19486,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: aac3258cd96fa7e4382464bfb102d52a, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114547675994977366
 MonoBehaviour:
@@ -19451,6 +19510,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: d7ebb1ca9507d7940a2ab11b3850bcca, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Go back to Load Scene
   buttonsToDeactivate: {fileID: 1932669653785010}
@@ -19478,6 +19538,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   chosonOptionTextMesh: {fileID: 102457816580108420}
   type: 1
@@ -19503,6 +19564,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   text: {fileID: 102531675161100112}
 --- !u!114 &114573901369627606
@@ -19527,6 +19589,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 2d67da67790a6994b8416f7603e08ea3, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114579066618688162
 MonoBehaviour:
@@ -19550,6 +19613,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 0
   combinedNetworksButton: {fileID: 0}
@@ -19577,6 +19641,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: f4860b5a95aa30343a5e3ae05e310f66, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114610869054952242
 MonoBehaviour:
@@ -19600,6 +19665,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: e2363ae35f3e694418534320a4dab3ec, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: d0907267a7e99324ab1e1f5811ffdd60, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: c9a78f4ccda166a4582f1bab4a4092f6,
@@ -19628,6 +19694,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: f4860b5a95aa30343a5e3ae05e310f66, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   arcsMenuButton: {fileID: 114353026918616888}
   toggleArcsMenu: {fileID: 114102003404875576}
@@ -19653,6 +19720,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212652629313141558}
   color: {r: 0, g: 0.2965517, b: 1, a: 1}
@@ -19678,6 +19746,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: {fileID: 102198662443055922}
   booleanNotIncludedColor: {r: 0, g: 0, b: 0, a: 0}
@@ -19707,6 +19776,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212577711110561228}
   color: {r: 1, g: 1, b: 0, a: 1}
@@ -19732,6 +19802,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   filterRulePrefab: {fileID: 1265204336235914}
   ruleType: 2
@@ -19771,8 +19842,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1047610745354992}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1991485666100884}
   textMeshToUndarken: {fileID: 102899369248857218}
   deactivateMenu: 0
@@ -19798,6 +19870,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 2cacc8359f353564fbeebc1ac9dd55d6, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114672600956854748
 MonoBehaviour:
@@ -19821,6 +19894,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: b436485621ff75a41860c26138239f23, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   closeMenuButton: {fileID: 114391954120755584}
   selectionToolButton: {fileID: 114338526941186376}
@@ -19846,6 +19920,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: fef34dd2ecaa5234ebcb82039cbcf517, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: fef34dd2ecaa5234ebcb82039cbcf517, type: 3}
 --- !u!114 &114693329853307646
@@ -19886,6 +19961,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 28f6d4006947ac3448597b55fa932c5b, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: dc5549c8c17a513499b547514cb276ba, type: 3}
 --- !u!114 &114699096758886552
@@ -19939,6 +20015,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: a287f3fa37e38094785f5ec47cf67233, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: bf56c66537dfd804394044bb34737069, type: 3}
 --- !u!114 &114708104601120182
@@ -19963,6 +20040,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 5b05a30f1c2ec9e4fa47b88fd67a5002, type: 3}
@@ -19991,6 +20069,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: {fileID: 102540775975730892}
 --- !u!114 &114715092637614252
@@ -20015,6 +20094,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: febaea948de296c458733ea74e010316, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114734835567100676
 MonoBehaviour:
@@ -20038,6 +20118,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212619415377992160}
   color: {r: 1, g: 1, b: 1, a: 1}
@@ -20063,6 +20144,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7b4ea4a12d66f6743a41bd9a28642333, type: 3}
   popupChoice: 0
   buttonActivated: 0
+  storedState: 0
   controllerInside: 0
   switchToMode: 0
   random: {fileID: 0}
@@ -20090,6 +20172,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212731007205314450}
   color: {r: 1, g: 1, b: 1, a: 1}
@@ -20115,6 +20198,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 426a876be15d16047b6f4ff794b6cdd0, type: 3}
@@ -20143,6 +20227,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 0f0d0a9b9b7217d4090374beaf4d252f, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114753983527241414
 MonoBehaviour:
@@ -20166,6 +20251,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212143078752676128}
   color: {r: 0, g: 0.2965517, b: 1, a: 1}
@@ -20218,6 +20304,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: a986d22798adea442adfcf3d25ed15df, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114762496696429608
 MonoBehaviour:
@@ -20241,6 +20328,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 5f1d0b6f080e22c43b751ebf73e392cd, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   sceneLoader: {fileID: 0}
 --- !u!114 &114772318929125352
@@ -20265,6 +20353,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: bf1687c975bfc9a4695cecb138bdcde5, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Show menu for markers
   buttonsToDeactivate: {fileID: 1162799493022370}
@@ -20304,6 +20393,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: db2cfeb9786c41e4db829a2d7284ef07, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: 01e0dcac3ef38a844a55988230239b74, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: 8d202cf6bc7453944bca3d3a020c5429,
@@ -20332,8 +20422,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1323486803358588}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1650467591502022}
   textMeshToUndarken: {fileID: 102800395748740580}
   deactivateMenu: 0
@@ -20359,6 +20450,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: d24034ec5295107429e82473009592d9, type: 3}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   change: -1
 --- !u!114 &114781922891576390
@@ -20383,6 +20475,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212913151579801028}
   color: {r: 0.11724126, g: 1, b: 0, a: 1}
@@ -20408,6 +20501,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: c2693749efece8a418086dc2a480d9d7, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114793099053963774
 MonoBehaviour:
@@ -20431,6 +20525,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114796776147372964
 MonoBehaviour:
@@ -20454,6 +20549,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 5137283b79c00834fa3bf99f2dff0150, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Show menu for markers
   buttonsToDeactivate: {fileID: 1047610745354992}
@@ -20481,6 +20577,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: ea389e92e283cf34fa9311364405e272, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114806658483367896
 MonoBehaviour:
@@ -20504,8 +20601,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1047610745354992}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1753007184747852}
   textMeshToUndarken: {fileID: 102856251136244244}
   deactivateMenu: 0
@@ -20531,6 +20629,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   descriptionOnButton: {fileID: 102918203548332186}
   parentMenu: {fileID: 0}
@@ -20556,6 +20655,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 0f5a2a10e20eb1146b733b63101144f2, type: 3}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   switchToMode: 3
   stop: {fileID: 114737311883918026}
@@ -20581,6 +20681,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 3acdddbc6826a4648a4eed5285292f67, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114839555795961300
 MonoBehaviour:
@@ -20604,6 +20705,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 212372830878805920}
   color: {r: 0.65517235, g: 0, b: 1, a: 1}
@@ -20643,6 +20745,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4c9adf45f92d4c04593326f0e07e6011, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114873032541457980
 MonoBehaviour:
@@ -20666,6 +20769,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4ad99e3833f5c1b4cbebb1ad105a4d93, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: c10c2416d651db84d94abc379e9ea7f5, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: e1790ed4df4e0444b81cf366d35167bc,
@@ -20694,6 +20798,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 07946674f3d09ba459ddee5421be1261, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114878776365165342
 MonoBehaviour:
@@ -20717,6 +20822,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: d7b21b488dda4254ba0d7e8a1f41eb62, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: 0426a62a895d4264a881e955093657be, type: 3}
 --- !u!114 &114889326156315940
@@ -20741,6 +20847,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 47c9e9a514c019a439da54d07733e202, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   mode: 0
 --- !u!114 &114894968863006620
@@ -20765,6 +20872,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   textMesh: {fileID: 102191005444992678}
 --- !u!114 &114909418545911910
@@ -20804,6 +20912,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: e4fb25623cf293e48adf6f55e0bb2ad7, type: 3}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   switchToMode: 1
   stop: {fileID: 114737311883918026}
@@ -20829,6 +20938,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 1c243ed4149c13947912828abb09545c, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: e6b4bb34c8aed1c4881bc6142be8dba3, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: 78f6bbf224c5167459ca600c6a7ce61e,
@@ -20857,6 +20967,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 38adf9a36e815994691c176135b4d1ae, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: Display Mode
   buttonsToDeactivate: {fileID: 1932669653785010}
@@ -20884,8 +20995,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1863777342347622}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1864960884377726}
   textMeshToUndarken: {fileID: 102135959613112650}
   deactivateMenu: 0
@@ -20911,6 +21023,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: b88cbb9a37c2723408328564a3520a97, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: 
   buttonsToDeactivate: {fileID: 1323486803358588}
@@ -20938,8 +21051,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1323486803358588}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1067355934265378}
   textMeshToUndarken: {fileID: 102800395748740580}
   deactivateMenu: 0
@@ -20980,6 +21094,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 45716d8cd1cf2424aba9a842a6df2c89, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114958914377497866
 MonoBehaviour:
@@ -21003,6 +21118,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 1
 --- !u!114 &114974587267745368
@@ -21027,6 +21143,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: ed6badfce545eba4ea13bed4e4ec18c3, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: ed6badfce545eba4ea13bed4e4ec18c3, type: 3}
 --- !u!114 &114974592803156642
@@ -21051,6 +21168,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300006, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!114 &114985982364822246
 MonoBehaviour:
@@ -21074,8 +21192,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1162799493022370}
+  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 1047610745354992}
   textMeshToUndarken: {fileID: 102257924879063074}
   deactivateMenu: 0
@@ -22935,7 +23054,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212320589967560110

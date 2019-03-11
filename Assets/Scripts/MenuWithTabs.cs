@@ -41,7 +41,10 @@ public class MenuWithTabs : MonoBehaviour
         foreach (var button in buttons)
         {
             // wait 0.1 seconds so we are out of the loop before we start destroying stuff
-            Destroy(button.gameObject, .1f);
+            if (button != null)
+            {
+                Destroy(button.gameObject, .1f);
+            }
         }
         buttons.Clear();
         //TurnOffAllTabs();

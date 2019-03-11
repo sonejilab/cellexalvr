@@ -485,59 +485,87 @@ public class Heatmap : MonoBehaviour
         result = database._result;
 
         CellexalLog.Log("Reading " + result.Count + " results from database");
-        Thread thread = new Thread(() =>
+        //Thread thread = new Thread(() =>
+        //{
+        System.Drawing.SolidBrush[] heatmapBrushes = heatmapGenerator.expressionColors;
+        float lowestExpression = 0;
+        float highestExpression = 0;
+        graphics.FillRectangle(Brushes.Black, heatmapX, heatmapY, heatmapWidth, heatmapHeight);
+        int genescount = 0;
+        //print(result.Count);
+        for (int i = 0; i < result.Count; ++i)
         {
-            System.Drawing.SolidBrush[] heatmapBrushes = heatmapGenerator.expressionColors;
-            float lowestExpression = 0;
-            float highestExpression = 0;
-            graphics.FillRectangle(heatmapBrushes[0], heatmapX, heatmapY, heatmapWidth, heatmapHeight);
-            int genescount = 0, cellcount = 0;
-            for (int i = 0; i < result.Count; ++i)
+            // the arraylist should contain the gene id and that gene's highest expression before all the expressions
+            Tuple<string, float> tuple = (Tuple<string, float>)result[i];
+            //if (geneIds.ContainsKey(tuple.Item1))
+            //{
+            // new gene
+            lowestExpression = tuple.Item2;
+            i++;
+            tuple = (Tuple<string, float>)result[i];
+            highestExpression = tuple.Item2;
+            ycoord = heatmapY + genePositions[geneIds[tuple.Item1]] * ycoordInc;
+            genescount++;
+            i++;
+            //}
+            //else
+            //{
+            List<Tuple<string, float>> expressions = new List<Tuple<string, float>>();
+            tuple = (Tuple<string, float>)result[i];
+            do
             {
-                // the arraylist should contain the gene id and that gene's highest expression before all the expressions
-                Tuple<string, float> tuple = (Tuple<string, float>)result[i];
-                if (geneIds.ContainsKey(tuple.Item1))
+                expressions.Add(tuple);
+                i++;
+                if (i >= result.Count)
+                    break;
+                tuple = (Tuple<string, float>)result[i];
+            }
+            while (!geneIds.ContainsKey(tuple.Item1));
+            i--;
+            expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => ((int)((t2.Item2 - t1.Item2) * 10000)));
+            float binsize = (float)expressions.Count / CellexalConfig.Config.NumberOfHeatmapColors;
+            for (int j = 0, k = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
+            {
+                int nextLimit = (int)(binsize * j);
+                for (; k < nextLimit; ++k)
                 {
-                    // new gene
-                    lowestExpression = tuple.Item2;
-                    i++;
-                    tuple = (Tuple<string, float>)result[i];
-                    highestExpression = tuple.Item2;
-                    ycoord = heatmapY + genePositions[geneIds[tuple.Item1]] * ycoordInc;
-                    genescount++;
-                }
-                else
-                {
-                    string cellName = tuple.Item1;
-                    float expression = tuple.Item2;
-                    xcoord = heatmapX + cellsPosition[cellName] * xcoordInc;
-
-                    if (expression == highestExpression)
-                    {
-                        graphics.FillRectangle(heatmapBrushes[heatmapBrushes.Length - 1], xcoord, ycoord, xcoordInc, ycoordInc);
-                    }
-                    else
-                    {
-                        graphics.FillRectangle(heatmapBrushes[(int)((expression - lowestExpression) / (highestExpression - lowestExpression) * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
-                    }
-                    cellcount++;
+                    expressions[k] = new Tuple<string, float>(expressions[k].Item1, j);
                 }
             }
-            ycoord = heatmapY;
-            // draw all the gene names
-            for (int i = 0; i < genes.Length; ++i)
+            //print(expressions.Count);
+            for (int j = 0; j < expressions.Count; ++j)
             {
-                string geneName = genes[i];
-                graphics.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
-                ycoord += ycoordInc;
+                string cellName = expressions[j].Item1;
+                float expression = expressions[j].Item2;
+                xcoord = heatmapX + cellsPosition[cellName] * xcoordInc;
+                graphics.FillRectangle(heatmapBrushes[(int)expression], xcoord, ycoord, xcoordInc, ycoordInc);
             }
-        });
 
-        thread.Start();
-        while (thread.IsAlive)
-        {
-            yield return null;
+            //if (expression == highestExpression)
+            //{
+            //    graphics.FillRectangle(heatmapBrushes[heatmapBrushes.Length - 1], xcoord, ycoord, xcoordInc, ycoordInc);
+            //}
+            //else
+            //{
+            //graphics.FillRectangle(heatmapBrushes[(int)((expression - lowestExpression) / (highestExpression - lowestExpression) * numberOfExpressionColors)], xcoord, ycoord, xcoordInc, ycoordInc);
+            //}
+            //}
         }
+        ycoord = heatmapY;
+        // draw all the gene names
+        for (int i = 0; i < genes.Length; ++i)
+        {
+            string geneName = genes[i];
+            graphics.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
+            ycoord += ycoordInc;
+        }
+        //});
+
+        //thread.Start();
+        //while (thread.IsAlive)
+        //{
+        //    yield return null;
+        //}
 
         //using (MemoryStream memoryStream = new MemoryStream())
         //{

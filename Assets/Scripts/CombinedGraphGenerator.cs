@@ -168,19 +168,27 @@ public class CombinedGraphGenerator : MonoBehaviour
     {
         Vector3 position = newGraph.ScaleCoordinates(newGraph.minCoordValues);
         GameObject axes = Instantiate(AxesPrefab, newGraph.transform);
-        axes.transform.localPosition = position - (Vector3.one * 0.1f);
+        axes.transform.localPosition = position - (Vector3.one * 0.01f);
         Vector3 size = newGraph.GetComponent<BoxCollider>().size;
         float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
         axes.transform.localScale = Vector3.one * (longestAx * 0.6f);
-        axes.GetComponent<AxesArrow>().SetColors(axisNames, newGraph.minCoordValues, newGraph.maxCoordValues);
+        if (graphType == GraphType.FACS)
+        {
+            axes.GetComponent<AxesArrow>().SetColors(axisNames, newGraph.minCoordValues, newGraph.maxCoordValues);
+            axes.SetActive(true);
+        }
+        else
+        {
+            axes.SetActive(false);
+        }
         TextMeshPro[] texts = axes.GetComponentsInChildren<TextMeshPro>();
+        newGraph.axes = axes;
         for (int i = 0; i < texts.Length; i++)
         {
             texts[i].text = axisNames[i];
         }
         if (graphType == GraphType.MDS)
         {
-            axes.SetActive(false);
         }
     }
 

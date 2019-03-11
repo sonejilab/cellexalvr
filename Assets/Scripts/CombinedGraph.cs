@@ -27,6 +27,7 @@ public class CombinedGraph : MonoBehaviour
     public TextMeshPro graphNameText;
     public TextMeshPro graphInfoText;
     public TextMeshPro graphNrText;
+    public GameObject axes;
     public bool GraphActive = true;
     public Dictionary<string, CombinedGraphPoint> points = new Dictionary<string, CombinedGraphPoint>();
     public Dictionary<string, CombinedGraphPoint> subSelectionPoints = new Dictionary<string, CombinedGraphPoint>();
@@ -781,6 +782,15 @@ public class CombinedGraph : MonoBehaviour
     public void SetInfoTextVisible(bool visible)
     {
         graphInfoText.transform.parent.gameObject.SetActive(visible);
+    }
+
+    /// <summary>
+    /// Set this graph's axes visible or not visible.
+    /// </summary>
+    /// <param name="visible"> True for visible, false for invisible </param>
+    public void SetAxesVisible(bool visible)
+    {
+        axes.SetActive(visible);
     }
 
     public void ResetColorsAndPosition()

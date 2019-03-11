@@ -248,9 +248,29 @@ public class InputReader : MonoBehaviour
                 //List<float> ycoords = new List<float>();
                 //List<float> zcoords = new List<float>();
                 int i = 0;
-                // first line is a header
+                // first line is (if correct format) a header and the first char is a tab. If wrong and does not contain header read first line as a cell.
                 string header = mdsStreamReader.ReadLine();
-                axes = header.Split(null).Skip(1).ToArray();
+                if (header.Split(null)[0].Equals('\t'))
+                {
+                    axes = header.Split(null).Skip(1).ToArray();
+                }
+                else
+                {
+                    string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length != 4)
+                    {
+                        continue;
+                    }
+                    string cellname = words[0];
+                    float x = float.Parse(words[1]);
+                    float y = float.Parse(words[2]);
+                    float z = float.Parse(words[3]);
+                    Cell cell = cellManager.AddCell(cellname);
+                    combinedGraphGenerator.AddGraphPoint(cell, x, y, z);
+                    axes[0] = "x";
+                    axes[1] = "y";
+                    axes[2] = "z";
+                }
                 while (!mdsStreamReader.EndOfStream)
                 {
                     itemsThisFrame = 0;

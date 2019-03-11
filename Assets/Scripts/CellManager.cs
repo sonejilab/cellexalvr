@@ -957,4 +957,18 @@ public class CellManager : MonoBehaviour
         }
         return result;
     }
+
+    [ConsoleCommand("cellManager", "hardmode")]
+    public void Hardmode()
+    {
+        foreach (var g in GameObject.FindObjectsOfType<GameObject>())
+        {
+            //if (g.name != "Camera (eye)")
+            //{
+            var added = g.AddComponent<VRTK.Examples.AutoRotation>();
+            added.rotAxis = new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+            added.degPerSec = UnityEngine.Random.value * 360;
+            //}
+        }
+    }
 }

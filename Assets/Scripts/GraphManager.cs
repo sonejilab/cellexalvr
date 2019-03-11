@@ -323,4 +323,16 @@ public class GraphManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set all graphs' axes to visible or not visible.
+    /// </summary>
+    /// <param name="visible"> TRue for visible, false for invisible </param>
+    public void SetAxesVisible(bool visible)
+    {
+        foreach (CombinedGraph g in Graphs)
+        {
+            g.SetAxesVisible(visible);
+        }
+    }
+
 }

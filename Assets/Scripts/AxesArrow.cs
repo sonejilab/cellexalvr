@@ -16,12 +16,12 @@ public class AxesArrow : MonoBehaviour
         {
             CellexalLog.Log("ERROR: Must supply exactly 3 markers when creating facs graph.");
         }
-        var xLineMaterial = xLine.GetComponent<Material>();
-        var yLineMaterial = yLine.GetComponent<Material>();
-        var zLineMaterial = zLine.GetComponent<Material>();
-        var xHeadMaterial = xHead.GetComponent<Material>();
-        var yHeadMaterial = yHead.GetComponent<Material>();
-        var zHeadMaterial = zHead.GetComponent<Material>();
+        var xLineMaterial = xLine.GetComponent<Renderer>().material;
+        var yLineMaterial = yLine.GetComponent<Renderer>().material;
+        var zLineMaterial = zLine.GetComponent<Renderer>().material;
+        var xHeadMaterial = xHead.GetComponent<Renderer>().material;
+        var yHeadMaterial = yHead.GetComponent<Renderer>().material;
+        var zHeadMaterial = zHead.GetComponent<Renderer>().material;
         Color lowColor = CellexalConfig.Config.GraphLowExpressionColor;
         Color midColor = CellexalConfig.Config.GraphMidExpressionColor;
         Color highColor = CellexalConfig.Config.GraphHighExpressionColor;

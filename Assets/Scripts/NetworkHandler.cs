@@ -10,6 +10,7 @@ public class NetworkHandler : MonoBehaviour
 {
 
     public Material highlightMaterial;
+    public Material normalMaterial;
     public List<NetworkCenter> Replacements { get; private set; }
     public bool removable;
     //public string NetworkHandlerName { get; internal set; }
@@ -54,7 +55,7 @@ public class NetworkHandler : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         highlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(highlightMaterial) };
         highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
-        unhighlightedMaterials = new Material[] { meshRenderer.materials[0], null };
+        unhighlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(normalMaterial) };
         this.transform.localScale = Vector3.zero;
         CellexalEvents.ScriptFinished.AddListener(SetRemovable);
         CellexalEvents.ScriptRunning.AddListener(SetUnRemovable);

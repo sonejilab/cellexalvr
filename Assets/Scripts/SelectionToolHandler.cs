@@ -591,6 +591,13 @@ public class SelectionToolHandler : MonoBehaviour
         return lastSelectedCells;
     }
 
+    public void Clear()
+    {
+        lastSelectedCells.Clear();
+        selectionHistory.Clear();
+        historyIndexOffset = 0;
+    }
+
     /// <summary>
     /// Get the current (not yet confirmed) selection.
     /// </summary>
