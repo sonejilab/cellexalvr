@@ -7,6 +7,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using CellexalVR.General;
 
 namespace Valve.VR.InteractionSystem
 {

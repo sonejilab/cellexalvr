@@ -11,6 +11,7 @@
 /html/
 /Images/
 /Assets/Prefabs/*
+/not_used_scripts/
 /Resources/
 /Screenshots/
 /*_Data/
@@ -20,7 +21,6 @@
 *.prefab
 *.ide*
 *.lock
-*.meta
 
 
 # Images and stuff

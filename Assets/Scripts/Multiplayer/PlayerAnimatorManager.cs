@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-namespace Com.MyCompany.MyGame
+namespace CellexalVR.Multiplayer
 {
     public class PlayerAnimatorManager : Photon.MonoBehaviour
     {
@@ -12,8 +12,7 @@ namespace Com.MyCompany.MyGame
         public Transform cameraPos;
         public Transform menu;
         public Transform menuTarget;
-
-        private GraphPoint selectedPoint;
+        
         #endregion
 
 

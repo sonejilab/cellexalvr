@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ConfigDir>\Config</ConfigDir>
-  <RscriptexePath>C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe</RscriptexePath>
+  <RscriptexePath>C:\Program Files\R\R-3.5.1\bin\x64\Rscript.exe</RscriptexePath>
   <GraphLoadingCellsPerFrameStartCount>200</GraphLoadingCellsPerFrameStartCount>
   <GraphLoadingCellsPerFrameIncrement>15</GraphLoadingCellsPerFrameIncrement>
   <GraphClustersPerFrameStartCount>5</GraphClustersPerFrameStartCount>
@@ -178,7 +178,7 @@
     <b>0</b>
     <a>1</a>
   </GraphHighExpressionColor>
-  <GraphMostExpressedMarker>false</GraphMostExpressedMarker>
+  <GraphMostExpressedMarker>true</GraphMostExpressedMarker>
   <AttributeColors>
     <Color>
       <r>1</r>
@@ -230,7 +230,7 @@
     <b>0</b>
     <a>1</a>
   </HeatmapConfirmMarkerColor>
-  <HeatmapAlgorithm>ANOVA</HeatmapAlgorithm>
+  <HeatmapAlgorithm>wilcox</HeatmapAlgorithm>
   <HeatmapNumberOfGenes>250</HeatmapNumberOfGenes>
   <NetworkLineColoringMethod>0</NetworkLineColoringMethod>
   <NetworkLineColorPositiveHigh>

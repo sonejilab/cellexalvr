@@ -309,7 +309,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4823048893697538}
-  - component: {fileID: 114027161518350158}
   m_Layer: 0
   m_Name: Dataset List
   m_TagString: Untagged
@@ -1151,23 +1150,6 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
---- !u!114 &114027161518350158
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1905516141003588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72cb6f29dccdd2848be97fbe0ffec4dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  listNodes:
-  - {fileID: 102147239535058692}
-  - {fileID: 102648945233636572}
-  - {fileID: 102122035264174540}
-  - {fileID: 102723774948232218}
-  loaderController: {fileID: 0}
 --- !u!114 &114099195438052748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1245,7 +1227,7 @@ MonoBehaviour:
   popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
-  datasetList: {fileID: 114027161518350158}
+  datasetList: {fileID: 0}
   textMesh: {fileID: 102723774948232218}
 --- !u!114 &114505403762525768
 MonoBehaviour:
@@ -1297,7 +1279,7 @@ MonoBehaviour:
   popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
-  datasetList: {fileID: 114027161518350158}
+  datasetList: {fileID: 0}
   textMesh: {fileID: 102122035264174540}
 --- !u!114 &114587725798817476
 MonoBehaviour:
@@ -1322,7 +1304,7 @@ MonoBehaviour:
   popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
-  datasetList: {fileID: 114027161518350158}
+  datasetList: {fileID: 0}
   textMesh: {fileID: 102147239535058692}
 --- !u!114 &114597058076855910
 MonoBehaviour:
@@ -1374,7 +1356,7 @@ MonoBehaviour:
   popupChoice: 1
   buttonActivated: 1
   controllerInside: 0
-  datasetList: {fileID: 114027161518350158}
+  datasetList: {fileID: 0}
   textMesh: {fileID: 102648945233636572}
 --- !u!212 &212090276857707030
 SpriteRenderer:

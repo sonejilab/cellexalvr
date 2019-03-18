@@ -267,37 +267,29 @@ MonoBehaviour:
   rightController: {fileID: 1308}
   leftController: {fileID: 124}
   controllerModelSwitcher: {fileID: 294}
-  groupInfoDisplay: {fileID: 1241101}
-  statusDisplay: {fileID: 1999331952}
-  HUD: {fileID: 1125617977}
-  FarDisplay: {fileID: 1616730850}
   HUDFlashInfo: {fileID: 380180735}
   HUDGroupInfo: {fileID: 1378709400}
-  statusDisplayHUD: {fileID: 388837833}
   FarFlashInfo: {fileID: 21809306}
   FarGroupInfo: {fileID: 534089671}
-  statusDisplayFar: {fileID: 844421822}
   headset: {fileID: 1876090423}
   controllerMenuCollider: {fileID: 274866942}
   rightLaser: {fileID: 292}
   leftLaser: {fileID: 299}
+  laserPointerController: {fileID: 0}
   selectionToolHandler: {fileID: 1187}
   deleteTool: {fileID: 938346206}
   minimizeTool: {fileID: 1261628826}
-  helpTool: {fileID: 1361679930}
   helpMenu: {fileID: 1284622108}
-  magnifierTool: {fileID: 882508321}
   drawTool: {fileID: 1082884299}
   webBrowser: {fileID: 514116544}
   mainMenu: {fileID: 214544479}
-  flashGenesMenu: {fileID: 922960130}
   arcsSubMenu: {fileID: 654271210}
   attributeSubMenu: {fileID: 1057236352}
   indexMenu: {fileID: 337548417}
+  createFromMarkerMenu: {fileID: 0}
   selectionFromPreviousMenu: {fileID: 1175211504}
   colorByGeneMenu: {fileID: 348558335}
   filterMenu: {fileID: 620331070}
-  newFilterMenu: {fileID: 386293962}
   selectionMenu: {fileID: 1476947686}
   currentFlashedGeneText: {fileID: 154111809}
   frontButtons: {fileID: 605130061}
@@ -314,12 +306,11 @@ MonoBehaviour:
   graphManager: {fileID: 1201}
   cellManager: {fileID: 1238}
   heatmapGenerator: {fileID: 1243}
-  heatmapBurner: {fileID: 114172059786112338, guid: 08f944bd386aa3c4eb320f9aee06c9ac,
-    type: 2}
   networkGenerator: {fileID: 1142}
   combinedGraphGenerator: {fileID: 169839137}
   inputFolderGenerator: {fileID: 1165}
   loaderController: {fileID: 1278437083}
+  configManager: {fileID: 0}
   helperCylinder: {fileID: 2002900820}
   inputReader: {fileID: 1210}
   database: {fileID: 78}
@@ -328,17 +319,20 @@ MonoBehaviour:
   calculatorCluster: {fileID: 2061622874}
   consoleManager: {fileID: 462868571}
   turnOffThoseLights: {fileID: 6}
-  desktopMenu: {fileID: 1215921841}
   fpsCounter: {fileID: 1135498748}
+  demoManager: {fileID: 0}
+  newGraphFromMarkers: {fileID: 0}
   keyboard: {fileID: 146}
-  keyboardStatus: {fileID: 2052360925}
+  keyboardStatus: {fileID: 0}
   keyboardOutput: {fileID: 1063092422}
   correlatedGenesList: {fileID: 211292001}
   previousSearchesList: {fileID: 1151}
   topListNode: {fileID: 1595451470}
   autoCompleteList: {fileID: 830892756}
-  keyboardStatusFolder: {fileID: 422987648}
+  keyboardStatusFolder: {fileID: 0}
   keyboardOutputFolder: {fileID: 1579220064}
+  settingsMenu: {fileID: 0}
+  colorPicker: {fileID: 0}
 --- !u!114 &134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,7 +1372,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.008669812, g: 0.01608792, b: 0.032361142, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!108 &896
 Light:
@@ -1633,7 +1627,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76cbe11f03b36843b137ab4b13b8f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SecondsBetweenEachCategory: 0
   referenceManager: {fileID: 133}
   controllerActions: {fileID: 1330}
   lineBetweenTwoGraphPointsPrefab: {fileID: 1930424304061810, guid: 7e6b0e9c0134dcb4985fdc0121d8fdb0,
@@ -1862,12 +1855,6 @@ MonoBehaviour:
   usePressed: 0
   uiClickPressed: 0
   menuPressed: 0
---- !u!114 &1241101 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114308654167923184, guid: c9fe1713b7a921a439b7c62d9a8e9733,
-    type: 2}
-  m_PrefabInternal: {fileID: 285494909}
-  m_Script: {fileID: 11500000, guid: 7bc551779b9324841912c620500b8655, type: 3}
 --- !u!1 &3427977
 GameObject:
   m_ObjectHideFlags: 0
@@ -3867,7 +3854,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &38345290
@@ -5554,58 +5541,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 90463207}
   m_CullTransparentMesh: 0
---- !u!1001 &93020770
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.331
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962033627500290, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-      propertyPath: m_RootOrder
-      value: 38
-      objectReference: {fileID: 0}
-    - target: {fileID: 114647151730373422, guid: 02b188ac04c90394fa0568a3b5adf8c4,
-        type: 2}
-      propertyPath: tutorialManager
-      value: 
-      objectReference: {fileID: 1725989832}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 02b188ac04c90394fa0568a3b5adf8c4, type: 2}
-  m_IsPrefabAsset: 0
---- !u!1 &93020771 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1693455403306754, guid: 02b188ac04c90394fa0568a3b5adf8c4,
-    type: 2}
-  m_PrefabInternal: {fileID: 93020770}
 --- !u!1 &102285047
 GameObject:
   m_ObjectHideFlags: 0
@@ -5813,6 +5748,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7089c7feabf3eae45b5d0b933201b419, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 2133204224}
   audioClip: {fileID: 8300000, guid: d772d60fe41c2394ea39f614d1759728, type: 3}
@@ -5935,6 +5871,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 113459232}
   color: {r: 1, g: 0, b: 0, a: 1}
@@ -6617,11 +6554,13 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: {fileID: 1449697730}
   booleanNotIncludedColor: {r: 0, g: 0, b: 0, a: 0}
   booleanYesColor: {r: 0, g: 1, b: 0.0043610195, a: 0}
   booleanNoColor: {r: 1, g: 0, b: 0, a: 0}
+  activeOutline: {fileID: 0}
   parentMenu: {fileID: 1057236352}
 --- !u!65 &138826933
 BoxCollider:
@@ -7382,6 +7321,7 @@ MonoBehaviour:
     type: 2}
   combinedGraphPrefab: {fileID: 1128814461414928, guid: af929ffd1d0a8af409a829dde3bae8ca,
     type: 2}
+  AxesPrefab: {fileID: 0}
   combinedGraphPointMaterialPrefab: {fileID: 2100000, guid: ac4d2b9d31934d840ac49ae1c6029604,
     type: 2}
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
@@ -7389,6 +7329,7 @@ MonoBehaviour:
   graphPointMesh: {fileID: 4300000, guid: 64351f611f4733d4cb548966ebfd444f, type: 3}
   clusterColliderContainer: {fileID: 0}
   isCreating: 0
+  addingToExisting: 0
   graphPointColors: {fileID: 0}
 --- !u!4 &169839138
 Transform:
@@ -7903,6 +7844,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!65 &180225570
 BoxCollider:
@@ -8130,161 +8072,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!43 &191204531
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 9
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 24
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 8
-    localAABB:
-      m_Center: {x: 0, y: 0.01, z: 0}
-      m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
-  m_VertexData:
-    serializedVersion: 2
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 28
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 288
-    _typelessdata: 0000c03f0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0.01, z: 0}
-    m_Extent: {x: 1.65, y: 0, z: 1.275}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
-  m_MeshOptimized: 0
 --- !u!1 &192005344
 GameObject:
   m_ObjectHideFlags: 0
@@ -8582,6 +8369,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 193488510}
   color: {r: 1, g: 1, b: 1, a: 1}
@@ -8993,7 +8781,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &211292001 stripped
@@ -9906,6 +9694,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 237166463}
   color: {r: 1, g: 1, b: 1, a: 1}
@@ -11219,12 +11008,12 @@ Prefab:
         type: 2}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 191204531}
+      objectReference: {fileID: 581604487}
     - target: {fileID: 23363797466158710, guid: c9fe1713b7a921a439b7c62d9a8e9733,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1210504986}
+      objectReference: {fileID: 1273433735}
     - target: {fileID: 23363797466158710, guid: c9fe1713b7a921a439b7c62d9a8e9733,
         type: 2}
       propertyPath: m_Materials.Array.data[1]
@@ -11346,7 +11135,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4336143761151500, guid: c9fe1713b7a921a439b7c62d9a8e9733, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4673662175773328, guid: c9fe1713b7a921a439b7c62d9a8e9733, type: 2}
       propertyPath: m_RootOrder
@@ -11354,7 +11143,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4056068015036762, guid: c9fe1713b7a921a439b7c62d9a8e9733, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4411543061339378, guid: c9fe1713b7a921a439b7c62d9a8e9733, type: 2}
       propertyPath: m_RootOrder
@@ -11693,6 +11482,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7b09dd29b57723845ad48ed813584e6d, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &301837264
 SpriteRenderer:
@@ -12511,7 +12301,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
-  buttonPrefab: {fileID: 1822880605}
+  tabPrefab: {fileID: 0}
+  prefab: {fileID: 0}
 --- !u!1 &340764866
 GameObject:
   m_ObjectHideFlags: 0
@@ -13442,6 +13233,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 45716d8cd1cf2424aba9a842a6df2c89, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &369693462
 SpriteRenderer:
@@ -13659,6 +13451,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 1c243ed4149c13947912828abb09545c, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: e6b4bb34c8aed1c4881bc6142be8dba3, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: 78f6bbf224c5167459ca600c6a7ce61e,
@@ -14411,7 +14204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusPrefab: {fileID: 1590651493}
-  defaultStatus: {fileID: 1070340539}
+  defaultStatus: {fileID: 0}
   startSpawnPos: {x: -230, y: 79, z: -4}
   nextSpawnPos: {x: -230, y: 79, z: -4}
   dnextSpawnPos: {x: 0, y: -100, z: 0}
@@ -14473,6 +14266,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: b436485621ff75a41860c26138239f23, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   closeMenuButton: {fileID: 786962207}
   selectionToolButton: {fileID: 229274219}
@@ -15161,7 +14955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5ec5e3780dbe54e84d063bfecb3234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 581793072}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -15172,8 +14966,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: eeee555e05f7a234bbd4a4b223bd860e, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
-  camera: {fileID: 918398485}
+  camera: {fileID: 0}
   canvas: {fileID: 842173690}
 --- !u!212 &420938282
 SpriteRenderer:
@@ -16703,6 +16498,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 0
   networks: []
@@ -18184,7 +17980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53d71c6943b373449f31e3cbb6a32e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 66379882}
   infoMenu: {fileID: 1516364520}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -18195,6 +17991,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4ad99e3833f5c1b4cbebb1ad105a4d93, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: c10c2416d651db84d94abc379e9ea7f5, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: e1790ed4df4e0444b81cf366d35167bc,
@@ -18336,7 +18133,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &531675940
@@ -19349,6 +19146,161 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 568816909}
   m_CullTransparentMesh: 0
+--- !u!43 &581604487
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 9
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 24
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0.01, z: 0}
+      m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 000004000100010004000500010005000200020005000600020006000300030006000700030007000000000007000400
+  m_VertexData:
+    serializedVersion: 2
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 28
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 288
+    _typelessdata: 0000c03f0ad7233c000090bf000000000000803f0000803f0000803f00000000000000000000c0bf0ad7233c000090bf000000000000803f0000803f0000803f0000803f000000000000c0bf0ad7233c0000903f000000000000803f0000803f0000803f00000000000000000000c03f0ad7233c0000903f000000000000803f0000803f0000803f0000803f000000003333d33f0ad7233c3333a3bf000000000000803f0000803f00000000000000000000803f3333d3bf0ad7233c3333a3bf000000000000803f0000803f000000000000803f0000803f3333d3bf0ad7233c3333a33f000000000000803f0000803f00000000000000000000803f3333d33f0ad7233c3333a33f000000000000803f0000803f000000000000803f0000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0.01, z: 0}
+    m_Extent: {x: 1.65, y: 0, z: 1.275}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimized: 0
 --- !u!102 &581793072
 TextMesh:
   serializedVersion: 3
@@ -19523,6 +19475,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 8300000, guid: 426a876be15d16047b6f4ff794b6cdd0, type: 3}
@@ -20141,7 +20094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
   textMesh: {fileID: 0}
-  keyboardOutput: {fileID: 2029140757}
+  keyboardOutput: {fileID: 0}
 --- !u!23 &612162699
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20712,6 +20665,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 03ef3400b94ba4c41be12bc64828a872, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &625484536
 SpriteRenderer:
@@ -21534,6 +21488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
   tabPrefab: {fileID: 138665658}
+  prefab: {fileID: 0}
   buttonPrefab: {fileID: 681972468}
 --- !u!1 &658022323
 GameObject:
@@ -22175,7 +22130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7f23c0668206a4ebd2ec81a2202d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 15121586}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -22186,6 +22141,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 1ee7d78aac6da2c48a47895a00c1c631, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 0}
@@ -23757,6 +23713,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: d868a010eb5a70a4089215d973acf543, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   webBrowser: {fileID: 1324473942}
   forward: 1
@@ -23804,7 +23761,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &733407597
@@ -28917,6 +28874,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 2cacc8359f353564fbeebc1ac9dd55d6, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &754093242
 SpriteRenderer:
@@ -29483,7 +29441,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &786337318
@@ -29820,6 +29778,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 1
   combinedNetworksButton: {fileID: 0}
@@ -30655,6 +30614,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 8300000, guid: fb29d8ea1932ee44c8bc2362d1193a35, type: 3}
@@ -31364,7 +31324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusPrefab: {fileID: 1488713693}
-  defaultStatus: {fileID: 1070340539}
+  defaultStatus: {fileID: 0}
   startSpawnPos: {x: -130, y: 175, z: -35.8}
   nextSpawnPos: {x: -130, y: 175, z: -35.8}
   dnextSpawnPos: {x: 0, y: -100, z: 0}
@@ -32302,6 +32262,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 0}
@@ -32501,6 +32462,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 873494627}
   color: {r: 0.11724126, g: 1, b: 0, a: 1}
@@ -32896,12 +32858,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &882508321 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114520678031537470, guid: c9fe1713b7a921a439b7c62d9a8e9733,
-    type: 2}
-  m_PrefabInternal: {fileID: 285494909}
-  m_Script: {fileID: 11500000, guid: 7a7f094785d328d459068e11992de748, type: 3}
 --- !u!1 &886236363
 GameObject:
   m_ObjectHideFlags: 0
@@ -33089,6 +33045,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 906853696}
   color: {r: 1, g: 1, b: 0, a: 1}
@@ -33450,11 +33407,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 914770809}
   m_Mesh: {fileID: 0}
---- !u!1 &918398485 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1498100160913078, guid: c9fe1713b7a921a439b7c62d9a8e9733,
-    type: 2}
-  m_PrefabInternal: {fileID: 285494909}
 --- !u!1 &919218673
 GameObject:
   m_ObjectHideFlags: 0
@@ -34112,7 +34064,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &930903147
@@ -34315,6 +34267,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 936055429}
   color: {r: 0.65517235, g: 0, b: 1, a: 1}
@@ -36120,7 +36073,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1001520602
@@ -36198,7 +36151,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1003234014
@@ -36461,6 +36414,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 0
   combinedNetworksButton: {fileID: 0}
@@ -36581,6 +36535,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   description: {fileID: 1998139215}
 --- !u!65 &1017788575
@@ -37870,6 +37825,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 212c926504249db4f95d32a4685d35da, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonsToActivate: {fileID: 2045424894}
   menuToClose: {fileID: 1152613218}
@@ -38040,11 +37996,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 23960355}
   m_Script: {fileID: 11500000, guid: 2cf13878e636ed345a93b32d24a7db3d, type: 3}
---- !u!1 &1070340539 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1860485345391724, guid: c9fe1713b7a921a439b7c62d9a8e9733,
-    type: 2}
-  m_PrefabInternal: {fileID: 285494909}
 --- !u!1 &1070686956
 GameObject:
   m_ObjectHideFlags: 0
@@ -38708,7 +38659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1568f0eed36e8e4cb02a2c6a9a67f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 581793072}
   infoMenu: {fileID: 599527956}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -38719,6 +38670,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 7f03786d2d520164bb9d4f86e37c7de8, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: b474a1ac76f7f064e95cf14a9ed65cd6, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: 2437df42172ed0a4ba767c0c40387689,
@@ -39051,7 +39003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf4ae88403070446a52e0cda49b386b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 15121586}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -39062,6 +39014,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 3acdddbc6826a4648a4eed5285292f67, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &1091437391
 SpriteRenderer:
@@ -39107,7 +39060,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &1091437392
@@ -39696,6 +39649,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: f4860b5a95aa30343a5e3ae05e310f66, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &1123378610
 SpriteRenderer:
@@ -39910,6 +39864,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 1127998685}
   color: {r: 0.65517235, g: 0, b: 1, a: 1}
@@ -40457,7 +40412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
   textMesh: {fileID: 0}
-  keyboardOutput: {fileID: 2029140757}
+  keyboardOutput: {fileID: 0}
 --- !u!23 &1141694600
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -41551,7 +41506,9 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 35e83d16205150941ab65f69e3f47075, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
+  statsMethod: 
 --- !u!212 &1174527686
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -42466,39 +42423,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1208953516}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!21 &1210504986
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 4800000, guid: a1975866494d6c446aef55a8d4038e56, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1213001487
 GameObject:
   m_ObjectHideFlags: 0
@@ -42641,6 +42565,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 47c9e9a514c019a439da54d07733e202, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   mode: 0
 --- !u!212 &1213625849
@@ -43068,6 +42993,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 1
   networks: []
@@ -43956,61 +43882,9 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &1252161873
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.901
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1.027
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0.089
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508068135392514, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-      propertyPath: m_RootOrder
-      value: 41
-      objectReference: {fileID: 0}
-    - target: {fileID: 114401919208469164, guid: 2c4dc9a0c5c4ad84388c3b64322ce876,
-        type: 2}
-      propertyPath: tutorialManager
-      value: 
-      objectReference: {fileID: 1725989832}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2c4dc9a0c5c4ad84388c3b64322ce876, type: 2}
-  m_IsPrefabAsset: 0
---- !u!1 &1252161874 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1425148906618716, guid: 2c4dc9a0c5c4ad84388c3b64322ce876,
-    type: 2}
-  m_PrefabInternal: {fileID: 1252161873}
 --- !u!1 &1254857058
 GameObject:
   m_ObjectHideFlags: 0
@@ -44654,6 +44528,39 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000055026005, y: -3}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!21 &1273433735
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 4800000, guid: a1975866494d6c446aef55a8d4038e56, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1278437083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46087,6 +45994,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 2133204224}
   audioClip: {fileID: 8300000, guid: d772d60fe41c2394ea39f614d1759728, type: 3}
@@ -46338,12 +46246,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1360661672}
   m_CullTransparentMesh: 0
---- !u!114 &1361679930 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114827590428080708, guid: c9fe1713b7a921a439b7c62d9a8e9733,
-    type: 2}
-  m_PrefabInternal: {fileID: 285494909}
-  m_Script: {fileID: 11500000, guid: b1a2de8e416f5aa479bbcd77f97f32ad, type: 3}
 --- !u!1 &1363310279
 GameObject:
   m_ObjectHideFlags: 0
@@ -47817,7 +47719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
   textMesh: {fileID: 0}
-  keyboardOutput: {fileID: 422987648}
+  keyboardOutput: {fileID: 0}
 --- !u!23 &1400649908
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -47875,58 +47777,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1400649905}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1402800320
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 1.155
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0.806
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357950238807892, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-      propertyPath: m_RootOrder
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 114582746035066188, guid: bcf5fe6aa6566ba488d3072fe5d1eadf,
-        type: 2}
-      propertyPath: tutorialManager
-      value: 
-      objectReference: {fileID: 1725989832}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bcf5fe6aa6566ba488d3072fe5d1eadf, type: 2}
-  m_IsPrefabAsset: 0
---- !u!1 &1402800321 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1448494659066394, guid: bcf5fe6aa6566ba488d3072fe5d1eadf,
-    type: 2}
-  m_PrefabInternal: {fileID: 1402800320}
 --- !u!1 &1407760565
 GameObject:
   m_ObjectHideFlags: 0
@@ -47983,6 +47833,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4c9adf45f92d4c04593326f0e07e6011, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &1407760568
 SpriteRenderer:
@@ -50058,6 +49909,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 97fcecd5faee0de40830f6938c51707d, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   mode: 1
 --- !u!212 &1479698758
@@ -51063,6 +50915,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 8300000, guid: 5b05a30f1c2ec9e4fa47b88fd67a5002, type: 3}
@@ -52152,6 +52005,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 1543123654}
   color: {r: 0, g: 0.2965517, b: 1, a: 1}
@@ -52261,7 +52115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1975a694c88b93f40ab226b9134712f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 524942533}
   infoMenu: {fileID: 1346905552}
   meshStandardColor: {r: 0.46323532, g: 0.43105313, b: 0, a: 1}
@@ -52272,6 +52126,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!65 &1543819222
 BoxCollider:
@@ -52409,58 +52264,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1546543260}
   m_CullTransparentMesh: 0
---- !u!1001 &1547365235
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 1.153
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4438968019539728, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-      propertyPath: m_RootOrder
-      value: 37
-      objectReference: {fileID: 0}
-    - target: {fileID: 114021848248794492, guid: f3bbd4943fce58749ac73c35ef08b786,
-        type: 2}
-      propertyPath: tutorialManager
-      value: 
-      objectReference: {fileID: 1725989832}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f3bbd4943fce58749ac73c35ef08b786, type: 2}
-  m_IsPrefabAsset: 0
---- !u!1 &1547365236 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1271986726695120, guid: f3bbd4943fce58749ac73c35ef08b786,
-    type: 2}
-  m_PrefabInternal: {fileID: 1547365235}
 --- !u!1 &1549901965
 GameObject:
   m_ObjectHideFlags: 0
@@ -54938,6 +54741,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 0
 --- !u!23 &1592438405
@@ -56146,7 +55950,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &1624694566
@@ -56774,7 +56578,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &1636143721
@@ -58084,7 +57888,7 @@ SpriteRenderer:
   m_Size: {x: 2.58, y: 2.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1669857819
@@ -58590,6 +58394,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: f4d6c6af3e17a81489647f5ef1f47a2b, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   grayScaleTexture: {fileID: 21300000, guid: f63a098b06c46e9428f84e295e7495f2, type: 3}
 --- !u!212 &1692187858
@@ -58785,6 +58590,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: ea389e92e283cf34fa9311364405e272, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &1696353426
 SpriteRenderer:
@@ -59460,164 +59266,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1001 &1725989831
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.5566829
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1.2743597
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0.07597924
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977625324737804, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-      propertyPath: m_RootOrder
-      value: 42
-      objectReference: {fileID: 0}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: referenceManager
-      value: 
-      objectReference: {fileID: 133}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: rightControllerModel
-      value: 
-      objectReference: {fileID: 27}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: leftControllerModel
-      value: 
-      objectReference: {fileID: 59}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[0]
-      value: 
-      objectReference: {fileID: 1547365236}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[1]
-      value: 
-      objectReference: {fileID: 93020771}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[2]
-      value: 
-      objectReference: {fileID: 1737960429}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[3]
-      value: 
-      objectReference: {fileID: 1402800321}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[4]
-      value: 
-      objectReference: {fileID: 93020771}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[5]
-      value: 
-      objectReference: {fileID: 1737960429}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: highlightSpots.Array.data[6]
-      value: 
-      objectReference: {fileID: 1252161874}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: mainMenu
-      value: 
-      objectReference: {fileID: 214544479}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: graphManager
-      value: 
-      objectReference: {fileID: 1201}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: keyboardButton
-      value: 
-      objectReference: {fileID: 526320813}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: selToolButton
-      value: 
-      objectReference: {fileID: 229274218}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: newSelButton
-      value: 
-      objectReference: {fileID: 1580609751}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: confirmSelButton
-      value: 
-      objectReference: {fileID: 369693459}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: networksButton
-      value: 
-      objectReference: {fileID: 2009015492}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: createHeatmapButton
-      value: 
-      objectReference: {fileID: 1174527683}
-    - target: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: burnHeatmapButton
-      value: 
-      objectReference: {fileID: 1090061508}
-    - target: {fileID: 114684185205498886, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114684185205498886, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114684185205498886, guid: 62925346b21075a478c2a06eb841495c,
-        type: 2}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 62925346b21075a478c2a06eb841495c, type: 2}
-  m_IsPrefabAsset: 0
---- !u!114 &1725989832 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
-    type: 2}
-  m_PrefabInternal: {fileID: 1725989831}
-  m_Script: {fileID: 11500000, guid: adf4469b18d530449ab4aa4590dfd32e, type: 3}
 --- !u!1 &1727141823
 GameObject:
   m_ObjectHideFlags: 0
@@ -60092,58 +59740,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1001 &1737960428
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.812
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4527070678054040, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-      propertyPath: m_RootOrder
-      value: 39
-      objectReference: {fileID: 0}
-    - target: {fileID: 114847219976579170, guid: ab29357c5cce6e1408da2c48e6eff77f,
-        type: 2}
-      propertyPath: tutorialManager
-      value: 
-      objectReference: {fileID: 1725989832}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ab29357c5cce6e1408da2c48e6eff77f, type: 2}
-  m_IsPrefabAsset: 0
---- !u!1 &1737960429 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1240130699472316, guid: ab29357c5cce6e1408da2c48e6eff77f,
-    type: 2}
-  m_PrefabInternal: {fileID: 1737960428}
 --- !u!1 &1739144716
 GameObject:
   m_ObjectHideFlags: 0
@@ -60331,6 +59927,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 1741524800}
   color: {r: 0.11724126, g: 1, b: 0, a: 1}
@@ -61831,6 +61428,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 8300000, guid: d137a8cfda4e4dc478533764ea5f2756, type: 3}
@@ -61952,6 +61550,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   toggleToState: 1
 --- !u!23 &1801422909
@@ -62320,8 +61919,10 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   descriptionOnButton: {fileID: 2091948519}
+  parentMenu: {fileID: 0}
 --- !u!65 &1822880608
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -62879,6 +62480,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 8300000, guid: 4ce4cd9d50d8eda42902abde33d7dd30, type: 3}
@@ -63458,6 +63060,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 60dfd485a885154489b23163a73db5d3, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   webBrowser: {fileID: 1324473942}
   forward: 0
@@ -63505,7 +63108,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &1856378117
@@ -64357,7 +63960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4abd6789a12dd488529120fdc32b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 581793072}
   infoMenu: {fileID: 2027844618}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -64368,6 +63971,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4bee24e135e59c3439ca9fccce32af3b, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: b30c3f8256a287a43afac4b6feea5f71, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: fa83fe1caafbac244bdc6fe2b223b5ee,
@@ -66654,6 +66258,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 1957141779}
   color: {r: 1, g: 0, b: 0, a: 1}
@@ -66953,6 +66558,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: b73581e635f69cf42ad546f5d29f23a8, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &1959956808
 SpriteRenderer:
@@ -67632,12 +67238,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1999331952 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114333059824987986, guid: c9fe1713b7a921a439b7c62d9a8e9733,
-    type: 2}
-  m_PrefabInternal: {fileID: 285494909}
-  m_Script: {fileID: 11500000, guid: 3267039387ab3bb419969fb0052f71c0, type: 3}
 --- !u!1 &2002818619
 GameObject:
   m_ObjectHideFlags: 0
@@ -67967,6 +67567,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 0f0d0a9b9b7217d4090374beaf4d252f, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
 --- !u!212 &2009015495
 SpriteRenderer:
@@ -68574,6 +68175,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   text: {fileID: 1821790229}
 --- !u!23 &2023581983
@@ -68693,6 +68295,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   videoCanv: {fileID: 522451887}
   audioClip: {fileID: 8300000, guid: a7d3fae3686634e46884b316480ea4e7, type: 3}
@@ -69570,7 +69173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a6d3c4972b39748a5c5ea5a01b0735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 15121586}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -69581,6 +69184,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 5de3617568a6e39479a9ace3cc452f8e, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: 5de3617568a6e39479a9ace3cc452f8e, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: ad4fd255600c9764e9d298fdf65faacb,
@@ -69858,12 +69462,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &2052360925 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114432342862603744, guid: 27218125b5d038b4880cb0e470f1c1c7,
-    type: 2}
-  m_PrefabInternal: {fileID: 23960355}
-  m_Script: {fileID: 11500000, guid: 2cb73e9a033d9534684220a27d5c42a6, type: 3}
 --- !u!1 &2053071545
 GameObject:
   m_ObjectHideFlags: 0
@@ -70038,7 +69636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc07443fcaffbc443919d6d34ff487b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 15121586}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -70049,6 +69647,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: 4ff0b9181fd409f4da181d0817abfa6a, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   gray: {fileID: 21300000, guid: 4ff0b9181fd409f4da181d0817abfa6a, type: 3}
   original: {fileID: 21300000, guid: d86608844a3c5f5489af0b60e1747e22, type: 3}
@@ -70670,7 +70269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed68e3ca0fe13a745974ba70a724b4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 133}
+  referenceManager: {fileID: 0}
   descriptionText: {fileID: 581793072}
   infoMenu: {fileID: 1793761466}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
@@ -70681,6 +70280,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: db2cfeb9786c41e4db829a2d7284ef07, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   activatedTexture: {fileID: 21300000, guid: 01e0dcac3ef38a844a55988230239b74, type: 3}
   highlightActivatedTexture: {fileID: 21300000, guid: 8d202cf6bc7453944bca3d3a020c5429,
@@ -70882,6 +70482,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 2075002695}
   color: {r: 1, g: 1, b: 0, a: 1}
@@ -71997,6 +71598,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 21300000, guid: f4860b5a95aa30343a5e3ae05e310f66, type: 3}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   arcsMenuButton: {fileID: 1960943695}
   toggleArcsMenu: {fileID: 654271210}
@@ -72315,6 +71917,7 @@ MonoBehaviour:
   deactivatedTexture: {fileID: 0}
   popupChoice: 1
   buttonActivated: 1
+  storedState: 0
   controllerInside: 0
   buttonRenderer: {fileID: 2134378936}
   color: {r: 0, g: 0.2965517, b: 1, a: 1}

@@ -1050,35 +1050,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1961336518474646}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf4469b18d530449ab4aa4590dfd32e, type: 3}
+  m_Script: {fileID: 11500000, guid: 423afc51b1cb41343a314cdf46b91173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialCanvas: {fileID: 1296290775990744}
-  stepPanels:
-  - {fileID: 1635288188231000}
-  - {fileID: 1921449553494554}
-  - {fileID: 1852567944428072}
-  - {fileID: 1791484757662618}
-  - {fileID: 1017763259418638}
-  - {fileID: 1382275146291206}
-  - {fileID: 1954263035948506}
-  - {fileID: 1621893891182158}
+  tutorialCanvas: {fileID: 0}
+  stepPanels: []
   referenceManager: {fileID: 0}
   rightControllerModel: {fileID: 0}
   leftControllerModel: {fileID: 0}
-  highlightSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  highlightSpots: []
   mainMenu: {fileID: 0}
   graphManager: {fileID: 0}
-  highLightStart: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 0}
-  standardMat: {fileID: 2100000, guid: df5748640eea7c74a8280861b2827a2c, type: 2}
-  highLightEnd: {r: 1, g: 1, b: 0, a: 1}
+  highLightStart: {r: 0, g: 0, b: 0, a: 0}
+  standardMat: {fileID: 0}
+  highLightEnd: {r: 0, g: 0, b: 0, a: 0}
   keyboardButton: {fileID: 0}
   selToolButton: {fileID: 0}
   newSelButton: {fileID: 0}
