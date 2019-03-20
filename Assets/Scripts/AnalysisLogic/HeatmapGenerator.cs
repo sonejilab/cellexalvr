@@ -164,6 +164,20 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
+        /// Highlights gene in genelist in all the heatmaps if it is there.
+        /// </summary>
+        /// <param name="geneName">Name of the gene to be highlighted.</param>
+        public void HighLightGene(string geneName)
+        {
+            foreach (Heatmap hm in heatmapList)
+            {
+                hm.HighLightGene(geneName);
+            }
+
+        }
+
+
+        /// <summary>
         /// Coroutine for creating a heatmap.
         /// </summary>
         IEnumerator GenerateHeatmapRoutine(string heatmapName)

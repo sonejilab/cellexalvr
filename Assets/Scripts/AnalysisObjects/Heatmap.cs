@@ -25,16 +25,18 @@ namespace CellexalVR.AnalysisObjects
     {
         public ReferenceManager referenceManager;
         public Texture texture;
-        public TextMesh infoText;
+        public TextMeshPro infoText;
         public TextMeshPro statusText;
         public SaveHeatmapButton saveImageButton;
         public GOanalysisButton goAnalysisButton;
         public GameObject highlightQuad;
+        public GameObject highlightGeneQuad;
         public GameObject confirmQuad;
         public GameObject movingQuadX;
         public GameObject movingQuadY;
         public int selectionNr;
-        public TextMeshPro highlightGene;
+        public TextMeshPro enlargedGeneText;
+        public TextMeshPro highlightGeneText;
         public bool removable;
 
         private GraphManager graphManager;
@@ -45,7 +47,7 @@ namespace CellexalVR.AnalysisObjects
         private SteamVR_TrackedObject rightController;
         private Transform raycastingSource;
         private GameManager gameManager;
-        private TextMesh highlightInfoText;
+        private TextMeshPro highlightInfoText;
         private ControllerModelSwitcher controllerModelSwitcher;
         private HeatmapGenerator heatmapGenerator;
 
@@ -71,6 +73,7 @@ namespace CellexalVR.AnalysisObjects
         private int numberOfExpressionColors;
         private SolidBrush[] heatmapBrushes;
         private bool buildingTexture = false;
+        private LineRenderer lineRenderer;
 
         private int selectionStartX;
         private int selectionStartY;
@@ -90,6 +93,9 @@ namespace CellexalVR.AnalysisObjects
         private float targetMinScale;
         private bool minimize;
         private bool maximize;
+
+        private bool highlight;
+        private float highlightTime = 0;
 
         // these are numbers ranging [0, groupWidths.Length)
         private int selectedGroupLeft;
@@ -113,7 +119,7 @@ namespace CellexalVR.AnalysisObjects
             speed = 2f;
             scaleSpeed = 3f;
             transform.localScale = new Vector3(0f, 0f, 0f);
-            target = new Vector3(1.4f, 1f, 0.05f);
+            target = new Vector3(1.4f, 1.2f, 0.05f);
             originalPos = originalScale = new Vector3();
             originalRot = new Quaternion();
 
@@ -132,10 +138,11 @@ namespace CellexalVR.AnalysisObjects
             deleteTool = referenceManager.deleteTool;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             highlightQuad.SetActive(false);
+            highlightGeneQuad.SetActive(false);
             confirmQuad.SetActive(false);
             movingQuadX.SetActive(false);
             movingQuadY.SetActive(false);
-            highlightInfoText = highlightQuad.GetComponentInChildren<TextMesh>();
+            highlightInfoText = highlightQuad.GetComponentInChildren<TextMeshPro>();
             geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
 
             numberOfExpressionColors = CellexalConfig.Config.NumberOfHeatmapColors;
@@ -146,6 +153,15 @@ namespace CellexalVR.AnalysisObjects
             {
                 b.referenceManager = referenceManager;
             }
+
+            //lineRenderer = highlightGeneQuad.AddComponent<LineRenderer>();
+            //lineRenderer.useWorldSpace = false;
+            //lineRenderer.startWidth = lineRenderer.endWidth = 0.005f;
+            //lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            //lineRenderer.startColor = new UnityEngine.Color(29, 146, 178); // same as outline on heatmap
+            //lineRenderer.endColor = new UnityEngine.Color(29, 146, 178);
+            //lineRenderer.SetPosition(0, new Vector3(0.5f, 0, 0));
+            //lineRenderer.SetPosition(1, new Vector3(5f, 0, 0));
 
         }
 
@@ -167,6 +183,18 @@ namespace CellexalVR.AnalysisObjects
             {
                 Maximize();
             }
+            if (highlight)
+            {
+                Highlight();
+                highlightTime += Time.deltaTime;
+                if (highlightTime > 6f)
+                {
+                    highlight = false;
+                    highlightTime = 0;
+                    highlightGeneQuad.SetActive(false);
+                }
+            }
+
 
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
@@ -206,7 +234,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     // if we hit the grouping bar
                     HandleHitGroupingBar(hitx);
-                    highlightGene.text = "";
+                    enlargedGeneText.text = "";
                 }
                 else if (CoordinatesInsideRect(hitx, bitmapHeight - hity, heatmapX, heatmapY, heatmapWidth, heatmapHeight))
                 {
@@ -248,14 +276,14 @@ namespace CellexalVR.AnalysisObjects
                         gameManager.InformHandleHitHeatmap(name, hitx, hity);
                         HandleHitHeatmap(hitx, hity);
                     }
-                    highlightGene.text = "";
+                    enlargedGeneText.gameObject.SetActive(false);
                 }
                 else
                 {
                     // if we hit the heatmap but not any area of interest, like the borders or any space in between
                     gameManager.InformResetHeatmapHighlight(name);
                     ResetHeatmapHighlight();
-                    highlightGene.text = "";
+                    enlargedGeneText.gameObject.SetActive(false);
                 }
             }
             else
@@ -434,7 +462,7 @@ namespace CellexalVR.AnalysisObjects
                 groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
             }
             // draw a white background
-            graphics.Clear(System.Drawing.Color.FromArgb(255, 255, 255, 0));
+            graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
 
             float xcoord = heatmapX;
             float ycoord = heatmapY;
@@ -564,7 +592,8 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < genes.Length; ++i)
             {
                 string geneName = genes[i];
-                graphics.DrawString(geneName, geneFont, SystemBrushes.MenuText, geneListX, ycoord);
+                graphics.DrawString(geneName, geneFont, Brushes.White, geneListX, ycoord);
+                //graphics.DrawString(geneName, geneFont, SystemBrushes.Menu, geneListX, ycoord);
                 ycoord += ycoordInc;
             }
             //});
@@ -712,6 +741,11 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
+        private void Highlight()
+        {
+            var lerp = Mathf.PingPong(Time.time, 1f) / 1f;
+            highlightGeneQuad.GetComponent<Renderer>().material.color = UnityEngine.Color.Lerp(UnityEngine.Color.white, UnityEngine.Color.cyan, lerp);
+        }
 
 
         public void HandlePressDown(int hitx, int hity)
@@ -835,8 +869,43 @@ namespace CellexalVR.AnalysisObjects
             highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             highlightQuad.SetActive(true);
             highlightInfoText.text = "";
-            highlightGene.text = genes[geneHit];
+            enlargedGeneText.gameObject.SetActive(true);
+            enlargedGeneText.text = genes[geneHit];
+            enlargedGeneText.transform.localPosition = new Vector3(enlargedGeneText.transform.localPosition.x,
+                                                                highlightQuad.transform.localPosition.y + 0.077f, 0);
             return geneHit;
+        }
+
+        /// <summary>
+        /// Highlights a gene in the genelist if it is there.
+        /// For example when colouring from keyboard it draws attention to the gene in the list.
+        /// </summary>
+        /// <param name="geneName">The name of the gene.</param>
+        public void HighLightGene(string geneName)
+        {
+            int geneHit = Array.FindIndex(genes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
+            if (geneHit != -1)
+            {
+                float highlightMarkerWidth = (float)geneListWidth / bitmapWidth;
+                float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length;
+                float highlightMarkerX = (float)geneListX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+                float highlightMarkerY = -(float)heatmapY / bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
+                //lineRenderer.SetColors(Color.red, Color.yellow);
+
+                highlightGeneQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, 0);
+                highlightGeneQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
+                highlightGeneQuad.SetActive(true);
+                highlightInfoText.text = "";
+                highlightGeneText.text = genes[geneHit];
+                //highlightGeneText.transform.localPosition = new Vector3(highlightGeneText.transform.localPosition.x,
+                //                                    highlightGeneQuad.transform.localPosition.y + 0.09f, 0);
+                highlight = true;
+            }
+            else
+            {
+                highlightGeneText.text = genes[geneHit] + " not in the heatmap list";
+            }
+
         }
 
         /// <summary>

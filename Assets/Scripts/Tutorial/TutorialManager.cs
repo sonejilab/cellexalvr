@@ -175,7 +175,6 @@ namespace CellexalVR.Tutorial
             {
                 obj.GetComponent<Renderer>().material.color = Color.Lerp(highLightStart, highLightEnd, lerp);
             }
-
         }
 
         // Update is called once per frame

@@ -181,6 +181,7 @@ namespace CellexalVR.AnalysisLogic
         {
             try
             {
+                referenceManager.heatmapGenerator.HighLightGene(geneName);
                 StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
 
             }
