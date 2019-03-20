@@ -10,15 +10,14 @@
 /TutorialData/
 /html/
 /Images/
-/Assets/Prefabs/*
 /not_used_scripts/
 /Resources/
 /Screenshots/
 /*_Data/
 /Output/
 /Saved_Images/
+/Config/
 
-*.prefab
 *.ide*
 *.lock
 
