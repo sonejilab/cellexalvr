@@ -8,7 +8,7 @@ namespace CellexalVR.Interaction
     public class PreviousSearchesLock : ClickablePanel
     {
 
-        public PreviousSearchesListNode searchListNode;
+        public ClickableTextPanel searchListNode;
         private bool locked;
         public bool Locked
         {
@@ -32,8 +32,7 @@ namespace CellexalVR.Interaction
 
         public override void Click()
         {
-            Locked = !searchListNode.Locked;
-            searchListNode.Locked = Locked;
+            Locked = !Locked;
             if (Locked)
             {
                 renderer.sharedMaterial = lockedNormalMaterial;

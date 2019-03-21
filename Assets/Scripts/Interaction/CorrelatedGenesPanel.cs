@@ -8,7 +8,7 @@ namespace CellexalVR.Interaction
     public class CorrelatedGenesPanel : ClickablePanel
     {
 
-        public PreviousSearchesListNode listNode;
+        public ClickableTextPanel listNode;
 
         private CorrelatedGenesList correlatedGenesList;
 

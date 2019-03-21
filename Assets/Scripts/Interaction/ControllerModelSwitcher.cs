@@ -55,7 +55,7 @@ namespace CellexalVR.Interaction
             selectionToolHandler = referenceManager.selectionToolHandler;
             deleteTool = referenceManager.deleteTool;
             minimizer = referenceManager.minimizeTool.gameObject;
-            keyboard = referenceManager.keyboard;
+            keyboard = referenceManager.keyboardSwitch;
             drawTool = referenceManager.drawTool.gameObject;
             rightLaser = referenceManager.rightLaser;
             leftLaser = referenceManager.leftLaser;
@@ -138,7 +138,7 @@ namespace CellexalVR.Interaction
                     break;
 
                 case Model.Keyboard:
-                    keyboard.SetKeyboardVisible(true);
+                    //keyboard.SetKeyboardVisible(true);
                     rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                     rightLaser.transform.localRotation = Quaternion.identity;
                     break;
@@ -205,8 +205,8 @@ namespace CellexalVR.Interaction
             // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
             if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
             {
-                rightLaser.ToggleLaser(false);
-                leftLaser.enabled = false;
+                //rightLaser.ToggleLaser(false);
+                //leftLaser.enabled = false;
                 keyboard.SetKeyboardVisible(false);
                 //rightLaser.enabled = false;
                 //referenceManager.gameManager.InformActivateKeyboard(false);
@@ -238,7 +238,7 @@ namespace CellexalVR.Interaction
                 case Model.Keyboard:
                     keyboard.SetKeyboardVisible(true);
                     //rightLaser.enabled = true;
-                    rightLaser.ToggleLaser(true);
+                    //rightLaser.ToggleLaser(true);
                     break;
                 case Model.WebBrowser:
                     webBrowser.SetActive(true);

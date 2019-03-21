@@ -38,7 +38,8 @@ namespace CellexalVR.Interaction
             }
             rightController = referenceManager.rightController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-
+            referenceManager.keyboardHandler.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            referenceManager.folderKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
             {
@@ -64,51 +65,56 @@ namespace CellexalVR.Interaction
             {
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
+
         }
 
         private void Update()
         {
-            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
-                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser
-                || this.gameObject.name == "Keyboard Folder Search")
+            var raycastingSource = referenceManager.rightLaser.transform;
+            var device = SteamVR_Controller.Input((int)rightController.index);
+            var ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                var raycastingSource = referenceManager.rightLaser.transform;
-                var device = SteamVR_Controller.Input((int)rightController.index);
-                var ray = new Ray(raycastingSource.position, raycastingSource.forward);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                // if we hit something this frame.
+                var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
+
+
+                if (hitPanel != null)
                 {
-                    // if we hit something this frame.
-                    var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
-                    if (hitPanel != null)
+                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                    referenceManager.laserPointerController.Override = true;
+                    if (lastHit != null && lastHit != hitPanel)
                     {
-                        if (lastHit != null && lastHit != hitPanel)
-                        {
-                            lastHit.SetHighlighted(false);
-                        }
-                        hitPanel.SetHighlighted(true);
-                        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                        {
-                            hitPanel.Click();
-                        }
-
-                        lastHit = hitPanel;
-                    }
-                    else if (lastHit != null)
-                    {
-                        // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                         lastHit.SetHighlighted(false);
-                        lastHit = null;
+                    }
+                    hitPanel.SetHighlighted(true);
+                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    {
+                        hitPanel.Click();
                     }
 
+                    lastHit = hitPanel;
                 }
                 else if (lastHit != null)
                 {
-                    // if we hit nothing this frame, but hit something last frame.
+                    // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                     lastHit.SetHighlighted(false);
                     lastHit = null;
+                    controllerModelSwitcher.SwitchToDesiredModel();
+                    referenceManager.laserPointerController.Override = false;
                 }
+
             }
+            else if (lastHit != null)
+            {
+                controllerModelSwitcher.SwitchToDesiredModel();
+                referenceManager.laserPointerController.Override = false;
+                // if we hit nothing this frame, but hit something last frame.
+                lastHit.SetHighlighted(false);
+                lastHit = null;
+            }
+
         }
     }
 }

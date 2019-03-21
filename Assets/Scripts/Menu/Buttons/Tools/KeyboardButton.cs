@@ -22,6 +22,7 @@ namespace CellexalVR.Menu.Buttons.Tools
         public override void Click()
         {
             base.Click();
+            //referenceManager.rightLaser.enabled = toolActivated;
             referenceManager.gameManager.InformActivateKeyboard(toolActivated);
         }
 

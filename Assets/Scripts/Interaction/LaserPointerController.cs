@@ -1,4 +1,5 @@
 using CellexalVR.General;
+using CellexalVR.Menu.Buttons;
 using UnityEngine;
 using VRTK;
 namespace CellexalVR.Interaction
@@ -31,10 +32,6 @@ namespace CellexalVR.Interaction
             tempHit = null;
             GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
-            layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
-            //layerMaskGraph = 1 << LayerMask.NameToLayer("GraphLayer");
-            //layerMaskNetwork = 1 << LayerMask.NameToLayer("NetworkLayer");
-            //layerMaskOther = layerMaskKeyboard | layerMaskSel;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
 
         }
@@ -66,21 +63,25 @@ namespace CellexalVR.Interaction
                     panel.transform.localRotation = Quaternion.Euler(-15, 5, 1);
                 }
             }
-            if (!hitSomething && alwaysActive)
+            else
             {
-                transform.localRotation = Quaternion.Euler(0, 0, 0);
-                Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
-                if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
-                {
-                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
-                }
-                else
-                {
-                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
-                    panel.transform.localPosition = new Vector3(0, 0, 0);
-                    panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
-                }
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
             }
+            //if (!hitSomething && alwaysActive)
+            //{
+            //    transform.localRotation = Quaternion.Euler(0, 0, 0);
+            //    Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
+            //    if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
+            //    {
+            //        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+            //    }
+            //    else
+            //    {
+            //        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
+            //        panel.transform.localPosition = new Vector3(0, 0, 0);
+            //        panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
+            //    }
+            //}
             if (!alwaysActive && !Override)
             {
                 // When to switch back to previous model. 
@@ -91,7 +92,7 @@ namespace CellexalVR.Interaction
                         controllerModelSwitcher.ActivateDesiredTool();
                     }
                     GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
-
+                    print("turned off laser");
 
                 }
             }

@@ -102,21 +102,13 @@ namespace CellexalVR.General
         #endregion
 
         #region GeneKeyboard
-        [Header("Gene Keyboard")]
-        public KeyboardSwitch keyboard;
-        public KeyboardStatus keyboardStatus;
-        public KeyboardOutput keyboardOutput;
+        [Header("Keyboards")]
+        public KeyboardHandler keyboardHandler;
+        public KeyboardSwitch keyboardSwitch;
         public CorrelatedGenesList correlatedGenesList;
         public PreviousSearchesList previousSearchesList;
-        public PreviousSearchesListNode topListNode;
         public AutoCompleteList autoCompleteList;
-
-        #endregion
-
-        #region FolderKeyboard
-        [Header("Folder Keyboard")]
-        public KeyboardStatus keyboardStatusFolder;
-        public KeyboardOutput keyboardOutputFolder;
+        public KeyboardHandler folderKeyboard;
 
         #endregion
 

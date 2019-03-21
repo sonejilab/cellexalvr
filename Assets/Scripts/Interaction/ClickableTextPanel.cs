@@ -27,7 +27,6 @@ namespace CellexalVR.Interaction
         /// The method of coloring that is used to color this thing.
         /// </summary>
         public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
-        public CurvedVRKeyboard.KeyboardStatus keyboardOutput;
 
         protected override void Start()
         {
@@ -81,17 +80,8 @@ namespace CellexalVR.Interaction
                 referenceManager.cellManager.ColorByIndex(NameOfThing);
                 referenceManager.gameManager.InformColorByIndex(NameOfThing);
             }
-            else if (name == "Clear")
-            {
-                keyboardOutput.ClearKey();
-            }
-
-            else if (name == "Enter")
-            {
-                keyboardOutput.EnterKey();
-            }
-            string emptyString = "";
-            referenceManager.keyboardStatus.SetOutput(ref emptyString);
+            referenceManager.previousSearchesList.AddEntry(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod);
+            referenceManager.keyboardHandler.Clear();
             referenceManager.autoCompleteList.ClearList();
         }
     }

@@ -23,7 +23,7 @@
             {
                 keyboardOutput.RemoveLetter();
                 output = output.Remove(output.Length - 1, 1);
-                autoCompleteList.KeyboardOutput = output;
+                //autoCompleteList.KeyboardOutput = output;
                 //autoCompleteList.KeyboardOutput = output;
                 //referenceManager.gameManager.InformKeyClicked("backspace");
             }
@@ -36,7 +36,7 @@
             {
                 keyboardOutput.AddLetter(key);
                 output = output + key.ToString();
-                autoCompleteList.KeyboardOutput = output;
+                //autoCompleteList.KeyboardOutput = output;
                 //referenceManager.gameManager.InformKeyClicked(key.ToString());
             }
 

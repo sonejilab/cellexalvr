@@ -25,7 +25,7 @@ namespace CellexalVR.AnalysisObjects
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
         private SelectionToolHandler selectionToolHandler;
-        private PreviousSearchesListNode listNode;
+        private ClickableTextPanel listNode;
 
         private void Start()
         {
@@ -87,7 +87,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         /// <param name="index"> The genes index in the list of previous searches. </param>
         /// <param name="name"> The genes name. </param>
-        public void CalculateCorrelatedGenes(PreviousSearchesListNode node, Extensions.Definitions.Measurement type)
+        public void CalculateCorrelatedGenes(ClickableTextPanel node, Extensions.Definitions.Measurement type)
         {
             listNode = node;
             listNode.GetComponentInChildren<CorrelatedGenesPanel>().SetPressed(true);

@@ -14,7 +14,7 @@ namespace CellexalVR.Interaction
 
         public List<PreviousSearchesLock> searchLocks = new List<PreviousSearchesLock>();
         public List<CorrelatedGenesPanel> correlatedGenesButtons = new List<CorrelatedGenesPanel>();
-        public List<PreviousSearchesListNode> previousSearchesListNodes = new List<PreviousSearchesListNode>();
+        public List<ClickableTextPanel> previousSearchesListNodes = new List<ClickableTextPanel>();
 
         private GameManager gameManager;
 
@@ -58,7 +58,7 @@ namespace CellexalVR.Interaction
             {
                 var listNode = previousSearchesListNodes[i];
                 // if this node is locked, just move on
-                if (listNode.Locked)
+                if (searchLocks[i].Locked)
                     continue;
                 // if this node is empty, insert what we are inserting and return
                 if (listNode.NameOfThing == "")
@@ -112,7 +112,6 @@ namespace CellexalVR.Interaction
         {
             foreach (var node in previousSearchesListNodes)
             {
-                node.Locked = false;
                 node.SetText("", Definitions.Measurement.INVALID);
             }
             foreach (var lockButton in searchLocks)
@@ -120,5 +119,15 @@ namespace CellexalVR.Interaction
                 lockButton.Locked = false;
             }
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            gameObject.GetComponentsInChildren<PreviousSearchesLock>(searchLocks);
+            gameObject.GetComponentsInChildren<ClickableTextPanel>(previousSearchesListNodes);
+            gameObject.GetComponentsInChildren<CorrelatedGenesPanel>(correlatedGenesButtons);
+        }
+#endif
     }
+
 }

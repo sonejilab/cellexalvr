@@ -23,19 +23,8 @@ namespace CellexalVR.Interaction
             KeyboardActive = visible;
             foreach (Transform t in transform)
             {
-                if (t.gameObject.GetComponent<AutoCompleteList>())
-                {
-                    foreach (Transform tt in t)
-                    {
-                        tt.gameObject.SetActive(visible);
-                    }
-                }
-                else
-                {
-                    t.gameObject.SetActive(visible);
-                }
+                t.gameObject.SetActive(visible);
             }
         }
-
     }
 }

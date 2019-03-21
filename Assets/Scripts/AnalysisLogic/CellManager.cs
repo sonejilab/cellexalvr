@@ -250,14 +250,14 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
             //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
 
-            // new_keyboard if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
-            // new_keyboard {
-            // new_keyboard     var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
-            // new_keyboard     foreach (Cell c in cells.Values)
-            // new_keyboard     {
-            // new_keyboard         c.SaveExpression(geneName + " " + coloringMethod, removedGene);
-            // new_keyboard     }
-            // new_keyboard }
+            if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
+            {
+                var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+                foreach (Cell c in cells.Values)
+                {
+                    c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+                }
+            }
             if (triggerEvent)
             {
                 CellexalEvents.GraphsColoredByGene.Invoke();

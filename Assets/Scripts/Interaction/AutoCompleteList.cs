@@ -14,17 +14,7 @@ namespace CellexalVR.Interaction
 
         private List<Tuple<string, Definitions.Measurement>> namesOfThings;
         public bool ListEnabled { get; set; } = true;
-        private string keyBoardOutput;
-        public string KeyboardOutput
-        {
-            get { return keyBoardOutput; }
 
-            set
-            {
-                keyBoardOutput = value;
-                UpdateList(value);
-            }
-        }
         private BKTreeNode root;
         private int addCost1 = 1;
         private int addCost2 = 1;
@@ -164,7 +154,7 @@ namespace CellexalVR.Interaction
         /// Updates the list with appropriate guesses for what the user might mean when they typed something on the keyboard.
         /// </summary>
         /// <param name="word">The word typed on the keyboard.</param>
-        private void UpdateList(string word)
+        public void UpdateList(string word)
         {
             if (word == "")
             {
