@@ -92,7 +92,6 @@ namespace CellexalVR.Interaction
                         controllerModelSwitcher.ActivateDesiredTool();
                     }
                     GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
-                    print("turned off laser");
 
                 }
             }
