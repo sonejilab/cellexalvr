@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4702052495741726}
   - component: {fileID: 33854092269411032}
   - component: {fileID: 23601448110652970}
-  - component: {fileID: 114483635505091214}
   - component: {fileID: 65032051190882804}
   m_Layer: 13
   m_Name: GraphPoint
@@ -97,20 +96,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0037, y: 0.0037, z: 0.0037}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114483635505091214
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1508805501921748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98f52b2868165944fbd17844d6e84877, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Graph: {fileID: 0}
-  lineBetweenCellsCubes: []
-  transparentMaterial: {fileID: 2100000, guid: 9a954001242a1ce44841bed80afe615d, type: 2}
-  particleMat: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 3}
-  ps: {fileID: 198270782395290292, guid: 22e9d73efdc8b1049aaaf0f341a9e9a1, type: 2}
-  label: 

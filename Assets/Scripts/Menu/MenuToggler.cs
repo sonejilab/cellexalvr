@@ -10,6 +10,8 @@ public class MenuToggler : MonoBehaviour
 {
     public ReferenceManager referenceManager;
     public bool MenuActive { get; set; }
+    public VRTK.VRTK_BezierPointerRenderer teleportLaser;
+    public GameObject menuCube;
 
     private SteamVR_Controller.Device device;
     private GameObject menu;
@@ -37,11 +39,12 @@ public class MenuToggler : MonoBehaviour
     void Update()
     {
         device = SteamVR_Controller.Input((int)leftController.index);
-        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.IsCursorVisible())
         {
             menu.transform.parent = leftController.transform;
             menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
             MenuActive = !MenuActive;
+            menuCube.SetActive(!MenuActive);
             SetMenuVisible(MenuActive);
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();

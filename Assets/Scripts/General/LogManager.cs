@@ -86,7 +86,10 @@ namespace CellexalVR.General
         /// <param name="message"> The string that should be written to the log. </param>
         public static void Log(string message)
         {
-            consoleManager.AppendOutput(message);
+            if (consoleManager)
+            {
+                consoleManager.AppendOutput(message);
+            }
             if (LogFilePath == "")
             {
                 logThisLater.Add("\t" + message);

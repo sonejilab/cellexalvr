@@ -713,6 +713,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 133}
+  teleportLaser: {fileID: 409608051}
+  menuCube: {fileID: 610491762}
 --- !u!114 &297
 MonoBehaviour:
   m_ObjectHideFlags: 0
