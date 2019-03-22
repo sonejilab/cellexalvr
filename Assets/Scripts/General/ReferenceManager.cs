@@ -109,6 +109,7 @@ namespace CellexalVR.General
         public PreviousSearchesList previousSearchesList;
         public AutoCompleteList autoCompleteList;
         public KeyboardHandler folderKeyboard;
+        public KeyboardHandler webBrowserKeyboard;
 
         #endregion
 

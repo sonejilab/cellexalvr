@@ -141,7 +141,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4362330521873802}
-  - component: {fileID: 114240815480928428}
   - component: {fileID: 65856341553819462}
   m_Layer: 0
   m_Name: HighlightLoader
@@ -1770,18 +1769,6 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
---- !u!114 &114240815480928428
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1336940205290046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac9a8cb54c3f32149b725ed455bfbfe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 0}
 --- !u!114 &114486994403053736
 MonoBehaviour:
   m_ObjectHideFlags: 1

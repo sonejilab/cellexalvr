@@ -143,7 +143,7 @@ namespace CellexalVR.AnalysisObjects
             movingQuadX.SetActive(false);
             movingQuadY.SetActive(false);
             highlightInfoText = highlightQuad.GetComponentInChildren<TextMeshPro>();
-            geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 12f, System.Drawing.FontStyle.Bold);
+            geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, 14f, System.Drawing.FontStyle.Bold);
 
             numberOfExpressionColors = CellexalConfig.Config.NumberOfHeatmapColors;
             heatmapGenerator = referenceManager.heatmapGenerator;

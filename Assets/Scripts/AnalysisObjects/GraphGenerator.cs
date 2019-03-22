@@ -612,6 +612,7 @@ namespace CellexalVR.AnalysisObjects
             stopwatch.Stop();
             CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName, stopwatch.Elapsed.ToString()));
             isCreating = false;
+            CellexalEvents.GraphsLoaded.Invoke();
             //yield break;
         }
 

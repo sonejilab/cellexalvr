@@ -21,7 +21,7 @@ namespace CellexalVR.Interaction
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             referenceManager.gameManager.InformDisableColliders(gameObject.name);
-            GetComponent<MeshCollider>().convex = true;
+            //GetComponent<MeshCollider>().convex = true;
             base.OnInteractableObjectGrabbed(e);
         }
 
@@ -29,8 +29,8 @@ namespace CellexalVR.Interaction
         {
             keyboard.SetActive(true);
             referenceManager.gameManager.InformEnableColliders(gameObject.name);
-            if (grabbingObjects.Count == 0)
-                GetComponent<MeshCollider>().convex = false;
+            //if (grabbingObjects.Count == 0)
+            //    GetComponent<MeshCollider>().convex = false;
             base.OnInteractableObjectUngrabbed(e);
         }
 

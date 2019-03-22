@@ -144,7 +144,7 @@ namespace CellexalVR.Interaction
                     break;
 
                 case Model.WebBrowser:
-                    webBrowser.SetActive(true);
+                    webBrowser.GetComponent<WebManager>().SetVisible(true);
                     rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                     rightLaser.transform.localRotation = Quaternion.identity;
                     break;
@@ -241,7 +241,7 @@ namespace CellexalVR.Interaction
                     //rightLaser.ToggleLaser(true);
                     break;
                 case Model.WebBrowser:
-                    webBrowser.SetActive(true);
+                    webBrowser.GetComponent<WebManager>().SetVisible(true);
                     rightLaser.ToggleLaser(true);
                     break;
                 case Model.TwoLasers:
@@ -279,7 +279,7 @@ namespace CellexalVR.Interaction
             keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
             drawTool.SetActive(false);
-            webBrowser.SetActive(false);
+            webBrowser.GetComponent<WebManager>().SetVisible(false);
             if (inMenu)
             {
                 SwitchToModel(Model.Menu);
