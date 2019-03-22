@@ -73,7 +73,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
                 CellexalLog.Log("\tSelection consists of  " + points.Count + " points");
-                string header = "\t" + first_marker + "\t" + second_marker + "\t" + third_marker;
+                string header = "cell_id\t" + first_marker + "\t" + second_marker + "\t" + third_marker;
                 file.WriteLine(header);
                 for (int i = 0; i < points.Count; i++)
                 {

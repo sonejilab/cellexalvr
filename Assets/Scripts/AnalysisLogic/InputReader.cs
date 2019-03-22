@@ -262,7 +262,6 @@ namespace CellexalVR.AnalysisLogic
                     }
                     else
                     {
-                        print(header.Split(null)[0].Equals(null));
                         string[] words = header.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words.Length != 4)
                         {
@@ -516,7 +515,7 @@ namespace CellexalVR.AnalysisLogic
             }
             stopwatch.Stop();
             CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
-            LoadPreviousGroupings();
+            //LoadPreviousGroupings();
             StartCoroutine(LogStart());
         }
 
@@ -966,7 +965,6 @@ namespace CellexalVR.AnalysisLogic
             FileStream fileStream = new FileStream(groupingsInfoFile, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             // skip the header
-            print(streamReader.ReadLine());
             List<string> groupingNames = new List<string>();
             List<int> fileLengths = new List<int>();
             string line = "";
