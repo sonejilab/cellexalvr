@@ -285,6 +285,14 @@ namespace CellexalVR.Interaction
         {
             Vector3[] verts = mesh.vertices;
             int[] tris = mesh.triangles;
+            if (verts.Length != 14)
+            {
+                verts = new Vector3[14]; 
+            }
+            if (tris.Length != 36)
+            {
+                tris = new int[36];
+            }
             Vector3 yOffset = new Vector3(0, 0.5f, 0);
             Vector3 xOffset = new Vector3(0, 0, -distance);
             for (int i = 0; i < verts.Length; i += 2)

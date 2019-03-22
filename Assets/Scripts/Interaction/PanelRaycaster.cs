@@ -40,6 +40,7 @@ namespace CellexalVR.Interaction
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             referenceManager.keyboardHandler.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             referenceManager.folderKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
             {

@@ -253,15 +253,17 @@ namespace CellexalVR.AnalysisLogic
                     //List<float> ycoords = new List<float>();
                     //List<float> zcoords = new List<float>();
                     int i = 0;
-                    // first line is (if correct format) a header and the first char is a tab. If wrong and does not contain header read first line as a cell.
+                    // first line is (if correct format) a header and the first word is cell_id (the name of the first column).
+                    // If wrong and does not contain header read first line as a cell.
                     string header = mdsStreamReader.ReadLine();
-                    if (header.Split(null)[0].Equals('\t'))
+                    if (header.Split(null)[0].Equals("cell_id"))
                     {
                         axes = header.Split(null).Skip(1).ToArray();
                     }
                     else
                     {
-                        string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                        print(header.Split(null)[0].Equals(null));
+                        string[] words = header.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words.Length != 4)
                         {
                             continue;
@@ -320,7 +322,6 @@ namespace CellexalVR.AnalysisLogic
                             maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                         }
                     }
-
                     // we must wait for the graph to fully initialize before adding stuff to it
                     // more_cells while (!newGraph.Ready())
                     // more_cells   yield return null; 
@@ -388,7 +389,6 @@ namespace CellexalVR.AnalysisLogic
             //status.RemoveStatus(statusId);
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
-            CellexalEvents.GraphsLoaded.Invoke();
 
             StartCoroutine(InitialCheckCoroutine());
             if (debug)
@@ -966,7 +966,7 @@ namespace CellexalVR.AnalysisLogic
             FileStream fileStream = new FileStream(groupingsInfoFile, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             // skip the header
-            streamReader.ReadLine();
+            print(streamReader.ReadLine());
             List<string> groupingNames = new List<string>();
             List<int> fileLengths = new List<int>();
             string line = "";
@@ -1018,7 +1018,7 @@ namespace CellexalVR.AnalysisLogic
                 for (int j = 0; j < fileLengths[i]; ++j)
                 {
                     line = streamReader.ReadLine();
-
+                    print(line);
                     words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     cellNames[i][j] = words[0];
 
