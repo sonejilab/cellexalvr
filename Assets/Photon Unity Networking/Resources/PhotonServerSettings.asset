@@ -96,4 +96,7 @@ MonoBehaviour:
   - SendToggleMenu
   - SendToggleNonExpressedCells
   - SendDeleteNetwork
+  - SendCreateMarkerGraph
+  - SendAddMarker
+  - SendCreateAttributeGraph
   DisableAutoOpenWizard: 1

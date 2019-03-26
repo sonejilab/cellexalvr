@@ -146,7 +146,6 @@ public class SelectionToolHandler : MonoBehaviour
         // if selection tool is inactive.
         if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
         {
-            print("deactivate");
             particles.gameObject.SetActive(false);
         }
 

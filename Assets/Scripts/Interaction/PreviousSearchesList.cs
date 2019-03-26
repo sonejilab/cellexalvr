@@ -23,6 +23,7 @@ namespace CellexalVR.Interaction
             gameManager = referenceManager.gameManager;
         }
 
+
         /// <summary>
         /// Checks if the list already contains an entry.
         /// </summary>
@@ -126,6 +127,8 @@ namespace CellexalVR.Interaction
             gameObject.GetComponentsInChildren<PreviousSearchesLock>(searchLocks);
             gameObject.GetComponentsInChildren<ClickableTextPanel>(previousSearchesListNodes);
             gameObject.GetComponentsInChildren<CorrelatedGenesPanel>(correlatedGenesButtons);
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 #endif
     }

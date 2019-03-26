@@ -79,6 +79,7 @@ namespace CellexalVR.AnalysisObjects
         private int selectionStartY;
         private bool selecting = false;
         private bool movingSelection = false;
+        private int layerMask;
 
         // For creation animation
         private bool createAnim = false;
@@ -122,6 +123,7 @@ namespace CellexalVR.AnalysisObjects
             target = new Vector3(1.4f, 1.2f, 0.05f);
             originalPos = originalScale = new Vector3();
             originalRot = new Quaternion();
+            layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
 
         }
 
@@ -185,13 +187,13 @@ namespace CellexalVR.AnalysisObjects
             }
             if (highlight)
             {
-                Highlight();
                 highlightTime += Time.deltaTime;
                 if (highlightTime > 6f)
                 {
                     highlight = false;
                     highlightTime = 0;
                     highlightGeneQuad.SetActive(false);
+                    highlightGeneText.text = "";
                 }
             }
 
@@ -213,7 +215,6 @@ namespace CellexalVR.AnalysisObjects
             raycastingSource = referenceManager.rightLaser.transform;
             //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
             RaycastHit hit;
-            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask);
             if (hit.collider && hit.transform == transform)
             {
@@ -741,13 +742,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-        private void Highlight()
-        {
-            var lerp = Mathf.PingPong(Time.time, 1f) / 1f;
-            highlightGeneQuad.GetComponent<Renderer>().material.color = UnityEngine.Color.Lerp(UnityEngine.Color.white, UnityEngine.Color.cyan, lerp);
-        }
-
-
+   
         public void HandlePressDown(int hitx, int hity)
         {
             if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
@@ -897,13 +892,14 @@ namespace CellexalVR.AnalysisObjects
                 highlightGeneQuad.SetActive(true);
                 highlightInfoText.text = "";
                 highlightGeneText.text = genes[geneHit];
-                //highlightGeneText.transform.localPosition = new Vector3(highlightGeneText.transform.localPosition.x,
-                //                                    highlightGeneQuad.transform.localPosition.y + 0.09f, 0);
+                highlightGeneText.transform.localPosition = new Vector3(highlightGeneText.transform.localPosition.x,
+                                                    highlightGeneQuad.transform.localPosition.y + 0.09f, 0);
                 highlight = true;
             }
             else
             {
-                highlightGeneText.text = genes[geneHit] + " not in the heatmap list";
+                print("gene does not exist in list");
+                highlightGeneText.text = geneName + " not in the heatmap list";
             }
 
         }

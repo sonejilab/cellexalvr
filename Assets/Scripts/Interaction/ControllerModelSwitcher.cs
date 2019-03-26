@@ -207,7 +207,7 @@ namespace CellexalVR.Interaction
             {
                 //rightLaser.ToggleLaser(false);
                 //leftLaser.enabled = false;
-                keyboard.SetKeyboardVisible(false);
+                //keyboard.SetKeyboardVisible(false);
                 //rightLaser.enabled = false;
                 //referenceManager.gameManager.InformActivateKeyboard(false);
             }

@@ -62,7 +62,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 68643428ffadc324082da695acfd7da8, type: 2}
+  - {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -274,8 +274,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81e0e8b204c28244a2ad3393db0704e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 2100000, guid: 3d938759d8b7a414988ec3261fb5265d, type: 2}
-  normalMaterial: {fileID: 2100000, guid: 68643428ffadc324082da695acfd7da8, type: 2}
+  highlightMaterial: {fileID: 2100000, guid: 8c266280f23e1c34aa706e90a9f5a1cd, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
   removable: 0
   networks: []
   layoutApplied: 0

@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -16,6 +17,12 @@ namespace CellexalVR.Interaction
         {
             base.Start();
             graphManager = referenceManager.graphManager;
+        }
+
+        private void OnValidate()
+        {
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         /// <summary>

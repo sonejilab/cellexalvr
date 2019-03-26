@@ -1,6 +1,7 @@
 ﻿using CellexalVR.Menu.SubMenus;
 using CellexalVR.AnalysisLogic;
 using UnityEngine;
+using CellexalVR.General;
 
 namespace CellexalVR.Menu.Buttons.Facs
 {
@@ -15,6 +16,7 @@ namespace CellexalVR.Menu.Buttons.Facs
         private CellManager cellManager;
         private string indexName;
 
+
         protected override string Description
         {
             get { return "Color graphs by facs - " + this.indexName; }
@@ -23,12 +25,14 @@ namespace CellexalVR.Menu.Buttons.Facs
         protected void Start()
         {
             cellManager = referenceManager.cellManager;
+            CellexalEvents.GraphsColoredByIndex.AddListener(TurnOn);
         }
 
         public override void Click()
         {
             cellManager.ColorByIndex(indexName);
             referenceManager.gameManager.InformColorByIndex(indexName);
+            TurnOff();
         }
 
         /// <summary>
@@ -42,6 +46,15 @@ namespace CellexalVR.Menu.Buttons.Facs
             meshStandardColor = GetComponent<Renderer>().material.color;
             this.indexName = indexName;
             descriptionOnButton.text = indexName;
+        }
+
+        private void TurnOn()
+        {
+            SetButtonActivated(true);
+        }
+        private void TurnOff()
+        {
+            SetButtonActivated(false);
         }
     }
 }

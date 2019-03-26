@@ -29,6 +29,12 @@ namespace CellexalVR.General
         /// <param name="message">A longer message that explains what went wrong, e.g "no data was found, make sure you placed in correctly" and so on</param>
         public static void SpawnError(string title, string message)
         {
+            Debug.Log(cameraTransform);
+            if (!cameraTransform)
+            {
+                cameraTransform = referenceManager.headset.transform;
+            }
+            Debug.Log(cameraTransform);
             SpawnError(cameraTransform.position + cameraTransform.forward * 0.7f, title, message);
         }
 

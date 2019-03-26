@@ -67,21 +67,21 @@ namespace CellexalVR.Interaction
             {
                 transform.localEulerAngles = new Vector3(0f, 0f, 0f);
             }
-            //if (!hitSomething && alwaysActive)
-            //{
-            //    transform.localRotation = Quaternion.Euler(0, 0, 0);
-            //    Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
-            //    if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
-            //    {
-            //        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
-            //    }
-            //    else
-            //    {
-            //        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
-            //        panel.transform.localPosition = new Vector3(0, 0, 0);
-            //        panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
-            //    }
-            //}
+            if (!hitSomething && alwaysActive)
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
+                //Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
+                //if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
+                //{
+                //    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                //}
+                //else
+                //{
+                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
+                panel.transform.localPosition = new Vector3(0, 0, 0);
+                panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
+                //}
+            }
             if (!alwaysActive && !Override)
             {
                 // When to switch back to previous model. 

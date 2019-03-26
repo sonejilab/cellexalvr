@@ -34,6 +34,7 @@ namespace CellexalVR.Menu.SubMenus
                 int colorIndex = i % Colors.Length;
                 b.GetComponent<ColorByAttributeButton>().SetAttribute(categoriesAndNames[i], names[i], Colors[colorIndex]);
                 b.GetComponent<ColorByAttributeButton>().parentMenu = this;
+                b.gameObject.name = categoriesAndNames[i];
             }
         }
 

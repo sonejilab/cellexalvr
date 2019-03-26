@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.General;
+using UnityEngine;
 
 namespace CellexalVR.Interaction
 {
@@ -56,6 +57,12 @@ namespace CellexalVR.Interaction
                 transform.parent.GetComponentInChildren<TMPro.TextMeshPro>().text = value + "";
                 text = value;
             }
+        }
+
+        private void OnValidate()
+        {
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         /// <summary>

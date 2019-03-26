@@ -27,9 +27,11 @@ namespace CellexalVR.General
         public static UnityEvent NetworkUnEnlarged = new UnityEvent();
         public static UnityEvent ScriptRunning = new UnityEvent();
         public static UnityEvent ScriptFinished = new UnityEvent();
+        public static UnityEvent KeyboardToggled = new UnityEvent();
 
         public static UnityEvent GraphsReset = new UnityEvent();
         public static UnityEvent GraphsColoredByGene = new UnityEvent();
+        public static UnityEvent GraphsColoredByIndex = new UnityEvent();
 
         public static UnityEvent LinesBetweenGraphsDrawn = new UnityEvent();
         public static UnityEvent LinesBetweenGraphsCleared = new UnityEvent();

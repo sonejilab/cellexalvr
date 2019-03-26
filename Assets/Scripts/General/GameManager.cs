@@ -247,7 +247,23 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendClearLinesBetweenGps", PhotonTargets.Others);
         }
 
+        public void InformAddMarker(string indexName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendAddMarker", PhotonTargets.Others, indexName);
+        }
 
+        public void InformCreateMarkerGraph()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendCreateMarkerGraph", PhotonTargets.Others);
+        }
+
+        public void InformCreateAttributeGraph()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendCreateAttributeGraph", PhotonTargets.Others);
+        }
 
         public void InformActivateKeyboard(bool activate)
         {

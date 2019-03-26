@@ -2,6 +2,8 @@
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.Menu.Buttons.Attributes;
+using CellexalVR.Menu.Buttons.Facs;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,6 +91,12 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to color all graphs by attribute " + attributeType);
             //Color col = new Color(r, g, b);
             referenceManager.cellManager.ColorByAttribute(attributeType, colored);
+            var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
+            if (attributeButton)
+            {
+                attributeButton.GetComponent<ColorByAttributeButton>().activeOutline.SetActive(colored);
+                attributeButton.GetComponent<ColorByAttributeButton>().colored = !colored;
+            }
         }
 
         [PunRPC]
@@ -141,6 +149,42 @@ namespace CellexalVR.Multiplayer
             }
         }
 
+        [PunRPC]
+        public void SendAddMarker(string indexName)
+        {
+            var markerButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
+            if (referenceManager.newGraphFromMarkers.markers.Count < 3 && !referenceManager.newGraphFromMarkers.markers.Contains(indexName))
+            {
+                referenceManager.newGraphFromMarkers.markers.Add(indexName);
+                if (markerButton)
+                {
+                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(true);
+                    markerButton.GetComponent<AddMarkerButton>().activeOutline.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+            else if (referenceManager.newGraphFromMarkers.markers.Contains(indexName))
+            {
+                referenceManager.newGraphFromMarkers.markers.Remove(indexName);
+                if (markerButton)
+                {
+                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(false);
+                }
+            }
+        }
+
+        [PunRPC]
+        public void SendCreateMarkerGraph()
+        {
+            CellexalLog.Log("Recieved message to create marker graph");
+            referenceManager.newGraphFromMarkers.CreateMarkerGraph();
+        }
+
+        [PunRPC]
+        public void SendCreateAttributeGraph()
+        {
+            CellexalLog.Log("Recieved message to create attribute graph");
+            referenceManager.graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
+        }
 
         [PunRPC]
         public void SendCancelSelection()

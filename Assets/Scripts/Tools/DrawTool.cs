@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Menu.Buttons;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,25 +64,25 @@ namespace CellexalVR.Tools
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 //// this happens only once when the trigger is pressed
-                //if (skipNextDraw)
-                //{
-                //    skipNextDraw = false;
-                //}
-                //else
-                //{
-                //    // if the trigger was pressed we need to make sure that the controller is not inside a button.
-                //    drawing = true;
-                //    var colliders = Physics.OverlapBox(controllerMenuCollider.transform.position, controllerMenuCollider.bounds.extents, controllerMenuCollider.gameObject.transform.rotation);
+                if (skipNextDraw)
+                {
+                    skipNextDraw = false;
+                }
+                else
+                {
+                    // if the trigger was pressed we need to make sure that the controller is not inside a button.
+                    drawing = true;
+                    var colliders = Physics.OverlapBox(controllerMenuCollider.transform.position, controllerMenuCollider.bounds.extents, controllerMenuCollider.gameObject.transform.rotation);
 
-                //    foreach (Collider collider in colliders)
-                //    {
-                //        if (collider.gameObject.GetComponent<StationaryButton>() || collider.gameObject.GetComponent<RotatableButton>() || collider.gameObject.GetComponent<SolidButton>())
-                //        {
-                //            drawing = false;
-                //            break;
-                //        }
-                //    }
-                //}
+                    foreach (Collider collider in colliders)
+                    {
+                        if (collider.gameObject.GetComponent<CellexalButton>())
+                        {
+                            drawing = false;
+                            break;
+                        }
+                    }
+                }
                 for (int i = 0; i < trailLines.Length; i++)
                 {
                     if (trailLines[i] != null)

@@ -50,7 +50,7 @@ namespace CellexalVR.SceneObjects
             inputReader = referenceManager.inputReader;
             inputFolderGenerator = referenceManager.inputFolderGenerator;
             graphManager = referenceManager.graphManager;
-            helperCylinder = referenceManager.helperCylinder;
+            //helperCylinder = referenceManager.helperCylinder;
             // multiple_exp datasetList = GetComponentInChildren<DatasetList>();
         }
 
@@ -109,7 +109,7 @@ namespace CellexalVR.SceneObjects
             if (distance.y > 0)
             {
                 finalScale = new Vector3(1f, startScale.y, 1f);
-                helperCylinder.SetActive(true);
+                //helperCylinder.SetActive(true);
             }
             else
             {

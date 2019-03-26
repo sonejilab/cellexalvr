@@ -738,12 +738,12 @@ namespace CellexalVR.AnalysisObjects
             }
             subGraph = CreateGraph(GraphType.ATTRIBUTE);
             subGraph.GraphName = name;
-            StartCoroutine(CreateSubGraphsCoroutine(expr));
+            StartCoroutine(CreateSubGraphsCoroutine(expr, attributes));
             //CreateSubGraphs(expr, attributes);
         }
 
 
-        private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr)
+        private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes)
         {
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
 
@@ -768,9 +768,9 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
             //}
-            foreach (string attrbibute in referenceManager.attributeSubMenu.attributes)
+            foreach (string attribute in attributes)
             {
-                referenceManager.cellManager.ColorByAttribute(attrbibute, true);
+                referenceManager.cellManager.ColorByAttribute(attribute, true, true);
             }
             graphManager.Graphs.Add(subGraph);
         }

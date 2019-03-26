@@ -19,6 +19,7 @@
         public override void Click()
         {
             referenceManager.newGraphFromMarkers.CreateMarkerGraph();
+            referenceManager.gameManager.InformCreateMarkerGraph();
         }
 
     }

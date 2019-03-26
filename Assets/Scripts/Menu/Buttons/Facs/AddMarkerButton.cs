@@ -40,6 +40,7 @@ namespace CellexalVR.Menu.Buttons.Facs
                 markers.Remove(this.indexName);
                 activeOutline.SetActive(false);
             }
+            referenceManager.gameManager.InformAddMarker(this.indexName);
         }
 
         /// <summary>

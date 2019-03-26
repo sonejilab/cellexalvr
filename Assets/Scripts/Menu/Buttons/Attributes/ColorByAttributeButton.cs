@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public Color booleanNoColor;
         public string Attribute { get; set; }
         public GameObject activeOutline;
-        private bool colored = false;
+        public bool colored = false;
 
         public enum Mode { SINGLE, BOOLEAN_EXPR }
         public Mode CurrentMode { get; set; } = Mode.SINGLE;
@@ -44,14 +44,6 @@ namespace CellexalVR.Menu.Buttons.Attributes
                 cellManager.ColorByAttribute(Attribute, !colored);
                 referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
                 colored = !colored;
-                if (colored)
-                {
-                    parentMenu.attributes.Add(Attribute);
-                }
-                else
-                {
-                    parentMenu.attributes.Remove(Attribute);
-                }
                 activeOutline.SetActive(colored);
             }
             else if (CurrentMode == Mode.BOOLEAN_EXPR)

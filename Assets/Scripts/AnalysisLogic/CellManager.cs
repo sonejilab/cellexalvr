@@ -179,9 +179,9 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="geneName"> The name of the gene. </param>
         public void ColorGraphsByGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
         {
+            referenceManager.heatmapGenerator.HighLightGene(geneName);
             try
             {
-                referenceManager.heatmapGenerator.HighLightGene(geneName);
                 StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
 
             }
@@ -206,7 +206,6 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
             coroutinesWaiting++;
-
             // if there is already a query running, wait for it to finish
             while (database.QueryRunning)
                 yield return null;
@@ -357,8 +356,19 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", "colorbyattribute", "cba")]
-        public void ColorByAttribute(string attributeType, bool color)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph=false)
         {
+            if (!subGraph)
+            {
+                if (color)
+                {
+                    referenceManager.attributeSubMenu.attributes.Add(attributeType);
+                }
+                else
+                {
+                    referenceManager.attributeSubMenu.attributes.Remove(attributeType);
+                }
+            }
             CellexalLog.Log("Colored graphs by " + attributeType);
             foreach (Cell cell in cells.Values)
             {
@@ -470,6 +480,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 cell.ColorByIndex(name);
             }
+            CellexalEvents.GraphsColoredByIndex.Invoke();
         }
 
         /// <summary>

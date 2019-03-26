@@ -1,3 +1,4 @@
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Tools
@@ -24,6 +25,7 @@ namespace CellexalVR.Menu.Buttons.Tools
             base.Click();
             //referenceManager.rightLaser.enabled = toolActivated;
             referenceManager.gameManager.InformActivateKeyboard(toolActivated);
+            CellexalEvents.KeyboardToggled.Invoke();
         }
 
 

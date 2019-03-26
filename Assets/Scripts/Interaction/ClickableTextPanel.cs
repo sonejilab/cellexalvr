@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
+using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -32,6 +33,12 @@ namespace CellexalVR.Interaction
         {
             base.Start();
             textMesh = GetComponentInChildren<TextMesh>();
+        }
+
+        private void OnValidate()
+        {
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         /// <summary>

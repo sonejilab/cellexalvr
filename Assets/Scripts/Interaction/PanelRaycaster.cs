@@ -69,6 +69,12 @@ namespace CellexalVR.Interaction
 
         }
 
+        private void OnValidate()
+        {
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+
         private void Update()
         {
             var raycastingSource = referenceManager.rightLaser.transform;

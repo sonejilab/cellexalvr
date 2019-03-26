@@ -102,15 +102,7 @@ namespace CellexalVR.AnalysisLogic
             // multiple_exp }
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
-            string fullPath;
-            if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
-            {
-                fullPath = workingDirectory + "\\TutorialData\\" + path;
-            }
-            else
-            {
-                fullPath = workingDirectory + "\\Data\\" + path;
-            }
+            string fullPath = workingDirectory + "\\Data\\" + path;
             CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
             CellexalUser.DataSourceFolder = currentPath;
             //LoadPreviousGroupings();
@@ -140,8 +132,15 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(f);
                 }
             }
-
-            string[] mdsFiles = Directory.GetFiles(fullPath, "*.mds");
+            string[] mdsFiles;
+            if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
+            {
+                mdsFiles = Directory.GetFiles(fullPath, "DDRTree.mds");
+            }
+            else
+            {
+                mdsFiles = Directory.GetFiles(fullPath, "*.mds");
+            }
             if (mdsFiles.Length == 0)
             {
                 CellexalError.SpawnError("Empty dataset", "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
@@ -202,7 +201,7 @@ namespace CellexalVR.AnalysisLogic
             int fileIndex = 0;
             //  Read each .mds file
             //  The file format should be
-            //  id  axis_name1   axis_name2   axis_name3
+            //  cell_id  axis_name1   axis_name2   axis_name3
             //  CELLNAME_1 X_COORD Y_COORD Z_COORD
             //  CELLNAME_2 X_COORD Y_COORD Z_COORD
             //  ...

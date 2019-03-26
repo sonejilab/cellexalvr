@@ -18103,6 +18103,7 @@ MonoBehaviour:
   booleanYesColor: {r: 0, g: 1, b: 0.0043610195, a: 0}
   booleanNoColor: {r: 1, g: 0, b: 0, a: 0}
   activeOutline: {fileID: 1820069147467192}
+  colored: 0
   parentMenu: {fileID: 114211563220486838}
 --- !u!114 &114800081667133630
 MonoBehaviour:

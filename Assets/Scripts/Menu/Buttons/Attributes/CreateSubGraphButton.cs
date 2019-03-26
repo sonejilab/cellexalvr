@@ -28,6 +28,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public override void Click()
         {
             graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
+            referenceManager.gameManager.InformCreateAttributeGraph();
         }
 
         private void TurnOn()

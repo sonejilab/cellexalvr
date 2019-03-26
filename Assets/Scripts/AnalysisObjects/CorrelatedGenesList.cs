@@ -35,6 +35,14 @@ namespace CellexalVR.AnalysisObjects
             selectionToolHandler = referenceManager.selectionToolHandler;
             SetVisible(false);
         }
+
+        private void OnValidate()
+        {
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+
+
         /// <summary>
         /// Fills the list with genenames. The list has room for 10 correlated and 10 anto correlated genes.
         /// </summary>
@@ -99,7 +107,7 @@ namespace CellexalVR.AnalysisObjects
         {
             string outputFile = CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt";
             string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
-            string args = selectionToolHandler.DataDir + " " + nodeName + " " + outputFile + " " + facsTypeArg;
+            string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile + " " + facsTypeArg;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";
             CellexalLog.Log("Calculating correlated genes with R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments: " + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -111,6 +119,7 @@ namespace CellexalVR.AnalysisObjects
             t.Start();
             while (t.IsAlive)
             {
+                print("r script still running");
                 yield return null;
             }
             stopwatch.Stop();

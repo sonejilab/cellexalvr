@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using UnityEngine;
 namespace CellexalVR.Interaction
 {
@@ -21,6 +22,12 @@ namespace CellexalVR.Interaction
         {
             correlatedGenesList = referenceManager.correlatedGenesList;
             this.tag = "Keyboard";
+        }
+
+        private void OnValidate()
+        {
+            if (gameObject.activeInHierarchy)
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         /// <summary>
