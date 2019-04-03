@@ -33,15 +33,15 @@ namespace CellexalVR.General
                 currentSelectionState = SelectionState.SELECTING;
                 referenceManager.controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.SelectionTool;
                 referenceManager.controllerModelSwitcher.SwitchToDesiredModel();
-                referenceManager.selectionToolHandler.SetSelectionToolEnabled(true, 0);
+                referenceManager.selectionToolCollider.SetSelectionToolEnabled(true, 0);
 
             }
             else if (currentSelectionState == SelectionState.SELECTING)
             {
                 // confirm and advance to confirmed
                 currentSelectionState = SelectionState.CONFIRMED;
-                referenceManager.selectionToolHandler.ConfirmSelection();
-                referenceManager.selectionToolHandler.SetSelectionToolEnabled(false, 0);
+                referenceManager.selectionManager.ConfirmSelection();
+                referenceManager.selectionToolCollider.SetSelectionToolEnabled(false, 0);
                 referenceManager.controllerModelSwitcher.TurnOffActiveTool(false);
             }
 

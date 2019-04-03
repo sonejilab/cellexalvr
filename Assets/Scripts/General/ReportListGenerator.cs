@@ -13,6 +13,7 @@ namespace CellexalVR.General
         public string[] htmlFiles;
         public GameObject reportNodePrefab;
         public SimpleWebBrowser.WebBrowser webBrowser;
+        public ReferenceManager referenceManager;
 
         private float heightIncrement = 1;
         private int nrOfNodes;
@@ -46,7 +47,7 @@ namespace CellexalVR.General
                 newNode.transform.localScale = reportNodePrefab.transform.localScale;
                 newNode.transform.localRotation = Quaternion.Euler(90, 0, 0);
                 ClickableReportPanel panel = newNode.GetComponent<ClickableReportPanel>();
-                PanelRaycaster rayCaster = GetComponent<PanelRaycaster>();
+                PanelRaycaster rayCaster = referenceManager.keyboardSwitch.GetComponent<PanelRaycaster>();
                 panel.SetMaterials(rayCaster.keyNormalMaterial, rayCaster.keyHighlightMaterial, rayCaster.keyPressedMaterial);
                 panel.SetText(file);
                 panel.webBrowser = webBrowser;

@@ -261,7 +261,7 @@ namespace SQLiter
         /// <param name="mode">The mode to sort the gene expressinos by.</param>
         public void QueryTopGenes(QueryTopGenesRankingMode mode)
         {
-            var list = referenceManager.selectionToolHandler.GetLastSelection();
+            var list = referenceManager.selectionManager.GetLastSelection();
             if (list.Count < 2)
             {
                 CellexalLog.Log("WARNING: Not querying for genes because list of cells is too short.");

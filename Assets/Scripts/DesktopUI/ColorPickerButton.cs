@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using UnityEngine;
 
 namespace CellexalVR.DesktopUI
@@ -66,7 +67,7 @@ namespace CellexalVR.DesktopUI
         private HeatmapGenerator heatmapGenerator;
         private GraphGenerator graphGenerator;
         private NetworkGenerator networkGenerator;
-        private SelectionToolHandler selectionToolHandler;
+        private SelectionToolCollider selectionToolCollider;
         private SettingsMenu settingsMenu;
 
         private void OnValidate()
@@ -93,7 +94,7 @@ namespace CellexalVR.DesktopUI
             heatmapGenerator = referenceManager.heatmapGenerator;
             graphGenerator = referenceManager.graphGenerator;
             networkGenerator = referenceManager.networkGenerator;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionToolCollider = referenceManager.selectionToolCollider;
             settingsMenu = referenceManager.settingsMenu;
         }
 
@@ -178,7 +179,7 @@ namespace CellexalVR.DesktopUI
                     networkGenerator.CreateLineMaterials();
                     break;
                 case ConfigColor.SELECTION:
-                    selectionToolHandler.UpdateColors();
+                    selectionToolCollider.UpdateColors();
                     break;
 
             }

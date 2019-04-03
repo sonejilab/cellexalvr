@@ -66,6 +66,10 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
         {
+            if (sortedKeys == null)
+            {
+                GatherKeys();
+            }
             foreach (ClickablePanel panel in sortedKeys)
             {
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
@@ -197,9 +201,9 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Colors all graphs based on what was typed.
         /// </summary>
-        public void SubmitOutput()
+        public void SubmitOutput(bool invoke=true)
         {
-            if (OnEnter != null)
+            if (invoke && OnEnter != null)
             {
                 OnEnter.Invoke(Text());
             }

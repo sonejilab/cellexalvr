@@ -32,7 +32,8 @@ namespace CellexalVR.Interaction
         // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
         public Model ActualModel;
 
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionToolCollider selectionToolCollider;
         private GameObject deleteTool;
         private GameObject minimizer;
         private GameObject drawTool;
@@ -52,7 +53,8 @@ namespace CellexalVR.Interaction
 
         void Awake()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            //selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionToolCollider = referenceManager.selectionToolCollider;
             deleteTool = referenceManager.deleteTool;
             minimizer = referenceManager.minimizeTool.gameObject;
             keyboard = referenceManager.keyboardSwitch;
@@ -188,7 +190,7 @@ namespace CellexalVR.Interaction
             // Deactivate all tools that should not be active.
             if (DesiredModel != Model.SelectionTool)
             {
-                selectionToolHandler.SetSelectionToolEnabled(false, 0);
+                selectionToolCollider.SetSelectionToolEnabled(false, 0);
             }
             if (DesiredModel != Model.DeleteTool)
             {
@@ -223,7 +225,7 @@ namespace CellexalVR.Interaction
             switch (DesiredModel)
             {
                 case Model.SelectionTool:
-                    selectionToolHandler.SetSelectionToolEnabled(true, selectionToolMeshIndex);
+                    selectionToolCollider.SetSelectionToolEnabled(true, selectionToolMeshIndex);
                     break;
                 case Model.DeleteTool:
                     deleteTool.SetActive(true);
@@ -262,7 +264,7 @@ namespace CellexalVR.Interaction
         /// <param name="inMenu"> True if the controller is in the menu and we should temporarily change into the menu model, false otherwise. </param>
         public void TurnOffActiveTool(bool inMenu)
         {
-            selectionToolHandler.SetSelectionToolEnabled(false, 0);
+            selectionToolCollider.SetSelectionToolEnabled(false, 0);
             deleteTool.SetActive(false);
             minimizer.SetActive(false);
             //if (!HelpToolShouldStayActivated)

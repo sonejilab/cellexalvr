@@ -43,7 +43,9 @@ namespace CellexalVR.General
 
         #region Tools
         [Header("Tools")]
-        public SelectionToolHandler selectionToolHandler;
+        //public SelectionToolHandler selectionToolHandler;
+        public SelectionToolCollider selectionToolCollider;
+        public SelectionManager selectionManager;
         public GameObject deleteTool;
         public MinimizeTool minimizeTool;
         public GameObject helpMenu;

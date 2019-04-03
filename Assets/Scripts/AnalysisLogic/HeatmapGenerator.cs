@@ -26,7 +26,7 @@ namespace CellexalVR.AnalysisLogic
 
 
         private GameObject calculatorCluster;
-        public SelectionToolHandler selectionToolHandler;
+        public SelectionManager selectionManager;
         //private StatusDisplay status;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
@@ -43,7 +43,7 @@ namespace CellexalVR.AnalysisLogic
         {
             t = null;
             heatmapPosition = heatmapPrefab.transform.position;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
@@ -182,12 +182,12 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         IEnumerator GenerateHeatmapRoutine(string heatmapName)
         {
-            if (selectionToolHandler.selectionConfirmed)
+            if (selectionManager.selectionConfirmed)
             {
                 GeneratingHeatmaps = true;
                 // Show calculators
                 calculatorCluster.SetActive(true);
-                List<Graph.GraphPoint> selection = selectionToolHandler.GetLastSelection();
+                List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
 
                 // Check if more than one cell is selected
                 if (selection.Count < 1)
@@ -201,11 +201,11 @@ namespace CellexalVR.AnalysisLogic
                 //int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
 
                 // if the R object is not updated, wait
-                while (selectionToolHandler.RObjectUpdating)
+                while (selectionManager.RObjectUpdating)
                     yield return null;
 
                 // Start generation of new heatmap in R
-                selectionNr = selectionToolHandler.fileCreationCtr - 1;
+                selectionNr = selectionManager.fileCreationCtr - 1;
                 //string home = Directory.GetCurrentDirectory();
 
                 string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();

@@ -7,10 +7,23 @@ public class SpecatorController : MonoBehaviour
     public float speed = 1f;
     public GameObject CtrlsCanvas;
     public GameObject TextCanvas;
+    public GameObject settingsMenu;
+    public GameObject console;
+
 
 
     void Start()
     {
+        foreach (Canvas c in settingsMenu.GetComponentsInChildren<Canvas>())
+        {
+            c.renderMode = RenderMode.ScreenSpaceCamera;
+            c.worldCamera = GetComponentInChildren<Camera>();
+        }
+        foreach (Canvas c in console.GetComponentsInChildren<Canvas>())
+        {
+            c.renderMode = RenderMode.ScreenSpaceCamera;
+            c.worldCamera = GetComponentInChildren<Camera>();
+        }
         //Cursor.lockState = CursorLockMode.Locked;
     }
 

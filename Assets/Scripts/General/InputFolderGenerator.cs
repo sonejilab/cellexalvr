@@ -46,16 +46,18 @@ namespace CellexalVR.General
             DestroyFolders();
 
             string dataDirectory;
+            string[] directories;
             if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
             {
-                dataDirectory = Directory.GetCurrentDirectory() + "\\TutorialData";
+                dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
+                directories = Directory.GetDirectories(dataDirectory, "Mouse_HSPC");
             }
             else
             {
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
+                directories = Directory.GetDirectories(dataDirectory);
             }
 
-            string[] directories = Directory.GetDirectories(dataDirectory);
             if (directories.Length == 0)
             {
                 if (directories.Length == 0)

@@ -32,6 +32,10 @@ namespace CellexalVR.General
             Debug.Log(cameraTransform);
             if (!cameraTransform)
             {
+                if (!referenceManager)
+                {
+                    referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                }
                 cameraTransform = referenceManager.headset.transform;
             }
             Debug.Log(cameraTransform);

@@ -56,7 +56,7 @@ namespace CellexalVR.General
                         player.gameObject.name = PhotonNetwork.playerName;
                         spectatorRig.SetActive(true);
                         VRRig.SetActive(false);
-                        referenceManager.selectionToolHandler = spectatorRig.GetComponent<SelectionToolHandler>();
+                        referenceManager.selectionManager = spectatorRig.GetComponent<SelectionManager>();
                     }
                     if (!PhotonNetwork.playerName.Contains("Spectator"))
                     {

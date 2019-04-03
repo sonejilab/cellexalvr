@@ -30,6 +30,7 @@ namespace CellexalVR.AnalysisObjects
         public TextMeshPro graphInfoText;
         public TextMeshPro graphNrText;
         public GameObject axes;
+        public string[] axisNames = new string[3];
         public bool GraphActive = true;
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();
         public Dictionary<string, GraphPoint> subSelectionPoints = new Dictionary<string, GraphPoint>();
@@ -76,9 +77,7 @@ namespace CellexalVR.AnalysisObjects
                 graphNrText.text = value.ToString();
             }
         }
-
-        public List<string> axisNames;
-
+        
         private ControllerModelSwitcher controllerModelSwitcher;
         private GameManager gameManager;
         private Vector3 startPosition;
@@ -87,6 +86,8 @@ namespace CellexalVR.AnalysisObjects
         private bool minimize;
         private bool maximize;
         private float speed;
+
+        private bool minimized;
         //private Vector3 targetPos;
         private float targetMinScale;
         private float targetMaxScale;
@@ -129,7 +130,6 @@ namespace CellexalVR.AnalysisObjects
             selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
             startPosition = transform.position;
             nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
-            axisNames = new List<string>();
         }
 
         private void Update()
@@ -185,6 +185,7 @@ namespace CellexalVR.AnalysisObjects
                 GraphActive = true;
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                     c.enabled = true;
+                minimized = false;
                 //foreach (GameObject line in Lines)
                 //    line.SetActive(true);
             }
@@ -246,6 +247,7 @@ namespace CellexalVR.AnalysisObjects
                     line.SetActive(false);
                 referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
                 referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+                minimized = true;
             }
         }
 
@@ -791,7 +793,10 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="visible"> True for visible, false for invisible </param>
         public void SetAxesVisible(bool visible)
         {
-            axes.SetActive(visible);
+            if (axes != null)
+            {
+                axes.SetActive(visible);
+            }
         }
 
         public void ResetColorsAndPosition()
@@ -941,7 +946,7 @@ namespace CellexalVR.AnalysisObjects
                 // the highest expression levels get 27 (somewhere between 0.1 and 0.2 when converted to a float) in the green channel to get an outline by the shader
                 colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
             }
-
+            int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
             foreach (CellExpressionPair pair in expressions)
             {
                 // If this is a subgraph it does not contain all cells...
@@ -953,7 +958,8 @@ namespace CellexalVR.AnalysisObjects
                     {
                         expressionColorIndex = nbrOfExpressionColors - 1;
                     }
-                    if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color > 27)
+
+                    if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color >= topExpressedThreshold && !minimized)
                     {
                         var circle = Instantiate(movingOutlineCircle);
                         circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;

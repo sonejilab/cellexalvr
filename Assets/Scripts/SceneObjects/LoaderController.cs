@@ -265,7 +265,7 @@ namespace CellexalVR.SceneObjects
                 referenceManager.heatmapGenerator.DeleteHeatmaps();
                 // new_keyboard referenceManager.previousSearchesList.ClearList();
                 referenceManager.drawTool.ClearAllLines();
-                referenceManager.selectionToolHandler.Clear();
+                referenceManager.selectionManager.Clear();
                 referenceManager.graphGenerator.graphCount = 0;
                 CellexalEvents.GraphsUnloaded.Invoke();
             }

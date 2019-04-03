@@ -400,15 +400,15 @@ namespace CellexalVR.AnalysisObjects
                     groupWidths.RemoveAt(i + 1);
                 }
             }
-            try
-            {
-                StartCoroutine(BuildTextureCoroutine(groupWidths));
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
-                CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
-            }
+            StartCoroutine(BuildTextureCoroutine(groupWidths));
+            //try
+            //{
+            //}
+            //catch (Exception e)
+            //{
+            //    CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
+            //    CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+            //}
         }
 
         /// <summary>
@@ -427,15 +427,15 @@ namespace CellexalVR.AnalysisObjects
             cells = newCells;
             genes = newGenes;
             groupWidths = newGroupWidths;
-            try
-            {
-                StartCoroutine(BuildTextureCoroutine(groupWidths));
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
-                CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
-            }
+            StartCoroutine(BuildTextureCoroutine(groupWidths));
+            //try
+            //{
+            //}
+            //catch (Exception e)
+            //{
+            //    CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
+            //    CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+            //}
         }
 
         private IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths)
@@ -898,7 +898,6 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                print("gene does not exist in list");
                 highlightGeneText.text = geneName + " not in the heatmap list";
             }
 
@@ -1227,8 +1226,8 @@ namespace CellexalVR.AnalysisObjects
             }
             // need to dump selection to txt file for GO analysis script. But file creation counter should not increment
             // in case networks should be created on the selection that created the original heatmap.
-            referenceManager.selectionToolHandler.DumpSelectionToTextFile(newGps);
-            referenceManager.selectionToolHandler.fileCreationCtr--;
+            referenceManager.selectionManager.DumpSelectionToTextFile(newGps);
+            referenceManager.selectionManager.fileCreationCtr--;
             heatmap.Init();
             try
             {
@@ -1423,7 +1422,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ColorCells()
         {
-            var selectionToolHandler = referenceManager.selectionToolHandler;
+            var selectionManager = referenceManager.selectionManager;
 
             for (int i = 0, cellIndex = 0; i < groupWidths.Count; ++i)
             {
@@ -1434,7 +1433,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     var graphPoint = cellManager.GetCell(cells[cellIndex]).GraphPoints[0];
 
-                    selectionToolHandler.AddGraphpointToSelection(graphPoint, group, false);
+                    selectionManager.AddGraphpointToSelection(graphPoint, group, false);
                 }
             }
         }

@@ -40,7 +40,8 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<string, Cell> cells;
         private List<GameObject> lines = new List<GameObject>();
         private GameManager gameManager;
-        private SelectionToolHandler selectionToolHandler;
+        private SelectionToolCollider selectionToolCollider;
+        private SelectionManager selectionManager;
         private GraphManager graphManager;
         //private StatusDisplay statusDisplay;
         //private StatusDisplay statusDisplayHUD;
@@ -78,10 +79,11 @@ namespace CellexalVR.AnalysisLogic
             rightController = referenceManager.rightController;
             previousSearchesList = referenceManager.previousSearchesList;
             gameManager = referenceManager.gameManager;
+            selectionManager = referenceManager.selectionManager;
             //statusDisplay = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionToolCollider = referenceManager.selectionToolCollider;
             graphManager = referenceManager.graphManager;
             currentFlashedGeneText = referenceManager.currentFlashedGeneText;
             //HUD = referenceManager.HUD;
@@ -128,7 +130,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="groupingColors">Optional parameter, used if a custom color scheme should be used. Maps groups to colors.</param>
         public void CreateNewSelection(string graphName, string[] cellnames, int[] groups, Dictionary<int, Color> groupingColors = null)
         {
-            selectionToolHandler.CancelSelection();
+            selectionManager.CancelSelection();
             Graph graph = graphManager.FindGraph(graphName);
             if (!graph)
             {
@@ -140,7 +142,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     Cell cell = cells[cellnames[i]];
                     //cell.SetGroup(groups[i], true);
-                    selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
+                    selectionManager.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
                     //graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groups[i]);
                 }
             }
@@ -150,7 +152,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     Cell cell = cells[cellnames[i]];
                     //cell.SetGroup(groups[i], false);
-                    selectionToolHandler.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false, groupingColors[groups[i]]);
+                    selectionManager.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false, groupingColors[groups[i]]);
                     //graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groupingColors[groups[i]]);
                 }
             }
@@ -393,7 +395,7 @@ namespace CellexalVR.AnalysisLogic
         {
             foreach (KeyValuePair<Graph.GraphPoint, int> entry in selectionList)
             {
-                selectionToolHandler.AddGraphpointToSelection(entry.Key, entry.Value, false);
+                selectionManager.AddGraphpointToSelection(entry.Key, entry.Value, false);
             }
         }
 
@@ -411,7 +413,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 if (expr.Eval(cell))
                 {
-                    cell.SetGroup(selectionToolHandler.currentColorIndex, true);
+                    cell.SetGroup(selectionToolCollider.currentColorIndex, true);
                 }
                 else
                 {
@@ -434,7 +436,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     numAdded++;
                     // more_cells selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], group, false);
-                    recolored[cell] = selectionToolHandler.currentColorIndex;
+                    recolored[cell] = selectionToolCollider.currentColorIndex;
                 }
             }
             CellexalLog.Log("Added " + numAdded + " cells to selection");
@@ -499,7 +501,7 @@ namespace CellexalVR.AnalysisLogic
                         LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
                         line.graphPoint1 = g;
                         line.graphPoint2 = sameCell;
-                        line.selectionToolHandler = selectionToolHandler;
+                        line.selectionManager = selectionManager;
                         LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
                         //lineRenderer.useWorldSpace = false;
                         line.t1 = g.parent.transform;
@@ -532,7 +534,7 @@ namespace CellexalVR.AnalysisLogic
                 line.t2 = sourceCell.parent.transform;
                 line.graphPoint1 = sourceCell;
                 line.graphPoint2 = targetCell;
-                line.selectionToolHandler = selectionToolHandler;
+                line.selectionManager = selectionManager;
                 LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
                 lineRenderer.startColor = color;
                 lineRenderer.endColor = color;

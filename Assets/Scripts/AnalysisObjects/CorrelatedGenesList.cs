@@ -24,7 +24,8 @@ namespace CellexalVR.AnalysisObjects
         //private StatusDisplay statusDisplay;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         private ClickableTextPanel listNode;
 
         private void Start()
@@ -32,7 +33,7 @@ namespace CellexalVR.AnalysisObjects
             //statusDisplay = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             SetVisible(false);
         }
 
@@ -119,7 +120,6 @@ namespace CellexalVR.AnalysisObjects
             t.Start();
             while (t.IsAlive)
             {
-                print("r script still running");
                 yield return null;
             }
             stopwatch.Stop();

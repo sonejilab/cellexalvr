@@ -169,17 +169,18 @@ namespace CellexalVR.AnalysisObjects
             return distance * distance;
         }
 
-        public void AddAxes(string[] axisNames)
+        public void AddAxes(Graph graph, string[] axisNames)
         {
-            Vector3 position = newGraph.ScaleCoordinates(newGraph.minCoordValues);
-            GameObject axes = Instantiate(AxesPrefab, newGraph.transform);
+            graph.axisNames = axisNames;
+            Vector3 position = graph.ScaleCoordinates(graph.minCoordValues);
+            GameObject axes = Instantiate(AxesPrefab, graph.transform);
             axes.transform.localPosition = position - (Vector3.one * 0.01f);
-            Vector3 size = newGraph.GetComponent<BoxCollider>().size;
+            Vector3 size = graph.GetComponent<BoxCollider>().size;
             float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
             axes.transform.localScale = Vector3.one * (longestAx * 0.6f);
             if (graphType == GraphType.FACS)
             {
-                axes.GetComponent<AxesArrow>().SetColors(axisNames, newGraph.minCoordValues, newGraph.maxCoordValues);
+                axes.GetComponent<AxesArrow>().SetColors(axisNames, graph.minCoordValues, graph.maxCoordValues);
                 axes.SetActive(true);
             }
             else
@@ -187,13 +188,10 @@ namespace CellexalVR.AnalysisObjects
                 axes.SetActive(false);
             }
             TextMeshPro[] texts = axes.GetComponentsInChildren<TextMeshPro>();
-            newGraph.axes = axes;
+            graph.axes = axes;
             for (int i = 0; i < texts.Length; i++)
             {
                 texts[i].text = axisNames[i];
-            }
-            if (graphType == GraphType.MDS)
-            {
             }
         }
 
@@ -739,7 +737,6 @@ namespace CellexalVR.AnalysisObjects
             subGraph = CreateGraph(GraphType.ATTRIBUTE);
             subGraph.GraphName = name;
             StartCoroutine(CreateSubGraphsCoroutine(expr, attributes));
-            //CreateSubGraphs(expr, attributes);
         }
 
 
@@ -773,6 +770,9 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true);
             }
             graphManager.Graphs.Add(subGraph);
+            string[] axes = new string[3];
+            axes = graphManager.Graphs[0].axisNames.ToArray();
+            AddAxes(subGraph, axes);
         }
 
         [ConsoleCommand("graphGenerator", "asg")]

@@ -306,7 +306,7 @@ namespace CellexalVR.DesktopUI
                 colors[i] = selectionColorButtons[i].Color;
             }
             CellexalConfig.Config.SelectionToolColors = colors;
-            referenceManager.selectionToolHandler.UpdateColors();
+            referenceManager.selectionToolCollider.UpdateColors();
         }
 
         public void SetGraphHighestExpressionMarker(bool active)

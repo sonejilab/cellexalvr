@@ -113,8 +113,8 @@ namespace CellexalVR.Menu.SubMenus
 
         public void AddCurrentExpressionAsGroup()
         {
-            referenceManager.cellManager.AddCellsToSelection(GetExpression(), referenceManager.selectionToolHandler.currentColorIndex);
-            referenceManager.selectionToolHandler.ChangeColor(true);
+            referenceManager.cellManager.AddCellsToSelection(GetExpression(), referenceManager.selectionToolCollider.currentColorIndex);
+            referenceManager.selectionToolCollider.ChangeColor(true);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using UnityEngine;
 namespace CellexalVR.SceneObjects
@@ -13,7 +14,7 @@ namespace CellexalVR.SceneObjects
         public Transform t1, t2;
         public Graph.GraphPoint graphPoint1;
         public Graph.GraphPoint graphPoint2;
-        public SelectionToolHandler selectionToolHandler;
+        public SelectionManager selectionManager;
         public Selectable cube;
 
         private LineRenderer lineRenderer;
@@ -28,7 +29,7 @@ namespace CellexalVR.SceneObjects
             lineRenderer.SetPositions(new Vector3[] { pos1, pos2 });
             middle = (pos1 + pos2) / 2f;
             cube.transform.position = middle;
-            cube.selectionToolHandler = selectionToolHandler;
+            cube.selectionManager = selectionManager;
             cube.graphPoint = graphPoint1;
         }
 

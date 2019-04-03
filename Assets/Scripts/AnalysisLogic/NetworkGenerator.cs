@@ -31,7 +31,8 @@ namespace CellexalVR.AnalysisLogic
         public Material[] LineMaterials;
 
         private GameObject calculatorCluster;
-        public SelectionToolHandler selectionToolHandler;
+        //public SelectionToolHandler selectionToolHandler;
+        public SelectionManager selectionManager;
         private InputReader inputReader;
         private GraphManager graphManager;
         private GameObject headset;
@@ -48,7 +49,7 @@ namespace CellexalVR.AnalysisLogic
         private void Start()
         {
             objectsInSky = 0;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             inputReader = referenceManager.inputReader;
             graphManager = referenceManager.graphManager;
             headset = referenceManager.headset;
@@ -168,13 +169,13 @@ namespace CellexalVR.AnalysisLogic
             //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
             //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
 
-            while (selectionToolHandler.RObjectUpdating)
+            while (selectionManager.RObjectUpdating)
                 yield return null;
 
             // generate the files containing the network information
 
             //string home = Directory.GetCurrentDirectory();
-            selectionNr = selectionToolHandler.fileCreationCtr - 1;
+            selectionNr = selectionManager.fileCreationCtr - 1;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").FixFilePath();
             string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").FixFilePath();

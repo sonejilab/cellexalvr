@@ -90,6 +90,8 @@ namespace CellexalVR.Interaction
                     if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                     {
                         controllerModelSwitcher.ActivateDesiredTool();
+                        panel.transform.localPosition = new Vector3(0, 0, 0);
+                        panel.transform.localRotation = Quaternion.Euler(0, 0, 0);
                     }
                     GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
 

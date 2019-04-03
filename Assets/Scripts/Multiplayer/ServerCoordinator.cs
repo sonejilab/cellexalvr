@@ -51,7 +51,7 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);
             Debug.Log("Recieved message to color all graphs by " + geneName);
             referenceManager.cellManager.ColorGraphsByGene(geneName); //, referenceManager.graphManager.GeneExpressionColoringMethod);
-            referenceManager.keyboardHandler.SubmitOutput();
+            referenceManager.keyboardHandler.SubmitOutput(false);
             referenceManager.autoCompleteList.ClearList();
         }
 
@@ -110,19 +110,19 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
         {
-            referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
+            referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
         }
 
         [PunRPC]
         public void SendCubeColoured(string graphName, string label, int newGroup, float r, float g, float b)
         {
-            referenceManager.selectionToolHandler.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b), true);
+            referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b), true);
         }
 
         [PunRPC]
         public void SendGoBackOneColor()
         {
-            referenceManager.selectionToolHandler.GoBackOneColorInHistory();
+            referenceManager.selectionManager.GoBackOneColorInHistory();
         }
 
         [PunRPC]
@@ -130,14 +130,14 @@ namespace CellexalVR.Multiplayer
         {
             for (int i = 0; i < k; i++)
             {
-                referenceManager.selectionToolHandler.GoBackOneStepInHistory();
+                referenceManager.selectionManager.GoBackOneStepInHistory();
             }
         }
 
         [PunRPC]
         public void SendRedoOneColor()
         {
-            referenceManager.selectionToolHandler.GoForwardOneColorInHistory();
+            referenceManager.selectionManager.GoForwardOneColorInHistory();
         }
 
         [PunRPC]
@@ -145,7 +145,7 @@ namespace CellexalVR.Multiplayer
         {
             for (int i = 0; i < k; i++)
             {
-                referenceManager.selectionToolHandler.GoForwardOneStepInHistory();
+                referenceManager.selectionManager.GoForwardOneStepInHistory();
             }
         }
 
@@ -189,14 +189,14 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendCancelSelection()
         {
-            referenceManager.selectionToolHandler.CancelSelection();
+            referenceManager.selectionManager.CancelSelection();
         }
 
         [PunRPC]
         public void SendConfirmSelection()
         {
             CellexalLog.Log("Recieved message to confirm selection");
-            referenceManager.selectionToolHandler.ConfirmSelection();
+            referenceManager.selectionManager.ConfirmSelection();
         }
 
         [PunRPC]
@@ -314,7 +314,7 @@ namespace CellexalVR.Multiplayer
         public void SendDrawLinesBetweenGps()
         {
             Debug.Log("Recieved message to draw lines between graph points");
-            referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionToolHandler.GetLastSelection());
+            referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection());
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         }
 
@@ -491,7 +491,7 @@ namespace CellexalVR.Multiplayer
                 coords[i] = new Vector3(xcoords[i], ycoords[i], zcoords[i]);
             }
             Color col = new Color(r, g, b);
-            gameManager.referenceManager.drawTool.DrawNewLine(col, coords);
+            referenceManager.drawTool.DrawNewLine(col, coords);
         }
 
         [PunRPC]

@@ -40,7 +40,8 @@ namespace CellexalVR.AnalysisLogic
         private CellManager cellManager;
         private LoaderController loaderController;
         private SQLite database;
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         private AttributeSubMenu attributeSubMenu;
         private ToggleArcsSubMenu arcsSubMenu;
         private ColorByIndexMenu indexMenu;
@@ -71,7 +72,8 @@ namespace CellexalVR.AnalysisLogic
             cellManager = referenceManager.cellManager;
             loaderController = referenceManager.loaderController;
             database = referenceManager.database;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            //selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             attributeSubMenu = referenceManager.attributeSubMenu;
             arcsSubMenu = referenceManager.arcsSubMenu;
             indexMenu = referenceManager.indexMenu;
@@ -115,7 +117,7 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(workingDirectory + "\\Output\\r_log.txt");
                 }
             }
-            selectionToolHandler.DataDir = fullPath;
+            selectionManager.DataDir = fullPath;
             if (!debug)
             {
                 // clear the network folder
@@ -154,9 +156,9 @@ namespace CellexalVR.AnalysisLogic
 
         void UpdateSelectionToolHandler()
         {
-            referenceManager.heatmapGenerator.selectionToolHandler = referenceManager.selectionToolHandler;
-            referenceManager.networkGenerator.selectionToolHandler = referenceManager.selectionToolHandler;
-            referenceManager.graphManager.selectionToolHandler = referenceManager.selectionToolHandler;
+            referenceManager.heatmapGenerator.selectionManager = referenceManager.selectionManager;
+            referenceManager.networkGenerator.selectionManager = referenceManager.selectionManager;
+            referenceManager.graphManager.selectionManager = referenceManager.selectionManager;
         }
 
         /// <summary>
@@ -276,6 +278,7 @@ namespace CellexalVR.AnalysisLogic
                         axes[1] = "y";
                         axes[2] = "z";
                     }
+                    combGraph.axisNames = axes;
                     while (!mdsStreamReader.EndOfStream)
                     {
                         itemsThisFrame = 0;
@@ -348,7 +351,7 @@ namespace CellexalVR.AnalysisLogic
 
                 // Add axes in bottom corner of graph and scale points differently
                 graphGenerator.SliceClustering();
-                graphGenerator.AddAxes(axes);
+                graphGenerator.AddAxes(combGraph, axes);
                 graphManager.Graphs.Add(combGraph);
                 if (debug)
                 {
@@ -804,7 +807,7 @@ namespace CellexalVR.AnalysisLogic
                     }
                     CellexalLog.Log("Successfully created convex hull of " + graphName);
                     networkHandler = skeleton.GetComponent<NetworkHandler>();
-                    networkHandlerName = "NetworkHandler_" + graphName + "-" + (selectionToolHandler.fileCreationCtr + 1);
+                    networkHandlerName = "NetworkHandler_" + graphName + "-" + (selectionManager.fileCreationCtr + 1);
                     networkHandler.name = networkHandlerName;
                     networkHandler.gameObject.AddComponent<PushBack>();
                 }
@@ -1067,7 +1070,7 @@ namespace CellexalVR.AnalysisLogic
 
             FileStream fileStream = new FileStream(files[index], FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
-            var selectionToolHandler = referenceManager.selectionToolHandler;
+            var selectionManager = referenceManager.selectionManager;
             GraphManager graphManager = referenceManager.graphManager;
             int numPointsAdded = 0;
             while (!streamReader.EndOfStream)
@@ -1089,7 +1092,7 @@ namespace CellexalVR.AnalysisLogic
                     fileStream.Close();
                     return;
                 }
-                selectionToolHandler.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false, groupColor);
+                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false, groupColor);
                 numPointsAdded++;
             }
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
