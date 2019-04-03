@@ -9,7 +9,8 @@ namespace CellexalVR.Menu.Buttons.Drawing
     {
         public Sprite grayScaleTexture;
 
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         protected override string Description
         {
             get { return "Undo last color"; }
@@ -29,13 +30,13 @@ namespace CellexalVR.Menu.Buttons.Drawing
 
         private void Start()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
         }
 
         public override void Click()
         {
             referenceManager.gameManager.InformGoBackOneColor();
-            selectionToolHandler.GoBackOneColorInHistory();
+            selectionManager.GoBackOneColorInHistory();
         }
 
         private void TurnOff()

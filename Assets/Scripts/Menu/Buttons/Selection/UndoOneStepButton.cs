@@ -9,7 +9,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
         public Sprite grayScaleTexture;
 
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         protected override string Description
         {
             get { return "Undo one step"; }
@@ -29,13 +30,13 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
         }
 
         public override void Click()
         {
             referenceManager.gameManager.InformGoBackSteps(1);
-            selectionToolHandler.GoBackOneStepInHistory();
+            selectionManager.GoBackOneStepInHistory();
         }
 
         private void TurnOff()

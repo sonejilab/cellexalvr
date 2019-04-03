@@ -33,6 +33,7 @@ namespace CellexalVR.Menu.Buttons.Networks
             var layoutSeed = rand.Next();
             networkGenerator.GenerateNetworks(layoutSeed);
             gameManager.InformGenerateNetworks(layoutSeed);
+            referenceManager.controllerModelSwitcher.TurnOffActiveTool(true);
         }
 
         private void TurnOn()

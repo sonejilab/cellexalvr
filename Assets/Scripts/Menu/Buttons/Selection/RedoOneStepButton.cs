@@ -8,8 +8,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     public class RedoOneStepButton : CellexalButton
     {
         public Sprite grayScaleTexture;
-
-        private SelectionToolHandler selectionToolHandler;
+        
+        private SelectionManager selectionManager;
         protected override string Description
         {
             get { return "Redo one step"; }
@@ -29,13 +29,13 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
         }
 
         public override void Click()
         {
             referenceManager.gameManager.InformRedoSteps(1);
-            selectionToolHandler.GoForwardOneStepInHistory();
+            selectionManager.GoForwardOneStepInHistory();
         }
 
         private void TurnOff()

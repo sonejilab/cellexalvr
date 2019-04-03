@@ -9,7 +9,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
         public Sprite grayScaleTexture;
 
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         protected override string Description
         {
             get { return "Undo ten steps"; }
@@ -29,7 +30,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
         }
 
         public override void Click()
@@ -37,7 +38,7 @@ namespace CellexalVR.Menu.Buttons.Selection
             referenceManager.gameManager.InformGoBackSteps(10);
             for (int i = 0; i < 10; i++)
             {
-                selectionToolHandler.GoBackOneStepInHistory();
+                selectionManager.GoBackOneStepInHistory();
             }
         }
 

@@ -10,7 +10,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
 
         private CellManager cellManager;
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
 
         protected override string Description
         {
@@ -20,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         private void Start()
         {
             cellManager = referenceManager.cellManager;
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             SetButtonActivated(false);
             CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
             CellexalEvents.LinesBetweenGraphsCleared.AddListener(TurnOn);
@@ -30,7 +31,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            cellManager.DrawLinesBetweenGraphPoints(selectionToolHandler.GetLastSelection());
+            cellManager.DrawLinesBetweenGraphPoints(selectionManager.GetLastSelection());
             referenceManager.gameManager.InformDrawLinesBetweenGps();
             TurnOff();
         }

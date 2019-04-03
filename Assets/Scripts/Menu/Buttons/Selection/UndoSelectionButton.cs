@@ -6,7 +6,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     ///</summary>
     public class UndoSelectionButton : CellexalButton
     {
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
 
         protected override string Description
         {
@@ -16,7 +17,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         protected void Start()
         {
 
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             SetButtonActivated(false);
             CellexalEvents.SelectionStarted.AddListener(TurnOn);
             CellexalEvents.SelectionCanceled.AddListener(TurnOff);
@@ -27,7 +28,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             referenceManager.gameManager.InformCancelSelection();
-            selectionToolHandler.CancelSelection();
+            selectionManager.CancelSelection();
             SetButtonActivated(false);
         }
 

@@ -8,7 +8,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     ///</summary>
     public class ConfirmSelection : CellexalButton
     {
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         private ControllerModelSwitcher controllerModelSwitcher;
 
         protected override string Description
@@ -19,7 +20,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         protected void Start()
         {
 
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             SetButtonActivated(false);
             CellexalEvents.SelectionStarted.AddListener(TurnOn);
@@ -32,8 +33,8 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            selectionToolHandler.SetSelectionToolEnabled(false, 0);
-            selectionToolHandler.ConfirmSelection();
+            referenceManager.selectionToolCollider.SetSelectionToolEnabled(false, 0);
+            selectionManager.ConfirmSelection();
             referenceManager.gameManager.InformConfirmSelection();
             //controllerModelSwitcher.TurnOffActiveTool(true);
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);

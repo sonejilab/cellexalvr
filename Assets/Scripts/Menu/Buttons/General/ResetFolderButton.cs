@@ -6,15 +6,15 @@ namespace CellexalVR.Menu.Buttons.General
     /// Represents a button used for resetting the input data folders. 
     /// It is spawned on a confirm submenu (which is spawned by the "Loading Menu Sub button" and if it is pressed closes this submenu.
     ///</summary>
-    public class ResetFolderButton : CellexalButton
+    public class ResetFolderButton : CloseMenuButton
     {
         //public GameObject subMenu;
-        public GameObject buttonsToActivate;
-        public GameObject menuToClose;
-        public TextMesh textMeshToUndarken;
+        //public GameObject buttonsToActivate;
+        //public GameObject menuToClose;
+        //public TextMesh textMeshToUndarken;
 
-        public bool deactivateMenu = false;
-        public bool deleteSceneObjs = false; // If total reset is to be done. If false don't delete anything, only bring back folders.
+        //public bool deactivateMenu = false;
+        public bool deleteSceneObjs; // If total reset is to be done. If false don't delete anything, only bring back folders.
 
 
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -40,42 +40,43 @@ namespace CellexalVR.Menu.Buttons.General
 
         public override void Click()
         {
-            if (deleteSceneObjs)
-            {
-                CloseSubMenu();
-            }
+            base.Click();
+            //if (deleteSceneObjs)
+            //{
+            //    CloseSubMenu();
+            //}
             controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
             controllerModelSwitcher.ActivateDesiredTool();
             referenceManager.loaderController.ResetFolders(deleteSceneObjs);
             referenceManager.gameManager.InformLoadingMenu(deleteSceneObjs);
         }
 
-        void CloseSubMenu()
-        {
-            spriteRenderer.sprite = standardTexture;
-            controllerInside = false;
-            descriptionText.text = "";
-            if (deactivateMenu)
-            {
-                menuToClose.SetActive(false);
-            }
-            else
-            {
-                foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
-                    r.enabled = false;
-                foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
-                    c.enabled = false;
-            }
-            //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
-            textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
-            buttonsToActivate.GetComponent<CellexalButton>().SetButtonActivated(true);
-            //foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
-            //{
-            //    if (b.gameObject.name == "Help Tool Button" || b.gameObject.name == "Web Browser Button")
-            //    {
-            //        b.SetButtonActivated(true);
-            //    }
-            //}
-        }
+        //void CloseSubMenu()
+        //{
+        //    spriteRenderer.sprite = standardTexture;
+        //    controllerInside = false;
+        //    descriptionText.text = "";
+        //    if (deactivateMenu)
+        //    {
+        //        menuToClose.SetActive(false);
+        //    }
+        //    else
+        //    {
+        //        foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
+        //            r.enabled = false;
+        //        foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
+        //            c.enabled = false;
+        //    }
+        //    //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+        //    textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
+        //    buttonsToActivate.GetComponent<CellexalButton>().SetButtonActivated(true);
+        //    //foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
+        //    //{
+        //    //    if (b.gameObject.name == "Help Tool Button" || b.gameObject.name == "Web Browser Button")
+        //    //    {
+        //    //        b.SetButtonActivated(true);
+        //    //    }
+        //    //}
+        //}
     }
 }

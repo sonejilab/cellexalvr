@@ -1,4 +1,5 @@
-﻿using CellexalVR.Menu.SubMenus;
+﻿using CellexalVR.General;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Selection
 {
@@ -9,7 +10,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
 
         public TextMesh text;
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
         private FilterMenu filterMenu;
         //private Filter filter;
         private bool filterActivated = false;
@@ -21,7 +23,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         protected void Start()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             filterMenu = referenceManager.filterMenu;
         }
 

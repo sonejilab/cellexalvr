@@ -33,6 +33,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         {
             heatmapGenerator.CreateHeatmap("");
             TurnOff();
+            referenceManager.controllerModelSwitcher.TurnOffActiveTool(true);
             //gd.CreateManyPlots();
         }
 

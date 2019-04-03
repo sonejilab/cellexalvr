@@ -10,7 +10,8 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
         public Sprite grayScaleTexture;
 
-        private SelectionToolHandler selectionToolHandler;
+        //private SelectionToolHandler selectionToolHandler;
+        private SelectionManager selectionManager;
 
         protected override string Description
         {
@@ -19,7 +20,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            selectionToolHandler = referenceManager.selectionToolHandler;
+            selectionManager = referenceManager.selectionManager;
             SetButtonActivated(false);
             CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
             CellexalEvents.SelectionCanceled.AddListener(TurnOff);
@@ -31,7 +32,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             referenceManager.gameManager.InformRedoOneColor();
-            selectionToolHandler.GoForwardOneColorInHistory();
+            selectionManager.GoForwardOneColorInHistory();
         }
 
         private void TurnOff()
