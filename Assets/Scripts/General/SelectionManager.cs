@@ -598,10 +598,8 @@ namespace CellexalVR.General
                     file.Write(gp.Group);
                     file.WriteLine();
                 }
-                file.Flush();
-                file.Close();
             }
-            StartCoroutine(UpdateRObjectGrouping());
+            //StartCoroutine(UpdateRObjectGrouping());
         }
 
 

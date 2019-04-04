@@ -1256,11 +1256,7 @@ namespace CellexalVR.AnalysisObjects
                     file.Write(gene);
                     file.WriteLine();
                 }
-                file.Flush();
-                file.Close();
             }
-
-
         }
 
         /// <summary>

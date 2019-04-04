@@ -52,8 +52,6 @@ namespace CellexalVR.AnalysisLogic
                       new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
                 {
                     writetofile.WriteLine(result);
-                    writetofile.Flush();
-                    writetofile.Close();
                 }
                 //UnityEngine.Debug.Log("RESULT : " + result + " - Exit thread: " + result.Contains("Execution"));
                 return result;

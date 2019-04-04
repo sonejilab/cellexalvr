@@ -600,13 +600,27 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendHandleHitHeatmap(string HeatmapName, int hitx, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).HandleHitHeatmap(hitx, hity);
+            try
+            {
+                referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).HandleHitHeatmap(hitx, hity);
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Failed to handle hit on heatmap. Stacktrace : " + e.StackTrace);
+            }
         }
 
         [PunRPC]
         public void SendResetHeatmapHighlight(string HeatmapName)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetHeatmapHighlight();
+            try
+            {
+                referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetHeatmapHighlight();
+            }
+            catch (NullReferenceException e)
+            {
+                CellexalLog.Log("Failed to reset heatmap highlight. Stacktrace : " + e.StackTrace);
+            }
         }
 
         [PunRPC]

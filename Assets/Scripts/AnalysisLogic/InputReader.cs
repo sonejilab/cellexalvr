@@ -1056,7 +1056,7 @@ namespace CellexalVR.AnalysisLogic
         public void ReadAndSelectPreviousSelection(int index)
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
-            string[] files = Directory.GetFiles(dataFolder, "user.group.*.txt");
+            string[] files = Directory.GetFiles(dataFolder, "selection*.txt");
             if (files.Length == 0)
             {
                 CellexalLog.Log("No previous selections found.");
