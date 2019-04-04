@@ -180,6 +180,36 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Coroutine for creating a heatmap.
         /// </summary>
+        void GenerateHm(string heatmapName)
+        {
+            //make.cellexalvr.heatmap.list(CO, group_selection_filepath, top_genes_number, output_filepath, stats_method)
+            string command = "make.cellexalvr.heatmap.list";
+            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
+            string topGenesNr = "250";
+            string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
+            string outputFilepath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
+            string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
+          
+            string filePath = CellexalUser.UserSpecificFolder + "\\input.txt";
+            using (StreamWriter file = new StreamWriter(filePath))
+            {
+                string line = command + "(" + latestSelection + ", " + topGenesNr + ", " + outputFilepath + ", " + statsMethod + ")";
+                file.Write(line);
+            }
+
+            //t = new Thread(() => RScriptRunner.RunFromCmd("", ""));
+            //t.Start();
+
+            //while (t.IsAlive)
+            //{
+            //    yield return null;
+            //}
+        }
+
+
+        /// <summary>
+        /// Coroutine for creating a heatmap.
+        /// </summary>
         IEnumerator GenerateHeatmapRoutine(string heatmapName)
         {
             if (selectionManager.selectionConfirmed)
@@ -251,6 +281,7 @@ namespace CellexalVR.AnalysisLogic
                 heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
                 heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
                 heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+                GenerateHm(heatmapName);
             }
         }
 
