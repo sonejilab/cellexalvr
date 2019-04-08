@@ -12,6 +12,7 @@ public class MenuToggler : MonoBehaviour
     public bool MenuActive { get; set; }
     public VRTK.VRTK_BezierPointerRenderer teleportLaser;
     public GameObject menuCube;
+    public GameObject menuHolder;
 
     private SteamVR_Controller.Device device;
     private GameObject menu;
@@ -31,9 +32,7 @@ public class MenuToggler : MonoBehaviour
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
         tempRotation = new Quaternion();
         // The menu should be turned off when the program starts
-        // menu.SetActive(false);
         MenuActive = false;
-        SetMenuVisible(false);
     }
 
     void Update()
@@ -41,15 +40,23 @@ public class MenuToggler : MonoBehaviour
         device = SteamVR_Controller.Input((int)leftController.index);
         if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.IsCursorVisible())
         {
-            menu.transform.parent = leftController.transform;
-            menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
             MenuActive = !MenuActive;
             menuCube.SetActive(!MenuActive);
-            SetMenuVisible(MenuActive);
+            if (!MenuActive)
+            {
+                menu.transform.parent = menuHolder.transform;
+                menu.transform.localPosition = new Vector3(0f, -10f, 0f);
+            }
+            else
+            {
+                menu.transform.parent = leftController.transform;
+                menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
+            }
+            menu.transform.localEulerAngles = new Vector3(-15, 0, 0);
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
             controllerModelSwitcher.ActivateDesiredTool();
-            referenceManager.gameManager.InformToggleMenu();
+            //referenceManager.gameManager.InformToggleMenu();
             //if (MenuActive)
             //{
             //    PhotonNetwork.Instantiate("Main Menu", new Vector3(0, 1, 0), Quaternion.identity, 0);

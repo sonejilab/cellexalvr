@@ -181,7 +181,6 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="geneName"> The name of the gene. </param>
         public void ColorGraphsByGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
         {
-            referenceManager.heatmapGenerator.HighLightGene(geneName);
             try
             {
                 StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
@@ -196,6 +195,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
             }
+            referenceManager.heatmapGenerator.HighLightGene(geneName);
         }
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
