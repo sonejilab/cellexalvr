@@ -608,7 +608,7 @@ namespace SQLiter
             }
             string geneNames = builder.ToString();
 
-            string query = "select cname, gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNames + ") and gene_id in (select id from genes where gname in (" + geneNames + "))";
+            string query = "select cname, gene_id, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cellNames + ") and gene_id in (select id from genes where gname in (" + geneNames + "))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)

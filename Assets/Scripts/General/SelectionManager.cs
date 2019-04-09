@@ -492,19 +492,27 @@ namespace CellexalVR.General
             RObjectUpdating = true;
             // wait one frame to let ConfirmSelection finish.
             yield return null;
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
-            string args = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellexalUser.UserSpecificFolder + " " + DataDir;
+            string assignment = "cellexalObj";
+            string function = "userGrouping";
+            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
+                                        + referenceManager.heatmapGenerator.selectionNr + ".txt").UnFixFilePath();
+            string args = "cellexalObj" + ", \"" + latestSelection + "\"";
             CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
+            Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-            while (t.IsAlive)
+            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+            RScriptRunner.RunRscriptOnServer(function, args, assignment);
+            CellexalLog.Log("Running R function " + function + " with the arguments: " + args);
+            stopwatch.Start();
+
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
+
             stopwatch.Stop();
-            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+            CellexalLog.Log("Updating grouping R script finished in " + stopwatch.Elapsed.ToString());
             RObjectUpdating = false;
         }
 
@@ -599,7 +607,7 @@ namespace CellexalVR.General
                     file.WriteLine();
                 }
             }
-            //StartCoroutine(UpdateRObjectGrouping());
+            StartCoroutine(UpdateRObjectGrouping());
         }
 
 

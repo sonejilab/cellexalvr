@@ -39,5 +39,5 @@ make.cellexalvr.heatmap.list(CO,group_selection_filepath,top_genes_number,output
 
 message( "Heatmap - no object save: grouping should already be stored" )
 
-#this is not necesary any more - done wile the group is stored.
+# this is not necesary any more - done wile the group is stored.
 # lockedSave(cellexalObj)
