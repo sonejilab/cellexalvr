@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UnlockedNormal
+  m_Name: KeyNormal
   m_Shader: {fileID: 4800000, guid: 0b3c9c433accece499056b5f47d0db54, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -39,11 +39,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FadedTex:
-        m_Texture: {fileID: 2800000, guid: e4f6f1fb75cf9bd478a02f93ca7e0c50, type: 3}
+        m_Texture: {fileID: 2800000, guid: f1dc9aa450ccb014e946ea4d8635adce, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 0b32bc77aae344a479fa7e59ec7965b7, type: 3}
+        m_Texture: {fileID: 2800000, guid: f63f08f395496694dafa38752487ec52, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -51,7 +51,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NonFadedTex:
-        m_Texture: {fileID: 2800000, guid: 0b32bc77aae344a479fa7e59ec7965b7, type: 3}
+        m_Texture: {fileID: 2800000, guid: f63f08f395496694dafa38752487ec52, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -78,7 +78,7 @@ Material:
     - _Parallax: 0.02
     - _PulseDuration: 0.3
     - _PulseMaxRadius: 0.5
-    - _PulseStartTime: 0.3999
+    - _PulseStartTime: -1
     - _PulseThickness: 0.04
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

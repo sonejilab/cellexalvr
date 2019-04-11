@@ -17,9 +17,11 @@ namespace CellexalVR.AnalysisObjects
     public class CorrelatedGenesList : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        public GameObject listNodePrefab;
         public ClickableTextPanel sourceGeneListNode;
-        public List<ClickableTextPanel> correlatedGenesList;
-        public List<ClickableTextPanel> anticorrelatedGenesList;
+        public List<GameObject> listNodes;
+        public List<ClickableTextPanel> correlatedPanels;
+        public List<ClickableTextPanel> anticorrelatedPanels;
 
         //private StatusDisplay statusDisplay;
         //private StatusDisplay statusDisplayHUD;
@@ -35,12 +37,6 @@ namespace CellexalVR.AnalysisObjects
             //statusDisplayFar = referenceManager.statusDisplayFar;
             selectionManager = referenceManager.selectionManager;
             SetVisible(false);
-        }
-
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
 
@@ -60,8 +56,8 @@ namespace CellexalVR.AnalysisObjects
             // fill the list
             for (int i = 0; i < 10; i++)
             {
-                correlatedGenesList[i].SetText(correlatedGenes[i], Definitions.Measurement.GENE);
-                anticorrelatedGenesList[i].SetText(anticorrelatedGenes[i], Definitions.Measurement.GENE);
+                correlatedPanels[i].SetText(correlatedGenes[i], Definitions.Measurement.GENE);
+                anticorrelatedPanels[i].SetText(anticorrelatedGenes[i], Definitions.Measurement.GENE);
             }
         }
 
@@ -157,6 +153,92 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
+
+
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!gameObject.activeInHierarchy || Event.current != null && Event.current.type == EventType.Repaint)
+                return;
+
+            // remove null entries
+            for (int i = 0; i < listNodes.Count; ++i)
+            {
+                if (listNodes[i] == null)
+                {
+                    listNodes.RemoveAt(i);
+                    i--;
+                }
+            }
+
+
+            BuildList();
+        }
+
+        public void BuildList()
+        {
+            int numberOfPanels = referenceManager.previousSearchesList.numberOfPanels;
+            if (numberOfPanels < 1)
+            {
+                return;
+            }
+            Mesh quadPrefab = referenceManager.previousSearchesList.quadPrefab;
+            // remove old nodes
+            foreach (var oldNode in listNodes)
+            {
+                if (oldNode != null)
+                {
+                    UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(oldNode.gameObject); };
+                }
+            }
+
+            listNodes.Clear();
+            correlatedPanels.Clear();
+            anticorrelatedPanels.Clear();
+
+            PanelRaycaster panelRaycaster = gameObject.GetComponentInParent<PanelRaycaster>();
+
+            // generate new nodes
+            for (int i = 0; i < numberOfPanels; ++i)
+            {
+                GameObject newCorrelatedPanel = Instantiate(listNodePrefab, gameObject.transform);
+                newCorrelatedPanel.SetActive(true);
+                GameObject newAnticorrelatedPanel = Instantiate(listNodePrefab, gameObject.transform);
+                newAnticorrelatedPanel.SetActive(true);
+                // get the child components
+                ClickableTextPanel correlatedPanel = newCorrelatedPanel.GetComponentInChildren<ClickableTextPanel>();
+                ClickableTextPanel anticorrelatedPanel = newAnticorrelatedPanel.GetComponentInChildren<ClickableTextPanel>();
+                // add the components to the lists
+                listNodes.Add(newCorrelatedPanel);
+                listNodes.Add(newAnticorrelatedPanel);
+                correlatedPanels.Add(correlatedPanel);
+                anticorrelatedPanels.Add(anticorrelatedPanel);
+
+                // assign meshes
+                Mesh previousSearchesListNodeMesh = new Mesh();
+                correlatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                anticorrelatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                // assign materials
+                correlatedPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
+                anticorrelatedPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
+
+                newCorrelatedPanel.gameObject.name = "Correlated List Node " + (i + 1);
+                newCorrelatedPanel.transform.localPosition = Vector3.zero;
+                newAnticorrelatedPanel.gameObject.name = "Anti-Correlated List Node " + (i + 1);
+                newAnticorrelatedPanel.transform.localPosition = Vector3.zero;
+                // assign positions
+                KeyboardItem correlatedItem = newCorrelatedPanel.GetComponent<KeyboardItem>();
+                KeyboardItem anticorrelatedItem = newAnticorrelatedPanel.GetComponent<KeyboardItem>();
+                correlatedItem.position = new Vector2Int(-12, i);
+                correlatedItem.size = new Vector2(3, 1);
+                anticorrelatedItem.position = new Vector2Int(-15, i);
+                anticorrelatedItem.size = new Vector2(3, 1);
+            }
+        }
+
+#endif
     }
 
 }
+

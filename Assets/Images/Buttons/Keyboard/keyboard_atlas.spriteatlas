@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: keyboard_atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 656d1cb8839d5ff4aa201c084569522b, type: 3}
+    - {fileID: 2800000, guid: e12433ea61d11bc42b7f6214f4354a6a, type: 3}
+    - {fileID: 2800000, guid: 0b32bc77aae344a479fa7e59ec7965b7, type: 3}
+    - {fileID: 2800000, guid: e4e924e9ed741aa468a0323ebb6fb9f2, type: 3}
+    - {fileID: 2800000, guid: 5c06d83e2ed301a42b9ffc77d6d7ec76, type: 3}
+    - {fileID: 2800000, guid: c0f685c0081f3d24d97002f47191610c, type: 3}
+    - {fileID: 2800000, guid: 4df7cb746285bf9428e076e746398ad6, type: 3}
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
+  m_Tag: keyboard_atlas
+  m_IsVariant: 0

@@ -47,6 +47,11 @@ namespace CellexalVR.Interaction
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
+            //foreach (var panel in GetComponentsInChildren<KeyboardPanel>(true))
+            //{
+            //    panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            //}
+
             foreach (var panel in GetComponentsInChildren<ClickableReportPanel>(true))
             {
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
@@ -96,9 +101,11 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
+                    hitPanel.UpdateLaserCoords(hit.textureCoord2);
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
                         hitPanel.Click();
+                        hitPanel.Pulse(hit.textureCoord2);
                     }
 
                     lastHit = hitPanel;
@@ -107,6 +114,7 @@ namespace CellexalVR.Interaction
                 {
                     // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                     lastHit.SetHighlighted(false);
+                    lastHit.UpdateLaserCoords(new Vector2(-1f, -1f));
                     lastHit = null;
                     controllerModelSwitcher.SwitchToDesiredModel();
                     referenceManager.laserPointerController.Override = false;
@@ -119,6 +127,7 @@ namespace CellexalVR.Interaction
                 referenceManager.laserPointerController.Override = false;
                 // if we hit nothing this frame, but hit something last frame.
                 lastHit.SetHighlighted(false);
+                lastHit.UpdateLaserCoords(new Vector2(-1f, -1f));
                 lastHit = null;
             }
 

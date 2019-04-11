@@ -384,8 +384,6 @@ Shader "Custom/CombinedGraphpoint"
                 // green channel values determines the outline state.
                 // g == 0: no outline
                 // 0 < g <= 0.1: outline
-                // 0.1 < g <= 0.2: moving outline 
-                // 0.2 < g <= 0.3: big shrinking outline
                 if (color.g == 0)
                 {
                     return;

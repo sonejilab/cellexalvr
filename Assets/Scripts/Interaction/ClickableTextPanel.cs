@@ -10,7 +10,6 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class ClickableTextPanel : ClickablePanel
     {
-        [HideInInspector]
         public TextMesh textMesh;
         /// <summary>
         /// The entire string of text that is displayed on the panel.
@@ -32,7 +31,7 @@ namespace CellexalVR.Interaction
         protected override void Start()
         {
             base.Start();
-            textMesh = GetComponentInChildren<TextMesh>();
+            //textMesh = GetComponentInChildren<TextMesh>();
         }
 
         private void OnValidate()

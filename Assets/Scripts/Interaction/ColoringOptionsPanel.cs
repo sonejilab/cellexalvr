@@ -36,7 +36,7 @@ namespace CellexalVR.Interaction
             {
                 textMesh.color = Color.white;
             }
-            GetComponentInChildren<TextMesh>().color = Color.green;
+            transform.parent.GetComponentInChildren<TextMesh>().color = Color.green;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CellexalVR.General;
+using System.Collections;
+using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -9,7 +10,7 @@ namespace CellexalVR.Interaction
     public class KeyboardPanel : ClickablePanel
     {
         public KeyboardHandler handler;
-        public Vector2Int position;
+
 
         public enum Type
         {
@@ -44,7 +45,7 @@ namespace CellexalVR.Interaction
 
         /// <summary>
         /// The text that is displayed on the button.
-        /// If <see cref="keyType"/> is set the <see cref="Type.Character"/> this button will add that
+        /// If <see cref="keyType"/> is set the <see cref="Type.Character"/> this button will add that to the keyboard output.
         /// </summary>
         public string Text
         {
@@ -99,5 +100,6 @@ namespace CellexalVR.Interaction
                     break;
             }
         }
+
     }
 }
