@@ -101,6 +101,7 @@ namespace CellexalVR.General
         public GameObject fpsCounter;
         public DemoManager demoManager;
         public NewGraphFromMarkers newGraphFromMarkers;
+        public NotificationManager notificationManager;
         #endregion
 
         #region GeneKeyboard

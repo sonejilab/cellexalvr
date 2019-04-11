@@ -100,21 +100,31 @@ namespace CellexalVR.AnalysisObjects
             StartCoroutine(CalculateCorrelatedGenesCoroutine(listNode.NameOfThing, type));
         }
 
+
         private IEnumerator CalculateCorrelatedGenesCoroutine(string nodeName, Extensions.Definitions.Measurement type)
         {
-            string outputFile = CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt";
-            string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
-            string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile + " " + facsTypeArg;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\get_correlated_genes.R";
-            CellexalLog.Log("Calculating correlated genes with R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments: " + args);
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             //var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + nodeName);
             //var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + nodeName);
             //var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + nodeName);
+            string function = "get.genes.cor.to";
+            string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").UnFixFilePath();
+            string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
+            string args = "cellexalObj" + ", \"" + nodeName + "\", \"" + outputFile + "\", " + facsTypeArg;
+
+            string script = function + "(" + args + ")";
+            // First wait until other processes are finished before trying to start this one.
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            {
+                yield return null;
+            }
+            CellexalLog.Log("Calculating correlated genes with R script " + script);
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            Thread t = new Thread(() => RScriptRunner.RunScript(script));
             t.Start();
-            while (t.IsAlive)
+
+            // Wait for this process to finish.
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
@@ -126,8 +136,8 @@ namespace CellexalVR.AnalysisObjects
             if (lines.Length != 2)
             {
                 CellexalLog.Log("Correlated genes file at " + CellexalLog.FixFilePath(outputFile) + " was not 2 lines long. Actual length: " + lines.Length);
-                //Debug.LogWarning("Correlated genes file at " + outputFile + " was not 2 lines long. Actual length: " + lines.Length);
                 yield break;
+                //Debug.LogWarning("Correlated genes file at " + outputFile + " was not 2 lines long. Actual length: " + lines.Length);
             }
 
             string[] correlatedGenes = lines[0].Split(null);
@@ -142,16 +152,16 @@ namespace CellexalVR.AnalysisObjects
             }
             CellexalLog.Log("Successfully calculated genes correlated to " + nodeName);
             PopulateList(nodeName, type, correlatedGenes, anticorrelatedGenes);
-            //statusDisplay.RemoveStatus(statusId);
-            //statusDisplayHUD.RemoveStatus(statusIdHUD);
-            //statusDisplayFar.RemoveStatus(statusIdFar);
             if (listNode)
             {
                 listNode.SetPressed(false);
                 listNode.GetComponentInChildren<CorrelatedGenesPanel>().SetPressed(false);
             }
+            //statusDisplay.RemoveStatus(statusId);
+            //statusDisplayHUD.RemoveStatus(statusIdHUD);
+            //statusDisplayFar.RemoveStatus(statusIdFar);
         }
-
+        
 
 
 

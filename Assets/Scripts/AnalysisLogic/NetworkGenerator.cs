@@ -170,14 +170,13 @@ namespace CellexalVR.AnalysisLogic
             GeneratingNetworks = true;
             calculatorCluster.SetActive(true);
 
-
             // generate the files containing the network information
             selectionNr = selectionManager.fileCreationCtr - 1;
             string function = "make.cellexalvr.network";
-            string assignment = "cellexalObj";
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
             string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
-            string args = "cellexalObj" + ", \"" + groupingFilePath + "\", \"" + networkResources + "\"";
+
+            string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\")";
             if (!Directory.Exists(networkResources))
             {
                 CellexalLog.Log("Creating directory " + networkResources.FixFilePath());
@@ -187,14 +186,20 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return null;
             }
-            CellexalLog.Log("Running R script " + function + " with the arguments \"" + args + "\"");
+
+            CellexalLog.Log("Running R script " + script + " with the arguments \"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            RScriptRunner.RunRscriptOnServer(function, args, assignment);
+            RScriptRunner.RunScript(script);
+            
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
+
+            // wait 1s frame for files to be created
+
+            yield return null;
             stopwatch.Stop();
             CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
             GeneratingNetworks = false;
@@ -203,6 +208,7 @@ namespace CellexalVR.AnalysisLogic
                 calculatorCluster.SetActive(false);
 
             inputReader.ReadNetworkFiles(layoutSeed);
+            referenceManager.notificationManager.SpawnNotification("Transcription factor networks finished.");
             //status.RemoveStatus(statusId);
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);

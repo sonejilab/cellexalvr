@@ -150,7 +150,6 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
-
             graphGenerator.isCreating = true;
         }
 
@@ -161,26 +160,6 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.graphManager.selectionManager = referenceManager.selectionManager;
         }
 
-        /// <summary>
-        /// Calls R logging function to start the logging session.
-        /// </summary>
-        IEnumerator LogStart()
-        {
-            string args = CellexalUser.UserSpecificFolder;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
-            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-
-            while (t.IsAlive)
-            {
-                yield return null;
-            }
-            stopwatch.Stop();
-            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-        }
 
 
         public void ReadCoordinates(string path, string[] files)
@@ -391,7 +370,6 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
 
-            //StartCoroutine(InitialCheckCoroutine());
             StartCoroutine(StartServer());
             if (debug)
             {
@@ -521,35 +499,71 @@ namespace CellexalVR.AnalysisLogic
 
             stopwatch.Stop();
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
+            referenceManager.notificationManager.SpawnNotification("R Server Session Initiated");
+            //StartCoroutine(LogStart());
         }
 
         public void StopServer()
         {
-            string name = CellexalUser.UserSpecificFolder + "\\tmpFile";
-            string args = name;
+            string name = CellexalUser.UserSpecificFolder + "\\server";
             File.Delete(name + ".pid");
             CellexalLog.Log("Stopped Server");
         }
 
-        //private IEnumerator InitialCheckCoroutine()
+        /// <summary>
+        /// Calls R logging function to start the logging session.
+        /// </summary>
+        IEnumerator LogStart()
+        {
+
+            //string script = "if ( !is.null(cellexalObj@usedObj$sessionPath) ) { \n" +
+            //                "cellexalObj @usedObj$sessionPath = NULL \n" +
+            //                " cellexalObj @usedObj$sessionRmdFiles = NULL \n" +
+            //                "cellexalObj @usedObj$sessionName = NULL } \n " +
+            //                "cellexalObj = sessionPath(cellexalObj, \"" + CellexalUser.UserSpecificFolder.UnFixFilePath() + "\")" ;
+
+            string filePath = Application.streamingAssetsPath + @"\R\logStart.R";
+
+            // Wait for other processes to finish and for server to have started.
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R") ||
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
+            {
+                yield return null;
+            }
+
+            CellexalLog.Log("Running R script : " + filePath);
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            RScriptRunner.RunScript(filePath, true);
+
+            // Wait for this process to finish.
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            {
+                yield return null;
+            }
+            stopwatch.Stop();
+            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+        }
+
+        ///// <summary>
+        ///// Calls R logging function to start the logging session.
+        ///// </summary>
+        //IEnumerator LogStart()
         //{
-        //    string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-        //    string userFolder = CellexalUser.UserSpecificFolder;
-        //    string args = dataSourceFolder + " " + userFolder;
-        //    string rScriptFilePath = Application.streamingAssetsPath + @"\R\initial_check.R";
-        //    CellexalLog.Log("Running initial check script at " + rScriptFilePath + " with the arguments " + args);
-        //    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        //    string args = CellexalUser.UserSpecificFolder;
+        //    string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
+        //    CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
+        //    var stopwatch = new System.Diagnostics.Stopwatch();
         //    stopwatch.Start();
         //    Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
         //    t.Start();
+
         //    while (t.IsAlive)
         //    {
         //        yield return null;
         //    }
         //    stopwatch.Stop();
-        //    CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
-        //    //LoadPreviousGroupings();
-        //    StartCoroutine(LogStart());
+        //    CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         //}
 
         /// <summary>

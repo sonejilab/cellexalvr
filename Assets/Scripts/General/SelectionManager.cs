@@ -492,19 +492,25 @@ namespace CellexalVR.General
             RObjectUpdating = true;
             // wait one frame to let ConfirmSelection finish.
             yield return null;
-            string assignment = "cellexalObj";
             string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
                                         + referenceManager.heatmapGenerator.selectionNr + ".txt").UnFixFilePath();
             string args = "cellexalObj" + ", \"" + latestSelection + "\"";
-            CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
+            string script = "cellexalObj <- " + function + "(" + args + ")";
+
+            // Wait for server to start up
+            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
+            {
+                yield return null;
+            }
+
 
             Stopwatch stopwatch = new Stopwatch();
+            Thread t = new Thread(() => RScriptRunner.RunScript(script));
+            CellexalLog.Log("Running R script " + script + " with the arguments \"");
+            CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
             stopwatch.Start();
-            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
-            RScriptRunner.RunRscriptOnServer(function, args, assignment);
-            CellexalLog.Log("Running R function " + function + " with the arguments: " + args);
-            stopwatch.Start();
+            t.Start();
 
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
