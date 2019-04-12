@@ -6436,7 +6436,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolHandler: {fileID: 114238331669992430}
+  referenceManager: {fileID: 0}
+  selectionManager: {fileID: 0}
+  radialMenu: {fileID: 0}
+  buttonIcons: {fileID: 0}
+  particles: {fileID: 0}
+  selectionToolColliders: []
+  Colors: []
+  currentColorIndex: 0
+  hapticFeedbackThisFrame: 1
 --- !u!114 &114155570382968302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6460,7 +6468,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolHandler: {fileID: 114238331669992430}
+  referenceManager: {fileID: 0}
+  selectionManager: {fileID: 0}
+  radialMenu: {fileID: 0}
+  buttonIcons: {fileID: 0}
+  particles: {fileID: 0}
+  selectionToolColliders: []
+  Colors: []
+  currentColorIndex: 0
+  hapticFeedbackThisFrame: 1
 --- !u!114 &114238331669992430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6661,7 +6677,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolHandler: {fileID: 114238331669992430}
+  referenceManager: {fileID: 0}
+  selectionManager: {fileID: 0}
+  radialMenu: {fileID: 0}
+  buttonIcons: {fileID: 0}
+  particles: {fileID: 0}
+  selectionToolColliders: []
+  Colors: []
+  currentColorIndex: 0
+  hapticFeedbackThisFrame: 1
 --- !u!114 &114402105162389194
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6868,7 +6892,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionToolHandler: {fileID: 114238331669992430}
+  referenceManager: {fileID: 0}
+  selectionManager: {fileID: 0}
+  radialMenu: {fileID: 0}
+  buttonIcons: {fileID: 0}
+  particles: {fileID: 0}
+  selectionToolColliders: []
+  Colors: []
+  currentColorIndex: 0
+  hapticFeedbackThisFrame: 1
 --- !u!114 &114798511661541400
 MonoBehaviour:
   m_ObjectHideFlags: 1
