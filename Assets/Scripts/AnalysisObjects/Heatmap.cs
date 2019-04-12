@@ -38,6 +38,7 @@ namespace CellexalVR.AnalysisObjects
         public TextMeshPro enlargedGeneText;
         public TextMeshPro highlightGeneText;
         public bool removable;
+        public string directory;
 
         private GraphManager graphManager;
         private CellManager cellManager;
@@ -450,7 +451,15 @@ namespace CellexalVR.AnalysisObjects
                 button.SetButtonActivated(false);
             }
 
-            SQLiter.SQLite database = referenceManager.database;
+            //SQLiter.SQLite database = referenceManager.database;
+            //SQLiter.SQLite db = Instantiate(SQLiter.SQLite);
+            //{
+            //    referenceManager = referenceManager
+            //};
+            SQLiter.SQLite db = gameObject.AddComponent<SQLiter.SQLite>();
+            db.referenceManager = referenceManager;
+            db.InitDatabase(this.directory + ".sqlite3");
+
             bitmap = new Bitmap(bitmapWidth, bitmapHeight);
             System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
 
@@ -479,17 +488,17 @@ namespace CellexalVR.AnalysisObjects
             }
             xcoord = heatmapX;
 
-            while (database.QueryRunning)
+            while (db.QueryRunning)
             {
                 yield return null;
             }
-            database.QueryGenesIds(genes);
-            while (database.QueryRunning)
+            db.QueryGenesIds(genes);
+            while (db.QueryRunning)
             {
                 yield return null;
             }
 
-            ArrayList result = database._result;
+            ArrayList result = db._result;
             Dictionary<string, string> geneIds = new Dictionary<string, string>(result.Count);
             foreach (Tuple<string, string> t in result)
             {
@@ -510,16 +519,16 @@ namespace CellexalVR.AnalysisObjects
             {
                 cellsPosition[cells[i]] = i;
             }
-            while (database.QueryRunning)
+            while (db.QueryRunning)
             {
                 yield return null;
             }
-            database.QueryGenesInCells(genes, cells);
-            while (database.QueryRunning)
+            db.QueryGenesInCells(genes, cells);
+            while (db.QueryRunning)
             {
                 yield return null;
             }
-            result = database._result;
+            result = db._result;
 
             CellexalLog.Log("Reading " + result.Count + " results from database");
             //Thread thread = new Thread(() =>

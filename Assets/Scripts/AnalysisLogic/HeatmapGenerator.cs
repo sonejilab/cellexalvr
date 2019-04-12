@@ -180,110 +180,142 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Coroutine for creating a heatmap.
         /// </summary>
-        void GenerateHm(string heatmapName)
+        IEnumerator GenerateHeatmapRoutine(string heatmapName)
         {
-            //make.cellexalvr.heatmap.list(CO, group_selection_filepath, top_genes_number, output_filepath, stats_method)
-            string command = "make.cellexalvr.heatmap.list";
-            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
-            string topGenesNr = "250";
-            string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
-            string outputFilepath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
-            string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
-          
-            string filePath = CellexalUser.UserSpecificFolder + "\\input.txt";
-            using (StreamWriter file = new StreamWriter(filePath))
+            GeneratingHeatmaps = true;
+            // Show calculators
+            calculatorCluster.SetActive(true);
+            List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
+
+            // Check if more than one cell is selected
+            if (selection.Count < 1)
             {
-                string line = command + "(" + latestSelection + ", " + topGenesNr + ", " + outputFilepath + ", " + statsMethod + ")";
-                file.Write(line);
+                CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
+                yield break;
             }
+            //make.cellexalvr.heatmap.list(CO, group_selection_filepath, top_genes_number, output_filepath, stats_method)
+            string function = "make.cellexalvr.heatmap.list";
+            string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
+            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").UnFixFilePath();
+            string topGenesNr = "250";
+            string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
+            string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
+            string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
 
-            //t = new Thread(() => RScriptRunner.RunFromCmd("", ""));
-            //t.Start();
+            string args = '"' + objectPath + "\", \"" + latestSelection + "\", " + topGenesNr + ", \"" + outputFilePath + "\", \"" + statsMethod + "\"";
 
-            //while (t.IsAlive)
-            //{
-            //    yield return null;
-            //}
+            if (!Directory.Exists(heatmapDirectory))
+            {
+                CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
+                Directory.CreateDirectory(heatmapDirectory);
+            }
+            //string args = objectPath + ", " + latestSelection + ", " + topGenesNr + ", " + outputFilepath + ", " + statsMethod;
+            t = new Thread(() => RScriptRunner.RunRscriptOnServer(function, args));
+            t.Start();
+            CellexalLog.Log("Running R function " + function + " with the arguments: " + args);
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R")) 
+            {
+                yield return null;
+            }
+            stopwatch.Stop();
+            CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
+
+            GeneratingHeatmaps = false;
+
+            var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+            heatmap.Init();
+            heatmap.transform.parent = transform;
+            heatmap.transform.localPosition = heatmapPosition;
+            heatmap.selectionNr = selectionNr;
+            heatmapList.Add(heatmap);
+            heatmap.directory = outputFilePath;
+            heatmap.BuildTexture(selection, outputFilePath);
+            //heatmap.GetComponent<AudioSource>().Play();
+            heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
+            heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
+            heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+
         }
 
 
         /// <summary>
         /// Coroutine for creating a heatmap.
         /// </summary>
-        IEnumerator GenerateHeatmapRoutine(string heatmapName)
-        {
-            if (selectionManager.selectionConfirmed)
-            {
-                GeneratingHeatmaps = true;
-                // Show calculators
-                calculatorCluster.SetActive(true);
-                List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
+        //IEnumerator GenerateHeatmapRoutine(string heatmapName)
+        //{
+        //    if (selectionManager.selectionConfirmed)
+        //    {
+        //        GeneratingHeatmaps = true;
+        //        // Show calculators
+        //        calculatorCluster.SetActive(true);
+        //        List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
 
-                // Check if more than one cell is selected
-                if (selection.Count < 1)
-                {
-                    CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
-                    yield break;
-                }
+        //        // Check if more than one cell is selected
+        //        if (selection.Count < 1)
+        //        {
+        //            CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
+        //            yield break;
+        //        }
 
-                //int statusId = status.AddStatus("R script generating heatmap");
-                //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
-                //int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
+        //        //int statusId = status.AddStatus("R script generating heatmap");
+        //        //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
+        //        //int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
 
-                // if the R object is not updated, wait
-                while (selectionManager.RObjectUpdating)
-                    yield return null;
+        //        // if the R object is not updated, wait
+        //        while (selectionManager.RObjectUpdating)
+        //            yield return null;
 
-                // Start generation of new heatmap in R
-                selectionNr = selectionManager.fileCreationCtr - 1;
-                //string home = Directory.GetCurrentDirectory();
+        //        // Start generation of new heatmap in R
+        //        selectionNr = selectionManager.fileCreationCtr - 1;
+        //        //string home = Directory.GetCurrentDirectory();
 
-                string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
-                string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
-                string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
-                string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath +
-                                " " + CellexalConfig.Config.HeatmapNumberOfGenes + " " + statsMethod;
-                if (!Directory.Exists(heatmapDirectory))
-                {
-                    CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
-                    Directory.CreateDirectory(heatmapDirectory);
-                }
-                CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
-                var stopwatch = new System.Diagnostics.Stopwatch();
-                stopwatch.Start();
-                t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-                t.Start();
+        //        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
+        //        string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
+        //        string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
+        //        string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath +
+        //                        " " + CellexalConfig.Config.HeatmapNumberOfGenes + " " + statsMethod;
+        //        if (!Directory.Exists(heatmapDirectory))
+        //        {
+        //            CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
+        //            Directory.CreateDirectory(heatmapDirectory);
+        //        }
+        //        CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
+        //        var stopwatch = new System.Diagnostics.Stopwatch();
+        //        stopwatch.Start();
+        //        t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        //        t.Start();
 
-                while (t.IsAlive)
-                {
-                    yield return null;
-                }
-                stopwatch.Stop();
-                CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
-                //status.RemoveStatus(statusId);
-                //statusDisplayHUD.RemoveStatus(statusIdHUD);
-                //statusDisplayFar.RemoveStatus(statusIdFar);
-                GeneratingHeatmaps = false;
-                //File.Delete(newHeatmapFilePath);
-                //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
+        //        while (t.IsAlive)
+        //        {
+        //            yield return null;
+        //        }
+        //        stopwatch.Stop();
+        //        CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
+        //        //status.RemoveStatus(statusId);
+        //        //statusDisplayHUD.RemoveStatus(statusIdHUD);
+        //        //statusDisplayFar.RemoveStatus(statusIdFar);
+        //        GeneratingHeatmaps = false;
+        //        //File.Delete(newHeatmapFilePath);
+        //        //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
 
-                var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
-                heatmap.Init();
-                heatmap.transform.parent = transform;
-                heatmap.transform.localPosition = heatmapPosition;
-                heatmap.selectionNr = selectionNr;
-                // save colors before.
-                //heatmap.SetVars(colors);
-                heatmapList.Add(heatmap);
-                //heatmap.UpdateImage(newHeatmapFilePath);
-                heatmap.BuildTexture(selection, outputFilePath);
-                //heatmap.GetComponent<AudioSource>().Play();
-                heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
-                heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
-                heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-                GenerateHm(heatmapName);
-            }
-        }
+        //        var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+        //        heatmap.Init();
+        //        heatmap.transform.parent = transform;
+        //        heatmap.transform.localPosition = heatmapPosition;
+        //        heatmap.selectionNr = selectionNr;
+        //        // save colors before.
+        //        //heatmap.SetVars(colors);
+        //        heatmapList.Add(heatmap);
+        //        //heatmap.UpdateImage(newHeatmapFilePath);
+        //        heatmap.BuildTexture(selection, outputFilePath);
+        //        //heatmap.GetComponent<AudioSource>().Play();
+        //        heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
+        //        heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
+        //        heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+        //    }
+        //}
 
         public void AddHeatmapToList(Heatmap heatmap)
         {

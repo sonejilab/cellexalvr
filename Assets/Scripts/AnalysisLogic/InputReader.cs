@@ -391,7 +391,8 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
 
-            StartCoroutine(InitialCheckCoroutine());
+            //StartCoroutine(InitialCheckCoroutine());
+            StartCoroutine(StartServer());
             if (debug)
             {
                 //  yield return new WaitForSeconds(3);
@@ -500,26 +501,56 @@ namespace CellexalVR.AnalysisLogic
         //     yield return null;
         // }
 
-        private IEnumerator InitialCheckCoroutine()
+        private IEnumerator StartServer()
         {
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
+            string serverName  = CellexalUser.UserSpecificFolder + "\\server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-            string userFolder = CellexalUser.UserSpecificFolder;
-            string args = dataSourceFolder + " " + userFolder;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\initial_check.R";
-            CellexalLog.Log("Running initial check script at " + rScriptFilePath + " with the arguments " + args);
+            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
+
+            CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
+            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             t.Start();
-            while (t.IsAlive)
+
+            while (!File.Exists(serverName + ".pid"))
             {
                 yield return null;
             }
+
             stopwatch.Stop();
-            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
-            //LoadPreviousGroupings();
-            StartCoroutine(LogStart());
+            CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
         }
+
+        public void StopServer()
+        {
+            string name = CellexalUser.UserSpecificFolder + "\\tmpFile";
+            string args = name;
+            File.Delete(name + ".pid");
+            CellexalLog.Log("Stopped Server");
+        }
+
+        //private IEnumerator InitialCheckCoroutine()
+        //{
+        //    string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
+        //    string userFolder = CellexalUser.UserSpecificFolder;
+        //    string args = dataSourceFolder + " " + userFolder;
+        //    string rScriptFilePath = Application.streamingAssetsPath + @"\R\initial_check.R";
+        //    CellexalLog.Log("Running initial check script at " + rScriptFilePath + " with the arguments " + args);
+        //    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        //    stopwatch.Start();
+        //    Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        //    t.Start();
+        //    while (t.IsAlive)
+        //    {
+        //        yield return null;
+        //    }
+        //    stopwatch.Stop();
+        //    CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+        //    //LoadPreviousGroupings();
+        //    StartCoroutine(LogStart());
+        //}
 
         /// <summary>
         /// Reads a file containing lists of genes that should be flashed.
