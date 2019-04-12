@@ -229,7 +229,7 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Colors all graphs based on what was typed.
         /// </summary>
-        public void SubmitOutput(bool invoke=true)
+        public void SubmitOutput(bool invoke = true)
         {
             if (invoke && OnEnter != null)
             {
@@ -241,6 +241,9 @@ namespace CellexalVR.Interaction
             Clear();
         }
 
+        /// <summary>
+        /// Returns the currently typed text.
+        /// </summary>
         public string Text()
         {
             if (displayingPlaceHolder)
@@ -266,6 +269,9 @@ namespace CellexalVR.Interaction
             BuildKeyboard();
         }
 
+        /// <summary>
+        /// Builds the keyboard by creating the meshes and positioning everything.
+        /// </summary>
         public void BuildKeyboard()
         {
             GatherKeys();
@@ -335,6 +341,16 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Creates a nine sliced quad that is used for the panels on the keyboard. This lets us use a texture with a border that won't be stretched over non-square panels. 
+        /// Meshes will be curved along a circle arc with the angle <paramref name="anglePerUnit"/> multiplied by the x component of <paramref name="size"/> and with the radius <paramref name="distance"/>.
+        /// </summary>
+        /// <param name="uv2min">The smallest uv2 coordinates. The uv2 should reflect the panel's position on the keyboard.</param>
+        /// <param name="uv2max">The largest uv2 coordinates.</param>
+        /// <param name="size">This panel's size.</param>
+        /// <param name="anglePerUnit">Radians per unit of <paramref name="size"/>. Affects how wide the panel becomes.</param>
+        /// <param name="distance">The radius of the circle's arc. Affects how curved the panel becomes.</param>
+        /// <returns></returns>
         private Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit, float distance)
         {
             // left, right, bottom and top margins
@@ -344,6 +360,7 @@ namespace CellexalVR.Interaction
             float maxXCoord = xSegments / 2f;
             float minXCoord = -maxXCoord;
             float maxYCoord = size.y;
+            // vertices need their coordinates scaled, uv does not
             float adjl = l * size.y;
             float adjr = r * size.y;
             float adjb = b * size.y;
@@ -375,8 +392,6 @@ namespace CellexalVR.Interaction
             Array.Copy(vertCorners, 0, verts, 0, 8);
             Array.Copy(vertCorners, 8, verts, verts.Length - 8, 8);
 
-            //l /= xSegments;
-            //r /= xSegments;
             // do the same for the uv
             Vector2[] uv = new Vector2[16 + 4 * (xSegments - 1)];
             Vector2[] uvCorners = new Vector2[] {
@@ -432,6 +447,7 @@ namespace CellexalVR.Interaction
                 }
             }
 
+            // uv2 based on uv but should be in real world coordinates
             Vector2[] uv2 = new Vector2[uv.Length];
             Vector2 uv2Diff = uv2max - uv2min;
             for (int i = 0; i < uv2.Length; ++i)
@@ -453,6 +469,9 @@ namespace CellexalVR.Interaction
 #endif
     }
 #if UNITY_EDITOR
+    /// <summary>
+    /// Editor class for the <see cref="KeyboardHandler"/> to add a "Build keyboard" button.
+    /// </summary>
     [UnityEditor.CustomEditor(typeof(KeyboardHandler))]
     [UnityEditor.CanEditMultipleObjects]
     public class KeyboardHandlerEditor : UnityEditor.Editor

@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
