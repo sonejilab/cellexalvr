@@ -1,0 +1,57 @@
+# 3D models
+*/lfs/*.3dm filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.3ds filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.blend filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.c4d filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.collada filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.dae filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.dxf filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.fbx filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.jas filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.lws filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.lxo filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.ma filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.max filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.mb filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.obj filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.ply filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.skp filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.stl filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.ztl filter=lfs diff=lfs merge=lfs -text
+
+# Audio
+*/lfs/*.aif filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.aiff filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.it filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.mod filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.mp3 filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.ogg filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.s3m filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.wav filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.xm filter=lfs diff=lfs merge=lfs -text
+
+# Fonts
+*/lfs/*.otf filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.ttf filter=lfs diff=lfs merge=lfs -text
+
+# Images
+*/lfs/*.bmp filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.exr filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.gif filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.hdr filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.iff filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.jpeg filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.jpg filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.pict filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.png filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.psd filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.tga filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.tif filter=lfs diff=lfs merge=lfs -text
+*/lfs/*.tiff filter=lfs diff=lfs merge=lfs -text
+
+# Collapse Unity-generated files on GitHub
+*/lfs/*.asset linguist-generated
+*/lfs/*.mat linguist-generated
+*/lfs/*.meta linguist-generated
+*/lfs/*.prefab linguist-generated
+*/lfs/*.unity linguist-generated
