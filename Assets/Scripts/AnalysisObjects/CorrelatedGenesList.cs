@@ -19,6 +19,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public GameObject listNodePrefab;
         public ClickableTextPanel sourceGeneListNode;
+        public GameObject listNodesParent;
         public List<GameObject> listNodes;
         public List<ClickableTextPanel> correlatedPanels;
         public List<ClickableTextPanel> anticorrelatedPanels;
@@ -29,6 +30,7 @@ namespace CellexalVR.AnalysisObjects
         //private SelectionToolHandler selectionToolHandler;
         private SelectionManager selectionManager;
         private ClickableTextPanel listNode;
+
 
         private void Start()
         {
@@ -162,6 +164,11 @@ namespace CellexalVR.AnalysisObjects
             if (!gameObject.activeInHierarchy || Event.current != null && Event.current.type == EventType.Repaint)
                 return;
 
+            if (referenceManager == null)
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+
             // remove null entries
             for (int i = 0; i < listNodes.Count; ++i)
             {
@@ -185,7 +192,7 @@ namespace CellexalVR.AnalysisObjects
             }
             Mesh quadPrefab = referenceManager.previousSearchesList.quadPrefab;
             // remove old nodes
-            foreach (var oldNode in listNodes)
+            foreach (Transform oldNode in listNodesParent.transform)
             {
                 if (oldNode != null)
                 {
@@ -204,8 +211,10 @@ namespace CellexalVR.AnalysisObjects
             {
                 GameObject newCorrelatedPanel = Instantiate(listNodePrefab, gameObject.transform);
                 newCorrelatedPanel.SetActive(true);
+                newCorrelatedPanel.transform.parent = listNodesParent.transform;
                 GameObject newAnticorrelatedPanel = Instantiate(listNodePrefab, gameObject.transform);
                 newAnticorrelatedPanel.SetActive(true);
+                newAnticorrelatedPanel.transform.parent = listNodesParent.transform;
                 // get the child components
                 ClickableTextPanel correlatedPanel = newCorrelatedPanel.GetComponentInChildren<ClickableTextPanel>();
                 ClickableTextPanel anticorrelatedPanel = newAnticorrelatedPanel.GetComponentInChildren<ClickableTextPanel>();
