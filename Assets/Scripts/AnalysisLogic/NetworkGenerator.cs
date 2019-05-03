@@ -210,6 +210,51 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.notificationManager.SpawnNotification("Transcription factor networks finished.");
         }
 
+
+        //IEnumerator GenerateNetworksCoroutine(int layoutSeed)
+        //{
+        //    GeneratingNetworks = true;
+        //    calculatorCluster.SetActive(true);
+        //    //int statusId = status.AddStatus("R script generating networks");
+        //    //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
+        //    //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
+
+        //    while (selectionManager.RObjectUpdating)
+        //        yield return null;
+
+        //    // generate the files containing the network information
+
+        //    //string home = Directory.GetCurrentDirectory();
+        //    selectionNr = selectionManager.fileCreationCtr - 1;
+        //    string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
+        //    string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").FixFilePath();
+        //    string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").FixFilePath();
+        //    string args = groupingFilePath + " " + CellexalUser.UserSpecificFolder + " " + " " + networkResources;
+        //    if (!Directory.Exists(networkResources))
+        //    {
+        //        CellexalLog.Log("Creating directory " + networkResources.FixFilePath());
+        //        Directory.CreateDirectory(networkResources);
+        //    }
+        //    rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_networks.R").FixFilePath();
+        //    CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
+        //    var stopwatch = new System.Diagnostics.Stopwatch();
+        //    stopwatch.Start();
+        //    t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+        //    t.Start();
+        //    while (t.IsAlive)
+        //        yield return null;
+        //    stopwatch.Stop();
+        //    CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
+        //    //status.RemoveStatus(statusId);
+        //    GeneratingNetworks = false;
+        //    CellexalEvents.NetworkCreated.Invoke();
+        //    if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)
+        //        calculatorCluster.SetActive(false);
+        //    //statusDisplayHUD.RemoveStatus(statusIdHUD);
+        //    //statusDisplayFar.RemoveStatus(statusIdFar);
+        //    inputReader.ReadNetworkFiles(layoutSeed);
+        //}
+
         /// <summary>
         /// Helper method to create network nodes.
         /// </summary>

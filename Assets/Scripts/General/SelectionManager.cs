@@ -507,11 +507,9 @@ namespace CellexalVR.General
 
             Stopwatch stopwatch = new Stopwatch();
             Thread t = new Thread(() => RScriptRunner.RunScript(script));
-            CellexalLog.Log("Running R script " + script + " with the arguments \"");
             CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
             stopwatch.Start();
             t.Start();
-
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
