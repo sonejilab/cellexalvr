@@ -787,6 +787,8 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   selectionNr: 0
   saveImageButton: {fileID: 114705351725496864}
+  movingOutlineCircle: {fileID: 1620093671004734, guid: b2489140aeb8ccb45b637b27fbf44833,
+    type: 2}
   isReplacement: 0
   replacing: {fileID: 0}
 --- !u!114 &114235242178268010

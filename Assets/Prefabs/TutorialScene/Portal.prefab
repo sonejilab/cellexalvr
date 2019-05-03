@@ -185,9 +185,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1425148906618716}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: ac9a8cb54c3f32149b725ed455bfbfe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialManager: {fileID: 114560222477992922, guid: 62925346b21075a478c2a06eb841495c,
+    type: 2}
 --- !u!198 &198160318907939838
 ParticleSystem:
   m_ObjectHideFlags: 1
