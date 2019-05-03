@@ -16,6 +16,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 using Random = UnityEngine.Random;
+using CellexalVR.General;
 
 /// <summary>
 /// Launch manager. Connect, join a random room or create one if none or all full.
@@ -173,12 +174,14 @@ namespace ExitGames.Demos.DemoAnimator
 
         public void ConnectSinglePlayer()
         {
+            CrossSceneInformation.Tutorial = false;
             SceneManager.LoadScene("vrjeans_scene1");
         }
 
         public void ConnectTutorialScene()
         {
-            SceneManager.LoadScene("TutorialScene");
+            CrossSceneInformation.Tutorial = true;
+            SceneManager.LoadScene("TutorialScene_New");
         }
 
 

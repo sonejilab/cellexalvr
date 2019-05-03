@@ -82,16 +82,18 @@ namespace CellexalVR.Menu.Buttons.Report
             }
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-            //SendIt();
+            
 
-            //string startPath = @"c:\example\start";
-            //string zipPath = @"c:\example\result.zip";
-
-            //ZipFile.CreateFromDirectory(startPath, zipPath);
             changeSprite = false;
             descriptionText.text = "";
             SetButtonActivated(true);
+            referenceManager.notificationManager.SpawnNotification("Session report compiled.");
+            //ZipFile.CreateFromDirectory(startPath, zipPath);
             //reportList.GenerateList();
+            
+            //SendIt();
+            //string startPath = @"c:\example\start";
+            //string zipPath = @"c:\example\result.zip";
         }
 
         void TurnOff()

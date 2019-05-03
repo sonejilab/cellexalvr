@@ -362,6 +362,14 @@ namespace CellexalVR.AnalysisObjects
             }
             return null;
         }
+
+        public void HighLightGene(string geneName)
+        {
+            foreach (NetworkCenter nc in networks)
+            {
+                nc.HighLightGene(geneName);
+            }
+        }
     }
 
 }

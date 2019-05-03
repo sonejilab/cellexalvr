@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.General;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CellexalVR.Tutorial
@@ -43,6 +44,7 @@ namespace CellexalVR.Tutorial
                 }
                 if (this.name == "Portal")
                 {
+                    CrossSceneInformation.Tutorial = false;
                     SceneManager.LoadScene("vrjeans_scene1");
                 }
                 //this.gameObject.SetActive(false);

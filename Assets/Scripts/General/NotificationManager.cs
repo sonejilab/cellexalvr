@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using TMPro;
 using CellexalVR.DesktopUI;
 
@@ -10,6 +9,7 @@ namespace CellexalVR.General
 
         public ReferenceManager referenceManager;
         public GameObject notificationPrefab;
+        public bool active = true;
 
 
         private Animator notificationAnimator;
@@ -23,6 +23,10 @@ namespace CellexalVR.General
         {
             GetComponent<Canvas>().worldCamera = referenceManager.headset.GetComponent<Camera>();
             audioSource = GetComponent<AudioSource>();
+            if (CrossSceneInformation.Tutorial)
+            {
+                active = false;
+            }
         }
 
 
@@ -47,17 +51,23 @@ namespace CellexalVR.General
         /// If several notification messages are displayed at the same time they will appear on top of each other.
         /// </summary>
         /// <param name="message">The notification message to display.</param>
+        [ConsoleCommand("notificationManager", "sn")]
         public void SpawnNotification(string message)
         {
-            notification = Instantiate(notificationPrefab, this.transform);
-            notification.transform.localPosition -= new Vector3(0, 100 * notificationCounter, 0);
-            notification.GetComponent<Notification>().notificationManager = this;
-            notification.GetComponentInChildren<TextMeshProUGUI>().text = message;
-            notificationCounter++;
-            if (!audioSource.isPlaying)
+            if (active)
             {
-                audioSource.Play();
+
+                notification = Instantiate(notificationPrefab, this.transform);
+                notification.transform.localPosition += new Vector3(0, 100 * notificationCounter, 0);
+                notification.GetComponent<Notification>().notificationManager = this;
+                notification.GetComponentInChildren<TextMeshProUGUI>().text = message;
+                notificationCounter++;
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.Play();
+                }
             }
+
         }
 
     }

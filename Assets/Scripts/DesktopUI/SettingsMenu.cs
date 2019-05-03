@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using CellexalVR.General;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.DesktopUI
 {
@@ -14,6 +15,7 @@ namespace CellexalVR.DesktopUI
         public GameObject settingsMenuGameObject;
         public ReferenceManager referenceManager;
         public GameObject unsavedChangesPrompt;
+        public GameObject confirmQuitPrompt;
         public GameObject resetAllSettingsPrompt;
         public HinterController hinterController;
         //[Header("Menu items")]
@@ -53,6 +55,7 @@ namespace CellexalVR.DesktopUI
         public GameObject addSelectionColorButton;
         [Header("Visual")]
         public TMPro.TMP_Dropdown skyboxDropdown;
+        public Toggle notificationToggle;
 
         public Material[] skyboxes;
 
@@ -127,6 +130,7 @@ namespace CellexalVR.DesktopUI
             networkLineNegativeLow.Color = CellexalConfig.Config.NetworkLineColorNegativeLow;
             networkNumberOfNetworkColors.text = "" + CellexalConfig.Config.NumberOfNetworkLineColors;
             networkLineWidth.text = "" + CellexalConfig.Config.NetworkLineWidth;
+            notificationToggle.isOn = CellexalConfig.Config.ShowNotifications;
 
             for (int i = 0; i < CellexalConfig.Config.SelectionToolColors.Length; ++i)
             {
@@ -279,6 +283,12 @@ namespace CellexalVR.DesktopUI
             RenderSettings.skybox = skyboxes[selected];
         }
 
+        public void SetNotifications(bool active)
+        {
+            CellexalConfig.Config.ShowNotifications = active;
+            referenceManager.notificationManager.active = active;
+        }
+
         public void AddSelectionColor()
         {
             unsavedChanges = true;
@@ -307,6 +317,7 @@ namespace CellexalVR.DesktopUI
             }
             CellexalConfig.Config.SelectionToolColors = colors;
             referenceManager.selectionToolCollider.UpdateColors();
+            referenceManager.graphGenerator.CreateShaderColors();
         }
 
         public void SetGraphHighestExpressionMarker(bool active)
@@ -350,12 +361,22 @@ namespace CellexalVR.DesktopUI
         }
 
         /// <summary>
+        /// Spawns prompt before exiting.
+        /// </summary>
+        public void QuitButton()
+        {
+            confirmQuitPrompt.SetActive(true);
+        }
+
+        /// <summary>
         /// Quits the program.
         /// </summary>
         public void Quit()
         {
             CellexalLog.Log("Quit button pressed");
             CellexalLog.LogBacklog();
+            // terminate server session
+            referenceManager.inputReader.QuitServer();
             // Application.Quit() does not work in the unity editor, only in standalone builds.
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;

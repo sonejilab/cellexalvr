@@ -47,6 +47,7 @@ namespace CellexalVR.General
         public int NumberOfNetworkLineColors { get; set; }
         public float NetworkLineWidth { get; set; }
         public int ConsoleMaxBufferLines { get; set; }
+        public bool ShowNotifications { get; set; }
 
         public Config() { }
 
@@ -83,6 +84,7 @@ namespace CellexalVR.General
             NumberOfNetworkLineColors = c.NumberOfNetworkLineColors;
             NetworkLineWidth = c.NetworkLineWidth;
             ConsoleMaxBufferLines = c.ConsoleMaxBufferLines;
+            ShowNotifications = c.ShowNotifications;
 
         }
     }

@@ -191,6 +191,9 @@ namespace CellexalVR.AnalysisLogic
             if (selection.Count < 1)
             {
                 CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
+                if (!referenceManager.networkGenerator.GeneratingNetworks)
+                    referenceManager.calculatorCluster.SetActive(false);
+                referenceManager.notificationManager.SpawnNotification("Heatmap generation failed.");
                 yield break;
             }
             string function = "make.cellexalvr.heatmap.list";
@@ -228,6 +231,7 @@ namespace CellexalVR.AnalysisLogic
             GeneratingHeatmaps = false;
 
             var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+
             heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
@@ -235,12 +239,9 @@ namespace CellexalVR.AnalysisLogic
             heatmapList.Add(heatmap);
             heatmap.directory = outputFilePath;
             heatmap.BuildTexture(selection, outputFilePath);
-            //heatmap.GetComponent<AudioSource>().Play();
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-
-            referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
         }
 
         public void AddHeatmapToList(Heatmap heatmap)

@@ -142,12 +142,5 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        /// <summary>
-        /// To clean up server files after termination. Can be called from outside if the user wants to start a new session (e.g. when loading a new dataset). 
-        /// </summary>
-        public void CleanUp()
-        {
-            File.Delete(CellexalUser.UserSpecificFolder + "\\server.pid");
-        }
     }
 }

@@ -28,7 +28,6 @@ namespace CellexalVR.AnalysisObjects
         //private StatusDisplay statusDisplayFar;
         //private SelectionToolHandler selectionToolHandler;
         private SelectionManager selectionManager;
-        private ClickableTextPanel listNode;
 
         private void Start()
         {
@@ -37,6 +36,7 @@ namespace CellexalVR.AnalysisObjects
             //statusDisplayFar = referenceManager.statusDisplayFar;
             selectionManager = referenceManager.selectionManager;
             SetVisible(false);
+            CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
 
 
@@ -77,6 +77,11 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        void TurnOff()
+        {
+            SetVisible(false);
+        }
+
         /// <summary>
         /// For multiplayer use. Listnode cant be sent as RPC call so send name of node directly.
         /// </summary>
@@ -94,10 +99,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="name"> The genes name. </param>
         public void CalculateCorrelatedGenes(ClickableTextPanel node, Extensions.Definitions.Measurement type)
         {
-            listNode = node;
-            listNode.GetComponentInChildren<CorrelatedGenesPanel>().SetPressed(true);
-            listNode.SetPressed(true);
-            StartCoroutine(CalculateCorrelatedGenesCoroutine(listNode.NameOfThing, type));
+            StartCoroutine(CalculateCorrelatedGenesCoroutine(node.NameOfThing, type));
         }
 
 
@@ -120,18 +122,24 @@ namespace CellexalVR.AnalysisObjects
             CellexalLog.Log("Calculating correlated genes with R script " + script);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunScript(script));
-            t.Start();
+            RScriptRunner.RunScript(script);
 
             // Wait for this process to finish.
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
+
+            // wait some frames for files to be created.
+            //for (int i = 0; i < 10; i++)
+            //{
+            //}
+            yield return null;
             stopwatch.Stop();
             CellexalLog.Log("Correlated genes R script finished in " + stopwatch.Elapsed.ToString());
             // r script is done, read the results.
             string[] lines = File.ReadAllLines(outputFile);
+
             // if the file is not 2 lines, something probably went wrong
             if (lines.Length != 2)
             {
@@ -152,11 +160,8 @@ namespace CellexalVR.AnalysisObjects
             }
             CellexalLog.Log("Successfully calculated genes correlated to " + nodeName);
             PopulateList(nodeName, type, correlatedGenes, anticorrelatedGenes);
-            if (listNode)
-            {
-                listNode.SetPressed(false);
-                listNode.GetComponentInChildren<CorrelatedGenesPanel>().SetPressed(false);
-            }
+            CellexalEvents.CorrelatedGenesCalculated.Invoke();
+            referenceManager.notificationManager.SpawnNotification("Correlated genes calculation finished.");
             //statusDisplay.RemoveStatus(statusId);
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);

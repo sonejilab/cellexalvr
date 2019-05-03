@@ -263,10 +263,10 @@ namespace CellexalVR.SceneObjects
             {
                 graphManager.DeleteGraphsAndNetworks();
                 referenceManager.heatmapGenerator.DeleteHeatmaps();
-                // new_keyboard referenceManager.previousSearchesList.ClearList();
                 referenceManager.drawTool.ClearAllLines();
                 referenceManager.selectionManager.Clear();
                 referenceManager.graphGenerator.graphCount = 0;
+                referenceManager.inputReader.QuitServer();
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
             // must reset loader before generating new folders

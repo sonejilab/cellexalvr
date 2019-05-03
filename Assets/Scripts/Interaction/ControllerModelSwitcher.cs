@@ -54,15 +54,18 @@ namespace CellexalVR.Interaction
         void Awake()
         {
             //selectionToolHandler = referenceManager.selectionToolHandler;
+            if (!SceneManagerHelper.ActiveSceneName.Equals("TutorialScene_New"))
+            {
+            }
             selectionToolCollider = referenceManager.selectionToolCollider;
+            drawTool = referenceManager.drawTool.gameObject;
+            keyboard = referenceManager.keyboardSwitch;
+            webBrowser = referenceManager.webBrowser;
             deleteTool = referenceManager.deleteTool;
             minimizer = referenceManager.minimizeTool.gameObject;
-            keyboard = referenceManager.keyboardSwitch;
-            drawTool = referenceManager.drawTool.gameObject;
+            DesiredModel = Model.Normal;
             rightLaser = referenceManager.rightLaser;
             leftLaser = referenceManager.leftLaser;
-            webBrowser = referenceManager.webBrowser;
-            DesiredModel = Model.Normal;
             //if (rightControllerBody.activeSelf)
             //{
             //SetMeshes();

@@ -116,5 +116,14 @@ namespace CellexalVR.Menu.SubMenus
             referenceManager.cellManager.AddCellsToSelection(GetExpression(), referenceManager.selectionToolCollider.currentColorIndex);
             referenceManager.selectionToolCollider.ChangeColor(true);
         }
+
+        public void SelectAllAttributes()
+        {
+            foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
+            {
+                b.Click();
+            }
+        }
+
     }
 }

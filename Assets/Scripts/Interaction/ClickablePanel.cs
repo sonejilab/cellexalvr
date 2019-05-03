@@ -47,7 +47,10 @@ namespace CellexalVR.Interaction
         public void Pulse(Vector2 pos)
         {
             PulseAndLaserCoords = new Vector4(pos.x, pos.y, PulseAndLaserCoords.z, PulseAndLaserCoords.w);
-            StartCoroutine(PulseCoroutine(pos));
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(PulseCoroutine(pos));
+            }
         }
 
         /// <summary>

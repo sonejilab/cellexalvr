@@ -309,6 +309,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="filepath">A path to the file containing the gene names</param>
         public void BuildTexture(List<Graph.GraphPoint> selection, string filepath)
         {
+
             if (buildingTexture)
             {
                 CellexalLog.Log("WARNING: Not building heatmap texture because it is already building");
@@ -368,6 +369,7 @@ namespace CellexalVR.AnalysisObjects
                 }
 
             }
+
             try
             {
                 StartCoroutine(BuildTextureCoroutine(groupWidths));
@@ -664,6 +666,8 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.HeatmapCreated.Invoke();
             if (!referenceManager.networkGenerator.GeneratingNetworks)
                 referenceManager.calculatorCluster.SetActive(false);
+
+            referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
         }
 
         private void OnTriggerEnter(Collider other)

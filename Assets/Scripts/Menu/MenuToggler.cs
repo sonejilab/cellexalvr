@@ -22,7 +22,7 @@ public class MenuToggler : MonoBehaviour
     private Collider boxCollider;
     private SteamVR_TrackedObject leftController;
     private ControllerModelSwitcher controllerModelSwitcher;
-    private Quaternion tempRotation; // save rotation when disabling menu for when reactivating
+    private float tempRotation; // save rotation when disabling menu for when reactivating
 
     private void Start()
     {
@@ -30,7 +30,6 @@ public class MenuToggler : MonoBehaviour
         boxCollider = GetComponent<Collider>();
         leftController = referenceManager.leftController;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-        tempRotation = new Quaternion();
         // The menu should be turned off when the program starts
         MenuActive = false;
     }
@@ -42,6 +41,7 @@ public class MenuToggler : MonoBehaviour
         {
             MenuActive = !MenuActive;
             menuCube.SetActive(!MenuActive);
+            tempRotation = menu.transform.localEulerAngles.z;
             if (!MenuActive)
             {
                 menu.transform.parent = menuHolder.transform;
@@ -52,7 +52,7 @@ public class MenuToggler : MonoBehaviour
                 menu.transform.parent = leftController.transform;
                 menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
             }
-            menu.transform.localEulerAngles = new Vector3(-15, 0, 0);
+            menu.transform.localEulerAngles = new Vector3(-15, 0, tempRotation);
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
             controllerModelSwitcher.ActivateDesiredTool();
@@ -138,7 +138,7 @@ public class MenuToggler : MonoBehaviour
     {
         if (visible)
         {
-            menu.transform.localRotation = tempRotation;
+            //menu.transform.localRotation = tempRotation;
             // we are turning on the menu
             // set everything back the way it was
             foreach (KeyValuePair<Renderer, bool> pair in renderers)
@@ -158,7 +158,7 @@ public class MenuToggler : MonoBehaviour
         }
         if (!visible)
         {
-            tempRotation = menu.transform.localRotation;
+            //tempRotation = menu.transform.localRotation;
             // we are turning off the menu
             // clear the old saved values
             renderers.Clear();
