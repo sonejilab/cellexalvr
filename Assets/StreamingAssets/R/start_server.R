@@ -14,6 +14,8 @@ if ( file.exists(file.path(dataSourceFolder, "cellexalObj.RData.lock") ) ){
 }
 cellexalObj <- loadObject(file.path(dataSourceFolder, "cellexalObj.RData"))
 
+cellexalObj@outpath = outputFolder
+
 if ( ! file.exists(outputFolder ) ){
 	dir.create( outputFolder )
 }

@@ -5,4 +5,4 @@ if ( !is.null(cellexalObj@usedObj$sessionPath) ) {
 	cellexalObj@usedObj$sessionName = NULL
 }
 
-cellexalObj = sessionPath(cellexalObj, sessionString)
+cellexalObj = sessionPath(cellexalObj, NULL)
