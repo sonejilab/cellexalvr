@@ -824,7 +824,14 @@ namespace CellexalVR.AnalysisLogic
                         CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.", graphName));
                         yield break;
                     }
-                    skeleton = graph.CreateConvexHull();
+                    
+                    StartCoroutine(graphManager.Graphs[0].CreateGraphSkeleton(true));
+                    while (graphManager.Graphs[0].convexHull == null)
+                    {
+                        yield return null;
+                    }
+    
+                    skeleton = graph.convexHull;
                     if (skeleton == null)
                     {
                         CellexalError.SpawnError("Error when generating networks", string.Format("Could not create a convex hull for the graph named {0}, this could be because the convex hull file is incorrect", graphName));
@@ -850,7 +857,6 @@ namespace CellexalVR.AnalysisLogic
                 minNegPcor[colorString] = 0f;
                 Vector3 position = graph.ScaleCoordinates(new Vector3(x, y, z));
                 NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
-                //network.transform.localPosition -= graph.transform.position;
                 foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                 {
                     if (r.gameObject.GetComponent<CellexalButton>() == null)

@@ -73,13 +73,13 @@ namespace CellexalVR.SceneObjects
             if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
             {
                 //helperCylinder.SetActive(false);
-                DestroyFolderColliders();
+                //DestroyFolderColliders();
             }
 
             if (timeEntered + 5 < Time.time && collidersDestroyed)
             {
                 //inputFolderGenerator.DestroyFolders();
-                DestroyCells();
+                //DestroyCells();
             }
         }
 
@@ -126,6 +126,8 @@ namespace CellexalVR.SceneObjects
             keyboard.SetActive(false);
             helpVideoObj.SetActive(false);
             // multiple_exp datasetList.gameObject.SetActive(false);
+            DestroyFolderColliders();
+            DestroyCells();
             moving = true;
         }
 
@@ -155,10 +157,10 @@ namespace CellexalVR.SceneObjects
                             CellexalLog.Log("Could not read folder. Caught exception - " + e.StackTrace);
                             ResetFolders(true);
                         }
-
                         // new_keyboard referenceManager.keyboardStatusFolder.ClearKey();
                         gameManager.InformReadFolder(path);
                     }
+
                     Destroy(cellParent.GetComponent<FixedJoint>());
                     Destroy(cellParent.GetComponent<Rigidbody>());
                     foreach (Transform child in cellParent)

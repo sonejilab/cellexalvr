@@ -232,12 +232,11 @@ namespace CellexalVR.AnalysisObjects
                 positions[node] = node.transform.localPosition;
             }
 
-            //Thread t = new Thread(() => CalculateLayoutThread(layout, positions));
-            CalculateLayoutThread(layout, positions);
-            //t.Start();
-            //while (t.IsAlive)
-            //    yield return null;
-            //t.Join();
+            Thread t = new Thread(() => CalculateLayoutThread(layout, positions));
+            t.Start();
+            while (t.IsAlive)
+                yield return null;
+            t.Join();
             foreach (var nodePos in positions)
             {
                 nodePos.Key.transform.localPosition = nodePos.Value;

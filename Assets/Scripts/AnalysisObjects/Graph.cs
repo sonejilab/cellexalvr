@@ -21,7 +21,11 @@ namespace CellexalVR.AnalysisObjects
     {
         public GameObject skeletonPrefab;
         public GameObject emptySkeletonPrefab;
+        public GameObject skeletonCubePrefab;
+        public Material skeletonMaterial;
+        public Material lineMaterial;
         public GameObject movingOutlineCircle;
+        public GameObject convexHull;
         //public string DirectoryName { get; set; }
         public List<GameObject> Lines { get; set; }
         [HideInInspector]
@@ -81,6 +85,8 @@ namespace CellexalVR.AnalysisObjects
         private ControllerModelSwitcher controllerModelSwitcher;
         private GameManager gameManager;
         private Vector3 startPosition;
+        private List<Vector3> nodePosition;
+        private List<Vector3> nodeSizes;
 
         // For minimization animation
         private bool minimize;
@@ -361,6 +367,7 @@ namespace CellexalVR.AnalysisObjects
             /// Not always of length 8. Empty children are removed when the octree is constructed to save some memory.
             /// </summary>
             public OctreeNode[] children;
+
             /// <summary>
             /// Null if this is not a leaf. Only leaves represents points in the graph.
             /// </summary>
@@ -388,6 +395,7 @@ namespace CellexalVR.AnalysisObjects
 
             public OctreeNode() { }
 
+            public bool nodeIterated;
             /// <summary>
             /// Returns a string representation of this node and all its children. May produce very long strings for very large trees.
             /// </summary>
@@ -466,6 +474,27 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
+            public List<Vector3> GetSkeletonNodesRecursive(OctreeNode node, List<Vector3> nodePositions = null, int nodeLevel = 0)
+            {
+                if (nodePositions == null)
+                {
+                    nodePositions = new List<Vector3>();
+                }
+                foreach (OctreeNode child in node.children)
+                {
+                    if (nodeLevel == 4)
+                    {
+                        nodePositions.Add(child.center);
+                        return nodePositions;
+                    }
+                    else
+                    {
+                        child.GetSkeletonNodesRecursive(child, nodePositions, nodeLevel + 1);
+                    }
+                }
+                return nodePositions;
+            }
+
             /// <summary>
             /// Returns the smallest node that contains a point. The retured node might not be a leaf.
             /// </summary>
@@ -536,6 +565,34 @@ namespace CellexalVR.AnalysisObjects
                 }
 
             }
+
+            public IEnumerator DrawSkeletonCubes(List<Vector3> nodePositions, List<Vector3> nodeSizes, int nodeLevel)
+            {
+                if (nodePositions == null)
+                {
+                    nodePositions = new List<Vector3>();
+                }
+                foreach (OctreeNode child in children)
+                {
+                    foreach (OctreeNode c in child.children)
+                    {
+                        foreach (OctreeNode on in c.children)
+                        {
+                            nodeSizes.Add(c.size);
+                            nodePositions.Add(c.center);
+                            //print("adding nodes");
+                            //foreach (OctreeNode onc in on.children)
+                            //{
+
+                            //}
+                        }
+                    }
+                    yield return null;
+                }
+                nodeIterated = true;
+
+            }
+
 
             public void DrawDebugLines(Vector3 gameobjectPos)
             {
@@ -627,93 +684,99 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
-        public GameObject CreateConvexHull(bool empty = false)
+
+        /// <summary>
+        /// Coroutine to create the graph skeleton using the nodes from the octree. Each octreenode on a certain level will be represented by a transparant cube.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator CreateGraphSkeletonCoroutine()
         {
-
-            // Read the .hull file
-            // The file format should be
-            //  VERTEX_1    VERTEX_2    VERTEX_3
-            //  VERTEX_1    VERTEX_2    VERTEX_3
-            // ...
-            // Each line is 3 integers that corresponds to graphpoints
-            // 1 means the graphpoint that was created from the first line in the .mds file
-            // 2 means the graphpoint that was created from the second line
-            // and so on
-            // Each line in the file connects three graphpoints into a triangle
-            // One problem is that the lines are always ordered numerically so when unity is figuring out 
-            // which way of the triangle is in and which is out, it's pretty much random what the result is.
-            // The "solution" was to place a shader which does not cull the backside of the triangles, so 
-            // both sides are always rendered.
-            string path = Directory.GetCurrentDirectory() + @"\Data\" + FolderName + @"\" + GraphName + ".hull";
-            FileStream fileStream = new FileStream(path, FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-
-            Vector3[] vertices = new Vector3[points.Count];
-            List<int> triangles = new List<int>();
-            CellexalLog.Log("Started reading " + path);
-            for (int i = 0; i < points.Count; ++i)
+            //MeshFilter convexHull = null;
+            convexHull = Instantiate(skeletonPrefab);
+            convexHull.gameObject.SetActive(false);
+            List<Vector3> nodePositions = new List<Vector3>();
+            List<Vector3> sizes = new List<Vector3>();
+            List<MeshFilter> meshes = new List<MeshFilter>();
+            StartCoroutine(octreeRoot.DrawSkeletonCubes(nodePositions, sizes, 0));
+            //octreeRoot.DrawSkeletonCubes(nodePositions, sizes, 0);
+            //octreeRoot.DrawSkeletonCubes(ref nodePositions, ref sizes, 0);
+            int i = 0;
+            while (!octreeRoot.nodeIterated)
             {
-                vertices[i] = ScaleCoordinates(pointsPositions[i]);
+                yield return null;
             }
-
-            while (!streamReader.EndOfStream)
+            foreach (Vector3 pos in nodePositions)
             {
-
-                string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
-                if (coords.Length != 3)
-                    continue;
-                // subtract 1 because R is 1-indexed
-                triangles.Add(int.Parse(coords[0]) - 1);
-                triangles.Add(int.Parse(coords[1]) - 1);
-                triangles.Add(int.Parse(coords[2]) - 1);
-
+                var cube = Instantiate(skeletonCubePrefab, convexHull.transform);
+                meshes.Add(cube.GetComponent<MeshFilter>());
+                cube.transform.localPosition = pos;
+                cube.transform.localScale = Vector3.one * 0.025f;
+                //cube.transform.localScale = sizes[i];
+                i++;
             }
-
-            streamReader.Close();
-            fileStream.Close();
-
-            MeshFilter convexHull = null;
-            if (!empty)
+            CombineInstance[] combine = new CombineInstance[meshes.Count];
+            i = 0;
+            while (i < meshes.Count)
             {
-                convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
+                combine[i].mesh = meshes[i].sharedMesh;
+                combine[i].transform = meshes[i].transform.localToWorldMatrix;
+                meshes[i].gameObject.SetActive(false);
+                //yield return null;
+                i++;
+            }
+            convexHull.GetComponent<MeshFilter>().mesh = new Mesh();
+            convexHull.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+            convexHull.GetComponent<MeshRenderer>().material = skeletonMaterial;
+
+            convexHull.gameObject.SetActive(true);
+
+            //CreateGraphSkeleton(convexHull);
+            //return convexHull.gameObject;
+        }
+
+        /// <summary>
+        /// Method to greate lines between nodes in the octree. This gives a sort of skeleton representation of the graph.
+        /// </summary>
+        /// <param name="convhull"></param>
+        /// <returns></returns>
+        public IEnumerator CreateGraphSkeleton(bool empty = false)
+        {
+            if (empty)
+            {
+                convexHull = Instantiate(emptySkeletonPrefab);
             }
             else
             {
-                convexHull = Instantiate(emptySkeletonPrefab).GetComponent<MeshFilter>();
+                convexHull = Instantiate(skeletonPrefab);
             }
-            convexHull.gameObject.name = "ConvexHull_" + this.name;
-            convexHull.mesh = new Mesh()
+            var nodes = octreeRoot.GetSkeletonNodesRecursive(octreeRoot, null, 0);
+            int posCount = nodes.Count;
+            nodes.OrderBy(v => v.x).ToList();
+            var sortedNodes = new List<Vector3>();
+            var subNodes = nodes;
+            int frameCount = 0;
+            while (nodes.Count > 0)
             {
-                vertices = vertices,
-                triangles = triangles.ToArray()
-            };
-            if (gameManager.multiplayer)
-            {
-                convexHull.transform.position = new Vector3(0, 1f, 0);
+                var firstNode = subNodes[0];
+                sortedNodes.Add(firstNode);
+                nodes.Remove(firstNode);
+                subNodes = nodes.OrderBy(v => Vector3.Distance(firstNode, v)).ToList();
+                frameCount++;
+                if (nodes.Count % 150 == 0)
+                    yield return null;
             }
-            if (!gameManager.multiplayer)
-            {
-                convexHull.transform.position = referenceManager.rightController.transform.position;
-            }
-            // move the convexhull slightly out of the way of the graph
-            // in a direction sort of pointing towards the middle.
-            // otherwise it lags really bad when the skeleton is first 
-            // moved out of the original graph
-            //Vector3 moveDist = new Vector3(0f, 0.3f, 0f);
-            //if (transform.position.x > 0) moveDist.x = -.2f;
-            //if (transform.position.z > 0) moveDist.z = -.2f;
-            //convexHull.transform.Translate(moveDist);
-            //convexHull.transform.position += referenceManager.rightController.transform.forward * 1f;
-            //convexHull.transform.rotation = transform.rotation;
-            //convexHull.transform.localScale = transform.localScale;
-            convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+            LineRenderer line = convexHull.gameObject.AddComponent<LineRenderer>();
+            line.material = lineMaterial;
+            line.startWidth = line.endWidth = 0.02f;
+            line.useWorldSpace = false;
+            line.alignment = LineAlignment.TransformZ;
+            line.positionCount = posCount;
+            line.SetPositions(sortedNodes.ToArray());
 
-            convexHull.mesh.RecalculateBounds();
-            convexHull.mesh.RecalculateNormals();
-            CellexalLog.Log("Created convex hull with " + vertices.Count() + " vertices");
-            convexHull.transform.localScale = Vector3.one;
-            return convexHull.gameObject;
+            convexHull.GetComponent<BoxCollider>().size = GetComponent<BoxCollider>().size;
+            convexHull.SetActive(true);
 
+            //return convexHull;
         }
 
         private void DrawDebugCube(Color color, Vector3 min, Vector3 max)

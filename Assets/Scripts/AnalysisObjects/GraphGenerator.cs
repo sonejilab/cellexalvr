@@ -12,6 +12,7 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
+using System.Threading;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -734,6 +735,7 @@ namespace CellexalVR.AnalysisObjects
                 expr = new BooleanExpression.OrExpr(tempExpr,
                                                     new BooleanExpression.ValueExpr(attributes[i]));
             }
+            
             subGraph = CreateGraph(GraphType.ATTRIBUTE);
             subGraph.GraphName = name;
             StartCoroutine(CreateSubGraphsCoroutine(expr, attributes));
@@ -742,10 +744,17 @@ namespace CellexalVR.AnalysisObjects
 
         private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes)
         {
+            StartCoroutine(graphManager.Graphs[0].CreateGraphSkeleton(true));
+            while (graphManager.Graphs[0].convexHull.activeSelf == false)
+            {
+                yield return null;
+            }
+            GameObject skeleton = graphManager.Graphs[0].convexHull;
+            skeleton.transform.parent = subGraph.transform;
+            skeleton.transform.localPosition = Vector3.zero;
+
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
 
-            //foreach (CombinedGraph graph in graphManager.Graphs)
-            //{
             Graph graph = graphManager.Graphs[0];
             foreach (Cell cell in subset)
             {
@@ -756,14 +765,13 @@ namespace CellexalVR.AnalysisObjects
             subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
             SliceClustering();
             subGraph.GetComponent<BoxCollider>().size = graph.GetComponent<BoxCollider>().size;
-            //var hull = graph.CreateConvexHull(true);
-            //hull.transform.parent = newGraph.transform;
-            //hull.transform.localPosition = Vector3.zero;
-            //hull.transform.localScale = Vector3.one;
+ 
             while (isCreating)
             {
                 yield return null;
             }
+
+
             //}
             foreach (string attribute in attributes)
             {
@@ -867,84 +875,6 @@ namespace CellexalVR.AnalysisObjects
                 newCollider.center = transform.InverseTransformPoint(center);
                 newCollider.size = halfExtents * 2;
             }
-        }
-
-        /// <summary>
-        /// Reads the .hull file that belongs to this graph and creates a skeleton that resembles the graph.
-        /// </summary>
-        /// <returns>The instantiated skeleton <see cref="GameObject"/>.</returns>
-        public GameObject CreateGraphSkeleton()
-        {
-
-            // Read the .hull file
-            // The file format should be
-            //  VERTEX_1    VERTEX_2    VERTEX_3
-            //  VERTEX_1    VERTEX_2    VERTEX_3
-            // ...
-            // Each line is 3 integers that corresponds to graphpoints
-            // 1 means the graphpoint that was created from the first line in the .mds file
-            // 2 means the graphpoint that was created from the second line
-            // and so on
-            // Each line in the file connects three graphpoints into a triangle
-            // One problem is that the lines are always ordered numerically so when unity is figuring out 
-            // which way of the triangle is in and which is out, it's pretty much random what the result is.
-            // The "solution" was to place a shader which does not cull the backside of the triangles, so 
-            // both sides are always rendered.
-            string path = Directory.GetCurrentDirectory() + @"\Data\" + DirectoryName + @"\" + newGraph.GraphName + ".hull";
-            FileStream fileStream = new FileStream(path, FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-
-            Vector3[] vertices = new Vector3[newGraph.points.Count];
-            List<int> triangles = new List<int>();
-            CellexalLog.Log("Started reading " + path);
-            foreach (var point in newGraph.points.Values)
-            {
-                vertices[point.index] = point.Position;
-            }
-            while (!streamReader.EndOfStream)
-            {
-                string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
-                if (coords.Length != 3)
-                    continue;
-                // subtract 1 because R is 1-indexed
-                triangles.Add(int.Parse(coords[0]) - 1);
-                triangles.Add(int.Parse(coords[1]) - 1);
-                triangles.Add(int.Parse(coords[2]) - 1);
-            }
-            streamReader.Close();
-            fileStream.Close();
-
-            var convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
-            convexHull.gameObject.name = "ConvexHull_" + this.name;
-            var mesh = new Mesh()
-            {
-                vertices = vertices,
-                triangles = triangles.ToArray()
-            };
-            //var meshSimplifier = new UnityMeshSimplifier.MeshSimplifier();
-            //meshSimplifier.Initialize(mesh);
-            //float quality = 255f / mesh.triangles.Length;
-            //meshSimplifier.SimplifyMesh(quality);
-            //convexHull.mesh = meshSimplifier.ToMesh();
-
-            convexHull.mesh = mesh;
-            convexHull.transform.position = transform.position;
-            // move the convexhull slightly out of the way of the graph
-            // in a direction sort of pointing towards the middle.
-            // otherwise it lags really bad when the skeleton is first 
-            // moved out of the original graph
-            Vector3 moveDist = new Vector3(.2f, 0, .2f);
-            if (transform.position.x > 0) moveDist.x = -.2f;
-            if (transform.position.z > 0) moveDist.z = -.2f;
-            convexHull.transform.Translate(moveDist);
-
-            convexHull.transform.rotation = transform.rotation;
-            convexHull.transform.localScale = transform.localScale;
-            convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
-            convexHull.mesh.RecalculateBounds();
-            convexHull.mesh.RecalculateNormals();
-            CellexalLog.Log("Created convex hull with " + vertices.Count() + " vertices");
-            return convexHull.gameObject;
         }
 
         /// <summary>
