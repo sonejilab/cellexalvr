@@ -417,13 +417,19 @@ MonoBehaviour:
     type: 2}
   emptySkeletonPrefab: {fileID: 1496824086956574, guid: ba53ec2d8cb9b834188ddcc17b5561f2,
     type: 2}
+  skeletonCubePrefab: {fileID: 1178875514128288, guid: d17afe6978f98a946aeb7b998d0d3c04,
+    type: 2}
+  skeletonMaterial: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
+  lineMaterial: {fileID: 2100000, guid: fb5aa86d27fbc354a9c1a52db2f254bf, type: 2}
   movingOutlineCircle: {fileID: 1620093671004734, guid: b2489140aeb8ccb45b637b27fbf44833,
     type: 2}
+  convexHull: {fileID: 0}
   graphManager: {fileID: 0}
   graphNameText: {fileID: 114815460846482644}
   graphInfoText: {fileID: 114460485008951306}
   graphNrText: {fileID: 114566603823957088}
   axes: {fileID: 0}
+  axisNames: []
   GraphActive: 1
   pointsPositions: []
   referenceManager: {fileID: 0}
@@ -437,7 +443,6 @@ MonoBehaviour:
   longestAxis: 0
   scaledOffset: {x: 0, y: 0, z: 0}
   nbrOfClusters: 0
-  axisNames: []
 --- !u!114 &114212794373154340
 MonoBehaviour:
   m_ObjectHideFlags: 1
