@@ -64,8 +64,16 @@ namespace CellexalVR.Tutorial
         private GameObject[] objList;
         private bool heatmapCreated;
         private bool networksCreated;
-        
+
         //private List<GameObject> steps;
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         // Use this for initialization
         void Start()
@@ -103,7 +111,7 @@ namespace CellexalVR.Tutorial
             {
                 return;
             }
-            
+
             if (rgripRight.GetComponent<MeshRenderer>() != null && rgripLeft.GetComponent<MeshRenderer>() != null && currentStep == 0)
             {
                 LoadTutorialStep(1);
@@ -115,7 +123,7 @@ namespace CellexalVR.Tutorial
                 if (referenceManager.mainMenu.GetComponent<MeshRenderer>().enabled)
                 {
                     ResetMaterials(new GameObject[] { trackpadLeft, triggerRight });
-                    HighlightMaterials(new GameObject [] { triggerLeft });
+                    HighlightMaterials(new GameObject[] { triggerLeft });
                     triggerParticlesLeft.SetActive(true);
                 }
                 else
@@ -247,7 +255,7 @@ namespace CellexalVR.Tutorial
             {
                 TurnOnSpot();
             }
-            
+
         }
 
 
@@ -266,7 +274,7 @@ namespace CellexalVR.Tutorial
             if (currentStep == 3)
             {
                 stepPanels[currentStep - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Step 3 of 7: Coloring by Gene Expression \n \n" +
-                    "Write in Gata1 and press Enter. Write using the trigger on the action controller. \n \n " + 
+                    "Write in Gata1 and press Enter. Write using the trigger on the action controller. \n \n " +
                     "Place the graph in the highlighted area to continue to the next step.";
             }
             if (currentStep == 5)
@@ -306,7 +314,7 @@ namespace CellexalVR.Tutorial
             newSelButton.GetComponent<Renderer>().material = standardButtonMat;
             confirmSelButton.GetComponent<Renderer>().material = highLightButtonMat;
             trackpadRight.GetComponent<Renderer>().material = highLightMat;
-            
+
         }
 
         void SelectionOff()

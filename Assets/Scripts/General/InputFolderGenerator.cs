@@ -18,6 +18,14 @@ namespace CellexalVR.General
         // 6 is the number of boxes on each "floor"
         private Vector3[] folderBaseCoords = new Vector3[6];
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             var folderAngle = -(Math.PI * 1.1d) / 2d;

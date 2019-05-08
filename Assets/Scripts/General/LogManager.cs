@@ -168,6 +168,14 @@ namespace CellexalVR.General
     {
         public ReferenceManager referenceManager;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Awake()
         {
             //CellExAlLog.InitNewLog();

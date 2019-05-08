@@ -17,6 +17,13 @@ public class SelectionFromPreviousMenu : MonoBehaviour
     private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
     private List<GameObject> buttons = new List<GameObject>();
 
+    private void OnValidate()
+    {
+        if (gameObject.scene.IsValid())
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
 
     private void Start()
     {

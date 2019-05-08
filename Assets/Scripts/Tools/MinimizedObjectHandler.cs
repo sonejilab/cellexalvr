@@ -19,6 +19,14 @@ public class MinimizedObjectHandler : MonoBehaviour
     private bool[,] spaceTaken = new bool[5, 5];
     private List<GameObject> minimizedObjects = new List<GameObject>(25);
 
+    private void OnValidate()
+    {
+        if (gameObject.scene.IsValid())
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
+
     void Start()
     {
         for (int i = 0; i < spaceTaken.GetLength(0); ++i)
@@ -28,7 +36,6 @@ public class MinimizedObjectHandler : MonoBehaviour
                 spaceTaken[i, j] = false;
             }
         }
-        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         menuToggler = referenceManager.menuToggler;
         CellexalEvents.GraphsUnloaded.AddListener(Clear);
     }

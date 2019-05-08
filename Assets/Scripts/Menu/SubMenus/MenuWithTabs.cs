@@ -28,6 +28,14 @@ namespace CellexalVR.Menu.SubMenus
         protected string[] names;
         protected string[] categories;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         protected virtual void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

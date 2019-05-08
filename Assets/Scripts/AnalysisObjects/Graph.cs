@@ -113,6 +113,15 @@ namespace CellexalVR.AnalysisObjects
 
         public OctreeNode octreeRoot;
         private GraphGenerator graphGenerator;
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             speed = 1.5f;

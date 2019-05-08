@@ -20,6 +20,14 @@ namespace CellexalVR.AnalysisLogic
         private string filePath;
         private bool useSelection;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             markers = new List<string>();

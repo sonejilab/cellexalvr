@@ -41,6 +41,13 @@ namespace CellexalVR.SceneObjects
         private GameManager gameManager;
         // multiple_exp private DatasetList datasetList;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         void Start()
         {

@@ -24,6 +24,14 @@ namespace CellexalVR.Menu.SubMenus
         public TextMesh TabName;
         //public string TabName { get; set; }
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         protected virtual void Awake()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

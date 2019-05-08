@@ -27,6 +27,14 @@ namespace CellexalVR.Tools
         private SteamVR_Controller.Device device;
         //Use this for initialization
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             rightController = referenceManager.rightController;

@@ -22,6 +22,14 @@ namespace CellexalVR.Menu.SubMenus
         private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -0.15f);
         private List<ColorByGeneButton> buttons;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         public void Init()
         {
             buttons = new List<ColorByGeneButton>();

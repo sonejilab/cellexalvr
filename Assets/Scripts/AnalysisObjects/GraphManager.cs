@@ -52,6 +52,14 @@ namespace CellexalVR.AnalysisObjects
         public bool drawDebugRejectionApprovedCubes = false;
         public bool drawDebugGroups = false;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Awake()
         {
             Graphs = new List<Graph>();

@@ -22,6 +22,13 @@ namespace CellexalVR.Tools
         private GameObject collidingWith;
         private int numberColliders;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         void Start()
         {

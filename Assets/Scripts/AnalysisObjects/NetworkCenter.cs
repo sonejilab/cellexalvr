@@ -79,6 +79,14 @@ namespace CellexalVR.AnalysisObjects
         private string oldName;
         private NetworkHandler handler;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             var referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

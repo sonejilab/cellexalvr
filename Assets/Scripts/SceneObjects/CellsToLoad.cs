@@ -26,9 +26,17 @@ public class CellsToLoad : MonoBehaviour
         }
     }
 
+    private void OnValidate()
+    {
+        if (gameObject.scene.IsValid())
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
+
     private void Start()
     {
-        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         this.gameObject.name = directory;
     }
 

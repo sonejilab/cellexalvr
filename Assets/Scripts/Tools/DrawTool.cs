@@ -24,6 +24,15 @@ namespace CellexalVR.Tools
         private bool skipNextDraw;
         private bool drawing;
 
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             rightController = referenceManager.rightController;

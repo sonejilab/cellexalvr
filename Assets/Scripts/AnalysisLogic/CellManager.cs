@@ -64,6 +64,14 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
 
         void Awake()
         {
@@ -358,7 +366,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", "colorbyattribute", "cba")]
-        public void ColorByAttribute(string attributeType, bool color, bool subGraph=false)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
         {
             if (!subGraph)
             {

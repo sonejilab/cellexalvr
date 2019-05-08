@@ -59,8 +59,10 @@ namespace CellexalVR.Menu.Buttons
 
         private void OnValidate()
         {
-            if (gameObject.activeInHierarchy)
+            if (gameObject.scene.IsValid())
+            {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
         }
 
         protected virtual void Awake()

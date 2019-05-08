@@ -15,6 +15,14 @@ namespace CellexalVR.SceneObjects
         private bool animateUp = false;
         private Renderer rend;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             rightController = referenceManager.rightController;

@@ -161,10 +161,7 @@ namespace CellexalVR.AnalysisObjects
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!gameObject.activeInHierarchy || Event.current != null && Event.current.type == EventType.Repaint)
-                return;
-
-            if (referenceManager == null)
+            if (referenceManager == null && gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
@@ -180,7 +177,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
 
-            BuildList();
+            //BuildList();
         }
 
         public void BuildList()

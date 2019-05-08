@@ -113,6 +113,14 @@ namespace CellexalVR.AnalysisObjects
         private int heatmapsCreated = 0;
         //private bool heatmapSaved; 
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             //Init();
