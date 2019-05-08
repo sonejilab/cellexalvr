@@ -26,6 +26,7 @@ namespace CellexalVR.Interaction
         private void Start()
         {
             gameManager = referenceManager.gameManager;
+            CellexalEvents.GraphsUnloaded.AddListener(ClearList);
         }
 
 

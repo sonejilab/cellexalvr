@@ -143,7 +143,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
             string[] mdsFiles;
-            if (SceneManagerHelper.ActiveSceneName == "TutorialScene")
+            if (CrossSceneInformation.Tutorial)
             {
                 mdsFiles = Directory.GetFiles(fullPath, "DDRTree.mds");
             }
@@ -158,7 +158,6 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
-
             graphGenerator.isCreating = true;
         }
 
@@ -169,26 +168,6 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.graphManager.selectionManager = referenceManager.selectionManager;
         }
 
-        /// <summary>
-        /// Calls R logging function to start the logging session.
-        /// </summary>
-        IEnumerator LogStart()
-        {
-            string args = CellexalUser.UserSpecificFolder;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
-            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-
-            while (t.IsAlive)
-            {
-                yield return null;
-            }
-            stopwatch.Stop();
-            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-        }
 
 
         public void ReadCoordinates(string path, string[] files)
@@ -399,7 +378,7 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
 
-            StartCoroutine(InitialCheckCoroutine());
+            StartCoroutine(StartServer());
             if (debug)
             {
                 //  yield return new WaitForSeconds(3);
@@ -508,26 +487,72 @@ namespace CellexalVR.AnalysisLogic
         //     yield return null;
         // }
 
-        private IEnumerator InitialCheckCoroutine()
+        private IEnumerator StartServer()
         {
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
+            string serverName = CellexalUser.UserSpecificFolder + "\\server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-            string userFolder = CellexalUser.UserSpecificFolder;
-            string args = dataSourceFolder + " " + userFolder;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\initial_check.R";
-            CellexalLog.Log("Running initial check script at " + rScriptFilePath + " with the arguments " + args);
+            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
+
+            CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
+            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
             t.Start();
-            while (t.IsAlive)
+
+            while (!File.Exists(serverName + ".pid"))
+            {
+                yield return null;
+            }
+
+            stopwatch.Stop();
+            CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
+            referenceManager.notificationManager.SpawnNotification("R Server Session Initiated.");
+            StartCoroutine(LogStart());
+        }
+
+        public void StopServer()
+        {
+            string name = CellexalUser.UserSpecificFolder + "\\server";
+            File.Delete(name + ".pid");
+            CellexalLog.Log("Stopped Server");
+        }
+
+        /// <summary>
+        /// Calls R logging function to start the logging session.
+        /// </summary>
+        IEnumerator LogStart()
+        {
+
+            //string script = "if ( !is.null(cellexalObj@usedObj$sessionPath) ) { \n" +
+            //                "cellexalObj @usedObj$sessionPath = NULL \n" +
+            //                " cellexalObj @usedObj$sessionRmdFiles = NULL \n" +
+            //                "cellexalObj @usedObj$sessionName = NULL } \n " +
+            //                "cellexalObj = sessionPath(cellexalObj, \"" + CellexalUser.UserSpecificFolder.UnFixFilePath() + "\")" ;
+
+            string filePath = Application.streamingAssetsPath + @"\R\logStart.R";
+
+            // Wait for other processes to finish and for server to have started.
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R") ||
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
+            {
+                yield return null;
+            }
+
+            CellexalLog.Log("Running R script : " + filePath);
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            RScriptRunner.RunScript(filePath, true);
+
+            // Wait for this process to finish.
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
             stopwatch.Stop();
-            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
-            //LoadPreviousGroupings();
-            StartCoroutine(LogStart());
+            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         }
+
 
         /// <summary>
         /// Reads a file containing lists of genes that should be flashed.
@@ -807,7 +832,14 @@ namespace CellexalVR.AnalysisLogic
                         CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.", graphName));
                         yield break;
                     }
-                    skeleton = graph.CreateConvexHull();
+                    
+                    StartCoroutine(graphManager.Graphs[0].CreateGraphSkeleton(true));
+                    while (graphManager.Graphs[0].convexHull == null)
+                    {
+                        yield return null;
+                    }
+    
+                    skeleton = graph.convexHull;
                     if (skeleton == null)
                     {
                         CellexalError.SpawnError("Error when generating networks", string.Format("Could not create a convex hull for the graph named {0}, this could be because the convex hull file is incorrect", graphName));
@@ -833,7 +865,6 @@ namespace CellexalVR.AnalysisLogic
                 minNegPcor[colorString] = 0f;
                 Vector3 position = graph.ScaleCoordinates(new Vector3(x, y, z));
                 NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
-                //network.transform.localPosition -= graph.transform.position;
                 foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                 {
                     if (r.gameObject.GetComponent<CellexalButton>() == null)
@@ -880,6 +911,17 @@ namespace CellexalVR.AnalysisLogic
                 string key1 = words[7];
                 string key2 = words[8];
                 float pcor = float.Parse(words[0]);
+
+                if (geneName1 == geneName2)
+                {
+                    CellexalError.SpawnError("Error in networkfiles", "Gene \'" + geneName1 + "\' cannot be correlated to itself in file " + nwkFilePaths[0]);
+                    cntStreamReader.Close();
+                    cntFileStream.Close();
+                    nwkStreamReader.Close();
+                    nwkFileStream.Close();
+                    yield break;
+                }
+
                 if (pcor < 0)
                 {
                     if (pcor < minNegPcor[color])
@@ -1064,7 +1106,7 @@ namespace CellexalVR.AnalysisLogic
         public void ReadAndSelectPreviousSelection(int index)
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
-            string[] files = Directory.GetFiles(dataFolder, "user.group.*.txt");
+            string[] files = Directory.GetFiles(dataFolder, "selection*.txt");
             if (files.Length == 0)
             {
                 CellexalLog.Log("No previous selections found.");
@@ -1153,6 +1195,14 @@ namespace CellexalVR.AnalysisLogic
             {
                 return f.CompareTo(other.f);
             }
+        }
+
+        /// <summary>
+        /// To clean up server files after termination. Can be called if the user wants to start a new session (e.g. when loading a new dataset) or when exiting the program. 
+        /// </summary>
+        public void QuitServer()
+        {
+            File.Delete(CellexalUser.UserSpecificFolder + "\\server.pid");
         }
     }
 }

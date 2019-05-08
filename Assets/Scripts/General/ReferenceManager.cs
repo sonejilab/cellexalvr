@@ -9,6 +9,8 @@ using SQLiter;
 using TMPro;
 using UnityEngine;
 using VRTK;
+using SQLiter;
+using CellexalVR.Tutorial;
 
 namespace CellexalVR.General
 {
@@ -100,6 +102,8 @@ namespace CellexalVR.General
         public GameObject fpsCounter;
         public DemoManager demoManager;
         public NewGraphFromMarkers newGraphFromMarkers;
+        public NotificationManager notificationManager;
+        public TutorialManager tutorialManager;
         #endregion
 
         #region GeneKeyboard

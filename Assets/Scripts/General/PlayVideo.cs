@@ -17,6 +17,8 @@ namespace CellexalVR.General
         //public RawImage image;
         public GameObject videoCanv;
         public AudioSource audioSource;
+        public bool autoPlay;
+
         private VideoSource videoSource;
         private VideoPlayer videoPlayer;
         private string videoURL;
@@ -32,22 +34,31 @@ namespace CellexalVR.General
             //Application.runInBackground = true;
             videoPlayer = GetComponent<VideoPlayer>();
             Application.targetFrameRate = (int)GetComponent<UnityEngine.Video.VideoPlayer>().frameRate;
+            if (autoPlay && videoURL != null)
+            {
+                StartVideo(videoURL, audioClip);
+            }
             //videoPlayer.clip = videoClip;
             //StartCoroutine(PlayVid());
             //videoPlayer.Pause();
         }
-
-        public void StartVideo(string url, AudioClip audio)
+        public void StartVideo(string url, AudioClip audio = null)
         {
             //videoClip = clip;
             videoURL = url;
-            print(videoURL);
-            audioSource.clip = audio;
-            if (!videoPlayer.isPlaying && videoPlayer.isPrepared)
+            if (audio != null)
             {
-                videoPlayer.Play();
-                audioSource.Play();
+                audioSource.clip = audio;
             }
+            //if (!videoPlayer.isPlaying && videoPlayer.isPrepared)
+            //{
+            //    videoPlayer.Play();
+            //    if (audio != null)
+            //    {
+            //        audioSource.Play();
+            //    }
+                
+            //}
             if (!videoPlayer.isPlaying)
             {
                 //Application.runInBackground = true;
@@ -69,7 +80,7 @@ namespace CellexalVR.General
                 print("STOP AUDIO");
                 audioSource.Stop();
             }
-            videoPlayer.Stop();
+            //videoPlayer.Stop();
         }
 
         IEnumerator PlayVid()
@@ -138,7 +149,14 @@ namespace CellexalVR.General
                 yield return null;
             }
             Debug.Log("Done Playing Video");
-            videoCanv.SetActive(false);
+            if (!autoPlay)
+            {
+                videoCanv.SetActive(false);
+            }
+            else
+            {
+                StartVideo(videoURL, audioClip);
+            }
         }
     }
 }

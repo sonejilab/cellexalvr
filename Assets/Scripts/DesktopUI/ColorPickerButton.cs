@@ -155,6 +155,7 @@ namespace CellexalVR.DesktopUI
                     break;
                 case ConfigColor.SELECTION:
                     CellexalConfig.Config.SelectionToolColors[selectionToolColorIndex] = color;
+                    referenceManager.graphGenerator.CreateShaderColors();
                     break;
             }
 

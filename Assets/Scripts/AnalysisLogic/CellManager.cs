@@ -204,6 +204,7 @@ namespace CellexalVR.AnalysisLogic
                 controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
             }
             referenceManager.heatmapGenerator.HighLightGene(geneName);
+            referenceManager.networkGenerator.HighLightGene(geneName);
         }
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)

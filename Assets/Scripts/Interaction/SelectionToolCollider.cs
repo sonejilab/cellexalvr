@@ -47,7 +47,10 @@ namespace CellexalVR.Interaction
             graphManager = referenceManager.graphManager;
             SetSelectionToolEnabled(false, 0);
 
-            UpdateColors();
+            if (CellexalConfig.Config != null)
+            {
+                UpdateColors();
+            }
             CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
         }
 

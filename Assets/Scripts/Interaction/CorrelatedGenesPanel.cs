@@ -22,6 +22,7 @@ namespace CellexalVR.Interaction
         {
             correlatedGenesList = referenceManager.correlatedGenesList;
             this.tag = "Keyboard";
+            CellexalEvents.CorrelatedGenesCalculated.AddListener(Reset);
         }
 
 
@@ -41,9 +42,14 @@ namespace CellexalVR.Interaction
         public override void Click()
         {
             // the gene name is followed by some other text
-            //SetPressed(true);
+            SetPressed(true);
             correlatedGenesList.CalculateCorrelatedGenes(listNode, listNode.Type);
             referenceManager.gameManager.InformCalculateCorrelatedGenes(listNode.NameOfThing);
+        }
+
+        private void Reset()
+        {
+            SetPressed(false);
         }
     }
 }

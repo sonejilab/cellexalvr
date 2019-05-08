@@ -91,5 +91,13 @@ namespace CellexalVR.Extensions
             }
             return null;
         }
+        
+        public static string UnFixFilePath(this string s)
+        {
+            string directorySeparatorChar = "\\\\";
+            s = s.Replace("/", directorySeparatorChar);
+            s = s.Replace("\\", directorySeparatorChar);
+            return s;
+        }
     }
 }

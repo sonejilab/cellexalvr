@@ -61,6 +61,7 @@ namespace CellexalVR.Interaction
             Clear();
             SwitchLayout(Layout.Lowercase);
             GatherKeys();
+            CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
 
         /// <summary>

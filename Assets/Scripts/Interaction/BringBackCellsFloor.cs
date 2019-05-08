@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.Tutorial;
+using UnityEngine;
 
 namespace CellexalVR.Interaction
 {
@@ -9,6 +10,7 @@ namespace CellexalVR.Interaction
     {
         public GameObject throwMarker;
         private CellsToLoad reset;
+        private BringBackObj resetObj;
 
         private void FixedUpdate()
         {
@@ -24,19 +26,43 @@ namespace CellexalVR.Interaction
                 reset.ResetPosition();
                 reset = null;
             }
+            if (resetObj != null)
+            {
+                var marker = Instantiate(throwMarker);
+                marker.transform.position = resetObj.gameObject.transform.position;
+                marker.transform.LookAt(Vector3.zero);
+                TextMesh textmesh = marker.GetComponentInChildren<TextMesh>();
+                float distance = Vector3.Distance(Vector3.zero, marker.transform.position);
+                textmesh.text = distance + " m!";
+                textmesh.transform.localScale *= (distance / 10f);
+                resetObj.ResetPosition();
+                resetObj = null;
+            }
         }
 
         private void OnTriggerStay(Collider other)
         {
             var parent = other.transform.parent;
-            if (parent == null) return;
-
-            var cellsToLoad = parent.GetComponent<CellsToLoad>();
-            if (cellsToLoad == null) return;
-
-            if (parent.GetComponent<Rigidbody>().velocity == Vector3.zero)
+            var shape = other.transform;
+            if (parent != null)
             {
-                reset = cellsToLoad;
+                var cellsToLoad = parent.GetComponent<CellsToLoad>();
+                if (cellsToLoad != null)
+                {
+                    if (parent.GetComponent<Rigidbody>().velocity == Vector3.zero)
+                    {
+                        reset = cellsToLoad;
+                    }
+                    return;
+                }
+                var shapeObj = shape.GetComponent<BringBackObj>();
+                if (shapeObj != null)
+                {
+                    if (parent.GetComponent<Rigidbody>().velocity == Vector3.zero)
+                    {
+                        resetObj = shapeObj;
+                    }
+                }
             }
         }
     }

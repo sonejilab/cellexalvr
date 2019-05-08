@@ -33,7 +33,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public int selectionNr;
         public CellexalButton saveImageButton;
-
+        public GameObject movingOutlineCircle;
 
         public float MaxNegPcor { get; set; }
         public float MinNegPcor { get; set; }
@@ -251,6 +251,7 @@ namespace CellexalVR.AnalysisObjects
                 nodePos.Key.RepositionEdges();
             }
             positions.Clear();
+            yield break;
         }
 
         /// <summary>
@@ -329,6 +330,13 @@ namespace CellexalVR.AnalysisObjects
                         var dir = diff.normalized;
 
                         var appliedForce = diff * Mathf.Log(diff.magnitude / (desiredSpringLength * Mathf.Log(node1.neighbours.Count + 3f, 4f))) / node1.neighbours.Count;
+                        //print(diff.magnitude / (desiredSpringLength * Mathf.Log(node1.neighbours.Count + 3f, 4f)));
+                        //print(0.1f + Mathf.Log(node1.neighbours.Count + 3f, 4f));
+                        //if (diff.magnitude == 0)
+                        //{
+                        //    print(node1.Label + " - " + diff.magnitude + " - " + appliedForce);
+                        //}
+                        //print(appliedForce);
                         //if (appliedForce.magnitude < minimumForce)
                         //    continue;
                         forces[node1] += appliedForce * springConstant;
@@ -470,6 +478,7 @@ namespace CellexalVR.AnalysisObjects
                     }
                 }
                 */
+                //print(positions[nodes[0]]);
             }
 
             foreach (var node in nodes)
@@ -1145,6 +1154,22 @@ namespace CellexalVR.AnalysisObjects
                 int b = Mathf.RoundToInt(obj.b * 255);
                 return r.GetHashCode() ^ g.GetHashCode() ^ b.GetHashCode();
             }
+        }
+
+        public void HighLightGene(string geneName)
+        {
+            int nodeHit = nodes.FindIndex(s => s.Label.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
+            if (nodeHit != -1)
+            {
+                NetworkNode nn = nodes[nodeHit];
+                nn.Highlight();
+                print(nodeHit);
+                var circle = Instantiate(movingOutlineCircle);
+                circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
+                circle.transform.position = nn.transform.position;
+                circle.transform.parent = transform;
+            }
+            //int nodeHit = Array.FindIndex(nodes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

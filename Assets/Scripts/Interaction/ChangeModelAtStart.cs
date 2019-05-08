@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CellexalVR.General;
+using System.Collections;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -23,6 +24,7 @@ namespace CellexalVR.Interaction
                 yield return new WaitForEndOfFrame();
             }
             modelSwitcher.SetMeshes();
+            CellexalEvents.ControllersInitiated.Invoke();
         }
     }
 

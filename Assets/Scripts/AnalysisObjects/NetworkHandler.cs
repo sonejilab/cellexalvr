@@ -337,6 +337,8 @@ namespace CellexalVR.AnalysisObjects
             if (transform.localScale.x >= targetScale)
             {
                 createAnim = false;
+                referenceManager.notificationManager.SpawnNotification("Transcription factor networks finished.");
+
             }
         }
 
@@ -369,6 +371,14 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
             return null;
+        }
+
+        public void HighLightGene(string geneName)
+        {
+            foreach (NetworkCenter nc in networks)
+            {
+                nc.HighLightGene(geneName);
+            }
         }
     }
 

@@ -500,19 +500,31 @@ namespace CellexalVR.General
             RObjectUpdating = true;
             // wait one frame to let ConfirmSelection finish.
             yield return null;
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
-            string args = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr - 1) + ".txt " + CellexalUser.UserSpecificFolder + " " + DataDir;
-            CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-            t.Start();
-            while (t.IsAlive)
+            string function = "userGrouping";
+            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
+                                        + referenceManager.heatmapGenerator.selectionNr + ".txt").UnFixFilePath();
+            string args = "cellexalObj" + ", \"" + latestSelection + "\"";
+            string script = "cellexalObj <- " + function + "(" + args + ")";
+
+            // Wait for server to start up
+            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
             {
                 yield return null;
             }
+
+
+            Stopwatch stopwatch = new Stopwatch();
+            Thread t = new Thread(() => RScriptRunner.RunScript(script));
+            CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
+            stopwatch.Start();
+            t.Start();
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            {
+                yield return null;
+            }
+
             stopwatch.Stop();
-            CellexalLog.Log("Updating R Object finished in " + stopwatch.Elapsed.ToString());
+            CellexalLog.Log("Updating grouping R script finished in " + stopwatch.Elapsed.ToString());
             RObjectUpdating = false;
         }
 
@@ -606,8 +618,6 @@ namespace CellexalVR.General
                     file.Write(gp.Group);
                     file.WriteLine();
                 }
-                file.Flush();
-                file.Close();
             }
             StartCoroutine(UpdateRObjectGrouping());
         }
