@@ -22,6 +22,15 @@ namespace CurvedVRKeyboard
         private OutputType nextOutputType;
         public enum OutputType { COLOR_GRAPHS_BY_GENE, FILTER_VALUE, FILTER_ITEM_NAME }
 
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             cellManager = referenceManager.cellManager;

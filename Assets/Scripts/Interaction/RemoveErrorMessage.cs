@@ -13,6 +13,14 @@ namespace CellexalVR.Interaction
         private SteamVR_Controller.Device device;
         private bool controllerInside;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             if (!referenceManager)

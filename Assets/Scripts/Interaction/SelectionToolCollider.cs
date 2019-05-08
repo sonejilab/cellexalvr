@@ -33,6 +33,13 @@ namespace CellexalVR.Interaction
         private int currentMeshIndex;
         private Color selectedColor;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         void Awake()
         {

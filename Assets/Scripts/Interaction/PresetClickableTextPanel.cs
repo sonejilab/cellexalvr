@@ -21,13 +21,6 @@ namespace CellexalVR.Interaction
         public Material highlightedMaterial;
         public Material pressedMaterial;
 
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-        }
 
         protected override void Start()
         {

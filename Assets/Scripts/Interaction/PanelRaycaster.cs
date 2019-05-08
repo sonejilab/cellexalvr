@@ -30,6 +30,14 @@ namespace CellexalVR.Interaction
 
         private ControllerModelSwitcher controllerModelSwitcher;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             if (referenceManager == null)
@@ -40,7 +48,7 @@ namespace CellexalVR.Interaction
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             referenceManager.keyboardHandler.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             referenceManager.folderKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
-            referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            //referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
             {
@@ -72,12 +80,6 @@ namespace CellexalVR.Interaction
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
-        }
-
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         private void Update()

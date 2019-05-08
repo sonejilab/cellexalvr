@@ -23,6 +23,14 @@ namespace CellexalVR.Interaction
         // used for the Levenshtein distance so we don't have to create a new matrix everytime.
         private int[,] scoreMatrix;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             //scoreMatrix = new int[16, 16];

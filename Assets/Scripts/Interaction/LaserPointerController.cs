@@ -25,6 +25,15 @@ namespace CellexalVR.Interaction
         public ReferenceManager referenceManager;
         public GameObject panel;
         public bool Override { get; set; }
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         // Use this for initialization
         void Start()
         {

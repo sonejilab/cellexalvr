@@ -24,11 +24,6 @@ namespace CellexalVR.Interaction
             this.tag = "Keyboard";
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        }
 
         /// <summary>
         /// Set the materials used by this panel.

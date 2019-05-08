@@ -34,12 +34,6 @@ namespace CellexalVR.Interaction
             //textMesh = GetComponentInChildren<TextMesh>();
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        }
-
         /// <summary>
         /// Sets the text of this panel.
         /// </summary>

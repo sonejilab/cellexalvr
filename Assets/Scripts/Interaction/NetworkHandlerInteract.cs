@@ -1,6 +1,7 @@
-﻿using VRTK;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using CellexalVR.AnalysisObjects;
+using UnityEngine;
+using VRTK;
 
 namespace CellexalVR.Interaction
 {
@@ -10,6 +11,14 @@ namespace CellexalVR.Interaction
     class NetworkHandlerInteract : VRTK_InteractableObject
     {
         public ReferenceManager referenceManager;
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
