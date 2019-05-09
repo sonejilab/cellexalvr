@@ -28,6 +28,14 @@ namespace CellexalVR.Interaction
         private Quaternion orgRot;
         private int maxDist = 10;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

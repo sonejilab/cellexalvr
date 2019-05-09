@@ -36,6 +36,14 @@ namespace CurvedVRKeyboard
         private const string TEXT = "text";
         private Component textComponent;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         /// <summary>
         /// Handles click on keyboarditem
         /// </summary>

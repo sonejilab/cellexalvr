@@ -30,6 +30,14 @@ namespace CellexalVR.Interaction
 
         private ControllerModelSwitcher controllerModelSwitcher;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             if (referenceManager == null)
@@ -83,12 +91,6 @@ namespace CellexalVR.Interaction
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
-        }
-
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         private void Update()

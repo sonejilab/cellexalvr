@@ -73,6 +73,14 @@ namespace CellexalVR.Tutorial
 
         //private List<GameObject> steps;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         // Use this for initialization
         void Start()
         {
@@ -109,7 +117,7 @@ namespace CellexalVR.Tutorial
             {
                 return;
             }
-            
+
             if (rgripRight.GetComponent<MeshRenderer>() != null && rgripLeft.GetComponent<MeshRenderer>() != null && currentStep == 0)
             {
                 LoadTutorialStep(1);
@@ -319,7 +327,7 @@ namespace CellexalVR.Tutorial
             {
                 TurnOnSpot();
             }
-            
+
         }
 
 
@@ -376,7 +384,7 @@ namespace CellexalVR.Tutorial
             newSelButton.GetComponent<Renderer>().material = standardButtonMat;
             confirmSelButton.GetComponent<Renderer>().material = highLightButtonMat;
             trackpadRight.GetComponent<Renderer>().material = highLightMat;
-            
+
         }
 
         void SelectionOff()

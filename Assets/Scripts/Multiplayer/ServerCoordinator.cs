@@ -22,10 +22,18 @@ namespace CellexalVR.Multiplayer
         private GameManager gameManager;
         private ReferenceManager referenceManager;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             gameManager = GameObject.Find("MultiUserManager").GetComponent<GameManager>();
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         #region RPCs

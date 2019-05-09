@@ -260,14 +260,11 @@ namespace CellexalVR.Interaction
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!gameObject.activeInHierarchy || Event.current != null && Event.current.type == EventType.Repaint)
-                return;
-
-            if (referenceManager == null)
+            if (referenceManager == null && gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<General.ReferenceManager>();
             }
-            BuildKeyboard();
+            //BuildKeyboard();
         }
 
         /// <summary>
@@ -276,6 +273,8 @@ namespace CellexalVR.Interaction
         public void BuildKeyboard()
         {
             GatherKeys();
+            referenceManager.previousSearchesList.BuildPreviousSearchesList();
+
             Vector2 size = maxPos - minPos;
             SwitchLayout(currentLayout);
             output.text = placeholder;

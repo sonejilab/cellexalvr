@@ -99,6 +99,14 @@ namespace CellexalVR.General
         private string configPath;
         private string sampleConfigPath;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             configDir = Directory.GetCurrentDirectory() + @"\Config";

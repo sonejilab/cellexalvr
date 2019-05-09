@@ -25,11 +25,6 @@ namespace CellexalVR.Interaction
             CellexalEvents.CorrelatedGenesCalculated.AddListener(Reset);
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        }
 
         /// <summary>
         /// Set the materials used by this panel.

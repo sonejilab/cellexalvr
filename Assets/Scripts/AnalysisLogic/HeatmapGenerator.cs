@@ -39,6 +39,14 @@ namespace CellexalVR.AnalysisLogic
         public UnityEngine.Color HighlightMarkerColor { get; private set; }
         public UnityEngine.Color ConfirmMarkerColor { get; private set; }
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Awake()
         {
             t = null;

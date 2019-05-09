@@ -15,6 +15,14 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
         private int panelLayerMask;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             rightController = referenceManager.rightController;

@@ -21,6 +21,14 @@ namespace CellexalVR.Menu.Buttons
         private Color highlightColor = Color.blue;
         public bool highlight;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         protected virtual void Start()
         {
             meshRenderer = GetComponent<MeshRenderer>();

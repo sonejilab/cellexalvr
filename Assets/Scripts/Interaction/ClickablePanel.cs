@@ -20,6 +20,14 @@ namespace CellexalVR.Interaction
         protected Material keyPressedMaterial;
         private bool isPressed;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         protected virtual void Start()
         {
             renderer = gameObject.GetComponent<Renderer>();

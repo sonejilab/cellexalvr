@@ -79,6 +79,14 @@ namespace CellexalVR.General
             }
         }
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Awake()
         {
             previousSelectionMenu = referenceManager.selectionFromPreviousMenu;

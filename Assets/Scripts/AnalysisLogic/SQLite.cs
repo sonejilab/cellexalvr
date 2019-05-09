@@ -78,6 +78,14 @@ namespace SQLiter
 
         private bool _createNewTavle = false;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         /// <summary>
         /// Awake will initialize the connection.  
         /// RunAsyncInit is just for show.  You can do the normal SQLiteInit to ensure that it is
@@ -269,9 +277,10 @@ namespace SQLiter
             }
             List<string> cellNames1 = new List<string>();
             List<string> cellNames2 = new List<string>();
+            int group1 = list[0].Group;
             foreach (Graph.GraphPoint gp in list)
             {
-                if (gp.Group == 0)
+                if (gp.Group == group1)
                 {
                     cellNames1.Add(gp.Label);
                 }

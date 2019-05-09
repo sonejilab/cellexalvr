@@ -11,6 +11,14 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformDisableColliders(gameObject.name);

@@ -24,6 +24,14 @@ namespace CellexalVR.Menu.SubMenus
         private List<FilterButton> buttons = new List<FilterButton>();
         private int nbrOfButtons = 0;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Awake()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

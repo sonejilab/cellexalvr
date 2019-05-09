@@ -45,6 +45,14 @@ namespace CellexalVR.AnalysisObjects
 
         public int layoutApplied = 0;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             speed = 1.5f;

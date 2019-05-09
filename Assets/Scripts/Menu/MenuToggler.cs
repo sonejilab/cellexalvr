@@ -24,6 +24,14 @@ public class MenuToggler : MonoBehaviour
     private ControllerModelSwitcher controllerModelSwitcher;
     private float tempRotation; // save rotation when disabling menu for when reactivating
 
+    private void OnValidate()
+    {
+        if (gameObject.scene.IsValid())
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
+
     private void Start()
     {
         menu = referenceManager.mainMenu;

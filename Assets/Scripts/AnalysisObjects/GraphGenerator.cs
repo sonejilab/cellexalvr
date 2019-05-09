@@ -52,6 +52,14 @@ namespace CellexalVR.AnalysisObjects
         private GameManager gameManager;
         private Graph subGraph;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Awake()
         {
             graphManager = referenceManager.graphManager;

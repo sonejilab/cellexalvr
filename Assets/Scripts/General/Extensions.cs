@@ -1,5 +1,7 @@
 ﻿using CellexalVR.General;
+using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 namespace CellexalVR.Extensions
 {
@@ -75,6 +77,21 @@ namespace CellexalVR.Extensions
             return s;
         }
 
+        public static Transform FindDeepChild(this Transform aParent, string aName)
+        {
+            Queue<Transform> queue = new Queue<Transform>();
+            queue.Enqueue(aParent);
+            while (queue.Count > 0)
+            {
+                var c = queue.Dequeue();
+                if (c.name == aName)
+                    return c;
+                foreach (Transform t in c)
+                    queue.Enqueue(t);
+            }
+            return null;
+        }
+        
         public static string UnFixFilePath(this string s)
         {
             string directorySeparatorChar = "\\\\";

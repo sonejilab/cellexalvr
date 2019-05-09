@@ -21,6 +21,14 @@ namespace CellexalVR.Multiplayer
         private GameObject menu;
         #endregion
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         #region MONOBEHAVIOUR MESSAGES
 
 

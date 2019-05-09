@@ -30,6 +30,14 @@ namespace CurvedVRKeyboard
         [SerializeField, HideInInspector]
         private string clickInputName;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             rightController = referenceManager.rightController;

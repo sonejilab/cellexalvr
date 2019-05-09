@@ -19,11 +19,6 @@ namespace CellexalVR.Interaction
             graphManager = referenceManager.graphManager;
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        }
 
         /// <summary>
         /// Click this panel, changing the mode of coloring used.

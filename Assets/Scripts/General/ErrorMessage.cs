@@ -75,6 +75,14 @@ namespace CellexalVR.General
         private bool backgroundQuadInitialised = false;
         private Animator errorMessageAnimator;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             if (!referenceManager)

@@ -15,6 +15,13 @@ namespace CellexalVR.Interaction
         public Graph.GraphPoint graphPoint;
         public bool selected = false;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         private void Start()
         {

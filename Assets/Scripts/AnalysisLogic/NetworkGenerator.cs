@@ -41,6 +41,14 @@ namespace CellexalVR.AnalysisLogic
         //private StatusDisplay statusDisplayFar;
         private Thread t;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         public NetworkGenerator()
         {
             CellexalEvents.ConfigLoaded.AddListener(CreateLineMaterials);

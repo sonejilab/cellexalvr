@@ -14,6 +14,14 @@ namespace CellexalVR.General
         public enum SelectionState { INACTIVE, SELECTING, CONFIRMED }
         private SelectionState currentSelectionState;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             currentSelectionState = SelectionState.INACTIVE;

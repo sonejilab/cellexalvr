@@ -65,6 +65,14 @@ namespace CellexalVR.AnalysisLogic
         //Flag for loading previous sessions
         public bool doLoad = false;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             gameManager = referenceManager.gameManager;

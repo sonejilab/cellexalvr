@@ -13,6 +13,14 @@ public class MenuRaycaster : MonoBehaviour
     private CellexalButton lastHit = null;
     private LayerMask layersToIgnore;
 
+    private void OnValidate()
+    {
+        if (gameObject.scene.IsValid())
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
+
     private void Start()
     {
         rightController = referenceManager.rightController;

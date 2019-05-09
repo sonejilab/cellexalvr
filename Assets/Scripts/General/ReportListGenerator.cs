@@ -19,6 +19,14 @@ namespace CellexalVR.General
         private int nrOfNodes;
         private List<string> files;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             nrOfNodes = 0;

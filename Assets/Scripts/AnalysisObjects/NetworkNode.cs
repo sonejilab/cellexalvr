@@ -45,6 +45,14 @@ namespace CellexalVR.AnalysisObjects
         private bool edgesAdded;
         private float lineWidth;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Start()
         {
             GetComponent<Renderer>().sharedMaterial = standardMaterial;

@@ -10,6 +10,14 @@ namespace CellexalVR.General
         public ReferenceManager referenceManager;
         public GameObject errorMessagePrefab;
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         public void Awake()
         {
             CellexalError.ReferenceManager = referenceManager;

@@ -72,7 +72,7 @@ namespace CellexalVR.DesktopUI
 
         private void OnValidate()
         {
-            if (gameObject.activeInHierarchy)
+            if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }

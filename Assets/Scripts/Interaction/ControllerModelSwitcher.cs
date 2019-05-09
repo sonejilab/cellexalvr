@@ -51,6 +51,14 @@ namespace CellexalVR.Interaction
         // Otherwise you can't point the helptool towards the keyboard.
         public bool HelpToolShouldStayActivated { get; set; }
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         void Awake()
         {
             //selectionToolHandler = referenceManager.selectionToolHandler;

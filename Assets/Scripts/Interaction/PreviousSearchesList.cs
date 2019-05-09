@@ -130,12 +130,17 @@ namespace CellexalVR.Interaction
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!gameObject.activeInHierarchy || Event.current != null && Event.current.type == EventType.Repaint)
-                return;
+            if (referenceManager == null && gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
+        public void BuildPreviousSearchesList()
+        {
             if (numberOfPanels < 1)
             {
-                Debug.LogWarning("Can not create less than 1 previous searches list nodes. Change numberOfPanels in the inspector on the " + name + " gameobject.");
+                Debug.LogError("Can not create less than 1 previous searches list nodes. Change numberOfPanels in the inspector on the " + name + " gameobject.");
                 return;
             }
             // remove null entries
@@ -205,8 +210,6 @@ namespace CellexalVR.Interaction
             gameObject.GetComponentsInChildren<PreviousSearchesLock>(searchLocks);
             gameObject.GetComponentsInChildren<ClickableTextPanel>(previousSearchesListNodes);
             gameObject.GetComponentsInChildren<CorrelatedGenesPanel>(correlatedGenesButtons);
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
 
         }
 #endif

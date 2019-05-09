@@ -60,11 +60,6 @@ namespace CellexalVR.Interaction
             }
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.activeInHierarchy)
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        }
 
         /// <summary>
         /// Handles what happens when a user clicks this button.
