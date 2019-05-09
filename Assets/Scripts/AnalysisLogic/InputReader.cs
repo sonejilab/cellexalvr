@@ -166,7 +166,7 @@ namespace CellexalVR.AnalysisLogic
         {
             facsGraphCounter++;
 
-            StartCoroutine(ReadMDSFiles(path, files, GraphGenerator.GraphType.FACS));
+            StartCoroutine(ReadMDSFiles(path, files, GraphGenerator.GraphType.FACS, false));
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="path"> The path to the folder where the files are. </param>
         /// <param name="mdsFiles"> The filenames. </param>
-        IEnumerator ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS)
+        IEnumerator ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -369,8 +369,10 @@ namespace CellexalVR.AnalysisLogic
             //status.RemoveStatus(statusId);
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
-
-            StartCoroutine(StartServer());
+            if (server)
+            {
+                StartCoroutine(StartServer());
+            }
             if (debug)
             {
                 //  yield return new WaitForSeconds(3);
@@ -825,8 +827,8 @@ namespace CellexalVR.AnalysisLogic
                         yield break;
                     }
                     
-                    StartCoroutine(graphManager.Graphs[0].CreateGraphSkeleton(true));
-                    while (graphManager.Graphs[0].convexHull == null)
+                    StartCoroutine(graph.CreateGraphSkeleton(false));
+                    while (!graph.convexHull.activeSelf)
                     {
                         yield return null;
                     }

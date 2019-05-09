@@ -91,6 +91,9 @@ namespace CellexalVR.General
             rightController = referenceManager.rightController;
             gameManager = referenceManager.gameManager;
             selectionToolCollider = referenceManager.selectionToolCollider;
+            CellexalEvents.GraphsColoredByGene.AddListener(Clear);
+            CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
+            CellexalEvents.GraphsReset.AddListener(Clear);
         }
 
         /// <summary>

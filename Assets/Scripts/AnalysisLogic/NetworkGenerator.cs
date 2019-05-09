@@ -176,7 +176,8 @@ namespace CellexalVR.AnalysisLogic
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
             string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
 
-            string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", 0.8, 130, \"pcor\")";
+            string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", 0.8,130, \"pcor\")";
+            //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\")";
             if (!Directory.Exists(networkResources))
             {
                 CellexalLog.Log("Creating directory " + networkResources.FixFilePath());
@@ -207,7 +208,6 @@ namespace CellexalVR.AnalysisLogic
                 calculatorCluster.SetActive(false);
 
             inputReader.ReadNetworkFiles(layoutSeed);
-            referenceManager.notificationManager.SpawnNotification("Transcription factor networks finished.");
         }
 
 

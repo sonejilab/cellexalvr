@@ -738,6 +738,7 @@ namespace CellexalVR.AnalysisObjects
             
             subGraph = CreateGraph(GraphType.ATTRIBUTE);
             subGraph.GraphName = name;
+            subGraph.tag = "Subgraph";
             StartCoroutine(CreateSubGraphsCoroutine(expr, attributes));
         }
 

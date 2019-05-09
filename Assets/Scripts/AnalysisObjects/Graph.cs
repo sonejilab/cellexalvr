@@ -762,7 +762,7 @@ namespace CellexalVR.AnalysisObjects
                 nodes.Remove(firstNode);
                 subNodes = nodes.OrderBy(v => Vector3.Distance(firstNode, v)).ToList();
                 frameCount++;
-                if (nodes.Count % 150 == 0)
+                if (nodes.Count % 100 == 0)
                     yield return null;
             }
             LineRenderer line = convexHull.gameObject.AddComponent<LineRenderer>();

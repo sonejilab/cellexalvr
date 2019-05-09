@@ -81,10 +81,12 @@ namespace CellexalVR.General
                 {
                     croppedDirectoryName = directory.Substring(backwardSlashIndex + 1);
                 }
+
                 else
                 {
                     croppedDirectoryName = directory.Substring(forwardSlashIndex + 1);
                 }
+
                 if (croppedDirectoryName.ToLower().Contains(filter))
                 {
                     Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
