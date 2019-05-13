@@ -600,6 +600,7 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
             recolored.Clear();
             ClearLinesBetweenGraphPoints();
+            referenceManager.attributeSubMenu.attributes.Clear();
 
 
         }

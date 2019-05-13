@@ -3,6 +3,7 @@ using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Attributes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ namespace CellexalVR.Menu.SubMenus
         public List<string> attributes;
 
         protected List<ColorByBooleanExpressionButton> booleanExpressionButtons;
+
 
         public override void CreateButtons(string[] categoriesAndNames)
         {
@@ -117,11 +119,13 @@ namespace CellexalVR.Menu.SubMenus
             referenceManager.selectionToolCollider.ChangeColor(true);
         }
 
-        public void SelectAllAttributes()
+        public IEnumerator SelectAllAttributes(bool toggle)
         {
             foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
             {
-                b.Click();
+                print(toggle);
+                b.ColourAttribute(toggle);
+                yield return null;
             }
         }
 

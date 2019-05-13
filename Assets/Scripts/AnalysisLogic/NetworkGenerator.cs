@@ -25,6 +25,7 @@ namespace CellexalVR.AnalysisLogic
         public List<NetworkHandler> networkList = new List<NetworkHandler>();
         public int objectsInSky;
         public int selectionNr;
+        public string networkMethod;
 
         public bool GeneratingNetworks { get; private set; }
 
@@ -184,8 +185,10 @@ namespace CellexalVR.AnalysisLogic
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
             string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
 
-            string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", 0.8,130, \"pcor\")";
+            networkMethod = "rho.p";
+            //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", 0.8,130, \"pcor\")";
             //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\")";
+            string script = function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", method=\"" + networkMethod + "\")";
             if (!Directory.Exists(networkResources))
             {
                 CellexalLog.Log("Creating directory " + networkResources.FixFilePath());

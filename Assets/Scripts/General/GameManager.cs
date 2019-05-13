@@ -1,4 +1,5 @@
-﻿using CellexalVR.Multiplayer;
+﻿using CellexalVR.Interaction;
+using CellexalVR.Multiplayer;
 using Photon;
 using System;
 using System.Collections;
@@ -149,11 +150,10 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendColorByIndex", PhotonTargets.Others, indexName);
         }
 
-        public void InformKeyClicked(CurvedVRKeyboard.KeyboardItem item)
+        public void InformKeyClicked(string value)
         {
             if (!multiplayer) return;
-            CellexalLog.Log("Informing clients that" + item + "was clicked");
-            string value = item.GetValue();
+            CellexalLog.Log("Informing clients that" + value + "was clicked");
             coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
 

@@ -1,6 +1,7 @@
 ﻿using CellexalVR.Menu.Buttons;
 using UnityEditor;
 using UnityEngine;
+
 /// <summary>
 /// A custom inspector for all buttons to help show only fields that are used.
 /// </summary>

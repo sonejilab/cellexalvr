@@ -2,7 +2,7 @@
 using System.Collections;
 using CellexalVR.General;
 
-namespace Com.MyCompany.MyGame
+namespace CellexalVR.Multiplayer
 {
     public class AvatarLeftArm : Photon.MonoBehaviour
     {

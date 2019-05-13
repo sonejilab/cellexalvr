@@ -25,6 +25,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public AttributeLogic CurrentBooleanExpressionState { get; private set; } = AttributeLogic.NOT_INCLUDED;
         public AttributeSubMenu parentMenu;
 
+        private Color savedMeshStandardColor;
+
         protected override string Description
         {
             get { return "Toggle attribute - " + description.text; }
@@ -43,8 +45,18 @@ namespace CellexalVR.Menu.Buttons.Attributes
             {
                 cellManager.ColorByAttribute(Attribute, !colored);
                 referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
+                //meshRenderer.material.color = colored ? meshStandardColor : meshDeactivatedColor;
+                if (!colored)
+                {
+                    savedMeshStandardColor = meshStandardColor;
+                    meshStandardColor = meshDeactivatedColor;
+                }
+                else
+                {
+                    meshStandardColor = savedMeshStandardColor;
+                }
                 colored = !colored;
-                activeOutline.SetActive(colored);
+                //activeOutline.SetActive(colored);
             }
             else if (CurrentMode == Mode.BOOLEAN_EXPR)
             {
@@ -66,6 +78,28 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
                 parentMenu.EvaluateExpression();
             }
+        }
+
+        /// <summary>
+        /// Called when toggling all attributes using the select all button.
+        /// </summary>
+        public void ColourAttribute(bool toggle)
+        {
+            cellManager.ColorByAttribute(Attribute, !toggle);
+            referenceManager.gameManager.InformColorByAttribute(Attribute, !toggle);
+            colored = !toggle;
+            if (colored)
+            {
+                savedMeshStandardColor = meshStandardColor;
+                meshStandardColor = meshDeactivatedColor;
+            }
+            else
+            {
+                meshStandardColor = savedMeshStandardColor;
+            }
+            //meshRenderer.material.color = !toggle? meshStandardColor : meshDeactivatedColor;
+            //activeOutline.SetActive(toggle);
+            //TurnOff();
         }
 
         /// <summary>
@@ -154,5 +188,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
             colored = false;
         }
+
+  
     }
 }

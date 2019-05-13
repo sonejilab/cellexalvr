@@ -10,6 +10,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.Interaction;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 using VRTK;
 

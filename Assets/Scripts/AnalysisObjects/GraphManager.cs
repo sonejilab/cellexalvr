@@ -24,6 +24,7 @@ namespace CellexalVR.AnalysisObjects
         public SelectionManager selectionManager;
 
         public List<Graph> Graphs;
+        public List<Graph> originalGraphs;
 
         private CellManager cellManager;
         private List<NetworkHandler> networks = new List<NetworkHandler>();
@@ -51,6 +52,7 @@ namespace CellexalVR.AnalysisObjects
         public bool drawDebugRaycast = false;
         public bool drawDebugRejectionApprovedCubes = false;
         public bool drawDebugGroups = false;
+        public int drawDebugCubesOnLevel = -1;
 
         private void OnValidate()
         {
@@ -111,6 +113,12 @@ namespace CellexalVR.AnalysisObjects
         public void DrawDebugRejectionApproveCubes(bool b)
         {
             drawDebugRejectionApprovedCubes = b;
+        }
+
+        [ConsoleCommand("graphManager", "drawdebugcubesonlevel", "ddcol")]
+        public void DrawDebugCubesOnLevel(int level)
+        {
+            drawDebugCubesOnLevel = level;
         }
 
         [ConsoleCommand("graphManager", "party")]
@@ -204,6 +212,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
             Graphs.Clear();
+            originalGraphs.Clear();
             foreach (NetworkHandler network in networks)
             {
                 foreach (NetworkCenter networkReplacement in network.Replacements)

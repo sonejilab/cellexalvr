@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System;
+using CellexalVR.SceneObjects;
 
 namespace CellexalVR.General
 {
