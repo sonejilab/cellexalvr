@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.SceneObjects;
+using UnityEngine;
 namespace CellexalVR.Interaction
 {
     /// <summary>
