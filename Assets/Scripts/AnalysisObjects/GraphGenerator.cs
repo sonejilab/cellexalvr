@@ -50,7 +50,7 @@ namespace CellexalVR.AnalysisObjects
         public int graphCount;
 
         private GameManager gameManager;
-        private Graph subGraph;
+        //private Graph subGraph;
 
         private void OnValidate()
         {
@@ -237,6 +237,7 @@ namespace CellexalVR.AnalysisObjects
             List<HashSet<Graph.GraphPoint>> clusters = new List<HashSet<Graph.GraphPoint>>();
             clusters = SplitCluster(firstCluster);
             MakeMeshes(clusters);
+
             //if (graphType == GraphType.ATTRIBUTE)
             //{
             //}
@@ -473,7 +474,6 @@ namespace CellexalVR.AnalysisObjects
             NativeArray<Vector2> resultUVs = new NativeArray<Vector2>(newGraph.points.Count * graphPointMeshVertexCount, Allocator.TempJob);
 
             int totalNumberOfPoints = newGraph.points.Count;
-
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 var cluster = clusters[i];
@@ -743,27 +743,36 @@ namespace CellexalVR.AnalysisObjects
                 expr = new BooleanExpression.OrExpr(tempExpr,
                                                     new BooleanExpression.ValueExpr(attributes[i]));
             }
-            
-            subGraph = CreateGraph(GraphType.ATTRIBUTE);
-            subGraph.GraphName = name;
-            StartCoroutine(CreateSubGraphsCoroutine(expr, attributes));
+            foreach (Graph g in graphManager.originalGraphs)
+            {
+                
+                StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, name));
+            }
         }
 
 
-        private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes)
+        private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes, Graph g, string name)
         {
-            StartCoroutine(graphManager.Graphs[0].CreateGraphSkeleton(true));
-            while (graphManager.Graphs[0].convexHull.activeSelf == false)
+            while (isCreating)
             {
                 yield return null;
             }
-            GameObject skeleton = graphManager.Graphs[0].convexHull;
-            skeleton.transform.parent = subGraph.transform;
+            var subGraph = CreateGraph(GraphType.ATTRIBUTE);
+            subGraph.GraphName = name;
+            subGraph.tag = "Subgraph";
+
+            StartCoroutine(g.CreateGraphSkeleton(true));
+            while (g.convexHull.activeSelf == false)
+            {
+                yield return null;
+            }
+            GameObject skeleton = g.convexHull;
+            skeleton.transform.parent = subGraph.gameObject.transform;
             skeleton.transform.localPosition = Vector3.zero;
 
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
 
-            Graph graph = graphManager.Graphs[0];
+            Graph graph = g;
             foreach (Cell cell in subset)
             {
                 var point = graph.FindGraphPoint(cell.Label).Position;
@@ -787,47 +796,47 @@ namespace CellexalVR.AnalysisObjects
             }
             graphManager.Graphs.Add(subGraph);
             string[] axes = new string[3];
-            axes = graphManager.Graphs[0].axisNames.ToArray();
+            axes = g.axisNames.ToArray();
             AddAxes(subGraph, axes);
         }
 
-        [ConsoleCommand("graphGenerator", "asg")]
-        public void AddToGraph()
-        {
-            StartCoroutine(AddToSubGraphCoroutine("celltype@Epiblast"));
-        }
+        //[ConsoleCommand("graphGenerator", "asg")]
+        //public void AddToGraph()
+        //{
+        //    StartCoroutine(AddToSubGraphCoroutine("celltype@Epiblast"));
+        //}
 
-        public void AddToGraph(string expr)
-        {
-            StartCoroutine(AddToSubGraphCoroutine(expr));
-        }
+        //public void AddToGraph(string expr)
+        //{
+        //    StartCoroutine(AddToSubGraphCoroutine(expr));
+        //}
 
-        private IEnumerator AddToSubGraphCoroutine(string expr)
-        {
-            isCreating = true;
-            List<Cell> subset = referenceManager.cellManager.SubSet(new BooleanExpression.ValueExpr(expr));
-            print("subset size " + subset.Count);
-            //foreach (CombinedGraph graph in graphManager.Graphs)
-            //{
-            Graph graph = graphManager.Graphs[0];
-            subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
-            subGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
-            Dictionary<string, Graph.GraphPoint> newPoints = new Dictionary<string, Graph.GraphPoint>();
-            foreach (Cell cell in subset)
-            {
-                var point = graph.FindGraphPoint(cell.Label).Position;
-                AddGraphPoint(cell, point.x, point.y, point.z);
-                newPoints[cell.Label] = new Graph.GraphPoint(cell.Label, point.x, point.y, point.z, subGraph);
-            }
-            print("new points size " + newPoints.Count);
-            SliceClustering(newPoints);
-            while (isCreating)
-            {
-                yield return null;
-            }
-            //}
-            referenceManager.cellManager.ColorByAttribute(expr, true);
-        }
+        //private IEnumerator AddToSubGraphCoroutine(string expr)
+        //{
+        //    isCreating = true;
+        //    List<Cell> subset = referenceManager.cellManager.SubSet(new BooleanExpression.ValueExpr(expr));
+        //    print("subset size " + subset.Count);
+        //    //foreach (CombinedGraph graph in graphManager.Graphs)
+        //    //{
+        //    Graph graph = graphManager.Graphs[0];
+        //    subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
+        //    subGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
+        //    Dictionary<string, Graph.GraphPoint> newPoints = new Dictionary<string, Graph.GraphPoint>();
+        //    foreach (Cell cell in subset)
+        //    {
+        //        var point = graph.FindGraphPoint(cell.Label).Position;
+        //        AddGraphPoint(cell, point.x, point.y, point.z);
+        //        newPoints[cell.Label] = new Graph.GraphPoint(cell.Label, point.x, point.y, point.z, subGraph);
+        //    }
+        //    print("new points size " + newPoints.Count);
+        //    SliceClustering(newPoints);
+        //    while (isCreating)
+        //    {
+        //        yield return null;
+        //    }
+        //    //}
+        //    referenceManager.cellManager.ColorByAttribute(expr, true);
+        //}
 
         /// <summary>
         /// Adds many boxcolliders to this graph. The idea is that when grabbing graphs we do not want to collide with all the small colliders on the graphpoints, so we put many boxcolliders that cover the graph instead.

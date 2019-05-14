@@ -21,6 +21,7 @@ namespace CellexalVR.Tutorial
         public ReferenceManager referenceManager;
         public GameObject highlightSpot;
         public GameObject portal;
+        public GameObject screenCanvas;
         public PlayVideo videoPlayer;
         public string[] videos;
         public GameObject helperTextR;
@@ -316,6 +317,8 @@ namespace CellexalVR.Tutorial
                                                                           "You have completed the tutorial. \n" +
                                                                           "Step through the portal to start analyzing your data.";
                     highlightSpot.SetActive(false);
+                    helperTextL.SetActive(false);
+                    helperTextR.SetActive(false);
                     TurnOnSpot();
                     break;
             }

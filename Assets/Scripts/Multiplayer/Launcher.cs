@@ -18,12 +18,12 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using CellexalVR.General;
 
-/// <summary>
-/// Launch manager. Connect, join a random room or create one if none or all full.
-/// </summary>
-namespace ExitGames.Demos.DemoAnimator
+namespace CellexalVR.Multiplayer
 {
 
+    /// <summary>
+    /// Launch manager. Connect, join a random room or create one if none or all full.
+    /// </summary>
     public class Launcher : Photon.PunBehaviour
     {
         #region Public Variables
@@ -32,7 +32,7 @@ namespace ExitGames.Demos.DemoAnimator
         public GameObject controlPanel;
         //[Tooltip("The UI Label to inform the user that the connection is in progress")]
         //public GameObject progressLabel;
-        
+
         #endregion
 
 
@@ -157,7 +157,7 @@ namespace ExitGames.Demos.DemoAnimator
             isConnecting = true;
             //progressLabel.SetActive(true);
             controlPanel.SetActive(false);
-            
+
 
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
             if (PhotonNetwork.connected)

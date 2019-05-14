@@ -81,7 +81,7 @@ namespace CellexalVR.AnalysisObjects
                 graphNrText.text = value.ToString();
             }
         }
-        
+
         private ControllerModelSwitcher controllerModelSwitcher;
         private GameManager gameManager;
         private Vector3 startPosition;
@@ -483,25 +483,25 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            public List<Vector3> GetSkeletonNodesRecursive(OctreeNode node, List<Vector3> nodePositions = null, int nodeLevel = 0)
+            public List<OctreeNode> GetSkeletonNodesRecursive(OctreeNode node, List<OctreeNode> nodes = null, int currentNodeLevel = 0, int desiredNodeLevel = 0)
             {
-                if (nodePositions == null)
+                if (nodes == null)
                 {
-                    nodePositions = new List<Vector3>();
+                    nodes = new List<OctreeNode>();
                 }
                 foreach (OctreeNode child in node.children)
                 {
-                    if (nodeLevel == 4)
+                    if (desiredNodeLevel == currentNodeLevel)
                     {
-                        nodePositions.Add(child.center);
-                        return nodePositions;
+                        nodes.Add(child);
+                        return nodes;
                     }
                     else
                     {
-                        child.GetSkeletonNodesRecursive(child, nodePositions, nodeLevel + 1);
+                        child.GetSkeletonNodesRecursive(child, nodes, currentNodeLevel + 1, desiredNodeLevel);
                     }
                 }
-                return nodePositions;
+                return nodes;
             }
 
             /// <summary>
@@ -571,6 +571,21 @@ namespace CellexalVR.AnalysisObjects
                 foreach (var child in children)
                 {
                     child.DrawDebugCubesRecursive(gameobjectPos, onlyLeaves, i);
+                }
+
+            }
+
+            public void DrawDebugCubesRecursive(Vector3 gameobjectPos, int i, int level)
+            {
+
+                if (i == level)
+                {
+                    Gizmos.DrawWireCube(gameobjectPos + pos + size / 2, size / 0.95f);
+                    return;
+                }
+                foreach (var child in children)
+                {
+                    child.DrawDebugCubesRecursive(gameobjectPos, i + 1, level);
                 }
 
             }
@@ -669,6 +684,10 @@ namespace CellexalVR.AnalysisObjects
                     Gizmos.color = Color.white;
                     octreeRoot.DrawDebugLines(transform.position);
                 }
+                if (graphManager.drawDebugCubesOnLevel > -1)
+                {
+                    octreeRoot.DrawDebugCubesRecursive(transform.position, 0, graphManager.drawDebugCubesOnLevel);
+                }
             }
             if (graphManager.drawSelectionToolDebugLines)
             {
@@ -758,20 +777,20 @@ namespace CellexalVR.AnalysisObjects
             {
                 convexHull = Instantiate(skeletonPrefab);
             }
-            var nodes = octreeRoot.GetSkeletonNodesRecursive(octreeRoot, null, 0);
+            var nodes = octreeRoot.GetSkeletonNodesRecursive(octreeRoot, null, 0, 4);
             int posCount = nodes.Count;
-            nodes.OrderBy(v => v.x).ToList();
+            nodes.OrderBy(v => v.center.x).ToList();
             var sortedNodes = new List<Vector3>();
             var subNodes = nodes;
             int frameCount = 0;
             while (nodes.Count > 0)
             {
                 var firstNode = subNodes[0];
-                sortedNodes.Add(firstNode);
+                sortedNodes.Add(firstNode.center);
                 nodes.Remove(firstNode);
-                subNodes = nodes.OrderBy(v => Vector3.Distance(firstNode, v)).ToList();
+                subNodes = nodes.OrderBy(v => Vector3.Distance(firstNode.center, v.center)).ToList();
                 frameCount++;
-                if (nodes.Count % 150 == 0)
+                if (nodes.Count % 60 == 0)
                     yield return null;
             }
             LineRenderer line = convexHull.gameObject.AddComponent<LineRenderer>();

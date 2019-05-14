@@ -10,6 +10,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.Interaction;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 using VRTK;
 
@@ -99,6 +100,9 @@ namespace CellexalVR.General
             rightController = referenceManager.rightController;
             gameManager = referenceManager.gameManager;
             selectionToolCollider = referenceManager.selectionToolCollider;
+            CellexalEvents.GraphsColoredByGene.AddListener(Clear);
+            CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
+            CellexalEvents.GraphsReset.AddListener(Clear);
         }
 
         /// <summary>

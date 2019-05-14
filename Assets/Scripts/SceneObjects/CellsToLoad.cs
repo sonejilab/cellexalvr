@@ -1,69 +1,74 @@
 using CellexalVR.General;
 using UnityEngine;
 
-/// <summary>
-/// Holds the directory name that the cells in the boxes should represent.
-/// </summary>
-public class CellsToLoad : MonoBehaviour
+
+namespace CellexalVR.SceneObjects
 {
 
-    private string directory;
-    private bool graphsLoaded = false;
-    private Vector3 defaultPosition;
-    private Quaternion defaultRotation;
-    private ReferenceManager referenceManager;
-
-    public string Directory
+    /// <summary>
+    /// Holds the directory name that the cells in the boxes should represent.
+    /// </summary>
+    public class CellsToLoad : MonoBehaviour
     {
-        get
+
+        private string directory;
+        private bool graphsLoaded = false;
+        private Vector3 defaultPosition;
+        private Quaternion defaultRotation;
+        private ReferenceManager referenceManager;
+
+        public string Directory
         {
-            graphsLoaded = true;
-            return directory;
+            get
+            {
+                graphsLoaded = true;
+                return directory;
+            }
+            set
+            {
+                directory = value;
+            }
         }
-        set
+
+        private void OnValidate()
         {
-            directory = value;
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
         }
-    }
 
-    private void OnValidate()
-    {
-        if (gameObject.scene.IsValid())
+        private void Start()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            this.gameObject.name = directory;
         }
-    }
 
-    private void Start()
-    {
-        //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-        this.gameObject.name = directory;
-    }
+        private void Update()
+        {
+            //if (GetComponent<VRTK_InteractableObject>().enabled)
+            //{
+            //    referenceManager.gameManager.InformMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
+            //    referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
 
-    private void Update()
-    {
-        //if (GetComponent<VRTK_InteractableObject>().enabled)
-        //{
-        //    referenceManager.gameManager.InformMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
-        //    referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
-            
-        //}
-    }
+            //}
+        }
 
-    public bool GraphsLoaded()
-    {
-        return graphsLoaded;
-    }
+        public bool GraphsLoaded()
+        {
+            return graphsLoaded;
+        }
 
-    internal void ResetPosition()
-    {
-        transform.localPosition = defaultPosition;
-        transform.localRotation = defaultRotation;
-    }
+        internal void ResetPosition()
+        {
+            transform.localPosition = defaultPosition;
+            transform.localRotation = defaultRotation;
+        }
 
-    internal void SavePosition()
-    {
-        defaultPosition = transform.localPosition;
-        defaultRotation = transform.localRotation;
+        internal void SavePosition()
+        {
+            defaultPosition = transform.localPosition;
+            defaultRotation = transform.localRotation;
+        }
     }
 }

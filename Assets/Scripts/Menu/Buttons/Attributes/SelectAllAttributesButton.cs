@@ -5,12 +5,14 @@ using CellexalVR.Menu.SubMenus;
 namespace CellexalVR.Menu.Buttons.Attributes
 {
     /// <summary>
-    /// Adds the points coloured according to the attributes to a new selection.
+    /// Toggles all the attributes. Called as a couroutine since if you have a big dataset with many attributes it takes too long.
     /// </summary>
     public class SelectAllAttributesButton : CellexalButton
     {
         public AttributeSubMenu attributeSubMenu;
         public CloseMenuButton closeMenuButton;
+
+        private bool toggle = false;
 
         protected override string Description
         {
@@ -26,7 +28,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         public override void Click()
         {
-            attributeSubMenu.SelectAllAttributes();
+            toggle = !toggle;
+            StartCoroutine(attributeSubMenu.SelectAllAttributes(!toggle));
         }
 
         private void TurnOn()

@@ -111,7 +111,6 @@ namespace CellexalVR.Tutorial
                 for (int i = 0; i < orgColors.Count; i++)
                 {
                     objs[i].GetComponent<Renderer>().material.color = orgColors[i];
-                    print(i + " - " + orgColors[i]);
                     //orgColors.RemoveAt(i);
                 }
                 orgColors.Clear();

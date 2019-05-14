@@ -96,7 +96,6 @@ namespace CellexalVR.SceneObjects
         /// </summary>
         public void ResetLoaderBooleans()
         {
-            inputFolderGenerator.DestroyFolders();
             cellsEntered = false;
             timeEntered = 0;
             collidersDestroyed = false;
@@ -280,14 +279,14 @@ namespace CellexalVR.SceneObjects
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
             // must reset loader before generating new folders
-            ResetLoaderBooleans();
-            inputFolderGenerator.GenerateFolders();
-            referenceManager.inputFolderGenerator.gameObject.SetActive(true);
             if (loaderMovedDown)
             {
                 loaderMovedDown = false;
                 MoveLoader(new Vector3(0f, 2f, 0f), 2);
             }
+            ResetLoaderBooleans();
+            inputFolderGenerator.GenerateFolders();
+            referenceManager.inputFolderGenerator.gameObject.SetActive(true);
             keyboard.SetActive(true);
             helpVideoObj.SetActive(true);
             // multiple_exp datasetList.gameObject.SetActive(true);

@@ -15,6 +15,7 @@ using CellexalVR.Menu.Buttons;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.SceneObjects;
 
 namespace CellexalVR.AnalysisObjects
 {

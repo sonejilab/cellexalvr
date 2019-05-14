@@ -4,6 +4,9 @@ using CellexalVR.DesktopUI;
 
 namespace CellexalVR.General
 {
+    /// <summary>
+    /// Handles the spawning of notifications. These can be spawned from anywhere e.g. when a script has finished and you want to notify the user.
+    /// </summary>
     public class NotificationManager : MonoBehaviour
     {
 

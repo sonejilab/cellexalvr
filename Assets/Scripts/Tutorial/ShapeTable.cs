@@ -14,10 +14,10 @@ namespace CellexalVR.Tutorial
             introManager = GameObject.Find("IntroTutorialManager").GetComponent<IntroTutorialManager>();
             shapes = new Dictionary<string, bool>
             {
-                ["Cube"] = false,
-                ["Triangle"] = false,
-                ["Sphere"] = false,
-                ["Torus"] = false,
+                ["Falukorv"] = false,
+                ["Kanelbulle"] = false,
+                ["Kaviar"] = false,
+                ["Surstromming"] = false,
 
             };
         }

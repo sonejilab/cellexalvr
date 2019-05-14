@@ -38,6 +38,7 @@ namespace CellexalVR.General
         public Color HeatmapHighlightMarkerColor { get; set; }
         public Color HeatmapConfirmMarkerColor { get; set; }
         public string HeatmapAlgorithm { get; set; }
+        public string NetworkAlgorithm { get; set; }
         public int HeatmapNumberOfGenes { get; set; }
         public int NetworkLineColoringMethod { get; set; }
         public Color NetworkLineColorPositiveHigh { get; set; }
@@ -75,6 +76,7 @@ namespace CellexalVR.General
             HeatmapHighlightMarkerColor = c.HeatmapHighlightMarkerColor;
             HeatmapConfirmMarkerColor = c.HeatmapConfirmMarkerColor;
             HeatmapAlgorithm = c.HeatmapAlgorithm;
+            NetworkAlgorithm = c.NetworkAlgorithm;
             HeatmapNumberOfGenes = c.HeatmapNumberOfGenes;
             NetworkLineColoringMethod = c.NetworkLineColoringMethod;
             NetworkLineColorPositiveHigh = c.NetworkLineColorPositiveHigh;

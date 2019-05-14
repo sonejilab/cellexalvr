@@ -2,7 +2,7 @@
 using CellexalVR.General;
 using UnityEngine;
 
-namespace CurvedVRKeyboard
+namespace CellexalVR.Interaction
 {
     /// <summary>
     /// Handles keyboard logic.

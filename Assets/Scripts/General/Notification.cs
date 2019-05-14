@@ -4,7 +4,7 @@ using CellexalVR.General;
 namespace CellexalVR.General
 {
     /// <summary>
-    /// Plays animation that hides error message.
+    /// Plays animation that hides the notification.
     /// </summary>
     public class Notification : MonoBehaviour
     {

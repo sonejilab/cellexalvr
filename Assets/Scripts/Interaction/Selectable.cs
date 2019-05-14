@@ -32,18 +32,21 @@ namespace CellexalVR.Interaction
 
         void OnTriggerEnter(Collider other)
         {
-            if (!selected)
+            int colorIndex = referenceManager.selectionToolCollider.currentColorIndex;
+            if (gameObject.GetComponent<Renderer>().material.color != referenceManager.selectionToolCollider.Colors[colorIndex])
             {
                 selectionManager.AddGraphpointToSelection(graphPoint);
-                int colorIndex = referenceManager.selectionToolCollider.currentColorIndex;
                 foreach (Selectable sel in graphPoint.lineBetweenCellsCubes)
                 {
                     sel.GetComponent<Renderer>().material.color = referenceManager.selectionToolCollider.Colors[colorIndex];
                 }
                 referenceManager.gameManager.InformCubeColoured(graphPoint.parent.name, graphPoint.Label,
                                                                 colorIndex, referenceManager.selectionToolCollider.Colors[colorIndex]);
-                selected = true;
             }
+            //if (!selected)
+            //{
+            //    //selected = true;
+            //}
             //var cubeOnLine = other.gameObject.GetComponent<Selectable>();
             //if (cubeOnLine != null && !cubeOnLine.selected)
             //{

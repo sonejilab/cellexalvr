@@ -2,16 +2,17 @@
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Interaction;
+using CellexalVR.Menu;
 using CellexalVR.Menu.SubMenus;
 using CellexalVR.SceneObjects;
 using CellexalVR.Tools;
+using CellexalVR.Tutorial;
 using SQLiter;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using VRTK;
-using SQLiter;
-using CellexalVR.Tutorial;
-using UnityEditor;
+
 
 namespace CellexalVR.General
 {
@@ -146,6 +147,7 @@ namespace CellexalVR.General
             TextMeshProUGUI HUDGroupInfo;
             TextMeshProUGUI FarFlashInfo;
             TextMeshProUGUI FarGroupInfo;
+
             headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
             rightLaser = rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
