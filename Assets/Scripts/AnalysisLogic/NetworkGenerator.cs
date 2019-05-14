@@ -184,8 +184,7 @@ namespace CellexalVR.AnalysisLogic
             string function = "make.cellexalvr.network";
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
             string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
-
-            networkMethod = "rho.p";
+            networkMethod = CellexalConfig.Config.NetworkAlgorithm;
             //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", 0.8,130, \"pcor\")";
             //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\")";
             string script = function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", method=\"" + networkMethod + "\")";

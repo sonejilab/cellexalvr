@@ -28,7 +28,7 @@ namespace CellexalVR.DesktopUI
         public ColorPickerButton heatmapLowExpression;
         public Image heatmapGradient;
         public TMPro.TMP_InputField numberOfHeatmapColorsInputField;
-        public Dropdown heatmapAlgorithm;
+        public TMPro.TMP_Dropdown heatmapAlgorithmDropdown;
         //public UnityEngine.UI.Dropdown heatmapAlgorithm;
         [Header("Graphs")]
         public ColorPickerButton graphHighExpression;
@@ -39,7 +39,8 @@ namespace CellexalVR.DesktopUI
         public ColorPickerButton graphDefaultColor;
         public Toggle graphHightestExpressedMarker;
         [Header("Networks")]
-        public Dropdown networkLineColoringMethod;
+        public TMPro.TMP_Dropdown networkAlgorithmDropdown;
+        public TMPro.TMP_Dropdown networkLineColoringMethodDropdown;
         public ColorPickerButton networkLinePositiveHigh;
         public ColorPickerButton networkLinePositiveLow;
         public Image networkPositiveGradient;
@@ -58,6 +59,10 @@ namespace CellexalVR.DesktopUI
         public Toggle notificationToggle;
 
         public Material[] skyboxes;
+
+        public List<string> networkAlgorithms;
+        public List<string> heatmapAlgorithms;
+        public List<string> lineColouringMethods;
 
         private ColorPicker colorPicker;
         private Config beforeChanges;
@@ -81,6 +86,28 @@ namespace CellexalVR.DesktopUI
                 skyboxOptions.Add(new TMPro.TMP_Dropdown.OptionData(mat.name));
             }
             skyboxDropdown.options = skyboxOptions;
+
+            var networkMethods = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in networkAlgorithms)
+            {
+                networkMethods.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            networkAlgorithmDropdown.options = networkMethods;
+
+            var heatmapMethods = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in heatmapAlgorithms)
+            {
+                heatmapMethods.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            heatmapAlgorithmDropdown.options = heatmapMethods;
+
+            var lineMethods = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in lineColouringMethods)
+            {
+                lineMethods.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            networkLineColoringMethodDropdown.options = lineMethods;
+
             selectionColorButtons = new List<ColorPickerButton>();
 
         }
@@ -117,13 +144,15 @@ namespace CellexalVR.DesktopUI
             heatmapMidExpression.Color = CellexalConfig.Config.HeatmapMidExpressionColor;
             heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
             numberOfHeatmapColorsInputField.text = "" + CellexalConfig.Config.NumberOfHeatmapColors;
+            heatmapAlgorithmDropdown.value = heatmapAlgorithms.IndexOf(CellexalConfig.Config.HeatmapAlgorithm);
             graphHighExpression.Color = CellexalConfig.Config.GraphHighExpressionColor;
             graphMidExpression.Color = CellexalConfig.Config.GraphMidExpressionColor;
             graphLowExpression.Color = CellexalConfig.Config.GraphLowExpressionColor;
             numberOfGraphColorsInputField.text = "" + CellexalConfig.Config.GraphNumberOfExpressionColors;
             graphDefaultColor.Color = CellexalConfig.Config.GraphDefaultColor;
             graphHightestExpressedMarker.isOn = CellexalConfig.Config.GraphMostExpressedMarker;
-            networkLineColoringMethod.value = CellexalConfig.Config.NetworkLineColoringMethod;
+            networkAlgorithmDropdown.value = networkAlgorithms.IndexOf(CellexalConfig.Config.NetworkAlgorithm);
+            networkLineColoringMethodDropdown.value = CellexalConfig.Config.NetworkLineColoringMethod;
             networkLinePositiveHigh.Color = CellexalConfig.Config.NetworkLineColorPositiveHigh;
             networkLinePositiveLow.Color = CellexalConfig.Config.NetworkLineColorPositiveLow;
             networkLineNegativeHigh.Color = CellexalConfig.Config.NetworkLineColorNegativeHigh;
@@ -203,8 +232,8 @@ namespace CellexalVR.DesktopUI
         public void SetHeatmapAlgorithm()
         {
             unsavedChanges = true;
-            int val = heatmapAlgorithm.value;
-            string algorithm = heatmapAlgorithm.options[val].text;
+            int val = heatmapAlgorithmDropdown.value;
+            string algorithm = heatmapAlgorithmDropdown.options[val].text;
             CellexalConfig.Config.HeatmapAlgorithm = algorithm;
             referenceManager.heatmapGenerator.InitColors();
         }
@@ -224,10 +253,18 @@ namespace CellexalVR.DesktopUI
             graphGradient.material.SetInt("_NColors", nColors);
         }
 
+        public void SetNetworkAlgorithm()
+        {
+            unsavedChanges = true;
+            int val = networkAlgorithmDropdown.value;
+            string algorithm = networkAlgorithmDropdown.options[val].text;
+            CellexalConfig.Config.NetworkAlgorithm = algorithm;
+        }
+
         public void SetNetworkColoringMethod()
         {
             unsavedChanges = true;
-            int newMethod = networkLineColoringMethod.value;
+            int newMethod = networkLineColoringMethodDropdown.value;
             CellexalConfig.Config.NetworkLineColoringMethod = newMethod;
 
             bool active = newMethod == 0;

@@ -134,6 +134,7 @@ namespace CellexalVR.General
             rightController = GameObject.Find("[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
             leftController = GameObject.Find("[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
             GameObject vrtkLeftController = GameObject.Find("[VRTK]/LeftController");
+            GameObject vrtkRightController = GameObject.Find("[VRTK]/RightController");
             controllerModelSwitcher = vrtkLeftController.GetComponent<ControllerModelSwitcher>();
             TextMeshProUGUI HUDFlashInfo;
             TextMeshProUGUI HUDGroupInfo;
@@ -141,7 +142,7 @@ namespace CellexalVR.General
             TextMeshProUGUI FarGroupInfo;
             headset = GameObject.Find("[CameraRig]/Camera (head)/Camera (eye)");
             controllerMenuCollider = vrtkLeftController.GetComponent<BoxCollider>();
-            rightLaser = vrtkLeftController.GetComponent<LaserPointerController>();
+            rightLaser = vrtkRightController.GetComponent<LaserPointerController>();
             leftLaser = vrtkLeftController.GetComponent<VRTK_StraightPointerRenderer>();
             laserPointerController = GameObject.Find("[VRTK]/RightController").GetComponent<LaserPointerController>();
 

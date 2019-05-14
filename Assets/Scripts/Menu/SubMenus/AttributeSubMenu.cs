@@ -123,7 +123,6 @@ namespace CellexalVR.Menu.SubMenus
         {
             foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
             {
-                print(toggle);
                 b.ColourAttribute(toggle);
                 yield return null;
             }
