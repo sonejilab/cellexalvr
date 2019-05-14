@@ -14,7 +14,7 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
-        public RadialMenu radialMenu;
+        public VRTK_RadialMenu radialMenu;
         public Sprite buttonIcons;
         public ParticleSystem particles;
         public Collider[] selectionToolColliders;
@@ -134,16 +134,18 @@ namespace CellexalVR.Interaction
         public void UpdateColors()
         {
             currentColorIndex = 0;
-            radialMenu.buttons[1].ButtonIcon = buttonIcons;
-            radialMenu.buttons[3].ButtonIcon = buttonIcons;
+            //radialMenu.buttons[1].ButtonIcon = buttonIcons;
+            //radialMenu.buttons[3].ButtonIcon = buttonIcons;
             Colors = CellexalConfig.Config.SelectionToolColors;
             for (int i = 0; i < Colors.Length; i++)
             {
                 Colors[i].a = 1;
             }
-            radialMenu.buttons[1].color = Colors[Colors.Length - 1];
-            radialMenu.buttons[3].color = Colors[1];
-            radialMenu.RegenerateButtons();
+
+            // VRTK 3.3
+            //radialMenu.buttons[1].color = Colors[Colors.Length - 1];
+            //radialMenu.buttons[3].color = Colors[1];
+            //radialMenu.RegenerateButtons();
             selectedColor = Colors[currentColorIndex];
         }
 
@@ -171,8 +173,9 @@ namespace CellexalVR.Interaction
             }
             int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
             int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
-            radialMenu.buttons[1].color = Colors[buttonIndexLeft];
-            radialMenu.buttons[3].color = Colors[buttonIndexRight];
+            // VRTK 3.3
+            //radialMenu.buttons[1].color = Colors[buttonIndexLeft];
+            //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             radialMenu.RegenerateButtons();
             selectedColor = Colors[currentColorIndex];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);

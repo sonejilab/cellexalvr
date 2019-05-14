@@ -1,8 +1,10 @@
-﻿using CellexalVR.Extensions;
+﻿using CellexalVR.Interaction;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Valve.VR.InteractionSystem;
 using VRTK;
 
@@ -77,44 +79,46 @@ namespace CellexalVR.General
             }
         }
 
-        public void BuildScene(bool forceInstantiate = false)
+        public void BuildScene()
         {
             //if (Application.isPlaying)
             //{
             //    return;
             //}
             // instantiate missing gameobjects
-            buildSceneEnumerator = BuildSceneCoroutine(forceInstantiate);
+            buildSceneEnumerator = BuildSceneCoroutine();
             buildSceneEnumerator.MoveNext();
         }
 
-        private IEnumerator BuildSceneCoroutine(bool forceInstantiate)
+        private IEnumerator BuildSceneCoroutine()
         {
             buildingScene = true;
             EditorUtility.DisplayProgressBar("Building scene", "Instantiating objects", 0f);
-            InstantiateSceneAsset(ref _InputReader, InputReader, forceInstantiate);
+            InstantiateSceneAsset(ref _InputReader, InputReader);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Instantiating objects", 0.1f);
-            InstantiateSceneAsset(ref _CameraRig, CameraRig, forceInstantiate);
-            InstantiateSceneAsset(ref _VRTK, VRTK, forceInstantiate);
-            InstantiateSceneAsset(ref _Managers, Managers, forceInstantiate);
-            InstantiateSceneAsset(ref _Generators, Generators, forceInstantiate);
-            InstantiateSceneAsset(ref _SQLiter, SQLiter, forceInstantiate);
-            InstantiateSceneAsset(ref _EventSystem, EventSystem, forceInstantiate);
-            InstantiateSceneAsset(ref _Floor, Floor, forceInstantiate);
-            InstantiateSceneAsset(ref _Calculators, Calculators, forceInstantiate);
-            InstantiateSceneAsset(ref _LightForTesting, LightForTesting, forceInstantiate);
-            InstantiateSceneAsset(ref _MenuHolder, MenuHolder, forceInstantiate);
-            InstantiateSceneAsset(ref _Loader, Loader, forceInstantiate);
-            InstantiateSceneAsset(ref _Keyboard, Keyboard, forceInstantiate);
-            InstantiateSceneAsset(ref _WebBrowser, WebBrowser, forceInstantiate);
-            InstantiateSceneAsset(ref _SettingsMenu, SettingsMenu, forceInstantiate);
-            InstantiateSceneAsset(ref _Console, Console, forceInstantiate);
-            InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas, forceInstantiate);
-            InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas, forceInstantiate);
+            InstantiateSceneAsset(ref _CameraRig, CameraRig);
+            _CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
+            InstantiateSceneAsset(ref _VRTK, VRTK);
+            InstantiateSceneAsset(ref _Managers, Managers);
+            InstantiateSceneAsset(ref _Generators, Generators);
+            InstantiateSceneAsset(ref _SQLiter, SQLiter);
+            InstantiateSceneAsset(ref _EventSystem, EventSystem);
+            InstantiateSceneAsset(ref _Floor, Floor);
+            InstantiateSceneAsset(ref _Calculators, Calculators);
+            InstantiateSceneAsset(ref _LightForTesting, LightForTesting);
+            InstantiateSceneAsset(ref _MenuHolder, MenuHolder);
+            InstantiateSceneAsset(ref _Loader, Loader);
+            InstantiateSceneAsset(ref _Keyboard, Keyboard);
+            InstantiateSceneAsset(ref _WebBrowser, WebBrowser);
+            InstantiateSceneAsset(ref _SettingsMenu, SettingsMenu);
+            InstantiateSceneAsset(ref _Console, Console);
+            InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas);
+            InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Setting references", 0.5f);
-            _InputReader.GetComponent<ReferenceManager>().AttemptSetReferences();
+            ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
+            referenceManager.AttemptSetReferences();
             yield return new WaitForSecondsRealtime(0.1f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
@@ -124,7 +128,8 @@ namespace CellexalVR.General
                 var allChildren = instance.GetComponentsInChildren<MonoBehaviour>(true);
                 foreach (var child in allChildren)
                 {
-                    // MonoBehaviour.SendMessage() does no work in inactive gameobjects, use reflection instead
+                    if (child == null) continue;
+                    // MonoBehaviour.SendMessage() does not work in inactive gameobjects, use reflection instead
                     if (child.GetType().GetMethod("OnValidate", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance) != null)
                     {
                         child.Invoke("OnValidate", 0f);
@@ -134,26 +139,46 @@ namespace CellexalVR.General
 
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Setting references", 0.7f);
-            // set up missing references 
-            VRTK_SDKManager sdkmanager = _VRTK.GetComponent<VRTK_SDKManager>();
-            _CameraRig.GetComponent<Player>().hands = new Hand[] { sdkmanager.scriptAliasLeftController.GetComponent<Hand>(), sdkmanager.scriptAliasRightController.GetComponent<Hand>() };
-            sdkmanager.actualBoundaries = _CameraRig;
-            sdkmanager.actualHeadset = _CameraRig.transform.FindDeepChild("Camera (eye)").gameObject;
-            sdkmanager.actualLeftController = _CameraRig.transform.Find("Controller (left)").gameObject;
-            sdkmanager.actualRightController = _CameraRig.transform.Find("Controller (right)").gameObject;
-            sdkmanager.modelAliasLeftController = sdkmanager.actualLeftController.transform.Find("Model").gameObject;
-            sdkmanager.modelAliasRightController = sdkmanager.actualRightController.transform.Find("Model").gameObject;
+            // set up missing references
+            VRTK_SDKManager sdkmanager = _CameraRig.GetComponent<VRTK_SDKManager>();
+            _CameraRig.GetComponentInChildren<Player>().hands = _CameraRig.GetComponentsInChildren<Hand>();
+
+            // set up radial menu buttons
+            VRTK_RadialMenu leftRadialMenu = referenceManager.leftControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            Undo.RecordObject(leftRadialMenu, "Radial menu events");
+            leftRadialMenu.buttons[1].OnClick = new UnityEngine.Events.UnityEvent();
+            leftRadialMenu.buttons[1].OnClick.AddListener(delegate { referenceManager.mainMenu.GetComponent<MenuRotator>().RotateLeft(1); });
+            leftRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
+            leftRadialMenu.buttons[3].OnClick.AddListener(delegate { referenceManager.mainMenu.GetComponent<MenuRotator>().RotateRight(1); });
+
+            VRTK_RadialMenu rightRadialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            Undo.RecordObject(rightRadialMenu, "Radial menu events");
+            ControllerModelSwitcher cms = referenceManager.leftController.GetComponent<ControllerModelSwitcher>();
+            SelectionToolCollider selectionToolCollider = referenceManager.selectionToolCollider;
+            rightRadialMenu.buttons[0].OnClick = new UnityEngine.Events.UnityEvent();
+            rightRadialMenu.buttons[0].OnClick.AddListener(delegate { cms.SwitchSelectionToolMesh(true); });
+            rightRadialMenu.buttons[1].OnClick = new UnityEngine.Events.UnityEvent();
+            rightRadialMenu.buttons[1].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(false); });
+            rightRadialMenu.buttons[2].OnClick = new UnityEngine.Events.UnityEvent();
+            rightRadialMenu.buttons[2].OnClick.AddListener(delegate { cms.SwitchSelectionToolMesh(false); });
+            rightRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
+            rightRadialMenu.buttons[3].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(true); });
+
+            Undo.RecordObject(sdkmanager, "Set controller script alias");
+            sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
+            sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
 
             _Keyboard.GetComponent<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
+            _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
+            _Loader.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
 
-            EditorUtility.DisplayProgressBar("Building scene", "Done", 1f);
             EditorUtility.ClearProgressBar();
             buildingScene = false;
         }
 
-        private void InstantiateSceneAsset(ref GameObject instance, GameObject prefab, bool forceInstantiate)
+        private void InstantiateSceneAsset(ref GameObject instance, GameObject prefab)
         {
-            if (instance != null && forceInstantiate)
+            if (instance != null)
             {
                 GameObject copy = instance;
                 UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(copy.gameObject); };
@@ -171,9 +196,12 @@ namespace CellexalVR.General
 
         public void RemoveInstances()
         {
-            foreach (var i in instances)
+            foreach (GameObject gameObject in SceneManager.GetActiveScene().GetRootGameObjects())
             {
-                UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(i.gameObject); };
+                if (gameObject != this.gameObject)
+                {
+                    UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(gameObject); };
+                }
             }
             instances.Clear();
         }
@@ -181,8 +209,8 @@ namespace CellexalVR.General
         public void AutoPopulateGameObjects()
         {
             InputReader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/InputReader.prefab");
-            CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[CameraRig].prefab");
-            VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK].prefab");
+            CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK]3.3.prefab");
+            VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK_Scripts].prefab");
             Managers = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Managers.prefab");
             Generators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Generators.prefab");
             SQLiter = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SQLiter.prefab");
@@ -198,6 +226,19 @@ namespace CellexalVR.General
             Console = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Console.prefab");
             FPSCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/FPS canvas.prefab");
             WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/WaitingCanvas.prefab");
+        }
+
+        public void SaveAllPrefabs()
+        {
+            float progress = 0.0f;
+            float progessPerInstance = 1f / instances.Count;
+            foreach (var instance in instances)
+            {
+                EditorUtility.DisplayProgressBar("Saving prefabs", instance.name, progress);
+                progress += progessPerInstance;
+                PrefabUtility.ReplacePrefab(instance, PrefabUtility.GetCorrespondingObjectFromSource(instance), ReplacePrefabOptions.ConnectToPrefab);
+            }
+            EditorUtility.ClearProgressBar();
         }
 
         private void Start()
@@ -221,15 +262,18 @@ namespace CellexalVR.General
 
         public override void OnInspectorGUI()
         {
-
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Build scene"))
             {
                 instance.BuildScene();
             }
             if (GUILayout.Button("Force build scene"))
             {
-                instance.BuildScene(true);
+                instance.RemoveInstances();
+                instance.BuildScene();
             }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Remove objects"))
             {
                 instance.RemoveInstances();
@@ -238,10 +282,15 @@ namespace CellexalVR.General
             {
                 instance.AutoPopulateGameObjects();
             }
+            GUILayout.EndHorizontal();
+            if (GUILayout.Button("Save all prefabs"))
+            {
+                instance.SaveAllPrefabs();
+            }
+
             DrawDefaultInspector();
 
         }
-
 
     }
 #endif

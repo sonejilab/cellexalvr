@@ -44,7 +44,8 @@ namespace CellexalVR.Interaction
         private MeshFilter leftControllerBodyMeshFilter;
         private Renderer leftControllerBodyRenderer;
         private Color desiredColor;
-        private LaserPointerController rightLaser;
+        private LaserPointerController laserPointerController;
+        private VRTK_StraightPointerRenderer rightLaser;
         private VRTK_StraightPointerRenderer leftLaser;
         private int selectionToolMeshIndex = 0;
         // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
@@ -72,6 +73,7 @@ namespace CellexalVR.Interaction
             deleteTool = referenceManager.deleteTool;
             minimizer = referenceManager.minimizeTool.gameObject;
             DesiredModel = Model.Normal;
+            laserPointerController = referenceManager.laserPointerController;
             rightLaser = referenceManager.rightLaser;
             leftLaser = referenceManager.leftLaser;
             //if (rightControllerBody.activeSelf)
@@ -152,25 +154,25 @@ namespace CellexalVR.Interaction
 
                 case Model.Keyboard:
                     //keyboard.SetKeyboardVisible(true);
-                    rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
-                    rightLaser.transform.localRotation = Quaternion.identity;
+                    rightLaser.enabled = true;
+                    laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetVisible(true);
-                    rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
-                    rightLaser.transform.localRotation = Quaternion.identity;
+                    rightLaser.enabled = true;
+                    laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.TwoLasers:
-                    rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
-                    rightLaser.transform.localRotation = Quaternion.identity;
+                    rightLaser.enabled = true;
+                    laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.Menu:
                     //print("switched to menu");
                     drawTool.SetActive(false);
-                    rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
+                    rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                     rightControllerBodyRenderer.material = normalMaterial;
                     break;
@@ -226,7 +228,7 @@ namespace CellexalVR.Interaction
             }
             if (DesiredModel != Model.TwoLasers)
             {
-                rightLaser.ToggleLaser(false);
+                laserPointerController.ToggleLaser(false);
                 leftLaser.enabled = false;
             }
             if (DesiredModel != Model.DrawTool)
@@ -255,10 +257,10 @@ namespace CellexalVR.Interaction
                     break;
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetVisible(true);
-                    rightLaser.ToggleLaser(true);
+                    laserPointerController.ToggleLaser(true);
                     break;
                 case Model.TwoLasers:
-                    rightLaser.ToggleLaser(true);
+                    laserPointerController.ToggleLaser(true);
                     leftLaser.enabled = true;
                     break;
                 case Model.DrawTool:
@@ -287,7 +289,7 @@ namespace CellexalVR.Interaction
             //{
             //    DesiredModel = Model.HelpTool;
             //}
-            rightLaser.ToggleLaser(false);
+            laserPointerController.ToggleLaser(false);
             leftLaser.enabled = false;
             keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);

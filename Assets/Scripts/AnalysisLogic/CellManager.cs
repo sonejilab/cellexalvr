@@ -30,7 +30,8 @@ namespace CellexalVR.AnalysisLogic
         #endregion
 
         public ReferenceManager referenceManager;
-        public VRTK_ControllerActions controllerActions;
+        VRTK_ControllerReference VRTKrightController;
+
         public GameObject lineBetweenTwoGraphPointsPrefab;
 
 
@@ -201,7 +202,7 @@ namespace CellexalVR.AnalysisLogic
             }
             if (rightController.isActiveAndEnabled)
             {
-                controllerActions.TriggerHapticPulse(2000, (ushort)600, 0);
+                SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
             }
             referenceManager.heatmapGenerator.HighLightGene(geneName);
             referenceManager.networkGenerator.HighLightGene(geneName);
@@ -624,9 +625,10 @@ namespace CellexalVR.AnalysisLogic
             {
                 //if (g.name != "Camera (eye)")
                 //{
-                var added = g.AddComponent<VRTK.Examples.AutoRotation>();
-                added.rotAxis = new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-                added.degPerSec = UnityEngine.Random.value * 360;
+                // VRTK 3.3
+                //var added = g.AddComponent<VRTK.Examples.AutoRotation>();
+                //added.rotAxis = new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                //added.degPerSec = UnityEngine.Random.value * 360;
                 //}
             }
         }

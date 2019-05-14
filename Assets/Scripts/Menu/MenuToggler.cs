@@ -29,12 +29,14 @@ public class MenuToggler : MonoBehaviour
         if (gameObject.scene.IsValid())
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+
         }
     }
 
     private void Start()
     {
         menu = referenceManager.mainMenu;
+        menuHolder = menu.transform.parent.gameObject;
         boxCollider = GetComponent<Collider>();
         leftController = referenceManager.leftController;
         controllerModelSwitcher = referenceManager.controllerModelSwitcher;

@@ -5548,7 +5548,11 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options: []
+    m_Options:
+    - m_Text: 
+      m_Image: {fileID: 0}
+    - m_Text: 
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -14825,6 +14829,7 @@ MonoBehaviour:
   settingsMenuGameObject: {fileID: 1526783631912468}
   referenceManager: {fileID: 0}
   unsavedChangesPrompt: {fileID: 1864239445033004}
+  confirmQuitPrompt: {fileID: 0}
   resetAllSettingsPrompt: {fileID: 1401986469699458}
   hinterController: {fileID: 114158480398057092}
   usernameInputField: {fileID: 114076914331143934}
@@ -14855,15 +14860,13 @@ MonoBehaviour:
   selectionColorButtonPrefab: {fileID: 1237976751201054}
   addSelectionColorButton: {fileID: 1628637914644384}
   skyboxDropdown: {fileID: 114094490082248784}
+  notificationToggle: {fileID: 0}
   skyboxes:
   - {fileID: 2100000, guid: 87bb60cb233a60d44952f93f5ec6aaff, type: 2}
   - {fileID: 2100000, guid: b6b8065f05059664597ea08cbb848ff9, type: 2}
-  - {fileID: 2100000, guid: efd1c33efd2d58340b88804268e6833f, type: 2}
-  - {fileID: 2100000, guid: c52c5d7968fa6c9499b0b5752f899bfb, type: 2}
   - {fileID: 2100000, guid: 860a66ca4259b384f9ec01b687f71c3c, type: 2}
   - {fileID: 2100000, guid: 88ec9a13802800449aaf825aff3aadc7, type: 2}
   - {fileID: 2100000, guid: 617d9be015db68348a623b01ea51a8c5, type: 2}
-  - {fileID: 2100000, guid: e2341a9d03e86ec4290c72b1e22bbc7c, type: 2}
 --- !u!114 &114737117721028252
 MonoBehaviour:
   m_ObjectHideFlags: 1

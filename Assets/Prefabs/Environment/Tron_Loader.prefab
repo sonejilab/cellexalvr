@@ -12207,6 +12207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   videoCanv: {fileID: 1187699896512284}
   audioSource: {fileID: 82381387434849710}
+  autoPlay: 0
 --- !u!114 &114854351943153182
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -15,7 +15,7 @@ namespace CellexalVR.Menu.Buttons
         public GameObject infoMenu;
 
         private int frameCount;
-        private string laserColliderName = "[RightController]BasePointerRenderer_ObjectInteractor_Collider";
+        private string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][BasePointerRenderer_ObjectInteractor_Container]";
         // all buttons must override this variable's get property
         /// <summary>
         /// A string that briefly explains what this button does.
@@ -114,10 +114,10 @@ namespace CellexalVR.Menu.Buttons
             {
                 bool inside = false;
                 RaycastHit hit;
-                raycastingSource = referenceManager.rightLaser.transform;
+                raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
                 //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled && buttonActivated)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled && buttonActivated)
                 {
                     inside = true;
                     frameCount = 0;

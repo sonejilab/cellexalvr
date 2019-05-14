@@ -52,6 +52,7 @@ namespace CellexalVR.SceneObjects
         void Start()
         {
             gameManager = referenceManager.gameManager;
+            cylinder = GameObject.Find("Floor/ExpandableFloor").transform;
             cellsToDestroy = new ArrayList();
             pathsToLoad = new List<string>();
             inputReader = referenceManager.inputReader;

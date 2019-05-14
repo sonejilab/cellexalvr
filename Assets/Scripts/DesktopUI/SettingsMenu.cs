@@ -130,7 +130,7 @@ namespace CellexalVR.DesktopUI
             networkLineNegativeLow.Color = CellexalConfig.Config.NetworkLineColorNegativeLow;
             networkNumberOfNetworkColors.text = "" + CellexalConfig.Config.NumberOfNetworkLineColors;
             networkLineWidth.text = "" + CellexalConfig.Config.NetworkLineWidth;
-            notificationToggle.isOn = CellexalConfig.Config.ShowNotifications;
+            //notificationToggle.isOn = CellexalConfig.Config.ShowNotifications;
 
             for (int i = 0; i < CellexalConfig.Config.SelectionToolColors.Length; ++i)
             {

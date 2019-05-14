@@ -11,6 +11,7 @@ using UnityEngine;
 using VRTK;
 using SQLiter;
 using CellexalVR.Tutorial;
+using UnityEditor;
 
 namespace CellexalVR.General
 {
@@ -23,6 +24,8 @@ namespace CellexalVR.General
         [Header("Controller things")]
         public SteamVR_TrackedObject rightController;
         public SteamVR_TrackedObject leftController;
+        public GameObject rightControllerScriptAlias;
+        public GameObject leftControllerScriptAlias;
         public ControllerModelSwitcher controllerModelSwitcher;
         //public GroupInfoDisplay groupInfoDisplay;
         //public StatusDisplay statusDisplay;
@@ -36,7 +39,7 @@ namespace CellexalVR.General
         public TextMeshProUGUI FarGroupInfo;
         public GameObject headset;
         public BoxCollider controllerMenuCollider;
-        public LaserPointerController rightLaser;
+        public VRTK_StraightPointerRenderer rightLaser;
         public VRTK_StraightPointerRenderer leftLaser;
         public LaserPointerController laserPointerController;
 
@@ -130,19 +133,24 @@ namespace CellexalVR.General
         /// </summary>
         public void AttemptSetReferences()
         {
-            rightController = GameObject.Find("[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
-            leftController = GameObject.Find("[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
-            GameObject vrtkLeftController = GameObject.Find("[VRTK]/LeftController");
-            controllerModelSwitcher = vrtkLeftController.GetComponent<ControllerModelSwitcher>();
+            // sorry about this monstrosity
+
+            Undo.RecordObject(this, "ReferenceManager Auto-populate");
+
+            rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
+            leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
+            rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");
+            leftControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/LeftControllerScriptAlias");
+            controllerModelSwitcher = leftController.GetComponent<ControllerModelSwitcher>();
             TextMeshProUGUI HUDFlashInfo;
             TextMeshProUGUI HUDGroupInfo;
             TextMeshProUGUI FarFlashInfo;
             TextMeshProUGUI FarGroupInfo;
-            headset = GameObject.Find("[CameraRig]/Camera (head)/Camera (eye)");
-            controllerMenuCollider = vrtkLeftController.GetComponent<BoxCollider>();
-            rightLaser = vrtkLeftController.GetComponent<LaserPointerController>();
-            leftLaser = vrtkLeftController.GetComponent<VRTK_StraightPointerRenderer>();
-            laserPointerController = GameObject.Find("[VRTK]/RightController").GetComponent<LaserPointerController>();
+            headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
+            controllerMenuCollider = leftController.GetComponent<BoxCollider>();
+            rightLaser = rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
+            leftLaser = leftControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
+            laserPointerController = rightControllerScriptAlias.GetComponent<LaserPointerController>();
 
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
             deleteTool = rightController.transform.Find("Delete Tool").gameObject;
@@ -171,7 +179,7 @@ namespace CellexalVR.General
             leftDescription = leftButtons.transform.Find("Description Text Left Side").GetComponent<TextMesh>();
             menuRotator = mainMenu.GetComponent<MenuRotator>();
             minimizedObjectHandler = GameObject.Find("MenuHolder/Main Menu/Jail").GetComponent<MinimizedObjectHandler>();
-            menuToggler = vrtkLeftController.GetComponent<MenuToggler>();
+            menuToggler = leftController.GetComponent<MenuToggler>();
 
             GameObject managersParent = GameObject.Find("Managers");
             GameObject generatorsParent = GameObject.Find("Generators");
@@ -207,6 +215,7 @@ namespace CellexalVR.General
 
             settingsMenu = GameObject.Find("Settings Menu").GetComponent<SettingsMenu>();
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();
+
         }
 #endif
     }
@@ -227,9 +236,18 @@ namespace CellexalVR.General
             if (GUILayout.Button("Auto-populate references"))
             {
                 instance.AttemptSetReferences();
+                serializedObject.Update();
+                serializedObject.ApplyModifiedProperties();
             }
             DrawDefaultInspector();
         }
+
+        public void SaveFields()
+        {
+            serializedObject.Update();
+            serializedObject.ApplyModifiedProperties();
+        }
+
     }
 #endif
 }

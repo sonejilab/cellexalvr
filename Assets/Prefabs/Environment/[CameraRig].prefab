@@ -453,7 +453,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4568148615709202}
-  - component: {fileID: 114238331669992430}
+  - component: {fileID: 114701473848690956}
   m_Layer: 0
   m_Name: Selection Tool
   m_TagString: SelectionTool
@@ -535,7 +535,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4346734489646246}
   - component: {fileID: 33929501215855442}
-  - component: {fileID: 114143992248592944}
   - component: {fileID: 64290224092121780}
   m_Layer: 14
   m_Name: Selection Tool Collider Tearpdrop Huge
@@ -1254,7 +1253,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4816839760615144}
   - component: {fileID: 33663298548439916}
-  - component: {fileID: 114760350114499644}
   - component: {fileID: 65052584226948414}
   m_Layer: 14
   m_Name: Selection Tool Collider Pointy
@@ -1461,7 +1459,6 @@ GameObject:
   - component: {fileID: 4666339986523916}
   - component: {fileID: 33792275345348630}
   - component: {fileID: 64231031430629682}
-  - component: {fileID: 114188896625273898}
   m_Layer: 14
   m_Name: Selection Tool Collider Teardrop
   m_TagString: SelectionTool
@@ -2068,7 +2065,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4961776368693654}
   - component: {fileID: 33686201404336814}
-  - component: {fileID: 114379815101371998}
   - component: {fileID: 135422762188048350}
   m_Layer: 14
   m_Name: Selection Tool Collider Ballon
@@ -5116,7 +5112,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 01293814c2c8dcb4facf901196f02e47, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5752,8 +5748,7 @@ AudioSource:
   m_GameObject: {fileID: 1464326282025714}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300001, guid: 95096f29d1ddcd647ace66f3641d42f5,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 51d720146198188499017d0bfe346302, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -6038,8 +6033,7 @@ AudioSource:
   m_GameObject: {fileID: 1464326282025714}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300001, guid: 95096f29d1ddcd647ace66f3641d42f5,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f0530a05f652d72499ffe61bd16e64ea, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -6425,26 +6419,6 @@ MonoBehaviour:
   rightController: {fileID: 114306800825491594}
   fadeScreen: {fileID: 1577877349052764}
   panel: {fileID: 1773705091360262}
---- !u!114 &114143992248592944
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1310285943384666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  selectionManager: {fileID: 0}
-  radialMenu: {fileID: 0}
-  buttonIcons: {fileID: 0}
-  particles: {fileID: 0}
-  selectionToolColliders: []
-  Colors: []
-  currentColorIndex: 0
-  hapticFeedbackThisFrame: 1
 --- !u!114 &114155570382968302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6457,52 +6431,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
---- !u!114 &114188896625273898
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1696814392362932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  selectionManager: {fileID: 0}
-  radialMenu: {fileID: 0}
-  buttonIcons: {fileID: 0}
-  particles: {fileID: 0}
-  selectionToolColliders: []
-  Colors: []
-  currentColorIndex: 0
-  hapticFeedbackThisFrame: 1
---- !u!114 &114238331669992430
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1275059486689130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a60ef43efa01494ea9f7df56d0aaacb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  hapticIntensity: 2000
-  radialMenu: {fileID: 0}
-  buttonIcons: {fileID: 21300000, guid: 4e966657e7ced194b9c1018e5e814c9b, type: 3}
-  selectionConfirmed: 0
-  heatmapGrabbed: 0
-  fileCreationCtr: 0
-  Colors: []
-  selectionToolColliders:
-  - {fileID: 64231031430629682}
-  - {fileID: 65052584226948414}
-  - {fileID: 135422762188048350}
-  - {fileID: 64290224092121780}
-  particles: {fileID: 198755364056950724}
-  currentColorIndex: 0
 --- !u!114 &114238392461443428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6569,10 +6497,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1445341633409444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 861aade4665236345aad627a520403d0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8099d326c7ea2034c8ddbe4311151241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenu: {fileID: 0}
+  degPerSec: 90
+  rotAxis: {x: 1, y: 0, z: 1}
 --- !u!114 &114270240462186446
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6660,32 +6589,12 @@ MonoBehaviour:
   activationButton: 10
   holdButtonToActivate: 1
   activationDelay: 0
-  selectionButton: 10
+  selectionButton: 3
   selectOnPress: 0
   interactWithObjects: 0
   grabToPointerTip: 0
   controller: {fileID: 0}
   customOrigin: {fileID: 0}
---- !u!114 &114379815101371998
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1973611666517282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  selectionManager: {fileID: 0}
-  radialMenu: {fileID: 0}
-  buttonIcons: {fileID: 0}
-  particles: {fileID: 0}
-  selectionToolColliders: []
-  Colors: []
-  currentColorIndex: 0
-  hapticFeedbackThisFrame: 1
 --- !u!114 &114402105162389194
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6881,12 +6790,12 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114760350114499644
+--- !u!114 &114701473848690956
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1580084278524664}
+  m_GameObject: {fileID: 1275059486689130}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f42aabb5ce6e75941802c321eb3037ea, type: 3}
@@ -6895,9 +6804,13 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   selectionManager: {fileID: 0}
   radialMenu: {fileID: 0}
-  buttonIcons: {fileID: 0}
-  particles: {fileID: 0}
-  selectionToolColliders: []
+  buttonIcons: {fileID: 21300000, guid: 4e966657e7ced194b9c1018e5e814c9b, type: 3}
+  particles: {fileID: 198755364056950724}
+  selectionToolColliders:
+  - {fileID: 64231031430629682}
+  - {fileID: 65052584226948414}
+  - {fileID: 135422762188048350}
+  - {fileID: 64290224092121780}
   Colors: []
   currentColorIndex: 0
   hapticFeedbackThisFrame: 1
@@ -7022,7 +6935,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blinkTransitionSpeed: 0.6
-  distanceBlinkDelay: 0
+  distanceBlinkDelay: 5
   headsetPositionCompensation: 1
   targetListPolicy: {fileID: 0}
   navMeshLimitDistance: 0
@@ -20745,7 +20658,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: ce7e294f69fe6234db94005efca9be8e, type: 2}
+  - {fileID: 0}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
