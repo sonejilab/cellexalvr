@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using CellexalVR.DesktopUI;
+using CellexalVR.General;
 using System.IO;
-using System.Collections;
-using CellexalVR.DesktopUI;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -10,7 +10,7 @@ namespace CellexalVR.AnalysisLogic
         public GameObject parentPrefab;
         public GameObject arrowPrefab;
 
-        [ConsoleCommand("velocityReader", "rvf")]
+        [ConsoleCommand("velocityReader", aliases: "rvf")]
         public void ReadVelocityFile()
         {
             ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\Mouse_HSPC\Diff.velo");
@@ -46,6 +46,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             streamReader.Close();
+            CellexalEvents.CommandFinished.Invoke(true);
         }
     }
 }

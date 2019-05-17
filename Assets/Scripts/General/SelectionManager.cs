@@ -454,7 +454,7 @@ namespace CellexalVR.General
         /// <summary>
         /// Confirms a selection and dumps the relevant data to a .txt file.
         /// </summary>
-        [ConsoleCommand("selectionManager", "confirmselection", "confirm")]
+        [ConsoleCommand("selectionManager", aliases: new string[] { "confirmselection", "confirm" })]
         public void ConfirmSelection()
         {
             foreach (Graph graph in graphManager.Graphs)
@@ -497,6 +497,7 @@ namespace CellexalVR.General
             selectionMade = false;
             selectionConfirmed = true;
             //selectionToolMenu.ConfirmSelection();
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         private IEnumerator UpdateRObjectGrouping()
@@ -561,7 +562,7 @@ namespace CellexalVR.General
         /// <summary>
         /// Unselects anything selected.
         /// </summary>
-        [ConsoleCommand("selectionManager", "cancelselection", "cs")]
+        [ConsoleCommand("selectionManager", aliases: new string[] { "cancelselection", "cs" })]
         public void CancelSelection()
         {
             foreach (Graph.GraphPoint other in selectedCells)
@@ -572,6 +573,7 @@ namespace CellexalVR.General
             historyIndexOffset = selectionHistory.Count;
             selectedCells.Clear();
             selectionMade = false;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
 

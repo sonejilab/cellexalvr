@@ -763,7 +763,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-   
+
         public void HandlePressDown(int hitx, int hity)
         {
             if (CoordinatesInsideRect(hitx, bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))

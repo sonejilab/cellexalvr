@@ -39,6 +39,14 @@ namespace CellexalVR.General
 
         }
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
 
         /// <summary>
         /// Waits until the close notification animation has finished and then deactivates the notification game object
@@ -54,7 +62,7 @@ namespace CellexalVR.General
         /// If several notification messages are displayed at the same time they will appear on top of each other.
         /// </summary>
         /// <param name="message">The notification message to display.</param>
-        [ConsoleCommand("notificationManager", "sn")]
+        [ConsoleCommand("notificationManager", aliases: "sn")]
         public void SpawnNotification(string message)
         {
             if (active)
@@ -70,7 +78,7 @@ namespace CellexalVR.General
                     audioSource.Play();
                 }
             }
-
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
     }

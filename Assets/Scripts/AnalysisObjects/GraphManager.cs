@@ -85,43 +85,49 @@ namespace CellexalVR.AnalysisObjects
 
         #region DEBUG_FUNCTIONS
 
-        [ConsoleCommand("graphManager", "drawdebugcubes", "ddc")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawdebugcubes", "ddc" })]
         public void DrawDebugGizmos(bool b)
         {
             drawDebugCubes = b;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "drawdebuglines", "ddl")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawdebuglines", "ddl" })]
         public void DrawDebugLines(bool b)
         {
             drawDebugLines = b;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "drawselectiontooldebuglines", "dstdl")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawselectiontooldebuglines", "dstdl" })]
         public void DrawSelectionToolDebugLines(bool b)
         {
             drawSelectionToolDebugLines = b;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "drawraycast", "drc")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawraycast", "drc" })]
         public void DrawDebugRaycast(bool b)
         {
             drawDebugRaycast = b;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "drawrejectionapprovecubes", "drac")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawrejectionapprovecubes", "drac" })]
         public void DrawDebugRejectionApproveCubes(bool b)
         {
             drawDebugRejectionApprovedCubes = b;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "drawdebugcubesonlevel", "ddcol")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawdebugcubesonlevel", "ddcol" })]
         public void DrawDebugCubesOnLevel(int level)
         {
             drawDebugCubesOnLevel = level;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "party")]
+        [ConsoleCommand("graphManager", aliases: "party")]
         public void Party(bool b)
         {
             if (b)
@@ -138,12 +144,14 @@ namespace CellexalVR.AnalysisObjects
                     graph.ResetColors();
                 }
             }
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("graphManager", "drawdebuggroups", "ddg")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "drawdebuggroups", "ddg" })]
         public void DrawDebugGroups(bool b)
         {
             drawDebugGroups = b;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         #endregion
@@ -169,13 +177,14 @@ namespace CellexalVR.AnalysisObjects
             return null;
         }
 
-        [ConsoleCommand("graphManager", "cg")]
+        [ConsoleCommand("graphManager", aliases: "cg")]
         public void RecolorGraphPoint(string label, int i)
         {
             foreach (var graph in Graphs)
             {
                 graph.RecolorGraphPointSelectionColor(graph.FindGraphPoint(label), i, false);
             }
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>
@@ -246,7 +255,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Resets all graphpoints' in all graphs colors to white.
         /// </summary>
-        [ConsoleCommand("graphManager", "resetcolor", "rc")]
+        [ConsoleCommand("graphManager", aliases: new string[] { "resetcolor", "rc" })]
         public void ResetGraphsColor()
         {
             CellexalEvents.GraphsReset.Invoke();
@@ -255,6 +264,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 g.ResetColors();
             }
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>

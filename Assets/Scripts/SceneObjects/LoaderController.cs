@@ -183,7 +183,7 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        [ConsoleCommand("loaderController", "loadallcells", "lac")]
+        [ConsoleCommand("loaderController", aliases: new string[] { "loadallcells", "lac" })]
         // multiple_exp     public void LoadAllCells()
         // multiple_exp     {
         // multiple_exp         if (pathsToLoad.Count == 0)

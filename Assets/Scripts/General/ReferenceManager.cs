@@ -206,6 +206,7 @@ namespace CellexalVR.General
             fpsCounter = GameObject.Find("FPS canvas");
             DemoManager demoManager;
             newGraphFromMarkers = createFromMarkerMenu.GetComponent<NewGraphFromMarkers>();
+            notificationManager = managersParent.GetComponentInChildren<NotificationManager>();
 
             keyboardHandler = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();

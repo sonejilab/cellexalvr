@@ -169,7 +169,7 @@ namespace CellexalVR.AnalysisLogic
 
 
 
-        [ConsoleCommand("cellManager", "colorbygene", "cbg")]
+        [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
         public void ColorGraphsByGene(string geneName)
         {
             ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
@@ -193,7 +193,6 @@ namespace CellexalVR.AnalysisLogic
             try
             {
                 StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
-
             }
             catch (Exception e)
             {
@@ -215,6 +214,7 @@ namespace CellexalVR.AnalysisLogic
                 // If there is already another query  waiting for the current to finish we should probably abort.
                 // This is just to make sure that a bug can't create many many coroutines that will form a long queue.
                 CellexalLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
             coroutinesWaiting++;
@@ -235,6 +235,7 @@ namespace CellexalVR.AnalysisLogic
             if (expressions.Count == 0)
             {
                 CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
 
@@ -275,6 +276,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalEvents.GraphsColoredByGene.Invoke();
             }
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>
@@ -367,7 +369,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
-        [ConsoleCommand("cellManager", "colorbyattribute", "cba")]
+        [ConsoleCommand("cellManager", aliases: new string[] { "colorbyattribute", "cba" })]
         public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
         {
             if (!subGraph)
@@ -399,6 +401,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         public void SendToSelection()
@@ -482,7 +485,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Color all graphpoints according to a column in the index.facs file.
         /// </summary>
-        [ConsoleCommand("cellManager", "colorbyindex", "cbi")]
+        [ConsoleCommand("cellManager", aliases: new string[] { "colorbyindex", "cbi" })]
         public void ColorByIndex(string name)
         {
             if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod))
@@ -493,6 +496,7 @@ namespace CellexalVR.AnalysisLogic
                 cell.ColorByIndex(name);
             }
             CellexalEvents.GraphsColoredByIndex.Invoke();
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>
@@ -617,21 +621,6 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
             return result;
-        }
-
-        [ConsoleCommand("cellManager", "hardmode")]
-        public void Hardmode()
-        {
-            foreach (var g in GameObject.FindObjectsOfType<GameObject>())
-            {
-                //if (g.name != "Camera (eye)")
-                //{
-                // VRTK 3.3
-                //var added = g.AddComponent<VRTK.Examples.AutoRotation>();
-                //added.rotAxis = new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-                //added.degPerSec = UnityEngine.Random.value * 360;
-                //}
-            }
         }
     }
 }
