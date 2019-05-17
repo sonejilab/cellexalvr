@@ -140,11 +140,12 @@ namespace CellexalVR.DesktopUI
 
         /// <summary>
         /// We can't deselect the text in the console input window the same frame it is activated, so this coroutine waits one frame and then deselects it.
+        /// We also can't move the cursor at all without waiting a frame.
         /// </summary>
-        private IEnumerator DeselectInputField()
+        private IEnumerator MoveTextEnd()
         {
             yield return null;
-            inputField.MoveTextEnd(true);
+            inputField.MoveTextEnd(false);
         }
 
         /// <summary>
@@ -367,7 +368,7 @@ namespace CellexalVR.DesktopUI
             {
                 // suggest command
                 // get all commands that start with what is written in the console.
-                string[] allCommands = commands.Keys.Where((string key) => key.Length >= command.Length && command.IndexOf(key.Substring(0, command.Length)) == 0).ToArray();
+                string[] allCommands = commands.Keys.Where((string key) => key.Length >= command.Length && command == key.Substring(0, command.Length)).ToArray();
                 string longestCommonBeginning = LongestCommonBeginning(words[0], allCommands);
                 inputField.text = longestCommonBeginning;
             }
@@ -378,17 +379,29 @@ namespace CellexalVR.DesktopUI
                 string folder = Directory.GetCurrentDirectory() + @"\" + folders[command] + @"\";
                 string[] foundFolders = Directory.GetDirectories(folder, currentText + "*", SearchOption.TopDirectoryOnly);
                 string[] foundFiles = Directory.GetFiles(folder, currentText + "*", SearchOption.TopDirectoryOnly);
-                string[] foldersAndFiles = foundFolders.Concat(foundFiles).ToArray();
-                for (int i = 0; i < foldersAndFiles.Length; ++i)
+                // put everything in one list
+                var list = foundFolders.Concat(foundFiles);
+                // remove the unnecessary full path, just keep the relative part
+                list = list.Select((f) => f.Substring(folder.Length));
+
+                if (currentText.Length > 0) 
                 {
-                    string fullPath = foldersAndFiles[i];
-                    foldersAndFiles[i] = fullPath.Substring(fullPath.LastIndexOf('\\') + 1);
+                    // Directory.GetDirectories returns hidden folders even if the user did not start the searchpattern with '.'
+                    // Remove those unless the user did start the searchpattern with '.'
+                    // Otherwise the LongestCommonBeginning later can fail in some cases.
+                    char firstchar = char.ToLower(currentText[0]);
+                    list = list.Where((f) => char.ToLower(f[0]).Equals(firstchar));
                 }
 
-                string longestCommonBegninning = LongestCommonBeginning(currentText, foldersAndFiles);
-                words[words.Length - 1] = longestCommonBegninning;
+                string[] foldersAndFiles = list.ToArray();
+
+                print(string.Join(" ", foldersAndFiles));
+                string longestCommonBeginning = LongestCommonBeginning(currentText, foldersAndFiles);
+                words[words.Length - 1] = longestCommonBeginning;
                 inputField.text = string.Join(" ", words);
             }
+
+            StartCoroutine(MoveTextEnd());
         }
 
         /// <summary>
@@ -406,9 +419,10 @@ namespace CellexalVR.DesktopUI
             string shortestCommon = words[0];
             for (int i = 1; i < words.Length && shortestCommon.Length > start.Length; ++i)
             {
+
                 for (int j = 0; j < words[i].Length && j < shortestCommon.Length; ++j)
                 {
-                    if (words[i][j] != shortestCommon[j])
+                    if (char.ToLower(words[i][j]) != char.ToLower(shortestCommon[j]))
                     {
                         shortestCommon = shortestCommon.Substring(0, j);
                         break;
