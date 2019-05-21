@@ -249,7 +249,7 @@ namespace CellexalVR.SceneObjects
             collidersDestroyed = true;
         }
 
-        void DestroyCells()
+        public void DestroyCells()
         {
             // since we are responsible for removing the parent reference we should probably
             // destroy the objects as well

@@ -55,6 +55,8 @@ namespace CellexalVR.General
         public GameObject helpMenu;
         public DrawTool drawTool;
         public GameObject webBrowser;
+        public CaptureScreenshot screenshotCamera;
+        public GameObject teleportLaser;
 
         #endregion
 
@@ -108,6 +110,9 @@ namespace CellexalVR.General
         public NewGraphFromMarkers newGraphFromMarkers;
         public NotificationManager notificationManager;
         public TutorialManager tutorialManager;
+        public ScreenCanvas screenCanvas;
+        //public GameObject helpVideoPlayer;
+        public PlayVideo helpVideoManager;
         #endregion
 
         #region GeneKeyboard
@@ -126,6 +131,12 @@ namespace CellexalVR.General
         [Header("Settings Menu")]
         public SettingsMenu settingsMenu;
         public ColorPicker colorPicker;
+        #endregion
+
+        #region Multi-user
+        public GameObject spectatorRig;
+        public GameObject VRRig;
+
         #endregion
 
 #if UNITY_EDITOR
@@ -160,6 +171,8 @@ namespace CellexalVR.General
             GameObject helpMenu;
             drawTool = rightController.GetComponentInChildren<DrawTool>();
             webBrowser = GameObject.Find("WebBrowser");
+            screenshotCamera = headset.GetComponentInChildren<CaptureScreenshot>(true);
+            teleportLaser = leftControllerScriptAlias.GetComponentInChildren<VRTK_BezierPointerRenderer>(true).gameObject;
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");
             arcsSubMenu = mainMenu.GetComponentInChildren<ToggleArcsSubMenu>(true);
@@ -206,6 +219,11 @@ namespace CellexalVR.General
             fpsCounter = GameObject.Find("FPS canvas");
             DemoManager demoManager;
             newGraphFromMarkers = createFromMarkerMenu.GetComponent<NewGraphFromMarkers>();
+            notificationManager = managersParent.GetComponentInChildren<NotificationManager>();
+            tutorialManager = managersParent.GetComponentInChildren<TutorialManager>();
+            screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
+            helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
+
 
             keyboardHandler = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
@@ -213,10 +231,14 @@ namespace CellexalVR.General
             previousSearchesList = GameObject.Find("Keyboard Setup/Previous Searches List").GetComponent<PreviousSearchesList>();
             autoCompleteList = GameObject.Find("Keyboard Setup").GetComponent<AutoCompleteList>();
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
-            webBrowserKeyboard = GameObject.Find("WebBrowser/Keyboard Setup").GetComponent<KeyboardHandler>();
+            webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
 
             settingsMenu = GameObject.Find("Settings Menu").GetComponent<SettingsMenu>();
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();
+
+            spectatorRig = GameObject.Find("SpectatorRig");
+            VRRig = GameObject.Find("[VRTK]3.3");
+            
 
         }
 #endif

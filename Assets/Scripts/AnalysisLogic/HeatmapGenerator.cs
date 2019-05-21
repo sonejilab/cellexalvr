@@ -206,12 +206,12 @@ namespace CellexalVR.AnalysisLogic
             }
             string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
-            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").UnFixFilePath();
+            string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
             string topGenesNr = "250";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
             string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
-            string args = "cellexalObj" + ", \"" + latestSelection + "\", " + topGenesNr + ", \"" + outputFilePath + "\", \"" + statsMethod + "\"";
+            string args = "cellexalObj" + ", \"" + groupingFilepath + "\", " + topGenesNr + ", \"" + outputFilePath + "\", \"" + statsMethod + "\"";
 
             string script = function + "(" + args + ")";
 

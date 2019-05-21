@@ -20,8 +20,16 @@ namespace CellexalVR.General
         private GameObject notification;
         private int notificationCounter;
         private AudioSource audioSource;
+        
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
-        // Use this for initialization
+
         void Start()
         {
             GetComponent<Canvas>().worldCamera = referenceManager.headset.GetComponent<Camera>();

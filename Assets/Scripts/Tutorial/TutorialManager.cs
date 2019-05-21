@@ -85,24 +85,11 @@ namespace CellexalVR.Tutorial
         // Use this for initialization
         void Start()
         {
-            // Events to listen to to determine when to move on and when to highlight different objects.
-            CellexalEvents.GraphsLoaded.AddListener(NextStep);
-            CellexalEvents.GraphsLoaded.AddListener(TurnOnSpot);
-            CellexalEvents.GraphsColoredByGene.AddListener(TurnOnSpot);
-            CellexalEvents.SelectionStarted.AddListener(SelectionOn);
-            CellexalEvents.SelectionConfirmed.AddListener(TurnOnSpot);
-            CellexalEvents.SelectionConfirmed.AddListener(SelectionOff);
-            CellexalEvents.NetworkUnEnlarged.AddListener(TurnOnSpot);
-            CellexalEvents.HeatmapCreated.AddListener(HeatmapCreated);
-            CellexalEvents.NetworkCreated.AddListener(NetworksCreated);
-            //CellexalEvents.KeyboardToggled.AddListener(NextDescription);
-            //CellexalEvents.HeatmapBurned.AddListener(TurnOnSpot);
-
-
             if (referenceManager.rightController.isActiveAndEnabled && referenceManager.leftController.isActiveAndEnabled)
             {
                 SetReferences();
             }
+            //screenCanvas = referenceManager.
         }
 
         // Update is called once per frame
@@ -157,10 +144,12 @@ namespace CellexalVR.Tutorial
                 //Loading data
                 case 1:
                     currentStep = 1;
+                    CellexalEvents.GraphsLoaded.AddListener(NextStep);
+                    CellexalEvents.GraphsLoaded.AddListener(TurnOnSpot);
                     objList = new[] { rgripRight, rgripLeft, lgripRight, lgripLeft };
                     HighlightMaterials(objList);
-                    helperTextL.SetActive(true);
-                    helperTextR.SetActive(true);
+                    //helperTextL.SetActive(true);
+                    //helperTextR.SetActive(true);
                     //stepPanels[currentStep - 1].SetActive(true);
                     canv = Instantiate(descriptionCanvasPrefab, transform);
                     canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step " + currentStep + " of 8: Loading Data \n" +
@@ -172,6 +161,8 @@ namespace CellexalVR.Tutorial
                 //Moving graphs
                 case 2:
                     currentStep = 2;
+                    CellexalEvents.GraphsLoaded.RemoveListener(NextStep);
+                    CellexalEvents.GraphsLoaded.RemoveListener(TurnOnSpot);
                     videoPlayer.StopVideo();
                     Destroy(canv);
                     videoPlayer.gameObject.SetActive(false);
@@ -187,6 +178,7 @@ namespace CellexalVR.Tutorial
                 //Keyboard colouring
                 case 3:
                     currentStep = 3;
+                    CellexalEvents.GraphsColoredByGene.AddListener(TurnOnSpot);
                     Destroy(canv);
                     videoPlayer.gameObject.SetActive(false);
                     canv = Instantiate(descriptionCanvasPrefab, transform);
@@ -207,6 +199,11 @@ namespace CellexalVR.Tutorial
                 //Selection tool
                 case 4:
                     currentStep = 4;
+                    CellexalEvents.GraphsColoredByGene.RemoveListener(TurnOnSpot);
+
+                    CellexalEvents.SelectionStarted.AddListener(SelectionOn);
+                    CellexalEvents.SelectionConfirmed.AddListener(TurnOnSpot);
+                    CellexalEvents.SelectionConfirmed.AddListener(SelectionOff);
                     //triggerParticlesRight.SetActive(false);
                     //triggerParticlesLeft.SetActive(false);
                     Destroy(canv);
@@ -215,6 +212,7 @@ namespace CellexalVR.Tutorial
                     canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step " + currentStep + " of 8: Selecting Cells \n" +
                                                         "--> Activate the Selection Tool \n" +
                                                         "--> Hold trigger while touching cells to select them. \n" +
+                                                        "--> Change colour by click right/left on the touchpad. \n" +
                                                         "--> Press Confirm Selection.";
                     ResetMaterials(objList);
 
@@ -228,9 +226,14 @@ namespace CellexalVR.Tutorial
                     break;
 
 
-                //Heatmap creation and deletion
+                //Heatmap creation
                 case 5:
                     currentStep = 5;
+                    CellexalEvents.SelectionStarted.RemoveListener(SelectionOn);
+                    CellexalEvents.SelectionConfirmed.RemoveListener(TurnOnSpot);
+                    CellexalEvents.SelectionConfirmed.RemoveListener(SelectionOff);
+
+                    CellexalEvents.HeatmapCreated.AddListener(HeatmapCreated);
                     ResetMaterials(objList);
                     videoPlayer.StopVideo();
                     objList = new[] { selToolButton, createHeatmapButton };
@@ -247,8 +250,12 @@ namespace CellexalVR.Tutorial
                     videoPlayer.StartVideo(videos[currentStep - 1]);
                     break;
 
+                // Click on gene on heatmap
                 case 6:
                     currentStep = 6;
+                    CellexalEvents.HeatmapCreated.RemoveListener(HeatmapCreated);
+
+                    CellexalEvents.GraphsColoredByGene.AddListener(TurnOnSpot);
                     videoPlayer.StopVideo();
                     closeMenuButton.GetComponent<Renderer>().material = highLightButtonMat;
                     laserButton.GetComponent<Renderer>().material = highLightButtonMat;
@@ -267,6 +274,9 @@ namespace CellexalVR.Tutorial
                 //Networks creation
                 case 7:
                     currentStep = 7;
+                    CellexalEvents.GraphsColoredByGene.RemoveListener(TurnOnSpot);
+
+                    CellexalEvents.NetworkUnEnlarged.AddListener(TurnOnSpot);
                     referenceManager.controllerModelSwitcher.TurnOffActiveTool(true);
                     ResetMaterials(objList);
                     ResetMaterials(new GameObject[] { closeMenuButton, laserButton });
@@ -288,16 +298,16 @@ namespace CellexalVR.Tutorial
                 //From start to finish
                 case 8:
                     currentStep = 8;
-                    CellexalEvents.GraphsLoaded.RemoveListener(TurnOnSpot);
-                    CellexalEvents.GraphsLoaded.RemoveListener(NextStep);
-                    CellexalEvents.SelectionConfirmed.RemoveListener(TurnOnSpot);
-                    CellexalEvents.NetworkUnEnlarged.AddListener(TurnOnSpot);
-                    heatmapCreated = networksCreated = false;
+                    CellexalEvents.NetworkUnEnlarged.RemoveListener(TurnOnSpot);
+
+                    CellexalEvents.NetworkCreated.AddListener(NetworksCreated);
+                    CellexalEvents.HeatmapCreated.AddListener(HeatmapCreated);
                     CellexalEvents.HeatmapCreated.AddListener(FinalLevel);
                     CellexalEvents.NetworkCreated.AddListener(FinalLevel);
-                    ResetMaterials(objList);
-                    Destroy(canv);
-                    videoPlayer.gameObject.SetActive(false);
+                    heatmapCreated = networksCreated = false;
+                    //ResetMaterials(objList);
+                    //Destroy(canv);
+                    videoPlayer.transform.parent.gameObject.SetActive(false);
                     canv = Instantiate(descriptionCanvasPrefab, transform);
                     canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step " + currentStep + " of 8: Putting it all together \n" +
                                                         "--> Load Data \n" +
@@ -317,8 +327,8 @@ namespace CellexalVR.Tutorial
                                                                           "You have completed the tutorial. \n" +
                                                                           "Step through the portal to start analyzing your data.";
                     highlightSpot.SetActive(false);
-                    helperTextL.SetActive(false);
-                    helperTextR.SetActive(false);
+                    //helperTextL.SetActive(false);
+                    //helperTextR.SetActive(false);
                     TurnOnSpot();
                     break;
             }
@@ -344,24 +354,6 @@ namespace CellexalVR.Tutorial
             }
         }
 
-        public void NextDescription()
-        {
-            //if (currentStep == 3)
-            //{
-            //    canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step 3 of 7: Coloring by Gene Expression \n \n" +
-            //        "Write in Gata1 and press Enter. Write using the trigger on the action controller. \n" + 
-            //        "Place the graph in the highlighted area to continue to the next step.";
-            //}
-            if (currentStep == 5)
-            {
-                canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step 5 of 8: Heatmaps \n" +
-                    "Activate Laser Tool -> Click on gene on the right side of the heatmap";
-
-                closeMenuButton.GetComponent<Renderer>().material = highLightButtonMat;
-                laserButton.GetComponent<Renderer>().material = highLightButtonMat;
-            }
-        }
-
         void HeatmapCreated()
         {
             createHeatmapButton.GetComponent<Renderer>().material = standardButtonMat;
@@ -378,6 +370,8 @@ namespace CellexalVR.Tutorial
             createNetworksButton.GetComponent<Renderer>().material = standardButtonMat;
             networksCreated = true;
             if (currentStep == 7)
+                NextStep();
+            if (currentStep == 8)
                 FinalLevel();
         }
 
@@ -405,7 +399,7 @@ namespace CellexalVR.Tutorial
             {
                 highlightSpot.transform.position = spotPositions[(currentStep + 1) % spotPositions.Length];
             }
-            if (currentStep == 8)
+            if (currentStep == 9)
             {
                 portal.SetActive(true);
             }
@@ -458,15 +452,15 @@ namespace CellexalVR.Tutorial
         void SetReferences()
         {
             // Menu
-            rgripRight = GameObject.Find("[CameraRig]/Controller (right)/Model/rgrip");
-            lgripRight = GameObject.Find("[CameraRig]/Controller (right)/Model/lgrip");
-            triggerRight = GameObject.Find("[CameraRig]/Controller (right)/Model/trigger");
-            trackpadRight = GameObject.Find("[CameraRig]/Controller (right)/Model/trackpad");
+            rgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/rgrip");
+            lgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/lgrip");
+            triggerRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/trigger");
+            trackpadRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/trackpad");
 
-            rgripLeft = GameObject.Find("[CameraRig]/Controller (left)/Model/rgrip");
-            lgripLeft = GameObject.Find("[CameraRig]/Controller (left)/Model/lgrip");
-            triggerLeft = GameObject.Find("[CameraRig]/Controller (left)/Model/trigger");
-            trackpadLeft = GameObject.Find("[CameraRig]/Controller (left)/Model/trackpad");
+            rgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/rgrip");
+            lgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/lgrip");
+            triggerLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/trigger");
+            trackpadLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/trackpad");
             //controllerHints = GameObject.Find("[CameraRig]/Controller (left)/Helper Text");
             //controllerHints.SetActive(true);
 
@@ -481,6 +475,7 @@ namespace CellexalVR.Tutorial
             laserButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Laser Tool Button");
             closeMenuButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Close Button Box/Close Menu Button");
 
+            //screenCanvas = referenceManager.screenCanvas.gameObject;
             referencesSet = true;
         }
     }

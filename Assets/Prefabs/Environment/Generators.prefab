@@ -222,6 +222,7 @@ MonoBehaviour:
   networkList: []
   objectsInSky: 0
   selectionNr: 0
+  networkMethod: 
   LineMaterials:
   - {fileID: 0}
   - {fileID: 0}
