@@ -47,15 +47,6 @@ namespace CellexalVR.General
 
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.scene.IsValid())
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-        }
-
-
         /// <summary>
         /// Waits until the close notification animation has finished and then deactivates the notification game object
         /// </summary>
