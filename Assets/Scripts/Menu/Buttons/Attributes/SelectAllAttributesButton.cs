@@ -12,7 +12,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public AttributeSubMenu attributeSubMenu;
         public CloseMenuButton closeMenuButton;
 
-        private bool toggle = false;
+        private bool toggle = true;
 
         protected override string Description
         {
@@ -28,8 +28,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         public override void Click()
         {
+            StartCoroutine(attributeSubMenu.SelectAllAttributes(toggle));
             toggle = !toggle;
-            StartCoroutine(attributeSubMenu.SelectAllAttributes(!toggle));
         }
 
         private void TurnOn()

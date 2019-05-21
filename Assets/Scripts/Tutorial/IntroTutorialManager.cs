@@ -50,7 +50,7 @@ namespace CellexalVR.Tutorial
                 }
                 if (final)
                 {
-                    SceneManager.LoadScene("vrjeans_scene1");
+                    SceneManager.LoadScene("CellexalVR_Main_Scene");
                 }
                 
             }

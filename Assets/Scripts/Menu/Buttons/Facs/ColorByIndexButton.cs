@@ -43,7 +43,7 @@ namespace CellexalVR.Menu.Buttons.Facs
         {
             //color = network.GetComponent<Renderer>().material.color;
             //GetComponent<Renderer>().material.color = color;
-            meshStandardColor = GetComponent<Renderer>().material.color;
+            //meshStandardColor = meshStandardColor;
             this.indexName = indexName;
             descriptionOnButton.text = indexName;
         }

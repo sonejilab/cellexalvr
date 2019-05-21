@@ -44,7 +44,7 @@ namespace CellexalVR.Interaction
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Controller"))
+            if (other.gameObject.name == "Collider" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
                 controllersInside++;
                 desiredState = true;
@@ -57,7 +57,7 @@ namespace CellexalVR.Interaction
 
         void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("Controller"))
+            if (other.gameObject.name == "Collider" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
                 controllersInside--;
                 if (controllersInside == 0)

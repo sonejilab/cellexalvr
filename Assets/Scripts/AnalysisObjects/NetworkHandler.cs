@@ -18,11 +18,11 @@ namespace CellexalVR.AnalysisObjects
         public Material normalMaterial;
         public List<NetworkCenter> Replacements { get; private set; }
         public bool removable;
+        public ReferenceManager referenceManager;
         //public string NetworkHandlerName { get; internal set; }
 
         public List<NetworkCenter> networks = new List<NetworkCenter>();
 
-        private ReferenceManager referenceManager;
         private GameManager gameManager;
         private MeshRenderer meshRenderer;
         private Material[] highlightedMaterials;

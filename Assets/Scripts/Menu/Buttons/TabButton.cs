@@ -12,6 +12,7 @@ namespace CellexalVR.Menu.Buttons
         public ReferenceManager referenceManager;
         public Tab tab;
         public MenuWithTabs Menu;
+        public bool highlight;
 
         protected SteamVR_TrackedObject rightController;
         protected bool controllerInside = false;
@@ -19,7 +20,7 @@ namespace CellexalVR.Menu.Buttons
         private MeshRenderer meshRenderer;
         private Color standardColor = Color.black;
         private Color highlightColor = Color.blue;
-        public bool highlight;
+        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
 
         private void OnValidate()
         {
@@ -56,7 +57,7 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+            if (other.gameObject.name == laserCollider)
             {
                 highlight = true;
                 controllerInside = true;
@@ -66,7 +67,7 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+            if (other.gameObject.name == laserCollider)
             {
                 controllerInside = false;
                 if (!tab.Active)

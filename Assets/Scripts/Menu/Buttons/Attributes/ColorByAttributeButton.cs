@@ -85,18 +85,24 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// </summary>
         public void ColourAttribute(bool toggle)
         {
-            cellManager.ColorByAttribute(Attribute, !toggle);
-            referenceManager.gameManager.InformColorByAttribute(Attribute, !toggle);
-            colored = !toggle;
-            if (colored)
+            cellManager.ColorByAttribute(Attribute, toggle);
+            referenceManager.gameManager.InformColorByAttribute(Attribute, toggle);
+            if (toggle)
             {
-                savedMeshStandardColor = meshStandardColor;
-                meshStandardColor = meshDeactivatedColor;
+                if (!colored)
+                {
+                    savedMeshStandardColor = meshStandardColor;
+                    meshStandardColor = meshDeactivatedColor;
+                }
             }
             else
             {
-                meshStandardColor = savedMeshStandardColor;
+                if (colored)
+                {
+                    meshStandardColor = savedMeshStandardColor;
+                }
             }
+            colored = toggle;
             //meshRenderer.material.color = !toggle? meshStandardColor : meshDeactivatedColor;
             //activeOutline.SetActive(toggle);
             //TurnOff();

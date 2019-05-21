@@ -10,13 +10,13 @@ namespace CellexalVR.Multiplayer
         //public float DirectionDampTime = 5f;
         public Transform target;
         public Transform leftControllerPos;
-        
-        
+
+
         #endregion
 
 
         #region Private Variables
-
+        public ReferenceManager referenceManager;
         #endregion
 
         #region MONOBEHAVIOUR MESSAGES
@@ -25,7 +25,8 @@ namespace CellexalVR.Multiplayer
         // Use this for initialization
         void Start()
         {
-            leftControllerPos = GameObject.Find("InputReader").GetComponent<ReferenceManager>().leftController.transform;
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            leftControllerPos = referenceManager.leftController.transform;
             target = GetComponent<Transform>();
             if (!target)
             {
@@ -52,7 +53,7 @@ namespace CellexalVR.Multiplayer
 
             if (leftControllerPos == null)
             {
-                leftControllerPos = GameObject.Find("Controller (left)").GetComponent<Transform>();
+                leftControllerPos = referenceManager.leftController.transform;
 
             }
 

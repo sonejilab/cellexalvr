@@ -1024,6 +1024,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4994065926125330}
   - component: {fileID: 114966063716313724}
+  - component: {fileID: 114192202095228150}
   m_Layer: 16
   m_Name: Folder Keyboard
   m_TagString: Keyboard
@@ -3206,7 +3207,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1735431452535294}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.325, y: 0.842, z: 0}
+  m_LocalPosition: {x: 0.325, y: 1.509, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4203276223092552}
@@ -6704,7 +6705,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bd8d72fcd841d7f46a5b348dfd499244, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9179,6 +9180,17 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   handler: {fileID: 114966063716313724}
   keyType: 1
+--- !u!114 &114192202095228150
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1418267276977642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec426c91bd2ab44a98c2211eb7ab74e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114205195475478846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10220,11 +10232,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 1187699896512284}
   audioClip: {fileID: 8300000, guid: d772d60fe41c2394ea39f614d1759728, type: 3}
   url: https://cellexalvr.med.lu.se/videos/LoadingData-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 1095479902981928}
 --- !u!114 &114432337102744946
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -11335,11 +11345,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 1187699896512284}
   audioClip: {fileID: 8300000, guid: d772d60fe41c2394ea39f614d1759728, type: 3}
   url: https://cellexalvr.med.lu.se/videos/LoadingData-converted.mp4
   buttonDescr: Close Video
-  videoManager: {fileID: 1095479902981928}
 --- !u!114 &114647683874131668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13044,8 +13052,8 @@ MonoBehaviour:
   OnEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: GenerateFolders
+      - m_Target: {fileID: 114192202095228150}
+        m_MethodName: FolderKeyboardEditEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

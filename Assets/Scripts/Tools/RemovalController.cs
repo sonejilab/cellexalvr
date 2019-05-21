@@ -149,27 +149,32 @@ namespace CellexalVR.Tools
                 GetComponent<MeshRenderer>().material = inactiveMat;
                 return;
             }
-            float step = speed * Time.deltaTime;
-            obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
-            obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-            obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
 
-            switch (obj.tag)
+            if (obj.transform.localScale.x > targetScale)
             {
-                case "HeatBoard":
-                    referenceManager.gameManager.InformMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                    break;
 
-                case "Network":
-                    referenceManager.gameManager.InformMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                    break;
+                float step = speed * Time.deltaTime;
+                obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
+                obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
+                obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
 
-                case "Subgraph":
-                    referenceManager.gameManager.InformMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                    break;
+                switch (obj.tag)
+                {
+                    case "HeatBoard":
+                        referenceManager.gameManager.InformMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                        break;
+
+                    case "Network":
+                        referenceManager.gameManager.InformMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                        break;
+
+                    case "Subgraph":
+                        referenceManager.gameManager.InformMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                        break;
+                }
             }
 
-            if (obj.transform.localScale.x <= targetScale)
+            else /*if (obj.transform.localScale.x <= targetScale)*/
             {
                 CellexalLog.Log("Deleted object: " + obj.name);
                 delete = false;

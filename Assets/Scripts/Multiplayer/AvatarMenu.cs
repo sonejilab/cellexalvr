@@ -17,7 +17,7 @@ namespace CellexalVR.Multiplayer
 
 
         #region Private Variables
-        private ReferenceManager referenceManager;
+        public ReferenceManager referenceManager;
         private GameObject menu;
         #endregion
 

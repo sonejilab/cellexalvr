@@ -21,7 +21,7 @@ namespace CellexalVR.Multiplayer
     {
         private List<GameManager> gamemanagers = new List<GameManager>();
         private GameManager gameManager;
-        private ReferenceManager referenceManager;
+        public ReferenceManager referenceManager;
 
         private void OnValidate()
         {
@@ -33,7 +33,11 @@ namespace CellexalVR.Multiplayer
 
         private void Start()
         {
-            gameManager = GameObject.Find("MultiUserManager").GetComponent<GameManager>();
+            if (referenceManager == null)
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+            gameManager = referenceManager.gameManager;
             //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
@@ -224,7 +228,7 @@ namespace CellexalVR.Multiplayer
             {
                 try
                 {
-                    g.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = false;
+                    //g.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = false;
                     g.transform.position = new Vector3(posX, posY, posZ);
                     g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                     g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
@@ -536,7 +540,6 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendMinimizeGraph(string graphName)
         {
-            print("Hide : " + graphName);
             GameObject.Find(graphName).GetComponent<Graph>().HideGraph();
             referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
         }

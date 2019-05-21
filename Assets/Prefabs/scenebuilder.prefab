@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1491622215652672}
+  m_IsPrefabAsset: 1
+--- !u!1 &1491622215652672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4110609605723658}
+  - component: {fileID: 114433012566905160}
+  m_Layer: 0
+  m_Name: scenebuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4110609605723658
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1491622215652672}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114433012566905160
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1491622215652672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f6decf37ac62f2409a00b9161fe7579, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputReader: {fileID: 1865869582214080, guid: 820fe67dd53608d469beb2bb2cc84441,
+    type: 2}
+  CameraRig: {fileID: 1200119748187238, guid: b51900c759a49794982681e8728adea6, type: 2}
+  VRTK: {fileID: 1312483784147908, guid: c63fcdbbeb634bf4292e0ece4a7d921a, type: 2}
+  Managers: {fileID: 1655421887270436, guid: 906996c1f795d6547896da4f4484d995, type: 2}
+  Generators: {fileID: 1900129272846280, guid: fc8400231f0ccf14dbf4ca343fd8c256, type: 2}
+  SQLiter: {fileID: 1592339975440912, guid: f4c11e7f9459f914bbb569d7272ffa39, type: 2}
+  EventSystem: {fileID: 1227912879406582, guid: 6d3092b7335feab428787173db84354b,
+    type: 2}
+  Floor: {fileID: 1215023464588338, guid: a3e724a0a3faae94fbb8a5fd82603d71, type: 2}
+  Calculators: {fileID: 1256811505487270, guid: 6d34846e733a4c44eae5a5ec30a0ea9e,
+    type: 2}
+  LightForTesting: {fileID: 1484828014217020, guid: 0d636179055b12a40a14f62d74813699,
+    type: 2}
+  MenuHolder: {fileID: 1915892760121796, guid: 04bd4990d5f5f1f42a354515c676f336, type: 2}
+  Loader: {fileID: 1599581179209888, guid: eb546eae74d9c2a4fa54240bc06b54c3, type: 2}
+  Keyboard: {fileID: 1300779574705418, guid: 04fcf1aa89c46fd4c9e5674e89b6f4f1, type: 2}
+  WebBrowser: {fileID: 1444221744563032, guid: 57fa6b1f2c578d8489bd1033a227c865, type: 2}
+  SettingsMenu: {fileID: 1411954133660600, guid: 3ff43d991f645f84397643bd00001c06,
+    type: 2}
+  Console: {fileID: 1325094886023510, guid: 8a2ffd86af146f94aa78c12658ed250a, type: 2}
+  FPSCanvas: {fileID: 1781189365238904, guid: ea5b777c23e2ab847addc074f3a5c8d1, type: 2}
+  WaitingCanvas: {fileID: 1597298401252412, guid: 071bbf15a284d924e8e7377189a76735,
+    type: 2}
+  SpectatorRig: {fileID: 1220572595244950, guid: fffc95dc63a56d041b45d0e32c9ee33a,
+    type: 2}

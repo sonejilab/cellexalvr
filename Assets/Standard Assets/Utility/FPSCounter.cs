@@ -19,6 +19,7 @@ namespace UnityStandardAssets.Utility
         {
             m_FpsNextPeriod = Time.realtimeSinceStartup + fpsMeasurePeriod;
             m_Text = GetComponent<Text>();
+            gameObject.SetActive(false);
         }
 
 

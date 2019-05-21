@@ -76,6 +76,9 @@ namespace CellexalVR.Interaction
             laserPointerController = referenceManager.laserPointerController;
             rightLaser = referenceManager.rightLaser;
             leftLaser = referenceManager.leftLaser;
+
+            if (CrossSceneInformation.Spectator)
+                gameObject.SetActive(false);
             //if (rightControllerBody.activeSelf)
             //{
             //SetMeshes();
@@ -90,7 +93,10 @@ namespace CellexalVR.Interaction
         void OnControllerLoaded(SteamVR_RenderModel renderModel, bool success)
         {
             if (!success) return;
-            SetMeshes();
+            if (!CrossSceneInformation.Spectator)
+            {
+                SetMeshes();
+            }
         }
 
         public void SetMeshes()
@@ -108,11 +114,16 @@ namespace CellexalVR.Interaction
 
         }
 
-        // Used when starting the program.
-        // It takes some time for steamvr and vrtk to set everything up, and for some time
-        // these variables will be null because the components are not yet added to the gameobjects.
+        /// <summary>
+        /// Used when starting the program.
+        /// It takes some time for steamvr and vrtk to set everything up, and for some time
+        /// these variables will be null because the components are not yet added to the gameobjects.
+        /// </summary>
+        /// <returns></returns>
         internal bool Ready()
         {
+            if (CrossSceneInformation.Spectator)
+                return true;
             return rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null && leftControllerBody.GetComponent<Renderer>() != null;
         }
 
@@ -172,6 +183,8 @@ namespace CellexalVR.Interaction
                 case Model.Menu:
                     //print("switched to menu");
                     drawTool.SetActive(false);
+                    deleteTool.SetActive(false);
+                    minimizer.SetActive(false);
                     rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                     rightControllerBodyRenderer.material = normalMaterial;

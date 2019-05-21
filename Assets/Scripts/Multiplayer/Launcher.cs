@@ -114,7 +114,6 @@ namespace CellexalVR.Multiplayer
                 // #Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed()
                 PhotonNetwork.JoinRandomRoom();
             }
-
         }
 
         public override void OnDisconnectedFromPhoton()
@@ -141,7 +140,7 @@ namespace CellexalVR.Multiplayer
 
                 // #Critical
                 // Load the Room Level. 
-                PhotonNetwork.LoadLevel("vrjeans_scene1");
+                PhotonNetwork.LoadLevel("CellexalVR_Main_Scene");
             }
         }
 
@@ -175,13 +174,13 @@ namespace CellexalVR.Multiplayer
         public void ConnectSinglePlayer()
         {
             CrossSceneInformation.Tutorial = false;
-            SceneManager.LoadScene("vrjeans_scene1");
+            SceneManager.LoadScene("CellexalVR_Main_Scene");
         }
 
         public void ConnectTutorialScene()
         {
             CrossSceneInformation.Tutorial = true;
-            SceneManager.LoadScene("TutorialScene_New");
+            SceneManager.LoadScene("IntroTutorialScene");
         }
 
 

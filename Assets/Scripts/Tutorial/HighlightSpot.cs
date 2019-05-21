@@ -22,41 +22,53 @@ namespace CellexalVR.Tutorial
         // Use this for initialization
         void Start()
         {
-           
+
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (loadLevel)
-            {
-                if (elapsedTime < fadeTime / 2.0f)
-                {
-                    print("fade to black");
-                    elapsedTime += Time.deltaTime;
-                    colorAlpha += 0.05f;
-                    screenCanvas.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
-                }
-                else if (elapsedTime < fadeTime && elapsedTime > (fadeTime / 2.0f))
-                {
-                    print("fade back");
-                    elapsedTime += Time.deltaTime;
-                    colorAlpha -= 0.05f;
-                    screenCanvas.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
-                }
-                else
-                {
-                    loadLevel = false;
-                    tutorialManager.screenCanvas.SetActive(false);
-                    CrossSceneInformation.Tutorial = false;
-                    GetComponentInParent<TutorialManager>().referenceManager.loaderController.ResetFolders(true);
-                    transform.parent.gameObject.SetActive(false);
-                }
-            }
+            //if (loadLevel)
+            //{
+            //    if (elapsedTime < fadeTime / 2.0f)
+            //    {
+            //        print("fade to black");
+            //        elapsedTime += Time.deltaTime;
+            //        colorAlpha += 0.05f;
+            //        screenCanvas.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
+            //    }
+            //    else if (elapsedTime < fadeTime && elapsedTime > (fadeTime / 2.0f))
+            //    {
+            //        print("fade back");
+            //        elapsedTime += Time.deltaTime;
+            //        colorAlpha -= 0.05f;
+            //        screenCanvas.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
+            //    }
+            //    else
+            //    {
+            //        loadLevel = false;
+            //        tutorialManager.screenCanvas.SetActive(false);
+            //        CrossSceneInformation.Tutorial = false;
+            //        GetComponentInParent<TutorialManager>().referenceManager.loaderController.ResetFolders(true);
+            //        transform.parent.gameObject.SetActive(false);
+            //    }
+            //}
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            if (this.name == "Portal")
+            {
+                if (other.gameObject.name == "Collider" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+                {
+                    CrossSceneInformation.Tutorial = false;
+                    tutorialManager.referenceManager.screenCanvas.gameObject.SetActive(true);
+                    tutorialManager.referenceManager.screenCanvas.FadeAnimation();
+                    tutorialManager.referenceManager.loaderController.ResetFolders(true);
+                    tutorialManager.gameObject.SetActive(false);
+                }
+                //loadLevel = true;
+            }
             if (other.tag == "Graph")
             {
                 this.gameObject.GetComponent<Collider>().enabled = false;
@@ -66,19 +78,13 @@ namespace CellexalVR.Tutorial
                 }
                 tutorialManager.NextStep();
             }
-            if ((other.tag == "Controller" || other.tag == "Cells") && !this.name.Contains("HighlightSpot"))
-            {
-                foreach (ParticleSystem sys in this.GetComponentsInChildren<ParticleSystem>())
-                {
-                    sys.Stop();
-                }
-                if (this.name == "Portal")
-                {
-                    tutorialManager.screenCanvas.SetActive(true);
-                    screenCanvas = tutorialManager.screenCanvas.GetComponentInChildren<Image>();
-                    loadLevel = true;
-                }
-            }
+            //if ((other.tag == "Controller" || other.tag == "Cells") && !this.name.Contains("HighlightSpot"))
+            //{
+            //    foreach (ParticleSystem sys in this.GetComponentsInChildren<ParticleSystem>())
+            //    {
+            //        sys.Stop();
+            //    }
+            //}
 
         }
     }

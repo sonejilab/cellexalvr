@@ -81,16 +81,7 @@ namespace CellexalVR.Tools
                 {
                     // if the trigger was pressed we need to make sure that the controller is not inside a button.
                     drawing = true;
-                    var colliders = Physics.OverlapBox(controllerMenuCollider.transform.position, controllerMenuCollider.bounds.extents, controllerMenuCollider.gameObject.transform.rotation);
 
-                    foreach (Collider collider in colliders)
-                    {
-                        if (collider.gameObject.GetComponent<CellexalButton>())
-                        {
-                            drawing = false;
-                            break;
-                        }
-                    }
                 }
                 for (int i = 0; i < trailLines.Length; i++)
                 {

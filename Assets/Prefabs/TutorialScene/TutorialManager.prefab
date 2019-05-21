@@ -826,8 +826,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1277584710074560}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.173, y: 1.69, z: 0.013020761}
+  m_LocalRotation: {x: -0, y: -0.4240853, z: -0, w: 0.9056223}
+  m_LocalPosition: {x: -0.382, y: 1.33, z: -0.855}
   m_LocalScale: {x: 0.64000005, y: 0.64000005, z: 0.64000005}
   m_Children:
   - {fileID: 4705527417190642}
@@ -836,7 +836,7 @@ Transform:
   - {fileID: 4468924980744286}
   m_Father: {fileID: 4977625324737804}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -50.186, z: 0}
 --- !u!4 &4884126076823744
 Transform:
   m_ObjectHideFlags: 1
@@ -1141,8 +1141,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.38961783, y: 1.648673, z: 0.9423785}
-  m_Center: {x: -0.23618385, y: -0.032850258, z: 0.027613945}
+  m_Size: {x: 0.21402113, y: 1.648673, z: 0.9423785}
+  m_Center: {x: -0.1483855, y: -0.032850258, z: 0.027613945}
 --- !u!82 &82565611266435418
 AudioSource:
   m_ObjectHideFlags: 1
@@ -2041,6 +2041,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   highlightSpot: {fileID: 1443228680810670}
   portal: {fileID: 1277584710074560}
+  screenCanvas: {fileID: 0}
   videoPlayer: {fileID: 114494474985359866}
   videos:
   - https://cellexalvr.med.lu.se/videos/TutorialVideos_Loading.mp4
@@ -39250,8 +39251,8 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: b4353df3a2ba6af429d00cce2deb1275, type: 2}
-  - {fileID: 2100000, guid: b4353df3a2ba6af429d00cce2deb1275, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -10,6 +10,7 @@ using VRTK;
 
 namespace CellexalVR.General
 {
+#if UNITY_EDITOR
     [ExecuteInEditMode]
     public class SceneBuilder : MonoBehaviour
     {
@@ -55,6 +56,8 @@ namespace CellexalVR.General
         private GameObject _FPSCanvas;
         public GameObject WaitingCanvas;
         private GameObject _WaitingCanvas;
+        public GameObject SpectatorRig;
+        private GameObject _SpectatorRig;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -115,6 +118,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _Console, Console);
             InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas);
             InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
+            InstantiateSceneAsset(ref _SpectatorRig, SpectatorRig);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Setting references", 0.5f);
             ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
@@ -144,33 +148,38 @@ namespace CellexalVR.General
             _CameraRig.GetComponentInChildren<Player>().hands = _CameraRig.GetComponentsInChildren<Hand>();
 
             // set up radial menu buttons
-            VRTK_RadialMenu leftRadialMenu = referenceManager.leftControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
-            Undo.RecordObject(leftRadialMenu, "Radial menu events");
-            leftRadialMenu.buttons[1].OnClick = new UnityEngine.Events.UnityEvent();
-            leftRadialMenu.buttons[1].OnClick.AddListener(delegate { referenceManager.mainMenu.GetComponent<MenuRotator>().RotateLeft(1); });
-            leftRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
-            leftRadialMenu.buttons[3].OnClick.AddListener(delegate { referenceManager.mainMenu.GetComponent<MenuRotator>().RotateRight(1); });
+            //VRTK_RadialMenu leftRadialMenu = referenceManager.leftControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            //Undo.RecordObject(leftRadialMenu, "Radial menu events");
+            //leftRadialMenu.buttons[1].OnClick = new UnityEngine.Events.UnityEvent();
+            //leftRadialMenu.buttons[1].OnClick.AddListener(delegate { referenceManager.mainMenu.GetComponent<MenuRotator>().RotateLeft(1); });
+            //leftRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
+            //leftRadialMenu.buttons[3].OnClick.AddListener(delegate { referenceManager.mainMenu.GetComponent<MenuRotator>().RotateRight(1); });
 
-            VRTK_RadialMenu rightRadialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
-            Undo.RecordObject(rightRadialMenu, "Radial menu events");
-            ControllerModelSwitcher cms = referenceManager.leftController.GetComponent<ControllerModelSwitcher>();
-            SelectionToolCollider selectionToolCollider = referenceManager.selectionToolCollider;
-            rightRadialMenu.buttons[0].OnClick = new UnityEngine.Events.UnityEvent();
-            rightRadialMenu.buttons[0].OnClick.AddListener(delegate { cms.SwitchSelectionToolMesh(true); });
-            rightRadialMenu.buttons[1].OnClick = new UnityEngine.Events.UnityEvent();
-            rightRadialMenu.buttons[1].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(false); });
-            rightRadialMenu.buttons[2].OnClick = new UnityEngine.Events.UnityEvent();
-            rightRadialMenu.buttons[2].OnClick.AddListener(delegate { cms.SwitchSelectionToolMesh(false); });
-            rightRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
-            rightRadialMenu.buttons[3].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(true); });
+            //VRTK_RadialMenu rightRadialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            //Undo.RecordObject(rightRadialMenu, "Radial menu events");
+            //ControllerModelSwitcher cms = referenceManager.leftController.GetComponent<ControllerModelSwitcher>();
+            //SelectionToolCollider selectionToolCollider = referenceManager.selectionToolCollider;
+            //rightRadialMenu.buttons[0].OnClick = new UnityEngine.Events.UnityEvent();
+            //rightRadialMenu.buttons[0].OnClick.AddListener(delegate { cms.SwitchSelectionToolMesh(true); });
+            //rightRadialMenu.buttons[1].OnClick = new UnityEngine.Events.UnityEvent();
+            //rightRadialMenu.buttons[1].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(false); });
+            //rightRadialMenu.buttons[2].OnClick = new UnityEngine.Events.UnityEvent();
+            //rightRadialMenu.buttons[2].OnClick.AddListener(delegate { cms.SwitchSelectionToolMesh(false); });
+            //rightRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
+            //rightRadialMenu.buttons[3].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(true); });
 
             Undo.RecordObject(sdkmanager, "Set controller script alias");
             sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
             sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
 
+            //referenceManager.leftControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildLeftRadialMenu();
+            //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
+
             _Keyboard.GetComponent<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
             _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
             _Loader.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
+
+            
 
             EditorUtility.ClearProgressBar();
             buildingScene = false;
@@ -225,7 +234,8 @@ namespace CellexalVR.General
             SettingsMenu = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Settings Menu.prefab");
             Console = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Console.prefab");
             FPSCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/FPS canvas.prefab");
-            WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/WaitingCanvas.prefab");
+            WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/ScreenCanvas.prefab");
+            SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SpectatorRig.prefab");
         }
 
         public void SaveAllPrefabs()
@@ -247,7 +257,6 @@ namespace CellexalVR.General
         }
 
     }
-#if UNITY_EDITOR
     [UnityEditor.CustomEditor(typeof(SceneBuilder))]
     public class SceneBuilderEditor : UnityEditor.Editor
     {

@@ -27,7 +27,7 @@ namespace CellexalVR.Interaction
         public int SpaceY { get; set; }
 
         private bool controllerInside = false;
-        private string laserColliderName = "[RightController]BasePointerRenderer_ObjectInteractor_Collider";
+        private string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
         private int frameCount;
         private int layerMask;
 
@@ -95,7 +95,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+            if (other.gameObject.name == laserColliderName)
             {
                 controllerInside = true;
                 GetComponent<Renderer>().material.color = Color.cyan;
@@ -104,7 +104,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name == "[RightController]BasePointerRenderer_ObjectInteractor_Collider")
+            if (other.gameObject.name == laserColliderName)
             {
                 controllerInside = false;
                 GetComponent<Renderer>().material.color = orgColor;

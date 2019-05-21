@@ -6,10 +6,8 @@ namespace CellexalVR.Menu.Buttons.Tools
     /// Represents the button that toggles the screenshot tool.
     /// </summary>
     public class ScreenshotButton : CellexalButton
-    {
-
-        public new GameObject camera;
-        public GameObject canvas;
+    { 
+        //public GameObject canvas;
 
         protected override string Description
         {
@@ -18,20 +16,24 @@ namespace CellexalVR.Menu.Buttons.Tools
 
         public override void Click()
         {
-            if (canvas.activeSelf)
+            if (referenceManager.screenshotCamera.gameObject.activeSelf)
             {
-                canvas.SetActive(false);
+                //canvas.SetActive(false);
                 spriteRenderer.sprite = standardTexture;
-                camera.gameObject.SetActive(false);
+                referenceManager.screenshotCamera.gameObject.SetActive(false);
+                referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = false;
+                referenceManager.screenCanvas.gameObject.SetActive(false);
             }
             else
             {
-                canvas.SetActive(true);
+                //canvas.SetActive(true);
                 spriteRenderer.sprite = deactivatedTexture;
-                camera.gameObject.SetActive(true);
+                referenceManager.screenshotCamera.gameObject.SetActive(true);
+                referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = true;
+                referenceManager.screenCanvas.gameObject.SetActive(true);
+
             }
 
-            camera.gameObject.GetComponent<CaptureScreenshot>().enabled = !camera.gameObject.GetComponent<CaptureScreenshot>().enabled;
         }
     }
 }

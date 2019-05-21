@@ -8,11 +8,12 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using ExitGames.Client.Photon;
+using CellexalVR.General;
 
 namespace CellexalVR.Multiplayer
 {
 
-    public class GameMenu : MonoBehaviour
+    public class MultiplayerMenu : MonoBehaviour
     {
         public GUISkin Skin;
         public GameObject mainMenu;
@@ -28,7 +29,7 @@ namespace CellexalVR.Multiplayer
 
         public static readonly string SceneNameMenu = "Launcher";
 
-        public static readonly string SceneNameGame = "vrjeans_scene1";
+        public static readonly string SceneNameGame = "CellexalVR_Main_Scene";
 
         public static readonly string SpectatorScene = "spectator_scene";
 
@@ -156,14 +157,18 @@ namespace CellexalVR.Multiplayer
             if (GUILayout.Button("Create Room", GUILayout.Width(200)))
             {
                 int n;
-                if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
+                if (spectator)
                 {
-                    PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+                    CrossSceneInformation.Spectator = true;
                 }
-                if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
-                {
-                    PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
-                }
+                //if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
+                //{
+                //    PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+                //}
+                //if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
+                //{
+                //    PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
+                //}
                 if (this.password.Length == 4 && int.TryParse(this.password, out n))
                 {
                     print("Create room: " + this.roomAndPass);
@@ -177,14 +182,18 @@ namespace CellexalVR.Multiplayer
             }
             if (GUILayout.Button("Join Room", GUILayout.Width(200)))
             {
-                if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
+                if (spectator)
                 {
-                    PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+                    CrossSceneInformation.Spectator = true;
                 }
-                if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
-                {
-                    PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
-                }
+                //if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
+                //{
+                //    PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
+                //}
+                //if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
+                //{
+                //    PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
+                //}
                 PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
             }
 

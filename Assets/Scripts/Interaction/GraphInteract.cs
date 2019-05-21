@@ -19,6 +19,11 @@ namespace CellexalVR.Interaction
             }
         }
 
+        private void Start()
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, false);

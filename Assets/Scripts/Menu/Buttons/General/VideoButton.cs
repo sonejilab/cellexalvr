@@ -12,11 +12,9 @@ namespace CellexalVR.Menu.Buttons.General
     /// </summary>
     public class VideoButton : CellexalButton
     {
-        public GameObject videoCanv;
         public AudioClip audioClip;
         public string url;
         public string buttonDescr;
-        public GameObject videoManager;
 
 
         protected override string Description
@@ -31,20 +29,28 @@ namespace CellexalVR.Menu.Buttons.General
 
         public override void SetHighlighted(bool highlight)
         {
-            // do nothing
+            if (buttonDescr.Equals("Close Video"))
+            {
+                base.SetHighlighted(highlight);
+            }
+            else
+            {
+                // do nothing
+            }
+                
         }
 
         public void StartVideo()
         {
-            videoCanv.SetActive(true);
-            videoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
+            referenceManager.helpVideoManager.videoCanv.SetActive(true);
+            referenceManager.helpVideoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
             infoMenu.SetActive(false);
             Exit();
         }
 
         public void StopVideo()
         {
-            videoCanv.SetActive(false);
+            referenceManager.helpVideoManager.videoCanv.SetActive(false);
             Exit();
         }
 

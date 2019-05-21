@@ -15,7 +15,7 @@ namespace CellexalVR.SceneObjects
         private bool graphsLoaded = false;
         private Vector3 defaultPosition;
         private Quaternion defaultRotation;
-        private ReferenceManager referenceManager;
+        public ReferenceManager referenceManager;
 
         public string Directory
         {

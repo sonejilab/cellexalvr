@@ -13,7 +13,7 @@ namespace CellexalVR.Menu
     {
         public ReferenceManager referenceManager;
         public bool MenuActive { get; set; }
-        public VRTK.VRTK_BezierPointerRenderer teleportLaser;
+        public GameObject teleportLaser;
         public GameObject menuCube;
         public GameObject menuHolder;
 
@@ -27,16 +27,7 @@ namespace CellexalVR.Menu
         private ControllerModelSwitcher controllerModelSwitcher;
         private float tempRotation; // save rotation when disabling menu for when reactivating
 
-        private void Start()
-        {
-            menu = referenceManager.mainMenu;
-            menuHolder = menu.transform.parent.gameObject;
-            boxCollider = GetComponent<Collider>();
-            leftController = referenceManager.leftController;
-            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            // The menu should be turned off when the program starts
-            MenuActive = false;
-        }
+
 
 
 
@@ -48,28 +39,25 @@ namespace CellexalVR.Menu
             }
         }
 
+        private void Start()
+        {
+            menu = referenceManager.mainMenu;
+            menuHolder = menu.transform.parent.gameObject;
+            boxCollider = GetComponent<Collider>();
+            leftController = referenceManager.leftController;
+            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+            teleportLaser = referenceManager.teleportLaser;
+            // The menu should be turned off when the program starts
+            MenuActive = false;
+        }
+
         void Update()
         {
             device = SteamVR_Controller.Input((int)leftController.index);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.IsCursorVisible())
+            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf)
             {
-                MenuActive = !MenuActive;
-                menuCube.SetActive(!MenuActive);
-                tempRotation = menu.transform.localEulerAngles.z;
-                if (!MenuActive)
-                {
-                    menu.transform.parent = menuHolder.transform;
-                    menu.transform.localPosition = new Vector3(0f, -10f, 0f);
-                }
-                else
-                {
-                    menu.transform.parent = leftController.transform;
-                    menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
-                }
-                menu.transform.localEulerAngles = new Vector3(-15, 0, tempRotation);
-                boxCollider.enabled = MenuActive;
-                controllerModelSwitcher.SwitchToDesiredModel();
-                controllerModelSwitcher.ActivateDesiredTool();
+                ToggleMenu(); 
+
                 //referenceManager.gameManager.InformToggleMenu();
                 //if (MenuActive)
                 //{
@@ -81,6 +69,27 @@ namespace CellexalVR.Menu
                 //}
 
             }
+        }
+
+        public void ToggleMenu()
+        {
+            MenuActive = !MenuActive;
+            menuCube.SetActive(!MenuActive);
+            tempRotation = menu.transform.localEulerAngles.z;
+            if (!MenuActive)
+            {
+                menu.transform.parent = menuHolder.transform;
+                menu.transform.localPosition = new Vector3(0f, -10f, 0f);
+            }
+            else
+            {
+                menu.transform.parent = leftController.transform;
+                menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
+            }
+            menu.transform.localEulerAngles = new Vector3(-15, 0, tempRotation);
+            boxCollider.enabled = MenuActive;
+            controllerModelSwitcher.SwitchToDesiredModel();
+            controllerModelSwitcher.ActivateDesiredTool();
         }
 
         /// <summary>

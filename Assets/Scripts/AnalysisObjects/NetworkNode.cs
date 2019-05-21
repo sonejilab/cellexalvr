@@ -32,7 +32,7 @@ namespace CellexalVR.AnalysisObjects
         }
         public Vector3[] LayoutPositions { get; set; } = new Vector3[2];
 
-        private ReferenceManager referenceManager;
+        public ReferenceManager referenceManager;
         public HashSet<NetworkNode> neighbours = new HashSet<NetworkNode>();
         public List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
         private List<Color> edgeColors = new List<Color>();
@@ -44,6 +44,8 @@ namespace CellexalVR.AnalysisObjects
         private SteamVR_Controller.Device device;
         private bool edgesAdded;
         private float lineWidth;
+        private string controllerCollider = "Collider";
+        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
 
         private void OnValidate()
         {
@@ -59,7 +61,7 @@ namespace CellexalVR.AnalysisObjects
             GetComponent<Collider>().enabled = false;
             normalScale = transform.localScale;
             largerScale = normalScale * 2f;
-
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             this.name = geneName.text;
         }
 
@@ -94,7 +96,7 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name.Equals("[RightController]BasePointerRenderer_ObjectInteractor_Collider");
+            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
             if (active && touched)
             {
                 var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
@@ -120,7 +122,8 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("Menu Controller Collider") || other.gameObject.name.Equals("[RightController]BasePointerRenderer_ObjectInteractor_Collider"))
+            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            if (touched)
             {
                 var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
                 controllerInside = false;

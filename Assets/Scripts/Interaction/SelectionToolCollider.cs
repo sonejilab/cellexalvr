@@ -4,6 +4,7 @@ using CellexalVR.Menu.SubMenus;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using VRTK;
 
 namespace CellexalVR.Interaction
@@ -15,7 +16,6 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
-        public VRTK_RadialMenu radialMenu;
         public Sprite buttonIcons;
         public ParticleSystem particles;
         public Collider[] selectionToolColliders;
@@ -33,6 +33,7 @@ namespace CellexalVR.Interaction
         private bool selActive = false;
         private int currentMeshIndex;
         private Color selectedColor;
+        private VRTK_RadialMenu radialMenu;
 
         private void OnValidate()
         {
@@ -61,6 +62,8 @@ namespace CellexalVR.Interaction
             rightController = referenceManager.rightController;
             gameManager = referenceManager.gameManager;
             selectionManager = referenceManager.selectionManager;
+            radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+
         }
 
 
@@ -142,11 +145,11 @@ namespace CellexalVR.Interaction
             {
                 Colors[i].a = 1;
             }
-
-            // VRTK 3.3
-            //radialMenu.buttons[1].color = Colors[Colors.Length - 1];
-            //radialMenu.buttons[3].color = Colors[1];
-            //radialMenu.RegenerateButtons();
+            
+            radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            radialMenu.RegenerateButtons();
+            radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
+            radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
             selectedColor = Colors[currentColorIndex];
         }
 
@@ -175,9 +178,10 @@ namespace CellexalVR.Interaction
             int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
             int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
             // VRTK 3.3
-            //radialMenu.buttons[1].color = Colors[buttonIndexLeft];
-            //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             radialMenu.RegenerateButtons();
+            radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
+            radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
+            //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             selectedColor = Colors[currentColorIndex];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
         }

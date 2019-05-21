@@ -121,7 +121,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4988946909476022}
   - component: {fileID: 95714215242263160}
-  - component: {fileID: 114473489040734014}
   - component: {fileID: 114468845745922842}
   - component: {fileID: 114648039882710838}
   m_Layer: 0
@@ -896,7 +895,6 @@ GameObject:
   - component: {fileID: 33197044574186642}
   - component: {fileID: 23226014224279066}
   - component: {fileID: 95184387833910376}
-  - component: {fileID: 114640019984486212}
   - component: {fileID: 114050286461022394}
   - component: {fileID: 114056557589785604}
   m_Layer: 0
@@ -3018,6 +3016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   videoCanv: {fileID: 0}
   audioSource: {fileID: 0}
+  autoPlay: 0
 --- !u!114 &114211967922426756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3308,19 +3307,6 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
---- !u!114 &114473489040734014
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1116105100471192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03cc376cb64084741809cf0cf75982c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 4988946909476022}
-  rightControllerPos: {fileID: 0}
 --- !u!114 &114486471016259804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3354,19 +3340,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4632113603985486}
-  leftControllerPos: {fileID: 0}
---- !u!114 &114640019984486212
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1933686213262964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae3e337840865654583b705ae7bb549a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 4304106366916506}
   leftControllerPos: {fileID: 0}
 --- !u!114 &114648039882710838
 MonoBehaviour:
@@ -4010,7 +3983,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212166010458775388
@@ -4424,7 +4397,7 @@ SpriteRenderer:
   m_Size: {x: 5.46, y: 5.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212467008031411364
@@ -4608,7 +4581,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212653220711854028

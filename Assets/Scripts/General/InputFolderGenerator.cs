@@ -44,6 +44,7 @@ namespace CellexalVR.General
             GenerateFolders();
 
             CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyFolderColliders);
+            CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyCells);
         }
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace CellexalVR.General
             }
             else
             {
+                referenceManager.tutorialManager.gameObject.SetActive(false);
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
                 directories = Directory.GetDirectories(dataDirectory);
             }

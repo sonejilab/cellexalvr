@@ -2088,7 +2088,7 @@ GameObject:
   - component: {fileID: 4458954063754910}
   - component: {fileID: 114014705138496778}
   m_Layer: 16
-  m_Name: Keyboard Setup
+  m_Name: Web Keyboard
   m_TagString: Keyboard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4585,7 +4585,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bd8d72fcd841d7f46a5b348dfd499244, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

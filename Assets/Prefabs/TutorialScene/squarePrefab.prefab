@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 23965170275417840}
   - component: {fileID: 65914927181198228}
   - component: {fileID: 114104883067374668}
-  - component: {fileID: 114237991332312150}
   m_Layer: 0
   m_Name: squarePrefab
   m_TagString: Untagged
@@ -111,16 +110,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPos: {x: 0, y: 0, z: 0}
   touchPadSequence: {fileID: 0}
---- !u!114 &114237991332312150
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1733165171981318}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8099d326c7ea2034c8ddbe4311151241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  degPerSec: 60
-  rotAxis: {x: 0, y: 0, z: 1}
+  seqNr: 0

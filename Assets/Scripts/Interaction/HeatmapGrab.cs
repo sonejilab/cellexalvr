@@ -11,12 +11,14 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
+        private void Start()
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-            if (referenceManager == null)
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
+
             referenceManager.gameManager.InformDisableColliders(gameObject.name);
             GetComponent<MeshCollider>().convex = true;
             base.OnInteractableObjectGrabbed(e);

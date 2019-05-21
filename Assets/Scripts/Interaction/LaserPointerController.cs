@@ -14,6 +14,7 @@ namespace CellexalVR.Interaction
         private GameObject tempHit;
         private int layerMaskMenu;
         private int layerMaskKeyboard;
+        private int layerMaskController;
         //private int layerMaskGraph;
         //private int layerMaskNetwork;
         //private int layerMaskOther;
@@ -70,8 +71,6 @@ namespace CellexalVR.Interaction
                 {
                     //controllerModelSwitcher.TurnOffActiveTool(true);
                     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
-                    //panel.transform.localPosition = new Vector3(0.0f, 0.0f, 0.01f);
-                    //panel.transform.localRotation = Quaternion.Euler(-15, 5, 1);
                 }
             }
             else
@@ -101,8 +100,6 @@ namespace CellexalVR.Interaction
                     if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                     {
                         controllerModelSwitcher.ActivateDesiredTool();
-                        //panel.transform.localPosition = new Vector3(0, 0, 0);
-                        //panel.transform.localRotation = Quaternion.Euler(0, 0, 0);
                     }
                     referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
 

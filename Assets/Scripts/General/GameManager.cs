@@ -46,6 +46,10 @@ namespace CellexalVR.General
         private void Start()
         {
             Instance = this;
+            waitingCanvas = referenceManager.screenCanvas.gameObject;
+            spectatorRig = referenceManager.spectatorRig;
+            VRRig = referenceManager.VRRig;
+
             if (!PhotonNetwork.connected) return;
             if (playerPrefab == null)
             {
@@ -61,18 +65,20 @@ namespace CellexalVR.General
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 
                     // If the user checked the spectator option the name prefix will be Spectator. If spectator spawn an invisible avatar instead.
-                    if (PhotonNetwork.playerName.Contains("Spectator"))
+                    if (CrossSceneInformation.Spectator)
                     {
                         GameObject player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         player.gameObject.name = PhotonNetwork.playerName;
                         spectatorRig.SetActive(true);
-                        VRRig.SetActive(false);
+                        //VRRig.SetActive(false);
+                        Destroy(VRRig);
                         referenceManager.selectionManager = spectatorRig.GetComponent<SelectionManager>();
                     }
-                    if (!PhotonNetwork.playerName.Contains("Spectator"))
+                    else if (!CrossSceneInformation.Spectator)
                     {
                         GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         player.gameObject.name = PhotonNetwork.playerName;
+                        Destroy(spectatorRig);
                     }
 
                     if (PhotonNetwork.isMasterClient)
@@ -100,6 +106,7 @@ namespace CellexalVR.General
             {
                 coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<ServerCoordinator>();
             }
+
         }
 
         #region Photon Messages
@@ -153,7 +160,7 @@ namespace CellexalVR.General
         public void InformKeyClicked(string value)
         {
             if (!multiplayer) return;
-            CellexalLog.Log("Informing clients that" + value + "was clicked");
+            CellexalLog.Log("Informing clients that" + value + " was clicked");
             coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
 
