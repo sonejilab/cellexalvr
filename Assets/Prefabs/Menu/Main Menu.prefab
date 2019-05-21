@@ -16337,11 +16337,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: fb29d8ea1932ee44c8bc2362d1193a35, type: 3}
   url: https://cellexalvr.med.lu.se/videos/DrawTool-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114261729154635704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16930,11 +16928,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 5b05a30f1c2ec9e4fa47b88fd67a5002, type: 3}
   url: https://cellexalvr.med.lu.se/videos/Keyboard-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114468623592118874
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16983,11 +16979,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 4ce4cd9d50d8eda42902abde33d7dd30, type: 3}
   url: https://cellexalvr.med.lu.se/videos/SelectionTool-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114487811571502868
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17087,11 +17081,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d137a8cfda4e4dc478533764ea5f2756, type: 3}
   url: https://cellexalvr.med.lu.se/videos/HideTool-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114543181233200844
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17221,11 +17213,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: a7d3fae3686634e46884b316480ea4e7, type: 3}
   url: https://cellexalvr.med.lu.se/videos/LaserTool-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114579812690865112
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17441,8 +17431,6 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  camera: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!114 &114650506652017852
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18599,11 +18587,9 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  videoCanv: {fileID: 0}
   audioClip: {fileID: 8300000, guid: 426a876be15d16047b6f4ff794b6cdd0, type: 3}
   url: https://cellexalvr.med.lu.se/videos/DeleteTool-converted.mp4
   buttonDescr: Play Video
-  videoManager: {fileID: 0}
 --- !u!114 &114968363360793058
 MonoBehaviour:
   m_ObjectHideFlags: 1

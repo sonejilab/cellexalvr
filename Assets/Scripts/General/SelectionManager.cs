@@ -507,7 +507,7 @@ namespace CellexalVR.General
             yield return null;
             string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
-                                        + referenceManager.heatmapGenerator.selectionNr + ".txt").UnFixFilePath();
+                                        + (fileCreationCtr - 1) + ".txt").UnFixFilePath();
             string args = "cellexalObj" + ", \"" + latestSelection + "\"";
             string script = "cellexalObj <- " + function + "(" + args + ")";
 
@@ -594,38 +594,51 @@ namespace CellexalVR.General
         {
             DumpSelectionToTextFile(selectedCells);
         }
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="selection"></param>
-        public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection)
+        public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string filePath="")
         {
-            // print(new System.Diagnostics.StackTrace());
-            string filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
-            using (StreamWriter file = new StreamWriter(filePath))
+            if (filePath != "")
             {
-                CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-                CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
-                if (selectionHistory != null)
-                    CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
-                foreach (Graph.GraphPoint gp in selection)
+                string savedSelectionsPath = CellexalUser.UserSpecificFolder + @"\SavedSelections\";
+                if (!Directory.Exists(savedSelectionsPath))
                 {
-                    file.Write(gp.Label);
-                    file.Write("\t");
-                    Color c = gp.GetColor();
-                    int r = (int)(c.r * 255);
-                    int g = (int)(c.g * 255);
-                    int b = (int)(c.b * 255);
-                    // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
-                    file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
-                    file.Write("\t");
-                    file.Write(gp.parent.GraphName);
-                    file.Write("\t");
-                    file.Write(gp.Group);
-                    file.WriteLine();
+                    Directory.CreateDirectory(savedSelectionsPath);
                 }
+                filePath = savedSelectionsPath + filePath + ".txt";
             }
-            StartCoroutine(UpdateRObjectGrouping());
+            else
+            {
+                filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+                using (StreamWriter file = new StreamWriter(filePath))
+                {
+                    CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
+                    CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
+                    if (selectionHistory != null)
+                        CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+                    foreach (Graph.GraphPoint gp in selection)
+                    {
+                        file.Write(gp.Label);
+                        file.Write("\t");
+                        Color c = gp.GetColor();
+                        int r = (int)(c.r * 255);
+                        int g = (int)(c.g * 255);
+                        int b = (int)(c.b * 255);
+                        // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
+                        file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                        file.Write("\t");
+                        file.Write(gp.parent.GraphName);
+                        file.Write("\t");
+                        file.Write(gp.Group);
+                        file.WriteLine();
+                    }
+                }
+                StartCoroutine(UpdateRObjectGrouping());
+            }
         }
 
 

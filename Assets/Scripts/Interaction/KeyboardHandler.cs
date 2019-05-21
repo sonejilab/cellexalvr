@@ -59,8 +59,8 @@ namespace CellexalVR.Interaction
         void Start()
         {
             //Clear();
-            SwitchLayout(Layout.Lowercase);
             GatherKeys();
+            SwitchLayout(Layout.Lowercase);
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
 
@@ -69,7 +69,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
         {
-            if (sortedKeys == null)
+            if (sortedKeys == null || sortedKeys.Length == 0)
             {
                 GatherKeys();
             }
@@ -88,7 +88,7 @@ namespace CellexalVR.Interaction
             maxPos = new Vector2(float.MinValue, float.MinValue);
 
             KeyboardItem[] items = GetComponentsInChildren<KeyboardItem>();
-            sortedKeys = GetComponentsInChildren<KeyboardPanel>();
+            sortedKeys = keysParentObject.GetComponentsInChildren<KeyboardPanel>();
             // sort by position, y first then x
             //Array.Sort(items, (KeyboardItem a, KeyboardItem b) => a.position.y == b.position.y ? (int)(a.position.x - b.position.x) : (int)(a.position.y - b.position.y));
             // find the smallest and largest positions for later
@@ -255,6 +255,11 @@ namespace CellexalVR.Interaction
             {
                 return output.text;
             }
+        }
+
+        public void OnEnterEvent()
+        {
+
         }
 
 #if UNITY_EDITOR
