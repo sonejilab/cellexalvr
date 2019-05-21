@@ -225,6 +225,7 @@ namespace CellexalVR.General
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
 
 
+
             keyboardHandler = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
             correlatedGenesList = GameObject.Find("Keyboard Setup/Correlated Genes List").GetComponent<CorrelatedGenesList>();

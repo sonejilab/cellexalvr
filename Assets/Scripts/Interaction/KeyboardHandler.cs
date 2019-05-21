@@ -215,7 +215,7 @@ namespace CellexalVR.Interaction
 
                 if (layoutToSwitchTo.Length != sortedKeys.Length)
                 {
-                    Debug.LogError("Invalid number of keys in KeyboardHandler.cs, string array layout length: " + layoutToSwitchTo.Length + ", number of found Keyboard panel gameobjects: " + sortedKeys.Length);
+                    Debug.LogError("Invalid number of keys on " + gameObject.name + ", string array layout length: " + layoutToSwitchTo.Length + ", number of found Keyboard panel gameobjects: " + sortedKeys.Length);
                     return;
                 }
             }

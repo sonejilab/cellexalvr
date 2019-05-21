@@ -151,7 +151,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        [ConsoleCommand("networkGenerator", "generatenetworks", "gn")]
+        [ConsoleCommand("networkGenerator", aliases: new string[] { "generatenetworks", "gn" })]
         public void GenerateNetworks()
         {
             var rand = new System.Random();
@@ -202,7 +202,7 @@ namespace CellexalVR.AnalysisLogic
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             RScriptRunner.RunScript(script);
-            
+
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;

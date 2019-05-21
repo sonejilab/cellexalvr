@@ -103,7 +103,7 @@ namespace CellexalVR.AnalysisLogic
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
         /// <param name="path"> The path to the folder. </param>
-        [ConsoleCommand("inputReader", "readfolder", "rf")]
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
             UpdateSelectionToolHandler();
@@ -377,7 +377,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 StartCoroutine(StartServer());
             }
-
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         public IEnumerator ReadAttributeFiles(string path)
@@ -429,7 +429,7 @@ namespace CellexalVR.AnalysisLogic
                     yieldCount++;
                     if (yieldCount % 500 == 0)
                         yield return null;
-                    
+
                 }
                 metacellStreamReader.Close();
                 metacellFileStream.Close();
@@ -749,6 +749,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 print(string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
                 CellexalError.SpawnError("Error when generating networks", string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
             string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
@@ -761,12 +762,14 @@ namespace CellexalVR.AnalysisLogic
                 //statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
                 //statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
                 CellexalError.SpawnError("Error when generating networks", string.Format("No .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
 
             if (cntFilePaths.Length > 1)
             {
                 CellexalError.SpawnError("Error when generating networks", string.Format("More than one .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
 
@@ -777,6 +780,7 @@ namespace CellexalVR.AnalysisLogic
             if (nwkFilePaths.Length == 0)
             {
                 CellexalError.SpawnError("Error when generating networks", string.Format("No .nwk file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
             FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
@@ -787,6 +791,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalError.SpawnError("Error when generating networks", string.Format(".nwk file is larger than 1 MB. .nwk file size: {0} B", nwkFileStream.Length));
                 nwkStreamReader.Close();
                 nwkFileStream.Close();
+                CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
 
@@ -828,19 +833,21 @@ namespace CellexalVR.AnalysisLogic
                     if (graph == null)
                     {
                         CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.", graphName));
+                        CellexalEvents.CommandFinished.Invoke(false);
                         yield break;
                     }
-                    
+
                     StartCoroutine(graph.CreateGraphSkeleton(false));
                     while (!graph.convexHull.activeSelf)
                     {
                         yield return null;
                     }
-    
+
                     skeleton = graph.convexHull;
                     if (skeleton == null)
                     {
                         CellexalError.SpawnError("Error when generating networks", string.Format("Could not create a convex hull for the graph named {0}, this could be because the convex hull file is incorrect", graphName));
+                        CellexalEvents.CommandFinished.Invoke(false);
                         yield break;
                     }
                     CellexalLog.Log("Successfully created convex hull of " + graphName);
@@ -917,6 +924,7 @@ namespace CellexalVR.AnalysisLogic
                     cntFileStream.Close();
                     nwkStreamReader.Close();
                     nwkFileStream.Close();
+                    CellexalEvents.CommandFinished.Invoke(false);
                     yield break;
                 }
 
@@ -995,6 +1003,7 @@ namespace CellexalVR.AnalysisLogic
             nwkStreamReader.Close();
             nwkFileStream.Close();
             CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
+            CellexalEvents.CommandFinished.Invoke(true);
             networkHandler.CreateNetworkAnimation(graph.transform);
         }
 
@@ -1100,7 +1109,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        [ConsoleCommand("inputReader", "selectfromprevious", "sfp")]
+        [ConsoleCommand("inputReader", aliases: new string[] { "selectfromprevious", "sfp" })]
         public void ReadAndSelectPreviousSelection(int index)
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
@@ -1108,11 +1117,13 @@ namespace CellexalVR.AnalysisLogic
             if (files.Length == 0)
             {
                 CellexalLog.Log("No previous selections found.");
+                CellexalEvents.CommandFinished.Invoke(false);
                 return;
             }
             else if (index < 0 || index >= files.Length)
             {
                 CellexalLog.Log(string.Format("Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index, files.Length - 1));
+                CellexalEvents.CommandFinished.Invoke(false);
                 return;
             }
 
@@ -1138,12 +1149,14 @@ namespace CellexalVR.AnalysisLogic
                     CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1, files[index]));
                     streamReader.Close();
                     fileStream.Close();
+                    CellexalEvents.CommandFinished.Invoke(false);
                     return;
                 }
                 selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false, groupColor);
                 numPointsAdded++;
             }
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+            CellexalEvents.CommandFinished.Invoke(true);
             streamReader.Close();
             fileStream.Close();
         }

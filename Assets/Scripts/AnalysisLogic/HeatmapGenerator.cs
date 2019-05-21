@@ -126,7 +126,7 @@ namespace CellexalVR.AnalysisLogic
             heatmapList.Clear();
         }
 
-        [ConsoleCommand("heatmapGenerator", "generateheatmap", "gh")]
+        [ConsoleCommand("heatmapGenerator", aliases: new string[] { "generateheatmap", "gh" })]
         public void CreateHeatmap()
         {
             statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
@@ -250,6 +250,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
 

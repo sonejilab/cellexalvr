@@ -27,10 +27,11 @@ namespace CellexalVR.General
             currentSelectionState = SelectionState.INACTIVE;
         }
 
-        [ConsoleCommand("demoManager", "demo")]
+        [ConsoleCommand("demoManager", aliases: "demo")]
         public void SetDemoPanelActive(bool active)
         {
             demoPanel.SetActive(active);
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         public void AdvanceSelection()

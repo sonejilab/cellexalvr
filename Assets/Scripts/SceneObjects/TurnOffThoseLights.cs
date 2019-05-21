@@ -1,4 +1,5 @@
 ﻿using CellexalVR.DesktopUI;
+using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.SceneObjects
@@ -15,10 +16,11 @@ namespace CellexalVR.SceneObjects
             gameObject.SetActive(false);
         }
 
-        [ConsoleCommand("turnOffThoseLights", "lights")]
+        [ConsoleCommand("turnOffThoseLights", aliases: "lights")]
         public void ToggleLights(bool on)
         {
             gameObject.SetActive(on);
+            CellexalEvents.CommandFinished.Invoke(true);
         }
     }
 }

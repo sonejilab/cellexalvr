@@ -7,6 +7,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using CellexalVR.General;
+using System.IO;
 
 namespace CellexalVR.DesktopUI
 {
@@ -25,6 +26,7 @@ namespace CellexalVR.DesktopUI
         private bool consoleActive = false;
         private Dictionary<MethodInfo, string> accessors = new Dictionary<MethodInfo, string>();
         private Dictionary<string, MethodInfo> commands = new Dictionary<string, MethodInfo>();
+        private Dictionary<string, string> folders = new Dictionary<string, string>();
         private Dictionary<MethodInfo, List<string>> aliases = new Dictionary<MethodInfo, List<string>>();
 
         private LinkedList<string> history = new LinkedList<string>();
@@ -34,6 +36,9 @@ namespace CellexalVR.DesktopUI
         private int currentNumberOfLines = 0;
         private string outputBufferString = "";
         private bool awaitingConfirm = false;
+        // flags if running multiple commands from a file
+        private bool lastCommandFinished = false;
+        private bool lastCommandOK = false;
 
         private void OnValidate()
         {
@@ -46,6 +51,7 @@ namespace CellexalVR.DesktopUI
         private void Awake()
         {
             CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+            CellexalEvents.CommandFinished.AddListener(CommandFinished);
         }
 
         private void Start()
@@ -69,13 +75,20 @@ namespace CellexalVR.DesktopUI
                                     aliases[method] = new List<string>();
                                 }
                                 aliases[method].Add(alias);
+                                folders[alias] = attribute.Folder;
                             }
                         }
                     }
                 }
             }
+
             history.AddFirst("");
             currentHistoryNode = history.First;
+
+            float fontMultiplier = Screen.dpi / 100f;
+            outputField.pointSize *= fontMultiplier;
+            //inputField.pointSize *= fontMultiplier;
+            inputField.pointSize *= fontMultiplier;
         }
 
         private void Update()
@@ -104,7 +117,7 @@ namespace CellexalVR.DesktopUI
             // only if the console is active
             if (!awaitingConfirm && Input.GetKeyDown(KeyCode.Return))
             {
-                CommandEntered();
+                EnterCommand(inputField.text);
             }
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
@@ -113,6 +126,10 @@ namespace CellexalVR.DesktopUI
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 TraverseHistory(false);
+            }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                AutocompleteInput(inputField.text);
             }
         }
 
@@ -190,13 +207,13 @@ namespace CellexalVR.DesktopUI
 
             // scroll the output to the end
             //outputField.verticalScrollbar.value = 1;
-            float yCoordinate = outputField.textComponent.textBounds.size.y + outputTextAreaTransform.rect.height;
+            //float yCoordinate = outputField.textComponent.textBounds.size.y + outputTextAreaTransform.rect.height;
 
             //print(string.Format("outputField.textComponent.textBounds.size.y: {0} outputTextAreaTransform.rect.size.y {1} yCoordinate: {2}", outputField.textComponent.textBounds.size.y, outputTextAreaTransform.rect.size.y, yCoordinate));
 
-            outputTextAreaTransform.position = new Vector3(0f, yCoordinate, 0f);
+            //outputTextAreaTransform.position = new Vector3(0f, yCoordinate, 0f);
 
-            Canvas.ForceUpdateCanvases();
+            //Canvas.ForceUpdateCanvases();
             //outputTextAreaTransform.offsetMin = new Vector2(0f, -bottomYCoordinate);
             //outputTextAreaTransform.offsetMax = new Vector2(0f, bottomYCoordinate);
             //outputTextAreaTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, bottomYCoordinate, outputTextAreaTransform.rect.size.y);
@@ -210,9 +227,8 @@ namespace CellexalVR.DesktopUI
         /// Called when a command is entered.
         /// Checks that the command syntax is correct and executes the command.
         /// </summary>
-        public void CommandEntered()
+        public void EnterCommand(string command)
         {
-            string command = inputField.text;
             AppendOutput("> " + command);
             inputField.text = "";
 
@@ -271,10 +287,10 @@ namespace CellexalVR.DesktopUI
                     return;
                 }
             }
+            //CellexalLog.Log("Running command: " + command);
 
             // finally invoke the method
             method.Invoke(access, parameters);
-
         }
 
         /// <summary>
@@ -333,11 +349,80 @@ namespace CellexalVR.DesktopUI
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Auto-completes a command or file path.
+        /// </summary>
+        /// <param name="currentCommand">What the user has written so far in the termninal. (The full line).</param>
+        private void AutocompleteInput(string currentCommand)
+        {
+            if (currentCommand == "")
+            {
+                return;
+            }
+
+            string[] words = currentCommand.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string command = words[0];
+
+            if (words.Length == 1)
+            {
+                // suggest command
+                // get all commands that start with what is written in the console.
+                string[] allCommands = commands.Keys.Where((string key) => key.Length >= command.Length && command.IndexOf(key.Substring(0, command.Length)) == 0).ToArray();
+                string longestCommonBeginning = LongestCommonBeginning(words[0], allCommands);
+                inputField.text = longestCommonBeginning;
+            }
+            else
+            {
+                // suggest file or folder
+                string currentText = words[words.Length - 1];
+                string folder = Directory.GetCurrentDirectory() + @"\" + folders[command] + @"\";
+                string[] foundFolders = Directory.GetDirectories(folder, currentText + "*", SearchOption.TopDirectoryOnly);
+                string[] foundFiles = Directory.GetFiles(folder, currentText + "*", SearchOption.TopDirectoryOnly);
+                string[] foldersAndFiles = foundFolders.Concat(foundFiles).ToArray();
+                for (int i = 0; i < foldersAndFiles.Length; ++i)
+                {
+                    string fullPath = foldersAndFiles[i];
+                    foldersAndFiles[i] = fullPath.Substring(fullPath.LastIndexOf('\\') + 1);
+                }
+
+                string longestCommonBegninning = LongestCommonBeginning(currentText, foldersAndFiles);
+                words[words.Length - 1] = longestCommonBegninning;
+                inputField.text = string.Join(" ", words);
+            }
+        }
+
+        /// <summary>
+        /// Finds the longest common beginning of strings, used for autocompleting commands and file paths.
+        /// </summary>
+        /// <param name="start">What the user has written so far.</param>
+        /// <param name="words">An array of words to check for the a common beginning.</param>
+        /// <returns>The longest common beginning shared between <paramref name="start"/> and all strings in <paramref name="words"/>.</returns>
+        private string LongestCommonBeginning(string start, string[] words)
+        {
+            if (words.Length == 0)
+            {
+                return start;
+            }
+            string shortestCommon = words[0];
+            for (int i = 1; i < words.Length && shortestCommon.Length > start.Length; ++i)
+            {
+                for (int j = 0; j < words[i].Length && j < shortestCommon.Length; ++j)
+                {
+                    if (words[i][j] != shortestCommon[j])
+                    {
+                        shortestCommon = shortestCommon.Substring(0, j);
+                        break;
+                    }
+                }
+            }
+            return shortestCommon;
+        }
+
         #region GENERAL COMMANDS
         /// <summary>
         /// Lists all available commands.
         /// </summary>
-        [ConsoleCommand("consoleManager", "listall")]
+        [ConsoleCommand("consoleManager", aliases: "listall")]
         public void ListAllCommands()
         {
             StringBuilder sb = new StringBuilder();
@@ -354,13 +439,14 @@ namespace CellexalVR.DesktopUI
 
             }
             AppendOutput(sb.ToString());
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>
         /// Displays information about the arguments of a command. Semi-helpful.
         /// </summary>
         /// <param name="command">The command to show arguemnt information about.</param>
-        [ConsoleCommand("consoleManager", "arguments", "args")]
+        [ConsoleCommand("consoleManager", aliases: new string[] { "arguments", "args" })]
         public void ParameterInfo(string command)
         {
             string parameterInfoString = ParameterInfosToString(commands[command].GetParameters());
@@ -372,23 +458,25 @@ namespace CellexalVR.DesktopUI
             {
                 AppendOutput(parameterInfoString);
             }
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>
         /// Clears the console.
         /// </summary>
-        [ConsoleCommand("consoleManager", "clear", "clr", "cls")]
+        [ConsoleCommand("consoleManager", aliases: new string[] { "clear", "clr", "cls" })]
         public void ClearConsole()
         {
             currentNumberOfLines = 0;
             outputBufferString = string.Empty;
             outputField.text = string.Empty;
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         /// <summary>
         /// Asks for a confirmation and eventually quits CellexalVR.
         /// </summary>
-        [ConsoleCommand("consoleManager", "quit", "goodbye")]
+        [ConsoleCommand("consoleManager", aliases: new string[] { "quit", "goodbye" })]
         public void Quit()
         {
             StartCoroutine(QuitCoroutine());
@@ -420,12 +508,75 @@ namespace CellexalVR.DesktopUI
             Application.Quit();
 #endif
             }
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        [ConsoleCommand("consoleManager", "fps")]
+        /// <summary>
+        /// Shows or hides a little fps counter in the top left corner of the desktop display.
+        /// </summary>
+        /// <param name="b">True to show hte fps coutner, false to hide it.</param>
+        [ConsoleCommand("consoleManager", aliases: "fps")]
         public void ShowFPS(bool b)
         {
             referenceManager.fpsCounter.SetActive(b);
+            CellexalEvents.CommandFinished.Invoke(true);
+        }
+
+        /// <summary>
+        /// Runs multiple commands written in a file.
+        /// </summary>
+        /// <param name="filename"></param>
+        [ConsoleCommand("consoleManager", aliases: new string[] { "readcommandfile", "rcf" })]
+        public void RunCommandFile(string filename)
+        {
+            StartCoroutine(RunCommandFileCoroutine(filename));
+        }
+
+        /// <summary>
+        /// Helper coroutine to run multiple commands. See <see cref="ConsoleManager.RunCommandFile(string)"/>.
+        /// </summary>
+        private IEnumerator RunCommandFileCoroutine(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                CellexalLog.Log("ERROR: File not found: " + filename);
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+
+            using (FileStream fileStream = new FileStream(filename, FileMode.Open))
+            using (StreamReader streamReader = new StreamReader(fileStream))
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    string line = streamReader.ReadLine();
+                    lastCommandFinished = false;
+                    EnterCommand(line);
+                    do
+                    {
+                        yield return null;
+                    } while (!lastCommandFinished);
+
+                    if (!lastCommandOK)
+                    {
+                        break;
+                    }
+                }
+
+                streamReader.Close();
+                fileStream.Close();
+            }
+            CellexalEvents.CommandFinished.Invoke(true);
+        }
+
+        /// <summary>
+        /// Called when the <see cref="CellexalEvents.CommandFinished"/> event is invoked.
+        /// </summary>
+        /// <param name="ok">True if the command that finished was successful, false otherwise.</param>
+        private void CommandFinished(bool ok)
+        {
+            lastCommandFinished = true;
+            lastCommandOK = ok;
         }
 
         #endregion
@@ -439,6 +590,7 @@ namespace CellexalVR.DesktopUI
     public class ConsoleCommandAttribute : Attribute
     {
         public string Access { get; private set; }
+        public string Folder { get; private set; }
         public string[] Aliases { get; private set; }
 
         /// <summary>
@@ -446,9 +598,10 @@ namespace CellexalVR.DesktopUI
         /// </summary>
         /// <param name="access">The name of a field in the <see cref="ReferenceManager"/> to access this method from. Case sensitive.</param>
         /// <param name="aliases">One or more ways to refer to this method from the console.</param>
-        public ConsoleCommandAttribute(string access, params string[] aliases)
+        public ConsoleCommandAttribute(string access, string folder = "", params string[] aliases)
         {
             Access = access;
+            Folder = folder;
             Aliases = aliases;
         }
     }

@@ -710,7 +710,7 @@ namespace CellexalVR.AnalysisObjects
                 newGraph.maxCoordValues.z = z;
         }
 
-        [ConsoleCommand("graphGenerator", "csg")]
+        [ConsoleCommand("graphGenerator", aliases: "csg")]
         public void CreateSubGraphs()
         {
             List<string> attr = new List<string>
@@ -740,16 +740,19 @@ namespace CellexalVR.AnalysisObjects
                     name += " - " + attributes[i];
                 }
                 BooleanExpression.Expr tempExpr = expr;
-                expr = new BooleanExpression.OrExpr(tempExpr,
-                                                    new BooleanExpression.ValueExpr(attributes[i]));
-            }
-            foreach (Graph g in graphManager.originalGraphs)
-            {
-                
-                StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, name));
+                expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.ValueExpr(attributes[i]));
+                StartCoroutine(CreateSubgraphsCoroutine(expr, attributes, graphManager.originalGraphs, name));
             }
         }
 
+        private IEnumerator CreateSubgraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes, List<Graph> graphs, string name)
+        {
+            foreach (Graph g in graphs)
+            {
+                yield return StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, name));
+            }
+            CellexalEvents.CommandFinished.Invoke(true);
+        }
 
         private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes, Graph g, string name)
         {
@@ -782,7 +785,7 @@ namespace CellexalVR.AnalysisObjects
             subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
             SliceClustering();
             subGraph.GetComponent<BoxCollider>().size = graph.GetComponent<BoxCollider>().size;
- 
+
             while (isCreating)
             {
                 yield return null;

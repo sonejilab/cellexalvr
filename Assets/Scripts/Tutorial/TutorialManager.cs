@@ -117,7 +117,7 @@ namespace CellexalVR.Tutorial
                 if (referenceManager.mainMenu.GetComponent<MeshRenderer>().enabled)
                 {
                     ResetMaterials(new GameObject[] { trackpadLeft, triggerRight });
-                    HighlightMaterials(new GameObject [] { triggerLeft });
+                    HighlightMaterials(new GameObject[] { triggerLeft });
                     //triggerParticlesLeft.SetActive(true);
                 }
                 else
@@ -134,7 +134,7 @@ namespace CellexalVR.Tutorial
         /// When changing step, change canvas with description as well as removing/adding buttons to be highlighted.
         /// </summary>
         /// <param name="stepNr"></param>
-        [ConsoleCommand("tutorialManager", "loadStep", "ls")]
+        [ConsoleCommand("tutorialManager", aliases: new string[] { "loadStep", "ls" })]
         public void LoadTutorialStep(int stepNr)
         {
             print("LOAD STEP: " + stepNr);
@@ -184,7 +184,7 @@ namespace CellexalVR.Tutorial
                     canv = Instantiate(descriptionCanvasPrefab, transform);
                     canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step " + currentStep + " of 8: Coloring by Gene Expression \n" +
                                                         "--> Activate the Keyboard \n" +
-                                                        "--> Type in Gata1 and press Enter. \n" + 
+                                                        "--> Type in Gata1 and press Enter. \n" +
                                                         "--> To continue, place the graph in the yellow area on the floor.";
                     ResetMaterials(objList);
                     videoPlayer.StopVideo();
@@ -332,6 +332,7 @@ namespace CellexalVR.Tutorial
                     TurnOnSpot();
                     break;
             }
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         void FinalLevel()
