@@ -27,6 +27,7 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, false);
+            //referenceManager.controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
             //referenceManager.gameManager.InformMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
             base.OnInteractableObjectGrabbed(e);
         }
@@ -34,7 +35,25 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, true);
+            //referenceManager.rightLaser.enabled = true;
+            //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
             base.OnInteractableObjectUngrabbed(e);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.name.Equals("Collider"))
+            {
+                CellexalEvents.ObjectGrabbed.Invoke();
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.name.Equals("Collider"))
+            {
+                CellexalEvents.ObjectUngrabbed.Invoke();
+            }
         }
     }
 }

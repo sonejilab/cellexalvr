@@ -53,5 +53,21 @@ namespace CellexalVR.Interaction
             GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
             base.OnInteractableObjectUngrabbed(e);
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.name.Equals("Collider"))
+            {
+                CellexalEvents.ObjectGrabbed.Invoke();
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.name.Equals("Collider"))
+            {
+                CellexalEvents.ObjectUngrabbed.Invoke();
+            }
+        }
     }
 }

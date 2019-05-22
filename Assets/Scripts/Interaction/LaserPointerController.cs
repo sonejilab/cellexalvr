@@ -24,7 +24,6 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
 
         public ReferenceManager referenceManager;
-        public GameObject panel;
         public Transform origin;
         public bool Override { get; set; }
 
@@ -39,12 +38,13 @@ namespace CellexalVR.Interaction
         // Use this for initialization
         void Start()
         {
-            panel = referenceManager.rightControllerScriptAlias.GetComponentInChildren<Canvas>().gameObject;
             frame = 0;
             tempHit = null;
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+            CellexalEvents.ObjectGrabbed.AddListener(() => ToggleLaser(false));
+            CellexalEvents.ObjectUngrabbed.AddListener(() => ToggleLaser(true));
 
         }
         private void Update()
@@ -80,17 +80,8 @@ namespace CellexalVR.Interaction
             if (!hitSomething && alwaysActive)
             {
                 origin.localRotation = Quaternion.Euler(0, 0, 0);
-                //Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 10, layerMaskKeyboard);
-                //if (hit.collider && (hit.collider.gameObject.CompareTag("Keyboard") || hit.collider.gameObject.CompareTag("PreviousSearchesListNode")))
-                //{
-                //    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
-                //}
-                //else
-                //{
                 controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
-                //panel.transform.localPosition = new Vector3(0, 0, 0);
-                //panel.transform.localRotation = Quaternion.Euler(0, 5, 1);
-                //}
+
             }
             if (!alwaysActive && !Override)
             {
@@ -101,7 +92,7 @@ namespace CellexalVR.Interaction
                     {
                         controllerModelSwitcher.ActivateDesiredTool();
                     }
-                    referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
+                    referenceManager.rightLaser.enabled = false;
 
                 }
             }
@@ -126,7 +117,7 @@ namespace CellexalVR.Interaction
         public void ToggleLaser(bool active)
         {
             alwaysActive = active;
-            referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = alwaysActive;
+            referenceManager.rightLaser.enabled = alwaysActive;
             origin.localRotation = Quaternion.identity;
             //if (alwaysActive)
             //{
