@@ -28,6 +28,8 @@ namespace CellexalVR.General
         public static UnityEvent ScriptRunning = new UnityEvent();
         public static UnityEvent ScriptFinished = new UnityEvent();
         public static UnityEvent KeyboardToggled = new UnityEvent();
+        public static UnityEvent ObjectGrabbed = new UnityEvent();
+        public static UnityEvent ObjectUngrabbed = new UnityEvent();
 
 
         public static UnityEvent GraphsReset = new UnityEvent();
