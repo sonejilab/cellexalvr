@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 23982623659630714}
   - component: {fileID: 114252115367115154}
   - component: {fileID: 65502072426276958}
-  - component: {fileID: 114940603741624592}
   m_Layer: 11
   m_Name: NetworkNodePrefab
   m_TagString: Menu Controller Collider
@@ -177,6 +176,7 @@ MonoBehaviour:
     type: 2}
   standardMaterial: {fileID: 2100000, guid: 9cfe725c6e37d244a964b41189e1d31d, type: 2}
   highlightMaterial: {fileID: 2100000, guid: e333e1753c2fcf1458b8dd3da30b3466, type: 2}
+  referenceManager: {fileID: 0}
 --- !u!114 &114269250619962334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -290,36 +290,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
---- !u!114 &114940603741624592
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1147256446606448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57bbe35e73e451c47b2b9f300d5d7816, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disableWhenIdle: 1
-  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
-  allowedTouchControllers: 0
-  isGrabbable: 0
-  holdButtonToGrab: 1
-  stayGrabbedOnTeleport: 1
-  validDrop: 1
-  grabOverrideButton: 0
-  allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
-  isUsable: 1
-  holdButtonToUse: 1
-  useOnlyIfGrabbed: 0
-  pointerActivatesUseAction: 0
-  useOverrideButton: 0
-  allowedUseControllers: 0
-  usingState: 0
-  referenceManager: {fileID: 0}
 --- !u!222 &222853809826507562
 CanvasRenderer:
   m_ObjectHideFlags: 1

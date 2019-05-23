@@ -432,6 +432,7 @@ GameObject:
   - component: {fileID: 114856442991154486}
   - component: {fileID: 114173966669533950}
   - component: {fileID: 114980736415935192}
+  - component: {fileID: 114264306695265362}
   m_Layer: 9
   m_Name: RightControllerScriptAlias
   m_TagString: Controller
@@ -845,7 +846,7 @@ MonoBehaviour:
   validCollisionColor: {r: 0, g: 0.73112607, b: 0.7924528, a: 1}
   invalidCollisionColor: {r: 0, g: 0.5071101, b: 0.8396226, a: 0.27450982}
   tracerVisibility: 1
-  cursorVisibility: 1
+  cursorVisibility: 0
   maximumLength: 100
   scaleFactor: 0.002
   cursorScaleMultiplier: 3
@@ -867,7 +868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playareaCursor: {fileID: 0}
   directionIndicator: {fileID: 0}
-  customRaycast: {fileID: 0}
+  customRaycast: {fileID: 114264306695265362}
   pointerOriginSmoothingSettings:
     smoothsPosition: 0
     maxAllowedPerFrameDistanceDifference: 0.003
@@ -994,6 +995,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114264306695265362
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903796768874974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3942f053b21854fbc5d1227c94120b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layersToIgnore:
+    serializedVersion: 2
+    m_Bits: 516
+  triggerInteraction: 0
 --- !u!114 &114274381075430214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1233,6 +1249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bec426c91bd2ab44a98c2211eb7ab74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
 --- !u!114 &114348731833172086
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1463,6 +1480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bec426c91bd2ab44a98c2211eb7ab74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
 --- !u!114 &114521011951290768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2010,7 +2028,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  panel: {fileID: 0}
   origin: {fileID: 4511245984938392}
 --- !u!114 &114995077801209180
 MonoBehaviour:
