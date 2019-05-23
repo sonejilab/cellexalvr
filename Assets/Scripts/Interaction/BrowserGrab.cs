@@ -21,7 +21,7 @@ namespace CellexalVR.Interaction
         }
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
-        {   
+        {
             keyboard.SetActive(false);
             if (referenceManager == null)
             {
@@ -39,6 +39,28 @@ namespace CellexalVR.Interaction
             //if (grabbingObjects.Count == 0)
             //    GetComponent<MeshCollider>().convex = false;
             base.OnInteractableObjectUngrabbed(e);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            {
+                if (other.gameObject.name.Equals("Collider"))
+                {
+                    CellexalEvents.ObjectGrabbed.Invoke();
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            {
+                if (other.gameObject.name.Equals("Collider"))
+                {
+                    CellexalEvents.ObjectUngrabbed.Invoke();
+                }
+            }
         }
 
     }

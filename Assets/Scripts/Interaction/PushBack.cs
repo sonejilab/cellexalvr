@@ -81,7 +81,7 @@ namespace CellexalVR.Interaction
                 raycastingSource = rightController.transform;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
                 //ray = new Ray(raycastingSource.position, raycastingSource.forward);
-                if (hit.collider && push)
+                if (hit.collider && push && hit.transform == transform)
                 {
                     if (hit.transform.GetComponent<NetworkCenter>())
                     {
@@ -101,9 +101,8 @@ namespace CellexalVR.Interaction
             {
                 raycastingSource = rightController.transform;
                 int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");
-                raycastingSource = rightController.transform;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist + 5, layerMask);
-                if (hit.collider && pull)
+                if (hit.collider && pull && hit.transform == transform)
                 {
                     // don't let the thing become smaller than what it was originally
                     // this could cause some problems if the user rescales the objects while they are far away

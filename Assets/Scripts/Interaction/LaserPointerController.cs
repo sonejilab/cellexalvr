@@ -118,6 +118,7 @@ namespace CellexalVR.Interaction
         {
             alwaysActive = active;
             referenceManager.rightLaser.enabled = alwaysActive;
+            referenceManager.leftLaser.enabled = alwaysActive;
             origin.localRotation = Quaternion.identity;
             //if (alwaysActive)
             //{

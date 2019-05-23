@@ -303,7 +303,7 @@ namespace CellexalVR.Interaction
             //    DesiredModel = Model.HelpTool;
             //}
             laserPointerController.ToggleLaser(false);
-            leftLaser.enabled = false;
+            //leftLaser.enabled = false;
             keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
             drawTool.SetActive(false);

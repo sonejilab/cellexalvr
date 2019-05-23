@@ -19,6 +19,11 @@ namespace CellexalVR.Interaction
             }
         }
 
+        private void Start()
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformDisableColliders(gameObject.name);
@@ -63,17 +68,23 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("Collider"))
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
             {
-                CellexalEvents.ObjectGrabbed.Invoke();
+                if (other.gameObject.name.Equals("Collider"))
+                {
+                    CellexalEvents.ObjectGrabbed.Invoke();
+                }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("Collider"))
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
             {
-                CellexalEvents.ObjectUngrabbed.Invoke();
+                if (other.gameObject.name.Equals("Collider"))
+                {
+                    CellexalEvents.ObjectUngrabbed.Invoke();
+                }
             }
         }
     }
