@@ -550,7 +550,7 @@ namespace SQLiter
 
         private IEnumerator QueryGeneInCellsCoroutine(string gene, string cells, Action<SQLite> action = null)
         {
-            string query = "select cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -738,7 +738,8 @@ namespace SQLiter
         private IEnumerator QueryGeneCoroutine(string geneName, Action<SQLite> action)
         {
             _result.Clear();
-            string query = "select cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -763,6 +764,7 @@ namespace SQLiter
         public void QueryGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
             QueryRunning = true;
+            
             StartCoroutine(QueryGeneCoroutine(geneName, coloringMethod));
         }
 
@@ -772,9 +774,11 @@ namespace SQLiter
         /// <param name="geneName"> The gene name </param>
         private IEnumerator QueryGeneCoroutine(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "select cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -857,6 +861,8 @@ namespace SQLiter
             _connection.Close();
             //status.RemoveStatus(statusId);
             QueryRunning = false;
+            stopWatch.Stop();
+            print(stopWatch.Elapsed);
         }
 
         private List<string> TTestLists(List<Pair<string, List<float>>> expressions1, List<Pair<string, List<float>>> expressions2, int length1, int length2)
@@ -1009,7 +1015,7 @@ namespace SQLiter
                 cellNames.Add(_reader.GetString(0));
             }
             // Get all relevant values.
-            query = "select gene_id, cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
+            query = "select gene_id, cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
             //print(query);
             t = new Thread(() => QueryThread(query));
             t.Start();
