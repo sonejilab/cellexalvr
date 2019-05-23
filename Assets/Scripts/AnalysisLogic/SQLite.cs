@@ -326,7 +326,7 @@ namespace SQLiter
             }
             string cellNamesString2 = builder.ToString();
             // query for list 1
-            string query = "select gene_id, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString1 + ") order by gene_id";
+            string query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString1 + ") order by gene_id";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -337,7 +337,7 @@ namespace SQLiter
             List<Pair<string, List<float>>> expressions1 = GetResultsTopGeneQuery();
             _result.Clear();
             // query for list 2
-            query = "select gene_id, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
+            query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
             t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -774,8 +774,6 @@ namespace SQLiter
         /// <param name="geneName"> The gene name </param>
         private IEnumerator QueryGeneCoroutine(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
-            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-            stopWatch.Start();
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
             string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
@@ -861,8 +859,6 @@ namespace SQLiter
             _connection.Close();
             //status.RemoveStatus(statusId);
             QueryRunning = false;
-            stopWatch.Stop();
-            print(stopWatch.Elapsed);
         }
 
         private List<string> TTestLists(List<Pair<string, List<float>>> expressions1, List<Pair<string, List<float>>> expressions2, int length1, int length2)
