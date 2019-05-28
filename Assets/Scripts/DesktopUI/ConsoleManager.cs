@@ -21,8 +21,7 @@ namespace CellexalVR.DesktopUI
         public GameObject consoleGameObject;
         public TMPro.TMP_InputField inputField;
         public TMPro.TMP_InputField outputField;
-        public RectTransform outputTextAreaTransform;
-
+        public TMPro.TMP_Text suggestionField;
         private bool consoleActive = false;
         private Dictionary<MethodInfo, string> accessors = new Dictionary<MethodInfo, string>();
         private Dictionary<string, MethodInfo> commands = new Dictionary<string, MethodInfo>();
@@ -85,10 +84,10 @@ namespace CellexalVR.DesktopUI
             history.AddFirst("");
             currentHistoryNode = history.First;
 
-            float fontMultiplier = Screen.dpi / 100f;
-            outputField.pointSize *= fontMultiplier;
+            //float fontMultiplier = Screen.dpi / 100f;
+            //outputField.pointSize *= fontMultiplier;
             //inputField.pointSize *= fontMultiplier;
-            inputField.pointSize *= fontMultiplier;
+            //inputField.pointSize *= fontMultiplier;
         }
 
         private void Update()
@@ -166,7 +165,7 @@ namespace CellexalVR.DesktopUI
             {
                 currentHistoryNode = currentHistoryNode.Previous;
             }
-
+            ClearAndHideSuggestions();
             inputField.text = currentHistoryNode.Value;
             inputField.MoveTextEnd(false);
         }
@@ -206,22 +205,7 @@ namespace CellexalVR.DesktopUI
             outputField.textComponent.ForceMeshUpdate();
             Canvas.ForceUpdateCanvases();
 
-            // scroll the output to the end
-            //outputField.verticalScrollbar.value = 1;
-            //float yCoordinate = outputField.textComponent.textBounds.size.y + outputTextAreaTransform.rect.height;
-
-            //print(string.Format("outputField.textComponent.textBounds.size.y: {0} outputTextAreaTransform.rect.size.y {1} yCoordinate: {2}", outputField.textComponent.textBounds.size.y, outputTextAreaTransform.rect.size.y, yCoordinate));
-
-            //outputTextAreaTransform.position = new Vector3(0f, yCoordinate, 0f);
-
-            //Canvas.ForceUpdateCanvases();
-            //outputTextAreaTransform.offsetMin = new Vector2(0f, -bottomYCoordinate);
-            //outputTextAreaTransform.offsetMax = new Vector2(0f, bottomYCoordinate);
-            //outputTextAreaTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, bottomYCoordinate, outputTextAreaTransform.rect.size.y);
-
-
-            //outputTextAreaTransform.anchoredPosition = new Vector3(0f, 1f, 0f);
-            //Canvas.ForceUpdateCanvases();
+            ClearAndHideSuggestions();
         }
 
         /// <summary>
@@ -356,6 +340,7 @@ namespace CellexalVR.DesktopUI
         /// <param name="currentCommand">What the user has written so far in the termninal. (The full line).</param>
         private void AutocompleteInput(string currentCommand)
         {
+            ClearAndHideSuggestions();
             if (currentCommand == "")
             {
                 return;
@@ -369,6 +354,11 @@ namespace CellexalVR.DesktopUI
                 // suggest command
                 // get all commands that start with what is written in the console.
                 string[] allCommands = commands.Keys.Where((string key) => key.Length >= command.Length && command == key.Substring(0, command.Length)).ToArray();
+                if (allCommands.Length > 1)
+                {
+                    suggestionField.text = string.Join(" ", allCommands);
+                    suggestionField.transform.parent.gameObject.SetActive(true);
+                }
                 string longestCommonBeginning = LongestCommonBeginning(words[0], allCommands);
                 inputField.text = longestCommonBeginning;
             }
@@ -384,7 +374,7 @@ namespace CellexalVR.DesktopUI
                 // remove the unnecessary full path, just keep the relative part
                 list = list.Select((f) => f.Substring(folder.Length));
 
-                if (currentText.Length > 0) 
+                if (currentText.Length > 0)
                 {
                     // Directory.GetDirectories returns hidden folders even if the user did not start the searchpattern with '.'
                     // Remove those unless the user did start the searchpattern with '.'
@@ -395,12 +385,19 @@ namespace CellexalVR.DesktopUI
 
                 string[] foldersAndFiles = list.ToArray();
 
+                if (foldersAndFiles.Length > 1)
+                {
+                    suggestionField.text = string.Join(" ", foldersAndFiles);
+                    suggestionField.transform.parent.gameObject.SetActive(true);
+                }
+
                 string longestCommonBeginning = LongestCommonBeginning(currentText, foldersAndFiles);
                 words[words.Length - 1] = longestCommonBeginning;
                 inputField.text = string.Join(" ", words);
             }
 
             StartCoroutine(MoveTextEnd());
+
         }
 
         /// <summary>
@@ -429,6 +426,12 @@ namespace CellexalVR.DesktopUI
                 }
             }
             return shortestCommon;
+        }
+
+        public void ClearAndHideSuggestions()
+        {
+            suggestionField.text = "";
+            suggestionField.transform.parent.gameObject.SetActive(false);
         }
 
         #region GENERAL COMMANDS
