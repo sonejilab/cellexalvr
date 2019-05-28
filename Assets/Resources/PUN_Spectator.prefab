@@ -3195,7 +3195,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1610247719652096}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e7f40da837f20d418bc68663f86b6f4, type: 3}
   m_Name: 
@@ -3341,6 +3341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4632113603985486}
   leftControllerPos: {fileID: 0}
+  referenceManager: {fileID: 0}
 --- !u!114 &114648039882710838
 MonoBehaviour:
   m_ObjectHideFlags: 1
