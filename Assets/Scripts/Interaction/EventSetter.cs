@@ -60,12 +60,23 @@ namespace CellexalVR.Interaction
 
         public void RightMenuUpClickEvent()
         {
-            referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(true);
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(true);
+            }
         }
 
         public void RightMenuDownClickEvent()
         {
-            referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
+            }
+            else if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers 
+                    || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+            {
+                //referenceManager.push
+            }
 
         }
 

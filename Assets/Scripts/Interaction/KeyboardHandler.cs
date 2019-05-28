@@ -31,6 +31,7 @@ namespace CellexalVR.Interaction
         public Layout currentLayout = Layout.Lowercase;
         public string placeholder = "Enter a gene name";
         public KeyboardEvent OnEdit;
+        public KeyboardEvent OnEditMultiuser;
         public KeyboardEvent OnEnter;
 
         private bool keyLayoutUppercase = false;
@@ -119,22 +120,29 @@ namespace CellexalVR.Interaction
         /// Adds a character to the output.
         /// </summary>
         /// <param name="c"></param>
-        public void AddCharacter(char c)
+        public void AddCharacter(char c, bool invokeMultiuserEvent)
         {
             if (displayingPlaceHolder)
             {
-                output.text = c + "";
+                output.text = c.ToString();
                 displayingPlaceHolder = false;
             }
             else
             {
                 output.text += c;
             }
+
             if (OnEdit != null)
             {
                 OnEdit.Invoke(Text());
             }
+
+            if (invokeMultiuserEvent)
+            {
+                OnEditMultiuser.Invoke(c.ToString());
+            }
         }
+
 
         /// <summary>
         /// Removes the last typed letter.

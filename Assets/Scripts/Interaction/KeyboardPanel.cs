@@ -69,7 +69,7 @@ namespace CellexalVR.Interaction
             switch (keyType)
             {
                 case Type.Character:
-                    handler.AddCharacter(Text[0]);
+                    handler.AddCharacter(Text[0], true);
                     break;
                 case Type.Shift:
                     handler.Shift();

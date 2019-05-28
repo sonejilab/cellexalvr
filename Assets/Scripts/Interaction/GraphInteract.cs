@@ -42,7 +42,8 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)  
             {
                 if (other.gameObject.name.Equals("Collider"))
                 {
@@ -53,7 +54,8 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
             {
                 if (other.gameObject.name.Equals("Collider"))
                 {

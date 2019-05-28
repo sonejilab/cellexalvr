@@ -27,6 +27,7 @@ namespace CellexalVR.Interaction
 
         private SteamVR_TrackedObject rightController;
         private ClickablePanel lastHit = null;
+        private bool grabbingObject = false;
 
         private ControllerModelSwitcher controllerModelSwitcher;
 
@@ -91,11 +92,13 @@ namespace CellexalVR.Interaction
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
+            CellexalEvents.ObjectGrabbed.AddListener(() => grabbingObject = true);
+            CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
         }
 
         private void Update()
         {
-            if (!controllerModelSwitcher.Ready())
+            if (!controllerModelSwitcher.Ready() || CrossSceneInformation.Ghost || grabbingObject)
                 return;
             var raycastingSource = referenceManager.rightLaser.transform;
             var device = SteamVR_Controller.Input((int)rightController.index);
@@ -110,6 +113,7 @@ namespace CellexalVR.Interaction
                 if (hitPanel != null)
                 {
                     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                    //referenceManager.laserPointerController.ToggleLaser(true);
                     referenceManager.laserPointerController.Override = true;
                     if (lastHit != null && lastHit != hitPanel)
                     {
@@ -132,6 +136,8 @@ namespace CellexalVR.Interaction
                     lastHit.UpdateLaserCoords(new Vector2(-1f, -1f));
                     lastHit = null;
                     controllerModelSwitcher.SwitchToDesiredModel();
+                    //referenceManager.laserPointerController.ToggleLaser(false);
+
                     referenceManager.laserPointerController.Override = false;
                 }
 
@@ -139,6 +145,7 @@ namespace CellexalVR.Interaction
             else if (lastHit != null)
             {
                 controllerModelSwitcher.SwitchToDesiredModel();
+                //referenceManager.laserPointerController.ToggleLaser(false);
                 referenceManager.laserPointerController.Override = false;
                 // if we hit nothing this frame, but hit something last frame.
                 lastHit.SetHighlighted(false);

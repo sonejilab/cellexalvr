@@ -185,6 +185,7 @@ namespace CellexalVR.Interaction
                     drawTool.SetActive(false);
                     deleteTool.SetActive(false);
                     minimizer.SetActive(false);
+                    //rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                     rightControllerBodyRenderer.material = normalMaterial;
@@ -233,7 +234,7 @@ namespace CellexalVR.Interaction
             // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
             if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
             {
-                //rightLaser.ToggleLaser(false);
+                //laserPointerController.ToggleLaser(false);
                 //leftLaser.enabled = false;
                 //keyboard.SetKeyboardVisible(false);
                 //rightLaser.enabled = false;
@@ -265,8 +266,8 @@ namespace CellexalVR.Interaction
                 //    break;
                 case Model.Keyboard:
                     keyboard.SetKeyboardVisible(true);
+                    laserPointerController.ToggleLaser(true);
                     //rightLaser.enabled = true;
-                    //rightLaser.ToggleLaser(true);
                     break;
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetVisible(true);

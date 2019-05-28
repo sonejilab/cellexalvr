@@ -38,6 +38,10 @@ namespace CellexalVR.Interaction
 
         void Start()
         {
+            if (CrossSceneInformation.Ghost || CrossSceneInformation.Spectator)
+            {
+                Destroy(this);
+            }
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             rightController = referenceManager.rightController;
             device = SteamVR_Controller.Input((int)rightController.index);
@@ -57,8 +61,7 @@ namespace CellexalVR.Interaction
                 device = SteamVR_Controller.Input((int)rightController.index);
             }
             bool objectPointedAt = GetComponent<VRTK_InteractableObject>() != null && GetComponent<VRTK_InteractableObject>().enabled && !GetComponent<VRTK_InteractableObject>().IsGrabbed();
-            bool correctControllerModel = referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers ||
-                referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard;
+            bool correctControllerModel = referenceManager.rightLaser.IsTracerVisible();
             if (objectPointedAt && correctControllerModel)
             {
                 if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
@@ -83,17 +86,22 @@ namespace CellexalVR.Interaction
                 //ray = new Ray(raycastingSource.position, raycastingSource.forward);
                 if (hit.collider && push && hit.transform == transform)
                 {
-                    if (hit.transform.GetComponent<NetworkCenter>())
-                    {
-                        transform.LookAt(Vector3.zero);
-                    }
-                    //else if (hit.transform.GetComponent<Heatmap>())
-                    //{
-                    //    transform.LookAt(Vector3.zero);
-                    //}
                     Vector3 dir = hit.transform.position - raycastingSource.position;
                     dir = dir.normalized;
                     transform.position += dir * distanceMultiplier;
+                    if (hit.transform.GetComponent<Graph>())
+                    {
+                        referenceManager.gameManager.InformMoveGraph(transform.gameObject.name, transform.localPosition, transform.localRotation, transform.localScale);
+                    }
+                    else if (hit.transform.GetComponent<NetworkCenter>())
+                    {
+                        transform.LookAt(Vector3.zero);
+                        referenceManager.gameManager.InformMoveNetwork(transform.gameObject.name, transform.localPosition, transform.localRotation, transform.localScale);
+                    }
+                    else if (hit.transform.GetComponent<Heatmap>())
+                    {
+                        referenceManager.gameManager.InformMoveHeatmap(transform.gameObject.name, transform.localPosition, transform.localRotation, transform.localScale);
+                    }
                     //transform.localScale = newScale;
                 }
             }

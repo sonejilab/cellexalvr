@@ -10,7 +10,7 @@ namespace CellexalVR.Interaction
     {
         public GraphManager.GeneExpressionColoringMethods modeToSwitchTo;
         public TMPro.TextMeshPro text;
-        public GameObject coloringOptionsList;
+        public ColoringOptionsList coloringOptionsList;
 
         private GraphManager graphManager;
 
@@ -26,13 +26,8 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
-            graphManager.GeneExpressionColoringMethod = modeToSwitchTo;
-            // set all other texts to white and ours to green
-            foreach (TMPro.TextMeshPro textMesh in coloringOptionsList.GetComponentsInChildren<TMPro.TextMeshPro>())
-            {
-                textMesh.color = Color.white;
-            }
-            text.color = Color.green;
+            referenceManager.gameManager.InformColoringMethodChanged((int)modeToSwitchTo);
+            coloringOptionsList.SwitchMode(modeToSwitchTo);
         }
     }
 }

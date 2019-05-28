@@ -20,6 +20,7 @@ namespace CellexalVR.Interaction
         //private int layerMaskOther;
         private bool alwaysActive;
         private bool keyboardActive;
+        private bool touchingObject;
         private bool hitLastFrame;
         private ControllerModelSwitcher controllerModelSwitcher;
 
@@ -43,8 +44,8 @@ namespace CellexalVR.Interaction
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            CellexalEvents.ObjectGrabbed.AddListener(() => ToggleLaser(false));
-            CellexalEvents.ObjectUngrabbed.AddListener(() => ToggleLaser(true));
+            CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
+            CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
 
         }
         private void Update()
@@ -77,12 +78,17 @@ namespace CellexalVR.Interaction
             {
                 origin.localEulerAngles = new Vector3(0f, 0f, 0f);
             }
-            if (!hitSomething && alwaysActive)
+
+            if (!hitSomething && alwaysActive && !touchingObject)
             {
                 origin.localRotation = Quaternion.Euler(0, 0, 0);
-                controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
-
+                //controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
+                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                {
+                    controllerModelSwitcher.ActivateDesiredTool();
+                }
             }
+
             if (!alwaysActive && !Override)
             {
                 // When to switch back to previous model. 
@@ -96,38 +102,27 @@ namespace CellexalVR.Interaction
 
                 }
             }
-            //if (!hitSomething && hitLastFrame)
-            //{
-            //    print("Unhighlight");
-            //    UnhighlightAllButtons();
-            //}
-
-            //hitLastFrame = hitSomething;
         }
 
-        //private void UnhighlightAllButtons()
-        //{
-        //    foreach (var button in referenceManager.mainMenu.GetComponentsInChildren<CellexalButton>())
-        //    {
-        //        button.SetHighlighted(false);
-        //    }
-        //}
 
         // Toggle Laser from laser button. Laser should then be active until toggled off.
         public void ToggleLaser(bool active)
         {
             alwaysActive = active;
-            referenceManager.rightLaser.enabled = alwaysActive;
-            referenceManager.leftLaser.enabled = alwaysActive;
+            referenceManager.rightLaser.enabled = active;
+            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+                referenceManager.leftLaser.enabled = active;
             origin.localRotation = Quaternion.identity;
-            //if (alwaysActive)
-            //{
-            //    layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskGraph | layerMaskNetwork;
-            //}
-            //if (!alwaysActive)
-            //{
-            //    layerMask = layerMaskMenu;
-            //}
+        }
+
+        void TouchingObject(bool touch)
+        {
+            referenceManager.rightLaser.enabled = !touch;
+            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            {
+                referenceManager.leftLaser.enabled = !touch;
+            }
+            touchingObject = touch;
         }
     }
 }

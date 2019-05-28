@@ -62,7 +62,8 @@ namespace CellexalVR.Interaction
             rightController = referenceManager.rightController;
             gameManager = referenceManager.gameManager;
             selectionManager = referenceManager.selectionManager;
-            radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            if (!CrossSceneInformation.Ghost)
+                radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
 
         }
 
@@ -145,12 +146,14 @@ namespace CellexalVR.Interaction
             {
                 Colors[i].a = 1;
             }
-            
-            radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
-            radialMenu.RegenerateButtons();
-            radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
-            radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
-            selectedColor = Colors[currentColorIndex];
+            if (!CrossSceneInformation.Ghost)
+            {
+                radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+                radialMenu.RegenerateButtons();
+                radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
+                radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
+                selectedColor = Colors[currentColorIndex];
+            }
         }
 
         /// <summary>

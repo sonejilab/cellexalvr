@@ -14,7 +14,8 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-            StartCoroutine(ChangeModel());
+            if (!CrossSceneInformation.Spectator)
+                StartCoroutine(ChangeModel());
         }
 
         IEnumerator ChangeModel()
