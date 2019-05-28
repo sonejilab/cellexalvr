@@ -1,6 +1,8 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.Tools;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
@@ -70,20 +72,11 @@ namespace CellexalVR.AnalysisObjects
             highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
             unhighlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(normalMaterial) };
             this.transform.localScale = Vector3.zero;
-            CellexalEvents.ScriptFinished.AddListener(SetRemovable);
-            CellexalEvents.ScriptRunning.AddListener(SetUnRemovable);
+            CellexalEvents.ScriptFinished.AddListener(() => removable = true);
+            CellexalEvents.ScriptRunning.AddListener(() => removable = false);
             referenceManager.graphManager.AddNetwork(this);
         }
 
-        private void SetUnRemovable()
-        {
-            removable = true;
-        }
-
-        private void SetRemovable()
-        {
-            removable = false;
-        }
 
         private void Update()
         {
@@ -307,6 +300,30 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
+        /// Animation for deleting network.
+        /// </summary>
+        void DeleteAnimation()
+        {
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, referenceManager.deleteTool.transform.position, step);
+            transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
+            transform.Rotate(Vector3.one * Time.deltaTime * 100);
+            if (transform.localScale.x <= targetMinScale)
+            {
+                foreach (NetworkCenter network in networks)
+                {
+                    foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
+                        r.enabled = false;
+                }
+                foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                    r.enabled = false;
+                minimize = false;
+                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+            }
+        }
+
+        /// <summary>
         /// Spawn network beside graph it was created from.
         /// </summary>
         public void CreateNetworkAnimation(Transform graph)
@@ -328,6 +345,53 @@ namespace CellexalVR.AnalysisObjects
             targetPos = transform.position;
             createAnim = true;
         }
+
+        public IEnumerator DeleteNetwork()
+        {
+            if (!removable)
+            {
+                Debug.Log("Script is running");
+                CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
+                yield break;
+            }
+            foreach (NetworkCenter nc in networks)
+            {
+                if (nc.Enlarged)
+                {
+                    yield return nc.BringBackOriginal();
+                }
+            }
+
+            referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
+            referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
+            referenceManager.graphManager.RemoveNetwork(this);
+            referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
+        }
+
+        public void DeleteNetworkMultiUser()
+        {
+            if (!removable)
+            {
+                Debug.Log("Script is running");
+                CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
+            }
+            foreach (NetworkCenter nc in networks)
+            {
+                if (nc.Enlarged)
+                {
+                    Destroy(nc.gameObject);
+                    //networks.Remove(nc);
+                }
+
+            }
+            networks.Clear();
+            referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
+            referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
+            referenceManager.graphManager.RemoveNetwork(this);
+            Destroy(this.gameObject);
+            //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
+        }
+
 
         void NetworkAnimation()
         {

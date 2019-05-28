@@ -212,7 +212,8 @@ namespace CellexalVR.AnalysisObjects
                 gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }
 
-            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
             {
                 HeatmapRaycast();
             }

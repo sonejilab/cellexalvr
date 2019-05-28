@@ -707,7 +707,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// If this network is enlarged, bring it back to the convex hull, if it is a replacement, destroy it and bring back the original 
         /// </summary>
-        public void BringBackOriginal()
+        public Coroutine BringBackOriginal()
         {
             if (isReplacement)
             {
@@ -721,11 +721,12 @@ namespace CellexalVR.AnalysisObjects
                 // calling Destroy without the time delay caused the program to crash pretty reliably
                 new WaitForSeconds(0.1f);
                 Destroy(gameObject);
+                return null;
             }
             else
             {
                 Enlarged = false;
-                StartCoroutine(BringBackOriginalCoroutine());
+                return StartCoroutine(BringBackOriginalCoroutine());
             }
         }
 
@@ -736,7 +737,10 @@ namespace CellexalVR.AnalysisObjects
             name = oldName;
             // the ForceStopInteracting waits until the end of the frame before it stops interacting
             // so we also have to wait one frame until proceeding
-            gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
+            if (gameObject.GetComponent<VRTK_InteractableObject>() != null)
+            {
+                gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
+            }
             yield return null;
             // now we can do things
             GetComponent<Renderer>().enabled = true;

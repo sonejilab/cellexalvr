@@ -21,7 +21,6 @@ namespace CellexalVR.AnalysisObjects
     {
         public GameObject skeletonPrefab;
         public GameObject emptySkeletonPrefab;
-        public GameObject skeletonCubePrefab;
         public Material skeletonMaterial;
         public Material lineMaterial;
         public GameObject movingOutlineCircle;
@@ -713,54 +712,54 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-        /// <summary>
-        /// Coroutine to create the graph skeleton using the nodes from the octree. Each octreenode on a certain level will be represented by a transparant cube.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator CreateGraphSkeletonCoroutine()
-        {
-            //MeshFilter convexHull = null;
-            convexHull = Instantiate(skeletonPrefab);
-            convexHull.gameObject.SetActive(false);
-            List<Vector3> nodePositions = new List<Vector3>();
-            List<Vector3> sizes = new List<Vector3>();
-            List<MeshFilter> meshes = new List<MeshFilter>();
-            StartCoroutine(octreeRoot.DrawSkeletonCubes(nodePositions, sizes, 0));
-            //octreeRoot.DrawSkeletonCubes(nodePositions, sizes, 0);
-            //octreeRoot.DrawSkeletonCubes(ref nodePositions, ref sizes, 0);
-            int i = 0;
-            while (!octreeRoot.nodeIterated)
-            {
-                yield return null;
-            }
-            foreach (Vector3 pos in nodePositions)
-            {
-                var cube = Instantiate(skeletonCubePrefab, convexHull.transform);
-                meshes.Add(cube.GetComponent<MeshFilter>());
-                cube.transform.localPosition = pos;
-                cube.transform.localScale = Vector3.one * 0.025f;
-                //cube.transform.localScale = sizes[i];
-                i++;
-            }
-            CombineInstance[] combine = new CombineInstance[meshes.Count];
-            i = 0;
-            while (i < meshes.Count)
-            {
-                combine[i].mesh = meshes[i].sharedMesh;
-                combine[i].transform = meshes[i].transform.localToWorldMatrix;
-                meshes[i].gameObject.SetActive(false);
-                //yield return null;
-                i++;
-            }
-            convexHull.GetComponent<MeshFilter>().mesh = new Mesh();
-            convexHull.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
-            convexHull.GetComponent<MeshRenderer>().material = skeletonMaterial;
+        ///// <summary>
+        ///// Coroutine to create the graph skeleton using the nodes from the octree. Each octreenode on a certain level will be represented by a transparant cube.
+        ///// </summary>
+        ///// <returns></returns>
+        //public IEnumerator CreateGraphSkeletonCoroutine()
+        //{
+        //    //MeshFilter convexHull = null;
+        //    convexHull = Instantiate(skeletonPrefab);
+        //    convexHull.gameObject.SetActive(false);
+        //    List<Vector3> nodePositions = new List<Vector3>();
+        //    List<Vector3> sizes = new List<Vector3>();
+        //    List<MeshFilter> meshes = new List<MeshFilter>();
+        //    StartCoroutine(octreeRoot.DrawSkeletonCubes(nodePositions, sizes, 0));
+        //    //octreeRoot.DrawSkeletonCubes(nodePositions, sizes, 0);
+        //    //octreeRoot.DrawSkeletonCubes(ref nodePositions, ref sizes, 0);
+        //    int i = 0;
+        //    while (!octreeRoot.nodeIterated)
+        //    {
+        //        yield return null;
+        //    }
+        //    foreach (Vector3 pos in nodePositions)
+        //    {
+        //        var cube = Instantiate(skeletonCubePrefab, convexHull.transform);
+        //        meshes.Add(cube.GetComponent<MeshFilter>());
+        //        cube.transform.localPosition = pos;
+        //        cube.transform.localScale = Vector3.one * 0.025f;
+        //        //cube.transform.localScale = sizes[i];
+        //        i++;
+        //    }
+        //    CombineInstance[] combine = new CombineInstance[meshes.Count];
+        //    i = 0;
+        //    while (i < meshes.Count)
+        //    {
+        //        combine[i].mesh = meshes[i].sharedMesh;
+        //        combine[i].transform = meshes[i].transform.localToWorldMatrix;
+        //        meshes[i].gameObject.SetActive(false);
+        //        //yield return null;
+        //        i++;
+        //    }
+        //    convexHull.GetComponent<MeshFilter>().mesh = new Mesh();
+        //    convexHull.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+        //    convexHull.GetComponent<MeshRenderer>().material = skeletonMaterial;
 
-            convexHull.gameObject.SetActive(true);
+        //    convexHull.gameObject.SetActive(true);
 
-            //CreateGraphSkeleton(convexHull);
-            //return convexHull.gameObject;
-        }
+        //    //CreateGraphSkeleton(convexHull);
+        //    //return convexHull.gameObject;
+        //}
 
         /// <summary>
         /// Method to greate lines between nodes in the octree. This gives a sort of skeleton representation of the graph.
@@ -801,7 +800,7 @@ namespace CellexalVR.AnalysisObjects
             line.positionCount = posCount;
             line.SetPositions(sortedNodes.ToArray());
 
-            convexHull.GetComponent<BoxCollider>().size = GetComponent<BoxCollider>().size;
+            //convexHull.GetComponent<BoxCollider>().size = GetComponent<BoxCollider>().size;
             convexHull.SetActive(true);
 
             //return convexHull;
@@ -890,9 +889,8 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        public void ResetColorsAndPosition()
+        public void ResetPosition()
         {
-            ResetColors();
             transform.position = startPosition;
         }
 

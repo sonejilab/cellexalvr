@@ -270,11 +270,11 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Resets the position, scale and color of all Graphs.
         /// </summary>
-        public void ResetGraphs()
+        public void ResetGraphsPosition()
         {
             foreach (Graph g in Graphs)
             {
-                g.ResetColorsAndPosition();
+                g.ResetPosition();
                 g.ResetSizeAndRotation();
             }
             //SetGraphStartPosition();
