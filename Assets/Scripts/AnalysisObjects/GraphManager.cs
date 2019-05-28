@@ -272,8 +272,6 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ResetGraphs()
         {
-            CellexalEvents.GraphsReset.Invoke();
-            selectionManager.CancelSelection();
             foreach (Graph g in Graphs)
             {
                 g.ResetColorsAndPosition();

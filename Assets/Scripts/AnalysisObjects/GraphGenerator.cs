@@ -742,14 +742,15 @@ namespace CellexalVR.AnalysisObjects
                 }
                 BooleanExpression.Expr tempExpr = expr;
                 expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.ValueExpr(attributes[i]));
-                StartCoroutine(CreateSubgraphsCoroutine(expr, attributes, graphManager.originalGraphs, name));
             }
+            StartCoroutine(CreateSubgraphsCoroutine(expr, attributes, graphManager.originalGraphs, name));
         }
 
         private IEnumerator CreateSubgraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes, List<Graph> graphs, string name)
         {
             foreach (Graph g in graphs)
             {
+                name = g.name + " - " + name;
                 yield return StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, name));
             }
             CellexalEvents.CommandFinished.Invoke(true);

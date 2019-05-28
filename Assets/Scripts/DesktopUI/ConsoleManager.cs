@@ -385,12 +385,12 @@ namespace CellexalVR.DesktopUI
 
                 string[] foldersAndFiles = list.ToArray();
 
-                //print(string.Join(" ", foldersAndFiles));
                 if (foldersAndFiles.Length > 1)
                 {
                     suggestionField.text = string.Join(" ", foldersAndFiles);
                     suggestionField.transform.parent.gameObject.SetActive(true);
                 }
+
                 string longestCommonBeginning = LongestCommonBeginning(currentText, foldersAndFiles);
                 words[words.Length - 1] = longestCommonBeginning;
                 inputField.text = string.Join(" ", words);
