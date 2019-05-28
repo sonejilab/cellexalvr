@@ -877,7 +877,7 @@ MonoBehaviour:
   validCollisionColor: {r: 0, g: 0.73112607, b: 0.7924528, a: 1}
   invalidCollisionColor: {r: 0, g: 0.5071101, b: 0.8396226, a: 0.27450982}
   tracerVisibility: 1
-  cursorVisibility: 1
+  cursorVisibility: 0
   maximumLength: 100
   scaleFactor: 0.002
   cursorScaleMultiplier: 3
@@ -1302,7 +1302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e104da36bd3b04b90c6ae969ac66dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customColliderContainer: {fileID: 0}
+  customColliderContainer: {fileID: 1269180947078364, guid: 17f0cb1b7468ba14cb3fc5e411f60178,
+    type: 2}
 --- !u!114 &114361493483778346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1314,7 +1315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabButton: 7
+  grabButton: 8
   grabPrecognition: 0
   throwMultiplier: 1
   createRigidBodyWhenNotTouching: 0
@@ -1427,7 +1428,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e104da36bd3b04b90c6ae969ac66dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customColliderContainer: {fileID: 0}
+  customColliderContainer: {fileID: 1269180947078364, guid: 17f0cb1b7468ba14cb3fc5e411f60178,
+    type: 2}
 --- !u!114 &114514357420396678
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1876,7 +1878,7 @@ MonoBehaviour:
   selectionDelay: 0
   selectAfterHoverDuration: 0
   interactWithObjects: 1
-  grabToPointerTip: 1
+  grabToPointerTip: 0
   attachedTo: {fileID: 0}
   controllerEvents: {fileID: 0}
   interactUse: {fileID: 0}
@@ -1905,7 +1907,7 @@ MonoBehaviour:
   selectionDelay: 0
   selectAfterHoverDuration: 0
   interactWithObjects: 1
-  grabToPointerTip: 1
+  grabToPointerTip: 0
   attachedTo: {fileID: 0}
   controllerEvents: {fileID: 0}
   interactUse: {fileID: 0}
@@ -2040,7 +2042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabButton: 7
+  grabButton: 8
   grabPrecognition: 0
   throwMultiplier: 1
   createRigidBodyWhenNotTouching: 0

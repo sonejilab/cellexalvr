@@ -1506,7 +1506,9 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   playerPrefab: {fileID: 1271435505246942, guid: 0c7b7c52fa156904386ad37a6fdbcd6c,
     type: 2}
-  spectatorPrefab: {fileID: 1271435505246942, guid: 0c7b7c52fa156904386ad37a6fdbcd6c,
+  spectatorPrefab: {fileID: 1610247719652096, guid: efa5a8e4cf4bd1447bcf2af185dbda65,
+    type: 2}
+  ghostPrefab: {fileID: 1373514449738098, guid: cc5211a68e77dd44e8786b27de24b56a,
     type: 2}
   serverCoordinatorPrefab: {fileID: 1940091353976766, guid: ae68d8a3df6c0bc4dadbc487958d55f4,
     type: 2}

@@ -28,22 +28,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1016290264042140
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4118755502681472}
-  - component: {fileID: 65678149039870960}
-  m_Layer: 2
-  m_Name: Collider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1019364639301140
 GameObject:
   m_ObjectHideFlags: 1
@@ -976,22 +960,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!1 &1484981317684258
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4342706575055790}
-  - component: {fileID: 65360171824749984}
-  m_Layer: 9
-  m_Name: Collider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1490273801008020
 GameObject:
   m_ObjectHideFlags: 1
@@ -2386,19 +2354,6 @@ Transform:
   m_Father: {fileID: 4728389150625836}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 75, y: 0, z: 0}
---- !u!4 &4118755502681472
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1016290264042140}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0565}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4423057397660976}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4119118203476480
 Transform:
   m_ObjectHideFlags: 1
@@ -2817,19 +2772,6 @@ Transform:
   m_Father: {fileID: 4118221667111600}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4342706575055790
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1484981317684258}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0.0186}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4424463842452488}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4347493626440864
 Transform:
   m_ObjectHideFlags: 1
@@ -2941,7 +2883,6 @@ Transform:
   - {fileID: 4684917484266082}
   - {fileID: 4462353023492624}
   - {fileID: 4728389150625836}
-  - {fileID: 4118755502681472}
   m_Father: {fileID: 4310435988119094}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2964,7 +2905,6 @@ Transform:
   - {fileID: 4280602669445114}
   - {fileID: 4561582179137082}
   - {fileID: 4188155678977382}
-  - {fileID: 4342706575055790}
   m_Father: {fileID: 4310435988119094}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5612,18 +5552,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 9.368574, y: 9.724577, z: 33.257088}
   m_Center: {x: 0.18490297, y: 0.3274631, z: -13.601209}
---- !u!65 &65360171824749984
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1484981317684258}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.010292095, y: 0.009093445, z: 0.061353}
-  m_Center: {x: -0.004890155, y: -0.0021228641, z: 0.008646995}
 --- !u!65 &65520005156711304
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -5636,18 +5564,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0021880686, y: 0.002317021, z: 0.06580145}
   m_Center: {x: 0.000068221125, y: -0.001317581, z: 0.026578382}
---- !u!65 &65678149039870960
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1016290264042140}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.020584188, y: 0.018186886, z: 0.12270601}
-  m_Center: {x: -0.004890155, y: -0.0021228641, z: 0.008646995}
 --- !u!65 &65915761942073576
 BoxCollider:
   m_ObjectHideFlags: 1
