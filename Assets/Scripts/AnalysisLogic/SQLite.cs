@@ -326,7 +326,7 @@ namespace SQLiter
             }
             string cellNamesString2 = builder.ToString();
             // query for list 1
-            string query = "select gene_id, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString1 + ") order by gene_id";
+            string query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString1 + ") order by gene_id";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -337,7 +337,7 @@ namespace SQLiter
             List<Pair<string, List<float>>> expressions1 = GetResultsTopGeneQuery();
             _result.Clear();
             // query for list 2
-            query = "select gene_id, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
+            query = "select gene_id, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cellNamesString2 + ") order by gene_id";
             t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -550,7 +550,7 @@ namespace SQLiter
 
         private IEnumerator QueryGeneInCellsCoroutine(string gene, string cells, Action<SQLite> action = null)
         {
-            string query = "select cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where cname in (" + cells + ") and gene_id = (select id from genes where gname = \"" + gene + "\")";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -738,7 +738,8 @@ namespace SQLiter
         private IEnumerator QueryGeneCoroutine(string geneName, Action<SQLite> action)
         {
             _result.Clear();
-            string query = "select cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -763,6 +764,7 @@ namespace SQLiter
         public void QueryGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
             QueryRunning = true;
+            
             StartCoroutine(QueryGeneCoroutine(geneName, coloringMethod));
         }
 
@@ -774,7 +776,7 @@ namespace SQLiter
         {
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "select cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -1009,7 +1011,7 @@ namespace SQLiter
                 cellNames.Add(_reader.GetString(0));
             }
             // Get all relevant values.
-            query = "select gene_id, cname, value from datavalues inner join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
+            query = "select gene_id, cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id in (select id from genes where gname in (" + genesList + "))";
             //print(query);
             t = new Thread(() => QueryThread(query));
             t.Start();
