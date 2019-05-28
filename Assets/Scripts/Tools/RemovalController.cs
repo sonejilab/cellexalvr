@@ -111,22 +111,17 @@ namespace CellexalVR.Tools
                     NetworkHandler nh = objectToDelete.GetComponent<NetworkHandler>();
                     if (nh)
                     {
-                        if (objectToDelete.GetComponent<NetworkHandler>().removable)
+                        if (referenceManager.gameManager.multiplayer)
                         {
-                            Debug.Log("Script is running");
-                            CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
-                            controllerInside = false;
-                            return;
+                            nh.DeleteNetworkMultiUser();
+                            referenceManager.gameManager.InformDeleteNetwork(nh.name);
                         }
-                        foreach (NetworkCenter nc in objectToDelete.GetComponent<NetworkHandler>().networks)
+                        else
                         {
-                            nc.BringBackOriginal();
+                            StartCoroutine(nh.DeleteNetwork());
                         }
-                        referenceManager.arcsSubMenu.DestroyTab(nh.name.Split('_')[1]); // Get last part of nw name   
-                        referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
-                        referenceManager.graphManager.RemoveNetwork(nh);
                     }
-                    delete = true;
+
                     break;
 
                 case "Subgraph":
@@ -174,24 +169,26 @@ namespace CellexalVR.Tools
                 }
             }
 
-            else /*if (obj.transform.localScale.x <= targetScale)*/
+            else 
             {
                 CellexalLog.Log("Deleted object: " + obj.name);
-                delete = false;
                 Destroy(obj);
+                if (!obj.GetComponent<NetworkHandler>())
+                {
+                    referenceManager.gameManager.InformDeleteObject(obj.name);
+                }
+                delete = false;
                 GetComponent<MeshRenderer>().material = inactiveMat;
                 GetComponent<Light>().color = Color.white;
                 transform.localScale = Vector3.one * 0.03f;
                 GetComponent<Light>().range = 0.04f;
-                if (obj.GetComponent<NetworkHandler>())
-                {
-                    referenceManager.gameManager.InformDeleteNetwork(obj.name);
-                }
-                else
-                {
-                    referenceManager.gameManager.InformDeleteObject(obj.name);
-                }
             }
+        }
+
+        public void DeleteObjectAnimation(GameObject obj)
+        {
+            objectToDelete = obj;
+            delete = true;
         }
     }
 }

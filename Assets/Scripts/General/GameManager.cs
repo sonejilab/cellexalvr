@@ -1,4 +1,5 @@
 ﻿using CellexalVR.Interaction;
+using CellexalVR.Menu;
 using CellexalVR.Multiplayer;
 using Photon;
 using System;
@@ -23,6 +24,7 @@ namespace CellexalVR.General
         [Tooltip("The prefab to use for representing the player")]
         public GameObject playerPrefab;
         public GameObject spectatorPrefab;
+        public GameObject ghostPrefab;
         public GameObject serverCoordinatorPrefab;
         public GameObject waitingCanvas;
         public GameObject spectatorRig;
@@ -34,6 +36,7 @@ namespace CellexalVR.General
 
 
         #endregion
+
 
         private void OnValidate()
         {
@@ -65,28 +68,38 @@ namespace CellexalVR.General
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 
                     // If the user checked the spectator option the name prefix will be Spectator. If spectator spawn an invisible avatar instead.
+                    GameObject player = new GameObject();
                     if (CrossSceneInformation.Spectator)
                     {
-                        GameObject player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-                        player.gameObject.name = PhotonNetwork.playerName;
+                        player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         spectatorRig.SetActive(true);
-                        //VRRig.SetActive(false);
                         Destroy(VRRig);
-                        referenceManager.selectionManager = spectatorRig.GetComponent<SelectionManager>();
                     }
-                    else if (!CrossSceneInformation.Spectator)
+
+                    else if (CrossSceneInformation.Ghost)
                     {
-                        GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-                        player.gameObject.name = PhotonNetwork.playerName;
+                        player = PhotonNetwork.Instantiate(this.ghostPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                        Destroy(referenceManager.leftControllerScriptAlias);
+                        Destroy(referenceManager.rightControllerScriptAlias);
+                        referenceManager.leftController.GetComponent<MenuToggler>().menuCube.SetActive(false);
+                        Destroy(referenceManager.leftController.GetComponent<MenuToggler>());
                         Destroy(spectatorRig);
                     }
+
+                    else if (!CrossSceneInformation.Spectator)
+                    {
+                        player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                        Destroy(spectatorRig);
+                    }
+
+                    player.gameObject.name = PhotonNetwork.playerName;
+
+
 
                     if (PhotonNetwork.isMasterClient)
                     {
                         coordinator = PhotonNetwork.Instantiate(this.serverCoordinatorPrefab.name, Vector3.zero, Quaternion.identity, 0).GetComponent<ServerCoordinator>();
 
-                        //waitingCanvas.SetActive(true);
-                        // serverCoordinator.RegisterClient(this);
                     }
                     if (!PhotonNetwork.isMasterClient)
                     {
@@ -134,6 +147,13 @@ namespace CellexalVR.General
             Debug.Log("Informing clients to color graphs by " + geneName);
             coordinator.photonView.RPC("SendColorGraphsByGene", PhotonTargets.Others, geneName);
 
+        }
+
+        public void InformColoringMethodChanged(int newMode)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to change coloring mode to " + newMode);
+            coordinator.photonView.RPC("SendColoringMethodChanged", PhotonTargets.Others, newMode);
         }
 
         public void InformColorGraphByPreviousExpression(string geneName)
@@ -238,10 +258,10 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendResetGraph", PhotonTargets.Others);
         }
 
-        public void InformResetGraphAll()
+        public void InformResetGraphPosition()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendResetGraphAll", PhotonTargets.Others);
+            coordinator.photonView.RPC("SendResetGraphPosition", PhotonTargets.Others);
         }
 
         public void InformLoadingMenu(bool delete)
@@ -375,13 +395,6 @@ namespace CellexalVR.General
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to create heatmap");
             coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others, hmName);
-        }
-
-        public void InformBurnHeatmap(string heatmapName, Transform target)
-        {
-            if (!multiplayer) return;
-            CellexalLog.Log("Informing clients to create heatmap");
-            coordinator.photonView.RPC("SendBurnHeatmap", PhotonTargets.Others, heatmapName, target);
         }
 
 

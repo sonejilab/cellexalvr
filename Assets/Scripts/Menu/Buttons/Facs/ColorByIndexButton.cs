@@ -31,8 +31,8 @@ namespace CellexalVR.Menu.Buttons.Facs
         public override void Click()
         {
             cellManager.ColorByIndex(indexName);
-            referenceManager.gameManager.InformColorByIndex(indexName);
             TurnOff();
+            referenceManager.gameManager.InformColorByIndex(indexName);
         }
 
         /// <summary>

@@ -69,11 +69,18 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendColoringMethodChanged(int newMode)
+        {
+            CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
+            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
+        }
+
+        [PunRPC]
         public void SendKeyClick(string key)
         {
             CellexalLog.Log("Recieved message to add" + key + "to search field");
             Debug.Log("Recieved message to add letter" + key + "to search field");
-            referenceManager.keyboardHandler.AddCharacter(key[0]); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+            referenceManager.keyboardHandler.AddCharacter(key[0], false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
         }
 
         //[PunRPC]
@@ -165,7 +172,7 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendAddMarker(string indexName)
         {
-            var markerButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
+            var markerButton = GameObject.Find("/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
             if (referenceManager.newGraphFromMarkers.markers.Count < 3 && !referenceManager.newGraphFromMarkers.markers.Contains(indexName))
             {
                 referenceManager.newGraphFromMarkers.markers.Add(indexName);
@@ -312,8 +319,8 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendResetGraphAll()
         {
-            Debug.Log("Recieved message to reset graph colors, position, scale and rotation");
-            referenceManager.graphManager.ResetGraphs();
+            Debug.Log("Recieved message to reset graph position, scale and rotation");
+            referenceManager.graphManager.ResetGraphsPosition();
         }
 
         [PunRPC]
@@ -389,11 +396,8 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
             NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
-            foreach (NetworkCenter nc in nh.networks)
-            {
-                Destroy(nc.gameObject);
-            }
-            Destroy(nh.gameObject);
+            //StartCoroutine(nh.DeleteNetwork());
+            nh.DeleteNetworkMultiUser();
         }
 
 

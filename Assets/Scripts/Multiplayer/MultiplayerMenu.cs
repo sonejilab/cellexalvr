@@ -21,7 +21,7 @@ namespace CellexalVR.Multiplayer
         private string roomName = "myLab";
         private string password = "";
         private string roomAndPass = "";
-        private bool spectator = false;
+        private int selGridInt = 0;
 
         private Vector2 scrollPos = Vector2.zero;
 
@@ -116,19 +116,7 @@ namespace CellexalVR.Multiplayer
             GUILayout.Label("Player Name:", GUILayout.Width(200));
             PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName);
             GUILayout.Space(158);
-            if (GUI.changed)
-            {
-                // Save name
-                if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
-                {
-                    print("IN SPEC");
-                    PlayerPrefs.SetString("playerName", "Spectator_" + PhotonNetwork.playerName);
-                }
-                else
-                {
-                    PlayerPrefs.SetString("playerName", PhotonNetwork.playerName);
-                }
-            }
+
             GUILayout.EndHorizontal();
 
             GUILayout.Space(15);
@@ -157,18 +145,6 @@ namespace CellexalVR.Multiplayer
             if (GUILayout.Button("Create Room", GUILayout.Width(200)))
             {
                 int n;
-                if (spectator)
-                {
-                    CrossSceneInformation.Spectator = true;
-                }
-                //if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
-                //{
-                //    PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
-                //}
-                //if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
-                //{
-                //    PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
-                //}
                 if (this.password.Length == 4 && int.TryParse(this.password, out n))
                 {
                     print("Create room: " + this.roomAndPass);
@@ -182,22 +158,51 @@ namespace CellexalVR.Multiplayer
             }
             if (GUILayout.Button("Join Room", GUILayout.Width(200)))
             {
-                if (spectator)
-                {
-                    CrossSceneInformation.Spectator = true;
-                }
-                //if (spectator && !PhotonNetwork.playerName.Contains("Spectator"))
-                //{
-                //    PhotonNetwork.playerName = "Spectator_" + PhotonNetwork.playerName;
-                //}
-                //if (!spectator && PhotonNetwork.playerName.Contains("Spectator"))
-                //{
-                //    PhotonNetwork.playerName = PhotonNetwork.playerName.Substring(10);
-                //}
                 PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
             }
 
-            spectator = GUILayout.Toggle(spectator, "Spectator View \n (Non-VR)");
+            
+            string[] selStrings = {"Normal VR View", "VR Spectator View", "Desktop Spectator View \n Non-VR"};
+
+            selGridInt = GUILayout.SelectionGrid(selGridInt, selStrings, 1);
+
+            switch (selGridInt)
+            {
+                case 0:
+                    CrossSceneInformation.Spectator = false;
+                    CrossSceneInformation.Ghost = false;
+                    break;
+                case 1:
+                    CrossSceneInformation.Ghost = true;
+                    CrossSceneInformation.Spectator = false;
+                    break;
+                case 2:
+                    CrossSceneInformation.Spectator = true;
+                    CrossSceneInformation.Ghost = false;
+                    break;
+            }
+
+
+            //CrossSceneInformation.Spectator = GUILayout.Toggle(CrossSceneInformation.Spectator, "Desktop Spectator Mode \n (Non-VR)");
+
+            //GUILayout.EndHorizontal();
+            //GUILayout.Space(10);
+            //GUILayout.BeginHorizontal();
+            //GUILayout.Space(420);
+
+            //CrossSceneInformation.Ghost = GUILayout.Toggle(CrossSceneInformation.Ghost, "VR Spectator Mode");
+
+            //if (CrossSceneInformation.Ghost && GUI.changed)
+            //{
+            //    CrossSceneInformation.Spectator = false;
+            //}
+
+            //else if (CrossSceneInformation.Spectator && GUI.changed)
+            //{
+            //    CrossSceneInformation.Ghost = false;
+            //}
+
+
 
             GUILayout.EndHorizontal();
 

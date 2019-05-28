@@ -122,6 +122,7 @@ namespace CellexalVR.General
         public CorrelatedGenesList correlatedGenesList;
         public PreviousSearchesList previousSearchesList;
         public AutoCompleteList autoCompleteList;
+        public ColoringOptionsList coloringOptionsList;
         public KeyboardHandler folderKeyboard;
         public KeyboardHandler webBrowserKeyboard;
 
@@ -231,6 +232,7 @@ namespace CellexalVR.General
             correlatedGenesList = GameObject.Find("Keyboard Setup/Correlated Genes List").GetComponent<CorrelatedGenesList>();
             previousSearchesList = GameObject.Find("Keyboard Setup/Previous Searches List").GetComponent<PreviousSearchesList>();
             autoCompleteList = GameObject.Find("Keyboard Setup").GetComponent<AutoCompleteList>();
+            coloringOptionsList = GameObject.Find("Keyboard Setup/Coloring Options List").GetComponent<ColoringOptionsList>();
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
             webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
 

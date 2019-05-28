@@ -109,7 +109,7 @@ namespace CellexalVR.Menu.Buttons
         /// </summary>
         private void CheckForHit()
         {
-            if (!buttonActivated) return;
+            if (!buttonActivated || CrossSceneInformation.Ghost) return;
             if (frameCount % 10 == 0)
             {
                 bool inside = false;

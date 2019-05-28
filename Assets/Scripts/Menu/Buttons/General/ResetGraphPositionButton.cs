@@ -6,7 +6,7 @@ namespace CellexalVR.Menu.Buttons.General
     ///<summary>
     /// Represents a button used for resetting the color and position of the graphs.
     ///</summary>
-    public class ResetGraphAllButton : CellexalButton
+    public class ResetGraphPositionButton : CellexalButton
     {
 
         private GraphManager graphManager;
@@ -15,7 +15,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             get
             {
-                return "Reset the position and\ncolor of all graphs";
+                return "Reset the position of all graphs";
             }
         }
 
@@ -29,8 +29,8 @@ namespace CellexalVR.Menu.Buttons.General
 
         public override void Click()
         {
-            graphManager.ResetGraphs();
-            referenceManager.gameManager.InformResetGraphAll();
+            graphManager.ResetGraphsPosition();
+            referenceManager.gameManager.InformResetGraphPosition();
         }
 
         private void OnGraphsLoaded()

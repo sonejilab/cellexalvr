@@ -744,6 +744,7 @@ namespace CellexalVR.AnalysisLogic
         private IEnumerator ReadNetworkFilesCoroutine(int layoutSeed)
         {
             CellexalLog.Log("Started reading network files");
+            CellexalEvents.ScriptRunning.Invoke();
             string networkDirectory = CellexalUser.UserSpecificFolder + @"\Resources\Networks";
             if (!Directory.Exists(networkDirectory))
             {
@@ -1004,6 +1005,7 @@ namespace CellexalVR.AnalysisLogic
             nwkFileStream.Close();
             CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
             CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.ScriptFinished.Invoke();
             networkHandler.CreateNetworkAnimation(graph.transform);
         }
 

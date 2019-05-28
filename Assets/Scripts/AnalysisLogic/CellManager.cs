@@ -257,6 +257,7 @@ namespace CellexalVR.AnalysisLogic
             //        {
             //            c.Show();
             //        }
+
             graphManager.ColorAllGraphsByGeneExpression(expressions);
 
             //float percentInResults = (float)database._result.Count / cells.Values.Count;
@@ -276,6 +277,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalEvents.GraphsColoredByGene.Invoke();
             }
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+
             CellexalEvents.CommandFinished.Invoke(true);
         }
 

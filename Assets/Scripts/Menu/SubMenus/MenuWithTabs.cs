@@ -142,8 +142,11 @@ namespace CellexalVR.Menu.SubMenus
         public virtual void DestroyTab(string networkName)
         {
             Tab t = tabs.Find(tab => tab.gameObject.name.Split('_')[1].Equals(networkName));
-            tabs.Remove(t);
-            Destroy(t.gameObject, 0.1f);
+            if (t)
+            {
+                tabs.Remove(t);
+                Destroy(t.gameObject, 0.1f);
+            }
             //foreach (Tab t in tabs)
             //{
             //    if (t.gameObject.name.Split('_')[1] == networkName)
