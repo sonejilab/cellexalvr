@@ -395,7 +395,6 @@ namespace CellexalVR.DesktopUI
 
                 string[] foldersAndFiles = list.ToArray();
 
-                print(string.Join(" ", foldersAndFiles));
                 string longestCommonBeginning = LongestCommonBeginning(currentText, foldersAndFiles);
                 words[words.Length - 1] = longestCommonBeginning;
                 inputField.text = string.Join(" ", words);
