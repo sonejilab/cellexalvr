@@ -785,7 +785,7 @@ namespace SQLiter
             int i = 0;
             LowestExpression = float.MaxValue;
             HighestExpression = float.MinValue;
-            if (coloringMethod == GraphManager.GeneExpressionColoringMethods.Linear)
+            if (coloringMethod == GraphManager.GeneExpressionColoringMethods.EqualExpressionRanges)
             {
                 // put results in equally sized buckets
                 while (_reader.Read())

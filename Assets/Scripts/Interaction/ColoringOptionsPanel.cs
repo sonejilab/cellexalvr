@@ -1,5 +1,4 @@
 ﻿using CellexalVR.AnalysisObjects;
-using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -10,6 +9,8 @@ namespace CellexalVR.Interaction
     public class ColoringOptionsPanel : ClickablePanel
     {
         public GraphManager.GeneExpressionColoringMethods modeToSwitchTo;
+        public TMPro.TextMeshPro text;
+        public GameObject coloringOptionsList;
 
         private GraphManager graphManager;
 
@@ -27,11 +28,11 @@ namespace CellexalVR.Interaction
         {
             graphManager.GeneExpressionColoringMethod = modeToSwitchTo;
             // set all other texts to white and ours to green
-            foreach (TextMesh textMesh in transform.parent.gameObject.GetComponentsInChildren<TextMesh>())
+            foreach (TMPro.TextMeshPro textMesh in coloringOptionsList.GetComponentsInChildren<TMPro.TextMeshPro>())
             {
                 textMesh.color = Color.white;
             }
-            transform.parent.GetComponentInChildren<TextMesh>().color = Color.green;
+            text.color = Color.green;
         }
     }
 }

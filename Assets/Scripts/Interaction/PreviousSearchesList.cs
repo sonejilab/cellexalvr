@@ -60,7 +60,7 @@ namespace CellexalVR.Interaction
             bool pushingDown = false;
             string pushDownName = "";
             Definitions.Measurement pushDownType = Definitions.Measurement.INVALID;
-            GraphManager.GeneExpressionColoringMethods pushDownColoringMethod = GraphManager.GeneExpressionColoringMethods.Linear;
+            GraphManager.GeneExpressionColoringMethods pushDownColoringMethod = GraphManager.GeneExpressionColoringMethods.EqualExpressionRanges;
             for (int i = 0; i < previousSearchesListNodes.Count; ++i)
             {
                 var listNode = previousSearchesListNodes[i];

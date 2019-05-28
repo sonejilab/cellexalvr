@@ -42,8 +42,8 @@ namespace CellexalVR.AnalysisObjects
         ///   </item>
         /// </list>
         /// </summary>
-        public enum GeneExpressionColoringMethods { Linear, Ranked };
-        public GeneExpressionColoringMethods GeneExpressionColoringMethod = GeneExpressionColoringMethods.Linear;
+        public enum GeneExpressionColoringMethods { EqualExpressionRanges, EqualCellNumbers };
+        public GeneExpressionColoringMethods GeneExpressionColoringMethod = GeneExpressionColoringMethods.EqualExpressionRanges;
 
         [Header("Debuging")]
         public bool drawDebugCubes = false;

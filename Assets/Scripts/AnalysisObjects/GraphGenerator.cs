@@ -189,6 +189,7 @@ namespace CellexalVR.AnalysisObjects
             axes.transform.localScale = Vector3.one * (longestAx * 0.6f);
             if (graphType == GraphType.FACS)
             {
+                print(graph.minCoordValues.ToString() + " " + graph.maxCoordValues.ToString());
                 axes.GetComponent<AxesArrow>().SetColors(axisNames, graph.minCoordValues, graph.maxCoordValues);
                 axes.SetActive(true);
             }
