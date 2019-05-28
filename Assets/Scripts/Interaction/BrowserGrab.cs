@@ -45,7 +45,7 @@ namespace CellexalVR.Interaction
         {
             if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
             {
-                if (other.gameObject.name.Equals("Collider"))
+                if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
                 {
                     CellexalEvents.ObjectGrabbed.Invoke();
                 }
@@ -56,7 +56,7 @@ namespace CellexalVR.Interaction
         {
             if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
             {
-                if (other.gameObject.name.Equals("Collider"))
+                if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
                 {
                     CellexalEvents.ObjectUngrabbed.Invoke();
                 }

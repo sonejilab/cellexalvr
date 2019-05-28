@@ -44,7 +44,7 @@ namespace CellexalVR.AnalysisObjects
         private SteamVR_Controller.Device device;
         private bool edgesAdded;
         private float lineWidth;
-        private string controllerCollider = "Collider";
+        private string controllerCollider = "ControllerCollider(Clone)";
         private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
 
         private void OnValidate()

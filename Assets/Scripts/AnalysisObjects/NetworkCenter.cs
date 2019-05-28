@@ -159,7 +159,7 @@ namespace CellexalVR.AnalysisObjects
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name == "Collider" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
                 controllerInside = true;
                 numColliders++;
@@ -168,7 +168,7 @@ namespace CellexalVR.AnalysisObjects
 
         void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name == "Collider" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
                 numColliders--;
             }
@@ -183,7 +183,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.name == "Collider"/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            if (other.gameObject.name == "ControllerCollider(Clone)"/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
                 device = SteamVR_Controller.Input((int)rightController.index);
                 if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && controllerInside)

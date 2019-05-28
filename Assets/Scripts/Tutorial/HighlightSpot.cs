@@ -59,7 +59,7 @@ namespace CellexalVR.Tutorial
         {
             if (this.name == "Portal")
             {
-                if (other.gameObject.name == "Collider" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+                if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
                 {
                     CrossSceneInformation.Tutorial = false;
                     tutorialManager.referenceManager.screenCanvas.gameObject.SetActive(true);
