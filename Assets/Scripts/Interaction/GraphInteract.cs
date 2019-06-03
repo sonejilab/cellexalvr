@@ -31,10 +31,7 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, false);
-            if (runningCoroutine != null)
-            {
-                StopCoroutine(runningCoroutine);
-            }
+            StopPositionSync();
             //referenceManager.controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
             //referenceManager.gameManager.InformMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
             base.OnInteractableObjectGrabbed(e);
@@ -45,11 +42,19 @@ namespace CellexalVR.Interaction
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, true);
             //referenceManager.rightLaser.enabled = true;
             //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
-            runningCoroutine = StartCoroutine(KeepGraphPositionSynched(3f));
+            runningCoroutine = StartCoroutine(KeepGraphPositionSynched());
             base.OnInteractableObjectUngrabbed(e);
         }
 
-        private IEnumerator KeepGraphPositionSynched(float time)
+        public void StopPositionSync()
+        {
+            if (runningCoroutine != null)
+            {
+                StopCoroutine(runningCoroutine);
+            }
+        }
+
+        private IEnumerator KeepGraphPositionSynched()
         {
             if (!referenceManager.gameManager.multiplayer)
             {
@@ -57,10 +62,10 @@ namespace CellexalVR.Interaction
             }
             string graphName = gameObject.GetComponent<Graph>().GraphName;
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            while (time > 0f || rigidbody.velocity.magnitude > 0.001f)
+            while (rigidbody.velocity.magnitude > 0.001f)
             {
                 referenceManager.gameManager.InformMoveGraph(graphName, transform.position, transform.rotation, transform.localScale);
-                time -= Time.deltaTime;
+                print(rigidbody.velocity.magnitude);
                 yield return null;
             }
         }
