@@ -61,7 +61,15 @@ namespace CellexalVR.AnalysisLogic
             selectionManager = referenceManager.selectionManager;
             inputReader = referenceManager.inputReader;
             graphManager = referenceManager.graphManager;
-            headset = referenceManager.headset;
+            if (CrossSceneInformation.Spectator)
+            {
+                headset = referenceManager.spectatorRig;
+                referenceManager.headset = headset;
+            }
+            else
+            {
+                headset = referenceManager.headset;
+            }
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;

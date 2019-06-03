@@ -45,8 +45,11 @@ namespace CellexalVR.Interaction
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            rightController = referenceManager.rightController;
-            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+            if (CrossSceneInformation.Normal)
+            {
+                rightController = referenceManager.rightController;
+                controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+            }
             if (referenceManager.keyboardHandler)
             {
                 referenceManager.keyboardHandler.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
@@ -98,7 +101,7 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (!controllerModelSwitcher.Ready() || CrossSceneInformation.Ghost || grabbingObject)
+            if (!CrossSceneInformation.Normal || !controllerModelSwitcher.Ready() || grabbingObject)
                 return;
             var raycastingSource = referenceManager.rightLaser.transform;
             var device = SteamVR_Controller.Input((int)rightController.index);
@@ -112,7 +115,10 @@ namespace CellexalVR.Interaction
 
                 if (hitPanel != null)
                 {
-                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                    if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
+                    {
+                        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                    }
                     //referenceManager.laserPointerController.ToggleLaser(true);
                     referenceManager.laserPointerController.Override = true;
                     if (lastHit != null && lastHit != hitPanel)

@@ -45,7 +45,7 @@ namespace CellexalVR.AnalysisObjects
         private bool edgesAdded;
         private float lineWidth;
         private string controllerCollider = "ControllerCollider(Clone)";
-        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
+        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
 
         private void OnValidate()
         {

@@ -247,7 +247,16 @@ namespace CellexalVR.AnalysisObjects
         void Minimize()
         {
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, referenceManager.leftController.transform.position, step);
+            Vector3 targetPosition = new Vector3();
+            if (CrossSceneInformation.Spectator)
+            {
+                targetPosition = Vector3.zero;
+            }
+            else
+            {
+                targetPosition = referenceManager.leftController.transform.position;
+            }
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
             //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);

@@ -169,16 +169,19 @@ namespace CellexalVR.Multiplayer
             switch (selGridInt)
             {
                 case 0:
+                    CrossSceneInformation.Normal = true;
                     CrossSceneInformation.Spectator = false;
                     CrossSceneInformation.Ghost = false;
                     break;
                 case 1:
                     CrossSceneInformation.Ghost = true;
                     CrossSceneInformation.Spectator = false;
+                    CrossSceneInformation.Normal = false;
                     break;
                 case 2:
                     CrossSceneInformation.Spectator = true;
                     CrossSceneInformation.Ghost = false;
+                    CrossSceneInformation.Normal = false;
                     break;
             }
 

@@ -435,6 +435,11 @@ namespace CellexalVR.AnalysisLogic
                 metacellFileStream.Close();
                 attributeSubMenu.CreateButtons(actualAttributeTypes);
                 cellManager.Attributes = actualAttributeTypes;
+                if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
+                {
+                    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
+                        " Consider adding more colours in the settings menu (under Selection Colours)");
+                }
             }
             stopwatch.Stop();
             attributeFileRead = true;
@@ -855,7 +860,6 @@ namespace CellexalVR.AnalysisLogic
                     networkHandler = skeleton.GetComponent<NetworkHandler>();
                     networkHandlerName = "NetworkHandler_" + graphName + "-" + (selectionManager.fileCreationCtr + 1);
                     networkHandler.name = networkHandlerName;
-                    networkHandler.gameObject.AddComponent<PushBack>();
                 }
                 float x = float.Parse(words[0]);
                 float y = float.Parse(words[1]);

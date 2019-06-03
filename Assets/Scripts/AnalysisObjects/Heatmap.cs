@@ -43,7 +43,6 @@ namespace CellexalVR.AnalysisObjects
         private GraphManager graphManager;
         private CellManager cellManager;
         private SteamVR_Controller.Device device;
-        public bool controllerInside = false;
         private GameObject deleteTool;
         private SteamVR_TrackedObject rightController;
         private Transform raycastingSource;
@@ -141,13 +140,16 @@ namespace CellexalVR.AnalysisObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             //referenceManager = heatmapGenerator.referenceManager;
             GetComponent<HeatmapGrab>().referenceManager = referenceManager;
-            rightController = referenceManager.rightController;
+            if (CrossSceneInformation.Normal)
+            {
+                rightController = referenceManager.rightController;
+                raycastingSource = rightController.transform;
+                controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+                deleteTool = referenceManager.deleteTool;
+            }
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
-            raycastingSource = rightController.transform;
             gameManager = referenceManager.gameManager;
-            deleteTool = referenceManager.deleteTool;
-            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             highlightQuad.SetActive(false);
             highlightGeneQuad.SetActive(false);
             confirmQuad.SetActive(false);
@@ -178,7 +180,7 @@ namespace CellexalVR.AnalysisObjects
 
         void Update()
         {
-            if (device == null)
+            if (device == null && CrossSceneInformation.Normal)
             {
                 device = SteamVR_Controller.Input((int)rightController.index);
             }
@@ -212,8 +214,8 @@ namespace CellexalVR.AnalysisObjects
                 gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }
 
-            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+            if (CrossSceneInformation.Normal && (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard))
             {
                 HeatmapRaycast();
             }
@@ -375,6 +377,9 @@ namespace CellexalVR.AnalysisObjects
                 {
                     Debug.Log("File - " + filepath + " - not found.");
                     CellexalLog.Log("File - " + filepath + " - not found.");
+                    CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+                    if (!referenceManager.networkGenerator.GeneratingNetworks)
+                        referenceManager.calculatorCluster.SetActive(false);
                 }
 
             }
@@ -679,21 +684,6 @@ namespace CellexalVR.AnalysisObjects
             referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.CompareTag("Menu Controller Collider"))
-            {
-                controllerInside = true;
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.CompareTag("Menu Controller Collider"))
-            {
-                controllerInside = false;
-            }
-        }
 
         private void CreateHeatmapAnimation()
         {

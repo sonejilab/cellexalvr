@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using CellexalVR.General;
+using System.Linq;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -12,10 +13,13 @@ namespace CellexalVR.Interaction
         public SimpleWebBrowser.WebBrowser webBrowser;
         public TMPro.TextMeshPro output;
 
+        private ReferenceManager referenceManager;
+
         // Use this for initialization
         void Start()
         {
             SetVisible(false);
+            referenceManager = webBrowser.referenceManager;
         }
 
         public void EnterKey()
@@ -27,13 +31,18 @@ namespace CellexalVR.Interaction
                 output.text = "www.google.com/search?q=" + output.text;
             }
             webBrowser.OnNavigate(output.text);
+            referenceManager.gameManager.InformBrowserEnter();
         }
 
         public void SetVisible(bool visible)
         {
-            foreach (Transform t in transform)
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
             {
-                t.gameObject.SetActive(visible);
+                r.enabled = visible;
+            }
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+            {
+                c.enabled = visible;
             }
             //webBrowser.enabled = visible;
         }

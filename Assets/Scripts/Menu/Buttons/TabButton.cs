@@ -20,7 +20,7 @@ namespace CellexalVR.Menu.Buttons
         private MeshRenderer meshRenderer;
         private Color standardColor = Color.black;
         private Color highlightColor = Color.blue;
-        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
+        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
 
         private void OnValidate()
         {
@@ -34,12 +34,17 @@ namespace CellexalVR.Menu.Buttons
         {
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.material.color = standardColor;
-            rightController = referenceManager.rightController;
+            if (!CrossSceneInformation.Spectator)
+            {
+                rightController = referenceManager.rightController;
+            }
             this.tag = "Menu Controller Collider";
         }
 
         protected virtual void Update()
         {
+            if (!CrossSceneInformation.Normal) return;
+        
             device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {

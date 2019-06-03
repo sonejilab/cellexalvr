@@ -12,7 +12,8 @@ namespace CellexalVR.Interaction
     public class EventSetter : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        
+
+        private PushBack pushBack;
 
         private void OnValidate()
         {
@@ -20,6 +21,11 @@ namespace CellexalVR.Interaction
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
+        }
+
+        private void Start()
+        {
+            pushBack = GetComponentInParent<PushBack>();
         }
 
         public void LeftMenuLeftClickEvent()
@@ -66,18 +72,28 @@ namespace CellexalVR.Interaction
             }
         }
 
+        public void RightMenuUpHoldEvent()
+        {
+            if (referenceManager.rightLaser.isActiveAndEnabled)
+            {
+                pushBack.Push();
+            }
+        }
+
         public void RightMenuDownClickEvent()
         {
             if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
             }
-            else if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers 
-                    || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-            {
-                //referenceManager.push
-            }
+        }
 
+        public void RightMenuDownHoldEvent()
+        {
+            if (referenceManager.rightLaser.isActiveAndEnabled)
+            {
+                pushBack.Pull();
+            }
         }
 
         public void GeneKeyboardEnterEvent(string geneName)
@@ -89,6 +105,12 @@ namespace CellexalVR.Interaction
         public void GeneKeyboardEditEvent(string s)
         {
             referenceManager.gameManager.InformKeyClicked(s);
+        }
+
+
+        public void BrowserKeyboardEditEvent(string s)
+        {
+            referenceManager.gameManager.InformBrowserKeyClicked(s);
         }
 
         public void FolderKeyboardEditEvent(string filter)

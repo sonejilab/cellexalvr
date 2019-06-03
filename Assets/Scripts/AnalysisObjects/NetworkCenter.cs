@@ -91,9 +91,12 @@ namespace CellexalVR.AnalysisObjects
         void Start()
         {
             var referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            rightController = referenceManager.rightController;
+            if (CrossSceneInformation.Normal)
+            {
+                controllerModelSwitcher = referenceManager.controllerModelSwitcher;
+                rightController = referenceManager.rightController;
+            }
             networkGenerator = referenceManager.networkGenerator;
-            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             gameManager = referenceManager.gameManager;
             handler = GetComponentInParent<NetworkHandler>();
         }
@@ -634,8 +637,9 @@ namespace CellexalVR.AnalysisObjects
                 rigidbody = gameObject.AddComponent<Rigidbody>();
             }
             rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-            rigidbody.angularDrag = float.PositiveInfinity;
+            rigidbody.isKinematic = false;
+            rigidbody.drag = 10;
+            rigidbody.angularDrag = 15;
             var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
             interactableObject.referenceManager = referenceManager;
             interactableObject.isGrabbable = true;

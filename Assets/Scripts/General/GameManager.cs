@@ -184,6 +184,19 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
 
+        public void InformBrowserKeyClicked(string value)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients that" + value + " was clicked");
+            coordinator.photonView.RPC("SendBrowserKeyClick", PhotonTargets.Others, value);
+        }
+
+        public void InformBrowserEnter()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendBrowserEnter", PhotonTargets.Others);
+        }
+
         public void InformSearchLockToggled(int index)
         {
             if (!multiplayer) return;
@@ -364,12 +377,17 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendRemoveCells", PhotonTargets.Others);
         }
 
-
-        // HEATMAP
+       
         public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+
+        public void InformMoveBrowser(Vector3 pos, Quaternion rot, Vector3 scale)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendMoveBrowser", PhotonTargets.Others, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
         public void InformDisableColliders(string name)
@@ -397,8 +415,7 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others, hmName);
         }
 
-
-        // NETWORKS
+        
         public void InformGenerateNetworks(int layoutSeed)
         {
             if (!multiplayer) return;

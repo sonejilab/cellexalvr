@@ -64,8 +64,8 @@ namespace CellexalVR.Interaction
             RaycastHit hit;
             origin.localRotation = Quaternion.Euler(15f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
-            bool hitSomething = hit.collider != null;
-            if (hitSomething)
+            bool hitMenu = hit.collider != null;
+            if (hitMenu)
             {
                 tempHit = hit.collider.gameObject;
                 if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
@@ -79,14 +79,11 @@ namespace CellexalVR.Interaction
                 origin.localEulerAngles = new Vector3(0f, 0f, 0f);
             }
 
-            if (!hitSomething && alwaysActive && !touchingObject)
+            if (!hitMenu && alwaysActive)
             {
                 origin.localRotation = Quaternion.Euler(0, 0, 0);
-                //controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.TwoLasers);
-                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                {
-                    controllerModelSwitcher.ActivateDesiredTool();
-                }
+
+
             }
 
             if (!alwaysActive && !Override)
@@ -99,7 +96,6 @@ namespace CellexalVR.Interaction
                         controllerModelSwitcher.ActivateDesiredTool();
                     }
                     referenceManager.rightLaser.enabled = false;
-
                 }
             }
         }

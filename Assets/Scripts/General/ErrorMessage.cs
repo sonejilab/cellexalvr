@@ -29,6 +29,10 @@ namespace CellexalVR.General
         /// <param name="message">A longer message that explains what went wrong, e.g "no data was found, make sure you placed in correctly" and so on</param>
         public static void SpawnError(string title, string message)
         {
+            if (CrossSceneInformation.Spectator)
+            {
+                return;
+            }
             if (!cameraTransform)
             {
                 if (!referenceManager)

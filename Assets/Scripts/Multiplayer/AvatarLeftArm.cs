@@ -26,7 +26,7 @@ namespace CellexalVR.Multiplayer
         void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            leftControllerPos = referenceManager.leftController.transform;
+            //leftControllerPos = referenceManager.leftController.transform;
             target = GetComponent<Transform>();
             if (!target)
             {

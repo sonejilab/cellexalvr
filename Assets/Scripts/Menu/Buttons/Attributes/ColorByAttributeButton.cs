@@ -45,18 +45,9 @@ namespace CellexalVR.Menu.Buttons.Attributes
             {
                 cellManager.ColorByAttribute(Attribute, !colored);
                 referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
-                //meshRenderer.material.color = colored ? meshStandardColor : meshDeactivatedColor;
-                if (!colored)
-                {
-                    savedMeshStandardColor = meshStandardColor;
-                    meshStandardColor = meshDeactivatedColor;
-                }
-                else
-                {
-                    meshStandardColor = savedMeshStandardColor;
-                }
+
                 colored = !colored;
-                //activeOutline.SetActive(colored);
+                activeOutline.SetActive(colored);
             }
             else if (CurrentMode == Mode.BOOLEAN_EXPR)
             {
@@ -87,24 +78,9 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
             cellManager.ColorByAttribute(Attribute, toggle);
             referenceManager.gameManager.InformColorByAttribute(Attribute, toggle);
-            if (toggle)
-            {
-                if (!colored)
-                {
-                    savedMeshStandardColor = meshStandardColor;
-                    meshStandardColor = meshDeactivatedColor;
-                }
-            }
-            else
-            {
-                if (colored)
-                {
-                    meshStandardColor = savedMeshStandardColor;
-                }
-            }
+
             colored = toggle;
-            //meshRenderer.material.color = !toggle? meshStandardColor : meshDeactivatedColor;
-            //activeOutline.SetActive(toggle);
+            activeOutline.SetActive(toggle);
             //TurnOff();
         }
 
@@ -193,6 +169,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         private void ResetVars()
         {
             colored = false;
+            activeOutline.SetActive(false);
         }
 
   

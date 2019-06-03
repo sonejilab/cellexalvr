@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using CellexalVR.Tools;
 using UnityEngine;
 
@@ -27,16 +28,19 @@ namespace CellexalVR.Interaction
         public int SpaceY { get; set; }
 
         private bool controllerInside = false;
-        private string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
+        private string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private int frameCount;
         private int layerMask;
 
 
         private void Start()
         {
-            rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+            if (!CrossSceneInformation.Spectator)
+            {
+                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+                minimizeTool = Handler.referenceManager.minimizeTool;
+            }
             this.name = "Jail_" + MinimizedObject.name;
-            minimizeTool = Handler.referenceManager.minimizeTool;
             orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
             layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
@@ -44,6 +48,11 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
+            if (CrossSceneInformation.Spectator)
+            {
+                return;
+            }
+
             var device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {

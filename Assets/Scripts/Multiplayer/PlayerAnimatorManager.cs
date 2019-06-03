@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using CellexalVR.General;
 
 namespace CellexalVR.Multiplayer
 {
@@ -26,6 +26,7 @@ namespace CellexalVR.Multiplayer
         // Use this for initialization
         void Start()
         {
+            if (CrossSceneInformation.Spectator) return;
             cameraPos = GameObject.Find("Camera (eye)").GetComponent<Transform>();
             target = GetComponent<Transform>();
             menu = GameObject.Find("Main Menu").GetComponent<Transform>();

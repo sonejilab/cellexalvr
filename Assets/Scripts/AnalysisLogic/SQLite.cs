@@ -774,8 +774,6 @@ namespace SQLiter
         /// <param name="geneName"> The gene name </param>
         private IEnumerator QueryGeneCoroutine(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
-            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-            stopWatch.Start();
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
             string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id "+
@@ -786,11 +784,6 @@ namespace SQLiter
             {
                 yield return null;
             }
-            stopWatch.Stop();
-            print(stopWatch.Elapsed);
-
-            stopWatch.Reset();
-            stopWatch.Start();
 
             int i = 0;
             LowestExpression = float.MaxValue;
@@ -861,8 +854,6 @@ namespace SQLiter
                 }
                 _result.AddRange(result);
             }
-            stopWatch.Stop();
-            print(stopWatch.Elapsed);
             if (DebugMode)
                 print("Number of columns returned from database: " + i);
             _reader.Close();

@@ -83,6 +83,14 @@ namespace CellexalVR.Multiplayer
             referenceManager.keyboardHandler.AddCharacter(key[0], false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
         }
 
+        [PunRPC]
+        public void SendBrowserKeyClick(string key)
+        {
+            CellexalLog.Log("Recieved message to add" + key + "to url field");
+            Debug.Log("Recieved message to add letter" + key + "to url field");
+            referenceManager.webBrowserKeyboard.AddCharacter(key[0], false); 
+        }
+
         //[PunRPC]
         //public void SendColorGraphsByPreviousExpression(string geneName)
         //{
@@ -375,6 +383,36 @@ namespace CellexalVR.Multiplayer
             {
                 CellexalLog.Log("Could not find heatmap to move");
             }
+        }
+
+        [PunRPC]
+        public void SendMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        {
+            GameObject wm = referenceManager.webBrowser;
+            bool browserExists = wm != null;
+            if (browserExists)
+            {
+                try
+                {
+                    wm.transform.position = new Vector3(posX, posY, posZ);
+                    wm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                    wm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move browser - Error: " + e);
+                }
+            }
+            else
+            {
+                CellexalLog.Log("Could not find browser to move");
+            }
+        }
+
+        [PunRPC]
+        public void SendBrowserEnter()
+        {
+            referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(referenceManager.webBrowserKeyboard.output.text);
         }
 
         [PunRPC]

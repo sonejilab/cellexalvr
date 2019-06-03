@@ -199,7 +199,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
                 CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
             }
-            if (rightController.isActiveAndEnabled)
+            if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
             {
                 SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
             }
@@ -608,6 +608,7 @@ namespace CellexalVR.AnalysisLogic
             recolored.Clear();
             ClearLinesBetweenGraphPoints();
             referenceManager.attributeSubMenu.attributes.Clear();
+            selectionList.Clear();
 
 
         }

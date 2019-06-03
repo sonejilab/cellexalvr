@@ -15,7 +15,7 @@ namespace CellexalVR.Menu.Buttons
         public GameObject infoMenu;
 
         private int frameCount;
-        private string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Cursor]";
+        private string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         // all buttons must override this variable's get property
         /// <summary>
         /// A string that briefly explains what this button does.
@@ -55,6 +55,7 @@ namespace CellexalVR.Menu.Buttons
         private int layerMaskMenu;
         private int layerMaskKeyboard;
         private int layerMask;
+        private bool laserInside;
 
 
         private void OnValidate()
@@ -79,15 +80,18 @@ namespace CellexalVR.Menu.Buttons
             layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
             layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
-            layerMask = layerMaskMenu | layerMaskKeyboard;
+            layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskNetwork ;
 
         }
 
         protected virtual void Update()
         {
             frameCount++;
-            CheckForClick();
-            CheckForHit();
+            if (CrossSceneInformation.Normal)
+            {
+                CheckForClick();
+                CheckForHit();
+            }
         }
 
         private void CheckForClick()
@@ -109,32 +113,31 @@ namespace CellexalVR.Menu.Buttons
         /// </summary>
         private void CheckForHit()
         {
-            if (!buttonActivated || CrossSceneInformation.Ghost) return;
+            if (!buttonActivated) return;
             if (frameCount % 10 == 0)
             {
-                bool inside = false;
+                laserInside = false;
                 RaycastHit hit;
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
                 //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled && buttonActivated)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.isActiveAndEnabled && buttonActivated)
                 {
-                    inside = true;
+                    laserInside = true;
                     frameCount = 0;
-                    controllerInside = inside;
-                    SetHighlighted(inside);
-                    //if (infoMenu) infoMenu.SetActive(inside);
+                    controllerInside = laserInside;
+                    SetHighlighted(laserInside);
                     return;
                 }
                 if (!(hit.collider || hit.transform == transform))
                 {
-                    inside = false;
-                    controllerInside = inside;
-                    SetHighlighted(inside);
+                    laserInside = false;
+                    controllerInside = laserInside;
+                    SetHighlighted(laserInside);
                     //if (infoMenu) infoMenu.SetActive(inside);
                 }
-                controllerInside = inside;
-                SetHighlighted(inside);
+                controllerInside = laserInside;
+                SetHighlighted(laserInside);
                 if (descriptionText.text == Description)
                 {
                     descriptionText.text = "";
@@ -224,7 +227,7 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerExit(Collider other)
         {
-            if (!buttonActivated) return;
+            if (!buttonActivated || laserInside) return;
             //print(name + " ontriggerexit");
             if (other.gameObject.name == laserColliderName)
             {
