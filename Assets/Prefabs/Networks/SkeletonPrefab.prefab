@@ -97,10 +97,10 @@ Rigidbody:
   m_GameObject: {fileID: 1496824086956574}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: Infinity
+  m_Drag: 10
+  m_AngularDrag: 15
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -223,8 +223,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  allowedNearTouchControllers: 0
   allowedTouchControllers: 0
+  ignoredColliders: []
   isGrabbable: 1
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
@@ -239,6 +240,8 @@ MonoBehaviour:
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
+  objectHighlighter: {fileID: 0}
+  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   usingState: 0
   referenceManager: {fileID: 0}
 --- !u!114 &114610040334634022
@@ -274,5 +277,6 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 8c266280f23e1c34aa706e90a9f5a1cd, type: 2}
   normalMaterial: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
   removable: 0
+  referenceManager: {fileID: 0}
   networks: []
   layoutApplied: 0

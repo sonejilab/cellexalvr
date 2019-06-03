@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 224864074561584262}
   - component: {fileID: 222808095603201368}
   - component: {fileID: 114933963496661944}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 224842876408625866}
   - component: {fileID: 222355731510289348}
   - component: {fileID: 114489168990307150}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4214522110065010}
   - component: {fileID: 114250849707456346}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: ReportList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 224206550531445240}
   - component: {fileID: 222907109600961688}
   - component: {fileID: 114406544271344418}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MessageBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 224677768055441442}
   - component: {fileID: 222347615353143022}
   - component: {fileID: 114564314210444090}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +410,7 @@ GameObject:
   - component: {fileID: 224647937958260770}
   - component: {fileID: 222069992505527506}
   - component: {fileID: 114397358384100828}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   - component: {fileID: 33387405857825206}
   - component: {fileID: 222055219100202182}
   - component: {fileID: 114918581965597642}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: List Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -719,7 +719,7 @@ GameObject:
   - component: {fileID: 224902712400304476}
   - component: {fileID: 222042328114184652}
   - component: {fileID: 114822105595344064}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -756,7 +756,7 @@ GameObject:
   - component: {fileID: 223722316046035394}
   - component: {fileID: 114868944094563918}
   - component: {fileID: 114767085912972710}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MessageBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -776,7 +776,7 @@ GameObject:
   - component: {fileID: 23536864327410442}
   - component: {fileID: 114936215921773330}
   - component: {fileID: 54170055923606494}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: ReportNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -899,7 +899,7 @@ GameObject:
   - component: {fileID: 222118637156096772}
   - component: {fileID: 114718639030451862}
   - component: {fileID: 114137414484114266}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Yes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -916,7 +916,7 @@ GameObject:
   - component: {fileID: 4198498471223362}
   - component: {fileID: 33063411541163178}
   - component: {fileID: 23477346693815938}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -952,7 +952,7 @@ GameObject:
   - component: {fileID: 224088218409452648}
   - component: {fileID: 222882971916914872}
   - component: {fileID: 114403940473052450}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1024,7 +1024,7 @@ GameObject:
   - component: {fileID: 65429564225234386}
   - component: {fileID: 212093449241500616}
   - component: {fileID: 114161893304298446}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Refresh List Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1041,7 +1041,7 @@ GameObject:
   - component: {fileID: 224157108213699398}
   - component: {fileID: 222151444901724084}
   - component: {fileID: 114992673132046974}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MessageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1077,7 +1077,7 @@ GameObject:
   - component: {fileID: 224281826288389432}
   - component: {fileID: 222016728078524132}
   - component: {fileID: 114626442426046092}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1133,7 +1133,7 @@ GameObject:
   - component: {fileID: 65955060102459616}
   - component: {fileID: 212235529663734186}
   - component: {fileID: 114388977383778600}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1151,7 +1151,7 @@ GameObject:
   - component: {fileID: 222320128179274498}
   - component: {fileID: 114724300078524368}
   - component: {fileID: 114926663001045906}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: OK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1169,7 +1169,7 @@ GameObject:
   - component: {fileID: 222824623311296180}
   - component: {fileID: 114367820317942764}
   - component: {fileID: 114578339709173012}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: No
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1346,7 +1346,7 @@ GameObject:
   - component: {fileID: 54976182970062964}
   - component: {fileID: 114378642692024088}
   - component: {fileID: 114974474485316536}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: InworldBrowser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1399,7 +1399,7 @@ GameObject:
   - component: {fileID: 222204637159932302}
   - component: {fileID: 114395184220628258}
   - component: {fileID: 114588744905914538}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Prompt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1417,7 +1417,7 @@ GameObject:
   - component: {fileID: 222626365171699518}
   - component: {fileID: 114274319378619786}
   - component: {fileID: 114769512665573924}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1617,7 +1617,7 @@ GameObject:
   - component: {fileID: 114172804611860096}
   - component: {fileID: 114553073461929244}
   - component: {fileID: 114580894507750564}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MainUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1653,7 +1653,7 @@ GameObject:
   - component: {fileID: 224193521684653372}
   - component: {fileID: 222535642818682816}
   - component: {fileID: 114130124562736824}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1720,7 +1720,7 @@ GameObject:
   - component: {fileID: 4239197968670514}
   - component: {fileID: 23499343856442568}
   - component: {fileID: 102291749626517340}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Description Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1823,7 +1823,7 @@ GameObject:
   - component: {fileID: 224943000253824790}
   - component: {fileID: 222524090858581156}
   - component: {fileID: 114921623270012504}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1842,7 +1842,7 @@ GameObject:
   - component: {fileID: 33943202460225512}
   - component: {fileID: 222514725719592644}
   - component: {fileID: 114172800737415664}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Gene Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1980,7 +1980,7 @@ GameObject:
   - component: {fileID: 65532165886083580}
   - component: {fileID: 212429986675123426}
   - component: {fileID: 114415085504014938}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Forward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1998,7 +1998,7 @@ GameObject:
   - component: {fileID: 222391668880354210}
   - component: {fileID: 114906584893921152}
   - component: {fileID: 114167838601882100}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: UrlField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2234,7 +2234,7 @@ GameObject:
   - component: {fileID: 224855709338582892}
   - component: {fileID: 222726851387880490}
   - component: {fileID: 114604143064264708}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2306,7 +2306,7 @@ GameObject:
   - component: {fileID: 222110253536940748}
   - component: {fileID: 114995112231236336}
   - component: {fileID: 114405891196430076}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Forward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7052,6 +7052,11 @@ MonoBehaviour:
   currentLayout: 1
   placeholder: Enter a URL
   OnEdit:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: CellexalVR.Interaction.KeyboardEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnEditMultiuser:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: CellexalVR.Interaction.KeyboardEvent, Assembly-CSharp, Version=0.0.0.0,

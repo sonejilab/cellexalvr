@@ -105,6 +105,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   selectionNr: 0
   saveImageButton: {fileID: 0}
+  movingOutlineCircle: {fileID: 0}
   isReplacement: 0
   replacing: {fileID: 0}
 --- !u!114 &114363799773430976
@@ -113,12 +114,11 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758485399609656}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightController: {fileID: 0}
   distanceMultiplier: 0.1
   scaleMultiplier: 0.4
   maxScale: 0

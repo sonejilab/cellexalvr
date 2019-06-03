@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 114356468590826636}
   - component: {fileID: 114212794373154340}
   - component: {fileID: 65609762057409860}
-  - component: {fileID: 114375410037375254}
   - component: {fileID: 114490444003295042}
   m_Layer: 8
   m_Name: Graph Prefab
@@ -372,10 +371,10 @@ Rigidbody:
   m_GameObject: {fileID: 1128814461414928}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 10
+  m_AngularDrag: 15
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -417,8 +416,6 @@ MonoBehaviour:
     type: 2}
   emptySkeletonPrefab: {fileID: 1496824086956574, guid: ba53ec2d8cb9b834188ddcc17b5561f2,
     type: 2}
-  skeletonCubePrefab: {fileID: 1178875514128288, guid: d17afe6978f98a946aeb7b998d0d3c04,
-    type: 2}
   skeletonMaterial: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
   lineMaterial: {fileID: 2100000, guid: fb5aa86d27fbc354a9c1a52db2f254bf, type: 2}
   movingOutlineCircle: {fileID: 1620093671004734, guid: b2489140aeb8ccb45b637b27fbf44833,
@@ -455,10 +452,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ungrabDistance: 1
+  lockAxis:
+    xState: 0
+    yState: 0
+    zState: 0
+  uniformScaling: 1
   lockXAxis: 0
   lockYAxis: 0
   lockZAxis: 0
-  uniformScaling: 1
 --- !u!114 &114356468590826636
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -478,23 +479,6 @@ MonoBehaviour:
   onGrabCollisionDelay: 0
   destroyImmediatelyOnThrow: 1
   breakForce: 1500
---- !u!114 &114375410037375254
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1128814461414928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rightController: {fileID: 0}
-  distanceMultiplier: 0.1
-  scaleMultiplier: 0.4
-  maxScale: 0
-  minScale: 0
-  referenceManager: {fileID: 0}
 --- !u!114 &114460485008951306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -620,8 +604,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  allowedNearTouchControllers: 0
   allowedTouchControllers: 0
+  ignoredColliders: []
   isGrabbable: 1
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
@@ -636,6 +621,8 @@ MonoBehaviour:
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
+  objectHighlighter: {fileID: 0}
+  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   usingState: 0
   referenceManager: {fileID: 0}
 --- !u!114 &114566603823957088
