@@ -386,6 +386,13 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendActivateBrowser(bool activate)
+        {
+            CellexalLog.Log("Recieved message to toggle web browser");
+            referenceManager.webBrowser.SetActive(activate);
+        }
+
+        [PunRPC]
         public void SendMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             GameObject wm = referenceManager.webBrowser;

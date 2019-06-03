@@ -184,6 +184,13 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
 
+        public void InformActivateBrowser(bool activate)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to activate web browser");
+            coordinator.photonView.RPC("SendActivateBrowser", PhotonTargets.Others, activate);
+        }
+
         public void InformBrowserKeyClicked(string value)
         {
             if (!multiplayer) return;

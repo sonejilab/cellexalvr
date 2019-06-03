@@ -24,7 +24,7 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (GetComponent<BrowserGrab>().IsGrabbed())
+            if (GetComponent<VRTK.VRTK_InteractableObject>().IsGrabbed())
             {
                 referenceManager.gameManager.InformMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
             }
