@@ -596,8 +596,15 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendMinimizeNetwork(string networkName)
         {
-            GameObject.Find(networkName).GetComponent<NetworkHandler>().HideNetworks();
+            referenceManager.networkGenerator.FindNetworkHandler(networkName).HideNetworks();
             referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(networkName), networkName);
+        }
+
+        [PunRPC]
+        public void SendMinimizeHeatmap(string heatmapName)
+        {
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HideHeatmap();
+            referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(heatmapName), heatmapName);
         }
 
         [PunRPC]
@@ -614,10 +621,21 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendShowNetwork(string networkName, string jailName)
         {
-            NetworkHandler nh = GameObject.Find(networkName).GetComponent<NetworkHandler>();
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             GameObject jail = GameObject.Find(jailName);
             MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
             nh.ShowNetworks();
+            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+            Destroy(jail);
+        }
+
+
+        [PunRPC]
+        public void SendShowHeatmap(string heatmapName, string jailName)
+        {
+            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            GameObject jail = GameObject.Find(jailName);
+            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
             handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
             Destroy(jail);
         }
