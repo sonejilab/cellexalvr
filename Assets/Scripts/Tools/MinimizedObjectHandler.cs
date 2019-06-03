@@ -62,12 +62,12 @@ namespace CellexalVR.Tools
             container.Handler = this;
             // if a gameobject is minimized but the menu is not active, we have to tell the 
             // menu toggler to turn that item on later.
-            if (!menuToggler.MenuActive)
-            {
-                menuToggler.AddGameObjectToActivate(container.gameObject);
-                container.GetComponent<Renderer>().enabled = false;
-                container.GetComponent<Collider>().enabled = false;
-            }
+            //if (!menuToggler.MenuActive)
+            //{
+            //    menuToggler.AddGameObjectToActivate(container.gameObject);
+            //    container.GetComponent<Renderer>().enabled = false;
+            //    container.GetComponent<Collider>().enabled = false;
+            //}
             for (int i = 0; i < spaceTaken.GetLength(0); ++i)
             {
                 for (int j = 0; j < spaceTaken.GetLength(1); ++j)

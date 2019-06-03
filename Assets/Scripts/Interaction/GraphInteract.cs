@@ -1,4 +1,6 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
+using System.Collections;
 using UnityEngine;
 using VRTK;
 
@@ -10,6 +12,8 @@ namespace CellexalVR.Interaction
     class GraphInteract : VRTK_InteractableObject
     {
         public ReferenceManager referenceManager;
+
+        private Coroutine runningCoroutine;
 
         private void OnValidate()
         {
@@ -27,6 +31,10 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, false);
+            if (runningCoroutine != null)
+            {
+                StopCoroutine(runningCoroutine);
+            }
             //referenceManager.controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
             //referenceManager.gameManager.InformMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
             base.OnInteractableObjectGrabbed(e);
@@ -37,7 +45,24 @@ namespace CellexalVR.Interaction
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, true);
             //referenceManager.rightLaser.enabled = true;
             //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
+            runningCoroutine = StartCoroutine(KeepGraphPositionSynched(3f));
             base.OnInteractableObjectUngrabbed(e);
+        }
+
+        private IEnumerator KeepGraphPositionSynched(float time)
+        {
+            if (!referenceManager.gameManager.multiplayer)
+            {
+                yield break;
+            }
+            string graphName = gameObject.GetComponent<Graph>().GraphName;
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            while (time > 0f && rigidbody.velocity.magnitude > 0.001f)
+            {
+                referenceManager.gameManager.InformMoveGraph(graphName, transform.position, transform.rotation, transform.localScale);
+                time -= Time.deltaTime;
+                yield return null;
+            }
         }
 
         //private void OnTriggerEnter(Collider other)

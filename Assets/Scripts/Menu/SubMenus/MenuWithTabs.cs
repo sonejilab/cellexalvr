@@ -131,7 +131,7 @@ namespace CellexalVR.Menu.SubMenus
             if (!menuToggler)
                 menuToggler = referenceManager.menuToggler;
             // tell the menu toggler to activate the tab button later if the menu is not active
-            menuToggler.AddGameObjectToActivate(newTab.TabButton.gameObject);
+            //menuToggler.AddGameObjectToActivate(newTab.TabButton.gameObject);
             return newTab;
         }
 
