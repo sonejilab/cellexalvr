@@ -180,7 +180,7 @@ namespace CellexalVR.General
         public void InformKeyClicked(string value)
         {
             if (!multiplayer) return;
-            CellexalLog.Log("Informing clients that" + value + " was clicked");
+            CellexalLog.Log("Informing clients that " + value + " was clicked");
             coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
 
@@ -194,7 +194,7 @@ namespace CellexalVR.General
         public void InformBrowserKeyClicked(string value)
         {
             if (!multiplayer) return;
-            CellexalLog.Log("Informing clients that" + value + " was clicked");
+            CellexalLog.Log("Informing clients that " + value + " was clicked");
             coordinator.photonView.RPC("SendBrowserKeyClick", PhotonTargets.Others, value);
         }
 

@@ -90,7 +90,8 @@ namespace CellexalVR.Interaction
             if (frameCount % 30 == 0)
             {
                 bool inside = false;
-                Collider[] collidesWith = Physics.OverlapBox(transform.position, transform.localScale, Quaternion.identity, layerMask);
+                
+                Collider[] collidesWith = Physics.OverlapBox(transform.position, GetComponent<BoxCollider>().size / 2, Quaternion.identity, layerMask);
 
                 foreach (Collider col in collidesWith)
                 {
@@ -107,6 +108,11 @@ namespace CellexalVR.Interaction
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
+        }
+
 
 
         private void OnTriggerEnter(Collider other)
@@ -120,7 +126,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name == laserColliderName)
+            if (other.gameObject.name == laserColliderName && !controllerInside)
             {
                 controllerInside = false;
                 GetComponent<Renderer>().material.color = orgColor;
