@@ -45,7 +45,7 @@ namespace CellexalVR.Tools
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 controllerInside = false;
-                if (collidingWith.CompareTag("Graph") || collidingWith.CompareTag("SubGraph"))
+                if (collidingWith.CompareTag("Graph") || collidingWith.CompareTag("Subgraph"))
                 {
                     // the collider is a graphpoint
                     var graph = collidingWith.transform;
