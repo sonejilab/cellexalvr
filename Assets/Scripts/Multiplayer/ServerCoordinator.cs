@@ -639,6 +639,7 @@ namespace CellexalVR.Multiplayer
             Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             GameObject jail = GameObject.Find(jailName);
             MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
+            h.ShowHeatmap();
             handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
             Destroy(jail);
         }

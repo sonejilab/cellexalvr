@@ -219,7 +219,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                r.enabled = false;
+                r.enabled = true;
 
 
             GetComponent<Renderer>().enabled = true;
@@ -246,7 +246,6 @@ namespace CellexalVR.AnalysisObjects
                 }
                 foreach (NetworkCenter network in networks)
                 {
-
                     network.GetComponent<Collider>().enabled = true;
                     if (network.Enlarged)
                     {
