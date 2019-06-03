@@ -1052,6 +1052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4249581500914642}
   leftControllerPos: {fileID: 0}
+  referenceManager: {fileID: 0}
 --- !u!114 &114379348130739002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1157,6 +1158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4636202266821344}
   leftControllerPos: {fileID: 0}
+  referenceManager: {fileID: 0}
 --- !u!114 &114511774641040060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1364,6 +1366,7 @@ MonoBehaviour:
   target: {fileID: 4477240162172066}
   menuPos: {fileID: 0}
   mainMenu: {fileID: 0}
+  referenceManager: {fileID: 0}
 --- !u!114 &114655731679768822
 MonoBehaviour:
   m_ObjectHideFlags: 1
