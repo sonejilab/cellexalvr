@@ -589,15 +589,25 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendMinimizeGraph(string graphName)
         {
-            referenceManager.graphManager.FindGraph(graphName).HideGraph();
-            referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            g.HideGraph();
+            referenceManager.minimizedObjectHandler.MinimizeObject(g.gameObject, graphName);
         }
 
         [PunRPC]
         public void SendMinimizeNetwork(string networkName)
         {
-            GameObject.Find(networkName).GetComponent<NetworkHandler>().HideNetworks();
-            referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(networkName), networkName);
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            nh.HideNetworks();
+            referenceManager.minimizedObjectHandler.MinimizeObject(nh.gameObject, networkName);
+        }
+
+        [PunRPC]
+        public void SendMinimizeHeatmap(string heatmapName)
+        {
+            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            h.HideHeatmap();
+            referenceManager.minimizedObjectHandler.MinimizeObject(h.gameObject, heatmapName);
         }
 
         [PunRPC]
@@ -614,10 +624,21 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendShowNetwork(string networkName, string jailName)
         {
-            NetworkHandler nh = GameObject.Find(networkName).GetComponent<NetworkHandler>();
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             GameObject jail = GameObject.Find(jailName);
             MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
             nh.ShowNetworks();
+            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+            Destroy(jail);
+        }
+
+
+        [PunRPC]
+        public void SendShowHeatmap(string heatmapName, string jailName)
+        {
+            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            GameObject jail = GameObject.Find(jailName);
+            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
             handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
             Destroy(jail);
         }

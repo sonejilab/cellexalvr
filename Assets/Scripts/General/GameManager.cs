@@ -488,6 +488,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendMinimizeNetwork", PhotonTargets.Others, networkName);
         }
 
+        public void InformMinimizeHeatmap(string heatmapName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendMinimizeHeatmap", PhotonTargets.Others, heatmapName);
+        }
+
         public void InformDeleteObject(string objName)
         {
             if (!multiplayer) return;
@@ -510,6 +516,12 @@ namespace CellexalVR.General
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendShowNetwork", PhotonTargets.Others, networkName, jailName);
+        }
+
+        public void InformShowHeatmap(string heatmapName, string jailName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendShowHeatmap", PhotonTargets.Others, heatmapName, jailName);
         }
 
         public void InformToggleExpressedCells()

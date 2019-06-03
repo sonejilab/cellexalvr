@@ -71,7 +71,7 @@ namespace CellexalVR.Interaction
                 {
                     MinimizedObject.GetComponent<Heatmap>().ShowHeatmap();
                     //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    //Handler.referenceManager.gameManager.InformShowNetwork(MinimizedObject.name, this.name);
+                    Handler.referenceManager.gameManager.InformShowHeatmap(MinimizedObject.name, this.name);
                 }
                 Handler.ContainerRemoved(this);
                 Destroy(gameObject);

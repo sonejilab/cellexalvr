@@ -83,7 +83,7 @@ namespace CellexalVR.Tools
                         string heatmapName = heatmap.gameObject.name;
                         jail.MinimizeObject(heatmap.gameObject, heatmapName);
                         controllerInside = false;
-                        //referenceManager.gameManager.InformMinimizeHeatmap(heatmapName);
+                        referenceManager.gameManager.InformMinimizeHeatmap(heatmapName);
                     }
                 }
             }
