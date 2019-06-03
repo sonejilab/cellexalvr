@@ -61,8 +61,8 @@ namespace CellexalVR.Menu.SubMenus
                 {
                     menuToggler = referenceManager.menuToggler;
                 }
-                menuToggler.AddGameObjectToActivate(buttonGameObject, gameObject);
-                menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
+                //menuToggler.AddGameObjectToActivate(buttonGameObject, gameObject);
+                //menuToggler.AddGameObjectToActivate(buttonGameObject.transform.GetChild(0).gameObject, gameObject);
                 buttonGameObject.transform.localPosition = buttonPos;
 
                 var button = buttonGameObject.GetComponent<SelectionFromPreviousButton>();

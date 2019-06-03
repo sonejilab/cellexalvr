@@ -63,32 +63,32 @@ namespace CellexalVR.Menu.SubMenus
                 // We don't want to change the state of the tab buttons, they should always be turned on.
                 if (ReferenceEquals(child.GetComponent<TabButton>(), null))
                 {
-                    if (menuToggler.MenuActive)
+                    //if (menuToggler.MenuActive)
+                    //{
+                    // if the menu is turned on
+                    ToggleGameObject(child.gameObject, active);
+                    // Toggle all children to the child as well
+                    foreach (Transform t in child.GetComponentsInChildren<Transform>())
                     {
-                        // if the menu is turned on
-                        ToggleGameObject(child.gameObject, active);
-                        // Toggle all children to the child as well
-                        foreach (Transform t in child.GetComponentsInChildren<Transform>())
-                        {
-                            ToggleGameObject(t.gameObject, active);
-                        }
+                        ToggleGameObject(t.gameObject, active);
+                    }
 
-                    }
-                    else
-                    {
-                        // if the menu is turned off
-                        menuToggler.AddGameObjectToActivateNoChildren(child.gameObject, active);
-                        foreach (Transform t in child.GetComponentsInChildren<Transform>())
-                        {
-                            menuToggler.AddGameObjectToActivateNoChildren(t.gameObject, active);
-                        }
-                    }
                 }
-                else if (!menuToggler.MenuActive)
+                else
                 {
-                    // set the tab button to become visible when the menu is turned back on if the submenu it is attached to is turned on
-                    menuToggler.AddGameObjectToActivate(child.gameObject, TabButton.Menu.gameObject);
+                    // if the menu is turned off
+                    menuToggler.AddGameObjectToActivateNoChildren(child.gameObject, active);
+                    foreach (Transform t in child.GetComponentsInChildren<Transform>())
+                    {
+                        menuToggler.AddGameObjectToActivateNoChildren(t.gameObject, active);
+                    }
                 }
+                //}
+                //else if (!menuToggler.MenuActive)
+                //{
+                //    // set the tab button to become visible when the menu is turned back on if the submenu it is attached to is turned on
+                //    menuToggler.AddGameObjectToActivate(child.gameObject, TabButton.Menu.gameObject);
+                //}
             }
         }
 
@@ -150,15 +150,15 @@ namespace CellexalVR.Menu.SubMenus
 
         public void AddButton(CellexalButton button)
         {
-            if (!menuToggler)
-            {
-                menuToggler = referenceManager.menuToggler;
-            }
+            //if (!menuToggler)
+            //{
+            //    menuToggler = referenceManager.menuToggler;
+            //}
 
-            if (button.transform.childCount > 0)
-            {
-                menuToggler.AddGameObjectToActivate(button.transform.GetChild(0).gameObject, gameObject);
-            }
+            //if (button.transform.childCount > 0)
+            //{
+            //    menuToggler.AddGameObjectToActivate(button.transform.GetChild(0).gameObject, gameObject);
+            //}
             button.transform.localPosition = buttonPos;
 
             if ((buttonIndex + 1) % 4 == 0)
