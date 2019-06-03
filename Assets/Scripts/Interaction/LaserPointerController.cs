@@ -105,9 +105,17 @@ namespace CellexalVR.Interaction
         public void ToggleLaser(bool active)
         {
             alwaysActive = active;
-            referenceManager.rightLaser.enabled = active;
+            if (active)
+            {
+                referenceManager.rightLaser.cursorVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+            }
+            else
+            {
+                referenceManager.rightLaser.cursorVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+            }
+            //referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-                referenceManager.leftLaser.enabled = active;
+                referenceManager.leftLaser.cursorVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
             origin.localRotation = Quaternion.identity;
         }
 

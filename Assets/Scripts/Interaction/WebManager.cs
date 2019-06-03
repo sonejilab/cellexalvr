@@ -22,6 +22,14 @@ namespace CellexalVR.Interaction
             referenceManager = webBrowser.referenceManager;
         }
 
+        private void Update()
+        {
+            if (GetComponent<BrowserGrab>().IsGrabbed())
+            {
+                referenceManager.gameManager.InformMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
+            }
+        }
+
         public void EnterKey()
         {
             print("Navigate to - " + output.text);
