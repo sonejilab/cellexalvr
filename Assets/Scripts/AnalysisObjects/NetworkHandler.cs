@@ -213,10 +213,11 @@ namespace CellexalVR.AnalysisObjects
             {
                 foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                     r.enabled = true;
-                if (network.Enlarged)
-                {
-                    network.gameObject.GetComponent<Renderer>().enabled = true;
-                }
+
+                //if (network.Enlarged)
+                //{
+                //    network.gameObject.GetComponent<Renderer>().enabled = true;
+                //}
             }
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 r.enabled = true;
