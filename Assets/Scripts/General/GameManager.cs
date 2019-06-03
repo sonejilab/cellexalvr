@@ -187,7 +187,7 @@ namespace CellexalVR.General
         public void InformActivateBrowser(bool activate)
         {
             if (!multiplayer) return;
-            CellexalLog.Log("Informing clients to activate web browser");
+            CellexalLog.Log("Informing clients to toggle web browser");
             coordinator.photonView.RPC("SendActivateBrowser", PhotonTargets.Others, activate);
         }
 

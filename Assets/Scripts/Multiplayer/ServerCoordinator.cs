@@ -389,7 +389,7 @@ namespace CellexalVR.Multiplayer
         public void SendActivateBrowser(bool activate)
         {
             CellexalLog.Log("Recieved message to toggle web browser");
-            referenceManager.webBrowser.SetActive(activate);
+            referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
         }
 
         [PunRPC]
