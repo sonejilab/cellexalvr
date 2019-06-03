@@ -41,27 +41,27 @@ namespace CellexalVR.Interaction
             base.OnInteractableObjectUngrabbed(e);
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-            {
-                if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-                {
-                    CellexalEvents.ObjectGrabbed.Invoke();
-                }
-            }
-        }
+        //private void OnTriggerEnter(Collider other)
+        //{
+        //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+        //    {
+        //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+        //        {
+        //            CellexalEvents.ObjectGrabbed.Invoke();
+        //        }
+        //    }
+        //}
 
-        private void OnTriggerExit(Collider other)
-        {
-            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-            {
-                if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-                {
-                    CellexalEvents.ObjectUngrabbed.Invoke();
-                }
-            }
-        }
+        //private void OnTriggerExit(Collider other)
+        //{
+        //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+        //    {
+        //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+        //        {
+        //            CellexalEvents.ObjectUngrabbed.Invoke();
+        //        }
+        //    }
+        //}
 
     }
 
