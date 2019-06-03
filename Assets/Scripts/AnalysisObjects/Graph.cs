@@ -172,9 +172,9 @@ namespace CellexalVR.AnalysisObjects
         {
             transform.position = referenceManager.leftController.transform.position;
             GraphActive = true;
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                r.enabled = true;
-
+            //foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            //    r.enabled = true;
+            gameObject.SetActive(true);
             //foreach (GameObject line in Lines)
             //    line.SetActive(true);
             maximize = true;
@@ -197,11 +197,11 @@ namespace CellexalVR.AnalysisObjects
                 CellexalLog.Log("Maximized object" + name);
                 maximize = false;
                 GraphActive = true;
-                foreach (Collider c in GetComponentsInChildren<Collider>())
-                    c.enabled = true;
                 minimized = false;
                 //foreach (GameObject line in Lines)
                 //    line.SetActive(true);
+                foreach (Collider c in GetComponentsInChildren<Collider>())
+                    c.enabled = true;
             }
         }
         /// <summary>
@@ -264,8 +264,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 minimize = false;
                 GraphActive = false;
-                foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                    r.enabled = false;
+                gameObject.SetActive(false);
                 foreach (GameObject line in Lines)
                     line.SetActive(false);
                 referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
