@@ -94,7 +94,7 @@ namespace CellexalVR.Tools
         {
 
             numberColliders++;
-            if (other.CompareTag("Graph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
+            if (other.CompareTag("Graph") || other.CompareTag("Subgraph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
             {
                 GetComponent<Light>().range = 0.08f;
                 GetComponent<Light>().intensity = 1.1f;
@@ -106,7 +106,7 @@ namespace CellexalVR.Tools
         private void OnTriggerExit(Collider other)
         {
             numberColliders--;
-            if (other.CompareTag("Graph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
+            if (other.CompareTag("Graph") || other.CompareTag("Subgraph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
             {
                 GetComponent<Light>().range = 0.04f;
                 GetComponent<Light>().intensity = 0.8f;
