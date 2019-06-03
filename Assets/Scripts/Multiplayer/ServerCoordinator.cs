@@ -88,7 +88,7 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to add" + key + "to url field");
             Debug.Log("Recieved message to add letter" + key + "to url field");
-            referenceManager.webBrowserKeyboard.AddCharacter(key[0], false); 
+            referenceManager.webBrowserKeyboard.AddCharacter(key[0], false);
         }
 
         //[PunRPC]
@@ -589,7 +589,7 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendMinimizeGraph(string graphName)
         {
-            GameObject.Find(graphName).GetComponent<Graph>().HideGraph();
+            referenceManager.graphManager.FindGraph(graphName).HideGraph();
             referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
         }
 
@@ -603,7 +603,7 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendShowGraph(string graphName, string jailName)
         {
-            Graph g = GameObject.Find(graphName).GetComponent<Graph>();
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
             GameObject jail = GameObject.Find(jailName);
             MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
             g.ShowGraph();

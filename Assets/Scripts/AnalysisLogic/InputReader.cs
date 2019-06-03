@@ -377,6 +377,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 StartCoroutine(StartServer());
             }
+            CellexalEvents.GraphsLoaded.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
