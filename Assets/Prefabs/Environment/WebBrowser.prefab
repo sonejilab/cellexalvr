@@ -1352,7 +1352,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1474517612183030
 GameObject:
   m_ObjectHideFlags: 1
@@ -2087,6 +2087,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4458954063754910}
   - component: {fileID: 114014705138496778}
+  - component: {fileID: 114343305458997858}
   m_Layer: 16
   m_Name: Web Keyboard
   m_TagString: Keyboard
@@ -7058,7 +7059,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   OnEditMultiuser:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114343305458997858}
+        m_MethodName: BrowserKeyboardEditEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: CellexalVR.Interaction.KeyboardEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   OnEnter:
@@ -8920,6 +8932,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 1, y: 7}
   size: {x: 2, y: 2}
+--- !u!114 &114343305458997858
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1847963554766590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec426c91bd2ab44a98c2211eb7ab74e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
 --- !u!114 &114343910841040938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9509,6 +9533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   webBrowser: {fileID: 114140419455278732}
   output: {fileID: 114189868070025586}
+  isVisible: 0
 --- !u!114 &114393072941107808
 MonoBehaviour:
   m_ObjectHideFlags: 1
