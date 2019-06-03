@@ -730,9 +730,7 @@ namespace CellexalVR.AnalysisObjects
         {
             transform.position = referenceManager.minimizedObjectHandler.transform.position;
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
-            {
                 r.enabled = true;
-            }
             GetComponent<Renderer>().enabled = true;
             maximize = true;
         }

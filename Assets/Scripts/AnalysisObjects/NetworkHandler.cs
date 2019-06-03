@@ -215,10 +215,13 @@ namespace CellexalVR.AnalysisObjects
                     r.enabled = true;
                 if (network.Enlarged)
                 {
-                    network.gameObject.GetComponent<Renderer>().enabled = false;
+                    network.gameObject.GetComponent<Renderer>().enabled = true;
                 }
-
             }
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+
+
             GetComponent<Renderer>().enabled = true;
             GetComponent<Collider>().enabled = true;
             maximize = true;
