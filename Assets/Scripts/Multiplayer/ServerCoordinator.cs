@@ -589,22 +589,25 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendMinimizeGraph(string graphName)
         {
-            referenceManager.graphManager.FindGraph(graphName).HideGraph();
-            referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(graphName), graphName);
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            g.HideGraph();
+            referenceManager.minimizedObjectHandler.MinimizeObject(g.gameObject, graphName);
         }
 
         [PunRPC]
         public void SendMinimizeNetwork(string networkName)
         {
-            referenceManager.networkGenerator.FindNetworkHandler(networkName).HideNetworks();
-            referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(networkName), networkName);
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            nh.HideNetworks();
+            referenceManager.minimizedObjectHandler.MinimizeObject(nh.gameObject, networkName);
         }
 
         [PunRPC]
         public void SendMinimizeHeatmap(string heatmapName)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HideHeatmap();
-            referenceManager.minimizedObjectHandler.MinimizeObject(GameObject.Find(heatmapName), heatmapName);
+            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            h.HideHeatmap();
+            referenceManager.minimizedObjectHandler.MinimizeObject(h.gameObject, heatmapName);
         }
 
         [PunRPC]
