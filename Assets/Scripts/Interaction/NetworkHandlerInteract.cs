@@ -70,7 +70,7 @@ namespace CellexalVR.Interaction
             }
             string networkHandlerName = gameObject.GetComponent<NetworkHandler>().name;
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            while (time > 0f && rigidbody.velocity.magnitude > 0.001f)
+            while (time > 0f || rigidbody.velocity.magnitude > 0.001f)
             {
                 referenceManager.gameManager.InformMoveNetwork(networkHandlerName, transform.position, transform.rotation, transform.localScale);
                 time -= Time.deltaTime;

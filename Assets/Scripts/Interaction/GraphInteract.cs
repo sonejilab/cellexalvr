@@ -57,7 +57,7 @@ namespace CellexalVR.Interaction
             }
             string graphName = gameObject.GetComponent<Graph>().GraphName;
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            while (time > 0f && rigidbody.velocity.magnitude > 0.001f)
+            while (time > 0f || rigidbody.velocity.magnitude > 0.001f)
             {
                 referenceManager.gameManager.InformMoveGraph(graphName, transform.position, transform.rotation, transform.localScale);
                 time -= Time.deltaTime;
