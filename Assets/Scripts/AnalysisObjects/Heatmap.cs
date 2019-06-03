@@ -213,9 +213,10 @@ namespace CellexalVR.AnalysisObjects
             {
                 gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }
-
-            if (CrossSceneInformation.Normal && (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard))
+            bool correctModel = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers
+                                || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Keyboard
+                                || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.WebBrowser;
+            if ((CrossSceneInformation.Normal || CrossSceneInformation.Tutorial) && correctModel)
             {
                 HeatmapRaycast();
             }

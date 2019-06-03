@@ -276,7 +276,7 @@ namespace CellexalVR.Tutorial
                     currentStep = 7;
                     CellexalEvents.GraphsColoredByGene.RemoveListener(TurnOnSpot);
 
-                    CellexalEvents.NetworkUnEnlarged.AddListener(TurnOnSpot);
+                    CellexalEvents.NetworkEnlarged.AddListener(TurnOnSpot);
                     referenceManager.controllerModelSwitcher.TurnOffActiveTool(true);
                     ResetMaterials(objList);
                     ResetMaterials(new GameObject[] { closeMenuButton, laserButton });
@@ -298,12 +298,12 @@ namespace CellexalVR.Tutorial
                 //From start to finish
                 case 8:
                     currentStep = 8;
-                    CellexalEvents.NetworkUnEnlarged.RemoveListener(TurnOnSpot);
+                    CellexalEvents.NetworkEnlarged.RemoveListener(TurnOnSpot);
 
                     CellexalEvents.NetworkCreated.AddListener(NetworksCreated);
                     CellexalEvents.HeatmapCreated.AddListener(HeatmapCreated);
-                    CellexalEvents.HeatmapCreated.AddListener(FinalLevel);
-                    CellexalEvents.NetworkCreated.AddListener(FinalLevel);
+                    //CellexalEvents.HeatmapCreated.AddListener(FinalLevel);
+                    //CellexalEvents.NetworkCreated.AddListener(FinalLevel);
                     heatmapCreated = networksCreated = false;
                     //ResetMaterials(objList);
                     //Destroy(canv);
@@ -361,7 +361,7 @@ namespace CellexalVR.Tutorial
             heatmapCreated = true;
             if (currentStep == 5)
                 NextStep();
-            if (currentStep == 7)
+            if (currentStep == 8)
                 FinalLevel();
 
         }
@@ -370,8 +370,6 @@ namespace CellexalVR.Tutorial
         {
             createNetworksButton.GetComponent<Renderer>().material = standardButtonMat;
             networksCreated = true;
-            if (currentStep == 7)
-                NextStep();
             if (currentStep == 8)
                 FinalLevel();
         }
@@ -396,7 +394,7 @@ namespace CellexalVR.Tutorial
         {
             BoxCollider col = highlightSpot.GetComponent<BoxCollider>();
             col.enabled = false;
-            if (currentStep != 8 && Physics.OverlapBox(highlightSpot.transform.position + col.center, col.size / 2).Length > 0)
+            if (currentStep != 9 && Physics.OverlapBox(highlightSpot.transform.position + col.center, col.size / 2).Length > 0)
             {
                 highlightSpot.transform.position = spotPositions[(currentStep + 1) % spotPositions.Length];
             }

@@ -71,6 +71,7 @@ namespace CellexalVR.Tutorial
             }
             if (other.tag == "Graph")
             {
+                print("Graph entered");
                 this.gameObject.GetComponent<Collider>().enabled = false;
                 foreach (ParticleSystem sys in this.GetComponentsInChildren<ParticleSystem>())
                 {
