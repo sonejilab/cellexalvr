@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
+using System.Collections;
 using UnityEngine;
 using VRTK;
 
@@ -11,6 +12,8 @@ namespace CellexalVR.Interaction
     class NetworkHandlerInteract : VRTK_InteractableObject
     {
         public ReferenceManager referenceManager;
+
+        private Coroutine runningCoroutine;
 
         private void OnValidate()
         {
@@ -28,6 +31,10 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformDisableColliders(gameObject.name);
+            if (runningCoroutine != null)
+            {
+                StopCoroutine(runningCoroutine);
+            }
             // moving many triggers really pushes what unity is capable of
             //foreach (Collider c in GetComponentsInChildren<Collider>())
             //{
@@ -50,10 +57,27 @@ namespace CellexalVR.Interaction
             //        ((MeshCollider)c).convex = false;
             //    }
             //}
+            runningCoroutine = StartCoroutine(KeepPositionSynched(3f));
             GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
             base.OnInteractableObjectUngrabbed(e);
         }
 
+        private IEnumerator KeepPositionSynched(float time)
+        {
+            if (!referenceManager.gameManager.multiplayer)
+            {
+                yield break;
+            }
+            string networkHandlerName = gameObject.GetComponent<NetworkHandler>().name;
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            while (time > 0f && rigidbody.velocity.magnitude > 0.001f)
+            {
+                referenceManager.gameManager.InformMoveNetwork(networkHandlerName, transform.position, transform.rotation, transform.localScale);
+                time -= Time.deltaTime;
+                yield return null;
+            }
+
+        }
         //private void OnTriggerEnter(Collider other)
         //{
         //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers

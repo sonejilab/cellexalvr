@@ -78,16 +78,16 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendKeyClick(string key)
         {
-            CellexalLog.Log("Recieved message to add" + key + "to search field");
-            Debug.Log("Recieved message to add letter" + key + "to search field");
+            CellexalLog.Log("Recieved message to add  " + key + " to search field");
+            Debug.Log("Recieved message to add letter " + key + " to search field");
             referenceManager.keyboardHandler.AddCharacter(key[0], false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
         }
 
         [PunRPC]
         public void SendBrowserKeyClick(string key)
         {
-            CellexalLog.Log("Recieved message to add" + key + "to url field");
-            Debug.Log("Recieved message to add letter" + key + "to url field");
+            CellexalLog.Log("Recieved message to add " + key + " to url field");
+            Debug.Log("Recieved message to add letter " + key + " to url field");
             referenceManager.webBrowserKeyboard.AddCharacter(key[0], false);
         }
 
@@ -419,7 +419,8 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendBrowserEnter()
         {
-            referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(referenceManager.webBrowserKeyboard.output.text);
+            string text = referenceManager.webBrowserKeyboard.output.text;
+            referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(text);
         }
 
         [PunRPC]

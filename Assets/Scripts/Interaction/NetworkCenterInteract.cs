@@ -1,4 +1,6 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
+using System.Collections;
 using UnityEngine;
 using VRTK;
 
@@ -10,6 +12,8 @@ namespace CellexalVR.Interaction
     class NetworkCenterInteract : VRTK_InteractableObject
     {
         public ReferenceManager referenceManager;
+
+        private Coroutine runningCoroutine;
 
         private void OnValidate()
         {
@@ -42,6 +46,10 @@ namespace CellexalVR.Interaction
                     //}
                 }
             }
+            if (runningCoroutine != null)
+            {
+                StopCoroutine(runningCoroutine);
+            }
             base.OnInteractableObjectGrabbed(e);
         }
 
@@ -63,7 +71,28 @@ namespace CellexalVR.Interaction
 
                 }
             }
+            runningCoroutine = StartCoroutine(KeepPositionSynched(3f));
             base.OnInteractableObjectUngrabbed(e);
+        }
+
+
+        private IEnumerator KeepPositionSynched(float time)
+        {
+            if (!referenceManager.gameManager.multiplayer)
+            {
+                yield break;
+            }
+            NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
+            string networkCenterName = center.name;
+            string networkHandlerName = center.Handler.name;
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            while (time > 0f && rigidbody.velocity.magnitude > 0.001f)
+            {
+                referenceManager.gameManager.InformMoveNetworkCenter(networkHandlerName, networkCenterName, transform.position, transform.rotation, transform.localScale);
+                time -= Time.deltaTime;
+                yield return null;
+            }
+
         }
 
         //private void OnTriggerEnter(Collider other)
