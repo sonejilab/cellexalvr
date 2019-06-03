@@ -247,6 +247,7 @@ namespace CellexalVR.Multiplayer
                     g.transform.position = new Vector3(posX, posY, posZ);
                     g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                     g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                    g.GetComponent<GraphInteract>().StopPositionSync();
                 }
                 catch (Exception e)
                 {
