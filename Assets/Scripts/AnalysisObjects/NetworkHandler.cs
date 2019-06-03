@@ -204,27 +204,23 @@ namespace CellexalVR.AnalysisObjects
         internal void ShowNetworks()
         {
             transform.position = referenceManager.minimizedObjectHandler.transform.position;
-            foreach (NetworkCenter network in Replacements)
-            {
-                network.GetComponent<Renderer>().enabled = true;
-                network.HideSphereIfEnlarged();
-            }
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = true;
             foreach (NetworkCenter network in networks)
             {
+                network.HideSphereIfEnlarged();
                 foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                     r.enabled = true;
 
-                //if (network.Enlarged)
-                //{
-                //    network.gameObject.GetComponent<Renderer>().enabled = true;
-                //}
+                if (network.Enlarged)
+                {
+                    network.gameObject.GetComponent<Renderer>().enabled = false;
+                }
             }
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                r.enabled = true;
 
 
             GetComponent<Renderer>().enabled = true;
-            GetComponent<Collider>().enabled = true;
+            //GetComponent<Collider>().enabled = true;
             maximize = true;
         }
 
