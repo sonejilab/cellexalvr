@@ -12,6 +12,7 @@ namespace CellexalVR.Interaction
 
         public SimpleWebBrowser.WebBrowser webBrowser;
         public TMPro.TextMeshPro output;
+        public bool isVisible;
 
         private ReferenceManager referenceManager;
 
@@ -52,6 +53,7 @@ namespace CellexalVR.Interaction
             {
                 c.enabled = visible;
             }
+            isVisible = visible;
             //webBrowser.enabled = visible;
         }
 
