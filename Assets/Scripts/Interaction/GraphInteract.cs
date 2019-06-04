@@ -13,7 +13,7 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private Coroutine runningCoroutine;
+        //private Coroutine runningCoroutine;
 
         private void OnValidate()
         {
@@ -31,7 +31,7 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, false);
-            StopPositionSync();
+            //StopPositionSync();
             //referenceManager.controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
             //referenceManager.gameManager.InformMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
             base.OnInteractableObjectGrabbed(e);
@@ -40,35 +40,37 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformToggleGrabbable(gameObject.name, true);
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            referenceManager.gameManager.InformGraphUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
             //referenceManager.rightLaser.enabled = true;
             //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
-            runningCoroutine = StartCoroutine(KeepGraphPositionSynched());
+            //runningCoroutine = StartCoroutine(KeepGraphPositionSynched());
             base.OnInteractableObjectUngrabbed(e);
         }
 
-        public void StopPositionSync()
-        {
-            if (runningCoroutine != null)
-            {
-                StopCoroutine(runningCoroutine);
-            }
-        }
+        //public void StopPositionSync()
+        //{
+        //    if (runningCoroutine != null)
+        //    {
+        //        StopCoroutine(runningCoroutine);
+        //    }
+        //}
 
-        private IEnumerator KeepGraphPositionSynched()
-        {
-            if (!referenceManager.gameManager.multiplayer)
-            {
-                yield break;
-            }
-            string graphName = gameObject.GetComponent<Graph>().GraphName;
-            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            while (rigidbody.velocity.magnitude > 0.001f)
-            {
-                referenceManager.gameManager.InformMoveGraph(graphName, transform.position, transform.rotation, transform.localScale);
-                print(rigidbody.velocity.magnitude);
-                yield return null;
-            }
-        }
+        //private IEnumerator KeepGraphPositionSynched()
+        //{
+        //    if (!referenceManager.gameManager.multiplayer)
+        //    {
+        //        yield break;
+        //    }
+        //    string graphName = gameObject.GetComponent<Graph>().GraphName;
+        //    Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+        //    while (rigidbody.velocity.magnitude > 0.01f)
+        //    {
+        //        referenceManager.gameManager.InformMoveGraph(graphName, transform.position, transform.rotation, transform.localScale);
+        //        print(rigidbody.velocity.magnitude);
+        //        yield return null;
+        //    }
+        //}
 
         //private void OnTriggerEnter(Collider other)
         //{

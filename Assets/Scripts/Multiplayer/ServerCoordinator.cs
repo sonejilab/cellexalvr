@@ -235,7 +235,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ, float velX, float velY, float velZ)
         {
             Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
             bool graphExists = g != null;
@@ -247,7 +247,7 @@ namespace CellexalVR.Multiplayer
                     g.transform.position = new Vector3(posX, posY, posZ);
                     g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                     g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                    g.GetComponent<GraphInteract>().StopPositionSync();
+                    //g.GetComponent<GraphInteract>().StopPositionSync();
                 }
                 catch (Exception e)
                 {
@@ -260,6 +260,18 @@ namespace CellexalVR.Multiplayer
 
             }
 
+        }
+
+        [PunRPC]
+        public void SendGraphUngrabbed(string graphName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        {
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            if (g)
+            {
+                Rigidbody r = g.GetComponent<Rigidbody>();
+                r.velocity = new Vector3(velX, velY, velZ);
+                r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
+            }
         }
 
         [PunRPC]

@@ -260,10 +260,17 @@ namespace CellexalVR.General
             CellexalLog.Log("Informing clients to clear all lines with color: " + color);
             coordinator.photonView.RPC("SendClearLinesWithColor", PhotonTargets.Others, color.r, color.g, color.b);
         }
+
         public void InformMoveGraph(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+
+        public void InformGraphUngrabbed(string moveGraphName, Vector3 vel, Vector3 angVel)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendGraphUngrabbed", PhotonTargets.Others, moveGraphName, vel.x, vel.y, vel.z, angVel.x, angVel.y, angVel.z);
         }
 
         public void InformMoveCells(string cellsName, Vector3 pos, Quaternion rot)
@@ -384,7 +391,7 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendRemoveCells", PhotonTargets.Others);
         }
 
-       
+
         public void InformMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
@@ -422,7 +429,7 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendCreateHeatmap", PhotonTargets.Others, hmName);
         }
 
-        
+
         public void InformGenerateNetworks(int layoutSeed)
         {
             if (!multiplayer) return;
