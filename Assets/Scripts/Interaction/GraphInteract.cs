@@ -48,30 +48,6 @@ namespace CellexalVR.Interaction
             base.OnInteractableObjectUngrabbed(e);
         }
 
-        //public void StopPositionSync()
-        //{
-        //    if (runningCoroutine != null)
-        //    {
-        //        StopCoroutine(runningCoroutine);
-        //    }
-        //}
-
-        //private IEnumerator KeepGraphPositionSynched()
-        //{
-        //    if (!referenceManager.gameManager.multiplayer)
-        //    {
-        //        yield break;
-        //    }
-        //    string graphName = gameObject.GetComponent<Graph>().GraphName;
-        //    Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-        //    while (rigidbody.velocity.magnitude > 0.01f)
-        //    {
-        //        referenceManager.gameManager.InformMoveGraph(graphName, transform.position, transform.rotation, transform.localScale);
-        //        print(rigidbody.velocity.magnitude);
-        //        yield return null;
-        //    }
-        //}
-
         //private void OnTriggerEnter(Collider other)
         //{
         //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers

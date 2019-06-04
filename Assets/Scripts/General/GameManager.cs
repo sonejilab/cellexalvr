@@ -443,6 +443,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
+        public void InformNetworkUngrabbed(string networkName, Vector3 vel, Vector3 angVel)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendNetworkUngrabbed", PhotonTargets.Others, networkName, vel.x, vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+        }
+
         public void InformEnlargeNetwork(string networkHandlerName, string networkName)
         {
             if (!multiplayer) return;
@@ -469,6 +475,12 @@ namespace CellexalVR.General
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendMoveNetworkCenter", PhotonTargets.Others, networkHandlerName, networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+
+        public void InformNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, Vector3 vel, Vector3 angVel)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendNetworkCenterUngrabbed", PhotonTargets.Others, networkHandlerName, networkCenterName, vel.x, vel.y, vel.z, angVel.x, angVel.y, angVel.z);
         }
 
         public void InformSetArcsVisible(bool toggleToState, string networkName)

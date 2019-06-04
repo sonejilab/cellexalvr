@@ -13,8 +13,6 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private Coroutine runningCoroutine;
-
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -46,16 +44,15 @@ namespace CellexalVR.Interaction
                     //}
                 }
             }
-            if (runningCoroutine != null)
-            {
-                StopCoroutine(runningCoroutine);
-            }
             base.OnInteractableObjectGrabbed(e);
         }
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
             referenceManager.gameManager.InformEnableColliders(gameObject.name);
+            NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            referenceManager.gameManager.InformNetworkCenterUngrabbed(center.Handler.name, center.name, rigidbody.velocity, rigidbody.angularVelocity);
             if (grabbingObjects.Count == 0)
             {
                 foreach (Collider c in GetComponentsInChildren<Collider>())
@@ -71,29 +68,9 @@ namespace CellexalVR.Interaction
 
                 }
             }
-            runningCoroutine = StartCoroutine(KeepPositionSynched(3f));
             base.OnInteractableObjectUngrabbed(e);
         }
 
-
-        private IEnumerator KeepPositionSynched(float time)
-        {
-            if (!referenceManager.gameManager.multiplayer)
-            {
-                yield break;
-            }
-            NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
-            string networkCenterName = center.name;
-            string networkHandlerName = center.Handler.name;
-            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            while (time > 0f || rigidbody.velocity.magnitude > 0.001f)
-            {
-                referenceManager.gameManager.InformMoveNetworkCenter(networkHandlerName, networkCenterName, transform.position, transform.rotation, transform.localScale);
-                time -= Time.deltaTime;
-                yield return null;
-            }
-
-        }
 
         //private void OnTriggerEnter(Collider other)
         //{

@@ -235,7 +235,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ, float velX, float velY, float velZ)
+        public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
             bool graphExists = g != null;
@@ -503,6 +503,18 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendNetworkUngrabbed(string networkName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            if (nh)
+            {
+                Rigidbody r = nh.GetComponent<Rigidbody>();
+                r.velocity = new Vector3(velX, velY, velZ);
+                r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
+            }
+        }
+
+        [PunRPC]
         public void SendEnlargeNetwork(string networkHandlerName, string networkCenterName)
         {
             CellexalLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
@@ -536,6 +548,22 @@ namespace CellexalVR.Multiplayer
             else
             {
                 CellexalLog.Log("Could not find networkcenter to move");
+            }
+        }
+
+        [PunRPC]
+        public void SendNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            if (nh)
+            {
+                NetworkCenter nc = nh.FindNetworkCenter(networkCenterName);
+                if (nc)
+                {
+                    Rigidbody r = nc.GetComponent<Rigidbody>();
+                    r.velocity = new Vector3(velX, velY, velZ);
+                    r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
+                }
             }
         }
 
