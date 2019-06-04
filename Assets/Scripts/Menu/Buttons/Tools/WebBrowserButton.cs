@@ -24,7 +24,7 @@ namespace CellexalVR.Menu.Buttons.Tools
         public override void Click()
         {
             base.Click();
-            referenceManager.gameManager.InformActivateBrowser(toolActivated);
+            //referenceManager.gameManager.InformActivateBrowser(toolActivated);
 
         }
 
