@@ -859,6 +859,12 @@ namespace CellexalVR.AnalysisLogic
                     }
                     CellexalLog.Log("Successfully created convex hull of " + graphName);
                     networkHandler = skeleton.GetComponent<NetworkHandler>();
+                    foreach (BoxCollider graphCollider in graph.GetComponents<BoxCollider>())
+                    {
+                        BoxCollider newCollider = networkHandler.gameObject.AddComponent<BoxCollider>();
+                        newCollider.center = graphCollider.center;
+                        newCollider.size = graphCollider.size;
+                    }
                     networkHandlerName = "NetworkHandler_" + graphName + "-" + (selectionManager.fileCreationCtr + 1);
                     networkHandler.name = networkHandlerName;
                 }

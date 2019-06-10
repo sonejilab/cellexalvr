@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 54762506670964714}
   - component: {fileID: 114356468590826636}
   - component: {fileID: 114212794373154340}
-  - component: {fileID: 65609762057409860}
   - component: {fileID: 114490444003295042}
   m_Layer: 8
   m_Name: Graph Prefab
@@ -378,18 +377,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65609762057409860
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1128814461414928}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114061481872000288
 MonoBehaviour:
   m_ObjectHideFlags: 1

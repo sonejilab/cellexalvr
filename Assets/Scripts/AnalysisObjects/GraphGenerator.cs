@@ -263,8 +263,14 @@ namespace CellexalVR.AnalysisObjects
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             clusters = SplitClusterRecursive(cluster, newGraph.octreeRoot, true);
+            // add colliders
+            foreach (Graph.OctreeNode node in newGraph.octreeRoot.children)
+            {
+                BoxCollider collider = newGraph.gameObject.AddComponent<BoxCollider>();
+                collider.center = node.pos + node.size / 2f;
+                collider.size = node.size;
+            }
             nbrOfClusters = clusters.Count;
-            newGraph.GetComponent<BoxCollider>().size = newGraph.octreeRoot.size;
             stopwatch.Stop();
             CellexalLog.Log(string.Format("clustered {0} in {1}. nbr of clusters: {2}", newGraph.GraphName, stopwatch.Elapsed.ToString(), newGraph.nbrOfClusters));
             return clusters;
@@ -619,7 +625,7 @@ namespace CellexalVR.AnalysisObjects
             stopwatch.Stop();
             CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName, stopwatch.Elapsed.ToString()));
             isCreating = false;
-            
+
             //yield break;
         }
 
