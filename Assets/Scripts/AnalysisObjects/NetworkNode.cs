@@ -35,6 +35,8 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public HashSet<NetworkNode> neighbours = new HashSet<NetworkNode>();
         public List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
+        
+
         private List<Color> edgeColors = new List<Color>();
         private Vector3 normalScale;
         private Vector3 largerScale;
@@ -96,11 +98,12 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
-            if (active && touched)
+            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider) ;
+            if (active && touched && !Center.controllerInsideSomeNode)
             {
+                Center.ToggleNodeColliders(false, gameObject.name);
                 var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
-                controllerInside = true;
+                controllerInside = Center.controllerInsideSomeNode = true;
                 foreach (GameObject obj in objects)
                 {
                     NetworkNode nn = obj.GetComponent<NetworkNode>();
@@ -116,7 +119,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
                 referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
-                controllerInside = false;
+                controllerInside = Center.controllerInsideSomeNode = false;
+                Center.ToggleNodeColliders(true, gameObject.name);
             }
         }
 
@@ -125,8 +129,9 @@ namespace CellexalVR.AnalysisObjects
             bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
             if (touched)
             {
+                Center.ToggleNodeColliders(true, gameObject.name);
                 var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == this.name);
-                controllerInside = false;
+                controllerInside = Center.controllerInsideSomeNode = false;
                 foreach (GameObject obj in objects)
                 {
                     NetworkNode nn = obj.GetComponent<NetworkNode>();

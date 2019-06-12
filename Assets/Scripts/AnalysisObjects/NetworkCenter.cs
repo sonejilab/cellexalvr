@@ -55,6 +55,7 @@ namespace CellexalVR.AnalysisObjects
         public bool Enlarged { get; private set; }
         public bool isReplacement = false;
         public enum Layout { TWO_D, THREE_D }
+        public bool controllerInsideSomeNode;
 
         private ControllerModelSwitcher controllerModelSwitcher;
         private SteamVR_Controller.Device device;
@@ -210,6 +211,19 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Used to disable colliders of nodes to avoid the controller being inside many nodes at the same time. 
+        /// </summary>
+        /// <param name="b">Toggle on/off</param>
+        /// <param name="exepction">The first node that the controller entered should be the only one to stay active.</param>
+        public void ToggleNodeColliders(bool b, string exepction)
+        {
+            foreach (NetworkNode node in nodes.FindAll(n => n.gameObject.name != exepction))
+            {
+                node.UnHighlight();
+                node.GetComponent<BoxCollider>().enabled = b;
+            }
+        }
 
         /// <summary>
         /// Adds a node to this network.
