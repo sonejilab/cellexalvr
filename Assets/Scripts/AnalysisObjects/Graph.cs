@@ -86,7 +86,7 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 startPosition;
         private List<Vector3> nodePosition;
         private List<Vector3> nodeSizes;
-
+        private List<GameObject> topExprCircles = new List<GameObject>();
         // For minimization animation
         private bool minimize;
         private bool maximize;
@@ -109,9 +109,7 @@ namespace CellexalVR.AnalysisObjects
         private string folderName;
         private int graphNr;
         private int nbrOfExpressionColors;
-        /// <summary>
-        /// The name of this graph. Should just be the filename that the graph came from.
-        /// </summary>
+
 
 
         private static LayerMask selectionToolLayerMask;
@@ -1044,6 +1042,14 @@ namespace CellexalVR.AnalysisObjects
                 colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
             }
             int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
+            if (CellexalConfig.Config.GraphMostExpressedMarker)
+            {
+                foreach (GameObject circle in topExprCircles)
+                {
+                    Destroy(circle);
+                }
+                topExprCircles.Clear();
+            }
             foreach (CellExpressionPair pair in expressions)
             {
                 // If this is a subgraph it does not contain all cells...
@@ -1062,6 +1068,7 @@ namespace CellexalVR.AnalysisObjects
                         circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
                         circle.transform.position = points[pair.Cell].WorldPosition;
                         circle.transform.parent = transform;
+                        topExprCircles.Add(circle);
                     }
                     texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
                 }
