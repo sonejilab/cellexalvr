@@ -1141,6 +1141,7 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   parent: {fileID: 114190743744166870}
+  doneTex: {fileID: 21300000, guid: 38fb2abc21daf5845b4f5b3686d41626, type: 3}
 --- !u!114 &114878040427955872
 MonoBehaviour:
   m_ObjectHideFlags: 1
