@@ -2,42 +2,27 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 
-homedir <- args[1] # <user specific folder>/output
+datadir <- args[1] # <user specific folder>
 
-datadir <- args[2] # <user specific folder>
+group_selection_filepath  <- args[2] # filepath to the grouping file
 
-latest_version <- args[3] # filepath to the grouping file
+top_genes_number <- args[3] # integer norm 250
 
 output_filepath <- args[4] # <homedir>/<heatmapName>.txt
 
-top_genes_number <- args[5] # integer norm 250
-
-stats_method <- args[6] # method to use for stats
-
-
-
-suppressMessages(library(cellexalvrR))
-
-expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
-
-group_selection_filepath <- file.path(datadir, paste("selection", latest_version, ".txt", sep=""))
-
-if ( ! file.exists(group_selection_filepath)) {
-	group_selection_filepath = latest_version # as this is the grouping name!
-}
-
-#print(group_selection_filepath)
-
-#generated_image_filepath <- file.path(homedir, "Images", paste("heatmap_", latest_version, ".png", sep=""))
+stats_method <- args[5] # method to use for stats
 
 message( paste("make_heatmap using grouping file", group_selection_filepath, " and stats method ", stats_method  ) )
 
-CO <- loadObject ( expression_data_filepath )
+# the script that will be run by the r session. Needs to be on the correct format to be read properly by the r source command. Change this line if you want to run your own heatmap function.
+function_str <- paste("make.cellexalvr.heatmap.list(cellexalObj,
+ 			\"", group_selection_filepath,
+			"\",", top_genes_number,
+			",\"", output_filepath,
+			"\",\"", stats_method,
+			"\")", sep="")
 
-message( paste( "make.cellexalvr.heatmap.list( TheLoadedCellexalObject ,",group_selection_filepath,",",top_genes_number,",",output_filepath,", ",stats_method," )"))
-make.cellexalvr.heatmap.list(CO,group_selection_filepath,top_genes_number,output_filepath, stats_method )
+fileConn <- file(file.path(datadir, "server.input.R"))
+writeLines(function_str, fileConn)
+close(fileConn)
 
-message( "Heatmap - no object save: grouping should already be stored" )
-
-# this is not necesary any more - done wile the group is stored.
-# lockedSave(cellexalObj)

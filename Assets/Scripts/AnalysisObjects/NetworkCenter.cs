@@ -16,6 +16,8 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.SceneObjects;
+using CellexalVR.Extensions;
+using CellexalVR.Menu.Buttons.Networks;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -33,7 +35,7 @@ namespace CellexalVR.AnalysisObjects
         public NetworkHandler Handler { get; set; }
         public ReferenceManager referenceManager;
         public int selectionNr;
-        public CellexalButton saveImageButton;
+        public SaveNetworkAsImageButton saveImageButton;
         public GameObject movingOutlineCircle;
 
         public float MaxNegPcor { get; set; }
@@ -1118,21 +1120,27 @@ namespace CellexalVR.AnalysisObjects
             saveImageButton.SetButtonActivated(false);
             saveImageButton.descriptionText.text = "Saving image...";
             string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
-            string args = CellexalUser.UserSpecificFolder + " " + networkImageFilePath + " " + groupingsFilepath;
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + networkImageFilePath.UnFixFilePath() + " " + groupingsFilepath.UnFixFilePath();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
+
+            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            {
+                yield return null;
+            }
+
             CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
 
-            while (t.IsAlive)
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-            saveImageButton.SetButtonActivated(true);
+            saveImageButton.FinishedButton();
             //handler.runningScript = false;
             CellexalEvents.ScriptFinished.Invoke();
             saveImageButton.descriptionText.text = "";

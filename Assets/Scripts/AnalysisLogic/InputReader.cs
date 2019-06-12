@@ -87,7 +87,16 @@ namespace CellexalVR.AnalysisLogic
             arcsSubMenu = referenceManager.arcsSubMenu;
             indexMenu = referenceManager.indexMenu;
             createFromMarkerMenu = referenceManager.createFromMarkerMenu;
-            headset = referenceManager.headset;
+            //headset = referenceManager.headset;
+            if (CrossSceneInformation.Spectator)
+            {
+                headset = referenceManager.spectatorRig;
+                referenceManager.headset = headset;
+            }
+            else
+            {
+                headset = referenceManager.headset;
+            }
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
@@ -499,7 +508,7 @@ namespace CellexalVR.AnalysisLogic
             string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
 
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args, true));
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t.Start();
@@ -515,12 +524,15 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(LogStart());
         }
 
-        public void StopServer()
+        /// <summary>
+        /// To clean up server files after termination. Can be called if the user wants to start a new session (e.g. when loading a new dataset) or when exiting the program. 
+        /// </summary>
+        public void QuitServer()
         {
-            string name = CellexalUser.UserSpecificFolder + "\\server";
-            File.Delete(name + ".pid");
+            File.Delete(CellexalUser.UserSpecificFolder + "\\server.pid");
             CellexalLog.Log("Stopped Server");
         }
+
 
         /// <summary>
         /// Calls R logging function to start the logging session.
@@ -534,7 +546,8 @@ namespace CellexalVR.AnalysisLogic
             //                "cellexalObj @usedObj$sessionName = NULL } \n " +
             //                "cellexalObj = sessionPath(cellexalObj, \"" + CellexalUser.UserSpecificFolder.UnFixFilePath() + "\")" ;
 
-            string filePath = Application.streamingAssetsPath + @"\R\logStart.R";
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
 
             // Wait for other processes to finish and for server to have started.
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R") ||
@@ -543,13 +556,15 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
 
-            CellexalLog.Log("Running R script : " + filePath);
+            CellexalLog.Log("Running R script : " + rScriptFilePath);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            RScriptRunner.RunScript(filePath, true);
+
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+            t.Start();
 
             // Wait for this process to finish.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
@@ -1215,12 +1230,7 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        /// <summary>
-        /// To clean up server files after termination. Can be called if the user wants to start a new session (e.g. when loading a new dataset) or when exiting the program. 
-        /// </summary>
-        public void QuitServer()
-        {
-            File.Delete(CellexalUser.UserSpecificFolder + "\\server.pid");
-        }
+
+
     }
 }

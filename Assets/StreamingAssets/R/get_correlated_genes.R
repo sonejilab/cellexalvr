@@ -1,14 +1,10 @@
-library(cellexalvrR)
-
 args <- commandArgs(trailingOnly = TRUE)
 
 datadir <- args[1]
 
 gene_name <- args[2]
 
-outputfile <- args[3]
-
-message("In function")
+output_filepath <- args[3]
 
 facsTypeArg <- as.logical(args[4])
 
@@ -16,6 +12,16 @@ expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
 message("Starting correlated genes function")
 
-get.genes.cor.to(expression_data_filepath, gene_name, outputfile, facsTypeArg)
+# the script that will be run by the r session. Needs to be on the correct format to be read properly by the r source command. Change this line if you want to run your own correlated genes function.
+
+function_str <- paste("get.genes.cor.to(\"", expression_data_filepath, "\",
+			\"", gene_name, "\",
+			\"", output_filepath, "\",
+			\"", facsTypeArg, "\")", 
+			sep="")
+
+fileConn <- file(file.path(datadir, "server.input.R"))
+writeLines(function_str, fileConn)
+close(fileConn)
 
 message("Finished correlated genes function")

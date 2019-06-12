@@ -61,15 +61,8 @@ namespace CellexalVR.AnalysisLogic
             selectionManager = referenceManager.selectionManager;
             inputReader = referenceManager.inputReader;
             graphManager = referenceManager.graphManager;
-            if (CrossSceneInformation.Spectator)
-            {
-                headset = referenceManager.spectatorRig;
-                referenceManager.headset = headset;
-            }
-            else
-            {
-                headset = referenceManager.headset;
-            }
+            headset = referenceManager.headset;
+
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
@@ -189,27 +182,27 @@ namespace CellexalVR.AnalysisLogic
 
             // generate the files containing the network information
             selectionNr = selectionManager.fileCreationCtr - 1;
-            string function = "make.cellexalvr.network";
+            //string function = "make.cellexalvr.network";
+            //string script = function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", method=\"" + networkMethod + "\")";
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
-            string networkResources = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
+            string outputFilePath = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
             networkMethod = CellexalConfig.Config.NetworkAlgorithm;
-            //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", 0.8,130, \"pcor\")";
-            //string script = "cellexalObj <- " + function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\")";
-            string script = function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", method=\"" + networkMethod + "\")";
-            if (!Directory.Exists(networkResources))
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + groupingFilePath + " " + outputFilePath + " " + networkMethod;
+            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_networks.R").FixFilePath();
+            if (!Directory.Exists(outputFilePath))
             {
-                CellexalLog.Log("Creating directory " + networkResources.FixFilePath());
-                Directory.CreateDirectory(networkResources);
+                CellexalLog.Log("Creating directory " + outputFilePath.FixFilePath());
+                Directory.CreateDirectory(outputFilePath);
             }
             while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
 
-            CellexalLog.Log("Running R script " + script + " with the arguments \"");
+            CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            RScriptRunner.RunScript(script);
+            RScriptRunner.RunRScript(rScriptFilePath, args);
 
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {

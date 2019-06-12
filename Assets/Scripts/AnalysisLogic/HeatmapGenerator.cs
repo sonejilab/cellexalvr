@@ -204,16 +204,19 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.notificationManager.SpawnNotification("Heatmap generation failed.");
                 yield break;
             }
-            string function = "make.cellexalvr.heatmap.list";
+            //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
             string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
             string topGenesNr = "250";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
             string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
-            string args = "cellexalObj" + ", \"" + groupingFilepath + "\", " + topGenesNr + ", \"" + outputFilePath + "\", \"" + statsMethod + "\"";
+            //string args = "cellexalObj" + ", \"" + groupingFilepath + "\", " + topGenesNr + ", \"" + outputFilePath + "\", \"" + statsMethod + "\"";
+            string args = CellexalUser.UserSpecificFolder + " " + groupingFilepath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
 
-            string script = function + "(" + args + ")";
+            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
+
+            //string script = function + "(" + args + ")";
 
             if (!Directory.Exists(heatmapDirectory))
             {
@@ -224,12 +227,13 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return null;
             }
-            t = new Thread(() => RScriptRunner.RunScript(script));
+            //t = new Thread(() => RScriptRunner.RunScript(script));
+            t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
-            CellexalLog.Log("Running R function " + function + " with the arguments: " + args);
+            CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R")) 
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R")) 
             {
                 yield return null;
             }

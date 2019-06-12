@@ -1,25 +1,24 @@
 #print("start R")
 
-
-suppressMessages(library(cellexalvrR))
-
 args <- commandArgs(trailingOnly = TRUE)
 
-input_file <- args[1] # grouping file path
+datadir <- args[1] # the user specific folder
 
-datadir <- args[2] # the user specific folder
+group_selection_filepath <- args[2] # grouping file path
 
-output_file  <- args[3] # the output path
+output_filepath  <- args[3] # the output path
+
+network_method <- args[4] # the algorithm to use
 
 expression_data_filepath <- file.path(datadir, "cellexalObj.RData")
 
-message( paste("make_network using grouping file", input_file ))
+# the script that will be run by the r session. Needs to be on the correct format to be read properly by the r source command. Change this line if you want to run your own network function.
+function_str <- paste("make.cellexalvr.network(cellexalObj,
+ 			\"", group_selection_filepath, "\",
+			\"", output_filepath, "\",
+			\"method=", network_method , "\")",
+			sep="")
 
-CO <- loadObject ( expression_data_filepath )
-
-cellexalvrObj <- make.cellexalvr.network(CO, input_file,  output_file)
-
-message( "Save updated cellexalvrR object" )
-
-lockedSave(cellexalvrObj, path=datadir )
-
+fileConn <- file(file.path(datadir, "server.input.R"))
+writeLines(function_str, fileConn)
+close(fileConn)

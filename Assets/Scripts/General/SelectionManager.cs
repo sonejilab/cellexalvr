@@ -505,12 +505,12 @@ namespace CellexalVR.General
             RObjectUpdating = true;
             // wait one frame to let ConfirmSelection finish.
             yield return null;
-            string function = "userGrouping";
+            //string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
                                         + (fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string args = "cellexalObj" + ", \"" + latestSelection + "\"";
-            string script = "cellexalObj <- " + function + "(" + args + ")";
-
+            //string script = "cellexalObj <- " + function + "(" + args + ")";
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
+            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
             // Wait for server to start up
             while (!File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
             {
@@ -518,9 +518,9 @@ namespace CellexalVR.General
             }
 
 
-            Stopwatch stopwatch = new Stopwatch();
-            Thread t = new Thread(() => RScriptRunner.RunScript(script));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
+            Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))

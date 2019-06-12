@@ -110,21 +110,24 @@ namespace CellexalVR.AnalysisObjects
             //var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + nodeName);
             //var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + nodeName);
             //var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + nodeName);
-            string function = "get.genes.cor.to";
+            //string function = "get.genes.cor.to";
+            //string args = "cellexalObj" + ", \"" + nodeName + "\", \"" + outputFile + "\", " + facsTypeArg;
+            //string script = function + "(" + args + ")";
+
             string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").UnFixFilePath();
             string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
-            string args = "cellexalObj" + ", \"" + nodeName + "\", \"" + outputFile + "\", " + facsTypeArg;
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + nodeName + " " + outputFile + " " + facsTypeArg;
+            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_correlated_genes.R").FixFilePath();
 
-            string script = function + "(" + args + ")";
             // First wait until other processes are finished before trying to start this one.
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
             {
                 yield return null;
             }
-            CellexalLog.Log("Calculating correlated genes with R script " + script);
+            CellexalLog.Log("Calculating correlated genes with R script " + rScriptFilePath);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            RScriptRunner.RunScript(script);
+            RScriptRunner.RunRScript(rScriptFilePath, args);
 
             // Wait for this process to finish.
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
@@ -132,10 +135,6 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
 
-            // wait some frames for files to be created.
-            //for (int i = 0; i < 10; i++)
-            //{
-            //}
             yield return null;
             stopwatch.Stop();
             CellexalLog.Log("Correlated genes R script finished in " + stopwatch.Elapsed.ToString());
