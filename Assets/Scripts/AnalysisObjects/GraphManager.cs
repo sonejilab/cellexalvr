@@ -253,7 +253,19 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Resets all graphpoints' in all graphs colors to white.
+        /// Clears expression colours from graph but keeps current selection colours.
+        /// </summary>
+        public void ClearExpressionColours()
+        {
+            foreach (Graph g in Graphs)
+            {
+                g.ResetColors(resetGroup:false);
+            }
+            selectionManager.RecolorSelectionPoints();
+        }
+
+        /// <summary>
+        /// Resets all graphpoints' in all graphs colors to white. Also clears selection and removes annotations.
         /// </summary>
         [ConsoleCommand("graphManager", aliases: new string[] { "resetcolor", "rc" })]
         public void ResetGraphsColor()
@@ -263,6 +275,10 @@ namespace CellexalVR.AnalysisObjects
             foreach (var g in Graphs)
             {
                 g.ResetColors();
+                foreach (GraphInfoPanelRotator panel in g.GetComponentsInChildren<GraphInfoPanelRotator>())
+                {
+                    Destroy(panel.gameObject);
+                }
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }

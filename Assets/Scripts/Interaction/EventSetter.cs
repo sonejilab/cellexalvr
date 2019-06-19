@@ -107,6 +107,12 @@ namespace CellexalVR.Interaction
             referenceManager.gameManager.InformKeyClicked(s);
         }
 
+        public void GeneKeyboardAnnotateEvent(string s)
+        {
+            referenceManager.selectionManager.AddAnnotation(s);
+            referenceManager.gameManager.InformAddAnnotation(s);
+        }
+
 
         public void BrowserKeyboardEditEvent(string s)
         {

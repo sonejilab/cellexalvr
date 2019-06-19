@@ -29,10 +29,11 @@ namespace CellexalVR.Interaction
         public float distance = 8f;
         public enum Layout { Uppercase, Lowercase, Special }
         public Layout currentLayout = Layout.Lowercase;
-        public string placeholder = "Enter a gene name";
+        public string placeholder = "Enter a name";
         public KeyboardEvent OnEdit;
         public KeyboardEvent OnEditMultiuser;
         public KeyboardEvent OnEnter;
+        public KeyboardEvent OnAnnotate;
 
         private bool keyLayoutUppercase = false;
         private KeyboardPanel[] sortedKeys;

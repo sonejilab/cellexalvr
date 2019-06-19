@@ -14,6 +14,7 @@ using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.SceneObjects;
 using System.Threading;
+using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -36,6 +37,8 @@ namespace CellexalVR.AnalysisLogic
         public GameObject lineBetweenTwoGraphPointsPrefab;
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
+        //public HDF5Handler hDF5Handler;
+
 
         private SQLite database;
         private SteamVR_TrackedObject rightController;
@@ -195,7 +198,7 @@ namespace CellexalVR.AnalysisLogic
             try
             {
                 StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
-                //StartCoroutine(QueryRObject(geneName, coloringMethod, triggerEvent));
+                //QueryRObject(geneName, coloringMethod, triggerEvent);
 
             }
             catch (Exception e)
@@ -212,150 +215,63 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        private IEnumerator QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
-        {
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_gene_expression.R").FixFilePath();
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + geneName;
-            string func = "write.table(cellexalObj@data[\"" + geneName + "\", cellexalObj@data[\"" +
-                geneName + "\",] > 0], file=\"" + CellexalUser.UserSpecificFolder.UnFixFilePath() +
-                "\\\\gene_expr.txt\", append=FALSE, row.names=TRUE, col.names=FALSE, sep=\" \", quote=FALSE)";
-            //string result = string.Empty;
-            while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
-            {
-                yield return null;
-            }
+
+
+        //private void QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
+        //{
+            //string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_gene_expression.R").FixFilePath();
+            //string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + geneName;
+            ////string func = "write.table(cellexalObj@data[\"" + geneName + "\", cellexalObj@data[\"" +
+            ////    geneName + "\",] > 0], file=\"" + CellexalUser.UserSpecificFolder.UnFixFilePath() +
+            ////    "\\\\gene_expr.txt\", append=FALSE, row.names=TRUE, col.names=FALSE, sep=\" \", quote=FALSE)";
+            ////string result = string.Empty;
+            //while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
+            //{
+            //    yield return null;
+            //}
+            ////Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             //Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            Thread t = new Thread(() => RScriptRunner.RunScript(func));
-            t.Start();
-            CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
-            {
-                yield return null;
-            }
+            //t.Start();
+            //CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
+            //var stopwatch = new System.Diagnostics.Stopwatch();
+            //stopwatch.Start();
+            //while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
+            //{
+            //    yield return null;
+            //}
+
             //stopwatch.Stop();
-            CellexalLog.Log("Get gene expression R script finished in " + stopwatch.Elapsed.ToString());
+            //CellexalLog.Log("Get gene expression R script finished in " + stopwatch.Elapsed.ToString());
 
             //stopwatch.Reset();
             //stopwatch.Start();
-            ArrayList expressions = new ArrayList();
-            GetComponent<AudioSource>().Play();
-            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            LowestExpression = float.MaxValue;
-            HighestExpression = float.MinValue;
-            string file = CellexalUser.UserSpecificFolder + @"\gene_expr.txt";
+            //ArrayList expressions = hDF5Handler.GetGeneExpressions(geneName, coloringMethod);
+            //GetComponent<AudioSource>().Play();
 
-            if (coloringMethod == GraphManager.GeneExpressionColoringMethods.EqualExpressionRanges)
-            {
-                // put results in equally sized buckets
-                using (StreamReader reader = new StreamReader(file))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        string[] line = reader.ReadLine().Split(' ');
-                        string name = line[0];
-                        float expr = float.Parse(line[1]);
-                        if (expr > HighestExpression)
-                        {
-                            HighestExpression = expr;
-                        }
-                        if (expr < LowestExpression)
-                        {
-                            LowestExpression = expr;
-                        }
 
-                        expressions.Add(new CellExpressionPair(name, expr, -1));
-                        if (HighestExpression == LowestExpression)
-                        {
-                            HighestExpression += 1;
-                        }
-                    }
-                    float binSize = (HighestExpression - LowestExpression) / CellexalConfig.Config.GraphNumberOfExpressionColors;
-                    //if (DebugMode)
-                    //{
-                    //    print("binsize = " + binSize);
-                    //}
-                    foreach (CellExpressionPair pair in expressions)
-                    {
-                        pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
-                    }
-                }
-                stopwatch.Stop();
-                print("Gene : " + geneName + ", Time : " + stopwatch.Elapsed.ToString());
-            }
-            else
-            {
-                List<CellExpressionPair> result = new List<CellExpressionPair>();
-                LowestExpression = float.MaxValue;
-                HighestExpression = float.MinValue;
-                // put the same number of results in each bucket, ordered
-                using (StreamReader reader = new StreamReader(file))
-                {
-                    string[] line = reader.ReadLine().Split(' ');
-                    string name = line[0];
-                    float expr = float.Parse(line[1]);
-                    CellExpressionPair newPair = new CellExpressionPair(name, expr, -1);
-                    expressions.Add(newPair);
-                    expr = newPair.Expression;
-                    if (expr > HighestExpression)
-                    {
-                        HighestExpression = expr;
-                    }
-                    if (expr < LowestExpression)
-                    {
-                        LowestExpression = expr;
-                    }
-                }
+            //graphManager.ColorAllGraphsByGeneExpression(expressions);
 
-                if (HighestExpression == LowestExpression)
-                {
-                    HighestExpression += 1;
-                }
-                // sort the list based on gene expressions
-                result.Sort();
 
-                int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
-                for (int j = 0; j < result.Count; ++j)
-                {
-                    result[j].Color = j / binsize;
-                }
-                expressions.AddRange(result);
-            }
-            //// stop the coroutine if the gene was not in the database
-            //if (expressions.Count == 0)
+            //if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
             //{
-            //    CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
-            //    CellexalEvents.CommandFinished.Invoke(false);
-            //    yield break;
+            //    var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+            //    foreach (Cell c in cells.Values)
+            //    {
+            //        c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+            //    }
             //}
+            //if (triggerEvent)
+            //{
+            //    CellexalEvents.GraphsColoredByGene.Invoke();
+            //}
+            //CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
 
-            graphManager.ColorAllGraphsByGeneExpression(expressions);
-            File.Delete(file);
-
-
-
-            if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
-            {
-                var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
-                foreach (Cell c in cells.Values)
-                {
-                    c.SaveExpression(geneName + " " + coloringMethod, removedGene);
-                }
-            }
-            if (triggerEvent)
-            {
-                CellexalEvents.GraphsColoredByGene.Invoke();
-            }
-            CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
-
-            CellexalEvents.CommandFinished.Invoke(true);
-        }
+            //CellexalEvents.CommandFinished.Invoke(true);
+        //}
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Reset();
             stopwatch.Start();
             if (coroutinesWaiting >= 1)
             {
@@ -426,6 +342,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 CellexalEvents.GraphsColoredByGene.Invoke();
             }
+
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
 
             CellexalEvents.CommandFinished.Invoke(true);

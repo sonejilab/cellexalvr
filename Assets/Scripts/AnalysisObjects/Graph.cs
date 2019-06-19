@@ -909,7 +909,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Resets the color of all graphpoints in this graph to white.
         /// </summary>
-        public void ResetColors()
+        public void ResetColors(bool resetGroup = true)
         {
             for (int i = 0; i < textureWidth; ++i)
             {
@@ -924,7 +924,10 @@ namespace CellexalVR.AnalysisObjects
             //{
             //    p.Group = -1;
             //}
-            octreeRoot.Group = -1;
+            if (resetGroup)
+            {
+                octreeRoot.Group = -1;
+            }
         }
 
         public Color GetGraphPointColor(GraphPoint gp)
@@ -987,6 +990,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void RecolorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
+            
             byte greenChannel = (byte)(outline ? 5 : 0);
             byte redChannel;
             if (i == -1)
