@@ -105,6 +105,7 @@ namespace CellexalVR.AnalysisLogic
             currentPath = "";
             facsGraphCounter = 0;
 
+            RScriptRunner.SetReferenceManager(referenceManager);
             CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
@@ -384,7 +385,8 @@ namespace CellexalVR.AnalysisLogic
 
             if (server)
             {
-                StartCoroutine(StartServer());
+                StartCoroutine(StartServer("main"));
+                //StartCoroutine(StartServer("gene"));
             }
             CellexalEvents.GraphsLoaded.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);
@@ -500,10 +502,18 @@ namespace CellexalVR.AnalysisLogic
         //     yield return null;
         // }
 
-        private IEnumerator StartServer()
+        
+        
+        /// <summary>
+        /// Start the R session that will run in the background. 
+        /// </summary>
+        /// <param name="serverType">If you are running several sessions give a serverType name that works as a prefix so the 
+        /// R session knows which file to look for.</param>
+        /// <returns></returns>
+        private IEnumerator StartServer(string serverType)
         {
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
-            string serverName = CellexalUser.UserSpecificFolder + "\\server";
+            string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
             string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
 
@@ -520,7 +530,7 @@ namespace CellexalVR.AnalysisLogic
 
             stopwatch.Stop();
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
-            referenceManager.notificationManager.SpawnNotification("R Server Session Initiated.");
+            referenceManager.notificationManager.SpawnNotification(serverType + " R Server Session Initiated.");
             StartCoroutine(LogStart());
         }
 
@@ -529,7 +539,8 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public void QuitServer()
         {
-            File.Delete(CellexalUser.UserSpecificFolder + "\\server.pid");
+            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.pid");
+            //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
         }
 
@@ -550,8 +561,8 @@ namespace CellexalVR.AnalysisLogic
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
 
             // Wait for other processes to finish and for server to have started.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R") ||
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") ||
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
             {
                 yield return null;
             }
@@ -564,7 +575,7 @@ namespace CellexalVR.AnalysisLogic
             t.Start();
 
             // Wait for this process to finish.
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }

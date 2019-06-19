@@ -21,7 +21,7 @@ grouping <- args[3] ## groupings file
 
 function_str <- paste("ontologyLogPage(cellexalObj,\"", genes , "\", \"", grouping, "\")", sep="")
 
-fileConn <- file(file.path(datadir, "server.input.R"))
+fileConn <- file(file.path(datadir, "mainServer.input.R"))
 writeLines(function_str, fileConn)
 close(fileConn)
 

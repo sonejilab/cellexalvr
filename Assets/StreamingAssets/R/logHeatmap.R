@@ -33,6 +33,6 @@ function_str <- paste("logHeatmap(cellexalObj,
 			sep="")
 
 
-fileConn <- file(file.path(datadir, "server.input.R"))
+fileConn <- file(file.path(datadir, "mainServer.input.R"))
 writeLines(function_str, fileConn)
 close(fileConn)

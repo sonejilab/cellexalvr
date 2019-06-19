@@ -19,6 +19,6 @@ function_str <- paste("make.cellexalvr.network(cellexalObj,
 			\"method=", network_method , "\")",
 			sep="")
 
-fileConn <- file(file.path(datadir, "server.input.R"))
+fileConn <- file(file.path(datadir, "mainServer.input.R"))
 writeLines(function_str, fileConn)
 close(fileConn)

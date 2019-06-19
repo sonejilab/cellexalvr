@@ -223,7 +223,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -233,7 +233,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R")) 
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")) 
             {
                 yield return null;
             }

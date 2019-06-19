@@ -1,5 +1,3 @@
-#print("start R")
-
 args <- commandArgs(trailingOnly = TRUE)
 
 datadir <- args[1] # <user specific folder>
@@ -12,7 +10,7 @@ output_filepath <- args[4] # <homedir>/<heatmapName>.txt
 
 stats_method <- args[5] # method to use for stats
 
-message( paste("make_heatmap using grouping file", group_selection_filepath, " and stats method ", stats_method  ) )
+#message( paste("make_heatmap using grouping file", group_selection_filepath, " and stats method ", stats_method  ) )
 
 # the script that will be run by the r session. Needs to be on the correct format to be read properly by the r source command. Change this line if you want to run your own heatmap function.
 function_str <- paste("make.cellexalvr.heatmap.list(cellexalObj,
@@ -22,7 +20,7 @@ function_str <- paste("make.cellexalvr.heatmap.list(cellexalObj,
 			"\",\"", stats_method,
 			"\")", sep="")
 
-fileConn <- file(file.path(datadir, "server.input.R"))
+fileConn <- file(file.path(datadir, "mainServer.input.R"))
 writeLines(function_str, fileConn)
 close(fileConn)
 

@@ -194,7 +194,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Creating directory " + outputFilePath.FixFilePath());
                 Directory.CreateDirectory(outputFilePath);
             }
-            while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -204,7 +204,7 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Start();
             RScriptRunner.RunRScript(rScriptFilePath, args);
 
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
