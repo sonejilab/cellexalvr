@@ -265,11 +265,7 @@ namespace CellexalVR.Interaction
                 return output.text;
             }
         }
-
-        public void OnEnterEvent()
-        {
-
-        }
+        
 
 #if UNITY_EDITOR
         private void OnValidate()

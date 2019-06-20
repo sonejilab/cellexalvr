@@ -184,9 +184,9 @@ namespace CellexalVR.AnalysisObjects
             Vector3 position = graph.ScaleCoordinates(graph.minCoordValues);
             GameObject axes = Instantiate(AxesPrefab, graph.transform);
             axes.transform.localPosition = position - (Vector3.one * 0.01f);
-            Vector3 size = graph.GetComponent<BoxCollider>().size;
+            Vector3 size = graph.ScaleCoordinates(graph.maxCoordValues);
             float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
-            axes.transform.localScale = Vector3.one * (longestAx * 0.6f);
+            axes.transform.localScale = Vector3.one * longestAx;
             if (graphType == GraphType.FACS)
             {
                 axes.GetComponent<AxesArrow>().SetColors(axisNames, graph.minCoordValues, graph.maxCoordValues);

@@ -14,7 +14,6 @@ using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.SceneObjects;
 using System.Threading;
-using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {
