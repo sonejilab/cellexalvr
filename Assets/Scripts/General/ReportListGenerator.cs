@@ -31,7 +31,6 @@ namespace CellexalVR.General
         {
             nrOfNodes = 0;
             files = new List<string>();
-            GenerateList();
         }
 
         /// <summary>
@@ -41,7 +40,8 @@ namespace CellexalVR.General
         public void GenerateList()
         {
             //ClearList();
-            htmlFiles = Directory.GetFiles(CellexalUser.UserSpecificFolder, "*.html");
+            if (Directory.Exists(CellexalUser.UserSpecificFolder))
+                htmlFiles = Directory.GetFiles(CellexalUser.UserSpecificFolder, "*.html");
             foreach (string file in htmlFiles)
             {
                 if (files.Contains(file))

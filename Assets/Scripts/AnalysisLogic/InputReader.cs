@@ -87,7 +87,16 @@ namespace CellexalVR.AnalysisLogic
             arcsSubMenu = referenceManager.arcsSubMenu;
             indexMenu = referenceManager.indexMenu;
             createFromMarkerMenu = referenceManager.createFromMarkerMenu;
-            headset = referenceManager.headset;
+            //headset = referenceManager.headset;
+            if (CrossSceneInformation.Spectator)
+            {
+                headset = referenceManager.spectatorRig;
+                referenceManager.headset = headset;
+            }
+            else
+            {
+                headset = referenceManager.headset;
+            }
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
@@ -96,6 +105,7 @@ namespace CellexalVR.AnalysisLogic
             currentPath = "";
             facsGraphCounter = 0;
 
+            RScriptRunner.SetReferenceManager(referenceManager);
             CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
@@ -375,7 +385,8 @@ namespace CellexalVR.AnalysisLogic
 
             if (server)
             {
-                StartCoroutine(StartServer());
+                StartCoroutine(StartServer("main"));
+                //StartCoroutine(StartServer("gene"));
             }
 
             while (graphGenerator.isCreating)
@@ -496,15 +507,23 @@ namespace CellexalVR.AnalysisLogic
         //     yield return null;
         // }
 
-        private IEnumerator StartServer()
+        
+        
+        /// <summary>
+        /// Start the R session that will run in the background. 
+        /// </summary>
+        /// <param name="serverType">If you are running several sessions give a serverType name that works as a prefix so the 
+        /// R session knows which file to look for.</param>
+        /// <returns></returns>
+        private IEnumerator StartServer(string serverType)
         {
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
-            string serverName = CellexalUser.UserSpecificFolder + "\\server";
+            string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
             string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
 
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args, true));
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t.Start();
@@ -516,16 +535,20 @@ namespace CellexalVR.AnalysisLogic
 
             stopwatch.Stop();
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
-            referenceManager.notificationManager.SpawnNotification("R Server Session Initiated.");
+            referenceManager.notificationManager.SpawnNotification(serverType + " R Server Session Initiated.");
             StartCoroutine(LogStart());
         }
 
-        public void StopServer()
+        /// <summary>
+        /// To clean up server files after termination. Can be called if the user wants to start a new session (e.g. when loading a new dataset) or when exiting the program. 
+        /// </summary>
+        public void QuitServer()
         {
-            string name = CellexalUser.UserSpecificFolder + "\\server";
-            File.Delete(name + ".pid");
+            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.pid");
+            //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
         }
+
 
         /// <summary>
         /// Calls R logging function to start the logging session.
@@ -539,22 +562,25 @@ namespace CellexalVR.AnalysisLogic
             //                "cellexalObj @usedObj$sessionName = NULL } \n " +
             //                "cellexalObj = sessionPath(cellexalObj, \"" + CellexalUser.UserSpecificFolder.UnFixFilePath() + "\")" ;
 
-            string filePath = Application.streamingAssetsPath + @"\R\logStart.R";
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
+            string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
 
             // Wait for other processes to finish and for server to have started.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R") ||
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") ||
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
             {
                 yield return null;
             }
 
-            CellexalLog.Log("Running R script : " + filePath);
+            CellexalLog.Log("Running R script : " + rScriptFilePath);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            RScriptRunner.RunScript(filePath, true);
+
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+            t.Start();
 
             // Wait for this process to finish.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -1226,12 +1252,7 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        /// <summary>
-        /// To clean up server files after termination. Can be called if the user wants to start a new session (e.g. when loading a new dataset) or when exiting the program. 
-        /// </summary>
-        public void QuitServer()
-        {
-            File.Delete(CellexalUser.UserSpecificFolder + "\\server.pid");
-        }
+
+
     }
 }

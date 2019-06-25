@@ -46,6 +46,7 @@ namespace CellexalVR.AnalysisObjects
         private bool textureChanged;
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        public List<GameObject> topExprCircles = new List<GameObject>();
         public Vector3 diffCoordValues;
         public float longestAxis;
         public Vector3 scaledOffset;
@@ -81,12 +82,12 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+
         private ControllerModelSwitcher controllerModelSwitcher;
         private GameManager gameManager;
         private Vector3 startPosition;
         private List<Vector3> nodePosition;
         private List<Vector3> nodeSizes;
-
         // For minimization animation
         private bool minimize;
         private bool maximize;
@@ -109,9 +110,7 @@ namespace CellexalVR.AnalysisObjects
         private string folderName;
         private int graphNr;
         private int nbrOfExpressionColors;
-        /// <summary>
-        /// The name of this graph. Should just be the filename that the graph came from.
-        /// </summary>
+
 
 
         private static LayerMask selectionToolLayerMask;
@@ -1021,7 +1020,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Resets the color of all graphpoints in this graph to white.
         /// </summary>
-        public void ResetColors()
+        public void ResetColors(bool resetGroup = true)
         {
             for (int i = 0; i < textureWidth; ++i)
             {
@@ -1036,7 +1035,10 @@ namespace CellexalVR.AnalysisObjects
             //{
             //    p.Group = -1;
             //}
-            octreeRoot.Group = -1;
+            if (resetGroup)
+            {
+                octreeRoot.Group = -1;
+            }
         }
 
         public Color GetGraphPointColor(GraphPoint gp)
@@ -1058,21 +1060,19 @@ namespace CellexalVR.AnalysisObjects
             texture.Apply();
         }
 
+      
+
         /// <summary>
-        /// Resets this graphs position, scale and color.
+        /// Clears the circles from previous colouring so it doesn't stack.
         /// </summary>
-        //    public void ResetGraph()
-        //    {
-        //        transform.localScale = defaultScale;
-        //        transform.position = defaultPos;
-        //        transform.rotation = Quaternion.identity;
-        //        foreach (GraphPoint point in points.Values)
-        //        {
-        //            point.gameObject.SetActive(true);
-        //            point.ResetCoords();
-        //            point.ResetColor();
-        //        }
-        //    }
+        public void ClearTopExprCircles()
+        {
+            foreach (GameObject circle in topExprCircles)
+            {
+                Destroy(circle);
+            }
+            topExprCircles.Clear();
+        }
 
         /// <summary>
         /// Recolors a single graphpoint.
@@ -1088,6 +1088,7 @@ namespace CellexalVR.AnalysisObjects
                 circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
                 circle.transform.position = graphPoint.WorldPosition;
                 circle.transform.parent = transform;
+                topExprCircles.Add(circle);
             }
             else if (i == -1)
             {
@@ -1100,6 +1101,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void RecolorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
+            
             byte greenChannel = (byte)(outline ? 5 : 0);
             byte redChannel;
             if (i == -1)
@@ -1155,6 +1157,10 @@ namespace CellexalVR.AnalysisObjects
                 colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
             }
             int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
+            if (CellexalConfig.Config.GraphMostExpressedMarker)
+            {
+                ClearTopExprCircles();
+            }
             foreach (CellExpressionPair pair in expressions)
             {
                 // If this is a subgraph it does not contain all cells...
@@ -1173,6 +1179,7 @@ namespace CellexalVR.AnalysisObjects
                         circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
                         circle.transform.position = points[pair.Cell].WorldPosition;
                         circle.transform.parent = transform;
+                        topExprCircles.Add(circle);
                     }
                     texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
                 }

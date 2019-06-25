@@ -16,6 +16,8 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.SceneObjects;
+using CellexalVR.Extensions;
+using CellexalVR.Menu.Buttons.Networks;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -33,7 +35,7 @@ namespace CellexalVR.AnalysisObjects
         public NetworkHandler Handler { get; set; }
         public ReferenceManager referenceManager;
         public int selectionNr;
-        public CellexalButton saveImageButton;
+        public SaveNetworkAsImageButton saveImageButton;
         public GameObject movingOutlineCircle;
 
         public float MaxNegPcor { get; set; }
@@ -53,6 +55,7 @@ namespace CellexalVR.AnalysisObjects
         public bool Enlarged { get; private set; }
         public bool isReplacement = false;
         public enum Layout { TWO_D, THREE_D }
+        public bool controllerInsideSomeNode;
 
         private ControllerModelSwitcher controllerModelSwitcher;
         private SteamVR_Controller.Device device;
@@ -208,6 +211,19 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Used to disable colliders of nodes to avoid the controller being inside many nodes at the same time. 
+        /// </summary>
+        /// <param name="b">Toggle on/off</param>
+        /// <param name="exepction">The first node that the controller entered should be the only one to stay active.</param>
+        public void ToggleNodeColliders(bool b, string exepction)
+        {
+            foreach (NetworkNode node in nodes.FindAll(n => n.gameObject.name != exepction))
+            {
+                node.UnHighlight();
+                node.GetComponent<BoxCollider>().enabled = b;
+            }
+        }
 
         /// <summary>
         /// Adds a node to this network.
@@ -1118,21 +1134,27 @@ namespace CellexalVR.AnalysisObjects
             saveImageButton.SetButtonActivated(false);
             saveImageButton.descriptionText.text = "Saving image...";
             string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt";
-            string args = CellexalUser.UserSpecificFolder + " " + networkImageFilePath + " " + groupingsFilepath;
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + networkImageFilePath.UnFixFilePath() + " " + groupingsFilepath.UnFixFilePath();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
+
+            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            {
+                yield return null;
+            }
+
             CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
 
-            while (t.IsAlive)
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-            saveImageButton.SetButtonActivated(true);
+            saveImageButton.FinishedButton();
             //handler.runningScript = false;
             CellexalEvents.ScriptFinished.Invoke();
             saveImageButton.descriptionText.text = "";

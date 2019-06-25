@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Networks
 {
@@ -9,6 +10,7 @@ namespace CellexalVR.Menu.Buttons.Networks
     public class SaveNetworkAsImageButton : CellexalButton
     {
         public NetworkCenter parent;
+        public Sprite doneTex;
 
         protected override string Description
         {
@@ -27,6 +29,11 @@ namespace CellexalVR.Menu.Buttons.Networks
         {
             parent.SaveNetworkAsImage();
             device.TriggerHapticPulse(2000);
+        }
+
+        public void FinishedButton()
+        {
+            spriteRenderer.sprite = doneTex;
         }
 
         private void TurnOn()

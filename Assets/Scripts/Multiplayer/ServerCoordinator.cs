@@ -107,6 +107,27 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendAddAnnotation(string annotation)
+        {
+            CellexalLog.Log("Recieved message to add annotation: " + annotation);
+            referenceManager.selectionManager.AddAnnotation(annotation);
+        }
+
+        [PunRPC]
+        public void SendExportAnnotations()
+        {
+            CellexalLog.Log("Recieved message to export annotations");
+            referenceManager.selectionManager.DumpAnnotatedSelectionToTextFile();
+        }
+
+        [PunRPC]
+        public void SendClearExpressionColours()
+        {
+            CellexalLog.Log("Recieved message to clear expression colours on the graphs");
+            referenceManager.graphManager.ClearExpressionColours();
+        }
+
+        [PunRPC]
         public void SendCalculateCorrelatedGenes(string geneName)
         {
             CellexalLog.Log("Recieved message to calculate genes correlated to " + geneName);

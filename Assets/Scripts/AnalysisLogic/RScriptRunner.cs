@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using CellexalVR.General;
 
 namespace CellexalVR.AnalysisLogic
@@ -11,6 +13,17 @@ namespace CellexalVR.AnalysisLogic
     /// </summary>
     public class RScriptRunner
     {
+        public static ReferenceManager referenceManager;
+
+        public static ArrayList geneResult = new ArrayList();
+
+        public static void SetReferenceManager(ReferenceManager rm)
+        {
+            referenceManager = rm;
+        }
+
+        private static bool readGenes;
+        private static bool sendGenes;
 
         /// <summary>
         /// Runs an R script from a file using Rscript.exe.
@@ -22,40 +35,64 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="rCodeFilePath"> File where your R code is located. </param>
         /// <param name="args"> Multiple R args can be seperated by spaces. </param>
+        /// <param name="writeOut"> If the stdout and stderror should be appended to the R log. </param>
         /// <returns>Returns a string with the R responses.</returns>
-
-        public static string RunFromCmd(string rCodeFilePath, string args)
+        public static string RunFromCmd(string rCodeFilePath, string args, bool writeOut)
         {
             string result = string.Empty;
             try
             {
                 string rPath = CellexalConfig.Config.RscriptexePath;
 
-                var info = new ProcessStartInfo();
-                info.FileName = rPath;
-                info.WorkingDirectory = Path.GetDirectoryName(rPath);
-                info.Arguments = rCodeFilePath + " " + args;
-                info.RedirectStandardInput = false;
-                info.RedirectStandardOutput = true;
-                info.RedirectStandardError = true;
-                info.UseShellExecute = false;
-                info.CreateNoWindow = true;
-
-
-                using (var proc = new Process())
+                var info = new ProcessStartInfo
                 {
-                    proc.StartInfo = info;
-                    proc.Start();
-                    result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
-                }
-                using (StreamWriter writetofile =
-                      new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                    FileName = rPath,
+                    WorkingDirectory = Path.GetDirectoryName(rPath),
+                    Arguments = rCodeFilePath + " " + args,
+                    RedirectStandardInput = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                var proc = new Process();
+                proc.StartInfo = info;
+                proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
                 {
-                    writetofile.WriteLine(result);
-                }
-                //UnityEngine.Debug.Log("RESULT : " + result + " - Exit thread: " + result.Contains("Execution"));
+                    if (!String.IsNullOrEmpty(e.Data))
+                    {
+                        using (StreamWriter stderrorWriter =
+                                new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                        {
+                            stderrorWriter.WriteLine("\n STDERROR: " + e.Data);
+                        }
+                    }
+                });
+                
+                proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+                {
+                    if (!String.IsNullOrEmpty(e.Data))
+                    {
+                        if (writeOut)
+                        {
+                            using (StreamWriter stdoutWriter =
+                                    new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                            {
+                                stdoutWriter.WriteLine("\n STDOUT: " + e.Data);
+                            }
+
+                        }
+                    }
+                });
+
+                proc.Start();
+                proc.BeginOutputReadLine();
+                proc.BeginErrorReadLine();
+                proc.WaitForExit();
+
+                proc.Close();
                 return result;
-                 
 
             }
             catch (Exception ex)
@@ -65,43 +102,58 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        /// <summary>
-        /// Run Rscript on a running r server session instead of starting a new process and loading the object again. 
-        /// Send it to the server by writing the command to run into the "<servername>.input.R". 
-        /// The R backend will read this file once every second and run the command inside it via "source(command(args))".
-        /// </summary>
-        /// <param name="function">The name of the R function to run. This will be the first thing written to the input.R file.</param>
-        /// <param name="args">The arguments to the command. Split up from script string for readability.</param>
-        public static string RunRscriptOnServer(string function, string args, string assignment="")
+        static void GeneProcHandler(object sender, DataReceivedEventArgs e)
         {
-            string result = string.Empty;
-            string inputFilePath = CellexalUser.UserSpecificFolder + "\\server";
-            if (!File.Exists(inputFilePath + ".input.R"))
+            //new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\gene_log.txt", true))
+            using (StreamWriter geneWriter =
+                new StreamWriter(CellexalUser.UserSpecificFolder + @"\gene_expr.txt", false))
             {
-                //File.Create(inputFilePath + ".input.lock").Close();
-                using (FileStream fs = File.Create(inputFilePath + ".input.lock"))
-                {
-                    using (StreamWriter file = new StreamWriter(inputFilePath + ".input.R"))
-                    {
-                        if (!assignment.Equals(string.Empty))
-                        {
-                            file.Write(assignment + " <- ");
-                        }
-                        file.Write(function);
-                        file.Write('(');
-                        file.Write(args + ')');
-                        file.WriteLine();
-                    }
-                    //result = "\nSTDOUT:\n" + proc.StandardOutput.ReadToEnd() + "\nSTDERR:\n" + proc.StandardError.ReadToEnd() + "\n----------\n";
-                    using (StreamWriter writetofile =
-                            new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
-                    {
-                        writetofile.WriteLine(result);
-                    }
-                }
+
+                geneWriter.WriteLine(e.Data);
             }
-            File.Delete(inputFilePath + ".input.lock");
-            return result;
+            //if (!String.IsNullOrEmpty(e.Data))
+            //{
+            //    if (e.Data == "BEGIN")
+            //    {
+            //        // START
+            //        UnityEngine.Debug.Log("begin");
+            //        readGenes = true;
+            //    }
+
+            //    else if (e.Data == "END")
+            //    {
+            //        // STOP
+            //        UnityEngine.Debug.Log("end");
+            //        readGenes = false;
+            //        UnityEngine.Debug.Log("send genes");
+            //        //referenceManager.cellManager.HandleGeneResult();
+            //        CellexalEvents.GeneExpressionsRetrieved.Invoke();
+            //        geneResult.Clear();
+            //    }
+
+            //    else if (readGenes)
+            //    {
+            //        string[] words = e.Data.Split(' ');
+            //        string name = words[0];
+            //        float expr = float.Parse(words[1]);
+            //        geneResult.Add(new Tuple<string, float>(name, expr));
+            //    }
+            //    //else if (sendGenes)
+            //    //{
+
+            //    //    sendGenes = false;
+            //    //}
+            //    //referenceManager.cellManager.expressions.Add();
+            //    else
+            //    {
+            //        using (StreamWriter geneWriter =
+            //            new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\gene_log.txt", true))
+            //        {
+
+            //            geneWriter.WriteLine(e.Data);
+            //        }
+            //    }
+            
         }
 
         /// <summary>
@@ -111,33 +163,39 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="s">s is the full string to be written into the input.R file which the server will then read.</param>
         /// <param name="isFile">If the s argument instead is a filePath the function copies that entire file to input.R</param>
-        public static string RunScript(string s, bool isFile=false)
+        public static void RunScript(string s)
         {
-            string result = string.Empty;
             string inputFilePath = CellexalUser.UserSpecificFolder + "\\server";
-            if (!File.Exists(inputFilePath + ".input.R"))
-            {
-                using (FileStream fs = File.Create(inputFilePath + ".input.lock"))
-                {
-                    if (isFile)
-                    { 
-                        File.Copy(s, inputFilePath + ".input.R");
-                    }
-                    else
-                    {
-                        File.WriteAllText(inputFilePath + ".input.R", s);
-                        //file.Write(s);
-                        //file.WriteLine();
-                    }
+            File.WriteAllText(inputFilePath + ".input.R", s);
+            //if (!File.Exists(inputFilePath + ".input.lock"))
+            //{
+            //    using (FileStream fs = File.Create(inputFilePath + ".input.lock"))
+            //    {
+            //    }
+            //    File.Delete(inputFilePath + ".input.lock");
+            //}
+        }
 
-                    using (StreamWriter writetofile =
-                            new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+        public static string RunRScript(string path, string args = "")
+        {
+            string result = null;
+            string inputFilePath = CellexalUser.UserSpecificFolder + "\\mainServer";
+            if (!File.Exists(inputFilePath + ".input.lock"))
+            {
+                try
+                {
+                    using (FileStream fs = File.Create(inputFilePath + ".input.lock"))
                     {
-                        writetofile.WriteLine(result);
+                        result = RunFromCmd(path, args, true);
                     }
                 }
+                catch (Exception)
+                {
+                    // Command Failed. Removing lock file on input.R 
+                    File.Delete(inputFilePath + ".input.lock");
+                }
+                File.Delete(inputFilePath + ".input.lock");
             }
-            File.Delete(inputFilePath + ".input.lock");
             return result;
         }
 

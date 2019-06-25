@@ -1,8 +1,8 @@
-suppressMessages(library(cellexalvrR))
+#suppressMessages(library(cellexalvrR))
 
 args <- commandArgs(trailingOnly = TRUE)
 
-datadir <- args[1] ## please give me the user spcific analysis path here!!!!
+datadir <- args[1] ## <user specific folder>
 
 genes <- args[2] ## the heatmap_<x>.txt file
 
@@ -10,7 +10,7 @@ heatmap_png <- args[3] ## the heatmap figure file
 
 grouping <- args[4] ## the grouping info selection0.txt or so
 
-message(paste( "log Heatmap with grouping file ", grouping) )
+#message(paste( "log Heatmap with grouping file ", grouping) )
 
 ontology <- args[5]
 
@@ -24,7 +24,15 @@ if ( is.na( topNodes) ) {
 	topNodes = 20
 }
 
-cellexalObj <- loadObject(file.path(datadir, "cellexalObj.RData"))
+function_str <- paste("logHeatmap(cellexalObj,
+			\"", genes , "\",
+			\"", heatmap_png, "\",
+			\"", grouping, "\"," ,
+			ontology, ",",
+			topNodes, ")", 
+			sep="")
 
-logHeatmap(cellexalObj, genes, heatmap_png, grouping, ontology = ontology, topNodes = topNodes )
 
+fileConn <- file(file.path(datadir, "mainServer.input.R"))
+writeLines(function_str, fileConn)
+close(fileConn)

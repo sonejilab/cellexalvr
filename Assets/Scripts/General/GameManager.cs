@@ -218,6 +218,27 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
         }
 
+        public void InformAddAnnotation(string annotation)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to add annotation: " + annotation);
+            coordinator.photonView.RPC("SendAddAnnotation", PhotonTargets.Others, annotation);
+        }
+
+        public void InformExportAnnotations()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to export annotations");
+            coordinator.photonView.RPC("SendExportAnnotations", PhotonTargets.Others);
+        }
+
+        public void InformClearExpressionColours()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to clear expression colours");
+            coordinator.photonView.RPC("SendClearExpressionColours", PhotonTargets.Others);
+        }
+
 
         public void InformCalculateCorrelatedGenes(string geneName)
         {

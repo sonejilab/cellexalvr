@@ -15,7 +15,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             get
             {
-                return "Reset the color of all graphs";
+                return "Reset Colour Of All Graphs";
             }
         }
 

@@ -19,8 +19,9 @@ cellexalObj@outpath = outputFolder
 if ( ! file.exists(outputFolder ) ){
 	dir.create( outputFolder )
 }
+
 cellexalObj <- renew(cellexalObj)
 
-exportUserGroups4vr(cellexalObj, outputFolder)
+#exportUserGroups4vr(cellexalObj, outputFolder)
 
 server(name)

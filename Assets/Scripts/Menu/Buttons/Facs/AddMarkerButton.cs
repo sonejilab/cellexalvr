@@ -9,7 +9,7 @@ namespace CellexalVR.Menu.Buttons.Facs
     /// </summary>
     public class AddMarkerButton : CellexalButton
     {
-        public TextMesh descriptionOnButton;
+        public TMPro.TextMeshPro descriptionOnButton;
         public GameObject activeOutline;
         public GraphFromMarkersMenu parentMenu;
 
@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.Buttons.Facs
 
         protected override string Description
         {
-            get { return "Add marker - " + this.indexName; }
+            get { return "Add Marker: " + this.indexName; }
         }
 
         protected void Start()

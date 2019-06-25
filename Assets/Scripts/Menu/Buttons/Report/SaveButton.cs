@@ -3,6 +3,8 @@ using System.Collections;
 using System.Threading;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.Extensions;
+using System.IO;
 
 namespace CellexalVR.Menu.Buttons.Report
 {
@@ -31,7 +33,7 @@ namespace CellexalVR.Menu.Buttons.Report
 
         protected override string Description
         {
-            get { return "Save Session/Create Report"; }
+            get { return "Compile Session Report"; }
         }
 
         protected override void Update()
@@ -67,19 +69,26 @@ namespace CellexalVR.Menu.Buttons.Report
         IEnumerator LogStop()
         {
             descriptionText.text = "Compiling report..";
-            string args = CellexalUser.UserSpecificFolder;
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
+
+            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            {
+                yield return null;
+            }
+
             Debug.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
 
-            while (t.IsAlive)
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
+
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
             

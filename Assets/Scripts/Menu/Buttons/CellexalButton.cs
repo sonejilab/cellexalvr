@@ -11,7 +11,7 @@ namespace CellexalVR.Menu.Buttons
     public abstract class CellexalButton : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public TextMesh descriptionText;
+        public TMPro.TextMeshPro descriptionText;
         public GameObject infoMenu;
 
         private int frameCount;

@@ -24,7 +24,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             get
             {
-                return "Show Axes of object";
+                return "Show Axes Of Objects";
             }
         }
 

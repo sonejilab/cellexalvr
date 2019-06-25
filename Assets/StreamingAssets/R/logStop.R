@@ -1,12 +1,9 @@
-suppressMessages(library(cellexalvrR))
-message( "Stop the logging")
-
 args <- commandArgs(trailingOnly = TRUE)
 
-datadir <- args[1] ## please give me the user spcific analysis path here!!!!
+datadir <- args[1] ## <user specific folder>
 
-cellexalObj <- loadObject(file.path(datadir, "cellexalObj.RData"))
+function_str <- paste("renderReport(cellexalObj)")
 
-cellexalObj = renderReport( cellexalObj ) ## finalize the session also removing the session information from the cellexalObj
-
-lockedSave(cellexalObj)
+fileConn <- file(file.path(datadir, "mainServer.input.R"))
+writeLines(function_str, fileConn)
+close(fileConn)

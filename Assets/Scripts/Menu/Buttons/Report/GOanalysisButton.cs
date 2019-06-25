@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.Buttons.Report
 
         protected override string Description
         {
-            get { return "Do GO analysis"; }
+            get { return "Do GO Analysis"; }
         }
 
         protected override void Awake()

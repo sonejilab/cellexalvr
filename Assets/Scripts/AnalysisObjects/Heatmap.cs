@@ -213,12 +213,13 @@ namespace CellexalVR.AnalysisObjects
             {
                 gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }
-            bool correctModel = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers
-                                || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Keyboard
-                                || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.WebBrowser;
-            if ((CrossSceneInformation.Normal || CrossSceneInformation.Tutorial) && correctModel)
+            if (CrossSceneInformation.Normal || CrossSceneInformation.Tutorial)
             {
-                HeatmapRaycast();
+                bool correctModel = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers
+                                    || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Keyboard
+                                    || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.WebBrowser;
+                if (correctModel)
+                    HeatmapRaycast();
             }
 
         }
@@ -1343,17 +1344,23 @@ namespace CellexalVR.AnalysisObjects
             //CellexalEvents.ScriptRunning.Invoke();
             saveImageButton.SetButtonActivated(false);
             statusText.text = "Saving Heatmap...";
-            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
-            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
+            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").UnFixFilePath();
+            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").UnFixFilePath();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
-            string args = CellexalUser.UserSpecificFolder.FixFilePath() + " " + genesFilePath + " " + heatmapImageFilePath.FixFilePath() + " " + groupingsFilepath;
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + heatmapImageFilePath.UnFixFilePath() + " " + groupingsFilepath;
+
+            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            {
+                yield return null;
+            }
+
             CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
 
-            while (t.IsAlive)
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -1398,18 +1405,23 @@ namespace CellexalVR.AnalysisObjects
             statusText.text = "Doing GO Analysis...";
             removable = true;
             //CellexalEvents.ScriptRunning.Invoke();
-            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").FixFilePath();
+            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + name + ".txt").UnFixFilePath();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\GOanalysis.R").FixFilePath();
-            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").FixFilePath();
-            string args = CellexalUser.UserSpecificFolder.FixFilePath() + " " + genesFilePath + " " + groupingsFilepath;
+            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + selectionNr + ".txt").UnFixFilePath();
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + groupingsFilepath;
+
+            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            {
+                yield return null;
+            }
+
             Debug.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
             CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
-
-            while (t.IsAlive)
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }

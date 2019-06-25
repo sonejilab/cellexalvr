@@ -95,13 +95,29 @@ namespace CellexalVR.Interaction
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
+            foreach (var panel in GetComponentsInChildren<AnnotatePanel>(true))
+            {
+                panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+
+            foreach (var panel in GetComponentsInChildren<ExportAnnotationPanel>(true))
+            {
+                panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+
+            foreach (var panel in GetComponentsInChildren<ClearExpressionColoursPanel>(true))
+            {
+                panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+
             CellexalEvents.ObjectGrabbed.AddListener(() => grabbingObject = true);
             CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
         }
 
         private void Update()
         {
-            if (!CrossSceneInformation.Normal || !controllerModelSwitcher.Ready() || grabbingObject)
+            if (!CrossSceneInformation.Normal || !controllerModelSwitcher.Ready() ||
+                grabbingObject || referenceManager.selectionToolCollider.IsSelectionToolEnabled())
                 return;
             var raycastingSource = referenceManager.rightLaser.transform;
             var device = SteamVR_Controller.Input((int)rightController.index);
@@ -117,6 +133,7 @@ namespace CellexalVR.Interaction
                 {
                     if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                     {
+                        print("Change model");
                         controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
                     }
                     //referenceManager.laserPointerController.ToggleLaser(true);

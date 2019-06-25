@@ -11,6 +11,7 @@ using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.SubMenus;
+using TMPro;
 using UnityEngine;
 using VRTK;
 
@@ -23,7 +24,7 @@ namespace CellexalVR.General
     public class SelectionManager : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-
+        public GameObject annotationTextPrefab;
         //public GroupInfoDisplay groupInfoDisplay;
         //public GroupInfoDisplay HUDGroupInfoDisplay;
         //public GroupInfoDisplay FarGroupInfoDisplay;
@@ -42,10 +43,12 @@ namespace CellexalVR.General
         private SteamVR_Controller.Device device;
         private List<Graph.GraphPoint> selectedCells = new List<Graph.GraphPoint>();
         private List<Graph.GraphPoint> lastSelectedCells = new List<Graph.GraphPoint>();
+        private List<Tuple<string, string>> annotatedPoints = new List<Tuple<string, string>>();
         private bool selectionMade = false;
         private GameObject grabbedObject;
         private bool heatmapCreated = true;
         private SelectionToolCollider selectionToolCollider;
+        private int annotationCtr = 0;
 
         [HideInInspector]
         public string DataDir { get; set; }
@@ -100,8 +103,8 @@ namespace CellexalVR.General
             rightController = referenceManager.rightController;
             gameManager = referenceManager.gameManager;
             selectionToolCollider = referenceManager.selectionToolCollider;
-            CellexalEvents.GraphsColoredByGene.AddListener(Clear);
-            CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
+            //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
+            //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
         }
 
@@ -505,25 +508,25 @@ namespace CellexalVR.General
             RObjectUpdating = true;
             // wait one frame to let ConfirmSelection finish.
             yield return null;
-            string function = "userGrouping";
+            //string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
                                         + (fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string args = "cellexalObj" + ", \"" + latestSelection + "\"";
-            string script = "cellexalObj <- " + function + "(" + args + ")";
-
+            //string script = "cellexalObj <- " + function + "(" + args + ")";
+            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
+            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
             // Wait for server to start up
-            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\server.pid"))
+            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
             {
                 yield return null;
             }
 
 
-            Stopwatch stopwatch = new Stopwatch();
-            Thread t = new Thread(() => RScriptRunner.RunScript(script));
+            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
+            Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\server.input.R"))
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -557,6 +560,11 @@ namespace CellexalVR.General
         public List<Graph.GraphPoint> GetCurrentSelection()
         {
             return selectedCells;
+        }
+
+        private List<Graph.GraphPoint> GetCurrentSelectionGroup(int index)
+        {
+            return selectedCells.FindAll(gp => gp.Group == index);
         }
 
         /// <summary>
@@ -597,10 +605,11 @@ namespace CellexalVR.General
 
 
         /// <summary>
-        /// 
+        /// Dumps the confirmed selection to a text file in the output folder.
+        /// The file contains the cell id and the colour of the selection group and which graph it was selected from.
         /// </summary>
         /// <param name="selection"></param>
-        public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string filePath="")
+        public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string filePath = "")
         {
             if (filePath != "")
             {
@@ -641,6 +650,95 @@ namespace CellexalVR.General
             }
         }
 
+        /// <summary>
+        /// Helper function to recolour only the points that are in the current selection.
+        /// </summary>
+        public void RecolorSelectionPoints()
+        {
+            foreach (Graph.GraphPoint gp in selectedCells)
+            {
+                foreach (Graph.GraphPoint g in referenceManager.cellManager.GetCell(gp.Label).GraphPoints)
+                {
+                    g.RecolorSelectionColor(gp.Group, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the annotation to the currently selected group of cells.
+        /// Also adds a line and text object above the cells with the annotation.
+        /// </summary>
+        /// <param name="annotation">The text that will be shown above the cells and later written to file.</param>
+        public void AddAnnotation(string annotation)
+        {
+            List<Graph.GraphPoint> pointsToAnnotate = GetCurrentSelectionGroup(selectionToolCollider.currentColorIndex);
+            foreach (Graph.GraphPoint gp in pointsToAnnotate)
+            {
+                annotatedPoints.Add(new Tuple<string, string>(gp.Label, annotation));
+            }
+
+            RecolorSelectionPoints();
+
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                GameObject annotationText = Instantiate(annotationTextPrefab, graph.transform);
+                Vector3 position = graph.FindGraphPoint(pointsToAnnotate[0].Label).Position;
+                annotationText.transform.localPosition = position;
+                annotationText.GetComponentInChildren<TextMeshPro>().text = annotation;
+            }
+        }
+
+        /// <summary>
+        /// Writes the cells that have added annotation to a text file. 
+        /// Only cell id and annotation is written to the file.
+        /// </summary>
+        /// <param name="selection">The selected graphpoints</param>
+        /// <param name="filePath"></param>
+        /// <param name="annotation">The string to write next to cell id as annotation.</param>
+        public void DumpAnnotatedSelectionToTextFile(string filePath = "")
+        {
+            if (filePath != "")
+            {
+                string savedSelectionsPath = CellexalUser.UserSpecificFolder + @"\SavedSelections\";
+                if (!Directory.Exists(savedSelectionsPath))
+                {
+                    Directory.CreateDirectory(savedSelectionsPath);
+                }
+                filePath = savedSelectionsPath + filePath + ".txt";
+            }
+            else
+            {
+                string annotationDirectory = CellexalUser.UserSpecificFolder + @"\AnnotatedSelections";
+                if (!Directory.Exists(annotationDirectory))
+                {
+                    CellexalLog.Log("Creating directory " + annotationDirectory.FixFilePath());
+                    Directory.CreateDirectory(annotationDirectory);
+                }
+                filePath = annotationDirectory + "\\annotated_selection" + annotationCtr + ".txt";
+                if (File.Exists(filePath))
+                {
+                    annotationCtr++;
+                    filePath = CellexalUser.UserSpecificFolder + "\\annotated_selection" + annotationCtr + ".txt";
+                }
+                print(filePath);
+                using (StreamWriter file = new StreamWriter(filePath, true))
+                {
+                    CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
+                    CellexalLog.Log("\tSelection consists of  " + GetCurrentSelection().Count + " points");
+                    if (selectionHistory != null)
+                        CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+                    foreach (Tuple<string, string> gp in annotatedPoints)
+                    {
+                        file.Write(gp.Item1);
+                        file.Write("\t");
+                        file.Write(gp.Item2);
+                        file.WriteLine();
+                    }
+                }
+                annotationCtr++;
+            }
+            annotatedPoints.Clear();
+        }
 
 
         public Color GetColor(int index)
