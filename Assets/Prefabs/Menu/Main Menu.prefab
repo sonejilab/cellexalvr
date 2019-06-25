@@ -16581,7 +16581,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  descriptionOnButton: {fileID: 102503305494881900}
+  descriptionOnButton: {fileID: 0}
   parentMenu: {fileID: 0}
 --- !u!114 &114334118908647950
 MonoBehaviour:
@@ -18086,7 +18086,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  description: {fileID: 102352167803484184}
+  description: {fileID: 0}
   booleanNotIncludedColor: {r: 0, g: 0, b: 0, a: 0}
   booleanYesColor: {r: 0, g: 1, b: 0.0043610195, a: 0}
   booleanNoColor: {r: 1, g: 0, b: 0, a: 0}
