@@ -46,6 +46,7 @@ namespace CellexalVR.AnalysisObjects
         private bool textureChanged;
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        public List<GameObject> topExprCircles = new List<GameObject>();
         public Vector3 diffCoordValues;
         public float longestAxis;
         public Vector3 scaledOffset;
@@ -81,12 +82,12 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+
         private ControllerModelSwitcher controllerModelSwitcher;
         private GameManager gameManager;
         private Vector3 startPosition;
         private List<Vector3> nodePosition;
         private List<Vector3> nodeSizes;
-        private List<GameObject> topExprCircles = new List<GameObject>();
         // For minimization animation
         private bool minimize;
         private bool maximize;
@@ -948,21 +949,19 @@ namespace CellexalVR.AnalysisObjects
             texture.Apply();
         }
 
+      
+
         /// <summary>
-        /// Resets this graphs position, scale and color.
+        /// Clears the circles from previous colouring so it doesn't stack.
         /// </summary>
-        //    public void ResetGraph()
-        //    {
-        //        transform.localScale = defaultScale;
-        //        transform.position = defaultPos;
-        //        transform.rotation = Quaternion.identity;
-        //        foreach (GraphPoint point in points.Values)
-        //        {
-        //            point.gameObject.SetActive(true);
-        //            point.ResetCoords();
-        //            point.ResetColor();
-        //        }
-        //    }
+        public void ClearTopExprCircles()
+        {
+            foreach (GameObject circle in topExprCircles)
+            {
+                Destroy(circle);
+            }
+            topExprCircles.Clear();
+        }
 
         /// <summary>
         /// Recolors a single graphpoint.
@@ -978,6 +977,7 @@ namespace CellexalVR.AnalysisObjects
                 circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
                 circle.transform.position = graphPoint.WorldPosition;
                 circle.transform.parent = transform;
+                topExprCircles.Add(circle);
             }
             else if (i == -1)
             {
@@ -1048,11 +1048,7 @@ namespace CellexalVR.AnalysisObjects
             int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
             if (CellexalConfig.Config.GraphMostExpressedMarker)
             {
-                foreach (GameObject circle in topExprCircles)
-                {
-                    Destroy(circle);
-                }
-                topExprCircles.Clear();
+                ClearTopExprCircles();
             }
             foreach (CellExpressionPair pair in expressions)
             {

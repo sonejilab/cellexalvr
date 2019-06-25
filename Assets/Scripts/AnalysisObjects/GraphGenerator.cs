@@ -225,7 +225,6 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                print("slice with points " + points.Values.Count);
                 foreach (var point in points.Values)
                 {
                     firstCluster.Add(point);

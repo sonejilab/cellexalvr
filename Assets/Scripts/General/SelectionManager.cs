@@ -104,7 +104,7 @@ namespace CellexalVR.General
             gameManager = referenceManager.gameManager;
             selectionToolCollider = referenceManager.selectionToolCollider;
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
-            CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
+            //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
         }
 

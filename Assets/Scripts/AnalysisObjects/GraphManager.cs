@@ -20,7 +20,6 @@ namespace CellexalVR.AnalysisObjects
         public List<string> directories;
         public Shader graphPointNormalShader;
         public Shader graphPointOutlineShader;
-        //public SelectionToolHandler selectionToolHandler;
         public SelectionManager selectionManager;
 
         public List<Graph> Graphs;
@@ -259,6 +258,7 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in Graphs)
             {
+                g.ClearTopExprCircles();
                 g.ResetColors(resetGroup:false);
             }
             selectionManager.RecolorSelectionPoints();
@@ -272,8 +272,9 @@ namespace CellexalVR.AnalysisObjects
         {
             CellexalEvents.GraphsReset.Invoke();
             selectionManager.CancelSelection();
-            foreach (var g in Graphs)
+            foreach (Graph g in Graphs)
             {
+                g.ClearTopExprCircles();
                 g.ResetColors();
                 foreach (GraphInfoPanelRotator panel in g.GetComponentsInChildren<GraphInfoPanelRotator>())
                 {

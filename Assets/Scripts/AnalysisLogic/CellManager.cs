@@ -559,6 +559,14 @@ namespace CellexalVR.AnalysisLogic
             if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod))
                 previousSearchesList.AddEntry(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod);
             CellexalLog.Log("Colored graphs by " + name);
+            if (CellexalConfig.Config.GraphMostExpressedMarker)
+            {
+                foreach (Graph graph in graphManager.Graphs)
+                {
+                    graph.ClearTopExprCircles();
+                }
+
+            }
             foreach (Cell cell in cells.Values)
             {
                 cell.ColorByIndex(name);
