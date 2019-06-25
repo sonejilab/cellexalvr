@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.Buttons.Facs
     /// </summary>
     public class ColorByIndexButton : CellexalButton
     {
-        public TextMesh descriptionOnButton;
+        public TMPro.TextMeshPro descriptionOnButton;
         public ColorByIndexMenu parentMenu;
 
         private CellManager cellManager;
@@ -19,7 +19,7 @@ namespace CellexalVR.Menu.Buttons.Facs
 
         protected override string Description
         {
-            get { return "Color graphs by facs - " + this.indexName; }
+            get { return "Color by: " + this.indexName; }
         }
 
         protected void Start()

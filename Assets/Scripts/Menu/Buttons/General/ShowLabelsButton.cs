@@ -24,7 +24,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             get
             {
-                return "Show labels of object";
+                return "Show Labels Of Objects";
             }
         }
 

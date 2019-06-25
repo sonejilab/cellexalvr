@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.Buttons
     {
         public GameObject buttonsToActivate;
         public GameObject menuToClose;
-        public TextMesh textMeshToUndarken;
+        public TMPro.TextMeshPro textMeshToUndarken;
 
         public bool deactivateMenu = false;
 

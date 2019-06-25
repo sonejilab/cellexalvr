@@ -14,7 +14,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             get
             {
-                { return "Teleport back home"; }
+                { return "Teleport Back To Start"; }
             }
         }
 

@@ -9,7 +9,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     {
         protected override string Description
         {
-            get { return "Create a new heatmap from your selection"; }
+            get { return "Create New Heatmap From Selection"; }
         }
 
         public override void Click()

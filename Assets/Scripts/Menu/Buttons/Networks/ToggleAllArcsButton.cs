@@ -14,7 +14,7 @@ namespace CellexalVR.Menu.Buttons.Networks
 
         protected override string Description
         {
-            get { return "Toggle all arcs"; }
+            get { return ""; }
         }
 
         public override void Click()

@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         public Sprite doneTex;
         protected override string Description
         {
-            get { return "Save heatmap\nimage to disk"; }
+            get { return "Save Heatmap Image To Disk"; }
         }
 
         protected override void Awake()

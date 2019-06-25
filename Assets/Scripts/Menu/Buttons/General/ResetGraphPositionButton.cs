@@ -15,7 +15,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             get
             {
-                return "Reset the position of all graphs";
+                return "Reset Position Of All Graphs";
             }
         }
 

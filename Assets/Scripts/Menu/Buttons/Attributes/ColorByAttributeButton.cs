@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
     /// </summary>
     public class ColorByAttributeButton : CellexalButton
     {
-        public TextMesh description;
+        public TMPro.TextMeshPro description;
 
         private CellManager cellManager;
         public Color booleanNotIncludedColor;
@@ -29,7 +29,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         protected override string Description
         {
-            get { return "Toggle attribute - " + description.text; }
+            get { return "Toggle Attr: " + description.text; }
         }
 
         protected void Start()

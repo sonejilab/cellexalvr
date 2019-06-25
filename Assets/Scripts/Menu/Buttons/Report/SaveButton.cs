@@ -33,7 +33,7 @@ namespace CellexalVR.Menu.Buttons.Report
 
         protected override string Description
         {
-            get { return "Save Session/Create Report"; }
+            get { return "Compile Session Report"; }
         }
 
         protected override void Update()

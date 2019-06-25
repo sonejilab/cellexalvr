@@ -11,7 +11,7 @@ namespace CellexalVR.Menu.Buttons
         public string description;
         public GameObject buttonsToDeactivate;
         public GameObject menu;
-        public TextMesh textMeshToDarken;
+        public TMPro.TextMeshPro textMeshToDarken;
 
         private Tab activeTab;
         //private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
