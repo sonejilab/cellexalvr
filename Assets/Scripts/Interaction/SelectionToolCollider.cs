@@ -89,10 +89,9 @@ namespace CellexalVR.Interaction
                     Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
                     minkowskiTimeoutStopwatch.Stop();
                     minkowskiTimeoutStopwatch.Start();
-                    float millisecond = Time.realtimeSinceStartup;
                     foreach (var graph in graphManager.Graphs)
                     {
-                        var closestPoints = graph.MinkowskiDetection(transform.position, boundsCenter, boundsExtents, currentColorIndex, millisecond);
+                        var closestPoints = graph.MinkowskiDetectionSelectionTool(transform.position, boundsCenter, boundsExtents, currentColorIndex);
                         foreach (var point in closestPoints)
                         {
                             selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);

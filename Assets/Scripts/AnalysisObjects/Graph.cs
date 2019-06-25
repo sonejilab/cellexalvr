@@ -411,7 +411,16 @@ namespace CellexalVR.AnalysisObjects
 
             public OctreeNode() { }
 
-            public bool nodeIterated;
+            private bool nodeIterated;
+            public bool NodeIterated
+            {
+                get { return nodeIterated; }
+                set
+                {
+                    nodeIterated = value;
+                    UpdateIterated();
+                }
+            }
             /// <summary>
             /// Returns a string representation of this node and all its children. May produce very long strings for very large trees.
             /// </summary>
@@ -555,6 +564,104 @@ namespace CellexalVR.AnalysisObjects
                 return !Physics.Raycast(pointPosWorldSpace, difference, difference.magnitude, Graph.selectionToolLayerMask);
             }
 
+            /// <summary>
+            /// Sets <see cref="NodeIterated"/> to false for this node and all of its children recursively.
+            /// </summary>
+            public void ResetIteration()
+            {
+                NodeIterated = false;
+                foreach (OctreeNode child in children)
+                {
+                    child.ResetIteration();
+                }
+            }
+
+            /// <summary>
+            /// Finds the first leaf node (using depth first) that has <see cref="NodeIterated"/> == false. Returns null if no non-iterated node was found.
+            /// </summary>
+            public OctreeNode FirstLeafNotIterated()
+            {
+                if (children.Length == 0)
+                {
+                    if (NodeIterated)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        NodeIterated = true;
+                        return this;
+                    }
+
+                }
+                else
+                {
+                    foreach (OctreeNode child in children)
+                    {
+                        if (!child.NodeIterated)
+                        {
+                            OctreeNode found = child.FirstLeafNotIterated();
+                            if (found != null)
+                            {
+                                return found;
+                            }
+                        }
+                    }
+                    // all children iterated
+                    NodeIterated = true;
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Updates each parent's <see cref="nodeIterated"/> if all its children are iterated.
+            /// </summary>
+            private void UpdateIterated()
+            {
+                foreach (OctreeNode child in children)
+                {
+                    if (!child.nodeIterated)
+                    {
+                        return;
+                    }
+                }
+                nodeIterated = true;
+                if (parent != null)
+                {
+                    parent.UpdateIterated();
+                }
+            }
+
+            /// <summary>
+            /// Returns a <see cref="List{OctreeNode}"/> all leaves that are under this node in the octree.
+            /// </summary>
+            /// <param name="includeIterated">True if nodes marked as iterated (<see cref="OctreeNode.NodeIterated"/>) should be included, false if they should not.</param>
+            public List<OctreeNode> AllLeavesUnder(bool includeIterated = true)
+            {
+                List<OctreeNode> list = new List<OctreeNode>();
+                AllLeavesUnder(ref list, includeIterated);
+                return list;
+            }
+
+            private void AllLeavesUnder(ref List<OctreeNode> list, bool includeIterated)
+            {
+                if (children.Length == 0)
+                {
+                    NodeIterated = true;
+                    list.Add(this);
+                }
+                else
+                {
+                    foreach (OctreeNode child in children)
+                    {
+                        if (includeIterated || !child.NodeIterated)
+                        {
+                            child.AllLeavesUnder(ref list, includeIterated);
+                        }
+                    }
+                }
+            }
+
             #region DEBUG_FUNCTIONS
             public void DebugColorLeaves(Color color)
             {
@@ -620,7 +727,7 @@ namespace CellexalVR.AnalysisObjects
                     }
                     yield return null;
                 }
-                nodeIterated = true;
+                NodeIterated = true;
 
             }
 
@@ -680,6 +787,9 @@ namespace CellexalVR.AnalysisObjects
 
         public void OnDrawGizmos()
         {
+            if (!Application.isPlaying)
+                return;
+
             if (octreeRoot != null)
             {
                 if (graphManager.drawDebugCubes)
@@ -941,7 +1051,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 for (int j = 0; j < textureHeight; ++j)
                 {
-                    texture.SetPixel(i, j, Color.blue);
+                    // green channel above 0.9
+                    texture.SetPixel(i, j, Color.green);
                 }
             }
             texture.Apply();
@@ -1079,6 +1190,58 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
+        /// Finds all <see cref="GraphPoint"/> that are inside a axis aligned box in the graph's local space.
+        /// </summary>
+        /// <param name="min">The box's minimum coordinates.</param>
+        /// <param name="max">The box's maximum coordinates.</param>
+        /// <param name="onlyNotIterated">True if only nodes that which are not yet iterated should be selected.</param>
+        /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="GraphPoint"/> that are inside the box.</returns>
+        public List<GraphPoint> MinkowskiDetection(Vector3 min, Vector3 max, bool onlyNotIterated = false)
+        {
+            List<GraphPoint> result = new List<GraphPoint>(64);
+            MinkowskiDetectionRecursive(min, max, octreeRoot, ref result, onlyNotIterated);
+            return result;
+        }
+
+        private void MinkowskiDetectionRecursive(Vector3 min, Vector3 max, OctreeNode node, ref List<GraphPoint> result, bool onlyNotIterated = false)
+        {
+            if (min.x - node.pos.x - node.size.x <= 0
+                   && max.x - node.pos.x >= 0
+                   && min.y - node.pos.y - node.size.y <= 0
+                   && max.y - node.pos.y >= 0
+                   && min.z - node.pos.z - node.size.z <= 0
+                   && max.z - node.pos.z >= 0)
+            {
+                // check if this node is entirely inside the bounding box
+                if (min.x < node.pos.x && max.x > node.pos.x + node.size.x &&
+                    min.y < node.pos.y && max.y > node.pos.y + node.size.y &&
+                    min.z < node.pos.z && max.z > node.pos.z + node.size.z)
+                {
+                    foreach (OctreeNode leaf in node.AllLeavesUnder(onlyNotIterated))
+                    {
+                        leaf.NodeIterated = true;
+                        result.Add(leaf.point);
+                    }
+                }
+                else if (node.point != null && (!onlyNotIterated || !node.NodeIterated))
+                {
+                    node.NodeIterated = true;
+                    result.Add(node.point);
+                }
+                else
+                {
+                    foreach (OctreeNode child in node.children)
+                    {
+                        if (!onlyNotIterated || !node.NodeIterated)
+                        {
+                            MinkowskiDetectionRecursive(min, max, child, ref result, onlyNotIterated);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Finds all <see cref="GraphPoint"/> that are inside the selection tool. This is done by traversing the generated Octree and dismissing subtrees using Minkowski differences.
         /// Ultimately, raycasting is used to find collisions because the selection tool is not a box.
         /// </summary>
@@ -1087,11 +1250,9 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="selectionToolBoundsExtents">The selection tool's bounding box's extents in world space.</param>
         /// <param name="group">The group that the selection tool is set to color the graphpoints by.</param>
         /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="GraphPoint"/> that are inside the selecion tool.</returns>
-        public List<GraphPoint> MinkowskiDetection(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group, float ms)
+        public List<GraphPoint> MinkowskiDetectionSelectionTool(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group)
         {
             List<GraphPoint> result = new List<GraphPoint>(64);
-            //int calls = 0;
-            //int callsEntirelyInside = 0;
 
             // calculate a new (non-minimal) bounding box for the selection tool, in the graph's local space
             Vector3 center = transform.InverseTransformPoint(selectionToolBoundsCenter);
@@ -1113,7 +1274,7 @@ namespace CellexalVR.AnalysisObjects
 
             debugGizmosPos = selectionToolPos;
 
-            MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result, ms);
+            MinkowskiDetectionRecursiveSelectionTool(selectionToolPos, min, max, octreeRoot, group, ref result);
             return result;
         }
 
@@ -1126,15 +1287,8 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="node">The <see cref="OctreeNode"/> to evaluate.</param>
         /// <param name="group">The group to assign the node.</param>
         /// <param name="result">All leaf nodes found so far.</param>
-        private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<GraphPoint> result, float ms)
+        private void MinkowskiDetectionRecursiveSelectionTool(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<GraphPoint> result)
         {
-            //print(Time.realtimeSinceStartup);
-            //if (Time.realtimeSinceStartup - ms > 25)
-            //{
-            //    print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
-            //    return;
-            //}
-            //calls++;
             // minkowski difference selection tool bounding box and node
             // take advantage of both being AABB
             // check if result contains (0,0,0)
@@ -1155,7 +1309,7 @@ namespace CellexalVR.AnalysisObjects
                     if (node.Group != group)
                     {
                         node.completelyInside = true;
-                        CheckIfLeavesInside(selectionToolWorldPos, node, group, ref result, ms);
+                        CheckIfLeavesInside(selectionToolWorldPos, node, group, ref result);
                     }
                     return;
                 }
@@ -1173,7 +1327,7 @@ namespace CellexalVR.AnalysisObjects
                     {
                         if (child.Group != group)
                         {
-                            MinkowskiDetectionRecursive(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result, ms);
+                            MinkowskiDetectionRecursiveSelectionTool(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result);
                         }
                     }
                 }
@@ -1191,14 +1345,8 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="node">The to evaluate.</param>
         /// <param name="group">The group to assign the node.</param>
         /// <param name="result">All leaf nodes found so far.</param>
-        private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<GraphPoint> result, float ms)
+        private void CheckIfLeavesInside(Vector3 selectionToolWorldPos, OctreeNode node, int group, ref List<GraphPoint> result)
         {
-            //if (Time.realtimeSinceStartup - ms > 250)
-            //{
-            //    print("stopped due to stopwatch - " + (Time.realtimeSinceStartup - ms));
-            //    return;
-            //}
-            //callsEntirelyInside++;
             if (node.point != null && node.PointInsideSelectionTool(selectionToolWorldPos, transform.TransformPoint(node.center)))
             {
                 node.Group = group;
@@ -1218,7 +1366,7 @@ namespace CellexalVR.AnalysisObjects
                 }
                 else
                 {
-                    CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result, ms);
+                    CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result);
                 }
             }
         }

@@ -113,6 +113,7 @@ namespace CellexalVR.General
         public ScreenCanvas screenCanvas;
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
+        public VelocityReader velocityReader;
         #endregion
 
         #region GeneKeyboard

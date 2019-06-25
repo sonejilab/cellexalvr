@@ -22,9 +22,16 @@ namespace CellexalVR.General
             private set { logFilePath = value; }
         }
         private static List<string> logThisLater = new List<string>();
+        private static StreamWriter logWriter;
 
         public static void InitNewLog()
         {
+            if (logWriter != null)
+            {
+                logWriter.Flush();
+                logWriter.Close();
+            }
+
             // File names can't have colons so we only use hyphens
             var now = DateTime.Now;
             var time = now.ToString("yyyy-MM-dd-HH-mm-ss");
@@ -44,6 +51,7 @@ namespace CellexalVR.General
                 File.Create(LogFilePath).Dispose();
             }
 
+            logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None));
 
             string nicerTime = now.ToString("yyyy-MM-dd HH:mm:ss");
             Log("Welcome to CellexalVR " + Application.version,
@@ -96,11 +104,10 @@ namespace CellexalVR.General
             }
             else
             {
-                using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
-                {
-                    logWriter.WriteLine(message);
-                    logWriter.Flush();
-                }
+
+                logWriter.WriteLine(message);
+                logWriter.Flush();
+
             }
         }
 
@@ -120,15 +127,14 @@ namespace CellexalVR.General
             }
             else
             {
-                using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+
+                foreach (string s in message)
                 {
-                    foreach (string s in message)
-                    {
-                        consoleManager.AppendOutput(s);
-                        logWriter.WriteLine(s);
-                    }
-                    logWriter.Flush();
+                    consoleManager.AppendOutput(s);
+                    logWriter.WriteLine(s);
                 }
+                logWriter.Flush();
+
             }
 
 

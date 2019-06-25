@@ -55,7 +55,7 @@ namespace CellexalVR.AnalysisLogic
                 }
                 //UnityEngine.Debug.Log("RESULT : " + result + " - Exit thread: " + result.Contains("Execution"));
                 return result;
-
+                 
 
             }
             catch (Exception ex)
