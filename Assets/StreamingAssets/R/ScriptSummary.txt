@@ -1,0 +1,13 @@
+Script file	function call
+get_correlated_genes.R	"get.genes.cor.to(cellexalObj, gname= '"+args[2]+"', output= '"+args[3]+"', is.smarker='"+as.logical(args[4])+"')"
+GOanalysis.R	"ontologyLogPage(cellexalObj, genes='", args[2] , "', grouping='", args[3], "')"
+initial_check.R	this should be keept and the log string I wrote in the email should be written to the log if it is used at all any more
+logNetwork.R	"logNetwork(cellexalObj, genes= NULL, png='", network_png, "', grouping='", grouping, "')"
+logStop.R	"renderReport(cellexalObj)"
+make_networks.R	make.cellexalvr.network(cellexalObj, cellidfile='", args[2], "', outpath='", args[3], "', method='", network_method , "' )"
+get_gene_expression.R	"write.table(t(cellexalObj@data[\"", args[2], "\",]), file= '", args[1], "/gene_expr.txt' , row.names=FALSE, col.names=TRUE, sep='\t', quote=FALSE)"
+logHeatmap.R	"logHeatmap(cellexalObj, genes='", args[2] , "', png='", args[3], "', grouping=", args[4], "' )"
+logStart.R	"cellexalObj <- sessionPath(cellexalObj)" ## but I have added that one into the log start I mentioned in the email!
+make_heatmap.R	"make.cellexalvr.heatmap.list(cellexalObj, cellidfile='", args[2], "', num.sig=", args[3], ", outfile = '", args[4], "', stats_method='", args[5], "')"
+start_server.R	## this has to be run as R process as it starts the server
+update_grouping.R	"cellexalObj <- userGrouping(cellexalObj, cellidfile='", args[2], "')"
