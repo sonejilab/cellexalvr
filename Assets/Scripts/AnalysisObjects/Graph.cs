@@ -51,6 +51,7 @@ namespace CellexalVR.AnalysisObjects
         public float longestAxis;
         public Vector3 scaledOffset;
         public int nbrOfClusters;
+        public VelocityParticleEmitter velocityParticleEmitter;
         public string GraphName
         {
             get { return graphName; }
@@ -1060,7 +1061,7 @@ namespace CellexalVR.AnalysisObjects
             texture.Apply();
         }
 
-      
+
 
         /// <summary>
         /// Clears the circles from previous colouring so it doesn't stack.
@@ -1101,7 +1102,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void RecolorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
-            
+
             byte greenChannel = (byte)(outline ? 5 : 0);
             byte redChannel;
             if (i == -1)

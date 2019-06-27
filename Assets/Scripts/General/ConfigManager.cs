@@ -47,6 +47,8 @@ namespace CellexalVR.General
         public Color NetworkLineColorNegativeHigh { get; set; }
         public int NumberOfNetworkLineColors { get; set; }
         public float NetworkLineWidth { get; set; }
+        public Color VelocityParticlesLowColor { get; set; }
+        public Color VelocityParticlesHighColor { get; set; }
         public int ConsoleMaxBufferLines { get; set; }
         public bool ShowNotifications { get; set; }
 

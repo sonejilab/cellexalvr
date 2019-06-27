@@ -241,9 +241,10 @@ namespace CellexalVR.SceneObjects
 
             foreach (Transform child in inputFolderGenerator.transform)
             {
-                if (child.CompareTag("Folder"))
+                if (child.CompareTag("Folder") && child.gameObject.GetComponent<Rigidbody>() == null)
                 {
                     child.gameObject.AddComponent<Rigidbody>();
+
                 }
             }
             collidersDestroyed = true;

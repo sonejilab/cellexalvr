@@ -10,17 +10,28 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class VelocityReader : MonoBehaviour
+    public class VelocityGenerator : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public float velocityThreshold = 0.001f;
-
-        public GameObject parentPrefab;
-        public GameObject arrowPrefab;
-        public GameObject triprefab;
-        public GameObject cubeprefab;
-        public GameObject planePrefab;
+        //public float velocityThreshold = 0.001f;
+        public Graph ActiveGraph { get; set; }
         public GameObject particleSystemPrefab;
+
+        //public GameObject parentPrefab;
+        //public GameObject arrowPrefab;
+        //public GameObject triprefab;
+        //public GameObject cubeprefab;
+        //public GameObject planePrefab;
+
+        private string particleSystemGameObjectName = "Velocity Particle System";
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         [ConsoleCommand("velocityReader", aliases: "rvf")]
         public void ReadVelocityFile()
@@ -28,16 +39,28 @@ namespace CellexalVR.AnalysisLogic
             ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\Ivan_MHSPC2\tsne.velo");
         }
 
-        public void ReadVelocityFile(string path)
+        public string[] VelocityFiles()
         {
-            StartCoroutine(ReadVelocityFileArrows(path));
+            return Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder, "*.velo");
         }
 
-        private IEnumerator ReadVelocityFileArrows(string path)
+        public void ReadVelocityFile(string path)
+        {
+            StartCoroutine(ReadVelocityParticleSystem(path));
+        }
+
+        private IEnumerator ReadVelocityParticleSystem(string path)
         {
             while (referenceManager.graphGenerator.isCreating)
             {
                 yield return null;
+            }
+
+            CellexalLog.Log("Started reading velocity file " + path);
+            if (ActiveGraph != null)
+            {
+                Destroy(ActiveGraph.transform.Find(particleSystemGameObjectName).gameObject);
+                ActiveGraph = null;
             }
 
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
@@ -45,16 +68,6 @@ namespace CellexalVR.AnalysisLogic
             string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             Graph graph = referenceManager.graphManager.FindGraph(graphName);
 
-            GameObject empty = new GameObject();
-            GameObject debugparent = Instantiate(empty, graph.transform);
-            debugparent.name = "arrows";
-            Destroy(empty);
-            graph.transform.position = new Vector3(100, 100, 100);
-            //Texture2D velocityData = new Texture2D(graph.texture.width, graph.texture.height);
-            //Texture2D gpPosData = new Texture2D(graph.texture.width, graph.texture.height);
-            //GameObject plane = Instantiate(planePrefab, graph.transform);
-            //plane.transform.localPosition = new Vector3(0f, 0f, 0f);
-            //plane.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.pointsPositions.Capacity);
 
             using (FileStream stream = new FileStream(path, FileMode.Open))
@@ -75,53 +88,28 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 from = graph.ScaleCoordinates(new Vector3(xfrom, yfrom, zfrom));
                     Vector3 to = graph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
-                    if (diff.sqrMagnitude > velocityThreshold)
-                    {
-                        Graph.GraphPoint point = graph.FindGraphPoint(cellName);
-                        velocities[point] = diff / 10f;
-                    }
 
-                    //velocityData.filterMode = FilterMode.Point;
-                    //gpPosData.filterMode = FilterMode.Point;
-                    //velocityData.SetPixel(point.textureCoord.x, point.textureCoord.y, new Color(diff.x, diff.y, diff.z));
-                    //gpPosData.SetPixel(point.textureCoord.x, point.textureCoord.y, new Color(from.x, from.y, from.z));
-
-                    //GameObject arrow = Instantiate(arrowPrefab, debugparent.transform);
-                    //GameObject shaft = arrow.transform.Find("arrow_shaft").gameObject;
-                    //GameObject head = arrow.transform.Find("arrow_head").gameObject;
-
-                    //arrow.transform.localPosition = from;
-                    //arrow.transform.LookAt(graph.transform.TransformPoint(to));
-                    //arrow.transform.Rotate(90f, 0f, 0f);
-                    //head.transform.position = graph.transform.TransformPoint(to);
-                    //shaft.transform.position = graph.transform.TransformPoint(from + diff / 2f);
-                    //shaft.transform.localScale = new Vector3(10f, 10f, 55f * diff.magnitude);
+                    Graph.GraphPoint point = graph.FindGraphPoint(cellName);
+                    velocities[point] = diff / 5f;
                 }
-                //velocityData.Apply();
-                //gpPosData.Apply();
-                //Material material = plane.GetComponent<Renderer>().material;
-                //material.SetTexture("_VelocityData", velocityData);
-                //material.SetTexture("_GraphPointPosData", gpPosData);
-                //File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\Assets\Images\velocityvectors.png", velocityData.EncodeToPNG());
-                //File.WriteAllBytes(Directory.GetCurrentDirectory() + @"\Assets\Images\graphpointpos.png", gpPosData.EncodeToPNG());
-
-                //AssetDatabase.CreateAsset(graph, Directory.GetCurrentDirectory() + @"\Assets\tsne");
-                //AssetDatabase.SaveAssets();
 
                 GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);
+                particleSystemGameObject.name = particleSystemGameObjectName;
                 VelocityParticleEmitter emitter = particleSystemGameObject.GetComponent<VelocityParticleEmitter>();
                 emitter.referenceManager = referenceManager;
                 emitter.graph = graph;
                 emitter.velocities = velocities;
-
+                graph.velocityParticleEmitter = emitter;
 
                 reader.Close();
                 stream.Close();
             }
 
-
+            ActiveGraph = graph;
+            CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
         }
 
+        /*
         private IEnumerator ReadVelocityFileCoroutine(string path)
         {
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
@@ -225,55 +213,55 @@ namespace CellexalVR.AnalysisLogic
             //    else if (pos.z > maxz) maxz = pos.z;
             //}
 
-            /*
+
             // connect graph
-            HashSet<Graph.GraphPoint> pointsLeft = new HashSet<Graph.GraphPoint>(graph.points.Values);
-            HashSet<Graph.GraphPoint> connected = new HashSet<Graph.GraphPoint>();
-            HashSet<Graph.GraphPoint> addToConnected = new HashSet<Graph.GraphPoint>();
-            Graph.GraphPoint first = pointsLeft.First();
-            // find all connected points (the subgraph)
-            connected.Add(first);
-            AllConnectedPoints(ref relations, ref inverseRelations, first, ref connected);
-            foreach (Graph.GraphPoint p in connected)
-            {
-                pointsLeft.Remove(p);
-            }
-            while (pointsLeft.Count > 0)
-            {
-                // find closest point that isn't connected
-                float minDist = float.MaxValue;
-                Graph.GraphPoint minDistPointUnconnected = null;
-                Graph.GraphPoint minDistPointConnected = null;
-                foreach (Graph.GraphPoint unconnectedPoint in pointsLeft)
-                {
-                    foreach (Graph.GraphPoint connectedPoint in connected)
-                    {
-                        float dist = (unconnectedPoint.Position - connectedPoint.Position).sqrMagnitude;
-                        if (dist < minDist)
-                        {
-                            minDist = dist;
-                            minDistPointUnconnected = unconnectedPoint;
-                            minDistPointConnected = connectedPoint;
-                        }
-                    }
-                }
+            //HashSet<Graph.GraphPoint> pointsLeft = new HashSet<Graph.GraphPoint>(graph.points.Values);
+            //HashSet<Graph.GraphPoint> connected = new HashSet<Graph.GraphPoint>();
+            //HashSet<Graph.GraphPoint> addToConnected = new HashSet<Graph.GraphPoint>();
+            //Graph.GraphPoint first = pointsLeft.First();
+            //// find all connected points (the subgraph)
+            //connected.Add(first);
+            //AllConnectedPoints(ref relations, ref inverseRelations, first, ref connected);
+            //foreach (Graph.GraphPoint p in connected)
+            //{
+            //    pointsLeft.Remove(p);
+            //}
+            //while (pointsLeft.Count > 0)
+            //{
+            //    // find closest point that isn't connected
+            //    float minDist = float.MaxValue;
+            //    Graph.GraphPoint minDistPointUnconnected = null;
+            //    Graph.GraphPoint minDistPointConnected = null;
+            //    foreach (Graph.GraphPoint unconnectedPoint in pointsLeft)
+            //    {
+            //        foreach (Graph.GraphPoint connectedPoint in connected)
+            //        {
+            //            float dist = (unconnectedPoint.Position - connectedPoint.Position).sqrMagnitude;
+            //            if (dist < minDist)
+            //            {
+            //                minDist = dist;
+            //                minDistPointUnconnected = unconnectedPoint;
+            //                minDistPointConnected = connectedPoint;
+            //            }
+            //        }
+            //    }
 
-                // remove all points we just added to the previous subgraph
-                addToConnected.Clear();
-                addToConnected.Add(minDistPointUnconnected);
-                AllConnectedPoints(ref relations, ref inverseRelations, minDistPointUnconnected, ref addToConnected);
-                foreach (Graph.GraphPoint p in addToConnected)
-                {
-                    connected.Add(p);
-                    pointsLeft.Remove(p);
-                }
+            //    // remove all points we just added to the previous subgraph
+            //    addToConnected.Clear();
+            //    addToConnected.Add(minDistPointUnconnected);
+            //    AllConnectedPoints(ref relations, ref inverseRelations, minDistPointUnconnected, ref addToConnected);
+            //    foreach (Graph.GraphPoint p in addToConnected)
+            //    {
+            //        connected.Add(p);
+            //        pointsLeft.Remove(p);
+            //    }
 
-                // connect the subgraphs
-                relations[minDistPointUnconnected].Add(minDistPointConnected);
-                relations[minDistPointConnected].Add(minDistPointUnconnected);
+            //    // connect the subgraphs
+            //    relations[minDistPointUnconnected].Add(minDistPointConnected);
+            //    relations[minDistPointConnected].Add(minDistPointUnconnected);
 
-            }
-            */
+            //}
+
 
             foreach (var rel in relations)
             {
@@ -735,9 +723,9 @@ namespace CellexalVR.AnalysisLogic
                 other.neighbours.Add(this);
             }
         }
-
+        */
     }
-
+    /*
     struct Vector4Int
     {
         public int x;
@@ -758,4 +746,5 @@ namespace CellexalVR.AnalysisLogic
             return new Vector4Int(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
         }
     }
+    */
 }

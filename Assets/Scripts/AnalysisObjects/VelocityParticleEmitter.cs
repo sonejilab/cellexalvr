@@ -17,6 +17,8 @@ namespace CellexalVR.AnalysisObjects
         /// Number of seconds between each arrow emit
         /// </summary>
         public float arrowEmitRate = 5f;
+
+        public float threshold;
         private float oldArrowEmitRate;
         private bool emitting = false;
 
@@ -25,6 +27,7 @@ namespace CellexalVR.AnalysisObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             InvokeRepeating("DoEmit", 0f, arrowEmitRate);
             particleSystem = gameObject.GetComponent<ParticleSystem>();
+            SetColors();
             particleSystem.Play();
             oldArrowEmitRate = arrowEmitRate;
         }
@@ -60,11 +63,15 @@ namespace CellexalVR.AnalysisObjects
 
             var emitParams = new ParticleSystem.EmitParams();
             int nItems = 0;
+            float sqrThreshold = threshold * threshold;
             foreach (var keyValuePair in velocities)
             {
-                emitParams.position = keyValuePair.Key.Position - offset + keyValuePair.Value.normalized * graphPointMesh.bounds.extents.magnitude * 2;
-                emitParams.velocity = keyValuePair.Value;
-                particleSystem.Emit(emitParams, 1);
+                if (keyValuePair.Value.sqrMagnitude > sqrThreshold)
+                {
+                    emitParams.position = keyValuePair.Key.Position - offset + keyValuePair.Value.normalized * graphPointMesh.bounds.extents.magnitude * 2;
+                    emitParams.velocity = keyValuePair.Value;
+                    particleSystem.Emit(emitParams, 1);
+                }
                 nItems++;
                 if (nItems >= itemsPerFrame)
                 {
@@ -74,5 +81,64 @@ namespace CellexalVR.AnalysisObjects
             }
             emitting = false;
         }
+
+        public void Play()
+        {
+            particleSystem.Play();
+        }
+
+        public void Stop()
+        {
+            particleSystem.Stop();
+            particleSystem.Clear();
+            CancelInvoke();
+        }
+
+        /// <summary>
+        /// Changes the frequency be some amount. Frequency can not be changed below 0.
+        /// </summary>
+        /// <param name="amount">How much to add (or subtract) to the frequency.</param>
+        /// <returns>The new frequency.</returns>
+        public float ChangeFrequency(float amount)
+        {
+            float newRate = arrowEmitRate + amount;
+            if (newRate > 0)
+            {
+                arrowEmitRate = newRate;
+            }
+
+            return arrowEmitRate;
+        }
+
+        /// <summary>
+        /// Multiples the current threshold by some amount. Thresholds lower than 0.001 is set to zero.
+        /// </summary>
+        /// <param name="amount">How much to multiply the frequency by.</param>
+        /// <returns>The new threshold.</returns>
+        public float ChangeThreshold(float amount)
+        {
+            if (threshold == 0f && amount > 1f)
+            {
+                threshold = 0.001f;
+            }
+            else if (threshold <= 0.001f && amount < 1f)
+            {
+                threshold = 0f;
+            }
+            else
+            {
+                threshold *= amount;
+            }
+            return threshold;
+        }
+
+        public void SetColors()
+        {
+            particleSystem = gameObject.GetComponent<ParticleSystem>();
+            ParticleSystem.ColorBySpeedModule colorBySpeedModule = particleSystem.colorBySpeed;
+            colorBySpeedModule.color = new ParticleSystem.MinMaxGradient(CellexalConfig.Config.VelocityParticlesLowColor, CellexalConfig.Config.VelocityParticlesHighColor);
+        }
+
     }
+
 }

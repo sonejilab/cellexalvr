@@ -24,7 +24,8 @@ namespace CellexalVR.DesktopUI
             HEATMAP_HIGH, HEATMAP_MID, HEATMAP_LOW,
             GRAPH_HIGH, GRAPH_MID, GRAPH_LOW, GRAPH_DEFAULT,
             SELECTION,
-            NETWORK_POSITIVE_HIGH, NETWORK_POSITIVE_LOW, NETWORK_NEGATIVE_HIGH, NETWORK_NEGATIVE_LOW
+            NETWORK_POSITIVE_HIGH, NETWORK_POSITIVE_LOW, NETWORK_NEGATIVE_HIGH, NETWORK_NEGATIVE_LOW,
+            VELOCITY_HIGH, VELOCITY_LOW
         }
         public ConfigColor colorField;
         private Color color;
@@ -157,6 +158,12 @@ namespace CellexalVR.DesktopUI
                     CellexalConfig.Config.SelectionToolColors[selectionToolColorIndex] = color;
                     referenceManager.graphGenerator.CreateShaderColors();
                     break;
+                case ConfigColor.VELOCITY_HIGH:
+                    CellexalConfig.Config.VelocityParticlesHighColor = color;
+                    break;
+                case ConfigColor.VELOCITY_LOW:
+                    CellexalConfig.Config.VelocityParticlesLowColor = color;
+                    break;
             }
 
             // call the appropriate method to update the necessary resources.
@@ -182,7 +189,6 @@ namespace CellexalVR.DesktopUI
                 case ConfigColor.SELECTION:
                     selectionToolCollider.UpdateColors();
                     break;
-
             }
             settingsMenu.ChangeMade();
         }
