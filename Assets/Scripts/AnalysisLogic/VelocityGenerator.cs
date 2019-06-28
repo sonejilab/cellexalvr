@@ -1,11 +1,9 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.General;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -110,6 +108,8 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /*
+        // unused code that might be useful in the future
+
         private IEnumerator ReadVelocityFileCoroutine(string path)
         {
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });

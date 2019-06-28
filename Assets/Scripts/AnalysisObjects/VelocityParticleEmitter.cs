@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,12 +14,13 @@ namespace CellexalVR.AnalysisObjects
 
         public int itemsPerFrame = 1000;
         private new ParticleSystem particleSystem;
+
         /// <summary>
         /// Number of seconds between each arrow emit
         /// </summary>
-        public float arrowEmitRate = 5f;
-
-        public float threshold;
+        private float arrowEmitRate = 5f;
+        private float threshold = 0;
+        private float speed = 1;
         private float oldArrowEmitRate;
         private bool emitting = false;
 
@@ -101,10 +103,17 @@ namespace CellexalVR.AnalysisObjects
         /// <returns>The new frequency.</returns>
         public float ChangeFrequency(float amount)
         {
-            float newRate = arrowEmitRate + amount;
-            if (newRate > 0)
+            if (arrowEmitRate == 0f && amount > 1f)
             {
-                arrowEmitRate = newRate;
+                arrowEmitRate = 0.001f;
+            }
+            else if (arrowEmitRate <= 0.001f && amount < 1f)
+            {
+                arrowEmitRate = 0f;
+            }
+            else
+            {
+                arrowEmitRate *= amount;
             }
 
             return arrowEmitRate;
@@ -130,6 +139,30 @@ namespace CellexalVR.AnalysisObjects
                 threshold *= amount;
             }
             return threshold;
+        }
+
+        /// <summary>
+        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.001 are set to 0.001.
+        /// </summary>
+        /// <param name="amount">The amount to change the speed by.</param>
+        /// <returns>The new speed.</returns>
+        public float ChangeSpeed(float amount)
+        {
+            if (speed == 0f && amount > 1f)
+            {
+                speed = 0.001f;
+            }
+            else if (speed <= 0.001f && amount < 1f)
+            {
+                speed = 0f;
+            }
+            else
+            {
+                speed *= amount;
+            }
+            var mainModule = particleSystem.main;
+            mainModule.simulationSpeed = speed;
+            return speed;
         }
 
         public void SetColors()

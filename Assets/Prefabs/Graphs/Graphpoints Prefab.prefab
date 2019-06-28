@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4957322073411224}
   - component: {fileID: 33463714987162136}
   - component: {fileID: 23364634105403548}
+  - component: {fileID: 114284534184512544}
   m_Layer: 13
   m_Name: Graphpoints Prefab
   m_TagString: Untagged
@@ -83,3 +84,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1303898112207200}
   m_Mesh: {fileID: 0}
+--- !u!114 &114284534184512544
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1303898112207200}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 062612ab560588540a02fa1859fc5315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uv: []
+  verticies: []
+  triangles: 
+  serialized: 0

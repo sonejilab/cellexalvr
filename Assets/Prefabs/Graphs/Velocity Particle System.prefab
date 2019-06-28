@@ -55,8 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   graph: {fileID: 0}
-  itersPerFrame: 1000
-  arrowEmitRate: 5
+  itemsPerFrame: 1000
 --- !u!198 &198557150336610568
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -64,7 +63,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1273458556093764}
   serializedVersion: 5
-  lengthInSec: 5
+  lengthInSec: 2.5
   simulationSpeed: 1
   stopAction: 0
   looping: 1
@@ -136,7 +135,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1325,7 +1324,7 @@ ParticleSystem:
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
   UVModule:
-    enabled: 0
+    enabled: 1
     mode: 0
     frameOverTime:
       serializedVersion: 2

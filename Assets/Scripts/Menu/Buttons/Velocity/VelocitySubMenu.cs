@@ -13,6 +13,7 @@ namespace CellexalVR.Menu.SubMenus
         public GameObject velocityDataPrefab;
         public TextMeshPro frequencyText;
         public TextMeshPro thresholdText;
+        public TextMeshPro speedText;
 
         private List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
         Vector3 startPosition = new Vector3(-0.37f, 1f, 0.1f);
@@ -34,6 +35,8 @@ namespace CellexalVR.Menu.SubMenus
             CellexalEvents.GraphsUnloaded.AddListener(DestroyButtons);
             frequencyText.text = "Frequency: 0.2";
             thresholdText.text = "Threshold: 0";
+            speedText.text = "Speed: 1";
+
         }
 
         private void CreateButtons()
@@ -42,7 +45,6 @@ namespace CellexalVR.Menu.SubMenus
             foreach (string filePath in referenceManager.velocityGenerator.VelocityFiles())
             {
                 GameObject newButton = Instantiate(velocityDataPrefab, this.transform);
-                newButton.SetActive(true);
                 newButton.transform.localPosition = nextButtonPosition;
 
                 if (buttonNbr % 5 == 4)
