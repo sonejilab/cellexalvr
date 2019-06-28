@@ -15,6 +15,14 @@ namespace CellexalVR.Interaction
             panels = gameObject.GetComponentsInChildren<ColoringOptionsPanel>();
         }
 
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         public void SwitchMode(GraphManager.GeneExpressionColoringMethods mode)
         {
             referenceManager.graphManager.GeneExpressionColoringMethod = mode;

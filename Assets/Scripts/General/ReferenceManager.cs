@@ -70,6 +70,7 @@ namespace CellexalVR.General
         public SelectionFromPreviousMenu selectionFromPreviousMenu;
         public ColorByGeneMenu colorByGeneMenu;
         public FilterMenu filterMenu;
+        public VelocitySubMenu velocitySubMenu;
         public GameObject selectionMenu;
         public TextMesh currentFlashedGeneText;
         public GameObject frontButtons;
@@ -83,7 +84,6 @@ namespace CellexalVR.General
         public MenuRotator menuRotator;
         public MinimizedObjectHandler minimizedObjectHandler;
         public MenuToggler menuToggler;
-
         #endregion
 
         #region Managers, generators and things
@@ -113,6 +113,7 @@ namespace CellexalVR.General
         public ScreenCanvas screenCanvas;
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
+        public VelocityGenerator velocityGenerator;
         #endregion
 
         #region GeneKeyboard
@@ -183,6 +184,7 @@ namespace CellexalVR.General
             selectionFromPreviousMenu = mainMenu.GetComponentInChildren<SelectionFromPreviousMenu>(true);
             colorByGeneMenu = mainMenu.GetComponentInChildren<ColorByGeneMenu>(true);
             filterMenu = mainMenu.GetComponentInChildren<FilterMenu>(true);
+            velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);
             selectionMenu = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu");
             TextMesh currentFlashedGeneText;
             frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
@@ -224,6 +226,7 @@ namespace CellexalVR.General
             tutorialManager = managersParent.GetComponentInChildren<TutorialManager>();
             screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
+            velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
 
 
 
@@ -241,7 +244,7 @@ namespace CellexalVR.General
 
             spectatorRig = GameObject.Find("SpectatorRig");
             VRRig = GameObject.Find("[VRTK]3.3");
-            
+
 
         }
 #endif

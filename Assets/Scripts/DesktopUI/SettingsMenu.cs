@@ -54,6 +54,9 @@ namespace CellexalVR.DesktopUI
         public GameObject selectionColorButtonPrefab;
         private List<ColorPickerButton> selectionColorButtons;
         public GameObject addSelectionColorButton;
+        [Header("Velocity")]
+        public ColorPickerButton velocityHighColor;
+        public ColorPickerButton velocityLowColor;
         [Header("Visual")]
         public TMPro.TMP_Dropdown skyboxDropdown;
         public Toggle notificationToggle;
@@ -180,6 +183,8 @@ namespace CellexalVR.DesktopUI
                     selectionColorButtons.Add(button);
                 }
             }
+            velocityHighColor.Color = CellexalConfig.Config.VelocityParticlesHighColor;
+            velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
 
             SetNetworkColoringMethod();
 
@@ -359,7 +364,14 @@ namespace CellexalVR.DesktopUI
 
         public void SetGraphHighestExpressionMarker(bool active)
         {
+            unsavedChanges = true;
             CellexalConfig.Config.GraphMostExpressedMarker = active;
+        }
+
+        public void UpdateVelocityColors()
+        {
+            unsavedChanges = true;
+            referenceManager.velocityGenerator.ActiveGraph.velocityParticleEmitter.SetColors();
         }
 
         public void ChangeMade()

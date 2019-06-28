@@ -44,7 +44,6 @@ namespace CellexalVR.General
                 File.Create(LogFilePath).Dispose();
             }
 
-
             string nicerTime = now.ToString("yyyy-MM-dd HH:mm:ss");
             Log("Welcome to CellexalVR " + Application.version,
                 "Running on Unity " + Application.unityVersion,
@@ -61,7 +60,7 @@ namespace CellexalVR.General
             if (logThisLater.Count > 0)
             {
                 Log("The following was generated before the log file existed:");
-                Log(logThisLater.ToArray());
+                LogBacklog();
                 Log("\tEnd of what was generated before the log file existed.");
                 logThisLater.Clear();
             }
@@ -70,13 +69,22 @@ namespace CellexalVR.General
         }
 
         /// <summary>
-        /// Creates a new log and prints everything that is in the backlog to the new log.
+        /// Writes everything that has been accumulated to the log file.
         /// </summary>
         public static void LogBacklog()
         {
-            if (logThisLater.Count > 0)
+            if (logFilePath == "")
             {
-                InitNewLog();
+                return;
+            }
+            using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+            {
+                foreach (string s in logThisLater)
+                {
+                    logWriter.WriteLine(s);
+                }
+                logThisLater.Clear();
+                logWriter.Flush();
             }
         }
 
@@ -90,18 +98,8 @@ namespace CellexalVR.General
             {
                 consoleManager.AppendOutput(message);
             }
-            if (LogFilePath == "")
-            {
-                logThisLater.Add("\t" + message);
-            }
-            else
-            {
-                using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
-                {
-                    logWriter.WriteLine(message);
-                    logWriter.Flush();
-                }
-            }
+
+            logThisLater.Add(message);
         }
 
         /// <summary>
@@ -110,28 +108,10 @@ namespace CellexalVR.General
         /// <param name="message"> The messages that should be written to the log. </param>
         public static void Log(params string[] message)
         {
-            if (LogFilePath == "")
+            foreach (string s in message)
             {
-                foreach (string s in message)
-                {
-                    logThisLater.Add("\t" + s);
-                    consoleManager.AppendOutput(s);
-                }
+                Log(s);
             }
-            else
-            {
-                using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
-                {
-                    foreach (string s in message)
-                    {
-                        consoleManager.AppendOutput(s);
-                        logWriter.WriteLine(s);
-                    }
-                    logWriter.Flush();
-                }
-            }
-
-
         }
 
         /// <summary>
@@ -178,9 +158,9 @@ namespace CellexalVR.General
 
         private void Awake()
         {
-            //CellExAlLog.InitNewLog();
+            CellexalLog.InitNewLog();
             CellexalEvents.UsernameChanged.AddListener(CellexalLog.UsernameChanged);
-            CellexalEvents.GraphsLoaded.AddListener(CellexalLog.InitNewLog);
+            //CellexalEvents.GraphsLoaded.AddListener(CellexalLog.InitNewLog);
 
             string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";
 
@@ -190,7 +170,6 @@ namespace CellexalVR.General
                 CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(outputDirectory));
                 Directory.CreateDirectory(outputDirectory);
             }
-
         }
 
         #region Events
@@ -199,12 +178,20 @@ namespace CellexalVR.General
         {
             SteamVR_Events.RenderModelLoaded.Listen(OnRenderModelLoaded);
             SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
+            InvokeRepeating("LogBacklog", 10f, 10f);
+        }
+
+        private void LogBacklog()
+        {
+            CellexalLog.LogBacklog();
         }
 
         private void OnDisable()
         {
             SteamVR_Events.RenderModelLoaded.Remove(OnRenderModelLoaded);
             SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
+            CellexalLog.LogBacklog();
+            CancelInvoke();
         }
 
         private void OnRenderModelLoaded(SteamVR_RenderModel model, bool success)
@@ -232,6 +219,7 @@ namespace CellexalVR.General
             string nicerTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             CellexalLog.Log("Application quit on " + nicerTime);
             CellexalLog.Log("Goodbye.");
+            CellexalLog.LogBacklog();
         }
 
         #endregion

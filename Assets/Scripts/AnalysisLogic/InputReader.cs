@@ -388,6 +388,11 @@ namespace CellexalVR.AnalysisLogic
                 StartCoroutine(StartServer("main"));
                 //StartCoroutine(StartServer("gene"));
             }
+
+            while (graphGenerator.isCreating)
+            {
+                yield return null;
+            }
             CellexalEvents.GraphsLoaded.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);
         }
