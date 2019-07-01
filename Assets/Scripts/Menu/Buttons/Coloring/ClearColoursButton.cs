@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -18,6 +17,7 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
+            CellexalEvents.GraphsResetKeepSelection.Invoke();
             graphManager.ClearExpressionColours();
         }
 

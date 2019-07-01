@@ -21,7 +21,6 @@ namespace CellexalVR.Interaction
         public CellexalVR.General.ReferenceManager referenceManager;
         public GameObject keysParentObject;
         public Material keyMaterial;
-        public Mesh quadPrefab;
         public AutoCompleteList autoCompleteList;
         public TMPro.TextMeshPro output;
         public float height = 5f;
@@ -265,7 +264,7 @@ namespace CellexalVR.Interaction
                 return output.text;
             }
         }
-        
+
 
 #if UNITY_EDITOR
         private void OnValidate()

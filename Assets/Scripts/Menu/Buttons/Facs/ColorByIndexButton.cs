@@ -1,7 +1,6 @@
-﻿using CellexalVR.Menu.SubMenus;
-using CellexalVR.AnalysisLogic;
-using UnityEngine;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Menu.SubMenus;
 
 namespace CellexalVR.Menu.Buttons.Facs
 {
@@ -26,6 +25,7 @@ namespace CellexalVR.Menu.Buttons.Facs
         {
             cellManager = referenceManager.cellManager;
             CellexalEvents.GraphsColoredByIndex.AddListener(TurnOn);
+            CellexalEvents.GraphsResetKeepSelection.AddListener(TurnOn);
         }
 
         public override void Click()

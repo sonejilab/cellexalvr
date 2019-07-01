@@ -33,6 +33,7 @@ namespace CellexalVR.General
 
 
         public static UnityEvent GraphsReset = new UnityEvent();
+        public static UnityEvent GraphsResetKeepSelection = new UnityEvent();
         public static UnityEvent GraphsColoredByGene = new UnityEvent();
         public static UnityEvent GraphsColoredByIndex = new UnityEvent();
         public static UnityEvent CorrelatedGenesCalculated = new UnityEvent();
