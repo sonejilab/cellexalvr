@@ -259,9 +259,10 @@ namespace CellexalVR.AnalysisObjects
             foreach (Graph g in Graphs)
             {
                 g.ClearTopExprCircles();
-                g.ResetColors(resetGroup:false);
+                g.ResetColors(resetGroup: false);
             }
             selectionManager.RecolorSelectionPoints();
+            CellexalEvents.GraphsResetKeepSelection.Invoke();
         }
 
         /// <summary>
