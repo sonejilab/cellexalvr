@@ -11,6 +11,22 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1900129272846280}
   m_IsPrefabAsset: 1
+--- !u!1 &1041440347386614
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4900551920225052}
+  - component: {fileID: 114192500795671036}
+  m_Layer: 0
+  m_Name: VelocityGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1136056702234574
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,6 +158,19 @@ Transform:
   m_Father: {fileID: 4982010448198502}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4900551920225052
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1041440347386614}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4982010448198502}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4982010448198502
 Transform:
   m_ObjectHideFlags: 1
@@ -156,6 +185,7 @@ Transform:
   - {fileID: 4109483318610356}
   - {fileID: 4240884778100542}
   - {fileID: 4796754215416330}
+  - {fileID: 4900551920225052}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -271,3 +301,17 @@ MonoBehaviour:
     type: 2}
   selectionNr: 0
   selectionManager: {fileID: 0}
+--- !u!114 &114192500795671036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1041440347386614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dec1b81f356a4d45a1809537eaa30ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  particleSystemPrefab: {fileID: 1273458556093764, guid: c0484a91c0c24d3488da0e77a836ce9a,
+    type: 2}
