@@ -133,7 +133,6 @@ namespace CellexalVR.Interaction
                 {
                     if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                     {
-                        print("Change model");
                         controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
                     }
                     //referenceManager.laserPointerController.ToggleLaser(true);
