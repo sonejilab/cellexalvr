@@ -15,8 +15,8 @@ namespace CellexalVR.Menu.SubMenus
 
         protected MenuToggler menuToggler;
         protected List<Tab> tabs = new List<Tab>();
-        protected Vector3 tabButtonPos = new Vector3(-0.367f, 1f, 0.35f);
-        protected Vector3 tabButtonPosOriginal = new Vector3(-0.367f, 1f, 0.35f);
+        protected Vector3 tabButtonPos = new Vector3(-0.367f, 1f, 0.325f);
+        protected Vector3 tabButtonPosOriginal = new Vector3(-0.367f, 1f, 0.325f);
         protected Vector3 tabButtonPosInc = new Vector3(0.25f, 0, 0);
 
         public CellexalButton prefab;

@@ -20,6 +20,7 @@ namespace CellexalVR.AnalysisObjects
         public Material normalMaterial;
         public List<NetworkCenter> Replacements { get; private set; }
         public bool removable;
+        public bool removing = false;
         public ReferenceManager referenceManager;
         //public string NetworkHandlerName { get; internal set; }
 
@@ -360,6 +361,8 @@ namespace CellexalVR.AnalysisObjects
                     yield return nc.BringBackOriginal();
                 }
             }
+
+            removing = true;
 
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);

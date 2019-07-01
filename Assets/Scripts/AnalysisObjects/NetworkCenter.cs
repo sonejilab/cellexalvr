@@ -81,7 +81,7 @@ namespace CellexalVR.AnalysisObjects
         private Dictionary<NetworkNode, Vector3> positions;
         private System.Random rand;
         private string oldName;
-        private NetworkHandler handler;
+        private NetworkHandler networkHandler;
 
         private void OnValidate()
         {
@@ -101,7 +101,7 @@ namespace CellexalVR.AnalysisObjects
             }
             networkGenerator = referenceManager.networkGenerator;
             gameManager = referenceManager.gameManager;
-            handler = GetComponentInParent<NetworkHandler>();
+            networkHandler = GetComponentInParent<NetworkHandler>();
         }
 
         void FixedUpdate()
@@ -133,7 +133,7 @@ namespace CellexalVR.AnalysisObjects
             //    numColliders = 0;
             //    enlarge = true;
             //}
-            if (gameObject.transform.hasChanged)
+            if (gameObject.transform.hasChanged && !networkHandler.removing)
             {
                 foreach (Arc a in arcs)
                 {

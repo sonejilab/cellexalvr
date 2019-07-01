@@ -44,8 +44,8 @@ namespace CellexalVR.Interaction
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
-            CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
+            //CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
+            //CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
 
         }
         private void Update()
@@ -95,7 +95,8 @@ namespace CellexalVR.Interaction
                     {
                         controllerModelSwitcher.ActivateDesiredTool();
                     }
-                    referenceManager.rightLaser.enabled = false;
+                    //referenceManager.rightLaser.enabled = false;
+                    referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
                 }
             }
         }
@@ -107,15 +108,15 @@ namespace CellexalVR.Interaction
             alwaysActive = active;
             if (active)
             {
-                referenceManager.rightLaser.cursorVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
             }
             else
             {
-                referenceManager.rightLaser.cursorVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
             }
             //referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-                referenceManager.leftLaser.cursorVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
             origin.localRotation = Quaternion.identity;
         }
 

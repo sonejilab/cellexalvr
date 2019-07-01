@@ -43,7 +43,6 @@ namespace CellexalVR.AnalysisLogic
         //private SelectionToolHandler selectionToolHandler;
         private SelectionManager selectionManager;
         private AttributeSubMenu attributeSubMenu;
-        private ToggleArcsSubMenu arcsSubMenu;
         private ColorByIndexMenu indexMenu;
         private GraphFromMarkersMenu createFromMarkerMenu;
         private GameObject headset;
@@ -84,7 +83,6 @@ namespace CellexalVR.AnalysisLogic
             //selectionToolHandler = referenceManager.selectionToolHandler;
             selectionManager = referenceManager.selectionManager;
             attributeSubMenu = referenceManager.attributeSubMenu;
-            arcsSubMenu = referenceManager.arcsSubMenu;
             indexMenu = referenceManager.indexMenu;
             createFromMarkerMenu = referenceManager.createFromMarkerMenu;
             //headset = referenceManager.headset;

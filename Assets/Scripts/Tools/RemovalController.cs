@@ -169,14 +169,23 @@ namespace CellexalVR.Tools
                 }
             }
 
-            else 
+            else if (obj.transform.localScale.x <= targetScale)
             {
-                CellexalLog.Log("Deleted object: " + obj.name);
-                Destroy(obj);
-                if (!obj.GetComponent<NetworkHandler>())
+                if (obj.transform.GetComponentInParent<NetworkHandler>() != null)
                 {
+                    obj = obj.transform.GetComponentInParent<NetworkHandler>().gameObject;
+                    Destroy(obj);
+                }
+                else if (obj.GetComponent<NetworkHandler>())
+                {
+                    Destroy(obj);
+                }
+                else
+                {
+                    Destroy(obj);
                     referenceManager.gameManager.InformDeleteObject(obj.name);
                 }
+                CellexalLog.Log("Deleted object: " + obj.name);
                 delete = false;
                 GetComponent<MeshRenderer>().material = inactiveMat;
                 GetComponent<Light>().color = Color.white;

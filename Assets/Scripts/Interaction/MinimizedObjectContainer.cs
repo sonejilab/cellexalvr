@@ -90,8 +90,8 @@ namespace CellexalVR.Interaction
             if (frameCount % 30 == 0)
             {
                 bool inside = false;
-                
-                Collider[] collidesWith = Physics.OverlapBox(transform.position, GetComponent<BoxCollider>().size / 2, Quaternion.identity, layerMask);
+
+                Collider[] collidesWith = Physics.OverlapBox(transform.position, transform.localScale / 3, Quaternion.identity, layerMask);
 
                 foreach (Collider col in collidesWith)
                 {
@@ -110,7 +110,8 @@ namespace CellexalVR.Interaction
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
+            //Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
+            Gizmos.DrawSphere(transform.position, (transform.localScale / 3).x);
         }
 
 

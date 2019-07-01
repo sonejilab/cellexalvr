@@ -165,18 +165,21 @@ namespace CellexalVR.Interaction
 
                 case Model.Keyboard:
                     //keyboard.SetKeyboardVisible(true);
-                    rightLaser.enabled = true;
+                    //rightLaser.enabled = true;
+                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetVisible(true);
-                    rightLaser.enabled = true;
+                    //rightLaser.enabled = true;
+                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.TwoLasers:
-                    rightLaser.enabled = true;
+                    //rightLaser.enabled = true;
+                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
@@ -185,8 +188,8 @@ namespace CellexalVR.Interaction
                     drawTool.SetActive(false);
                     deleteTool.SetActive(false);
                     minimizer.SetActive(false);
-                    //rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
-                    rightLaser.enabled = true;
+                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
+                    //rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                     rightControllerBodyRenderer.material = normalMaterial;
                     break;
