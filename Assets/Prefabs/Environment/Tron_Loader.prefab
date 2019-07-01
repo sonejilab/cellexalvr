@@ -10309,7 +10309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 0}
+  descriptionText: {fileID: 114308157785406722}
   infoMenu: {fileID: 1776617242323400}
   meshStandardColor: {r: 0.4627451, g: 0.43137255, b: 0, a: 1}
   meshHighlightColor: {r: 0.9843137, g: 1, b: 0, a: 1}

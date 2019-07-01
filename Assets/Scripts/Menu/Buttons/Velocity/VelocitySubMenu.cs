@@ -16,8 +16,8 @@ namespace CellexalVR.Menu.SubMenus
         public TextMeshPro speedText;
 
         private List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
-        Vector3 startPosition = new Vector3(-0.37f, 1f, 0.1f);
-        Vector3 nextButtonPosition = new Vector3(-0.37f, 1f, 0.1f);
+        Vector3 startPosition = new Vector3(-0.37f, 1f, 0.0f);
+        Vector3 nextButtonPosition = new Vector3(-0.37f, 1f, 0.0f);
         Vector3 positionIncCol = new Vector3(0.185f, 0f, 0f);
         Vector3 positionIncRow = new Vector3(0f, 0f, -0.2f);
 
@@ -73,6 +73,9 @@ namespace CellexalVR.Menu.SubMenus
             {
                 button.DeactivateOutline();
             }
+            frequencyText.text = "Frequency: 0.2";
+            thresholdText.text = "Threshold: 0";
+            speedText.text = "Speed: 1";
         }
 
         private void DestroyButtons()
@@ -82,6 +85,7 @@ namespace CellexalVR.Menu.SubMenus
                 Destroy(button.gameObject);
             }
             buttons.Clear();
+            nextButtonPosition = startPosition;
         }
     }
 }
