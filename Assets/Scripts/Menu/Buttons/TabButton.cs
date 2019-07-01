@@ -20,7 +20,6 @@ namespace CellexalVR.Menu.Buttons
         private Color standardColor = Color.black;
         private Color highlightColor = Color.blue;
         private readonly string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
-        //private readonly string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][BasePointerRenderer_ObjectInteractor_Container]";
         private bool highlight;
         private int frameCount;
         private bool laserInside;
@@ -104,7 +103,6 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerEnter(Collider other)
         {
-            print("on trigger enter - " + other.gameObject.name);
             if (other.gameObject.name == laserCollider)
             {
                 highlight = true;
@@ -115,7 +113,6 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerExit(Collider other)
         {
-            print("on trigger exit - " + other.gameObject.name);
             if (other.gameObject.name == laserCollider)
             {
                 controllerInside = false;

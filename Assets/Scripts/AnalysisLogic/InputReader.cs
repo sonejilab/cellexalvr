@@ -243,6 +243,7 @@ namespace CellexalVR.AnalysisLogic
                     }
                     combGraph.GraphNumber = facsGraphCounter;
                     combGraph.GraphName = name;
+                    combGraph.tag = "Subgraph";
                 }
                 //combGraph.gameObject.name = combGraph.GraphName;
                 //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
