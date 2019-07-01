@@ -205,10 +205,10 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
                 CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
             }
-            if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
-            {
-                SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            }
+            //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
+            //{
+            //    SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            //}
             referenceManager.heatmapGenerator.HighLightGene(geneName);
             referenceManager.networkGenerator.HighLightGene(geneName);
         }
@@ -218,54 +218,54 @@ namespace CellexalVR.AnalysisLogic
 
         //private void QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
         //{
-            //string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_gene_expression.R").FixFilePath();
-            //string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + geneName;
-            ////string func = "write.table(cellexalObj@data[\"" + geneName + "\", cellexalObj@data[\"" +
-            ////    geneName + "\",] > 0], file=\"" + CellexalUser.UserSpecificFolder.UnFixFilePath() +
-            ////    "\\\\gene_expr.txt\", append=FALSE, row.names=TRUE, col.names=FALSE, sep=\" \", quote=FALSE)";
-            ////string result = string.Empty;
-            //while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
-            //{
-            //    yield return null;
-            //}
-            ////Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            //Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            //t.Start();
-            //CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
-            //var stopwatch = new System.Diagnostics.Stopwatch();
-            //stopwatch.Start();
-            //while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
-            //{
-            //    yield return null;
-            //}
+        //string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_gene_expression.R").FixFilePath();
+        //string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + geneName;
+        ////string func = "write.table(cellexalObj@data[\"" + geneName + "\", cellexalObj@data[\"" +
+        ////    geneName + "\",] > 0], file=\"" + CellexalUser.UserSpecificFolder.UnFixFilePath() +
+        ////    "\\\\gene_expr.txt\", append=FALSE, row.names=TRUE, col.names=FALSE, sep=\" \", quote=FALSE)";
+        ////string result = string.Empty;
+        //while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
+        //{
+        //    yield return null;
+        //}
+        ////Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+        //Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+        //t.Start();
+        //CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
+        //var stopwatch = new System.Diagnostics.Stopwatch();
+        //stopwatch.Start();
+        //while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
+        //{
+        //    yield return null;
+        //}
 
-            //stopwatch.Stop();
-            //CellexalLog.Log("Get gene expression R script finished in " + stopwatch.Elapsed.ToString());
+        //stopwatch.Stop();
+        //CellexalLog.Log("Get gene expression R script finished in " + stopwatch.Elapsed.ToString());
 
-            //stopwatch.Reset();
-            //stopwatch.Start();
-            //ArrayList expressions = hDF5Handler.GetGeneExpressions(geneName, coloringMethod);
-            //GetComponent<AudioSource>().Play();
-
-
-            //graphManager.ColorAllGraphsByGeneExpression(expressions);
+        //stopwatch.Reset();
+        //stopwatch.Start();
+        //ArrayList expressions = hDF5Handler.GetGeneExpressions(geneName, coloringMethod);
+        //GetComponent<AudioSource>().Play();
 
 
-            //if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
-            //{
-            //    var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
-            //    foreach (Cell c in cells.Values)
-            //    {
-            //        c.SaveExpression(geneName + " " + coloringMethod, removedGene);
-            //    }
-            //}
-            //if (triggerEvent)
-            //{
-            //    CellexalEvents.GraphsColoredByGene.Invoke();
-            //}
-            //CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+        //graphManager.ColorAllGraphsByGeneExpression(expressions);
 
-            //CellexalEvents.CommandFinished.Invoke(true);
+
+        //if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
+        //{
+        //    var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+        //    foreach (Cell c in cells.Values)
+        //    {
+        //        c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+        //    }
+        //}
+        //if (triggerEvent)
+        //{
+        //    CellexalEvents.GraphsColoredByGene.Invoke();
+        //}
+        //CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+
+        //CellexalEvents.CommandFinished.Invoke(true);
         //}
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)

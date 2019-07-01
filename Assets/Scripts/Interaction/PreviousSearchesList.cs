@@ -41,7 +41,7 @@ namespace CellexalVR.Interaction
         {
             foreach (var node in previousSearchesListNodes)
             {
-                if (node.NameOfThing == name && node.Type == type && node.ColoringMethod == coloringMethod)
+                if (node.NameOfThing.ToLower() == name.ToLower() && node.Type == type && node.ColoringMethod == coloringMethod)
                     return true;
             }
             return false;

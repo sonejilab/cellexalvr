@@ -22,7 +22,7 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// The name of the thing that is displayed.
         /// </summary>
-        public string NameOfThing { get; protected set; }
+        public string NameOfThing { get; protected set; } = "";
         /// <summary>
         /// The method of coloring that is used to color this thing.
         /// </summary>
@@ -80,7 +80,10 @@ namespace CellexalVR.Interaction
                 referenceManager.cellManager.ColorByIndex(NameOfThing);
                 referenceManager.gameManager.InformColorByIndex(NameOfThing);
             }
-            referenceManager.previousSearchesList.AddEntry(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod);
+            if (!referenceManager.previousSearchesList.Contains(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod))
+            {
+                referenceManager.previousSearchesList.AddEntry(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod);
+            }
             referenceManager.keyboardHandler.Clear();
             referenceManager.autoCompleteList.ClearList();
         }
