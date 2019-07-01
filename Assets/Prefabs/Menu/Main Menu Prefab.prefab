@@ -17375,7 +17375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1893605410370618}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17460,7 +17460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 1, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 0.8161765, b: 0.8161765, a: 1}
@@ -17486,7 +17486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102503241304103238}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17500,7 +17500,7 @@ MonoBehaviour:
   controllerInside: 0
   buttonsToActivate: {fileID: 1432252269728652}
   menuToClose: {fileID: 1640709649760356}
-  textMeshToUndarken: {fileID: 102333440239550814}
+  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
   deleteSceneObjs: 1
 --- !u!114 &114085970965995968
@@ -17515,7 +17515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102899369248857218}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17540,7 +17540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102847888490210446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17589,7 +17589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102426701696512934}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17730,7 +17730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1320603380090762}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -17757,7 +17757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102503241304103238}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17796,7 +17796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102847888490210446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0.5803922}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17808,7 +17808,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  descriptionOnButton: {fileID: 102863579610058584}
+  descriptionOnButton: {fileID: 0}
   activeOutline: {fileID: 1920721293312574}
   parentMenu: {fileID: 114285038929829662}
 --- !u!114 &114130335564865692
@@ -18057,7 +18057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0.5, b: 0, a: 0.819}
   meshHighlightColor: {r: 0.15862082, g: 1, b: 0, a: 1}
@@ -18085,7 +18085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18111,7 +18111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102503241304103238}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18140,7 +18140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1089405817799522}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -18249,7 +18249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1893605410370618}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -18276,7 +18276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18300,7 +18300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18366,7 +18366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18392,7 +18392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102503241304103238}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18433,7 +18433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102899369248857218}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18578,7 +18578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18745,7 +18745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0.5019608, b: 0, a: 0.81960785}
   meshHighlightColor: {r: 0.15686275, g: 1, b: 0, a: 1}
@@ -18824,7 +18824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102503241304103238}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18909,7 +18909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1088596352560000}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -19283,7 +19283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0.5568628, g: 0, b: 0, a: 0.78431374}
   meshHighlightColor: {r: 1, g: 0, b: 0, a: 1}
@@ -19338,7 +19338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1493143415159324}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -19481,7 +19481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0.5568628, g: 0, b: 0, a: 0.78431374}
   meshHighlightColor: {r: 1, g: 0, b: 0, a: 1}
@@ -19518,7 +19518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1585558334406092}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19547,7 +19547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19573,7 +19573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102899369248857218}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19612,7 +19612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102620369923486092}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19714,7 +19714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102760058113568102}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19787,7 +19787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0.5588235, g: 0, b: 0, a: 0.784}
   meshHighlightColor: {r: 1, g: 0, b: 0, a: 1}
@@ -19815,7 +19815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102620369923486092}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19896,7 +19896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19922,7 +19922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19948,7 +19948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102620369923486092}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19979,7 +19979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20096,7 +20096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20120,7 +20120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102620369923486092}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20338,7 +20338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102536813443357636}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1096738337014818}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -20365,7 +20365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102426701696512934}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20438,7 +20438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20492,7 +20492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20518,7 +20518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1585558334406092}
   meshStandardColor: {r: 0.07352942, g: 0.07352942, b: 0.07352942, a: 1}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -20545,7 +20545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102899369248857218}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20569,7 +20569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20735,7 +20735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102080517038186312}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1089405817799522}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20817,7 +20817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20867,7 +20867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102620369923486092}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20919,7 +20919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102899369248857218}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20971,7 +20971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102039989816382888}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21023,7 +21023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102503241304103238}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21047,7 +21047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21087,7 +21087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102620369923486092}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21111,7 +21111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102536813443357636}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 1096738337014818}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21237,7 +21237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102426701696512934}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21352,7 +21352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102927391881026446}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21508,7 +21508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102899369248857218}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21532,7 +21532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 102778039920295758}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0.5019608, b: 0, a: 0.81960785}
   meshHighlightColor: {r: 0.15686275, g: 1, b: 0, a: 1}

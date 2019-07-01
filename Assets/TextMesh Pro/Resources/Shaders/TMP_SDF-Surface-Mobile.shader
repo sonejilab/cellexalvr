@@ -54,7 +54,7 @@ SubShader {
 	}
 
 	LOD 300
-	Cull [_CullMode]
+	Cull Back
 
 	CGPROGRAM
 	#pragma surface PixShader Lambert alpha:blend vertex:VertShader noforwardadd nolightmap nodirlightmap

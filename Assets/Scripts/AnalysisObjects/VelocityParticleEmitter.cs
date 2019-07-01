@@ -22,6 +22,7 @@ namespace CellexalVR.AnalysisObjects
         private float threshold = 0;
         private float speed = 1;
         private float oldArrowEmitRate;
+        private bool playing = false;
         private bool emitting = false;
 
         private void Start()
@@ -30,7 +31,7 @@ namespace CellexalVR.AnalysisObjects
             InvokeRepeating("DoEmit", 0f, arrowEmitRate);
             particleSystem = gameObject.GetComponent<ParticleSystem>();
             SetColors();
-            particleSystem.Play();
+            Play();
             oldArrowEmitRate = arrowEmitRate;
         }
 
@@ -43,10 +44,9 @@ namespace CellexalVR.AnalysisObjects
         {
             if (oldArrowEmitRate != arrowEmitRate)
             {
-                CancelInvoke();
-                particleSystem.Clear();
-                InvokeRepeating("DoEmit", 0f, arrowEmitRate);
                 oldArrowEmitRate = arrowEmitRate;
+                Stop();
+                Play();
             }
         }
 
@@ -87,6 +87,7 @@ namespace CellexalVR.AnalysisObjects
         public void Play()
         {
             particleSystem.Play();
+            InvokeRepeating("DoEmit", 0f, arrowEmitRate);
         }
 
         public void Stop()
@@ -169,7 +170,13 @@ namespace CellexalVR.AnalysisObjects
         {
             particleSystem = gameObject.GetComponent<ParticleSystem>();
             ParticleSystem.ColorBySpeedModule colorBySpeedModule = particleSystem.colorBySpeed;
-            colorBySpeedModule.color = new ParticleSystem.MinMaxGradient(CellexalConfig.Config.VelocityParticlesLowColor, CellexalConfig.Config.VelocityParticlesHighColor);
+            Gradient gradient = new Gradient();
+            gradient.mode = GradientMode.Blend;
+            gradient.colorKeys = new GradientColorKey[] {
+                new GradientColorKey(CellexalConfig.Config.VelocityParticlesLowColor, 0),
+                new GradientColorKey(CellexalConfig.Config.VelocityParticlesHighColor, 1) };
+
+            colorBySpeedModule.color = new ParticleSystem.MinMaxGradient(gradient);
         }
 
     }

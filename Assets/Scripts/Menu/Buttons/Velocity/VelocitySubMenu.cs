@@ -62,6 +62,7 @@ namespace CellexalVR.Menu.SubMenus
                 Renderer buttonRenderer = newButton.GetComponent<Renderer>();
                 buttonRenderer.material = new Material(buttonRenderer.material);
                 buttons.Add(buttonScript);
+                newButton.SetActive(true);
                 buttonNbr++;
             }
         }
