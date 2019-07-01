@@ -82,6 +82,7 @@ namespace CellexalVR.AnalysisObjects
         private System.Random rand;
         private string oldName;
         private NetworkHandler networkHandler;
+        private GameObject highlightCircle;
 
         private void OnValidate()
         {
@@ -1194,10 +1195,15 @@ namespace CellexalVR.AnalysisObjects
             {
                 NetworkNode nn = nodes[nodeHit];
                 nn.Highlight();
-                var circle = Instantiate(movingOutlineCircle);
-                circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
-                circle.transform.position = nn.transform.position;
-                circle.transform.parent = transform;
+                if (highlightCircle != null)
+                {
+                    Destroy(highlightCircle);
+                    highlightCircle = null;
+                }
+                highlightCircle = Instantiate(movingOutlineCircle);
+                highlightCircle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
+                highlightCircle.transform.position = nn.transform.position;
+                highlightCircle.transform.parent = transform;
             }
             //int nodeHit = Array.FindIndex(nodes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
         }

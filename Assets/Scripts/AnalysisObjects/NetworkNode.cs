@@ -121,6 +121,7 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
                 controllerInside = Center.controllerInsideSomeNode = false;
                 Center.ToggleNodeColliders(true, gameObject.name);
+                print("network node ontriggerstay");
             }
         }
 
