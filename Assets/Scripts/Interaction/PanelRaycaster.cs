@@ -116,9 +116,10 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (!CrossSceneInformation.Normal || !controllerModelSwitcher.Ready() ||
-                grabbingObject || referenceManager.selectionToolCollider.IsSelectionToolEnabled())
+            if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
+                !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled()))
                 return;
+
             var raycastingSource = referenceManager.rightLaser.transform;
             var device = SteamVR_Controller.Input((int)rightController.index);
             var ray = new Ray(raycastingSource.position, raycastingSource.forward);

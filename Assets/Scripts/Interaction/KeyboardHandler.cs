@@ -282,7 +282,10 @@ namespace CellexalVR.Interaction
         public void BuildKeyboard()
         {
             GatherKeys();
-            referenceManager.previousSearchesList.BuildPreviousSearchesList();
+            if (referenceManager.previousSearchesList)
+            {
+                referenceManager.previousSearchesList.BuildPreviousSearchesList();
+            }
 
             Vector2 size = maxPos - minPos;
             SwitchLayout(currentLayout);
