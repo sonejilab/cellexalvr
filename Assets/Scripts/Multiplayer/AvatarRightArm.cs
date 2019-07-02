@@ -45,8 +45,8 @@ namespace CellexalVR.Multiplayer
 
             if (rightControllerPos == null)
             {
-                rightControllerPos = GameObject.Find("Controller (right)").GetComponent<Transform>();
-
+                rightControllerPos = GameObject.Find("Controller (right)")?.GetComponent<Transform>();
+                return;
             }
             if (!target)
             {
