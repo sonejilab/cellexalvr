@@ -790,7 +790,11 @@ namespace CellexalVR.AnalysisObjects
             subGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
             subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
             SliceClustering();
-            subGraph.GetComponent<BoxCollider>().size = graph.GetComponent<BoxCollider>().size;
+            foreach (BoxCollider col in graph.GetComponents<BoxCollider>())
+            {
+                var newCol = subGraph.gameObject.AddComponent<BoxCollider>();
+                newCol.size = col.size;
+            }
 
             while (isCreating)
             {
