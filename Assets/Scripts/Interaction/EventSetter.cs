@@ -74,9 +74,19 @@ namespace CellexalVR.Interaction
 
         public void RightMenuUpHoldEvent()
         {
-            if (referenceManager.rightLaser.isActiveAndEnabled)
+            if (referenceManager.rightLaser.IsTracerVisible() &&
+                referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
             {
                 pushBack.Push();
+            }
+        }
+
+        public void RightMenuDownHoldEvent()
+        {
+            if (referenceManager.rightLaser.IsTracerVisible() &&
+                referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+            {
+                pushBack.Pull();
             }
         }
 
@@ -85,14 +95,6 @@ namespace CellexalVR.Interaction
             if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
-            }
-        }
-
-        public void RightMenuDownHoldEvent()
-        {
-            if (referenceManager.rightLaser.isActiveAndEnabled)
-            {
-                pushBack.Pull();
             }
         }
 

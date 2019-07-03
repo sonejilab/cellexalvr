@@ -15,6 +15,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Extensions;
+using System.Linq;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -57,7 +58,9 @@ namespace CellexalVR.AnalysisObjects
         /// Item1: group number, Item2: group width in coordinates, Item3: number of cells in the group
         /// </summary>
         private List<Tuple<int, float, int>> groupWidths;
+        private List<Tuple<int, float, int>> attributeWidths;
         private Dictionary<int, UnityEngine.Color> groupingColors;
+        private Dictionary<int, UnityEngine.Color> attributeColors;
         private string[] genes;
         private int bitmapWidth = 4096;
         private int bitmapHeight = 4096;
@@ -67,8 +70,10 @@ namespace CellexalVR.AnalysisObjects
         private int heatmapHeight = 3596;
         private int geneListX = 3846;
         private int geneListWidth = 250;
-        private int groupBarY = 100;
+        private int attributeBarY = 0;
+        private int groupBarY = 120;
         private int groupBarHeight = 100;
+        private int attributeBarHeight = 100;
         private System.Drawing.Font geneFont;
         private int numberOfExpressionColors;
         private SolidBrush[] heatmapBrushes;
@@ -215,9 +220,9 @@ namespace CellexalVR.AnalysisObjects
             }
             if (CrossSceneInformation.Normal || CrossSceneInformation.Tutorial)
             {
-                bool correctModel = controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers
-                                    || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.Keyboard
-                                    || controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.WebBrowser;
+                bool correctModel = controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                                    || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
+                                    || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser;
                 if (correctModel)
                     HeatmapRaycast();
             }
@@ -333,16 +338,38 @@ namespace CellexalVR.AnalysisObjects
 
             cells = new string[selection.Count];
             groupWidths = new List<Tuple<int, float, int>>();
+            attributeWidths = new List<Tuple<int, float, int>>();
             groupingColors = new Dictionary<int, UnityEngine.Color>();
+            attributeColors = new Dictionary<int, UnityEngine.Color>();
             float cellWidth = (float)heatmapWidth / selection.Count;
             int lastGroup = -1;
-            int width = 0;
+            int lastAttribute = -1;
+            int groupWidth = 0;
+            int attributeWidth = 0;
             // read the cells and their groups
             for (int i = 0; i < selection.Count; ++i)
             {
                 Graph.GraphPoint graphpoint = selection[i];
                 int group = graphpoint.Group;
                 groupingColors[group] = graphpoint.GetColor();
+                //var attributes = cellManager.GetCell(graphpoint.Label).Attributes;
+                //if (attributes.Count > 0)
+                //{
+                //    var attribute = attributes.First();
+                //    attributeColors[attribute.Value] = referenceManager.selectionManager.GetColor(attribute.Value);
+                //    if (lastAttribute == -1)
+                //    {
+                //        lastAttribute = attribute.Value;
+                //    }
+
+                //    if (attribute.Value != lastAttribute)
+                //    {
+                //        attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, (int)attributeWidth));
+                //        attributeWidth = 0;
+                //        lastAttribute = attribute.Value;
+                //    }
+                //    //print("key : " + attributes.First().Key + ", value : " + attributes.First().Value);
+                //}
                 cells[i] = graphpoint.Label;
                 if (lastGroup == -1)
                 {
@@ -352,14 +379,16 @@ namespace CellexalVR.AnalysisObjects
                 // used for saving the widths of the groups later
                 if (group != lastGroup)
                 {
-                    groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, (int)width));
-                    width = 0;
+                    groupWidths.Add(new Tuple<int, float, int>(lastGroup, groupWidth * cellWidth, (int)groupWidth));
+                    groupWidth = 0;
                     lastGroup = group;
                 }
-                width++;
+                groupWidth++;
+                attributeWidth++;
             }
             // add the last group as well
-            groupWidths.Add(new Tuple<int, float, int>(lastGroup, width * cellWidth, width));
+            groupWidths.Add(new Tuple<int, float, int>(lastGroup, groupWidth * cellWidth, groupWidth));
+            attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, attributeWidth));
             if (genes == null || genes.Length == 0)
             {
                 try
@@ -489,6 +518,13 @@ namespace CellexalVR.AnalysisObjects
 
                 groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
             }
+
+            //Dictionary<int, SolidBrush> attributeBrushes = new Dictionary<int, SolidBrush>();
+            //foreach (var entry in attributeColors)
+            //{
+            //    UnityEngine.Color unitycolor = entry.Value;
+            //    attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
+            //}
             // draw a white background
             graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
 
@@ -496,6 +532,18 @@ namespace CellexalVR.AnalysisObjects
             float ycoord = heatmapY;
             float xcoordInc = (float)heatmapWidth / cells.Length;
             float ycoordInc = (float)heatmapHeight / genes.Length;
+            //float cellwidth = (float)heatmapWidth / attributeColors.Count;
+            //// draw the grouping bar
+            //for (int i = 0; i < attributeBrushes.Count; ++i)
+            //{
+            //    int attributeNbr = attributeWidths[i].Item1;
+            //    float attributeWidth = attributeWidths[i].Item2;
+            //    graphics.FillRectangle(attributeBrushes[attributeNbr], xcoord, attributeBarY, attributeWidth, attributeBarHeight);
+            //    xcoord += attributeWidth;
+            //}
+
+            //xcoord = heatmapX;
+            //ycoord = heatmapY;
             // draw the grouping bar
             for (int i = 0; i < groupWidths.Count; ++i)
             {
@@ -504,7 +552,7 @@ namespace CellexalVR.AnalysisObjects
                 graphics.FillRectangle(groupBrushes[groupNbr], xcoord, groupBarY, groupWidth, groupBarHeight);
                 xcoord += groupWidth;
             }
-            xcoord = heatmapX;
+            //xcoord = heatmapX;
 
             while (db.QueryRunning)
             {

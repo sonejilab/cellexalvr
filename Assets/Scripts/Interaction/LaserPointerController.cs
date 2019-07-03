@@ -18,7 +18,6 @@ namespace CellexalVR.Interaction
         //private int layerMaskGraph;
         //private int layerMaskNetwork;
         //private int layerMaskOther;
-        private bool alwaysActive;
         private bool keyboardActive;
         private bool touchingObject;
         private bool hitLastFrame;
@@ -27,6 +26,7 @@ namespace CellexalVR.Interaction
         public ReferenceManager referenceManager;
         public Transform origin;
         public bool Override { get; set; }
+        public bool alwaysActive;
 
         private void OnValidate()
         {
@@ -74,14 +74,18 @@ namespace CellexalVR.Interaction
                     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
                 }
             }
+
             else
             {
                 origin.localEulerAngles = new Vector3(0f, 0f, 0f);
             }
-
             if (!hitMenu && alwaysActive)
             {
                 origin.localRotation = Quaternion.Euler(0, 0, 0);
+                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                {
+                    controllerModelSwitcher.ActivateDesiredTool();
+                }
 
 
             }

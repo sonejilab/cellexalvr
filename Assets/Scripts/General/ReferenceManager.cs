@@ -148,7 +148,6 @@ namespace CellexalVR.General
         public void AttemptSetReferences()
         {
             // sorry about this monstrosity
-
             Undo.RecordObject(this, "ReferenceManager Auto-populate");
 
             rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
