@@ -9,13 +9,13 @@ namespace CellexalVR.Menu.Buttons.General
     public class ShowAxesButton : CellexalButton
     {
         private GraphManager graphManager;
-        private bool activate;
+        private bool activated;
 
         void Start()
         {
             graphManager = referenceManager.graphManager;
             //GetComponent<SimpleTextRotator>().SetTransforms(this.transform, this.transform);
-            activate = false;
+            activated = false;
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
@@ -30,8 +30,8 @@ namespace CellexalVR.Menu.Buttons.General
 
         public override void Click()
         {
-            graphManager.SetAxesVisible(activate);
-            activate = !activate;
+            activated = !activated;
+            graphManager.SetAxesVisible(activated);
         }
 
         void TurnOn()

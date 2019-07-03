@@ -223,7 +223,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (selectionManager.RObjectUpdating || !File.Exists(groupingFilepath) || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
