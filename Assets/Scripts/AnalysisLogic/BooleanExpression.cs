@@ -130,7 +130,7 @@ namespace CellexalVR.AnalysisLogic
 
                         c = s[i];
                     } while (ParseChar(c) == Token.VALUE);
-                    return new ValueExpr(s.Substring(i - tokenLength, tokenLength));
+                    return new AttributeExpr(s.Substring(i - tokenLength, tokenLength));
             }
             return null;
         }
@@ -177,11 +177,65 @@ namespace CellexalVR.AnalysisLogic
             public abstract override string ToString();
         }
 
-        public class ValueExpr : Expr
+        public class GeneExpr : Expr
+        {
+            public string gene;
+            public GeneExpr() { }
+            public GeneExpr(string gene)
+            {
+                if (aliases.ContainsKey(gene))
+                {
+                    this.gene = aliases[gene];
+                }
+                else
+                {
+                    this.gene = gene;
+                }
+            }
+
+            public override bool Eval(Cell cell)
+            {
+                return false;
+            }
+
+            public override string ToString()
+            {
+                return gene;
+            }
+        }
+
+        public class FacsExpr : Expr
+        {
+            public string facs;
+            public FacsExpr() { }
+            public FacsExpr(string facs)
+            {
+                if (aliases.ContainsKey(facs))
+                {
+                    this.facs = aliases[facs];
+                }
+                else
+                {
+                    this.facs = facs;
+                }
+            }
+
+            public override bool Eval(Cell cell)
+            {
+                return cell.Facs.ContainsKey(facs.ToLower());
+            }
+
+            public override string ToString()
+            {
+                return facs;
+            }
+        }
+
+        public class AttributeExpr : Expr
         {
             public string attribute;
-            public ValueExpr() { }
-            public ValueExpr(string attribute)
+            public AttributeExpr() { }
+            public AttributeExpr(string attribute)
             {
                 if (aliases.ContainsKey(attribute))
                 {

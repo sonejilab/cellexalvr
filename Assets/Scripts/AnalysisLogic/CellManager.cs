@@ -36,6 +36,10 @@ namespace CellexalVR.AnalysisLogic
         public GameObject lineBetweenTwoGraphPointsPrefab;
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
+        /// <summary>
+        /// Lowest and highest range of facs measurements. <see cref="Tuple{T1, T2}.Item1"/> is the lowest value and <see cref="Tuple{T1, T2}.Item2"/> is the highest.
+        /// </summary>
+        public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
         //public HDF5Handler hDF5Handler;
 
 
@@ -107,6 +111,7 @@ namespace CellexalVR.AnalysisLogic
             //FarGroupInfo = referenceManager.FarGroupInfo;
             recolored = new Dictionary<Cell, int>();
             selectionList = new Dictionary<Graph.GraphPoint, int>();
+            FacsRanges = new Dictionary<string, Tuple<float, float>>();
         }
 
         /// <summary>
@@ -534,14 +539,9 @@ namespace CellexalVR.AnalysisLogic
             cells[cellname].AddAttribute(attributeType, group);
         }
 
-        internal void AddFacs(string cellName, string facs, int index)
+        internal void AddFacs(string cellName, string facs, float value)
         {
-            if (index < 0 || index >= CellexalConfig.Config.GraphNumberOfExpressionColors)
-            {
-                // value hasn't been normalized correctly
-                print(facs + " " + index);
-            }
-            cells[cellName].AddFacs(facs, index);
+            cells[cellName].AddFacs(facs, value);
         }
 
         internal void AddFacsValue(string cellName, string facs, string value)
@@ -567,9 +567,23 @@ namespace CellexalVR.AnalysisLogic
                 }
 
             }
+
+            name = name.ToLower();
+            int nColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             foreach (Cell cell in cells.Values)
             {
-                cell.ColorByIndex(name);
+                Tuple<float, float> range = FacsRanges[name];
+                float expr = cell.Facs[name];
+                int group = 0;
+                if (expr == range.Item2)
+                {
+                    group = nColors - 1;
+                }
+                else
+                {
+                    group = (int)((cell.Facs[name] - range.Item1) / (range.Item2 - range.Item1) * nColors);
+                }
+                cell.ColorByGeneExpression(group);
             }
             CellexalEvents.GraphsColoredByIndex.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);

@@ -32,9 +32,11 @@ namespace CellexalVR.Interaction
 
         void OnTriggerEnter(Collider other)
         {
+            print(other.name);
             int colorIndex = referenceManager.selectionToolCollider.currentColorIndex;
             if (gameObject.GetComponent<Renderer>().material.color != referenceManager.selectionToolCollider.Colors[colorIndex])
             {
+                print(other.name + " color mismatch");
                 selectionManager.AddGraphpointToSelection(graphPoint);
                 foreach (Selectable sel in graphPoint.lineBetweenCellsCubes)
                 {

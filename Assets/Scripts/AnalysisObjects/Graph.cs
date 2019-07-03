@@ -1083,6 +1083,7 @@ namespace CellexalVR.AnalysisObjects
         public void RecolorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
         {
             //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
+            // TODO CELLEXAL: make the most expressed a percent of the total or something that isn't a hard coded 27
             if (i > 27 && CellexalConfig.Config.GraphMostExpressedMarker)
             {
                 var circle = Instantiate(movingOutlineCircle);
