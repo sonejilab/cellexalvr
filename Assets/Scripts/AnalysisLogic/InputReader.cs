@@ -58,7 +58,6 @@ namespace CellexalVR.AnalysisLogic
 
         private Bitmap image1;
 
-
         [Tooltip("Automatically loads the Bertie dataset")]
         public bool debug = false;
 
@@ -468,7 +467,6 @@ namespace CellexalVR.AnalysisLogic
             List<Tuple<string, BooleanExpression.Expr>> expressions = new List<Tuple<string, BooleanExpression.Expr>>(files.Length);
             foreach (string file in files)
             {
-                // TODO CELLEXAL: add aliases support and stuff to these files
                 expressions.Add(new Tuple<string, BooleanExpression.Expr>(file, BooleanExpression.ParseFile(file)));
             }
 
@@ -506,8 +504,8 @@ namespace CellexalVR.AnalysisLogic
         //     yield return null;
         // }
 
-        
-        
+
+
         /// <summary>
         /// Start the R session that will run in the background. 
         /// </summary>
@@ -657,6 +655,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 string line = streamReader.ReadLine();
                 SplitValues(line, ref values, separators);
+                string cellName = values[0];
                 for (int j = 0; j < values.Length - 1; ++j)
                 {
 
@@ -667,27 +666,20 @@ namespace CellexalVR.AnalysisLogic
                         max[j] = value;
 
                 }
-            }
-            // now that we know the min and max values we can iterate over the values once again
-            streamReader.DiscardBufferedData();
-            streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-            // read header line
-            streamReader.ReadLine();
-            for (i = 0; !streamReader.EndOfStream; ++i)
-            {
-                string line = streamReader.ReadLine();
-                SplitValues(line, ref values, separators);
-                string cellName = values[0];
                 for (int j = 0; j < values.Length - 1; ++j)
                 {
                     // normalize to the range [0, 29]
-                    float colorIndexFloat = ((float.Parse(values[j + 1]) - min[j]) / (max[j] - min[j])) * (CellexalConfig.Config.GraphNumberOfExpressionColors - 1);
-                    int colorIndex = Mathf.FloorToInt(colorIndexFloat);
-                    cellManager.AddFacs(cellName, header[j], colorIndex);
+                    cellManager.AddFacs(cellName, header[j], float.Parse(values[j + 1]));
                     cellManager.AddFacsValue(cellName, header[j], values[j + 1]);
                     //print(values[j + 1]);
                 }
             }
+            // set the min and max values
+            for (i = 0; i < header.Length; ++i)
+            {
+                cellManager.FacsRanges[header[i].ToLower()] = new Tuple<float, float>(min[i], max[i]);
+            }
+
             streamReader.Close();
             fileStream.Close();
             indexMenu.CreateButtons(header);

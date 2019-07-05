@@ -24,7 +24,8 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public GameObject graphpointsPrefab;
         public GameObject graphPrefab;
-        public GameObject AxesPrefab;
+        public GameObject AxesPrefabColoured;
+        public GameObject AxesPrefabUncoloured;
         public Material graphPointMaterialPrefab;
         public GameObject skeletonPrefab;
         public Mesh graphPointMesh;
@@ -182,20 +183,22 @@ namespace CellexalVR.AnalysisObjects
         {
             graph.axisNames = axisNames;
             Vector3 position = graph.ScaleCoordinates(graph.minCoordValues);
-            GameObject axes = Instantiate(AxesPrefab, graph.transform);
-            axes.transform.localPosition = position - (Vector3.one * 0.01f);
-            Vector3 size = graph.ScaleCoordinates(graph.maxCoordValues);
-            float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
-            axes.transform.localScale = Vector3.one * longestAx;
+            GameObject axes;
             if (graphType == GraphType.FACS)
             {
+                axes = Instantiate(AxesPrefabColoured, graph.transform);
                 axes.GetComponent<AxesArrow>().SetColors(axisNames, graph.minCoordValues, graph.maxCoordValues);
                 axes.SetActive(true);
             }
             else
             {
+                axes = Instantiate(AxesPrefabUncoloured, graph.transform);
                 axes.SetActive(false);
             }
+            axes.transform.localPosition = position - (Vector3.one * 0.01f);
+            Vector3 size = graph.ScaleCoordinates(graph.maxCoordValues);
+            float longestAx = Mathf.Max(Mathf.Max(size.x, size.y), size.z);
+            axes.transform.localScale = Vector3.one * longestAx;
             TextMeshPro[] texts = axes.GetComponentsInChildren<TextMeshPro>();
             graph.axes = axes;
             for (int i = 0; i < texts.Length; i++)
@@ -727,7 +730,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void CreateSubGraphs(List<string> attributes)
         {
-            BooleanExpression.Expr expr = new BooleanExpression.ValueExpr(attributes[0]);
+            BooleanExpression.Expr expr = new BooleanExpression.AttributeExpr(attributes[0]);
 
             string name = attributes[0];
             if (name.Contains('@'))
@@ -745,7 +748,7 @@ namespace CellexalVR.AnalysisObjects
                     name += " - " + attributes[i];
                 }
                 BooleanExpression.Expr tempExpr = expr;
-                expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.ValueExpr(attributes[i]));
+                expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.AttributeExpr(attributes[i]));
             }
             StartCoroutine(CreateSubgraphsCoroutine(expr, attributes, graphManager.originalGraphs, name));
         }

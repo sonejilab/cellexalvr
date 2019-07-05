@@ -15,7 +15,7 @@ namespace CellexalVR.AnalysisLogic
         public List<Graph.GraphPoint> GraphPoints;
 
         public Dictionary<string, int> Attributes { get; private set; }
-        public Dictionary<string, int> Facs { get; private set; }
+        public Dictionary<string, float> Facs { get; private set; }
         public Dictionary<string, string> FacsValue { get; private set; }
         public int ExpressionLevel { get; internal set; }
         public string Label { get; set; }
@@ -37,7 +37,7 @@ namespace CellexalVR.AnalysisLogic
             this.Label = label;
             GraphPoints = new List<Graph.GraphPoint>();
             Attributes = new Dictionary<string, int>();
-            Facs = new Dictionary<string, int>();
+            Facs = new Dictionary<string, float>();
             FacsValue = new Dictionary<string, string>();
             tempMat = null;
         }
@@ -127,9 +127,17 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="facsName"> The index. </param>
         public void ColorByIndex(string facsName)
         {
+            //foreach (Graph.GraphPoint g in GraphPoints)
+            //{
+            //    g.RecolorGeneExpression(, false);
+            //}
+        }
+
+        public void ColorByGeneExpression(int i)
+        {
             foreach (Graph.GraphPoint g in GraphPoints)
             {
-                g.RecolorGeneExpression(Facs[facsName.ToLower()], false);
+                g.RecolorGeneExpression(i, false);
             }
         }
 
@@ -137,10 +145,10 @@ namespace CellexalVR.AnalysisLogic
         /// Adds a .facs bin index to this cell.
         /// </summary>
         /// <param name="facsName"> The thing's name. </param>
-        /// <param name="index"> The value of the thing. </param>
-        internal void AddFacs(string facsName, int index)
+        /// <param name="value"> The value of the thing. </param>
+        internal void AddFacs(string facsName, float value)
         {
-            Facs[facsName.ToLower()] = index;
+            Facs[facsName.ToLower()] = value;
         }
 
 
