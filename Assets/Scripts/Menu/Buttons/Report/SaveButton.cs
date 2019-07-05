@@ -19,9 +19,9 @@ namespace CellexalVR.Menu.Buttons.Report
         public Sprite gray;
         public Sprite original;
         public ReportListGenerator reportList;
+        public bool changeSprite;
         //private float elapsedTime;
         private float time = 1.0f;
-        private bool changeSprite;
 
         // Use this for initialization
         protected override void Awake()
@@ -57,53 +57,13 @@ namespace CellexalVR.Menu.Buttons.Report
         public override void Click()
         {
             SetButtonActivated(false);
-            StartCoroutine(LogStop());
+            StartCoroutine(referenceManager.reportManager.LogStop(this));
             //elapsedTime = 0.0f;
 
 
         }
 
-        /// <summary>
-        /// Calls R logging function to stop the logging session.
-        /// </summary>
-        IEnumerator LogStop()
-        {
-            descriptionText.text = "Compiling report..";
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
 
-            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
-            {
-                yield return null;
-            }
-
-            Debug.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            t.Start();
-
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
-            {
-                yield return null;
-            }
-
-            stopwatch.Stop();
-            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-            
-
-            changeSprite = false;
-            descriptionText.text = "";
-            SetButtonActivated(true);
-            referenceManager.notificationManager.SpawnNotification("Session report compiled.");
-            //ZipFile.CreateFromDirectory(startPath, zipPath);
-            //reportList.GenerateList();
-            
-            //SendIt();
-            //string startPath = @"c:\example\start";
-            //string zipPath = @"c:\example\result.zip";
-        }
 
         void TurnOff()
         {

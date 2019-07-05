@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
     /// <summary>
@@ -20,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
 
         public override void Click()
         {
-            gameObject.GetComponentInParent<AnalysisObjects.Heatmap>().SaveImage();
+            GetComponentInParent<CellexalVR.AnalysisObjects.Heatmap>().SaveImage();
             device.TriggerHapticPulse(2000);
         }
         public void FinishedButton()

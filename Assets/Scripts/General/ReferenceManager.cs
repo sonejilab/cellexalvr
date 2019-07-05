@@ -114,6 +114,7 @@ namespace CellexalVR.General
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
         public VelocityGenerator velocityGenerator;
+        public ReportManager reportManager;
         #endregion
 
         #region GeneKeyboard
@@ -226,6 +227,7 @@ namespace CellexalVR.General
             screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
+            reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
 
 
 

@@ -223,7 +223,9 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            while (selectionManager.RObjectUpdating || !File.Exists(groupingFilepath) || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (selectionManager.RObjectUpdating || !File.Exists(groupingFilepath)
+                || !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid")
+                ||  File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -233,10 +235,12 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
+
             while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")) 
             {
                 yield return null;
             }
+
             stopwatch.Stop();
             CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
 
@@ -257,83 +261,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
-
-        /// <summary>
-        /// Coroutine for creating a heatmap.
-        /// </summary>
-        //IEnumerator GenerateHeatmapRoutine(string heatmapName)
-        //{
-        //    if (selectionManager.selectionConfirmed)
-        //    {
-        //        GeneratingHeatmaps = true;
-        //        // Show calculators
-        //        calculatorCluster.SetActive(true);
-        //        List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
-
-        //        // Check if more than one cell is selected
-        //        if (selection.Count < 1)
-        //        {
-        //            CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
-        //            yield break;
-        //        }
-
-        //        //int statusId = status.AddStatus("R script generating heatmap");
-        //        //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating heatmap");
-        //        //int statusIdFar = statusDisplayFar.AddStatus("R script generating heatmap");
-
-        //        // if the R object is not updated, wait
-        //        while (selectionManager.RObjectUpdating)
-        //            yield return null;
-
-        //        // Start generation of new heatmap in R
-        //        selectionNr = selectionManager.fileCreationCtr - 1;
-        //        //string home = Directory.GetCurrentDirectory();
-
-        //        string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
-        //        string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").FixFilePath();
-        //        string outputFilePath = (heatmapDirectory + @"\" + heatmapName + ".txt").FixFilePath();
-        //        string args = heatmapDirectory + " " + CellexalUser.UserSpecificFolder + " " + selectionNr + " " + outputFilePath +
-        //                        " " + CellexalConfig.Config.HeatmapNumberOfGenes + " " + statsMethod;
-        //        if (!Directory.Exists(heatmapDirectory))
-        //        {
-        //            CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
-        //            Directory.CreateDirectory(heatmapDirectory);
-        //        }
-        //        CellexalLog.Log("Running R script " + rScriptFilePath.FixFilePath() + " with the arguments \"" + args + "\"");
-        //        var stopwatch = new System.Diagnostics.Stopwatch();
-        //        stopwatch.Start();
-        //        t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args));
-        //        t.Start();
-
-        //        while (t.IsAlive)
-        //        {
-        //            yield return null;
-        //        }
-        //        stopwatch.Stop();
-        //        CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
-        //        //status.RemoveStatus(statusId);
-        //        //statusDisplayHUD.RemoveStatus(statusIdHUD);
-        //        //statusDisplayFar.RemoveStatus(statusIdFar);
-        //        GeneratingHeatmaps = false;
-        //        //File.Delete(newHeatmapFilePath);
-        //        //File.Move(heatmapFilePath + @"\heatmap.png", newHeatmapFilePath);
-
-        //        var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
-        //        heatmap.Init();
-        //        heatmap.transform.parent = transform;
-        //        heatmap.transform.localPosition = heatmapPosition;
-        //        heatmap.selectionNr = selectionNr;
-        //        // save colors before.
-        //        //heatmap.SetVars(colors);
-        //        heatmapList.Add(heatmap);
-        //        //heatmap.UpdateImage(newHeatmapFilePath);
-        //        heatmap.BuildTexture(selection, outputFilePath);
-        //        //heatmap.GetComponent<AudioSource>().Play();
-        //        heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
-        //        heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
-        //        heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-        //    }
-        //}
 
         public void AddHeatmapToList(Heatmap heatmap)
         {

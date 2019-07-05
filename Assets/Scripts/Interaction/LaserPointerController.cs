@@ -58,7 +58,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        // Call every 3rd frame.
+        // Call every 5th frame.
         private void Frame5Update()
         {
             RaycastHit hit;
