@@ -10699,6 +10699,7 @@ MonoBehaviour:
   gray: {fileID: 21300000, guid: 4ff0b9181fd409f4da181d0817abfa6a, type: 3}
   original: {fileID: 21300000, guid: d86608844a3c5f5489af0b60e1747e22, type: 3}
   reportList: {fileID: 0}
+  changeSprite: 0
 --- !u!1 &1383452493116436
 GameObject:
   m_ObjectHideFlags: 0
