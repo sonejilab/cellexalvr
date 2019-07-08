@@ -624,10 +624,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendHandlePressDown", PhotonTargets.Others, heatmapName, hitx, hity);
         }
 
-        public void InformCreateNewHeatmapFromSelection(string heatmapName)
+        public void InformCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop,
+            int selectedGeneBottom, float selectedBoxWidth, float selectedBoxHeight)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName, selectedGroupLeft, selectedGroupRight,
+                selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
 
         #endregion

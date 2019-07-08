@@ -515,7 +515,8 @@ namespace CellexalVR.General
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
             // Wait for server to start up
-            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
+            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid")
+                    || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }

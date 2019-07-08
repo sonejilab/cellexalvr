@@ -1,12 +1,14 @@
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
     ///<summary>
-    /// Represents a button used the graphs from the cell selection used for this particular heatmap.
+    /// Represents a button that is used to reorder the attribute bar on the heatmap. 
+    /// Click once to order by attribute and again to go back to original order.
     ///</summary>
     public class ReorderByAttributeButton : CellexalButton
     {
         private bool toggle;
         private CellexalVR.AnalysisObjects.Heatmap heatmap;
+        private CellexalVR.AnalysisLogic.HeatmapGenerator heatmapGenerator;
 
         protected override string Description
         {
@@ -26,7 +28,8 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         protected override void Awake()
         {
             base.Awake();
-            heatmap = gameObject.GetComponentInParent<AnalysisObjects.Heatmap>();
+            heatmap = GetComponentInParent<CellexalVR.AnalysisObjects.Heatmap>();
+            heatmapGenerator = referenceManager.heatmapGenerator;
         }
 
 
@@ -38,7 +41,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
             }
             else
             {
-                heatmap.BuildTexture(heatmap.selection, "");
+                heatmapGenerator.BuildTexture(heatmap.selection, "", heatmap);
             }
             toggle = !toggle;
         }

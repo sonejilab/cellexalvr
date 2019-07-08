@@ -738,7 +738,10 @@ namespace SQLiter
         private IEnumerator QueryGeneCoroutine(string geneName, Action<SQLite> action)
         {
             _result.Clear();
-            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            string query = "select cname, value " +
+                           "FROM datavalues " +
+                           "INNER JOIN cells ON (datavalues.cell_id = cells.id) " +
+                           "WHERE (ene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
 
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
@@ -776,7 +779,7 @@ namespace SQLiter
         {
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id "+
+            string query = "SELECT cname, value from datavalues left join cells on datavalues.cell_id = cells.id "+
                 "where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();

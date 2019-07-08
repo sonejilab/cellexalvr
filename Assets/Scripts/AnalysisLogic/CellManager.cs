@@ -299,8 +299,7 @@ namespace CellexalVR.AnalysisLogic
             GetComponent<AudioSource>().Play();
             SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
             ArrayList expressions = database._result;
-            stopwatch.Stop();
-            //print("Time : " + stopwatch.Elapsed.ToString());
+
             // stop the coroutine if the gene was not in the database
             if (expressions.Count == 0)
             {
@@ -308,25 +307,6 @@ namespace CellexalVR.AnalysisLogic
                 CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
-
-            //        Dictionary<string, int> sortedCells = new Dictionary<string, int>();
-            //        for (int i = 0; i < expressions.Count; ++i)
-            //        {
-            //            Cell cell = cells[((CellExpressionPair)expressions[i]).Cell];
-            //            //cell.Hide();
-            //            cell.ColorByExpression((int)((CellExpressionPair)expressions[i]).Expression);
-            //            sortedCells.Add(((CellExpressionPair)expressions[i]).Cell, (int)((CellExpressionPair)expressions[i]).Expression);
-            //        }
-            //
-            //        int n = (int)Math.Round(0.01 * cells.Count);
-            //        HighlightTopExpressedCells(sortedCells, n);
-            //
-            //        yield return new WaitForSeconds(2);
-            //
-            //        foreach (Cell c in cells.Values)
-            //        {
-            //            c.Show();
-            //        }
 
             graphManager.ColorAllGraphsByGeneExpression(expressions);
 
@@ -348,7 +328,8 @@ namespace CellexalVR.AnalysisLogic
             }
 
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
-
+            stopwatch.Stop();
+            print("Time : " + stopwatch.Elapsed.ToString());
             CellexalEvents.CommandFinished.Invoke(true);
         }
 

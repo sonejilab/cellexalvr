@@ -1078,6 +1078,7 @@ GameObject:
   - component: {fileID: 114008092450855906}
   - component: {fileID: 64373526009168968}
   - component: {fileID: 54283347973449174}
+  - component: {fileID: 1590412641064584483}
   m_Layer: 8
   m_Name: Heatboard
   m_TagString: HeatBoard
@@ -1181,8 +1182,28 @@ MonoBehaviour:
   selectionNr: 0
   enlargedGeneText: {fileID: 114284576377539384}
   highlightGeneText: {fileID: 114230615009697458}
+  highlightInfoText: {fileID: 0}
   removable: 0
   directory: 
+  createAnim: 0
+  orderedByAttribute: 0
+  buildingTexture: 0
+  genes: []
+  bitmapWidth: 4096
+  bitmapHeight: 4096
+  heatmapX: 250
+  heatmapY: 250
+  heatmapWidth: 3596
+  heatmapHeight: 3596
+  geneListX: 3846
+  geneListWidth: 250
+  attributeBarY: 10
+  groupBarY: 120
+  groupBarHeight: 100
+  attributeBarHeight: 100
+  noAttribute: -2
+  lastAttribute: -1
+  attributeWidth: 0
 --- !u!114 &114329533491564300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1288,6 +1309,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1590412641064584483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546507171833466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e5935dc8af0424abd39cd814df2a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1564312003961644
 GameObject:
   m_ObjectHideFlags: 0

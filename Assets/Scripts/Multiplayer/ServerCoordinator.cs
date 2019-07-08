@@ -722,25 +722,25 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
         }
 
         [PunRPC]
         public void SendConfirmSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
         }
 
         [PunRPC]
         public void SendHandleMovingSelection(string heatmapName, int hitx, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HandleMovingSelection(hitx, hity);
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleMovingSelection(hitx, hity);
         }
 
         [PunRPC]
         public void SendMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
         }
 
         [PunRPC]
@@ -748,7 +748,7 @@ namespace CellexalVR.Multiplayer
         {
             try
             {
-                referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).HandleHitHeatmap(hitx, hity);
+                referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().HandleHitHeatmap(hitx, hity);
             }
             catch (Exception e)
             {
@@ -772,19 +772,21 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendResetSelecting(string HeatmapName)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetSelecting();
+            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().ResetSelecting();
         }
 
         [PunRPC]
         public void SendHandlePressDown(string heatmapName, int hitx, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).HandlePressDown(hitx, hity);
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandlePressDown(hitx, hity);
         }
 
         [PunRPC]
-        public void SendCreateNewHeatmapFromSelection(string heatmapName)
+        public void SendCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop,
+            int selectedGeneBottom, float selectedBoxWidth, float selectedBoxHeight)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).CreateNewHeatmapFromSelection();
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight,
+                selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
 
         #endregion
