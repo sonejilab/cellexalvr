@@ -30,6 +30,7 @@ namespace CellexalVR.AnalysisLogic
 
         #endregion
 
+        //public GameObject box;
         public ReferenceManager referenceManager;
         VRTK_ControllerReference VRTKrightController;
 
@@ -48,7 +49,6 @@ namespace CellexalVR.AnalysisLogic
         private PreviousSearchesList previousSearchesList;
         private Dictionary<string, Cell> cells;
         private List<GameObject> lines = new List<GameObject>();
-        private GameManager gameManager;
         private SelectionToolCollider selectionToolCollider;
         private SelectionManager selectionManager;
         private GraphManager graphManager;
@@ -95,7 +95,6 @@ namespace CellexalVR.AnalysisLogic
             database = referenceManager.database;
             rightController = referenceManager.rightController;
             previousSearchesList = referenceManager.previousSearchesList;
-            gameManager = referenceManager.gameManager;
             selectionManager = referenceManager.selectionManager;
             //statusDisplay = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
@@ -574,77 +573,86 @@ namespace CellexalVR.AnalysisLogic
         /// Draws lines between all points that share the same label.
         /// </summary>
         /// <param name="points"> The graphpoints to draw the lines from. </param>
-        public void DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
+        //public void DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
+        //{
+        //    Vector3[] positions = new Vector3[points.Count];
+        //    Cell[] selectedCells = new Cell[points.Count];
+        //    int i = 0;
+
+
+
+        //    //foreach (BoxCollider col in graph.GetComponents<BoxCollider>())
+        //    //{
+        //    //    var newCol = newGraph.gameObject.AddComponent<BoxCollider>();
+        //    //    newCol.size = col.size;
+        //    //}
+        //    foreach (Graph.GraphPoint g in points)
+        //    {
+        //        Color color = g.GetColor();
+        //        foreach (Graph.GraphPoint sameCell in cells[g.Label].GraphPoints)
+        //        {
+        //            if (sameCell != g)
+        //            {
+        //                LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
+        //                line.graphPoint1 = g;
+        //                line.graphPoint2 = sameCell;
+        //                line.selectionManager = selectionManager;
+        //                LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+        //                line.t1 = g.parent.transform;
+        //                line.t2 = sameCell.parent.transform;
+        //                lineRenderer.startColor = color;
+        //                lineRenderer.endColor = color;
+        //                lines.Add(line.gameObject);
+        //                sameCell.parent.Lines.Add(line.gameObject);
+        //                g.parent.Lines.Add(line.gameObject);
+        //                positions[i] = (line.t1.TransformPoint(g.Position) + line.t2.TransformPoint(sameCell.Position)) / 2f;
+        //                selectedCells[i] = cells[g.Label];
+        //                 if (!sameCell.parent.GraphActive)
+        //                {
+        //                    line.gameObject.SetActive(false);
+        //                }
+        //                g.lineBetweenCellsCubes.Add(line.cube);
+        //            }
+        //        }
+        //        i++;
+        //    }
+        //    referenceManager.graphGenerator.CreatePointsBetweenGraphs(selectedCells, positions);
+        //    CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
+        //}
+
+        /// <summary>
+        /// Draws lines between the graph that was selected from to points in other graphs that share the same cell label.
+        /// </summary>
+        /// <param name="points"> The graphpoints to draw the lines from. </param>
+        public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
         {
-            foreach (Graph.GraphPoint g in points)
+            var fromGraph = points[0].parent;
+            foreach (Graph toGraph in graphManager.originalGraphs.FindAll(x => x != fromGraph))
             {
-                Color color = g.GetColor();
-                foreach (Graph.GraphPoint sameCell in cells[g.Label].GraphPoints)
+                var newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
+                GraphBetweenGraphs gbg = newGraph.gameObject.AddComponent<GraphBetweenGraphs>();
+                //gbg.box = box;
+                gbg.graph1 = fromGraph;
+                gbg.graph2 = toGraph;
+                gbg.referenceManager = referenceManager;
+                gbg.lineBetweenTwoGraphPointsPrefab = lineBetweenTwoGraphPointsPrefab;
+                gbg.CreateGraphBetweenGraphs(points, newGraph, fromGraph, toGraph);
+                while (referenceManager.graphGenerator.isCreating)
                 {
-                    if (sameCell != g)
-                    {
-                        LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-                        line.graphPoint1 = g;
-                        line.graphPoint2 = sameCell;
-                        line.selectionManager = selectionManager;
-                        LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-                        //lineRenderer.useWorldSpace = false;
-                        line.t1 = g.parent.transform;
-                        line.t2 = sameCell.parent.transform;
-                        lineRenderer.startColor = color;
-                        lineRenderer.endColor = color;
-                        lines.Add(line.gameObject);
-                        sameCell.parent.Lines.Add(line.gameObject);
-                        g.parent.Lines.Add(line.gameObject);
-                        if (!sameCell.parent.GraphActive)
-                        {
-                            line.gameObject.SetActive(false);
-                        }
-                        g.lineBetweenCellsCubes.Add(line.cube);
-                    }
+                    yield return null;
                 }
+                gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20, neighbourDistance: 0.10f, kernelBandwidth: 1.5f);
             }
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
+            
         }
 
-        public void DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points, Graph fromGraph, Graph toGraph)
-        {
-            foreach (Graph.GraphPoint g in points)
-            {
-                Color color = g.GetColor();
-                var sourceCell = fromGraph.points[g.Label];
-                var targetCell = toGraph.points[g.Label];
-                LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-                line.t1 = targetCell.parent.transform;
-                line.t2 = sourceCell.parent.transform;
-                line.graphPoint1 = sourceCell;
-                line.graphPoint2 = targetCell;
-                line.selectionManager = selectionManager;
-                LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-                lineRenderer.startColor = color;
-                lineRenderer.endColor = color;
-                lines.Add(line.gameObject);
-                fromGraph.Lines.Add(line.gameObject);
-                toGraph.Lines.Add(line.gameObject);
-                if (!targetCell.parent.GraphActive)
-                {
-                    line.gameObject.SetActive(false);
-                }
-                g.lineBetweenCellsCubes.Add(line.cube);
-            }
-        }
 
         /// <summary>
         /// Removes all lines between graphs.
         /// </summary>
         public void ClearLinesBetweenGraphPoints()
         {
-            foreach (GameObject line in lines)
-            {
-                Destroy(line, 0.05f);
-                line.GetComponent<LineBetweenTwoPoints>().graphPoint1.lineBetweenCellsCubes.Clear();
-            }
-            lines.Clear();
             graphManager.ClearLinesBetweenGraphs();
             CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         }

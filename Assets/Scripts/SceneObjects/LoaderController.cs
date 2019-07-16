@@ -35,7 +35,8 @@ namespace CellexalVR.SceneObjects
         private Vector3 finalPosition;
         private Vector3 startScale;
         private Vector3 finalScale;
-        private bool moving = false;
+        private bool moveLoader = false;
+        private bool moveFloor = false;
         private float currentTime;
         private float arrivalTime;
         private GameManager gameManager;
@@ -64,19 +65,30 @@ namespace CellexalVR.SceneObjects
 
         void Update()
         {
-            if (moving)
+            if (moveLoader)
             {
                 gameObject.transform.position = Vector3.Lerp(startPosition, finalPosition, currentTime / arrivalTime);
-                cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
                 currentTime += Time.deltaTime;
                 if (Mathf.Abs(transform.position.y - finalPosition.y) <= 0.005)
                 {
-                    moving = false;
+                    moveLoader = false;
                     loadingComplete = true;
+                    moveFloor = true;
+                    currentTime = 0f;
                     //Debug.Log("Loading Complete");
                     //sound.Stop();
                 }
             }
+            if (moveFloor)
+            {
+                currentTime += Time.deltaTime;
+                cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
+                if (Mathf.Abs(cylinder.transform.localScale.x - finalScale.x) <= 0.005)
+                {
+                    moveFloor = false;
+                }
+            }
+            
 
             if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
             {
@@ -115,14 +127,14 @@ namespace CellexalVR.SceneObjects
             startScale = cylinder.localScale;
             if (distance.y > 0)
             {
-                finalScale = new Vector3(1f, startScale.y, 1f);
+                finalScale = new Vector3(0.144f, startScale.y, 0.144f);
                 //helperCylinder.SetActive(true);
             }
             else
             {
                 finalScale = new Vector3(1f, startScale.y, 1f);
             }
-            if (moving)
+            if (moveLoader)
             {
                 finalPosition = distance;
             }
@@ -135,7 +147,7 @@ namespace CellexalVR.SceneObjects
             // multiple_exp datasetList.gameObject.SetActive(false);
             DestroyFolderColliders();
             DestroyCells();
-            moving = true;
+            moveLoader = true;
         }
 
         void OnTriggerEnter(Collider collider)

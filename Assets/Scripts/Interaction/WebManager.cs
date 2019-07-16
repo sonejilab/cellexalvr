@@ -13,14 +13,23 @@ namespace CellexalVR.Interaction
         public SimpleWebBrowser.WebBrowser webBrowser;
         public TMPro.TextMeshPro output;
         public bool isVisible;
+        public ReferenceManager referenceManager;
 
-        private ReferenceManager referenceManager;
+        private bool firstActivated; 
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
 
         // Use this for initialization
         void Start()
         {
             SetVisible(false);
-            referenceManager = webBrowser.referenceManager;
         }
 
         private void Update()
@@ -41,6 +50,16 @@ namespace CellexalVR.Interaction
             }
             webBrowser.OnNavigate(output.text);
             referenceManager.gameManager.InformBrowserEnter();
+        }
+        
+        public void SetBrowserActive(bool active)
+        {
+            if (!firstActivated)
+            {
+                webBrowser.gameObject.SetActive(active);
+                firstActivated = true;
+            }
+            SetVisible(active);
         }
 
         public void SetVisible(bool visible)

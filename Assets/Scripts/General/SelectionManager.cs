@@ -123,6 +123,7 @@ namespace CellexalVR.General
         /// </summary>
         public void AddGraphpointToSelection(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback)
         {
+
             AddGraphpointToSelection(graphPoint, newGroup, true, selectionToolCollider.Colors[newGroup]);
             //Debug.Log("Adding gp to sel. Inform clients.");
             gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
@@ -138,6 +139,12 @@ namespace CellexalVR.General
             if (graphPoint == null)
             {
                 return;
+            }
+            var parentGraph = graphPoint.parent;
+            if (parentGraph.tag.Equals("Untagged"))
+            {
+                var ctcGraph = graphPoint.parent.GetComponent<GraphBetweenGraphs>();
+                graphPoint = ctcGraph.graph1.FindGraphPoint(graphPoint.Label);
             }
             // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 

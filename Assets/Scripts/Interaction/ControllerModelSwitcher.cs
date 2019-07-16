@@ -171,7 +171,8 @@ namespace CellexalVR.Interaction
                     break;
 
                 case Model.WebBrowser:
-                    webBrowser.GetComponent<WebManager>().SetVisible(true);
+                    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
+                    //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     //rightLaser.enabled = true;
                     rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
@@ -273,7 +274,8 @@ namespace CellexalVR.Interaction
                     //rightLaser.enabled = true;
                     break;
                 case Model.WebBrowser:
-                    webBrowser.GetComponent<WebManager>().SetVisible(true);
+                    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
+                    //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     laserPointerController.ToggleLaser(true);
                     break;
                 case Model.TwoLasers:
@@ -311,7 +313,8 @@ namespace CellexalVR.Interaction
             keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
             drawTool.SetActive(false);
-            webBrowser.GetComponent<WebManager>().SetVisible(false);
+            webBrowser.GetComponent<WebManager>().SetBrowserActive(false);
+            //webBrowser.GetComponent<WebManager>().SetVisible(false);
             if (inMenu)
             {
                 SwitchToModel(Model.Menu);

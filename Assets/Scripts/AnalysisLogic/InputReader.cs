@@ -106,6 +106,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
+
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>

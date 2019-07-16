@@ -376,7 +376,7 @@ namespace CellexalVR.Multiplayer
         public void SendDrawLinesBetweenGps()
         {
             Debug.Log("Recieved message to draw lines between graph points");
-            referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection());
+            StartCoroutine(referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection()));
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         }
 
@@ -423,7 +423,8 @@ namespace CellexalVR.Multiplayer
         public void SendActivateBrowser(bool activate)
         {
             CellexalLog.Log("Recieved message to toggle web browser");
-            referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
+            referenceManager.webBrowser.GetComponent<WebManager>().SetBrowserActive(activate);
+            //referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
         }
 
         [PunRPC]

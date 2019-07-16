@@ -72,24 +72,24 @@ namespace CellexalVR.General
                     if (CrossSceneInformation.Spectator)
                     {
                         player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-                        spectatorRig.SetActive(true);
                         Destroy(VRRig);
+                        spectatorRig.SetActive(true);
                     }
 
                     else if (CrossSceneInformation.Ghost)
                     {
+                        Destroy(spectatorRig);
                         player = PhotonNetwork.Instantiate(this.ghostPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         Destroy(referenceManager.leftControllerScriptAlias);
                         Destroy(referenceManager.rightControllerScriptAlias);
                         referenceManager.leftController.GetComponent<MenuToggler>().menuCube.SetActive(false);
                         Destroy(referenceManager.leftController.GetComponent<MenuToggler>());
-                        Destroy(spectatorRig);
                     }
 
                     else if (!CrossSceneInformation.Spectator)
                     {
-                        player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         Destroy(spectatorRig);
+                        player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                     }
 
                     player.gameObject.name = PhotonNetwork.playerName;
