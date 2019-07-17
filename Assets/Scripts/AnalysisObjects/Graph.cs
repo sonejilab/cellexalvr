@@ -24,6 +24,7 @@ namespace CellexalVR.AnalysisObjects
         public Material skeletonMaterial;
         public Material lineMaterial;
         public GameObject movingOutlineCircle;
+        [HideInInspector]
         public GameObject convexHull;
         //public string DirectoryName { get; set; }
         public List<GameObject> CTCGraphs { get; set; }
@@ -32,6 +33,7 @@ namespace CellexalVR.AnalysisObjects
         public TextMeshPro graphNameText;
         public TextMeshPro graphInfoText;
         public TextMeshPro graphNrText;
+        [HideInInspector]
         public GameObject axes;
         public string[] axisNames = new string[3];
         public bool GraphActive = true;
@@ -52,6 +54,7 @@ namespace CellexalVR.AnalysisObjects
         public Vector3 scaledOffset;
         public int nbrOfClusters;
         public VelocityParticleEmitter velocityParticleEmitter;
+        public GameObject lineParent;
         public string GraphName
         {
             get { return graphName; }

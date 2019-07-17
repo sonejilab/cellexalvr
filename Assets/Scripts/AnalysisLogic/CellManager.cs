@@ -30,7 +30,7 @@ namespace CellexalVR.AnalysisLogic
 
         #endregion
 
-        //public GameObject box;
+        public GameObject clusterDebugBox;
         public ReferenceManager referenceManager;
         VRTK_ControllerReference VRTKrightController;
 
@@ -631,7 +631,10 @@ namespace CellexalVR.AnalysisLogic
             {
                 var newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
                 GraphBetweenGraphs gbg = newGraph.gameObject.AddComponent<GraphBetweenGraphs>();
-                //gbg.box = box;
+                if (clusterDebugBox)
+                {
+                    gbg.clusterDebugBox = clusterDebugBox;
+                }
                 gbg.graph1 = fromGraph;
                 gbg.graph2 = toGraph;
                 gbg.referenceManager = referenceManager;
@@ -641,7 +644,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
-                gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20, neighbourDistance: 0.10f, kernelBandwidth: 1.5f);
+                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20, neighbourDistance: 0.10f, kernelBandwidth: 1.5f));
             }
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
             

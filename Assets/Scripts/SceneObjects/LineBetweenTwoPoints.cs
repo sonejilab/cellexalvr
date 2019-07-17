@@ -18,6 +18,7 @@ namespace CellexalVR.SceneObjects
         public Vector3 midGraphCentroid;
         public Vector3 toGraphCentroid;
         public bool centroids;
+        public Color LineColor { get; set; }
 
         public Graph.GraphPoint graphPoint1;
         public Graph.GraphPoint graphPoint2;
@@ -35,6 +36,7 @@ namespace CellexalVR.SceneObjects
         private bool initAnimate;
         private float x;
         private AnimationCurve curve;
+        private int posCtr = 0;
 
 
         private void Start()
@@ -47,9 +49,9 @@ namespace CellexalVR.SceneObjects
                 midPos = t3.TransformPoint(midGraphCentroid);
                 firstAnchor = (fromPos + midPos) / 2f;
                 secondAnchor = (midPos + toPos) / 2f;
+                lineRenderer.positionCount = 5;
                 linePosistions = new Vector3[] { fromPos, firstAnchor, midPos, secondAnchor, toPos };
-                lineRenderer.positionCount = 2;
-                lineRenderer.SetPosition(0, fromPos);
+                lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
                 lineRenderer.startWidth = lineRenderer.endWidth += 0.10f;
@@ -61,8 +63,9 @@ namespace CellexalVR.SceneObjects
                 fromPos = t1.TransformPoint(graphPoint1.Position);
                 toPos = t2.TransformPoint(graphPoint2.Position);
                 midPos = t3.TransformPoint(graphPoint3.Position);
+                lineRenderer.positionCount = 3;
                 linePosistions = new Vector3[] { fromPos, midPos, toPos };
-                lineRenderer.SetPosition(0, fromPos);
+                lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
                 initAnimate = true;
@@ -101,22 +104,30 @@ namespace CellexalVR.SceneObjects
         private void InitLine()
         {
             float dist = Vector3.Distance(currentPos, currentTarget);
-            x += Time.deltaTime * 5f; ;
+            x += Time.deltaTime * 2f;
             float increment = Mathf.Lerp(0, dist, x);
-            if (lineRenderer.positionCount == 1)
+            if (posCtr == 0)
             {
-                lineRenderer.positionCount++;
                 Vector3 pointAlongLine = (2 * increment) * Vector3.Normalize(currentTarget - currentPos) + currentPos;
-                lineRenderer.SetPosition(lineRenderer.positionCount - 1, pointAlongLine);
+                //lineRenderer.positionCount++;
+                posCtr++;
+                for (int i = posCtr; i < lineRenderer.positionCount; i++)
+                {
+                    lineRenderer.SetPosition(i, pointAlongLine);
+                }
             }
             else if (dist > increment)
             {
                 Vector3 pointAlongLine = increment * Vector3.Normalize(currentTarget - currentPos) + currentPos;
-                lineRenderer.SetPosition(lineRenderer.positionCount - 1, pointAlongLine);
+                for (int i = posCtr; i < lineRenderer.positionCount; i++)
+                {
+                    lineRenderer.SetPosition(i, pointAlongLine);
+                }
+                //lineRenderer.SetPosition(posCtr, pointAlongLine);
             }
             else if (dist <= increment)
             {
-                if (lineRenderer.positionCount == linePosistions.Length)
+                if (posCtr + 1 == linePosistions.Length)
                 {
                     if (centroids)
                     {
@@ -128,13 +139,23 @@ namespace CellexalVR.SceneObjects
                         curve.AddKey(0.0f, 1.0f);
                         lineRenderer.widthMultiplier = 0.15f;
                         lineRenderer.widthCurve = curve;
+                        //Gradient gradient = new Gradient();
+                        //gradient.SetKeys(
+                        //    new GradientColorKey[] { new GradientColorKey(LineColor, 0.0f),
+                        //                                new GradientColorKey(LineColor, 1.0f) },
+                        //    new GradientAlphaKey[] { new GradientAlphaKey(0.1f, 0.0f), new GradientAlphaKey(0.1f, 0.2f),
+                        //                                new GradientAlphaKey(0.5f, 0.2f), new GradientAlphaKey(0.1f, 0.8f),
+                        //                                new GradientAlphaKey(0.1f, 1.0f) }
+                        //);
+                        //lineRenderer.colorGradient = gradient;
                     }
                     initAnimate = false;
                     return;
                 }
-                lineRenderer.positionCount++;
-                currentPos = linePosistions[lineRenderer.positionCount - 2];
-                currentTarget = linePosistions[lineRenderer.positionCount - 1];
+                //lineRenderer.positionCount++;
+                posCtr++;
+                currentPos = linePosistions[posCtr - 1];
+                currentTarget = linePosistions[posCtr];
                 x = 0f;
             }
         }

@@ -529,14 +529,14 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 GameObject newPart;
-                if (graphType == GraphType.BETWEEN)
-                {
-                    newPart = Instantiate(graphpointsLargerPrefab, newGraph.transform);
-                }
-                else
-                {
-                    newPart = Instantiate(graphpointsPrefab, newGraph.transform);
-                }
+                //if (graphType == GraphType.BETWEEN)
+                //{
+                //    newPart = Instantiate(graphpointsLargerPrefab, newGraph.transform);
+                //}
+                //else
+                //{
+                newPart = Instantiate(graphpointsPrefab, newGraph.transform);
+                //}
                 //clusters[i].All((CombinedGraph.CombinedGraphPoint point) => (point.cluster = newPart));
                 var newMesh = new Mesh();
                 int clusterOffset = clusterOffsets[i];
