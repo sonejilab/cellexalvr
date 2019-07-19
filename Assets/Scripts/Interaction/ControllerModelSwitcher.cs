@@ -1,6 +1,7 @@
 using UnityEngine;
 using VRTK;
 using CellexalVR.General;
+using System;
 
 namespace CellexalVR.Interaction
 {
@@ -31,6 +32,7 @@ namespace CellexalVR.Interaction
         // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
         // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
         public Model ActualModel;
+        public bool meshesSetSuccessful;
 
         //private SelectionToolHandler selectionToolHandler;
         private SelectionToolCollider selectionToolCollider;
@@ -63,9 +65,6 @@ namespace CellexalVR.Interaction
         void Awake()
         {
             //selectionToolHandler = referenceManager.selectionToolHandler;
-            if (!SceneManagerHelper.ActiveSceneName.Equals("TutorialScene_New"))
-            {
-            }
             selectionToolCollider = referenceManager.selectionToolCollider;
             drawTool = referenceManager.drawTool.gameObject;
             keyboard = referenceManager.keyboardSwitch;
@@ -109,9 +108,9 @@ namespace CellexalVR.Interaction
             leftControllerBodyMeshFilter.mesh = normalControllerMesh;
             leftControllerBodyRenderer = leftControllerBody.GetComponent<Renderer>();
             leftControllerBodyRenderer.material = normalMaterial;
+            meshesSetSuccessful = true;
             //var leftBody = leftControllerBody.GetComponent<Renderer>();
             //leftBody.material = leftControllerMaterial;
-
         }
 
         /// <summary>
@@ -152,6 +151,10 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SwitchToModel(Model model)
         {
+            if (!meshesSetSuccessful)
+            {
+                SetMeshes();
+            }
             ActualModel = model;
             switch (model)
             {

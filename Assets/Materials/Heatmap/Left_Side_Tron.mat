@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Left_Side_Tron
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHAPREMULTIPLY_ON _EMISSION
@@ -73,5 +74,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0, g: 1, b: 0.9172416, a: 0}
-    - _EmissionColor: {r: 0, g: 0.5686275, b: 0.69803923, a: 1}
+    - _Color: {r: 0.43529412, g: 0.7647059, b: 0.8745098, a: 0}
+    - _EmissionColor: {r: 0.15896086, g: 0.5457247, b: 0.7379107, a: 1}

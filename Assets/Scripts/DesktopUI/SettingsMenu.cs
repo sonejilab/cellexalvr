@@ -31,6 +31,7 @@ namespace CellexalVR.DesktopUI
         public TMPro.TMP_Dropdown heatmapAlgorithmDropdown;
         //public UnityEngine.UI.Dropdown heatmapAlgorithm;
         [Header("Graphs")]
+        public TMPro.TMP_Dropdown graphPointQualityDropdown;
         public ColorPickerButton graphHighExpression;
         public ColorPickerButton graphMidExpression;
         public ColorPickerButton graphLowExpression;
@@ -65,6 +66,7 @@ namespace CellexalVR.DesktopUI
 
         public List<string> networkAlgorithms;
         public List<string> heatmapAlgorithms;
+        public List<string> graphPointQualityModes;
         public List<string> lineColouringMethods;
 
         private ColorPicker colorPicker;
@@ -103,6 +105,13 @@ namespace CellexalVR.DesktopUI
                 heatmapMethods.Add(new TMPro.TMP_Dropdown.OptionData(s));
             }
             heatmapAlgorithmDropdown.options = heatmapMethods;
+
+            var graphPointQualities = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in graphPointQualityModes)
+            {
+                graphPointQualities.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            graphPointQualityDropdown.options = graphPointQualities;
 
             var lineMethods = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in lineColouringMethods)
@@ -148,6 +157,7 @@ namespace CellexalVR.DesktopUI
             heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
             numberOfHeatmapColorsInputField.text = "" + CellexalConfig.Config.NumberOfHeatmapColors;
             heatmapAlgorithmDropdown.value = heatmapAlgorithms.IndexOf(CellexalConfig.Config.HeatmapAlgorithm);
+            graphPointQualityDropdown.value = graphPointQualityModes.IndexOf(CellexalConfig.Config.GraphPointQuality);
             graphHighExpression.Color = CellexalConfig.Config.GraphHighExpressionColor;
             graphMidExpression.Color = CellexalConfig.Config.GraphMidExpressionColor;
             graphLowExpression.Color = CellexalConfig.Config.GraphLowExpressionColor;
@@ -242,6 +252,15 @@ namespace CellexalVR.DesktopUI
             CellexalConfig.Config.HeatmapAlgorithm = algorithm;
             referenceManager.heatmapGenerator.InitColors();
         }
+        public void SetGraphPointQuality()
+        {
+            unsavedChanges = true;
+            int val = graphPointQualityDropdown.value;
+            string quality = graphPointQualityDropdown.options[val].text;
+            CellexalConfig.Config.GraphPointQuality = quality;
+            //referenceManager.heatmapGenerator.InitColors();
+        }
+
 
         public void SetNumberOfGraphColors()
         {

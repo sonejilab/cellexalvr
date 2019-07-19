@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 33463714987162136}
   - component: {fileID: 23364634105403548}
   - component: {fileID: 114284534184512544}
+  - component: {fileID: 2079175854451750203}
   m_Layer: 13
-  m_Name: Graphpoints Prefab
+  m_Name: Graphpoints Lowest Quality Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1303898112207200}
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 4300000, guid: c0212a93b36e99042bf29d6f21ae4004, type: 2}
 --- !u!23 &23364634105403548
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -94,3 +95,17 @@ MonoBehaviour:
   verticies: []
   triangles: 
   serialized: 0
+--- !u!64 &2079175854451750203
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303898112207200}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300000, guid: c0212a93b36e99042bf29d6f21ae4004, type: 2}

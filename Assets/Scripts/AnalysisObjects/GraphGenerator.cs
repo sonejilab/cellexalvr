@@ -14,6 +14,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
 using System.Threading;
 using CellexalVR.SceneObjects;
+using Unity.Burst;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -25,6 +26,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public GameObject graphpointsPrefab;
         public GameObject graphpointsLargerPrefab;
+        public GameObject graphpointsLowestQualityPrefab;
         public GameObject graphPrefab;
         public GameObject AxesPrefabColoured;
         public GameObject AxesPrefabUncoloured;
@@ -32,6 +34,8 @@ namespace CellexalVR.AnalysisObjects
         public GameObject skeletonPrefab;
         public Mesh graphPointStandardMesh;
         public Mesh graphPointLargerMesh;
+        public Mesh graphPointLowestQualityMesh;
+        public Mesh graphPointHighestQualityMesh;
         public string DirectoryName { get; set; }
         public bool isCreating;
         public bool addingToExisting;
@@ -85,9 +89,17 @@ namespace CellexalVR.AnalysisObjects
             {
                 meshToUse = graphPointLargerMesh;
             }
-            else
+            else if (CellexalConfig.Config.GraphPointQuality == "High")
+            {
+                meshToUse = graphPointHighestQualityMesh;
+            }
+            else if (CellexalConfig.Config.GraphPointQuality == "Medium")
             {
                 meshToUse = graphPointStandardMesh;
+            }
+            else if (CellexalConfig.Config.GraphPointQuality == "Low")
+            {
+                meshToUse = graphPointLowestQualityMesh;
             }
             newGraph = Instantiate(graphPrefab).GetComponent<Graph>();
             //graphManager.SetGraphStartPosition();
