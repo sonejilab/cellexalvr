@@ -26,10 +26,15 @@ namespace CellexalVR.Menu
         private SteamVR_TrackedObject leftController;
         private ControllerModelSwitcher controllerModelSwitcher;
         private float tempRotation; // save rotation when disabling menu for when reactivating
-
-
-
-
+        private bool animate;
+        private float currentTime;
+        private float arrivalTime = 1f;
+        private Vector3 startScale;
+        private Vector3 finalScale;
+        private Vector3 startPosition;
+        private Vector3 finalPosition;
+        private Vector3 originalScale = new Vector3(0.26f, 0.26f, 0.32f);
+        private readonly int animateSpeed = 8;
 
         private void OnValidate()
         {
@@ -56,19 +61,40 @@ namespace CellexalVR.Menu
             device = SteamVR_Controller.Input((int)leftController.index);
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf)
             {
-                ToggleMenu(); 
+                animate = true;
+                currentTime = 0f;
+                startScale = menu.transform.localScale;
+                if (MenuActive)
+                {
+                    startPosition = menu.transform.localPosition;
+                    finalScale = menuCube.transform.localScale;
+                    finalPosition = menuCube.transform.localScale;
+                }
+                else
+                {
+                    startPosition = menuCube.transform.localPosition;
+                    finalScale = originalScale;
+                    finalPosition = new Vector3(0f, 0f, 0.17f);
+                    menu.transform.parent = leftController.transform;
+                    menu.transform.localEulerAngles = new Vector3(-15, 0, tempRotation);
+                    menu.transform.localPosition = menuCube.transform.localPosition;
+                }
+            }
 
-                //referenceManager.gameManager.InformToggleMenu();
-                //if (MenuActive)
-                //{
-                //    PhotonNetwork.Instantiate("Main Menu", new Vector3(0, 1, 0), Quaternion.identity, 0);
-                //}
-                //if (!MenuActive)
-                //{
-                //    PhotonNetwork.Destroy("Main Menu");
-                //}
+            if (animate)
+            {
+                currentTime += Time.deltaTime;
+                float step = (currentTime * animateSpeed) / arrivalTime;
+                menu.transform.localScale = Vector3.Lerp(startScale, finalScale, step);
+                menu.transform.localPosition = Vector3.Lerp(startPosition, finalPosition, step);
+                if (Mathf.Abs(menu.transform.localScale.x - finalScale.x) <= 0.001f)
+                {
+                    animate = false;
+                    ToggleMenu();
+                }
 
             }
+
         }
 
         public void ToggleMenu()
@@ -86,7 +112,6 @@ namespace CellexalVR.Menu
                 menu.transform.parent = leftController.transform;
                 menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
             }
-            menu.transform.localEulerAngles = new Vector3(-15, 0, tempRotation);
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
             controllerModelSwitcher.ActivateDesiredTool();

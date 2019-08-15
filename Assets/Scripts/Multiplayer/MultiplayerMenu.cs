@@ -165,7 +165,6 @@ namespace CellexalVR.Multiplayer
             string[] selStrings = {"Normal VR View", "VR Spectator View", "Desktop Spectator View \n Non-VR"};
 
             selGridInt = GUILayout.SelectionGrid(selGridInt, selStrings, 1);
-
             switch (selGridInt)
             {
                 case 0:

@@ -24,14 +24,16 @@ namespace CellexalVR.AnalysisObjects
         public Material skeletonMaterial;
         public Material lineMaterial;
         public GameObject movingOutlineCircle;
+        [HideInInspector]
         public GameObject convexHull;
         //public string DirectoryName { get; set; }
-        public List<GameObject> Lines { get; set; }
+        public List<GameObject> CTCGraphs { get; set; }
         [HideInInspector]
         public GraphManager graphManager;
         public TextMeshPro graphNameText;
         public TextMeshPro graphInfoText;
         public TextMeshPro graphNrText;
+        [HideInInspector]
         public GameObject axes;
         public string[] axisNames = new string[3];
         public bool GraphActive = true;
@@ -52,6 +54,7 @@ namespace CellexalVR.AnalysisObjects
         public Vector3 scaledOffset;
         public int nbrOfClusters;
         public VelocityParticleEmitter velocityParticleEmitter;
+        public GameObject lineParent;
         public string GraphName
         {
             get { return graphName; }
@@ -138,7 +141,7 @@ namespace CellexalVR.AnalysisObjects
             graphManager = referenceManager.graphManager;
             gameManager = referenceManager.gameManager;
             graphManager = referenceManager.graphManager;
-            Lines = new List<GameObject>();
+            CTCGraphs = new List<GameObject>();
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             graphGenerator = referenceManager.graphGenerator;
             selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
@@ -175,8 +178,6 @@ namespace CellexalVR.AnalysisObjects
             //foreach (Renderer r in GetComponentsInChildren<Renderer>())
             //    r.enabled = true;
             gameObject.SetActive(true);
-            //foreach (GameObject line in Lines)
-            //    line.SetActive(true);
             maximize = true;
         }
 
@@ -198,8 +199,10 @@ namespace CellexalVR.AnalysisObjects
                 maximize = false;
                 GraphActive = true;
                 minimized = false;
-                //foreach (GameObject line in Lines)
-                //    line.SetActive(true);
+                foreach (GameObject obj in CTCGraphs)
+                {
+                    obj.SetActive(true);
+                }
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                     c.enabled = true;
             }
@@ -212,34 +215,17 @@ namespace CellexalVR.AnalysisObjects
             GraphActive = false;
             //targetPos = referenceManager.minimizedObjectHandler.transform.position;
             foreach (Collider c in GetComponentsInChildren<Collider>())
+            {
                 c.enabled = false;
-            foreach (GameObject line in Lines)
-                line.SetActive(false);
+            }
+            foreach (GameObject obj in CTCGraphs)
+            {
+                obj.SetActive(false);
+            }
             oldPos = transform.position;
             oldScale = transform.localScale;
             minimize = true;
         }
-
-
-
-        /// <summary>
-        /// Same as above but called with arguments when you want to modify the pos and min scale.
-        /// </summary>
-        /// <param name="pos">Position to minimize towards.</param>
-        /// <param name="targetScale">Minimum scale before hiding object completely.</param>
-        //internal void HideGraph(Vector3 pos, float targetScale)
-        //{
-        //    GraphActive = false;
-        //    targetMinScale = targetScale;
-        //    targetPos = pos;
-        //    foreach (Collider c in GetComponentsInChildren<Collider>())
-        //        c.enabled = false;
-        //    foreach (GameObject line in Lines)
-        //        line.SetActive(false);
-        //    oldPos = transform.position;
-        //    oldScale = transform.localScale;
-        //    minimize = true;
-        //}
 
         /// <summary>
         /// Animation for hiding graph.
@@ -265,8 +251,6 @@ namespace CellexalVR.AnalysisObjects
                 minimize = false;
                 GraphActive = false;
                 gameObject.SetActive(false);
-                foreach (GameObject line in Lines)
-                    line.SetActive(false);
                 referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
                 referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
                 minimized = true;
@@ -1130,6 +1114,7 @@ namespace CellexalVR.AnalysisObjects
             return points[label];
         }
 
+
         /// <summary>
         /// Color all graphpoints in this graph with the expression of some gene.
         /// </summary>
@@ -1314,7 +1299,6 @@ namespace CellexalVR.AnalysisObjects
                     boundingBoxMin.z < node.pos.z && boundingBoxMax.z > node.pos.z + node.size.z)
                 {
                     // just find the leaves and check if they are inside
-
                     if (node.Group != group)
                     {
                         node.completelyInside = true;

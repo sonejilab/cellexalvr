@@ -94,13 +94,13 @@ namespace CellexalVR.Interaction
                 }
                 else if (hit.transform.GetComponent<NetworkCenter>())
                 {
-                    hit.transform.LookAt(raycastingSource.transform);
+                    hit.transform.LookAt(referenceManager.headset.transform);
                     hit.transform.Rotate(0, 0, 180);
                     referenceManager.gameManager.InformMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
                 else if (hit.transform.GetComponent<Heatmap>())
                 {
-                    hit.transform.LookAt(raycastingSource.transform);
+                    hit.transform.LookAt(referenceManager.headset.transform);
                     hit.transform.Rotate(0, 180, 0);
                     referenceManager.gameManager.InformMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }

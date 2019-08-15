@@ -59,7 +59,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
             emitting = true;
-            Mesh graphPointMesh = referenceManager.graphGenerator.graphPointMesh;
+            Mesh graphPointMesh = referenceManager.graphGenerator.graphPointStandardMesh;
             int verticesPerGraphPoint = graphPointMesh.vertexCount;
             Vector3 offset = graphPointMesh.normals[0] * graphPointMesh.bounds.extents.x / 2f;
 

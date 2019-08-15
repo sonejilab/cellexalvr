@@ -106,6 +106,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
+
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
@@ -533,7 +534,7 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
             referenceManager.notificationManager.SpawnNotification(serverType + " R Server Session Initiated.");
-            StartCoroutine(LogStart());
+            StartCoroutine(referenceManager.reportManager.LogStart());
         }
 
         /// <summary>
@@ -547,43 +548,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        /// <summary>
-        /// Calls R logging function to start the logging session.
-        /// </summary>
-        IEnumerator LogStart()
-        {
 
-            //string script = "if ( !is.null(cellexalObj@usedObj$sessionPath) ) { \n" +
-            //                "cellexalObj @usedObj$sessionPath = NULL \n" +
-            //                " cellexalObj @usedObj$sessionRmdFiles = NULL \n" +
-            //                "cellexalObj @usedObj$sessionName = NULL } \n " +
-            //                "cellexalObj = sessionPath(cellexalObj, \"" + CellexalUser.UserSpecificFolder.UnFixFilePath() + "\")" ;
-
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
-
-            // Wait for other processes to finish and for server to have started.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") ||
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
-            {
-                yield return null;
-            }
-
-            CellexalLog.Log("Running R script : " + rScriptFilePath);
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
-            Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            t.Start();
-
-            // Wait for this process to finish.
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
-            {
-                yield return null;
-            }
-            stopwatch.Stop();
-            CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
-        }
 
 
         /// <summary>

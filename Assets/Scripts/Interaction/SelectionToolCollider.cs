@@ -71,10 +71,6 @@ namespace CellexalVR.Interaction
         private void Update()
         {
             device = SteamVR_Controller.Input((int)rightController.index);
-            // Only activate selection if trigger is pressed.
-            //device = SteamVR_Controller.Input((int)rightController.index);
-            // more_cells device = SteamVR_Controller.Input((int)rightController.index);
-            //device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -91,11 +87,11 @@ namespace CellexalVR.Interaction
                     minkowskiTimeoutStopwatch.Start();
                     foreach (var graph in graphManager.Graphs)
                     {
+                        //print(graph.GraphName + graph.GraphActive);
                         var closestPoints = graph.MinkowskiDetectionSelectionTool(transform.position, boundsCenter, boundsExtents, currentColorIndex);
                         foreach (var point in closestPoints)
                         {
                             selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
-
                         }
                     }
                 }

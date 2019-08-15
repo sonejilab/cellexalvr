@@ -1,6 +1,7 @@
 using UnityEngine;
 using VRTK;
 using CellexalVR.General;
+using System;
 
 namespace CellexalVR.Interaction
 {
@@ -31,6 +32,7 @@ namespace CellexalVR.Interaction
         // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
         // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
         public Model ActualModel;
+        public bool meshesSetSuccessful;
 
         //private SelectionToolHandler selectionToolHandler;
         private SelectionToolCollider selectionToolCollider;
@@ -63,9 +65,6 @@ namespace CellexalVR.Interaction
         void Awake()
         {
             //selectionToolHandler = referenceManager.selectionToolHandler;
-            if (!SceneManagerHelper.ActiveSceneName.Equals("TutorialScene_New"))
-            {
-            }
             selectionToolCollider = referenceManager.selectionToolCollider;
             drawTool = referenceManager.drawTool.gameObject;
             keyboard = referenceManager.keyboardSwitch;
@@ -109,9 +108,9 @@ namespace CellexalVR.Interaction
             leftControllerBodyMeshFilter.mesh = normalControllerMesh;
             leftControllerBodyRenderer = leftControllerBody.GetComponent<Renderer>();
             leftControllerBodyRenderer.material = normalMaterial;
+            meshesSetSuccessful = true;
             //var leftBody = leftControllerBody.GetComponent<Renderer>();
             //leftBody.material = leftControllerMaterial;
-
         }
 
         /// <summary>
@@ -152,6 +151,10 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SwitchToModel(Model model)
         {
+            if (!meshesSetSuccessful)
+            {
+                SetMeshes();
+            }
             ActualModel = model;
             switch (model)
             {
@@ -171,7 +174,8 @@ namespace CellexalVR.Interaction
                     break;
 
                 case Model.WebBrowser:
-                    webBrowser.GetComponent<WebManager>().SetVisible(true);
+                    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
+                    //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     //rightLaser.enabled = true;
                     rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
@@ -273,7 +277,8 @@ namespace CellexalVR.Interaction
                     //rightLaser.enabled = true;
                     break;
                 case Model.WebBrowser:
-                    webBrowser.GetComponent<WebManager>().SetVisible(true);
+                    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
+                    //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     laserPointerController.ToggleLaser(true);
                     break;
                 case Model.TwoLasers:
@@ -311,7 +316,8 @@ namespace CellexalVR.Interaction
             keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
             drawTool.SetActive(false);
-            webBrowser.GetComponent<WebManager>().SetVisible(false);
+            webBrowser.GetComponent<WebManager>().SetBrowserActive(false);
+            //webBrowser.GetComponent<WebManager>().SetVisible(false);
             if (inMenu)
             {
                 SwitchToModel(Model.Menu);

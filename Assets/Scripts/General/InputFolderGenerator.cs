@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using CellexalVR.SceneObjects;
+using TMPro;
 
 namespace CellexalVR.General
 {
@@ -109,7 +110,7 @@ namespace CellexalVR.General
                     nfolder++;
 
                     // Set text on folder box
-                    newFolder.GetComponentInChildren<TextMesh>().text = croppedDirectoryName;
+                    newFolder.GetComponentInChildren<TextMeshPro>().text = croppedDirectoryName;
                     newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
                     newFolder.gameObject.name = croppedDirectoryName + "_box";
                 }

@@ -72,24 +72,24 @@ namespace CellexalVR.General
                     if (CrossSceneInformation.Spectator)
                     {
                         player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-                        spectatorRig.SetActive(true);
                         Destroy(VRRig);
+                        spectatorRig.SetActive(true);
                     }
 
                     else if (CrossSceneInformation.Ghost)
                     {
+                        Destroy(spectatorRig);
                         player = PhotonNetwork.Instantiate(this.ghostPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         Destroy(referenceManager.leftControllerScriptAlias);
                         Destroy(referenceManager.rightControllerScriptAlias);
                         referenceManager.leftController.GetComponent<MenuToggler>().menuCube.SetActive(false);
                         Destroy(referenceManager.leftController.GetComponent<MenuToggler>());
-                        Destroy(spectatorRig);
                     }
 
                     else if (!CrossSceneInformation.Spectator)
                     {
-                        player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                         Destroy(spectatorRig);
+                        player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
                     }
 
                     player.gameObject.name = PhotonNetwork.playerName;
@@ -132,6 +132,26 @@ namespace CellexalVR.General
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to read folder " + path);
             coordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
+        }
+
+        public void InformSynchConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
+                                        Color graphLowExpressionColor, Color graphMidExpressionColor, Color graphHighExpressionColor,
+                                        bool graphMostExpressedMarker, Color[] attributeColors, int numberOfHeatmapColors, 
+                                        Color heatmapLowExpressionColor, Color heatmapMidExpressionColor, Color heatmapHighExpressionColor,
+                                        string heatmapAlgorithm, string networkAlgorithm, int heatmapNumberOfGenes, 
+                                        int networkLineColoringMethod, Color networkLineColorPositiveHigh, Color networkLineColorPositiveLow,
+                                        Color networkLineColorNegativeHigh, Color networkLineColorNegativeLow, int numberOfNetworkLineColors,
+                                        float networkLineWidth)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to synch relevant parts of config");
+            coordinator.photonView.RPC("SendSynchConfig", PhotonTargets.Others, selectionToolColors, graphDefaultColor,
+                                        graphNumberOfExpressionColors, graphLowExpressionColor, graphMidExpressionColor, graphHighExpressionColor,
+                                        graphMostExpressedMarker, attributeColors, numberOfHeatmapColors, heatmapLowExpressionColor,
+                                        heatmapMidExpressionColor, heatmapHighExpressionColor, heatmapAlgorithm, networkAlgorithm,
+                                        heatmapNumberOfGenes, networkLineColoringMethod, networkLineColorPositiveHigh,
+                                        networkLineColorPositiveLow, networkLineColorNegativeHigh, networkLineColorNegativeLow,
+                                        numberOfNetworkLineColors, networkLineWidth);
         }
 
         public void InformGraphPointChangedColor(string graphname, string label, Color color)
@@ -624,10 +644,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendHandlePressDown", PhotonTargets.Others, heatmapName, hitx, hity);
         }
 
-        public void InformCreateNewHeatmapFromSelection(string heatmapName)
+        public void InformCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop,
+            int selectedGeneBottom, float selectedBoxWidth, float selectedBoxHeight)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName, selectedGroupLeft, selectedGroupRight,
+                selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
 
         #endregion

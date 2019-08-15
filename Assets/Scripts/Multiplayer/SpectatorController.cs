@@ -67,7 +67,6 @@ namespace CellexalVR.Multiplayer
             {
                 speed = 1;
             }
-
             if (Input.GetKey(KeyCode.W))
             {
                 transform.Translate(Vector3.forward * Time.deltaTime * speed);
@@ -98,7 +97,6 @@ namespace CellexalVR.Multiplayer
                 transform.Translate(Vector3.down * Time.deltaTime * speed);
             }
         }
-
     }
 
 }

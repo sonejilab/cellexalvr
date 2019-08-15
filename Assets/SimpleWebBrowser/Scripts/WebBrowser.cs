@@ -7,6 +7,7 @@ using MessageLibrary;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 
 namespace SimpleWebBrowser
 {
@@ -80,6 +81,9 @@ namespace SimpleWebBrowser
         private string _setUrlString = "";
 
         private SteamVR_TrackedObject rightController;
+        private WebManager webManager;
+
+
         public ReferenceManager referenceManager;
         public GameObject browserPrefab;
         public SteamVR_Controller.Device device;
@@ -130,8 +134,33 @@ namespace SimpleWebBrowser
 
         }
 
-        void Awake()
+        //void Awake()
+        //{
+        //    _mainEngine = new BrowserEngine();
+
+        //    if (RandomMemoryFile)
+        //    {
+        //        Guid memid = Guid.NewGuid();
+        //        MemoryFile = memid.ToString();
+        //    }
+        //    if (RandomPort)
+        //    {
+        //        System.Random r = new System.Random();
+        //        Port = 8000 + r.Next(1000);
+        //    }
+
+
+
+        //    _mainEngine.InitPlugin(Width, Height, MemoryFile, Port, InitialURL, EnableWebRTC);
+        //    //run initialization
+        //    if (JSInitializationCode.Trim() != "")
+        //        _mainEngine.RunJSOnce(JSInitializationCode);
+        //}
+
+        // Use this for initialization
+        void Start()
         {
+            webManager = GetComponentInParent<WebManager>();
             _mainEngine = new BrowserEngine();
 
             if (RandomMemoryFile)
@@ -151,11 +180,7 @@ namespace SimpleWebBrowser
             //run initialization
             if (JSInitializationCode.Trim() != "")
                 _mainEngine.RunJSOnce(JSInitializationCode);
-        }
 
-        // Use this for initialization
-        void Start()
-        {
             InitPrefabLinks();
             mainUIPanel.InitPrefabLinks();
             if (referenceManager == null)
@@ -426,7 +451,7 @@ namespace SimpleWebBrowser
         #region Helpers
 
         private Vector2 GetScreenCoords()
-        { 
+        {
             RaycastHit hit;
             if (!Physics.Raycast(referenceManager.rightLaser.transform.position, referenceManager.rightLaser.transform.forward, out hit, 10f))
                 return new Vector2(-1f, -1f);
@@ -508,21 +533,24 @@ namespace SimpleWebBrowser
                 OnTriggerUp();
             }
             // If sockets get disconnected or similar error we need to recreate object.
-            try
+            if (webManager.isVisible)
             {
-                _mainEngine.UpdateTexture();
-            }
-            catch (InvalidOperationException e)
-            {
-                CellexalLog.Log("Browser could not update. Destroy object and re-initialize...");
-                var newBrowser = GameObject.Instantiate(browserPrefab, Vector3.zero, Quaternion.identity);
-                newBrowser.transform.parent = gameObject.transform.parent;
-                newBrowser.transform.localPosition = transform.localPosition;
-                newBrowser.transform.localScale = transform.localScale;
-                newBrowser.transform.localRotation = transform.localRotation;
-                //gameObject.AddComponent<WebBrowser>();
-                Destroy(gameObject);
+                try
+                {
+                    _mainEngine.UpdateTexture();
+                }
+                catch (InvalidOperationException e)
+                {
+                    CellexalLog.Log("Browser could not update. Destroy object and re-initialize...");
+                    var newBrowser = GameObject.Instantiate(browserPrefab, Vector3.zero, Quaternion.identity);
+                    newBrowser.transform.parent = gameObject.transform.parent;
+                    newBrowser.transform.localPosition = transform.localPosition;
+                    newBrowser.transform.localScale = transform.localScale;
+                    newBrowser.transform.localRotation = transform.localRotation;
+                    //gameObject.AddComponent<WebBrowser>();
+                    Destroy(gameObject);
 
+                }
             }
 
 

@@ -150,6 +150,12 @@ namespace CellexalVR.General
             {
                 return;
             }
+            var parentGraph = graphPoint.parent;
+            if (parentGraph.tag.Equals("Untagged"))
+            {
+                var ctcGraph = graphPoint.parent.GetComponent<GraphBetweenGraphs>();
+                graphPoint = ctcGraph.graph1.FindGraphPoint(graphPoint.Label);
+            }
             // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
             int oldGroup = graphPoint.Group;
@@ -526,7 +532,8 @@ namespace CellexalVR.General
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
             // Wait for server to start up
-            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
+            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid")
+                    || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }

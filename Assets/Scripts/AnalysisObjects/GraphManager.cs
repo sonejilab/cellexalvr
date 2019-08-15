@@ -325,9 +325,14 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ClearLinesBetweenGraphs()
         {
-            foreach (Graph g in Graphs)
+            foreach (Graph g in originalGraphs)
             {
-                g.Lines.Clear();
+                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                {
+                    Destroy(g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().gameObject);
+                    Graphs.Remove(g.CTCGraphs[i].GetComponent<Graph>());
+                }
+                g.CTCGraphs.Clear();
             }
         }
 

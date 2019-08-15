@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
---- !u!114 &2150704130997703942
+--- !u!114 &797481884179529250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,6 +177,7 @@ MonoBehaviour:
   helpVideoManager: {fileID: 0}
   velocityGenerator: {fileID: 0}
   filterManager: {fileID: 0}
+  reportManager: {fileID: 0}
   keyboardHandler: {fileID: 0}
   keyboardSwitch: {fileID: 0}
   correlatedGenesList: {fileID: 0}

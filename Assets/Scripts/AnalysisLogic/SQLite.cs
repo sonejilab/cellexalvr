@@ -467,13 +467,13 @@ namespace SQLiter
         /// </summary>
         /// <param name="gene">The gene to query for.</param>
         /// <param name="cells">The cells to query for.</param>
-        internal void QueryGenesInCells(string gene, string[] cells, Action<SQLite> action = null)
+        internal void QueryGenesInCells(string gene, Cell[] cells, Action<SQLite> action = null)
         {
             QueryRunning = true;
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cells.Length; ++i)
             {
-                string cell = cells[i];
+                string cell = cells[i].Label;
                 builder.Append("\"").Append(cell).Append("\"");
                 if (i < cells.Length - 1)
                 {
@@ -618,14 +618,14 @@ namespace SQLiter
         /// </summary>
         /// <param name="genes">An array with the genes to query for.</param>
         /// <param name="cells">An array with the cells to query for.</param>
-        internal void QueryGenesInCells(string[] genes, string[] cells)
+        internal void QueryGenesInCells(string[] genes, Cell[] cells)
         {
             QueryRunning = true;
             StartCoroutine(QueryGenesInCellsCoroutine(genes, cells));
 
         }
 
-        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, string[] cells)
+        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, Cell[] cells)
         {
             if (cells.Length == 0 || genes.Length == 0)
             {
@@ -635,8 +635,8 @@ namespace SQLiter
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cells.Length; ++i)
             {
-                string cell = cells[i];
-                builder.Append("\"").Append(cell).Append("\"");
+                Cell cell = cells[i];
+                builder.Append("\"").Append(cell.Label).Append("\"");
                 if (i < cells.Length - 1)
                 {
                     builder.Append(", ");
@@ -784,7 +784,10 @@ namespace SQLiter
         private IEnumerator QueryGeneCoroutine(string geneName, Action<SQLite> action)
         {
             _result.Clear();
-            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+            string query = "select cname, value " +
+                           "FROM datavalues " +
+                           "INNER JOIN cells ON (datavalues.cell_id = cells.id) " +
+                           "WHERE (ene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
 
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
@@ -822,7 +825,7 @@ namespace SQLiter
         {
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "select cname, value from datavalues left join cells on datavalues.cell_id = cells.id " +
+            string query = "SELECT cname, value from datavalues left join cells on datavalues.cell_id = cells.id " +
                 "where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();

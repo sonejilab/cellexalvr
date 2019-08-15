@@ -7,16 +7,24 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     /// </summary>
     class CreateNewHeatmapButton : CellexalButton
     {
+        private CellexalVR.AnalysisObjects.Heatmap heatmap;
+        private HeatmapRaycast heatmapRaycast;
+
         protected override string Description
         {
             get { return "Create New Heatmap From Selection"; }
         }
 
+        private void Start()
+        {
+            heatmapRaycast = GetComponentInParent<AnalysisObjects.HeatmapRaycast>();
+            heatmap = GetComponentInParent<AnalysisObjects.Heatmap>();
+
+        }
+
         public override void Click()
         {
-            var heatmap = GetComponentInParent<AnalysisObjects.Heatmap>();
-            referenceManager.gameManager.InformCreateNewHeatmapFromSelection(heatmap.name);
-            heatmap.CreateNewHeatmapFromSelection();
+            heatmapRaycast.CreateNewHeatmapFromSelection();
             device.TriggerHapticPulse(2000);
         }
     }
