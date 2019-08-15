@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
+using CellexalVR.Filters;
 using CellexalVR.Interaction;
 using CellexalVR.Menu;
 using CellexalVR.Menu.SubMenus;
@@ -114,6 +115,7 @@ namespace CellexalVR.General
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
         public VelocityGenerator velocityGenerator;
+        public FilterManager filterManager;
         #endregion
 
         #region GeneKeyboard
@@ -126,6 +128,15 @@ namespace CellexalVR.General
         public ColoringOptionsList coloringOptionsList;
         public KeyboardHandler folderKeyboard;
         public KeyboardHandler webBrowserKeyboard;
+
+        #endregion
+
+        #region Filters
+        [Header("Filters")]
+        public GameObject filterBlockBoard;
+        public KeyboardHandler filterNameKeyboard;
+        public KeyboardHandler filterOperatorKeyboard;
+        public KeyboardHandler filterValueKeyboard;
 
         #endregion
 
@@ -226,7 +237,7 @@ namespace CellexalVR.General
             screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
-
+            filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
 
 
             keyboardHandler = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
@@ -243,7 +254,6 @@ namespace CellexalVR.General
 
             spectatorRig = GameObject.Find("SpectatorRig");
             VRRig = GameObject.Find("[VRTK]3.3");
-
 
         }
 #endif

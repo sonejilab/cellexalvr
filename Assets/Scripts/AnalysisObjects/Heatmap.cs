@@ -558,19 +558,19 @@ namespace CellexalVR.AnalysisObjects
             {
                 yield return null;
             }
-            db.QueryGenesIds(genes);
-            while (db.QueryRunning)
-            {
-                yield return null;
-            }
+            //db.QueryGenesIds(genes);
+            //while (db.QueryRunning)
+            //{
+            //    yield return null;
+            //}
 
-            ArrayList result = db._result;
-            Dictionary<string, string> geneIds = new Dictionary<string, string>(result.Count);
-            foreach (Tuple<string, string> t in result)
-            {
-                // ids are keys, names are values
-                geneIds[t.Item2] = t.Item1;
-            }
+            //ArrayList result = db._result;
+            //Dictionary<string, string> geneIds = new Dictionary<string, string>(result.Count);
+            //foreach (Tuple<string, string> t in result)
+            //{
+            //    // ids are keys, names are values
+            //    geneIds[t.Item2] = t.Item1;
+            //}
 
             Dictionary<string, int> genePositions = new Dictionary<string, int>(genes.Length);
             for (int i = 0; i < genes.Length; ++i)
@@ -594,7 +594,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 yield return null;
             }
-            result = db._result;
+            ArrayList result = db._result;
 
             CellexalLog.Log("Reading " + result.Count + " results from database");
             //Thread thread = new Thread(() =>
@@ -616,7 +616,7 @@ namespace CellexalVR.AnalysisObjects
                 i++;
                 tuple = (Tuple<string, float>)result[i];
                 highestExpression = tuple.Item2;
-                ycoord = heatmapY + genePositions[geneIds[tuple.Item1]] * ycoordInc;
+                ycoord = heatmapY + genePositions[tuple.Item1] * ycoordInc;
                 genescount++;
                 i++;
                 //}
@@ -632,7 +632,7 @@ namespace CellexalVR.AnalysisObjects
                         break;
                     tuple = (Tuple<string, float>)result[i];
                 }
-                while (!geneIds.ContainsKey(tuple.Item1));
+                while (!genePositions.ContainsKey(tuple.Item1));
                 i--;
                 expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => ((int)((t2.Item2 - t1.Item2) * 10000)));
                 float binsize = (float)expressions.Count / CellexalConfig.Config.NumberOfHeatmapColors;

@@ -26,7 +26,9 @@ namespace CellexalVR.Extensions
                 default:
                     return "";
             }
+
         }
+
     }
 
     public enum AttributeLogic { INVALID, NOT_INCLUDED, YES, NO }
@@ -91,7 +93,7 @@ namespace CellexalVR.Extensions
             }
             return null;
         }
-        
+
         public static string UnFixFilePath(this string s)
         {
             string directorySeparatorChar = "\\\\";

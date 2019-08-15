@@ -62,8 +62,20 @@ namespace CellexalVR.Interaction
             {
                 referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
-            
-            
+            if (referenceManager.filterNameKeyboard)
+            {
+                referenceManager.filterNameKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+            if (referenceManager.filterOperatorKeyboard)
+            {
+                referenceManager.filterOperatorKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+            if (referenceManager.filterValueKeyboard)
+            {
+                referenceManager.filterValueKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+
+
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
             {
@@ -143,6 +155,7 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
+
                     hitPanel.UpdateLaserCoords(hit.textureCoord2);
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {

@@ -730,7 +730,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void CreateSubGraphs(List<string> attributes)
         {
-            BooleanExpression.Expr expr = new BooleanExpression.AttributeExpr(attributes[0]);
+            BooleanExpression.Expr expr = new BooleanExpression.AttributeExpr(attributes[0], true);
 
             string name = attributes[0];
             if (name.Contains('@'))
@@ -748,7 +748,7 @@ namespace CellexalVR.AnalysisObjects
                     name += " - " + attributes[i];
                 }
                 BooleanExpression.Expr tempExpr = expr;
-                expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.AttributeExpr(attributes[i]));
+                expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.AttributeExpr(attributes[i], true));
             }
             StartCoroutine(CreateSubgraphsCoroutine(expr, attributes, graphManager.originalGraphs, name));
         }

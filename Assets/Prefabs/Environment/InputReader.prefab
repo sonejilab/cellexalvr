@@ -1,21 +1,11 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &100100000
-Prefab:
-  m_ObjectHideFlags: 1
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications: []
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1865869582214080}
-  m_IsPrefabAsset: 1
 --- !u!1 &1865869582214080
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4124897533270930}
@@ -23,7 +13,7 @@ GameObject:
   - component: {fileID: 114405805043964006}
   - component: {fileID: 114065228220667824}
   - component: {fileID: 114706478586369516}
-  - component: {fileID: 114605234585142436}
+  - component: {fileID: 2150704130997703942}
   m_Layer: 0
   m_Name: InputReader
   m_TagString: Untagged
@@ -33,9 +23,10 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &4124897533270930
 Transform:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865869582214080}
   m_LocalRotation: {x: 0.7005581, y: -0.0074735875, z: 0.0073378365, w: 0.71351856}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -44,11 +35,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114916324322146698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865869582214080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1387051ba67a5d64d8d9fda78daa2dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  networkPrefab: {fileID: 114190743744166870, guid: 802de9a0247fe3f4aa4ce2c5509c2eef,
+    type: 3}
+  graphName: {fileID: 114647396841719870, guid: 2ba89b1022cb7e14f9efe83d76c6788b,
+    type: 3}
+  lineprefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 3}
+  debug: 0
+  doLoad: 0
+--- !u!114 &114405805043964006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865869582214080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9de993d076257b48865457786c5dcc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
 --- !u!114 &114065228220667824
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865869582214080}
   m_Enabled: 0
   m_EditorHideFlags: 0
@@ -57,23 +82,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   usernameField: {fileID: 0}
   usernameText: {fileID: 0}
---- !u!114 &114405805043964006
+--- !u!114 &114706478586369516
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865869582214080}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9de993d076257b48865457786c5dcc8, type: 3}
+  m_Script: {fileID: 11500000, guid: 44ddcae96663a4041870643579f8a6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 114605234585142436}
---- !u!114 &114605234585142436
+  referenceManager: {fileID: 0}
+--- !u!114 &2150704130997703942
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865869582214080}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -110,6 +137,7 @@ MonoBehaviour:
   selectionFromPreviousMenu: {fileID: 0}
   colorByGeneMenu: {fileID: 0}
   filterMenu: {fileID: 0}
+  velocitySubMenu: {fileID: 0}
   selectionMenu: {fileID: 0}
   currentFlashedGeneText: {fileID: 0}
   frontButtons: {fileID: 0}
@@ -131,11 +159,11 @@ MonoBehaviour:
   graphGenerator: {fileID: 0}
   inputFolderGenerator: {fileID: 0}
   loaderController: {fileID: 0}
-  configManager: {fileID: 114706478586369516}
+  configManager: {fileID: 0}
   helperCylinder: {fileID: 0}
-  inputReader: {fileID: 114916324322146698}
+  inputReader: {fileID: 0}
   database: {fileID: 0}
-  logManager: {fileID: 114405805043964006}
+  logManager: {fileID: 0}
   gameManager: {fileID: 0}
   calculatorCluster: {fileID: 0}
   consoleManager: {fileID: 0}
@@ -147,45 +175,17 @@ MonoBehaviour:
   tutorialManager: {fileID: 0}
   screenCanvas: {fileID: 0}
   helpVideoManager: {fileID: 0}
+  velocityGenerator: {fileID: 0}
+  filterManager: {fileID: 0}
   keyboardHandler: {fileID: 0}
   keyboardSwitch: {fileID: 0}
   correlatedGenesList: {fileID: 0}
   previousSearchesList: {fileID: 0}
   autoCompleteList: {fileID: 0}
+  coloringOptionsList: {fileID: 0}
   folderKeyboard: {fileID: 0}
   webBrowserKeyboard: {fileID: 0}
   settingsMenu: {fileID: 0}
   colorPicker: {fileID: 0}
   spectatorRig: {fileID: 0}
   VRRig: {fileID: 0}
---- !u!114 &114706478586369516
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1865869582214080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44ddcae96663a4041870643579f8a6e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 114605234585142436}
---- !u!114 &114916324322146698
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1865869582214080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1387051ba67a5d64d8d9fda78daa2dee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 114605234585142436}
-  networkPrefab: {fileID: 114190743744166870, guid: 802de9a0247fe3f4aa4ce2c5509c2eef,
-    type: 2}
-  graphName: {fileID: 114647396841719870, guid: 2ba89b1022cb7e14f9efe83d76c6788b,
-    type: 2}
-  lineprefab: {fileID: 1820579546230104, guid: f2a3da0f21dec6b4cb72d32489e20385, type: 2}
-  debug: 0
-  doLoad: 0

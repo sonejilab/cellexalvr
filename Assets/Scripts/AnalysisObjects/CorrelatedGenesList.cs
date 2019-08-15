@@ -114,7 +114,7 @@ namespace CellexalVR.AnalysisObjects
             //string function = "get.genes.cor.to";
             //string args = "cellexalObj" + ", \"" + nodeName + "\", \"" + outputFile + "\", " + facsTypeArg;
             //string script = function + "(" + args + ")";
-            
+
             string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").UnFixFilePath();
             string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
             string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile + " " + facsTypeArg;
@@ -169,7 +169,7 @@ namespace CellexalVR.AnalysisObjects
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
         }
-        
+
 
 
 
@@ -209,7 +209,11 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (oldNode != null)
                 {
-                    UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(oldNode.gameObject); };
+                    UnityEditor.EditorApplication.delayCall += () =>
+                    {
+                        UnityEditor.PrefabUtility.RevertAddedGameObject(oldNode.gameObject, UnityEditor.InteractionMode.AutomatedAction);
+                        /*DestroyImmediate(oldNode.gameObject);*/
+                    };
                 }
             }
 
