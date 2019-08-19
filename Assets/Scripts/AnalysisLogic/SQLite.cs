@@ -469,11 +469,23 @@ namespace SQLiter
         /// <param name="cells">The cells to query for.</param>
         internal void QueryGenesInCells(string gene, Cell[] cells, Action<SQLite> action = null)
         {
+            string[] cellnameArray = cells.Select((c) => c.Label).ToArray();
+            QueryGenesInCells(gene, cells, action);
+
+        }
+
+        /// <summary>
+        /// Queries the database for the expression of a gene in some cells.
+        /// </summary>
+        /// <param name="gene">The gene to query for.</param>
+        /// <param name="cells">The cells to query for.</param>
+        internal void QueryGenesInCells(string gene, string[] cells, Action<SQLite> action = null)
+        {
             QueryRunning = true;
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cells.Length; ++i)
             {
-                string cell = cells[i].Label;
+                string cell = cells[i];
                 builder.Append("\"").Append(cell).Append("\"");
                 if (i < cells.Length - 1)
                 {
@@ -618,14 +630,14 @@ namespace SQLiter
         /// </summary>
         /// <param name="genes">An array with the genes to query for.</param>
         /// <param name="cells">An array with the cells to query for.</param>
-        internal void QueryGenesInCells(string[] genes, Cell[] cells)
+        internal void QueryGenesInCells(string[] genes, string[] cells)
         {
             QueryRunning = true;
             StartCoroutine(QueryGenesInCellsCoroutine(genes, cells));
 
         }
 
-        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, Cell[] cells)
+        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, string[] cells)
         {
             if (cells.Length == 0 || genes.Length == 0)
             {
@@ -635,8 +647,7 @@ namespace SQLiter
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cells.Length; ++i)
             {
-                Cell cell = cells[i];
-                builder.Append("\"").Append(cell.Label).Append("\"");
+                builder.Append("\"").Append(cells[i]).Append("\"");
                 if (i < cells.Length - 1)
                 {
                     builder.Append(", ");

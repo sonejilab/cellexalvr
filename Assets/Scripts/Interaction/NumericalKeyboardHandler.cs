@@ -16,10 +16,8 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Validates the currently written text.
         /// </summary>
-        public void ValidateInput()
+        public void ValidateInput(string text)
         {
-            string text = output.text;
-
             // text must only contain one dot
             int indexOfSecondDot = IndexOfSecond(text, '.');
             if (indexOfSecondDot != -1)
@@ -27,14 +25,13 @@ namespace CellexalVR.Interaction
                 text = text.Substring(0, indexOfSecondDot);
             }
 
-            // text must only contain one percent sign
-            int indexOfSecondPercent = IndexOfSecond(text, '%');
-            if (indexOfSecondPercent != -1)
+            // nothing must be typed after a percent sign
+            int indexOfPercent = text.IndexOf('%');
+            if (indexOfPercent != -1)
             {
-                text = text.Substring(0, indexOfSecondPercent);
+                text = text.Substring(0, indexOfPercent + 1);
             }
-
-            output.text = text;
+            SetAllOutputs(text);
         }
 
         private int IndexOfSecond(string s, char c)

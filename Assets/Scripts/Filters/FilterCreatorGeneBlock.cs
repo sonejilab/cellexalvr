@@ -71,5 +71,16 @@ namespace CellexalVR.Filters
             }
             return new BooleanExpression.GeneExpr(geneString, BooleanExpression.ParseToken(operatorString, 0), valueFloat, isPercent);
         }
+
+        public override void SetCollidersActivated(bool activate)
+        {
+            geneName.GetComponent<Collider>().enabled = activate;
+            operatorSign.GetComponent<Collider>().enabled = activate;
+            value.GetComponent<Collider>().enabled = activate;
+            foreach (var port in ports)
+            {
+                port.GetComponent<Collider>().enabled = activate;
+            }
+        }
     }
 }

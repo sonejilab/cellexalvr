@@ -101,6 +101,11 @@ namespace CellexalVR.AnalysisObjects
             {
                 meshToUse = graphPointLowestQualityMesh;
             }
+            else
+            {
+                meshToUse = graphPointStandardMesh;
+
+            }
             newGraph = Instantiate(graphPrefab).GetComponent<Graph>();
             //graphManager.SetGraphStartPosition();
             newGraph.transform.position = startPositions[graphCount % 6];

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 114405805043964006}
   - component: {fileID: 114065228220667824}
   - component: {fileID: 114706478586369516}
-  - component: {fileID: 2150704130997703942}
+  - component: {fileID: 797481884179529250}
   m_Layer: 0
   m_Name: InputReader
   m_TagString: Untagged
@@ -28,13 +28,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865869582214080}
-  m_LocalRotation: {x: 0.7005581, y: -0.0074735875, z: 0.0073378365, w: 0.71351856}
+  m_LocalRotation: {x: 0.70055956, y: -0.007472198, z: 0.007336502, w: 0.7135171}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 88.950005, y: -1.2, z: 0}
 --- !u!114 &114916324322146698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1387051ba67a5d64d8d9fda78daa2dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
+  referenceManager: {fileID: 797481884179529250}
   networkPrefab: {fileID: 114190743744166870, guid: 802de9a0247fe3f4aa4ce2c5509c2eef,
     type: 3}
   graphName: {fileID: 114647396841719870, guid: 2ba89b1022cb7e14f9efe83d76c6788b,
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9de993d076257b48865457786c5dcc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
+  referenceManager: {fileID: 797481884179529250}
 --- !u!114 &114065228220667824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44ddcae96663a4041870643579f8a6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
+  referenceManager: {fileID: 797481884179529250}
 --- !u!114 &797481884179529250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,11 +159,11 @@ MonoBehaviour:
   graphGenerator: {fileID: 0}
   inputFolderGenerator: {fileID: 0}
   loaderController: {fileID: 0}
-  configManager: {fileID: 0}
+  configManager: {fileID: 114706478586369516}
   helperCylinder: {fileID: 0}
-  inputReader: {fileID: 0}
+  inputReader: {fileID: 114916324322146698}
   database: {fileID: 0}
-  logManager: {fileID: 0}
+  logManager: {fileID: 114405805043964006}
   gameManager: {fileID: 0}
   calculatorCluster: {fileID: 0}
   consoleManager: {fileID: 0}
@@ -178,7 +178,7 @@ MonoBehaviour:
   velocityGenerator: {fileID: 0}
   filterManager: {fileID: 0}
   reportManager: {fileID: 0}
-  keyboardHandler: {fileID: 0}
+  geneKeyboard: {fileID: 0}
   keyboardSwitch: {fileID: 0}
   correlatedGenesList: {fileID: 0}
   previousSearchesList: {fileID: 0}
@@ -186,6 +186,11 @@ MonoBehaviour:
   coloringOptionsList: {fileID: 0}
   folderKeyboard: {fileID: 0}
   webBrowserKeyboard: {fileID: 0}
+  filterBlockBoard: {fileID: 0}
+  filterNameKeyboard: {fileID: 0}
+  filterOperatorKeyboard: {fileID: 0}
+  filterValueKeyboard: {fileID: 0}
+  filterNameKeyboardAutoCompleteList: {fileID: 0}
   settingsMenu: {fileID: 0}
   colorPicker: {fileID: 0}
   spectatorRig: {fileID: 0}

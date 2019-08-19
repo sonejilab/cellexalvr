@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,10 +15,11 @@ namespace CellexalVR.Filters
     {
         public ReferenceManager referenceManager;
         public FilterManager filterManager;
+
         public bool isPrefab = true;
 
-        private List<FilterCreatorBlockPort> ports;
-        private GameObject filterBlockBoard;
+        protected List<FilterCreatorBlockPort> ports;
+        protected GameObject filterBlockBoard;
         public virtual int HighlightedSection { get; set; }
 
         protected virtual void Start()
@@ -29,15 +31,14 @@ namespace CellexalVR.Filters
             }
             filterBlockBoard = referenceManager.filterBlockBoard;
             VRTK.VRTK_InteractableObject interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
-            interactableObject.InteractableObjectGrabbed += CreateDuplicateIfPrefab;
-            interactableObject.InteractableObjectUngrabbed += MoveToBoard;
+            interactableObject.InteractableObjectGrabbed += OnGrabbed;
+            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
         }
 
-        private void CreateDuplicateIfPrefab(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
         {
             if (isPrefab)
             {
-                isPrefab = false;
                 // create a new prefab to replace us
                 GameObject newPrefab = Instantiate(gameObject, transform.position, transform.rotation, transform.parent);
                 newPrefab.GetComponent<FilterCreatorBlock>().isPrefab = true;
@@ -46,17 +47,20 @@ namespace CellexalVR.Filters
             }
         }
 
-        private void MoveToBoard(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
         {
+            if (isPrefab)
+            {
+                isPrefab = false;
+                transform.parent = filterBlockBoard.transform;
+                SetCollidersActivated(true);
+            }
+
             StartCoroutine(MoveToBoardCoroutine());
         }
 
         private IEnumerator MoveToBoardCoroutine()
         {
-            if (transform.parent != filterBlockBoard.transform)
-            {
-                transform.parent = filterBlockBoard.transform;
-            }
 
             BoxCollider collider = filterBlockBoard.GetComponent<BoxCollider>();
             Vector3 startPos = filterBlockBoard.transform.InverseTransformPoint(transform.position);
@@ -109,6 +113,11 @@ namespace CellexalVR.Filters
         public abstract BooleanExpression.Expr ToExpr();
 
         /// <summary>
+        /// Activates or deactivates all colliders except the one used for grabbing the block.
+        /// </summary>
+        public abstract void SetCollidersActivated(bool activate);
+
+        /// <summary>
         /// Unhighlights all ports on this block.
         /// </summary>
         public virtual void UnhighlightAllPorts()
@@ -119,6 +128,16 @@ namespace CellexalVR.Filters
             }
         }
 
+        /// <summary>
+        /// Disconnects all ports on this block if they are connected to another port.
+        /// </summary>
+        internal void DisconnectAllPorts()
+        {
+            foreach (var port in ports)
+            {
+                port.Disconnect();
+            }
+        }
 
     }
 }

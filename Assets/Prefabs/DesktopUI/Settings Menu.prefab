@@ -13122,7 +13122,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411954133660600}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -13163,6 +13163,7 @@ MonoBehaviour:
   heatmapGradient: {fileID: 114604753557558638}
   numberOfHeatmapColorsInputField: {fileID: 114930378242367714}
   heatmapAlgorithmDropdown: {fileID: 114202509949937284}
+  graphPointQualityDropdown: {fileID: 5233168887624432964}
   graphHighExpression: {fileID: 114954167055659858}
   graphMidExpression: {fileID: 114278210905384088}
   graphLowExpression: {fileID: 114631663393905558}
@@ -13200,6 +13201,7 @@ MonoBehaviour:
   - wilcox
   - Seurat_wilcox
   - anova
+  graphPointQualityModes: []
   lineColouringMethods:
   - By correlation
   - Random

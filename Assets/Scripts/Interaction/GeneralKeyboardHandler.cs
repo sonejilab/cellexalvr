@@ -48,10 +48,12 @@ namespace CellexalVR.Interaction
             if (CurrentLayout == 2)
             {
                 SwitchLayout(Layouts[0]);
+                CurrentLayout = 0;
             }
             else
             {
                 SwitchLayout(Layouts[2]);
+                CurrentLayout = 2;
             }
         }
     }

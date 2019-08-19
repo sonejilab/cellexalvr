@@ -12,16 +12,18 @@ namespace CellexalVR.Filters
         public ReferenceManager referenceManager;
         public FilterCreatorBlock parent;
         public int section;
-        public bool isAttributeInclude = false;
-        public CellexalVR.Interaction.KeyboardHandler keyboardToUse;
+        public enum FieldType { NAME, OPERATOR, VALUE, ATTRIBUTE_INCLUDE }
+        public FieldType type;
         public TMPro.TextMeshPro textmeshpro;
 
+        private FilterManager filterManager;
         private SteamVR_TrackedObject rightController;
         private bool controllerInside;
 
         private void Start()
         {
             rightController = referenceManager.rightController;
+            filterManager = referenceManager.filterManager;
         }
 
         private void OnValidate()
@@ -57,12 +59,27 @@ namespace CellexalVR.Filters
             var device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
-                if (!isAttributeInclude)
+                if (type == FieldType.NAME)
                 {
-                    keyboardToUse.gameObject.SetActive(true);
-                    keyboardToUse.output = textmeshpro;
+                    var keyboard = referenceManager.filterNameKeyboard;
+                    keyboard.gameObject.SetActive(true);
+                    keyboard.additionalOutputs.Add(textmeshpro);
                 }
-                else
+                else if (type == FieldType.OPERATOR)
+                {
+                    var keyboard = referenceManager.filterOperatorKeyboard;
+                    keyboard.gameObject.SetActive(true);
+                    keyboard.output = textmeshpro;
+
+                }
+                else if (type == FieldType.VALUE)
+                {
+                    var keyboard = referenceManager.filterValueKeyboard;
+                    keyboard.gameObject.SetActive(true);
+                    keyboard.additionalOutputs.Add(textmeshpro);
+
+                }
+                else if (type == FieldType.ATTRIBUTE_INCLUDE)
                 {
                     textmeshpro.text = textmeshpro.text == "included" ? "not included" : "included";
                 }

@@ -119,9 +119,9 @@ namespace CellexalVR.General
         public ReportManager reportManager;
         #endregion
 
-        #region GeneKeyboard
+        #region Keyboard
         [Header("Keyboards")]
-        public KeyboardHandler keyboardHandler;
+        public KeyboardHandler geneKeyboard;
         public KeyboardSwitch keyboardSwitch;
         public CorrelatedGenesList correlatedGenesList;
         public PreviousSearchesList previousSearchesList;
@@ -138,6 +138,7 @@ namespace CellexalVR.General
         public KeyboardHandler filterNameKeyboard;
         public KeyboardHandler filterOperatorKeyboard;
         public KeyboardHandler filterValueKeyboard;
+        public AutoCompleteList filterNameKeyboardAutoCompleteList;
 
         #endregion
 
@@ -242,7 +243,7 @@ namespace CellexalVR.General
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
 
 
-            keyboardHandler = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
+            geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
             correlatedGenesList = GameObject.Find("Keyboard Setup/Correlated Genes List").GetComponent<CorrelatedGenesList>();
             previousSearchesList = GameObject.Find("Keyboard Setup/Previous Searches List").GetComponent<PreviousSearchesList>();
@@ -250,6 +251,14 @@ namespace CellexalVR.General
             coloringOptionsList = GameObject.Find("Keyboard Setup/Coloring Options List").GetComponent<ColoringOptionsList>();
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
             webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
+
+            GameObject filterCreator = GameObject.Find("Filter Creator");
+            filterBlockBoard = filterCreator.transform.Find("Filter Block Board").gameObject;
+            GameObject keyboardParent = filterBlockBoard.transform.Find("Keyboards").gameObject;
+            filterNameKeyboard = keyboardParent.GetComponentInChildren<GeneralKeyboardHandler>(true);
+            filterOperatorKeyboard = keyboardParent.GetComponentInChildren<OperatorKeyboardHandler>(true);
+            filterValueKeyboard = keyboardParent.GetComponentInChildren<NumericalKeyboardHandler>(true);
+            filterNameKeyboardAutoCompleteList = filterNameKeyboard.gameObject.GetComponentInChildren<AutoCompleteList>(true);
 
             settingsMenu = GameObject.Find("Settings Menu").GetComponent<SettingsMenu>();
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();

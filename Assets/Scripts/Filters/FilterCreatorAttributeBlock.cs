@@ -56,17 +56,17 @@ namespace CellexalVR.Filters
         public override BooleanExpression.Expr ToExpr()
         {
             UpdateStrings();
-            bool isPercent = includeString[includeString.Length - 1] == '%';
-            float valueFloat;
-            if (isPercent)
-            {
-                valueFloat = float.Parse(includeString.Substring(0, includeString.Length - 1));
-            }
-            else
-            {
-                valueFloat = float.Parse(includeString);
-            }
             return new BooleanExpression.AttributeExpr(attributeNameString, includeString == "include");
+        }
+
+        public override void SetCollidersActivated(bool activate)
+        {
+            attributeName.GetComponent<Collider>().enabled = activate;
+            include.GetComponent<Collider>().enabled = activate;
+            foreach (var port in ports)
+            {
+                port.GetComponent<Collider>().enabled = activate;
+            }
         }
     }
 }

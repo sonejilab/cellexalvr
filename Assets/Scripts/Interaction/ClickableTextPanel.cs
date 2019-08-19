@@ -28,9 +28,13 @@ namespace CellexalVR.Interaction
         /// </summary>
         public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
 
+
+        private KeyboardHandler parentKeyboard;
+
         protected override void Start()
         {
             base.Start();
+            parentKeyboard = gameObject.GetComponentInParent<KeyboardHandler>();
             //textMesh = GetComponentInChildren<TextMesh>();
         }
 
@@ -65,6 +69,10 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            parentKeyboard.SetAllOutputs(NameOfThing);
+            parentKeyboard.SubmitOutput(true);
+            return;
+
             if (Type == Definitions.Measurement.GENE)
             {
                 referenceManager.cellManager.ColorGraphsByGene(NameOfThing, ColoringMethod);
@@ -84,7 +92,7 @@ namespace CellexalVR.Interaction
             {
                 referenceManager.previousSearchesList.AddEntry(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod);
             }
-            referenceManager.keyboardHandler.Clear();
+            referenceManager.geneKeyboard.Clear();
             referenceManager.autoCompleteList.ClearList();
         }
     }

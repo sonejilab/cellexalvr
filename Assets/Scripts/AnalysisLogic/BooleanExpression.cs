@@ -752,7 +752,7 @@ namespace CellexalVR.AnalysisLogic
 
             public override string ToString()
             {
-                return "gene:" + gene + " " + OpToString(compare) + " " + value;
+                return "gene:" + gene + " " + OpToString(compare) + " " + value + (percent ? "%" : "");
             }
 
             public override void SwapPercentExpressions(Tuple<string, float, float>[] ranges)
@@ -764,6 +764,7 @@ namespace CellexalVR.AnalysisLogic
                         if (tuple.Item1 == this.gene)
                         {
                             value = (value / 100f) * tuple.Item3;
+                            percent = false;
                             return;
                         }
                     }
@@ -810,7 +811,7 @@ namespace CellexalVR.AnalysisLogic
 
             public override string ToString()
             {
-                return "facs:" + facs + " " + OpToString(compare) + " " + value;
+                return "facs:" + facs + " " + OpToString(compare) + " " + value + (percent ? "%" : "");
             }
 
             public override void SwapPercentExpressions(Tuple<string, float, float>[] ranges)
@@ -822,6 +823,7 @@ namespace CellexalVR.AnalysisLogic
                         if (tuple.Item1 == this.facs)
                         {
                             value = (value / 100f) * tuple.Item3;
+                            percent = false;
                             return;
                         }
                     }

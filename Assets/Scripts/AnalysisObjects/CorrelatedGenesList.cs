@@ -209,11 +209,14 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (oldNode != null)
                 {
-                    UnityEditor.EditorApplication.delayCall += () =>
+                    if (UnityEditor.PrefabUtility.IsAddedGameObjectOverride(oldNode.gameObject))
                     {
-                        UnityEditor.PrefabUtility.RevertAddedGameObject(oldNode.gameObject, UnityEditor.InteractionMode.AutomatedAction);
-                        /*DestroyImmediate(oldNode.gameObject);*/
-                    };
+                        UnityEditor.EditorApplication.delayCall += () =>
+                        {
+                            UnityEditor.PrefabUtility.RevertAddedGameObject(oldNode.gameObject, UnityEditor.InteractionMode.AutomatedAction);
+                            /*DestroyImmediate(oldNode.gameObject);*/
+                        };
+                    }
                 }
             }
 

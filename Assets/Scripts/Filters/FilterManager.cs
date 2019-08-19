@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 namespace CellexalVR.Filters
@@ -18,6 +19,7 @@ namespace CellexalVR.Filters
         public ReferenceManager referenceManager;
         public GameObject wirePrefab;
         public FilterCreatorResultBlock resultBlock;
+        public TextMeshPro filterPreviewText;
 
         private SteamVR_TrackedObject rightController;
         private List<Tuple<Graph.GraphPoint, int>> queuedCells = new List<Tuple<Graph.GraphPoint, int>>(256);
@@ -45,6 +47,8 @@ namespace CellexalVR.Filters
         private void OnValidate()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            resultBlock = referenceManager.filterBlockBoard.GetComponentInChildren<FilterCreatorResultBlock>();
+            filterPreviewText = referenceManager.filterBlockBoard.transform.Find("Filter Preview Text").GetComponent<TextMeshPro>();
         }
 
         /// <summary>
@@ -66,9 +70,11 @@ namespace CellexalVR.Filters
         private IEnumerator SwapPercentExpressions()
         {
             resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.LOADING);
-            // swap out percent expressions
             string[] genes = currentFilter.GetGenes(true).ToArray();
             string[] facs = currentFilter.GetFacs(true).ToArray();
+
+            List<Tuple<string, float, float>> ranges = new List<Tuple<string, float, float>>();
+            // swap genes
             if (genes.Length > 0)
             {
                 SQLiter.SQLite database = referenceManager.database;
@@ -82,30 +88,33 @@ namespace CellexalVR.Filters
                     yield return null;
                 }
                 var results = database._result;
-                Tuple<string, float, float>[] ranges = new Tuple<string, float, float>[results.Count];
                 for (int i = 0; i < results.Count; ++i)
                 {
                     Tuple<string, float, float> range = (Tuple<string, float, float>)results[i];
-                    ranges[i] = new Tuple<string, float, float>(range.Item1.ToLower(), range.Item2, range.Item3);
+                    ranges.Add(new Tuple<string, float, float>(range.Item1.ToLower(), range.Item2, range.Item3));
                 }
+            }
+
+            // swap facs
+            if (facs.Length > 0)
+            {
                 var facsRanges = referenceManager.cellManager.FacsRanges;
-                for (int i = genes.Length, j = 0; i < ranges.Length; ++i, ++j)
+                for (int i = 0; i < facs.Length; ++i)
                 {
-                    if (!facsRanges.ContainsKey(facs[j]))
+                    if (!facsRanges.ContainsKey(facs[i]))
                     {
-                        CellexalLog.Log("FILTER ERROR: Facs " + facs[j] + " not found.");
+                        CellexalLog.Log("FILTER ERROR: Facs " + facs[i] + " not found.");
                         yield break;
                     }
 
-                    Tuple<float, float> facsRange = facsRanges[facs[j]];
-                    ranges[i] = new Tuple<string, float, float>(facs[j].ToLower(), facsRange.Item1, facsRange.Item2);
+                    Tuple<float, float> facsRange = facsRanges[facs[i]];
+                    ranges.Add(new Tuple<string, float, float>(facs[i].ToLower(), facsRange.Item1, facsRange.Item2));
                 }
-
-                currentFilter.Expression.SwapPercentExpressions(ranges);
-                currentFilter.Expression.SetFilterManager(this);
             }
+            currentFilter.Expression.SwapPercentExpressions(ranges.ToArray());
+            currentFilter.Expression.SetFilterManager(this);
             referenceManager.selectionManager.CurrentFilter = currentFilter;
-            print(currentFilter.Expression.ToString());
+            filterPreviewText.text = currentFilter.Expression.ToString();
             loadingFilter = false;
             resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.FINISHED);
             runningSwapPercentCoroutine = null;
@@ -128,6 +137,10 @@ namespace CellexalVR.Filters
                 StartCoroutine(EvalQueuedCellsCoroutine());
             }
 
+        }
+
+        private void LateUpdate()
+        {
             var device = SteamVR_Controller.Input((int)rightController.index);
             if (!portClickedThisFrame && previouslyClickedPort != null && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
@@ -147,7 +160,7 @@ namespace CellexalVR.Filters
 
             //CellexalLog.Log("Evaluating " + cellsToEvaluate.Count + " queued cells for filter");
             string[] cells = cellsToEvaluate.Select((p) => p.Item1.Label).ToArray();
-            //print("found " + currentFilterGenes.Length + " in filter");
+            //print("evaling " + cellsToEvaluate.Count + " with " + currentFilter.Expression.ToString());
             if (currentFilterGenes.Length > 0)
             {
                 SQLiter.SQLite database = referenceManager.database;
@@ -260,6 +273,4 @@ namespace CellexalVR.Filters
             }
         }
     }
-
-
 }

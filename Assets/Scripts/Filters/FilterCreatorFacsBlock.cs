@@ -67,7 +67,18 @@ namespace CellexalVR.Filters
             {
                 valueFloat = float.Parse(valueString);
             }
-            return new BooleanExpression.FacsExpr(facsString, BooleanExpression.ParseToken(operatorString, 0), valueFloat, isPercent);
+            return new BooleanExpression.FacsExpr(facsString.ToLower(), BooleanExpression.ParseToken(operatorString, 0), valueFloat, isPercent);
+        }
+
+        public override void SetCollidersActivated(bool activate)
+        {
+            facsName.GetComponent<Collider>().enabled = activate;
+            operatorSign.GetComponent<Collider>().enabled = activate;
+            value.GetComponent<Collider>().enabled = activate;
+            foreach (var port in ports)
+            {
+                port.GetComponent<Collider>().enabled = activate;
+            }
         }
     }
 }

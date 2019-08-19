@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -227,7 +228,7 @@ namespace CellexalVR.AnalysisLogic
             }
             while (selectionManager.RObjectUpdating || !File.Exists(groupingFilepath)
                 || !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid")
-                ||  File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+                || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -238,7 +239,7 @@ namespace CellexalVR.AnalysisLogic
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")) 
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
@@ -506,7 +507,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return null;
             }
-            db.QueryGenesInCells(heatmap.genes, heatmap.cells);
+            db.QueryGenesInCells(heatmap.genes, heatmap.cells.Select((c) => c.Label).ToArray());
             while (db.QueryRunning)
             {
                 yield return null;

@@ -49,7 +49,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
         {
-            throw new System.InvalidOperationException("Use the other SetMaterial method");
+            //throw new System.InvalidOperationException("Use the other SetMaterial method");
         }
 
         /// <summary>

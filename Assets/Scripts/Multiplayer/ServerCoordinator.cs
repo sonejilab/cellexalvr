@@ -82,7 +82,7 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);
             Debug.Log("Recieved message to color all graphs by " + geneName);
             referenceManager.cellManager.ColorGraphsByGene(geneName); //, referenceManager.graphManager.GeneExpressionColoringMethod);
-            referenceManager.keyboardHandler.SubmitOutput(false);
+            referenceManager.geneKeyboard.SubmitOutput(false);
             referenceManager.autoCompleteList.ClearList();
         }
 
@@ -98,7 +98,7 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to add  " + key + " to search field");
             Debug.Log("Recieved message to add letter " + key + " to search field");
-            referenceManager.keyboardHandler.AddCharacter(key[0], false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+            referenceManager.geneKeyboard.AddCharacter(key[0], false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
         }
 
         [PunRPC]

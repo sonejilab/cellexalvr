@@ -46,6 +46,8 @@ namespace CellexalVR.General
         private GameObject _Keyboard;
         public GameObject WebBrowser;
         private GameObject _WebBrowser;
+        public GameObject FilterCreator;
+        private GameObject _FilterCreator;
 
 
         public GameObject SettingsMenu;
@@ -114,6 +116,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _Loader, Loader);
             InstantiateSceneAsset(ref _Keyboard, Keyboard);
             InstantiateSceneAsset(ref _WebBrowser, WebBrowser);
+            InstantiateSceneAsset(ref _FilterCreator, FilterCreator);
             InstantiateSceneAsset(ref _SettingsMenu, SettingsMenu);
             InstantiateSceneAsset(ref _Console, Console);
             InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas);
@@ -176,7 +179,7 @@ namespace CellexalVR.General
             //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
 
             _Keyboard.GetComponent<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
-            _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
+            _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>(true).BuildKeyboard();
             _Loader.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
 
             
@@ -231,6 +234,7 @@ namespace CellexalVR.General
             Loader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Tron_Loader.prefab");
             Keyboard = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Keyboard Setup.prefab");
             WebBrowser = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/WebBrowser.prefab");
+            FilterCreator = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Filters/Filter Creator.prefab");
             SettingsMenu = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Settings Menu.prefab");
             Console = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Console.prefab");
             FPSCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/FPS canvas.prefab");

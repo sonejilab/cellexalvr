@@ -38,5 +38,13 @@ namespace CellexalVR.Filters
                 return "(!" + input.connectedTo.parent.ToString() + ")";
             }
         }
+
+        public override void SetCollidersActivated(bool activate)
+        {
+            foreach (var port in ports)
+            {
+                port.GetComponent<Collider>().enabled = activate;
+            }
+        }
     }
 }

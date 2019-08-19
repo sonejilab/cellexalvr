@@ -96,5 +96,6 @@ namespace CellexalVR.Filters
             runningCoroutine = null;
         }
 
+        public override void SetCollidersActivated(bool activate) { }
     }
 }

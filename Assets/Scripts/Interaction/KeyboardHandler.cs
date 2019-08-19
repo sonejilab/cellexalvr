@@ -67,6 +67,11 @@ namespace CellexalVR.Interaction
             {
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
+
+            foreach (ClickablePanel panel in GetComponentsInChildren<ClickablePanel>())
+            {
+                panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
         }
 
         /// <summary>
@@ -142,7 +147,6 @@ namespace CellexalVR.Interaction
             }
         }
 
-
         /// <summary>
         /// Adds a character to the output.
         /// </summary>
@@ -208,6 +212,10 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SubmitOutput(bool invoke = true)
         {
+            foreach (var o in additionalOutputs)
+            {
+                o.text = output.text;
+            }
             if (invoke && OnEnter != null)
             {
                 OnEnter.Invoke(Text());
@@ -238,9 +246,18 @@ namespace CellexalVR.Interaction
 
         public void DismissKeyboard()
         {
+            additionalOutputs.Clear();
             gameObject.SetActive(false);
         }
 
+        public void SetAllOutputs(string text)
+        {
+            output.text = text;
+            foreach (var o in additionalOutputs)
+            {
+                o.text = text;
+            }
+        }
 
 #if UNITY_EDITOR
         private void OnValidate()
@@ -329,6 +346,10 @@ namespace CellexalVR.Interaction
                     Mesh mesh = CreateNineSlicedQuad(smallUV, largeUV, item.size, radiansPerUnit, size);
                     panel.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
                     panel.GetComponent<MeshFilter>().sharedMesh = mesh;
+                    if (panel.GetComponent<MeshCollider>())
+                    {
+                        DestroyImmediate(panel.GetComponent<MeshCollider>());
+                    }
                     if (panel.GetComponent<BoxCollider>() == null)
                     {
                         panel.gameObject.AddComponent<BoxCollider>();
