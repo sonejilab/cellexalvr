@@ -153,5 +153,10 @@ MonoBehaviour:
   fromGraphCentroid: {x: 0, y: 0, z: 0}
   midGraphCentroid: {x: 0, y: 0, z: 0}
   toGraphCentroid: {x: 0, y: 0, z: 0}
+  fromRadius: 0
+  toRadius: 0
   centroids: 0
+  spherePrefab: {fileID: 4094783700118341761, guid: 5ba5762dcec71d54aaaac9a33291c189,
+    type: 3}
+  sphereMaterial: {fileID: 2100000, guid: 27899123a4c81774f85143b216eb324e, type: 2}
   selectionManager: {fileID: 0}
