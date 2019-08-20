@@ -17,7 +17,12 @@ namespace CellexalVR.SceneObjects
         public Vector3 fromGraphCentroid;
         public Vector3 midGraphCentroid;
         public Vector3 toGraphCentroid;
+        public Vector3 fromClusterHull;
+        public Vector3 midClusterHull;
+        public Vector3 toClusterHull;
         public bool centroids;
+        public GameObject spherePrefab;
+        public Material sphereMaterial;
         public Color LineColor { get; set; }
 
         public Graph.GraphPoint graphPoint1;
@@ -37,6 +42,9 @@ namespace CellexalVR.SceneObjects
         private float x;
         private AnimationCurve curve;
         private int posCtr = 0;
+        private GameObject fromSphere;
+        private GameObject midSphere;
+        private GameObject toSphere;
 
 
         private void Start()
@@ -54,7 +62,7 @@ namespace CellexalVR.SceneObjects
                 lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
-                lineRenderer.startWidth = lineRenderer.endWidth += 0.10f;
+                lineRenderer.startWidth = lineRenderer.endWidth += 0.01f;
                 initAnimate = true;
 
             }
@@ -87,6 +95,9 @@ namespace CellexalVR.SceneObjects
                     midPos = t3.TransformPoint(midGraphCentroid);
                     firstAnchor = (fromPos + midPos) / 2f;
                     secondAnchor = (midPos + toPos) / 2f;
+                    fromSphere.transform.position = fromPos;
+                    midSphere.transform.position = midPos;
+                    toSphere.transform.position = toPos;
                     lineRenderer.SetPositions(new Vector3[] { fromPos, firstAnchor, midPos, secondAnchor, toPos });
                 }
                 else
@@ -131,14 +142,30 @@ namespace CellexalVR.SceneObjects
                 {
                     if (centroids)
                     {
-                        curve = new AnimationCurve();
-                        curve.AddKey(1.0f, 1.0f);
-                        curve.AddKey(0.2f, 0.10f);
-                        curve.AddKey(0.5f, 0.1f);
-                        curve.AddKey(0.8f, 0.10f);
-                        curve.AddKey(0.0f, 1.0f);
-                        lineRenderer.widthMultiplier = 0.15f;
-                        lineRenderer.widthCurve = curve;
+                        Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.5f);
+                        fromSphere = Instantiate(spherePrefab, transform);
+                        fromSphere.GetComponent<Renderer>().material.color = col;
+                        fromSphere.transform.localScale = fromClusterHull * 200;
+                        fromSphere.transform.position = fromPos;
+
+                        midSphere = Instantiate(spherePrefab, transform);
+                        midSphere.GetComponent<Renderer>().material.color = col; 
+                        midSphere.transform.localScale = midClusterHull * 100;
+                        midSphere.transform.position = midPos;
+
+                        toSphere = Instantiate(spherePrefab, transform);
+                        toSphere.GetComponent<Renderer>().material.color = col;
+                        toSphere.transform.localScale = toClusterHull * 200;
+                        toSphere.transform.position = toPos;
+                        //curve = new AnimationCurve();
+                        //curve.AddKey(1.0f, 1.0f);
+                        //curve.AddKey(0.2f, 0.10f);
+                        //curve.AddKey(0.5f, 0.1f);
+                        //curve.AddKey(0.8f, 0.10f);
+                        //curve.AddKey(0.0f, 1.0f);
+                        //lineRenderer.widthMultiplier = fromRadius;
+                        //lineRenderer.widthMultiplier = 0.15f;
+                        //lineRenderer.widthCurve = curve;
                         //Gradient gradient = new Gradient();
                         //gradient.SetKeys(
                         //    new GradientColorKey[] { new GradientColorKey(LineColor, 0.0f),
