@@ -9,6 +9,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
+using CellexalVR.Filters;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.SubMenus;
 using TMPro;
@@ -57,7 +58,7 @@ namespace CellexalVR.General
         private int historyIndexOffset;
         private GameManager gameManager;
 
-        //public Filter CurrentFilter { get; set; }
+        public Filter CurrentFilter { get; set; }
         public bool RObjectUpdating { get; private set; }
 
         /// <summary>
@@ -123,8 +124,17 @@ namespace CellexalVR.General
         /// </summary>
         public void AddGraphpointToSelection(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback)
         {
+            if (CurrentFilter != null)
+            {
+                referenceManager.filterManager.AddCellToEval(graphPoint, newGroup);
 
-            AddGraphpointToSelection(graphPoint, newGroup, true, selectionToolCollider.Colors[newGroup]);
+            }
+            else
+            {
+                AddGraphpointToSelection(graphPoint, newGroup, true, selectionToolCollider.Colors[newGroup]);
+
+            }
+
             //Debug.Log("Adding gp to sel. Inform clients.");
             gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
         }

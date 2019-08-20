@@ -328,7 +328,7 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
             stopwatch.Stop();
-            print("Time : " + stopwatch.Elapsed.ToString());
+            //print("Time : " + stopwatch.Elapsed.ToString());
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
@@ -648,7 +648,7 @@ namespace CellexalVR.AnalysisLogic
             }
             
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
-            
+
         }
 
 

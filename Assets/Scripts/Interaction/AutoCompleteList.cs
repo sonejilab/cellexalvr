@@ -11,6 +11,7 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
         public List<ClickableTextPanel> listNodes;
+        public bool buildTree;
 
         private List<Tuple<string, Definitions.Measurement>> namesOfThings;
         public bool ListEnabled { get; set; } = true;
@@ -35,7 +36,11 @@ namespace CellexalVR.Interaction
         {
             //scoreMatrix = new int[16, 16];
             namesOfThings = new List<Tuple<string, Definitions.Measurement>>();
-            CellexalEvents.GraphsLoaded.AddListener(Init);
+            if (buildTree)
+            {
+                CellexalEvents.GraphsLoaded.AddListener(Init);
+            }
+            CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
 
         /// <summary>
@@ -136,8 +141,26 @@ namespace CellexalVR.Interaction
             //root.TreeInfo(ref numChildren, ref numLeaves, 0, ref depth);
             //float avgChildren = numChildren / ((float)namesOfThings.Count - numLeaves);
             //print(avgChildren + " " + depth);
+            referenceManager.filterNameKeyboardAutoCompleteList.SetBKTree(root);
             stopwatch.Stop();
             CellexalLog.Log(string.Format("Successfully built autocomplete list bk-tree in {0}", stopwatch.Elapsed.ToString()));
+        }
+
+        /// <summary>
+        /// Clears the bk tree
+        /// </summary>
+        public void Clear()
+        {
+            ClearList();
+            root = null;
+        }
+
+        /// <summary>
+        /// Sets the root of the bk tree
+        /// </summary>
+        private void SetBKTree(BKTreeNode root)
+        {
+            this.root = root;
         }
 
         /// <summary>
@@ -164,12 +187,14 @@ namespace CellexalVR.Interaction
         /// <param name="word">The word typed on the keyboard.</param>
         public void UpdateList(string word)
         {
+            if (root == null)
+            {
+                return;
+            }
+
             if (word == "")
             {
-                for (int i = 0; i < listNodes.Count; ++i)
-                {
-                    listNodes[i].SetText("", Definitions.Measurement.INVALID);
-                }
+                ClearList();
                 return;
             }
             List<Tuple<int, BKTreeNode>> candidates = new List<Tuple<int, BKTreeNode>>(64);

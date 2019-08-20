@@ -64,7 +64,7 @@ namespace CellexalVR.Tools
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("HeatBoard") || other.CompareTag("Network") || other.CompareTag("Subgraph"))
+            if (other.CompareTag("HeatBoard") || other.CompareTag("Network") || other.CompareTag("Subgraph") || other.CompareTag("FilterBlock"))
             {
                 controllerInside = true;
                 objectToDelete = other.gameObject;

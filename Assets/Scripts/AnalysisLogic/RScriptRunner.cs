@@ -69,7 +69,7 @@ namespace CellexalVR.AnalysisLogic
                         }
                     }
                 });
-                
+
                 proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
                 {
                     if (!String.IsNullOrEmpty(e.Data))
@@ -153,7 +153,7 @@ namespace CellexalVR.AnalysisLogic
             //            geneWriter.WriteLine(e.Data);
             //        }
             //    }
-            
+
         }
 
         /// <summary>

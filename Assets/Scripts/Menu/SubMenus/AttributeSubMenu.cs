@@ -86,7 +86,7 @@ namespace CellexalVR.Menu.SubMenus
                 ColorByAttributeButton button = b.GetComponent<ColorByAttributeButton>();
                 if (button.CurrentBooleanExpressionState != AttributeLogic.INVALID && button.CurrentBooleanExpressionState != AttributeLogic.NOT_INCLUDED)
                 {
-                    BooleanExpression.Expr newNode = new BooleanExpression.AttributeExpr(button.Attribute);
+                    BooleanExpression.Expr newNode = new BooleanExpression.AttributeExpr(button.Attribute, true);
 
                     if (button.CurrentBooleanExpressionState == AttributeLogic.NO)
                     {

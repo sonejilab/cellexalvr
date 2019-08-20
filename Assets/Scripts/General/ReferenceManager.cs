@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
+using CellexalVR.Filters;
 using CellexalVR.Interaction;
 using CellexalVR.Menu;
 using CellexalVR.Menu.SubMenus;
@@ -114,12 +115,13 @@ namespace CellexalVR.General
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
         public VelocityGenerator velocityGenerator;
+        public FilterManager filterManager;
         public ReportManager reportManager;
         #endregion
 
-        #region GeneKeyboard
+        #region Keyboard
         [Header("Keyboards")]
-        public KeyboardHandler keyboardHandler;
+        public KeyboardHandler geneKeyboard;
         public KeyboardSwitch keyboardSwitch;
         public CorrelatedGenesList correlatedGenesList;
         public PreviousSearchesList previousSearchesList;
@@ -127,6 +129,16 @@ namespace CellexalVR.General
         public ColoringOptionsList coloringOptionsList;
         public KeyboardHandler folderKeyboard;
         public KeyboardHandler webBrowserKeyboard;
+
+        #endregion
+
+        #region Filters
+        [Header("Filters")]
+        public GameObject filterBlockBoard;
+        public KeyboardHandler filterNameKeyboard;
+        public KeyboardHandler filterOperatorKeyboard;
+        public KeyboardHandler filterValueKeyboard;
+        public AutoCompleteList filterNameKeyboardAutoCompleteList;
 
         #endregion
 
@@ -227,11 +239,11 @@ namespace CellexalVR.General
             screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
+            filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
 
 
-
-            keyboardHandler = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
+            geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
             correlatedGenesList = GameObject.Find("Keyboard Setup/Correlated Genes List").GetComponent<CorrelatedGenesList>();
             previousSearchesList = GameObject.Find("Keyboard Setup/Previous Searches List").GetComponent<PreviousSearchesList>();
@@ -240,12 +252,19 @@ namespace CellexalVR.General
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
             webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
 
+            GameObject filterCreator = GameObject.Find("Filter Creator");
+            filterBlockBoard = filterCreator.transform.Find("Filter Block Board").gameObject;
+            GameObject keyboardParent = filterBlockBoard.transform.Find("Keyboards").gameObject;
+            filterNameKeyboard = keyboardParent.GetComponentInChildren<GeneralKeyboardHandler>(true);
+            filterOperatorKeyboard = keyboardParent.GetComponentInChildren<OperatorKeyboardHandler>(true);
+            filterValueKeyboard = keyboardParent.GetComponentInChildren<NumericalKeyboardHandler>(true);
+            filterNameKeyboardAutoCompleteList = filterNameKeyboard.gameObject.GetComponentInChildren<AutoCompleteList>(true);
+
             settingsMenu = GameObject.Find("Settings Menu").GetComponent<SettingsMenu>();
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();
 
             spectatorRig = GameObject.Find("SpectatorRig");
             VRRig = GameObject.Find("[VRTK]3.3");
-
 
         }
 #endif

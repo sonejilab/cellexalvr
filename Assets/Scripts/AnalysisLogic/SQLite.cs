@@ -15,6 +15,7 @@ using CellexalVR.AnalysisObjects;
 using SQLiter;
 using CellexalVR.AnalysisLogic;
 using System.Data;
+using System.Linq;
 
 namespace SQLiter
 {
@@ -468,11 +469,23 @@ namespace SQLiter
         /// <param name="cells">The cells to query for.</param>
         internal void QueryGenesInCells(string gene, Cell[] cells, Action<SQLite> action = null)
         {
+            string[] cellnameArray = cells.Select((c) => c.Label).ToArray();
+            QueryGenesInCells(gene, cells, action);
+
+        }
+
+        /// <summary>
+        /// Queries the database for the expression of a gene in some cells.
+        /// </summary>
+        /// <param name="gene">The gene to query for.</param>
+        /// <param name="cells">The cells to query for.</param>
+        internal void QueryGenesInCells(string gene, string[] cells, Action<SQLite> action = null)
+        {
             QueryRunning = true;
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cells.Length; ++i)
             {
-                string cell = cells[i].Label;
+                string cell = cells[i];
                 builder.Append("\"").Append(cell).Append("\"");
                 if (i < cells.Length - 1)
                 {
@@ -534,13 +547,47 @@ namespace SQLiter
             QueryRunning = false;
 
         }
+
+        /// <summary>
+        /// Queries the database for the lowest and highest expression. This fills <see cref="_reader"/> with <see cref="Tuple{string, float, float}"/> (gene_name, min, max)
+        /// </summary>
+        /// <param name="genes">An array of strings with the gene names.</param>
+        internal void QueryGeneRanges(string[] genes)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryGeneRangesCoroutine(genes));
+        }
+
+        private IEnumerator QueryGeneRangesCoroutine(string[] genes)
+        {
+            string genesString = string.Join(", ", genes);
+            string query = "select gname, min(value), max(value) from datavalues inner join genes on datavalues.gene_id = genes.id where gname in (\"" + genesString + "\") group by gname";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+
+            while (_reader.Read())
+            {
+                string cellName = _reader.GetString(0);
+                float min = _reader.GetFloat(1);
+                float max = _reader.GetFloat(2);
+                _result.Add(new Tuple<string, float, float>(cellName, min, max));
+            }
+            QueryRunning = false;
+        }
+
         /// <summary>
         /// Queries the database for the expression of a gene in some cells. This function assumes that the string <paramref name="cells"/> is already formatted the way sqlite wants.
         /// </summary>
         /// <param name="gene">The gene to query for.</param>
         /// <param name="cells">The cells to query for. Cell names should be inside quotes (") and seperated with commas.</param>
         /// <example>
-        /// QueryGenesInCells("Gata1", "\"HSPC_001\", \"HSPC_002\", \"HSPC_003\"");
+        /// <code>QueryGenesInCells("Gata1", "\"HSPC_001\", \"HSPC_002\", \"HSPC_003\"");</code>
         /// </example>
         internal void QueryGeneInCells(string gene, string cells)
         {
@@ -575,29 +622,32 @@ namespace SQLiter
 
         /// <summary>
         /// Query the database for all expressions of multiple genes and multiple cells.
-        /// This method puts many <see cref="Tuple"/> with string and floats in the <see cref="ArrayList"/> _result.
-        /// The first <see cref="Tuple"/> is always a gene id and the highest expression of that gene. The next bunch of <see cref="Tuple"/>
-        /// are cell names and their respective expression of the gene in the previously mentioned Tuple.
-        /// Then another <see cref="Tuple"/> follows with the next gene id followed by cells and their expression and so on.
-        /// Not all cells are put in the ArrayList, only the ones that were found in the database. This means
-        /// that there is not the same amount of elements between each tuple which marks a new gene.
+        /// This method puts many <see cref="Tuple{string, float}"/> with string and floats in the <see cref="ArrayList"/> <see cref="_result"/>.
+        /// The first <see cref="Tuple{string, float}"/> is a gene name and the lowest expression for that gene, following that is the highest expression of that gene. 
+        /// The next bunch of <see cref="Tuple{string, float}"/> are cell names and their respective expression of the gene in the previously mentioned Tuples.
+        /// Then another two <see cref="Tuple{string, float}"/> follows with the next gene name, lowest and highest expression followed by cells and their expression and so on.
+        /// Not all cells are put in the ArrayList, only the ones that were found in the database. This means that there is not the same amount of elements between each tuple which marks a new gene.
         /// </summary>
         /// <param name="genes">An array with the genes to query for.</param>
         /// <param name="cells">An array with the cells to query for.</param>
-        internal void QueryGenesInCells(string[] genes, Cell[] cells)
+        internal void QueryGenesInCells(string[] genes, string[] cells)
         {
             QueryRunning = true;
             StartCoroutine(QueryGenesInCellsCoroutine(genes, cells));
 
         }
 
-        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, Cell[] cells)
+        private IEnumerator QueryGenesInCellsCoroutine(string[] genes, string[] cells)
         {
+            if (cells.Length == 0 || genes.Length == 0)
+            {
+                yield break;
+            }
+
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cells.Length; ++i)
             {
-                Cell cell = cells[i];
-                builder.Append("\"").Append(cell.Label).Append("\"");
+                builder.Append("\"").Append(cells[i]).Append("\"");
                 if (i < cells.Length - 1)
                 {
                     builder.Append(", ");
@@ -617,7 +667,7 @@ namespace SQLiter
             }
             string geneNames = builder.ToString();
 
-            string query = "SELECT cname, gene_id, value " +
+            string query = "SELECT cname, gname, value " +
                            "FROM ((datavalues " +
                            "INNER JOIN cells ON datavalues.cell_id = cells.id) " +
                            "INNER JOIN genes ON datavalues.gene_id = genes.id) " +
@@ -638,7 +688,7 @@ namespace SQLiter
             while (_reader.Read())
             {
                 string cellName = _reader.GetString(0);
-                string geneId = _reader.GetInt32(1).ToString();
+                string geneId = _reader.GetString(1);
                 float expression = _reader.GetFloat(2);
                 if (geneId != lastGeneId)
                 {
@@ -674,8 +724,15 @@ namespace SQLiter
                 }
             }
             // replace the last value as well
-            _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
-            _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
+            if (lowestGeneExpressionIndex < _result.Count && highestGeneExpressionIndex < _result.Count)
+            {
+                _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
+                _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
+            }
+            else
+            {
+                print("index out of bounds: " + lowestGeneExpressionIndex + " " + highestGeneExpressionIndex + ", _result count: " + _result.Count);
+            }
             // the structure if _result is now a list with each gene's highest epxression followed by all the individual expressions
             QueryRunning = false;
         }
@@ -767,7 +824,7 @@ namespace SQLiter
         public void QueryGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
         {
             QueryRunning = true;
-            
+
             StartCoroutine(QueryGeneCoroutine(geneName, coloringMethod));
         }
 
@@ -779,7 +836,7 @@ namespace SQLiter
         {
             //int statusId = status.AddStatus("Querying database for gene " + geneName);
             _result.Clear();
-            string query = "SELECT cname, value from datavalues left join cells on datavalues.cell_id = cells.id "+
+            string query = "SELECT cname, value from datavalues left join cells on datavalues.cell_id = cells.id " +
                 "where gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
@@ -1195,20 +1252,6 @@ namespace SQLiter
         {
             this.First = first;
             this.Second = second;
-        }
-    }
-
-    /// <summary>
-    /// Helper struct for representing a pair of a string and an int
-    /// </summary>
-    struct StringFloatPair
-    {
-        public string s;
-        public int i;
-        public StringFloatPair(string s, int i)
-        {
-            this.s = s;
-            this.i = i;
         }
     }
 

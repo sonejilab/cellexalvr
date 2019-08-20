@@ -81,14 +81,7 @@ namespace CellexalVR.Interaction
                     handler.Clear();
                     break;
                 case Type.NumChar:
-                    if (handler.currentLayout == KeyboardHandler.Layout.Special)
-                    {
-                        handler.SwitchLayout(KeyboardHandler.Layout.Lowercase);
-                    }
-                    else
-                    {
-                        handler.SwitchLayout(KeyboardHandler.Layout.Special);
-                    }
+                    handler.NumChar();
                     break;
                 case Type.Enter:
                     handler.SubmitOutput();

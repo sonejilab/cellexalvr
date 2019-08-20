@@ -50,9 +50,9 @@ namespace CellexalVR.Interaction
                 rightController = referenceManager.rightController;
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
-            if (referenceManager.keyboardHandler)
+            if (referenceManager.geneKeyboard)
             {
-                referenceManager.keyboardHandler.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                referenceManager.geneKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
             if (referenceManager.folderKeyboard)
             {
@@ -62,8 +62,29 @@ namespace CellexalVR.Interaction
             {
                 referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
-            
-            
+            if (referenceManager.filterNameKeyboard)
+            {
+                referenceManager.filterNameKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+            if (referenceManager.filterOperatorKeyboard)
+            {
+                referenceManager.filterOperatorKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+            if (referenceManager.filterValueKeyboard)
+            {
+                referenceManager.filterValueKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+
+            foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>(true))
+            {
+                panel.SetMaterials(unlockedNormalMaterial, unlockedHighlightMaterial, unlockedPressedMaterial, lockedNormalMaterial, lockedHighlightMaterial, lockedPressedMaterial);
+            }
+
+            foreach (var panel in GetComponentsInChildren<CorrelatedGenesPanel>(true))
+            {
+                panel.SetMaterials(correlatedGenesNormalMaterial, correlatedGenesHighlightMaterial, correlatedGenesPressedMaterial);
+            }
+            /*
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
             {
@@ -80,15 +101,7 @@ namespace CellexalVR.Interaction
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
-            foreach (var panel in GetComponentsInChildren<CorrelatedGenesPanel>(true))
-            {
-                panel.SetMaterials(correlatedGenesNormalMaterial, correlatedGenesHighlightMaterial, correlatedGenesPressedMaterial);
-            }
 
-            foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>(true))
-            {
-                panel.SetMaterials(unlockedNormalMaterial, unlockedHighlightMaterial, unlockedPressedMaterial, lockedNormalMaterial, lockedHighlightMaterial, lockedPressedMaterial);
-            }
 
             foreach (var panel in GetComponentsInChildren<ColoringOptionsPanel>(true))
             {
@@ -109,6 +122,7 @@ namespace CellexalVR.Interaction
             {
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
+            */
 
             CellexalEvents.ObjectGrabbed.AddListener(() => grabbingObject = true);
             CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
@@ -143,6 +157,7 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
+
                     hitPanel.UpdateLaserCoords(hit.textureCoord2);
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {

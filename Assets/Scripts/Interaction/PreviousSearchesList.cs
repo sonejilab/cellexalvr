@@ -207,9 +207,9 @@ namespace CellexalVR.Interaction
             }
             referenceManager.correlatedGenesList.BuildList();
 
-            gameObject.GetComponentsInChildren<PreviousSearchesLock>(searchLocks);
-            gameObject.GetComponentsInChildren<ClickableTextPanel>(previousSearchesListNodes);
-            gameObject.GetComponentsInChildren<CorrelatedGenesPanel>(correlatedGenesButtons);
+            //gameObject.GetComponentsInChildren<PreviousSearchesLock>(searchLocks);
+            //gameObject.GetComponentsInChildren<ClickableTextPanel>(previousSearchesListNodes);
+            //gameObject.GetComponentsInChildren<CorrelatedGenesPanel>(correlatedGenesButtons);
 
         }
 #endif

@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using CellexalVR.General;
 using System;
-using CellexalVR.General;
-using UnityEngine.Events;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace CellexalVR.Interaction
 {
@@ -16,52 +16,41 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Handles the keyboard and what happens when keys are pressed.
     /// </summary>
-    public class KeyboardHandler : MonoBehaviour
+    public abstract class KeyboardHandler : MonoBehaviour
     {
         public CellexalVR.General.ReferenceManager referenceManager;
         public GameObject keysParentObject;
         public Material keyMaterial;
-        public AutoCompleteList autoCompleteList;
         public TMPro.TextMeshPro output;
+        public List<TMPro.TextMeshPro> additionalOutputs;
         public float height = 5f;
         public float anglePerUnit = 5f;
         public float distance = 8f;
-        public enum Layout { Uppercase, Lowercase, Special }
-        public Layout currentLayout = Layout.Lowercase;
         public string placeholder = "Enter a name";
+        public bool clearOnEnter = true;
         public KeyboardEvent OnEdit;
         public KeyboardEvent OnEditMultiuser;
         public KeyboardEvent OnEnter;
         public KeyboardEvent OnAnnotate;
 
-        private bool keyLayoutUppercase = false;
-        private KeyboardPanel[] sortedKeys;
+        protected KeyboardPanel[] sortedKeys;
         private Vector2 minPos;
         private Vector2 maxPos;
 
-        // these are the layouts that the keyboard can switch between
-        private string[] uppercase = { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
-                                       "Shift", "A", "S", "D", "F", "G", "H", "J", "K", "L",
-                                       "123\n!#%", "Z", "X", "C", "V", "B", "N", "M", "Back", "Clear",
-                                       "Enter"};
-
-        private string[] lowercase = { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
-                                       "Shift", "a", "s", "d", "f", "g", "h", "j", "k", "l",
-                                       "123\n!#%", "z", "x", "c", "v", "b", "n", "m", "Back", "Clear",
-                                       "Enter"};
-
-        private string[] special = {   "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-                                       "Shift", "!", "#", "%", "&", "/", "(", ")", "=", "@",
-                                       "ABC\nabc", "\\", "-", "_", ".", ":", ",", ";", "Back", "Clear",
-                                       "Enter"};
-
         private bool displayingPlaceHolder = true;
 
-        void Start()
+        public int CurrentLayout { get; protected set; }
+        abstract public string[][] Layouts { get; protected set; }
+
+        public virtual void Shift() { }
+
+        public virtual void NumChar() { }
+
+        protected virtual void Start()
         {
             //Clear();
+            SwitchLayout(Layouts[0]);
             GatherKeys();
-            SwitchLayout(Layout.Lowercase);
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
 
@@ -78,20 +67,38 @@ namespace CellexalVR.Interaction
             {
                 panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
+
+            foreach (ClickablePanel panel in GetComponentsInChildren<ClickablePanel>())
+            {
+                panel.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+            }
+        }
+
+        /// <summary>
+        /// Helper class to sort keyboarditems based on their position on the keyboard.
+        /// </summary>
+        private class KeyboardItemComparer : IComparer<KeyboardItem>
+        {
+            public int Compare(KeyboardItem a, KeyboardItem b)
+            {
+                return a.position.y == b.position.y ? (int)(a.position.x - b.position.x) : (int)(a.position.y - b.position.y);
+            }
         }
 
         /// <summary>
         /// Gathers the keys from the scene.
         /// </summary>
-        private void GatherKeys()
+        protected void GatherKeys()
         {
             minPos = new Vector2(float.MaxValue, float.MaxValue);
             maxPos = new Vector2(float.MinValue, float.MinValue);
 
             KeyboardItem[] items = GetComponentsInChildren<KeyboardItem>();
+            KeyboardItem[] itemsUnderKeyObject = keysParentObject.GetComponentsInChildren<KeyboardItem>();
             sortedKeys = keysParentObject.GetComponentsInChildren<KeyboardPanel>();
+            //print(items.Length + " " + sortedKeys.Length);
             // sort by position, y first then x
-            //Array.Sort(items, (KeyboardItem a, KeyboardItem b) => a.position.y == b.position.y ? (int)(a.position.x - b.position.x) : (int)(a.position.y - b.position.y));
+            Array.Sort(itemsUnderKeyObject, sortedKeys, new KeyboardItemComparer());
             // find the smallest and largest positions for later
             foreach (var item in items)
             {
@@ -113,6 +120,30 @@ namespace CellexalVR.Interaction
                 {
                     maxPos.y = thisMaxPos.y;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Switches the layout of the keyboard.
+        /// </summary>
+        /// <param name="layout">The new layout.</param>
+        protected void SwitchLayout(string[] layout)
+        {
+            if (sortedKeys == null || layout.Length != sortedKeys.Length)
+            {
+                // none, too many or too few keys found
+                GatherKeys();
+
+                if (layout.Length != sortedKeys.Length)
+                {
+                    Debug.LogError("Invalid number of keys on " + gameObject.name + ", string array layout length: " + layout.Length + ", number of found Keyboard panel gameobjects: " + sortedKeys.Length);
+                    return;
+                }
+            }
+            // everything seems ok, switch the layout
+            for (int i = 0; i < sortedKeys.Length; ++i)
+            {
+                sortedKeys[i].GetComponentInChildren<KeyboardPanel>().Text = layout[i];
             }
         }
 
@@ -177,69 +208,14 @@ namespace CellexalVR.Interaction
         }
 
         /// <summary>
-        /// Switches between uppercase and lowercase layout.
-        /// </summary>
-        public void Shift()
-        {
-            if (currentLayout == Layout.Uppercase)
-            {
-                SwitchLayout(Layout.Lowercase);
-            }
-            else if (currentLayout == Layout.Lowercase)
-            {
-                SwitchLayout(Layout.Uppercase);
-            }
-        }
-
-        /// <summary>
-        /// Switches the layout of the keyboard.
-        /// </summary>
-        /// <param name="layout">The new layout.</param>
-        public void SwitchLayout(Layout layout)
-        {
-            string[] layoutToSwitchTo;
-            if (layout == Layout.Lowercase)
-            {
-                layoutToSwitchTo = lowercase;
-            }
-            else if (layout == Layout.Uppercase)
-            {
-                layoutToSwitchTo = uppercase;
-            }
-            else if (layout == Layout.Special)
-            {
-                layoutToSwitchTo = special;
-            }
-            else
-            {
-                Debug.LogError("Invalid layout selected in KeyboardHandler.cs");
-                return;
-            }
-
-            if (sortedKeys == null || layoutToSwitchTo.Length != sortedKeys.Length)
-            {
-                // none, too many or too few keys found
-                GatherKeys();
-
-                if (layoutToSwitchTo.Length != sortedKeys.Length)
-                {
-                    Debug.LogError("Invalid number of keys on " + gameObject.name + ", string array layout length: " + layoutToSwitchTo.Length + ", number of found Keyboard panel gameobjects: " + sortedKeys.Length);
-                    return;
-                }
-            }
-            // everything seems ok, switch the layout
-            for (int i = 0; i < sortedKeys.Length; ++i)
-            {
-                sortedKeys[i].GetComponentInChildren<KeyboardPanel>().Text = layoutToSwitchTo[i];
-            }
-            currentLayout = layout;
-        }
-
-        /// <summary>
         /// Colors all graphs based on what was typed.
         /// </summary>
         public void SubmitOutput(bool invoke = true)
         {
+            foreach (var o in additionalOutputs)
+            {
+                o.text = output.text;
+            }
             if (invoke && OnEnter != null)
             {
                 OnEnter.Invoke(Text());
@@ -247,7 +223,10 @@ namespace CellexalVR.Interaction
             //referenceManager.cellManager.ColorGraphsByGene(output.text);
             //referenceManager.previousSearchesList.AddEntry(output.text, Extensions.Definitions.Measurement.GENE, referenceManager.graphManager.GeneExpressionColoringMethod);
             //referenceManager.gameManager.InformColorGraphsByGene(output.text);
-            Clear();
+            if (clearOnEnter)
+            {
+                Clear();
+            }
         }
 
         /// <summary>
@@ -265,6 +244,20 @@ namespace CellexalVR.Interaction
             }
         }
 
+        public void DismissKeyboard()
+        {
+            additionalOutputs.Clear();
+            gameObject.SetActive(false);
+        }
+
+        public void SetAllOutputs(string text)
+        {
+            output.text = text;
+            foreach (var o in additionalOutputs)
+            {
+                o.text = text;
+            }
+        }
 
 #if UNITY_EDITOR
         private void OnValidate()
@@ -281,6 +274,11 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void BuildKeyboard()
         {
+            if (!gameObject.scene.IsValid())
+            {
+                return;
+            }
+
             GatherKeys();
             if (referenceManager.previousSearchesList)
             {
@@ -288,8 +286,11 @@ namespace CellexalVR.Interaction
             }
 
             Vector2 size = maxPos - minPos;
-            SwitchLayout(currentLayout);
-            output.text = placeholder;
+            SwitchLayout(Layouts[0]);
+            if (output)
+            {
+                output.text = placeholder;
+            }
             float radiansPerUnit = anglePerUnit / 180f * Mathf.PI;
 
             KeyboardPanel[] keys = keysParentObject.GetComponentsInChildren<KeyboardPanel>();
@@ -300,14 +301,15 @@ namespace CellexalVR.Interaction
                 {
                     float keyAngleDegrees = anglePerUnit * -item.position.x;
                     float keyAngleRadians = radiansPerUnit * -item.position.x;
-                    position = new Vector3(Mathf.Cos(keyAngleRadians), 0, Mathf.Sin(keyAngleRadians)) * distance;
+                    position = new Vector3(Mathf.Cos(keyAngleRadians) - 1, 0, Mathf.Sin(keyAngleRadians)) * distance;
+
                     item.transform.localRotation = Quaternion.Euler(0f, 90 - keyAngleDegrees, 0f);
                 }
                 else
                 {
                     position = new Vector3(item.position.x, 0, item.position.y);
                 }
-                float yPos = (size.y - item.position.y + minPos.y) * height / size.y;
+                float yPos = (size.y - item.position.y + minPos.y - 1) * height / size.y;
                 position += new Vector3(0f, yPos, 0f);
                 item.transform.localPosition = position;
                 // scale so everything fits
@@ -320,6 +322,7 @@ namespace CellexalVR.Interaction
                     {
                         KeyboardPanel keyboardPanel = (KeyboardPanel)panel;
                         keyboardPanel.referenceManager = referenceManager;
+                        keyboardPanel.handler = this;
                         panel.GetComponent<MeshRenderer>().sharedMaterial = keyMaterial;
                         TextMeshPro text = item.GetComponentInChildren<TextMeshPro>();
                         text.margin = new Vector4(0.25f, 0f, 0.25f, 0.5f);
@@ -331,7 +334,7 @@ namespace CellexalVR.Interaction
                         {
                             text.transform.localPosition = new Vector3(0f, 0f, -0.01f);
                         }
-                        text.transform.localScale = Vector3.one * (height / 3f);
+                        text.transform.localScale = Vector3.one * (height / ((size.y - 1) / 4));
 
                     }
 
@@ -340,11 +343,18 @@ namespace CellexalVR.Interaction
                     Vector2 smallUV = new Vector2(min.x / size.x, max.y / size.y);
                     Vector2 largeUV = new Vector2(max.x / size.x, min.y / size.y);
                     panel.CenterUV = (smallUV + largeUV) / 2f;
-                    Mesh mesh = CreateNineSlicedQuad(smallUV, largeUV, item.size, radiansPerUnit, distance);
+                    Mesh mesh = CreateNineSlicedQuad(smallUV, largeUV, item.size, radiansPerUnit, size);
                     panel.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
                     panel.GetComponent<MeshFilter>().sharedMesh = mesh;
-                    panel.GetComponent<MeshCollider>().sharedMesh = mesh;
-                    panel.transform.localScale = new Vector3(1f, scale, 1f);
+                    if (panel.GetComponent<MeshCollider>())
+                    {
+                        DestroyImmediate(panel.GetComponent<MeshCollider>());
+                    }
+                    if (panel.GetComponent<BoxCollider>() == null)
+                    {
+                        panel.gameObject.AddComponent<BoxCollider>();
+                    }
+                    panel.transform.localScale = new Vector3(1f, 1f, 1f);
 
                 }
 
@@ -362,8 +372,9 @@ namespace CellexalVR.Interaction
         /// <param name="size">This panel's size.</param>
         /// <param name="anglePerUnit">Radians per unit of <paramref name="size"/>. Affects how wide the panel becomes.</param>
         /// <param name="distance">The radius of the circle's arc. Affects how curved the panel becomes.</param>
+        /// <param name="keyboardSize">The size of the keyboard, in the same units as <paramref name="size"/>.</param>
         /// <returns></returns>
-        private Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit, float distance)
+        private Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit, Vector2 keyboardSize)
         {
             // left, right, bottom and top margins
             float l = 0.1f, r = 0.1f;
@@ -371,12 +382,13 @@ namespace CellexalVR.Interaction
             int xSegments = (int)size.x;
             float maxXCoord = xSegments / 2f;
             float minXCoord = -maxXCoord;
-            float maxYCoord = size.y;
+            Vector2 adjSize = new Vector2(size.x, size.y / keyboardSize.y * height);
+            float maxYCoord = adjSize.y;
             // vertices need their coordinates scaled, uv does not
-            float adjl = l * size.y;
-            float adjr = r * size.y;
-            float adjb = b * size.y;
-            float adjt = t * size.y;
+            float adjl = l * adjSize.x;
+            float adjr = r * adjSize.x;
+            float adjb = b * adjSize.y;
+            float adjt = t * adjSize.y;
             anglePerUnit = -anglePerUnit;
             // pre-calculate some values
             float[] cosVals = new float[] {
@@ -484,7 +496,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Editor class for the <see cref="KeyboardHandler"/> to add a "Build keyboard" button.
     /// </summary>
-    [UnityEditor.CustomEditor(typeof(KeyboardHandler))]
+    [UnityEditor.CustomEditor(typeof(KeyboardHandler), true)]
     [UnityEditor.CanEditMultipleObjects]
     public class KeyboardHandlerEditor : UnityEditor.Editor
     {

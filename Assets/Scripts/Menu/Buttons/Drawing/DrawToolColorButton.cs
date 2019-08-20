@@ -20,6 +20,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
 
         private void OnValidate()
         {
+            buttonRenderer = GetComponent<SpriteRenderer>();
             buttonRenderer.color = color;
             Color oldColor = buttonRenderer.color;
             float newr = oldColor.r - oldColor.r / 2f;
@@ -31,8 +32,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
         private void Start()
         {
             drawTool = referenceManager.drawTool;
-            buttonRenderer = GetComponent<SpriteRenderer>();
-            OnValidate();
+            //buttonRenderer = GetComponent<SpriteRenderer>();
         }
 
         public override void Click()

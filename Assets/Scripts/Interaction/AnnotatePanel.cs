@@ -16,7 +16,7 @@ namespace CellexalVR.Interaction
         protected override void Start()
         {
             base.Start();
-            keyboardHandler = referenceManager.keyboardHandler;
+            keyboardHandler = referenceManager.geneKeyboard;
         }
 
 

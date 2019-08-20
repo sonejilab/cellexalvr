@@ -72,6 +72,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     emitParams.position = keyValuePair.Key.Position - offset + keyValuePair.Value.normalized * graphPointMesh.bounds.extents.magnitude * 2;
                     emitParams.velocity = keyValuePair.Value;
+                    emitParams.startColor = keyValuePair.Key.GetColor();
                     particleSystem.Emit(emitParams, 1);
                 }
                 nItems++;

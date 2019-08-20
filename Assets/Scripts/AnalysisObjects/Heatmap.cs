@@ -205,6 +205,7 @@ namespace CellexalVR.AnalysisObjects
                 createAnim = false;
                 return;
             }
+
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, target, step);
             transform.localScale += Vector3.one * Time.deltaTime * scaleSpeed;
