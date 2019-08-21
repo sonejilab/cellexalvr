@@ -33,9 +33,9 @@ namespace CellexalVR.Menu.SubMenus
         {
             CellexalEvents.GraphsLoaded.AddListener(CreateButtons);
             CellexalEvents.GraphsUnloaded.AddListener(DestroyButtons);
-            frequencyText.text = "Frequency: 0.2";
+            frequencyText.text = "Frequency: 1";
             thresholdText.text = "Threshold: 0";
-            speedText.text = "Speed: 1";
+            speedText.text = "Speed: 5";
 
         }
 
@@ -73,9 +73,9 @@ namespace CellexalVR.Menu.SubMenus
             {
                 button.DeactivateOutline();
             }
-            frequencyText.text = "Frequency: 0.2";
+            frequencyText.text = "Frequency: 1";
             thresholdText.text = "Threshold: 0";
-            speedText.text = "Speed: 1";
+            speedText.text = "Speed: 5";
         }
 
         private void DestroyButtons()

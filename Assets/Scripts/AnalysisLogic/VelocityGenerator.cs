@@ -99,7 +99,7 @@ namespace CellexalVR.AnalysisLogic
                 emitter.referenceManager = referenceManager;
                 emitter.particleMaterial = arrowMaterial;
                 emitter.graph = graph;
-                emitter.velocities = velocities;
+                emitter.Velocities = velocities;
                 graph.velocityParticleEmitter = emitter;
 
                 reader.Close();

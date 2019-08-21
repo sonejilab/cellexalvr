@@ -1026,6 +1026,18 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Toggles all graphpoint cluster gameobjects active/inactive.
+        /// </summary>
+        public void ToggleGraphPoints()
+        {
+            foreach (GameObject cluster in graphPointClusters)
+            {
+                cluster.SetActive(!cluster.activeSelf);
+            }
+        }
+
+
         public Color GetGraphPointColor(GraphPoint gp)
         {
             int group = (int)(255 * texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y).r);
