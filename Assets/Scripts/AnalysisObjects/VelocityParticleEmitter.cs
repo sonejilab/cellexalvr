@@ -11,6 +11,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public Dictionary<Graph.GraphPoint, Vector3> velocities;
         public Graph graph;
+        public Material particleMaterial;
 
         public int itemsPerFrame = 1000;
         private new ParticleSystem particleSystem;
@@ -30,6 +31,7 @@ namespace CellexalVR.AnalysisObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             InvokeRepeating("DoEmit", 0f, arrowEmitRate);
             particleSystem = gameObject.GetComponent<ParticleSystem>();
+            particleSystem.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
             SetColors();
             Play();
             oldArrowEmitRate = arrowEmitRate;

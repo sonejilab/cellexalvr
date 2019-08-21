@@ -294,7 +294,6 @@ namespace CellexalVR.AnalysisObjects
             stopwatch.Stop();
             CellexalLog.Log(string.Format("clustered {0} in {1}. nbr of clusters: {2}", newGraph.GraphName, stopwatch.Elapsed.ToString(), newGraph.nbrOfClusters));
             return clusters;
-
         }
 
         /// <summary>

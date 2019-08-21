@@ -62,14 +62,14 @@ namespace CellexalVR.SceneObjects
                 lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
-                lineRenderer.startWidth = lineRenderer.endWidth += 0.005f;
+                lineRenderer.startWidth = lineRenderer.endWidth += 0.015f;
                 initAnimate = true;
 
                 Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.5f);
-                fromSphere = Instantiate(spherePrefab, t1);
-                fromSphere.GetComponent<Renderer>().material.color = col;
-                fromSphere.transform.localScale = fromClusterHull * 200;
-                fromSphere.transform.position = fromPos;
+                //fromSphere = Instantiate(spherePrefab, t1);
+                //fromSphere.GetComponent<Renderer>().material.color = col;
+                //fromSphere.transform.localScale = fromClusterHull * 200;
+                //fromSphere.transform.position = fromPos;
 
 
             }
@@ -102,9 +102,9 @@ namespace CellexalVR.SceneObjects
                     midPos = t3.TransformPoint(midGraphCentroid);
                     firstAnchor = (fromPos + midPos) / 2f;
                     secondAnchor = (midPos + toPos) / 2f;
-                    fromSphere.transform.position = fromPos;
-                    midSphere.transform.position = midPos;
-                    toSphere.transform.position = toPos;
+                    //fromSphere.transform.position = fromPos;
+                    //midSphere.transform.position = midPos;
+                    //toSphere.transform.position = toPos;
                     lineRenderer.SetPositions(new Vector3[] { fromPos, firstAnchor, midPos, secondAnchor, toPos });
                 }
                 else
@@ -150,10 +150,10 @@ namespace CellexalVR.SceneObjects
                 {
                     if (centroids)
                     {
-                        toSphere = Instantiate(spherePrefab, t2);
-                        toSphere.GetComponent<Renderer>().material.color = col;
-                        toSphere.transform.localScale = toClusterHull * 200;
-                        toSphere.transform.position = toPos;
+                        //toSphere = Instantiate(spherePrefab, t2);
+                        //toSphere.GetComponent<Renderer>().material.color = col;
+                        //toSphere.transform.localScale = toClusterHull * 200;
+                        //toSphere.transform.position = toPos;
                         //curve = new AnimationCurve();
                         //curve.AddKey(1.0f, 1.0f);
                         //curve.AddKey(0.2f, 0.10f);
@@ -181,10 +181,10 @@ namespace CellexalVR.SceneObjects
                     if (centroids)
                     {
 
-                        midSphere = Instantiate(spherePrefab, t3);
-                        midSphere.GetComponent<Renderer>().material.color = col;
-                        midSphere.transform.localScale = midClusterHull * 200;
-                        midSphere.transform.position = midPos;
+                        //midSphere = Instantiate(spherePrefab, t3);
+                        //midSphere.GetComponent<Renderer>().material.color = col;
+                        //midSphere.transform.localScale = midClusterHull * 200;
+                        //midSphere.transform.position = midPos;
 
                     }
                 }

@@ -24,6 +24,7 @@ namespace CellexalVR.AnalysisObjects
         public GameObject clusterDebugBox;
 
 
+        private GameObject velocityParticleSystemPrefab;
         private Graph graph;
         private Transform t1, t2;
         private List<LineBetweenTwoPoints> lines = new List<LineBetweenTwoPoints>();
@@ -34,6 +35,7 @@ namespace CellexalVR.AnalysisObjects
         {
             t1 = graph1.transform;
             t2 = graph2.transform;
+            velocityParticleSystemPrefab = referenceManager.velocityGenerator.particleSystemPrefab;
         }
 
         // Update is called once per frame
@@ -96,36 +98,36 @@ namespace CellexalVR.AnalysisObjects
                 graph.FindGraphPoint(point.Label).RecolorSelectionColor(point.Group, false);
             }
             HashSet<Graph.GraphPoint> prevjoinedclusters = new HashSet<Graph.GraphPoint>();
-            //var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
-            //yield return null;
-            //var toGraphCentroids = MeanShiftClustering(toGraphpoints, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
-            //yield return null;
-            //List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = AssignPointsToClusters(centroids, points, neighbourDistance);
-            //yield return null;
-            //List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
-            //for (int i = 0; i < clusters.Count; i++)
-            //{
-            //    int centroidLinesAdded = 0;
-            //    var fromCluster = clusters[i];
-            //    for (int j = 0; j < toGraphClusters.Count; j++)
-            //    {
-            //        var toCluster = toGraphClusters[j];
-            //        if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
-            //        {
-            //            continue;
-            //        }
-            //        var joinedCluster = from gpfrom in fromCluster.Item1
-            //                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
-            //                            select gpfrom;
-            //        if (joinedCluster.ToList().Count > clusterSize)
-            //        {
-            //            prevjoinedclusters.UnionWith(joinedCluster);
-            //            AddCentroidLine(fromGraph, toGraph, fromCluster.Item1, toCluster.Item1, joinedCluster, centroidLinesAdded);
-            //            centroidLinesAdded++;
-            //        }
-            //    }
-            //    yield return null;
-            //}
+            var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
+            yield return null;
+            var toGraphCentroids = MeanShiftClustering(toGraphpoints, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
+            yield return null;
+            List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = AssignPointsToClusters(centroids, points, neighbourDistance);
+            yield return null;
+            List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
+            for (int i = 0; i < clusters.Count; i++)
+            {
+                int centroidLinesAdded = 0;
+                var fromCluster = clusters[i];
+                for (int j = 0; j < toGraphClusters.Count; j++)
+                {
+                    var toCluster = toGraphClusters[j];
+                    if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
+                    {
+                        continue;
+                    }
+                    var joinedCluster = from gpfrom in fromCluster.Item1
+                                        join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
+                                        select gpfrom;
+                    if (joinedCluster.ToList().Count > clusterSize)
+                    {
+                        prevjoinedclusters.UnionWith(joinedCluster);
+                        AddCentroidLine(fromGraph, toGraph, joinedCluster, centroidLinesAdded);
+                        centroidLinesAdded++;
+                    }
+                }
+                yield return null;
+            }
 
             yield return null;
             var pointsOutsideClusters = points.Except(prevjoinedclusters);
@@ -256,14 +258,17 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="fromCluster"></param>
         /// <param name="toCluster"></param>
         /// <param name="joinedCluster"></param>
-        private void AddCentroidLine(Graph from, Graph to, HashSet<Graph.GraphPoint> fromCluster, HashSet<Graph.GraphPoint> toCluster,
-                                        IEnumerable<Graph.GraphPoint> joinedCluster, int centroidLinesAdded)
+        private void AddCentroidLine(Graph from, Graph to, IEnumerable<Graph.GraphPoint> joinedCluster, int centroidLinesAdded)
         {
+            HashSet<Graph.GraphPoint> fromCluster = new HashSet<Graph.GraphPoint>();
             HashSet<Graph.GraphPoint> midCluster = new HashSet<Graph.GraphPoint>();
+            HashSet<Graph.GraphPoint> toCluster = new HashSet<Graph.GraphPoint>();
             HashSet<Vector3> prevAddedHulls = new HashSet<Vector3>();
             foreach (Graph.GraphPoint gp in joinedCluster)
             {
+                fromCluster.Add(from.FindGraphPoint(gp.Label));
                 midCluster.Add(graph.FindGraphPoint(gp.Label));
+                toCluster.Add(to.FindGraphPoint(gp.Label));
             }
             LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
             Vector3 fromCentroid = CalculateCentroid(fromCluster);
@@ -302,6 +307,27 @@ namespace CellexalVR.AnalysisObjects
             lines.Add(line);
             line.transform.parent = graph.lineParent.transform;
             line.gameObject.SetActive(true);
+
+
+
+
+            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(fromCluster.ToList().Capacity);
+            Vector3 dir;
+            foreach (Graph.GraphPoint gp in fromCluster)
+            {
+                dir = fromCentroid - gp.Position;
+                velocities[gp] = dir / 5f;
+            }
+            GameObject velocityParticleSystem = Instantiate(velocityParticleSystemPrefab, from.transform);
+            VelocityParticleEmitter emitter = velocityParticleSystem.GetComponent<VelocityParticleEmitter>();
+            emitter.referenceManager = referenceManager;
+            emitter.graph = from;
+            emitter.velocities = velocities;
+            emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+
+            //emitter.ChangeSpeed(0.5f);
+
+
         }
 
         private Vector3 CalculateCentroid(HashSet<Graph.GraphPoint> cluster)
