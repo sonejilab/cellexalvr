@@ -89,11 +89,11 @@ namespace CellexalVR.AnalysisObjects
             {
                 meshToUse = graphPointLargerMesh;
             }
-            else if (CellexalConfig.Config.GraphPointQuality == "High")
-            {
-                meshToUse = graphPointHighestQualityMesh;
-            }
-            else if (CellexalConfig.Config.GraphPointQuality == "Medium")
+            //else if (CellexalConfig.Config.GraphPointQuality == "High")
+            //{
+            //    meshToUse = graphPointHighestQualityMesh;
+            //}
+            else if (CellexalConfig.Config.GraphPointQuality == "Standard")
             {
                 meshToUse = graphPointStandardMesh;
             }

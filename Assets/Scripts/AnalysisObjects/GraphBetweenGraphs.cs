@@ -95,76 +95,45 @@ namespace CellexalVR.AnalysisObjects
                 toGraphpoints.Add(toGraph.FindGraphPoint(point.Label));
                 graph.FindGraphPoint(point.Label).RecolorSelectionColor(point.Group, false);
             }
-            var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
-            yield return null;
-            var toGraphCentroids = MeanShiftClustering(toGraphpoints, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
-            yield return null;
-            List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = AssignPointsToClusters(centroids, points, neighbourDistance);
-            yield return null;
-            List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
             HashSet<Graph.GraphPoint> prevjoinedclusters = new HashSet<Graph.GraphPoint>();
-            for (int i = 0; i < clusters.Count; i++)
-            {
-                var fromCluster = clusters[i];
-                for (int j = 0; j < toGraphClusters.Count; j++)
-                {
-                    var toCluster = toGraphClusters[j];
-                    if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
-                    {
-                        continue;
-                    }
-                    var joinedCluster = from gpfrom in fromCluster.Item1
-                                        join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
-                                        select gpfrom;
-                    if (joinedCluster.ToList().Count > clusterSize)
-                    {
-                        print(graph1.GraphName + " - " + graph2.GraphName + ", joined cluster size = " + joinedCluster.ToList().Count);
-                        prevjoinedclusters.UnionWith(joinedCluster);
-                        AddCentroidLine(fromGraph, toGraph, fromCluster.Item1, toCluster.Item1, joinedCluster);
-                        //LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-                        //line.t1 = fromGraph.transform;
-                        //line.t2 = toGraph.transform;
-                        //line.t3 = graph.transform;
-                        //line.centroids = true;
-                        //line.fromGraphCentroid = clusters[i].Item2;
-                        //line.toGraphCentroid = toGraphClusters[j].Item2;
-                        //var midGp = graph.FindGraphPoint(joinedCluster.ToList()[(int)(joinedCluster.ToList().Count / 2)].Label);
-                        //line.midGraphCentroid = midGp.Position;
-                        //line.selectionManager = referenceManager.selectionManager;
-                        //LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-                        //Color color = fromGraph.FindGraphPoint(midGp.Label).GetColor();
-                        //line.LineColor = color;
-                        //lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.1f);
-                        //lines.Add(line);
-                        //line.transform.parent = graph.lineParent.transform;
-                        //line.gameObject.SetActive(true);
-                    }
-                }
-                yield return null;
-            }
+            //var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
+            //yield return null;
+            //var toGraphCentroids = MeanShiftClustering(toGraphpoints, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
+            //yield return null;
+            //List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = AssignPointsToClusters(centroids, points, neighbourDistance);
+            //yield return null;
+            //List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
+            //for (int i = 0; i < clusters.Count; i++)
+            //{
+            //    int centroidLinesAdded = 0;
+            //    var fromCluster = clusters[i];
+            //    for (int j = 0; j < toGraphClusters.Count; j++)
+            //    {
+            //        var toCluster = toGraphClusters[j];
+            //        if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
+            //        {
+            //            continue;
+            //        }
+            //        var joinedCluster = from gpfrom in fromCluster.Item1
+            //                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
+            //                            select gpfrom;
+            //        if (joinedCluster.ToList().Count > clusterSize)
+            //        {
+            //            prevjoinedclusters.UnionWith(joinedCluster);
+            //            AddCentroidLine(fromGraph, toGraph, fromCluster.Item1, toCluster.Item1, joinedCluster, centroidLinesAdded);
+            //            centroidLinesAdded++;
+            //        }
+            //    }
+            //    yield return null;
+            //}
+
+            yield return null;
             var pointsOutsideClusters = points.Except(prevjoinedclusters);
             foreach (Graph.GraphPoint point in pointsOutsideClusters)
             {
                 AddLine(fromGraph, toGraph, point);
-                //Color color = point.GetColor();
-                //var sourceCell = fromGraph.points[point.Label];
-                //var targetCell = toGraph.points[point.Label];
-                //LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-                //line.t1 = sourceCell.parent.transform;
-                //line.t2 = targetCell.parent.transform;
-                //line.graphPoint1 = sourceCell;
-                //line.graphPoint2 = targetCell;
-                //var midPosition = (line.t1.TransformPoint(sourceCell.Position) + line.t2.TransformPoint(targetCell.Position)) / 2f;
-                //var gp = graph.FindGraphPoint(point.Label);
-                //line.graphPoint3 = gp;
-                //line.t3 = gp.parent.transform;
-                //line.selectionManager = referenceManager.selectionManager;
-                //LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-                //lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.1f);
-                //lines.Add(line);
-                //line.transform.parent = graph.lineParent.transform;
-                //line.gameObject.SetActive(true);
             }
+
         }
 
         /// <summary>
@@ -206,7 +175,7 @@ namespace CellexalVR.AnalysisObjects
                     {
                         continue;
                     }
-                   if (neighbours.Count == 0)
+                    if (neighbours.Count == 0)
                     {
                         centroids.RemoveAt(i);
                         continue;
@@ -287,30 +256,44 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="fromCluster"></param>
         /// <param name="toCluster"></param>
         /// <param name="joinedCluster"></param>
-        private void AddCentroidLine(Graph from, Graph to, HashSet<Graph.GraphPoint> fromCluster, HashSet<Graph.GraphPoint> toCluster, IEnumerable<Graph.GraphPoint> joinedCluster)
+        private void AddCentroidLine(Graph from, Graph to, HashSet<Graph.GraphPoint> fromCluster, HashSet<Graph.GraphPoint> toCluster,
+                                        IEnumerable<Graph.GraphPoint> joinedCluster, int centroidLinesAdded)
         {
             HashSet<Graph.GraphPoint> midCluster = new HashSet<Graph.GraphPoint>();
+            HashSet<Vector3> prevAddedHulls = new HashSet<Vector3>();
             foreach (Graph.GraphPoint gp in joinedCluster)
             {
                 midCluster.Add(graph.FindGraphPoint(gp.Label));
             }
             LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-            var fromCentroid = CalculateCentroid(fromCluster);
-            var fromClusterHull = CalculateClusterHull(fromCluster, fromCentroid);
-            var midCentroid = CalculateCentroid(midCluster);
-            var midClusterHull = CalculateClusterHull(midCluster, midCentroid);
-            var toCentroid = CalculateCentroid(toCluster);
-            var toClusterHull = CalculateClusterHull(toCluster, toCentroid);
+            Vector3 fromCentroid = CalculateCentroid(fromCluster);
+            Vector3 midCentroid = CalculateCentroid(midCluster);
+            Vector3 toCentroid = CalculateCentroid(toCluster);
+            Vector3 fromClusterHull = CalculateClusterHull(fromCluster, fromCentroid);
+            Vector3 midClusterHull = CalculateClusterHull(midCluster, midCentroid);
+            Vector3 toClusterHull = CalculateClusterHull(toCluster, toCentroid);
+            if (!prevAddedHulls.Contains(fromClusterHull))
+            {
+                line.fromClusterHull = fromClusterHull;
+                prevAddedHulls.Add(fromClusterHull);
+            }
+            if (!prevAddedHulls.Contains(midClusterHull))
+            {
+                line.midClusterHull = midClusterHull;
+                prevAddedHulls.Add(midClusterHull);
+            }
+            if (!prevAddedHulls.Contains(toClusterHull))
+            {
+                line.toClusterHull = toClusterHull;
+                prevAddedHulls.Add(toClusterHull);
+            }
             line.t1 = from.transform;
             line.t2 = to.transform;
             line.t3 = graph.transform;
             line.centroids = true;
             line.fromGraphCentroid = fromCentroid;
-            line.fromClusterHull = fromClusterHull;
             line.midGraphCentroid = midCentroid;
-            line.midClusterHull = midClusterHull;
             line.toGraphCentroid = toCentroid;
-            line.toClusterHull = toClusterHull;
             line.selectionManager = referenceManager.selectionManager;
             LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
             Color color = from.FindGraphPoint(joinedCluster.ToList()[0].Label).GetColor();

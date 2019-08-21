@@ -90,17 +90,17 @@ namespace CellexalVR.SceneObjects
             }
             
 
-            if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
-            {
-                //helperCylinder.SetActive(false);
-                //DestroyFolderColliders();
-            }
+            //if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
+            //{
+            //    //helperCylinder.SetActive(false);
+            //    //DestroyFolderColliders();
+            //}
 
-            if (timeEntered + 5 < Time.time && collidersDestroyed)
-            {
-                //inputFolderGenerator.DestroyFolders();
-                //DestroyCells();
-            }
+            //if (timeEntered + 5 < Time.time && collidersDestroyed)
+            //{
+            //    //inputFolderGenerator.DestroyFolders();
+            //    //DestroyCells();
+            //}
         }
 
         /// <summary>
