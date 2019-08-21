@@ -274,6 +274,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void BuildKeyboard()
         {
+            UnityEditor.Undo.RecordObject(referenceManager.correlatedGenesList, "Build keyboard");
             if (!gameObject.scene.IsValid())
             {
                 return;
@@ -371,36 +372,36 @@ namespace CellexalVR.Interaction
         /// <param name="uv2max">The largest uv2 coordinates.</param>
         /// <param name="size">This panel's size.</param>
         /// <param name="anglePerUnit">Radians per unit of <paramref name="size"/>. Affects how wide the panel becomes.</param>
-        /// <param name="distance">The radius of the circle's arc. Affects how curved the panel becomes.</param>
         /// <param name="keyboardSize">The size of the keyboard, in the same units as <paramref name="size"/>.</param>
         /// <returns></returns>
-        private Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit, Vector2 keyboardSize)
+        public Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit, Vector2 keyboardSize)
         {
             // left, right, bottom and top margins
             float l = 0.1f, r = 0.1f;
             float b = 0.1f, t = 0.1f;
             int xSegments = (int)size.x;
-            float maxXCoord = xSegments / 2f;
+            float maxXCoord = size.x / 2f;
             float minXCoord = -maxXCoord;
             Vector2 adjSize = new Vector2(size.x, size.y / keyboardSize.y * height);
             float maxYCoord = adjSize.y;
-            // vertices need their coordinates scaled, uv does not
-            float adjl = l * adjSize.x;
-            float adjr = r * adjSize.x;
-            float adjb = b * adjSize.y;
-            float adjt = t * adjSize.y;
+
+            // vertices need their coordinates scaled, uv does not 
+            //float adjl = l * adjSize.x;
+            //float adjr = r * adjSize.x;
+            float adjb = b * adjSize.y / size.y;
+            float adjt = t * adjSize.y / size.y;
             anglePerUnit = -anglePerUnit;
             // pre-calculate some values
             float[] cosVals = new float[] {
                 Mathf.Cos(anglePerUnit * minXCoord) * distance - distance,
-                Mathf.Cos(anglePerUnit * (minXCoord + adjl)) * distance - distance,
-                Mathf.Cos(anglePerUnit * (maxXCoord - adjr)) * distance - distance,
+                Mathf.Cos(anglePerUnit * (minXCoord + l)) * distance - distance,
+                Mathf.Cos(anglePerUnit * (maxXCoord - r)) * distance - distance,
                 Mathf.Cos(anglePerUnit * maxXCoord) * distance - distance
             };
             float[] sinVals = new float[] {
                 Mathf.Sin(anglePerUnit * minXCoord) * distance,
-                Mathf.Sin(anglePerUnit * (minXCoord + adjl)) * distance,
-                Mathf.Sin(anglePerUnit * (maxXCoord - adjr)) * distance,
+                Mathf.Sin(anglePerUnit * (minXCoord + l)) * distance,
+                Mathf.Sin(anglePerUnit * (maxXCoord - r)) * distance,
                 Mathf.Sin(anglePerUnit * maxXCoord) * distance
             };
 
@@ -432,7 +433,7 @@ namespace CellexalVR.Interaction
             for (int i = 0; i < xSegments - 1; ++i)
             {
                 int index = 8 + i * 4;
-                float xposUV = (i + 1f) / xSegments;
+                float xposUV = (i + 1f) / size.x;
                 float angle = anglePerUnit * (minXCoord + (maxXCoord - minXCoord) * xposUV);
                 float xpos = Mathf.Cos(angle) * distance - distance;
                 float zpos = Mathf.Sin(angle) * distance;

@@ -203,8 +203,9 @@ namespace CellexalVR.AnalysisObjects
             {
                 return;
             }
-            Mesh quadPrefab = referenceManager.previousSearchesList.quadPrefab;
+            //Mesh quadPrefab = referenceManager.previousSearchesList.quadPrefab;
             // remove old nodes
+            //UnityEditor.PrefabUtility.
             foreach (Transform oldNode in listNodesParent.transform)
             {
                 if (oldNode != null)
@@ -214,9 +215,15 @@ namespace CellexalVR.AnalysisObjects
                         UnityEditor.EditorApplication.delayCall += () =>
                         {
                             UnityEditor.PrefabUtility.RevertAddedGameObject(oldNode.gameObject, UnityEditor.InteractionMode.AutomatedAction);
-                            /*DestroyImmediate(oldNode.gameObject);*/
                         };
                     }
+                    //else
+                    //{
+                    //    UnityEditor.EditorApplication.delayCall += () =>
+                    //    {
+                    //        UnityEditor.PrefabUtility.
+                    //    };
+                    //}
                 }
             }
 
@@ -245,9 +252,9 @@ namespace CellexalVR.AnalysisObjects
                 anticorrelatedPanels.Add(anticorrelatedPanel);
 
                 // assign meshes
-                Mesh previousSearchesListNodeMesh = new Mesh();
-                correlatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                anticorrelatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                //Mesh previousSearchesListNodeMesh = new Mesh();
+                //correlatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                //anticorrelatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
                 // assign materials
                 correlatedPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
                 anticorrelatedPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
@@ -264,6 +271,7 @@ namespace CellexalVR.AnalysisObjects
                 anticorrelatedItem.position = new Vector2Int(-15, i);
                 anticorrelatedItem.size = new Vector2(3, 1);
             }
+            UnityEditor.PrefabUtility.ApplyPrefabInstance(gameObject, UnityEditor.InteractionMode.AutomatedAction);
         }
 
 #endif

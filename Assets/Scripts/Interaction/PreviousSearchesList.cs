@@ -184,10 +184,10 @@ namespace CellexalVR.Interaction
                     correlatedGenesButtons.Add(correlatedGenesButton);
 
                     // assign meshes
-                    Mesh previousSearchesListNodeMesh = new Mesh();
-                    previousSearchesListNode.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                    searchLock.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                    correlatedGenesButton.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                    //Mesh previousSearchesListNodeMesh = new Mesh();
+                    //previousSearchesListNode.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                    //searchLock.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                    //correlatedGenesButton.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
                     // assign materials
                     previousSearchesListNode.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
                     searchLock.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.unlockedNormalMaterial;

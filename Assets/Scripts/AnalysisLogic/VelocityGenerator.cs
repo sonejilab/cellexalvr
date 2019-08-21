@@ -96,7 +96,7 @@ namespace CellexalVR.AnalysisLogic
                 VelocityParticleEmitter emitter = particleSystemGameObject.GetComponent<VelocityParticleEmitter>();
                 emitter.referenceManager = referenceManager;
                 emitter.graph = graph;
-                emitter.velocities = velocities;
+                emitter.Velocities = velocities;
                 graph.velocityParticleEmitter = emitter;
 
                 reader.Close();
