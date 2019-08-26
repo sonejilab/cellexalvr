@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace CellexalVR.SceneObjects
 {
@@ -28,6 +29,9 @@ namespace CellexalVR.SceneObjects
         public Graph.GraphPoint graphPoint1;
         public Graph.GraphPoint graphPoint2;
         public Graph.GraphPoint graphPoint3;
+        public IEnumerable<Graph.GraphPoint> fromPointCluster;
+        public IEnumerable<Graph.GraphPoint> midPointCluster;
+        public IEnumerable<Graph.GraphPoint> toPointCluster;
         public SelectionManager selectionManager;
         public Graph.OctreeNode fromClusterNode;
         public Graph.OctreeNode toClusterNode;
@@ -45,7 +49,12 @@ namespace CellexalVR.SceneObjects
         private GameObject fromSphere;
         private GameObject midSphere;
         private GameObject toSphere;
-
+        private string controllerCollider = "ControllerCollider(Clone)";
+        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
+        private BoxCollider bcFrom;
+        private BoxCollider bcMid;
+        private BoxCollider bcTo;
+        private int group;
 
         private void Start()
         {
@@ -55,17 +64,32 @@ namespace CellexalVR.SceneObjects
                 fromPos = t1.TransformPoint(fromGraphCentroid);
                 toPos = t2.TransformPoint(toGraphCentroid);
                 midPos = t3.TransformPoint(midGraphCentroid);
-                firstAnchor = (fromPos + midPos) / 2f;
-                secondAnchor = (midPos + toPos) / 2f;
+                firstAnchor = fromPos + ((1f / 6f) * (midPos - fromPos));
+                secondAnchor = toPos - ((1f / 6f) * (toPos - midPos));
                 lineRenderer.positionCount = 5;
                 linePosistions = new Vector3[] { fromPos, firstAnchor, midPos, secondAnchor, toPos };
                 lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
-                lineRenderer.startWidth = lineRenderer.endWidth += 0.015f;
+                lineRenderer.startWidth = lineRenderer.endWidth += 0.010f;
                 initAnimate = true;
 
-                Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.5f);
+                bcFrom = gameObject.AddComponent<BoxCollider>();
+                bcFrom.size = Vector3.one * 0.025f;
+                bcFrom.center = fromPos;
+                bcFrom.isTrigger = true;
+
+                bcMid = gameObject.AddComponent<BoxCollider>();
+                bcMid.size = Vector3.one * 0.025f;
+                bcMid.center = midPos;
+                bcMid.isTrigger = true;
+
+                bcTo = gameObject.AddComponent<BoxCollider>();
+                bcTo.size = Vector3.one * 0.025f;
+                bcTo.center = toPos;
+                bcTo.isTrigger = true;
+
+
                 //fromSphere = Instantiate(spherePrefab, t1);
                 //fromSphere.GetComponent<Renderer>().material.color = col;
                 //fromSphere.transform.localScale = fromClusterHull * 200;
@@ -87,6 +111,60 @@ namespace CellexalVR.SceneObjects
             }
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            if (touched)
+            {
+                print("highlight");
+                Highlight(true);
+            }
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            if (touched)
+            {
+                Highlight(false);
+            }
+        }
+        private void Highlight(bool highlight)
+        {
+            if (highlight)
+            {
+                lineRenderer.startColor = lineRenderer.endColor = Color.white;
+                group = fromPointCluster.ElementAt(0).Group;
+                foreach (Graph.GraphPoint gp in fromPointCluster)
+                {
+                    gp.HighlightGraphPoint(true);
+                }
+                foreach (Graph.GraphPoint gp in midPointCluster)
+                {
+                    gp.HighlightGraphPoint(true);
+                }
+                foreach (Graph.GraphPoint gp in toPointCluster)
+                {
+                    gp.HighlightGraphPoint(true);
+                }
+            }
+            else
+            {
+                foreach (Graph.GraphPoint gp in fromPointCluster)
+                {
+                    gp.HighlightGraphPoint(false);
+                }
+                foreach (Graph.GraphPoint gp in midPointCluster)
+                {
+                    gp.HighlightGraphPoint(false);
+                }
+                foreach (Graph.GraphPoint gp in toPointCluster)
+                {
+                    gp.HighlightGraphPoint(false);
+                }
+                lineRenderer.startColor = lineRenderer.endColor = LineColor;
+            }
+        }
+
         private void Update()
         {
             if (initAnimate)
@@ -100,12 +178,14 @@ namespace CellexalVR.SceneObjects
                     fromPos = t1.TransformPoint(fromGraphCentroid);
                     toPos = t2.TransformPoint(toGraphCentroid);
                     midPos = t3.TransformPoint(midGraphCentroid);
-                    firstAnchor = (fromPos + midPos) / 2f;
-                    secondAnchor = (midPos + toPos) / 2f;
-                    //fromSphere.transform.position = fromPos;
-                    //midSphere.transform.position = midPos;
-                    //toSphere.transform.position = toPos;
+                    //firstAnchor = (fromPos + midPos) / 2f;
+                    //secondAnchor = (midPos + toPos) / 2f;
+                    firstAnchor = fromPos + ((1f / 6f) * (midPos - fromPos));
+                    secondAnchor = toPos - ((1f / 6f) * (toPos - midPos));
                     lineRenderer.SetPositions(new Vector3[] { fromPos, firstAnchor, midPos, secondAnchor, toPos });
+                    bcFrom.center = fromPos;
+                    bcMid.center = midPos;
+                    bcTo.center = toPos;
                 }
                 else
                 {
@@ -145,7 +225,7 @@ namespace CellexalVR.SceneObjects
             }
             else if (dist <= increment)
             {
-                Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.5f);
+                Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.2f);
                 if (posCtr + 1 == linePosistions.Length)
                 {
                     if (centroids)
@@ -154,15 +234,21 @@ namespace CellexalVR.SceneObjects
                         //toSphere.GetComponent<Renderer>().material.color = col;
                         //toSphere.transform.localScale = toClusterHull * 200;
                         //toSphere.transform.position = toPos;
-                        //curve = new AnimationCurve();
-                        //curve.AddKey(1.0f, 1.0f);
-                        //curve.AddKey(0.2f, 0.10f);
-                        //curve.AddKey(0.5f, 0.1f);
-                        //curve.AddKey(0.8f, 0.10f);
-                        //curve.AddKey(0.0f, 1.0f);
+                        curve = new AnimationCurve();
+                        curve.AddKey(0.0f, 1.0f);
+                        curve.AddKey(0.1f, 0.05f);
+                        curve.AddKey(0.5f, 0.05f);
+                        curve.AddKey(0.9f, 0.05f);
+                        curve.AddKey(1.0f, 1.0f);
+                        lineRenderer.widthMultiplier = 0.05f;
+                        lineRenderer.widthCurve = curve;
+                        midSphere = Instantiate(spherePrefab, t3);
+                        midSphere.GetComponent<Renderer>().material = sphereMaterial;
+                        midSphere.GetComponent<Renderer>().material.color = col;
+                        midSphere.transform.localScale = midClusterHull * 300;
+                        midSphere.transform.position = midPos;
+                        //midSphere.transform.Rotate(new Vector3(0, 90, 0));
                         //lineRenderer.widthMultiplier = fromRadius;
-                        //lineRenderer.widthMultiplier = 0.15f;
-                        //lineRenderer.widthCurve = curve;
                         //Gradient gradient = new Gradient();
                         //gradient.SetKeys(
                         //    new GradientColorKey[] { new GradientColorKey(LineColor, 0.0f),
@@ -176,18 +262,7 @@ namespace CellexalVR.SceneObjects
                     initAnimate = false;
                     return;
                 }
-                else
-                {
-                    if (centroids)
-                    {
-
-                        //midSphere = Instantiate(spherePrefab, t3);
-                        //midSphere.GetComponent<Renderer>().material.color = col;
-                        //midSphere.transform.localScale = midClusterHull * 200;
-                        //midSphere.transform.position = midPos;
-
-                    }
-                }
+                
 
                 //lineRenderer.positionCount++;
                 posCtr++;

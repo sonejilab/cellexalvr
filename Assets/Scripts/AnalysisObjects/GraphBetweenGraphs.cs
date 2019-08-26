@@ -30,6 +30,12 @@ namespace CellexalVR.AnalysisObjects
         private List<LineBetweenTwoPoints> lines = new List<LineBetweenTwoPoints>();
         private LineBetweenTwoPoints firstLine;
         private List<LineBetweenTwoPoints> orderedLines = new List<LineBetweenTwoPoints>();
+        private Dictionary<Graph.GraphPoint, Vector3> velocitiesFromGraph = new Dictionary<Graph.GraphPoint, Vector3>();
+        private Dictionary<Graph.GraphPoint, Vector3> velocitiesMidGraph = new Dictionary<Graph.GraphPoint, Vector3>();
+        private Dictionary<Graph.GraphPoint, Vector3> velocitiesToGraph = new Dictionary<Graph.GraphPoint, Vector3>();
+        private GameObject velocityParticleSystemFromGraph;
+        private GameObject velocityParticleSystemMidGraph;
+        private GameObject velocityParticleSystemToGraph;
         // Use this for initialization
         void Start()
         {
@@ -107,7 +113,6 @@ namespace CellexalVR.AnalysisObjects
             List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
             for (int i = 0; i < clusters.Count; i++)
             {
-                int centroidLinesAdded = 0;
                 var fromCluster = clusters[i];
                 for (int j = 0; j < toGraphClusters.Count; j++)
                 {
@@ -122,8 +127,7 @@ namespace CellexalVR.AnalysisObjects
                     if (joinedCluster.ToList().Count > clusterSize)
                     {
                         prevjoinedclusters.UnionWith(joinedCluster);
-                        AddCentroidLine(fromGraph, toGraph, joinedCluster, centroidLinesAdded);
-                        centroidLinesAdded++;
+                        AddCentroidLine(fromGraph, toGraph, joinedCluster);
                     }
                 }
                 yield return null;
@@ -135,6 +139,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 AddLine(fromGraph, toGraph, point);
             }
+            AddParticles(fromGraph, toGraph);
 
         }
 
@@ -258,7 +263,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="fromCluster"></param>
         /// <param name="toCluster"></param>
         /// <param name="joinedCluster"></param>
-        private void AddCentroidLine(Graph from, Graph to, IEnumerable<Graph.GraphPoint> joinedCluster, int centroidLinesAdded)
+        private void AddCentroidLine(Graph from, Graph to, IEnumerable<Graph.GraphPoint> joinedCluster)
         {
             HashSet<Graph.GraphPoint> fromCluster = new HashSet<Graph.GraphPoint>();
             HashSet<Graph.GraphPoint> midCluster = new HashSet<Graph.GraphPoint>();
@@ -299,34 +304,85 @@ namespace CellexalVR.AnalysisObjects
             line.fromGraphCentroid = fromCentroid;
             line.midGraphCentroid = midCentroid;
             line.toGraphCentroid = toCentroid;
+            line.fromPointCluster = fromCluster;
+            line.midPointCluster = midCluster;
+            line.toPointCluster = toCluster;
+
             line.selectionManager = referenceManager.selectionManager;
             LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
             Color color = from.FindGraphPoint(joinedCluster.ToList()[0].Label).GetColor();
-            line.LineColor = color;
-            lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.1f);
+            line.LineColor = new Color(color.r, color.g, color.b, 0.2f);
+            lineRenderer.startColor = lineRenderer.endColor = line.LineColor;
             lines.Add(line);
-            line.transform.parent = graph.lineParent.transform;
+            //line.transform.parent = graph.lineParent.transform;
             line.gameObject.SetActive(true);
 
 
-
-
-            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(fromCluster.ToList().Capacity);
             Vector3 dir;
             foreach (Graph.GraphPoint gp in fromCluster)
             {
                 dir = fromCentroid - gp.Position;
-                velocities[gp] = dir / 5f;
+                velocitiesFromGraph[gp] = dir / 5f;
             }
-            GameObject velocityParticleSystem = Instantiate(velocityParticleSystemPrefab, from.transform);
-            VelocityParticleEmitter emitter = velocityParticleSystem.GetComponent<VelocityParticleEmitter>();
+
+            foreach (Graph.GraphPoint gp in toCluster)
+            {
+                dir = toCentroid - gp.Position;
+                velocitiesToGraph[gp] = dir / 5f;
+            }
+            foreach (Graph.GraphPoint gp in midCluster)
+            {
+                dir = midCentroid - gp.Position;
+                velocitiesMidGraph[gp] = dir / 5f;
+            }
+
+        }
+
+        private void AddParticles(Graph from, Graph to)
+        {
+            velocityParticleSystemFromGraph = Instantiate(velocityParticleSystemPrefab, from.transform);
+            VelocityParticleEmitter emitter = velocityParticleSystemFromGraph.GetComponent<VelocityParticleEmitter>();
             emitter.referenceManager = referenceManager;
             emitter.graph = from;
-            emitter.velocities = velocities;
+            emitter.Velocities = velocitiesFromGraph;
             emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            emitter.UseGraphPointColors = true;
+            emitter.ChangeFrequency(4.0f);
+            ParticleSystem.TrailModule trailModule = velocityParticleSystemFromGraph.GetComponent<ParticleSystem>().trails;
+            trailModule.enabled = true;
+            trailModule.lifetime = 2.0f;
+            trailModule.widthOverTrail = 0.010f;
 
-            //emitter.ChangeSpeed(0.5f);
+            velocityParticleSystemMidGraph = Instantiate(velocityParticleSystemPrefab, graph.transform);
+            velocityParticleSystemMidGraph.transform.localScale /= 2;
+            VelocityParticleEmitter emitterMidGraph = velocityParticleSystemMidGraph.GetComponent<VelocityParticleEmitter>();
+            emitterMidGraph.referenceManager = referenceManager;
+            emitterMidGraph.graph = graph;
+            emitterMidGraph.Velocities = velocitiesMidGraph;
+            emitterMidGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            emitterMidGraph.UseGraphPointColors = true;
+            emitterMidGraph.ChangeFrequency(4.0f);
+            ParticleSystem.TrailModule trailModuleMidGraph = velocityParticleSystemMidGraph.GetComponent<ParticleSystem>().trails;
+            trailModuleMidGraph.enabled = true;
+            trailModuleMidGraph.lifetime = 2.0f;
+            trailModuleMidGraph.widthOverTrail = 0.010f;
 
+            velocityParticleSystemToGraph = Instantiate(velocityParticleSystemPrefab, to.transform);
+            VelocityParticleEmitter emitterToGraph = velocityParticleSystemToGraph.GetComponent<VelocityParticleEmitter>();
+            emitterToGraph.referenceManager = referenceManager;
+            emitterToGraph.graph = to;
+            emitterToGraph.Velocities = velocitiesToGraph;
+            emitterToGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            emitterToGraph.UseGraphPointColors = true;
+            emitterToGraph.ChangeFrequency(4.0f);
+            ParticleSystem.TrailModule trailModuleToGraph = velocityParticleSystemToGraph.GetComponent<ParticleSystem>().trails;
+            trailModuleToGraph.enabled = true;
+            trailModuleToGraph.lifetime = 2.0f;
+            trailModuleToGraph.widthOverTrail = 0.010f;
+            //trailModuleToGraph.dieWithParticles = false;
+
+            //velocityParticleSystemFromGraph.transform.parent = graph.transform;
+            //velocityParticleSystemToGraph.transform.parent = graph.transform;
 
         }
 
@@ -370,7 +426,7 @@ namespace CellexalVR.AnalysisObjects
             Color color = point.GetColor();
             var sourceCell = from.points[point.Label];
             var targetCell = to.points[point.Label];
-            LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
+            LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab, graph.lineParent.transform).GetComponent<LineBetweenTwoPoints>();
             line.t1 = sourceCell.parent.transform;
             line.t2 = targetCell.parent.transform;
             line.graphPoint1 = sourceCell;
@@ -383,9 +439,17 @@ namespace CellexalVR.AnalysisObjects
             LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
             lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.1f);
             lines.Add(line);
-            line.transform.parent = graph.lineParent.transform;
+            //line.transform.parent = graph.lineParent.transform;
             line.gameObject.SetActive(true);
 
+        }
+
+        public void RemoveGraph()
+        {
+            Destroy(velocityParticleSystemFromGraph.gameObject);
+            Destroy(velocityParticleSystemMidGraph.gameObject);
+            Destroy(velocityParticleSystemToGraph.gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

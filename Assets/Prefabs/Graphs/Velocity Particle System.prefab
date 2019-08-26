@@ -4719,7 +4719,7 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 6aa41733870aa854081b3a08352ccc61, type: 2}
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 811da8644173d0845ac7f445bba2e057, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4776,4 +4776,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   graph: {fileID: 0}
+  particleMaterial: {fileID: 0}
   itemsPerFrame: 1000

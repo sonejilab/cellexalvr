@@ -644,7 +644,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
-                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 50, neighbourDistance: 0.10f, kernelBandwidth: 1.5f));
+                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20, neighbourDistance: 0.25f, kernelBandwidth: 1.5f));
             }
             
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();

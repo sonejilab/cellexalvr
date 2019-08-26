@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 4930519345909036}
   - component: {fileID: 120543708637766720}
   - component: {fileID: 114465564163712748}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: LineWithoutTextPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4930519345909036
 Transform:
   m_ObjectHideFlags: 0
@@ -71,6 +71,7 @@ LineRenderer:
   m_SortingOrder: 1
   m_Positions:
   - {x: 0, y: 0, z: 0}
+  - {x: 2, y: 2, z: 2}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.0015
@@ -128,7 +129,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 10
-    numCapVertices: 10
+    numCapVertices: 1
     alignment: 0
     textureMode: 0
     shadowBias: 0
@@ -153,8 +154,9 @@ MonoBehaviour:
   fromGraphCentroid: {x: 0, y: 0, z: 0}
   midGraphCentroid: {x: 0, y: 0, z: 0}
   toGraphCentroid: {x: 0, y: 0, z: 0}
-  fromRadius: 0
-  toRadius: 0
+  fromClusterHull: {x: 0, y: 0, z: 0}
+  midClusterHull: {x: 0, y: 0, z: 0}
+  toClusterHull: {x: 0, y: 0, z: 0}
   centroids: 0
   spherePrefab: {fileID: 4094783700118341761, guid: 5ba5762dcec71d54aaaac9a33291c189,
     type: 3}
