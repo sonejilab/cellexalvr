@@ -134,6 +134,13 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
         }
 
+        public void InformSynchConfig2(byte[] data)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to synch relevant parts of config");
+            coordinator.photonView.RPC("SendSynchConfig2", PhotonTargets.Others, data);
+        }
+
         public void InformSynchConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
                                         Color graphLowExpressionColor, Color graphMidExpressionColor, Color graphHighExpressionColor,
                                         bool graphMostExpressedMarker, Color[] attributeColors, int numberOfHeatmapColors, 
@@ -698,6 +705,7 @@ namespace CellexalVR.General
                 waitingCanvas.SetActive(false);
             }
             Debug.Log("Client Coordinator Found");
+            referenceManager.configManager.MultiUserSynchronise();
         }
 
         private IEnumerator FindServerCoordinator()
