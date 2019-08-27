@@ -176,10 +176,10 @@ namespace CellexalVR.General
             CellexalConfig.Config = (Config)serializer.Deserialize(streamReader);
             streamReader.Close();
             fileStream.Close();
-            if (PhotonNetwork.isMasterClient)
-            {
-                MultiUserSynchronise();
-            }
+            //if (PhotonNetwork.isMasterClient)
+            //{
+            //    MultiUserSynchronise();
+            //}
             CellexalEvents.ConfigLoaded.Invoke();
 
         }
@@ -250,14 +250,18 @@ namespace CellexalVR.General
         public void MultiUserSynchronise()
         {
             print("SYNCH");
-            FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
-            MemoryStream stream = new MemoryStream();
-            XmlSerializer ser = new XmlSerializer(typeof(Config));
-            ser.Serialize(stream, CellexalConfig.Config);
-            byte[] data = stream.ToArray();
+            Config temp = CellexalConfig.Config;
+            //FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            //MemoryStream stream = new MemoryStream();
+            //XmlSerializer ser = new XmlSerializer(typeof(Config));
+            //ser.Serialize(stream, CellexalConfig.Config);
+            //byte[] data = stream.ToArray();
+
+            byte[] data = SerializeObject(CellexalConfig.Config);
 
             referenceManager.gameManager.InformSynchConfig2(data);
 
+            CellexalConfig.Config = DeserializeObject<Config>(data);
             //referenceManager.gameManager.InformSynchConfig(CellexalConfig.Config.SelectionToolColors, CellexalConfig.Config.GraphDefaultColor,
             //                                                CellexalConfig.Config.GraphNumberOfExpressionColors, CellexalConfig.Config.GraphLowExpressionColor,
             //                                                CellexalConfig.Config.GraphMidExpressionColor, CellexalConfig.Config.GraphHighExpressionColor,
@@ -271,13 +275,30 @@ namespace CellexalVR.General
             //                                                CellexalConfig.Config.NumberOfNetworkLineColors, CellexalConfig.Config.NetworkLineWidth);
         }
 
+        public byte[] SerializeObject<T>(T serializabledObject)
+        {
+            T obj = serializabledObject;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(T));
+                ser.Serialize(stream, obj);
+                return stream.ToArray();
+            }
+        }
+
+        public T DeserializeObject<T>(byte[] serializedBytes)
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            using (MemoryStream stream = new MemoryStream(serializedBytes))
+            {
+                return (T)ser.Deserialize(stream);
+            }
+        }
+
         public void SynchroniseConfig2(byte[] data)
         {
             print("SynchroniseConfig");
-            MemoryStream stream = new MemoryStream(data);
-            XmlSerializer ser = new XmlSerializer(typeof(Config));
-            Config config = (Config)ser.Deserialize(stream);
-            CellexalConfig.Config = config;
+            CellexalConfig.Config = (Config)DeserializeObject<Config>(data);
         }
 
         public void SynchroniseConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
