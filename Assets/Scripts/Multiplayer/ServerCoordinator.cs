@@ -53,28 +53,10 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendSynchConfig2(byte[] data)
+        public void SendSynchConfig(byte[] data)
         {
             CellexalLog.Log("Recieved message to synch config");
-            referenceManager.configManager.SynchroniseConfig2(data);
-        }
-        [PunRPC]
-        public void SendSynchConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
-                                        Color graphLowExpressionColor, Color graphMidExpressionColor, Color graphHighExpressionColor,
-                                        bool graphMostExpressedMarker, Color[] attributeColors, int numberOfHeatmapColors, 
-                                        Color heatmapLowExpressionColor, Color heatmapMidExpressionColor, Color heatmapHighExpressionColor,
-                                        string heatmapAlgorithm, string networkAlgorithm, int heatmapNumberOfGenes, 
-                                        int networkLineColoringMethod, Color networkLineColorPositiveHigh, Color networkLineColorPositiveLow,
-                                        Color networkLineColorNegativeHigh, Color networkLineColorNegativeLow, int numberOfNetworkLineColors,
-                                        float networkLineWidth)
-        {
-            referenceManager.configManager.SynchroniseConfig(selectionToolColors, graphDefaultColor,
-                                        graphNumberOfExpressionColors, graphLowExpressionColor, graphMidExpressionColor,
-                                        graphHighExpressionColor, graphMostExpressedMarker, attributeColors, numberOfHeatmapColors,
-                                        heatmapLowExpressionColor, heatmapMidExpressionColor, heatmapHighExpressionColor,
-                                        heatmapAlgorithm, networkAlgorithm, heatmapNumberOfGenes, networkLineColoringMethod,
-                                        networkLineColorPositiveHigh, networkLineColorPositiveLow, networkLineColorNegativeHigh,
-                                        networkLineColorNegativeLow, numberOfNetworkLineColors, networkLineWidth);
+            referenceManager.configManager.SynchroniseConfig(data);
         }
         [PunRPC]
         public void SendGraphpointChangedColor(string graphName, string label, float r, float g, float b)
