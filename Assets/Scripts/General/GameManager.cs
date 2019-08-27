@@ -705,7 +705,7 @@ namespace CellexalVR.General
                 waitingCanvas.SetActive(false);
             }
             Debug.Log("Client Coordinator Found");
-            referenceManager.configManager.MultiUserSynchronise();
+            //referenceManager.configManager.MultiUserSynchronise();
         }
 
         private IEnumerator FindServerCoordinator()
