@@ -270,6 +270,7 @@ namespace CellexalVR.General
                                         Color networkLineColorNegativeHigh, Color networkLineColorNegativeLow, int numberOfNetworkLineColors,
                                         float networkLineWidth)
         {
+            print("Synchronise config");
             multiUserSynchronise = true;
             CellexalConfig.Config.SelectionToolColors = selectionToolColors;
             CellexalConfig.Config.GraphDefaultColor = graphDefaultColor;

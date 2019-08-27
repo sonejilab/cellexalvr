@@ -62,6 +62,8 @@ namespace CellexalVR.Multiplayer
                                         Color networkLineColorNegativeHigh, Color networkLineColorNegativeLow, int numberOfNetworkLineColors,
                                         float networkLineWidth)
         {
+            CellexalLog.Log("Recieved message synch config");
+            print("Recieved message synch config");
             referenceManager.configManager.SynchroniseConfig(selectionToolColors, graphDefaultColor,
                                         graphNumberOfExpressionColors, graphLowExpressionColor, graphMidExpressionColor,
                                         graphHighExpressionColor, graphMostExpressedMarker, attributeColors, numberOfHeatmapColors,
