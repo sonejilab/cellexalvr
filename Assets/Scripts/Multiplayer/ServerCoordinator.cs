@@ -53,6 +53,12 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendSynchConfig2(byte[] data)
+        {
+            CellexalLog.Log("Recieved message to synch config");
+            referenceManager.configManager.SynchroniseConfig2(data);
+        }
+        [PunRPC]
         public void SendSynchConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
                                         Color graphLowExpressionColor, Color graphMidExpressionColor, Color graphHighExpressionColor,
                                         bool graphMostExpressedMarker, Color[] attributeColors, int numberOfHeatmapColors, 

@@ -338,6 +338,12 @@ namespace CellexalVR.AnalysisObjects
                 Group = i;
             }
 
+            public void HighlightGraphPoint(bool active)
+            {
+                parent.HighlightGraphPoint(this, active);
+
+            }
+
             public void ResetColor()
             {
                 parent.ResetGraphPointColor(this);
@@ -1113,6 +1119,16 @@ namespace CellexalVR.AnalysisObjects
             Color32 finalColor = new Color32(redChannel, greenChannel, 0, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
+        }
+
+        public void HighlightGraphPoint(GraphPoint graphPoint, bool active)
+        {
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            byte greenChannel = (byte)(active ? 38 : 0); 
+            Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255); 
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
+            textureChanged = true;
+            
         }
 
         public void ResetGraphPointColor(GraphPoint graphPoint)

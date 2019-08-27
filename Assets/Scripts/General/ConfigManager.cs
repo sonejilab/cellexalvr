@@ -25,6 +25,7 @@ namespace CellexalVR.General
         public float GraphGrabbableCollidersExtensionThresehold { get; set; }
         public Color[] SelectionToolColors { get; set; }
         public Color GraphDefaultColor { get; set; }
+        public Color GraphZeroExpressionColor { get; set; }
         public int GraphNumberOfExpressionColors { get; set; }
         public Color GraphLowExpressionColor { get; set; }
         public Color GraphMidExpressionColor { get; set; }
@@ -66,6 +67,7 @@ namespace CellexalVR.General
             GraphGrabbableCollidersExtensionThresehold = c.GraphGrabbableCollidersExtensionThresehold;
             SelectionToolColors = c.SelectionToolColors;
             GraphDefaultColor = c.GraphDefaultColor;
+            GraphZeroExpressionColor = c.GraphZeroExpressionColor;
             GraphNumberOfExpressionColors = c.GraphNumberOfExpressionColors;
             GraphLowExpressionColor = c.GraphLowExpressionColor;
             GraphMidExpressionColor = c.GraphMidExpressionColor;
@@ -245,20 +247,37 @@ namespace CellexalVR.General
             return new Color(unityR, unityG, unityB);
         }
 
-        private void MultiUserSynchronise()
+        public void MultiUserSynchronise()
         {
             print("SYNCH");
-            referenceManager.gameManager.InformSynchConfig(CellexalConfig.Config.SelectionToolColors, CellexalConfig.Config.GraphDefaultColor,
-                                                            CellexalConfig.Config.GraphNumberOfExpressionColors, CellexalConfig.Config.GraphLowExpressionColor,
-                                                            CellexalConfig.Config.GraphMidExpressionColor, CellexalConfig.Config.GraphHighExpressionColor,
-                                                            CellexalConfig.Config.GraphMostExpressedMarker, CellexalConfig.Config.AttributeColors,
-                                                            CellexalConfig.Config.NumberOfHeatmapColors, CellexalConfig.Config.HeatmapLowExpressionColor,
-                                                            CellexalConfig.Config.HeatmapMidExpressionColor, CellexalConfig.Config.HeatmapHighExpressionColor,
-                                                            CellexalConfig.Config.HeatmapAlgorithm, CellexalConfig.Config.NetworkAlgorithm,
-                                                            CellexalConfig.Config.HeatmapNumberOfGenes, CellexalConfig.Config.NetworkLineColoringMethod,
-                                                            CellexalConfig.Config.NetworkLineColorPositiveHigh, CellexalConfig.Config.NetworkLineColorPositiveLow,
-                                                            CellexalConfig.Config.NetworkLineColorNegativeLow, CellexalConfig.Config.NetworkLineColorPositiveHigh,
-                                                            CellexalConfig.Config.NumberOfNetworkLineColors, CellexalConfig.Config.NetworkLineWidth);
+            FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            MemoryStream stream = new MemoryStream();
+            XmlSerializer ser = new XmlSerializer(typeof(Config));
+            ser.Serialize(stream, CellexalConfig.Config);
+            byte[] data = stream.ToArray();
+
+            referenceManager.gameManager.InformSynchConfig2(data);
+
+            //referenceManager.gameManager.InformSynchConfig(CellexalConfig.Config.SelectionToolColors, CellexalConfig.Config.GraphDefaultColor,
+            //                                                CellexalConfig.Config.GraphNumberOfExpressionColors, CellexalConfig.Config.GraphLowExpressionColor,
+            //                                                CellexalConfig.Config.GraphMidExpressionColor, CellexalConfig.Config.GraphHighExpressionColor,
+            //                                                CellexalConfig.Config.GraphMostExpressedMarker, CellexalConfig.Config.AttributeColors,
+            //                                                CellexalConfig.Config.NumberOfHeatmapColors, CellexalConfig.Config.HeatmapLowExpressionColor,
+            //                                                CellexalConfig.Config.HeatmapMidExpressionColor, CellexalConfig.Config.HeatmapHighExpressionColor,
+            //                                                CellexalConfig.Config.HeatmapAlgorithm, CellexalConfig.Config.NetworkAlgorithm,
+            //                                                CellexalConfig.Config.HeatmapNumberOfGenes, CellexalConfig.Config.NetworkLineColoringMethod,
+            //                                                CellexalConfig.Config.NetworkLineColorPositiveHigh, CellexalConfig.Config.NetworkLineColorPositiveLow,
+            //                                                CellexalConfig.Config.NetworkLineColorNegativeLow, CellexalConfig.Config.NetworkLineColorPositiveHigh,
+            //                                                CellexalConfig.Config.NumberOfNetworkLineColors, CellexalConfig.Config.NetworkLineWidth);
+        }
+
+        public void SynchroniseConfig2(byte[] data)
+        {
+            print("SynchroniseConfig");
+            MemoryStream stream = new MemoryStream(data);
+            XmlSerializer ser = new XmlSerializer(typeof(Config));
+            Config config = (Config)ser.Deserialize(stream);
+            CellexalConfig.Config = config;
         }
 
         public void SynchroniseConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,

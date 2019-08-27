@@ -329,7 +329,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 for (int i = 0; i < g.CTCGraphs.Count; i++)
                 {
-                    Destroy(g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().gameObject);
+                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    gbg.RemoveGraph();
                     Graphs.Remove(g.CTCGraphs[i].GetComponent<Graph>());
                 }
                 g.CTCGraphs.Clear();

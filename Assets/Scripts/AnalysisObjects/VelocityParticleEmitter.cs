@@ -9,6 +9,7 @@ namespace CellexalVR.AnalysisObjects
     {
         public ReferenceManager referenceManager;
         public Graph graph;
+        public Material particleMaterial;
 
         public int itemsPerFrame = 1000;
 
@@ -62,6 +63,7 @@ namespace CellexalVR.AnalysisObjects
                 InvokeRepeating("DoEmit", 0f, arrowEmitRate);
             }
             particleSystem = gameObject.GetComponent<ParticleSystem>();
+            particleSystem.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
             SetColors();
             Play();
             oldArrowEmitRate = arrowEmitRate;

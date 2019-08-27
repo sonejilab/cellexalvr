@@ -14,6 +14,8 @@ namespace CellexalVR.AnalysisLogic
         //public float velocityThreshold = 0.001f;
         public Graph ActiveGraph { get; set; }
         public GameObject particleSystemPrefab;
+        public Material arrowMaterial;
+        public Material standardMaterial;
 
         //public GameObject parentPrefab;
         //public GameObject arrowPrefab;
@@ -95,6 +97,7 @@ namespace CellexalVR.AnalysisLogic
                 particleSystemGameObject.name = particleSystemGameObjectName;
                 VelocityParticleEmitter emitter = particleSystemGameObject.GetComponent<VelocityParticleEmitter>();
                 emitter.referenceManager = referenceManager;
+                emitter.particleMaterial = arrowMaterial;
                 emitter.graph = graph;
                 emitter.Velocities = velocities;
                 graph.velocityParticleEmitter = emitter;
