@@ -22,7 +22,7 @@ namespace CellexalVR.DesktopUI
         {
             NONE,
             HEATMAP_HIGH, HEATMAP_MID, HEATMAP_LOW,
-            GRAPH_HIGH, GRAPH_MID, GRAPH_LOW, GRAPH_DEFAULT,
+            GRAPH_HIGH, GRAPH_MID, GRAPH_LOW, GRAPH_ZERO, GRAPH_DEFAULT,
             SELECTION,
             NETWORK_POSITIVE_HIGH, NETWORK_POSITIVE_LOW, NETWORK_NEGATIVE_HIGH, NETWORK_NEGATIVE_LOW,
             VELOCITY_HIGH, VELOCITY_LOW
@@ -139,6 +139,9 @@ namespace CellexalVR.DesktopUI
                 case ConfigColor.GRAPH_LOW:
                     CellexalConfig.Config.GraphLowExpressionColor = color;
                     break;
+                case ConfigColor.GRAPH_ZERO:
+                    CellexalConfig.Config.GraphZeroExpressionColor = color;
+                    break;
                 case ConfigColor.GRAPH_DEFAULT:
                     CellexalConfig.Config.GraphDefaultColor = color;
                     break;
@@ -177,6 +180,7 @@ namespace CellexalVR.DesktopUI
                 case ConfigColor.GRAPH_HIGH:
                 case ConfigColor.GRAPH_MID:
                 case ConfigColor.GRAPH_LOW:
+                case ConfigColor.GRAPH_ZERO:
                 case ConfigColor.GRAPH_DEFAULT:
                     graphGenerator.CreateShaderColors();
                     break;

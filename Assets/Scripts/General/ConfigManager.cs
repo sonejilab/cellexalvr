@@ -249,92 +249,71 @@ namespace CellexalVR.General
 
         public void MultiUserSynchronise()
         {
-            print("SYNCH");
-            Config temp = CellexalConfig.Config;
             //FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
             //MemoryStream stream = new MemoryStream();
             //XmlSerializer ser = new XmlSerializer(typeof(Config));
             //ser.Serialize(stream, CellexalConfig.Config);
             //byte[] data = stream.ToArray();
 
-            byte[] data = SerializeObject(CellexalConfig.Config);
+            byte[] data = SerializeConfig(CellexalConfig.Config);
 
-            referenceManager.gameManager.InformSynchConfig2(data);
+            referenceManager.gameManager.InformSynchConfig(data);
 
-            CellexalConfig.Config = DeserializeObject<Config>(data);
-            //referenceManager.gameManager.InformSynchConfig(CellexalConfig.Config.SelectionToolColors, CellexalConfig.Config.GraphDefaultColor,
-            //                                                CellexalConfig.Config.GraphNumberOfExpressionColors, CellexalConfig.Config.GraphLowExpressionColor,
-            //                                                CellexalConfig.Config.GraphMidExpressionColor, CellexalConfig.Config.GraphHighExpressionColor,
-            //                                                CellexalConfig.Config.GraphMostExpressedMarker, CellexalConfig.Config.AttributeColors,
-            //                                                CellexalConfig.Config.NumberOfHeatmapColors, CellexalConfig.Config.HeatmapLowExpressionColor,
-            //                                                CellexalConfig.Config.HeatmapMidExpressionColor, CellexalConfig.Config.HeatmapHighExpressionColor,
-            //                                                CellexalConfig.Config.HeatmapAlgorithm, CellexalConfig.Config.NetworkAlgorithm,
-            //                                                CellexalConfig.Config.HeatmapNumberOfGenes, CellexalConfig.Config.NetworkLineColoringMethod,
-            //                                                CellexalConfig.Config.NetworkLineColorPositiveHigh, CellexalConfig.Config.NetworkLineColorPositiveLow,
-            //                                                CellexalConfig.Config.NetworkLineColorNegativeLow, CellexalConfig.Config.NetworkLineColorPositiveHigh,
-            //                                                CellexalConfig.Config.NumberOfNetworkLineColors, CellexalConfig.Config.NetworkLineWidth);
+            CellexalConfig.Config = DeserializeConfig<Config>(data);
         }
 
-        public byte[] SerializeObject<T>(T serializabledObject)
+        public byte[] SerializeConfig<Config>(Config serializableConfig)
         {
-            T obj = serializabledObject;
+            Config config = serializableConfig;
             using (MemoryStream stream = new MemoryStream())
             {
-                XmlSerializer ser = new XmlSerializer(typeof(T));
-                ser.Serialize(stream, obj);
+                XmlSerializer ser = new XmlSerializer(typeof(Config));
+                ser.Serialize(stream, config);
                 return stream.ToArray();
             }
         }
 
-        public T DeserializeObject<T>(byte[] serializedBytes)
+        public Config DeserializeConfig<Config>(byte[] serializedBytes)
         {
-            XmlSerializer ser = new XmlSerializer(typeof(T));
+            XmlSerializer ser = new XmlSerializer(typeof(Config));
             using (MemoryStream stream = new MemoryStream(serializedBytes))
             {
-                return (T)ser.Deserialize(stream);
+                return (Config)ser.Deserialize(stream);
             }
         }
 
-        public void SynchroniseConfig2(byte[] data)
+        public void SynchroniseConfig(byte[] data)
         {
-            print("SynchroniseConfig");
-            CellexalConfig.Config = (Config)DeserializeObject<Config>(data);
+            Config config = DeserializeConfig<Config>(data);
+            // Only change the parts that need to be.
+            CellexalConfig.Config.SelectionToolColors = config.SelectionToolColors;
+            CellexalConfig.Config.GraphDefaultColor = config.GraphDefaultColor;
+            CellexalConfig.Config.GraphZeroExpressionColor = config.GraphZeroExpressionColor;
+            CellexalConfig.Config.GraphNumberOfExpressionColors = config.GraphNumberOfExpressionColors;
+            CellexalConfig.Config.GraphLowExpressionColor = config.GraphLowExpressionColor;
+            CellexalConfig.Config.GraphMidExpressionColor = config.GraphMidExpressionColor;
+            CellexalConfig.Config.GraphHighExpressionColor = config.GraphHighExpressionColor;
+            CellexalConfig.Config.GraphMostExpressedMarker = config.GraphMostExpressedMarker;
+            CellexalConfig.Config.AttributeColors = config.AttributeColors;
+            CellexalConfig.Config.NumberOfHeatmapColors = config.NumberOfHeatmapColors;
+            CellexalConfig.Config.HeatmapLowExpressionColor = config.HeatmapLowExpressionColor;
+            CellexalConfig.Config.HeatmapMidExpressionColor = config.HeatmapMidExpressionColor;
+            CellexalConfig.Config.HeatmapHighExpressionColor = config.HeatmapHighExpressionColor;
+            CellexalConfig.Config.HeatmapHighlightMarkerColor = config.HeatmapHighlightMarkerColor;
+            CellexalConfig.Config.HeatmapConfirmMarkerColor = config.HeatmapConfirmMarkerColor;
+            CellexalConfig.Config.HeatmapAlgorithm = config.HeatmapAlgorithm;
+            CellexalConfig.Config.NetworkAlgorithm = config.NetworkAlgorithm;
+            CellexalConfig.Config.HeatmapNumberOfGenes = config.HeatmapNumberOfGenes;
+            CellexalConfig.Config.NetworkLineColoringMethod = config.NetworkLineColoringMethod;
+            CellexalConfig.Config.NetworkLineColorPositiveHigh = config.NetworkLineColorPositiveHigh;
+            CellexalConfig.Config.NetworkLineColorPositiveLow = config.NetworkLineColorPositiveLow;
+            CellexalConfig.Config.NetworkLineColorNegativeLow = config.NetworkLineColorNegativeLow;
+            CellexalConfig.Config.NetworkLineColorNegativeHigh = config.NetworkLineColorNegativeHigh;
+            CellexalConfig.Config.NumberOfNetworkLineColors = config.NumberOfNetworkLineColors;
+            CellexalConfig.Config.NetworkLineWidth = config.NetworkLineWidth;
+
+            CellexalEvents.ConfigLoaded.Invoke();
         }
 
-        public void SynchroniseConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
-                                        Color graphLowExpressionColor, Color graphMidExpressionColor, Color graphHighExpressionColor,
-                                        bool graphMostExpressedMarker, Color[] attributeColors, int numberOfHeatmapColors, 
-                                        Color heatmapLowExpressionColor, Color heatmapMidExpressionColor, Color heatmapHighExpressionColor,
-                                        string heatmapAlgorithm, string networkAlgorithm, int heatmapNumberOfGenes, 
-                                        int networkLineColoringMethod, Color networkLineColorPositiveHigh, Color networkLineColorPositiveLow,
-                                        Color networkLineColorNegativeHigh, Color networkLineColorNegativeLow, int numberOfNetworkLineColors,
-                                        float networkLineWidth)
-        {
-            print("Synchronise config");
-            multiUserSynchronise = true;
-            CellexalConfig.Config.SelectionToolColors = selectionToolColors;
-            CellexalConfig.Config.GraphDefaultColor = graphDefaultColor;
-            CellexalConfig.Config.GraphNumberOfExpressionColors = graphNumberOfExpressionColors;
-
-            CellexalConfig.Config.GraphLowExpressionColor = graphLowExpressionColor;
-            CellexalConfig.Config.GraphMidExpressionColor = graphMidExpressionColor;
-            CellexalConfig.Config.GraphHighExpressionColor = graphHighExpressionColor;
-            CellexalConfig.Config.GraphMostExpressedMarker = graphMostExpressedMarker;
-            CellexalConfig.Config.AttributeColors = attributeColors;
-            CellexalConfig.Config.NumberOfHeatmapColors = numberOfHeatmapColors;
-            CellexalConfig.Config.HeatmapLowExpressionColor = heatmapLowExpressionColor;
-            CellexalConfig.Config.HeatmapMidExpressionColor = heatmapMidExpressionColor;
-            CellexalConfig.Config.HeatmapHighExpressionColor = heatmapHighExpressionColor;
-            CellexalConfig.Config.HeatmapAlgorithm = heatmapAlgorithm;
-            CellexalConfig.Config.NetworkAlgorithm = networkAlgorithm;
-            CellexalConfig.Config.HeatmapNumberOfGenes = heatmapNumberOfGenes;
-            CellexalConfig.Config.NetworkLineColoringMethod = networkLineColoringMethod;
-            CellexalConfig.Config.NetworkLineColorPositiveHigh = networkLineColorPositiveHigh;
-            CellexalConfig.Config.NetworkLineColorPositiveLow = networkLineColorPositiveLow;
-            CellexalConfig.Config.NetworkLineColorNegativeHigh = networkLineColorNegativeHigh;
-            CellexalConfig.Config.NetworkLineColorNegativeLow = networkLineColorNegativeLow;
-            CellexalConfig.Config.NumberOfNetworkLineColors = numberOfNetworkLineColors;
-            CellexalConfig.Config.NetworkLineWidth = networkLineWidth;
-        }
     }
 }

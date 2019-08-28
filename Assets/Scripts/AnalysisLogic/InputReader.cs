@@ -115,6 +115,10 @@ namespace CellexalVR.AnalysisLogic
         public void ReadFolder(string path)
         {
             UpdateSelectionToolHandler();
+            if (PhotonNetwork.isMasterClient)
+            {
+                referenceManager.configManager.MultiUserSynchronise();
+            }
             attributeFileRead = false;
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {

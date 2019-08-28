@@ -127,10 +127,10 @@ namespace CellexalVR.AnalysisObjects
             int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             int nbrOfSelectionColors = CellexalConfig.Config.SelectionToolColors.Length;
 
-            if (nbrOfExpressionColors + nbrOfSelectionColors > 255)
+            if (nbrOfExpressionColors + nbrOfSelectionColors > 250)
             {
-                nbrOfExpressionColors = 255 - nbrOfSelectionColors;
-                CellexalLog.Log(string.Format("ERROR: Can not have more than 255 total expression and selection colors. Reducing expression colors to {0}. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.", nbrOfExpressionColors));
+                nbrOfExpressionColors = 250 - nbrOfSelectionColors;
+                CellexalLog.Log(string.Format("ERROR: Can not have more than 254 total expression and selection colors. Reducing expression colors to {0}. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.", nbrOfExpressionColors));
             }
             else if (nbrOfExpressionColors < 3)
             {
@@ -169,7 +169,13 @@ namespace CellexalVR.AnalysisObjects
                 pixel++;
             }
 
+            // Setting a block of colours because when going from linear to gamma space in the shader could cause rounding errors.
             graphPointColors.SetPixel(255, 0, CellexalConfig.Config.GraphDefaultColor);
+            graphPointColors.SetPixel(254, 0, CellexalConfig.Config.GraphDefaultColor);
+            graphPointColors.SetPixel(253, 0, CellexalConfig.Config.GraphDefaultColor);
+            graphPointColors.SetPixel(252, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+            graphPointColors.SetPixel(251, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+            graphPointColors.SetPixel(250, 0, CellexalConfig.Config.GraphZeroExpressionColor);
             graphPointColors.filterMode = FilterMode.Point;
             graphPointColors.Apply();
 

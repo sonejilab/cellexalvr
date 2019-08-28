@@ -1156,7 +1156,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 for (int j = 0; j < textureHeight; ++j)
                 {
-                    texture.SetPixel(i, j, Color.black);
+                    //texture.SetPixel(i, j, Color.black);
+                    texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(250, 0, 0, 255) });
                 }
             }
 

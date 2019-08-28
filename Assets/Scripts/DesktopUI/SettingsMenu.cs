@@ -38,6 +38,7 @@ namespace CellexalVR.DesktopUI
         public Image graphGradient;
         public TMPro.TMP_InputField numberOfGraphColorsInputField;
         public ColorPickerButton graphDefaultColor;
+        public ColorPickerButton graphZeroExpressionColor;
         public Toggle graphHightestExpressedMarker;
         [Header("Networks")]
         public TMPro.TMP_Dropdown networkAlgorithmDropdown;
@@ -163,6 +164,7 @@ namespace CellexalVR.DesktopUI
             graphLowExpression.Color = CellexalConfig.Config.GraphLowExpressionColor;
             numberOfGraphColorsInputField.text = "" + CellexalConfig.Config.GraphNumberOfExpressionColors;
             graphDefaultColor.Color = CellexalConfig.Config.GraphDefaultColor;
+            graphZeroExpressionColor.Color = CellexalConfig.Config.GraphZeroExpressionColor;
             graphHightestExpressedMarker.isOn = CellexalConfig.Config.GraphMostExpressedMarker;
             networkAlgorithmDropdown.value = networkAlgorithms.IndexOf(CellexalConfig.Config.NetworkAlgorithm);
             networkLineColoringMethodDropdown.value = CellexalConfig.Config.NetworkLineColoringMethod;
