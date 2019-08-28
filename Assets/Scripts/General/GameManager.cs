@@ -134,31 +134,11 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendReadFolder", PhotonTargets.Others, path);
         }
 
-        public void InformSynchConfig2(byte[] data)
+        public void InformSynchConfig(byte[] data)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to synch relevant parts of config");
             coordinator.photonView.RPC("SendSynchConfig2", PhotonTargets.Others, data);
-        }
-
-        public void InformSynchConfig(Color[] selectionToolColors, Color graphDefaultColor, int graphNumberOfExpressionColors,
-                                        Color graphLowExpressionColor, Color graphMidExpressionColor, Color graphHighExpressionColor,
-                                        bool graphMostExpressedMarker, Color[] attributeColors, int numberOfHeatmapColors, 
-                                        Color heatmapLowExpressionColor, Color heatmapMidExpressionColor, Color heatmapHighExpressionColor,
-                                        string heatmapAlgorithm, string networkAlgorithm, int heatmapNumberOfGenes, 
-                                        int networkLineColoringMethod, Color networkLineColorPositiveHigh, Color networkLineColorPositiveLow,
-                                        Color networkLineColorNegativeHigh, Color networkLineColorNegativeLow, int numberOfNetworkLineColors,
-                                        float networkLineWidth)
-        {
-            if (!multiplayer) return;
-            CellexalLog.Log("Informing clients to synch relevant parts of config");
-            coordinator.photonView.RPC("SendSynchConfig", PhotonTargets.Others, selectionToolColors, graphDefaultColor,
-                                        graphNumberOfExpressionColors, graphLowExpressionColor, graphMidExpressionColor, graphHighExpressionColor,
-                                        graphMostExpressedMarker, attributeColors, numberOfHeatmapColors, heatmapLowExpressionColor,
-                                        heatmapMidExpressionColor, heatmapHighExpressionColor, heatmapAlgorithm, networkAlgorithm,
-                                        heatmapNumberOfGenes, networkLineColoringMethod, networkLineColorPositiveHigh,
-                                        networkLineColorPositiveLow, networkLineColorNegativeHigh, networkLineColorNegativeLow,
-                                        numberOfNetworkLineColors, networkLineWidth);
         }
 
         public void InformGraphPointChangedColor(string graphname, string label, Color color)
