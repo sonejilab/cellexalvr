@@ -58,6 +58,7 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to synch config");
             referenceManager.configManager.SynchroniseConfig(data);
         }
+
         [PunRPC]
         public void SendGraphpointChangedColor(string graphName, string label, float r, float g, float b)
         {
