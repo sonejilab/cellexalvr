@@ -138,7 +138,7 @@ namespace CellexalVR.General
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to synch relevant parts of config");
-            coordinator.photonView.RPC("SendSynchConfig2", PhotonTargets.Others, data);
+            coordinator.photonView.RPC("SendSynchConfig", PhotonTargets.Others, data);
         }
 
         public void InformGraphPointChangedColor(string graphname, string label, Color color)

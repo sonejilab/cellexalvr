@@ -404,7 +404,14 @@ namespace CellexalVR.DesktopUI
         {
             CellexalLog.Log("Saved changes made in the settings menu.");
             unsavedChanges = false;
-            referenceManager.configManager.SaveConfigFile();
+            if (referenceManager.gameManager.multiplayer)
+            {
+                referenceManager.configManager.MultiUserSynchronise();
+            }
+            else
+            {
+                referenceManager.configManager.SaveConfigFile();
+            }
             unsavedChangesPrompt.SetActive(false);
             settingsMenuGameObject.SetActive(false);
             colorPicker.gameObject.SetActive(false);

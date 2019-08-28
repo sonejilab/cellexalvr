@@ -249,17 +249,19 @@ namespace CellexalVR.General
 
         public void MultiUserSynchronise()
         {
-            //FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
-            //MemoryStream stream = new MemoryStream();
-            //XmlSerializer ser = new XmlSerializer(typeof(Config));
-            //ser.Serialize(stream, CellexalConfig.Config);
-            //byte[] data = stream.ToArray();
-
             byte[] data = SerializeConfig(CellexalConfig.Config);
 
             referenceManager.gameManager.InformSynchConfig(data);
 
-            CellexalConfig.Config = DeserializeConfig<Config>(data);
+            string sharedConfigPath = configDir + @"\sharedConfig.xml";
+            if (!File.Exists(sharedConfigPath))
+            {
+                File.Create(sharedConfigPath);
+            }
+
+            configPath = sharedConfigPath;
+            SaveConfigFile();
+
         }
 
         public byte[] SerializeConfig<Config>(Config serializableConfig)
@@ -312,6 +314,13 @@ namespace CellexalVR.General
             CellexalConfig.Config.NumberOfNetworkLineColors = config.NumberOfNetworkLineColors;
             CellexalConfig.Config.NetworkLineWidth = config.NetworkLineWidth;
 
+            string sharedConfigPath = configDir + @"\sharedConfig.xml";
+            if (!File.Exists(sharedConfigPath))
+            {
+                File.Create(sharedConfigPath);
+            }
+            configPath = sharedConfigPath;
+            SaveConfigFile();
             CellexalEvents.ConfigLoaded.Invoke();
         }
 
