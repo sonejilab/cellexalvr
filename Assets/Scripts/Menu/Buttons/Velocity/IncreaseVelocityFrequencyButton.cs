@@ -9,7 +9,6 @@ namespace CellexalVR.Menu.Buttons.Velocity
         /// How much the delay between the emits is changed in seconds. Negative numbers mean more often, positive numbers mean less often.
         /// </summary>
         public float amount = 1f;
-        public TextMeshPro frequencyText;
 
         protected override string Description
         {
@@ -30,7 +29,8 @@ namespace CellexalVR.Menu.Buttons.Velocity
                 {
                     newFrequencyString = newFrequencyString.Substring(0, 4);
                 }
-                frequencyText.text = "Frequency: " + newFrequencyString;
+                referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+                referenceManager.gameManager.InformChangeFrequency(activeGraph.GraphName, amount);
             }
         }
     }

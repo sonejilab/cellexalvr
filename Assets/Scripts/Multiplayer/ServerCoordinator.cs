@@ -797,6 +797,107 @@ namespace CellexalVR.Multiplayer
                 selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
 
+        [PunRPC]
+        public void SendStartVelocity(string graphName)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                activeGraph.velocityParticleEmitter.Play();
+            }
+        }
+
+        [PunRPC]
+        public void SendStopVelocity(string graphName)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                activeGraph.velocityParticleEmitter.Stop();
+            }
+        }
+
+        public void SendToggleGraphPoints(string graphName)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                activeGraph.ToggleGraphPoints();
+            }
+        }
+
+        public void SendConstantSynchedMode(string graphName, bool switchToConstant)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                activeGraph.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
+                if (switchToConstant)
+                {
+                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Constant";
+                }
+                else
+                {
+                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Synched";
+                }
+            }
+        }
+        public void SendGraphPointColorsMode(string graphName, bool switchToGraphPointColors)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                activeGraph.velocityParticleEmitter.UseGraphPointColors = switchToGraphPointColors;
+                if (switchToGraphPointColors)
+                {
+                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Graphpoint colors";
+                }
+                else
+                {
+                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Gradient";
+                }
+            }
+        }
+        public void SendChangeFrequency(string graphName, float amount)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                float newFrequency = activeGraph.velocityParticleEmitter.ChangeFrequency(amount);
+                string newFrequencyString = (1f / newFrequency).ToString();
+                if (newFrequencyString.Length > 4)
+                {
+                    newFrequencyString = newFrequencyString.Substring(0, 4);
+                }
+                referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+            }
+        }
+
+        public void SendChangeThreshold(string graphName, float amount)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                float newThreshold = activeGraph.velocityParticleEmitter.ChangeThreshold(amount);
+                referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
+            }
+        }
+        public void SendChangeSpeed(string graphName, float amount)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                float newSpeed = activeGraph.velocityParticleEmitter.ChangeSpeed(amount);
+                referenceManager.velocitySubMenu.speedText.text = "Speed: " + newSpeed;
+            }
+        }
+
+        public void SendReadVelocityFile(string filePath)
+        {
+            referenceManager.velocityGenerator.ReadVelocityFile(filePath);
+            referenceManager.velocitySubMenu.DeactivateOutlines();
+            referenceManager.velocitySubMenu.ActivateOutline(filePath);
+        }
         #endregion
     }
 }

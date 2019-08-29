@@ -639,6 +639,56 @@ namespace CellexalVR.General
                 selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
 
+        public void InformStartVelocity(string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendStartVelocity", PhotonTargets.Others, graphName);
+        }
+        
+        public void InformStopVelocity(string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendStopVelocity", PhotonTargets.Others, graphName);
+        }
+
+        public void InformToggleGraphPoints(string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others, graphName);
+        }
+
+        public void InformConstantSynchedMode(string graphName, bool switchToConstant)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others, graphName, switchToConstant);
+        }
+
+        public void InformGraphPointColorsMode(string graphName, bool switchToGraphpointColors)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others, graphName, switchToGraphpointColors);
+        }
+        public void InformChangeFrequency(string graphName, float amount)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendChangeFrequency", PhotonTargets.Others, graphName, amount);
+        }
+
+        public void InformChangeThreshold(string graphName, float amount)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendChangeThreshold", PhotonTargets.Others, graphName, amount);
+        }
+        public void InformChangeSpeed(string graphName, float amount)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendChangeSpeed", PhotonTargets.Others, graphName, amount);
+        }
+        public void InformReadVelocityFile(string filePath)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendReadVelocityFile", PhotonTargets.Others, filePath);
+        }
         #endregion
 
         /// <summary>
@@ -685,7 +735,6 @@ namespace CellexalVR.General
                 waitingCanvas.SetActive(false);
             }
             Debug.Log("Client Coordinator Found");
-            //referenceManager.configManager.MultiUserSynchronise();
         }
 
         private IEnumerator FindServerCoordinator()

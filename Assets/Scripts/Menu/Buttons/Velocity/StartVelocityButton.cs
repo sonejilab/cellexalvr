@@ -18,6 +18,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
             if (activeGraph != null)
             {
                 activeGraph.velocityParticleEmitter.Play();
+                referenceManager.gameManager.InformStartVelocity(activeGraph.GraphName);
             }
         }
     }

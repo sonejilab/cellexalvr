@@ -6,7 +6,6 @@ public class DecreaseVelocitySpeedButton : CellexalButton
 {
 
     public float amount;
-    public TextMeshPro speedText;
 
     protected override string Description
     {
@@ -18,8 +17,10 @@ public class DecreaseVelocitySpeedButton : CellexalButton
 
     public override void Click()
     {
-        VelocityParticleEmitter emitter = referenceManager.velocityGenerator.ActiveGraph.velocityParticleEmitter;
+        Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
+        VelocityParticleEmitter emitter = activeGraph.velocityParticleEmitter;
         float newSpeed = emitter.ChangeSpeed(amount);
-        speedText.text = "Speed: " + newSpeed;
+        referenceManager.velocitySubMenu.speedText.text = "Speed: " + newSpeed;
+        referenceManager.gameManager.InformChangeSpeed(activeGraph.GraphName, amount);
     }
 }

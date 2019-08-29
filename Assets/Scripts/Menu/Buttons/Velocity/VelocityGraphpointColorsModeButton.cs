@@ -8,8 +8,6 @@ namespace CellexalVR.Menu.Buttons
     public class VelocityGraphpointColorsModeButton : CellexalButton
     {
 
-        public TextMeshPro graphpointColorsModeText;
-
         protected override string Description
         {
             get
@@ -23,16 +21,17 @@ namespace CellexalVR.Menu.Buttons
             Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
             if (activeGraph != null)
             {
-                bool switchToGraphpointCOlors = !activeGraph.velocityParticleEmitter.UseGraphPointColors;
-                activeGraph.velocityParticleEmitter.UseGraphPointColors = switchToGraphpointCOlors;
-                if (switchToGraphpointCOlors)
+                bool switchToGraphpointColors = !activeGraph.velocityParticleEmitter.UseGraphPointColors;
+                activeGraph.velocityParticleEmitter.UseGraphPointColors = switchToGraphpointColors;
+                if (switchToGraphpointColors)
                 {
-                    graphpointColorsModeText.text = "Mode: Graphpoint colors";
+                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Graphpoint colors";
                 }
                 else
                 {
-                    graphpointColorsModeText.text = "Mode: Gradient";
+                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Gradient";
                 }
+                referenceManager.gameManager.InformGraphPointColorsMode(activeGraph.GraphName, switchToGraphpointColors);
             }
         }
     }

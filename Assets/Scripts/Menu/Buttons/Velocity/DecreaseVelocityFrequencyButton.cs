@@ -6,7 +6,6 @@ namespace CellexalVR.Menu.Buttons.Velocity
     public class DecreaseVelocityFrequencyButton : CellexalButton
     {
         public float amount = -1f;
-        public TextMeshPro frequencyText;
 
         protected override string Description
         {
@@ -27,7 +26,8 @@ namespace CellexalVR.Menu.Buttons.Velocity
                 {
                     newFrequencyString = newFrequencyString.Substring(0, 4);
                 }
-                frequencyText.text = "Frequency: " + newFrequencyString;
+                referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+                referenceManager.gameManager.InformChangeFrequency(activeGraph.GraphName, amount);
             }
         }
     }
