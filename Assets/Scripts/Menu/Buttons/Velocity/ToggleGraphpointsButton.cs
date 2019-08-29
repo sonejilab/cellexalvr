@@ -20,6 +20,7 @@ namespace CellexalVR.Menu.Buttons
             if (activeGraph != null)
             {
                 activeGraph.ToggleGraphPoints();
+                referenceManager.gameManager.InformToggleGraphPoints(activeGraph.GraphName);
             }
         }
     }

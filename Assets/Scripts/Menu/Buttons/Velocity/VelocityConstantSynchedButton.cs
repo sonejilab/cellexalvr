@@ -8,8 +8,6 @@ namespace CellexalVR.Menu.Buttons
     public class VelocityConstantSynchedButton : CellexalButton
     {
 
-        public TextMeshPro constantSynchedText;
-
         protected override string Description
         {
             get
@@ -17,6 +15,7 @@ namespace CellexalVR.Menu.Buttons
                 return "Change between constant or synched mode";
             }
         }
+
 
         public override void Click()
         {
@@ -27,12 +26,13 @@ namespace CellexalVR.Menu.Buttons
                 activeGraph.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
                 if (switchToConstant)
                 {
-                    constantSynchedText.text = "Mode: Constant";
+                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Constant";
                 }
                 else
                 {
-                    constantSynchedText.text = "Mode: Synched";
+                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Synched";
                 }
+                referenceManager.gameManager.InformConstantSynchedMode(activeGraph.GraphName, switchToConstant);
             }
         }
     }

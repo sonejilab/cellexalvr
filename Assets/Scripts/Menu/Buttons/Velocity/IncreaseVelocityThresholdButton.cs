@@ -7,7 +7,6 @@ namespace CellexalVR.Menu.Buttons.Velocity
     {
 
         public float amount = 2f;
-        public TextMeshPro thresholdText;
 
         protected override string Description
         {
@@ -23,7 +22,8 @@ namespace CellexalVR.Menu.Buttons.Velocity
             if (activeGraph != null)
             {
                 float newThreshold = activeGraph.velocityParticleEmitter.ChangeThreshold(amount);
-                thresholdText.text = "Threshold: " + newThreshold;
+                referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
+                referenceManager.gameManager.InformChangeThreshold(activeGraph.GraphName, amount);
             }
         }
     }

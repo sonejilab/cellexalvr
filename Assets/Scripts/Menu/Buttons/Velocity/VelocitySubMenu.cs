@@ -11,9 +11,12 @@ namespace CellexalVR.Menu.SubMenus
     {
         public ReferenceManager referenceManager;
         public GameObject velocityDataPrefab;
+        public TextMeshPro constantSynchedModeText;
         public TextMeshPro frequencyText;
         public TextMeshPro thresholdText;
         public TextMeshPro speedText;
+        public TextMeshPro graphPointColorsModeText;
+
 
         private List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
         Vector3 startPosition = new Vector3(-0.37f, 1f, 0.0f);
@@ -76,6 +79,17 @@ namespace CellexalVR.Menu.SubMenus
             frequencyText.text = "Frequency: 1";
             thresholdText.text = "Threshold: 0";
             speedText.text = "Speed: 5";
+        }
+
+        public void ActivateOutline(string filePath)
+        {
+            foreach (LoadVelocityButton button in buttons)
+            {
+                if (button.FilePath == filePath)
+                {
+                    button.activeOutline.SetActive(true);
+                }
+            }
         }
 
         private void DestroyButtons()
