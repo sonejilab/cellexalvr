@@ -176,10 +176,6 @@ namespace CellexalVR.General
             CellexalConfig.Config = (Config)serializer.Deserialize(streamReader);
             streamReader.Close();
             fileStream.Close();
-            //if (PhotonNetwork.isMasterClient)
-            //{
-            //    MultiUserSynchronise();
-            //}
             CellexalEvents.ConfigLoaded.Invoke();
 
         }
@@ -191,11 +187,7 @@ namespace CellexalVR.General
                 Directory.CreateDirectory("Config");
                 CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(configDir));
             }
-
-            if (!File.Exists(configPath))
-            {
-                File.Create(configPath);
-            }
+            
             CellexalLog.Log("Started saving the config file");
 
             FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -254,10 +246,10 @@ namespace CellexalVR.General
             referenceManager.gameManager.InformSynchConfig(data);
 
             string sharedConfigPath = configDir + @"\sharedConfig.xml";
-            if (!File.Exists(sharedConfigPath))
-            {
-                File.Create(sharedConfigPath);
-            }
+            //if (!File.Exists(sharedConfigPath))
+            //{
+            //    File.Create(sharedConfigPath);
+            //}
 
             configPath = sharedConfigPath;
             SaveConfigFile();
@@ -315,13 +307,9 @@ namespace CellexalVR.General
             CellexalConfig.Config.NetworkLineWidth = config.NetworkLineWidth;
 
             string sharedConfigPath = configDir + @"\sharedConfig.xml";
-            if (!File.Exists(sharedConfigPath))
-            {
-                File.Create(sharedConfigPath);
-            }
             configPath = sharedConfigPath;
             SaveConfigFile();
-            CellexalEvents.ConfigLoaded.Invoke();
+            ReadConfigFile();
         }
 
     }
