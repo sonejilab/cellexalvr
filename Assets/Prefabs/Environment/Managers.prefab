@@ -24590,6 +24590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76cbe11f03b36843b137ab4b13b8f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clusterDebugBox: {fileID: 0}
   referenceManager: {fileID: 0}
   lineBetweenTwoGraphPointsPrefab: {fileID: 1930424304061810, guid: 7e6b0e9c0134dcb4985fdc0121d8fdb0,
     type: 3}
@@ -30181,6 +30182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4230801858326186}
   - component: {fileID: 114713925428185986}
+  - component: {fileID: 1971523611}
   m_Layer: 0
   m_Name: SelectionManager
   m_TagString: Untagged
@@ -30221,6 +30223,23 @@ MonoBehaviour:
   heatmapGrabbed: 0
   fileCreationCtr: 0
   hapticIntensity: 2000
+--- !u!114 &1971523611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909716149730190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f435900cbbc524abf08333d859ff4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  wirePrefab: {fileID: 5259189461818842502, guid: d223b4f0fc9f8a442a7a1c8540ee7892,
+    type: 3}
+  resultBlock: {fileID: 0}
+  filterPreviewText: {fileID: 0}
 --- !u!1 &1927050685744552
 GameObject:
   m_ObjectHideFlags: 0
