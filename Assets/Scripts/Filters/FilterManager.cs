@@ -28,6 +28,7 @@ namespace CellexalVR.Filters
         private Coroutine runningSwapPercentCoroutine;
         private bool evaluating = false;
         private Filter currentFilter;
+        private string currentFilterPath;
         private string[] currentFilterGenes;
         private FilterCreatorBlockPort previouslyClickedPort;
         private GameObject previewWire;
@@ -59,17 +60,46 @@ namespace CellexalVR.Filters
         public void LoadFilter(string path)
         {
             loadingFilter = true;
-            path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + path;
+            currentFilterPath = path;
+            //path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + path;
             currentFilter = new Filter();
             currentFilter.Expression = BooleanExpression.ParseFile(path);
             //referenceManager.selectionManager.CurrentFilter = currentFilter;
             CellexalLog.Log("Loaded filter " + path);
+            referenceManager.filterMenu.AddFilterButton(currentFilter, currentFilterPath);
             StartCoroutine(SwapPercentExpressions());
+        }
+
+        public void SaveFilter()
+        {
+            print("Saving filter: " + currentFilter.Expression.ToString());
+            //var nameKeyboard = referenceManager.filterNameKeyboard;
+            //nameKeyboard.gameObject.SetActive(true);
+            string filterString = currentFilter.Expression.ToString();
+            string fileName = filterString.Split(null)[0];
+            fileName = fileName.Replace(':', '_');
+            while (File.Exists(CellexalUser.UserSpecificFolder + "\\" + fileName))
+            {
+                fileName += "_2";
+            }
+
+            string filterPath = CellexalUser.UserSpecificFolder + "\\" + fileName + ".fil";
+            FileStream fileStream = new FileStream(filterPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            using (StreamWriter streamWriter = new StreamWriter(fileStream))
+            {
+                streamWriter.Write(filterString);
+            }
+            resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.FILTER_SAVED);
+            referenceManager.filterMenu.AddFilterButton(currentFilter, currentFilterPath);
         }
 
         private IEnumerator SwapPercentExpressions()
         {
-            resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.LOADING);
+            if (resultBlock.isActiveAndEnabled)
+            {
+                resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.LOADING);
+            }
             string[] genes = currentFilter.GetGenes(true).ToArray();
             string[] facs = currentFilter.GetFacs(true).ToArray();
 
@@ -116,7 +146,10 @@ namespace CellexalVR.Filters
             referenceManager.selectionManager.CurrentFilter = currentFilter;
             filterPreviewText.text = currentFilter.Expression.ToString();
             loadingFilter = false;
-            resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.FINISHED);
+            if (resultBlock.isActiveAndEnabled)
+            {
+                resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.FINISHED);
+            }
             runningSwapPercentCoroutine = null;
         }
 
@@ -260,6 +293,17 @@ namespace CellexalVR.Filters
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
         }
 
+        public void UpdateFilterFromFilterButton(Filter filter)
+        {
+            if (runningSwapPercentCoroutine != null)
+            {
+                StopCoroutine(runningSwapPercentCoroutine);
+            }
+            loadingFilter = true;
+            currentFilter = filter;
+            currentFilterGenes = currentFilter.GetGenes(false).ToArray();
+            runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
+        }
         private class TupleComparer : IEqualityComparer<Tuple<string, string>>
         {
             public bool Equals(Tuple<string, string> x, Tuple<string, string> y)

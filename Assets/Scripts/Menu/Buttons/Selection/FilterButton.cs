@@ -1,5 +1,7 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.Filters;
+using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using TMPro;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Selection
 {
@@ -9,16 +11,15 @@ namespace CellexalVR.Menu.Buttons.Selection
     public class FilterButton : CellexalButton
     {
 
-        public TextMesh text;
-        //private SelectionToolHandler selectionToolHandler;
+        public TextMeshPro text;
         private SelectionManager selectionManager;
         private FilterMenu filterMenu;
-        //private Filter filter;
+        private Filter filter;
         private bool filterActivated = false;
 
         protected override string Description
         {
-            get { return "Toggle this filter"; }
+            get { return "Toggle the " + text.text + " filter"; }
         }
 
         protected void Start()
@@ -32,13 +33,14 @@ namespace CellexalVR.Menu.Buttons.Selection
             if (!filterActivated)
             {
                 filterMenu.DeactivateAllOtherFilters(this);
-                //filter.Load();
+                referenceManager.filterManager.UpdateFilterFromFilterButton(filter);
                 filterActivated = true;
                 text.color = Color.green;
+                referenceManager.menuRotator.RotateLeft(2);
             }
             else
             {
-                //filter.Unload();
+                referenceManager.selectionManager.CurrentFilter = null;
                 filterActivated = false;
                 text.color = Color.white;
             }
@@ -67,10 +69,10 @@ namespace CellexalVR.Menu.Buttons.Selection
         /// </summary>
         /// <param name="filter">The filter to set.</param>
         /// <param name="name">The name of the filter (the name of the file it came from).</param>
-        //public void SetFilter(Filter filter, string name)
-        //{
-        //    this.filter = filter;
-        //    text.text = name;
-        //}
+        public void SetFilter(Filter filter, string name)
+        {
+            this.filter = filter;
+            text.text = name;
+        }
     }
 }

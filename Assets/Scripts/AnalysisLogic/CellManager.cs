@@ -570,57 +570,6 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Draws lines between all points that share the same label.
-        /// </summary>
-        /// <param name="points"> The graphpoints to draw the lines from. </param>
-        //public void DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
-        //{
-        //    Vector3[] positions = new Vector3[points.Count];
-        //    Cell[] selectedCells = new Cell[points.Count];
-        //    int i = 0;
-
-
-
-        //    //foreach (BoxCollider col in graph.GetComponents<BoxCollider>())
-        //    //{
-        //    //    var newCol = newGraph.gameObject.AddComponent<BoxCollider>();
-        //    //    newCol.size = col.size;
-        //    //}
-        //    foreach (Graph.GraphPoint g in points)
-        //    {
-        //        Color color = g.GetColor();
-        //        foreach (Graph.GraphPoint sameCell in cells[g.Label].GraphPoints)
-        //        {
-        //            if (sameCell != g)
-        //            {
-        //                LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
-        //                line.graphPoint1 = g;
-        //                line.graphPoint2 = sameCell;
-        //                line.selectionManager = selectionManager;
-        //                LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-        //                line.t1 = g.parent.transform;
-        //                line.t2 = sameCell.parent.transform;
-        //                lineRenderer.startColor = color;
-        //                lineRenderer.endColor = color;
-        //                lines.Add(line.gameObject);
-        //                sameCell.parent.Lines.Add(line.gameObject);
-        //                g.parent.Lines.Add(line.gameObject);
-        //                positions[i] = (line.t1.TransformPoint(g.Position) + line.t2.TransformPoint(sameCell.Position)) / 2f;
-        //                selectedCells[i] = cells[g.Label];
-        //                 if (!sameCell.parent.GraphActive)
-        //                {
-        //                    line.gameObject.SetActive(false);
-        //                }
-        //                g.lineBetweenCellsCubes.Add(line.cube);
-        //            }
-        //        }
-        //        i++;
-        //    }
-        //    referenceManager.graphGenerator.CreatePointsBetweenGraphs(selectedCells, positions);
-        //    CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
-        //}
-
-        /// <summary>
         /// Draws lines between the graph that was selected from to points in other graphs that share the same cell label.
         /// </summary>
         /// <param name="points"> The graphpoints to draw the lines from. </param>
@@ -644,7 +593,8 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
-                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20, neighbourDistance: 0.25f, kernelBandwidth: 1.5f));
+                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20,
+                                neighbourDistance: 0.25f, kernelBandwidth: 1.5f));
             }
             
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();

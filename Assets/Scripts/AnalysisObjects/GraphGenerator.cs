@@ -73,15 +73,6 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.ConfigLoaded.AddListener(CreateShaderColors);
         }
 
-        private void Update()
-        {
-            // foreach (CombinedGraph graph in graphManager.graphs)
-            // {
-            //     graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
-            //     graph.combinedGraphPointClusters[0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
-            // }
-        }
-
         public Graph CreateGraph(GraphType type)
         {
             graphType = type;
@@ -789,8 +780,8 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in graphs)
             {
-                name = g.name + " - " + name;
-                yield return StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, name));
+                string fullName = g.name + " - " + name;
+                yield return StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, fullName));
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }
@@ -817,6 +808,7 @@ namespace CellexalVR.AnalysisObjects
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
 
             Graph graph = g;
+            
             foreach (Cell cell in subset)
             {
                 var point = graph.FindGraphPoint(cell.Label).Position;
@@ -836,15 +828,18 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
 
-
-            //}
             foreach (string attribute in attributes)
             {
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true);
             }
+
+            if (g.hasVelocityInfo)
+            {
+                referenceManager.velocitySubMenu.CreateButton(Directory.GetCurrentDirectory() +
+                    @"\Data\" + CellexalUser.DataSourceFolder + @"\" + g.GraphName + ".mds", name);
+            }
             graphManager.Graphs.Add(subGraph);
-            string[] axes = new string[3];
-            axes = g.axisNames.ToArray();
+            string[] axes = g.axisNames.ToArray();
             AddAxes(subGraph, axes);
         }
 

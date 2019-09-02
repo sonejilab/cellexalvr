@@ -19,6 +19,7 @@ namespace CellexalVR.Menu.SubMenus
 
 
         private List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
+        private int buttonNbr;
         Vector3 startPosition = new Vector3(-0.37f, 1f, 0.0f);
         Vector3 nextButtonPosition = new Vector3(-0.37f, 1f, 0.0f);
         Vector3 positionIncCol = new Vector3(0.185f, 0f, 0f);
@@ -42,31 +43,62 @@ namespace CellexalVR.Menu.SubMenus
 
         }
 
+        public void CreateButton(string filePath, string subGraphName = "")
+        {
+            GameObject newButton = Instantiate(velocityDataPrefab, this.transform);
+            newButton.transform.localPosition = nextButtonPosition;
+
+            if (buttonNbr % 5 == 4)
+            {
+                nextButtonPosition -= 4 * positionIncCol;
+                nextButtonPosition += positionIncRow;
+            }
+            else
+            {
+                nextButtonPosition += positionIncCol;
+            }
+
+            LoadVelocityButton buttonScript = newButton.GetComponent<LoadVelocityButton>();
+            buttonScript.subGraphName = subGraphName;
+            buttonScript.FilePath = filePath;
+            Renderer buttonRenderer = newButton.GetComponent<Renderer>();
+            buttonRenderer.material = new Material(buttonRenderer.material);
+            buttons.Add(buttonScript);
+            newButton.SetActive(true);
+            foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>())
+            {
+                rend.enabled = GetComponent<MeshRenderer>().enabled;
+            }
+            buttonNbr++;
+
+        }
+
         private void CreateButtons()
         {
-            int buttonNbr = 0;
+            buttonNbr = 0;
             foreach (string filePath in referenceManager.velocityGenerator.VelocityFiles())
             {
-                GameObject newButton = Instantiate(velocityDataPrefab, this.transform);
-                newButton.transform.localPosition = nextButtonPosition;
+                CreateButton(filePath);
+                //GameObject newButton = Instantiate(velocityDataPrefab, this.transform);
+                //newButton.transform.localPosition = nextButtonPosition;
 
-                if (buttonNbr % 5 == 4)
-                {
-                    nextButtonPosition -= 4 * positionIncCol;
-                    nextButtonPosition += positionIncRow;
-                }
-                else
-                {
-                    nextButtonPosition += positionIncCol;
-                }
+                //if (buttonNbr % 5 == 4)
+                //{
+                //    nextButtonPosition -= 4 * positionIncCol;
+                //    nextButtonPosition += positionIncRow;
+                //}
+                //else
+                //{
+                //    nextButtonPosition += positionIncCol;
+                //}
 
-                LoadVelocityButton buttonScript = newButton.GetComponent<LoadVelocityButton>();
-                buttonScript.FilePath = filePath;
-                Renderer buttonRenderer = newButton.GetComponent<Renderer>();
-                buttonRenderer.material = new Material(buttonRenderer.material);
-                buttons.Add(buttonScript);
-                newButton.SetActive(true);
-                buttonNbr++;
+                //LoadVelocityButton buttonScript = newButton.GetComponent<LoadVelocityButton>();
+                //buttonScript.FilePath = filePath;
+                //Renderer buttonRenderer = newButton.GetComponent<Renderer>();
+                //buttonRenderer.material = new Material(buttonRenderer.material);
+                //buttons.Add(buttonScript);
+                //newButton.SetActive(true);
+                //buttonNbr++;
             }
         }
 

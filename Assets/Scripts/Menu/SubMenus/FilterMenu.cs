@@ -1,4 +1,5 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.Filters;
+using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Selection;
 using System.Collections.Generic;
@@ -18,11 +19,13 @@ namespace CellexalVR.Menu.SubMenus
 
         private MenuToggler menuToggler;
         // hard coded positions :)
-        private Vector3 buttonPos = new Vector3(-0.39f, 0.55f, 0.282f);
+        //private Vector3 buttonPos = new Vector3(-0.39f, 0.55f, 0.282f);
+        private Vector3 buttonPos;
         private Vector3 buttonPosInc = new Vector3(.25f, 0, 0);
         private Vector3 buttonPosNewRowInc = new Vector3(0, 0, -.15f);
         private List<FilterButton> buttons = new List<FilterButton>();
         private int nbrOfButtons = 0;
+        private string[] filterPaths;
 
         private void OnValidate()
         {
@@ -36,41 +39,59 @@ namespace CellexalVR.Menu.SubMenus
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             menuToggler = referenceManager.menuToggler;
+            buttonPos = buttonPrefab.gameObject.transform.localPosition;
+            CellexalEvents.FilterLoaded.AddListener(CreateButton);
+        }
+
+        public void CreateButtons(string[] files)
+        {
+            filterPaths = files;
+            CreateButton();
+        }
+
+        private void CreateButton()
+        {
+            if (nbrOfButtons < filterPaths.Length)
+            {
+                referenceManager.filterManager.LoadFilter(filterPaths[nbrOfButtons]);
+            }
         }
 
         /// <summary>
-        /// Creates new buttons for coloring by attributes.
+        /// Creates new buttons for filters. 
         /// </summary>
         /// <param name="attributes"> An array of strings that contain the names of the attributes. </param>
-        //public void AddFilterButton(Filter filter, string filterName)
-        //{
-        //    var newButton = Instantiate(buttonPrefab, transform);
-        //    newButton.gameObject.SetActive(true);
-        //    if (!menuToggler)
-        //    {
-        //        menuToggler = referenceManager.menuToggler;
-        //    }
-        //    menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
-        //    if (newButton.transform.childCount > 0)
-        //        menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
-        //    newButton.referenceManager = referenceManager;
-        //    newButton.transform.localPosition = buttonPos;
-        //    //newButton.SetFilter(filter, filterName);
-        //    buttons.Add(newButton);
-        //    // position the buttons in a 4 column grid.
-        //    if ((nbrOfButtons + 1) % 4 == 0)
-        //    {
-        //        buttonPos -= buttonPosInc * 3;
-        //        buttonPos += buttonPosNewRowInc;
-        //    }
-        //    else
-        //    {
-        //        buttonPos += buttonPosInc;
-        //    }
-        //    newFilterButton.transform.localPosition = buttonPos;
-        //    nbrOfButtons++;
-
-        //}
+        public void AddFilterButton(Filter filter, string filterName)
+        {
+            var filterPathString = filterName.Split('\\');
+            filterName = filterPathString[filterPathString.Length - 1].Split('.')[0]; 
+            var newButton = Instantiate(buttonPrefab, transform);
+            newButton.gameObject.SetActive(true);
+            if (!menuToggler)
+            {
+                menuToggler = referenceManager.menuToggler;
+            }
+            menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
+            if (newButton.transform.childCount > 0)
+                menuToggler.AddGameObjectToActivate(newButton.transform.GetChild(0).gameObject, gameObject);
+            newButton.referenceManager = referenceManager;
+            newButton.transform.localPosition = buttonPos;
+            newButton.SetFilter(filter, filterName);
+            buttons.Add(newButton);
+            // position the buttons in a 4 column grid.
+            if ((nbrOfButtons + 1) % 4 == 0)
+            {
+                buttonPos -= buttonPosInc * 3;
+                buttonPos += buttonPosNewRowInc;
+            }
+            else
+            {
+                buttonPos += buttonPosInc;
+            }
+            newFilterButton.transform.localPosition = buttonPos;
+            nbrOfButtons++;
+            CellexalEvents.FilterLoaded.Invoke();
+        }
 
         public void DeactivateAllOtherFilters(FilterButton buttonToSkip)
         {

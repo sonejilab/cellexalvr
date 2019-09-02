@@ -104,34 +104,34 @@ namespace CellexalVR.AnalysisObjects
                 graph.FindGraphPoint(point.Label).RecolorSelectionColor(point.Group, false);
             }
             HashSet<Graph.GraphPoint> prevjoinedclusters = new HashSet<Graph.GraphPoint>();
-            var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
-            yield return null;
-            var toGraphCentroids = MeanShiftClustering(toGraphpoints, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
-            yield return null;
-            List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = AssignPointsToClusters(centroids, points, neighbourDistance);
-            yield return null;
-            List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
-            for (int i = 0; i < clusters.Count; i++)
-            {
-                var fromCluster = clusters[i];
-                for (int j = 0; j < toGraphClusters.Count; j++)
-                {
-                    var toCluster = toGraphClusters[j];
-                    if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
-                    {
-                        continue;
-                    }
-                    var joinedCluster = from gpfrom in fromCluster.Item1
-                                        join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
-                                        select gpfrom;
-                    if (joinedCluster.ToList().Count > clusterSize)
-                    {
-                        prevjoinedclusters.UnionWith(joinedCluster);
-                        AddCentroidLine(fromGraph, toGraph, joinedCluster);
-                    }
-                }
-                yield return null;
-            }
+            //var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
+            //yield return null;
+            //var toGraphCentroids = MeanShiftClustering(toGraphpoints, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
+            //yield return null;
+            //List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = AssignPointsToClusters(centroids, points, neighbourDistance);
+            //yield return null;
+            //List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = AssignPointsToClusters(toGraphCentroids, toGraphpoints, neighbourDistance);
+            //for (int i = 0; i < clusters.Count; i++)
+            //{
+            //    var fromCluster = clusters[i];
+            //    for (int j = 0; j < toGraphClusters.Count; j++)
+            //    {
+            //        var toCluster = toGraphClusters[j];
+            //        if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
+            //        {
+            //            continue;
+            //        }
+            //        var joinedCluster = from gpfrom in fromCluster.Item1
+            //                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
+            //                            select gpfrom;
+            //        if (joinedCluster.ToList().Count > clusterSize)
+            //        {
+            //            prevjoinedclusters.UnionWith(joinedCluster);
+            //            AddCentroidLine(fromGraph, toGraph, joinedCluster);
+            //        }
+            //    }
+            //    yield return null;
+            //}
 
             yield return null;
             var pointsOutsideClusters = points.Except(prevjoinedclusters);
