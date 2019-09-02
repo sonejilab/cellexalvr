@@ -354,6 +354,11 @@ namespace CellexalVR.AnalysisLogic
             {
                 Token token = ParseToken(s, j);
                 j += token.text.Length;
+                if (token.type == Token.Type.VALUE_NAME || token.type == Token.Type.VALUE_PERCENT)
+                {
+                    j++;
+                }
+
                 if (token.type != Token.Type.WHITESPACE)
                 {
                     tokens.Add(token);
