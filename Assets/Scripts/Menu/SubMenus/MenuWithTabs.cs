@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.General;
+using TMPro;
+
 namespace CellexalVR.Menu.SubMenus
 {
     /// <summary>
@@ -33,6 +35,7 @@ namespace CellexalVR.Menu.SubMenus
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                //GetComponent<Renderer>().sharedMaterial = GameObject.Find("Main Menu").GetComponent<MenuRotator>().menuMaterial;
             }
         }
 
@@ -83,7 +86,7 @@ namespace CellexalVR.Menu.SubMenus
                 if (buttonIndex % buttonsPerTab == 0 || i > 0 && categories[i] != categories[i - 1])
                 {
                     newTab = AddTab(tabPrefab);
-                    newTab.TabButton.GetComponentInChildren<TextMesh>().text = categories[i];
+                    newTab.TabButton.GetComponentInChildren<TextMeshPro>().text = categories[i];
                     buttonIndex = 0;
 
                 }

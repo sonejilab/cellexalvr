@@ -19,6 +19,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
             {
                 activeGraph.velocityParticleEmitter.Stop();
                 referenceManager.gameManager.InformStopVelocity(activeGraph.GraphName);
+                referenceManager.velocitySubMenu.DeactivateOutlines();
             }
         }
     }

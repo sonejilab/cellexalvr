@@ -256,6 +256,7 @@ namespace CellexalVR.AnalysisLogic
                 //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
                 //int i, j;
                 string[] axes = new string[3];
+                string[] velo = new string[3];
                 using (StreamReader mdsStreamReader = new StreamReader(file))
                 {
                     //List<string> cellnames = new List<string>();
@@ -266,15 +267,23 @@ namespace CellexalVR.AnalysisLogic
                     // first line is (if correct format) a header and the first word is cell_id (the name of the first column).
                     // If wrong and does not contain header read first line as a cell.
                     string header = mdsStreamReader.ReadLine();
-                    if (header.Split(null)[0].Equals("cell_id"))
+                    if (header.Split(null)[0].Equals("CellID"))
                     {
-                        axes = header.Split(null).Skip(1).ToArray();
+                        string[] columns = header.Split(null).Skip(1).ToArray();
+                        Array.Copy(columns, 0, axes, 0, 3);
+                        if (columns.Length == 6)
+                        {
+                            Array.Copy(columns, 3, velo, 0, 3);
+                            graphManager.velocityFiles.Add(file);
+                            combGraph.hasVelocityInfo = true;
+                        }
                     }
                     else
                     {
                         string[] words = header.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                        if (words.Length != 4)
+                        if (words.Length != 4 && words.Length != 7)
                         {
+                            print(words.Length);
                             continue;
                         }
                         string cellname = words[0];
@@ -300,8 +309,9 @@ namespace CellexalVR.AnalysisLogic
                         for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
                         {
                             string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                            if (words.Length != 4)
+                            if (words.Length != 4 && words.Length != 7)
                             {
+                                print(words.Length);
                                 continue;
                             }
                             string cellname = words[0];
@@ -373,6 +383,7 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
                 ReadBooleanExpressionFiles(path);
                 ReadFacsFiles(path, totalNbrOfCells);
+                ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
 
             //loaderController.loaderMovedDown = true;
@@ -476,6 +487,12 @@ namespace CellexalVR.AnalysisLogic
             }
 
             attributeSubMenu.AddExpressionButtons(expressions.ToArray());
+        }
+
+        private void ReadFilterFiles(string path)
+        {
+            string[] files = Directory.GetFiles(path, "*.fil");
+            referenceManager.filterMenu.CreateButtons(files);
         }
 
         // public void DrawSomeLines(SQLite database)

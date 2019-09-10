@@ -41,7 +41,7 @@ namespace CellexalVR.AnalysisLogic
 
         public string[] VelocityFiles()
         {
-            return Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder, "*.velo");
+            return referenceManager.graphManager.velocityFiles.ToArray();
         }
 
         public void ReadVelocityFile(string path)
@@ -49,7 +49,12 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(ReadVelocityParticleSystem(path));
         }
 
-        private IEnumerator ReadVelocityParticleSystem(string path)
+        public void ReadVelocityFile(string path, string subGraphName)
+        {
+            StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
+        }
+
+        private IEnumerator ReadVelocityParticleSystem(string path, string subGraphName = "")
         {
             while (referenceManager.graphGenerator.isCreating)
             {
@@ -63,10 +68,21 @@ namespace CellexalVR.AnalysisLogic
                 ActiveGraph = null;
             }
 
+            Graph graph;
+            Graph originalGraph;
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
             string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
-            Graph graph = referenceManager.graphManager.FindGraph(graphName);
+            originalGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (subGraphName != string.Empty)
+            {
+                graph = referenceManager.graphManager.FindGraph(subGraphName);
+            }
+            else
+            {
+                graph = originalGraph;
+            }
+
 
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.pointsPositions.Capacity);
 
@@ -75,9 +91,15 @@ namespace CellexalVR.AnalysisLogic
             {
                 while (!reader.EndOfStream)
                 {
+                    string header = reader.ReadLine();
                     string line = reader.ReadLine();
                     string[] words = line.Split(null);
                     string cellName = words[0];
+                    Graph.GraphPoint point = graph.FindGraphPoint(cellName);
+                    if (point == null)
+                    {
+                        continue;
+                    }
                     float xfrom = float.Parse(words[1]);
                     float yfrom = float.Parse(words[2]);
                     float zfrom = float.Parse(words[3]);
@@ -85,11 +107,10 @@ namespace CellexalVR.AnalysisLogic
                     float yto = float.Parse(words[5]);
                     float zto = float.Parse(words[6]);
 
-                    Vector3 from = graph.ScaleCoordinates(new Vector3(xfrom, yfrom, zfrom));
-                    Vector3 to = graph.ScaleCoordinates(new Vector3(xto, yto, zto));
+                    Vector3 from = originalGraph.ScaleCoordinates(new Vector3(xfrom, yfrom, zfrom));
+                    Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    Graph.GraphPoint point = graph.FindGraphPoint(cellName);
                     velocities[point] = diff / 5f;
                 }
 

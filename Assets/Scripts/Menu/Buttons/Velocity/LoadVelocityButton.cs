@@ -7,9 +7,11 @@ public class LoadVelocityButton : CellexalVR.Menu.Buttons.CellexalButton
 {
     public TextMeshPro buttonText;
     public GameObject activeOutline;
+    public string subGraphName;
 
     private string shorterFilePath;
     private string filePath;
+
     public string FilePath
     {
         get { return filePath; }
@@ -19,7 +21,14 @@ public class LoadVelocityButton : CellexalVR.Menu.Buttons.CellexalButton
             int lastSlashIndex = filePath.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = filePath.LastIndexOf('.');
             shorterFilePath = filePath.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
-            buttonText.text = shorterFilePath;
+            if (subGraphName != string.Empty)
+            {
+                buttonText.text = subGraphName;
+            }
+            else
+            {
+                buttonText.text = shorterFilePath;
+            }
         }
     }
 
@@ -28,13 +37,20 @@ public class LoadVelocityButton : CellexalVR.Menu.Buttons.CellexalButton
     {
         get
         {
-            return "Load " + shorterFilePath;
+            return "Load " + buttonText.text;
         }
     }
 
     public override void Click()
     {
-        referenceManager.velocityGenerator.ReadVelocityFile(FilePath);
+        if (subGraphName != string.Empty)
+        {
+            referenceManager.velocityGenerator.ReadVelocityFile(FilePath, subGraphName);
+        }
+        else
+        {
+            referenceManager.velocityGenerator.ReadVelocityFile(FilePath);
+        }
         referenceManager.velocitySubMenu.DeactivateOutlines();
         activeOutline.SetActive(true);
         referenceManager.gameManager.InformReadVelocityFile(FilePath);

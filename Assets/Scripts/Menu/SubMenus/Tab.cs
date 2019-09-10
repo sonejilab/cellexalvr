@@ -1,5 +1,6 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
+using TMPro;
 using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
@@ -21,7 +22,8 @@ namespace CellexalVR.Menu.SubMenus
 
         private MenuToggler menuToggler;
 
-        public TextMesh TabName;
+        //public TextMesh TabName;
+        public TextMeshPro TabName;
         //public string TabName { get; set; }
 
         private void OnValidate()

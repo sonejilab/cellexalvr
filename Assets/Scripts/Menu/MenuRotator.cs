@@ -10,6 +10,7 @@ namespace CellexalVR.Menu
     public class MenuRotator : MonoBehaviour
     {
         public Rotation SideFacingPlayer { get; set; }
+        public Material menuMaterial;
 
         private bool isRotating = false;
         private Vector3 fromAngle;
@@ -21,6 +22,23 @@ namespace CellexalVR.Menu
             // Reset rotation in case it is changed in the editor.
             transform.localRotation = Quaternion.identity;
             SideFacingPlayer = Rotation.Front;
+        }
+        /// <summary>
+        /// Editor script to ensure all menus and submenus have the same material without having to populate manually. 
+        /// </summary>
+        public void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                foreach (Renderer rend in GetComponentsInChildren<Renderer>())
+                {
+                    string[] name = rend.gameObject.name.Split(null);
+                    if (name[name.Length - 1].Equals("Menu") || name[name.Length - 1].Equals("Box"))
+                    {
+                        rend.material = menuMaterial;
+                    }
+                }
+            }
         }
 
         /// <summary>

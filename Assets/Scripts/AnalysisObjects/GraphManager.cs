@@ -24,6 +24,7 @@ namespace CellexalVR.AnalysisObjects
 
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
+        public List<string> velocityFiles;
 
         private CellManager cellManager;
         private List<NetworkHandler> networks = new List<NetworkHandler>();

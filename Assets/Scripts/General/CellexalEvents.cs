@@ -44,6 +44,8 @@ namespace CellexalVR.General
         public static UnityEvent FlashGenesFileStartedLoading = new UnityEvent();
         public static UnityEvent FlashGenesFileFinishedLoading = new UnityEvent();
 
+        public static UnityEvent FilterLoaded = new UnityEvent();
+
         public static UnityEvent ConfigLoaded = new UnityEvent();
 
         public static UnityEvent QueryTopGenesStarted = new UnityEvent();

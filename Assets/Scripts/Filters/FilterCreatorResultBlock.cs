@@ -58,7 +58,7 @@ namespace CellexalVR.Filters
             return input.ToExpr();
         }
 
-        public enum LoadingTextState { LOADING, FINISHED, INVALID_FILTER, OFF }
+        public enum LoadingTextState { LOADING, FINISHED, INVALID_FILTER, OFF, FILTER_SAVED }
 
         public void SetLoadingTextState(LoadingTextState state)
         {
@@ -85,6 +85,10 @@ namespace CellexalVR.Filters
                     loadingText.color = loadingTextInvalidColor;
                     loadingText.text = "Invalid filter";
                     runningCoroutine = StartCoroutine(DisableLoadingTextAfterTimeCoroutine(3f));
+                    break;
+                case LoadingTextState.FILTER_SAVED:
+                    loadingText.color = loadingTextDoneColor;
+                    loadingText.text = "Filter saved";
                     break;
             }
         }

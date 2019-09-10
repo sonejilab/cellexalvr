@@ -55,6 +55,7 @@ namespace CellexalVR.AnalysisObjects
         public int nbrOfClusters;
         public VelocityParticleEmitter velocityParticleEmitter;
         public GameObject lineParent;
+        public bool hasVelocityInfo;
         public string GraphName
         {
             get { return graphName; }
@@ -1139,7 +1140,8 @@ namespace CellexalVR.AnalysisObjects
 
         public GraphPoint FindGraphPoint(string label)
         {
-            return points[label];
+            points.TryGetValue(label, out GraphPoint gp);
+            return gp;
         }
 
 

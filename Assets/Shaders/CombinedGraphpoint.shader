@@ -17,6 +17,7 @@ Shader "Custom/CombinedGraphpoint"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _GraphpointColorTex("Graphpoint Colors", 2D) = "white" {}
         _OutlineThickness("Thickness", float) = 0.005
+		_ThickerOutline("ThicknessMultiplier", float) = 4
         _TestPar("test", float) = 0
 
     }
@@ -110,9 +111,12 @@ Shader "Custom/CombinedGraphpoint"
                    i.lightDir = normalize(i.lightDir);
                    //fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
                    
+                   // float3 expressionColorData = (tex2D(_MainTex, i.uv));
                    float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
+				   // float2 colorTexUV = float2((round((expressionColorData.x) * 256))/ 256, 0.5);
                    float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
-                   float4 color = tex2D(_GraphpointColorTex, colorTexUV);
+				   
+				   float4 color = tex2D(_GraphpointColorTex, colorTexUV);
                    //color *= fixed4(i.vertexLighting, 1.0);
                    fixed diff = saturate(dot(i.normal, i.lightDir));
 
@@ -188,6 +192,7 @@ Shader "Custom/CombinedGraphpoint"
 
                 fixed4 frag(v2f i) : COLOR
                 {
+                    // float3 expressionColorData = (tex2D(_MainTex, i.uv));
                     float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
                     if (expressionColorData.g > 0.9) {
                         // party
@@ -205,8 +210,9 @@ Shader "Custom/CombinedGraphpoint"
                     } else {
                         // normal
                         i.lightDir = normalize(i.lightDir);
-                        float2 colorTexUV = float2(expressionColorData.x, 0.5);
-                        float4 color = tex2D(_GraphpointColorTex, colorTexUV);
+						// float2 colorTexUV = float2((round((expressionColorData.x) * 256))/ 256, 0.5);
+                        float2 colorTexUV = float2(expressionColorData.r + 1/512, 0.5);
+						float4 color = tex2D(_GraphpointColorTex, colorTexUV);
                         fixed3 normal = i.normal;                    
                         fixed diff = saturate(dot(normal, i.lightDir));
                         
@@ -249,6 +255,7 @@ Shader "Custom/CombinedGraphpoint"
             #include "UnityCG.cginc"
 
             float _OutlineThickness;
+            float _ThickerOutline;
             float _MovingOutlineOuterRadius;
             float _MovingOutlineInnerRadius;
             sampler2D_float _MainTex;
@@ -283,9 +290,14 @@ Shader "Custom/CombinedGraphpoint"
             }
 
             // creates an outline around a cell
-            void outline(v2g start, v2g end, inout TriangleStream<v2g> triStream)
+            void outline(v2g start, v2g end, inout TriangleStream<v2g> triStream, bool thickerOutline)
             {
-                float width = _OutlineThickness;// / 100;
+				float thicknessFactor = 1;
+				if (thickerOutline)
+				{
+					thicknessFactor = _ThickerOutline;
+				}
+                float width = _OutlineThickness * thicknessFactor; // / 100;
                 float4 parallel = (end.pos - start.pos) * width;
                 float4 perpendicular = normalize(float4(parallel.y, -parallel.x, 0, 0)) * width;
                 float4 v1 = start.pos - parallel;
@@ -315,7 +327,7 @@ Shader "Custom/CombinedGraphpoint"
                 // green channel values determines the following;
                 // g == 0: no outline
                 // 0   < g <= 0.1: outline
-                // 0.1 < g <= 0.2: velocity
+                // 0.1 < g <= 0.2: thicker outline
                 // 0.2 < g <= 0.9: not used
                 // 0.9 < g <= 1  : party
                 if (color.g == 0)
@@ -324,10 +336,16 @@ Shader "Custom/CombinedGraphpoint"
                 }
                 else if (color.g <= 0.1)
                 {
-                    outline(IN[0], IN[1], triStream);
-                    outline(IN[1], IN[2], triStream);
-                    outline(IN[2], IN[0], triStream);
+                    outline(IN[0], IN[1], triStream, false);
+                    outline(IN[1], IN[2], triStream, false);
+                    outline(IN[2], IN[0], triStream, false);
                 }
+				else if (color.g <= 0.2)
+				{
+					outline(IN[0], IN[1], triStream, true);
+					outline(IN[1], IN[2], triStream, true);
+					outline(IN[2], IN[0], triStream, true);
+				}
 
             }
 

@@ -51,6 +51,7 @@ namespace CellexalVR.SceneObjects
         private GameObject toSphere;
         private string controllerCollider = "ControllerCollider(Clone)";
         private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
+        private bool controllerInside;
         private BoxCollider bcFrom;
         private BoxCollider bcMid;
         private BoxCollider bcTo;
@@ -116,16 +117,18 @@ namespace CellexalVR.SceneObjects
             bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
             if (touched)
             {
-                print("highlight");
                 Highlight(true);
+                controllerInside = true;
             }
         }
+
         private void OnTriggerExit(Collider other)
         {
             bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
             if (touched)
             {
                 Highlight(false);
+                controllerInside = false;
             }
         }
         private void Highlight(bool highlight)
