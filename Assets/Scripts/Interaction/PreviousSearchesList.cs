@@ -14,7 +14,7 @@ namespace CellexalVR.Interaction
         public ReferenceManager referenceManager;
         public GameObject listNodePrefab;
         public Mesh quadPrefab;
-        public int numberOfPanels = 10;
+        //public int numberOfPanels = 10;
 
         public List<GameObject> listNodes = new List<GameObject>();
         public List<PreviousSearchesLock> searchLocks = new List<PreviousSearchesLock>();
@@ -136,81 +136,69 @@ namespace CellexalVR.Interaction
             }
         }
 
-        public void BuildPreviousSearchesList()
+        public void BuildPreviousSearchesList(int numberOfPanels, PreviousSearchesList prefabInstance)
         {
             if (numberOfPanels < 1)
             {
                 Debug.LogError("Can not create less than 1 previous searches list nodes. Change numberOfPanels in the inspector on the " + name + " gameobject.");
                 return;
             }
-            // remove null entries
-            for (int i = 0; i < previousSearchesListNodes.Count; ++i)
+
+            // remove old nodes
+            foreach (var oldNode in prefabInstance.listNodes)
             {
-                if (previousSearchesListNodes[i] == null)
-                {
-                    previousSearchesListNodes.RemoveAt(i);
-                    i--;
-                }
+                DestroyImmediate(oldNode.gameObject);
             }
 
-            if (previousSearchesListNodes.Count != numberOfPanels)
+            prefabInstance.listNodes.Clear();
+            prefabInstance.previousSearchesListNodes.Clear();
+            prefabInstance.searchLocks.Clear();
+            prefabInstance.correlatedGenesButtons.Clear();
+
+            PanelRaycaster panelRaycaster = prefabInstance.gameObject.GetComponentInParent<PanelRaycaster>();
+
+            // generate new nodes
+            for (int i = 0; i < numberOfPanels; ++i)
             {
-                // remove old nodes
-                foreach (var oldNode in listNodes)
-                {
-                    UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(oldNode.gameObject); };
-                }
+                GameObject newPanel = Instantiate(prefabInstance.listNodePrefab, prefabInstance.transform);
+                newPanel.SetActive(true);
+                // get the child components
+                ClickableTextPanel previousSearchesListNode = newPanel.GetComponentInChildren<ClickableTextPanel>();
+                PreviousSearchesLock searchLock = newPanel.GetComponentInChildren<PreviousSearchesLock>();
+                CorrelatedGenesPanel correlatedGenesButton = newPanel.GetComponentInChildren<CorrelatedGenesPanel>();
+                // add the components to the lists
+                prefabInstance.listNodes.Add(newPanel);
+                prefabInstance.previousSearchesListNodes.Add(previousSearchesListNode);
+                prefabInstance.searchLocks.Add(searchLock);
+                prefabInstance.correlatedGenesButtons.Add(correlatedGenesButton);
 
-                listNodes.Clear();
-                previousSearchesListNodes.Clear();
-                searchLocks.Clear();
-                correlatedGenesButtons.Clear();
+                // assign meshes
+                //Mesh previousSearchesListNodeMesh = new Mesh();
+                //previousSearchesListNode.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                //searchLock.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                //correlatedGenesButton.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
+                // assign materials
+                previousSearchesListNode.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
+                searchLock.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.unlockedNormalMaterial;
+                correlatedGenesButton.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.correlatedGenesNormalMaterial;
 
-                PanelRaycaster panelRaycaster = gameObject.GetComponentInParent<PanelRaycaster>();
-
-                // generate new nodes
-                for (int i = 0; i < numberOfPanels; ++i)
-                {
-                    GameObject newPanel = Instantiate(listNodePrefab, gameObject.transform);
-                    newPanel.SetActive(true);
-                    // get the child components
-                    ClickableTextPanel previousSearchesListNode = newPanel.GetComponentInChildren<ClickableTextPanel>();
-                    PreviousSearchesLock searchLock = newPanel.GetComponentInChildren<PreviousSearchesLock>();
-                    CorrelatedGenesPanel correlatedGenesButton = newPanel.GetComponentInChildren<CorrelatedGenesPanel>();
-                    // add the components to the lists
-                    listNodes.Add(newPanel);
-                    previousSearchesListNodes.Add(previousSearchesListNode);
-                    searchLocks.Add(searchLock);
-                    correlatedGenesButtons.Add(correlatedGenesButton);
-
-                    // assign meshes
-                    //Mesh previousSearchesListNodeMesh = new Mesh();
-                    //previousSearchesListNode.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                    //searchLock.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                    //correlatedGenesButton.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                    // assign materials
-                    previousSearchesListNode.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
-                    searchLock.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.unlockedNormalMaterial;
-                    correlatedGenesButton.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.correlatedGenesNormalMaterial;
-
-                    newPanel.gameObject.name = "List Node " + (i + 1);
-                    newPanel.transform.localPosition = Vector3.zero;
-                    // assign positions
-                    KeyboardItem previousSearchesListNodeItem = previousSearchesListNode.GetComponentInParent<KeyboardItem>();
-                    KeyboardItem searchLockItem = searchLock.GetComponentInParent<KeyboardItem>();
-                    KeyboardItem correlatedGenesButtonItem = correlatedGenesButton.GetComponentInParent<KeyboardItem>();
-                    previousSearchesListNodeItem.position = new Vector2Int(-6, i);
-                    previousSearchesListNodeItem.size = new Vector2(3, 1);
-                    searchLockItem.position = new Vector2Int(-8, i);
-                    correlatedGenesButtonItem.position = new Vector2Int(-9, i);
-                }
+                newPanel.gameObject.name = "List Node " + (i + 1);
+                newPanel.transform.localPosition = Vector3.zero;
+                // assign positions
+                KeyboardItem previousSearchesListNodeItem = previousSearchesListNode.GetComponentInParent<KeyboardItem>();
+                KeyboardItem searchLockItem = searchLock.GetComponentInParent<KeyboardItem>();
+                KeyboardItem correlatedGenesButtonItem = correlatedGenesButton.GetComponentInParent<KeyboardItem>();
+                int keyboardPosY = numberOfPanels - i - 1;
+                previousSearchesListNodeItem.position = new Vector2Int(-6, keyboardPosY);
+                previousSearchesListNodeItem.size = new Vector2(3, 1);
+                searchLockItem.position = new Vector2Int(-8, keyboardPosY);
+                correlatedGenesButtonItem.position = new Vector2Int(-9, keyboardPosY);
             }
-            referenceManager.correlatedGenesList.BuildList();
+
 
             //gameObject.GetComponentsInChildren<PreviousSearchesLock>(searchLocks);
             //gameObject.GetComponentsInChildren<ClickableTextPanel>(previousSearchesListNodes);
             //gameObject.GetComponentsInChildren<CorrelatedGenesPanel>(correlatedGenesButtons);
-
         }
 #endif
     }

@@ -196,60 +196,44 @@ namespace CellexalVR.AnalysisObjects
             //BuildList();
         }
 
-        public void BuildList()
+        public void BuildList(int numberOfPanels, CorrelatedGenesList prefabInstance)
         {
-            int numberOfPanels = referenceManager.previousSearchesList.numberOfPanels;
             if (numberOfPanels < 1)
             {
                 return;
             }
-            //Mesh quadPrefab = referenceManager.previousSearchesList.quadPrefab;
-            // remove old nodes
-            //UnityEditor.PrefabUtility.
-            foreach (Transform oldNode in listNodesParent.transform)
+
+            foreach (GameObject oldNode in prefabInstance.listNodes)
             {
                 if (oldNode != null)
                 {
-                    if (UnityEditor.PrefabUtility.IsAddedGameObjectOverride(oldNode.gameObject))
-                    {
-                        UnityEditor.EditorApplication.delayCall += () =>
-                        {
-                            UnityEditor.PrefabUtility.RevertAddedGameObject(oldNode.gameObject, UnityEditor.InteractionMode.AutomatedAction);
-                        };
-                    }
-                    //else
-                    //{
-                    //    UnityEditor.EditorApplication.delayCall += () =>
-                    //    {
-                    //        UnityEditor.PrefabUtility.
-                    //    };
-                    //}
+                    DestroyImmediate(oldNode);
                 }
             }
 
-            listNodes.Clear();
-            correlatedPanels.Clear();
-            anticorrelatedPanels.Clear();
+            prefabInstance.listNodes.Clear();
+            prefabInstance.correlatedPanels.Clear();
+            prefabInstance.anticorrelatedPanels.Clear();
 
-            PanelRaycaster panelRaycaster = gameObject.GetComponentInParent<PanelRaycaster>();
+            PanelRaycaster panelRaycaster = prefabInstance.GetComponentInParent<PanelRaycaster>();
 
             // generate new nodes
             for (int i = 0; i < numberOfPanels; ++i)
             {
-                GameObject newCorrelatedPanel = Instantiate(listNodePrefab, gameObject.transform);
+                GameObject newCorrelatedPanel = Instantiate(prefabInstance.listNodePrefab, prefabInstance.listNodesParent.transform);
                 newCorrelatedPanel.SetActive(true);
-                newCorrelatedPanel.transform.parent = listNodesParent.transform;
-                GameObject newAnticorrelatedPanel = Instantiate(listNodePrefab, gameObject.transform);
+                newCorrelatedPanel.transform.parent = prefabInstance.listNodesParent.transform;
+                GameObject newAnticorrelatedPanel = Instantiate(prefabInstance.listNodePrefab, prefabInstance.listNodesParent.transform);
                 newAnticorrelatedPanel.SetActive(true);
-                newAnticorrelatedPanel.transform.parent = listNodesParent.transform;
+                newAnticorrelatedPanel.transform.parent = prefabInstance.listNodesParent.transform;
                 // get the child components
                 ClickableTextPanel correlatedPanel = newCorrelatedPanel.GetComponentInChildren<ClickableTextPanel>();
                 ClickableTextPanel anticorrelatedPanel = newAnticorrelatedPanel.GetComponentInChildren<ClickableTextPanel>();
                 // add the components to the lists
-                listNodes.Add(newCorrelatedPanel);
-                listNodes.Add(newAnticorrelatedPanel);
-                correlatedPanels.Add(correlatedPanel);
-                anticorrelatedPanels.Add(anticorrelatedPanel);
+                prefabInstance.listNodes.Add(newCorrelatedPanel);
+                prefabInstance.listNodes.Add(newAnticorrelatedPanel);
+                prefabInstance.correlatedPanels.Add(correlatedPanel);
+                prefabInstance.anticorrelatedPanels.Add(anticorrelatedPanel);
 
                 // assign meshes
                 //Mesh previousSearchesListNodeMesh = new Mesh();
@@ -266,12 +250,12 @@ namespace CellexalVR.AnalysisObjects
                 // assign positions
                 KeyboardItem correlatedItem = newCorrelatedPanel.GetComponent<KeyboardItem>();
                 KeyboardItem anticorrelatedItem = newAnticorrelatedPanel.GetComponent<KeyboardItem>();
-                correlatedItem.position = new Vector2Int(-12, i);
+                int keyboardPosY = numberOfPanels - i - 1;
+                correlatedItem.position = new Vector2Int(-12, keyboardPosY);
                 correlatedItem.size = new Vector2(3, 1);
-                anticorrelatedItem.position = new Vector2Int(-15, i);
+                anticorrelatedItem.position = new Vector2Int(-15, keyboardPosY);
                 anticorrelatedItem.size = new Vector2(3, 1);
             }
-            UnityEditor.PrefabUtility.ApplyPrefabInstance(gameObject, UnityEditor.InteractionMode.AutomatedAction);
         }
 
 #endif

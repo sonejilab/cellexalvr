@@ -35,10 +35,18 @@ namespace CellexalVR.Interaction
             Locked = !Locked;
             if (Locked)
             {
+                keyNormalMaterial = lockedNormalMaterial;
+                keyHighlightMaterial = lockedHighlightMaterial;
+                keyPressedMaterial = lockedPressedMaterial;
+
                 renderer.sharedMaterial = lockedNormalMaterial;
             }
             else
             {
+                keyNormalMaterial = unlockedNormalMaterial;
+                keyHighlightMaterial = unlockedHighlightMaterial;
+                keyPressedMaterial = unlockedPressedMaterial;
+
                 renderer.sharedMaterial = unlockedNormalMaterial;
             }
 
@@ -47,7 +55,7 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Do not use. Use <see cref="SetMaterials(Material, Material, Material, Material, Material, Material)"/>
         /// </summary>
-        public override void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
+        public override void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial, Vector4 scaleCorrection)
         {
             //throw new System.InvalidOperationException("Use the other SetMaterial method");
         }
@@ -55,7 +63,9 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Set the materials used by this lock.
         /// </summary>
-        public void SetMaterials(Material unlockedNormalMaterial, Material unlockedHighlightMaterial, Material unlockedPressedMaterial, Material lockedNormalMaterial, Material lockedHighlightMaterial, Material lockedPressedMaterial)
+        public void SetMaterials(Material unlockedNormalMaterial, Material unlockedHighlightMaterial, Material unlockedPressedMaterial,
+            Material lockedNormalMaterial, Material lockedHighlightMaterial, Material lockedPressedMaterial,
+            Vector4 scaleCorrection)
         {
             this.unlockedNormalMaterial = unlockedNormalMaterial;
             this.unlockedHighlightMaterial = unlockedHighlightMaterial;
@@ -63,23 +73,21 @@ namespace CellexalVR.Interaction
             this.lockedNormalMaterial = lockedNormalMaterial;
             this.lockedHighlightMaterial = lockedHighlightMaterial;
             this.lockedPressedMaterial = lockedPressedMaterial;
-        }
 
-        public override void SetHighlighted(bool highlight)
-        {
-            if (Locked)
+            this.unlockedNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.unlockedHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.unlockedPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.lockedNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.lockedHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.lockedPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+
+            keyNormalMaterial = unlockedNormalMaterial;
+            keyHighlightMaterial = unlockedHighlightMaterial;
+            keyPressedMaterial = unlockedPressedMaterial;
+
+            if (renderer)
             {
-                if (highlight)
-                    renderer.sharedMaterial = lockedHighlightMaterial;
-                else
-                    renderer.sharedMaterial = lockedNormalMaterial;
-            }
-            else
-            {
-                if (highlight)
-                    renderer.sharedMaterial = unlockedHighlightMaterial;
-                else
-                    renderer.sharedMaterial = unlockedNormalMaterial;
+                renderer.sharedMaterial = unlockedNormalMaterial;
             }
         }
     }

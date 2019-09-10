@@ -16,10 +16,8 @@ namespace CellexalVR.Interaction
         public Material keyPressedMaterial;
         public Material unlockedNormalMaterial;
         public Material unlockedHighlightMaterial;
-        public Material unlockedPressedMaterial;
         public Material lockedNormalMaterial;
         public Material lockedHighlightMaterial;
-        public Material lockedPressedMaterial;
         public Material correlatedGenesNormalMaterial;
         public Material correlatedGenesHighlightMaterial;
         public Material correlatedGenesPressedMaterial;
@@ -53,6 +51,25 @@ namespace CellexalVR.Interaction
             if (referenceManager.geneKeyboard)
             {
                 referenceManager.geneKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+
+                Material newUnlockedNormalMaterial = new Material(unlockedNormalMaterial);
+                Material newUnlockedHighlightMaterial = new Material(unlockedHighlightMaterial);
+                Material newLockedNormalMaterial = new Material(lockedNormalMaterial);
+                Material newLockedHighlightMaterial = new Material(lockedHighlightMaterial);
+
+                foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>(true))
+                {
+                    panel.SetMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial, newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial, newLockedHighlightMaterial, referenceManager.geneKeyboard.ScaleCorrection());
+                }
+
+                Material newCorrelatedGenesNormalMaterial = new Material(correlatedGenesNormalMaterial);
+                Material newCorrelatedGenesHighlightMaterial = new Material(correlatedGenesHighlightMaterial);
+                Material newCorrelatedGenesPressedMaterial = new Material(correlatedGenesPressedMaterial);
+
+                foreach (var panel in GetComponentsInChildren<CorrelatedGenesPanel>(true))
+                {
+                    panel.SetMaterials(newCorrelatedGenesNormalMaterial, newCorrelatedGenesHighlightMaterial, newCorrelatedGenesPressedMaterial, referenceManager.geneKeyboard.ScaleCorrection());
+                }
             }
             if (referenceManager.folderKeyboard)
             {
@@ -75,15 +92,6 @@ namespace CellexalVR.Interaction
                 referenceManager.filterValueKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
 
-            foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>(true))
-            {
-                panel.SetMaterials(unlockedNormalMaterial, unlockedHighlightMaterial, unlockedPressedMaterial, lockedNormalMaterial, lockedHighlightMaterial, lockedPressedMaterial);
-            }
-
-            foreach (var panel in GetComponentsInChildren<CorrelatedGenesPanel>(true))
-            {
-                panel.SetMaterials(correlatedGenesNormalMaterial, correlatedGenesHighlightMaterial, correlatedGenesPressedMaterial);
-            }
             /*
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
@@ -137,8 +145,7 @@ namespace CellexalVR.Interaction
             var raycastingSource = referenceManager.rightLaser.transform;
             var device = SteamVR_Controller.Input((int)rightController.index);
             var ray = new Ray(raycastingSource.position, raycastingSource.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 // if we hit something this frame.
                 var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
@@ -157,12 +164,15 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
+                    var keyboardHandler = hitPanel.GetComponentInParent<KeyboardHandler>();
+                    Vector2 uv2 = keyboardHandler.ToUv2Coord(hit.point);
 
-                    hitPanel.UpdateLaserCoords(hit.textureCoord2);
+                    hitPanel.UpdateLaserCoords(uv2);
+
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
                         hitPanel.Click();
-                        hitPanel.Pulse(hit.textureCoord2);
+                        hitPanel.Pulse(uv2);
                     }
 
                     lastHit = hitPanel;

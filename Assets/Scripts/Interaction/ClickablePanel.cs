@@ -31,6 +31,7 @@ namespace CellexalVR.Interaction
         protected virtual void Start()
         {
             renderer = gameObject.GetComponent<Renderer>();
+            renderer.sharedMaterial = keyNormalMaterial;
         }
 
         /// <summary>
@@ -39,11 +40,19 @@ namespace CellexalVR.Interaction
         /// <param name="keyNormalMaterial">The normal material.</param>
         /// <param name="keyHighlightMaterial">The material that should be used when the laser pointer is pointed at the button.</param>
         /// <param name="keyPressedMaterial">The material that should be used when the panel is pressed.</param>
-        public virtual void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
+        public virtual void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial, Vector4 scaleCorrection)
         {
             this.keyNormalMaterial = keyNormalMaterial;
             this.keyHighlightMaterial = keyHighlightMaterial;
             this.keyPressedMaterial = keyPressedMaterial;
+
+            this.keyNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.keyHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            this.keyPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            if (renderer)
+            {
+                renderer.sharedMaterial = keyNormalMaterial;
+            }
         }
 
         public abstract void Click();
@@ -57,7 +66,7 @@ namespace CellexalVR.Interaction
             PulseAndLaserCoords = new Vector4(pos.x, pos.y, PulseAndLaserCoords.z, PulseAndLaserCoords.w);
             if (isActiveAndEnabled)
             {
-                StartCoroutine(PulseCoroutine(pos));
+                StartCoroutine(PulseCoroutine());
             }
         }
 
@@ -68,26 +77,34 @@ namespace CellexalVR.Interaction
         public void UpdateLaserCoords(Vector2 pos)
         {
             PulseAndLaserCoords = new Vector4(PulseAndLaserCoords.x, PulseAndLaserCoords.y, pos.x, pos.y);
-            Shader.SetGlobalVector("_PulseCoords", PulseAndLaserCoords);
+            keyNormalMaterial.SetVector("_PulseCoords", PulseAndLaserCoords);
+            keyHighlightMaterial.SetVector("_PulseCoords", PulseAndLaserCoords);
+            keyPressedMaterial.SetVector("_PulseCoords", PulseAndLaserCoords);
         }
 
         /// <summary>
         /// Uses the Keyboard shader to play a pulse anmimation.
         /// </summary>
-        /// <param name="pos">The center coordinates for the pulse using <see cref="KeyboardItem.position"/>.</param>
-        protected IEnumerator PulseCoroutine(Vector2 pos)
+        protected IEnumerator PulseCoroutine()
         {
-            Material material = gameObject.GetComponent<MeshRenderer>().sharedMaterial;
+
             float t = 0f;
-            float pulseDuration = material.GetFloat("_PulseDuration");
-            Shader.SetGlobalVector("_PulseCoords", PulseAndLaserCoords);
+            float pulseDuration = keyNormalMaterial.GetFloat("_PulseDuration");
+            keyNormalMaterial.SetVector("_PulseCoords", PulseAndLaserCoords);
+            keyHighlightMaterial.SetVector("_PulseCoords", PulseAndLaserCoords);
+            keyPressedMaterial.SetVector("_PulseCoords", PulseAndLaserCoords);
             while (t < pulseDuration)
             {
-                Shader.SetGlobalFloat("_PulseStartTime", t);
+                keyNormalMaterial.SetFloat("_PulseStartTime", t);
+                keyHighlightMaterial.SetFloat("_PulseStartTime", t);
+                keyPressedMaterial.SetFloat("_PulseStartTime", t);
                 t += Time.deltaTime;
                 yield return null;
             }
-            Shader.SetGlobalFloat("_PulseStartTime", -1f);
+
+            keyNormalMaterial.SetFloat("_PulseStartTime", -1f);
+            keyHighlightMaterial.SetFloat("_PulseStartTime", -1f);
+            keyPressedMaterial.SetFloat("_PulseStartTime", -1f);
         }
 
         /// <summary>

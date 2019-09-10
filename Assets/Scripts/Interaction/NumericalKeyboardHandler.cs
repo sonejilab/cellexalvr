@@ -1,5 +1,6 @@
-﻿using System.Linq;
-
+﻿using System;
+using System.Linq;
+using UnityEngine;
 
 namespace CellexalVR.Interaction
 {
@@ -53,5 +54,52 @@ namespace CellexalVR.Interaction
             }
             return -1;
         }
+
+#if UNITY_EDITOR
+        public void BuildKeyboard()
+        {
+            OpenPrefab(out GameObject prefab, out NumericalKeyboardHandler keyboardHandler);
+            if (keyboardHandler == null)
+            {
+                return;
+            }
+            base.BuildKeyboard(keyboardHandler);
+            ClosePrefab(prefab);
+        }
     }
+
+    /// <summary>
+    /// Editor class for the <see cref="NumericalKeyboardHandler"/> to add a "Build keyboard" button.
+    /// </summary>
+    [UnityEditor.CustomEditor(typeof(NumericalKeyboardHandler), true)]
+    [UnityEditor.CanEditMultipleObjects]
+    public class NumericalKeyboardHandlerEditor : UnityEditor.Editor
+    {
+        private NumericalKeyboardHandler instance;
+
+        void OnEnable()
+        {
+            instance = (NumericalKeyboardHandler)target;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (GUILayout.Button("Build keyboard"))
+            {
+
+                instance.BuildKeyboard();
+            }
+
+            try
+            {
+                DrawDefaultInspector();
+            }
+            catch (ArgumentException)
+            {
+                // I think this happens because BuildKeyboard opens a prefab using UnityEditor.PrefabUtility.LoadPrefabContents
+                // which opens a second (hidden) inspector which glitches out because it's called from OnInspectorGUI.
+            }
+        }
+    }
+#endif
 }

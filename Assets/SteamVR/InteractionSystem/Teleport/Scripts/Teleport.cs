@@ -141,9 +141,17 @@ namespace Valve.VR.InteractionSystem
 			}
 		}
 
+        private void OnValidate()
+        {
+            if (gameObject.scene != null)
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
-		//-------------------------------------------------
-		void Awake()
+
+        //-------------------------------------------------
+        void Awake()
 		{
             leftController = referenceManager.leftController;
 			_instance = this;

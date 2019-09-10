@@ -28,9 +28,12 @@ namespace CellexalVR.Filters
 
         private void OnValidate()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            parent = transform.parent?.GetComponent<FilterCreatorBlock>();
-            textmeshpro = gameObject.GetComponent<TMPro.TextMeshPro>();
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                parent = transform.parent?.GetComponent<FilterCreatorBlock>();
+                textmeshpro = gameObject.GetComponent<TMPro.TextMeshPro>();
+            }
         }
 
         private void OnTriggerEnter(Collider other)

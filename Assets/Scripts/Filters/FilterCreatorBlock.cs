@@ -87,8 +87,11 @@ namespace CellexalVR.Filters
 
         private void OnValidate()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            filterManager = referenceManager.filterManager;
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                filterManager = referenceManager.filterManager;
+            }
         }
 
         public string ValidateValueString(string s)

@@ -178,9 +178,9 @@ namespace CellexalVR.General
             //referenceManager.leftControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildLeftRadialMenu();
             //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
 
-            _Keyboard.GetComponent<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
-            _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>(true).BuildKeyboard();
-            _Loader.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
+          //TODO_CELLEXAL  _Keyboard.GetComponent<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
+          //TODO_CELLEXAL  _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>(true).BuildKeyboard();
+          //TODO_CELLEXAL  _Loader.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
 
             
 
