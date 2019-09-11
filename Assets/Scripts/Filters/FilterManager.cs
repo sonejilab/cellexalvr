@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -79,8 +80,12 @@ namespace CellexalVR.Filters
             //var nameKeyboard = referenceManager.filterNameKeyboard;
             //nameKeyboard.gameObject.SetActive(true);
             string filterString = currentFilter.Expression.ToString();
-            string fileName = filterString.Split(null)[0];
-            fileName = fileName.Replace(':', '_');
+            List<string> itemsInFilter = new List<string>();
+            currentFilter.Expression.GetGenes(ref itemsInFilter);
+            currentFilter.Expression.GetFacs(ref itemsInFilter);
+            currentFilter.Expression.GetAttributes(ref itemsInFilter);
+            string fileName = string.Join("_", itemsInFilter);
+
             while (File.Exists(CellexalUser.UserSpecificFolder + "\\" + fileName))
             {
                 fileName += "_2";

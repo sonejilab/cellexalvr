@@ -705,6 +705,8 @@ namespace CellexalVR.AnalysisLogic
 
             public abstract void GetFacs(ref List<string> result, bool onlyPercent = false);
 
+            public abstract void GetAttributes(ref List<string> result);
+
             public abstract void SetFilterManager(FilterManager filterManager);
 
             public abstract void SwapPercentExpressions(Tuple<string, float, float>[] ranges);
@@ -754,6 +756,8 @@ namespace CellexalVR.AnalysisLogic
             }
 
             public override void GetFacs(ref List<string> result, bool onlyPercent = false) { }
+
+            public override void GetAttributes(ref List<string> result) { }
 
             public override string ToString()
             {
@@ -814,6 +818,8 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
+            public override void GetAttributes(ref List<string> result) { }
+
             public override string ToString()
             {
                 return "facs:" + facs + " " + OpToString(compare) + " " + value + (percent ? "%" : "");
@@ -859,6 +865,14 @@ namespace CellexalVR.AnalysisLogic
 
             public override void GetFacs(ref List<string> result, bool onlyPercent = false) { }
 
+            public override void GetAttributes(ref List<string> result)
+            {
+                if (!result.Contains(attribute))
+                {
+                    result.Add(attribute);
+                }
+            }
+
             public override string ToString()
             {
                 return "attr:" + attribute + " " + include;
@@ -895,6 +909,12 @@ namespace CellexalVR.AnalysisLogic
             {
                 subExpr1.GetFacs(ref result, onlyPercent);
                 subExpr2.GetFacs(ref result, onlyPercent);
+            }
+
+            public override void GetAttributes(ref List<string> result)
+            {
+                subExpr1.GetAttributes(ref result);
+                subExpr2.GetAttributes(ref result);
             }
 
             public override string ToString()
@@ -940,6 +960,12 @@ namespace CellexalVR.AnalysisLogic
             {
                 subExpr1.GetFacs(ref result, onlyPercent);
                 subExpr2.GetFacs(ref result, onlyPercent);
+            }
+
+            public override void GetAttributes(ref List<string> result)
+            {
+                subExpr1.GetAttributes(ref result);
+                subExpr2.GetAttributes(ref result);
             }
 
             public override string ToString()
@@ -988,6 +1014,12 @@ namespace CellexalVR.AnalysisLogic
                 subExpr2.GetFacs(ref result, onlyPercent);
             }
 
+            public override void GetAttributes(ref List<string> result)
+            {
+                subExpr1.GetAttributes(ref result);
+                subExpr2.GetAttributes(ref result);
+            }
+
             public override string ToString()
             {
                 return "(" + subExpr1.ToString() + " ^ " + subExpr2.ToString() + ")";
@@ -1029,6 +1061,11 @@ namespace CellexalVR.AnalysisLogic
             public override void GetFacs(ref List<string> result, bool onlyPercent = false)
             {
                 subExpr.GetFacs(ref result, onlyPercent);
+            }
+
+            public override void GetAttributes(ref List<string> result)
+            {
+                subExpr.GetAttributes(ref result);
             }
 
             public override string ToString()
