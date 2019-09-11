@@ -53,7 +53,7 @@ public class LoadVelocityButton : CellexalVR.Menu.Buttons.CellexalButton
         }
         referenceManager.velocitySubMenu.DeactivateOutlines();
         activeOutline.SetActive(true);
-        referenceManager.gameManager.InformReadVelocityFile(FilePath);
+        referenceManager.gameManager.InformReadVelocityFile(shorterFilePath);
     }
 
     public void DeactivateOutline()

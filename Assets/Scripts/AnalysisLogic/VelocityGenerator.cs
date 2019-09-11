@@ -74,6 +74,12 @@ namespace CellexalVR.AnalysisLogic
             int lastDotIndex = path.LastIndexOf('.');
             string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
+            //print(path);
+            //print(lastSlashIndex);
+            //print(lastDotIndex);
+            
+            //print(graphName);
+            //print(originalGraph.GraphName);
             if (subGraphName != string.Empty)
             {
                 graph = referenceManager.graphManager.FindGraph(subGraphName);
@@ -83,6 +89,7 @@ namespace CellexalVR.AnalysisLogic
                 graph = originalGraph;
             }
 
+            //print(graphName + " - " + graph.GraphName);
 
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.pointsPositions.Capacity);
 
