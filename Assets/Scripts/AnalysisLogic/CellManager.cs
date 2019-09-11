@@ -35,6 +35,7 @@ namespace CellexalVR.AnalysisLogic
         VRTK_ControllerReference VRTKrightController;
 
         public GameObject lineBetweenTwoGraphPointsPrefab;
+        public GameObject pointClusterPrefab;
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
         /// <summary>
@@ -136,6 +137,15 @@ namespace CellexalVR.AnalysisLogic
         public Cell GetCell(string label)
         {
             return cells[label];
+        }
+
+        /// <summary>
+        /// Returns all cells.
+        /// </summary>
+        /// <returns></returns>
+        public Cell[] GetCells()
+        {
+            return cells.Values.ToArray();
         }
 
         /// <summary>
@@ -588,13 +598,14 @@ namespace CellexalVR.AnalysisLogic
                 gbg.graph2 = toGraph;
                 gbg.referenceManager = referenceManager;
                 gbg.lineBetweenTwoGraphPointsPrefab = lineBetweenTwoGraphPointsPrefab;
+                gbg.pointClusterPrefab = pointClusterPrefab;
                 gbg.CreateGraphBetweenGraphs(points, newGraph, fromGraph, toGraph);
                 while (referenceManager.graphGenerator.isCreating)
                 {
                     yield return null;
                 }
-                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 20,
-                                neighbourDistance: 0.25f, kernelBandwidth: 1.5f));
+                StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 5,
+                                neighbourDistance: 0.10f, kernelBandwidth: 1.5f));
             }
             
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
