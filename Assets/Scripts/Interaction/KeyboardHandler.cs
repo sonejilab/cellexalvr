@@ -115,7 +115,8 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Gathers the keys from the scene.
         /// </summary>
-        protected void GatherKeys(KeyboardHandler prefabInstance)
+        /// <returns>True if keys were succesfully gathered, false otherwise.</returns>
+        protected bool GatherKeys(KeyboardHandler prefabInstance)
         {
             prefabInstance.minPos = new Vector2(float.MaxValue, float.MaxValue);
             prefabInstance.maxPos = new Vector2(float.MinValue, float.MinValue);
@@ -124,6 +125,11 @@ namespace CellexalVR.Interaction
             KeyboardItem[] itemsUnderKeyObject = prefabInstance.keysParentObject.GetComponentsInChildren<KeyboardItem>(true);
             prefabInstance.sortedKeys = prefabInstance.GetComponentsInChildren<KeyboardPanel>(true);
             // sort by position, y first then x
+            if (itemsUnderKeyObject.Length != prefabInstance.sortedKeys.Length)
+            {
+                Debug.LogError("Can not build keyboard, different number of keys found. Items under key object: " + itemsUnderKeyObject.Length + " keyboardpanels found: " + prefabInstance.sortedKeys.Length);
+                return false;
+            }
             Array.Sort(itemsUnderKeyObject, prefabInstance.sortedKeys, new KeyboardItemComparer());
             // find the smallest and largest positions for later
             foreach (var item in items)
@@ -151,6 +157,7 @@ namespace CellexalVR.Interaction
                     prefabInstance.maxPos.y = thisMaxPos.y;
                 }
             }
+            return true;
         }
 
         /// <summary>
@@ -395,7 +402,8 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Builds the keyboard by creating the meshes and positioning everything.
         /// </summary>
-        public virtual void BuildKeyboard(KeyboardHandler prefab)
+        /// <returns>True if the keyboard was successfully built, false otherwise.</returns>
+        public virtual bool BuildKeyboard(KeyboardHandler prefab)
         {
 
             string keyboardMeshesBaseFolder = prefabFolderPath + "/KeyboardMeshes";
@@ -416,8 +424,11 @@ namespace CellexalVR.Interaction
                     UnityEditor.AssetDatabase.DeleteAsset(UnityEditor.AssetDatabase.GUIDToAssetPath(asset));
                 }
             }
+            if (!prefab.GatherKeys(prefab))
+            {
+                return false;
+            }
 
-            prefab.GatherKeys(prefab);
             Vector2 size = prefab.maxPos - prefab.minPos;
 
             float radiansPerUnit = anglePerUnit / 180f * Mathf.PI;
@@ -501,6 +512,7 @@ namespace CellexalVR.Interaction
             {
                 prefab.output.text = placeholder;
             }
+            return true;
         }
 
         /// <summary>
