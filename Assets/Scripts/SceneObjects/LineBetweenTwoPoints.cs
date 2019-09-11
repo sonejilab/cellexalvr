@@ -4,23 +4,21 @@ using CellexalVR.Interaction;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 namespace CellexalVR.SceneObjects
 {
-
     /// <summary>
     /// Represents a line between two graphpoints and moves the line accordingly when the graphpoints move.
     /// Either the line is a line from one graphpoint to another (having one mid point as the graphpoint in the graph between).
     /// Or it is clustered line. In this case it goes from a centroid of a cluster to another and has two anchorpoints more so 5 points in total.
     /// </summary>
-    class LineBetweenTwoPoints : MonoBehaviour
+    public class LineBetweenTwoPoints : MonoBehaviour
     {
         public Transform t1, t2, t3;
         public Vector3 fromGraphCentroid;
         public Vector3 midGraphCentroid;
         public Vector3 toGraphCentroid;
-        public Vector3 fromClusterHull;
         public Vector3 midClusterHull;
-        public Vector3 toClusterHull;
         public bool centroids;
         public GameObject spherePrefab;
         public Material sphereMaterial;
@@ -52,10 +50,6 @@ namespace CellexalVR.SceneObjects
         private string controllerCollider = "ControllerCollider(Clone)";
         private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool controllerInside;
-        private BoxCollider bcFrom;
-        private BoxCollider bcMid;
-        private BoxCollider bcTo;
-        private int group;
 
         private void Start()
         {
@@ -75,29 +69,8 @@ namespace CellexalVR.SceneObjects
                 lineRenderer.startWidth = lineRenderer.endWidth += 0.010f;
                 initAnimate = true;
 
-                bcFrom = gameObject.AddComponent<BoxCollider>();
-                bcFrom.size = Vector3.one * 0.025f;
-                bcFrom.center = fromPos;
-                bcFrom.isTrigger = true;
-
-                bcMid = gameObject.AddComponent<BoxCollider>();
-                bcMid.size = Vector3.one * 0.025f;
-                bcMid.center = midPos;
-                bcMid.isTrigger = true;
-
-                bcTo = gameObject.AddComponent<BoxCollider>();
-                bcTo.size = Vector3.one * 0.025f;
-                bcTo.center = toPos;
-                bcTo.isTrigger = true;
-
-
-                //fromSphere = Instantiate(spherePrefab, t1);
-                //fromSphere.GetComponent<Renderer>().material.color = col;
-                //fromSphere.transform.localScale = fromClusterHull * 200;
-                //fromSphere.transform.position = fromPos;
-
-
             }
+
             else
             {
                 fromPos = t1.TransformPoint(graphPoint1.Position);
@@ -111,68 +84,11 @@ namespace CellexalVR.SceneObjects
                 initAnimate = true;
             }
         }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
-            if (touched)
-            {
-                Highlight(true);
-                controllerInside = true;
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
-            if (touched)
-            {
-                Highlight(false);
-                controllerInside = false;
-            }
-        }
-        private void Highlight(bool highlight)
-        {
-            if (highlight)
-            {
-                lineRenderer.startColor = lineRenderer.endColor = Color.white;
-                group = fromPointCluster.ElementAt(0).Group;
-                foreach (Graph.GraphPoint gp in fromPointCluster)
-                {
-                    gp.HighlightGraphPoint(true);
-                }
-                foreach (Graph.GraphPoint gp in midPointCluster)
-                {
-                    gp.HighlightGraphPoint(true);
-                }
-                foreach (Graph.GraphPoint gp in toPointCluster)
-                {
-                    gp.HighlightGraphPoint(true);
-                }
-            }
-            else
-            {
-                foreach (Graph.GraphPoint gp in fromPointCluster)
-                {
-                    gp.HighlightGraphPoint(false);
-                }
-                foreach (Graph.GraphPoint gp in midPointCluster)
-                {
-                    gp.HighlightGraphPoint(false);
-                }
-                foreach (Graph.GraphPoint gp in toPointCluster)
-                {
-                    gp.HighlightGraphPoint(false);
-                }
-                lineRenderer.startColor = lineRenderer.endColor = LineColor;
-            }
-        }
-
         private void Update()
         {
             if (initAnimate)
             {
-                InitLine();
+                AnimateLine();
             }
             else if (t1.hasChanged || t2.hasChanged)
             {
@@ -186,9 +102,6 @@ namespace CellexalVR.SceneObjects
                     firstAnchor = fromPos + ((1f / 6f) * (midPos - fromPos));
                     secondAnchor = toPos - ((1f / 6f) * (toPos - midPos));
                     lineRenderer.SetPositions(new Vector3[] { fromPos, firstAnchor, midPos, secondAnchor, toPos });
-                    bcFrom.center = fromPos;
-                    bcMid.center = midPos;
-                    bcTo.center = toPos;
                 }
                 else
                 {
@@ -199,10 +112,12 @@ namespace CellexalVR.SceneObjects
                 }
             }
         }
+
+       
         /// <summary>
         /// Animation that shows line progressivly move towards anchor points and lastly enpoint.
         /// </summary>
-        private void InitLine()
+        private void AnimateLine()
         {
             float dist = Vector3.Distance(currentPos, currentTarget);
             x += Time.deltaTime * 2f;
@@ -233,10 +148,6 @@ namespace CellexalVR.SceneObjects
                 {
                     if (centroids)
                     {
-                        //toSphere = Instantiate(spherePrefab, t2);
-                        //toSphere.GetComponent<Renderer>().material.color = col;
-                        //toSphere.transform.localScale = toClusterHull * 200;
-                        //toSphere.transform.position = toPos;
                         curve = new AnimationCurve();
                         curve.AddKey(0.0f, 1.0f);
                         curve.AddKey(0.1f, 0.05f);
@@ -245,11 +156,11 @@ namespace CellexalVR.SceneObjects
                         curve.AddKey(1.0f, 1.0f);
                         lineRenderer.widthMultiplier = 0.05f;
                         lineRenderer.widthCurve = curve;
-                        midSphere = Instantiate(spherePrefab, t3);
-                        midSphere.GetComponent<Renderer>().material = sphereMaterial;
-                        midSphere.GetComponent<Renderer>().material.color = col;
-                        midSphere.transform.localScale = midClusterHull * 300;
-                        midSphere.transform.position = midPos;
+                        //midSphere = Instantiate(spherePrefab, t3);
+                        //midSphere.GetComponent<Renderer>().material = sphereMaterial;
+                        //midSphere.GetComponent<Renderer>().material.color = col;
+                        //midSphere.transform.localScale = midClusterHull * 300;
+                        //midSphere.transform.position = midPos;
                         //midSphere.transform.Rotate(new Vector3(0, 90, 0));
                         //lineRenderer.widthMultiplier = fromRadius;
                         //Gradient gradient = new Gradient();
@@ -265,7 +176,7 @@ namespace CellexalVR.SceneObjects
                     initAnimate = false;
                     return;
                 }
-                
+
 
                 //lineRenderer.positionCount++;
                 posCtr++;

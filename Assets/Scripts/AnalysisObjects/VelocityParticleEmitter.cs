@@ -69,6 +69,7 @@ namespace CellexalVR.AnalysisObjects
             oldArrowEmitRate = arrowEmitRate;
         }
 
+
         void DoEmit()
         {
             currentEmitCoroutine = StartCoroutine(DoEmitCoroutine());
@@ -82,6 +83,11 @@ namespace CellexalVR.AnalysisObjects
                 itemsPerFrameConstant = emitOrder.Count / (arrowEmitRate * 90);
                 Stop();
                 Play();
+            }
+
+            if (graph.transform.hasChanged && transform.localScale != graph.transform.localScale)
+            {
+                transform.localScale = graph.transform.localScale;
             }
         }
 
