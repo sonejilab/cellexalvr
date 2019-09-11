@@ -85,6 +85,7 @@ Material:
     - _TestPar: 0
     - _TestRadius1: 0.31
     - _TestRadius2: 0.31
+    - _ThickerOutline: 4
     - _Thickness: 0.001
     - _UVSec: 0
     - _ZWrite: 1

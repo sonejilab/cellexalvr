@@ -16,10 +16,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         protected override void Awake()
         {
             base.Awake();
-            //CellexalEvents.CreatingNetworks.AddListener(TurnOff);
             CellexalEvents.NetworkCreated.AddListener(TurnOn);
-            //CellexalEvents.CreatingHeatmap.AddListener(TurnOff);
-            //CellexalEvents.HeatmapCreated.AddListener(TurnOn);
         }
 
         protected override ControllerModelSwitcher.Model ControllerModel

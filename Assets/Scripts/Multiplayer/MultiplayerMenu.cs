@@ -219,7 +219,7 @@ namespace CellexalVR.Multiplayer
                 }
             }
 
-            GUILayout.Space(20);
+            //GUILayout.Space(20);
 
             if (GUILayout.Button("Go Back", GUILayout.Width(200)))
             {

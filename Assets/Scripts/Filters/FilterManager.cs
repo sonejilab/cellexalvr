@@ -65,12 +65,12 @@ namespace CellexalVR.Filters
             loadingFilter = true;
             currentFilterPath = path;
             //path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + path;
-            currentFilter = new Filter();
-            currentFilter.Expression = BooleanExpression.ParseFile(path);
+            Filter newFilter = new Filter();
+            newFilter.Expression = BooleanExpression.ParseFile(path);
             //referenceManager.selectionManager.CurrentFilter = currentFilter;
             CellexalLog.Log("Loaded filter " + path);
-            referenceManager.filterMenu.AddFilterButton(currentFilter, currentFilterPath);
-            StartCoroutine(SwapPercentExpressions());
+            referenceManager.filterMenu.AddFilterButton(newFilter, currentFilterPath);
+            //StartCoroutine(SwapPercentExpressions());
         }
 
         public void SaveFilter()

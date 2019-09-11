@@ -19667,7 +19667,7 @@ GameObject:
   - component: {fileID: 4478476877499366}
   - component: {fileID: 198108326920078528}
   - component: {fileID: 199223881400110446}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: RingVert
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24590,9 +24590,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76cbe11f03b36843b137ab4b13b8f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clusterDebugBox: {fileID: 0}
+  clusterDebugBox: {fileID: 1094026296554484, guid: 44fac215e16489f4280a5e446875f9e4,
+    type: 3}
   referenceManager: {fileID: 0}
   lineBetweenTwoGraphPointsPrefab: {fileID: 1930424304061810, guid: 7e6b0e9c0134dcb4985fdc0121d8fdb0,
+    type: 3}
+  pointClusterPrefab: {fileID: 3648292811063363965, guid: 0b612474faeaeae4aaf8107d94e8be22,
     type: 3}
 --- !u!82 &82925076866271336
 AudioSource:
@@ -24702,7 +24705,7 @@ GameObject:
   - component: {fileID: 114825715914188772}
   - component: {fileID: 65885107425001252}
   - component: {fileID: 82246164635089332}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HighlightSpot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24998,6 +25001,7 @@ MonoBehaviour:
   selectionManager: {fileID: 114713925428185986}
   Graphs: []
   originalGraphs: []
+  velocityFiles: []
   GeneExpressionColoringMethod: 0
   drawDebugCubes: 0
   drawDebugLines: 0
@@ -25113,7 +25117,7 @@ GameObject:
   - component: {fileID: 4144636955357640}
   - component: {fileID: 198249076693876758}
   - component: {fileID: 199178112456950298}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30251,7 +30255,7 @@ GameObject:
   - component: {fileID: 4387784426909138}
   - component: {fileID: 198954671582527700}
   - component: {fileID: 199147034748609798}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35012,7 +35016,7 @@ GameObject:
   - component: {fileID: 4351333345192834}
   - component: {fileID: 198636240240415372}
   - component: {fileID: 199226278158649022}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Inner
   m_TagString: Untagged
   m_Icon: {fileID: 0}

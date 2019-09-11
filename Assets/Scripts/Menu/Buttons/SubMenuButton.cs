@@ -14,7 +14,6 @@ namespace CellexalVR.Menu.Buttons
         public TMPro.TextMeshPro textMeshToDarken;
 
         private Tab activeTab;
-        //private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
 
         protected override string Description
         {
@@ -29,14 +28,6 @@ namespace CellexalVR.Menu.Buttons
             SetMenuActivated(false);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
-            //if (gameObject.name.Equals("Graph From Markers Button"))
-            //{
-            //    TurnOff();
-            //    CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
-            //}
-            //else
-            //{
-            //}
         }
 
         public override void Click()
@@ -47,10 +38,6 @@ namespace CellexalVR.Menu.Buttons
         public void OpenMenu()
         {
             DeactivateButtonsRecursive(buttonsToDeactivate);
-            //foreach (CellexalButton b in buttonsToDeactivate.GetComponentsInChildren<CellexalButton>())
-            //{
-            //}
-            //textMeshToDarken.GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
             textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
             SetMenuActivated(true);
             descriptionText.text = "";
@@ -68,10 +55,6 @@ namespace CellexalVR.Menu.Buttons
                 CellexalButton b = t.GetComponent<CellexalButton>();
                 if (b != null)
                 {
-                    //    if (menu.GetComponent<MenuWithTabs>())
-                    //    {
-                    //        menu.GetComponent<MenuWithTabs>().savedButtonStates[b] = b.buttonActivated;
-                    //    }
                     b.StoreState();
                     b.SetButtonActivated(false);
                 }

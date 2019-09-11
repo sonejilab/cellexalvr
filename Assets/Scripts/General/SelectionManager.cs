@@ -512,6 +512,7 @@ namespace CellexalVR.General
             // clear the list since we are done with it
             selectedCells.Clear();
             selectionHistory.Clear();
+            historyIndexOffset = 0;
             CellexalEvents.SelectionConfirmed.Invoke();
             heatmapCreated = false;
             selectionMade = false;
@@ -555,6 +556,27 @@ namespace CellexalVR.General
         }
 
         /// <summary>
+        /// Selects all points in to current group. If filter is active it queues all points for evaluation. 
+        /// </summary>
+        public void SelectAll()
+        {
+            Graph g = graphManager.Graphs[0];
+            foreach (Cell c in referenceManager.cellManager.GetCells())
+            {
+                Graph.GraphPoint gp = g.FindGraphPoint(c.Label);
+                if (CurrentFilter != null)
+                {
+                    referenceManager.filterManager.AddCellToEval(gp, selectionToolCollider.currentColorIndex);
+                }
+                else
+                {
+                    AddGraphpointToSelection(gp, selectionToolCollider.currentColorIndex, false);
+                }
+
+            }
+        }
+
+        /// <summary>
         /// Gets the last selection that was confirmed.
         /// </summary>
         /// <returns> A List of all graphpoints that were selected. </returns>
@@ -591,13 +613,20 @@ namespace CellexalVR.General
         [ConsoleCommand("selectionManager", aliases: new string[] { "cancelselection", "cs" })]
         public void CancelSelection()
         {
-            foreach (Graph.GraphPoint other in selectedCells)
+            int stepsToGoBack = selectionHistory.Count - historyIndexOffset;
+            for (int i = 0; i <= stepsToGoBack; i++)
             {
-                other.ResetColor();
+                GoBackOneStepInHistory();
             }
-            CellexalEvents.SelectionCanceled.Invoke();
+            //foreach (Graph.GraphPoint other in selectedCells)
+            //{
+            //    other.ResetColor();
+            //}
+
+            //CellexalEvents.SelectionCanceled.Invoke();
             historyIndexOffset = selectionHistory.Count;
-            selectedCells.Clear();
+            CellexalEvents.BeginningOfHistoryReached.Invoke();
+            //selectedCells.Clear();
             selectionMade = false;
             CellexalEvents.CommandFinished.Invoke(true);
         }
