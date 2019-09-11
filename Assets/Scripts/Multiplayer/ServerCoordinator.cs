@@ -817,6 +817,7 @@ namespace CellexalVR.Multiplayer
             }
         }
 
+        [PunRPC]
         public void SendToggleGraphPoints(string graphName)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -826,6 +827,7 @@ namespace CellexalVR.Multiplayer
             }
         }
 
+        [PunRPC]
         public void SendConstantSynchedMode(string graphName, bool switchToConstant)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -842,6 +844,7 @@ namespace CellexalVR.Multiplayer
                 }
             }
         }
+        [PunRPC]
         public void SendGraphPointColorsMode(string graphName, bool switchToGraphPointColors)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -858,6 +861,7 @@ namespace CellexalVR.Multiplayer
                 }
             }
         }
+        [PunRPC]
         public void SendChangeFrequency(string graphName, float amount)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -872,7 +876,7 @@ namespace CellexalVR.Multiplayer
                 referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
             }
         }
-
+        [PunRPC]
         public void SendChangeThreshold(string graphName, float amount)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -882,6 +886,8 @@ namespace CellexalVR.Multiplayer
                 referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
             }
         }
+
+        [PunRPC]
         public void SendChangeSpeed(string graphName, float amount)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -892,8 +898,10 @@ namespace CellexalVR.Multiplayer
             }
         }
 
+        [PunRPC]
         public void SendReadVelocityFile(string filePath)
         {
+            CellexalLog.Log("Recieved message to read velocity file - " + filePath);
             referenceManager.velocityGenerator.ReadVelocityFile(filePath);
             referenceManager.velocitySubMenu.DeactivateOutlines();
             referenceManager.velocitySubMenu.ActivateOutline(filePath);
