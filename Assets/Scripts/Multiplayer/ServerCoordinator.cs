@@ -902,6 +902,7 @@ namespace CellexalVR.Multiplayer
         public void SendReadVelocityFile(string filePath)
         {
             CellexalLog.Log("Recieved message to read velocity file - " + filePath);
+            filePath = CellexalUser.DataSourceFolder + "\\" + filePath + ".mds";
             referenceManager.velocityGenerator.ReadVelocityFile(filePath);
             referenceManager.velocitySubMenu.DeactivateOutlines();
             referenceManager.velocitySubMenu.ActivateOutline(filePath);
