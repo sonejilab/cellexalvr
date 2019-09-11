@@ -46,6 +46,8 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   particleSystemPrefab: {fileID: 1273458556093764, guid: c0484a91c0c24d3488da0e77a836ce9a,
     type: 3}
+  arrowMaterial: {fileID: 0}
+  standardMaterial: {fileID: 0}
 --- !u!1 &1136056702234574
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +147,6 @@ MonoBehaviour:
   networkLineDefaultMaterial: {fileID: 2100000, guid: 25fdd2a7e612ec640999bee4b6940ad8,
     type: 2}
   networkList: []
-  objectsInSky: 0
   selectionNr: 0
   networkMethod: 
   LineMaterials:
@@ -226,6 +227,10 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   graphpointsPrefab: {fileID: 1303898112207200, guid: b1e87102f13f2ac40bb4008fb0e68aac,
     type: 3}
+  graphpointsLargerPrefab: {fileID: 1303898112207200, guid: e87dea2a4a5339c4f93a2036607cd852,
+    type: 3}
+  graphpointsLowestQualityPrefab: {fileID: 1303898112207200, guid: b4ad93e037f64ac488a84561c9893a68,
+    type: 3}
   graphPrefab: {fileID: 1128814461414928, guid: af929ffd1d0a8af409a829dde3bae8ca,
     type: 3}
   AxesPrefabColoured: {fileID: 1766706351881866, guid: a462447547b3c8449b5ff111f14b733f,
@@ -236,7 +241,13 @@ MonoBehaviour:
     type: 2}
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 3}
-  graphPointMesh: {fileID: 4300000, guid: 64351f611f4733d4cb548966ebfd444f, type: 3}
+  graphPointStandardMesh: {fileID: 4300000, guid: 64351f611f4733d4cb548966ebfd444f,
+    type: 3}
+  graphPointLargerMesh: {fileID: 4300000, guid: 31f5fbd3c3942d748ad28b8941a11185,
+    type: 3}
+  graphPointLowestQualityMesh: {fileID: -5495902117074765545, guid: cce4d2d505711a44e9de6478005bcec7,
+    type: 3}
+  graphPointHighestQualityMesh: {fileID: 0}
   isCreating: 0
   addingToExisting: 0
   graphPointColors: {fileID: 0}
@@ -323,4 +334,5 @@ MonoBehaviour:
   heatmapPrefab: {fileID: 1546507171833466, guid: 08f944bd386aa3c4eb320f9aee06c9ac,
     type: 3}
   selectionNr: 0
+  heatmapsCreated: 0
   selectionManager: {fileID: 0}

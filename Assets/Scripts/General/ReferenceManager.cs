@@ -266,6 +266,8 @@ namespace CellexalVR.General
             spectatorRig = GameObject.Find("SpectatorRig");
             VRRig = GameObject.Find("[VRTK]3.3");
 
+            UnityEditor.PrefabUtility.ApplyPrefabInstance(gameObject, UnityEditor.InteractionMode.AutomatedAction);
+            UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(gameObject, "Assets/Prefabs/Environment/InputReader.prefab", UnityEditor.InteractionMode.AutomatedAction);
         }
 #endif
     }

@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: UnlockedNormal
   m_Shader: {fileID: 4800000, guid: 0b3c9c433accece499056b5f47d0db54, type: 3}
   m_ShaderKeywords: 
@@ -78,7 +79,7 @@ Material:
     - _Parallax: 0.02
     - _PulseDuration: 0.3
     - _PulseMaxRadius: 0.5
-    - _PulseStartTime: 0.3999
+    - _PulseStartTime: -1
     - _PulseThickness: 0.04
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -90,5 +91,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LaserHitColor: {r: 0.29019606, g: 1, b: 0.8078432, a: 1}
     - _PulseColor: {r: 0.2901961, g: 1, b: 0.8078432, a: 1}
-    - _PulseCoords: {r: 0.21, g: 0.64, b: 0, a: 0}
+    - _PulseCoords: {r: -1, g: -1, b: -1, a: -1}
     - _ScaleCorrection: {r: 2.6, g: 1, b: 1, a: 1}

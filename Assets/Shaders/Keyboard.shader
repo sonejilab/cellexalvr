@@ -8,6 +8,8 @@ Shader "Custom/Keyboard"
         _LaserHitColor("Laser Hit Color", Color) = (1, 1, 1, 1)
         _LaserHitThickness("Laser Hit Thickness", float) = 0.1
         _FadeRadius("Texture fade radius", float) = 5.0
+		_PulseCoords("Pulse and Laser Coords", Vector) = (0, 0, 0, 0)
+		_PulseStartTime("Pulse Start Time", float) = 0.0
         _PulseDuration("Pulse Duration", float) = 1.0
         _PulseMaxRadius("Pulse Max Radius", float) = 1.0
         _PulseThickness("Pulse Thickness", float) = 0.1
@@ -55,7 +57,6 @@ Shader "Custom/Keyboard"
             float _PulseMaxRadius;
             float _PulseThickness;
             float4 _ScaleCorrection;
-            // global properties
             // goes from 0 to _PulseDuration when a pulse plays
             float _PulseStartTime;
             // xy is the uv2 coords that the last pulse played at, zw is the uv2 coords of the last laser hit
@@ -78,10 +79,25 @@ Shader "Custom/Keyboard"
                 float2 laserCoords = _PulseCoords.zw;
                 fixed4 nonFadedColor = tex2D(_NonFadedTex, IN.uv);
                 fixed4 fadedColor = tex2D(_FadedTex, IN.uv);
+
                 // the distance between us and where the laser hit
                 float laserHitDist = length((laserCoords - keyboardPos) * _ScaleCorrection.xy);
+
                 fixed4 finalColor = lerp(nonFadedColor, fadedColor, saturate(laserHitDist / _FadeRadius));
-                // fixed4 finalColor =  fixed4(int2(IN.uv.x * 10, IN.uv.y * 10) / 10.0, 0, 0);
+				/*
+				// debug stuff
+				fixed4 finalColor = fixed4(1,1,1,1);
+				if (IN.keyboardPos.x <= 0.99 && IN.keyboardPos.x >= 0.01 && IN.keyboardPos.y <= 0.99 && IN.keyboardPos.y >= 0.01)
+				{
+					//finalColor = fixed4(int2(IN.keyboardPos.x * 10, IN.keyboardPos.y * 10) / 10.0 , 0, 1);
+					//finalColor = fixed4(GammaToLinearSpace(fixed3(IN.keyboardPos.x , IN.keyboardPos.y , 0)), 1);
+					//finalColor = fixed4(IN.uv.x , IN.uv.y , 0, 1);
+				}
+				//else
+				//{
+				//	finalColor = fixed4(1,1,1,1);
+				//}
+				*/
                 // draw the shiny area where the laser hits, or just finalColor if we are too far away
                 finalColor = lerp(_LaserHitColor, finalColor, saturate(laserHitDist / _LaserHitThickness));
                 float pulseTime = _PulseStartTime;
@@ -89,6 +105,7 @@ Shader "Custom/Keyboard"
                 {
                     // correct the pos to match the scale.
                     float2 pos = (keyboardPos - _PulseCoords.xy) * _ScaleCorrection.xy;
+
                     // the distances to the inner and outer radii
                     float innerRadiusDist = length(pos) / _PulseMaxRadius - pulseTime;
                     float outerRadiusDist = innerRadiusDist - _PulseThickness;

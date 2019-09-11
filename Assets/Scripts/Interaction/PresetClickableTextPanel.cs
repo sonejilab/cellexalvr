@@ -20,12 +20,12 @@ namespace CellexalVR.Interaction
         public Material normalMaterial;
         public Material highlightedMaterial;
         public Material pressedMaterial;
-
+        public Vector4 scaleCorrection;
 
         protected override void Start()
         {
             base.Start();
-            SetMaterials(normalMaterial, highlightedMaterial, pressedMaterial);
+            SetMaterials(normalMaterial, highlightedMaterial, pressedMaterial, scaleCorrection);
         }
 
         public override void Click()

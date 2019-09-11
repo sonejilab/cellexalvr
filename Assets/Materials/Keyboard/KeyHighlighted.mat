@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: KeyHighlighted
   m_Shader: {fileID: 4800000, guid: 0b3c9c433accece499056b5f47d0db54, type: 3}
   m_ShaderKeywords: 
@@ -39,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FadedTex:
-        m_Texture: {fileID: 2800000, guid: 77aedd4e67a0ae74e8375f5bc5c17bab, type: 3}
+        m_Texture: {fileID: 2800000, guid: f2f3c8ec795bdec4dbe53d77db9def0f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -90,5 +91,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LaserHitColor: {r: 0.29019606, g: 1, b: 0.8078432, a: 1}
     - _PulseColor: {r: 0.2901961, g: 1, b: 0.8078432, a: 1}
-    - _PulseCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _PulseCoords: {r: -1, g: -1, b: -1, a: -1}
     - _ScaleCorrection: {r: 2.6, g: 1, b: 1, a: 1}

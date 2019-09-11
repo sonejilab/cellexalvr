@@ -13716,7 +13716,8 @@ MonoBehaviour:
   - anova
   graphPointQualityModes:
   - Low
-  - Standard
+  - Medium
+  - High
   lineColouringMethods:
   - By correlation
   - Random
@@ -31594,9 +31595,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: 
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

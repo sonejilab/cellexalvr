@@ -10716,7 +10716,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200119748187238}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -11935,6 +11935,7 @@ MonoBehaviour:
   leftControllerMaterial: {fileID: 2100000, guid: 16047cef510b68744b3bd259bbfce3ab,
     type: 2}
   ActualModel: 0
+  meshesSetSuccessful: 0
 --- !u!114 &114698286860284840
 MonoBehaviour:
   m_ObjectHideFlags: 0

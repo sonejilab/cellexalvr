@@ -31,9 +31,12 @@ namespace CellexalVR.Filters
 
         private void OnValidate()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            filterManager = referenceManager.filterManager;
-            parent = transform.parent?.GetComponent<FilterCreatorBlock>();
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                filterManager = referenceManager.filterManager;
+                parent = transform.parent?.GetComponent<FilterCreatorBlock>();
+            }
         }
 
 

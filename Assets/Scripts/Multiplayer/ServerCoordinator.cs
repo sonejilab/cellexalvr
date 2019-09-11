@@ -87,7 +87,7 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to add  " + key + " to search field");
             Debug.Log("Recieved message to add letter " + key + " to search field");
-            referenceManager.geneKeyboard.AddCharacter(key[0], false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+            referenceManager.geneKeyboard.AddText(key, false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
         }
 
         [PunRPC]
@@ -95,7 +95,7 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to add " + key + " to url field");
             Debug.Log("Recieved message to add letter " + key + " to url field");
-            referenceManager.webBrowserKeyboard.AddCharacter(key[0], false);
+            referenceManager.webBrowserKeyboard.AddText(key, false);
         }
 
         //[PunRPC]

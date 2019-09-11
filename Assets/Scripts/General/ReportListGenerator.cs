@@ -56,7 +56,7 @@ namespace CellexalVR.General
                 newNode.transform.localRotation = Quaternion.Euler(90, 0, 0);
                 ClickableReportPanel panel = newNode.GetComponent<ClickableReportPanel>();
                 PanelRaycaster rayCaster = referenceManager.keyboardSwitch.GetComponent<PanelRaycaster>();
-                panel.SetMaterials(rayCaster.keyNormalMaterial, rayCaster.keyHighlightMaterial, rayCaster.keyPressedMaterial);
+                panel.SetMaterials(rayCaster.keyNormalMaterial, rayCaster.keyHighlightMaterial, rayCaster.keyPressedMaterial, new Vector4(1f / files.Count, 1f, 1f, 1f));
                 panel.SetText(file);
                 panel.webBrowser = webBrowser;
                 newNode.SetActive(true);

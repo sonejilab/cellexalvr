@@ -41,6 +41,7 @@ namespace CellexalVR.Interaction
         }
 
         public Type keyType;
+        public bool replaceOutputs = false;
         private string text;
 
         /// <summary>
@@ -69,7 +70,11 @@ namespace CellexalVR.Interaction
             switch (keyType)
             {
                 case Type.Character:
-                    handler.AddCharacter(Text[0], true);
+                    if (replaceOutputs)
+                    {
+                        handler.Clear();
+                    }
+                    handler.AddText(Text, true);
                     break;
                 case Type.Shift:
                     handler.Shift();
