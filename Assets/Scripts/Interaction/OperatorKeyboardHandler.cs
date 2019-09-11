@@ -22,7 +22,9 @@ namespace CellexalVR.Interaction
             base.BuildKeyboard(keyboardHandler);
             ClosePrefab(prefab);
         }
+#endif
     }
+#if UNITY_EDITOR
 
     /// <summary>
     /// Editor class for the <see cref="OperatorKeyboardHandler"/> to add a "Build keyboard" button.
