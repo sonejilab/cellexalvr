@@ -139,8 +139,6 @@ namespace CellexalVR.General
             gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
         }
 
-
-
         /// <summary>
         /// Adds a graphpoint to the current selection, and changes its color.
         /// </summary>

@@ -486,8 +486,8 @@ namespace CellexalVR.AnalysisLogic
             Dictionary<string, string> geneIds = new Dictionary<string, string>(result.Count);
             foreach (Tuple<string, string> t in result)
             {
-                // ids are keys, names are values
-                geneIds[t.Item2] = t.Item1;
+                // keys are names, values are ids
+                geneIds[t.Item1] = t.Item2;
             }
 
             Dictionary<string, int> genePositions = new Dictionary<string, int>(heatmap.genes.Length);
@@ -529,7 +529,8 @@ namespace CellexalVR.AnalysisLogic
                 i++;
                 tuple = (Tuple<string, float>)result[i];
                 highestExpression = tuple.Item2;
-                ycoord = heatmap.heatmapY + genePositions[geneIds[tuple.Item1]] * ycoordInc;
+                ycoord = heatmap.heatmapY + genePositions[tuple.Item1] * ycoordInc;
+
                 genescount++;
                 i++;
                 //}
@@ -561,7 +562,14 @@ namespace CellexalVR.AnalysisLogic
                 {
                     string cellName = expressions[j].Item1;
                     float expression = expressions[j].Item2;
-                    xcoord = heatmap.heatmapX + cellsPosition[cellName] * xcoordInc;
+                    try
+                    {
+                        xcoord = heatmap.heatmapX + cellsPosition[cellName] * xcoordInc;
+                    }
+                    catch (KeyNotFoundException)
+                    {
+
+                    }
                     graphics.FillRectangle(heatmapBrushes[(int)expression], xcoord, ycoord, xcoordInc, ycoordInc);
                 }
 
@@ -575,15 +583,15 @@ namespace CellexalVR.AnalysisLogic
                 //}
                 //}
             }
-            ycoord = heatmap.heatmapY;
+            ycoord = heatmap.heatmapY - 4;
             float fontSize;
             if (heatmap.genes.Length > 120)
             {
-                fontSize = 13f;
+                fontSize = 8f;
             }
             else
             {
-                fontSize = 20;
+                fontSize = 20f;
             }
             geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, fontSize, System.Drawing.FontStyle.Regular);
             // draw all the gene names

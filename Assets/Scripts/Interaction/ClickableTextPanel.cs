@@ -71,7 +71,6 @@ namespace CellexalVR.Interaction
         {
             parentKeyboard.SetAllOutputs(NameOfThing);
             parentKeyboard.SubmitOutput(true);
-            return;
 
             if (Type == Definitions.Measurement.GENE)
             {

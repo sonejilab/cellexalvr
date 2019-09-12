@@ -99,6 +99,11 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Parses a file and turns it into a filter.
+        /// </summary>
+        /// <param name="filePath">The file to parse.</param>
+        /// <returns>The resulting filter, or null if the filter was not correctly parsed.</returns>
         public static Expr ParseFile(string filePath)
         {
             var streamReader = new StreamReader(filePath);
@@ -119,6 +124,19 @@ namespace CellexalVR.AnalysisLogic
             return root;
         }
 
+        /// <summary>
+        /// Parses a string as a filter. This is the inverse of <see cref="BooleanExpression.Expr.ToString"/>.
+        /// </summary>
+        /// <param name="filter">A string representing a filter.</param>
+        /// <returns>The parsed filter, or null if the filter was not correctly parsed.</returns>
+        public static Expr ParseFilter(string filter)
+        {
+            return ParseLine(filter);
+        }
+
+        /// <summary>
+        /// Parses one line in a filter, a line can be an alias or an expression.
+        /// </summary>
         private static Expr ParseLine(string line)
         {
             if (line.Length == 0)
@@ -135,6 +153,14 @@ namespace CellexalVR.AnalysisLogic
             return CombineExprs(exprs);
         }
 
+        /// <summary>
+        /// Combines a list if exrpressions into a single expression. Expressions are assumed to be properly placed in the list. E.g. [GeneExpr, AndExpr, FacsExpr, ...] and so on.
+        /// </summary>
+        /// <remarks>
+        /// This is probably a very inefficient way of doing this.
+        /// </remarks>
+        /// <param name="exprs">A list of expressions to combine</param>
+        /// <returns>The root expression</returns>
         private static Expr CombineExprs(List<Expr> exprs)
         {
 
@@ -207,6 +233,13 @@ namespace CellexalVR.AnalysisLogic
             return exprs[0];
         }
 
+        /// <summary>
+        /// Parses a list of <see cref="Token"/> and turns them into the appropriate <see cref="Expr"/>.
+        /// </summary>
+        /// <param name="tokens">The list of <see cref="Token"/> . This list is assumed to be properly constructed. E.g. <see cref="GeneExpr"/> requires a <see cref="Token"/> with <see cref="Token.Type.TYPE_GENE"/>, followed by a <see cref="Token.Type.VALUE_NAME"/>, then some operator and then <see cref="Token.Type.VALUE_NUM"/>.</param>
+        /// <param name="index">The index of <paramref name="tokens"/> to start parsing at.</param>
+        /// <param name="parLevel">The current number of paranthesis we are in.</param>
+        /// <returns>A list of <see cref="Expr"/> or null if the tokens could not be turned into expressions (likely due to the order of tokens or misspelled aliases).</returns>
         private static List<Expr> ParseTokens(List<Token> tokens, ref int index, int parLevel = 0)
         {
 
@@ -287,6 +320,13 @@ namespace CellexalVR.AnalysisLogic
             return exprs;
         }
 
+        /// <summary>
+        /// Replaces an alias with the real name.
+        /// </summary>
+        /// <param name="tokens">The list of tokens where the alias is</param>
+        /// <param name="index">The index of the alias to replace.</param>
+        /// <param name="alias">The alias name.</param>
+        /// <returns>True if the alias was successfully replaced, false otherwise.</returns>
         private static bool ReplaceAlias(List<Token> tokens, ref int index, string alias)
         {
             if (!aliases.ContainsKey(alias))
@@ -300,6 +340,11 @@ namespace CellexalVR.AnalysisLogic
             return true;
         }
 
+        /// <summary>
+        /// Parses an alias.
+        /// Aliases are written on seperate lines in the filter files, so the list of tokens should only contain this alias.
+        /// </summary>
+        /// <param name="tokens">The list of tokens.</param>
         private static void ParseAlias(List<Token> tokens)
         {
             if (tokens.Count != 5)
@@ -347,6 +392,11 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Parses a line for tokens.
+        /// </summary>
+        /// <param name="s">The line to parse.</param>
+        /// <returns>A list of parsed tokens.</returns>
         private static List<Token> ParseLineForTokens(string s)
         {
             List<Token> tokens = new List<Token>();

@@ -226,6 +226,7 @@ namespace SQLiter
 
             // close connection
             _connection.Close();
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
         #region Query

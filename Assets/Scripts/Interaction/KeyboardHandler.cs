@@ -185,19 +185,19 @@ namespace CellexalVR.Interaction
         }
 
         /// <summary>
-        /// Adds a character to the output.
+        /// Adds text to the output.
         /// </summary>
-        /// <param name="s"></param>
-        public void AddText(string s, bool invokeMultiuserEvent)
+        /// <param name="add">Text to add</param>
+        public void AddText(string add, bool invokeMultiuserEvent)
         {
             if (displayingPlaceHolder)
             {
-                output.text = s.ToString();
+                output.text = add.ToString();
                 displayingPlaceHolder = false;
             }
             else
             {
-                output.text += s;
+                output.text += add;
             }
 
             if (OnEdit != null)
@@ -207,7 +207,7 @@ namespace CellexalVR.Interaction
 
             if (invokeMultiuserEvent)
             {
-                OnEditMultiuser.Invoke(s.ToString());
+                OnEditMultiuser.Invoke(add.ToString());
             }
         }
 
@@ -215,7 +215,7 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Removes the last typed letter.
         /// </summary>
-        public void BackSpace()
+        public void BackSpace(bool invokeMultiuserEvent = false)
         {
             if (output.text.Length == 1)
             {
@@ -229,6 +229,10 @@ namespace CellexalVR.Interaction
             {
                 OnEdit.Invoke(Text());
             }
+            if (invokeMultiuserEvent)
+            {
+                referenceManager.gameManager.InformBackspaceKeyClicked();
+            }
         }
 
         /// <summary>
@@ -236,11 +240,24 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Clear()
         {
+            Clear(false);
+        }
+
+        /// <summary>
+        /// Clears the output.
+        /// </summary>
+        /// <param name="invokeMultiuserEvent">True if an event to run this function on all connected clients should be invoked.</param>
+        public void Clear(bool invokeMultiuserEvent = false)
+        {
             output.text = placeholder;
             displayingPlaceHolder = true;
             if (OnEdit != null)
             {
                 OnEdit.Invoke(Text());
+            }
+            if (invokeMultiuserEvent)
+            {
+                referenceManager.gameManager.InformClearKeyClicked();
             }
         }
 
@@ -281,12 +298,19 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Clears all outputs and disables this keyboard.
+        /// </summary>
         public void DismissKeyboard()
         {
             additionalOutputs.Clear();
             gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Sets all outputs to a text.
+        /// </summary>
+        /// <param name="text">The text to set all outputs to</param>
         public void SetAllOutputs(string text)
         {
             output.text = text;
