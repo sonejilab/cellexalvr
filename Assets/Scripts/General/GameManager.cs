@@ -660,13 +660,13 @@ namespace CellexalVR.General
         public void InformConstantSynchedMode(string graphName, bool switchToConstant)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others, graphName, switchToConstant);
+            coordinator.photonView.RPC("SendConstantSynchedMode", PhotonTargets.Others, graphName, switchToConstant);
         }
 
         public void InformGraphPointColorsMode(string graphName, bool switchToGraphpointColors)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others, graphName, switchToGraphpointColors);
+            coordinator.photonView.RPC("SendGraphPointColorsMode", PhotonTargets.Others, graphName, switchToGraphpointColors);
         }
         public void InformChangeFrequency(string graphName, float amount)
         {
