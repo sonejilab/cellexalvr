@@ -81,6 +81,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
             colored = toggle;
             activeOutline.SetActive(toggle);
+
             //TurnOff();
         }
 
@@ -172,6 +173,6 @@ namespace CellexalVR.Menu.Buttons.Attributes
             activeOutline.SetActive(false);
         }
 
-  
+
     }
 }

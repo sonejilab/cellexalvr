@@ -780,14 +780,18 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in graphs)
             {
-                string fullName = g.name + " - " + name;
-                yield return StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, fullName));
+                if (g.gameObject.activeSelf)
+                {
+                    string fullName = g.name + " - " + name;
+                    yield return StartCoroutine(CreateSubGraphsCoroutine(expr, attributes, g, fullName));
+                }
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
         private IEnumerator CreateSubGraphsCoroutine(BooleanExpression.Expr expr, List<string> attributes, Graph g, string name)
         {
+            List<string> attributesToColor = new List<string>(attributes);
             while (isCreating)
             {
                 yield return null;
@@ -807,17 +811,17 @@ namespace CellexalVR.AnalysisObjects
 
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
 
-            Graph graph = g;
-            
+            //Graph graph = g;
+
             foreach (Cell cell in subset)
             {
-                var point = graph.FindGraphPoint(cell.Label).Position;
+                var point = g.FindGraphPoint(cell.Label).Position;
                 AddGraphPoint(cell, point.x, point.y, point.z);
             }
-            subGraph.maxCoordValues = graph.ScaleCoordinates(graph.maxCoordValues);
-            subGraph.minCoordValues = graph.ScaleCoordinates(graph.minCoordValues);
+            subGraph.maxCoordValues = g.ScaleCoordinates(g.maxCoordValues);
+            subGraph.minCoordValues = g.ScaleCoordinates(g.minCoordValues);
             SliceClustering();
-            foreach (BoxCollider col in graph.GetComponents<BoxCollider>())
+            foreach (BoxCollider col in g.GetComponents<BoxCollider>())
             {
                 var newCol = subGraph.gameObject.AddComponent<BoxCollider>();
                 newCol.size = col.size;
@@ -828,7 +832,7 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
 
-            foreach (string attribute in attributes)
+            foreach (string attribute in attributesToColor)
             {
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true);
             }

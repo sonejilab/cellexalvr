@@ -305,6 +305,8 @@ namespace CellexalVR.General
             CellexalConfig.Config.NetworkLineColorNegativeHigh = config.NetworkLineColorNegativeHigh;
             CellexalConfig.Config.NumberOfNetworkLineColors = config.NumberOfNetworkLineColors;
             CellexalConfig.Config.NetworkLineWidth = config.NetworkLineWidth;
+            CellexalConfig.Config.VelocityParticlesHighColor = config.VelocityParticlesHighColor;
+            CellexalConfig.Config.VelocityParticlesLowColor = config.VelocityParticlesLowColor;
 
             string sharedConfigPath = configDir + @"\sharedConfig.xml";
             configPath = sharedConfigPath;
