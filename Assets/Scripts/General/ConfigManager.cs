@@ -187,7 +187,7 @@ namespace CellexalVR.General
                 Directory.CreateDirectory("Config");
                 CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(configDir));
             }
-            
+
             CellexalLog.Log("Started saving the config file");
 
             FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -305,8 +305,8 @@ namespace CellexalVR.General
             CellexalConfig.Config.NetworkLineColorNegativeHigh = config.NetworkLineColorNegativeHigh;
             CellexalConfig.Config.NumberOfNetworkLineColors = config.NumberOfNetworkLineColors;
             CellexalConfig.Config.NetworkLineWidth = config.NetworkLineWidth;
-            CellexalConfig.Config.VelocityParticlesHighColor = config.VelocityParticlesHighColor;
             CellexalConfig.Config.VelocityParticlesLowColor = config.VelocityParticlesLowColor;
+            CellexalConfig.Config.VelocityParticlesHighColor = config.VelocityParticlesHighColor;
 
             string sharedConfigPath = configDir + @"\sharedConfig.xml";
             configPath = sharedConfigPath;

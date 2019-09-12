@@ -408,7 +408,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
             CellexalEvents.GraphsLoaded.Invoke();
-            CellexalEvents.CommandFinished.Invoke(true);
+            
         }
 
         public IEnumerator ReadAttributeFiles(string path)
@@ -556,6 +556,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
             referenceManager.notificationManager.SpawnNotification(serverType + " R Server Session Initiated.");
             StartCoroutine(referenceManager.reportManager.LogStart());
+            
         }
 
         /// <summary>

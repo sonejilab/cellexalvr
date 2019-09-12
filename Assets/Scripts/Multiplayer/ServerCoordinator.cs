@@ -70,7 +70,6 @@ namespace CellexalVR.Multiplayer
         public void SendColorGraphsByGene(string geneName)
         {
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);
-            Debug.Log("Recieved message to color all graphs by " + geneName);
             referenceManager.cellManager.ColorGraphsByGene(geneName); //, referenceManager.graphManager.GeneExpressionColoringMethod);
             referenceManager.geneKeyboard.SubmitOutput(false);
             referenceManager.autoCompleteList.ClearList();
@@ -87,15 +86,27 @@ namespace CellexalVR.Multiplayer
         public void SendKeyClick(string key)
         {
             CellexalLog.Log("Recieved message to add  " + key + " to search field");
-            Debug.Log("Recieved message to add letter " + key + " to search field");
-            referenceManager.geneKeyboard.AddText(key, false); //, referenceManager.graphManager.GeneExpressionColoringMethod);
+            referenceManager.geneKeyboard.AddText(key, false);
+        }
+
+        [PunRPC]
+        public void SendKBackspaceKeyClicked()
+        {
+            CellexalLog.Log("Recieved message to click backspace");
+            referenceManager.geneKeyboard.BackSpace(false);
+        }
+
+        [PunRPC]
+        public void SendClearKeyClicked()
+        {
+            CellexalLog.Log("Recieved message to clear search field");
+            referenceManager.geneKeyboard.Clear(false);
         }
 
         [PunRPC]
         public void SendBrowserKeyClick(string key)
         {
             CellexalLog.Log("Recieved message to add " + key + " to url field");
-            Debug.Log("Recieved message to add letter " + key + " to url field");
             referenceManager.webBrowserKeyboard.AddText(key, false);
         }
 
@@ -362,28 +373,28 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendResetGraph()
         {
-            Debug.Log("Recieved message to reset graph colors");
+            CellexalLog.Log("Recieved message to reset graph colors");
             referenceManager.graphManager.ResetGraphsColor();
         }
 
         [PunRPC]
         public void SendResetGraphAll()
         {
-            Debug.Log("Recieved message to reset graph position, scale and rotation");
+            CellexalLog.Log("Recieved message to reset graph position, scale and rotation");
             referenceManager.graphManager.ResetGraphsPosition();
         }
 
         [PunRPC]
         public void SendLoadingMenu(bool delete)
         {
-            Debug.Log("Recieved message to reset to loading dataset scene");
+            CellexalLog.Log("Recieved message to reset to loading dataset scene");
             referenceManager.loaderController.ResetFolders(delete);
         }
 
         [PunRPC]
         public void SendDrawLinesBetweenGps()
         {
-            Debug.Log("Recieved message to draw lines between graph points");
+            CellexalLog.Log("Recieved message to draw lines between graph points");
             StartCoroutine(referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection()));
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         }
@@ -391,7 +402,7 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendClearLinesBetweenGps()
         {
-            Debug.Log("Recieved message to clear lines between graph points");
+            CellexalLog.Log("Recieved message to clear lines between graph points");
             referenceManager.cellManager.ClearLinesBetweenGraphPoints();
             CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         }
@@ -908,6 +919,13 @@ namespace CellexalVR.Multiplayer
             referenceManager.velocityGenerator.ReadVelocityFile(filePath);
             referenceManager.velocitySubMenu.DeactivateOutlines();
             referenceManager.velocitySubMenu.ActivateOutline(filePath);
+        }
+
+        [PunRPC]
+        public void SendSetFilter(string filter)
+        {
+            CellexalLog.Log("Recieved message to read filter " + filter);
+            referenceManager.filterManager.ParseFilter(filter);
         }
         #endregion
     }

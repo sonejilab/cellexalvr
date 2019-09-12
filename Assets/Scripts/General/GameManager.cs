@@ -191,6 +191,20 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendKeyClick", PhotonTargets.Others, value);
         }
 
+        public void InformBackspaceKeyClicked()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients that backspace was clicked");
+            coordinator.photonView.RPC("SendKBackspaceKeyClicked", PhotonTargets.Others);
+        }
+
+        public void InformClearKeyClicked()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients that clear was clicked");
+            coordinator.photonView.RPC("SendClearKeyClicked", PhotonTargets.Others);
+        }
+
         public void InformActivateBrowser(bool activate)
         {
             if (!multiplayer) return;
@@ -644,7 +658,7 @@ namespace CellexalVR.General
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendStartVelocity", PhotonTargets.Others, graphName);
         }
-        
+
         public void InformStopVelocity(string graphName)
         {
             if (!multiplayer) return;
@@ -688,6 +702,12 @@ namespace CellexalVR.General
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendReadVelocityFile", PhotonTargets.Others, filePath);
+        }
+
+        public void InformSetFilter(string filter)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendSetFilter", PhotonTargets.Others, filter);
         }
         #endregion
 

@@ -62,6 +62,7 @@ namespace CellexalVR.Filters
         /// <param name="path">A path to the file containing the filter.</param>
         [ConsoleCommand("filterManager", folder: "Data\\Mouse_HSPC", aliases: new string[] { "loadfilter", "lf" })]
         public void LoadFilter(string path)
+
         {
             loadingFilter = true;
             currentFilterPath = path;
@@ -74,6 +75,9 @@ namespace CellexalVR.Filters
             //StartCoroutine(SwapPercentExpressions());
         }
 
+        /// <summary>
+        /// Saves the current filter as a text file.
+        /// </summary>
         public void SaveFilter()
         {
             print("Saving filter: " + currentFilter.Expression.ToString());
@@ -102,6 +106,9 @@ namespace CellexalVR.Filters
             referenceManager.filterMenu.AddFilterButton(currentFilter, currentFilterPath);
         }
 
+        /// <summary>
+        /// Coroutine that swaps percent expressions for absolute ones. Percents are always calculated based on the highest and lowest gene/facs expressions in a dataset.
+        /// </summary>
         private IEnumerator SwapPercentExpressions()
         {
             if (resultBlock.isActiveAndEnabled)
@@ -152,7 +159,9 @@ namespace CellexalVR.Filters
             currentFilter.Expression.SwapPercentExpressions(ranges.ToArray());
             currentFilter.Expression.SetFilterManager(this);
             referenceManager.selectionManager.CurrentFilter = currentFilter;
-            filterPreviewText.text = currentFilter.Expression.ToString();
+            string filterAsText = currentFilter.Expression.ToString();
+            filterPreviewText.text = filterAsText;
+            referenceManager.gameManager.InformSetFilter(filterAsText);
             loadingFilter = false;
             if (resultBlock.isActiveAndEnabled)
             {
@@ -191,6 +200,9 @@ namespace CellexalVR.Filters
             portClickedThisFrame = false;
         }
 
+        /// <summary>
+        /// Coroutine to evaluate selected cells based on the current filter
+        /// </summary>
         private IEnumerator EvalQueuedCellsCoroutine()
         {
             evaluating = true;
@@ -282,6 +294,20 @@ namespace CellexalVR.Filters
             }
         }
 
+        /// <summary>
+        /// Parses a string and turns it into a filter.
+        /// </summary>
+        /// <param name="filter">The string to parse.</param>
+        public void ParseFilter(string filter)
+        {
+            Filter newFilter = new Filter();
+            newFilter.Expression = BooleanExpression.ParseFilter(filter);
+            currentFilter = newFilter;
+        }
+
+        /// <summary>
+        /// Updates the current filter based on the blocks in the filter creator.
+        /// </summary>
         public void UpdateFilterFromFilterCreator()
         {
             if (runningSwapPercentCoroutine != null)
@@ -301,6 +327,10 @@ namespace CellexalVR.Filters
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
         }
 
+        /// <summary>
+        /// Updates the filter based on a filter stored with a button.
+        /// </summary>
+        /// <param name="filter">The filter stored in the button.</param>
         public void UpdateFilterFromFilterButton(Filter filter)
         {
             if (runningSwapPercentCoroutine != null)
@@ -312,6 +342,10 @@ namespace CellexalVR.Filters
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
         }
+
+        /// <summary>
+        /// Helper class to compare tuples of strings.
+        /// </summary>
         private class TupleComparer : IEqualityComparer<Tuple<string, string>>
         {
             public bool Equals(Tuple<string, string> x, Tuple<string, string> y)
