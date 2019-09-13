@@ -27,6 +27,40 @@ namespace CellexalVR.Interaction
                             " " }
         };
 
+        /// <summary>
+        /// Switches between uppercase and lowercase layout.
+        /// </summary>
+        public override void Shift()
+        {
+            if (CurrentLayout == 0)
+            {
+                SwitchLayout(Layouts[1]);
+                CurrentLayout = 1;
+            }
+            else if (CurrentLayout == 1)
+            {
+                SwitchLayout(Layouts[0]);
+                CurrentLayout = 0;
+            }
+        }
+
+        /// <summary>
+        /// Switches between lowercase and special layout.
+        /// </summary>
+        public override void NumChar()
+        {
+            if (CurrentLayout == 2)
+            {
+                SwitchLayout(Layouts[0]);
+                CurrentLayout = 0;
+            }
+            else
+            {
+                SwitchLayout(Layouts[2]);
+                CurrentLayout = 2;
+            }
+        }
+
 #if UNITY_EDITOR
         public void BuildKeyboard()
         {

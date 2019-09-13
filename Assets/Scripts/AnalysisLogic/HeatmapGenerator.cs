@@ -616,6 +616,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
             // these yields makes the loading a little bit smoother, but still cuts a few frames.
             var texture = new Texture2D(4096, 4096);
+            texture.requestedMipmapLevel = 0;
             yield return null;
             texture.LoadImage(File.ReadAllBytes(heatmapFilePath));
             heatmap.texture = texture;
