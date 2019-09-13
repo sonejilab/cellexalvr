@@ -22,6 +22,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
         public GameObject heatmapPrefab;
+        public Texture2D heatmapTexture;
         public int selectionNr;
         public int heatmapsCreated = 0;
         public bool GeneratingHeatmaps { get; private set; }
@@ -615,8 +616,8 @@ namespace CellexalVR.AnalysisLogic
             string heatmapFilePath = heatmapDirectory + "\\heatmap_temp.png";
             heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
             // these yields makes the loading a little bit smoother, but still cuts a few frames.
-            var texture = new Texture2D(4096, 4096);
-            texture.requestedMipmapLevel = 0;
+
+            var texture = Instantiate(heatmapTexture) as Texture2D;
             yield return null;
             texture.LoadImage(File.ReadAllBytes(heatmapFilePath));
             heatmap.texture = texture;
