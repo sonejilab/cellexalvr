@@ -616,7 +616,6 @@ namespace CellexalVR.AnalysisLogic
             string heatmapFilePath = heatmapDirectory + "\\heatmap_temp.png";
             heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
             // these yields makes the loading a little bit smoother, but still cuts a few frames.
-            //var texture = new Texture2D(4096, 4096);
 
             var texture = Instantiate(heatmapTexture) as Texture2D;
             yield return null;
