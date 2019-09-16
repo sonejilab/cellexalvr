@@ -646,6 +646,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName, selectedGroupLeft, selectedGroupRight,
                 selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
+        
+        public void InformReorderByAttribute(string heatmapName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendReorderByAttribute", PhotonTargets.Others, heatmapName);
+        }
 
         public void InformStartVelocity(string graphName)
         {
