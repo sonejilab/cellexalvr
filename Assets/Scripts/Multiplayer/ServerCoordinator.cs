@@ -61,12 +61,6 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendGraphpointChangedColor(string graphName, string label, float r, float g, float b)
-        {
-            referenceManager.graphManager.RecolorGraphPoint(graphName, label, new Color(r, g, b));
-        }
-
-        [PunRPC]
         public void SendColorGraphsByGene(string geneName)
         {
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);

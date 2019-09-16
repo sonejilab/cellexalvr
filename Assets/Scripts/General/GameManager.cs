@@ -141,12 +141,6 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendSynchConfig", PhotonTargets.Others, data);
         }
 
-        public void InformGraphPointChangedColor(string graphname, string label, Color color)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
-        }
-
         public void InformColorGraphsByGene(string geneName)
         {
             if (!multiplayer) return;
