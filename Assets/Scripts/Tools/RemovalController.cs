@@ -183,7 +183,7 @@ namespace CellexalVR.Tools
                 else
                 {
                     Destroy(obj);
-                    referenceManager.gameManager.InformDeleteObject(obj.name);
+                    referenceManager.gameManager.InformDeleteObject(obj.name, obj.tag);
                 }
                 CellexalLog.Log("Deleted object: " + obj.name);
                 delete = false;

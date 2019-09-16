@@ -479,10 +479,21 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendDeleteObject(string name)
+        public void SendDeleteObject(string name, string tag)
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
-            Destroy(GameObject.Find(name));
+            GameObject gameObject = GameObject.Find(name);
+            if (tag == "Subgraph")
+            {
+                Graph graph = gameObject.GetComponent<Graph>();
+                referenceManager.graphManager.Graphs.Remove(graph);
+                Destroy(graph.gameObject);
+            }
+            else if (tag == "HeatBoard")
+            {
+                referenceManager.heatmapGenerator.DeleteHeatmap(name);
+            }
+
         }
 
         [PunRPC]
