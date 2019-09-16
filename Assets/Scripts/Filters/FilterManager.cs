@@ -255,9 +255,13 @@ namespace CellexalVR.Filters
                 //{
                 //    print("evaluating " + t.Item1.Label + " with " + gene + "expression " + GeneExprs[new Tuple<string, string>(cellname, gene)]);
                 //}
-                if (currentFilter.Pass(cellManager.GetCell(t.Item1.Label)))
+                Graph.GraphPoint gp = t.Item1;
+                int group = t.Item2;
+                if (currentFilter.Pass(cellManager.GetCell(gp.Label)))
                 {
-                    selectionManager.AddGraphpointToSelection(t.Item1, t.Item2, false, selectionManager.GetColor(t.Item2));
+                    Color newColor = selectionManager.GetColor(group);
+                    selectionManager.AddGraphpointToSelection(gp, group, false, newColor);
+                    referenceManager.gameManager.InformSelectedAdd(gp.parent.GraphName, gp.Label, group, newColor);
                 }
             }
 

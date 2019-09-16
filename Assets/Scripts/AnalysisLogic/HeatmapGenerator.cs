@@ -163,16 +163,17 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(GenerateHeatmapRoutine(heatmapName));
         }
 
+
+        public void DeleteHeatmap(string heatmapName)
+        {
+            Heatmap heatmap = FindHeatmap(heatmapName);
+            Destroy(heatmap.gameObject);
+            heatmapList.Remove(heatmap);
+        }
+
         public Heatmap FindHeatmap(string heatmapName)
         {
-            foreach (Heatmap hm in heatmapList)
-            {
-                if (hm.name == heatmapName)
-                {
-                    return hm;
-                }
-            }
-            return null;
+            return heatmapList.Find((Heatmap h) => heatmapName == h.name);
         }
 
         /// <summary>

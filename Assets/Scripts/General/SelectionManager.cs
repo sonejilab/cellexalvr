@@ -127,16 +127,14 @@ namespace CellexalVR.General
             if (CurrentFilter != null)
             {
                 referenceManager.filterManager.AddCellToEval(graphPoint, newGroup);
-
             }
             else
             {
                 AddGraphpointToSelection(graphPoint, newGroup, true, selectionToolCollider.Colors[newGroup]);
-
+                gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
             }
 
             //Debug.Log("Adding gp to sel. Inform clients.");
-            gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
         }
 
         /// <summary>

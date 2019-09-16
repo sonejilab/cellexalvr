@@ -555,10 +555,10 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendMinimizeHeatmap", PhotonTargets.Others, heatmapName);
         }
 
-        public void InformDeleteObject(string objName)
+        public void InformDeleteObject(string objName, string objTag)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendDeleteObject", PhotonTargets.Others, objName);
+            coordinator.photonView.RPC("SendDeleteObject", PhotonTargets.Others, objName, objTag);
         }
 
         public void InformDeleteNetwork(string objName)
