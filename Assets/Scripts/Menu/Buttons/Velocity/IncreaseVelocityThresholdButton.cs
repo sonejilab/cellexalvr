@@ -21,8 +21,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
             Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
             if (activeGraph != null)
             {
-                float newThreshold = activeGraph.velocityParticleEmitter.ChangeThreshold(amount);
-                referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
+                activeGraph.velocityParticleEmitter.ChangeThreshold(amount);
                 referenceManager.gameManager.InformChangeThreshold(activeGraph.GraphName, amount);
             }
         }

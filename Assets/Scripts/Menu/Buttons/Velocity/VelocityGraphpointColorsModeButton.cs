@@ -23,14 +23,6 @@ namespace CellexalVR.Menu.Buttons
             {
                 bool switchToGraphpointColors = !activeGraph.velocityParticleEmitter.UseGraphPointColors;
                 activeGraph.velocityParticleEmitter.UseGraphPointColors = switchToGraphpointColors;
-                if (switchToGraphpointColors)
-                {
-                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Graphpoint colors";
-                }
-                else
-                {
-                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Gradient";
-                }
                 referenceManager.gameManager.InformGraphPointColorsMode(activeGraph.GraphName, switchToGraphpointColors);
             }
         }

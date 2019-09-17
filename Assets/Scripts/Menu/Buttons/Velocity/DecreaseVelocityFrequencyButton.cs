@@ -20,13 +20,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
             Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
             if (activeGraph != null)
             {
-                float newFrequency = activeGraph.velocityParticleEmitter.ChangeFrequency(amount);
-                string newFrequencyString = (1f / newFrequency).ToString();
-                if (newFrequencyString.Length > 4)
-                {
-                    newFrequencyString = newFrequencyString.Substring(0, 4);
-                }
-                referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+                activeGraph.velocityParticleEmitter.ChangeFrequency(amount);
                 referenceManager.gameManager.InformChangeFrequency(activeGraph.GraphName, amount);
             }
         }

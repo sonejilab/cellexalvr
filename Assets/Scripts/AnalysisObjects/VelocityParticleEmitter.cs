@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
@@ -10,7 +11,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public Graph graph;
         public Material particleMaterial;
-
+        public float timeThreshold = 0.05f;
         public int itemsPerFrame = 1000;
 
         public Dictionary<Graph.GraphPoint, Vector3> Velocities
@@ -18,12 +19,14 @@ namespace CellexalVR.AnalysisObjects
             set
             {
                 emitOrder = new List<KeyValuePair<Graph.GraphPoint, Vector3>>(value);
-                itemsPerFrameConstant = emitOrder.Count / arrowEmitRate;
+                itemsPerFrameConstant = emitOrder.Count / (arrowEmitRate * 90);
+                greatestVelocity = Mathf.Sqrt(emitOrder.Max((kvp) => kvp.Value.sqrMagnitude));
+
             }
         }
         private List<KeyValuePair<Graph.GraphPoint, Vector3>> emitOrder;
 
-        private bool constantEmitOverTime;
+        private bool constantEmitOverTime = true;
         public bool ConstantEmitOverTime
         {
             get => constantEmitOverTime;
@@ -36,39 +39,42 @@ namespace CellexalVR.AnalysisObjects
         }
 
         private float itemsPerFrameConstant;
-        public bool UseGraphPointColors { get; set; }
-        public bool RandomEmitOrder { get; set; }
+        private bool useGraphPointColors;
+        public bool UseGraphPointColors
+        {
+            get => useGraphPointColors;
+            set
+            {
+                useGraphPointColors = value;
+                SetAllTexts();
+            }
+        }
 
         private new ParticleSystem particleSystem;
         /// <summary>
         /// Number of seconds between each arrow emit
         /// </summary>
         private float arrowEmitRate = 1f;
-        private float threshold = 0;
-        private float speed = 5;
+        private float threshold = 0f;
+        private float speed = 10f;
         private float oldArrowEmitRate;
         private bool playing = false;
         private bool emitting = false;
         private Coroutine currentEmitCoroutine;
+        private int nFramesAboveTimeThreshold = 0;
+        private float greatestVelocity;
 
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            if (constantEmitOverTime)
-            {
-                DoEmit();
-            }
-            else
-            {
-                InvokeRepeating("DoEmit", 0f, arrowEmitRate);
-            }
             particleSystem = gameObject.GetComponent<ParticleSystem>();
             particleSystem.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
+            var mainModule = particleSystem.main;
+            mainModule.simulationSpeed = speed;
             SetColors();
             Play();
             oldArrowEmitRate = arrowEmitRate;
         }
-
 
         void DoEmit()
         {
@@ -98,13 +104,14 @@ namespace CellexalVR.AnalysisObjects
                 // don't emit if we are already emitting
                 yield break;
             }
-
+            var stopwatch = new System.Diagnostics.Stopwatch();
             emitting = true;
 
             ParticleSystem.ColorBySpeedModule colorBySpeedModule = particleSystem.colorBySpeed;
             colorBySpeedModule.enabled = !UseGraphPointColors;
 
             Mesh graphPointMesh = referenceManager.graphGenerator.graphPointStandardMesh;
+            //float graphPointMeshSize = graphPointMesh.bounds.extents.magnitude * 2;
             //int verticesPerGraphPoint = graphPointMesh.vertexCount;
             Vector3 offset = graphPointMesh.normals[0] * graphPointMesh.bounds.extents.x / 2f;
 
@@ -114,7 +121,7 @@ namespace CellexalVR.AnalysisObjects
             int yieldsSoFar = 0;
             float sqrThreshold = threshold * threshold;
 
-            if (RandomEmitOrder)
+            if (ConstantEmitOverTime)
             {
                 for (int i = 0; i < emitOrder.Count - 2; ++i)
                 {
@@ -125,51 +132,92 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            foreach (var keyValuePair in emitOrder)
+            do
             {
-                if (keyValuePair.Value.sqrMagnitude > sqrThreshold)
+                //stopwatch.Restart();
+
+                if (nextYield > emitOrder.Count)
                 {
-                    emitParams.position = keyValuePair.Key.Position - offset + keyValuePair.Value.normalized * graphPointMesh.bounds.extents.magnitude * 2;
-                    emitParams.velocity = keyValuePair.Value;
-                    if (UseGraphPointColors)
+                    nextYield = emitOrder.Count;
+                }
+                // emit one round of particles
+                for (; nItems < nextYield; ++nItems)
+                {
+                    var keyValuePair = emitOrder[nItems];
+                    if (keyValuePair.Value.sqrMagnitude > sqrThreshold)
                     {
-                        emitParams.startColor = keyValuePair.Key.GetColor();
+                        emitParams.position = keyValuePair.Key.Position - offset; // + keyValuePair.Value.normalized * graphPointMeshSize;
+                        emitParams.velocity = keyValuePair.Value;
+                        if (UseGraphPointColors)
+                        {
+                            emitParams.startColor = keyValuePair.Key.GetColor();
+                        }
+                        particleSystem.Emit(emitParams, 1);
                     }
-                    particleSystem.Emit(emitParams, 1);
                 }
 
-                nItems++;
-                if (nItems >= nextYield)
-                {
-                    yield return null;
-                    yieldsSoFar++;
+                nItems = nextYield;
 
-                    if (ConstantEmitOverTime)
-                    {
-                        nextYield = (int)(itemsPerFrameConstant * yieldsSoFar);
-                    }
-                    else
-                    {
-                        nextYield += itemsPerFrame;
-                    }
+                //stopwatch.Stop();
+                //if (stopwatch.Elapsed.TotalSeconds > timeThreshold)
+                //{
+                //    nFramesAboveTimeThreshold++;
+                //}
+                //else
+                //{
+                //    nFramesAboveTimeThreshold = 0;
+                //}
+
+                //if (nFramesAboveTimeThreshold >= 3)
+                //{
+                //    ChangeFrequency(2f);
+                //    nFramesAboveTimeThreshold = 0;
+                //    Stop();
+                //    Play();
+
+                //}
+
+                yield return null;
+                yieldsSoFar++;
+
+                if (ConstantEmitOverTime)
+                {
+                    nextYield = (int)(itemsPerFrameConstant * yieldsSoFar);
                 }
-            }
+                else
+                {
+                    nextYield += itemsPerFrame;
+                }
+
+            } while (nItems < emitOrder.Count);
 
             if (constantEmitOverTime)
             {
+                yield return null;
                 currentEmitCoroutine = StartCoroutine(DoEmitCoroutine());
             }
             else
             {
                 currentEmitCoroutine = null;
+                emitting = false;
             }
-            emitting = false;
         }
 
         public void Play()
         {
-            particleSystem.Play();
-            InvokeRepeating("DoEmit", 0f, arrowEmitRate);
+            var colorBySpeedModule = particleSystem.colorBySpeed;
+            Vector2 range = new Vector2(0, greatestVelocity);
+            colorBySpeedModule.range = range;
+            if (constantEmitOverTime)
+            {
+                DoEmit();
+            }
+            else
+            {
+                InvokeRepeating("DoEmit", 0f, arrowEmitRate);
+            }
+            SetAllTexts();
+
         }
 
         public void Stop()
@@ -180,13 +228,14 @@ namespace CellexalVR.AnalysisObjects
             if (currentEmitCoroutine != null)
             {
                 StopCoroutine(currentEmitCoroutine);
+                currentEmitCoroutine = null;
             }
         }
 
         /// <summary>
         /// Changes the frequency be some amount. Frequency can not be changed below 0.
         /// </summary>
-        /// <param name="amount">How much to add (or subtract) to the frequency.</param>
+        /// <param name="amount">How much to multiply the frequency by.</param>
         /// <returns>The new frequency.</returns>
         public float ChangeFrequency(float amount)
         {
@@ -202,6 +251,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 arrowEmitRate *= amount;
             }
+            SetAllTexts();
 
             return arrowEmitRate;
         }
@@ -209,7 +259,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Multiples the current threshold by some amount. Thresholds lower than 0.001 is set to zero.
         /// </summary>
-        /// <param name="amount">How much to multiply the frequency by.</param>
+        /// <param name="amount">How much to multiply the threshold by.</param>
         /// <returns>The new threshold.</returns>
         public float ChangeThreshold(float amount)
         {
@@ -225,6 +275,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 threshold *= amount;
             }
+            SetAllTexts();
             return threshold;
         }
 
@@ -249,7 +300,30 @@ namespace CellexalVR.AnalysisObjects
             }
             var mainModule = particleSystem.main;
             mainModule.simulationSpeed = speed;
+            SetAllTexts();
             return speed;
+        }
+
+        /// <summary>
+        /// Sets the frequency, speed and threshold texts on the velocity submenu.
+        /// </summary>
+        /// <remarks>
+        /// Automatically called by <see cref="ChangeFrequency(float)"/>, <see cref="ChangeSpeed(float)"/> and <see cref="ChangeThreshold(float)"/>.
+        /// </remarks>
+        public void SetAllTexts()
+        {
+            string newFrequencyString = (1f / arrowEmitRate).ToString();
+            if (newFrequencyString.Length > 8)
+            {
+                newFrequencyString = newFrequencyString.Substring(0, 8);
+            }
+            var submenu = referenceManager.velocitySubMenu;
+            submenu.frequencyText.text = "Frequency: " + newFrequencyString;
+            submenu.speedText.text = "Speed: " + speed;
+            submenu.thresholdText.text = "Threshold: " + threshold;
+            submenu.constantSynchedModeText.text = "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
+            submenu.graphPointColorsModeText.text = "Mode: " + (UseGraphPointColors ? "Graphpoint colors" : "Gradient");
+
         }
 
         /// <summary>

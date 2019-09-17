@@ -18,8 +18,7 @@ public class IncreaseVelocitySpeedButton : CellexalButton
     {
         Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
         VelocityParticleEmitter emitter = activeGraph.velocityParticleEmitter;
-        float newSpeed = emitter.ChangeSpeed(amount);
-        referenceManager.velocitySubMenu.speedText.text = "Speed: " + newSpeed;
+        emitter.ChangeSpeed(amount);
         referenceManager.gameManager.InformChangeSpeed(activeGraph.GraphName, amount);
     }
 

@@ -24,14 +24,6 @@ namespace CellexalVR.Menu.Buttons
             {
                 bool switchToConstant = !activeGraph.velocityParticleEmitter.ConstantEmitOverTime;
                 activeGraph.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
-                if (switchToConstant)
-                {
-                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Constant";
-                }
-                else
-                {
-                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Synched";
-                }
                 referenceManager.gameManager.InformConstantSynchedMode(activeGraph.GraphName, switchToConstant);
             }
         }

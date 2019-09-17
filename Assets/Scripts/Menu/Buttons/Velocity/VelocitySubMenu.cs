@@ -1,7 +1,5 @@
-﻿using System;
+﻿using CellexalVR.General;
 using System.Collections.Generic;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.General;
 using TMPro;
 using UnityEngine;
 
@@ -37,10 +35,11 @@ namespace CellexalVR.Menu.SubMenus
         {
             CellexalEvents.GraphsLoaded.AddListener(CreateButtons);
             CellexalEvents.GraphsUnloaded.AddListener(DestroyButtons);
-            frequencyText.text = "Frequency: 1";
-            thresholdText.text = "Threshold: 0";
-            speedText.text = "Speed: 5";
-
+            frequencyText.text = "Frequency: ";
+            thresholdText.text = "Threshold: ";
+            speedText.text = "Speed: ";
+            graphPointColorsModeText.text = "Mode: ";
+            constantSynchedModeText.text = "Mode: ";
         }
 
         public void CreateButton(string filePath, string subGraphName = "")
@@ -108,9 +107,11 @@ namespace CellexalVR.Menu.SubMenus
             {
                 button.DeactivateOutline();
             }
-            frequencyText.text = "Frequency: 1";
-            thresholdText.text = "Threshold: 0";
-            speedText.text = "Speed: 5";
+            frequencyText.text = "Frequency: ";
+            thresholdText.text = "Threshold: ";
+            speedText.text = "Speed: ";
+            graphPointColorsModeText.text = "Mode: ";
+            constantSynchedModeText.text = "Mode: ";
         }
 
         public void ActivateOutline(string filePath)
