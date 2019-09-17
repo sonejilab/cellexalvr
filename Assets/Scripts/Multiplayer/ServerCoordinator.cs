@@ -61,12 +61,6 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendGraphpointChangedColor(string graphName, string label, float r, float g, float b)
-        {
-            referenceManager.graphManager.RecolorGraphPoint(graphName, label, new Color(r, g, b));
-        }
-
-        [PunRPC]
         public void SendColorGraphsByGene(string geneName)
         {
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);
@@ -364,10 +358,13 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendToggleGrabbable(string name, bool b)
+        public void SendToggleGrabbable(string name, bool enable)
         {
-            //referenceManager.graphManager.FindGraph(name).GetComponent<GraphInteract>().isGrabbable = b;
-            referenceManager.graphManager.FindGraph(name).GetComponent<Collider>().enabled = b;
+            var colliders = referenceManager.graphManager.FindGraph(name).GetComponents<Collider>();
+            foreach (Collider c in colliders)
+            {
+                c.enabled = enable;
+            }
         }
 
         [PunRPC]
@@ -435,6 +432,24 @@ namespace CellexalVR.Multiplayer
             else
             {
                 CellexalLog.Log("Could not find heatmap to move");
+            }
+        }
+
+        [PunRPC]
+        public void SendReorderByAttribute(string heatmapName, bool toggle)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                if (toggle)
+                {
+                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
+                }
+                else
+                {
+                    hm.ReorderByAttribute();
+                }
             }
         }
 

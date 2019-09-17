@@ -35,7 +35,8 @@ namespace CellexalVR.Menu.Buttons.Heatmap
 
         public override void Click()
         {
-            if (!toggle)
+            referenceManager.gameManager.InformReorderByAttribute(this.gameObject.name);
+            if (!heatmap.orderedByAttribute)
             {
                 heatmap.ReorderByAttribute();
             }
@@ -43,7 +44,6 @@ namespace CellexalVR.Menu.Buttons.Heatmap
             {
                 heatmapGenerator.BuildTexture(heatmap.selection, "", heatmap);
             }
-            toggle = !toggle;
         }
     }
 }

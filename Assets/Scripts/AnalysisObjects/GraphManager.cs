@@ -187,17 +187,7 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        /// <summary>
-        /// Recolors a graphpoint.
-        /// </summary>
-        /// <param name="graphname"> The name of the graph. </param>
-        /// <param name="label"> The graphpoint's label. </param>
-        /// <param name="color"> The new color. </param>
-        public void RecolorGraphPoint(string graphname, string label, UnityEngine.Color color)
-        {
-            //FindGraphPoint(graphname, label).Recolor(color, false);
-        }
-
+        /// <summary
         public void ColorAllGraphsByGeneExpression(ArrayList expressions)
         {
             foreach (Graph graph in Graphs)

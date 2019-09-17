@@ -131,6 +131,7 @@ namespace CellexalVR.Menu.SubMenus
             {
                 Destroy(button.gameObject);
             }
+            referenceManager.graphManager.velocityFiles.Clear();
             buttons.Clear();
             nextButtonPosition = startPosition;
         }

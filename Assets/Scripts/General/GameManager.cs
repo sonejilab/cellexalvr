@@ -141,12 +141,6 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendSynchConfig", PhotonTargets.Others, data);
         }
 
-        public void InformGraphPointChangedColor(string graphname, string label, Color color)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("SendGraphpointChangedColor", PhotonTargets.Others, graphname, label, color.r, color.g, color.b);
-        }
-
         public void InformColorGraphsByGene(string geneName)
         {
             if (!multiplayer) return;
@@ -651,6 +645,12 @@ namespace CellexalVR.General
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName, selectedGroupLeft, selectedGroupRight,
                 selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+        }
+        
+        public void InformReorderByAttribute(string heatmapName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendReorderByAttribute", PhotonTargets.Others, heatmapName);
         }
 
         public void InformStartVelocity(string graphName)
