@@ -50,6 +50,22 @@ namespace CellexalVR.AnalysisObjects
         // Update is called once per frame
         void Update()
         {
+            if (t1 == null)
+            {
+                graph1.CTCGraphs.Remove(gameObject);
+                RemoveGraph();
+                return;
+            }
+            if (t2 == null)
+            {
+                graph2.CTCGraphs.Remove(gameObject);
+                RemoveGraph();
+                return;
+            }
+            if (!(t1.gameObject.activeSelf && t2.gameObject.activeSelf))
+            {
+                gameObject.SetActive(false);
+            }
             if (t1.hasChanged || t2.hasChanged)
             {
                 transform.position = (t1.position + t2.position) / 2f;
@@ -142,7 +158,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 AddLine(fromGraph, toGraph, point);
             }
-            AddParticles(fromGraph, toGraph);
+            //AddParticles(fromGraph, toGraph);
 
         }
 
@@ -486,9 +502,12 @@ namespace CellexalVR.AnalysisObjects
 
         public void RemoveGraph()
         {
-            Destroy(velocityParticleSystemFromGraph.gameObject);
-            Destroy(velocityParticleSystemMidGraph.gameObject);
-            Destroy(velocityParticleSystemToGraph.gameObject);
+            graph1.CTCGraphs.Remove(gameObject);
+            graph2.CTCGraphs.Remove(gameObject);
+            referenceManager.graphManager.Graphs.Remove(GetComponent<Graph>());
+            // bundle lines Destroy(velocityParticleSystemFromGraph.gameObject);
+            // bundle lines Destroy(velocityParticleSystemMidGraph.gameObject);
+            // bundle lines Destroy(velocityParticleSystemToGraph.gameObject);
             foreach (LineBetweenTwoPoints line in lines)
             {
                 Destroy(line.gameObject);

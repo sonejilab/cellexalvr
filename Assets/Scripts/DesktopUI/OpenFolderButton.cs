@@ -24,9 +24,9 @@ namespace CellexalVR.DesktopUI
             else if (path == "$UNITY_LOG")
             {
 #if UNITY_EDITOR
-                fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "Local", "Unity", "Editor", "Editor.log");
+                fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "Local", "Unity", "Editor", "Player.log");
 #else
-            fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "LocalLow", Application.companyName, Application.productName, "output_log.txt");
+                fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "LocalLow", Application.companyName, Application.productName, "Player.log");
 #endif
             }
             System.Diagnostics.Process.Start(fullPath);

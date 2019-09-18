@@ -233,12 +233,14 @@ namespace CellexalVR.AnalysisLogic
                 string[] regexResult = Regex.Split(file, @"[\\/]");
                 string graphFileName = regexResult[regexResult.Length - 1];
                 //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
+                graphManager.Graphs.Add(combGraph);
                 if (type.Equals(GraphGenerator.GraphType.MDS))
                 {
                     combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
                     combGraph.FolderName = regexResult[regexResult.Length - 2];
+                    graphManager.originalGraphs.Add(combGraph);
                 }
-                else
+                else if (type.Equals(GraphGenerator.GraphType.FACS))
                 {
                     string name = "";
                     foreach (string s in referenceManager.newGraphFromMarkers.markers)
@@ -247,7 +249,8 @@ namespace CellexalVR.AnalysisLogic
                     }
                     combGraph.GraphNumber = facsGraphCounter;
                     combGraph.GraphName = name;
-                    combGraph.tag = "Subgraph";
+                    combGraph.tag = "FacsGraph";
+                    graphManager.facsGraphs.Add(combGraph);
                 }
                 //combGraph.gameObject.name = combGraph.GraphName;
                 //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
@@ -365,8 +368,6 @@ namespace CellexalVR.AnalysisLogic
                 // Add axes in bottom corner of graph and scale points differently
                 graphGenerator.SliceClustering();
                 graphGenerator.AddAxes(combGraph, axes);
-                graphManager.Graphs.Add(combGraph);
-                graphManager.originalGraphs.Add(combGraph);
 
                 CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
                 //combinedGraphGenerator.isCreating = false;
@@ -408,7 +409,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
             CellexalEvents.GraphsLoaded.Invoke();
-            
+
         }
 
         public IEnumerator ReadAttributeFiles(string path)
@@ -556,7 +557,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
             referenceManager.notificationManager.SpawnNotification(serverType + " R Server Session Initiated.");
             StartCoroutine(referenceManager.reportManager.LogStart());
-            
+
         }
 
         /// <summary>

@@ -196,13 +196,16 @@ namespace CellexalVR.AnalysisObjects
             {
                 transform.localScale = oldScale;
                 transform.localPosition = oldPos;
-                CellexalLog.Log("Maximized object" + name);
+                //CellexalLog.Log("Maximized object" + name);
                 maximize = false;
                 GraphActive = true;
                 minimized = false;
                 foreach (GameObject obj in CTCGraphs)
                 {
-                    obj.SetActive(true);
+                    if (obj != null)
+                    {
+                        obj.SetActive(true);
+                    }
                 }
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                     c.enabled = true;
@@ -221,7 +224,10 @@ namespace CellexalVR.AnalysisObjects
             }
             foreach (GameObject obj in CTCGraphs)
             {
-                obj.SetActive(false);
+                if (obj != null)
+                {
+                    obj.SetActive(false);
+                }
             }
             oldPos = transform.position;
             oldScale = transform.localScale;
@@ -234,7 +240,7 @@ namespace CellexalVR.AnalysisObjects
         void Minimize()
         {
             float step = speed * Time.deltaTime;
-            Vector3 targetPosition = new Vector3();
+            Vector3 targetPosition;
             if (CrossSceneInformation.Spectator)
             {
                 targetPosition = Vector3.zero;
@@ -1125,11 +1131,11 @@ namespace CellexalVR.AnalysisObjects
         public void HighlightGraphPoint(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
-            byte greenChannel = (byte)(active ? 38 : 0); 
-            Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255); 
+            byte greenChannel = (byte)(active ? 38 : 0);
+            Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
-            
+
         }
 
         public void ResetGraphPointColor(GraphPoint graphPoint)

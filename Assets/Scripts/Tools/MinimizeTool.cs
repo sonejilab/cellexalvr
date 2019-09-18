@@ -45,7 +45,8 @@ namespace CellexalVR.Tools
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 controllerInside = false;
-                if (collidingWith.CompareTag("Graph") || collidingWith.CompareTag("Subgraph"))
+                if (collidingWith.CompareTag("Graph") || collidingWith.CompareTag("SubGraph")
+                    || collidingWith.CompareTag("FacsGraph"))
                 {
                     // the collider is a graphpoint
                     var graph = collidingWith.transform;
@@ -94,7 +95,8 @@ namespace CellexalVR.Tools
         {
 
             numberColliders++;
-            if (other.CompareTag("Graph") || other.CompareTag("Subgraph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
+            if (other.CompareTag("Graph") || other.CompareTag("SubGraph") || other.CompareTag("FacsGraph")
+                || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
             {
                 GetComponent<Light>().range = 0.08f;
                 GetComponent<Light>().intensity = 1.1f;
@@ -106,7 +108,8 @@ namespace CellexalVR.Tools
         private void OnTriggerExit(Collider other)
         {
             numberColliders--;
-            if (other.CompareTag("Graph") || other.CompareTag("Subgraph") || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
+            if (other.CompareTag("Graph") || other.CompareTag("SubGraph") || other.CompareTag("FacsGraph")
+                || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
             {
                 GetComponent<Light>().range = 0.04f;
                 GetComponent<Light>().intensity = 0.8f;

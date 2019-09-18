@@ -798,7 +798,7 @@ namespace CellexalVR.AnalysisObjects
             }
             var subGraph = CreateGraph(GraphType.ATTRIBUTE);
             subGraph.GraphName = name;
-            subGraph.tag = "Subgraph";
+            subGraph.tag = "SubGraph";
 
             StartCoroutine(g.CreateGraphSkeleton(true));
             while (g.convexHull.activeSelf == false)

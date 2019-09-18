@@ -90,6 +90,10 @@ namespace CellexalVR.SceneObjects
             {
                 AnimateLine();
             }
+            else if (t1 == null || t2 == null)
+            {
+                Destroy(this.gameObject);
+            }
             else if (t1.hasChanged || t2.hasChanged)
             {
                 if (centroids)

@@ -61,7 +61,13 @@ namespace CellexalVR.Interaction
                     MinimizedObject.GetComponent<Graph>().ShowGraph();
                     Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
                 }
-                if (MinimizedObject.CompareTag("Subgraph"))
+                if (MinimizedObject.CompareTag("SubGraph"))
+                {
+                    MinimizedObject.GetComponent<Graph>().ShowGraph();
+                    //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
+                    Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
+                }
+                if (MinimizedObject.CompareTag("FacsGraph"))
                 {
                     MinimizedObject.GetComponent<Graph>().ShowGraph();
                     //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");

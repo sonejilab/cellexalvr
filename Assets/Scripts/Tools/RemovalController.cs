@@ -64,7 +64,8 @@ namespace CellexalVR.Tools
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("HeatBoard") || other.CompareTag("Network") || other.CompareTag("Subgraph") || other.CompareTag("FilterBlock"))
+            if (other.CompareTag("HeatBoard") || other.CompareTag("Network") || other.CompareTag("SubGraph")
+                || other.CompareTag("FacsGraph") || other.CompareTag("FilterBlock"))
             {
                 controllerInside = true;
                 objectToDelete = other.gameObject;
@@ -124,8 +125,26 @@ namespace CellexalVR.Tools
 
                     break;
 
-                case "Subgraph":
-                    referenceManager.graphManager.Graphs.Remove(objectToDelete.GetComponent<Graph>());
+                case "SubGraph":
+                    Graph subGraph = objectToDelete.GetComponent<Graph>();
+                    referenceManager.graphManager.Graphs.Remove(subGraph);
+                    for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
+                    {
+                        subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                    }
+                    subGraph.CTCGraphs.Clear();
+                    delete = true;
+                    break;
+
+                case "FacsGraph":
+                    Graph facsGraph = objectToDelete.GetComponent<Graph>();
+                    referenceManager.graphManager.Graphs.Remove(facsGraph);
+                    referenceManager.graphManager.facsGraphs.Remove(facsGraph);
+                    for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
+                    {
+                        facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                    }
+                    facsGraph.CTCGraphs.Clear();
                     delete = true;
                     break;
             }
@@ -163,7 +182,8 @@ namespace CellexalVR.Tools
                         referenceManager.gameManager.InformMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
                         break;
 
-                    case "Subgraph":
+                    case "SubGraph":
+                    case "FacsGraph":
                         referenceManager.gameManager.InformMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
                         break;
                 }
