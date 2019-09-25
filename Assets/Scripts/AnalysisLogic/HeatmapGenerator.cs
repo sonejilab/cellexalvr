@@ -60,7 +60,7 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
             calculatorCluster = referenceManager.calculatorCluster;
-            calculatorCluster.SetActive(false);
+            //calculatorCluster.SetActive(false);
             GeneratingHeatmaps = false;
             CellexalEvents.ConfigLoaded.AddListener(InitColors);
         }
@@ -196,8 +196,9 @@ namespace CellexalVR.AnalysisLogic
         IEnumerator GenerateHeatmapRoutine(string heatmapName)
         {
             GeneratingHeatmaps = true;
-            // Show calculators
-            calculatorCluster.SetActive(true);
+            // Show calculators and floor pulse
+            //calculatorCluster.SetActive(true);
+            referenceManager.floor.StartPulse();
             List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
 
             // Check if more than one cell is selected
@@ -346,7 +347,8 @@ namespace CellexalVR.AnalysisLogic
                     CellexalLog.Log("File - " + filepath + " - not found.");
                     CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
                     if (!referenceManager.networkGenerator.GeneratingNetworks)
-                        referenceManager.calculatorCluster.SetActive(false);
+                        referenceManager.floor.StopPulse();
+                        //referenceManager.calculatorCluster.SetActive(false);
                 }
             }
             heatmap.orderedByAttribute = false;
@@ -641,7 +643,10 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalEvents.HeatmapCreated.Invoke();
             if (!referenceManager.networkGenerator.GeneratingNetworks)
-                referenceManager.calculatorCluster.SetActive(false);
+            {
+                //referenceManager.calculatorCluster.SetActive(false);
+                referenceManager.floor.StopPulse();
+            }
 
             referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
         }

@@ -64,7 +64,7 @@ namespace CellexalVR.AnalysisLogic
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
-            calculatorCluster = referenceManager.calculatorCluster;
+            //calculatorCluster = referenceManager.calculatorCluster;
         }
 
         /// <summary>
@@ -176,7 +176,8 @@ namespace CellexalVR.AnalysisLogic
             //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
             //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
             GeneratingNetworks = true;
-            calculatorCluster.SetActive(true);
+            //calculatorCluster.SetActive(true);
+            referenceManager.floor.StartPulse();
 
             // generate the files containing the network information
             selectionNr = selectionManager.fileCreationCtr - 1;
@@ -215,7 +216,11 @@ namespace CellexalVR.AnalysisLogic
             GeneratingNetworks = false;
             CellexalEvents.NetworkCreated.Invoke();
             if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)
-                calculatorCluster.SetActive(false);
+            {
+                //calculatorCluster.SetActive(false);
+                referenceManager.floor.StopPulse();
+            }
+
 
             inputReader.ReadNetworkFiles(layoutSeed);
         }
