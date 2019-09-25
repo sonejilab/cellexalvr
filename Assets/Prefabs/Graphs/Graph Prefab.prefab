@@ -35,6 +35,7 @@ Transform:
   - {fileID: 4619149877531850}
   - {fileID: 4665592290570396}
   - {fileID: 5140143614207209266}
+  - {fileID: 2635473326645688082}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -64,6 +65,7 @@ MonoBehaviour:
   graphInfoText: {fileID: 114460485008951306}
   graphNrText: {fileID: 114566603823957088}
   axes: {fileID: 0}
+  annotationsParent: {fileID: 1463522536816783246}
   axisNames: []
   GraphActive: 1
   pointsPositions: []
@@ -81,6 +83,7 @@ MonoBehaviour:
   nbrOfClusters: 0
   velocityParticleEmitter: {fileID: 0}
   lineParent: {fileID: 4956736124800454237}
+  hasVelocityInfo: 0
 --- !u!54 &54762506670964714
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -944,6 +947,36 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &1463522536816783246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2635473326645688082}
+  m_Layer: 8
+  m_Name: Annotations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2635473326645688082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463522536816783246}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4216483850737216}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4956736124800454237
 GameObject:
   m_ObjectHideFlags: 0

@@ -110,7 +110,7 @@ namespace CellexalVR.AnalysisObjects
             ParticleSystem.ColorBySpeedModule colorBySpeedModule = particleSystem.colorBySpeed;
             colorBySpeedModule.enabled = !UseGraphPointColors;
 
-            Mesh graphPointMesh = referenceManager.graphGenerator.graphPointStandardMesh;
+            Mesh graphPointMesh = referenceManager.graphGenerator.meshToUse;
             //float graphPointMeshSize = graphPointMesh.bounds.extents.magnitude * 2;
             //int verticesPerGraphPoint = graphPointMesh.vertexCount;
             Vector3 offset = graphPointMesh.normals[0] * graphPointMesh.bounds.extents.x / 2f;
