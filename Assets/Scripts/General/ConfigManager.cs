@@ -53,6 +53,8 @@ namespace CellexalVR.General
         public int ConsoleMaxBufferLines { get; set; }
         public bool ShowNotifications { get; set; }
         public string GraphPointQuality { get; set; }
+        public string GraphPointSize { get; set; }
+        public Color SkyboxTintColor { get; set; }
 
         public Config() { }
 
@@ -93,6 +95,8 @@ namespace CellexalVR.General
             ConsoleMaxBufferLines = c.ConsoleMaxBufferLines;
             ShowNotifications = c.ShowNotifications;
             GraphPointQuality = c.GraphPointQuality;
+            GraphPointSize = c.GraphPointSize;
+            SkyboxTintColor = c.SkyboxTintColor;
 
         }
     }
