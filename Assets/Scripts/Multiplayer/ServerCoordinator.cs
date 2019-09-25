@@ -120,10 +120,10 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendAddAnnotation(string annotation)
+        public void SendAddAnnotation(string annotation, int index)
         {
             CellexalLog.Log("Recieved message to add annotation: " + annotation);
-            referenceManager.selectionManager.AddAnnotation(annotation);
+            referenceManager.selectionManager.AddAnnotation(annotation, index);
         }
 
         [PunRPC]
@@ -436,19 +436,19 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReorderByAttribute(string heatmapName, bool toggle)
+        public void SendReorderByAttribute(string heatmapName, bool order)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
             if (heatmapExists)
             {
-                if (toggle)
+                if (order)
                 {
-                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
+                    hm.ReorderByAttribute();
                 }
                 else
                 {
-                    hm.ReorderByAttribute();
+                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
                 }
             }
         }

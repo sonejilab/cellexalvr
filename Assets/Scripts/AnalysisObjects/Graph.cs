@@ -35,6 +35,7 @@ namespace CellexalVR.AnalysisObjects
         public TextMeshPro graphNrText;
         [HideInInspector]
         public GameObject axes;
+        public GameObject annotationsParent;
         public string[] axisNames = new string[3];
         public bool GraphActive = true;
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();

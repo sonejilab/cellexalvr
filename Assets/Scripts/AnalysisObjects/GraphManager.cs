@@ -269,7 +269,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 g.ClearTopExprCircles();
                 g.ResetColors();
-                foreach (GraphInfoPanelRotator panel in g.GetComponentsInChildren<GraphInfoPanelRotator>())
+                foreach (GraphInfoPanelRotator panel in g.annotationsParent.GetComponentsInChildren<GraphInfoPanelRotator>())
                 {
                     Destroy(panel.gameObject);
                 }

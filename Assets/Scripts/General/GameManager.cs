@@ -233,11 +233,11 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendToggleMenu", PhotonTargets.Others);
         }
 
-        public void InformAddAnnotation(string annotation)
+        public void InformAddAnnotation(string annotation, int index)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to add annotation: " + annotation);
-            coordinator.photonView.RPC("SendAddAnnotation", PhotonTargets.Others, annotation);
+            coordinator.photonView.RPC("SendAddAnnotation", PhotonTargets.Others, annotation, index);
         }
 
         public void InformExportAnnotations()
@@ -647,10 +647,10 @@ namespace CellexalVR.General
                 selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
         
-        public void InformReorderByAttribute(string heatmapName)
+        public void InformReorderByAttribute(string heatmapName, bool order)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendReorderByAttribute", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("SendReorderByAttribute", PhotonTargets.Others, heatmapName, order);
         }
 
         public void InformStartVelocity(string graphName)
