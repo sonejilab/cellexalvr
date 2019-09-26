@@ -435,13 +435,14 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReorderByAttribute(string heatmapName, bool order)
+        public void SendReorderByAttribute(string heatmapName, bool shouldReorder)
         {
+            CellexalLog.Log("Recieved message to " + (shouldReorder ? "reorder" : "restore") + " heatmap");
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
             if (heatmapExists)
             {
-                if (order)
+                if (shouldReorder)
                 {
                     hm.ReorderByAttribute();
                 }

@@ -126,7 +126,7 @@ namespace CellexalVR.DesktopUI
             {
                 TraverseHistory(false);
             }
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (Input.GetKeyDown(KeyCode.Tab)) 
             {
                 AutocompleteInput(inputField.text);
             }
