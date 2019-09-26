@@ -35,7 +35,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
 
         public override void Click()
         {
-            referenceManager.gameManager.InformReorderByAttribute(this.gameObject.name, !heatmap.orderedByAttribute);
+            referenceManager.gameManager.InformReorderByAttribute(heatmap.gameObject.name, !heatmap.orderedByAttribute);
             if (!heatmap.orderedByAttribute)
             {
                 heatmap.ReorderByAttribute();

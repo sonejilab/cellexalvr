@@ -114,6 +114,10 @@ namespace CellexalVR.Menu.SubMenus
             constantSynchedModeText.text = "Mode: ";
         }
 
+        /// <summary>
+        /// Activates one outline and deactivates the rest.
+        /// </summary>
+        /// <param name="filePath">The string to the file that the button represents. See <see cref="LoadVelocityButton.FilePath"/>.</param>
         public void ActivateOutline(string filePath)
         {
             foreach (LoadVelocityButton button in buttons)
@@ -121,6 +125,10 @@ namespace CellexalVR.Menu.SubMenus
                 if (button.FilePath == filePath)
                 {
                     button.activeOutline.SetActive(true);
+                }
+                else
+                {
+                    button.activeOutline.SetActive(false);
                 }
             }
         }
