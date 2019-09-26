@@ -761,9 +761,8 @@ namespace CellexalVR.General
                 if (File.Exists(filePath))
                 {
                     annotationCtr++;
-                    filePath = CellexalUser.UserSpecificFolder + "\\annotated_selection" + annotationCtr + ".txt";
+                    filePath = annotationDirectory + "\\annotated_selection" + annotationCtr + ".txt";
                 }
-                print(filePath);
                 using (StreamWriter file = new StreamWriter(filePath, true))
                 {
                     CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
