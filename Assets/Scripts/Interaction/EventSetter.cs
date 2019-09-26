@@ -111,8 +111,9 @@ namespace CellexalVR.Interaction
 
         public void GeneKeyboardAnnotateEvent(string s)
         {
-            referenceManager.selectionManager.AddAnnotation(s);
-            referenceManager.gameManager.InformAddAnnotation(s);
+            int index = referenceManager.selectionToolCollider.currentColorIndex;
+            referenceManager.selectionManager.AddAnnotation(s, index);
+            referenceManager.gameManager.InformAddAnnotation(s, index);
         }
 
 

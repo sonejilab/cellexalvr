@@ -120,10 +120,10 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendAddAnnotation(string annotation)
+        public void SendAddAnnotation(string annotation, int index)
         {
             CellexalLog.Log("Recieved message to add annotation: " + annotation);
-            referenceManager.selectionManager.AddAnnotation(annotation);
+            referenceManager.selectionManager.AddAnnotation(annotation, index);
         }
 
         [PunRPC]
@@ -436,19 +436,19 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReorderByAttribute(string heatmapName, bool toggle)
+        public void SendReorderByAttribute(string heatmapName, bool order)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
             if (heatmapExists)
             {
-                if (toggle)
+                if (order)
                 {
-                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
+                    hm.ReorderByAttribute();
                 }
                 else
                 {
-                    hm.ReorderByAttribute();
+                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
                 }
             }
         }
@@ -503,12 +503,29 @@ namespace CellexalVR.Multiplayer
         public void SendDeleteObject(string name, string tag)
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
-            GameObject gameObject = GameObject.Find(name);
-            if (tag == "Subgraph")
+            GameObject objectToDelete = GameObject.Find(name);
+            if (tag == "SubGraph")
             {
-                Graph graph = gameObject.GetComponent<Graph>();
-                referenceManager.graphManager.Graphs.Remove(graph);
-                Destroy(graph.gameObject);
+                Graph subGraph = objectToDelete.GetComponent<Graph>();
+                referenceManager.graphManager.Graphs.Remove(subGraph);
+                for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
+                {
+                    subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                }
+                subGraph.CTCGraphs.Clear();
+                Destroy(objectToDelete);
+            }
+            else if (tag == "FacsGraph")
+            {
+                Graph facsGraph = objectToDelete.GetComponent<Graph>();
+                referenceManager.graphManager.Graphs.Remove(facsGraph);
+                referenceManager.graphManager.facsGraphs.Remove(facsGraph);
+                for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
+                {
+                    facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                }
+                facsGraph.CTCGraphs.Clear();
+                Destroy(objectToDelete);
             }
             else if (tag == "HeatBoard")
             {

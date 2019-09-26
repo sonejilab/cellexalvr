@@ -25,17 +25,18 @@ namespace CellexalVR.AnalysisObjects
     {
         public ReferenceManager referenceManager;
         public GameObject graphpointsPrefab;
-        public GameObject graphpointsLargerPrefab;
-        public GameObject graphpointsLowestQualityPrefab;
         public GameObject graphPrefab;
         public GameObject AxesPrefabColoured;
         public GameObject AxesPrefabUncoloured;
         public Material graphPointMaterialPrefab;
         public GameObject skeletonPrefab;
-        public Mesh graphPointStandardMesh;
-        public Mesh graphPointLargerMesh;
-        public Mesh graphPointLowestQualityMesh;
-        public Mesh graphPointHighestQualityMesh;
+        public Mesh graphpointStandardQStandardSzMesh;
+        public Mesh graphpointStandardQSmallSzMesh;
+        public Mesh graphpointStandardQLargeSzMesh;
+        public Mesh graphpointLowQStandardSzMesh;
+        public Mesh graphpointLowQSmallSzMesh;
+        public Mesh graphpointLowQLargeSzMesh;
+        public Mesh meshToUse;
         public string DirectoryName { get; set; }
         public bool isCreating;
         public bool addingToExisting;
@@ -56,7 +57,6 @@ namespace CellexalVR.AnalysisObjects
                                             new Vector3(0.5f, 1.1f, 0.7f)
                                         };
 
-        private Mesh meshToUse;
         //private Graph subGraph;
 
         private void OnValidate()
@@ -71,6 +71,7 @@ namespace CellexalVR.AnalysisObjects
         {
             graphManager = referenceManager.graphManager;
             CellexalEvents.ConfigLoaded.AddListener(CreateShaderColors);
+            //CellexalEvents.ConfigLoaded.AddListener(RescaleGraphpointMeshes);
         }
 
         public Graph CreateGraph(GraphType type)
@@ -78,25 +79,41 @@ namespace CellexalVR.AnalysisObjects
             graphType = type;
             if (type == GraphType.BETWEEN)
             {
-                meshToUse = graphPointLargerMesh;
+                meshToUse = graphpointStandardQLargeSzMesh;
             }
-            //else if (CellexalConfig.Config.GraphPointQuality == "High")
-            //{
-            //    meshToUse = graphPointHighestQualityMesh;
-            //}
-            else if (CellexalConfig.Config.GraphPointQuality == "Standard")
+            else if (CellexalConfig.Config.GraphPointQuality == "Standard"
+                        && CellexalConfig.Config.GraphPointSize == "Standard")
             {
-                meshToUse = graphPointStandardMesh;
+                meshToUse = graphpointStandardQStandardSzMesh;
             }
-            else if (CellexalConfig.Config.GraphPointQuality == "Low")
+            else if (CellexalConfig.Config.GraphPointQuality == "Low"
+                        && CellexalConfig.Config.GraphPointSize == "Standard")
             {
-                meshToUse = graphPointLowestQualityMesh;
+                meshToUse = graphpointLowQStandardSzMesh;
+            }
+            else if (CellexalConfig.Config.GraphPointQuality == "Standard"
+                        && CellexalConfig.Config.GraphPointSize == "Small")
+            {
+                meshToUse = graphpointLowQSmallSzMesh;
+            }
+            else if (CellexalConfig.Config.GraphPointQuality == "Low"
+                        && CellexalConfig.Config.GraphPointSize == "Small")
+            {
+                meshToUse = graphpointLowQSmallSzMesh;
+            }
+            else if (CellexalConfig.Config.GraphPointQuality == "Standard"
+                        && CellexalConfig.Config.GraphPointSize == "Large")
+            {
+                meshToUse = graphpointStandardQLargeSzMesh;
             }
             else
             {
-                meshToUse = graphPointStandardMesh;
-
+                meshToUse = graphpointLowQLargeSzMesh;
             }
+
+
+
+
             newGraph = Instantiate(graphPrefab).GetComponent<Graph>();
             //graphManager.SetGraphStartPosition();
             newGraph.transform.position = startPositions[graphCount % 6];
@@ -798,7 +815,7 @@ namespace CellexalVR.AnalysisObjects
             }
             var subGraph = CreateGraph(GraphType.ATTRIBUTE);
             subGraph.GraphName = name;
-            subGraph.tag = "Subgraph";
+            subGraph.tag = "SubGraph";
 
             StartCoroutine(g.CreateGraphSkeleton(true));
             while (g.convexHull.activeSelf == false)

@@ -586,7 +586,8 @@ namespace CellexalVR.AnalysisLogic
         public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
         {
             var fromGraph = points[0].parent;
-            foreach (Graph toGraph in graphManager.originalGraphs.FindAll(x => x != fromGraph))
+            var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs).ToList();
+            foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
             {
                 var newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
                 GraphBetweenGraphs gbg = newGraph.gameObject.AddComponent<GraphBetweenGraphs>();

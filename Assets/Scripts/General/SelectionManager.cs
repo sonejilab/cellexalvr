@@ -226,7 +226,7 @@ namespace CellexalVR.General
             else
             {
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
-                //selectedCells.Remove(graphPoint);
+                selectedCells.Remove(graphPoint);
                 selectedCells.Add(graphPoint);
                 //try
                 //{
@@ -712,9 +712,9 @@ namespace CellexalVR.General
         /// Also adds a line and text object above the cells with the annotation.
         /// </summary>
         /// <param name="annotation">The text that will be shown above the cells and later written to file.</param>
-        public void AddAnnotation(string annotation)
+        public void AddAnnotation(string annotation, int index)
         {
-            List<Graph.GraphPoint> pointsToAnnotate = GetCurrentSelectionGroup(selectionToolCollider.currentColorIndex);
+            List<Graph.GraphPoint> pointsToAnnotate = GetCurrentSelectionGroup(index);
             foreach (Graph.GraphPoint gp in pointsToAnnotate)
             {
                 annotatedPoints.Add(new Tuple<string, string>(gp.Label, annotation));
@@ -724,7 +724,7 @@ namespace CellexalVR.General
 
             foreach (Graph graph in graphManager.Graphs)
             {
-                GameObject annotationText = Instantiate(annotationTextPrefab, graph.transform);
+                GameObject annotationText = Instantiate(annotationTextPrefab, graph.annotationsParent.transform);
                 Vector3 position = graph.FindGraphPoint(pointsToAnnotate[0].Label).Position;
                 annotationText.transform.localPosition = position;
                 annotationText.GetComponentInChildren<TextMeshPro>().text = annotation;

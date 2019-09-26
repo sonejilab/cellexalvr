@@ -117,6 +117,7 @@ namespace CellexalVR.General
         public VelocityGenerator velocityGenerator;
         public FilterManager filterManager;
         public ReportManager reportManager;
+        public Floor floor;
         #endregion
 
         #region Keyboard
@@ -241,6 +242,7 @@ namespace CellexalVR.General
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
+            floor = GameObject.Find("Floor").GetComponent<Floor>();
 
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();

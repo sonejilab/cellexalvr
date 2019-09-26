@@ -66,7 +66,7 @@ namespace CellexalVR.SceneObjects
                 lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
-                lineRenderer.startWidth = lineRenderer.endWidth += 0.010f;
+                lineRenderer.startWidth = lineRenderer.endWidth += 0.015f;
                 initAnimate = true;
 
             }
@@ -89,6 +89,10 @@ namespace CellexalVR.SceneObjects
             if (initAnimate)
             {
                 AnimateLine();
+            }
+            else if (t1 == null || t2 == null)
+            {
+                Destroy(this.gameObject);
             }
             else if (t1.hasChanged || t2.hasChanged)
             {

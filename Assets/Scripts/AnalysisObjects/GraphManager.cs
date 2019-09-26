@@ -24,6 +24,7 @@ namespace CellexalVR.AnalysisObjects
 
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
+        public List<Graph> facsGraphs;
         public List<string> velocityFiles;
 
         private CellManager cellManager;
@@ -268,7 +269,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 g.ClearTopExprCircles();
                 g.ResetColors();
-                foreach (GraphInfoPanelRotator panel in g.GetComponentsInChildren<GraphInfoPanelRotator>())
+                foreach (GraphInfoPanelRotator panel in g.annotationsParent.GetComponentsInChildren<GraphInfoPanelRotator>())
                 {
                     Destroy(panel.gameObject);
                 }
@@ -318,11 +319,10 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in originalGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for(int i = 0; i < g.CTCGraphs.Count; i++)
                 {
                     GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
-                    Graphs.Remove(g.CTCGraphs[i].GetComponent<Graph>());
                 }
                 g.CTCGraphs.Clear();
             }

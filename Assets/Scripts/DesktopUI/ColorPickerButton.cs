@@ -25,7 +25,8 @@ namespace CellexalVR.DesktopUI
             GRAPH_HIGH, GRAPH_MID, GRAPH_LOW, GRAPH_ZERO, GRAPH_DEFAULT,
             SELECTION,
             NETWORK_POSITIVE_HIGH, NETWORK_POSITIVE_LOW, NETWORK_NEGATIVE_HIGH, NETWORK_NEGATIVE_LOW,
-            VELOCITY_HIGH, VELOCITY_LOW
+            VELOCITY_HIGH, VELOCITY_LOW,
+            SKYBOX_TINT
         }
         public ConfigColor colorField;
         private Color color;
@@ -167,6 +168,9 @@ namespace CellexalVR.DesktopUI
                 case ConfigColor.VELOCITY_LOW:
                     CellexalConfig.Config.VelocityParticlesLowColor = color;
                     break;
+                case ConfigColor.SKYBOX_TINT:
+                    CellexalConfig.Config.SkyboxTintColor = color;
+                    break;
             }
 
             // call the appropriate method to update the necessary resources.
@@ -192,6 +196,10 @@ namespace CellexalVR.DesktopUI
                     break;
                 case ConfigColor.SELECTION:
                     selectionToolCollider.UpdateColors();
+                    break;
+                case ConfigColor.SKYBOX_TINT:
+                    RenderSettings.skybox.SetColor("_Tint", color);
+                    //RenderSettings.skybox.SetColor("_Tint", new Color(0, 0, 0));
                     break;
             }
             settingsMenu.ChangeMade();
