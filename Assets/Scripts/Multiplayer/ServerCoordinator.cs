@@ -96,7 +96,6 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to clear search field");
             referenceManager.geneKeyboard.Clear(false);
         }
-
         [PunRPC]
         public void SendBrowserKeyClick(string key)
         {
@@ -148,16 +147,16 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendColorByAttribute(string attributeType, bool colored)
+        public void SendColorByAttribute(string attributeType, bool toggle)
         {
-            CellexalLog.Log("Recieved message to color all graphs by attribute " + attributeType);
+            CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all graphs by attribute " + attributeType);
             //Color col = new Color(r, g, b);
-            referenceManager.cellManager.ColorByAttribute(attributeType, colored);
+            referenceManager.cellManager.ColorByAttribute(attributeType, toggle);
             var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
             if (attributeButton)
             {
-                attributeButton.GetComponent<ColorByAttributeButton>().activeOutline.SetActive(colored);
-                attributeButton.GetComponent<ColorByAttributeButton>().colored = !colored;
+                attributeButton.GetComponent<ColorByAttributeButton>().activeOutline.SetActive(toggle);
+                attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
             }
         }
 
@@ -508,6 +507,7 @@ namespace CellexalVR.Multiplayer
             {
                 Graph subGraph = objectToDelete.GetComponent<Graph>();
                 referenceManager.graphManager.Graphs.Remove(subGraph);
+                referenceManager.graphManager.attributeSubGraphs.Remove(subGraph);
                 for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
                 {
                     subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
