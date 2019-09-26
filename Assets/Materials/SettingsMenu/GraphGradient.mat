@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: GraphGradient
   m_Shader: {fileID: 4800000, guid: 36005543ca0de024e88bcd466bd909e9, type: 3}
   m_ShaderKeywords: 
@@ -62,7 +63,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxVal: 1
     - _Metallic: 0
+    - _MinVal: 0
     - _Mode: 0
     - _NColors: 30
     - _OcclusionStrength: 1
