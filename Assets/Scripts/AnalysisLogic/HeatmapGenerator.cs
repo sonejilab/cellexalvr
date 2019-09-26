@@ -415,6 +415,7 @@ namespace CellexalVR.AnalysisLogic
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             CellexalLog.Log("Started building a heatmap texture");
+            referenceManager.floor.StartPulse();
 
             foreach (var button in heatmap.GetComponentsInChildren<CellexalButton>())
             {
@@ -507,8 +508,8 @@ namespace CellexalVR.AnalysisLogic
 
             heatmap.GetComponent<Collider>().enabled = true;
 
-            if (!referenceManager.networkGenerator.GeneratingNetworks)
-                referenceManager.calculatorCluster.SetActive(false);
+            //if (!referenceManager.networkGenerator.GeneratingNetworks)
+            //    referenceManager.calculatorCluster.SetActive(false);
 
             foreach (var button in GetComponentsInChildren<CellexalButton>())
             {
