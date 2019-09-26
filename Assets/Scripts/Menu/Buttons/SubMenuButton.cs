@@ -40,6 +40,13 @@ namespace CellexalVR.Menu.Buttons
             DeactivateButtonsRecursive(buttonsToDeactivate);
             textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
             SetMenuActivated(true);
+            var tabs = menu.GetComponentsInChildren<Tab>();
+            if (tabs.Length > 0)
+            {
+                var firstTab = tabs[0];
+                firstTab.SetTabActive(true);
+                firstTab.TabButton.SetHighlighted(true);
+            }
             descriptionText.text = "";
         }
 
