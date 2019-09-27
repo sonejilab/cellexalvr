@@ -76,7 +76,10 @@ namespace CellexalVR.Filters
                 case LoadingTextState.FINISHED:
                     loadingText.color = loadingTextDoneColor;
                     loadingText.text = "Loading done";
-                    runningCoroutine = StartCoroutine(DisableLoadingTextAfterTimeCoroutine(3f));
+                    if (gameObject.activeInHierarchy)
+                    {
+                        runningCoroutine = StartCoroutine(DisableLoadingTextAfterTimeCoroutine(3f));
+                    }
                     break;
                 case LoadingTextState.OFF:
                     loadingText.gameObject.SetActive(false);
@@ -84,7 +87,10 @@ namespace CellexalVR.Filters
                 case LoadingTextState.INVALID_FILTER:
                     loadingText.color = loadingTextInvalidColor;
                     loadingText.text = "Invalid filter";
-                    runningCoroutine = StartCoroutine(DisableLoadingTextAfterTimeCoroutine(3f));
+                    if (gameObject.activeInHierarchy)
+                    {
+                        runningCoroutine = StartCoroutine(DisableLoadingTextAfterTimeCoroutine(3f));
+                    }
                     break;
                 case LoadingTextState.FILTER_SAVED:
                     loadingText.color = loadingTextDoneColor;

@@ -72,25 +72,25 @@ namespace CellexalVR.Interaction
             parentKeyboard.SetAllOutputs(NameOfThing);
             parentKeyboard.SubmitOutput(true);
 
-            if (Type == Definitions.Measurement.GENE)
-            {
-                referenceManager.cellManager.ColorGraphsByGene(NameOfThing, ColoringMethod);
-                referenceManager.gameManager.InformColorGraphsByGene(NameOfThing);
-            }
-            else if (Type == Definitions.Measurement.ATTRIBUTE)
-            {
-                referenceManager.cellManager.ColorByAttribute(NameOfThing, true);
-                referenceManager.gameManager.InformColorByAttribute(NameOfThing, true);
-            }
-            else if (Type == Definitions.Measurement.FACS)
-            {
-                referenceManager.cellManager.ColorByIndex(NameOfThing);
-                referenceManager.gameManager.InformColorByIndex(NameOfThing);
-            }
-            if (!referenceManager.previousSearchesList.Contains(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod))
-            {
-                referenceManager.previousSearchesList.AddEntry(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod);
-            }
+            //if (Type == Definitions.Measurement.GENE)
+            //{
+            //    referenceManager.cellManager.ColorGraphsByGene(NameOfThing, ColoringMethod);
+            //    referenceManager.gameManager.InformColorGraphsByGene(NameOfThing);
+            //}
+            //else if (Type == Definitions.Measurement.ATTRIBUTE)
+            //{
+            //    referenceManager.cellManager.ColorByAttribute(NameOfThing, true);
+            //    referenceManager.gameManager.InformColorByAttribute(NameOfThing, true);
+            //}
+            //else if (Type == Definitions.Measurement.FACS)
+            //{
+            //    referenceManager.cellManager.ColorByIndex(NameOfThing);
+            //    referenceManager.gameManager.InformColorByIndex(NameOfThing);
+            //}
+            //if (!referenceManager.previousSearchesList.Contains(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod))
+            //{
+            //    referenceManager.previousSearchesList.AddEntry(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod);
+            //}
             referenceManager.geneKeyboard.Clear();
             referenceManager.autoCompleteList.ClearList();
         }
