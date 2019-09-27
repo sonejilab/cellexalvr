@@ -90,7 +90,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// </summary>
         public void ToggleOutline(bool toggle)
         {
-            if (transform.parent.gameObject.activeSelf)
+            if (transform.parent.GetComponent<Tab>().Active)
             {
                 activeOutline.SetActive(toggle);
             }
