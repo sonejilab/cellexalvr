@@ -860,6 +860,7 @@ namespace CellexalVR.AnalysisObjects
                     @"\Data\" + CellexalUser.DataSourceFolder + @"\" + g.GraphName + ".mds", name);
             }
             graphManager.Graphs.Add(subGraph);
+            graphManager.attributeSubGraphs.Add(subGraph);
             string[] axes = g.axisNames.ToArray();
             AddAxes(subGraph, axes);
         }

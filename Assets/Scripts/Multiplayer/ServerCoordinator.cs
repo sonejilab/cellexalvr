@@ -152,9 +152,11 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all graphs by attribute " + attributeType);
             //Color col = new Color(r, g, b);
             referenceManager.cellManager.ColorByAttribute(attributeType, toggle);
-            var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
+            //var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
+            var attributeButton = referenceManager.attributeSubMenu.FindButton(attributeType);
             if (attributeButton)
             {
+                print(attributeButton.gameObject.name);
                 attributeButton.GetComponent<ColorByAttributeButton>().activeOutline.SetActive(toggle);
                 attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
             }
