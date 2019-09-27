@@ -11873,7 +11873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 0}
+  descriptionText: {fileID: 114213541841952802}
   infoMenu: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -27227,7 +27227,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1872856266739458}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -31271,7 +31271,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Mode: Graphpoint colors'
+  m_text: 'Mode:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
@@ -31339,10 +31339,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -25, w: 0}
   m_textInfo:
     textComponent: {fileID: 2412912811244708016}
-    characterCount: 23
+    characterCount: 5
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -32040,7 +32040,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Mode: synched'
+  m_text: 'Mode: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: d62a573c923f5cb47b8ff65261033b90, type: 2}
@@ -32108,10 +32108,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -14, w: 0}
   m_textInfo:
     textComponent: {fileID: 298224504304324470}
-    characterCount: 13
+    characterCount: 6
     spriteCount: 0
     spaceCount: 1
-    wordCount: 2
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1

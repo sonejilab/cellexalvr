@@ -80,10 +80,10 @@ namespace CellexalVR.Interaction
                     handler.Shift();
                     break;
                 case Type.Back:
-                    handler.BackSpace();
+                    handler.BackSpace(true);
                     break;
                 case Type.Clear:
-                    handler.Clear();
+                    handler.Clear(true);
                     break;
                 case Type.NumChar:
                     handler.NumChar();

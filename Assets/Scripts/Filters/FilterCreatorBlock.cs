@@ -19,7 +19,7 @@ namespace CellexalVR.Filters
         public bool isPrefab = true;
 
         protected List<FilterCreatorBlockPort> ports;
-        protected GameObject filterBlockBoard;
+        protected GameObject filterBlockBoard; 
         public virtual int HighlightedSection { get; set; }
 
         protected virtual void Start()

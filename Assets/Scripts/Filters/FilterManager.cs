@@ -44,6 +44,8 @@ namespace CellexalVR.Filters
             previewWire = Instantiate(wirePrefab, this.transform);
             previewWire.SetActive(false);
             rightController = referenceManager.rightController;
+            CellexalEvents.GraphsUnloaded.AddListener(ClearBoard);
+            CellexalEvents.GraphsUnloaded.AddListener(DeactivateFilterCreatorBoard);
         }
 
         private void OnValidate()
@@ -345,6 +347,33 @@ namespace CellexalVR.Filters
             currentFilter = filter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
+        }
+
+        /// <summary>
+        /// Clears the filter creator board of all blocks.
+        /// </summary>
+        private void ClearBoard()
+        {
+            Transform filterBoardTransform = referenceManager.filterBlockBoard.transform;
+            foreach (Transform child in filterBoardTransform)
+            {
+                // only get direct children, no grand children
+                if (child.parent == filterBoardTransform)
+                {
+                    FilterCreatorBlock blockScript = child.GetComponent<FilterCreatorBlock>();
+                    if (blockScript != null && !(blockScript is FilterCreatorResultBlock))
+                    {
+                        blockScript.DisconnectAllPorts();
+                        Destroy(child.gameObject);
+                    }
+                }
+            }
+
+        }
+
+        private void DeactivateFilterCreatorBoard()
+        {
+            referenceManager.filterBlockBoard.SetActive(false);
         }
 
         /// <summary>
