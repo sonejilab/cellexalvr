@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
+using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Attributes;
 using System;
 using System.Collections;
@@ -38,6 +39,12 @@ namespace CellexalVR.Menu.SubMenus
                 b.GetComponent<ColorByAttributeButton>().parentMenu = this;
                 b.gameObject.name = categoriesAndNames[i];
             }
+        }
+
+        public ColorByAttributeButton FindButton(string attribute)
+        {
+            var button = buttons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == attribute);
+            return button.GetComponent<ColorByAttributeButton>();
         }
 
 

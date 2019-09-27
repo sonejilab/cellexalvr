@@ -25,6 +25,7 @@ namespace CellexalVR.AnalysisObjects
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
         public List<Graph> facsGraphs;
+        public List<Graph> attributeSubGraphs;
         public List<string> velocityFiles;
 
         private CellManager cellManager;
@@ -213,6 +214,8 @@ namespace CellexalVR.AnalysisObjects
             }
             Graphs.Clear();
             originalGraphs.Clear();
+            facsGraphs.Clear();
+            attributeSubGraphs.Clear();
             foreach (NetworkHandler network in networks)
             {
                 foreach (NetworkCenter networkReplacement in network.Replacements)
@@ -325,6 +328,16 @@ namespace CellexalVR.AnalysisObjects
                     gbg.RemoveGraph();
                 }
                 g.CTCGraphs.Clear();
+            }
+            foreach (Graph g in attributeSubGraphs)
+            {
+                for(int i = 0; i < g.CTCGraphs.Count; i++)
+                {
+                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    gbg.RemoveGraph();
+                }
+                g.CTCGraphs.Clear();
+
             }
         }
 
