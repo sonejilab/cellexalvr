@@ -157,7 +157,8 @@ namespace CellexalVR.Multiplayer
             if (attributeButton)
             {
                 print(attributeButton.gameObject.name);
-                attributeButton.GetComponent<ColorByAttributeButton>().activeOutline.SetActive(toggle);
+                var outline = attributeButton.GetComponent<ColorByAttributeButton>().activeOutline;
+                outline.GetComponent<MeshRenderer>().enabled = toggle;
                 attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
             }
         }
