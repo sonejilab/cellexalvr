@@ -47,7 +47,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
                 referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
 
                 colored = !colored;
-                activeOutline.SetActive(colored);
+                ToggleOutline(colored);
+                //activeOutline.SetActive(colored);
             }
             else if (CurrentMode == Mode.BOOLEAN_EXPR)
             {
@@ -80,7 +81,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
             referenceManager.gameManager.InformColorByAttribute(Attribute, toggle);
 
             colored = toggle;
-            activeOutline.SetActive(toggle);
+            ToggleOutline(toggle);
+            //activeOutline.SetActive(toggle);
 
             //TurnOff();
         }
@@ -94,10 +96,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             {
                 activeOutline.SetActive(toggle);
             }
-            else
-            {
-                storedState = toggle;
-            }
+            storedState = toggle;
         }
 
         /// <summary>
