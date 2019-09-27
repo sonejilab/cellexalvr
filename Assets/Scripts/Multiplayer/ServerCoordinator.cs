@@ -154,13 +154,13 @@ namespace CellexalVR.Multiplayer
             referenceManager.cellManager.ColorByAttribute(attributeType, toggle);
             //var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
             var attributeButton = referenceManager.attributeSubMenu.FindButton(attributeType);
-            if (attributeButton)
-            {
-                print(attributeButton.gameObject.name);
-                var outline = attributeButton.GetComponent<ColorByAttributeButton>().activeOutline;
-                outline.GetComponent<MeshRenderer>().enabled = toggle;
-                attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
-            }
+            attributeButton.ToggleOutline(toggle);
+            //if (attributeButton)
+            //{
+            //    var outline = attributeButton.GetComponent<ColorByAttributeButton>().activeOutline;
+            //    attributeButton.storedState = toggle;
+            //}
+            attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
         }
 
         [PunRPC]
