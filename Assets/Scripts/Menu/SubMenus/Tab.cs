@@ -70,7 +70,7 @@ namespace CellexalVR.Menu.SubMenus
                     // if the menu is turned on
                     ToggleGameObject(child.gameObject, active);
                     // Toggle all children to the child as well
-                    foreach (Transform t in child.GetComponentsInChildren<Transform>())
+                    foreach (Transform t in child.GetComponentsInChildren<Transform>(true))
                     {
                         ToggleGameObject(t.gameObject, active);
                     }
