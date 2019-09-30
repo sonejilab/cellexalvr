@@ -620,9 +620,6 @@ namespace CellexalVR.Multiplayer
             }
         }
 
-
-
-
         [PunRPC]
         public void SendNetworkUngrabbed(string networkName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
         {
