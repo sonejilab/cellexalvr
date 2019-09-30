@@ -90,9 +90,18 @@ namespace CellexalVR.AnalysisObjects
             foreach (Graph.GraphPoint g in points)
             {
                 var sourceCell = fromGraph.points[g.Label];
-                var targetCell = toGraph.points[g.Label];
+                var targetCell = toGraph.FindGraphPoint(g.Label);
+                if (targetCell == null)
+                {
+                    continue;
+                }
                 var midPosition = (fromGraph.transform.TransformPoint(sourceCell.Position) + toGraph.transform.TransformPoint(targetCell.Position)) / 2f;
                 var gp = referenceManager.graphGenerator.AddGraphPoint(referenceManager.cellManager.GetCell(g.Label), midPosition.x, midPosition.y, midPosition.z);
+            }
+            if (newGraph.points.Count == 0)
+            {
+                Destroy(newGraph.gameObject);
+                return;
             }
             referenceManager.graphGenerator.SliceClustering();
             referenceManager.graphManager.Graphs.Add(newGraph);
