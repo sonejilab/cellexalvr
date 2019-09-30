@@ -369,10 +369,18 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendToggleGrabbable(string name, bool enable)
         {
-            var colliders = referenceManager.graphManager.FindGraph(name).GetComponents<Collider>();
-            foreach (Collider c in colliders)
+            var graph = referenceManager.graphManager.FindGraph(name);
+            if (graph == null)
             {
-                c.enabled = enable;
+                CellexalLog.Log("Tried to toggle graph colliders but could not find graph " + name);
+            }
+            else
+            {
+                var colliders = graph.GetComponents<Collider>();
+                foreach (Collider c in colliders)
+                {
+                    c.enabled = enable;
+                }
             }
         }
 
@@ -937,9 +945,10 @@ namespace CellexalVR.Multiplayer
             }
             else
             {
-                referenceManager.velocitySubMenu.ActivateOutline(filePath);
+                referenceManager.velocityGenerator.ReadVelocityFile(filePath);
             }
-            //referenceManager.velocitySubMenu.DeactivateOutlines();
+            referenceManager.velocitySubMenu.DeactivateOutlines();
+            veloButton.ToggleOutline(true);
         }
         #endregion
 
