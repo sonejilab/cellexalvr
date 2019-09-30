@@ -309,6 +309,7 @@ namespace CellexalVR.Filters
             Filter newFilter = new Filter();
             newFilter.Expression = BooleanExpression.ParseFilter(filter);
             currentFilter = newFilter;
+            referenceManager.selectionManager.CurrentFilter = newFilter;
         }
 
         /// <summary>
