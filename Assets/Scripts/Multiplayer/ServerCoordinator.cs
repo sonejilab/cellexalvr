@@ -964,7 +964,7 @@ namespace CellexalVR.Multiplayer
             filePath = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + filePath + ".mds";
             print(filePath);
             referenceManager.velocityGenerator.ReadVelocityFile(filePath);
-            referenceManager.velocitySubMenu.DeactivateOutlines();
+            //referenceManager.velocitySubMenu.DeactivateOutlines();
             referenceManager.velocitySubMenu.ActivateOutline(filePath);
         }
 

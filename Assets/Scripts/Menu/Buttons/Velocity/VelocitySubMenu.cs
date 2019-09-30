@@ -64,10 +64,10 @@ namespace CellexalVR.Menu.SubMenus
             buttonRenderer.material = new Material(buttonRenderer.material);
             buttons.Add(buttonScript);
             newButton.SetActive(true);
-            foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>())
-            {
-                rend.enabled = GetComponent<MeshRenderer>().enabled;
-            }
+            //foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>())
+            //{
+            //    rend.enabled = GetComponent<MeshRenderer>().enabled;
+            //}
             buttonNbr++;
 
         }
@@ -124,11 +124,13 @@ namespace CellexalVR.Menu.SubMenus
             {
                 if (button.FilePath == filePath)
                 {
-                    button.activeOutline.SetActive(true);
+                    button.ToggleOutline(true);
+                    //button.activeOutline.SetActive(true);
                 }
                 else
                 {
-                    button.activeOutline.SetActive(false);
+                    button.ToggleOutline(false);
+                    //button.activeOutline.SetActive(false);
                 }
             }
         }

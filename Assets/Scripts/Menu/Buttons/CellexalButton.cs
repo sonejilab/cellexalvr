@@ -2,6 +2,7 @@
 using VRTK;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons.General;
+using CellexalVR.Menu.SubMenus;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -13,6 +14,7 @@ namespace CellexalVR.Menu.Buttons
         public ReferenceManager referenceManager;
         public TMPro.TextMeshPro descriptionText;
         public GameObject infoMenu;
+        public GameObject activeOutline;
 
         private int frameCount;
         private readonly string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
@@ -80,7 +82,7 @@ namespace CellexalVR.Menu.Buttons
             layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
             layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
-            layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskNetwork ;
+            layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskNetwork;
 
         }
 
@@ -189,6 +191,20 @@ namespace CellexalVR.Menu.Buttons
         {
             storedState = buttonActivated;
         }
+
+        /// <summary>
+        /// To synchronise the outline in multi-user mode. So the outline doesnt get active if the other users menu or tab is active.
+        /// </summary>
+        public void ToggleOutline(bool toggle)
+        {
+            if (transform.parent.GetComponent<Tab>().Active)
+            {
+                activeOutline.SetActive(toggle);
+            }
+            storedState = toggle;
+        }
+
+
 
         protected void OnTriggerEnter(Collider other)
         {

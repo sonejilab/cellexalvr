@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using TMPro;
+using CellexalVR.Menu.Buttons;
 using System;
 
-public class LoadVelocityButton : CellexalVR.Menu.Buttons.CellexalButton
+public class LoadVelocityButton : CellexalButton
 {
     public TextMeshPro buttonText;
-    public GameObject activeOutline;
     public string subGraphName;
 
     private string shorterFilePath;
@@ -51,13 +51,15 @@ public class LoadVelocityButton : CellexalVR.Menu.Buttons.CellexalButton
         {
             referenceManager.velocityGenerator.ReadVelocityFile(FilePath);
         }
+        ToggleOutline(true);
         referenceManager.velocitySubMenu.DeactivateOutlines();
-        activeOutline.SetActive(true);
+        //activeOutline.SetActive(true);
         referenceManager.gameManager.InformReadVelocityFile(shorterFilePath);
     }
 
     public void DeactivateOutline()
     {
-        activeOutline.SetActive(false);
+        ToggleOutline(false);
+        //activeOutline.SetActive(false);
     }
 }

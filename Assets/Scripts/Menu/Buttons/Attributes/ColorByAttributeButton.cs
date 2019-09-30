@@ -90,14 +90,14 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// <summary>
         /// To synchronise the outline in multi-user mode. So the outline doesnt get active if the other users menu or tab is active.
         /// </summary>
-        public void ToggleOutline(bool toggle)
-        {
-            if (transform.parent.GetComponent<Tab>().Active)
-            {
-                activeOutline.SetActive(toggle);
-            }
-            storedState = toggle;
-        }
+        //public void ToggleOutline(bool toggle)
+        //{
+        //    if (transform.parent.GetComponent<Tab>().Active)
+        //    {
+        //        activeOutline.SetActive(toggle);
+        //    }
+        //    storedState = toggle;
+        //}
 
         /// <summary>
         /// Sets which attribute this button should show when pressed.
