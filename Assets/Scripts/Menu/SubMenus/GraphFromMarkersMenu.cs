@@ -1,4 +1,5 @@
-﻿using CellexalVR.Menu.Buttons.Facs;
+﻿using CellexalVR.Menu.Buttons;
+using CellexalVR.Menu.Buttons.Facs;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,12 @@ namespace CellexalVR.Menu.SubMenus
                 b.parentMenu = this;
                 b.gameObject.name = names[i];
             }
+        }
+
+        public override CellexalButton FindButton(string name)
+        {
+            var button = buttons.Find(x => x.GetComponent<AddMarkerButton>().indexName == name);
+            return button;
         }
 
     }

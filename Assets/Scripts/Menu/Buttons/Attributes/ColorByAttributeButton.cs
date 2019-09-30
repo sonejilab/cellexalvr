@@ -17,7 +17,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public Color booleanYesColor;
         public Color booleanNoColor;
         public string Attribute { get; set; }
-        public GameObject activeOutline;
+        //public GameObject activeOutline;
         public bool colored = false;
 
         public enum Mode { SINGLE, BOOLEAN_EXPR }

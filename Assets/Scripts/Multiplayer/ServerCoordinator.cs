@@ -157,6 +157,7 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to color all graphs by index " + indexName);
             //Color col = new Color(r, g, b);
             referenceManager.cellManager.ColorByIndex(indexName);
+            referenceManager.indexMenu.FindButton(indexName).GetComponent<ColorByIndexButton>().TurnOff();
         }
         #endregion
 
@@ -292,6 +293,7 @@ namespace CellexalVR.Multiplayer
             for (int i = 0; i < xcoords.Length; i++)
             {
                 coords[i] = new Vector3(xcoords[i], ycoords[i], zcoords[i]);
+
             }
             Color col = new Color(r, g, b);
             referenceManager.drawTool.DrawNewLine(col, coords);
@@ -403,17 +405,20 @@ namespace CellexalVR.Multiplayer
             referenceManager.cellManager.ClearLinesBetweenGraphPoints();
             CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         }
+
         [PunRPC]
         public void SendAddMarker(string indexName)
         {
-            var markerButton = GameObject.Find("/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
+            //var markerButton = GameObject.Find("/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
+            var markerButton = referenceManager.createFromMarkerMenu.FindButton(indexName);
             if (referenceManager.newGraphFromMarkers.markers.Count < 3 && !referenceManager.newGraphFromMarkers.markers.Contains(indexName))
             {
                 referenceManager.newGraphFromMarkers.markers.Add(indexName);
                 if (markerButton)
                 {
-                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(true);
-                    markerButton.GetComponent<AddMarkerButton>().activeOutline.GetComponent<MeshRenderer>().enabled = true;
+                    markerButton.ToggleOutline(true);
+                    //markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(true);
+                    //markerButton.GetComponent<AddMarkerButton>().activeOutline.GetComponent<MeshRenderer>().enabled = true;
                 }
             }
             else if (referenceManager.newGraphFromMarkers.markers.Contains(indexName))
@@ -421,7 +426,8 @@ namespace CellexalVR.Multiplayer
                 referenceManager.newGraphFromMarkers.markers.Remove(indexName);
                 if (markerButton)
                 {
-                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(false);
+                    markerButton.ToggleOutline(false);
+                    //markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(false);
                 }
             }
         }
@@ -923,14 +929,20 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReadVelocityFile(string filePath)
+        public void SendReadVelocityFile(string filePath, string subGraphName)
         {
             CellexalLog.Log("Recieved message to read velocity file - " + filePath);
             filePath = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + filePath + ".mds";
-            print(filePath);
-            referenceManager.velocityGenerator.ReadVelocityFile(filePath);
+            var veloButton = referenceManager.velocitySubMenu.FindButton(filePath, subGraphName);
+            if (subGraphName != string.Empty)
+            {
+                referenceManager.velocityGenerator.ReadVelocityFile(filePath, subGraphName);
+            }
+            else
+            {
+                referenceManager.velocitySubMenu.ActivateOutline(filePath);
+            }
             //referenceManager.velocitySubMenu.DeactivateOutlines();
-            referenceManager.velocitySubMenu.ActivateOutline(filePath);
         }
         #endregion
 

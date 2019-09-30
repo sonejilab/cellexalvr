@@ -48,11 +48,12 @@ namespace CellexalVR.Menu.Buttons.Facs
             descriptionOnButton.text = indexName;
         }
 
-        private void TurnOn()
+        public void TurnOn()
         {
             SetButtonActivated(true);
         }
-        private void TurnOff()
+
+        public void TurnOff()
         {
             SetButtonActivated(false);
         }

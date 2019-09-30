@@ -10,10 +10,10 @@ namespace CellexalVR.Menu.Buttons.Facs
     public class AddMarkerButton : CellexalButton
     {
         public TMPro.TextMeshPro descriptionOnButton;
-        public GameObject activeOutline;
+        //public GameObject activeOutline;
         public GraphFromMarkersMenu parentMenu;
+        public string indexName;
 
-        private string indexName;
         private List<string> markers;
 
         protected override string Description
@@ -32,13 +32,15 @@ namespace CellexalVR.Menu.Buttons.Facs
             if (markers.Count < 3 && !markers.Contains(this.indexName))
             {
                 markers.Add(this.indexName);
-                activeOutline.SetActive(true);
-                activeOutline.GetComponent<MeshRenderer>().enabled = true;
+                ToggleOutline(true);
+                //activeOutline.SetActive(true);
+                //activeOutline.GetComponent<MeshRenderer>().enabled = true;
             }
             else if (markers.Contains(this.indexName))
             {
                 markers.Remove(this.indexName);
-                activeOutline.SetActive(false);
+                ToggleOutline(false);
+                //activeOutline.SetActive(false);
             }
             referenceManager.gameManager.InformAddMarker(this.indexName);
         }
