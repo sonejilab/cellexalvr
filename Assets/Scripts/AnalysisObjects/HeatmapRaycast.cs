@@ -91,6 +91,7 @@ namespace CellexalVR.AnalysisObjects
                 if (CoordinatesInsideRect(hitx, hity, heatmap.geneListX, heatmap.heatmapY, heatmap.geneListWidth, heatmap.heatmapHeight))
                 {
                     // if we hit the list of genes
+                    gameManager.InformHandleHitGenesList(name, hity);
                     int geneHit = HandleHitGeneList(hity);
 
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -102,12 +103,14 @@ namespace CellexalVR.AnalysisObjects
                 else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.groupBarY, heatmap.heatmapWidth, heatmap.groupBarHeight))
                 {
                     // if we hit the grouping bar
+                    gameManager.InformHandleHitGroupingBar(name, hitx);
                     HandleHitGroupingBar(hitx);
                     heatmap.enlargedGeneText.text = "";
                 }
 
                 else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.attributeBarY, heatmap.heatmapWidth, heatmap.attributeBarHeight))
                 {
+                    gameManager.InformHandleHitAttributeBar(name, hitx);
                     HandleHitAttributeBar(hitx);
                     heatmap.enlargedGeneText.text = "";
                 }

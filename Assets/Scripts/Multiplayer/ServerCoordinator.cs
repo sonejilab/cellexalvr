@@ -24,6 +24,8 @@ namespace CellexalVR.Multiplayer
         private GameManager gameManager;
         public ReferenceManager referenceManager;
 
+        private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -45,6 +47,7 @@ namespace CellexalVR.Multiplayer
         #region RPCs
         // these methods are basically messages that are sent over the network from on client to another.
 
+        #region Loading
         [PunRPC]
         public void SendReadFolder(string path)
         {
@@ -61,6 +64,54 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendLoadingMenu(bool delete)
+        {
+            CellexalLog.Log("Recieved message to reset to loading dataset scene");
+            referenceManager.loaderController.ResetFolders(delete);
+        }
+        #endregion
+
+        #region Interaction
+        [PunRPC]
+        public void SendDisableColliders(string name)
+        {
+            GameObject obj = GameObject.Find(name);
+            Collider[] children = obj.GetComponentsInChildren<Collider>();
+            int i = 0;
+            foreach (Collider c in children)
+            {
+                if (c)
+                {
+                    i++;
+                    colliders[c] = c.enabled;
+                    c.enabled = false;
+                }
+            }
+
+        }
+
+
+
+        [PunRPC]
+        public void SendEnableColliders(string name)
+        {
+            GameObject obj = GameObject.Find(name);
+            Collider[] children = obj.GetComponentsInChildren<Collider>();
+            int i = 0;
+
+            foreach (KeyValuePair<Collider, bool> pair in colliders)
+            {
+                if (pair.Key)
+                {
+                    i++;
+                    pair.Key.enabled = pair.Value;
+                }
+            }
+        }
+        #endregion
+
+        #region Coloring
+        [PunRPC]
         public void SendColorGraphsByGene(string geneName)
         {
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);
@@ -76,8 +127,49 @@ namespace CellexalVR.Multiplayer
             referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
         }
 
+        //[PunRPC]
+        //public void SendColorGraphsByPreviousExpression(string geneName)
+        //{
+        //    CellexalLog.Log("Recieved message to color all graphs by " + geneName);
+        //    referenceManager.cellManager.ColorGraphsByPreviousExpression(geneName);
+        //}
+
         [PunRPC]
-        public void SendKeyClick(string key)
+        public void SendColorByAttribute(string attributeType, bool toggle)
+        {
+            CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all graphs by attribute " + attributeType);
+            //Color col = new Color(r, g, b);
+            referenceManager.cellManager.ColorByAttribute(attributeType, toggle);
+            //var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
+            var attributeButton = referenceManager.attributeSubMenu.FindButton(attributeType);
+            attributeButton.ToggleOutline(toggle);
+            //if (attributeButton)
+            //{
+            //    var outline = attributeButton.GetComponent<ColorByAttributeButton>().activeOutline;
+            //    attributeButton.storedState = toggle;
+            //}
+            attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
+        }
+
+        [PunRPC]
+        public void SendColorByIndex(string indexName)
+        {
+            CellexalLog.Log("Recieved message to color all graphs by index " + indexName);
+            //Color col = new Color(r, g, b);
+            referenceManager.cellManager.ColorByIndex(indexName);
+        }
+        #endregion
+
+        #region Keyboard
+
+        [PunRPC]
+        public void SendActivateKeyboard(bool activate)
+        {
+            referenceManager.keyboardSwitch.SetKeyboardVisible(activate);
+        }
+
+        [PunRPC]
+        public void SendKeyClicked(string key)
         {
             CellexalLog.Log("Recieved message to add  " + key + " to search field");
             referenceManager.geneKeyboard.AddText(key, false);
@@ -96,19 +188,6 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to clear search field");
             referenceManager.geneKeyboard.Clear(false);
         }
-        [PunRPC]
-        public void SendBrowserKeyClick(string key)
-        {
-            CellexalLog.Log("Recieved message to add " + key + " to url field");
-            referenceManager.webBrowserKeyboard.AddText(key, false);
-        }
-
-        //[PunRPC]
-        //public void SendColorGraphsByPreviousExpression(string geneName)
-        //{
-        //    CellexalLog.Log("Recieved message to color all graphs by " + geneName);
-        //    referenceManager.cellManager.ColorGraphsByPreviousExpression(geneName);
-        //}
 
         [PunRPC]
         public void SendSearchLockToggled(int index)
@@ -145,30 +224,14 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to calculate genes correlated to " + geneName);
             referenceManager.correlatedGenesList.CalculateCorrelatedGenes(geneName, Definitions.Measurement.GENE);
         }
+        #endregion
 
+        #region Selection
         [PunRPC]
-        public void SendColorByAttribute(string attributeType, bool toggle)
+        public void SendConfirmSelection()
         {
-            CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all graphs by attribute " + attributeType);
-            //Color col = new Color(r, g, b);
-            referenceManager.cellManager.ColorByAttribute(attributeType, toggle);
-            //var attributeButton = GameObject.Find("/[CameraRig]/Controller (left)/Main Menu/Attribute Menu/AttributeTabPrefab(Clone)/" + attributeType);
-            var attributeButton = referenceManager.attributeSubMenu.FindButton(attributeType);
-            attributeButton.ToggleOutline(toggle);
-            //if (attributeButton)
-            //{
-            //    var outline = attributeButton.GetComponent<ColorByAttributeButton>().activeOutline;
-            //    attributeButton.storedState = toggle;
-            //}
-            attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
-        }
-
-        [PunRPC]
-        public void SendColorByIndex(string indexName)
-        {
-            CellexalLog.Log("Recieved message to color all graphs by index " + indexName);
-            //Color col = new Color(r, g, b);
-            referenceManager.cellManager.ColorByIndex(indexName);
+            CellexalLog.Log("Recieved message to confirm selection");
+            referenceManager.selectionManager.ConfirmSelection();
         }
 
         [PunRPC]
@@ -199,6 +262,12 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendCancelSelection()
+        {
+            referenceManager.selectionManager.CancelSelection();
+        }
+
+        [PunRPC]
         public void SendRedoOneColor()
         {
             referenceManager.selectionManager.GoForwardOneColorInHistory();
@@ -212,63 +281,48 @@ namespace CellexalVR.Multiplayer
                 referenceManager.selectionManager.GoForwardOneStepInHistory();
             }
         }
+        #endregion
 
+        #region Draw tool
         [PunRPC]
-        public void SendAddMarker(string indexName)
+        public void SendDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
         {
-            var markerButton = GameObject.Find("/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
-            if (referenceManager.newGraphFromMarkers.markers.Count < 3 && !referenceManager.newGraphFromMarkers.markers.Contains(indexName))
+            CellexalLog.Log("Recieved message to draw line with " + xcoords.Length + " segments");
+            Vector3[] coords = new Vector3[xcoords.Length];
+            for (int i = 0; i < xcoords.Length; i++)
             {
-                referenceManager.newGraphFromMarkers.markers.Add(indexName);
-                if (markerButton)
-                {
-                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(true);
-                    markerButton.GetComponent<AddMarkerButton>().activeOutline.GetComponent<MeshRenderer>().enabled = true;
-                }
+                coords[i] = new Vector3(xcoords[i], ycoords[i], zcoords[i]);
             }
-            else if (referenceManager.newGraphFromMarkers.markers.Contains(indexName))
-            {
-                referenceManager.newGraphFromMarkers.markers.Remove(indexName);
-                if (markerButton)
-                {
-                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(false);
-                }
-            }
+            Color col = new Color(r, g, b);
+            referenceManager.drawTool.DrawNewLine(col, coords);
         }
 
         [PunRPC]
-        public void SendCreateMarkerGraph()
+        public void SendClearAllLines()
         {
-            CellexalLog.Log("Recieved message to create marker graph");
-            referenceManager.newGraphFromMarkers.CreateMarkerGraph();
+            CellexalLog.Log("Recieved message to clear line segments");
+            referenceManager.drawTool.SkipNextDraw();
+            referenceManager.drawTool.ClearAllLines();
         }
 
         [PunRPC]
-        public void SendCreateAttributeGraph()
+        public void SendClearLastLine()
         {
-            CellexalLog.Log("Recieved message to create attribute graph");
-            referenceManager.graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
+            CellexalLog.Log("Recieved message to clear previous line");
+            referenceManager.drawTool.SkipNextDraw();
+            referenceManager.drawTool.ClearLastLine();
         }
 
         [PunRPC]
-        public void SendCancelSelection()
+        public void SendClearLinesWithColor(float r, float g, float b)
         {
-            referenceManager.selectionManager.CancelSelection();
+            CellexalLog.Log("Recieved message to clear previous line");
+            referenceManager.drawTool.SkipNextDraw();
+            referenceManager.drawTool.ClearAllLinesWithColor(new Color(r, g, b));
         }
+        #endregion
 
-        [PunRPC]
-        public void SendConfirmSelection()
-        {
-            CellexalLog.Log("Recieved message to confirm selection");
-            referenceManager.selectionManager.ConfirmSelection();
-        }
-
-        [PunRPC]
-        public void SendRemoveCells()
-        {
-            CellexalLog.Log("Recieved message to remove selected selection");
-            // more_cells   referenceManager.selectionToolHandler.ConfirmRemove();
-        }
+        #region Graphs
 
         [PunRPC]
         public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
@@ -311,55 +365,6 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendMoveCells(string cellsName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
-        {
-            GameObject c = referenceManager.inputFolderGenerator.FindCells(cellsName);
-
-            c.transform.position = new Vector3(posX, posY, posZ);
-            c.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-            //g.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-        }
-
-        private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
-
-        [PunRPC]
-        public void SendDisableColliders(string name)
-        {
-            GameObject obj = GameObject.Find(name);
-            Collider[] children = obj.GetComponentsInChildren<Collider>();
-            int i = 0;
-            foreach (Collider c in children)
-            {
-                if (c)
-                {
-                    i++;
-                    colliders[c] = c.enabled;
-                    c.enabled = false;
-                }
-            }
-
-        }
-
-
-
-        [PunRPC]
-        public void SendEnableColliders(string name)
-        {
-            GameObject obj = GameObject.Find(name);
-            Collider[] children = obj.GetComponentsInChildren<Collider>();
-            int i = 0;
-
-            foreach (KeyValuePair<Collider, bool> pair in colliders)
-            {
-                if (pair.Key)
-                {
-                    i++;
-                    pair.Key.enabled = pair.Value;
-                }
-            }
-        }
-
-        [PunRPC]
         public void SendToggleGrabbable(string name, bool enable)
         {
             var colliders = referenceManager.graphManager.FindGraph(name).GetComponents<Collider>();
@@ -377,17 +382,10 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendResetGraphAll()
+        public void SendResetGraphPosition()
         {
             CellexalLog.Log("Recieved message to reset graph position, scale and rotation");
             referenceManager.graphManager.ResetGraphsPosition();
-        }
-
-        [PunRPC]
-        public void SendLoadingMenu(bool delete)
-        {
-            CellexalLog.Log("Recieved message to reset to loading dataset scene");
-            referenceManager.loaderController.ResetFolders(delete);
         }
 
         [PunRPC]
@@ -405,14 +403,46 @@ namespace CellexalVR.Multiplayer
             referenceManager.cellManager.ClearLinesBetweenGraphPoints();
             CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         }
-
         [PunRPC]
-        public void SendToggleMenu()
+        public void SendAddMarker(string indexName)
         {
-            referenceManager.gameManager.avatarMenuActive = !referenceManager.gameManager.avatarMenuActive;
-            //Debug.Log("TOGGLE MENU " + referenceManager.gameManager.avatarMenuActive);
+            var markerButton = GameObject.Find("/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
+            if (referenceManager.newGraphFromMarkers.markers.Count < 3 && !referenceManager.newGraphFromMarkers.markers.Contains(indexName))
+            {
+                referenceManager.newGraphFromMarkers.markers.Add(indexName);
+                if (markerButton)
+                {
+                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(true);
+                    markerButton.GetComponent<AddMarkerButton>().activeOutline.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+            else if (referenceManager.newGraphFromMarkers.markers.Contains(indexName))
+            {
+                referenceManager.newGraphFromMarkers.markers.Remove(indexName);
+                if (markerButton)
+                {
+                    markerButton.GetComponent<AddMarkerButton>().activeOutline.SetActive(false);
+                }
+            }
         }
 
+        [PunRPC]
+        public void SendCreateMarkerGraph()
+        {
+            CellexalLog.Log("Recieved message to create marker graph");
+            referenceManager.newGraphFromMarkers.CreateMarkerGraph();
+        }
+
+        [PunRPC]
+        public void SendCreateAttributeGraph()
+        {
+            CellexalLog.Log("Recieved message to create attribute graph");
+            referenceManager.graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
+        }
+
+        #endregion
+
+        #region Heatmaps
         [PunRPC]
         public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
@@ -438,353 +468,11 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReorderByAttribute(string heatmapName, bool shouldReorder)
-        {
-            CellexalLog.Log("Recieved message to " + (shouldReorder ? "reorder" : "restore") + " heatmap");
-            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
-            bool heatmapExists = hm != null;
-            if (heatmapExists)
-            {
-                if (shouldReorder)
-                {
-                    hm.ReorderByAttribute();
-                }
-                else
-                {
-                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
-                }
-            }
-        }
-
-        [PunRPC]
-        public void SendActivateBrowser(bool activate)
-        {
-            CellexalLog.Log("Recieved message to toggle web browser");
-            referenceManager.webBrowser.GetComponent<WebManager>().SetBrowserActive(activate);
-            //referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
-        }
-
-        [PunRPC]
-        public void SendMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
-        {
-            GameObject wm = referenceManager.webBrowser;
-            bool browserExists = wm != null;
-            if (browserExists)
-            {
-                try
-                {
-                    wm.transform.position = new Vector3(posX, posY, posZ);
-                    wm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-                    wm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                }
-                catch (Exception e)
-                {
-                    CellexalLog.Log("Could not move browser - Error: " + e);
-                }
-            }
-            else
-            {
-                CellexalLog.Log("Could not find browser to move");
-            }
-        }
-
-        [PunRPC]
-        public void SendBrowserEnter()
-        {
-            string text = referenceManager.webBrowserKeyboard.output.text;
-            referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(text);
-        }
-
-        [PunRPC]
         public void SendCreateHeatmap(string hmName)
         {
             CellexalLog.Log("Recieved message to create heatmap");
             referenceManager.heatmapGenerator.CreateHeatmap(hmName);
         }
-
-        [PunRPC]
-        public void SendDeleteObject(string name, string tag)
-        {
-            CellexalLog.Log("Recieved message to delete object with name: " + name);
-            GameObject objectToDelete = GameObject.Find(name);
-            if (tag == "SubGraph")
-            {
-                Graph subGraph = objectToDelete.GetComponent<Graph>();
-                referenceManager.graphManager.Graphs.Remove(subGraph);
-                referenceManager.graphManager.attributeSubGraphs.Remove(subGraph);
-                for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
-                {
-                    subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                }
-                subGraph.CTCGraphs.Clear();
-                Destroy(objectToDelete);
-            }
-            else if (tag == "FacsGraph")
-            {
-                Graph facsGraph = objectToDelete.GetComponent<Graph>();
-                referenceManager.graphManager.Graphs.Remove(facsGraph);
-                referenceManager.graphManager.facsGraphs.Remove(facsGraph);
-                for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
-                {
-                    facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                }
-                facsGraph.CTCGraphs.Clear();
-                Destroy(objectToDelete);
-            }
-            else if (tag == "HeatBoard")
-            {
-                referenceManager.heatmapGenerator.DeleteHeatmap(name);
-            }
-
-        }
-
-        [PunRPC]
-        public void SendDeleteNetwork(string name)
-        {
-            CellexalLog.Log("Recieved message to delete object with name: " + name);
-            NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
-            //StartCoroutine(nh.DeleteNetwork());
-            nh.DeleteNetworkMultiUser();
-        }
-
-
-        [PunRPC]
-        public void SendGenerateNetworks(int layoutSeed)
-        {
-            CellexalLog.Log("Recieved message to generate networks");
-            referenceManager.networkGenerator.GenerateNetworks(layoutSeed);
-        }
-
-        [PunRPC]
-        public void SendSwitchNetworkLayout(int layout, string networkHandlerName, string networkName)
-        {
-            CellexalLog.Log("Recieved message to generate networks");
-            print("network names:" + networkName + " " + networkHandlerName);
-            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
-            var network = handler.FindNetworkCenter(networkName);
-            network.SwitchLayout((NetworkCenter.Layout)layout);
-        }
-
-
-        [PunRPC]
-        public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
-        {
-            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
-            bool networkExists = nh != null;
-            if (networkExists)
-            {
-                try
-                {
-                    nh.transform.position = new Vector3(posX, posY, posZ);
-                    nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-                    nh.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                }
-                catch (Exception e)
-                {
-                    CellexalLog.Log("Could not move network to move - Error: " + e);
-                }
-            }
-            else
-            {
-                CellexalLog.Log("Could not find network to move");
-            }
-        }
-
-        [PunRPC]
-        public void SendNetworkUngrabbed(string networkName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
-        {
-            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
-            if (nh)
-            {
-                Rigidbody r = nh.GetComponent<Rigidbody>();
-                r.velocity = new Vector3(velX, velY, velZ);
-                r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
-            }
-        }
-
-        [PunRPC]
-        public void SendEnlargeNetwork(string networkHandlerName, string networkCenterName)
-        {
-            CellexalLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
-            referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
-        }
-
-        [PunRPC]
-        public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
-        {
-            CellexalLog.Log("Recieved message to bring back network " + networkCenterName + " in handler " + networkHandlerName);
-            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
-            var center = handler.FindNetworkCenter(networkCenterName);
-            center.BringBackOriginal();
-        }
-
-        [PunRPC]
-        public void SendMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
-        {
-            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
-            var center = handler.FindNetworkCenter(networkCenterName);
-            bool networkExists = (handler != null && center != null);
-            if (networkExists)
-            {
-                Vector3 pos = new Vector3(posX, posY, posZ);
-                Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
-                Vector3 scale = new Vector3(scaleX, scaleY, scaleZ);
-                center.transform.position = pos;
-                center.transform.rotation = rot;
-                center.transform.localScale = scale;
-            }
-            else
-            {
-                CellexalLog.Log("Could not find networkcenter to move");
-            }
-        }
-
-        [PunRPC]
-        public void SendNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
-        {
-            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
-            if (nh)
-            {
-                NetworkCenter nc = nh.FindNetworkCenter(networkCenterName);
-                if (nc)
-                {
-                    Rigidbody r = nc.GetComponent<Rigidbody>();
-                    r.velocity = new Vector3(velX, velY, velZ);
-                    r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
-                }
-            }
-        }
-
-        [PunRPC]
-        public void SendSetArcsVisible(bool toggleToState, string networkName)
-        {
-            CellexalLog.Log("Toggle arcs of " + networkName);
-            NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
-            network.SetCombinedArcsVisible(false);
-            network.SetArcsVisible(toggleToState);
-        }
-
-        [PunRPC]
-        public void SendSetCombinedArcsVisible(bool toggleToState, string networkName)
-        {
-            CellexalLog.Log("Toggle combined arcs of " + networkName);
-            NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
-            network.SetArcsVisible(false);
-            network.SetCombinedArcsVisible(toggleToState);
-        }
-
-        [PunRPC]
-        public void SendDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
-        {
-            CellexalLog.Log("Recieved message to draw line with " + xcoords.Length + " segments");
-            Vector3[] coords = new Vector3[xcoords.Length];
-            for (int i = 0; i < xcoords.Length; i++)
-            {
-                coords[i] = new Vector3(xcoords[i], ycoords[i], zcoords[i]);
-            }
-            Color col = new Color(r, g, b);
-            referenceManager.drawTool.DrawNewLine(col, coords);
-        }
-
-        [PunRPC]
-        public void SendClearAllLines()
-        {
-            CellexalLog.Log("Recieved message to clear line segments");
-            referenceManager.drawTool.SkipNextDraw();
-            referenceManager.drawTool.ClearAllLines();
-        }
-
-        [PunRPC]
-        public void SendClearLastLine()
-        {
-            CellexalLog.Log("Recieved message to clear previous line");
-            referenceManager.drawTool.SkipNextDraw();
-            referenceManager.drawTool.ClearLastLine();
-        }
-
-        [PunRPC]
-        public void SendClearLinesWithColor(float r, float g, float b)
-        {
-            CellexalLog.Log("Recieved message to clear previous line");
-            referenceManager.drawTool.SkipNextDraw();
-            referenceManager.drawTool.ClearAllLinesWithColor(new Color(r, g, b));
-        }
-
-        [PunRPC]
-        public void SendActivateKeyboard(bool activate)
-        {
-            referenceManager.keyboardSwitch.SetKeyboardVisible(activate);
-        }
-
-        [PunRPC]
-        public void SendMinimizeGraph(string graphName)
-        {
-            Graph g = referenceManager.graphManager.FindGraph(graphName);
-            g.HideGraph();
-            referenceManager.minimizedObjectHandler.MinimizeObject(g.gameObject, graphName);
-        }
-
-        [PunRPC]
-        public void SendMinimizeNetwork(string networkName)
-        {
-            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
-            nh.HideNetworks();
-            referenceManager.minimizedObjectHandler.MinimizeObject(nh.gameObject, networkName);
-        }
-
-        [PunRPC]
-        public void SendMinimizeHeatmap(string heatmapName)
-        {
-            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
-            h.HideHeatmap();
-            referenceManager.minimizedObjectHandler.MinimizeObject(h.gameObject, heatmapName);
-        }
-
-        [PunRPC]
-        public void SendShowGraph(string graphName, string jailName)
-        {
-            Graph g = referenceManager.graphManager.FindGraph(graphName);
-            GameObject jail = GameObject.Find(jailName);
-            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
-            g.ShowGraph();
-            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
-            Destroy(jail);
-        }
-
-        [PunRPC]
-        public void SendShowNetwork(string networkName, string jailName)
-        {
-            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
-            GameObject jail = GameObject.Find(jailName);
-            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
-            nh.ShowNetworks();
-            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
-            Destroy(jail);
-        }
-
-
-        [PunRPC]
-        public void SendShowHeatmap(string heatmapName, string jailName)
-        {
-            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
-            GameObject jail = GameObject.Find(jailName);
-            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
-            h.ShowHeatmap();
-            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
-            Destroy(jail);
-        }
-
-        //[PunRPC]
-        //public void SendToggleExpressedCells()
-        //{
-        //    referenceManager.cellManager.ToggleExpressedCells();
-        //}
-
-        //[PunRPC]
-        //public void SendToggleNonExpressedCells()
-        //{
-        //    referenceManager.cellManager.ToggleNonExpressedCells();
-        //}
 
         [PunRPC]
         public void SendHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
@@ -857,6 +545,280 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendReorderByAttribute(string heatmapName, bool shouldReorder)
+        {
+            CellexalLog.Log("Recieved message to " + (shouldReorder ? "reorder" : "restore") + " heatmap");
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                if (shouldReorder)
+                {
+                    hm.ReorderByAttribute();
+                }
+                else
+                {
+                    referenceManager.heatmapGenerator.BuildTexture(hm.selection, "", hm);
+                }
+            }
+        }
+
+        [PunRPC]
+        public void SendHandleHitGenesList(string heatmapName, int hity)
+        {
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitGeneList(hity);
+        }
+
+        [PunRPC]
+        public void SendHandleHitGroupingBar(string heatmapName, int hitx)
+        {
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitGroupingBar(hitx);
+        }
+
+        [PunRPC]
+        public void SendHandleHitAttributeBar(string heatmapName, int hitx)
+        {
+            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitAttributeBar(hitx);
+        }
+        #endregion
+
+        #region Networks
+        [PunRPC]
+        public void SendGenerateNetworks(int layoutSeed)
+        {
+            CellexalLog.Log("Recieved message to generate networks");
+            referenceManager.networkGenerator.GenerateNetworks(layoutSeed);
+        }
+
+        [PunRPC]
+        public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            bool networkExists = nh != null;
+            if (networkExists)
+            {
+                try
+                {
+                    nh.transform.position = new Vector3(posX, posY, posZ);
+                    nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                    nh.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move network to move - Error: " + e);
+                }
+            }
+            else
+            {
+                CellexalLog.Log("Could not find network to move");
+            }
+        }
+
+
+
+
+        [PunRPC]
+        public void SendNetworkUngrabbed(string networkName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            if (nh)
+            {
+                Rigidbody r = nh.GetComponent<Rigidbody>();
+                r.velocity = new Vector3(velX, velY, velZ);
+                r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
+            }
+        }
+
+        [PunRPC]
+        public void SendEnlargeNetwork(string networkHandlerName, string networkCenterName)
+        {
+            CellexalLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
+            referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
+        }
+
+        [PunRPC]
+        public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
+        {
+            CellexalLog.Log("Recieved message to bring back network " + networkCenterName + " in handler " + networkHandlerName);
+            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            var center = handler.FindNetworkCenter(networkCenterName);
+            center.BringBackOriginal();
+        }
+
+        [PunRPC]
+        public void SendSwitchNetworkLayout(int layout, string networkHandlerName, string networkName)
+        {
+            CellexalLog.Log("Recieved message to generate networks");
+            print("network names:" + networkName + " " + networkHandlerName);
+            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            var network = handler.FindNetworkCenter(networkName);
+            network.SwitchLayout((NetworkCenter.Layout)layout);
+        }
+
+        [PunRPC]
+        public void SendMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        {
+            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            var center = handler.FindNetworkCenter(networkCenterName);
+            bool networkExists = (handler != null && center != null);
+            if (networkExists)
+            {
+                Vector3 pos = new Vector3(posX, posY, posZ);
+                Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
+                Vector3 scale = new Vector3(scaleX, scaleY, scaleZ);
+                center.transform.position = pos;
+                center.transform.rotation = rot;
+                center.transform.localScale = scale;
+            }
+            else
+            {
+                CellexalLog.Log("Could not find networkcenter to move");
+            }
+        }
+
+        [PunRPC]
+        public void SendNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            if (nh)
+            {
+                NetworkCenter nc = nh.FindNetworkCenter(networkCenterName);
+                if (nc)
+                {
+                    Rigidbody r = nc.GetComponent<Rigidbody>();
+                    r.velocity = new Vector3(velX, velY, velZ);
+                    r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
+                }
+            }
+        }
+
+        [PunRPC]
+        public void SendSetArcsVisible(bool toggleToState, string networkName)
+        {
+            CellexalLog.Log("Toggle arcs of " + networkName);
+            NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
+            network.SetCombinedArcsVisible(false);
+            network.SetArcsVisible(toggleToState);
+        }
+
+        [PunRPC]
+        public void SendSetCombinedArcsVisible(bool toggleToState, string networkName)
+        {
+            CellexalLog.Log("Toggle combined arcs of " + networkName);
+            NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
+            network.SetArcsVisible(false);
+            network.SetCombinedArcsVisible(toggleToState);
+        }
+        #endregion
+
+        #region Hide tool
+        [PunRPC]
+        public void SendMinimizeGraph(string graphName)
+        {
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            g.HideGraph();
+            referenceManager.minimizedObjectHandler.MinimizeObject(g.gameObject, graphName);
+        }
+
+        [PunRPC]
+        public void SendShowGraph(string graphName, string jailName)
+        {
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            GameObject jail = GameObject.Find(jailName);
+            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
+            g.ShowGraph();
+            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+            Destroy(jail);
+        }
+
+        [PunRPC]
+        public void SendMinimizeNetwork(string networkName)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            nh.HideNetworks();
+            referenceManager.minimizedObjectHandler.MinimizeObject(nh.gameObject, networkName);
+        }
+
+        [PunRPC]
+        public void SendShowNetwork(string networkName, string jailName)
+        {
+            NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            GameObject jail = GameObject.Find(jailName);
+            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
+            nh.ShowNetworks();
+            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+            Destroy(jail);
+        }
+
+        [PunRPC]
+        public void SendMinimizeHeatmap(string heatmapName)
+        {
+            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            h.HideHeatmap();
+            referenceManager.minimizedObjectHandler.MinimizeObject(h.gameObject, heatmapName);
+        }
+
+        [PunRPC]
+        public void SendShowHeatmap(string heatmapName, string jailName)
+        {
+            Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            GameObject jail = GameObject.Find(jailName);
+            MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
+            h.ShowHeatmap();
+            handler.ContainerRemoved(jail.GetComponent<MinimizedObjectContainer>());
+            Destroy(jail);
+        }
+        #endregion
+
+        #region Delete tool
+        [PunRPC]
+        public void SendDeleteObject(string name, string tag)
+        {
+            CellexalLog.Log("Recieved message to delete object with name: " + name);
+            GameObject objectToDelete = GameObject.Find(name);
+            if (tag == "SubGraph")
+            {
+                Graph subGraph = objectToDelete.GetComponent<Graph>();
+                referenceManager.graphManager.Graphs.Remove(subGraph);
+                referenceManager.graphManager.attributeSubGraphs.Remove(subGraph);
+                for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
+                {
+                    subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                }
+                subGraph.CTCGraphs.Clear();
+                Destroy(objectToDelete);
+            }
+            else if (tag == "FacsGraph")
+            {
+                Graph facsGraph = objectToDelete.GetComponent<Graph>();
+                referenceManager.graphManager.Graphs.Remove(facsGraph);
+                referenceManager.graphManager.facsGraphs.Remove(facsGraph);
+                for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
+                {
+                    facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                }
+                facsGraph.CTCGraphs.Clear();
+                Destroy(objectToDelete);
+            }
+            else if (tag == "HeatBoard")
+            {
+                referenceManager.heatmapGenerator.DeleteHeatmap(name);
+            }
+
+        }
+
+        [PunRPC]
+        public void SendDeleteNetwork(string name)
+        {
+            CellexalLog.Log("Recieved message to delete object with name: " + name);
+            NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
+            //StartCoroutine(nh.DeleteNetwork());
+            nh.DeleteNetworkMultiUser();
+        }
+        #endregion
+
+        #region Velocity
+        [PunRPC]
         public void SendStartVelocity(string graphName)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -903,6 +865,7 @@ namespace CellexalVR.Multiplayer
                 }
             }
         }
+
         [PunRPC]
         public void SendGraphPointColorsMode(string graphName, bool switchToGraphPointColors)
         {
@@ -920,6 +883,7 @@ namespace CellexalVR.Multiplayer
                 }
             }
         }
+
         [PunRPC]
         public void SendChangeFrequency(string graphName, float amount)
         {
@@ -935,6 +899,7 @@ namespace CellexalVR.Multiplayer
                 referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
             }
         }
+
         [PunRPC]
         public void SendChangeThreshold(string graphName, float amount)
         {
@@ -967,7 +932,9 @@ namespace CellexalVR.Multiplayer
             //referenceManager.velocitySubMenu.DeactivateOutlines();
             referenceManager.velocitySubMenu.ActivateOutline(filePath);
         }
+        #endregion
 
+        #region Filters
         [PunRPC]
         public void SendSetFilter(string filter)
         {
@@ -975,5 +942,57 @@ namespace CellexalVR.Multiplayer
             referenceManager.filterManager.ParseFilter(filter);
         }
         #endregion
+
+        #region Browser
+        [PunRPC]
+        public void SendMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        {
+            GameObject wm = referenceManager.webBrowser;
+            bool browserExists = wm != null;
+            if (browserExists)
+            {
+                try
+                {
+                    wm.transform.position = new Vector3(posX, posY, posZ);
+                    wm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                    wm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move browser - Error: " + e);
+                }
+            }
+            else
+            {
+                CellexalLog.Log("Could not find browser to move");
+            }
+        }
+
+        [PunRPC]
+        public void SendActivateBrowser(bool activate)
+        {
+            CellexalLog.Log("Recieved message to toggle web browser");
+            referenceManager.webBrowser.GetComponent<WebManager>().SetBrowserActive(activate);
+            //referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
+        }
+
+        [PunRPC]
+        public void SendBrowserKeyClicked(string key)
+        {
+            CellexalLog.Log("Recieved message to add " + key + " to url field");
+            referenceManager.webBrowserKeyboard.AddText(key, false);
+        }
+
+        [PunRPC]
+        public void SendBrowserEnter()
+        {
+            string text = referenceManager.webBrowserKeyboard.output.text;
+            referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(text);
+        }
+
+        #endregion
+
+        #endregion
+
     }
 }
