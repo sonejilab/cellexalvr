@@ -17,7 +17,9 @@ TagManager:
   - Sphere
   - Keyboard
   - SelectionTool
-  - Subgraph
+  - FilterBlock
+  - SubGraph
+  - FacsGraph
   layers:
   - Default
   - TransparentFX
