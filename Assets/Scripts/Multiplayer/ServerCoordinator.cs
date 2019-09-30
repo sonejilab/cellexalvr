@@ -934,11 +934,11 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReadVelocityFile(string filePath, string subGraphName)
+        public void SendReadVelocityFile(string shorterFilePath, string subGraphName)
         {
-            CellexalLog.Log("Recieved message to read velocity file - " + filePath);
-            filePath = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + filePath + ".mds";
-            var veloButton = referenceManager.velocitySubMenu.FindButton(filePath, subGraphName);
+            CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
+            var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
+            string filePath = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + shorterFilePath + ".mds";
             if (subGraphName != string.Empty)
             {
                 referenceManager.velocityGenerator.ReadVelocityFile(filePath, subGraphName);
