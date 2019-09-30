@@ -205,7 +205,6 @@ namespace CellexalVR.Menu.Buttons
             }
             else if (veloSubMenu != null && veloSubMenu.Active)
             {
-                print("Toggle outline");
                 activeOutline.SetActive(toggle);
             }
             storedState = toggle;

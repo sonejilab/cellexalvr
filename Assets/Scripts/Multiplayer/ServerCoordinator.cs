@@ -948,9 +948,10 @@ namespace CellexalVR.Multiplayer
             }
             else
             {
-                referenceManager.velocitySubMenu.ActivateOutline(filePath);
+                referenceManager.velocityGenerator.ReadVelocityFile(filePath);
             }
-            //referenceManager.velocitySubMenu.DeactivateOutlines();
+            referenceManager.velocitySubMenu.DeactivateOutlines();
+            veloButton.ToggleOutline(true);
         }
         #endregion
 
