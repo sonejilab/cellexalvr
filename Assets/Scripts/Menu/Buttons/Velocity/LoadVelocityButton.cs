@@ -7,9 +7,9 @@ using System;
 public class LoadVelocityButton : CellexalButton
 {
     public TextMeshPro buttonText;
-    public string subGraphName;
+    public string subGraphName = System.String.Empty;
+    public string shorterFilePath;
 
-    private string shorterFilePath;
     private string filePath;
 
     public string FilePath
@@ -51,10 +51,10 @@ public class LoadVelocityButton : CellexalButton
         {
             referenceManager.velocityGenerator.ReadVelocityFile(FilePath);
         }
-        ToggleOutline(true);
         referenceManager.velocitySubMenu.DeactivateOutlines();
+        ToggleOutline(true);
         //activeOutline.SetActive(true);
-        referenceManager.gameManager.InformReadVelocityFile(shorterFilePath);
+        referenceManager.gameManager.InformReadVelocityFile(shorterFilePath, subGraphName);
     }
 
     public void DeactivateOutline()

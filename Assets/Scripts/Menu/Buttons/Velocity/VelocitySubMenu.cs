@@ -14,9 +14,10 @@ namespace CellexalVR.Menu.SubMenus
         public TextMeshPro thresholdText;
         public TextMeshPro speedText;
         public TextMeshPro graphPointColorsModeText;
+        public List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
+        public bool Active { get; set; }
 
 
-        private List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
         private int buttonNbr;
         Vector3 startPosition = new Vector3(-0.37f, 1f, 0.0f);
         Vector3 nextButtonPosition = new Vector3(-0.37f, 1f, 0.0f);
@@ -98,6 +99,18 @@ namespace CellexalVR.Menu.SubMenus
                 //buttons.Add(buttonScript);
                 //newButton.SetActive(true);
                 //buttonNbr++;
+            }
+        }
+
+        public LoadVelocityButton FindButton(string filePath, string subGraphName)
+        {
+            if (subGraphName != string.Empty)
+            {
+                return buttons.Find(x => x.subGraphName == subGraphName);
+            }
+            else
+            {
+                return buttons.Find(x => x.shorterFilePath == filePath);
             }
         }
 
