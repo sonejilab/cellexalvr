@@ -517,7 +517,7 @@ namespace CellexalVR.General
         public void InformHandleHitGroupingBar(string heatmapName, int hitx)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendHandleHitroupingBar", PhotonTargets.Others, heatmapName, hitx);
+            coordinator.photonView.RPC("SendHandleHitGroupingBar", PhotonTargets.Others, heatmapName, hitx);
         }
 
         public void InformHandleHitAttributeBar(string heatmapName, int hitx)
@@ -728,7 +728,7 @@ namespace CellexalVR.General
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients that " + value + " was clicked");
-            coordinator.photonView.RPC("SendBrowserKeyClicked", PhotonTargets.Others, value);
+            coordinator.photonView.RPC("SendBrowserKeyClicked", PhotonTargets.Others, value); 
         }
 
         public void InformBrowserEnter()
