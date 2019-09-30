@@ -41,12 +41,11 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
-        public ColorByAttributeButton FindButton(string attribute)
+        public override CellexalButton FindButton(string name)
         {
-            var button = buttons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == attribute);
-            return button.GetComponent<ColorByAttributeButton>();
+            var button = buttons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == name);
+            return button;
         }
-
 
         public void AddExpressionButtons(Tuple<string, BooleanExpression.Expr>[] expressions)
         {

@@ -46,6 +46,13 @@ namespace CellexalVR.Menu.SubMenus
             CellexalEvents.GraphsUnloaded.AddListener(DestroyTabs);
         }
 
+        public virtual CellexalButton FindButton(string name)
+        {
+            var button = buttons.Find(x => x.name == name);
+            return button;
+        }
+
+
         public virtual void CreateButtons(string[] categoriesAndNames)
         {
             DestroyTabs();
