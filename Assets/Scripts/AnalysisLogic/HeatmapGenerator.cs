@@ -205,8 +205,9 @@ namespace CellexalVR.AnalysisLogic
             if (selection.Count < 1)
             {
                 CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
-                if (!referenceManager.networkGenerator.GeneratingNetworks)
-                    referenceManager.calculatorCluster.SetActive(false);
+                referenceManager.floor.StopPulse();
+                //if (!referenceManager.networkGenerator.GeneratingNetworks)
+                //    referenceManager.calculatorCluster.SetActive(false);
                 referenceManager.notificationManager.SpawnNotification("Heatmap generation failed.");
                 yield break;
             }
@@ -348,7 +349,7 @@ namespace CellexalVR.AnalysisLogic
                     CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
                     if (!referenceManager.networkGenerator.GeneratingNetworks)
                         referenceManager.floor.StopPulse();
-                        //referenceManager.calculatorCluster.SetActive(false);
+                    //referenceManager.calculatorCluster.SetActive(false);
                 }
             }
             heatmap.orderedByAttribute = false;
@@ -534,54 +535,76 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Helper method that is run as a thread in <see cref="BuildTextureCoroutine(List{Tuple{int, float, int}}, List{Tuple{int, float, int}}, Heatmap)"/>.
         /// </summary>
-        private void CreateHeatmapPNG(Heatmap heatmap, ArrayList result, Dictionary<string, int> genePositions, Dictionary<string, int> cellsPosition, Dictionary<string, string> geneIds, string heatmapFilePath)
+        public void CreateHeatmapPNG(Heatmap heatmap, ArrayList result, Dictionary<string, int> genePositions, Dictionary<string, int> cellsPosition,
+            Dictionary<string, string> geneIds, string heatmapFilePath)
         {
             var attributeWidths = heatmap.attributeWidths;
             var groupWidths = heatmap.groupWidths;
-            System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(heatmap.bitmap);
+            //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(heatmap.bitmap);
+            System.Drawing.Graphics graphics = DrawHeatmap(heatmap, System.Drawing.Color.FromArgb(0,0,0,0), System.Drawing.Color.White);
 
-            // get the grouping colors
-            Dictionary<int, SolidBrush> groupBrushes = new Dictionary<int, SolidBrush>();
-            foreach (var entry in heatmap.groupingColors)
-            {
-                UnityEngine.Color unitycolor = entry.Value;
+            //// get the grouping colors
+            //Dictionary<int, SolidBrush> groupBrushes = new Dictionary<int, SolidBrush>();
+            //foreach (var entry in heatmap.groupingColors)
+            //{
+            //    UnityEngine.Color unitycolor = entry.Value;
 
-                groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
-            }
+            //    groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
+            //}
 
-            Dictionary<int, SolidBrush> attributeBrushes = new Dictionary<int, SolidBrush>();
-            foreach (var entry in heatmap.attributeColors)
-            {
-                UnityEngine.Color unitycolor = entry.Value;
-                attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
-            }
-            // draw a white background
-            graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
+            //Dictionary<int, SolidBrush> attributeBrushes = new Dictionary<int, SolidBrush>();
+            //foreach (var entry in heatmap.attributeColors)
+            //{
+            //    UnityEngine.Color unitycolor = entry.Value;
+            //    attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
+            //}
+            //// draw a background
+            //graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
+
+            //// draw the attribute bar
+            //for (int i = 0; i < attributeWidths.Count; ++i)
+            //{
+            //    int attributeNbr = attributeWidths[i].Item1;
+            //    float attributeWidth = attributeWidths[i].Item2;
+            //    graphics.FillRectangle(attributeBrushes[attributeNbr], xcoord, heatmap.attributeBarY, attributeWidth, heatmap.attributeBarHeight);
+            //    xcoord += attributeWidth;
+            //}
+
+            //xcoord = heatmap.heatmapX;
+            //ycoord = heatmap.heatmapY;
+            //// draw the grouping bar
+            //for (int i = 0; i < groupWidths.Count; ++i)
+            //{
+            //    int groupNbr = groupWidths[i].Item1;
+            //    float groupWidth = groupWidths[i].Item2;
+            //    graphics.FillRectangle(groupBrushes[groupNbr], xcoord, heatmap.groupBarY, groupWidth, heatmap.groupBarHeight);
+            //    xcoord += groupWidth;
+            //}
+
+            //ycoord = heatmap.heatmapY - 4;
+            //float fontSize;
+            //if (heatmap.genes.Length > 120)
+            //{
+            //    fontSize = 8f;
+            //}
+            //else
+            //{
+            //    fontSize = 20f;
+            //}
+            //geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, fontSize, System.Drawing.FontStyle.Regular);
+            //// draw all the gene names
+            //for (int i = 0; i < heatmap.genes.Length; ++i)
+            //{
+            //    string geneName = heatmap.genes[i];
+
+            //    graphics.DrawString(geneName, geneFont, Brushes.White, heatmap.geneListX, ycoord);
+            //    ycoord += ycoordInc;
+            //}
 
             float xcoord = heatmap.heatmapX;
             float ycoord = heatmap.heatmapY;
             float xcoordInc = (float)heatmap.heatmapWidth / heatmap.cells.Length;
             float ycoordInc = (float)heatmap.heatmapHeight / heatmap.genes.Length;
-            // draw the grouping bar
-            for (int i = 0; i < attributeWidths.Count; ++i)
-            {
-                int attributeNbr = attributeWidths[i].Item1;
-                float attributeWidth = attributeWidths[i].Item2;
-                graphics.FillRectangle(attributeBrushes[attributeNbr], xcoord, heatmap.attributeBarY, attributeWidth, heatmap.attributeBarHeight);
-                xcoord += attributeWidth;
-            }
-
-            xcoord = heatmap.heatmapX;
-            ycoord = heatmap.heatmapY;
-            // draw the grouping bar
-            for (int i = 0; i < groupWidths.Count; ++i)
-            {
-                int groupNbr = groupWidths[i].Item1;
-                float groupWidth = groupWidths[i].Item2;
-                graphics.FillRectangle(groupBrushes[groupNbr], xcoord, heatmap.groupBarY, groupWidth, heatmap.groupBarHeight);
-                xcoord += groupWidth;
-            }
-
             System.Drawing.SolidBrush[] heatmapBrushes = expressionColors;
             float lowestExpression = 0;
             float highestExpression = 0;
@@ -650,6 +673,80 @@ namespace CellexalVR.AnalysisLogic
                 //}
                 //}
             }
+
+
+            heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
+            graphics.Dispose();
+
+        }
+        /// <summary>
+        /// If the heatmap is to be saved for logging purposes (when the user presses save heatmap)
+        /// the background color should be white and text colour black for easier reading on a computer screen.
+        /// So only the genelist and widths are redrawn.
+        /// </summary>
+        public void SavePNGtoDisk(Heatmap heatmap, string heatmapFilePath)
+        {
+            System.Drawing.Graphics graphics = DrawHeatmap(heatmap, System.Drawing.Color.White, System.Drawing.Color.Black);
+
+            heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
+            graphics.Dispose();
+        }
+
+        /// <summary>
+        /// Helper function to draw the parts of the heatmap that are incommon for both logging and in-session heatmaps.
+        /// </summary>
+        private System.Drawing.Graphics DrawHeatmap(Heatmap heatmap, System.Drawing.Color backgrounColor, System.Drawing.Color textColor)
+        {
+            System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(heatmap.bitmap);
+
+            // get the grouping colors
+            Dictionary<int, SolidBrush> groupBrushes = new Dictionary<int, SolidBrush>();
+            foreach (var entry in heatmap.groupingColors)
+            {
+                UnityEngine.Color unitycolor = entry.Value;
+
+                groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
+            }
+            // get the attribute colors
+            Dictionary<int, SolidBrush> attributeBrushes = new Dictionary<int, SolidBrush>();
+            foreach (var entry in heatmap.attributeColors)
+            {
+                UnityEngine.Color unitycolor = entry.Value;
+                attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
+            }
+            // draw a background
+            //graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
+
+            SolidBrush backgrounBrush = new SolidBrush(backgrounColor);
+            graphics.FillRectangle(backgrounBrush, 0, 0, heatmap.heatmapX, heatmap.bitmapHeight);
+            graphics.FillRectangle(backgrounBrush, 0, 0, heatmap.bitmapWidth, heatmap.heatmapY);
+            graphics.FillRectangle(backgrounBrush, heatmap.geneListX, 0, heatmap.geneListWidth, heatmap.bitmapHeight);
+            graphics.FillRectangle(backgrounBrush, 0, (heatmap.bitmapWidth - heatmap.heatmapY), heatmap.bitmapWidth, heatmap.bitmapHeight);
+
+            float xcoord = heatmap.heatmapX;
+            float ycoord = heatmap.heatmapY;
+            float xcoordInc = (float)heatmap.heatmapWidth / heatmap.cells.Length;
+            float ycoordInc = (float)heatmap.heatmapHeight / heatmap.genes.Length;
+
+            // draw the attribute bar
+            for (int i = 0; i < heatmap.attributeWidths.Count; ++i)
+            {
+                int attributeNbr = heatmap.attributeWidths[i].Item1;
+                float attributeWidth = heatmap.attributeWidths[i].Item2;
+                graphics.FillRectangle(attributeBrushes[attributeNbr], xcoord, heatmap.attributeBarY, attributeWidth, heatmap.attributeBarHeight);
+                xcoord += attributeWidth;
+            }
+
+            xcoord = heatmap.heatmapX;
+            ycoord = heatmap.heatmapY;
+            // draw the grouping bar
+            for (int i = 0; i < heatmap.groupWidths.Count; ++i)
+            {
+                int groupNbr = heatmap.groupWidths[i].Item1;
+                float groupWidth = heatmap.groupWidths[i].Item2;
+                graphics.FillRectangle(groupBrushes[groupNbr], xcoord, heatmap.groupBarY, groupWidth, heatmap.groupBarHeight);
+                xcoord += groupWidth;
+            }
             ycoord = heatmap.heatmapY - 4;
             float fontSize;
             if (heatmap.genes.Length > 120)
@@ -661,19 +758,18 @@ namespace CellexalVR.AnalysisLogic
                 fontSize = 20f;
             }
             geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, fontSize, System.Drawing.FontStyle.Regular);
+            SolidBrush textBrush = new SolidBrush(textColor);
             // draw all the gene names
             for (int i = 0; i < heatmap.genes.Length; ++i)
             {
                 string geneName = heatmap.genes[i];
 
-                graphics.DrawString(geneName, geneFont, Brushes.White, heatmap.geneListX, ycoord);
+                graphics.DrawString(geneName, geneFont, textBrush, heatmap.geneListX, ycoord);
                 ycoord += ycoordInc;
             }
 
+            return graphics;
 
-
-            heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
-            graphics.Dispose();
 
         }
         #endregion

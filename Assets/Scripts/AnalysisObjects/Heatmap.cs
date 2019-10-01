@@ -547,7 +547,8 @@ namespace CellexalVR.AnalysisObjects
                 // unless you press this button way too many times the same second
                 heatmapImageFilePath += "_d";
             }
-            bitmap.Save(heatmapImageFilePath);
+            //bitmap.Save(heatmapImageFilePath);
+            heatmapGenerator.SavePNGtoDisk(this, heatmapImageFilePath);
             StartCoroutine(referenceManager.reportManager.LogHeatmap(heatmapImageFilePath, this));
         }
 
