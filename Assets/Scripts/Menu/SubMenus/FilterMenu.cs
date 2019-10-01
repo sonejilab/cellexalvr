@@ -10,9 +10,8 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// The menu that holds t he buttons for choosing and creating filters.
     /// </summary>
-    public class FilterMenu : MonoBehaviour
+    public class FilterMenu : MenuWithoutTabs
     {
-        public ReferenceManager referenceManager;
 
         public FilterButton buttonPrefab;
         public SubMenuButton newFilterButton;
@@ -27,17 +26,8 @@ namespace CellexalVR.Menu.SubMenus
         private int nbrOfButtons = 0;
         private string[] filterPaths;
 
-        private void OnValidate()
-        {
-            if (gameObject.scene.IsValid())
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-        }
-
         private void Awake()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             menuToggler = referenceManager.menuToggler;
             buttonPos = buttonPrefab.gameObject.transform.localPosition;
             CellexalEvents.FilterLoaded.AddListener(CreateButton);

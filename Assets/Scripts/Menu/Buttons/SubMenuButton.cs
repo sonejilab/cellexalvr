@@ -40,11 +40,10 @@ namespace CellexalVR.Menu.Buttons
             DeactivateButtonsRecursive(buttonsToDeactivate);
             textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
             SetMenuActivated(true);
-            if (menu.GetComponent<VelocitySubMenu>() != null)
-            {
-                menu.GetComponent<VelocitySubMenu>().Active = true;
-                print(menu.GetComponent<VelocitySubMenu>().Active);
-            }
+            //if (menu.GetComponent<VelocitySubMenu>() != null)
+            //{
+            //    menu.GetComponent<VelocitySubMenu>().Active = true;
+            //}
             var tabs = menu.GetComponentsInChildren<Tab>();
             if (tabs.Length > 0)
             {
@@ -131,9 +130,24 @@ namespace CellexalVR.Menu.Buttons
         private void SetGameObjectAndChildrenEnabled(GameObject obj, bool active)
         {
             foreach (var r in obj.GetComponentsInChildren<Renderer>())
+            {
+                if (r.gameObject.name.Equals("ActiveOutline"))
+                {
+                    r.gameObject.SetActive(r.transform.parent.GetComponent<CellexalButton>().storedState);
+                }
                 r.enabled = active;
+
+            }
             foreach (var c in obj.GetComponentsInChildren<Collider>())
+            {
                 c.enabled = active;
+                if (c.gameObject.name.Equals("ActiveOutline"))
+                {
+                    c.gameObject.SetActive(c.transform.parent.GetComponent<CellexalButton>().storedState);
+                }
+                c.enabled = active;
+
+            }
         }
 
         void TurnOn()

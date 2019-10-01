@@ -767,7 +767,6 @@ namespace CellexalVR.General
         {
             base.OnJoinedRoom();
             multiplayer = true;
-            Debug.Log("CLIENT JOINED ROOM");
             CellexalLog.Log("We joined a server");
             StartCoroutine(FindServerCoordinator());
         }
@@ -783,7 +782,6 @@ namespace CellexalVR.General
             {
                 waitingCanvas.SetActive(false);
             }
-            Debug.Log("Client Coordinator Found");
         }
 
         private IEnumerator FindServerCoordinator()
@@ -793,7 +791,6 @@ namespace CellexalVR.General
             {
                 StartCoroutine(FindServerCoordinator());
             }
-            Debug.Log("Server Coordinator Found");
         }
 
 

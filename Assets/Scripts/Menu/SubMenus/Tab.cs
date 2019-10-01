@@ -151,6 +151,11 @@ namespace CellexalVR.Menu.SubMenus
             if (c)
             {
                 c.enabled = active;
+                if (c.gameObject.name.Equals("ActiveOutline"))
+                {
+                    c.gameObject.SetActive(c.transform.parent.GetComponent<CellexalButton>().storedState);
+                }
+                c.enabled = active;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons
@@ -53,6 +54,7 @@ namespace CellexalVR.Menu.Buttons
             if (deactivateMenu)
             {
                 menuToClose.SetActive(false);
+                menuToClose.GetComponent<MenuWithoutTabs>().SetMenuActive(false);
             }
 
             else

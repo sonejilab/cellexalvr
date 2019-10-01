@@ -313,6 +313,15 @@ namespace CellexalVR.Interaction
         /// <param name="text">The text to set all outputs to</param>
         public void SetAllOutputs(string text)
         {
+            if (text != "")
+            {
+                text = placeholder;
+                displayingPlaceHolder = true;
+            }
+            else
+            {
+                displayingPlaceHolder = false;
+            }
             output.text = text;
             foreach (var o in additionalOutputs)
             {

@@ -198,12 +198,12 @@ namespace CellexalVR.Menu.Buttons
         public void ToggleOutline(bool toggle)
         {
             var tab = transform.parent.GetComponent<Tab>();
-            var veloSubMenu = transform.parent.GetComponent<VelocitySubMenu>();
+            var menuNoTab = transform.parent.GetComponent<MenuWithoutTabs>();
             if (tab != null && tab.Active)
             {
                 activeOutline.SetActive(toggle);
             }
-            else if (veloSubMenu != null && veloSubMenu.Active)
+            else if (menuNoTab != null && menuNoTab.Active)
             {
                 activeOutline.SetActive(toggle);
             }
