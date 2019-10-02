@@ -32,6 +32,10 @@ namespace CellexalVR.Menu.Buttons.Attributes
                 graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
                 referenceManager.gameManager.InformCreateAttributeGraph();
             }
+            else
+            {
+                print(referenceManager.attributeSubMenu.attributes.Count);
+            }
         }
 
         private void TurnOn()

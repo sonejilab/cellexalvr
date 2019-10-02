@@ -73,13 +73,13 @@ namespace CellexalVR.Interaction
             this.lockedNormalMaterial = lockedNormalMaterial;
             this.lockedHighlightMaterial = lockedHighlightMaterial;
             this.lockedPressedMaterial = lockedPressedMaterial;
+            unlockedNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            unlockedHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            unlockedPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            lockedNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            lockedHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
+            lockedPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
 
-            this.unlockedNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
-            this.unlockedHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
-            this.unlockedPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
-            this.lockedNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
-            this.lockedHighlightMaterial.SetVector("_ScaleCorrection", scaleCorrection);
-            this.lockedPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
 
             keyNormalMaterial = unlockedNormalMaterial;
             keyHighlightMaterial = unlockedHighlightMaterial;
@@ -90,5 +90,6 @@ namespace CellexalVR.Interaction
                 renderer.sharedMaterial = unlockedNormalMaterial;
             }
         }
+
     }
 }

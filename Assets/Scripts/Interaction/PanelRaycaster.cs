@@ -61,6 +61,7 @@ namespace CellexalVR.Interaction
                 {
                     panel.SetMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial, newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial, newLockedHighlightMaterial, referenceManager.geneKeyboard.ScaleCorrection());
                 }
+                referenceManager.geneKeyboard.AddMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial, newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial, newLockedHighlightMaterial);
 
                 Material newCorrelatedGenesNormalMaterial = new Material(correlatedGenesNormalMaterial);
                 Material newCorrelatedGenesHighlightMaterial = new Material(correlatedGenesHighlightMaterial);
@@ -70,6 +71,7 @@ namespace CellexalVR.Interaction
                 {
                     panel.SetMaterials(newCorrelatedGenesNormalMaterial, newCorrelatedGenesHighlightMaterial, newCorrelatedGenesPressedMaterial, referenceManager.geneKeyboard.ScaleCorrection());
                 }
+                referenceManager.geneKeyboard.AddMaterials(newCorrelatedGenesNormalMaterial, newCorrelatedGenesHighlightMaterial, newCorrelatedGenesPressedMaterial);
             }
             if (referenceManager.folderKeyboard)
             {
@@ -158,30 +160,32 @@ namespace CellexalVR.Interaction
                         controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
                     }
                     //referenceManager.laserPointerController.ToggleLaser(true);
+                    var keyboardHandler = hitPanel.GetComponentInParent<KeyboardHandler>();
+                    Vector2 uv2 = keyboardHandler.ToUv2Coord(hit.point);
                     referenceManager.laserPointerController.Override = true;
                     if (lastHit != null && lastHit != hitPanel)
                     {
+                        // if we hit a different panel last frame, un-highlight it
                         lastHit.SetHighlighted(false);
                     }
-                    hitPanel.SetHighlighted(true);
-                    var keyboardHandler = hitPanel.GetComponentInParent<KeyboardHandler>();
-                    Vector2 uv2 = keyboardHandler.ToUv2Coord(hit.point);
 
-                    hitPanel.UpdateLaserCoords(uv2);
+                    hitPanel.SetHighlighted(true);
+                    keyboardHandler.UpdateLaserCoords(uv2);
 
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
                         hitPanel.Click();
-                        hitPanel.Pulse(uv2);
+                        keyboardHandler.Pulse(uv2);
                     }
 
                     lastHit = hitPanel;
                 }
                 else if (lastHit != null)
                 {
+                    var keyboardHandler = lastHit.GetComponentInParent<KeyboardHandler>();
                     // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                     lastHit.SetHighlighted(false);
-                    lastHit.UpdateLaserCoords(new Vector2(-1f, -1f));
+                    keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
                     lastHit = null;
                     controllerModelSwitcher.SwitchToDesiredModel();
                     //referenceManager.laserPointerController.ToggleLaser(false);
@@ -192,12 +196,13 @@ namespace CellexalVR.Interaction
             }
             else if (lastHit != null)
             {
+                var keyboardHandler = lastHit.GetComponentInParent<KeyboardHandler>();
                 controllerModelSwitcher.SwitchToDesiredModel();
                 //referenceManager.laserPointerController.ToggleLaser(false);
                 referenceManager.laserPointerController.Override = false;
                 // if we hit nothing this frame, but hit something last frame.
                 lastHit.SetHighlighted(false);
-                lastHit.UpdateLaserCoords(new Vector2(-1f, -1f));
+                keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
                 lastHit = null;
             }
 

@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FadedTex:
-        m_Texture: {fileID: 2800000, guid: e4e924e9ed741aa468a0323ebb6fb9f2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 82eab126841866447bb9507fc2dc3a47, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -52,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NonFadedTex:
-        m_Texture: {fileID: 2800000, guid: e4e924e9ed741aa468a0323ebb6fb9f2, type: 3}
+        m_Texture: {fileID: 2800000, guid: aa3ad50b6d916844ba03885e67fe72cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:

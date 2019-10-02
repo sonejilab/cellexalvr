@@ -84,7 +84,7 @@ namespace CellexalVR.Interaction
             //}
             //else
             //{
-            //SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
+            SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
             //}
         }
 
@@ -94,7 +94,9 @@ namespace CellexalVR.Interaction
             if (!success) return;
             if (!CrossSceneInformation.Spectator)
             {
-                SetMeshes();
+                //Valve.VR.ETrackedDeviceProperty.Prop_RenderModelName_String
+                //SetMeshes();
+                //print(renderModel.renderModelName);
             }
         }
 
@@ -123,7 +125,8 @@ namespace CellexalVR.Interaction
         {
             if (CrossSceneInformation.Spectator)
                 return true;
-            return rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null && leftControllerBody.GetComponent<Renderer>() != null;
+            return rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null
+                 && leftControllerBody.GetComponent<MeshFilter>() != null && leftControllerBody.GetComponent<Renderer>() != null;
         }
 
         void OnTriggerEnter(Collider other)

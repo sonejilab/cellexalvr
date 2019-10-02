@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 #if UNITY_EDITOR
 using System.Reflection;
 #endif
@@ -41,10 +42,16 @@ namespace CellexalVR.Interaction
         public Vector2 minPos;
         [HideInInspector]
         public Vector2 maxPos;
+        [HideInInspector]
+        public List<Material> materials;
 
         private bool displayingPlaceHolder = true;
         protected string prefabFolderPath = "Assets/Prefabs/Keyboards";
         protected string prefabPath;
+
+        // vector used by the shader to display pulse when a panel is clicked and an animation where the laser is.
+        private static Vector4 PulseAndLaserCoords;
+        private float pulseDuration;
 
         public int CurrentLayout { get; protected set; }
         abstract public string[][] Layouts { get; protected set; }
@@ -76,6 +83,8 @@ namespace CellexalVR.Interaction
             {
                 GatherKeys();
             }
+            pulseDuration = keyNormalMaterial.GetFloat("_PulseDuration");
+
             // set up the scale correction shader property so the rings on the keyboard are properly displayed
             Material adjustedKeyNormalMaterial = new Material(keyNormalMaterial);
             Material adjustedKeyHighlightedMaterial = new Material(keyHighlightMaterial);
@@ -84,7 +93,10 @@ namespace CellexalVR.Interaction
             adjustedKeyNormalMaterial.SetVector("_ScaleCorrection", scaleCorrection);
             adjustedKeyHighlightedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
             adjustedKeyPressedMaterial.SetVector("_ScaleCorrection", scaleCorrection);
-
+            materials = new List<Material>();
+            materials.Add(adjustedKeyNormalMaterial);
+            materials.Add(adjustedKeyHighlightedMaterial);
+            materials.Add(adjustedKeyPressedMaterial);
             //foreach (ClickablePanel panel in sortedKeys)
             //{
             //    panel.SetMaterials(adjustedKeyNormalMaterial, adjustedKeyHighlightedMaterial, adjustedKeyPressedMaterial);
@@ -94,6 +106,61 @@ namespace CellexalVR.Interaction
             {
                 panel.SetMaterials(adjustedKeyNormalMaterial, adjustedKeyHighlightedMaterial, adjustedKeyPressedMaterial, scaleCorrection);
             }
+        }
+
+        public void AddMaterials(params Material[] mats)
+        {
+            materials.AddRange(mats);
+        }
+
+        /// <summary>
+        /// Displays a pulse.
+        /// </summary>
+        /// <param name="pos">The uv2 coordinates of the center of the pulse.</param>
+        public void Pulse(Vector2 pos)
+        {
+            PulseAndLaserCoords = new Vector4(pos.x, pos.y, PulseAndLaserCoords.z, PulseAndLaserCoords.w);
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(PulseCoroutine());
+            }
+        }
+
+        /// <summary>
+        /// Updates the coordinates for the laser hit animation.
+        /// </summary>
+        /// <param name="pos">The uv2 coordinates of the laser hit.</param>
+        public virtual void UpdateLaserCoords(Vector2 pos)
+        {
+            PulseAndLaserCoords = new Vector4(PulseAndLaserCoords.x, PulseAndLaserCoords.y, pos.x, pos.y);
+            SetVectors("_PulseCoords", PulseAndLaserCoords);
+        }
+
+        /// <summary>
+        /// Uses the Keyboard shader to play a pulse anmimation.
+        /// </summary>
+        protected virtual IEnumerator PulseCoroutine()
+        {
+            float t = 0f;
+
+            SetVectors("_PulseCoords", PulseAndLaserCoords);
+            while (t < pulseDuration)
+            {
+                SetFloats("_PulseStartTime", t);
+                t += Time.deltaTime;
+                yield return null;
+            }
+            SetFloats("_PulseStartTime", -1f);
+        }
+
+        protected void SetVectors(string name, Vector4 value)
+        {
+            materials.ForEach((mat) => mat.SetVector(name, value));
+        }
+
+        protected void SetFloats(string name, float value)
+        {
+            materials.ForEach((mat) => mat.SetFloat(name, value));
         }
 
         /// <summary>
@@ -339,17 +406,14 @@ namespace CellexalVR.Interaction
         {
             float angleMultiplier = anglePerUnit == 0f ? 1f : anglePerUnit;
             Vector3 dirLocalSpace = transform.InverseTransformPoint(dir);
-            //a.y = 0f;
 
             // y coordinate
-            //float heightInWorldSpace = Mathf.Cos(Vector3.Angle(Vector3.up, transform.up) * Mathf.Deg2Rad);
             float keyboardYCoord = dirLocalSpace.y / height;
 
             // x coordinate
             dirLocalSpace.y = 0f;
             Vector3 a = Vector3.right;
             Vector3 b = dirLocalSpace + new Vector3(distance, 0f, 0f);
-            //b.y = 0f;
             float angle = Vector3.SignedAngle(a, b, Vector3.up);
             float keyboardSizeX = (maxPos.x - minPos.x) * angleMultiplier;
             float keyboardAngleSizeNegative = minPos.x * angleMultiplier;

@@ -13,13 +13,14 @@ namespace CellexalVR.Interaction
 
         private CorrelatedGenesList correlatedGenesList;
 
-        private Material correlatedGenesNormalMaterial;
-        private Material correlatedGenesHighlightMaterial;
-        private Material correlatedGenesPressedMaterial;
+        //private Material correlatedGenesNormalMaterial;
+        //private Material correlatedGenesHighlightMaterial;
+        //private Material correlatedGenesPressedMaterial;
 
 
         protected override void Start()
         {
+            base.Start();
             correlatedGenesList = referenceManager.correlatedGenesList;
             this.tag = "Keyboard";
             CellexalEvents.CorrelatedGenesCalculated.AddListener(Reset);
