@@ -313,7 +313,7 @@ namespace CellexalVR.Interaction
         /// <param name="text">The text to set all outputs to</param>
         public void SetAllOutputs(string text)
         {
-            if (text != "")
+            if (text == "")
             {
                 text = placeholder;
                 displayingPlaceHolder = true;
