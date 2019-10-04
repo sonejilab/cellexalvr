@@ -1927,6 +1927,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 6661726212506607524}
   infoMenu: {fileID: 0}
+  activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -2560,6 +2561,7 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   minPos: {x: -1, y: 0}
   maxPos: {x: 20, y: 8}
+  materials: []
 --- !u!114 &6660956173167543618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8375,6 +8377,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 6661726212506607524}
   infoMenu: {fileID: 0}
+  activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -8652,6 +8655,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 6661726212506607524}
   infoMenu: {fileID: 0}
+  activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
