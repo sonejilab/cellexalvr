@@ -13722,7 +13722,7 @@ MonoBehaviour:
   - Standard
   graphPointSizeModes:
   - Small
-  - Medium
+  - Standard
   - Large
   lineColouringMethods:
   - By correlation
@@ -33409,7 +33409,7 @@ MonoBehaviour:
   image: {fileID: 5969706282600157456}
   gradientColor: 0
   gradient: {fileID: 0}
-  colorField: 7
+  colorField: 16
   selectionToolColorIndex: 0
 --- !u!1 &5364323395714788880
 GameObject:
