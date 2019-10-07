@@ -44,12 +44,16 @@ namespace CellexalVR.AnalysisLogic
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
 
             // Wait for other processes to finish and for server to have started.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") ||
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (referenceManager.selectionManager.RObjectUpdating || !rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
-
             CellexalLog.Log("Running R script : " + rScriptFilePath);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -75,12 +79,16 @@ namespace CellexalVR.AnalysisLogic
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
 
-            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (referenceManager.selectionManager.RObjectUpdating || !rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
-
-            Debug.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -123,12 +131,16 @@ namespace CellexalVR.AnalysisLogic
             string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + heatmap.selectionNr + ".txt").UnFixFilePath();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + heatmapImageFilePath.UnFixFilePath() + " " + groupingsFilepath;
-
-            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (referenceManager.selectionManager.RObjectUpdating || !rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
-
             CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -184,12 +196,16 @@ namespace CellexalVR.AnalysisLogic
             string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + heatmap.selectionNr + ".txt").UnFixFilePath();
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + groupingsFilepath;
 
-            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (referenceManager.selectionManager.RObjectUpdating || !rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
-
-            Debug.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
             CellexalLog.Log("Running R script " + rScriptFilePath + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -222,11 +238,16 @@ namespace CellexalVR.AnalysisLogic
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + networkImageFilePath.UnFixFilePath() + " " + groupingsFilepath.UnFixFilePath();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
 
-            while (referenceManager.selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (referenceManager.selectionManager.RObjectUpdating || !rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
-
             CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();

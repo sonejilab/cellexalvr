@@ -51,6 +51,11 @@ namespace CellexalVR.Menu.Buttons
                 firstTab.SetTabActive(true);
                 firstTab.TabButton.SetHighlighted(true);
             }
+            var subMenuWithouthTabs = menu.GetComponent<MenuWithoutTabs>();
+            if (subMenuWithouthTabs != null)
+            {
+                subMenuWithouthTabs.SetMenuActive(true);
+            }
             descriptionText.text = "";
         }
 

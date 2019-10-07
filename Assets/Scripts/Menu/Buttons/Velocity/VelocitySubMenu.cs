@@ -107,12 +107,10 @@ namespace CellexalVR.Menu.SubMenus
                 if (button.FilePath == filePath)
                 {
                     button.ToggleOutline(true);
-                    //button.activeOutline.SetActive(true);
                 }
                 else
                 {
                     button.ToggleOutline(false);
-                    //button.activeOutline.SetActive(false);
                 }
             }
         }

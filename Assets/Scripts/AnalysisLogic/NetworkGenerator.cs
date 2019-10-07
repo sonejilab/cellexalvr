@@ -179,6 +179,10 @@ namespace CellexalVR.AnalysisLogic
             //calculatorCluster.SetActive(true);
             referenceManager.floor.StartPulse();
 
+            while (selectionManager.RObjectUpdating)
+            {
+                yield return null;
+            }
             // generate the files containing the network information
             selectionNr = selectionManager.fileCreationCtr - 1;
             //string function = "make.cellexalvr.network";
@@ -193,8 +197,14 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Creating directory " + outputFilePath.FixFilePath());
                 Directory.CreateDirectory(outputFilePath);
             }
-            while (selectionManager.RObjectUpdating || !File.Exists(groupingFilePath) || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (!rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
 

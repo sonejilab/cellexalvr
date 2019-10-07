@@ -403,7 +403,7 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to draw lines between graph points");
             StartCoroutine(referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection()));
-            CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
+            //CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         }
 
         [PunRPC]
@@ -411,7 +411,7 @@ namespace CellexalVR.Multiplayer
         {
             CellexalLog.Log("Recieved message to clear lines between graph points");
             referenceManager.cellManager.ClearLinesBetweenGraphPoints();
-            CellexalEvents.LinesBetweenGraphsCleared.Invoke();
+            //CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         }
 
         [PunRPC]

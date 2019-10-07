@@ -525,23 +525,25 @@ namespace CellexalVR.General
             //string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
                                         + (fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            //string script = "cellexalObj <- " + function + "(" + args + ")";
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
-            // Wait for server to start up
-            while (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid")
-                    || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            // Wait for server to start up and not be busy
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (!rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
-
-
             Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }

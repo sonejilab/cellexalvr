@@ -203,7 +203,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 activeOutline.SetActive(toggle);
             }
-            else if (menuNoTab != null && menuNoTab.Active)
+            else if (menuNoTab != null)
             {
                 activeOutline.SetActive(toggle);
             }

@@ -16,6 +16,7 @@ namespace CellexalVR.AnalysisLogic
         public static ReferenceManager referenceManager;
 
         public static ArrayList geneResult = new ArrayList();
+        public static bool serverIdle = true;
 
         public static void SetReferenceManager(ReferenceManager rm)
         {
@@ -178,6 +179,7 @@ namespace CellexalVR.AnalysisLogic
 
         public static string RunRScript(string path, string args = "")
         {
+            serverIdle = false;
             string result = null;
             string inputFilePath = CellexalUser.UserSpecificFolder + "\\mainServer";
             if (!File.Exists(inputFilePath + ".input.lock"))
@@ -196,6 +198,7 @@ namespace CellexalVR.AnalysisLogic
                 }
                 File.Delete(inputFilePath + ".input.lock");
             }
+            serverIdle = true;
             return result;
         }
 

@@ -46,8 +46,6 @@ namespace CellexalVR.Menu.SubMenus
             string tabName = networks[0].Handler.gameObject.name.Split('_')[1];
             newTab.gameObject.name = "Tab_" + tabName;
             newTab.TabName.text = tabName;
-            print(tabName);
-            print(newTab.TabName);
             //newTab.tab = newTab.transform.parent.gameObject;
             if (colors == null)
             {

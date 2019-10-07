@@ -29,6 +29,10 @@ namespace CellexalVR.Menu.SubMenus
         public virtual void SetMenuActive(bool toggle)
         {
             Active = toggle;
+            foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>(true))
+            {
+                rend.enabled = toggle;
+            }
         }
 
     }

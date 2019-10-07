@@ -199,9 +199,13 @@ namespace CellexalVR.AnalysisLogic
             // Show calculators and floor pulse
             //calculatorCluster.SetActive(true);
             referenceManager.floor.StartPulse();
-            List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
 
             // Check if more than one cell is selected
+            while (selectionManager.RObjectUpdating)
+            {
+                yield return null;
+            }
+            List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
             if (selection.Count < 1)
             {
                 CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
@@ -230,10 +234,14 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
                 Directory.CreateDirectory(heatmapDirectory);
             }
-            while (selectionManager.RObjectUpdating || !File.Exists(groupingFilepath)
-                || !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid")
-                || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (!rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
             //t = new Thread(() => RScriptRunner.RunScript(script));
@@ -541,7 +549,7 @@ namespace CellexalVR.AnalysisLogic
             var attributeWidths = heatmap.attributeWidths;
             var groupWidths = heatmap.groupWidths;
             //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(heatmap.bitmap);
-            System.Drawing.Graphics graphics = DrawHeatmap(heatmap, System.Drawing.Color.FromArgb(0,0,0,0), System.Drawing.Color.White);
+            System.Drawing.Graphics graphics = DrawHeatmap(heatmap, System.Drawing.Color.FromArgb(0, 0, 0, 0), System.Drawing.Color.White);
 
             //// get the grouping colors
             //Dictionary<int, SolidBrush> groupBrushes = new Dictionary<int, SolidBrush>();
