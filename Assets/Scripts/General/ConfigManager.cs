@@ -61,6 +61,16 @@ namespace CellexalVR.General
         public Config(Config c)
         {
             ConfigDir = c.ConfigDir;
+            if (CrossSceneInformation.RScriptPath != null)
+            {
+                RscriptexePath = CrossSceneInformation.RScriptPath;
+                c.RscriptexePath = RscriptexePath;
+            }
+            else
+            {
+                RscriptexePath = c.RscriptexePath;
+            }
+
             GraphLoadingCellsPerFrameStartCount = c.GraphLoadingCellsPerFrameStartCount;
             GraphLoadingCellsPerFrameIncrement = c.GraphLoadingCellsPerFrameIncrement;
             GraphClustersPerFrameStartCount = c.GraphClustersPerFrameStartCount;
@@ -96,16 +106,6 @@ namespace CellexalVR.General
             GraphPointQuality = c.GraphPointQuality;
             GraphPointSize = c.GraphPointSize;
             SkyboxTintColor = c.SkyboxTintColor;
-            if (CrossSceneInformation.RScriptPath != null)
-            {
-                RscriptexePath = CrossSceneInformation.RScriptPath;
-                c.RscriptexePath = RscriptexePath;
-            }
-            else
-            {
-                RscriptexePath = c.RscriptexePath;
-            }
-
         }
     }
 

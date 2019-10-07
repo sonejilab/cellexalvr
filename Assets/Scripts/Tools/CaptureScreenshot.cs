@@ -94,16 +94,28 @@ namespace CellexalVR.Tools
         {
             string args = screenshotImageFilePath;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\screenshot_report.R";
-            CellexalLog.Log("Running R script " + CellexalLog.FixFilePath(rScriptFilePath) + " with the arguments \"" + args + "\"");
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (!rServerReady || !RScriptRunner.serverIdle)
+            {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                yield return null;
+            }
+            //t = new Thread(() => RScriptRunner.RunScript(script));
             Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
+            CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
 
-            while (t.IsAlive)
+            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
             }
+
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         }
