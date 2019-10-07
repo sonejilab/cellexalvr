@@ -14,6 +14,8 @@ namespace CellexalVR.AnalysisLogic
     public class ReportManager : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+
+        private bool goAnalysisRunning;
         // Use this for initialization
         void Start()
         {
@@ -76,6 +78,7 @@ namespace CellexalVR.AnalysisLogic
         public IEnumerator LogStop(SaveButton saveButton)
         {
             saveButton.descriptionText.text = "Compiling report..";
+            referenceManager.floor.StartPulse();
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
 
@@ -103,7 +106,7 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
 
-
+            CellexalEvents.ScriptFinished.Invoke();
             saveButton.changeSprite = false;
             saveButton.descriptionText.text = "";
             saveButton.SetButtonActivated(true);
@@ -127,6 +130,7 @@ namespace CellexalVR.AnalysisLogic
             //CellexalEvents.ScriptRunning.Invoke();
             heatmap.saveImageButton.SetButtonActivated(false);
             heatmap.statusText.text = "Saving Heatmap...";
+            referenceManager.floor.StartPulse();
             string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").UnFixFilePath();
             string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + heatmap.selectionNr + ".txt").UnFixFilePath();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
@@ -155,9 +159,9 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
             heatmap.saveImageButton.FinishedButton();
             heatmap.statusText.text = "";
-            //CellexalEvents.ScriptFinished.Invoke();
+            CellexalEvents.ScriptFinished.Invoke();
             heatmap.removable = false;
-            //saveImageButton.SetButtonActivated(true);
+           //saveImageButton.SetButtonActivated(true);
         }
 
         /// <summary>
@@ -190,6 +194,8 @@ namespace CellexalVR.AnalysisLogic
         IEnumerator GOAnalysis(string goAnalysisDirectory, Heatmap heatmap)
         {
             heatmap.statusText.text = "Doing GO Analysis...";
+            referenceManager.floor.StartPulse();
+            goAnalysisRunning = true;
             heatmap.removable = true;
             string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").UnFixFilePath();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\GOanalysis.R").FixFilePath();
@@ -217,9 +223,11 @@ namespace CellexalVR.AnalysisLogic
             }
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+            CellexalEvents.ScriptFinished.Invoke();
             heatmap.statusText.text = "";
             heatmap.goAnalysisButton.FinishedButton();
             heatmap.removable = false;
+            goAnalysisRunning = false;
         }
         #endregion
 
@@ -232,6 +240,7 @@ namespace CellexalVR.AnalysisLogic
         {
             //handler.runningScript = true;
             CellexalEvents.ScriptRunning.Invoke();
+            referenceManager.floor.StartPulse();
             nc.saveImageButton.SetButtonActivated(false);
             nc.saveImageButton.descriptionText.text = "Saving image...";
             string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + nc.selectionNr + ".txt";
@@ -264,6 +273,7 @@ namespace CellexalVR.AnalysisLogic
             //handler.runningScript = false;
             CellexalEvents.ScriptFinished.Invoke();
             nc.saveImageButton.descriptionText.text = "";
+
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using CellexalVR.General;
+using System.IO;
 
 public class Floor : MonoBehaviour
 {
@@ -15,8 +16,10 @@ public class Floor : MonoBehaviour
         CellexalEvents.GraphsLoaded.AddListener(StartWave);
         CellexalEvents.GraphsColoredByGene.AddListener(StartWave);
         CellexalEvents.GraphsColoredByIndex.AddListener(StartWave);
-        CellexalEvents.HeatmapCreated.AddListener(StartWave);
-        CellexalEvents.NetworkCreated.AddListener(StartWave);
+        //CellexalEvents.HeatmapCreated.AddListener(StartWave);
+        //CellexalEvents.NetworkCreated.AddListener(StartWave);
+        CellexalEvents.ScriptFinished.AddListener(() => StartCoroutine(ScriptFinished()));
+        CellexalEvents.ScriptFinished.AddListener(StartWave);
     }
 
     // Update is called once per frame
@@ -63,5 +66,19 @@ public class Floor : MonoBehaviour
         }
 
         gridMaterial.SetFloat("_WaveStartTime", -1f);
+    }
+    private IEnumerator ScriptFinished()
+    {
+        float waitTime = 0f;
+        while (waitTime < 0.5f)
+        {
+            waitTime += Time.deltaTime;
+            yield return null;
+        }
+        if (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+        {
+            print("stop pulse");
+            StopPulse();
+        }
     }
 }

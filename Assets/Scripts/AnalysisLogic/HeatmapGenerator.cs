@@ -209,7 +209,10 @@ namespace CellexalVR.AnalysisLogic
             if (selection.Count < 1)
             {
                 CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
-                referenceManager.floor.StopPulse();
+                if (!(referenceManager.networkGenerator.GeneratingNetworks && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+                {
+                    referenceManager.floor.StopPulse();
+                }
                 //if (!referenceManager.networkGenerator.GeneratingNetworks)
                 //    referenceManager.calculatorCluster.SetActive(false);
                 referenceManager.notificationManager.SpawnNotification("Heatmap generation failed.");
@@ -355,8 +358,10 @@ namespace CellexalVR.AnalysisLogic
                     Debug.Log("File - " + filepath + " - not found.");
                     CellexalLog.Log("File - " + filepath + " - not found.", e.StackTrace);
                     CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
-                    if (!referenceManager.networkGenerator.GeneratingNetworks)
+                    if (!(referenceManager.networkGenerator.GeneratingNetworks && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+                    {
                         referenceManager.floor.StopPulse();
+                    }
                     //referenceManager.calculatorCluster.SetActive(false);
                 }
             }
@@ -531,12 +536,11 @@ namespace CellexalVR.AnalysisLogic
             heatmap.createAnim = true;
 
             CellexalEvents.HeatmapCreated.Invoke();
-            if (!referenceManager.networkGenerator.GeneratingNetworks)
-            {
-                //referenceManager.calculatorCluster.SetActive(false);
-                referenceManager.floor.StopPulse();
-            }
-
+            CellexalEvents.ScriptFinished.Invoke();
+            //if (!(referenceManager.networkGenerator.GeneratingNetworks && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+            //{
+            //    referenceManager.floor.StopPulse();
+            //}
             referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
         }
 

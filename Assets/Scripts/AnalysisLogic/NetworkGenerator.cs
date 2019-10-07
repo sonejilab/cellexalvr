@@ -225,12 +225,11 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
             GeneratingNetworks = false;
             CellexalEvents.NetworkCreated.Invoke();
-            if (!referenceManager.heatmapGenerator.GeneratingHeatmaps)
-            {
-                //calculatorCluster.SetActive(false);
-                referenceManager.floor.StopPulse();
-            }
-
+            CellexalEvents.ScriptFinished.Invoke();
+            //if (!(referenceManager.heatmapGenerator.GeneratingHeatmaps && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+            //{
+            //    referenceManager.floor.StopPulse();
+            //}
 
             inputReader.ReadNetworkFiles(layoutSeed);
         }
