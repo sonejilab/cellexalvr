@@ -15,7 +15,7 @@ namespace CellexalVR.Interaction
         public bool isVisible;
         public ReferenceManager referenceManager;
 
-        private bool firstActivated; 
+        private bool firstActivated;
 
         private void OnValidate()
         {
@@ -51,12 +51,12 @@ namespace CellexalVR.Interaction
             webBrowser.OnNavigate(output.text);
             referenceManager.gameManager.InformBrowserEnter();
         }
-        
+
         public void SetBrowserActive(bool active)
         {
-            if (!firstActivated)
+            if (!firstActivated && !webBrowser.gameObject.activeInHierarchy)
             {
-                webBrowser.gameObject.SetActive(active);
+                webBrowser.gameObject.SetActive(true);
                 firstActivated = true;
             }
             SetVisible(active);

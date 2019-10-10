@@ -208,6 +208,7 @@ namespace CellexalVR.AnalysisObjects
             cell.AddGraphPoint(gp);
             UpdateMinMaxCoords(x, y, z);
             //print("adding points to - " + newGraph.gameObject.name + " - " + newGraph.points.Count);
+            //CellexalLog.Log("Added graphpoint: " + cell.Label + " " + x + " " + y + " " + z);
             return gp;
         }
 
@@ -277,8 +278,7 @@ namespace CellexalVR.AnalysisObjects
             }
             //firstCluster.IntersectWith(newGraph.points.Values);
 
-            List<HashSet<Graph.GraphPoint>> clusters = new List<HashSet<Graph.GraphPoint>>();
-            clusters = SplitCluster(firstCluster);
+            List<HashSet<Graph.GraphPoint>> clusters = SplitCluster(firstCluster);
             MakeMeshes(clusters);
         }
 
@@ -290,13 +290,12 @@ namespace CellexalVR.AnalysisObjects
         /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
         private List<HashSet<Graph.GraphPoint>> SplitCluster(HashSet<Graph.GraphPoint> cluster)
         {
-            var clusters = new List<HashSet<Graph.GraphPoint>>();
             newGraph.octreeRoot = new Graph.OctreeNode();
             newGraph.octreeRoot.pos = new Vector3(-0.5f, -0.5f, -0.5f);
             newGraph.octreeRoot.size = new Vector3(1f, 1f, 1f);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            clusters = SplitClusterRecursive(cluster, newGraph.octreeRoot, true);
+            List<HashSet<Graph.GraphPoint>> clusters = SplitClusterRecursive(cluster, newGraph.octreeRoot, true);
             // add colliders
             foreach (Graph.OctreeNode node in newGraph.octreeRoot.children)
             {
@@ -354,15 +353,15 @@ namespace CellexalVR.AnalysisObjects
                 splitCenter += pos;
                 if (pos.x < minX)
                     minX = pos.x;
-                if (pos.x > maxX)
+                else if (pos.x > maxX)
                     maxX = pos.x;
                 if (pos.y < minY)
                     minY = pos.y;
-                if (pos.y > maxY)
+                else if (pos.y > maxY)
                     maxY = pos.y;
                 if (pos.z < minZ)
                     minZ = pos.z;
-                if (pos.z > maxZ)
+                else if (pos.z > maxZ)
                     maxZ = pos.z;
             }
             splitCenter /= cluster.Count;
@@ -371,7 +370,6 @@ namespace CellexalVR.AnalysisObjects
             Vector3 nodePos = node.pos;
             node.size = new Vector3(maxX - minX + graphpointMeshSize, maxY - minY + graphpointMeshSize, maxZ - minZ + graphpointMeshSize);
             Vector3 nodeSize = node.size;
-
 
             // initialise new clusters
             List<HashSet<Graph.GraphPoint>> newClusters = new List<HashSet<Graph.GraphPoint>>(8);
@@ -405,7 +403,7 @@ namespace CellexalVR.AnalysisObjects
             nodePos,
             new Vector3(splitCenter.x,  nodePos.y,      nodePos.z),
             new Vector3(nodePos.x,      splitCenter.y,  nodePos.z),
-            new Vector3(splitCenter.x,  splitCenter.y,  node.pos.z),
+            new Vector3(splitCenter.x,  splitCenter.y,  nodePos.z),
             new Vector3(nodePos.x,      nodePos.y ,     splitCenter.z),
             new Vector3(splitCenter.x,  nodePos.y,      splitCenter.z),
             new Vector3(nodePos.x,      splitCenter.y,  splitCenter.z),
@@ -440,7 +438,6 @@ namespace CellexalVR.AnalysisObjects
                     node.children[i] = newOctreeNode;
                 }
             }
-            //print(newClusters.Count);
             //call recursively for each new cluster
             for (int i = 0; i < newClusters.Count; ++i)
             {
@@ -502,9 +499,8 @@ namespace CellexalVR.AnalysisObjects
             int graphPointMeshVertexCount = meshToUse.vertexCount;
             int graphPointMeshTriangleCount = meshToUse.triangles.Length;
             Material graphPointMaterial = Instantiate(graphPointMaterialPrefab);
-            //List<Vector3> graphpointMeshNormals = new List<Vector3>(graphPointMeshVertexCount);
-            //graphPointMesh.GetNormals(graphpointMeshNormals);
 
+            // arrays used by the combine meshes job
             NativeArray<Vector3> graphPointMeshVertices = new NativeArray<Vector3>(meshToUse.vertices, Allocator.TempJob);
             NativeArray<int> graphPointMeshTriangles = new NativeArray<int>(meshToUse.triangles, Allocator.TempJob);
             NativeArray<int> clusterOffsets = new NativeArray<int>(nbrOfClusters, Allocator.TempJob);
@@ -513,12 +509,12 @@ namespace CellexalVR.AnalysisObjects
             NativeArray<int> resultTriangles = new NativeArray<int>(newGraph.points.Count * graphPointMeshTriangleCount, Allocator.TempJob);
             NativeArray<Vector2> resultUVs = new NativeArray<Vector2>(newGraph.points.Count * graphPointMeshVertexCount, Allocator.TempJob);
 
-            int totalNumberOfPoints = newGraph.points.Count;
+            // set up cluster offsets
+            clusterOffsets[0] = 0;
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 var cluster = clusters[i];
                 int clusterOffset = cluster.Count;
-                clusterOffsets[0] = 0;
                 if (i < clusterOffsets.Length - 1)
                 {
                     clusterOffsets[i + 1] = clusterOffsets[i] + cluster.Count;
@@ -529,10 +525,16 @@ namespace CellexalVR.AnalysisObjects
                 {
                     positions[clusterOffsets[i] + j] = point.Position;
                     point.SetTextureCoord(new Vector2Int(j, i));
+
+                    //debugPoints.Remove(point);
+
                     j++;
                 }
             }
 
+
+
+            // create a job to create and merge the meshes
             var job = new CombineMeshesJob()
             {
                 // input
@@ -551,6 +553,7 @@ namespace CellexalVR.AnalysisObjects
             yield return new WaitWhile(() => !handle.IsCompleted);
             handle.Complete();
 
+            // instantiate everything
             int itemsThisFrame = 0;
             int maximumItemsPerFrame = CellexalConfig.Config.GraphClustersPerFrameStartCount;
             int maximumItemsPerFrameInc = CellexalConfig.Config.GraphClustersPerFrameIncrement;
@@ -559,25 +562,17 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 GameObject newPart;
-                //if (graphType == GraphType.BETWEEN)
-                //{
-                //    newPart = Instantiate(graphpointsLargerPrefab, newGraph.transform);
-                //}
-                //else
-                //{
                 newPart = Instantiate(graphpointsPrefab, newGraph.transform);
-                //}
-                //clusters[i].All((CombinedGraph.CombinedGraphPoint point) => (point.cluster = newPart));
                 var newMesh = new Mesh();
                 int clusterOffset = clusterOffsets[i];
                 int clusterSize = 0;
                 if (i < clusterOffsets.Length - 1)
                 {
-                    clusterSize = clusterOffsets[i + 1] - clusterOffsets[i];
+                    clusterSize = clusterOffsets[i + 1] - clusterOffset;
                 }
                 else
                 {
-                    clusterSize = newGraph.points.Count - clusterOffsets[i];
+                    clusterSize = newGraph.points.Count - clusterOffset;
                 }
                 int nbrOfVerticesInCluster = clusterSize * graphPointMeshVertexCount;
                 int nbrOfTrianglesInCluster = clusterSize * graphPointMeshTriangleCount;
@@ -588,21 +583,6 @@ namespace CellexalVR.AnalysisObjects
                 newMesh.vertices = new NativeSlice<Vector3>(job.resultVertices, vertexOffset, nbrOfVerticesInCluster).ToArray();
                 newMesh.uv = new NativeSlice<Vector2>(job.resultUVs, vertexOffset, nbrOfVerticesInCluster).ToArray();
                 newMesh.triangles = new NativeSlice<int>(job.resultTriangles, triangleOffset, nbrOfTrianglesInCluster).ToArray();
-
-                //List<Vector3> newMeshNormals = new List<Vector3>(clusterSize * graphpointMeshNormals.Count);
-                //for (int j = 0; j < clusterSize; ++j)
-                //{
-                //    newMeshNormals.AddRange(graphpointMeshNormals);
-                //}
-
-                //newMesh.SetNormals(newMeshNormals);
-                //newMesh.vertices = new Vector3[nbrOfVerticesInCluster];
-                //newMesh.uv = new Vector2[nbrOfVerticesInCluster];
-                //newMesh.triangles = new int[nbrOfTrianglesInCluster];
-
-                //job.resultVertices.CopySliceTo(newMesh.vertices, vertexOffset, nbrOfVerticesInCluster);
-                //job.resultUVs.CopySliceTo(newMesh.uv, vertexOffset, nbrOfVerticesInCluster);
-                //job.resultTriangles.CopySliceTo(newMesh.triangles, triangleOffset, nbrOfTrianglesInCluster);
 
                 newMesh.RecalculateBounds();
                 newMesh.RecalculateNormals();
@@ -633,8 +613,6 @@ namespace CellexalVR.AnalysisObjects
             }
             job.positions.Dispose();
             job.clusterOffsets.Dispose();
-            //job.vertices.Dispose();
-            //job.triangles.Dispose();
             job.resultVertices.Dispose();
             job.resultTriangles.Dispose();
             job.resultUVs.Dispose();
@@ -642,6 +620,7 @@ namespace CellexalVR.AnalysisObjects
             graphPointMeshVertices.Dispose();
             graphPointMeshTriangles.Dispose();
 
+            // set up the graph's texture
             newGraph.textureWidth = nbrOfMaxPointsPerClusters;
             newGraph.textureHeight = nbrOfClusters;
             Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
@@ -660,15 +639,16 @@ namespace CellexalVR.AnalysisObjects
             sharedMaterial.mainTexture = newGraph.texture;
 
             Shader graphpointShader = sharedMaterial.shader;
-
             sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
-            //sharedMaterial.SetColorArray("_ExpressionColors", graphpointColors);
 
             stopwatch.Stop();
             CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName, stopwatch.Elapsed.ToString()));
             isCreating = false;
+        }
 
-            //yield break;
+        private static string V2S(Vector3 v)
+        {
+            return "(" + v.x + ", " + v.y + ", " + v.z + ")";
         }
 
         /// <summary>
@@ -699,24 +679,35 @@ namespace CellexalVR.AnalysisObjects
             // each call to execute merges the meshes of one cluster
             public void Execute(int index)
             {
-                int nbrOfPoints = 0;
+                int clusterOffset = clusterOffsets[index];
+                int nbrOfPoints;
                 if (index < clusterOffsets.Length - 1)
                 {
-                    nbrOfPoints = clusterOffsets[index + 1] - clusterOffsets[index];
+                    nbrOfPoints = clusterOffsets[index + 1] - clusterOffset;
                 }
                 else
                 {
-                    nbrOfPoints = positions.Length - clusterOffsets[index];
+                    nbrOfPoints = positions.Length - clusterOffset;
                 }
+
                 int nbrOfVertices = vertices.Length;
                 int nbrOfTriangles = triangles.Length;
-                int vertexIndexOffset = clusterOffsets[index] * nbrOfVertices;
-                int triangleIndexOffset = clusterOffsets[index] * nbrOfTriangles;
+                int vertexIndexOffset = clusterOffset * nbrOfVertices;
+                int triangleIndexOffset = clusterOffset * nbrOfTriangles;
                 float clusterUVY = (index + 0.5f) / clusterOffsets.Length;
 
                 for (int i = 0; i < nbrOfPoints; ++i)
                 {
-                    Vector3 pointPosition = positions[clusterOffsets[index] + i];
+                    Vector3 pointPosition = positions[clusterOffset + i];
+                    if (index == clusterOffsets.Length - 1)
+                    {
+                        //print(V2S(pointPosition));
+                        if (pointPosition.x == 0f && pointPosition.y == 0f && pointPosition.z == 0f)
+                        {
+                            print(index + " " + (clusterOffset + i));
+                        }
+
+                    }
                     float pointUVX = (i + 0.5f) / clusterMaxSize;
 
                     for (int j = 0; j < nbrOfVertices; ++j)

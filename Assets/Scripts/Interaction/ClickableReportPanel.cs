@@ -15,7 +15,6 @@ namespace CellexalVR.Interaction
         /// The entire string of text that is displayed on the panel.
         /// </summary>
         public string Text { get; protected set; }
-        public Material[] materials;
 
         public SimpleWebBrowser.WebBrowser webBrowser;
 
@@ -23,10 +22,6 @@ namespace CellexalVR.Interaction
         {
             base.Start();
             textMesh = GetComponentInChildren<TextMeshPro>();
-            materials = new Material[3];
-            materials[0] = keyHighlightMaterial;
-            materials[1] = keyNormalMaterial;
-            materials[2] = keyPressedMaterial;
         }
 
 
