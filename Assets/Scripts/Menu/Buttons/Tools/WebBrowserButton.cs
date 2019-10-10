@@ -1,4 +1,5 @@
-﻿using CellexalVR.Interaction;
+﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 namespace CellexalVR.Menu.Buttons.Tools
 {
     /// <summary>
@@ -9,6 +10,7 @@ namespace CellexalVR.Menu.Buttons.Tools
         private void Start()
         {
             SetButtonActivated(true);
+            CellexalEvents.GraphsUnloaded.RemoveListener(TurnOff);
         }
 
         protected override string Description

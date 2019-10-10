@@ -1,4 +1,5 @@
-﻿using CellexalVR.Interaction;
+﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.Menu.Buttons.Tools
 {
@@ -11,6 +12,7 @@ namespace CellexalVR.Menu.Buttons.Tools
         {
             base.Awake();
             TurnOn();
+            CellexalEvents.GraphsUnloaded.RemoveListener(TurnOff);
         }
         protected override string Description
         {
@@ -20,6 +22,8 @@ namespace CellexalVR.Menu.Buttons.Tools
         {
             get { return ControllerModelSwitcher.Model.TwoLasers; }
         }
+
+
 
     }
 }

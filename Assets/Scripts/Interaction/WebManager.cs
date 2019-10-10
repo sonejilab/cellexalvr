@@ -56,7 +56,9 @@ namespace CellexalVR.Interaction
         {
             if (!firstActivated && !webBrowser.gameObject.activeInHierarchy)
             {
-                webBrowser.gameObject.SetActive(true);
+                webBrowser.gameObject.SetActive(active);
+                GetComponentInChildren<ReportListGenerator>().GenerateList();
+
                 firstActivated = true;
             }
             SetVisible(active);

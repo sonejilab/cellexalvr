@@ -319,8 +319,8 @@ namespace CellexalVR.Interaction
             keyboard.SetKeyboardVisible(false);
             //referenceManager.gameManager.InformActivateKeyboard(false);
             drawTool.SetActive(false);
-            webBrowser.GetComponent<WebManager>().SetBrowserActive(false);
-            //webBrowser.GetComponent<WebManager>().SetVisible(false);
+            //webBrowser.GetComponent<WebManager>().SetBrowserActive(false);
+            webBrowser.GetComponent<WebManager>().SetVisible(false);
             if (inMenu)
             {
                 SwitchToModel(Model.Menu);

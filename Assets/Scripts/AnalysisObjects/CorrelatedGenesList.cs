@@ -121,8 +121,14 @@ namespace CellexalVR.AnalysisObjects
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_correlated_genes.R").FixFilePath();
 
             // First wait until other processes are finished before trying to start this one.
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            while (!rServerReady || !RScriptRunner.serverIdle)
             {
+                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
             CellexalLog.Log("Calculating correlated genes with R script " + rScriptFilePath + " and arguments: " + args);

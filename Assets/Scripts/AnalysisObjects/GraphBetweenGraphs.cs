@@ -101,6 +101,7 @@ namespace CellexalVR.AnalysisObjects
             if (newGraph.points.Count == 0)
             {
                 Destroy(newGraph.gameObject);
+                referenceManager.graphGenerator.isCreating = false;
                 return;
             }
             referenceManager.graphGenerator.SliceClustering();
