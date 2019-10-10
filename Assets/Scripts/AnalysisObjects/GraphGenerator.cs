@@ -316,22 +316,30 @@ namespace CellexalVR.AnalysisObjects
         /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
         private List<HashSet<Graph.GraphPoint>> SplitClusterRecursive(HashSet<Graph.GraphPoint> cluster, Graph.OctreeNode node, bool addClusters)
         {
+            var result = new List<HashSet<Graph.GraphPoint>>();
             float graphpointMeshSize = meshToUse.bounds.size.x;
             float graphpointMeshExtent = graphpointMeshSize / 2f;
+            Graph.GraphPoint firstPoint = cluster.First();
+            // if the cluster size is 1, add one last octreenode and return. recursion stops here.
             if (cluster.Count == 1)
             {
                 node.children = new Graph.OctreeNode[0];
-                var point = cluster.First();
-                node.point = point;
-                point.node = node;
+                node.point = firstPoint;
+                firstPoint.node = node;
                 node.size = meshToUse.bounds.size;
-                //node.size = new Vector3(0.03f, 0.03f, 0.03f);
-                node.pos = point.Position - node.size / 2;
-                node.center = point.Position;
-                return null;
+                node.pos = firstPoint.Position - node.size / 2;
+                node.center = firstPoint.Position;
+                if (addClusters)
+                {
+                    result.Add(cluster);
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
             }
 
-            var result = new List<HashSet<Graph.GraphPoint>>();
             if (cluster.Count <= nbrOfMaxPointsPerClusters && addClusters)
             {
                 result.Add(cluster);
@@ -341,12 +349,13 @@ namespace CellexalVR.AnalysisObjects
             // cluster is too big, split it
             // calculate center
             Vector3 splitCenter = Vector3.zero;
-            float minX = float.MaxValue;
-            float minY = float.MaxValue;
-            float minZ = float.MaxValue;
-            float maxX = float.MinValue;
-            float maxY = float.MinValue;
-            float maxZ = float.MinValue;
+            Vector3 firstPointPosition = firstPoint.Position;
+            float minX = firstPointPosition.x;
+            float minY = firstPointPosition.y;
+            float minZ = firstPointPosition.z;
+            float maxX = firstPointPosition.x;
+            float maxY = firstPointPosition.y;
+            float maxZ = firstPointPosition.z;
             foreach (var point in cluster)
             {
                 Vector3 pos = point.Position;
@@ -400,25 +409,26 @@ namespace CellexalVR.AnalysisObjects
 
             node.children = new Graph.OctreeNode[newClusters.Count((HashSet<Graph.GraphPoint> c) => c.Count > 0)];
             Vector3[] newOctreePos = new Vector3[] {
-            nodePos,
-            new Vector3(splitCenter.x,  nodePos.y,      nodePos.z),
-            new Vector3(nodePos.x,      splitCenter.y,  nodePos.z),
-            new Vector3(splitCenter.x,  splitCenter.y,  nodePos.z),
-            new Vector3(nodePos.x,      nodePos.y ,     splitCenter.z),
-            new Vector3(splitCenter.x,  nodePos.y,      splitCenter.z),
-            new Vector3(nodePos.x,      splitCenter.y,  splitCenter.z),
-            splitCenter };
+                nodePos,
+                new Vector3(splitCenter.x,  nodePos.y,      nodePos.z),
+                new Vector3(nodePos.x,      splitCenter.y,  nodePos.z),
+                new Vector3(splitCenter.x,  splitCenter.y,  nodePos.z),
+                new Vector3(nodePos.x,      nodePos.y ,     splitCenter.z),
+                new Vector3(splitCenter.x,  nodePos.y,      splitCenter.z),
+                new Vector3(nodePos.x,      splitCenter.y,  splitCenter.z),
+                splitCenter
+            };
 
             Vector3[] newOctreeSizes = new Vector3[]
             {
-            splitCenter - nodePos,
-            new Vector3(nodeSize.x - (splitCenter.x - nodePos.x), splitCenter.y - nodePos.y,                splitCenter.z - nodePos.z),
-            new Vector3(splitCenter.x - nodePos.x,                nodeSize.y - (splitCenter.y - nodePos.y), splitCenter.z - nodePos.z),
-            new Vector3(nodeSize.x - (splitCenter.x - nodePos.x), nodeSize.y - (splitCenter.y - nodePos.y), splitCenter.z - nodePos.z),
-            new Vector3(splitCenter.x - nodePos.x,                splitCenter.y - nodePos.y ,               nodeSize.z - (splitCenter.z - nodePos.z)),
-            new Vector3(nodeSize.x - (splitCenter.x - nodePos.x), splitCenter.y - nodePos.y,                nodeSize.z - (splitCenter.z - nodePos.z)),
-            new Vector3(splitCenter.x - nodePos.x,                nodeSize.y - (splitCenter.y - nodePos.y), nodeSize.z - (splitCenter.z - nodePos.z)),
-            nodeSize - (splitCenter - nodePos)
+                splitCenter - nodePos,
+                new Vector3(nodeSize.x - (splitCenter.x - nodePos.x), splitCenter.y - nodePos.y,                splitCenter.z - nodePos.z),
+                new Vector3(splitCenter.x - nodePos.x,                nodeSize.y - (splitCenter.y - nodePos.y), splitCenter.z - nodePos.z),
+                new Vector3(nodeSize.x - (splitCenter.x - nodePos.x), nodeSize.y - (splitCenter.y - nodePos.y), splitCenter.z - nodePos.z),
+                new Vector3(splitCenter.x - nodePos.x,                splitCenter.y - nodePos.y ,               nodeSize.z - (splitCenter.z - nodePos.z)),
+                new Vector3(nodeSize.x - (splitCenter.x - nodePos.x), splitCenter.y - nodePos.y,                nodeSize.z - (splitCenter.z - nodePos.z)),
+                new Vector3(splitCenter.x - nodePos.x,                nodeSize.y - (splitCenter.y - nodePos.y), nodeSize.z - (splitCenter.z - nodePos.z)),
+                nodeSize - (splitCenter - nodePos)
             };
 
             for (int i = 0, j = 0; j < 8; ++i, ++j)
@@ -699,15 +709,6 @@ namespace CellexalVR.AnalysisObjects
                 for (int i = 0; i < nbrOfPoints; ++i)
                 {
                     Vector3 pointPosition = positions[clusterOffset + i];
-                    if (index == clusterOffsets.Length - 1)
-                    {
-                        //print(V2S(pointPosition));
-                        if (pointPosition.x == 0f && pointPosition.y == 0f && pointPosition.z == 0f)
-                        {
-                            print(index + " " + (clusterOffset + i));
-                        }
-
-                    }
                     float pointUVX = (i + 0.5f) / clusterMaxSize;
 
                     for (int j = 0; j < nbrOfVertices; ++j)
