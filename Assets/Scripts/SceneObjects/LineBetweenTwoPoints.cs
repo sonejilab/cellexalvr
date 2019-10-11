@@ -66,7 +66,8 @@ namespace CellexalVR.SceneObjects
                 lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
-                lineRenderer.startWidth = lineRenderer.endWidth += 0.015f;
+                lineRenderer.startWidth = lineRenderer.endWidth += 0.04f;
+                //lineRenderer.startWidth = lineRenderer.endWidth += 0.015f;
                 initAnimate = true;
 
             }
@@ -81,6 +82,7 @@ namespace CellexalVR.SceneObjects
                 lineRenderer.SetPositions(new Vector3[] { fromPos, fromPos, fromPos });
                 currentPos = linePosistions[0];
                 currentTarget = linePosistions[1];
+                lineRenderer.startWidth = lineRenderer.endWidth = 0.04f;
                 initAnimate = true;
             }
         }

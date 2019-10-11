@@ -29,7 +29,6 @@ namespace CellexalVR.Interaction
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
         private GameManager gameManager;
-        private Stopwatch minkowskiTimeoutStopwatch = new Stopwatch();
         private bool selActive = false;
         private int currentMeshIndex;
         private Color selectedColor;
@@ -81,14 +80,13 @@ namespace CellexalVR.Interaction
                 if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     hapticFeedbackThisFrame = true;
-                    Vector3 boundsCenter = selectionToolColliders[currentMeshIndex].bounds.center;
-                    Vector3 boundsExtents = selectionToolColliders[currentMeshIndex].bounds.extents;
-                    minkowskiTimeoutStopwatch.Stop();
-                    minkowskiTimeoutStopwatch.Start();
+                    var activeCollider = selectionToolColliders[currentMeshIndex];
+                    Vector3 boundsCenter = activeCollider.bounds.center;
+                    Vector3 boundsExtents = activeCollider.bounds.extents;
                     foreach (var graph in graphManager.Graphs)
                     {
                         //print(graph.GraphName + graph.GraphActive);
-                        var closestPoints = graph.MinkowskiDetectionSelectionTool(transform.position, boundsCenter, boundsExtents, currentColorIndex);
+                        var closestPoints = graph.MinkowskiDetectionSelectionTool(activeCollider.transform.position, boundsCenter, boundsExtents, currentColorIndex);
                         foreach (var point in closestPoints)
                         {
                             selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
@@ -101,7 +99,7 @@ namespace CellexalVR.Interaction
                     ActivateSelection(false);
                 }
             }
-            // Sometimes the a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
+            // Sometimes a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
             // if selection tool is inactive.
             if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
             {

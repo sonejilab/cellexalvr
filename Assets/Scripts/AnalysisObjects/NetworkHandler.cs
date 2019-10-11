@@ -187,7 +187,14 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void Highlight()
         {
-            meshRenderer.materials = highlightedMaterials;
+            if (!meshRenderer)
+            {
+                meshRenderer = GetComponent<MeshRenderer>();
+            }
+            if (meshRenderer)
+            {
+                meshRenderer.materials = highlightedMaterials;
+            }
         }
 
         /// <summary>
@@ -195,7 +202,14 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void Unhighlight()
         {
-            meshRenderer.materials = unhighlightedMaterials;
+            if (!meshRenderer)
+            {
+                meshRenderer = GetComponent<MeshRenderer>();
+            }
+            if (meshRenderer)
+            {
+                meshRenderer.materials = unhighlightedMaterials;
+            }
         }
 
 

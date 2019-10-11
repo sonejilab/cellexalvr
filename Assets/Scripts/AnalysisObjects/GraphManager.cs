@@ -47,6 +47,7 @@ namespace CellexalVR.AnalysisObjects
         public enum GeneExpressionColoringMethods { EqualExpressionRanges, EqualCellNumbers };
         public GeneExpressionColoringMethods GeneExpressionColoringMethod = GeneExpressionColoringMethods.EqualExpressionRanges;
 
+#if UNITY_EDITOR
         [Header("Debuging")]
         public bool drawDebugCubes = false;
         public bool drawDebugLines = false;
@@ -55,6 +56,7 @@ namespace CellexalVR.AnalysisObjects
         public bool drawDebugRejectionApprovedCubes = false;
         public bool drawDebugGroups = false;
         public int drawDebugCubesOnLevel = -1;
+#endif
 
         private void OnValidate()
         {
@@ -85,6 +87,7 @@ namespace CellexalVR.AnalysisObjects
             //CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
         }
 
+#if UNITY_EDITOR
         #region DEBUG_FUNCTIONS
 
         [ConsoleCommand("graphManager", aliases: new string[] { "drawdebugcubes", "ddc" })]
@@ -157,7 +160,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
         #endregion
-
+#endif
         /// <summary>
         /// Finds a graphpoint.
         /// </summary>
