@@ -379,6 +379,12 @@ namespace CellexalVR.Filters
             referenceManager.filterBlockBoard.SetActive(false);
         }
 
+        public void ResetFilter()
+        {
+            currentFilter = null;
+            referenceManager.selectionManager.CurrentFilter = null;
+        }
+
         /// <summary>
         /// Helper class to compare tuples of strings.
         /// </summary>

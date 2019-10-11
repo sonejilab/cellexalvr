@@ -183,37 +183,6 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Highlights this networkhandler by outlining the skeleton mesh.
-        /// </summary>
-        public void Highlight()
-        {
-            if (!meshRenderer)
-            {
-                meshRenderer = GetComponent<MeshRenderer>();
-            }
-            if (meshRenderer)
-            {
-                meshRenderer.materials = highlightedMaterials;
-            }
-        }
-
-        /// <summary>
-        /// Unhighlights this networkhandler.
-        /// </summary>
-        public void Unhighlight()
-        {
-            if (!meshRenderer)
-            {
-                meshRenderer = GetComponent<MeshRenderer>();
-            }
-            if (meshRenderer)
-            {
-                meshRenderer.materials = unhighlightedMaterials;
-            }
-        }
-
-
-        /// <summary>
         /// Toggles all renderers and colliders on for all networks on this convex hull.
         /// </summary>
         internal void ShowNetworks()
