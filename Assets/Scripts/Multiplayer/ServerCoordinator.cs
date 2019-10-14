@@ -965,6 +965,13 @@ namespace CellexalVR.Multiplayer
             CellexalLog.Log("Recieved message to read filter " + filter);
             referenceManager.filterManager.ParseFilter(filter);
         }
+
+        [PunRPC]
+        public void ResetFilter()
+        {
+            CellexalLog.Log("Recieved message to reset filter");
+            referenceManager.filterManager.ResetFilter(false);
+        }
         #endregion
 
         #region Browser
@@ -1019,4 +1026,4 @@ namespace CellexalVR.Multiplayer
         #endregion
 
     }
-}
+} 

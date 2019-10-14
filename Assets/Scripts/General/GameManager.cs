@@ -708,6 +708,12 @@ namespace CellexalVR.General
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendSetFilter", PhotonTargets.Others, filter);
         }
+
+        public void InformResetFilter()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendResetFilter", PhotonTargets.Others);
+        }
         #endregion
 
         #region Browser

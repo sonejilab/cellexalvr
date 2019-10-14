@@ -379,10 +379,14 @@ namespace CellexalVR.Filters
             referenceManager.filterBlockBoard.SetActive(false);
         }
 
-        public void ResetFilter()
+        public void ResetFilter(bool informMultiUser = true)
         {
             currentFilter = null;
             referenceManager.selectionManager.CurrentFilter = null;
+            if (informMultiUser)
+            {
+                referenceManager.gameManager.InformResetFilter();
+            }
         }
 
         /// <summary>
