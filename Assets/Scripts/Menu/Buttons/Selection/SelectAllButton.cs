@@ -20,7 +20,6 @@ namespace CellexalVR.Menu.Buttons.Selection
             selectionManager = referenceManager.selectionManager;
             SetButtonActivated(false);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
-            CellexalEvents.SelectionConfirmed.AddListener(TurnOff);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
 
