@@ -108,10 +108,13 @@ namespace CellexalVR.AnalysisObjects
         private Quaternion oldRot;
         private Vector3 oldScale;
 
+
+#if UNITY_EDITOR
         // Debug stuff
         private Vector3 debugGizmosPos;
         private Vector3 debugGizmosMin;
         private Vector3 debugGizmosMax;
+#endif
         private string graphName;
         private string folderName;
         private int graphNr;
@@ -660,6 +663,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
+#if UNITY_EDITOR
             #region DEBUG_FUNCTIONS
             public void DebugColorLeaves(Color color)
             {
@@ -781,8 +785,10 @@ namespace CellexalVR.AnalysisObjects
                 return CellexalConfig.Config.SelectionToolColors[i];
             }
             #endregion
+#endif
         }
 
+#if UNITY_EDITOR
         public void OnDrawGizmos()
         {
             if (!Application.isPlaying)
@@ -807,10 +813,7 @@ namespace CellexalVR.AnalysisObjects
             if (graphManager.drawSelectionToolDebugLines)
             {
                 Gizmos.color = Color.green;
-                DrawDebugCube(Color.green, transform.TransformPoint(debugGizmosMin), transform.TransformPoint(debugGizmosMax));
-                Gizmos.DrawSphere(debugGizmosMin, 0.01f);
-                Gizmos.DrawSphere(debugGizmosMax, 0.01f);
-                //print("debug lines: " + debugGizmosMin.ToString() + " " + debugGizmosMax.ToString());
+                DrawDebugCube(Color.green, transform.TransformPoint(debugGizmosMin), transform.TransformPoint(debugGizmosMax), true);
             }
             if (graphManager.drawDebugRaycast)
             {
@@ -826,7 +829,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
         }
-
+#endif
 
         ///// <summary>
         ///// Coroutine to create the graph skeleton using the nodes from the octree. Each octreenode on a certain level will be represented by a transparant cube.
@@ -922,10 +925,13 @@ namespace CellexalVR.AnalysisObjects
             //return convexHull;
         }
 
-        private void DrawDebugCube(Color color, Vector3 min, Vector3 max)
+        private void DrawDebugCube(Color color, Vector3 min, Vector3 max, bool inWorldSpace = false)
         {
-            min += transform.position;
-            max += transform.position;
+            if (!inWorldSpace)
+            {
+                min += transform.position;
+                max += transform.position;
+            }
             Gizmos.color = color;
             Vector3[] corners = new Vector3[]
             {
@@ -1179,7 +1185,6 @@ namespace CellexalVR.AnalysisObjects
             }
             for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
             {
-                // the highest expression levels get 27 (somewhere between 0.1 and 0.2 when converted to a float) in the green channel to get an outline by the shader
                 colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
             }
             int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
@@ -1298,14 +1303,19 @@ namespace CellexalVR.AnalysisObjects
             float extentsy = Mathf.Abs(axisX.y) + Mathf.Abs(axisY.y) + Mathf.Abs(axisZ.y);
             float extentsz = Mathf.Abs(axisX.z) + Mathf.Abs(axisY.z) + Mathf.Abs(axisZ.z);
 
+            extentsx = Mathf.Max(extentsx, 0.05f);
+            extentsy = Mathf.Max(extentsy, 0.05f);
+            extentsz = Mathf.Max(extentsz, 0.05f);
+
             Vector3 extents = new Vector3(extentsx, extentsy, extentsz);
             Vector3 min = center - extents;
             Vector3 max = center + extents;
 
-            //debugGizmosMin = min;
-            //debugGizmosMax = max;
-
+#if UNITY_EDITOR
+            debugGizmosMin = min;
+            debugGizmosMax = max;
             debugGizmosPos = selectionToolPos;
+#endif
 
             MinkowskiDetectionRecursiveSelectionTool(selectionToolPos, min, max, octreeRoot, group, ref result);
             return result;

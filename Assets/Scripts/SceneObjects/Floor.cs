@@ -77,7 +77,6 @@ public class Floor : MonoBehaviour
         }
         if (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
         {
-            print("stop pulse");
             StopPulse();
         }
     }
