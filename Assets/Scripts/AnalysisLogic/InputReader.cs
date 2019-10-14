@@ -543,13 +543,23 @@ namespace CellexalVR.AnalysisLogic
             string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
 
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
-            Thread t = new Thread(() => RScriptRunner.RunFromCmd(rScriptFilePath, args, true));
+            string value = null;
+            Thread t = new Thread(
+            () =>
+            {
+                value = RScriptRunner.RunFromCmd(rScriptFilePath, args, true);
+            });
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             t.Start();
 
             while (!File.Exists(serverName + ".pid"))
             {
+                if (value != null && !value.Equals(string.Empty))
+                {
+                    CellexalError.SpawnError("Failed to start R Server", "Make sure you have set the correct R path in the launcher menu");
+                    yield break;
+                }
                 yield return null;
             }
 

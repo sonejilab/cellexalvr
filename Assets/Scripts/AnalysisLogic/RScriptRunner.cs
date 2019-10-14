@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
@@ -96,11 +97,28 @@ namespace CellexalVR.AnalysisLogic
                 return result;
 
             }
+
             catch (Exception ex)
             {
                 //CellexalLog.Log("Error, R script failed.", string.Format("The R script at {0} failed with the message {1}", rCodeFilePath, ex.ToString()));
+                //if (ex.GetType() == typeof(System.ComponentModel.Win32Exception))
+                //{
+                //    throw new Exception("Rrrr Script failed: " + result, ex);
+
+                //}
+                if (ex.GetType() == typeof(System.ComponentModel.Win32Exception) ||
+                    ex.GetType() == typeof(ArgumentException))
+                {
+                    return "Failed to Start Server";
+                    //CellexalEvents.ScriptFailed.Invoke();
+                }
                 throw new Exception("R Script failed: " + result, ex);
             }
+            //catch (System.ComponentModel.Win32Exception win32ex)
+            //{
+            //    CellexalError.SpawnError("Failed to start R Server", "Check if you have set the correct R path in the launcher menu");
+            //    throw new Exception("Rrrr Script failed: " + result, win32ex);
+            //}
         }
 
         static void GeneProcHandler(object sender, DataReceivedEventArgs e)

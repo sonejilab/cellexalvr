@@ -790,6 +790,12 @@ namespace CellexalVR.Multiplayer
             if (tag == "SubGraph")
             {
                 Graph subGraph = objectToDelete.GetComponent<Graph>();
+                if (subGraph.hasVelocityInfo)
+                {
+                    var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
+                    referenceManager.velocitySubMenu.buttons.Remove(veloButton);
+                    Destroy(veloButton.gameObject);
+                }
                 referenceManager.graphManager.Graphs.Remove(subGraph);
                 referenceManager.graphManager.attributeSubGraphs.Remove(subGraph);
                 for (int i = 0; i < subGraph.CTCGraphs.Count; i++)

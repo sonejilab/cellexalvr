@@ -63,7 +63,8 @@ namespace CellexalVR.AnalysisLogic
             markers.Clear();
             foreach (AddMarkerButton b in GetComponentsInChildren<AddMarkerButton>())
             {
-                b.activeOutline.SetActive(false);
+                b.ToggleOutline(false);
+                //b.activeOutline.SetActive(false);
             }
         }
 

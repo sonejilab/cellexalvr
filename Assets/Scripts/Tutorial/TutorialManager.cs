@@ -42,10 +42,10 @@ namespace CellexalVR.Tutorial
         private GameObject createNetworksButton;
         // private GameObject loadMenuButton;
         private GameObject createHeatmapButton;
-        private GameObject deleteButton;
+        //private GameObject deleteButton;
         private GameObject laserButton;
         private GameObject closeMenuButton;
-        private GameObject controllerHints;
+        //private GameObject controllerHints;
 
         private int currentStep = 0;
         private SteamVR_Controller.Device device;
@@ -58,7 +58,6 @@ namespace CellexalVR.Tutorial
         private GameObject trackpadLeft;
         private GameObject trackpadRight;
         private bool referencesSet;
-        private float duration = 1f;
 
 
         private GameObject graph;
@@ -305,8 +304,7 @@ namespace CellexalVR.Tutorial
                     //CellexalEvents.HeatmapCreated.AddListener(FinalLevel);
                     //CellexalEvents.NetworkCreated.AddListener(FinalLevel);
                     heatmapCreated = networksCreated = false;
-                    //ResetMaterials(objList);
-                    //Destroy(canv);
+                    Destroy(canv);
                     videoPlayer.transform.parent.gameObject.SetActive(false);
                     canv = Instantiate(descriptionCanvasPrefab, transform);
                     canv.GetComponentInChildren<TextMeshProUGUI>().text = "Step " + currentStep + " of 8: Putting it all together \n" +
@@ -314,6 +312,8 @@ namespace CellexalVR.Tutorial
                                                         "--> Select Cells \n" +
                                                         "--> Create Heatmap and Networks";
 
+                    ResetMaterials(objList);
+                    objList = new[] { selToolButton, confirmSelButton, createNetworksButton, createHeatmapButton };
                     referenceManager.loaderController.ResetFolders(true);
                     highlightSpot.SetActive(false);
                     break;
@@ -327,6 +327,7 @@ namespace CellexalVR.Tutorial
                                                                           "You have completed the tutorial. \n" +
                                                                           "Step through the portal to start analyzing your data.";
                     highlightSpot.SetActive(false);
+                    ResetMaterials(objList);
                     //helperTextL.SetActive(false);
                     //helperTextR.SetActive(false);
                     TurnOnSpot();
@@ -353,6 +354,16 @@ namespace CellexalVR.Tutorial
             {
                 graph = GameObject.Find("DDRtree");
             }
+        }
+
+        public void CompleteTutorial()
+        {
+            CrossSceneInformation.Tutorial = false;
+            referenceManager.screenCanvas.gameObject.SetActive(true);
+            referenceManager.screenCanvas.FadeAnimation();
+            referenceManager.loaderController.ResetFolders(true);
+            gameObject.SetActive(false);
+
         }
 
         void HeatmapCreated()
@@ -450,14 +461,31 @@ namespace CellexalVR.Tutorial
         /// </summary>
         void SetReferences()
         {
+            // This currently doesnt work properly if the user is using something other than HTC vive controllers since the names will be different.
             // Menu
             rgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/rgrip");
+            if (rgripRight == null)
+            {
+                rgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/handgrip");
+            }
             lgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/lgrip");
+            if (lgripRight == null)
+            {
+                lgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/handgrip");
+            }
             triggerRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/trigger");
             trackpadRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/trackpad");
 
             rgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/rgrip");
+            if (rgripLeft == null)
+            {
+                rgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/handgrip");
+            }
             lgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/lgrip");
+            if (lgripLeft == null)
+            {
+                lgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/handgrip");
+            }
             triggerLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/trigger");
             trackpadLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/trackpad");
             //controllerHints = GameObject.Find("[CameraRig]/Controller (left)/Helper Text");
@@ -470,9 +498,10 @@ namespace CellexalVR.Tutorial
             confirmSelButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Confirm Selection Button");
             createNetworksButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Create Networks Button");
             createHeatmapButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Create Heatmap Button");
-            deleteButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Delete Tool Button");
+            //deleteButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Delete Tool Button");
             laserButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Laser Tool Button");
             closeMenuButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Close Button Box/Close Menu Button");
+
 
             //screenCanvas = referenceManager.screenCanvas.gameObject;
             referencesSet = true;

@@ -850,6 +850,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 referenceManager.velocitySubMenu.CreateButton(Directory.GetCurrentDirectory() +
                     @"\Data\" + CellexalUser.DataSourceFolder + @"\" + g.GraphName + ".mds", name);
+                subGraph.hasVelocityInfo = true;
             }
             graphManager.Graphs.Add(subGraph);
             graphManager.attributeSubGraphs.Add(subGraph);

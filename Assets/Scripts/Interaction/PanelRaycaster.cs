@@ -183,9 +183,12 @@ namespace CellexalVR.Interaction
                 else if (lastHit != null)
                 {
                     var keyboardHandler = lastHit.GetComponentInParent<KeyboardHandler>();
+                    if (keyboardHandler != null)
+                    {
+                        keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
+                    }
                     // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                     lastHit.SetHighlighted(false);
-                    keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
                     lastHit = null;
                     controllerModelSwitcher.SwitchToDesiredModel();
                     //referenceManager.laserPointerController.ToggleLaser(false);
@@ -202,7 +205,10 @@ namespace CellexalVR.Interaction
                 referenceManager.laserPointerController.Override = false;
                 // if we hit nothing this frame, but hit something last frame.
                 lastHit.SetHighlighted(false);
-                keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
+                if (keyboardHandler != null)
+                {
+                    keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
+                }
                 lastHit = null;
             }
 

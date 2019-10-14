@@ -342,6 +342,16 @@ namespace CellexalVR.AnalysisObjects
                 g.CTCGraphs.Clear();
 
             }
+            foreach (Graph g in facsGraphs)
+            {
+                for(int i = 0; i < g.CTCGraphs.Count; i++)
+                {
+                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    gbg.RemoveGraph();
+                }
+                g.CTCGraphs.Clear();
+
+            }
         }
 
         /// <summary>

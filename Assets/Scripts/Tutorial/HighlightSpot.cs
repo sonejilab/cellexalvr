@@ -61,11 +61,7 @@ namespace CellexalVR.Tutorial
             {
                 if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
                 {
-                    CrossSceneInformation.Tutorial = false;
-                    tutorialManager.referenceManager.screenCanvas.gameObject.SetActive(true);
-                    tutorialManager.referenceManager.screenCanvas.FadeAnimation();
-                    tutorialManager.referenceManager.loaderController.ResetFolders(true);
-                    tutorialManager.gameObject.SetActive(false);
+                    tutorialManager.CompleteTutorial();
                 }
                 //loadLevel = true;
             }

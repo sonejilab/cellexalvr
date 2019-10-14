@@ -43,8 +43,8 @@ public class SetRScript : MonoBehaviour
         if (CellexalConfig.Config.RscriptexePath.Contains(".exe"))
         {
             CrossSceneInformation.RScriptPath = CellexalConfig.Config.RscriptexePath;
-            inputField.text = CellexalConfig.Config.RscriptexePath;
         }
+        inputField.text = CellexalConfig.Config.RscriptexePath;
 
 
     }
