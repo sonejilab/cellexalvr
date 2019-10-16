@@ -221,7 +221,7 @@ namespace CellexalVR.AnalysisLogic
             //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
             string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string topGenesNr = "5";
+            string topGenesNr = "250";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
             string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
@@ -593,7 +593,7 @@ namespace CellexalVR.AnalysisLogic
                 for (int j = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
                 {
                     int nextLimit = (int)(binsize * (j + 1));
-                    for (; expressionIndex < nextLimit; ++expressionIndex)
+                    for (; expressionIndex < nextLimit && expressionIndex < expressions.Count; ++expressionIndex)
                     {
                         expressions[expressionIndex] = new Tuple<string, float>(expressions[expressionIndex].Item1, j);
                     }
