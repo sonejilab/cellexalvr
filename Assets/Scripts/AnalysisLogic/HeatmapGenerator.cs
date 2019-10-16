@@ -221,7 +221,7 @@ namespace CellexalVR.AnalysisLogic
             //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
             string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string topGenesNr = "5";
+            string topGenesNr = "250";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
             string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
