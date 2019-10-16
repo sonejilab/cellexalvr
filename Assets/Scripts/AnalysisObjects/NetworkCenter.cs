@@ -723,6 +723,7 @@ namespace CellexalVR.AnalysisObjects
             }
             //handler.runningScript = false;
             //CellexalEvents.ScriptFinished.Invoke();
+            transform.parent = oldParent;
         }
 
         /// <summary>
