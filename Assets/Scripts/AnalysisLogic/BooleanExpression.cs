@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using static CellexalVR.Extensions.Definitions;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -14,6 +13,8 @@ namespace CellexalVR.AnalysisLogic
     /// </summary>
     public static class BooleanExpression
     {
+        public static string ErrorMessage { get; private set; }
+
         private static Dictionary<string, Tuple<Token, Token>> aliases = new Dictionary<string, Tuple<Token, Token>>();
 
         private static readonly string reservedCharacters = ":&|^.%()=!<> \t\n";
@@ -28,6 +29,12 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
             return false;
+        }
+
+        private static void LogError(string message)
+        {
+            ErrorMessage = message;
+            CellexalLog.Log("FILTER ERROR: " + message);
         }
 
         public class Token
@@ -227,7 +234,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     stringBuilder.Append(e.ToString()).Append(" ");
                 }
-                CellexalLog.Log("FILTER ERROR: Could not combine expression " + stringBuilder.ToString());
+                LogError("Could not combine expression " + stringBuilder.ToString());
                 return null;
             }
             return exprs[0];
@@ -246,7 +253,7 @@ namespace CellexalVR.AnalysisLogic
             List<Expr> exprs = new List<Expr>();
             if (tokens.Count == 0)
             {
-                CellexalLog.Log("FILTER ERROR: Can not parse line with 0 tokens.");
+                LogError("Can not parse line with 0 tokens.");
                 return null;
             }
 
@@ -287,7 +294,7 @@ namespace CellexalVR.AnalysisLogic
                     case Token.Type.R_PAR:
                         if (parLevel == 0)
                         {
-                            CellexalLog.Log("FILTER ERROR: Found ')' without accompanying '(' at character " + token.stringIndex);
+                            LogError("Found ')' without accompanying '(' at character " + token.stringIndex);
                             return null;
                         }
                         // recursion base case
@@ -315,7 +322,7 @@ namespace CellexalVR.AnalysisLogic
             }
             if (parLevel > 0)
             {
-                CellexalLog.Log("FITER WARNING: " + parLevel + " paranthesis not closed at end of filter, assuming all should close here.");
+                CellexalLog.Log(parLevel + " paranthesis not closed at end of filter, assuming all should close here.");
             }
             return exprs;
         }
@@ -331,7 +338,7 @@ namespace CellexalVR.AnalysisLogic
         {
             if (!aliases.ContainsKey(alias))
             {
-                CellexalLog.Log("FILTER ERROR: Alias " + alias + " not found. Did you define it using alias:[alias_name] = [type]:[name] at the start of the filter file?");
+                LogError("Alias " + alias + " not found. Did you define it using alias:[alias_name] = [type]:[name] at the start of the filter file?");
                 return false;
             }
             var realTokens = aliases[alias];
@@ -349,42 +356,42 @@ namespace CellexalVR.AnalysisLogic
         {
             if (tokens.Count != 5)
             {
-                CellexalLog.Log("FILTER ERROR: Wrong format for alias. Correct format is \"alias:[alias_name] = [type]:[real_name] \". E.g: \"alias:g = gene:gata1\"");
+                LogError("Wrong format for alias. Correct format is \"alias:[alias_name] = [type]:[real_name] \". E.g: \"alias:g = gene:gata1\"");
                 return;
             }
 
             Token aliasName = tokens[1];
             if (aliasName != Token.Type.VALUE_NAME)
             {
-                CellexalLog.Log("FILTER ERROR:Expected name for alias but found " + aliasName.text + "at character " + aliasName.stringIndex + " when parsing alias.");
+                LogError("Expected name for alias but found " + aliasName.text + "at character " + aliasName.stringIndex + " when parsing alias.");
                 return;
             }
 
             Token op = tokens[2];
             if (op != Token.Type.OP_EQ)
             {
-                CellexalLog.Log("FILTER ERROR: Expected '=' but found \'" + op.text + "\' at character " + op.stringIndex + " when parsing alias.");
+                LogError("Expected '=' but found \'" + op.text + "\' at character " + op.stringIndex + " when parsing alias.");
                 return;
             }
 
             Token aliasType = tokens[3];
             if (!aliasType.IsType())
             {
-                CellexalLog.Log("FILTER ERROR: Expected a type but found \'" + aliasType.text + "\' at character " + aliasType.stringIndex + " when parsing alias.");
+                LogError("Expected a type but found \'" + aliasType.text + "\' at character " + aliasType.stringIndex + " when parsing alias.");
                 return;
             }
 
             Token aliasRealName = tokens[4];
             if (aliasRealName != Token.Type.VALUE_NAME)
             {
-                CellexalLog.Log("FILTER ERROR: Expected a name but found \'" + aliasRealName.text + "\' at character " + aliasRealName.stringIndex + " when parsing alias.");
+                LogError("Expected a name but found \'" + aliasRealName.text + "\' at character " + aliasRealName.stringIndex + " when parsing alias.");
                 return;
             }
 
             if (aliases.ContainsKey(aliasName.text))
             {
                 var alias = aliases[aliasRealName.text];
-                CellexalLog.Log("FILTER ERROR: Alias " + aliasName.text + " already defined as " + alias.Item1.text + " " + alias.Item2.text + " when parsing alias.");
+                LogError("Alias " + aliasName.text + " already defined as " + alias.Item1.text + " " + alias.Item2.text + " when parsing alias.");
                 return;
             }
 
@@ -425,7 +432,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 if (i + 1 > tokens.Count)
                 {
-                    CellexalLog.Log("FILTER ERROR: Expected attribute expression but reached end of file.");
+                    LogError("Expected attribute expression but reached end of file.");
                     return null;
                 }
 
@@ -433,14 +440,14 @@ namespace CellexalVR.AnalysisLogic
                 i++;
                 if (nameToken.type != Token.Type.VALUE_NAME)
                 {
-                    CellexalLog.Log("FILTER ERROR: Expected name but found " + nameToken.text + " at character " + nameToken.stringIndex);
+                    LogError("Expected name but found " + nameToken.text + " at character " + nameToken.stringIndex);
                     return null;
                 }
 
                 Token operatorToken = tokens[i];
                 if (!(operatorToken.type == Token.Type.ATTR_YES || operatorToken.type == Token.Type.ATTR_NO))
                 {
-                    CellexalLog.Log("FILTER ERROR: Expected yes or no but found " + operatorToken.text + " at character " + operatorToken.stringIndex);
+                    LogError("Expected yes or no but found " + operatorToken.text + " at character " + operatorToken.stringIndex);
                     return null;
                 }
 
@@ -455,7 +462,7 @@ namespace CellexalVR.AnalysisLogic
                 float value;
                 if (!float.TryParse(valueToken.text, out value))
                 {
-                    CellexalLog.Log("FILTER ERROR: Value " + valueToken.text + " could not be parsed as float at character " + typeToken.stringIndex);
+                    LogError("Value " + valueToken.text + " could not be parsed as float at character " + typeToken.stringIndex);
                     return null;
                 }
 
@@ -471,7 +478,7 @@ namespace CellexalVR.AnalysisLogic
                 float value;
                 if (!float.TryParse(valueToken.text, out value))
                 {
-                    CellexalLog.Log("FILTER ERROR: Value " + valueToken.text + " could not be parsed as float at character " + typeToken.stringIndex);
+                    LogError("Value " + valueToken.text + " could not be parsed as float at character " + typeToken.stringIndex);
                     return null;
                 }
 
@@ -479,7 +486,7 @@ namespace CellexalVR.AnalysisLogic
             }
             else
             {
-                CellexalLog.Log("FILTER ERROR: Expected type but found " + typeToken.text + " at character " + typeToken.stringIndex);
+                LogError("Expected type but found " + typeToken.text + " at character " + typeToken.stringIndex);
                 return null;
             }
         }
@@ -492,7 +499,7 @@ namespace CellexalVR.AnalysisLogic
 
             if (i + 3 > tokens.Count)
             {
-                CellexalLog.Log("FILTER ERROR: Expected expression but reached end of file.");
+                LogError("Expected expression but reached end of file.");
                 return false;
             }
 
@@ -502,19 +509,19 @@ namespace CellexalVR.AnalysisLogic
 
             if (nameToken.type != Token.Type.VALUE_NAME)
             {
-                CellexalLog.Log("FILTER ERROR: Expected name but found " + nameToken.text + " at character " + nameToken.stringIndex);
+                LogError("Expected name but found " + nameToken.text + " at character " + nameToken.stringIndex);
                 return false;
             }
 
             if (!operatorToken.IsOperator())
             {
-                CellexalLog.Log("FILTER ERROR: Expected operator but found " + operatorToken.text + " at character " + operatorToken.stringIndex);
+                LogError("Expected operator but found " + operatorToken.text + " at character " + operatorToken.stringIndex);
                 return false;
             }
 
             if (!(valueToken.type == Token.Type.VALUE_NUM || valueToken.type == Token.Type.VALUE_PERCENT))
             {
-                CellexalLog.Log("FILTER ERROR: Expected value but found " + operatorToken.text + " at character " + operatorToken.stringIndex);
+                LogError("Expected value but found " + operatorToken.text + " at character " + operatorToken.stringIndex);
                 return false;
             }
 

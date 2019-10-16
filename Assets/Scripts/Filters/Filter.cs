@@ -36,5 +36,13 @@ namespace CellexalVR.Filters
             Expression.GetFacs(ref result, onlyPercent);
             return result;
         }
+
+        public List<string> GetAttributes()
+        {
+            List<string> result = new List<string>();
+            Expression.GetAttributes(ref result);
+            return result;
+        }
+
     }
 }

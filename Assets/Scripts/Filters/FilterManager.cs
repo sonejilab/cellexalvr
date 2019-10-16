@@ -21,6 +21,7 @@ namespace CellexalVR.Filters
         public GameObject wirePrefab;
         public FilterCreatorResultBlock resultBlock;
         public TextMeshPro filterPreviewText;
+        public Filter currentFilter;
 
         private SteamVR_TrackedObject rightController;
         private List<Tuple<Graph.GraphPoint, int>> queuedCells = new List<Tuple<Graph.GraphPoint, int>>(256);
@@ -28,7 +29,6 @@ namespace CellexalVR.Filters
         private bool loadingFilter = false;
         private Coroutine runningSwapPercentCoroutine;
         private bool evaluating = false;
-        private Filter currentFilter;
         private string currentFilterPath;
         private string[] currentFilterGenes;
         private FilterCreatorBlockPort previouslyClickedPort;
@@ -117,6 +117,14 @@ namespace CellexalVR.Filters
             {
                 resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.LOADING);
             }
+
+            yield return StartCoroutine(ValidateFilterCoroutine(currentFilter));
+            if (currentFilter == null)
+            {
+                runningSwapPercentCoroutine = null;
+                yield break;
+            }
+
             string[] genes = currentFilter.GetGenes(true).ToArray();
             string[] facs = currentFilter.GetFacs(true).ToArray();
 
@@ -148,19 +156,12 @@ namespace CellexalVR.Filters
                 var facsRanges = referenceManager.cellManager.FacsRanges;
                 for (int i = 0; i < facs.Length; ++i)
                 {
-                    if (!facsRanges.ContainsKey(facs[i]))
-                    {
-                        CellexalLog.Log("FILTER ERROR: Facs " + facs[i] + " not found.");
-                        yield break;
-                    }
-
                     Tuple<float, float> facsRange = facsRanges[facs[i]];
                     ranges.Add(new Tuple<string, float, float>(facs[i].ToLower(), facsRange.Item1, facsRange.Item2));
                 }
             }
             currentFilter.Expression.SwapPercentExpressions(ranges.ToArray());
             currentFilter.Expression.SetFilterManager(this);
-            referenceManager.selectionManager.CurrentFilter = currentFilter;
             string filterAsText = currentFilter.Expression.ToString();
             filterPreviewText.text = filterAsText;
             referenceManager.gameManager.InformSetFilter(filterAsText);
@@ -308,10 +309,13 @@ namespace CellexalVR.Filters
         {
             Filter newFilter = new Filter();
             newFilter.Expression = BooleanExpression.ParseFilter(filter);
+            if (newFilter.Expression == null)
+            {
+                return;
+            }
             newFilter.Expression.SetFilterManager(this);
             currentFilter = newFilter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
-            referenceManager.selectionManager.CurrentFilter = newFilter;
         }
 
         /// <summary>
@@ -329,11 +333,66 @@ namespace CellexalVR.Filters
             if (newFilter == null)
             {
                 resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+                filterPreviewText.text = BooleanExpression.ErrorMessage;
                 return;
             }
             currentFilter = newFilter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
+        }
+
+        private IEnumerator ValidateFilterCoroutine(Filter filter)
+        {
+            // check that genes exists
+            string[] genes = filter.GetGenes().ToArray();
+            SQLiter.SQLite database = referenceManager.database;
+            while (database.QueryRunning)
+            {
+                yield return null;
+            }
+            database.QueryGenesIds(genes);
+            while (database.QueryRunning)
+            {
+                yield return null;
+            }
+            foreach (Tuple<string, int> geneId in database._result)
+            {
+                if (!genes.Contains(geneId.Item1))
+                {
+                    resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+                    filterPreviewText.text = "FILTER ERROR: Gene " + geneId.Item1 + " not found";
+                    currentFilter = null;
+                    yield break;
+                }
+            }
+
+            // check that facs exists
+            CellManager cellManager = referenceManager.cellManager;
+            List<string> facsList = filter.GetFacs();
+            foreach (string facs in facsList)
+            {
+                if (!cellManager.FacsRanges.ContainsKey(facs))
+                {
+                    resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+                    filterPreviewText.text = "FILTER ERROR: Facs " + facs + " not found";
+                    currentFilter = null;
+                    yield break;
+                }
+            }
+
+            // check attributes
+            List<string> attributes = filter.GetAttributes();
+            foreach (string attribute in attributes)
+            {
+                if (!cellManager.Attributes.Contains(attribute))
+                {
+                    resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+                    filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
+                    currentFilter = null;
+                    yield break;
+                }
+            }
+            currentFilter = filter;
         }
 
         /// <summary>
@@ -382,7 +441,6 @@ namespace CellexalVR.Filters
         public void ResetFilter(bool informMultiUser = true)
         {
             currentFilter = null;
-            referenceManager.selectionManager.CurrentFilter = null;
             if (informMultiUser)
             {
                 referenceManager.gameManager.InformResetFilter();

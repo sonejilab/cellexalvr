@@ -65,7 +65,7 @@ namespace CellexalVR.Filters
             BoxCollider collider = filterBlockBoard.GetComponent<BoxCollider>();
             Vector3 startPos = filterBlockBoard.transform.InverseTransformPoint(transform.position);
             Vector3 targetPos = filterBlockBoard.transform.InverseTransformPoint(collider.ClosestPoint(transform.position));
-            targetPos.z = 0.01f;
+            targetPos.z = 0.02f;
 
             Quaternion startRot = transform.localRotation;
             Quaternion targetRot = Quaternion.identity;
