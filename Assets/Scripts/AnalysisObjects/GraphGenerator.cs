@@ -187,9 +187,13 @@ namespace CellexalVR.AnalysisObjects
             graphPointColors.filterMode = FilterMode.Point;
             graphPointColors.Apply();
 
+            graphPointMaterialPrefab.SetTexture("_GraphpointColorTex", graphPointColors);
             foreach (Graph graph in graphManager.Graphs)
             {
-                graph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+                if (graph.graphPointClusters.Count > 0)
+                {
+                    graph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
+                }
             }
         }
 
