@@ -337,16 +337,17 @@ namespace CellexalVR.AnalysisObjects
                 CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
                 yield break;
             }
-            foreach (NetworkCenter nc in networks)
-            {
-                if (nc.Enlarged)
-                {
-                    yield return nc.BringBackOriginal();
-                }
-            }
+            //foreach (NetworkCenter nc in networks)
+            //{
+            //    if (nc.Enlarged)
+            //    {
+            //        yield return nc.BringBackOriginal();
+            //    }
+            //}
 
             removing = true;
 
+            networks.Clear();
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             referenceManager.graphManager.RemoveNetwork(this);
@@ -360,15 +361,15 @@ namespace CellexalVR.AnalysisObjects
                 Debug.Log("Script is running");
                 CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
             }
-            foreach (NetworkCenter nc in networks)
-            {
-                if (nc.Enlarged)
-                {
-                    Destroy(nc.gameObject);
-                    //networks.Remove(nc);
-                }
+            //foreach (NetworkCenter nc in networks)
+            //{
+            //    if (nc.Enlarged)
+            //    {
+            //        //Destroy(nc.gameObject);
+            //        //networks.Remove(nc);
+            //    }
 
-            }
+            //}
             networks.Clear();
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);

@@ -12,7 +12,6 @@ using UnityEngine;
 
 namespace CellexalVR.Multiplayer
 {
-
     /// <summary>
     /// This class holds the remote-callable commands that are sent over network between to connected clients.
     /// To synchronize the scenes in multiplayer it means when a function is called on one client the same has to be done on the others. 
@@ -76,6 +75,10 @@ namespace CellexalVR.Multiplayer
         public void SendDisableColliders(string name)
         {
             GameObject obj = GameObject.Find(name);
+            if (obj == null)
+            {
+                return;
+            }
             Collider[] children = obj.GetComponentsInChildren<Collider>();
             int i = 0;
             foreach (Collider c in children)
@@ -96,6 +99,10 @@ namespace CellexalVR.Multiplayer
         public void SendEnableColliders(string name)
         {
             GameObject obj = GameObject.Find(name);
+            if (obj == null)
+            {
+                return;
+            }
             Collider[] children = obj.GetComponentsInChildren<Collider>();
             int i = 0;
 
@@ -346,11 +353,10 @@ namespace CellexalVR.Multiplayer
                     CellexalLog.Log("Could not move graph - Error: " + e);
                 }
             }
-            else
-            {
-                CellexalLog.Log("Could not find graph to move");
-
-            }
+            //else
+            //{
+            //    CellexalLog.Log("Could not find graph to move");
+            //}
 
         }
 
@@ -475,10 +481,10 @@ namespace CellexalVR.Multiplayer
                     CellexalLog.Log("Could not move heatmap - Error: " + e);
                 }
             }
-            else
-            {
-                CellexalLog.Log("Could not find heatmap to move");
-            }
+            //else
+            //{
+            //    CellexalLog.Log("Could not find heatmap to move");
+            //}
         }
 
         [PunRPC]
@@ -619,13 +625,13 @@ namespace CellexalVR.Multiplayer
                 }
                 catch (Exception e)
                 {
-                    CellexalLog.Log("Could not move network to move - Error: " + e);
+                    CellexalLog.Log("Could not move network - Error: " + e);
                 }
             }
-            else
-            {
-                CellexalLog.Log("Could not find network to move");
-            }
+            //else
+            //{
+            //    CellexalLog.Log("Could not find network to move");
+            //}
         }
 
         [PunRPC]

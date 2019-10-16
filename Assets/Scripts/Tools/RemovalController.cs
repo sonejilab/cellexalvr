@@ -15,10 +15,11 @@ namespace CellexalVR.Tools
 
         private bool controllerInside;
         private bool delete;
-        private float fade = 0;
         private Transform target;
         private float speed;
         private float targetScale;
+        private float currentTime;
+        private float deleteTime = 0.7f;
         private float shrinkSpeed;
         private GameObject objectToDelete;
         private bool runningScript;
@@ -53,11 +54,14 @@ namespace CellexalVR.Tools
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 InitiateDelete(objectToDelete);
+                currentTime = 0;
+                shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
             }
 
             if (delete)
             {
                 DeleteObject(objectToDelete);
+                currentTime += Time.deltaTime;
             }
 
         }
@@ -170,7 +174,7 @@ namespace CellexalVR.Tools
                 return;
             }
 
-            if (obj.transform.localScale.x > targetScale)
+            if (currentTime < deleteTime)
             {
 
                 float step = speed * Time.deltaTime;
@@ -195,7 +199,7 @@ namespace CellexalVR.Tools
                 }
             }
 
-            else if (obj.transform.localScale.x <= targetScale)
+            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f) 
             {
                 if (obj.transform.GetComponentInParent<NetworkHandler>() != null)
                 {
