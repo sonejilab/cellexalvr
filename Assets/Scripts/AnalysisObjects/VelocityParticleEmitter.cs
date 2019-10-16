@@ -230,6 +230,7 @@ namespace CellexalVR.AnalysisObjects
                 StopCoroutine(currentEmitCoroutine);
                 currentEmitCoroutine = null;
             }
+            emitting = false;
         }
 
         /// <summary>
@@ -239,13 +240,15 @@ namespace CellexalVR.AnalysisObjects
         /// <returns>The new frequency.</returns>
         public float ChangeFrequency(float amount)
         {
-            if (arrowEmitRate == 0f && amount > 1f)
+            float freq = 1f / (arrowEmitRate * amount);
+            if (freq <= 0.03125 && amount > 1f)
             {
-                arrowEmitRate = 0.001f;
+                arrowEmitRate = 32f; // 1 / 32 = 0.03125
             }
-            else if (arrowEmitRate <= 0.001f && amount < 1f)
+
+            else if (freq >= 32 && amount < 1f)
             {
-                arrowEmitRate = 0f;
+                arrowEmitRate = 0.03125f;
             }
             else
             {
