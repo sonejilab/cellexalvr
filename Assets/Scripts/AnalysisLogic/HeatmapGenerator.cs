@@ -593,7 +593,7 @@ namespace CellexalVR.AnalysisLogic
                 for (int j = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
                 {
                     int nextLimit = (int)(binsize * (j + 1));
-                    for (; expressionIndex < nextLimit; ++expressionIndex)
+                    for (; expressionIndex < nextLimit && expressionIndex < expressions.Count; ++expressionIndex)
                     {
                         expressions[expressionIndex] = new Tuple<string, float>(expressions[expressionIndex].Item1, j);
                     }
