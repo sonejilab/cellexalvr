@@ -283,56 +283,55 @@ namespace CellexalVR.General
         public void InformSelectedAdd(string graphName, string label, int newGroup, Color color)
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to add cells to selection");
             coordinator.photonView.RPC("SendAddSelect", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
         }
 
         public void InformCubeColoured(string graphName, string label, int newGroup, Color color)
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to colour selected cube");
+            //Debug.Log("Informing clients to colour selected cube");
             coordinator.photonView.RPC("SendCubeColoured", PhotonTargets.Others, graphName, label, newGroup, color.r, color.g, color.b);
         }
 
         public void InformGoBackOneColor()
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to undo last color");
+            //Debug.Log("Informing clients to undo last color");
             coordinator.photonView.RPC("SendGoBackOneColor", PhotonTargets.Others);
         }
 
         public void InformGoBackSteps(int k)
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to undo last color");
+            //Debug.Log("Informing clients to undo last color");
             coordinator.photonView.RPC("SendGoBackSteps", PhotonTargets.Others, k);
         }
 
         public void InformCancelSelection()
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to undo last color");
+            //Debug.Log("Informing clients to undo last color");
             coordinator.photonView.RPC("SendCancelSelection", PhotonTargets.Others);
         }
 
         public void InformRedoOneColor()
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to undo last color");
+            //Debug.Log("Informing clients to undo last color");
             coordinator.photonView.RPC("SendRedoOneColor", PhotonTargets.Others);
         }
 
         public void InformRedoSteps(int k)
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to undo last color");
+            //Debug.Log("Informing clients to undo last color");
             coordinator.photonView.RPC("SendRedoSteps", PhotonTargets.Others, k);
         }
 
         public void InformRemoveCells()
         {
             if (!multiplayer) return;
-            Debug.Log("Informing clients to remove selected cells");
+            //Debug.Log("Informing clients to remove selected cells");
             coordinator.photonView.RPC("SendRemoveCells", PhotonTargets.Others);
         }
 
