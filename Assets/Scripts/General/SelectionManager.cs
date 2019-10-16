@@ -57,8 +57,8 @@ namespace CellexalVR.General
         // the number of steps we have taken back in the history.
         private int historyIndexOffset;
         private GameManager gameManager;
+        private FilterManager filterManager;
 
-        public Filter CurrentFilter { get; set; }
         public bool RObjectUpdating { get; private set; }
 
         /// <summary>
@@ -104,6 +104,7 @@ namespace CellexalVR.General
             rightController = referenceManager.rightController;
             gameManager = referenceManager.gameManager;
             selectionToolCollider = referenceManager.selectionToolCollider;
+            filterManager = referenceManager.filterManager;
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
             //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
@@ -124,7 +125,7 @@ namespace CellexalVR.General
         /// </summary>
         public void AddGraphpointToSelection(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback)
         {
-            if (CurrentFilter != null)
+            if (filterManager.currentFilter != null)
             {
                 referenceManager.filterManager.AddCellToEval(graphPoint, newGroup);
             }
@@ -562,7 +563,7 @@ namespace CellexalVR.General
             foreach (Cell c in referenceManager.cellManager.GetCells())
             {
                 Graph.GraphPoint gp = g.FindGraphPoint(c.Label);
-                if (CurrentFilter != null)
+                if (filterManager.currentFilter != null)
                 {
                     referenceManager.filterManager.AddCellToEval(gp, selectionToolCollider.currentColorIndex);
                 }
@@ -787,7 +788,7 @@ namespace CellexalVR.General
 
         public Color GetColor(int index)
         {
-            return selectionToolCollider.Colors[index];
+            return selectionToolCollider.Colors[index % selectionToolCollider.Colors.Length];
         }
 
 

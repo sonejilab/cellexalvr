@@ -40,7 +40,7 @@ namespace CellexalVR.Menu.Buttons.Selection
             }
             else
             {
-                referenceManager.selectionManager.CurrentFilter = null;
+                referenceManager.filterManager.currentFilter = null;
                 filterActivated = false;
                 text.color = Color.white;
             }

@@ -221,7 +221,7 @@ namespace CellexalVR.AnalysisLogic
             //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
             string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string topGenesNr = "250";
+            string topGenesNr = "5";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
             string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
@@ -340,41 +340,38 @@ namespace CellexalVR.AnalysisLogic
             heatmap.attributeWidths.Add(new Tuple<int, float, int>(heatmap.lastAttribute, heatmap.attributeWidth * cellWidth, heatmap.attributeWidth));
             if (heatmap.genes == null || heatmap.genes.Length == 0)
             {
-                try
+                if (!File.Exists(filepath))
                 {
-                    StreamReader streamReader = new StreamReader(filepath);
-                    int numberOfGenes = int.Parse(streamReader.ReadLine());
-                    heatmap.genes = new string[numberOfGenes];
-                    int i = 0;
-                    while (!streamReader.EndOfStream)
-                    {
-                        heatmap.genes[i] = streamReader.ReadLine();
-                        i++;
-                    }
-                    streamReader.Close();
-                }
-                catch (FileNotFoundException e)
-                {
-                    Debug.Log("File - " + filepath + " - not found.");
-                    CellexalLog.Log("File - " + filepath + " - not found.", e.StackTrace);
-                    CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+                    CellexalLog.Log("Failed to create heatmap. R script did not return gene list file " + filepath);
+                    CellexalError.SpawnError("Failed to create heatmap", "R script did not return gene list file " + filepath);
                     if (!(referenceManager.networkGenerator.GeneratingNetworks && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
                     {
                         referenceManager.floor.StopPulse();
                     }
-                    //referenceManager.calculatorCluster.SetActive(false);
+                    return;
                 }
+                StreamReader streamReader = new StreamReader(filepath);
+                int numberOfGenes = int.Parse(streamReader.ReadLine());
+                heatmap.genes = new string[numberOfGenes];
+                int i = 0;
+                while (!streamReader.EndOfStream)
+                {
+                    heatmap.genes[i] = streamReader.ReadLine();
+                    i++;
+                }
+                streamReader.Close();
+
             }
             heatmap.orderedByAttribute = false;
-            try
-            {
-                StartCoroutine(BuildTextureCoroutine(heatmap.groupWidths, heatmap.attributeWidths, heatmap));
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
-                CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
-            }
+            //try
+            //{
+            StartCoroutine(BuildTextureCoroutine(heatmap.groupWidths, heatmap.attributeWidths, heatmap));
+            //}
+            //catch (Exception e)
+            //{
+            //    CellexalLog.Log("Failed to create heatmap - " + e.StackTrace);
+            //    CellexalError.SpawnError("Failed to create heatmap", "Read full stacktrace in cellexal log");
+            //}
         }
 
         public void BuildTexture(List<Tuple<int, float, int>> groupWidths, List<Tuple<int, float, int>> attributeWidths, Heatmap heatmap)
@@ -445,6 +442,16 @@ namespace CellexalVR.AnalysisLogic
             db.referenceManager = referenceManager;
             db.InitDatabase(heatmap.directory + ".sqlite3");
 
+            yield return StartCoroutine(db.ValidateDatabaseCoroutine());
+            if (!db._databaseOK)
+            {
+                // something went wrong in the r script
+                CellexalError.SpawnError("Could not generate heatmap", "R script did not return a valid gene database file, check R log for more information");
+                CellexalLog.Log("Could not generate heatmap, R script did not return a valid gene database file");
+                Destroy(gameObject);
+                yield break;
+            }
+
             heatmap.bitmap = new Bitmap(heatmap.bitmapWidth, heatmap.bitmapHeight);
 
             //xcoord = heatmapX;
@@ -499,13 +506,13 @@ namespace CellexalVR.AnalysisLogic
 
 
             CellexalLog.Log("Reading " + result.Count + " results from database");
-
-            Thread thread = new Thread(() => CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath));
-            thread.Start();
-            while (thread.IsAlive)
-            {
-                yield return null;
-            }
+            CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath);
+            //Thread thread = new Thread(() => CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath));
+            //thread.Start();
+            //while (thread.IsAlive)
+            //{
+            //    yield return null;
+            //}
 
             // the thread is now done and the heatmap has been painted
             // copy the bitmap data over to a unity texture
@@ -555,123 +562,49 @@ namespace CellexalVR.AnalysisLogic
             //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(heatmap.bitmap);
             System.Drawing.Graphics graphics = DrawHeatmap(heatmap, System.Drawing.Color.FromArgb(0, 0, 0, 0), System.Drawing.Color.White);
 
-            //// get the grouping colors
-            //Dictionary<int, SolidBrush> groupBrushes = new Dictionary<int, SolidBrush>();
-            //foreach (var entry in heatmap.groupingColors)
-            //{
-            //    UnityEngine.Color unitycolor = entry.Value;
-
-            //    groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
-            //}
-
-            //Dictionary<int, SolidBrush> attributeBrushes = new Dictionary<int, SolidBrush>();
-            //foreach (var entry in heatmap.attributeColors)
-            //{
-            //    UnityEngine.Color unitycolor = entry.Value;
-            //    attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255), (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
-            //}
-            //// draw a background
-            //graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
-
-            //// draw the attribute bar
-            //for (int i = 0; i < attributeWidths.Count; ++i)
-            //{
-            //    int attributeNbr = attributeWidths[i].Item1;
-            //    float attributeWidth = attributeWidths[i].Item2;
-            //    graphics.FillRectangle(attributeBrushes[attributeNbr], xcoord, heatmap.attributeBarY, attributeWidth, heatmap.attributeBarHeight);
-            //    xcoord += attributeWidth;
-            //}
-
-            //xcoord = heatmap.heatmapX;
-            //ycoord = heatmap.heatmapY;
-            //// draw the grouping bar
-            //for (int i = 0; i < groupWidths.Count; ++i)
-            //{
-            //    int groupNbr = groupWidths[i].Item1;
-            //    float groupWidth = groupWidths[i].Item2;
-            //    graphics.FillRectangle(groupBrushes[groupNbr], xcoord, heatmap.groupBarY, groupWidth, heatmap.groupBarHeight);
-            //    xcoord += groupWidth;
-            //}
-
-            //ycoord = heatmap.heatmapY - 4;
-            //float fontSize;
-            //if (heatmap.genes.Length > 120)
-            //{
-            //    fontSize = 8f;
-            //}
-            //else
-            //{
-            //    fontSize = 20f;
-            //}
-            //geneFont = new System.Drawing.Font(FontFamily.GenericMonospace, fontSize, System.Drawing.FontStyle.Regular);
-            //// draw all the gene names
-            //for (int i = 0; i < heatmap.genes.Length; ++i)
-            //{
-            //    string geneName = heatmap.genes[i];
-
-            //    graphics.DrawString(geneName, geneFont, Brushes.White, heatmap.geneListX, ycoord);
-            //    ycoord += ycoordInc;
-            //}
-
             float xcoord = heatmap.heatmapX;
             float ycoord = heatmap.heatmapY;
             float xcoordInc = (float)heatmap.heatmapWidth / heatmap.cells.Length;
             float ycoordInc = (float)heatmap.heatmapHeight / heatmap.genes.Length;
             System.Drawing.SolidBrush[] heatmapBrushes = expressionColors;
-            float lowestExpression = 0;
-            float highestExpression = 0;
             graphics.FillRectangle(Brushes.Black, heatmap.heatmapX, heatmap.heatmapY, heatmap.heatmapWidth, heatmap.heatmapHeight);
-            int genescount = 0;
-            for (int i = 0; i < result.Count; ++i)
+            Tuple<string, float> tuple;
+            List<Tuple<string, float>> expressions = new List<Tuple<string, float>>();
+            for (int i = 1; i < result.Count;)
             {
-                // the arraylist should contain the gene id and that gene's highest expression before all the expressions
-                Tuple<string, float> tuple = (Tuple<string, float>)result[i];
                 // new gene
-                lowestExpression = tuple.Item2;
-                i++;
-                tuple = (Tuple<string, float>)result[i];
-                highestExpression = tuple.Item2;
-                ycoord = heatmap.heatmapY + genePositions[tuple.Item1] * ycoordInc;
-
-                genescount++;
-                i++;
-                //}
-                //else
-                //{
-                List<Tuple<string, float>> expressions = new List<Tuple<string, float>>();
-                tuple = (Tuple<string, float>)result[i];
-                do
+                string genename = ((Tuple<string, float>)result[i]).Item1;
+                ycoord = heatmap.heatmapY + genePositions[genename] * ycoordInc;
+                // the arraylist should contain the gene id and that gene's highest expression before all the expressions
+                i += 1;
+                expressions.Clear();
+                while (i < result.Count)
                 {
-                    expressions.Add(tuple);
-                    i++;
-                    if (i >= result.Count)
-                        break;
                     tuple = (Tuple<string, float>)result[i];
+                    i++;
+                    if (geneIds.ContainsKey(tuple.Item1))
+                        break;
+                    expressions.Add(tuple);
                 }
-                while (!geneIds.ContainsKey(tuple.Item1));
-                i--;
                 expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => ((int)((t2.Item2 - t1.Item2) * 10000)));
-                float binsize = (float)expressions.Count / CellexalConfig.Config.NumberOfHeatmapColors;
-                for (int j = 0, k = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
+                float binsize = (float)expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
+                int expressionIndex = 0;
+
+                for (int j = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
                 {
-                    int nextLimit = (int)(binsize * j);
-                    for (; k < nextLimit; ++k)
+                    int nextLimit = (int)(binsize * (j + 1));
+                    for (; expressionIndex < nextLimit; ++expressionIndex)
                     {
-                        expressions[k] = new Tuple<string, float>(expressions[k].Item1, j);
+                        expressions[expressionIndex] = new Tuple<string, float>(expressions[expressionIndex].Item1, j);
                     }
                 }
+
                 for (int j = 0; j < expressions.Count; ++j)
                 {
                     string cellName = expressions[j].Item1;
                     float expression = expressions[j].Item2;
-                    try
-                    {
-                        xcoord = heatmap.heatmapX + cellsPosition[cellName] * xcoordInc;
-                    }
-                    catch (KeyNotFoundException)
-                    {
+                    xcoord = heatmap.heatmapX + cellsPosition[cellName] * xcoordInc;
 
-                    }
                     graphics.FillRectangle(heatmapBrushes[(int)expression], xcoord, ycoord, xcoordInc, ycoordInc);
                 }
 
@@ -685,7 +618,6 @@ namespace CellexalVR.AnalysisLogic
                 //}
                 //}
             }
-
 
             heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
             graphics.Dispose();
@@ -707,7 +639,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Helper function to draw the parts of the heatmap that are incommon for both logging and in-session heatmaps.
         /// </summary>
-        private System.Drawing.Graphics DrawHeatmap(Heatmap heatmap, System.Drawing.Color backgrounColor, System.Drawing.Color textColor)
+        private System.Drawing.Graphics DrawHeatmap(Heatmap heatmap, System.Drawing.Color backgroundColor, System.Drawing.Color textColor)
         {
             System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(heatmap.bitmap);
 
@@ -729,11 +661,11 @@ namespace CellexalVR.AnalysisLogic
             // draw a background
             //graphics.Clear(System.Drawing.Color.FromArgb(0, 0, 0, 0));
 
-            SolidBrush backgrounBrush = new SolidBrush(backgrounColor);
-            graphics.FillRectangle(backgrounBrush, 0, 0, heatmap.heatmapX, heatmap.bitmapHeight);
-            graphics.FillRectangle(backgrounBrush, 0, 0, heatmap.bitmapWidth, heatmap.heatmapY);
-            graphics.FillRectangle(backgrounBrush, heatmap.geneListX, 0, heatmap.geneListWidth, heatmap.bitmapHeight);
-            graphics.FillRectangle(backgrounBrush, 0, (heatmap.bitmapWidth - heatmap.heatmapY), heatmap.bitmapWidth, heatmap.bitmapHeight);
+            SolidBrush backgroundBrush = new SolidBrush(backgroundColor);
+            graphics.FillRectangle(backgroundBrush, 0, 0, heatmap.heatmapX, heatmap.bitmapHeight);
+            graphics.FillRectangle(backgroundBrush, 0, 0, heatmap.bitmapWidth, heatmap.heatmapY);
+            graphics.FillRectangle(backgroundBrush, heatmap.geneListX, 0, heatmap.geneListWidth, heatmap.bitmapHeight);
+            graphics.FillRectangle(backgroundBrush, 0, (heatmap.bitmapWidth - heatmap.heatmapY), heatmap.bitmapWidth, heatmap.bitmapHeight);
 
             float xcoord = heatmap.heatmapX;
             float ycoord = heatmap.heatmapY;

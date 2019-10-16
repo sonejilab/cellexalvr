@@ -48,6 +48,8 @@ namespace SQLiter
         public static SQLite Instance = null;
         public bool DebugMode = false;
         public bool QueryRunning { get; private set; }
+        public bool _databaseOK = false;
+
         public ReferenceManager referenceManager;
 
         private CellManager cellManager;
@@ -57,13 +59,6 @@ namespace SQLiter
         // file should show up in the Unity inspector after a few seconds of running it the first time
         private static string _sqlDBLocation = "";
 
-        /// <summary>
-        /// Table name and DB actual file name -- this is the name of the actual file on the filesystem
-        /// </summary>
-        //private const string SQL_DB_NAME = "Assets\\database.db";
-
-        // table name
-        private const string SQL_TABLE_NAME = "datavalues";
         /// <summary>
         /// DB objects
         /// </summary>
@@ -77,7 +72,6 @@ namespace SQLiter
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
 
-        private bool _createNewTavle = false;
 
         private void OnValidate()
         {
@@ -148,7 +142,7 @@ namespace SQLiter
         {
             _sqlDBLocation = "URI=file:" + path;
 
-            Debug.Log(_sqlDBLocation);
+            //Debug.Log(_sqlDBLocation);
             Instance = this;
             SQLiteInit();
         }
@@ -226,22 +220,16 @@ namespace SQLiter
 
             // close connection
             _connection.Close();
-            CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        #region Query
-
-        public void QueryMostExpressedGenes(int n)
+        public void ValidateDatabase()
         {
             QueryRunning = true;
-            StartCoroutine(QueryMostExpressedGenesCoroutine(n));
+            StartCoroutine(ValidateDatabaseCoroutine());
         }
-
-        internal IEnumerator QueryMostExpressedGenesCoroutine(int n)
+        public IEnumerator ValidateDatabaseCoroutine()
         {
-            string query = "select avg(value), gname from datavalues inner join genes on gene_id = id group by id order by - avg(value) limit " + n + ";";
-            _result.Clear();
-
+            string query = "select count(*) from sqlite_master where type='table' and name in ('genes', 'cells', 'datavalues');";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)
@@ -249,16 +237,17 @@ namespace SQLiter
                 yield return null;
             }
 
-            while (_reader.Read())
+            _reader.Read();
+            int nTables = _reader.GetInt32(0);
+            if (nTables == 3)
             {
-                _result.Add(_reader.GetString(1));
+                _databaseOK = true;
             }
-            _reader.Close();
-            _connection.Close();
             QueryRunning = false;
-
+            CellexalEvents.CommandFinished.Invoke(true);
         }
 
+        #region Query
 
         /// <summary>
         /// Different modes to sort genes.
@@ -686,28 +675,33 @@ namespace SQLiter
             string lastGeneId = "";
             int lowestGeneExpressionIndex = 0;
             int highestGeneExpressionIndex = 1;
+
+            // reserve space for the first gene
+            _result.Add(new Tuple<string, float>("", 0f));
+            _result.Add(new Tuple<string, float>("", 0f));
             while (_reader.Read())
             {
                 string cellName = _reader.GetString(0);
                 string geneId = _reader.GetString(1);
                 float expression = _reader.GetFloat(2);
+                if (lastGeneId == "")
+                {
+                    lastGeneId = geneId;
+                }
                 if (geneId != lastGeneId)
                 {
+                    // replace the last reserved space with the highest expression we found
+                    int numberOfCellsFound = _result.Count - highestGeneExpressionIndex - 1;
+                    if (numberOfCellsFound < cells.Length)
+                    {
+                        // if one cell was not in the database, it has an expression of zero
+                        lowestExpression = 0;
+                    }
+                    _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
+                    _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
                     // reserve this space for later
                     _result.Add(new Tuple<string, float>("", 0f));
                     _result.Add(new Tuple<string, float>("", 0f));
-                    if (highestGeneExpressionIndex != -1)
-                    {
-                        // replace the last reserved space with the highest expression we found
-                        int numberOfCellsFound = _result.Count - highestGeneExpressionIndex - 1;
-                        if (numberOfCellsFound < cells.Length)
-                        {
-                            // if one cell was not in the database, it has an expression of zero
-                            lowestExpression = 0;
-                        }
-                        _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
-                        _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
-                    }
                     highestGeneExpressionIndex = _result.Count - 1;
                     lowestGeneExpressionIndex = _result.Count - 2;
                     highestExpression = 0f;
@@ -724,17 +718,11 @@ namespace SQLiter
                     lowestExpression = expression;
                 }
             }
+
             // replace the last value as well
-            if (lowestGeneExpressionIndex < _result.Count && highestGeneExpressionIndex < _result.Count)
-            {
-                _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
-                _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
-            }
-            else
-            {
-                print("index out of bounds: " + lowestGeneExpressionIndex + " " + highestGeneExpressionIndex + ", _result count: " + _result.Count);
-            }
-            // the structure if _result is now a list with each gene's highest epxression followed by all the individual expressions
+            _result[lowestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, lowestExpression);
+            _result[highestGeneExpressionIndex] = new Tuple<string, float>(lastGeneId, highestExpression);
+
             QueryRunning = false;
         }
 

@@ -146,7 +146,7 @@ namespace CellexalVR.AnalysisLogic
             //        readGenes = false;
             //        UnityEngine.Debug.Log("send genes");
             //        //referenceManager.cellManager.HandleGeneResult();
-            //        CellexalEvents.GeneExpressionsRetrieved.Invoke();
+            //        CellexalEvents.GeneExpressionsRetrieved.Invoke(); 
             //        geneResult.Clear();
             //    }
 

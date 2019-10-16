@@ -967,7 +967,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void ResetFilter()
+        public void SendResetFilter()
         {
             CellexalLog.Log("Recieved message to reset filter");
             referenceManager.filterManager.ResetFilter(false);
@@ -1026,4 +1026,4 @@ namespace CellexalVR.Multiplayer
         #endregion
 
     }
-} 
+}

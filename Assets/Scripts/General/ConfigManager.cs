@@ -279,7 +279,7 @@ namespace CellexalVR.General
             }
         }
 
-        public Config DeserializeConfig<Config>(byte[] serializedBytes)
+        public Config DeserializeConfig(byte[] serializedBytes)
         {
             XmlSerializer ser = new XmlSerializer(typeof(Config));
             using (MemoryStream stream = new MemoryStream(serializedBytes))
@@ -290,7 +290,7 @@ namespace CellexalVR.General
 
         public void SynchroniseConfig(byte[] data)
         {
-            Config config = DeserializeConfig<Config>(data);
+            Config config = DeserializeConfig(data);
             // Only change the parts that need to be.
             CellexalConfig.Config.SelectionToolColors = config.SelectionToolColors;
             CellexalConfig.Config.GraphDefaultColor = config.GraphDefaultColor;
