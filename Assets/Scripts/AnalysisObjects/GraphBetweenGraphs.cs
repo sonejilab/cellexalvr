@@ -399,7 +399,8 @@ namespace CellexalVR.AnalysisObjects
             emitter.referenceManager = referenceManager;
             emitter.graph = from;
             emitter.Velocities = velocitiesFromGraph;
-            emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            //emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            emitter.UseArrowParticle = false;
             emitter.UseGraphPointColors = true;
             emitter.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModule = velocityParticleSystemFromGraph.GetComponent<ParticleSystem>().trails;
@@ -413,7 +414,8 @@ namespace CellexalVR.AnalysisObjects
             emitterMidGraph.referenceManager = referenceManager;
             emitterMidGraph.graph = graph;
             emitterMidGraph.Velocities = velocitiesMidGraph;
-            emitterMidGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            //emitterMidGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            emitterMidGraph.UseArrowParticle = false;
             emitterMidGraph.UseGraphPointColors = true;
             emitterMidGraph.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModuleMidGraph = velocityParticleSystemMidGraph.GetComponent<ParticleSystem>().trails;
@@ -426,7 +428,8 @@ namespace CellexalVR.AnalysisObjects
             emitterToGraph.referenceManager = referenceManager;
             emitterToGraph.graph = to;
             emitterToGraph.Velocities = velocitiesToGraph;
-            emitterToGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            //emitterToGraph.arrowParticleMaterial = referenceManager.velocityGenerator.standardMaterial;
+            emitterToGraph.UseArrowParticle = false;
             emitterToGraph.UseGraphPointColors = true;
             emitterToGraph.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModuleToGraph = velocityParticleSystemToGraph.GetComponent<ParticleSystem>().trails;

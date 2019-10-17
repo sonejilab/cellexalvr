@@ -908,6 +908,24 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
+        public void SendChangeParticleMode(string graphName, bool switchToArrows)
+        {
+            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
+            if (activeGraph != null)
+            {
+                activeGraph.velocityParticleEmitter.UseArrowParticle = switchToArrows;
+                if (switchToArrows)
+                {
+                    referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Arrows";
+                }
+                else
+                {
+                    referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Circles";
+                }
+            }
+        }
+
+        [PunRPC]
         public void SendChangeFrequency(string graphName, float amount)
         {
             Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);

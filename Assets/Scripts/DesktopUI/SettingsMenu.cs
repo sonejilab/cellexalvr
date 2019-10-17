@@ -204,13 +204,12 @@ namespace CellexalVR.DesktopUI
                     addSelectionColorButton.transform.SetAsLastSibling();
                     selectionColorButtons.Add(button);
                 }
-                if (CellexalConfig.Config.SelectionToolColors.Length > selectionColorButtons.Count)
+                if (CellexalConfig.Config.SelectionToolColors.Length < selectionColorButtons.Count)
                 {
                     for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < selectionColorButtons.Count; j++ )
                     {
                         Debug.Log("Removing - " + j);
                         RemoveSelectionColor(selectionColorButtons[j].gameObject);
-
                     }
                 }
             }
