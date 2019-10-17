@@ -19,8 +19,8 @@ namespace CellexalVR.Filters
         public bool isPrefab = true;
 
         protected List<FilterCreatorBlockPort> ports;
-        protected GameObject filterBlockBoard; 
-        public virtual int HighlightedSection { get; set; }
+        protected GameObject filterBlockBoard;
+        public virtual FilterCreatorBlockHighlighter HighlightedSection { get; set; }
 
         protected virtual void Start()
         {
@@ -65,7 +65,7 @@ namespace CellexalVR.Filters
             BoxCollider collider = filterBlockBoard.GetComponent<BoxCollider>();
             Vector3 startPos = filterBlockBoard.transform.InverseTransformPoint(transform.position);
             Vector3 targetPos = filterBlockBoard.transform.InverseTransformPoint(collider.ClosestPoint(transform.position));
-            targetPos.z = 0.02f;
+            targetPos.z = 0.01f;
 
             Quaternion startRot = transform.localRotation;
             Quaternion targetRot = Quaternion.identity;

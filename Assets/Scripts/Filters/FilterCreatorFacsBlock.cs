@@ -18,13 +18,14 @@ namespace CellexalVR.Filters
         private string valueString;
         private MeshRenderer meshRenderer;
 
-        public override int HighlightedSection
+        public override FilterCreatorBlockHighlighter HighlightedSection
         {
             get => base.HighlightedSection;
             set
             {
                 base.HighlightedSection = value;
-                meshRenderer.material.mainTextureOffset = new Vector2(value * 0.25f, 0f);
+                int section = value != null ? value.section : 0;
+                meshRenderer.material.mainTextureOffset = new Vector2(section * 0.25f, 0f);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.Filters
 {
@@ -40,7 +41,12 @@ namespace CellexalVR.Filters
         {
             if (other.CompareTag("Controller"))
             {
-                parent.HighlightedSection = section;
+                if (parent.HighlightedSection != null)
+                {
+                    parent.HighlightedSection.controllerInside = false;
+                }
+
+                parent.HighlightedSection = this;
                 controllerInside = true;
             }
         }
@@ -50,41 +56,47 @@ namespace CellexalVR.Filters
             if (other.CompareTag("Controller"))
             {
                 controllerInside = false;
-                if (parent.HighlightedSection == section)
+                if (parent.HighlightedSection == this)
                 {
-                    parent.HighlightedSection = 0;
+                    parent.HighlightedSection = null;
                 }
             }
         }
+
 
         private void Update()
         {
             var device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
+                KeyboardHandler keyboard = null;
                 if (type == FieldType.NAME)
                 {
-                    var keyboard = referenceManager.filterNameKeyboard;
-                    keyboard.gameObject.SetActive(true);
+                    keyboard = referenceManager.filterNameKeyboard;
                     keyboard.additionalOutputs.Add(textmeshpro);
                 }
                 else if (type == FieldType.OPERATOR)
                 {
-                    var keyboard = referenceManager.filterOperatorKeyboard;
-                    keyboard.gameObject.SetActive(true);
+                    keyboard = referenceManager.filterOperatorKeyboard;
                     keyboard.output = textmeshpro;
 
                 }
                 else if (type == FieldType.VALUE)
                 {
-                    var keyboard = referenceManager.filterValueKeyboard;
-                    keyboard.gameObject.SetActive(true);
+                    keyboard = referenceManager.filterValueKeyboard;
                     keyboard.additionalOutputs.Add(textmeshpro);
 
                 }
                 else if (type == FieldType.ATTRIBUTE_INCLUDE)
                 {
                     textmeshpro.text = textmeshpro.text == "included" ? "not included" : "included";
+                }
+
+                if (keyboard != null)
+                {
+                    keyboard.gameObject.SetActive(true);
+                    keyboard.transform.position = transform.position;
+                    keyboard.transform.Translate(new Vector3(-0.05f, -0.1f, 0f), Space.Self);
                 }
             }
         }

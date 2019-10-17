@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Launcher.unity
     guid: aeed05bb8ad9c5242a4764a845aad31a
-  - enabled: 1
+  - enabled: 0
     path: Assets/vrjeans_scene1.unity
     guid: 14933dc213bea1a42b97f83fda842ff4
   - enabled: 0
@@ -20,7 +20,13 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/TutorialScene.unity
-    guid: cb36b16662241594e9cadb77def7d3fc
+    path: Assets/CellexalVR_Main_Scene.unity
+    guid: 6f5e5ccac9ff7634f9dac6eccbb87ca1
+  - enabled: 1
+    path: Assets/IntroTutorialScene.unity
+    guid: 109c1c936823b7f438573a39b04f738a
   m_configObjects: {}
