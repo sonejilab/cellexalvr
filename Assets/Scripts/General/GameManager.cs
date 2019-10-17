@@ -678,6 +678,11 @@ namespace CellexalVR.General
             if (!multiplayer) return;
             coordinator.photonView.RPC("SendGraphPointColorsMode", PhotonTargets.Others, graphName, switchToGraphpointColors);
         }
+        public void InformChangeParticleMode(string graphName, bool switchToArrows)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendChangeParticleMode", PhotonTargets.Others, graphName, switchToArrows);
+        }
         public void InformChangeFrequency(string graphName, float amount)
         {
             if (!multiplayer) return;
@@ -733,7 +738,7 @@ namespace CellexalVR.General
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients that " + value + " was clicked");
-            coordinator.photonView.RPC("SendBrowserKeyClicked", PhotonTargets.Others, value); 
+            coordinator.photonView.RPC("SendBrowserKeyClicked", PhotonTargets.Others, value);
         }
 
         public void InformBrowserEnter()

@@ -10,9 +10,10 @@ namespace CellexalVR.AnalysisObjects
     {
         public ReferenceManager referenceManager;
         public Graph graph;
-        public Material particleMaterial;
         public float timeThreshold = 0.05f;
         public int itemsPerFrame = 1000;
+        public Material arrowParticleMaterial;
+        public Material circleParticleMaterial;
 
         public Dictionary<Graph.GraphPoint, Vector3> Velocities
         {
@@ -50,6 +51,18 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        private bool useArrowParticle;
+        public bool UseArrowParticle
+        {
+            get => useArrowParticle;
+            set
+            {
+                useArrowParticle = value;
+                SetAllTexts();
+            }
+        }
+
+
         private new ParticleSystem particleSystem;
         /// <summary>
         /// Number of seconds between each arrow emit
@@ -68,7 +81,7 @@ namespace CellexalVR.AnalysisObjects
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             particleSystem = gameObject.GetComponent<ParticleSystem>();
-            particleSystem.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
+            particleSystem.GetComponent<ParticleSystemRenderer>().material = arrowParticleMaterial;
             var mainModule = particleSystem.main;
             mainModule.simulationSpeed = speed;
             SetColors();
@@ -82,7 +95,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
         private void Update()
-        {
+        {   
             if (oldArrowEmitRate != arrowEmitRate)
             {
                 oldArrowEmitRate = arrowEmitRate;
@@ -110,12 +123,28 @@ namespace CellexalVR.AnalysisObjects
             ParticleSystem.ColorBySpeedModule colorBySpeedModule = particleSystem.colorBySpeed;
             colorBySpeedModule.enabled = !UseGraphPointColors;
 
+
             Mesh graphPointMesh = referenceManager.graphGenerator.meshToUse;
             //float graphPointMeshSize = graphPointMesh.bounds.extents.magnitude * 2;
             //int verticesPerGraphPoint = graphPointMesh.vertexCount;
             Vector3 offset = graphPointMesh.normals[0] * graphPointMesh.bounds.extents.x / 2f;
 
             var emitParams = new ParticleSystem.EmitParams();
+            if (!UseArrowParticle)
+            {
+                //ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+                emitParams.startSize = 0.015f;
+                ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+                renderer.material = circleParticleMaterial;
+                renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            }
+            else
+            {
+                emitParams.startSize = 1f;
+                ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+                renderer.material = arrowParticleMaterial;
+                renderer.renderMode = ParticleSystemRenderMode.Stretch;
+            }
             int nItems = 0;
             int nextYield = ConstantEmitOverTime ? (int)itemsPerFrameConstant : itemsPerFrame;
             int yieldsSoFar = 0;
@@ -148,6 +177,7 @@ namespace CellexalVR.AnalysisObjects
                     {
                         emitParams.position = keyValuePair.Key.Position - offset; // + keyValuePair.Value.normalized * graphPointMeshSize;
                         emitParams.velocity = keyValuePair.Value;
+
                         if (UseGraphPointColors)
                         {
                             emitParams.startColor = keyValuePair.Key.GetColor();
@@ -326,6 +356,7 @@ namespace CellexalVR.AnalysisObjects
             submenu.thresholdText.text = "Threshold: " + threshold;
             submenu.constantSynchedModeText.text = "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
             submenu.graphPointColorsModeText.text = "Mode: " + (UseGraphPointColors ? "Graphpoint colors" : "Gradient");
+            submenu.particleMaterialText.text = "Mode: " + (UseArrowParticle ? "Arrow" : "Circle");
 
         }
 

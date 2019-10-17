@@ -77,7 +77,7 @@ namespace CellexalVR.AnalysisLogic
             //print(path);
             //print(lastSlashIndex);
             //print(lastDotIndex);
-            
+
             //print(graphName);
             //print(originalGraph.GraphName);
             if (subGraphName != string.Empty)
@@ -96,9 +96,9 @@ namespace CellexalVR.AnalysisLogic
             using (FileStream stream = new FileStream(path, FileMode.Open))
             using (StreamReader reader = new StreamReader(stream))
             {
+                string header = reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
-                    string header = reader.ReadLine();
                     string line = reader.ReadLine();
                     string[] words = line.Split(null);
                     string cellName = words[0];
@@ -125,7 +125,8 @@ namespace CellexalVR.AnalysisLogic
                 particleSystemGameObject.name = particleSystemGameObjectName;
                 VelocityParticleEmitter emitter = particleSystemGameObject.GetComponent<VelocityParticleEmitter>();
                 emitter.referenceManager = referenceManager;
-                emitter.particleMaterial = arrowMaterial;
+                emitter.arrowParticleMaterial = arrowMaterial;
+                emitter.circleParticleMaterial = standardMaterial;
                 emitter.graph = graph;
                 emitter.Velocities = velocities;
                 graph.velocityParticleEmitter = emitter;
