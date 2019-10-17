@@ -51,7 +51,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        private bool useArrowParticle;
+        private bool useArrowParticle = true;
         public bool UseArrowParticle
         {
             get => useArrowParticle;
@@ -133,7 +133,7 @@ namespace CellexalVR.AnalysisObjects
             if (!UseArrowParticle)
             {
                 //ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
-                emitParams.startSize = 0.015f;
+                emitParams.startSize = 0.01f;
                 ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
                 renderer.material = circleParticleMaterial;
                 renderer.renderMode = ParticleSystemRenderMode.Billboard;

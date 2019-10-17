@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.SubMenus
 
         private int buttonNbr;
         Vector3 startPosition = new Vector3(-0.37f, 1f, -0.15f);
-        Vector3 nextButtonPosition = new Vector3(-0.37f, 1f, 0.0f);
+        Vector3 nextButtonPosition = new Vector3(-0.37f, 1f, -0.15f);
         Vector3 positionIncCol = new Vector3(0.185f, 0f, 0f);
         Vector3 positionIncRow = new Vector3(0f, 0f, -0.2f);
 
