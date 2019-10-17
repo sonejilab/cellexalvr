@@ -976,7 +976,7 @@ namespace CellexalVR.Multiplayer
         public void SendResetFilter()
         {
             CellexalLog.Log("Recieved message to reset filter");
-            referenceManager.filterManager.ResetFilter(false);
+            referenceManager.filterManager.ResetFilter(/*false*/);
         }
         #endregion
 
