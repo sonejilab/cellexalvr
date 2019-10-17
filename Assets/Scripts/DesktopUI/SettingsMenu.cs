@@ -208,6 +208,7 @@ namespace CellexalVR.DesktopUI
                 {
                     for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < selectionColorButtons.Count; j++ )
                     {
+                        Debug.Log("Removing - " + j);
                         RemoveSelectionColor(selectionColorButtons[j].gameObject);
 
                     }

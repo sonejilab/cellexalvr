@@ -257,7 +257,7 @@ namespace CellexalVR.General
             GameObject filterCreator = GameObject.Find("Filter Creator");
             filterBlockBoard = filterCreator.transform.Find("Filter Block Board").gameObject;
             GameObject keyboardParent = filterBlockBoard.transform.Find("Keyboards").gameObject;
-            filterNameKeyboard = keyboardParent.GetComponentInChildren<GeneralKeyboardHandler>(true);
+            filterNameKeyboard = keyboardParent.GetComponentInChildren<FilterNameKeyboardHandler>(true);
             filterOperatorKeyboard = keyboardParent.GetComponentInChildren<OperatorKeyboardHandler>(true);
             filterValueKeyboard = keyboardParent.GetComponentInChildren<NumericalKeyboardHandler>(true);
             filterNameKeyboardAutoCompleteList = filterNameKeyboard.gameObject.GetComponentInChildren<AutoCompleteList>(true);

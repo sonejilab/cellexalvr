@@ -12,7 +12,10 @@ namespace CellexalVR.Interaction
                            ">=", "<=" }
         };
 
-
+        public void UpdateFilterFromFilterCreator()
+        {
+            referenceManager.filterManager.UpdateFilterFromFilterCreator();
+        }
 
 #if UNITY_EDITOR
         public void BuildKeyboard()
@@ -21,6 +24,12 @@ namespace CellexalVR.Interaction
 
             base.BuildKeyboard(keyboardHandler);
             ClosePrefab(prefab);
+
+            OnEdit = new KeyboardEvent();
+            OnEdit.AddListener(SetAllOutputs);
+            OnEdit.AddListener((string s) => referenceManager.filterManager.UpdateFilterFromFilterCreator());
+            OnEdit.AddListener((string s) => DismissKeyboard());
+
         }
 #endif
     }

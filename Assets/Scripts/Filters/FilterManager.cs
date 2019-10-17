@@ -345,6 +345,7 @@ namespace CellexalVR.Filters
         {
             // check that genes exists
             string[] genes = filter.GetGenes().ToArray();
+            Array.ForEach(genes, (s) => s.ToLower());
             SQLiter.SQLite database = referenceManager.database;
             while (database.QueryRunning)
             {
@@ -355,9 +356,9 @@ namespace CellexalVR.Filters
             {
                 yield return null;
             }
-            foreach (Tuple<string, int> geneId in database._result)
+            foreach (Tuple<string, string> geneId in database._result)
             {
-                if (!genes.Contains(geneId.Item1))
+                if (!genes.Contains(geneId.Item1.ToLower()))
                 {
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Gene " + geneId.Item1 + " not found";

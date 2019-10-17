@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace CellexalVR.Interaction
 {
-    public class GeneralKeyboardHandler : KeyboardHandler
+    public class FilterNameKeyboardHandler : KeyboardHandler
     {
         public override string[][] Layouts { get; protected set; } = {
             // lowercase
@@ -57,29 +57,39 @@ namespace CellexalVR.Interaction
             }
         }
 
+        public void UpdateFilterFromFilterCreator()
+        {
+            referenceManager.filterManager.UpdateFilterFromFilterCreator();
+        }
+
 #if UNITY_EDITOR
         public void BuildKeyboard()
         {
-            OpenPrefab(out GameObject prefab, out GeneralKeyboardHandler keyboardHandler);
+            var oldOnEdit = OnEdit;
+            OpenPrefab(out GameObject prefab, out FilterNameKeyboardHandler keyboardHandler);
             base.BuildKeyboard(keyboardHandler);
             ClosePrefab(prefab);
+
+            OnEdit = oldOnEdit;
+            return;
+
         }
 #endif
     }
 #if UNITY_EDITOR
 
     /// <summary>
-    /// Editor class for the <see cref="GeneralKeyboardHandler"/> to add a "Build keyboard" button.
+    /// Editor class for the <see cref="FilterNameKeyboardHandler"/> to add a "Build keyboard" button.
     /// </summary>
-    [UnityEditor.CustomEditor(typeof(GeneralKeyboardHandler), true)]
+    [UnityEditor.CustomEditor(typeof(FilterNameKeyboardHandler), true)]
     [UnityEditor.CanEditMultipleObjects]
-    public class GeneralKeyboardHandlerEditor : UnityEditor.Editor
+    public class FilterNameKeyboardHandlerEditor : UnityEditor.Editor
     {
-        private GeneralKeyboardHandler instance;
+        private FilterNameKeyboardHandler instance;
 
         void OnEnable()
         {
-            instance = (GeneralKeyboardHandler)target;
+            instance = (FilterNameKeyboardHandler)target;
         }
 
         public override void OnInspectorGUI()

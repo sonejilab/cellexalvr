@@ -55,6 +55,11 @@ namespace CellexalVR.Interaction
             return -1;
         }
 
+        public void UpdateFilterFromFilterCreator()
+        {
+            referenceManager.filterManager.UpdateFilterFromFilterCreator();
+        }
+
 #if UNITY_EDITOR
         public void BuildKeyboard()
         {
@@ -65,6 +70,16 @@ namespace CellexalVR.Interaction
             }
             base.BuildKeyboard(keyboardHandler);
             ClosePrefab(prefab);
+
+            OnEdit = new KeyboardEvent();
+            OnEdit.AddListener(ValidateInput);
+            OnEdit.AddListener((string s) => referenceManager.filterManager.UpdateFilterFromFilterCreator());
+
+            OnEnter = new KeyboardEvent();
+            OnEnter.AddListener((string s) => SubmitOutput(false));
+            OnEnter.AddListener((string s) => DismissKeyboard());
+
+
         }
 #endif
     }
