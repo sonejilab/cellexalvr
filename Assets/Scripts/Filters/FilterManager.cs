@@ -164,7 +164,7 @@ namespace CellexalVR.Filters
             currentFilter.Expression.SetFilterManager(this);
             string filterAsText = currentFilter.Expression.ToString();
             filterPreviewText.text = filterAsText;
-            referenceManager.gameManager.InformSetFilter(filterAsText);
+            //referenceManager.gameManager.InformSetFilter(filterAsText);
             loadingFilter = false;
             if (resultBlock.isActiveAndEnabled)
             {
@@ -209,14 +209,10 @@ namespace CellexalVR.Filters
         private IEnumerator EvalQueuedCellsCoroutine()
         {
             evaluating = true;
-            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            //stopwatch.Start();
             cellsToEvaluate.AddRange(queuedCells);
             queuedCells.Clear();
 
-            //CellexalLog.Log("Evaluating " + cellsToEvaluate.Count + " queued cells for filter");
             string[] cells = cellsToEvaluate.Select((p) => p.Item1.Label).ToArray();
-            //print("evaling " + cellsToEvaluate.Count + " with " + currentFilter.Expression.ToString());
             if (currentFilterGenes.Length > 0)
             {
                 SQLiter.SQLite database = referenceManager.database;
@@ -225,7 +221,6 @@ namespace CellexalVR.Filters
                 {
                     yield return null;
                 }
-                //print("got " + database._result.Count + " gene ranges from database");
 
                 // results are ready to be read
                 string geneName = "";
@@ -252,12 +247,6 @@ namespace CellexalVR.Filters
 
             foreach (var t in cellsToEvaluate)
             {
-                //print("evaluating cell " + t.Item1.Label);
-                //string cellname = t.Item1.Label;
-                //foreach (string gene in GeneExprs.Keys.Select((Tuple<string, string> tuple) => tuple.Item1))
-                //{
-                //    print("evaluating " + t.Item1.Label + " with " + gene + "expression " + GeneExprs[new Tuple<string, string>(cellname, gene)]);
-                //}
                 Graph.GraphPoint gp = t.Item1;
                 int group = t.Item2;
                 if (currentFilter.Pass(cellManager.GetCell(gp.Label)))
@@ -270,8 +259,6 @@ namespace CellexalVR.Filters
 
             cellsToEvaluate.Clear();
             GeneExprs.Clear();
-            //stopwatch.Stop();
-            //CellexalLog.Log("Finished evaluating cells for filter in " + stopwatch.Elapsed);
             // wait half a second before evaluating again
             yield return new WaitForSeconds(0.5f);
             evaluating = false;
@@ -439,13 +426,14 @@ namespace CellexalVR.Filters
             referenceManager.filterBlockBoard.SetActive(false);
         }
 
-        public void ResetFilter(bool informMultiUser = true)
+        public void ResetFilter(/*bool informMultiUser = true*/)
         {
             currentFilter = null;
-            if (informMultiUser)
-            {
-                referenceManager.gameManager.InformResetFilter();
-            }
+            resultBlock.DisconnectAllPorts();
+            //if (informMultiUser)
+            //{
+            //    referenceManager.gameManager.InformResetFilter();
+            //}
         }
 
         /// <summary>
