@@ -358,7 +358,7 @@ namespace CellexalVR.Filters
             CellManager cellManager = referenceManager.cellManager;
             List<string> facsList = filter.GetFacs();
             foreach (string facs in facsList)
-            {
+            {   
                 if (!cellManager.FacsRanges.ContainsKey(facs))
                 {
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);

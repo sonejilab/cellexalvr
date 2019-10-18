@@ -178,12 +178,6 @@ namespace CellexalVR.General
             //referenceManager.leftControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildLeftRadialMenu();
             //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
 
-          //TODO_CELLEXAL  _Keyboard.GetComponent<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
-          //TODO_CELLEXAL  _WebBrowser.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>(true).BuildKeyboard();
-          //TODO_CELLEXAL  _Loader.GetComponentInChildren<CellexalVR.Interaction.KeyboardHandler>().BuildKeyboard();
-
-            
-
             EditorUtility.ClearProgressBar();
             buildingScene = false;
         }
@@ -232,7 +226,7 @@ namespace CellexalVR.General
             LightForTesting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Light For Testing.prefab");
             MenuHolder = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/MenuHolder.prefab");
             Loader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Tron_Loader.prefab");
-            Keyboard = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Keyboard Setup.prefab");
+            Keyboard = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Keyboards/Keyboard Setup.prefab");
             WebBrowser = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/WebBrowser.prefab");
             FilterCreator = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Filters/Filter Creator.prefab");
             SettingsMenu = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Settings Menu.prefab");
