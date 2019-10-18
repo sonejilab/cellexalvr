@@ -231,7 +231,7 @@ namespace CellexalVR.AnalysisObjects
         private void Minimize()
         {
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+            transform.position = Vector3.MoveTowards(transform.position, referenceManager.leftController.transform.position, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 50);
             if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
