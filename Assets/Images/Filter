@@ -1,0 +1,30 @@
+Unstaged changes after reset:
+M	.gitignore
+M	Assets/CellexalVR_Main_Scene.unity
+M	Assets/Launcher.unity
+M	Assets/Materials/Environment/ItemPickupOutlineThick.mat
+M	Assets/Materials/Heatmap/HeatmapTransparent.mat
+M	Assets/Materials/SettingsMenu/HeatmapGradient.mat
+M	Assets/Materials/SettingsMenu/PreviewColorBox.mat
+M	Assets/Materials/SettingsMenu/SatValBox.mat
+M	Assets/Photon Unity Networking/Editor/PhotonNetwork/Views/PhotonAnimatorViewEditor.cs
+M	Assets/Photon Unity Networking/Resources/PhotonServerSettings.asset
+D	Assets/Plugins/SQLiter/DLLs/System.Data.dll
+D	Assets/Plugins/SQLiter/DLLs/System.Data.dll.meta
+M	Assets/Prefabs/Graphs/sphere_low_poly.FBX.meta
+M	Assets/Prefabs/Materials/No Name.mat
+M	Assets/SceneLoaderTest.unity
+M	Assets/Scripts/AnalysisObjects/GraphBetweenGraphs.cs
+M	Assets/SimpleWebBrowser/PluginServer/x64/debug.log
+M	Assets/SimpleWebBrowser/PluginServer/x64/log-file.txt
+D	Assets/SteamVR/Plugins.meta
+M	Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
+M	Packages/manifest.json
+M	ProjectSettings/DynamicsManager.asset
+M	ProjectSettings/EditorBuildSettings.asset
+M	ProjectSettings/GraphicsSettings.asset
+M	ProjectSettings/ProjectSettings.asset
+M	ProjectSettings/ProjectVersion.txt
+M	ProjectSettings/QualitySettings.asset
+M	ProjectSettings/UnityConnectSettings.asset
+M	packages/manifest.json

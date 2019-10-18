@@ -202,6 +202,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 transform.localScale = oldScale;
                 transform.localPosition = oldPos;
+                transform.localRotation = oldRot;
                 //CellexalLog.Log("Maximized object" + name);
                 maximize = false;
                 GraphActive = true;
@@ -255,7 +256,7 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
+                targetPosition = referenceManager.leftController.transform.position;
             }
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;

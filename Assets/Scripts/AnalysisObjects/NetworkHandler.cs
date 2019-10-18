@@ -189,7 +189,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         internal void ShowNetworks()
         {
-            transform.position = referenceManager.minimizedObjectHandler.transform.position;
+            transform.position = referenceManager.leftController.transform.position;
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 r.enabled = true;
             foreach (NetworkCenter network in networks)
@@ -223,6 +223,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 transform.localScale = originalScale;
                 transform.localPosition = originalPos;
+                transform.localRotation = originalRot;
                 foreach (NetworkCenter network in Replacements)
                 {
                     network.GetComponent<Collider>().enabled = true;
