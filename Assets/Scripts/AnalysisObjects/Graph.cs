@@ -107,6 +107,8 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 oldPos;
         private Quaternion oldRot;
         private Vector3 oldScale;
+        private float currentTime = 0;
+        private float deleteTime = 0.7f;
 
 
 #if UNITY_EDITOR
@@ -235,6 +237,8 @@ namespace CellexalVR.AnalysisObjects
             }
             oldPos = transform.position;
             oldScale = transform.localScale;
+            shrinkSpeed = (transform.localScale.x - targetMinScale) / deleteTime;
+            currentTime = 0;
             minimize = true;
         }
 
@@ -251,13 +255,13 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                targetPosition = referenceManager.leftController.transform.position;
+                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
             }
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
             //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-            if (transform.localScale.x <= targetMinScale)
+            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
                 minimize = false;
                 GraphActive = false;
@@ -266,6 +270,7 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
                 minimized = true;
             }
+            currentTime += Time.deltaTime;
         }
 
         public Vector3 ScaleCoordinates(Vector3 coords)

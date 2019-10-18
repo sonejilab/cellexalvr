@@ -45,6 +45,8 @@ namespace CellexalVR.AnalysisObjects
         private bool createAnim;
         private Vector3 targetPos;
         private float targetScale;
+        private float currentTime = 0;
+        private float deleteTime = 0.7f;
 
         public int layoutApplied = 0;
 
@@ -255,6 +257,8 @@ namespace CellexalVR.AnalysisObjects
             originalPos = transform.position;
             originalRot = transform.localRotation;
             originalScale = transform.localScale;
+            currentTime = 0;
+            shrinkSpeed = (transform.localScale.x - targetScale) / deleteTime;
             minimize = true;
         }
 
@@ -267,7 +271,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (transform.localScale.x <= targetMinScale)
+            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
                 foreach (NetworkCenter network in networks)
                 {
@@ -280,6 +284,7 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
                 referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
             }
+            currentTime += Time.deltaTime;
         }
 
         /// <summary>
