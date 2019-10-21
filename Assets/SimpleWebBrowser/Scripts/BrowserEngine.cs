@@ -239,7 +239,6 @@ namespace SimpleWebBrowser
             byte[] b = mstr.GetBuffer();
             lock (_clientSocket.GetStream())
             {
-                Debug.Log("sending navigate event");
                 _clientSocket.GetStream().Write(b, 0, b.Length);
             }
         }
