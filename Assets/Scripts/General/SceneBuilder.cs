@@ -178,6 +178,16 @@ namespace CellexalVR.General
             //referenceManager.leftControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildLeftRadialMenu();
             //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
 
+            _Keyboard.GetComponent<GeneKeyboardHandler>().BuildKeyboard();
+            _FilterCreator.GetComponentInChildren<FilterNameKeyboardHandler>(true).BuildKeyboard();
+            _FilterCreator = GameObject.Find("Filter Creator");
+            _FilterCreator.GetComponentInChildren<OperatorKeyboardHandler>(true).BuildKeyboard();
+            _FilterCreator = GameObject.Find("Filter Creator");
+            _FilterCreator.GetComponentInChildren<NumericalKeyboardHandler>(true).BuildKeyboard();
+            _Loader.GetComponentInChildren<FolderKeyboardHandler>(true).BuildKeyboard();
+            _WebBrowser.GetComponentInChildren<WebKeyboardHandler>(true).BuildKeyboard();
+
+            AutoPopulateGameObjects();
             EditorUtility.ClearProgressBar();
             buildingScene = false;
         }
@@ -290,10 +300,10 @@ namespace CellexalVR.General
                 instance.AutoPopulateGameObjects();
             }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Save all prefabs"))
-            {
-                instance.SaveAllPrefabs();
-            }
+            //if (GUILayout.Button("Save all prefabs"))
+            //{
+            //    instance.SaveAllPrefabs();
+            //}
 
             DrawDefaultInspector();
 
