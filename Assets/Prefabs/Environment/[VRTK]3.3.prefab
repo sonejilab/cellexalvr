@@ -984,7 +984,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1029,7 +1029,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1165202643468736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -806885394, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -1042,8 +1042,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: Point the laser towards something to find out more
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11539,7 +11539,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4940225777015776}
   - component: {fileID: 33860865999189366}
-  - component: {fileID: 64129143640793200}
+  - component: {fileID: 160724176}
   m_Layer: 14
   m_Name: Selection Tool Collider Teardrop
   m_TagString: SelectionTool
@@ -11569,7 +11569,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327859366197334}
   m_Mesh: {fileID: 4300002, guid: 720e2754d5d776445a36fd59cfd55e39, type: 3}
---- !u!64 &64129143640793200
+--- !u!64 &160724176
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12482,7 +12482,7 @@ MonoBehaviour:
   buttonIcons: {fileID: 21300000, guid: 4e966657e7ced194b9c1018e5e814c9b, type: 3}
   particles: {fileID: 198619358105292146}
   selectionToolColliders:
-  - {fileID: 64129143640793200}
+  - {fileID: 160724176}
   - {fileID: 65520005156711304}
   - {fileID: 135965618154803798}
   - {fileID: 64297983899819906}
@@ -14903,7 +14903,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14948,7 +14948,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1694443445283312}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -806885394, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -14961,8 +14961,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -15035,11 +15035,11 @@ MonoBehaviour:
     lineCount: 0
     pageCount: 0
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 23588081438827638}
@@ -20227,6 +20227,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2357738283683473160}
   infoMenu: {fileID: 0}
+  activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -20268,7 +20269,7 @@ Transform:
   m_GameObject: {fileID: 1728141745495570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.001, y: -0.0046, z: 0.0164}
-  m_LocalScale: {x: 0.022283988, y: 0.022283984, z: 0.022283988}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.025}
   m_Children: []
   m_Father: {fileID: 4423057397660976}
   m_RootOrder: 3
@@ -20298,7 +20299,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d034e8faab3a284e80bfd252b7a7a24, type: 2}
+  - {fileID: 2100000, guid: baca1d49f825a044da4585d54cb0b93a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20334,7 +20335,7 @@ MonoBehaviour:
     value: {x: 0, y: 0, z: 0}
     space: 1
   rotateDegreesPerSecond:
-    value: {x: 0, y: 90, z: 90}
+    value: {x: 0, y: 0, z: 90}
     space: 1
   ignoreTimescale: 0
 --- !u!1 &1728482697143258
@@ -20612,7 +20613,7 @@ MeshCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1
-  m_CookingOptions: 14
+  m_CookingOptions: -1
   m_Mesh: {fileID: 4300000, guid: 70a9c265aa1ce7c469c1a8b0238a6bd1, type: 3}
 --- !u!1 &1758570761568618
 GameObject:
@@ -20672,7 +20673,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 87507b87222a4584e9c5420b920cd86f, type: 2}
+  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

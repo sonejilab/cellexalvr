@@ -4777,4 +4777,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   graph: {fileID: 0}
   particleMaterial: {fileID: 2100000, guid: 6aa41733870aa854081b3a08352ccc61, type: 2}
+  timeThreshold: 0.05
   itemsPerFrame: 1000
+  arrowParticle: {fileID: 2100000, guid: 6aa41733870aa854081b3a08352ccc61, type: 2}
+  circleParticle: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
