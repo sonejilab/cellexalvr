@@ -74,7 +74,7 @@ LineRenderer:
   - {x: 2, y: 2, z: 2}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.0015
+    widthMultiplier: 0.004
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -154,9 +154,7 @@ MonoBehaviour:
   fromGraphCentroid: {x: 0, y: 0, z: 0}
   midGraphCentroid: {x: 0, y: 0, z: 0}
   toGraphCentroid: {x: 0, y: 0, z: 0}
-  fromClusterHull: {x: 0, y: 0, z: 0}
   midClusterHull: {x: 0, y: 0, z: 0}
-  toClusterHull: {x: 0, y: 0, z: 0}
   centroids: 0
   spherePrefab: {fileID: 4094783700118341761, guid: 5ba5762dcec71d54aaaac9a33291c189,
     type: 3}

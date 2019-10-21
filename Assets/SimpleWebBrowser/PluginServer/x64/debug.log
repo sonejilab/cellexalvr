@@ -39,3 +39,34 @@
 [0306/141847.707:WARNING:audio_output_dispatcher_impl.cc(138)] Active proxy streams during shutdown: 1
 [0306/141847.779:WARNING:audio_sync_reader.cc(166)] AudioSyncReader::Read timed out, audio glitch count=1
 [0402/160725.631:WARNING:spdy_session.cc(2224)] Received HEADERS for invalid stream 89
+[0703/091853.190:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091853.191:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091853.193:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091853.193:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091853.195:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091853.197:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091941.506:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091941.507:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091941.507:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091941.508:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091941.511:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/091941.511:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/093739.444:WARNING:quota_manager.cc(1833)] Create directory failed for path
+[0703/093739.444:WARNING:quota_manager.cc(1833)] Create directory failed for path
+[0703/094618.653:WARNING:quota_manager.cc(1833)] Create directory failed for path
+[0703/094618.654:WARNING:quota_manager.cc(1833)] Create directory failed for path
+[0703/094618.810:WARNING:quota_manager.cc(1833)] Create directory failed for path
+[0703/153703.188:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/153703.190:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/153703.190:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/153703.191:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/153703.193:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0703/153703.194:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0704/111244.126:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0704/111244.127:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0704/111244.129:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0704/111244.129:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0704/111244.132:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0704/111244.133:ERROR:render_media_log.cc(25)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[0716/155818.047:ERROR:browser_host_impl.cc(1548)] Invalid URL passed to CefBrowserHostImpl::LoadURL: 
+[0716/155825.788:ERROR:ssl_client_socket_impl.cc(1101)] handshake failed; returned -1, SSL error code 1, net_error -101
