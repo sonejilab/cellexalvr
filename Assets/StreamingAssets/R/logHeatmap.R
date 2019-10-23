@@ -27,8 +27,8 @@ if ( is.na( topNodes) ) {
 function_str <- paste("cellexalObj = logHeatmap(cellexalObj,
 			\"", genes , "\",
 			\"", heatmap_png, "\",
-			\"", grouping, "\"," ,
-			ontology, ",",
+			\"", grouping, "\",\"" ,
+			ontology, "\",",
 			topNodes, ")", 
 			sep="")
 
