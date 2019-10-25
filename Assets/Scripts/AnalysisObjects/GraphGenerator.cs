@@ -148,13 +148,7 @@ namespace CellexalVR.AnalysisObjects
             int halfNbrOfExpressionColors = nbrOfExpressionColors / 2;
 
             Color[] lowMidExpressionColors = Extensions.Extensions.InterpolateColors(lowColor, midColor, halfNbrOfExpressionColors);
-            Color[] midHighExpressionColors = Extensions.Extensions.InterpolateColors(midColor, highColor, nbrOfExpressionColors - halfNbrOfExpressionColors);
-
-
-            //graphpointColors = new Color[256];
-            //Array.Copy(lowMidExpressionColors, graphpointColors, halfNbrOfExpressionColors);
-            //Array.Copy(midHighExpressionColors, 0, graphpointColors, halfNbrOfExpressionColors, nbrOfExpressionColors - halfNbrOfExpressionColors);
-            //Array.Copy(CellexalConfig.SelectionToolColors, 0, graphpointColors, nbrOfExpressionColors, nbrOfSelectionColors);
+            Color[] midHighExpressionColors = Extensions.Extensions.InterpolateColors(midColor, highColor, nbrOfExpressionColors - halfNbrOfExpressionColors + 1);
 
             //// reservered colors
             //graphpointColors[255] = Color.white;
@@ -166,7 +160,7 @@ namespace CellexalVR.AnalysisObjects
                 graphPointColors.SetPixel(pixel, 0, lowMidExpressionColors[i]);
                 pixel++;
             }
-            for (int i = 0; i < nbrOfExpressionColors - halfNbrOfExpressionColors; ++i)
+            for (int i = 1; i < nbrOfExpressionColors - halfNbrOfExpressionColors + 1; ++i)
             {
                 graphPointColors.SetPixel(pixel, 0, midHighExpressionColors[i]);
                 pixel++;
@@ -178,12 +172,16 @@ namespace CellexalVR.AnalysisObjects
             }
 
             // Setting a block of colours because when going from linear to gamma space in the shader could cause rounding errors.
+            //graphPointColors.SetPixel(255, 0, CellexalConfig.Config.GraphDefaultColor);
+            //graphPointColors.SetPixel(254, 0, CellexalConfig.Config.GraphDefaultColor);
+            //graphPointColors.SetPixel(253, 0, CellexalConfig.Config.GraphDefaultColor);       
+            //graphPointColors.SetPixel(252, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+            //graphPointColors.SetPixel(251, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+            //graphPointColors.SetPixel(250, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+
             graphPointColors.SetPixel(255, 0, CellexalConfig.Config.GraphDefaultColor);
-            graphPointColors.SetPixel(254, 0, CellexalConfig.Config.GraphDefaultColor);
-            graphPointColors.SetPixel(253, 0, CellexalConfig.Config.GraphDefaultColor);
-            graphPointColors.SetPixel(252, 0, CellexalConfig.Config.GraphZeroExpressionColor);
-            graphPointColors.SetPixel(251, 0, CellexalConfig.Config.GraphZeroExpressionColor);
-            graphPointColors.SetPixel(250, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+            graphPointColors.SetPixel(254, 0, CellexalConfig.Config.GraphZeroExpressionColor);
+
             graphPointColors.filterMode = FilterMode.Point;
             graphPointColors.Apply();
 
@@ -637,9 +635,9 @@ namespace CellexalVR.AnalysisObjects
             // set up the graph's texture
             newGraph.textureWidth = nbrOfMaxPointsPerClusters;
             newGraph.textureHeight = nbrOfClusters;
-            Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
+            Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false, true);
             texture.filterMode = FilterMode.Point;
-
+            texture.anisoLevel = 0;
             for (int i = 0; i < texture.width; ++i)
             {
                 for (int j = 0; j < texture.height; ++j)
@@ -850,16 +848,16 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true);
             }
 
+            graphManager.Graphs.Add(subGraph);
+            graphManager.attributeSubGraphs.Add(subGraph);
+            string[] axes = g.axisNames.ToArray();
+            AddAxes(subGraph, axes);
             if (g.hasVelocityInfo)
             {
                 referenceManager.velocitySubMenu.CreateButton(Directory.GetCurrentDirectory() +
                     @"\Data\" + CellexalUser.DataSourceFolder + @"\" + g.GraphName + ".mds", name);
                 subGraph.hasVelocityInfo = true;
             }
-            graphManager.Graphs.Add(subGraph);
-            graphManager.attributeSubGraphs.Add(subGraph);
-            string[] axes = g.axisNames.ToArray();
-            AddAxes(subGraph, axes);
         }
 
         public void CreatePointsBetweenGraphs(Cell[] cells, Vector3[] positions)

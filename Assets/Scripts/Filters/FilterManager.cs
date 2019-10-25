@@ -53,8 +53,11 @@ namespace CellexalVR.Filters
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-                resultBlock = referenceManager.filterBlockBoard.GetComponentInChildren<FilterCreatorResultBlock>();
-                filterPreviewText = referenceManager.filterBlockBoard.transform.Find("Filter Preview Text").GetComponent<TextMeshPro>();
+                if (referenceManager.filterBlockBoard)
+                {
+                    resultBlock = referenceManager.filterBlockBoard.GetComponentInChildren<FilterCreatorResultBlock>();
+                    filterPreviewText = referenceManager.filterBlockBoard.transform.Find("Filter Preview Text").GetComponent<TextMeshPro>();
+                }
             }
         }
 
@@ -358,7 +361,7 @@ namespace CellexalVR.Filters
             CellManager cellManager = referenceManager.cellManager;
             List<string> facsList = filter.GetFacs();
             foreach (string facs in facsList)
-            {   
+            {
                 if (!cellManager.FacsRanges.ContainsKey(facs))
                 {
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);

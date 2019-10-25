@@ -1,6 +1,6 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Menu.Buttons;
-using TMPro;
+using System.Collections.Generic;
 
 public class IncreaseVelocitySpeedButton : CellexalButton
 {
@@ -16,10 +16,11 @@ public class IncreaseVelocitySpeedButton : CellexalButton
 
     public override void Click()
     {
-        Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
-        VelocityParticleEmitter emitter = activeGraph.velocityParticleEmitter;
-        emitter.ChangeSpeed(amount);
-        referenceManager.gameManager.InformChangeSpeed(activeGraph.GraphName, amount);
+        List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
+        foreach (Graph g in activeGraphs)
+        {
+            g.velocityParticleEmitter.ChangeSpeed(amount);
+            referenceManager.gameManager.InformChangeSpeed(amount);
+        }
     }
-
 }

@@ -1,16 +1,30 @@
-﻿using UnityEngine;
-using System.Collections;
-using TMPro;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Menu.Buttons;
-using System;
+using System.Linq;
+using TMPro;
 
 public class LoadVelocityButton : CellexalButton
 {
     public TextMeshPro buttonText;
-    public string subGraphName = System.String.Empty;
+    private string subGraphName;
+    public string SubGraphName
+    {
+        get { return subGraphName; }
+        set
+        {
+            subGraphName = value;
+            if (value != "")
+            {
+                buttonText.text = subGraphName;
+                subGraph = referenceManager.graphManager.FindGraph(value);
+            }
+        }
+    }
     public string shorterFilePath;
 
     private string filePath;
+    private Graph graph = null;
+    private Graph subGraph = null;
 
     public string FilePath
     {
@@ -18,9 +32,8 @@ public class LoadVelocityButton : CellexalButton
         set
         {
             filePath = value;
-            int lastSlashIndex = filePath.LastIndexOfAny(new char[] { '/', '\\' });
-            int lastDotIndex = filePath.LastIndexOf('.');
-            shorterFilePath = filePath.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
+            shorterFilePath = FixGraphPath(value);
+            graph = referenceManager.graphManager.FindGraph(shorterFilePath);
             if (subGraphName != string.Empty)
             {
                 buttonText.text = subGraphName;
@@ -30,6 +43,14 @@ public class LoadVelocityButton : CellexalButton
                 buttonText.text = shorterFilePath;
             }
         }
+    }
+
+    private string FixGraphPath(string path)
+    {
+        int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
+        int lastDotIndex = path.LastIndexOf('.');
+        return path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
+
     }
 
 
@@ -43,16 +64,21 @@ public class LoadVelocityButton : CellexalButton
 
     public override void Click()
     {
-        if (subGraphName != string.Empty)
+        var velocityGenerator = referenceManager.velocityGenerator;
+        Graph graphToActivate = subGraph != null ? subGraph : graph;
+        velocityGenerator.ActiveGraphs.ForEach((g) => print("activegraphs: " + g));
+        bool startVelocity = !velocityGenerator.ActiveGraphs.Contains(graphToActivate);
+        if (startVelocity)
         {
             referenceManager.velocityGenerator.ReadVelocityFile(FilePath, subGraphName);
         }
         else
         {
-            referenceManager.velocityGenerator.ReadVelocityFile(FilePath);
+            Destroy(graphToActivate.velocityParticleEmitter.gameObject);
+            velocityGenerator.ActiveGraphs.Remove(graphToActivate);
         }
-        referenceManager.velocitySubMenu.DeactivateOutlines();
-        ToggleOutline(true);
+        //referenceManager.velocitySubMenu.DeactivateOutlines();
+        ToggleOutline(startVelocity);
         //activeOutline.SetActive(true);
         referenceManager.gameManager.InformReadVelocityFile(shorterFilePath, subGraphName);
     }

@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using System.Collections.Generic;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -16,12 +17,12 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
-            if (activeGraph != null)
+            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in activeGraphs)
             {
-                activeGraph.ToggleGraphPoints();
-                referenceManager.gameManager.InformToggleGraphPoints(activeGraph.GraphName);
+                g.ToggleGraphPoints();
             }
+            referenceManager.gameManager.InformToggleGraphPoints();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace CellexalVR.Menu.SubMenus
             }
 
             LoadVelocityButton buttonScript = newButton.GetComponent<LoadVelocityButton>();
-            buttonScript.subGraphName = subGraphName;
+            buttonScript.SubGraphName = subGraphName;
             buttonScript.FilePath = filePath;
             Renderer buttonRenderer = newButton.GetComponent<Renderer>();
             buttonRenderer.material = new Material(buttonRenderer.material);
@@ -76,7 +76,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             if (subGraphName != string.Empty)
             {
-                return buttons.Find(x => x.subGraphName == subGraphName);
+                return buttons.Find(x => x.SubGraphName == subGraphName);
             }
             else
             {

@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using System.Collections.Generic;
 
 namespace CellexalVR.Menu.Buttons.Velocity
 {
@@ -14,13 +15,12 @@ namespace CellexalVR.Menu.Buttons.Velocity
 
         public override void Click()
         {
-            Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
-            if (activeGraph != null)
+            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in activeGraphs)
             {
-                activeGraph.velocityParticleEmitter.Stop();
-                referenceManager.gameManager.InformStopVelocity(activeGraph.GraphName);
-                //referenceManager.velocitySubMenu.DeactivateOutlines();
+                g.velocityParticleEmitter.Stop();
             }
+            referenceManager.gameManager.InformStopVelocity();
         }
     }
 }

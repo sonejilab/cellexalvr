@@ -12,7 +12,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
         //public float velocityThreshold = 0.001f;
-        public Graph ActiveGraph { get; set; }
+        public List<Graph> ActiveGraphs { get; set; }
         public GameObject particleSystemPrefab;
         public Material arrowMaterial;
         public Material standardMaterial;
@@ -24,7 +24,10 @@ namespace CellexalVR.AnalysisLogic
         //public GameObject planePrefab;
 
         private string particleSystemGameObjectName = "Velocity Particle System";
-
+        private void Start()
+        {
+            ActiveGraphs = new List<Graph>();
+        }
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -62,11 +65,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             CellexalLog.Log("Started reading velocity file " + path);
-            if (ActiveGraph != null)
-            {
-                Destroy(ActiveGraph.transform.Find(particleSystemGameObjectName).gameObject);
-                ActiveGraph = null;
-            }
 
             Graph graph;
             Graph originalGraph;
@@ -135,7 +133,7 @@ namespace CellexalVR.AnalysisLogic
                 stream.Close();
             }
 
-            ActiveGraph = graph;
+            ActiveGraphs.Add(graph);
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
         }
 
