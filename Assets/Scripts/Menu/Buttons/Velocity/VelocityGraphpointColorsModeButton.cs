@@ -1,6 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
-using TMPro;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -18,13 +17,14 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
-            if (activeGraph != null)
+            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
+            bool switchToGraphpointColors = false;
+            foreach (Graph g in activeGraphs)
             {
-                bool switchToGraphpointColors = !activeGraph.velocityParticleEmitter.UseGraphPointColors;
-                activeGraph.velocityParticleEmitter.UseGraphPointColors = switchToGraphpointColors;
-                referenceManager.gameManager.InformGraphPointColorsMode(activeGraph.GraphName, switchToGraphpointColors);
+                switchToGraphpointColors = !g.velocityParticleEmitter.UseGraphPointColors;
+                g.velocityParticleEmitter.UseGraphPointColors = switchToGraphpointColors;
             }
+            referenceManager.gameManager.InformGraphPointColorsMode(switchToGraphpointColors);
         }
     }
 }

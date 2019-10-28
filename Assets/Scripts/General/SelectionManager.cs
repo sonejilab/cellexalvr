@@ -162,7 +162,7 @@ namespace CellexalVR.General
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
                 if (gp != null)
                 {
-                    gp.RecolorSelectionColor(newGroup, true);
+                    gp.ColorSelectionColor(newGroup, true);
                 }
             }
             //graphPoint.Recolor(Colors[newGroup], newGroup);
@@ -308,7 +308,7 @@ namespace CellexalVR.General
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
-                gp.RecolorSelectionColor(info.fromGroup, !info.newNode);
+                gp.ColorSelectionColor(info.fromGroup, !info.newNode);
             }
 
             //groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
@@ -359,7 +359,7 @@ namespace CellexalVR.General
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
-                gp.RecolorSelectionColor(info.toGroup, info.toGroup != -1);
+                gp.ColorSelectionColor(info.toGroup, info.toGroup != -1);
             }
             //groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
             //HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
@@ -499,7 +499,7 @@ namespace CellexalVR.General
                     Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(graph.GraphName, gp.Label);
                     if (graphPoint != null)
                     {
-                        graphPoint.RecolorSelectionColor(gp.Group, false);
+                        graphPoint.ColorSelectionColor(gp.Group, false);
                     }
                 }
                 lastSelectedCells.Add(gp);
@@ -705,7 +705,7 @@ namespace CellexalVR.General
             {
                 foreach (Graph.GraphPoint g in referenceManager.cellManager.GetCell(gp.Label).GraphPoints)
                 {
-                    g.RecolorSelectionColor(gp.Group, true);
+                    g.ColorSelectionColor(gp.Group, true);
                 }
             }
         }

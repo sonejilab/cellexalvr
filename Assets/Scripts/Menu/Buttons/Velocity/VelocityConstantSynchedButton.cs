@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -19,13 +20,14 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
-            if (activeGraph != null)
+            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
+            bool switchToConstant = false;
+            foreach (Graph g in activeGraphs)
             {
-                bool switchToConstant = !activeGraph.velocityParticleEmitter.ConstantEmitOverTime;
-                activeGraph.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
-                referenceManager.gameManager.InformConstantSynchedMode(activeGraph.GraphName, switchToConstant);
+                switchToConstant = !g.velocityParticleEmitter.ConstantEmitOverTime;
+                g.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
             }
+            referenceManager.gameManager.InformConstantSynchedMode(switchToConstant);
         }
     }
 }
