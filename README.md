@@ -9,7 +9,10 @@ You can read more about how to use CellexalVR in our [manual](https://cellexalvr
 You can download a compiled version of CellexalVR for Windows 10 from [our website](https://cellexalvr.med.lu.se/download).
 
 There are a few things that must be done if you are planning to run CellexalVR for the first time.
-* Check that you have a pretty beefy computer.
+* Check that you have a pretty beefy computer. We are using:
+* * intel i7 or AMD ryzen 1920x CPU
+* * NVIDIA GeForce GTX 1080 GPU
+* * 16 GB RAM
 * Make sure you have an HTC Vive that is set up properly.
 * Make sure [SteamVR](https://steamcommunity.com/steamvr) is installed. (This should get installed when you configure your Vive for the first time)
 * Make sure at least [R 3.5.0](https://cran.r-project.org/src/base/R-3/) is installed.
@@ -42,6 +45,8 @@ CellexalVR
 * or [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [3535f45](https://github.com/shambam/cellexalvr/commit/3535f4519b8f8efa2edc37f587a2f543a972e8bb)
 * or [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [5c9324f](https://github.com/shambam/cellexalvr/commit/5c9324f745c802c3b070b9efdcd2a9e0b0428c2a)
 * or [Unity 5.6.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [0dd8cf8](https://github.com/shambam/cellexalvr/commit/0dd8cf8f2d382f604dd5cca9ba50c2ec73086284)
+
+### Some examples and a more in depth guide of the project is available [here](https://cellexalvr.med.lu.se/programmers-guide).
 
 ## Project structure
 The Unity project contains 3 scenes that CellexalVR uses. The [Assets/Launcher.unity](Assets/Launcher.unity) scene is what the user sees when they start CellexalVR. It contains the menus for choosing single-user, multi-user or the tutorial. The [Assets/IntroTutorialScene.unity](Assets/IntroTutorialScene.unity) scene is the tutorial, it is for the most part a stripped down version of the main scene, [Assets/CellexalVR_Main_Scene.unity](Assets/CellexalVR_Main_Scene.unity). The main scene is where the interesting things happen.
