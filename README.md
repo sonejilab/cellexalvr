@@ -6,14 +6,19 @@ You can read more about this project at [our website](https://cellexalvr.med.lu.
 You can read more about how to use CellexalVR in our [manual](https://cellexalvr.med.lu.se/manual_introduction).
 
 ## Running CellexalVR
+You can download a compiled version of CellexalVR for Windows 10 from [our website](https://cellexalvr.med.lu.se/download).
+
 There are a few things that must be done if you are planning to run CellexalVR for the first time.
+* Check that you have a pretty beefy computer.
 * Make sure you have an HTC Vive that is set up properly.
 * Make sure [SteamVR](https://steamcommunity.com/steamvr) is installed. (This should get installed when you configure your Vive for the first time)
 * Make sure at least [R 3.5.0](https://cran.r-project.org/src/base/R-3/) is installed.
-* Create a Data folder where CellexalVR is installed.
-* Put your data inside a new folder with a sensible name in the Data folder.
-* If you have multiple sets of data, place them into one folder each within the Data folder.
-* Adjust the text between the `RscriptFilePath` tags in the `Config/config.xml` file to where you installed R. It should look something like `<RscriptFilePath>C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe</RscriptFilePath>`
+* Install the [CellexalVR R package](https://www.github.com/sonejilab/cellexalvrr) by running `devtools::install_github("sonejilab/cellexalvrr")` in an R terminal. This requires the `devtools` package, you can install it with `install.packages("devtools")`.
+* If you want to make use of the html reports, you need to install [pandoc](https://pandoc.org/).
+* Create a folder called `Data` where CellexalVR is installed.
+* Put your data inside a new folder with a sensible name in the `Data` folder.
+* If you have multiple sets of data, place them into one folder each within the `Data` folder.
+* When you start CellexalVR for the first time, enter the path to your `Rscript.exe` in the text box, or adjust the text between the `RscriptFilePath` tags in the `Config/config.xml` file to where you installed R. It should look something like `<RscriptFilePath>C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe</RscriptFilePath>`.
 The folder structure should then be
 ```
 CellexalVR
@@ -32,11 +37,10 @@ CellexalVR
 
 ## Cloning the project
 ### Requirements
-* A pretty beefy computer
-* [R 3.5.0](https://cran.r-project.org/src/base/R-3/)
+* All of the requirements of running CellexalVR (assuming you want to run it as well)
 * [Unity 2019.1.8f1](https://unity3d.com/get-unity/download/archive)
-* [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [3535f45](https://github.com/shambam/cellexalvr/commit/3535f4519b8f8efa2edc37f587a2f543a972e8bb)
-* [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [5c9324f](https://github.com/shambam/cellexalvr/commit/5c9324f745c802c3b070b9efdcd2a9e0b0428c2a)
+* or [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [3535f45](https://github.com/shambam/cellexalvr/commit/3535f4519b8f8efa2edc37f587a2f543a972e8bb)
+* or [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [5c9324f](https://github.com/shambam/cellexalvr/commit/5c9324f745c802c3b070b9efdcd2a9e0b0428c2a)
 * or [Unity 5.6.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [0dd8cf8](https://github.com/shambam/cellexalvr/commit/0dd8cf8f2d382f604dd5cca9ba50c2ec73086284)
 
 ## Project structure
@@ -65,4 +69,4 @@ The values of all gene expressions are stored in an sqlite3 database. This datab
 The folder structure when it comes to prefabs, materials and scripts is hopefully somewhat intuitive. The [Assets/Prefabs](Assets/Prefabs), [Assets/Materials](Assets/Materials) and [Assets/Images](Assets/Images) folders all have a similar set of folders in them like <code>Graphs</code>, <code>Heatmaps</code>, <code>Menu</code> and so on. The [Assets/Scripts](Assets/Scripts) is organised after which namespace scripts are in. All scripts written by us are in the <code>CellexalVR</code> namespace and its subsequent nested namespaces.
 
 ## Notes
-If you lose your config.xml there is a sample one at [Assets/StreamingAssets/sample_config.xml](Assets/StreamingAssets/sample_config.xml). If you run the program without a `config.xml` file, the sample one will be copied to `Config/config.xml`.
+If you lose your config.xml there is a sample one at [Assets/StreamingAssets/sample_config.xml](Assets/StreamingAssets/sample_config.xml). If you run CellexalVR without a `config.xml` file, the sample one will be copied to `Config/config.xml`.
