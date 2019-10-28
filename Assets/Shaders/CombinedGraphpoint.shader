@@ -112,9 +112,10 @@ Shader "Custom/CombinedGraphpoint"
                    //fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
                    
                    // float3 expressionColorData = (tex2D(_MainTex, i.uv));
-                   float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
-				   // float2 colorTexUV = float2((round((expressionColorData.x) * 256))/ 256, 0.5);
-                   float2 colorTexUV = float2(expressionColorData.x + 1/512, 0.5);
+                   float3 expressionColorData = tex2D(_MainTex, i.uv);
+                   // the 255.0 / 256.0 is there to shift the x-coordinate slightly to the left, otherwise the rightmost pixel (which in the _MainTex is red = 255) rolls over to the leftmost
+                   float2 colorTexUV = float2(expressionColorData.x * 255.0/256.0, 0.5);
+
 				   
 				   float4 color = tex2D(_GraphpointColorTex, colorTexUV);
                    //color *= fixed4(i.vertexLighting, 1.0);
@@ -193,7 +194,7 @@ Shader "Custom/CombinedGraphpoint"
                 fixed4 frag(v2f i) : COLOR
                 {
                     // float3 expressionColorData = (tex2D(_MainTex, i.uv));
-                    float3 expressionColorData = LinearToGammaSpace(tex2D(_MainTex, i.uv));
+                    float3 expressionColorData = tex2D(_MainTex, i.uv);
                     if (expressionColorData.g > 0.9) {
                         // party
                         float time = _Time.z * 2;
@@ -211,7 +212,7 @@ Shader "Custom/CombinedGraphpoint"
                         // normal
                         i.lightDir = normalize(i.lightDir);
 						// float2 colorTexUV = float2((round((expressionColorData.x) * 256))/ 256, 0.5);
-                        float2 colorTexUV = float2(expressionColorData.r + 1/512, 0.5);
+                        float2 colorTexUV = float2(expressionColorData.r * 255.0/256.0, 0.5);
 						float4 color = tex2D(_GraphpointColorTex, colorTexUV);
                         fixed3 normal = i.normal;                    
                         fixed diff = saturate(dot(normal, i.lightDir));
