@@ -86,7 +86,7 @@ namespace CellexalVR.Interaction
                     foreach (var graph in graphManager.Graphs)
                     {
                         //print(graph.GraphName + graph.GraphActive);
-                        var closestPoints = graph.MinkowskiDetectionSelectionTool(activeCollider.transform.position, boundsCenter, boundsExtents, currentColorIndex);
+                        var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter, boundsExtents, currentColorIndex);
                         foreach (var point in closestPoints)
                         {
                             selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);

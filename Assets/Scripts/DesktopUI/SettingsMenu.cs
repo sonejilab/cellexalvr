@@ -206,7 +206,7 @@ namespace CellexalVR.DesktopUI
                 }
                 if (CellexalConfig.Config.SelectionToolColors.Length < selectionColorButtons.Count)
                 {
-                    for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < selectionColorButtons.Count; j++ )
+                    for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < selectionColorButtons.Count; j++)
                     {
                         Debug.Log("Removing - " + j);
                         RemoveSelectionColor(selectionColorButtons[j].gameObject);
@@ -420,7 +420,10 @@ namespace CellexalVR.DesktopUI
         public void UpdateVelocityColors()
         {
             unsavedChanges = true;
-            referenceManager.velocityGenerator.ActiveGraph.velocityParticleEmitter.SetColors();
+            foreach (AnalysisObjects.Graph g in referenceManager.velocityGenerator.ActiveGraphs)
+            {
+                g.velocityParticleEmitter.SetColors();
+            }
         }
 
         public void ChangeMade()

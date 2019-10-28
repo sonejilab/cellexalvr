@@ -1,0 +1,1079 @@
+fileFormatVersion: 2
+guid: 1a07b88df31336e47ac07aa5de6208b4
+ModelImporter:
+  serializedVersion: 25
+  internalIDToNameTable:
+  - first:
+      74: 7347356104343934442
+    second: funnel|Big Cog|Big Cog|Big Cog|Take 001|BaseLayer|Big Cog|Big Cog|Take
+  - first:
+      74: -1638996936573001541
+    second: funnel|Big Cog|Big Cog|Box|Take 001|BaseLayer|Big Cog|Box|Take 001|Bas
+  - first:
+      74: 7021029166003216041
+    second: funnel|Big Cog|Big Cog|funnel|Take 001|BaseLayer|Big Cog|funnel|Take 0
+  - first:
+      74: -6758791087918019092
+    second: funnel|Big Cog|Big Cog|Small Cog|Take 001|BaseLayer|Big Cog|Small Cog|
+  - first:
+      74: -3606951865570242743
+    second: funnel|Box|Box|Big Cog|Take 001|BaseLayer|Box|Big Cog|Take 001|BaseLay
+  - first:
+      74: -8152994123283087065
+    second: funnel|Box|Box|Box|Take 001|BaseLayer|Box|Box|Take 001|BaseLayer
+  - first:
+      74: 8560899058217818771
+    second: funnel|Box|Box|funnel|Take 001|BaseLayer|Box|funnel|Take 001|BaseLayer
+  - first:
+      74: 4777141865146754280
+    second: funnel|Box|Box|Small Cog|Take 001|BaseLayer|Box|Small Cog|Take 001|Bas
+  - first:
+      74: -2370400654415101283
+    second: funnel|funnel|funnel|Box|Take 001|BaseLayer|funnel|Box|Take 001|BaseLa
+  - first:
+      74: 9092662593723791230
+    second: funnel|funnel|funnel|funnel|Take 001|BaseLayer|funnel|funnel|Take 001|
+  - first:
+      74: -7069770976772522227
+    second: funnel|funnel|funnel|Small Cog|Take 001|BaseLayer|funnel|Small Cog|Tak
+  - first:
+      74: -6593326222915643234
+    second: funnel|Small Cog|Small Cog|Big Cog|Take 001|BaseLayer|Small Cog|Big Co
+  - first:
+      74: 796916972991000108
+    second: funnel|Small Cog|Small Cog|Box|Take 001|BaseLayer|Small Cog|Box|Take 0
+  - first:
+      74: 2662120238111691932
+    second: funnel|Small Cog|Small Cog|funnel|Take 001|BaseLayer|Small Cog|funnel|
+  - first:
+      74: 4746661905457058238
+    second: funnel|Small Cog|Small Cog|Small Cog|Take 001|BaseLayer|Small Cog|Smal
+  - first:
+      74: 7134762340807331477
+    second: funnel.003|Big Cog|Big Cog|Big Cog|Take 001|BaseLayer|Big Cog|Big Cog|Take
+  - first:
+      74: 2347316285864191729
+    second: funnel.003|Big Cog|Big Cog|Box|Take 001|BaseLayer|Big Cog|Box|Take 001|Bas
+  - first:
+      74: -6205684127972415548
+    second: funnel.003|Big Cog|Big Cog|funnel|Take 001|BaseLayer|Big Cog|funnel|Take
+      0
+  - first:
+      74: -8071427845939983642
+    second: funnel.003|Big Cog|Big Cog|Small Cog|Take 001|BaseLayer|Big Cog|Small
+      Cog|
+  - first:
+      74: 966176542973623383
+    second: funnel.003|Box|Box|Big Cog|Take 001|BaseLayer|Box|Big Cog|Take 001|BaseLay
+  - first:
+      74: 6315819749844271266
+    second: funnel.003|Box|Box|Box|Take 001|BaseLayer|Box|Box|Take 001|BaseLayer
+  - first:
+      74: 3022609066669741241
+    second: funnel.003|Box|Box|funnel|Take 001|BaseLayer|Box|funnel|Take 001|BaseLayer
+  - first:
+      74: -8256425995752074564
+    second: funnel.003|Box|Box|Small Cog|Take 001|BaseLayer|Box|Small Cog|Take 001|Bas
+  - first:
+      74: -955233941758493669
+    second: funnel.003|funnel|funnel|Box|Take 001|BaseLayer|funnel|Box|Take 001|BaseLa
+  - first:
+      74: -2996679980626652114
+    second: funnel.003|funnel|funnel|funnel|Take 001|BaseLayer|funnel|funnel|Take
+      001|
+  - first:
+      74: -378225573475922367
+    second: funnel.003|funnel|funnel|Small Cog|Take 001|BaseLayer|funnel|Small Cog|Tak
+  - first:
+      74: -5984146176048781811
+    second: funnel.003|Small Cog|Small Cog|Big Cog|Take 001|BaseLayer|Small Cog|Big
+      Co
+  - first:
+      74: -4646851201053263065
+    second: funnel.003|Small Cog|Small Cog|Box|Take 001|BaseLayer|Small Cog|Box|Take
+      0
+  - first:
+      74: -2175614765645588281
+    second: funnel.003|Small Cog|Small Cog|funnel|Take 001|BaseLayer|Small Cog|funnel|
+  - first:
+      74: -6490420526639606039
+    second: funnel.003|Small Cog|Small Cog|Small Cog|Take 001|BaseLayer|Small Cog|Smal
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: funnel|Big Cog|Big Cog|Big Cog|Take 001|BaseLayer|Big Cog|Big Cog|Take
+      takeName: funnel|Big Cog|Big Cog|Big Cog|Take 001|BaseLayer|Big Cog|Big Cog|Take
+      internalID: 7347356104343934442
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Big Cog|Big Cog|Box|Take 001|BaseLayer|Big Cog|Box|Take 001|Bas
+      takeName: funnel|Big Cog|Big Cog|Box|Take 001|BaseLayer|Big Cog|Box|Take 001|Bas
+      internalID: -1638996936573001541
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Big Cog|Big Cog|funnel|Take 001|BaseLayer|Big Cog|funnel|Take 0
+      takeName: funnel|Big Cog|Big Cog|funnel|Take 001|BaseLayer|Big Cog|funnel|Take
+        0
+      internalID: 7021029166003216041
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Big Cog|Big Cog|Small Cog|Take 001|BaseLayer|Big Cog|Small Cog|
+      takeName: funnel|Big Cog|Big Cog|Small Cog|Take 001|BaseLayer|Big Cog|Small
+        Cog|
+      internalID: -6758791087918019092
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Box|Box|Big Cog|Take 001|BaseLayer|Box|Big Cog|Take 001|BaseLay
+      takeName: funnel|Box|Box|Big Cog|Take 001|BaseLayer|Box|Big Cog|Take 001|BaseLay
+      internalID: -3606951865570242743
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Box|Box|Box|Take 001|BaseLayer|Box|Box|Take 001|BaseLayer
+      takeName: funnel|Box|Box|Box|Take 001|BaseLayer|Box|Box|Take 001|BaseLayer
+      internalID: -8152994123283087065
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Box|Box|funnel|Take 001|BaseLayer|Box|funnel|Take 001|BaseLayer
+      takeName: funnel|Box|Box|funnel|Take 001|BaseLayer|Box|funnel|Take 001|BaseLayer
+      internalID: 8560899058217818771
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Box|Box|Small Cog|Take 001|BaseLayer|Box|Small Cog|Take 001|Bas
+      takeName: funnel|Box|Box|Small Cog|Take 001|BaseLayer|Box|Small Cog|Take 001|Bas
+      internalID: 4777141865146754280
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|funnel|funnel|Box|Take 001|BaseLayer|funnel|Box|Take 001|BaseLa
+      takeName: funnel|funnel|funnel|Box|Take 001|BaseLayer|funnel|Box|Take 001|BaseLa
+      internalID: -2370400654415101283
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|funnel|funnel|funnel|Take 001|BaseLayer|funnel|funnel|Take 001|
+      takeName: funnel|funnel|funnel|funnel|Take 001|BaseLayer|funnel|funnel|Take
+        001|
+      internalID: 9092662593723791230
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|funnel|funnel|Small Cog|Take 001|BaseLayer|funnel|Small Cog|Tak
+      takeName: funnel|funnel|funnel|Small Cog|Take 001|BaseLayer|funnel|Small Cog|Tak
+      internalID: -7069770976772522227
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Small Cog|Small Cog|Big Cog|Take 001|BaseLayer|Small Cog|Big Co
+      takeName: funnel|Small Cog|Small Cog|Big Cog|Take 001|BaseLayer|Small Cog|Big
+        Co
+      internalID: -6593326222915643234
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Small Cog|Small Cog|Box|Take 001|BaseLayer|Small Cog|Box|Take 0
+      takeName: funnel|Small Cog|Small Cog|Box|Take 001|BaseLayer|Small Cog|Box|Take
+        0
+      internalID: 796916972991000108
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Small Cog|Small Cog|funnel|Take 001|BaseLayer|Small Cog|funnel|
+      takeName: funnel|Small Cog|Small Cog|funnel|Take 001|BaseLayer|Small Cog|funnel|
+      internalID: 2662120238111691932
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel|Small Cog|Small Cog|Small Cog|Take 001|BaseLayer|Small Cog|Smal
+      takeName: funnel|Small Cog|Small Cog|Small Cog|Take 001|BaseLayer|Small Cog|Smal
+      internalID: 4746661905457058238
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Big Cog|Big Cog|Big Cog|Take 001|BaseLayer|Big Cog|Big Cog|Take
+      takeName: funnel.003|Big Cog|Big Cog|Big Cog|Take 001|BaseLayer|Big Cog|Big
+        Cog|Take
+      internalID: 7134762340807331477
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Big Cog|Big Cog|Box|Take 001|BaseLayer|Big Cog|Box|Take 001|Bas
+      takeName: funnel.003|Big Cog|Big Cog|Box|Take 001|BaseLayer|Big Cog|Box|Take
+        001|Bas
+      internalID: 2347316285864191729
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Big Cog|Big Cog|funnel|Take 001|BaseLayer|Big Cog|funnel|Take
+        0
+      takeName: funnel.003|Big Cog|Big Cog|funnel|Take 001|BaseLayer|Big Cog|funnel|Take
+        0
+      internalID: -6205684127972415548
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Big Cog|Big Cog|Small Cog|Take 001|BaseLayer|Big Cog|Small
+        Cog|
+      takeName: funnel.003|Big Cog|Big Cog|Small Cog|Take 001|BaseLayer|Big Cog|Small
+        Cog|
+      internalID: -8071427845939983642
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Box|Box|Big Cog|Take 001|BaseLayer|Box|Big Cog|Take 001|BaseLay
+      takeName: funnel.003|Box|Box|Big Cog|Take 001|BaseLayer|Box|Big Cog|Take 001|BaseLay
+      internalID: 966176542973623383
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Box|Box|Box|Take 001|BaseLayer|Box|Box|Take 001|BaseLayer
+      takeName: funnel.003|Box|Box|Box|Take 001|BaseLayer|Box|Box|Take 001|BaseLayer
+      internalID: 6315819749844271266
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Box|Box|funnel|Take 001|BaseLayer|Box|funnel|Take 001|BaseLayer
+      takeName: funnel.003|Box|Box|funnel|Take 001|BaseLayer|Box|funnel|Take 001|BaseLayer
+      internalID: 3022609066669741241
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Box|Box|Small Cog|Take 001|BaseLayer|Box|Small Cog|Take 001|Bas
+      takeName: funnel.003|Box|Box|Small Cog|Take 001|BaseLayer|Box|Small Cog|Take
+        001|Bas
+      internalID: -8256425995752074564
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|funnel|funnel|Box|Take 001|BaseLayer|funnel|Box|Take 001|BaseLa
+      takeName: funnel.003|funnel|funnel|Box|Take 001|BaseLayer|funnel|Box|Take 001|BaseLa
+      internalID: -955233941758493669
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|funnel|funnel|funnel|Take 001|BaseLayer|funnel|funnel|Take
+        001|
+      takeName: funnel.003|funnel|funnel|funnel|Take 001|BaseLayer|funnel|funnel|Take
+        001|
+      internalID: -2996679980626652114
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|funnel|funnel|Small Cog|Take 001|BaseLayer|funnel|Small Cog|Tak
+      takeName: funnel.003|funnel|funnel|Small Cog|Take 001|BaseLayer|funnel|Small
+        Cog|Tak
+      internalID: -378225573475922367
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Small Cog|Small Cog|Big Cog|Take 001|BaseLayer|Small Cog|Big
+        Co
+      takeName: funnel.003|Small Cog|Small Cog|Big Cog|Take 001|BaseLayer|Small Cog|Big
+        Co
+      internalID: -5984146176048781811
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Small Cog|Small Cog|Box|Take 001|BaseLayer|Small Cog|Box|Take
+        0
+      takeName: funnel.003|Small Cog|Small Cog|Box|Take 001|BaseLayer|Small Cog|Box|Take
+        0
+      internalID: -4646851201053263065
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Small Cog|Small Cog|funnel|Take 001|BaseLayer|Small Cog|funnel|
+      takeName: funnel.003|Small Cog|Small Cog|funnel|Take 001|BaseLayer|Small Cog|funnel|
+      internalID: -2175614765645588281
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: funnel.003|Small Cog|Small Cog|Small Cog|Take 001|BaseLayer|Small Cog|Smal
+      takeName: funnel.003|Small Cog|Small Cog|Small Cog|Take 001|BaseLayer|Small
+        Cog|Smal
+      internalID: -6490420526639606039
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

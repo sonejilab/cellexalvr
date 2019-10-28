@@ -32,8 +32,8 @@ namespace CellexalVR.General
 
         public GameObject Floor;
         private GameObject _Floor;
-        public GameObject Calculators;
-        private GameObject _Calculators;
+        //public GameObject Calculators;
+        //private GameObject _Calculators;
         public GameObject LightForTesting;
         private GameObject _LightForTesting;
         public GameObject MenuHolder;
@@ -110,7 +110,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _SQLiter, SQLiter);
             InstantiateSceneAsset(ref _EventSystem, EventSystem);
             InstantiateSceneAsset(ref _Floor, Floor);
-            InstantiateSceneAsset(ref _Calculators, Calculators);
+            //InstantiateSceneAsset(ref _Calculators, Calculators);
             InstantiateSceneAsset(ref _LightForTesting, LightForTesting);
             InstantiateSceneAsset(ref _MenuHolder, MenuHolder);
             InstantiateSceneAsset(ref _Loader, Loader);
@@ -232,7 +232,7 @@ namespace CellexalVR.General
             SQLiter = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SQLiter.prefab");
             EventSystem = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/EventSystem.prefab");
             Floor = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Floor.prefab");
-            Calculators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Calculator cluster.prefab");
+            //Calculators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Calculator cluster.prefab");
             LightForTesting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Light For Testing.prefab");
             MenuHolder = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/MenuHolder.prefab");
             Loader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Tron_Loader.prefab");

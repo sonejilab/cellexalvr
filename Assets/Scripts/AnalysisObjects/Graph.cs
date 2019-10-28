@@ -344,14 +344,14 @@ namespace CellexalVR.AnalysisObjects
                 textureCoord = newPos;
             }
 
-            public void RecolorGeneExpression(int i, bool outline)
+            public void ColorGeneExpression(int i, bool outline)
             {
-                parent.RecolorGraphPointGeneExpression(this, i, outline);
+                parent.ColorGraphPointGeneExpression(this, i, outline);
             }
 
-            public void RecolorSelectionColor(int i, bool outline)
+            public void ColorSelectionColor(int i, bool outline)
             {
-                parent.RecolorGraphPointSelectionColor(this, i, outline);
+                parent.ColorGraphPointSelectionColor(this, i, outline);
                 Group = i;
             }
 
@@ -675,7 +675,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (point != null)
                 {
-                    point.RecolorSelectionColor(0, false);
+                    point.ColorSelectionColor(0, false);
                 }
                 foreach (var child in children)
                 {
@@ -1102,7 +1102,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         /// <param name="graphPoint">The graphpoint to recolor.</param>
         /// <param name="color">The graphpoint's new color.</param>
-        public void RecolorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
+        public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
         {
             //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
             // TODO CELLEXAL: make the most expressed a percent of the total or something that isn't a hard coded 27
@@ -1123,7 +1123,7 @@ namespace CellexalVR.AnalysisObjects
             textureChanged = true;
         }
 
-        public void RecolorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
+        public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
 
             byte greenChannel = (byte)(outline ? 5 : 0);
@@ -1179,7 +1179,7 @@ namespace CellexalVR.AnalysisObjects
                 for (int j = 0; j < textureHeight; ++j)
                 {
                     //texture.SetPixel(i, j, Color.black);
-                    texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(250, 0, 0, 255) });
+                    texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
                 }
             }
 
@@ -1240,14 +1240,14 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="max">The box's maximum coordinates.</param>
         /// <param name="onlyNotIterated">True if only nodes that which are not yet iterated should be selected.</param>
         /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="GraphPoint"/> that are inside the box.</returns>
-        public List<GraphPoint> MinkowskiDetection(Vector3 min, Vector3 max, bool onlyNotIterated = false)
+        public List<GraphPoint> MinkowskiDetection_old(Vector3 min, Vector3 max, bool onlyNotIterated = false)
         {
             List<GraphPoint> result = new List<GraphPoint>(64);
-            MinkowskiDetectionRecursive(min, max, octreeRoot, ref result, onlyNotIterated);
+            MinkowskiDetectionRecursive_old(min, max, octreeRoot, ref result, onlyNotIterated);
             return result;
         }
 
-        private void MinkowskiDetectionRecursive(Vector3 min, Vector3 max, OctreeNode node, ref List<GraphPoint> result, bool onlyNotIterated = false)
+        private void MinkowskiDetectionRecursive_old(Vector3 min, Vector3 max, OctreeNode node, ref List<GraphPoint> result, bool onlyNotIterated = false)
         {
             if (min.x - node.pos.x - node.size.x <= 0
                    && max.x - node.pos.x >= 0
@@ -1278,7 +1278,7 @@ namespace CellexalVR.AnalysisObjects
                     {
                         if (!onlyNotIterated || !node.NodeIterated)
                         {
-                            MinkowskiDetectionRecursive(min, max, child, ref result, onlyNotIterated);
+                            MinkowskiDetectionRecursive_old(min, max, child, ref result, onlyNotIterated);
                         }
                     }
                 }
@@ -1294,7 +1294,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="selectionToolBoundsExtents">The selection tool's bounding box's extents in world space.</param>
         /// <param name="group">The group that the selection tool is set to color the graphpoints by.</param>
         /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="GraphPoint"/> that are inside the selecion tool.</returns>
-        public List<GraphPoint> MinkowskiDetectionSelectionTool(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group)
+        public List<GraphPoint> MinkowskiDetection(Vector3 selectionToolPos, Vector3 selectionToolBoundsCenter, Vector3 selectionToolBoundsExtents, int group)
         {
             List<GraphPoint> result = new List<GraphPoint>(64);
 
@@ -1323,7 +1323,7 @@ namespace CellexalVR.AnalysisObjects
             debugGizmosPos = selectionToolPos;
 #endif
 
-            MinkowskiDetectionRecursiveSelectionTool(selectionToolPos, min, max, octreeRoot, group, ref result);
+            MinkowskiDetectionRecursive(selectionToolPos, min, max, octreeRoot, group, ref result);
             return result;
         }
 
@@ -1336,7 +1336,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="node">The <see cref="OctreeNode"/> to evaluate.</param>
         /// <param name="group">The group to assign the node.</param>
         /// <param name="result">All leaf nodes found so far.</param>
-        private void MinkowskiDetectionRecursiveSelectionTool(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<GraphPoint> result)
+        private void MinkowskiDetectionRecursive(Vector3 selectionToolWorldPos, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<GraphPoint> result)
         {
             // minkowski difference selection tool bounding box and node
             // take advantage of both being AABB
@@ -1375,7 +1375,7 @@ namespace CellexalVR.AnalysisObjects
                     {
                         if (child.Group != group)
                         {
-                            MinkowskiDetectionRecursiveSelectionTool(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result);
+                            MinkowskiDetectionRecursive(selectionToolWorldPos, boundingBoxMin, boundingBoxMax, child, group, ref result);
                         }
                     }
                 }

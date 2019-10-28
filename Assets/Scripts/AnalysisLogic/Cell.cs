@@ -75,7 +75,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     if (color)
                     {
-                        g.RecolorSelectionColor(Attributes[attributeType.ToLower()], false);
+                        g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);
                         //g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
                         //Debug.Log("ADD GROUP - " + Attributes[attributeType.ToLower()]);
                         //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(GraphPoints[0], Attributes[attributeType.ToLower()], false, g.Material.color);
@@ -137,7 +137,7 @@ namespace CellexalVR.AnalysisLogic
         {
             foreach (Graph.GraphPoint g in GraphPoints)
             {
-                g.RecolorGeneExpression(i, false);
+                g.ColorGeneExpression(i, false);
             }
         }
 
@@ -170,7 +170,7 @@ namespace CellexalVR.AnalysisLogic
         {
             foreach (var g in GraphPoints)
             {
-                g.RecolorSelectionColor(group, false);
+                g.ColorSelectionColor(group, false);
             }
         }
 

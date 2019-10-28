@@ -130,7 +130,7 @@ namespace CellexalVR.AnalysisObjects
             foreach (Graph.GraphPoint point in points)
             {
                 toGraphpoints.Add(toGraph.FindGraphPoint(point.Label));
-                graph.FindGraphPoint(point.Label).RecolorSelectionColor(point.Group, false);
+                graph.FindGraphPoint(point.Label).ColorSelectionColor(point.Group, false);
             }
             HashSet<Graph.GraphPoint> prevjoinedclusters = new HashSet<Graph.GraphPoint>();
             //var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);

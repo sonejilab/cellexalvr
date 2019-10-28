@@ -47,7 +47,7 @@ namespace CellexalVR.General
                 if (files.Contains(file))
                 {
                     // Node is already in list. Skip it and move on..
-                    return;
+                    continue;
                 }
                 GameObject newNode = Instantiate(reportNodePrefab, Vector3.zero, Quaternion.identity);
                 newNode.transform.parent = transform;

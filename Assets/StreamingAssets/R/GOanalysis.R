@@ -19,7 +19,7 @@ grouping <- args[3] ## groupings file
 #}
 
 
-function_str <- paste("ontologyLogPage(cellexalObj,\"", genes , "\", \"", grouping, "\")", sep="")
+function_str <- paste("cellexalObj = ontologyLogPage(cellexalObj,\"", genes , "\", \"", grouping, "\")", sep="")
 
 fileConn <- file(file.path(datadir, "mainServer.input.R"))
 writeLines(function_str, fileConn)

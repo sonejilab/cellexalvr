@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using CellexalVR.AnalysisObjects;
 
 namespace CellexalVR.Menu.Buttons
@@ -19,12 +19,16 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            Graph activeGraph = referenceManager.velocityGenerator.ActiveGraph;
-            if (activeGraph != null)
+            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
+            if (activeGraphs.Count > 0)
             {
-                bool switchToArrow = !activeGraph.velocityParticleEmitter.UseArrowParticle;
-                activeGraph.velocityParticleEmitter.UseArrowParticle = switchToArrow;
-                referenceManager.gameManager.InformChangeParticleMode(activeGraph.GraphName, switchToArrow);
+                bool switchToArrow = false;
+                foreach (Graph g in activeGraphs)
+                {
+                    switchToArrow = !g.velocityParticleEmitter.UseArrowParticle;
+                    g.velocityParticleEmitter.UseArrowParticle = switchToArrow;
+                }
+                referenceManager.gameManager.InformChangeParticleMode(switchToArrow);
             }
         }
     }

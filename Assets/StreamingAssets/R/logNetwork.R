@@ -17,7 +17,7 @@ grouping <- args[3]
 #if ( is.na( topNodes) ) {
 #	topNodes = 20
 #}
-function_str <- paste("logNetwork(cellexalObj,
+function_str <- paste("cellexalObj = logNetwork(cellexalObj,
 			NULL,
 			\"", network_png, "\",
 			\"", grouping, "\")", 

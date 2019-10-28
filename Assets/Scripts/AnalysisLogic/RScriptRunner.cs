@@ -91,6 +91,7 @@ namespace CellexalVR.AnalysisLogic
                 proc.Start();
                 proc.BeginOutputReadLine();
                 proc.BeginErrorReadLine();
+                //CellexalLog.Log("R script finished. stderr:", proc.StandardError.ReadToEnd());
                 proc.WaitForExit();
 
                 proc.Close();
@@ -109,7 +110,7 @@ namespace CellexalVR.AnalysisLogic
                 if (ex.GetType() == typeof(System.ComponentModel.Win32Exception) ||
                     ex.GetType() == typeof(ArgumentException))
                 {
-                    return "Failed to Start Server";
+                    return "Failed to Start Server"; 
                     //CellexalEvents.ScriptFailed.Invoke();
                 }
                 throw new Exception("R Script failed: " + result, ex);

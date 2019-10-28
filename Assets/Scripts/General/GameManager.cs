@@ -649,56 +649,60 @@ namespace CellexalVR.General
         #endregion
 
         #region Velocity
-        public void InformStartVelocity(string graphName)
+        public void InformStartVelocity()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendStartVelocity", PhotonTargets.Others, graphName);
+            coordinator.photonView.RPC("SendStartVelocity", PhotonTargets.Others);
         }
 
-        public void InformStopVelocity(string graphName)
+        public void InformStopVelocity()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendStopVelocity", PhotonTargets.Others, graphName);
+            coordinator.photonView.RPC("SendStopVelocity", PhotonTargets.Others);
         }
 
-        public void InformToggleGraphPoints(string graphName)
+        public void InformToggleGraphPoints()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others, graphName);
+            coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others);
         }
 
-        public void InformConstantSynchedMode(string graphName, bool switchToConstant)
+        public void InformConstantSynchedMode(bool switchToConstant)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendConstantSynchedMode", PhotonTargets.Others, graphName, switchToConstant);
+            coordinator.photonView.RPC("SendConstantSynchedMode", PhotonTargets.Others, switchToConstant);
         }
 
-        public void InformGraphPointColorsMode(string graphName, bool switchToGraphpointColors)
+        public void InformGraphPointColorsMode(bool switchToGraphpointColors)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendGraphPointColorsMode", PhotonTargets.Others, graphName, switchToGraphpointColors);
-        }
-        public void InformChangeParticleMode(string graphName, bool switchToArrows)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("SendChangeParticleMode", PhotonTargets.Others, graphName, switchToArrows);
-        }
-        public void InformChangeFrequency(string graphName, float amount)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("SendChangeFrequency", PhotonTargets.Others, graphName, amount);
+            coordinator.photonView.RPC("SendGraphPointColorsMode", PhotonTargets.Others, switchToGraphpointColors);
         }
 
-        public void InformChangeThreshold(string graphName, float amount)
+        public void InformChangeParticleMode(bool switchToArrows)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendChangeThreshold", PhotonTargets.Others, graphName, amount);
+            coordinator.photonView.RPC("SendChangeParticleMode", PhotonTargets.Others, switchToArrows);
         }
-        public void InformChangeSpeed(string graphName, float amount)
+
+        public void InformChangeFrequency(float amount)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendChangeSpeed", PhotonTargets.Others, graphName, amount);
+            coordinator.photonView.RPC("SendChangeFrequency", PhotonTargets.Others, amount);
         }
+
+        public void InformChangeThreshold(float amount)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendChangeThreshold", PhotonTargets.Others, amount);
+        }
+
+        public void InformChangeSpeed(float amount)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendChangeSpeed", PhotonTargets.Others, amount);
+        }
+
         public void InformReadVelocityFile(string filePath, string subGraphName)
         {
             if (!multiplayer) return;

@@ -842,125 +842,129 @@ namespace CellexalVR.Multiplayer
 
         #region Velocity
         [PunRPC]
-        public void SendStartVelocity(string graphName)
+        public void SendStartVelocity()
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in graphs)
             {
-                activeGraph.velocityParticleEmitter.Play();
+                g.velocityParticleEmitter.Play();
             }
         }
 
         [PunRPC]
-        public void SendStopVelocity(string graphName)
+        public void SendStopVelocity()
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in graphs)
             {
-                activeGraph.velocityParticleEmitter.Stop();
+                g.velocityParticleEmitter.Stop();
             }
         }
 
         [PunRPC]
-        public void SendToggleGraphPoints(string graphName)
+        public void SendToggleGraphPoints()
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in graphs)
             {
-                activeGraph.ToggleGraphPoints();
+                g.ToggleGraphPoints();
             }
         }
 
         [PunRPC]
-        public void SendConstantSynchedMode(string graphName, bool switchToConstant)
+        public void SendConstantSynchedMode(bool switchToConstant)
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            if (switchToConstant)
             {
-                activeGraph.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
-                if (switchToConstant)
-                {
-                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Constant";
-                }
-                else
-                {
-                    referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Synched";
-                }
+                referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Constant";
+            }
+            else
+            {
+                referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Synched";
+            }
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in graphs)
+            {
+                g.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
             }
         }
 
         [PunRPC]
-        public void SendGraphPointColorsMode(string graphName, bool switchToGraphPointColors)
+        public void SendGraphPointColorsMode(bool switchToGraphPointColors)
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            if (switchToGraphPointColors)
             {
-                activeGraph.velocityParticleEmitter.UseGraphPointColors = switchToGraphPointColors;
-                if (switchToGraphPointColors)
-                {
-                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Graphpoint colors";
-                }
-                else
-                {
-                    referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Gradient";
-                }
+                referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Graphpoint colors";
+            }
+            else
+            {
+                referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Gradient";
+            }
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in graphs)
+            {
+                g.velocityParticleEmitter.UseGraphPointColors = switchToGraphPointColors;
             }
         }
 
         [PunRPC]
-        public void SendChangeParticleMode(string graphName, bool switchToArrows)
+        public void SendChangeParticleMode(bool switchToArrows)
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            foreach (Graph g in graphs)
             {
-                activeGraph.velocityParticleEmitter.UseArrowParticle = switchToArrows;
-                if (switchToArrows)
-                {
-                    referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Arrows";
-                }
-                else
-                {
-                    referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Circles";
-                }
+                g.velocityParticleEmitter.UseArrowParticle = switchToArrows;
+            }
+            if (switchToArrows)
+            {
+                referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Arrows";
+            }
+            else
+            {
+                referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Circles";
             }
         }
 
         [PunRPC]
-        public void SendChangeFrequency(string graphName, float amount)
+        public void SendChangeFrequency(float amount)
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            float newFrequency = 0;
+            foreach (Graph g in graphs)
             {
-                float newFrequency = activeGraph.velocityParticleEmitter.ChangeFrequency(amount);
-                string newFrequencyString = (1f / newFrequency).ToString();
-                if (newFrequencyString.Length > 4)
-                {
-                    newFrequencyString = newFrequencyString.Substring(0, 4);
-                }
-                referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+                g.velocityParticleEmitter.ChangeFrequency(amount);
             }
+            string newFrequencyString = (1f / newFrequency).ToString();
+            if (newFrequencyString.Length > 4)
+            {
+                newFrequencyString = newFrequencyString.Substring(0, 4);
+            }
+            referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+
         }
 
         [PunRPC]
-        public void SendChangeThreshold(string graphName, float amount)
+        public void SendChangeThreshold(float amount)
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            float newThreshold = 0;
+            foreach (Graph g in graphs)
             {
-                float newThreshold = activeGraph.velocityParticleEmitter.ChangeThreshold(amount);
-                referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
+                newThreshold = g.velocityParticleEmitter.ChangeThreshold(amount);
             }
+            referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
         }
 
         [PunRPC]
         public void SendChangeSpeed(string graphName, float amount)
         {
-            Graph activeGraph = referenceManager.graphManager.FindGraph(graphName);
-            if (activeGraph != null)
+            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
+            float newSpeed = 0;
+            foreach (Graph g in graphs)
             {
-                float newSpeed = activeGraph.velocityParticleEmitter.ChangeSpeed(amount);
-                referenceManager.velocitySubMenu.speedText.text = "Speed: " + newSpeed;
+                newSpeed = g.velocityParticleEmitter.ChangeSpeed(amount);
             }
+            referenceManager.velocitySubMenu.speedText.text = "Speed: " + newSpeed;
         }
 
         [PunRPC]

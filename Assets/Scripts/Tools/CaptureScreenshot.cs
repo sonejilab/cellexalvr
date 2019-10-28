@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.IO;
-using System;
-using System.Threading;
-using System.Collections;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
-using CellexalVR.AnalysisLogic;
 using CellexalVR.SceneObjects;
+using System;
+using System.Collections;
+using System.IO;
+using System.Threading;
+using UnityEngine;
 
 namespace CellexalVR.Tools
 {
@@ -82,6 +81,11 @@ namespace CellexalVR.Tools
 
             screenCanvas.FadeAnimation(1f);
             yield return new WaitForSeconds(0.5f);
+#if try_this_later
+            string logScreenShotRScriptPath = (Application.streamingAssetsPath + @"\log_screenshot.R");
+            Thread t = new Thread(() => RScriptRunner.RunRScript(logScreenShotRScriptPath, screenshotImageFilePath));
+            t.Start();
+#endif
             panel.SetActive(true);
             screenshotCounter++;
         }
