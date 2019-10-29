@@ -586,19 +586,63 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendHandleHitGenesList(string heatmapName, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitGeneList(hity);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.GetComponent<HeatmapRaycast>().HandleHitGeneList(hity);
+            }
+            else
+            {
+                return;
+            }
         }
 
         [PunRPC]
         public void SendHandleHitGroupingBar(string heatmapName, int hitx)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitGroupingBar(hitx);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.GetComponent<HeatmapRaycast>().HandleHitGroupingBar(hitx);
+            }
+            else
+            {
+                return;
+            }
         }
 
         [PunRPC]
         public void SendHandleHitAttributeBar(string heatmapName, int hitx)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitAttributeBar(hitx);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.GetComponent<HeatmapRaycast>().HandleHitAttributeBar(hitx);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        [PunRPC]
+        public void SendResetInfoTexts(string heatmapName)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.barInfoText.text = "";
+                hm.enlargedGeneText.text = "";
+            }
+            else
+            {
+                return;
+            }
+
         }
         #endregion
 
