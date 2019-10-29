@@ -57,6 +57,8 @@ namespace CellexalVR.AnalysisObjects
         public VelocityParticleEmitter velocityParticleEmitter;
         public GameObject lineParent;
         public bool hasVelocityInfo;
+        [HideInInspector]
+        public bool graphPointsInactive = false;
         public string GraphName
         {
             get { return graphName; }
@@ -1057,6 +1059,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ToggleGraphPoints()
         {
+            graphPointsInactive = !graphPointsInactive;
             foreach (GameObject cluster in graphPointClusters)
             {
                 cluster.SetActive(!cluster.activeSelf);

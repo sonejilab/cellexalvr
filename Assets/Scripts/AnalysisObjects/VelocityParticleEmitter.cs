@@ -15,12 +15,34 @@ namespace CellexalVR.AnalysisObjects
         public Material arrowParticleMaterial;
         public Material circleParticleMaterial;
 
+        public float ArrowEmitRate { get; set; } = 1f;
+
+        public float Threshold { get; set; }
+
+        private float speed = 10f;
+        public float Speed
+        {
+            get => speed;
+            set
+            {
+                speed = value;
+                if (particleSystem != null)
+                {
+                    var mainModule = particleSystem.main;
+                    mainModule.simulationSpeed = speed;
+                }
+            }
+        }
+
+        [HideInInspector]
+        public new ParticleSystem particleSystem;
+
         public Dictionary<Graph.GraphPoint, Vector3> Velocities
         {
             set
             {
                 emitOrder = new List<KeyValuePair<Graph.GraphPoint, Vector3>>(value);
-                itemsPerFrameConstant = emitOrder.Count / (arrowEmitRate * 90);
+                itemsPerFrameConstant = emitOrder.Count / (ArrowEmitRate * 90);
                 greatestVelocity = Mathf.Sqrt(emitOrder.Max((kvp) => kvp.Value.sqrMagnitude));
 
             }
@@ -41,35 +63,12 @@ namespace CellexalVR.AnalysisObjects
 
         private float itemsPerFrameConstant;
         private bool useGraphPointColors;
-        public bool UseGraphPointColors
-        {
-            get => useGraphPointColors;
-            set
-            {
-                useGraphPointColors = value;
-                SetAllTexts();
-            }
-        }
+        public bool UseGraphPointColors { get; set; }
 
         private bool useArrowParticle = true;
-        public bool UseArrowParticle
-        {
-            get => useArrowParticle;
-            set
-            {
-                useArrowParticle = value;
-                SetAllTexts();
-            }
-        }
+        public bool UseArrowParticle { get; set; }
 
 
-        private new ParticleSystem particleSystem;
-        /// <summary>
-        /// Number of seconds between each arrow emit
-        /// </summary>
-        private float arrowEmitRate = 1f;
-        private float threshold = 0f;
-        private float speed = 10f;
         private float oldArrowEmitRate;
         private bool playing = false;
         private bool emitting = false;
@@ -86,7 +85,7 @@ namespace CellexalVR.AnalysisObjects
             mainModule.simulationSpeed = speed;
             SetColors();
             Play();
-            oldArrowEmitRate = arrowEmitRate;
+            oldArrowEmitRate = ArrowEmitRate;
         }
 
         void DoEmit()
@@ -95,11 +94,11 @@ namespace CellexalVR.AnalysisObjects
         }
 
         private void Update()
-        {   
-            if (oldArrowEmitRate != arrowEmitRate)
+        {
+            if (oldArrowEmitRate != ArrowEmitRate)
             {
-                oldArrowEmitRate = arrowEmitRate;
-                itemsPerFrameConstant = emitOrder.Count / (arrowEmitRate * 90);
+                oldArrowEmitRate = ArrowEmitRate;
+                itemsPerFrameConstant = emitOrder.Count / (ArrowEmitRate * 90);
                 Stop();
                 Play();
             }
@@ -148,7 +147,7 @@ namespace CellexalVR.AnalysisObjects
             int nItems = 0;
             int nextYield = ConstantEmitOverTime ? (int)itemsPerFrameConstant : itemsPerFrame;
             int yieldsSoFar = 0;
-            float sqrThreshold = threshold * threshold;
+            float sqrThreshold = Threshold * Threshold;
 
             if (ConstantEmitOverTime)
             {
@@ -244,10 +243,8 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                InvokeRepeating("DoEmit", 0f, arrowEmitRate);
+                InvokeRepeating("DoEmit", 0f, ArrowEmitRate);
             }
-            SetAllTexts();
-
         }
 
         public void Stop()
@@ -261,103 +258,6 @@ namespace CellexalVR.AnalysisObjects
                 currentEmitCoroutine = null;
             }
             emitting = false;
-        }
-
-        /// <summary>
-        /// Changes the frequency be some amount. Frequency can not be changed below 0.
-        /// </summary>
-        /// <param name="amount">How much to multiply the frequency by.</param>
-        /// <returns>The new frequency.</returns>
-        public float ChangeFrequency(float amount)
-        {
-            float freq = 1f / (arrowEmitRate * amount);
-            if (freq <= 0.03125 && amount > 1f)
-            {
-                arrowEmitRate = 32f; // 1 / 32 = 0.03125
-            }
-
-            else if (freq >= 32 && amount < 1f)
-            {
-                arrowEmitRate = 0.03125f;
-            }
-            else
-            {
-                arrowEmitRate *= amount;
-            }
-            SetAllTexts();
-
-            return arrowEmitRate;
-        }
-
-        /// <summary>
-        /// Multiples the current threshold by some amount. Thresholds lower than 0.001 is set to zero.
-        /// </summary>
-        /// <param name="amount">How much to multiply the threshold by.</param>
-        /// <returns>The new threshold.</returns>
-        public float ChangeThreshold(float amount)
-        {
-            if (threshold == 0f && amount > 1f)
-            {
-                threshold = 0.001f;
-            }
-            else if (threshold <= 0.001f && amount < 1f)
-            {
-                threshold = 0f;
-            }
-            else
-            {
-                threshold *= amount;
-            }
-            SetAllTexts();
-            return threshold;
-        }
-
-        /// <summary>
-        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.001 are set to 0.001.
-        /// </summary>
-        /// <param name="amount">The amount to change the speed by.</param>
-        /// <returns>The new speed.</returns>
-        public float ChangeSpeed(float amount)
-        {
-            if (speed == 0f && amount > 1f)
-            {
-                speed = 0.001f;
-            }
-            else if (speed <= 0.001f && amount < 1f)
-            {
-                speed = 0f;
-            }
-            else
-            {
-                speed *= amount;
-            }
-            var mainModule = particleSystem.main;
-            mainModule.simulationSpeed = speed;
-            SetAllTexts();
-            return speed;
-        }
-
-        /// <summary>
-        /// Sets the frequency, speed and threshold texts on the velocity submenu.
-        /// </summary>
-        /// <remarks>
-        /// Automatically called by <see cref="ChangeFrequency(float)"/>, <see cref="ChangeSpeed(float)"/> and <see cref="ChangeThreshold(float)"/>.
-        /// </remarks>
-        public void SetAllTexts()
-        {
-            string newFrequencyString = (1f / arrowEmitRate).ToString();
-            if (newFrequencyString.Length > 8)
-            {
-                newFrequencyString = newFrequencyString.Substring(0, 8);
-            }
-            var submenu = referenceManager.velocitySubMenu;
-            submenu.frequencyText.text = "Frequency: " + newFrequencyString;
-            submenu.speedText.text = "Speed: " + speed;
-            submenu.thresholdText.text = "Threshold: " + threshold;
-            submenu.constantSynchedModeText.text = "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
-            submenu.graphPointColorsModeText.text = "Mode: " + (UseGraphPointColors ? "Graphpoint colors" : "Gradient");
-            submenu.particleMaterialText.text = "Mode: " + (UseArrowParticle ? "Arrow" : "Circle");
-
         }
 
         /// <summary>

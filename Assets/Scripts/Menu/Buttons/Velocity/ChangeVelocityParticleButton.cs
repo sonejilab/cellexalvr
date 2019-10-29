@@ -19,17 +19,8 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
-            if (activeGraphs.Count > 0)
-            {
-                bool switchToArrow = false;
-                foreach (Graph g in activeGraphs)
-                {
-                    switchToArrow = !g.velocityParticleEmitter.UseArrowParticle;
-                    g.velocityParticleEmitter.UseArrowParticle = switchToArrow;
-                }
-                referenceManager.gameManager.InformChangeParticleMode(switchToArrow);
-            }
+            referenceManager.velocityGenerator.ChangeParticle();
+            referenceManager.gameManager.InformChangeParticleMode();
         }
     }
 }

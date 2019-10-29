@@ -20,14 +20,8 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
-            bool switchToConstant = false;
-            foreach (Graph g in activeGraphs)
-            {
-                switchToConstant = !g.velocityParticleEmitter.ConstantEmitOverTime;
-                g.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
-            }
-            referenceManager.gameManager.InformConstantSynchedMode(switchToConstant);
+            referenceManager.velocityGenerator.ChangeConstantSynchedMode();
+            referenceManager.gameManager.InformConstantSynchedMode();
         }
     }
 }

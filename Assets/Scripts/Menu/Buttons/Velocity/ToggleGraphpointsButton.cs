@@ -17,11 +17,7 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in activeGraphs)
-            {
-                g.ToggleGraphPoints();
-            }
+            referenceManager.velocityGenerator.ToggleGraphPoints();
             referenceManager.gameManager.InformToggleGraphPoints();
         }
     }

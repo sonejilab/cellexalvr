@@ -16,11 +16,7 @@ public class IncreaseVelocitySpeedButton : CellexalButton
 
     public override void Click()
     {
-        List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
-        foreach (Graph g in activeGraphs)
-        {
-            g.velocityParticleEmitter.ChangeSpeed(amount);
-            referenceManager.gameManager.InformChangeSpeed(amount);
-        }
+        referenceManager.velocityGenerator.ChangeSpeed(amount);
+        referenceManager.gameManager.InformChangeSpeed(amount);
     }
 }

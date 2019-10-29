@@ -402,7 +402,7 @@ namespace CellexalVR.AnalysisObjects
             //emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
             emitter.UseArrowParticle = false;
             emitter.UseGraphPointColors = true;
-            emitter.ChangeFrequency(4.0f);
+            //emitter.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModule = velocityParticleSystemFromGraph.GetComponent<ParticleSystem>().trails;
             trailModule.enabled = true;
             trailModule.lifetime = 2.0f;
@@ -417,7 +417,7 @@ namespace CellexalVR.AnalysisObjects
             //emitterMidGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
             emitterMidGraph.UseArrowParticle = false;
             emitterMidGraph.UseGraphPointColors = true;
-            emitterMidGraph.ChangeFrequency(4.0f);
+            //emitterMidGraph.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModuleMidGraph = velocityParticleSystemMidGraph.GetComponent<ParticleSystem>().trails;
             trailModuleMidGraph.enabled = true;
             trailModuleMidGraph.lifetime = 2.0f;
@@ -431,7 +431,7 @@ namespace CellexalVR.AnalysisObjects
             //emitterToGraph.arrowParticleMaterial = referenceManager.velocityGenerator.standardMaterial;
             emitterToGraph.UseArrowParticle = false;
             emitterToGraph.UseGraphPointColors = true;
-            emitterToGraph.ChangeFrequency(4.0f);
+            //emitterToGraph.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModuleToGraph = velocityParticleSystemToGraph.GetComponent<ParticleSystem>().trails;
             trailModuleToGraph.enabled = true;
             trailModuleToGraph.lifetime = 2.0f;

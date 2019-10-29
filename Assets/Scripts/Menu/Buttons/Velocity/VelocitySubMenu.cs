@@ -26,11 +26,12 @@ namespace CellexalVR.Menu.SubMenus
         {
             CellexalEvents.GraphsLoaded.AddListener(CreateButtons);
             CellexalEvents.GraphsUnloaded.AddListener(DestroyButtons);
-            frequencyText.text = "Frequency: ";
-            thresholdText.text = "Threshold: ";
-            speedText.text = "Speed: ";
-            graphPointColorsModeText.text = "Mode: ";
-            constantSynchedModeText.text = "Mode: ";
+            frequencyText.text = "Frequency: 1";
+            thresholdText.text = "Threshold: 0";
+            speedText.text = "Speed: 10";
+            graphPointColorsModeText.text = "Mode: Gradient";
+            constantSynchedModeText.text = "Mode: Constant";
+            particleMaterialText.text = "Mode: Arrow";
         }
 
         public void CreateButton(string filePath, string subGraphName = "")
@@ -90,11 +91,6 @@ namespace CellexalVR.Menu.SubMenus
             {
                 button.DeactivateOutline();
             }
-            frequencyText.text = "Frequency: ";
-            thresholdText.text = "Threshold: ";
-            speedText.text = "Speed: ";
-            graphPointColorsModeText.text = "Mode: ";
-            constantSynchedModeText.text = "Mode: ";
         }
 
         /// <summary>
