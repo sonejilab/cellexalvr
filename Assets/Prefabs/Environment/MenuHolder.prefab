@@ -18239,7 +18239,6 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   buttonText: {fileID: 114781739379812666}
-  subGraphName: 
   shorterFilePath: 
 --- !u!1 &1601115706213330
 GameObject:
@@ -32908,17 +32907,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 114723503269570940}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: c177061c052cfd040a404b7661a97512, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: 5cc6c0b9088f09e4f9118620ef5499c4, type: 3}
-  deactivatedTexture: {fileID: 21300000, guid: c5a8a192b283d5444a498e7ce5d18861, type: 3}
-  popupChoice: 1
-  buttonActivated: 1
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 0}
+  meshHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 0}
+  standardTexture: {fileID: 0}
+  highlightedTexture: {fileID: 0}
+  deactivatedTexture: {fileID: 0}
+  popupChoice: 0
+  buttonActivated: 0
   storedState: 0
   controllerInside: 0
 --- !u!1 &8757358648665631407
