@@ -114,6 +114,7 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
+            referenceManager.gameManager.InformReadFolder(path);
             UpdateSelectionToolHandler();
             if (PhotonNetwork.isMasterClient)
             {

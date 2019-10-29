@@ -266,8 +266,6 @@ namespace CellexalVR.General
             configPath = sharedConfigPath;
             SaveConfigFile();
             ReadConfigFile();
-
-
         }
 
         public byte[] SerializeConfig<Config>(Config serializableConfig)

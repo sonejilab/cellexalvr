@@ -635,7 +635,7 @@ namespace CellexalVR.AnalysisObjects
             // set up the graph's texture
             newGraph.textureWidth = nbrOfMaxPointsPerClusters;
             newGraph.textureHeight = nbrOfClusters;
-            Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false, true);
+            Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
             texture.filterMode = FilterMode.Point;
             texture.anisoLevel = 0;
             for (int i = 0; i < texture.width; ++i)
