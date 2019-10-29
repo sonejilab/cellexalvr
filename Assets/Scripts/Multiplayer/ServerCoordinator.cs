@@ -942,7 +942,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendChangeSpeed(string graphName, float amount)
+        public void SendChangeSpeed(float amount)
         {
             referenceManager.velocityGenerator.ChangeSpeed(amount);
         }
