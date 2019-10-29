@@ -169,11 +169,11 @@ namespace CellexalVR.AnalysisObjects
             }
             graph.texture.Apply();
 
-            //var data = graph.texture.GetRawTextureData();
-            //for (int i = 0; i < data.Length; i += 4)
-            //{
-            //    print(i + ": " + data[i] + " " + data[i + 1] + " " + data[i + 2] + " " + data[i + 3]);
-            //}
+            var data = graph.texture.GetRawTextureData();
+            for (int i = 0; i < data.Length; i += 4)
+            {
+                print(i + ": " + data[i] + " " + data[i + 1] + " " + data[i + 2] + " " + data[i + 3]);
+            }
         }
 
         #endregion

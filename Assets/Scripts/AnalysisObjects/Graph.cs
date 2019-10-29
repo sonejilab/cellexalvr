@@ -1126,7 +1126,7 @@ namespace CellexalVR.AnalysisObjects
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
 
-            byte greenChannel = (byte)(outline ? 5 : 0);
+            byte greenChannel = (byte)(outline ? 4 : 0);
             byte redChannel;
             if (i == -1)
             {
