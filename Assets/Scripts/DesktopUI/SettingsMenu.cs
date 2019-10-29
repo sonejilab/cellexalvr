@@ -193,7 +193,7 @@ namespace CellexalVR.DesktopUI
                     // there is already a button in the menu, change its color
                     selectionColorButtons[i].Color = CellexalConfig.Config.SelectionToolColors[i];
                 }
-                else
+                else if (i >= selectionColorButtons.Count)
                 {
                     // no more buttons, create one
                     GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
@@ -204,14 +204,16 @@ namespace CellexalVR.DesktopUI
                     addSelectionColorButton.transform.SetAsLastSibling();
                     selectionColorButtons.Add(button);
                 }
-                if (CellexalConfig.Config.SelectionToolColors.Length < selectionColorButtons.Count)
+            }
+            if (CellexalConfig.Config.SelectionToolColors.Length < selectionColorButtons.Count)
+            {
+                print("sel button count: " + selectionColorButtons.Count + ", config col count: " + CellexalConfig.Config.SelectionToolColors.Length) ;
+                int nrOfselectionColorButtons = selectionColorButtons.Count;
+                for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < nrOfselectionColorButtons; j++)
                 {
-                    for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < selectionColorButtons.Count; j++)
-                    {
-                        Debug.Log("Removing - " + j);
-                        RemoveSelectionColor(selectionColorButtons[j].gameObject);
-                    }
+                    RemoveSelectionColor(selectionColorButtons[selectionColorButtons.Count - 1].gameObject);
                 }
+                addSelectionColorButton.transform.SetAsLastSibling();
             }
             velocityHighColor.Color = CellexalConfig.Config.VelocityParticlesHighColor;
             velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
@@ -394,7 +396,7 @@ namespace CellexalVR.DesktopUI
         {
             unsavedChanges = true;
             selectionColorButtons.Remove(button.GetComponentInChildren<ColorPickerButton>());
-            Destroy(button);
+            Destroy(button.transform.parent.gameObject);
             UpdateSelectionToolColors();
         }
 
