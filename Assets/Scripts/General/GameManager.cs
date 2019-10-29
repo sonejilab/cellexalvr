@@ -525,6 +525,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendHandleHitAttributeBar", PhotonTargets.Others, heatmapName, hitx);
         }
 
+        public void InformResetInfoTexts(string heatmapName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendResetInfoTexts", PhotonTargets.Others, heatmapName);
+        }
+
         #endregion
 
         #region Networks
