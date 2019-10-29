@@ -107,11 +107,18 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
+
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
+        public void ReadFolderConsole(string path)
+        {
+            referenceManager.gameManager.InformReadFolder(path);
+            ReadFolder(path);
+        }
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
         /// <param name="path"> The path to the folder. </param>
-        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
+        //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
             UpdateSelectionToolHandler();

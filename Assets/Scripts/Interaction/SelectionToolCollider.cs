@@ -1,6 +1,7 @@
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
@@ -142,9 +143,17 @@ namespace CellexalVR.Interaction
             if (!CrossSceneInformation.Ghost)
             {
                 radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
-                radialMenu.RegenerateButtons();
-                radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
-                radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
+                try
+                { 
+                    radialMenu.RegenerateButtons();
+                    radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
+                    radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
+                }
+                catch (NullReferenceException e)
+                {
+                    CellexalLog.Log("Could not recreate buttons on controller. Could be that controllers were inactive at the time");
+                    return;
+                }
                 selectedColor = Colors[currentColorIndex];
             }
         }

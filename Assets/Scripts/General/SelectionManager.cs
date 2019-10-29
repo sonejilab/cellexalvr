@@ -788,7 +788,14 @@ namespace CellexalVR.General
 
         public Color GetColor(int index)
         {
-            return selectionToolCollider.Colors[index % selectionToolCollider.Colors.Length];
+            if (CrossSceneInformation.Spectator)
+            {
+                return CellexalConfig.Config.SelectionToolColors[index % CellexalConfig.Config.SelectionToolColors.Length];
+            }
+            else
+            {
+                return selectionToolCollider.Colors[index % selectionToolCollider.Colors.Length];
+            }
         }
 
 
