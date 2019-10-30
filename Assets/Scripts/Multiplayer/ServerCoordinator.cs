@@ -636,7 +636,7 @@ namespace CellexalVR.Multiplayer
             if (heatmapExists)
             {
                 hm.barInfoText.text = "";
-                hm.enlargedGeneText.text = "";
+                hm.enlargedGeneText.gameObject.SetActive(false);
             }
             else
             {

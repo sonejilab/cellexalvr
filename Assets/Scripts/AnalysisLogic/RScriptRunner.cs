@@ -60,33 +60,33 @@ namespace CellexalVR.AnalysisLogic
 
                 var proc = new Process();
                 proc.StartInfo = info;
-                proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
-                {
-                    if (!String.IsNullOrEmpty(e.Data))
-                    {
-                        using (StreamWriter stderrorWriter =
-                                new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
-                        {
-                            stderrorWriter.WriteLine("\n STDERROR: " + e.Data);
-                        }
-                    }
-                });
+                //proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+                //{
+                //    if (!String.IsNullOrEmpty(e.Data))
+                //    {
+                //        using (StreamWriter stderrorWriter =
+                //                new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                //        {
+                //            stderrorWriter.WriteLine("\n STDERROR: " + e.Data);
+                //        }
+                //    }
+                //});
 
-                proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
-                {
-                    if (!String.IsNullOrEmpty(e.Data))
-                    {
-                        if (writeOut)
-                        {
-                            using (StreamWriter stdoutWriter =
-                                    new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
-                            {
-                                stdoutWriter.WriteLine("\n STDOUT: " + e.Data);
-                            }
+                //proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+                //{
+                //    if (!String.IsNullOrEmpty(e.Data))
+                //    {
+                //        if (writeOut)
+                //        {
+                //            using (StreamWriter stdoutWriter =
+                //                    new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                //            {
+                //                stdoutWriter.WriteLine("\n STDOUT: " + e.Data);
+                //            }
 
-                        }
-                    }
-                });
+                //        }
+                //    }
+                //});
 
                 proc.Start();
                 proc.BeginOutputReadLine();
