@@ -1163,8 +1163,8 @@ namespace CellexalVR.AnalysisObjects
 
         public GraphPoint FindGraphPoint(string label)
         {
-            points.TryGetValue(label, out GraphPoint gp);
-            return gp;
+            var keyExists = points.TryGetValue(label, out GraphPoint gp);
+            return keyExists? gp : null;
         }
 
 
