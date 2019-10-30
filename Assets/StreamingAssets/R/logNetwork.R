@@ -19,8 +19,8 @@ grouping <- args[3]
 #}
 function_str <- paste("cellexalObj = logNetwork(cellexalObj,
 			NULL,
-			\"", network_png, "\",
-			\"", grouping, "\")", 
+			", cellexalvrR::file2Script(network_png) , ",
+			", cellexalvrR::file2Script(grouping),  ")", 
 			sep="")
 
 
