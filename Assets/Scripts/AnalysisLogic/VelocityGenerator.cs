@@ -134,6 +134,10 @@ namespace CellexalVR.AnalysisLogic
                 emitter.UseGraphPointColors = useGraphPointColors;
                 emitter.UseArrowParticle = useArrowParticle;
                 graph.velocityParticleEmitter = emitter;
+                if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
+                {
+                    graph.ToggleGraphPoints();
+                }
 
                 reader.Close();
                 stream.Close();
