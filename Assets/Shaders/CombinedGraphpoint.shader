@@ -283,7 +283,7 @@ Shader "Custom/CombinedGraphpoint"
                 v2g OUT;
                 OUT.pos = UnityObjectToClipPos(IN.vertex + normalize(IN.normal) * _TestPar);
                 float4 uvAndMip = float4(IN.texcoord.x, IN.texcoord.y, 0, 0);
-                OUT.color = LinearToGammaSpace(tex2Dlod(_MainTex, uvAndMip));
+                OUT.color = tex2Dlod(_MainTex, uvAndMip);
                 OUT.texcoord = IN.texcoord;
                 OUT.radius = float4(0,0,0,0);
                 OUT.viewDir = ObjSpaceViewDir(IN.vertex);
