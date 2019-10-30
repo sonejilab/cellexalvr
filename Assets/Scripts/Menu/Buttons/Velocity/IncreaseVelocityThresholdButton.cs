@@ -18,12 +18,8 @@ namespace CellexalVR.Menu.Buttons.Velocity
 
         public override void Click()
         {
-            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in activeGraphs)
-            {
-                g.velocityParticleEmitter.ChangeThreshold(amount);
-                referenceManager.gameManager.InformChangeThreshold(amount);
-            }
+            referenceManager.velocityGenerator.ChangeThreshold(amount);
+            referenceManager.gameManager.InformChangeThreshold(amount);
         }
     }
 }

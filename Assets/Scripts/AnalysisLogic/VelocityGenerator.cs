@@ -11,17 +11,18 @@ namespace CellexalVR.AnalysisLogic
     public class VelocityGenerator : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        //public float velocityThreshold = 0.001f;
         public List<Graph> ActiveGraphs { get; set; }
         public GameObject particleSystemPrefab;
         public Material arrowMaterial;
         public Material standardMaterial;
 
-        //public GameObject parentPrefab;
-        //public GameObject arrowPrefab;
-        //public GameObject triprefab;
-        //public GameObject cubeprefab;
-        //public GameObject planePrefab;
+        private float frequency = 1f;
+        private float speed = 10f;
+        private float threshold = 0f;
+        private bool constantEmitOverTime = true;
+        private bool graphPointsToggled = false;
+        private bool useGraphPointColors = false;
+        private bool useArrowParticle = true;
 
         private string particleSystemGameObjectName = "Velocity Particle System";
         private void Start()
@@ -127,14 +128,154 @@ namespace CellexalVR.AnalysisLogic
                 emitter.circleParticleMaterial = standardMaterial;
                 emitter.graph = graph;
                 emitter.Velocities = velocities;
+                emitter.ArrowEmitRate = 1f / frequency;
+                emitter.Threshold = threshold;
+                emitter.Speed = speed;
+                emitter.UseGraphPointColors = useGraphPointColors;
+                emitter.UseArrowParticle = useArrowParticle;
                 graph.velocityParticleEmitter = emitter;
+                if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
+                {
+                    graph.ToggleGraphPoints();
+                }
 
                 reader.Close();
                 stream.Close();
+
             }
 
             ActiveGraphs.Add(graph);
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
+        }
+
+        /// <summary>
+        /// Changes how often the particles should be emitted.
+        /// </summary>
+        /// <param name="amount">Amount to multiply the frequency by.</param>
+        public void ChangeFrequency(float amount)
+        {
+            frequency *= amount;
+            if (frequency <= 0.03125)
+            {
+                frequency = 0.03125f; // 1 / 32 = 0.03125
+            }
+            else if (frequency >= 32)
+            {
+                frequency = 32f;
+            }
+
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.ArrowEmitRate = 1f / frequency;
+            }
+
+            string newFrequencyString = frequency.ToString();
+            if (newFrequencyString.Length > 8)
+            {
+                newFrequencyString = newFrequencyString.Substring(0, 8);
+            }
+            referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
+        }
+
+        /// <summary>
+        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.001 are set to 0.001.
+        /// </summary>
+        /// <param name="amount">The amount to change the speed by.</param>
+        public void ChangeSpeed(float amount)
+        {
+            speed *= amount;
+            if (speed < 0.5f)
+            {
+                speed = 0.5f;
+            }
+            else if (speed > 32f)
+            {
+                speed = 32f;
+            }
+
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.Speed = speed;
+            }
+            referenceManager.velocitySubMenu.speedText.text = "Speed: " + speed;
+        }
+
+        /// <summary>
+        /// Multiples the current threshold by some amount. Thresholds lower than 0.001 is set to zero.
+        /// </summary>
+        /// <param name="amount">How much to multiply the threshold by.</param>
+        public void ChangeThreshold(float amount)
+        {
+            threshold *= amount;
+            if (threshold < 0.001f && amount < 1f)
+            {
+                threshold = 0f;
+            }
+            else if (threshold == 0f && amount > 1f)
+            {
+                threshold = 0.001f;
+            }
+
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.Threshold = threshold;
+            }
+
+            referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + threshold;
+        }
+
+        public void ToggleGraphPoints()
+        {
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.ToggleGraphPoints();
+            }
+        }
+
+
+        public void ChangeConstantSynchedMode()
+        {
+            if (ActiveGraphs.Count == 0)
+            {
+                return;
+            }
+
+            constantEmitOverTime = !ActiveGraphs[0].velocityParticleEmitter.ConstantEmitOverTime;
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.ConstantEmitOverTime = constantEmitOverTime;
+            }
+            referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
+        }
+
+        public void ChangeGraphPointColorMode()
+        {
+            if (ActiveGraphs.Count == 0)
+            {
+                return;
+            }
+
+            useGraphPointColors = !ActiveGraphs[0].velocityParticleEmitter.UseGraphPointColors;
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.UseGraphPointColors = useGraphPointColors;
+            }
+            referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: " + (useGraphPointColors ? "Graphpoint colors" : "Gradient");
+        }
+
+        public void ChangeParticle()
+        {
+            if (ActiveGraphs.Count == 0)
+            {
+                return;
+            }
+
+            useArrowParticle = !ActiveGraphs[0].velocityParticleEmitter.UseArrowParticle;
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.UseArrowParticle = useArrowParticle;
+            }
+            referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: " + (useArrowParticle ? "Arrow" : "Circle");
         }
 
         /*

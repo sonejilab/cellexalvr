@@ -525,6 +525,12 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendHandleHitAttributeBar", PhotonTargets.Others, heatmapName, hitx);
         }
 
+        public void InformResetInfoTexts(string heatmapName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("SendResetInfoTexts", PhotonTargets.Others, heatmapName);
+        }
+
         #endregion
 
         #region Networks
@@ -667,22 +673,22 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendToggleGraphPoints", PhotonTargets.Others);
         }
 
-        public void InformConstantSynchedMode(bool switchToConstant)
+        public void InformConstantSynchedMode()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendConstantSynchedMode", PhotonTargets.Others, switchToConstant);
+            coordinator.photonView.RPC("SendConstantSynchedMode", PhotonTargets.Others);
         }
 
-        public void InformGraphPointColorsMode(bool switchToGraphpointColors)
+        public void InformGraphPointColorsMode()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendGraphPointColorsMode", PhotonTargets.Others, switchToGraphpointColors);
+            coordinator.photonView.RPC("SendGraphPointColorsMode", PhotonTargets.Others);
         }
 
-        public void InformChangeParticleMode(bool switchToArrows)
+        public void InformChangeParticleMode()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendChangeParticleMode", PhotonTargets.Others, switchToArrows);
+            coordinator.photonView.RPC("SendChangeParticleMode", PhotonTargets.Others);
         }
 
         public void InformChangeFrequency(float amount)

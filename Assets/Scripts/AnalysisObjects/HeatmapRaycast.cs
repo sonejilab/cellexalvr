@@ -105,19 +105,19 @@ namespace CellexalVR.AnalysisObjects
                     // if we hit the grouping bar
                     gameManager.InformHandleHitGroupingBar(name, hitx);
                     HandleHitGroupingBar(hitx);
-                    heatmap.enlargedGeneText.text = "";
                 }
 
                 else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.attributeBarY, heatmap.heatmapWidth, heatmap.attributeBarHeight))
                 {
                     gameManager.InformHandleHitAttributeBar(name, hitx);
                     HandleHitAttributeBar(hitx);
-                    heatmap.enlargedGeneText.text = "";
                 }
 
                 else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.heatmapY, heatmap.heatmapWidth, heatmap.heatmapHeight))
                 {
                     heatmap.barInfoText.text = "";
+                    heatmap.enlargedGeneText.text = "";
+                    gameManager.InformResetInfoTexts(name);
                     // if we hit the actual heatmap
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
@@ -156,7 +156,6 @@ namespace CellexalVR.AnalysisObjects
                         gameManager.InformHandleHitHeatmap(name, hitx, hity);
                         HandleHitHeatmap(hitx, hity);
                     }
-                    heatmap.enlargedGeneText.gameObject.SetActive(false);
                 }
                 else
                 {
@@ -308,6 +307,7 @@ namespace CellexalVR.AnalysisObjects
             heatmap.highlightQuad.SetActive(true);
             heatmap.barInfoText.text = "Group nr: " + group;
             heatmap.highlightInfoText.text = "";
+            heatmap.enlargedGeneText.text = "";
         }
 
         /// <summary>
@@ -329,6 +329,7 @@ namespace CellexalVR.AnalysisObjects
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             heatmap.highlightQuad.SetActive(true);
             heatmap.barInfoText.text = attribute >= 0 ? cellManager.Attributes[attribute] : "No attribute";
+            heatmap.enlargedGeneText.text = "";
             //highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth, 0.003f / highlightMarkerHeight, 0.003f);
         }
 
@@ -352,7 +353,7 @@ namespace CellexalVR.AnalysisObjects
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             heatmap.highlightQuad.SetActive(true);
             heatmap.highlightInfoText.text = "";
-            heatmap.enlargedGeneText.gameObject.SetActive(true);
+            //heatmap.enlargedGeneText.gameObject.SetActive(true);
             heatmap.enlargedGeneText.text = heatmap.genes[geneHit];
             heatmap.enlargedGeneText.transform.localPosition = new Vector3(heatmap.enlargedGeneText.transform.localPosition.x,
                                                                 heatmap.highlightQuad.transform.localPosition.y + 0.077f, 0);

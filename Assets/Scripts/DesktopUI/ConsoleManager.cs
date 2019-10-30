@@ -126,7 +126,7 @@ namespace CellexalVR.DesktopUI
             {
                 TraverseHistory(false);
             }
-            if (Input.GetKeyDown(KeyCode.Tab)) 
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
                 AutocompleteInput(inputField.text);
             }
@@ -203,7 +203,7 @@ namespace CellexalVR.DesktopUI
             outputField.text = outputBufferString;
             outputField.MoveTextEnd(false);
             outputField.textComponent.ForceMeshUpdate();
-            Canvas.ForceUpdateCanvases();
+            //Canvas.ForceUpdateCanvases();
 
             ClearAndHideSuggestions();
         }

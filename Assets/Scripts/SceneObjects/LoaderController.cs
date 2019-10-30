@@ -291,6 +291,7 @@ namespace CellexalVR.SceneObjects
                 referenceManager.inputReader.QuitServer();
                 referenceManager.keyboardSwitch.SetKeyboardVisible(false);
                 referenceManager.cellManager.ClearLinesBetweenGraphPoints();
+                referenceManager.velocityGenerator.ActiveGraphs.Clear();
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
             // must reset loader before generating new folders

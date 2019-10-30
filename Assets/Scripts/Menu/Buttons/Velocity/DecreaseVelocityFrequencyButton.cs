@@ -17,12 +17,8 @@ namespace CellexalVR.Menu.Buttons.Velocity
 
         public override void Click()
         {
-            List<Graph> activeGraphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in activeGraphs)
-            {
-                g.velocityParticleEmitter.ChangeFrequency(amount);
-                referenceManager.gameManager.InformChangeFrequency(amount);
-            }
+            referenceManager.velocityGenerator.ChangeFrequency(amount);
+            referenceManager.gameManager.InformChangeFrequency(amount);
         }
     }
 }

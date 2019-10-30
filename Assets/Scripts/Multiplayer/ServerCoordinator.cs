@@ -586,19 +586,63 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendHandleHitGenesList(string heatmapName, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitGeneList(hity);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.GetComponent<HeatmapRaycast>().HandleHitGeneList(hity);
+            }
+            else
+            {
+                return;
+            }
         }
 
         [PunRPC]
         public void SendHandleHitGroupingBar(string heatmapName, int hitx)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitGroupingBar(hitx);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.GetComponent<HeatmapRaycast>().HandleHitGroupingBar(hitx);
+            }
+            else
+            {
+                return;
+            }
         }
 
         [PunRPC]
         public void SendHandleHitAttributeBar(string heatmapName, int hitx)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleHitAttributeBar(hitx);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.GetComponent<HeatmapRaycast>().HandleHitAttributeBar(hitx);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        [PunRPC]
+        public void SendResetInfoTexts(string heatmapName)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                hm.barInfoText.text = "";
+                hm.enlargedGeneText.text = "";
+            }
+            else
+            {
+                return;
+            }
+
         }
         #endregion
 
@@ -864,107 +908,43 @@ namespace CellexalVR.Multiplayer
         [PunRPC]
         public void SendToggleGraphPoints()
         {
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in graphs)
-            {
-                g.ToggleGraphPoints();
-            }
+            referenceManager.velocityGenerator.ToggleGraphPoints();
         }
 
         [PunRPC]
-        public void SendConstantSynchedMode(bool switchToConstant)
+        public void SendConstantSynchedMode()
         {
-            if (switchToConstant)
-            {
-                referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Constant";
-            }
-            else
-            {
-                referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: Synched";
-            }
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in graphs)
-            {
-                g.velocityParticleEmitter.ConstantEmitOverTime = switchToConstant;
-            }
+            referenceManager.velocityGenerator.ChangeConstantSynchedMode();
         }
 
         [PunRPC]
-        public void SendGraphPointColorsMode(bool switchToGraphPointColors)
+        public void SendGraphPointColorsMode()
         {
-            if (switchToGraphPointColors)
-            {
-                referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Graphpoint colors";
-            }
-            else
-            {
-                referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: Gradient";
-            }
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in graphs)
-            {
-                g.velocityParticleEmitter.UseGraphPointColors = switchToGraphPointColors;
-            }
+            referenceManager.velocityGenerator.ChangeGraphPointColorMode();
         }
 
         [PunRPC]
-        public void SendChangeParticleMode(bool switchToArrows)
+        public void SendChangeParticleMode()
         {
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            foreach (Graph g in graphs)
-            {
-                g.velocityParticleEmitter.UseArrowParticle = switchToArrows;
-            }
-            if (switchToArrows)
-            {
-                referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Arrows";
-            }
-            else
-            {
-                referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: Circles";
-            }
+            referenceManager.velocityGenerator.ChangeParticle();
         }
 
         [PunRPC]
         public void SendChangeFrequency(float amount)
         {
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            float newFrequency = 0;
-            foreach (Graph g in graphs)
-            {
-                g.velocityParticleEmitter.ChangeFrequency(amount);
-            }
-            string newFrequencyString = (1f / newFrequency).ToString();
-            if (newFrequencyString.Length > 4)
-            {
-                newFrequencyString = newFrequencyString.Substring(0, 4);
-            }
-            referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
-
+            referenceManager.velocityGenerator.ChangeFrequency(amount);
         }
 
         [PunRPC]
         public void SendChangeThreshold(float amount)
         {
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            float newThreshold = 0;
-            foreach (Graph g in graphs)
-            {
-                newThreshold = g.velocityParticleEmitter.ChangeThreshold(amount);
-            }
-            referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + newThreshold;
+            referenceManager.velocityGenerator.ChangeThreshold(amount);
         }
 
         [PunRPC]
-        public void SendChangeSpeed(string graphName, float amount)
+        public void SendChangeSpeed(float amount)
         {
-            List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
-            float newSpeed = 0;
-            foreach (Graph g in graphs)
-            {
-                newSpeed = g.velocityParticleEmitter.ChangeSpeed(amount);
-            }
-            referenceManager.velocitySubMenu.speedText.text = "Speed: " + newSpeed;
+            referenceManager.velocityGenerator.ChangeSpeed(amount);
         }
 
         [PunRPC]

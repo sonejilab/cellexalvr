@@ -243,7 +243,7 @@ namespace CellexalVR.General
             Console = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Console.prefab");
             FPSCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/FPS canvas.prefab");
             WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/ScreenCanvas.prefab");
-            SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SpectatorRig.prefab");
+            SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
         }
 
         public void SaveAllPrefabs()

@@ -129,8 +129,16 @@ namespace CellexalVR.AnalysisObjects
             List<Graph.GraphPoint> toGraphpoints = new List<Graph.GraphPoint>();
             foreach (Graph.GraphPoint point in points)
             {
-                toGraphpoints.Add(toGraph.FindGraphPoint(point.Label));
-                graph.FindGraphPoint(point.Label).ColorSelectionColor(point.Group, false);
+                var gp = toGraph.FindGraphPoint(point.Label);
+                if (gp != null)
+                {
+                    toGraphpoints.Add(toGraph.FindGraphPoint(point.Label));
+                    graph.FindGraphPoint(point.Label).ColorSelectionColor(point.Group, false);
+                }
+                else
+                {
+                    continue;
+                }
             }
             HashSet<Graph.GraphPoint> prevjoinedclusters = new HashSet<Graph.GraphPoint>();
             //var centroids = MeanShiftClustering(points, neighbourDistance: neighbourDistance, kernelBandwidth: kernelBandwidth);
@@ -402,7 +410,7 @@ namespace CellexalVR.AnalysisObjects
             //emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
             emitter.UseArrowParticle = false;
             emitter.UseGraphPointColors = true;
-            emitter.ChangeFrequency(4.0f);
+            //emitter.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModule = velocityParticleSystemFromGraph.GetComponent<ParticleSystem>().trails;
             trailModule.enabled = true;
             trailModule.lifetime = 2.0f;
@@ -417,7 +425,7 @@ namespace CellexalVR.AnalysisObjects
             //emitterMidGraph.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
             emitterMidGraph.UseArrowParticle = false;
             emitterMidGraph.UseGraphPointColors = true;
-            emitterMidGraph.ChangeFrequency(4.0f);
+            //emitterMidGraph.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModuleMidGraph = velocityParticleSystemMidGraph.GetComponent<ParticleSystem>().trails;
             trailModuleMidGraph.enabled = true;
             trailModuleMidGraph.lifetime = 2.0f;
@@ -431,7 +439,7 @@ namespace CellexalVR.AnalysisObjects
             //emitterToGraph.arrowParticleMaterial = referenceManager.velocityGenerator.standardMaterial;
             emitterToGraph.UseArrowParticle = false;
             emitterToGraph.UseGraphPointColors = true;
-            emitterToGraph.ChangeFrequency(4.0f);
+            //emitterToGraph.ChangeFrequency(4.0f);
             ParticleSystem.TrailModule trailModuleToGraph = velocityParticleSystemToGraph.GetComponent<ParticleSystem>().trails;
             trailModuleToGraph.enabled = true;
             trailModuleToGraph.lifetime = 2.0f;
@@ -483,24 +491,31 @@ namespace CellexalVR.AnalysisObjects
         public LineBetweenTwoPoints AddLine(Graph from, Graph to, Graph.GraphPoint point)
         {
             Color color = point.GetColor();
-            var sourceCell = from.points[point.Label];
-            var targetCell = to.points[point.Label];
-            LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab, graph.lineParent.transform).GetComponent<LineBetweenTwoPoints>();
-            line.t1 = sourceCell.parent.transform;
-            line.t2 = targetCell.parent.transform;
-            line.graphPoint1 = sourceCell;
-            line.graphPoint2 = targetCell;
-            //var midPosition = (line.t1.TransformPoint(sourceCell.Position) + line.t2.TransformPoint(targetCell.Position)) / 2f;
-            var gp = graph.FindGraphPoint(point.Label);
-            line.graphPoint3 = gp;
-            line.t3 = gp.parent.transform;
-            line.selectionManager = referenceManager.selectionManager;
-            LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-            lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.1f);
-            lines.Add(line);
-            //line.transform.parent = graph.lineParent.transform;
-            line.gameObject.SetActive(true);
-            return line;
+            to.points.TryGetValue(point.Label, out Graph.GraphPoint targetCell);
+            if (targetCell == null)
+            {
+                return null;
+            }
+            else
+            {
+                var sourceCell = from.points[point.Label];
+                LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab, graph.lineParent.transform).GetComponent<LineBetweenTwoPoints>();
+                line.t1 = sourceCell.parent.transform;
+                line.t2 = targetCell.parent.transform;
+                line.graphPoint1 = sourceCell;
+                line.graphPoint2 = targetCell;
+                //var midPosition = (line.t1.TransformPoint(sourceCell.Position) + line.t2.TransformPoint(targetCell.Position)) / 2f;
+                var gp = graph.FindGraphPoint(point.Label);
+                line.graphPoint3 = gp;
+                line.t3 = gp.parent.transform;
+                line.selectionManager = referenceManager.selectionManager;
+                LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+                lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.1f);
+                lines.Add(line);
+                //line.transform.parent = graph.lineParent.transform;
+                line.gameObject.SetActive(true);
+                return line;
+            }
         }
 
         public void TogglePointClusterColliders(bool b, string exception)
