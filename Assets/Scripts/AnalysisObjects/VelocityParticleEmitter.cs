@@ -10,16 +10,15 @@ namespace CellexalVR.AnalysisObjects
     {
         public ReferenceManager referenceManager;
         public Graph graph;
-        public float timeThreshold = 0.05f;
         public int itemsPerFrame = 1000;
         public Material arrowParticleMaterial;
         public Material circleParticleMaterial;
 
-        public float ArrowEmitRate { get; set; } = 1f;
+        public float ArrowEmitRate { get; set; }
 
         public float Threshold { get; set; }
 
-        private float speed = 10f;
+        private float speed;
         public float Speed
         {
             get => speed;
