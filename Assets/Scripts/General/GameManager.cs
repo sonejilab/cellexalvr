@@ -709,10 +709,10 @@ namespace CellexalVR.General
             coordinator.photonView.RPC("SendChangeSpeed", PhotonTargets.Others, amount);
         }
 
-        public void InformReadVelocityFile(string filePath, string subGraphName)
+        public void InformReadVelocityFile(string filePath, string subGraphName, bool activate)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("SendReadVelocityFile", PhotonTargets.Others, filePath, subGraphName);
+            coordinator.photonView.RPC("SendReadVelocityFile", PhotonTargets.Others, filePath, subGraphName, activate);
         }
         #endregion
 

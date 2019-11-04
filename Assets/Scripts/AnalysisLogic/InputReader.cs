@@ -534,8 +534,6 @@ namespace CellexalVR.AnalysisLogic
         //     yield return null;
         // }
 
-
-
         /// <summary>
         /// Start the R session that will run in the background. 
         /// </summary>
@@ -583,6 +581,8 @@ namespace CellexalVR.AnalysisLogic
         public void QuitServer()
         {
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.pid");
+            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.R");
             //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
         }

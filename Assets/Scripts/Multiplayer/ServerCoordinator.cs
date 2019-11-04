@@ -948,18 +948,31 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReadVelocityFile(string shorterFilePath, string subGraphName)
+        public void SendReadVelocityFile(string shorterFilePath, string subGraphName, bool activate)
         {
             CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
             var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
             string filePath = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + shorterFilePath + ".mds";
-            if (subGraphName != string.Empty)
+            Graph graph = referenceManager.graphManager.FindGraph(subGraphName);
+            //if (subGraphName != string.Empty)
+            //{
+            //    referenceManager.velocityGenerator.ReadVelocityFile(filePath, subGraphName);
+            //}
+            //else
+            //{
+            //    referenceManager.velocityGenerator.ReadVelocityFile(filePath);
+            //}
+            if (activate)
             {
                 referenceManager.velocityGenerator.ReadVelocityFile(filePath, subGraphName);
             }
             else
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(filePath);
+                if (graph.graphPointsInactive)
+                {
+                    graph.ToggleGraphPoints();
+                }
+                referenceManager.velocityGenerator.ActiveGraphs.Remove(graph);
             }
             referenceManager.velocitySubMenu.DeactivateOutlines();
             veloButton.ToggleOutline(true);

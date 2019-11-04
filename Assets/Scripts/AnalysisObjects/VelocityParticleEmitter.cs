@@ -132,7 +132,7 @@ namespace CellexalVR.AnalysisObjects
             if (!UseArrowParticle)
             {
                 //ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
-                emitParams.startSize = 0.01f;
+                emitParams.startSize = 0.004f;
                 ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
                 renderer.material = circleParticleMaterial;
                 renderer.renderMode = ParticleSystemRenderMode.Billboard;
@@ -256,6 +256,10 @@ namespace CellexalVR.AnalysisObjects
             {
                 StopCoroutine(currentEmitCoroutine);
                 currentEmitCoroutine = null;
+            }
+            if (graph.graphPointsInactive)
+            {
+                graph.ToggleGraphPoints();
             }
             emitting = false;
         }
