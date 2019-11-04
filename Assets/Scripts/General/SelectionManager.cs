@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
@@ -13,9 +6,15 @@ using CellexalVR.Filters;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using TMPro;
 using UnityEngine;
-using VRTK;
 
 namespace CellexalVR.General
 {

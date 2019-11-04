@@ -1,83 +1,87 @@
-﻿using UnityEngine;
+﻿using CellexalVR.General;
 using System.Collections;
-using CellexalVR.General;
 using System.IO;
+using UnityEngine;
 
-public class Floor : MonoBehaviour
+namespace CellexalVR.SceneObjects
 {
 
-    public Material gridMaterial;
-
-    private bool pulseToggle;
-
-    // Use this for initialization
-    void Start()
+    public class Floor : MonoBehaviour
     {
-        CellexalEvents.GraphsLoaded.AddListener(StartWave);
-        CellexalEvents.GraphsColoredByGene.AddListener(StartWave);
-        CellexalEvents.GraphsColoredByIndex.AddListener(StartWave);
-        //CellexalEvents.HeatmapCreated.AddListener(StartWave);
-        //CellexalEvents.NetworkCreated.AddListener(StartWave);
-        CellexalEvents.ScriptFinished.AddListener(() => StartCoroutine(ScriptFinished()));
-        CellexalEvents.ScriptFinished.AddListener(StartWave);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    StartWave();
-        //}
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    StartPulse();
-        //}
+        public Material gridMaterial;
 
-    }
+        private bool pulseToggle;
 
-    public void StartPulse()
-    {
-        gridMaterial.SetFloat("_PulseToggle", 1.0f);
-    }
-
-    public void StopPulse()
-    {
-        gridMaterial.SetFloat("_PulseToggle", 0.0f);
-    }
-
-    public void StartWave()
-    {
-        //gridMaterial.SetFloat("_PulseToggle", 0.0f);
-        StartCoroutine(WaveCoroutine());
-    }
-
-    private IEnumerator WaveCoroutine()
-    {
-        float t = 0f;
-        float pulseDuration = gridMaterial.GetFloat("_WaveDuration");
-        float pulseSpeed = gridMaterial.GetFloat("_WaveSpeed");
-
-        while (t < 1f)
+        // Use this for initialization
+        void Start()
         {
-            gridMaterial.SetFloat("_WaveStartTime", t);
-            t += Time.deltaTime * pulseSpeed / pulseDuration;
-            yield return null;
+            CellexalEvents.GraphsLoaded.AddListener(StartWave);
+            CellexalEvents.GraphsColoredByGene.AddListener(StartWave);
+            CellexalEvents.GraphsColoredByIndex.AddListener(StartWave);
+            //CellexalEvents.HeatmapCreated.AddListener(StartWave);
+            //CellexalEvents.NetworkCreated.AddListener(StartWave);
+            CellexalEvents.ScriptFinished.AddListener(() => StartCoroutine(ScriptFinished()));
+            CellexalEvents.ScriptFinished.AddListener(StartWave);
         }
 
-        gridMaterial.SetFloat("_WaveStartTime", -1f);
-    }
-    private IEnumerator ScriptFinished()
-    {
-        float waitTime = 0f;
-        while (waitTime < 0.5f)
+        // Update is called once per frame
+        void Update()
         {
-            waitTime += Time.deltaTime;
-            yield return null;
+            //if (Input.GetKeyDown(KeyCode.T))
+            //{
+            //    StartWave();
+            //}
+            //if (Input.GetKeyDown(KeyCode.R))
+            //{
+            //    StartPulse();
+            //}
+
         }
-        if (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+
+        public void StartPulse()
         {
-            StopPulse();
+            gridMaterial.SetFloat("_PulseToggle", 1.0f);
+        }
+
+        public void StopPulse()
+        {
+            gridMaterial.SetFloat("_PulseToggle", 0.0f);
+        }
+
+        public void StartWave()
+        {
+            //gridMaterial.SetFloat("_PulseToggle", 0.0f);
+            StartCoroutine(WaveCoroutine());
+        }
+
+        private IEnumerator WaveCoroutine()
+        {
+            float t = 0f;
+            float pulseDuration = gridMaterial.GetFloat("_WaveDuration");
+            float pulseSpeed = gridMaterial.GetFloat("_WaveSpeed");
+
+            while (t < 1f)
+            {
+                gridMaterial.SetFloat("_WaveStartTime", t);
+                t += Time.deltaTime * pulseSpeed / pulseDuration;
+                yield return null;
+            }
+
+            gridMaterial.SetFloat("_WaveStartTime", -1f);
+        }
+        private IEnumerator ScriptFinished()
+        {
+            float waitTime = 0f;
+            while (waitTime < 0.5f)
+            {
+                waitTime += Time.deltaTime;
+                yield return null;
+            }
+            if (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            {
+                StopPulse();
+            }
         }
     }
 }

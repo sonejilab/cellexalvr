@@ -1,12 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class ResetFilterButton : CellexalVR.Menu.Buttons.CellexalButton
+﻿namespace CellexalVR.Menu.Buttons.Velocity
 {
-    protected override string Description => "Resets the current filter";
 
-    public override void Click()
+    public class ResetFilterButton : CellexalVR.Menu.Buttons.CellexalButton
     {
-        referenceManager.filterManager.ResetFilter();
+        protected override string Description => "Resets the current filter";
+
+        public override void Click()
+        {
+            referenceManager.filterManager.ResetFilter();
+        }
     }
 }

@@ -1,23 +1,22 @@
-﻿using CellexalVR.AnalysisObjects;
-using CellexalVR.Menu.Buttons;
-using System.Collections.Generic;
-
-public class DecreaseVelocitySpeedButton : CellexalButton
+﻿namespace CellexalVR.Menu.Buttons.Velocity
 {
-
-    public float amount;
-
-    protected override string Description
+    public class DecreaseVelocitySpeedButton : CellexalButton
     {
-        get
+
+        public float amount;
+
+        protected override string Description
         {
-            return "Decrease speed of velocity arrows";
+            get
+            {
+                return "Decrease speed of velocity arrows";
+            }
         }
-    }
 
-    public override void Click()
-    {
-        referenceManager.velocityGenerator.ChangeSpeed(amount);
-        referenceManager.multiuserMessageSender.SendMessageChangeSpeed(amount);
+        public override void Click()
+        {
+            referenceManager.velocityGenerator.ChangeSpeed(amount);
+            referenceManager.multiuserMessageSender.SendMessageChangeSpeed(amount);
+        }
     }
 }
