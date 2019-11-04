@@ -9748,6 +9748,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
+  activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -24899,7 +24900,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4923016933376072}
-  - component: {fileID: 114114666967439366}
+  - component: {fileID: 279240723}
   m_Layer: 0
   m_Name: MultiUserManager
   m_TagString: Untagged
@@ -24921,7 +24922,7 @@ Transform:
   m_Father: {fileID: 4776004323092934}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114114666967439366
+--- !u!114 &279240723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24930,7 +24931,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1674256474790368}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 242fc6ce7cadac045bf00ac0a8e2cddc, type: 3}
+  m_Script: {fileID: 11500000, guid: c5d7afb9e50f7de4b9e5c67e1fee7667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
@@ -25001,6 +25002,8 @@ MonoBehaviour:
   selectionManager: {fileID: 114713925428185986}
   Graphs: []
   originalGraphs: []
+  facsGraphs: []
+  attributeSubGraphs: []
   velocityFiles: []
   GeneExpressionColoringMethod: 0
   drawDebugCubes: 0

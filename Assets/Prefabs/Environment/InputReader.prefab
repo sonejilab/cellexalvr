@@ -164,7 +164,7 @@ MonoBehaviour:
   inputReader: {fileID: 114916324322146698}
   database: {fileID: 0}
   logManager: {fileID: 114405805043964006}
-  gameManager: {fileID: 0}
+  multiuserMessageSender: {fileID: 0}
   calculatorCluster: {fileID: 0}
   consoleManager: {fileID: 0}
   turnOffThoseLights: {fileID: 0}
