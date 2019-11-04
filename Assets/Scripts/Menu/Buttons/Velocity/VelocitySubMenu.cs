@@ -28,7 +28,7 @@ namespace CellexalVR.Menu.SubMenus
             CellexalEvents.GraphsUnloaded.AddListener(DestroyButtons);
             frequencyText.text = "Frequency: 1";
             thresholdText.text = "Threshold: 0";
-            speedText.text = "Speed: 10";
+            speedText.text = "Speed: 8";
             graphPointColorsModeText.text = "Mode: Gradient";
             constantSynchedModeText.text = "Mode: Constant";
             particleMaterialText.text = "Mode: Arrow";

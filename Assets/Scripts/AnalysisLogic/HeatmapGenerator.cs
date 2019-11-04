@@ -619,7 +619,6 @@ namespace CellexalVR.AnalysisLogic
                 //}
             }
 
-            heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
             graphics.Dispose();
 
         }

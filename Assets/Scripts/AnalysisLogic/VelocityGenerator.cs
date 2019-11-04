@@ -17,7 +17,7 @@ namespace CellexalVR.AnalysisLogic
         public Material standardMaterial;
 
         private float frequency = 1f;
-        private float speed = 10f;
+        private float speed = 8f;
         private float threshold = 0f;
         private bool constantEmitOverTime = true;
         private bool graphPointsToggled = false;
