@@ -61,19 +61,19 @@ namespace CellexalVR.Interaction
                 hit.transform.position += dir * distanceMultiplier;
                 if (hit.transform.GetComponent<Graph>())
                 {
-                    referenceManager.gameManager.InformMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                    referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
                 else if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     hit.transform.LookAt(raycastingSource.transform);
                     hit.transform.Rotate(0, 0, 180);
-                    referenceManager.gameManager.InformMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                    referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
                 else if (hit.transform.GetComponent<Heatmap>())
                 {
                     hit.transform.LookAt(raycastingSource.transform);
                     hit.transform.Rotate(0, 180, 0);
-                    referenceManager.gameManager.InformMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                    referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
             }
         }
@@ -90,19 +90,19 @@ namespace CellexalVR.Interaction
                 hit.transform.position += dir * distanceMultiplier;
                 if (hit.transform.GetComponent<Graph>())
                 {
-                    referenceManager.gameManager.InformMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                    referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
                 else if (hit.transform.GetComponent<NetworkCenter>())
                 {
                     hit.transform.LookAt(referenceManager.headset.transform);
                     hit.transform.Rotate(0, 0, 180);
-                    referenceManager.gameManager.InformMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                    referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
                 else if (hit.transform.GetComponent<Heatmap>())
                 {
                     hit.transform.LookAt(referenceManager.headset.transform);
                     hit.transform.Rotate(0, 180, 0);
-                    referenceManager.gameManager.InformMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                    referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
             }
         }

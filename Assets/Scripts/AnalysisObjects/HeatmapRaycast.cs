@@ -6,6 +6,7 @@ using TMPro;
 using CellexalVR.AnalysisLogic;
 using System;
 using System.Collections.Generic;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -22,7 +23,7 @@ namespace CellexalVR.AnalysisObjects
         private SteamVR_Controller.Device device;
         private SteamVR_TrackedObject rightController;
         private Transform raycastingSource;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private ControllerModelSwitcher controllerModelSwitcher;
         private int selectionStartX;
         private int selectionStartY;
@@ -53,7 +54,7 @@ namespace CellexalVR.AnalysisObjects
             layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             heatmapGenerator = referenceManager.heatmapGenerator;
             heatmap = GetComponent<Heatmap>();
         }
@@ -91,25 +92,25 @@ namespace CellexalVR.AnalysisObjects
                 if (CoordinatesInsideRect(hitx, hity, heatmap.geneListX, heatmap.heatmapY, heatmap.geneListWidth, heatmap.heatmapHeight))
                 {
                     // if we hit the list of genes
-                    gameManager.InformHandleHitGenesList(name, hity);
+                    multiuserMessageSender.SendMessageHandleHitGenesList(name, hity);
                     int geneHit = HandleHitGeneList(hity);
 
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
-                        gameManager.InformColorGraphsByGene(heatmap.genes[geneHit]);
+                        multiuserMessageSender.SendMessageColorGraphsByGene(heatmap.genes[geneHit]);
                         referenceManager.cellManager.ColorGraphsByGene(heatmap.genes[geneHit], graphManager.GeneExpressionColoringMethod);
                     }
                 }
                 else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.groupBarY, heatmap.heatmapWidth, heatmap.groupBarHeight))
                 {
                     // if we hit the grouping bar
-                    gameManager.InformHandleHitGroupingBar(name, hitx);
+                    multiuserMessageSender.SendMessageHandleHitGroupingBar(name, hitx);
                     HandleHitGroupingBar(hitx);
                 }
 
                 else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.attributeBarY, heatmap.heatmapWidth, heatmap.attributeBarHeight))
                 {
-                    gameManager.InformHandleHitAttributeBar(name, hitx);
+                    multiuserMessageSender.SendMessageHandleHitAttributeBar(name, hitx);
                     HandleHitAttributeBar(hitx);
                 }
 
@@ -117,50 +118,50 @@ namespace CellexalVR.AnalysisObjects
                 {
                     heatmap.barInfoText.text = "";
                     heatmap.enlargedGeneText.gameObject.SetActive(false);
-                    gameManager.InformResetInfoTexts(name);
+                    multiuserMessageSender.SendMessageResetInfoTexts(name);
                     // if we hit the actual heatmap
                     if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                     {
-                        gameManager.InformHandlePressDown(name, hitx, hity);
+                        multiuserMessageSender.SendMessageHandlePressDown(name, hitx, hity);
                         HandlePressDown(hitx, hity);
                     }
 
                     if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
                     {
                         // called when choosing a box selection
-                        gameManager.InformHandleBoxSelection(name, hitx, hity, selectionStartX, selectionStartY);
+                        multiuserMessageSender.SendMessageHandleBoxSelection(name, hitx, hity, selectionStartX, selectionStartY);
                         HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
                     {
                         // called when letting go of the trigger to finalize a box selection
-                        gameManager.InformConfirmSelection(name, hitx, hity, selectionStartX, selectionStartY);
+                        multiuserMessageSender.SendMessageConfirmSelection(name, hitx, hity, selectionStartX, selectionStartY);
                         ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
                     else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
                     {
                         // called when moving a selection
-                        gameManager.InformHandleMovingSelection(name, hitx, hity);
+                        multiuserMessageSender.SendMessageHandleMovingSelection(name, hitx, hity);
                         HandleMovingSelection(hitx, hity);
                     }
                     else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
                     {
                         // called when letting go of the trigger to move the selection
-                        gameManager.InformMoveSelection(name, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+                        multiuserMessageSender.SendMessageMoveSelection(name, hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
                         MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
                         ResetSelection();
                     }
                     else
                     {
                         // handle when the raycast just hits the heatmap
-                        gameManager.InformHandleHitHeatmap(name, hitx, hity);
+                        multiuserMessageSender.SendMessageHandleHitHeatmap(name, hitx, hity);
                         HandleHitHeatmap(hitx, hity);
                     }
                 }
                 else
                 {
                     // if we hit the heatmap but not any area of interest, like the borders or any space in between
-                    gameManager.InformResetHeatmapHighlight(name);
+                    multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
                     heatmap.ResetHeatmapHighlight();
                     //heatmap.enlargedGeneText.gameObject.SetActive(false);
                     heatmap.enlargedGeneText.gameObject.SetActive(false);
@@ -169,13 +170,13 @@ namespace CellexalVR.AnalysisObjects
             else
             {
                 // if we don't hit the heatmap at all
-                gameManager.InformResetHeatmapHighlight(name);
+                multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
                 heatmap.ResetHeatmapHighlight();
             }
             if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
                 // if the raycast leaves the heatmap and the user lets go of the trigger
-                gameManager.InformResetSelecting(name);
+                multiuserMessageSender.SendMessageResetSelecting(name);
                 ResetSelecting();
             }
         }
@@ -651,7 +652,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void CreateNewHeatmapFromSelection()
         {
-            gameManager.InformCreateNewHeatmapFromSelection(heatmap.name, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+            multiuserMessageSender.SendMessageCreateNewHeatmapFromSelection(heatmap.name, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
             heatmap.CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
 
         }

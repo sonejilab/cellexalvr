@@ -21,7 +21,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             referenceManager.velocityGenerator.ChangeConstantSynchedMode();
-            referenceManager.gameManager.InformConstantSynchedMode();
+            referenceManager.multiuserMessageSender.SendMessageConstantSynchedMode();
         }
     }
 }

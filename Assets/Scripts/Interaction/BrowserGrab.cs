@@ -27,7 +27,7 @@ namespace CellexalVR.Interaction
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            referenceManager.gameManager.InformDisableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             //GetComponent<MeshCollider>().convex = true;
             base.OnInteractableObjectGrabbed(e);
         }
@@ -35,7 +35,7 @@ namespace CellexalVR.Interaction
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
             keyboard.SetActive(true);
-            referenceManager.gameManager.InformEnableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             //if (grabbingObjects.Count == 0)
             //    GetComponent<MeshCollider>().convex = false;
             base.OnInteractableObjectUngrabbed(e);

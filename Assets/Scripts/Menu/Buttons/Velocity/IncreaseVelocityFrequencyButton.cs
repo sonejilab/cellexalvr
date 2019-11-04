@@ -21,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
         public override void Click()
         {
             referenceManager.velocityGenerator.ChangeFrequency(amount);
-            referenceManager.gameManager.InformChangeFrequency(amount);
+            referenceManager.multiuserMessageSender.SendMessageChangeFrequency(amount);
         }
     }
 }

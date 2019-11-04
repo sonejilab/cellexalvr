@@ -298,7 +298,7 @@ namespace CellexalVR.Interaction
             }
             if (invokeMultiuserEvent)
             {
-                referenceManager.gameManager.InformBackspaceKeyClicked();
+                referenceManager.multiuserMessageSender.SendMessageBackspaceKeyClicked();
             }
         }
 
@@ -324,7 +324,7 @@ namespace CellexalVR.Interaction
             }
             if (invokeMultiuserEvent)
             {
-                referenceManager.gameManager.InformClearKeyClicked();
+                referenceManager.multiuserMessageSender.SendMessageClearKeyClicked();
             }
         }
 
@@ -343,7 +343,7 @@ namespace CellexalVR.Interaction
             }
             //referenceManager.cellManager.ColorGraphsByGene(output.text);
             //referenceManager.previousSearchesList.AddEntry(output.text, Extensions.Definitions.Measurement.GENE, referenceManager.graphManager.GeneExpressionColoringMethod);
-            //referenceManager.gameManager.InformColorGraphsByGene(output.text);
+            //referenceManager.MultiuserMessageSender.SendMessageColorGraphsByGene(output.text);
             if (clearOnEnter)
             {
                 Clear();

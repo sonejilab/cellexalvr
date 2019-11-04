@@ -5,6 +5,7 @@ using CellexalVR.Filters;
 using CellexalVR.Interaction;
 using CellexalVR.Menu;
 using CellexalVR.Menu.SubMenus;
+using CellexalVR.Multiuser;
 using CellexalVR.SceneObjects;
 using CellexalVR.Tools;
 using CellexalVR.Tutorial;
@@ -102,7 +103,7 @@ namespace CellexalVR.General
         public InputReader inputReader;
         public SQLite database;
         public LogManager logManager;
-        public GameManager gameManager;
+        public MultiuserMessageSender multiuserMessageSender;
         public GameObject calculatorCluster;
         public ConsoleManager consoleManager;
         public TurnOffThoseLights turnOffThoseLights;
@@ -228,7 +229,7 @@ namespace CellexalVR.General
             inputReader = inputreader.GetComponent<InputReader>();
             database = GameObject.Find("SQLiter").GetComponent<SQLiter.SQLite>();
             logManager = inputreader.GetComponent<LogManager>();
-            gameManager = managersParent.GetComponentInChildren<GameManager>();
+            multiuserMessageSender = managersParent.GetComponentInChildren<MultiuserMessageSender>();
             calculatorCluster = GameObject.Find("Calculator cluster");
             consoleManager = GameObject.Find("Console").GetComponent<ConsoleManager>();
             turnOffThoseLights = GameObject.Find("Light For Testing").GetComponent<TurnOffThoseLights>();

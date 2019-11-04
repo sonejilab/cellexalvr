@@ -167,7 +167,7 @@ namespace CellexalVR.Filters
             currentFilter.Expression.SetFilterManager(this);
             string filterAsText = currentFilter.Expression.ToString();
             filterPreviewText.text = filterAsText;
-            //referenceManager.gameManager.InformSetFilter(filterAsText);
+            //referenceManager.multiuserMessageSender.SendMessageSetFilter(filterAsText);
             loadingFilter = false;
             if (resultBlock.isActiveAndEnabled)
             {
@@ -256,7 +256,7 @@ namespace CellexalVR.Filters
                 {
                     Color newColor = selectionManager.GetColor(group);
                     selectionManager.AddGraphpointToSelection(gp, group, false, newColor);
-                    referenceManager.gameManager.InformSelectedAdd(gp.parent.GraphName, gp.Label, group, newColor);
+                    referenceManager.multiuserMessageSender.SendMessageSelectedAdd(gp.parent.GraphName, gp.Label, group, newColor);
                 }
             }
 
@@ -435,7 +435,7 @@ namespace CellexalVR.Filters
             resultBlock.DisconnectAllPorts();
             //if (informMultiUser)
             //{
-            //    referenceManager.gameManager.InformResetFilter();
+            //    referenceManager.multiuserMessageSender.SendMessageResetFilter();
             //}
         }
 

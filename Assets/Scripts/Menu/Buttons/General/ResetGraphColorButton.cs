@@ -31,7 +31,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             CellexalEvents.GraphsResetKeepSelection.Invoke();
             graphManager.ResetGraphsColor();
-            referenceManager.gameManager.InformResetGraphColor();
+            referenceManager.multiuserMessageSender.SendMessageResetGraphColor();
         }
 
         private void OnGraphsLoaded()

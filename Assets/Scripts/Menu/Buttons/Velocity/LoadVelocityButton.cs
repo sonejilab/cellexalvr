@@ -81,7 +81,7 @@ public class LoadVelocityButton : CellexalButton
             }
             velocityGenerator.ActiveGraphs.Remove(graphToActivate);
         }
-        referenceManager.gameManager.InformReadVelocityFile(shorterFilePath, subGraphName, startVelocity);
+        referenceManager.multiuserMessageSender.SendMessageReadVelocityFile(shorterFilePath, subGraphName, startVelocity);
         //referenceManager.velocitySubMenu.DeactivateOutlines();
         ToggleOutline(startVelocity);
         //activeOutline.SetActive(true);

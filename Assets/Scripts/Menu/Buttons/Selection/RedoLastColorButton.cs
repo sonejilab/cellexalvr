@@ -31,7 +31,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            referenceManager.gameManager.InformRedoOneColor();
+            referenceManager.multiuserMessageSender.SendMessageRedoOneColor();
             selectionManager.GoForwardOneColorInHistory();
         }
 

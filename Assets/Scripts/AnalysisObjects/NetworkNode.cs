@@ -118,7 +118,7 @@ namespace CellexalVR.AnalysisObjects
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
-                referenceManager.gameManager.InformColorGraphsByGene(Label.ToLower());
+                referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(Label.ToLower());
                 controllerInside = Center.controllerInsideSomeNode = false;
                 Center.ToggleNodeColliders(true, gameObject.name);
             }

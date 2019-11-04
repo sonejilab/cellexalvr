@@ -25,7 +25,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
-            referenceManager.gameManager.InformExportAnnotations();
+            referenceManager.multiuserMessageSender.SendMessageExportAnnotations();
             selectionManager.DumpAnnotatedSelectionToTextFile();
         }
     }

@@ -42,7 +42,7 @@ namespace CellexalVR.Menu.Buttons.Facs
                 ToggleOutline(false);
                 //activeOutline.SetActive(false);
             }
-            referenceManager.gameManager.InformAddMarker(this.indexName);
+            referenceManager.multiuserMessageSender.SendMessageAddMarker(this.indexName);
         }
 
         /// <summary>

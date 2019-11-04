@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             CellexalEvents.GraphsResetKeepSelection.Invoke();
-            referenceManager.gameManager.InformClearExpressionColours();
+            referenceManager.multiuserMessageSender.SendMessageClearExpressionColours();
             graphManager.ClearExpressionColours();
         }
 

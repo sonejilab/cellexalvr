@@ -18,6 +18,7 @@ using CellexalVR.SceneObjects;
 using CellexalVR.Interaction;
 using System.Drawing;
 using System.Drawing.Imaging;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -49,7 +50,7 @@ namespace CellexalVR.AnalysisLogic
         //private StatusDisplay status;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private NetworkGenerator networkGenerator;
         private GraphGenerator graphGenerator;
         private string currentPath;
@@ -74,7 +75,7 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
             loaderController = referenceManager.loaderController;
@@ -111,7 +112,7 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolderConsole(string path)
         {
-            referenceManager.gameManager.InformReadFolder(path);
+            referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
         }
         /// <summary>

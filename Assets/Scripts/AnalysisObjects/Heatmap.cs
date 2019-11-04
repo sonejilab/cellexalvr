@@ -16,6 +16,7 @@ using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Extensions;
 using System.Linq;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -97,7 +98,7 @@ namespace CellexalVR.AnalysisObjects
         #endregion region
 
         #region Private variables
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private HeatmapGenerator heatmapGenerator;
 
 
@@ -147,7 +148,7 @@ namespace CellexalVR.AnalysisObjects
             //    rightController = referenceManager.rightController;
             //    controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             //}
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             highlightQuad.SetActive(false);
             highlightGeneQuad.SetActive(false);
             confirmQuad.SetActive(false);
@@ -195,7 +196,7 @@ namespace CellexalVR.AnalysisObjects
 
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
-                gameManager.InformMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
+                multiuserMessageSender.SendMessageMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }
 
         }

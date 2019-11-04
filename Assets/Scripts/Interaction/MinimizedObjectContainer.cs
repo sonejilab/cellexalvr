@@ -59,31 +59,31 @@ namespace CellexalVR.Interaction
                 if (MinimizedObject.CompareTag("Graph"))
                 {
                     MinimizedObject.GetComponent<Graph>().ShowGraph();
-                    Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
+                    Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name, this.name);
                 }
                 if (MinimizedObject.CompareTag("SubGraph"))
                 {
                     MinimizedObject.GetComponent<Graph>().ShowGraph();
                     //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
+                    Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name, this.name);
                 }
                 if (MinimizedObject.CompareTag("FacsGraph"))
                 {
                     MinimizedObject.GetComponent<Graph>().ShowGraph();
                     //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.gameManager.InformShowGraph(MinimizedObject.name, this.name);
+                    Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name, this.name);
                 }
                 if (MinimizedObject.CompareTag("Network"))
                 {
                     MinimizedObject.GetComponent<NetworkHandler>().ShowNetworks();
                     //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.gameManager.InformShowNetwork(MinimizedObject.name, this.name);
+                    Handler.referenceManager.multiuserMessageSender.SendMessageShowNetwork(MinimizedObject.name, this.name);
                 }
                 if (MinimizedObject.CompareTag("HeatBoard"))
                 {
                     MinimizedObject.GetComponent<Heatmap>().ShowHeatmap();
                     //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.gameManager.InformShowHeatmap(MinimizedObject.name, this.name);
+                    Handler.referenceManager.multiuserMessageSender.SendMessageShowHeatmap(MinimizedObject.name, this.name);
                 }
 
                 Handler.ContainerRemoved(this);

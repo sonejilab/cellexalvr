@@ -28,7 +28,7 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.gameManager.InformDisableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             if (grabbingObjects.Count == 1)
             {
                 // moving many triggers really pushes what unity is capable of
@@ -49,10 +49,10 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.gameManager.InformEnableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.gameManager.InformNetworkCenterUngrabbed(center.Handler.name, center.name, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, rigidbody.velocity, rigidbody.angularVelocity);
             if (grabbingObjects.Count == 0)
             {
                 foreach (Collider c in GetComponentsInChildren<Collider>())

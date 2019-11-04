@@ -26,7 +26,7 @@ namespace CellexalVR.Menu.Buttons.Networks
             {
                 network.SetArcsVisible(false);
                 network.SetCombinedArcsVisible(toggleToState);
-                referenceManager.gameManager.InformSetCombinedArcsVisible(toggleToState, network.name);
+                referenceManager.multiuserMessageSender.SendMessageSetCombinedArcsVisible(toggleToState, network.name);
             }
         }
 

@@ -10,17 +10,17 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
     /// <summary>
     /// This class holds the remote-callable commands that are sent over network between to connected clients.
     /// To synchronize the scenes in multiplayer it means when a function is called on one client the same has to be done on the others. 
     /// Each function in this class represent one such function to synchronize the scenes.
     /// </summary>
-    public class ServerCoordinator : Photon.MonoBehaviour
+    public class MultiuserMessageReciever : Photon.MonoBehaviour
     {
-        private List<GameManager> gamemanagers = new List<GameManager>();
-        private GameManager gameManager;
+        private List<MultiuserMessageSender> gamemanagers = new List<MultiuserMessageSender>();
+        private MultiuserMessageSender multiuserMessageSender;
         public ReferenceManager referenceManager;
 
         private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
@@ -39,7 +39,7 @@ namespace CellexalVR.Multiplayer
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
@@ -48,7 +48,7 @@ namespace CellexalVR.Multiplayer
 
         #region Loading
         [PunRPC]
-        public void SendReadFolder(string path)
+        public void RecieveMessageReadFolder(string path)
         {
             CellexalLog.Log("Recieved message to read folder at " + path);
             referenceManager.inputReader.ReadFolder(path);
@@ -56,14 +56,14 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendSynchConfig(byte[] data)
+        public void RecieveMessageSynchConfig(byte[] data)
         {
             CellexalLog.Log("Recieved message to synch config");
             referenceManager.configManager.SynchroniseConfig(data);
         }
 
         [PunRPC]
-        public void SendLoadingMenu(bool delete)
+        public void RecieveMessageLoadingMenu(bool delete)
         {
             CellexalLog.Log("Recieved message to reset to loading dataset scene");
             referenceManager.loaderController.ResetFolders(delete);
@@ -72,7 +72,7 @@ namespace CellexalVR.Multiplayer
 
         #region Interaction
         [PunRPC]
-        public void SendDisableColliders(string name)
+        public void RecieveMessageDisableColliders(string name)
         {
             GameObject obj = GameObject.Find(name);
             if (obj == null)
@@ -96,7 +96,7 @@ namespace CellexalVR.Multiplayer
 
 
         [PunRPC]
-        public void SendEnableColliders(string name)
+        public void RecieveMessageEnableColliders(string name)
         {
             GameObject obj = GameObject.Find(name);
             if (obj == null)
@@ -119,7 +119,7 @@ namespace CellexalVR.Multiplayer
 
         #region Coloring
         [PunRPC]
-        public void SendColorGraphsByGene(string geneName)
+        public void RecieveMessageColorGraphsByGene(string geneName)
         {
             CellexalLog.Log("Recieved message to color all graphs by " + geneName);
             referenceManager.cellManager.ColorGraphsByGene(geneName); //, referenceManager.graphManager.GeneExpressionColoringMethod);
@@ -128,21 +128,21 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendColoringMethodChanged(int newMode)
+        public void RecieveMessageColoringMethodChanged(int newMode)
         {
             CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
             referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
         }
 
         //[PunRPC]
-        //public void SendColorGraphsByPreviousExpression(string geneName)
+        //public void RecieveMessageColorGraphsByPreviousExpression(string geneName)
         //{
         //    CellexalLog.Log("Recieved message to color all graphs by " + geneName);
         //    referenceManager.cellManager.ColorGraphsByPreviousExpression(geneName);
         //}
 
         [PunRPC]
-        public void SendColorByAttribute(string attributeType, bool toggle)
+        public void RecieveMessageColorByAttribute(string attributeType, bool toggle)
         {
             CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all graphs by attribute " + attributeType);
             //Color col = new Color(r, g, b);
@@ -159,7 +159,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendColorByIndex(string indexName)
+        public void RecieveMessageColorByIndex(string indexName)
         {
             CellexalLog.Log("Recieved message to color all graphs by index " + indexName);
             //Color col = new Color(r, g, b);
@@ -171,34 +171,34 @@ namespace CellexalVR.Multiplayer
         #region Keyboard
 
         [PunRPC]
-        public void SendActivateKeyboard(bool activate)
+        public void RecieveMessageActivateKeyboard(bool activate)
         {
             referenceManager.keyboardSwitch.SetKeyboardVisible(activate);
         }
 
         [PunRPC]
-        public void SendKeyClicked(string key)
+        public void RecieveMessageKeyClicked(string key)
         {
             CellexalLog.Log("Recieved message to add  " + key + " to search field");
             referenceManager.geneKeyboard.AddText(key, false);
         }
 
         [PunRPC]
-        public void SendKBackspaceKeyClicked()
+        public void RecieveMessageKBackspaceKeyClicked()
         {
             CellexalLog.Log("Recieved message to click backspace");
             referenceManager.geneKeyboard.BackSpace(false);
         }
 
         [PunRPC]
-        public void SendClearKeyClicked()
+        public void RecieveMessageClearKeyClicked()
         {
             CellexalLog.Log("Recieved message to clear search field");
             referenceManager.geneKeyboard.Clear(false);
         }
 
         [PunRPC]
-        public void SendSearchLockToggled(int index)
+        public void RecieveMessageSearchLockToggled(int index)
         {
             CellexalLog.Log("Recieved message to toggle lock number " + index);
             referenceManager.previousSearchesList.searchLocks[index].Click();
@@ -206,28 +206,28 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendAddAnnotation(string annotation, int index)
+        public void RecieveMessageAddAnnotation(string annotation, int index)
         {
             CellexalLog.Log("Recieved message to add annotation: " + annotation);
             referenceManager.selectionManager.AddAnnotation(annotation, index);
         }
 
         [PunRPC]
-        public void SendExportAnnotations()
+        public void RecieveMessageExportAnnotations()
         {
             CellexalLog.Log("Recieved message to export annotations");
             referenceManager.selectionManager.DumpAnnotatedSelectionToTextFile();
         }
 
         [PunRPC]
-        public void SendClearExpressionColours()
+        public void RecieveMessageClearExpressionColours()
         {
             CellexalLog.Log("Recieved message to clear expression colours on the graphs");
             referenceManager.graphManager.ClearExpressionColours();
         }
 
         [PunRPC]
-        public void SendCalculateCorrelatedGenes(string geneName)
+        public void RecieveMessageCalculateCorrelatedGenes(string geneName)
         {
             CellexalLog.Log("Recieved message to calculate genes correlated to " + geneName);
             referenceManager.correlatedGenesList.CalculateCorrelatedGenes(geneName, Definitions.Measurement.GENE);
@@ -236,32 +236,32 @@ namespace CellexalVR.Multiplayer
 
         #region Selection
         [PunRPC]
-        public void SendConfirmSelection()
+        public void RecieveMessageConfirmSelection()
         {
             CellexalLog.Log("Recieved message to confirm selection");
             referenceManager.selectionManager.ConfirmSelection();
         }
 
         [PunRPC]
-        public void SendAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
+        public void RecieveMessageAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
         {
             referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
         }
 
         [PunRPC]
-        public void SendCubeColoured(string graphName, string label, int newGroup, float r, float g, float b)
+        public void RecieveMessageCubeColoured(string graphName, string label, int newGroup, float r, float g, float b)
         {
             referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b), true);
         }
 
         [PunRPC]
-        public void SendGoBackOneColor()
+        public void RecieveMessageGoBackOneColor()
         {
             referenceManager.selectionManager.GoBackOneColorInHistory();
         }
 
         [PunRPC]
-        public void SendGoBackSteps(int k)
+        public void RecieveMessageGoBackSteps(int k)
         {
             for (int i = 0; i < k; i++)
             {
@@ -270,19 +270,19 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendCancelSelection()
+        public void RecieveMessageCancelSelection()
         {
             referenceManager.selectionManager.CancelSelection();
         }
 
         [PunRPC]
-        public void SendRedoOneColor()
+        public void RecieveMessageRedoOneColor()
         {
             referenceManager.selectionManager.GoForwardOneColorInHistory();
         }
 
         [PunRPC]
-        public void SendRedoSteps(int k)
+        public void RecieveMessageRedoSteps(int k)
         {
             for (int i = 0; i < k; i++)
             {
@@ -293,7 +293,7 @@ namespace CellexalVR.Multiplayer
 
         #region Draw tool
         [PunRPC]
-        public void SendDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
+        public void RecieveMessageDrawLine(float r, float g, float b, float[] xcoords, float[] ycoords, float[] zcoords)
         {
             CellexalLog.Log("Recieved message to draw line with " + xcoords.Length + " segments");
             Vector3[] coords = new Vector3[xcoords.Length];
@@ -307,7 +307,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendClearAllLines()
+        public void RecieveMessageClearAllLines()
         {
             CellexalLog.Log("Recieved message to clear line segments");
             referenceManager.drawTool.SkipNextDraw();
@@ -315,7 +315,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendClearLastLine()
+        public void RecieveMessageClearLastLine()
         {
             CellexalLog.Log("Recieved message to clear previous line");
             referenceManager.drawTool.SkipNextDraw();
@@ -323,7 +323,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendClearLinesWithColor(float r, float g, float b)
+        public void RecieveMessageClearLinesWithColor(float r, float g, float b)
         {
             CellexalLog.Log("Recieved message to clear previous line");
             referenceManager.drawTool.SkipNextDraw();
@@ -334,7 +334,7 @@ namespace CellexalVR.Multiplayer
         #region Graphs
 
         [PunRPC]
-        public void SendMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        public void RecieveMessageMoveGraph(string moveGraphName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             Graph g = referenceManager.graphManager.FindGraph(moveGraphName);
             bool graphExists = g != null;
@@ -361,7 +361,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendGraphUngrabbed(string graphName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        public void RecieveMessageGraphUngrabbed(string graphName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
         {
             Graph g = referenceManager.graphManager.FindGraph(graphName);
             if (g)
@@ -373,7 +373,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendToggleGrabbable(string name, bool enable)
+        public void RecieveMessageToggleGrabbable(string name, bool enable)
         {
             var graph = referenceManager.graphManager.FindGraph(name);
             if (graph == null)
@@ -391,21 +391,21 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendResetGraph()
+        public void RecieveMessageResetGraph()
         {
             CellexalLog.Log("Recieved message to reset graph colors");
             referenceManager.graphManager.ResetGraphsColor();
         }
 
         [PunRPC]
-        public void SendResetGraphPosition()
+        public void RecieveMessageResetGraphPosition()
         {
             CellexalLog.Log("Recieved message to reset graph position, scale and rotation");
             referenceManager.graphManager.ResetGraphsPosition();
         }
 
         [PunRPC]
-        public void SendDrawLinesBetweenGps()
+        public void RecieveMessageDrawLinesBetweenGps()
         {
             CellexalLog.Log("Recieved message to draw lines between graph points");
             StartCoroutine(referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection()));
@@ -413,7 +413,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendClearLinesBetweenGps()
+        public void RecieveMessageClearLinesBetweenGps()
         {
             CellexalLog.Log("Recieved message to clear lines between graph points");
             referenceManager.cellManager.ClearLinesBetweenGraphPoints();
@@ -421,7 +421,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendAddMarker(string indexName)
+        public void RecieveMessageAddMarker(string indexName)
         {
             //var markerButton = GameObject.Find("/Main Menu/Attribute Menu/TabPrefab(Clone)/" + indexName);
             var markerButton = referenceManager.createFromMarkerMenu.FindButton(indexName);
@@ -447,14 +447,14 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendCreateMarkerGraph()
+        public void RecieveMessageCreateMarkerGraph()
         {
             CellexalLog.Log("Recieved message to create marker graph");
             referenceManager.newGraphFromMarkers.CreateMarkerGraph();
         }
 
         [PunRPC]
-        public void SendCreateAttributeGraph()
+        public void RecieveMessageCreateAttributeGraph()
         {
             CellexalLog.Log("Recieved message to create attribute graph");
             referenceManager.graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
@@ -464,7 +464,7 @@ namespace CellexalVR.Multiplayer
 
         #region Heatmaps
         [PunRPC]
-        public void SendMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        public void RecieveMessageMoveHeatmap(string heatmapName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
@@ -488,38 +488,38 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendCreateHeatmap(string hmName)
+        public void RecieveMessageCreateHeatmap(string hmName)
         {
             CellexalLog.Log("Recieved message to create heatmap");
             referenceManager.heatmapGenerator.CreateHeatmap(hmName);
         }
 
         [PunRPC]
-        public void SendHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
+        public void RecieveMessageHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
         {
             referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
         }
 
         [PunRPC]
-        public void SendConfirmSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
+        public void RecieveMessageConfirmSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
         {
             referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
         }
 
         [PunRPC]
-        public void SendHandleMovingSelection(string heatmapName, int hitx, int hity)
+        public void RecieveMessageHandleMovingSelection(string heatmapName, int hitx, int hity)
         {
             referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleMovingSelection(hitx, hity);
         }
 
         [PunRPC]
-        public void SendMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+        public void RecieveMessageMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
             referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
         }
 
         [PunRPC]
-        public void SendHandleHitHeatmap(string HeatmapName, int hitx, int hity)
+        public void RecieveMessageHandleHitHeatmap(string HeatmapName, int hitx, int hity)
         {
             try
             {
@@ -532,7 +532,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendResetHeatmapHighlight(string HeatmapName)
+        public void RecieveMessageResetHeatmapHighlight(string HeatmapName)
         {
             try
             {
@@ -545,19 +545,19 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendResetSelecting(string HeatmapName)
+        public void RecieveMessageResetSelecting(string HeatmapName)
         {
             referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().ResetSelecting();
         }
 
         [PunRPC]
-        public void SendHandlePressDown(string heatmapName, int hitx, int hity)
+        public void RecieveMessageHandlePressDown(string heatmapName, int hitx, int hity)
         {
             referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandlePressDown(hitx, hity);
         }
 
         [PunRPC]
-        public void SendCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop,
+        public void RecieveMessageCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop,
             int selectedGeneBottom, float selectedBoxWidth, float selectedBoxHeight)
         {
             referenceManager.heatmapGenerator.FindHeatmap(heatmapName).CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight,
@@ -565,7 +565,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendReorderByAttribute(string heatmapName, bool shouldReorder)
+        public void RecieveMessageReorderByAttribute(string heatmapName, bool shouldReorder)
         {
             CellexalLog.Log("Recieved message to " + (shouldReorder ? "reorder" : "restore") + " heatmap");
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
@@ -584,7 +584,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendHandleHitGenesList(string heatmapName, int hity)
+        public void RecieveMessageHandleHitGenesList(string heatmapName, int hity)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
@@ -599,7 +599,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendHandleHitGroupingBar(string heatmapName, int hitx)
+        public void RecieveMessageHandleHitGroupingBar(string heatmapName, int hitx)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
@@ -614,7 +614,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendHandleHitAttributeBar(string heatmapName, int hitx)
+        public void RecieveMessageHandleHitAttributeBar(string heatmapName, int hitx)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
@@ -629,7 +629,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendResetInfoTexts(string heatmapName)
+        public void RecieveMessageResetInfoTexts(string heatmapName)
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
@@ -648,14 +648,14 @@ namespace CellexalVR.Multiplayer
 
         #region Networks
         [PunRPC]
-        public void SendGenerateNetworks(int layoutSeed)
+        public void RecieveMessageGenerateNetworks(int layoutSeed)
         {
             CellexalLog.Log("Recieved message to generate networks");
             referenceManager.networkGenerator.GenerateNetworks(layoutSeed);
         }
 
         [PunRPC]
-        public void SendMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        public void RecieveMessageMoveNetwork(string networkName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             bool networkExists = nh != null;
@@ -679,7 +679,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendNetworkUngrabbed(string networkName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        public void RecieveMessageNetworkUngrabbed(string networkName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             if (nh)
@@ -691,14 +691,14 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendEnlargeNetwork(string networkHandlerName, string networkCenterName)
+        public void RecieveMessageEnlargeNetwork(string networkHandlerName, string networkCenterName)
         {
             CellexalLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
             referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
         }
 
         [PunRPC]
-        public void SendBringBackNetwork(string networkHandlerName, string networkCenterName)
+        public void RecieveMessageBringBackNetwork(string networkHandlerName, string networkCenterName)
         {
             CellexalLog.Log("Recieved message to bring back network " + networkCenterName + " in handler " + networkHandlerName);
             var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
@@ -707,7 +707,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendSwitchNetworkLayout(int layout, string networkHandlerName, string networkName)
+        public void RecieveMessageSwitchNetworkLayout(int layout, string networkHandlerName, string networkName)
         {
             CellexalLog.Log("Recieved message to generate networks");
             print("network names:" + networkName + " " + networkHandlerName);
@@ -717,7 +717,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        public void RecieveMessageMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
             var center = handler.FindNetworkCenter(networkCenterName);
@@ -738,7 +738,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+        public void RecieveMessageNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
             if (nh)
@@ -754,7 +754,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendSetArcsVisible(bool toggleToState, string networkName)
+        public void RecieveMessageSetArcsVisible(bool toggleToState, string networkName)
         {
             CellexalLog.Log("Toggle arcs of " + networkName);
             NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
@@ -763,7 +763,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendSetCombinedArcsVisible(bool toggleToState, string networkName)
+        public void RecieveMessageSetCombinedArcsVisible(bool toggleToState, string networkName)
         {
             CellexalLog.Log("Toggle combined arcs of " + networkName);
             NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
@@ -774,7 +774,7 @@ namespace CellexalVR.Multiplayer
 
         #region Hide tool
         [PunRPC]
-        public void SendMinimizeGraph(string graphName)
+        public void RecieveMessageMinimizeGraph(string graphName)
         {
             Graph g = referenceManager.graphManager.FindGraph(graphName);
             g.HideGraph();
@@ -782,7 +782,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendShowGraph(string graphName, string jailName)
+        public void RecieveMessageShowGraph(string graphName, string jailName)
         {
             Graph g = referenceManager.graphManager.FindGraph(graphName);
             GameObject jail = GameObject.Find(jailName);
@@ -793,7 +793,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendMinimizeNetwork(string networkName)
+        public void RecieveMessageMinimizeNetwork(string networkName)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             nh.HideNetworks();
@@ -801,7 +801,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendShowNetwork(string networkName, string jailName)
+        public void RecieveMessageShowNetwork(string networkName, string jailName)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             GameObject jail = GameObject.Find(jailName);
@@ -812,7 +812,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendMinimizeHeatmap(string heatmapName)
+        public void RecieveMessageMinimizeHeatmap(string heatmapName)
         {
             Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             h.HideHeatmap();
@@ -820,7 +820,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendShowHeatmap(string heatmapName, string jailName)
+        public void RecieveMessageShowHeatmap(string heatmapName, string jailName)
         {
             Heatmap h = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             GameObject jail = GameObject.Find(jailName);
@@ -833,7 +833,7 @@ namespace CellexalVR.Multiplayer
 
         #region Delete tool
         [PunRPC]
-        public void SendDeleteObject(string name, string tag)
+        public void RecieveMessageDeleteObject(string name, string tag)
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
             GameObject objectToDelete = GameObject.Find(name);
@@ -875,7 +875,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendDeleteNetwork(string name)
+        public void RecieveMessageDeleteNetwork(string name)
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
             NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
@@ -886,7 +886,7 @@ namespace CellexalVR.Multiplayer
 
         #region Velocity
         [PunRPC]
-        public void SendStartVelocity()
+        public void RecieveMessageStartVelocity()
         {
             List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
             foreach (Graph g in graphs)
@@ -896,7 +896,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendStopVelocity()
+        public void RecieveMessageStopVelocity()
         {
             List<Graph> graphs = referenceManager.velocityGenerator.ActiveGraphs;
             foreach (Graph g in graphs)
@@ -906,49 +906,49 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendToggleGraphPoints()
+        public void RecieveMessageToggleGraphPoints()
         {
             referenceManager.velocityGenerator.ToggleGraphPoints();
         }
 
         [PunRPC]
-        public void SendConstantSynchedMode()
+        public void RecieveMessageConstantSynchedMode()
         {
             referenceManager.velocityGenerator.ChangeConstantSynchedMode();
         }
 
         [PunRPC]
-        public void SendGraphPointColorsMode()
+        public void RecieveMessageGraphPointColorsMode()
         {
             referenceManager.velocityGenerator.ChangeGraphPointColorMode();
         }
 
         [PunRPC]
-        public void SendChangeParticleMode()
+        public void RecieveMessageChangeParticleMode()
         {
             referenceManager.velocityGenerator.ChangeParticle();
         }
 
         [PunRPC]
-        public void SendChangeFrequency(float amount)
+        public void RecieveMessageChangeFrequency(float amount)
         {
             referenceManager.velocityGenerator.ChangeFrequency(amount);
         }
 
         [PunRPC]
-        public void SendChangeThreshold(float amount)
+        public void RecieveMessageChangeThreshold(float amount)
         {
             referenceManager.velocityGenerator.ChangeThreshold(amount);
         }
 
         [PunRPC]
-        public void SendChangeSpeed(float amount)
+        public void RecieveMessageChangeSpeed(float amount)
         {
             referenceManager.velocityGenerator.ChangeSpeed(amount);
         }
 
         [PunRPC]
-        public void SendReadVelocityFile(string shorterFilePath, string subGraphName, bool activate)
+        public void RecieveMessageReadVelocityFile(string shorterFilePath, string subGraphName, bool activate)
         {
             CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
             var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
@@ -981,14 +981,14 @@ namespace CellexalVR.Multiplayer
 
         #region Filters
         [PunRPC]
-        public void SendSetFilter(string filter)
+        public void RecieveMessageSetFilter(string filter)
         {
             CellexalLog.Log("Recieved message to read filter " + filter);
             referenceManager.filterManager.ParseFilter(filter);
         }
 
         [PunRPC]
-        public void SendResetFilter()
+        public void RecieveMessageResetFilter()
         {
             CellexalLog.Log("Recieved message to reset filter");
             referenceManager.filterManager.ResetFilter(/*false*/);
@@ -997,7 +997,7 @@ namespace CellexalVR.Multiplayer
 
         #region Browser
         [PunRPC]
-        public void SendMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
+        public void RecieveMessageMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             GameObject wm = referenceManager.webBrowser;
             bool browserExists = wm != null;
@@ -1021,7 +1021,7 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendActivateBrowser(bool activate)
+        public void RecieveMessageActivateBrowser(bool activate)
         {
             CellexalLog.Log("Recieved message to toggle web browser");
             referenceManager.webBrowser.GetComponent<WebManager>().SetBrowserActive(activate);
@@ -1029,14 +1029,14 @@ namespace CellexalVR.Multiplayer
         }
 
         [PunRPC]
-        public void SendBrowserKeyClicked(string key)
+        public void RecieveMessageBrowserKeyClicked(string key)
         {
             CellexalLog.Log("Recieved message to add " + key + " to url field");
             referenceManager.webBrowserKeyboard.AddText(key, false);
         }
 
         [PunRPC]
-        public void SendBrowserEnter()
+        public void RecieveMessageBrowserEnter()
         {
             string text = referenceManager.webBrowserKeyboard.output.text;
             referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(text);

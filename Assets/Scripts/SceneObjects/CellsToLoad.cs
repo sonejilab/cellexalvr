@@ -48,7 +48,7 @@ namespace CellexalVR.SceneObjects
         {
             //if (GetComponent<VRTK_InteractableObject>().enabled)
             //{
-            //    referenceManager.gameManager.InformMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
+            //    referenceManager.MultiuserMessageSender.SendMessageMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
             //    referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
 
             //}

@@ -19,7 +19,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
         public override void Click()
         {
             referenceManager.velocityGenerator.ChangeThreshold(amount);
-            referenceManager.gameManager.InformChangeThreshold(amount);
+            referenceManager.multiuserMessageSender.SendMessageChangeThreshold(amount);
         }
     }
 }

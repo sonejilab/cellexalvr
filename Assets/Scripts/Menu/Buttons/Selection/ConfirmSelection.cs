@@ -35,7 +35,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         {
             referenceManager.selectionToolCollider.SetSelectionToolEnabled(false, 0);
             selectionManager.ConfirmSelection();
-            referenceManager.gameManager.InformConfirmSelection();
+            referenceManager.multiuserMessageSender.SendMessageConfirmSelection();
             //controllerModelSwitcher.TurnOffActiveTool(true);
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
             //ctrlMdlSwitcher.TurnOffActiveTool();

@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.Multiuser;
 using CellexalVR.Tools;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace CellexalVR.AnalysisObjects
 
         public List<NetworkCenter> networks = new List<NetworkCenter>();
 
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private MeshRenderer meshRenderer;
         private Material[] highlightedMaterials;
         private Material[] unhighlightedMaterials;
@@ -69,7 +70,7 @@ namespace CellexalVR.AnalysisObjects
             Replacements = new List<NetworkCenter>();
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             GetComponent<NetworkHandlerInteract>().referenceManager = referenceManager;
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             meshRenderer = GetComponent<MeshRenderer>();
             highlightedMaterials = new Material[] { meshRenderer.materials[0], new Material(highlightMaterial) };
             highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
@@ -85,7 +86,7 @@ namespace CellexalVR.AnalysisObjects
         {
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
-                gameManager.InformMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
+                multiuserMessageSender.SendMessageMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
             }
             if (minimize)
             {
@@ -317,11 +318,11 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void CreateNetworkAnimation(Transform graph)
         {
-            if (gameManager.multiplayer)
+            if (multiuserMessageSender.multiplayer)
             {
                 transform.position = new Vector3(0, 1, 0);
             }
-            if (!gameManager.multiplayer)
+            if (!multiuserMessageSender.multiplayer)
             {
                 transform.position = graph.position;
                 transform.rotation = graph.rotation;

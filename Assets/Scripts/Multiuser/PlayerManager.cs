@@ -10,7 +10,7 @@ using System;
 using TMPro;
 
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace CellexalVR.Multiplayer
         void Awake()
         {
             // #Important
-            // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
+            // used in MultiuserMessageSender.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
             if (photonView.isMine)
             {
                 PhotonNetwork.player.NickName = PhotonNetwork.playerName;

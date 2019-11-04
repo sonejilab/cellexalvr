@@ -248,7 +248,7 @@ namespace CellexalVR.Interaction
                 //leftLaser.enabled = false;
                 //keyboard.SetKeyboardVisible(false);
                 //rightLaser.enabled = false;
-                //referenceManager.gameManager.InformActivateKeyboard(false);
+                //referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(false);
             }
             if (DesiredModel != Model.TwoLasers)
             {
@@ -317,7 +317,7 @@ namespace CellexalVR.Interaction
             laserPointerController.ToggleLaser(false);
             //leftLaser.enabled = false;
             keyboard.SetKeyboardVisible(false);
-            //referenceManager.gameManager.InformActivateKeyboard(false);
+            //referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(false);
             drawTool.SetActive(false);
             //webBrowser.GetComponent<WebManager>().SetBrowserActive(false);
             webBrowser.GetComponent<WebManager>().SetVisible(false);

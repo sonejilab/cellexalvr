@@ -151,7 +151,7 @@ namespace CellexalVR.AnalysisLogic
             if (name.Equals(string.Empty))
             {
                 heatmapName = "heatmap_" + System.DateTime.Now.ToString("HH-mm-ss");
-                referenceManager.gameManager.InformCreateHeatmap(heatmapName);
+                referenceManager.multiuserMessageSender.SendMessageCreateHeatmap(heatmapName);
             }
             else
             {

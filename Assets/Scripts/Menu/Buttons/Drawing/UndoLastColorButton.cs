@@ -35,7 +35,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
 
         public override void Click()
         {
-            referenceManager.gameManager.InformGoBackOneColor();
+            referenceManager.multiuserMessageSender.SendMessageGoBackOneColor();
             selectionManager.GoBackOneColorInHistory();
         }
 

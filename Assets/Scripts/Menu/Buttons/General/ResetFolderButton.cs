@@ -48,7 +48,7 @@ namespace CellexalVR.Menu.Buttons.General
             controllerModelSwitcher.DesiredModel = ControllerModelSwitcher.Model.Normal;
             controllerModelSwitcher.ActivateDesiredTool();
             referenceManager.loaderController.ResetFolders(deleteSceneObjs);
-            referenceManager.gameManager.InformLoadingMenu(deleteSceneObjs);
+            referenceManager.multiuserMessageSender.SendMessageLoadingMenu(deleteSceneObjs);
         }
 
         //void CloseSubMenu()

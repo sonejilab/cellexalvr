@@ -28,7 +28,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            referenceManager.gameManager.InformCancelSelection();
+            referenceManager.multiuserMessageSender.SendMessageCancelSelection();
             selectionManager.CancelSelection();
             SetButtonActivated(false);
         }

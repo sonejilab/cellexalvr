@@ -39,7 +39,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
         {
             drawTool.SkipNextDraw();
             drawTool.ClearAllLinesWithColor(color);
-            referenceManager.gameManager.InformClearAllLinesWithColor(color);
+            referenceManager.multiuserMessageSender.SendMessageClearAllLinesWithColor(color);
         }
     }
 }

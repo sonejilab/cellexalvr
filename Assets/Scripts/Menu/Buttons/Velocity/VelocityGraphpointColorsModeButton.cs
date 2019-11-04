@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             referenceManager.velocityGenerator.ChangeGraphPointColorMode();
-            referenceManager.gameManager.InformGraphPointColorsMode();
+            referenceManager.multiuserMessageSender.SendMessageGraphPointColorsMode();
         }
     }
 }

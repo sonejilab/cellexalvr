@@ -1,5 +1,6 @@
 using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
@@ -10,7 +11,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     {
         //public GeneDistance gd;
         private HeatmapGenerator heatmapGenerator;
-        private GameManager gameManager;
+        private MultiuserMessageSender MultiuserMessageSender;
 
         public string statsMethod;
 
@@ -22,7 +23,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         protected void Start()
         {
             heatmapGenerator = referenceManager.heatmapGenerator;
-            gameManager = referenceManager.gameManager;
+            MultiuserMessageSender = referenceManager.multiuserMessageSender;
             SetButtonActivated(false);
             CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);

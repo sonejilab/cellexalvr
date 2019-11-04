@@ -127,7 +127,7 @@ namespace CellexalVR.Tools
                 ycoords[i] = newLinePositions[i - 1].y;
                 zcoords[i] = newLinePositions[i - 1].z;
             }
-            referenceManager.gameManager.InformDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
+            referenceManager.multiuserMessageSender.SendMessageDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
 
             lines.Add(SpawnNewLine(LineColor, newLinePositions));
             foreach (LineRenderer line in temporaryLines)

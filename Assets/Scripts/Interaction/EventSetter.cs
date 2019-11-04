@@ -101,25 +101,25 @@ namespace CellexalVR.Interaction
         public void GeneKeyboardEnterEvent(string geneName)
         {
             referenceManager.cellManager.ColorGraphsByGene(geneName);
-            referenceManager.gameManager.InformColorGraphsByGene(geneName);
+            referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(geneName);
         }
 
         public void GeneKeyboardEditEvent(string s)
         {
-            referenceManager.gameManager.InformKeyClicked(s);
+            referenceManager.multiuserMessageSender.SendMessageKeyClicked(s);
         }
 
         public void GeneKeyboardAnnotateEvent(string s)
         {
             int index = referenceManager.selectionToolCollider.currentColorIndex;
             referenceManager.selectionManager.AddAnnotation(s, index);
-            referenceManager.gameManager.InformAddAnnotation(s, index);
+            referenceManager.multiuserMessageSender.SendMessageAddAnnotation(s, index);
         }
 
 
         public void BrowserKeyboardEditEvent(string s)
         {
-            referenceManager.gameManager.InformBrowserKeyClicked(s);
+            referenceManager.multiuserMessageSender.SendMessageBrowserKeyClicked(s);
         }
 
         public void FolderKeyboardEditEvent(string filter)

@@ -30,7 +30,7 @@ namespace CellexalVR.Menu.Buttons.General
         public override void Click()
         {
             graphManager.ResetGraphsPosition();
-            referenceManager.gameManager.InformResetGraphPosition();
+            referenceManager.multiuserMessageSender.SendMessageResetGraphPosition();
         }
 
         private void OnGraphsLoaded()

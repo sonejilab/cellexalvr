@@ -30,18 +30,18 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.gameManager.InformToggleGrabbable(gameObject.name, false);
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
             //StopPositionSync();
             //referenceManager.controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
-            //referenceManager.gameManager.InformMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
+            //referenceManager.MultiuserMessageSender.SendMessageMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
             base.OnInteractableObjectGrabbed(e);
         }
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.gameManager.InformToggleGrabbable(gameObject.name, true);
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.gameManager.InformGraphUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageGraphUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
             //referenceManager.rightLaser.enabled = true;
             //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
             //runningCoroutine = StartCoroutine(KeepGraphPositionSynched());

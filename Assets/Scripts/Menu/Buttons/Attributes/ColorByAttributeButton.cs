@@ -44,7 +44,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             if (CurrentMode == Mode.SINGLE)
             {
                 cellManager.ColorByAttribute(Attribute, !colored);
-                referenceManager.gameManager.InformColorByAttribute(Attribute, !colored);
+                referenceManager.multiuserMessageSender.SendMessageColorByAttribute(Attribute, !colored);
 
                 colored = !colored;
                 ToggleOutline(colored);
@@ -78,7 +78,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public void ColourAttribute(bool toggle)
         {
             cellManager.ColorByAttribute(Attribute, toggle);
-            referenceManager.gameManager.InformColorByAttribute(Attribute, toggle);
+            referenceManager.multiuserMessageSender.SendMessageColorByAttribute(Attribute, toggle);
 
             colored = toggle;
             ToggleOutline(toggle);
