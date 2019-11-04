@@ -18,6 +18,6 @@ public class DecreaseVelocitySpeedButton : CellexalButton
     public override void Click()
     {
         referenceManager.velocityGenerator.ChangeSpeed(amount);
-        referenceManager.gameManager.InformChangeSpeed(amount);
+        referenceManager.multiuserMessageSender.SendMessageChangeSpeed(amount);
     }
 }

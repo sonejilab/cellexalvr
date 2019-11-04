@@ -32,7 +32,7 @@ namespace CellexalVR.Menu.Buttons.Facs
         {
             cellManager.ColorByIndex(indexName);
             TurnOff();
-            referenceManager.gameManager.InformColorByIndex(indexName);
+            referenceManager.multiuserMessageSender.SendMessageColorByIndex(indexName);
         }
 
         /// <summary>

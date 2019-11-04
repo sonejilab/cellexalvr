@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
 
     /// <summary>

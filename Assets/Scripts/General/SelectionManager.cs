@@ -12,6 +12,7 @@ using CellexalVR.Extensions;
 using CellexalVR.Filters;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.SubMenus;
+using CellexalVR.Multiuser;
 using TMPro;
 using UnityEngine;
 using VRTK;
@@ -56,7 +57,7 @@ namespace CellexalVR.General
         private List<HistoryListInfo> selectionHistory = new List<HistoryListInfo>();
         // the number of steps we have taken back in the history.
         private int historyIndexOffset;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private FilterManager filterManager;
 
         public bool RObjectUpdating { get; private set; }
@@ -102,7 +103,7 @@ namespace CellexalVR.General
         {
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             rightController = referenceManager.rightController;
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             selectionToolCollider = referenceManager.selectionToolCollider;
             filterManager = referenceManager.filterManager;
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
@@ -117,7 +118,7 @@ namespace CellexalVR.General
         public void AddGraphpointToSelection(Graph.GraphPoint graphPoint)
         {
             AddGraphpointToSelection(graphPoint, selectionToolCollider.currentColorIndex, true, selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
-            gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, selectionToolCollider.currentColorIndex, selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
+            multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, selectionToolCollider.currentColorIndex, selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace CellexalVR.General
             else
             {
                 AddGraphpointToSelection(graphPoint, newGroup, true, selectionToolCollider.Colors[newGroup]);
-                gameManager.InformSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
+                multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
             }
 
             //Debug.Log("Adding gp to sel. Inform clients.");
@@ -168,7 +169,7 @@ namespace CellexalVR.General
             //graphPoint.Recolor(Colors[newGroup], newGroup);
             graphPoint.Group = newGroup;
             // renderer.material.color = Colors[newGroup];
-            //gameManager.InformGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
+            //multiuserMessageSender.SendMessageGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 
             bool newNode = !graphPoint.unconfirmedInSelection;
             graphPoint.unconfirmedInSelection = true;
@@ -217,7 +218,7 @@ namespace CellexalVR.General
 
             if (newNode)
             {
-                //gameManager.InformSelectedAdd(graphPoint.GraphName, graphPoint.Label);
+                //multiuserMessageSender.SendMessageSelectedAdd(graphPoint.GraphName, graphPoint.Label);
                 if (selectedCells.Count == 0)
                 {
                     CellexalEvents.SelectionStarted.Invoke();

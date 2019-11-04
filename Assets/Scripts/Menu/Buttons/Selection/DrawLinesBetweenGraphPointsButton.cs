@@ -32,7 +32,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             StartCoroutine(cellManager.DrawLinesBetweenGraphPoints(selectionManager.GetLastSelection()));
-            referenceManager.gameManager.InformDrawLinesBetweenGps();
+            referenceManager.multiuserMessageSender.SendMessageDrawLinesBetweenGps();
             TurnOff();
         }
 

@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
+using CellexalVR.Multiuser;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,11 +22,11 @@ namespace CellexalVR.Interaction
         public List<CorrelatedGenesPanel> correlatedGenesButtons = new List<CorrelatedGenesPanel>();
         public List<ClickableTextPanel> previousSearchesListNodes = new List<ClickableTextPanel>();
 
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
 
         private void Start()
         {
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             CellexalEvents.GraphsUnloaded.AddListener(ClearList);
         }
 

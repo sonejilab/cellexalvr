@@ -10,10 +10,10 @@ using Random = UnityEngine.Random;
 using ExitGames.Client.Photon;
 using CellexalVR.General;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
 
-    public class MultiplayerMenu : MonoBehaviour
+    public class MultiuserMenu : MonoBehaviour
     {
         public GUISkin Skin;
         public GameObject mainMenu;

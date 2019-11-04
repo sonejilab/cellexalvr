@@ -116,10 +116,10 @@ namespace CellexalVR.Tools
                     NetworkHandler nh = objectToDelete.GetComponent<NetworkHandler>();
                     if (nh)
                     {
-                        if (referenceManager.gameManager.multiplayer)
+                        if (referenceManager.multiuserMessageSender.multiplayer)
                         {
                             nh.DeleteNetworkMultiUser();
-                            referenceManager.gameManager.InformDeleteNetwork(nh.name);
+                            referenceManager.multiuserMessageSender.SendMessageDeleteNetwork(nh.name);
                         }
                         else
                         {
@@ -185,16 +185,16 @@ namespace CellexalVR.Tools
                 switch (obj.tag)
                 {
                     case "HeatBoard":
-                        referenceManager.gameManager.InformMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                        referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
                         break;
 
                     case "Network":
-                        referenceManager.gameManager.InformMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                        referenceManager.multiuserMessageSender.SendMessageMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
                         break;
 
                     case "SubGraph":
                     case "FacsGraph":
-                        referenceManager.gameManager.InformMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                        referenceManager.multiuserMessageSender.SendMessageMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
                         break;
                 }
             }
@@ -213,7 +213,7 @@ namespace CellexalVR.Tools
                 else
                 {
                     Destroy(obj);
-                    referenceManager.gameManager.InformDeleteObject(obj.name, obj.tag);
+                    referenceManager.multiuserMessageSender.SendMessageDeleteObject(obj.name, obj.tag);
                 }
                 CellexalLog.Log("Deleted object: " + obj.name);
                 delete = false;

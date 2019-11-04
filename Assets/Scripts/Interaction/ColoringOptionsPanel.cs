@@ -27,7 +27,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
-            referenceManager.gameManager.InformColoringMethodChanged((int)modeToSwitchTo);
+            referenceManager.multiuserMessageSender.SendMessageColoringMethodChanged((int)modeToSwitchTo);
             coloringOptionsList.SwitchMode(modeToSwitchTo);
         }
     }

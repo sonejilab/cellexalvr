@@ -36,7 +36,7 @@ namespace CellexalVR.Interaction
         {
             if (GetComponent<VRTK.VRTK_InteractableObject>().IsGrabbed())
             {
-                referenceManager.gameManager.InformMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
+                referenceManager.multiuserMessageSender.SendMessageMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
             }
         }
 
@@ -49,7 +49,7 @@ namespace CellexalVR.Interaction
                 output.text = "www.google.com/search?q=" + output.text;
             }
             webBrowser.OnNavigate(output.text);
-            referenceManager.gameManager.InformBrowserEnter();
+            referenceManager.multiuserMessageSender.SendMessageBrowserEnter();
         }
 
         public void SetBrowserActive(bool active)

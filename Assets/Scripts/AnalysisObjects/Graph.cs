@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.Multiuser;
 using SQLiter;
 using TMPro;
 using UnityEngine;
@@ -92,7 +93,7 @@ namespace CellexalVR.AnalysisObjects
 
 
         private ControllerModelSwitcher controllerModelSwitcher;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private Vector3 startPosition;
         private List<Vector3> nodePosition;
         private List<Vector3> nodeSizes;
@@ -148,7 +149,7 @@ namespace CellexalVR.AnalysisObjects
             targetMaxScale = 1f;
             oldPos = new Vector3();
             graphManager = referenceManager.graphManager;
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             graphManager = referenceManager.graphManager;
             CTCGraphs = new List<GameObject>();
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
@@ -168,7 +169,7 @@ namespace CellexalVR.AnalysisObjects
 
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
-                gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+                multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
             }
             if (minimize)
             {
@@ -199,7 +200,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, oldPos, step);
             transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * -100);
-            //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+            //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
             if (transform.localScale.x >= targetMaxScale)
             {
                 transform.localScale = oldScale;
@@ -263,7 +264,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            //gameManager.InformMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+            //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
             if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
                 minimize = false;

@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Multiuser;
 using UnityEngine;
 
 namespace CellexalVR.Interaction
@@ -18,7 +19,7 @@ namespace CellexalVR.Interaction
         private CellManager cellManager;
         //private Filter.FilterRule targetFilterRule;
         private TextMesh textMeshToUpdate;
-        private GameManager gameManager;
+        private MultiuserMessageSender MultiuserMessageSender;
         private OutputType nextOutputType;
         public enum OutputType { COLOR_GRAPHS_BY_GENE, FILTER_VALUE, FILTER_ITEM_NAME }
 
@@ -35,7 +36,7 @@ namespace CellexalVR.Interaction
         {
             cellManager = referenceManager.cellManager;
             textMesh = GetComponent<TextMesh>();
-            gameManager = referenceManager.gameManager;
+            MultiuserMessageSender = referenceManager.multiuserMessageSender;
         }
 
         public void AddLetter(char c)
@@ -76,7 +77,7 @@ namespace CellexalVR.Interaction
             {
                 case OutputType.COLOR_GRAPHS_BY_GENE:
                     cellManager.ColorGraphsByGene(text);
-                    referenceManager.gameManager.InformColorGraphsByGene(text);
+                    referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(text);
                     break;
                 //case OutputType.FILTER_VALUE:
                 //    try

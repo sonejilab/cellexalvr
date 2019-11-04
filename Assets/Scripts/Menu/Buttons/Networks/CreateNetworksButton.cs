@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.Menu.Buttons.Networks
 {
@@ -9,7 +10,7 @@ namespace CellexalVR.Menu.Buttons.Networks
     public class CreateNetworksButton : CellexalButton
     {
         private NetworkGenerator networkGenerator;
-        private GameManager gameManager;
+        private MultiuserMessageSender MultiuserMessageSender;
 
         protected override string Description
         {
@@ -20,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Networks
         {
 
             networkGenerator = referenceManager.networkGenerator;
-            gameManager = referenceManager.gameManager;
+            MultiuserMessageSender = referenceManager.multiuserMessageSender;
             SetButtonActivated(false);
             CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
@@ -32,7 +33,7 @@ namespace CellexalVR.Menu.Buttons.Networks
             var rand = new System.Random();
             var layoutSeed = rand.Next();
             networkGenerator.GenerateNetworks(layoutSeed);
-            gameManager.InformGenerateNetworks(layoutSeed);
+            MultiuserMessageSender.SendMessageGenerateNetworks(layoutSeed);
             referenceManager.controllerModelSwitcher.TurnOffActiveTool(true);
         }
 

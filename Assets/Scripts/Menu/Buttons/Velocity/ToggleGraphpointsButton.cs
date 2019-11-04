@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             referenceManager.velocityGenerator.ToggleGraphPoints();
-            referenceManager.gameManager.InformToggleGraphPoints();
+            referenceManager.multiuserMessageSender.SendMessageToggleGraphPoints();
         }
     }
 }

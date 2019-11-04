@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using CellexalVR.General;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
 
     public class AvatarMenu : Photon.MonoBehaviour
@@ -63,15 +63,15 @@ namespace CellexalVR.Multiplayer
             }
             if (photonView.isMine == false)
             {
-                if (referenceManager.gameManager.avatarMenuActive)
+                if (referenceManager.multiuserMessageSender.avatarMenuActive)
                 {
                     mainMenu.SetActive(true);
                 }
-                if (!referenceManager.gameManager.avatarMenuActive)
+                if (!referenceManager.multiuserMessageSender.avatarMenuActive)
                 {
                     mainMenu.SetActive(false);
                 }
-                if (!referenceManager.gameManager.avatarMenuActive)
+                if (!referenceManager.multiuserMessageSender.avatarMenuActive)
                 {
                     mainMenu.SetActive(false);
                 }

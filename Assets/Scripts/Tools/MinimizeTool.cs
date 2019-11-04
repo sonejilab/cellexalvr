@@ -58,7 +58,7 @@ namespace CellexalVR.Tools
                     string graphName = graph.GetComponent<Graph>().gameObject.name;
                     jail.MinimizeObject(graph.gameObject, graphName);
                     //minimize = true;
-                    referenceManager.gameManager.InformMinimizeGraph(graphName);
+                    referenceManager.multiuserMessageSender.SendMessageMinimizeGraph(graphName);
                 }
                 if (collidingWith.CompareTag("Network"))
                 {
@@ -70,7 +70,7 @@ namespace CellexalVR.Tools
                         networkHandler.HideNetworks();
                         string networkName = collidingWith.gameObject.name;
                         jail.MinimizeObject(collidingWith, networkName);
-                        referenceManager.gameManager.InformMinimizeNetwork(networkName);
+                        referenceManager.multiuserMessageSender.SendMessageMinimizeNetwork(networkName);
                     }
                 }
                 if (collidingWith.CompareTag("HeatBoard"))
@@ -84,7 +84,7 @@ namespace CellexalVR.Tools
                         string heatmapName = heatmap.gameObject.name;
                         jail.MinimizeObject(heatmap.gameObject, heatmapName);
                         controllerInside = false;
-                        referenceManager.gameManager.InformMinimizeHeatmap(heatmapName);
+                        referenceManager.multiuserMessageSender.SendMessageMinimizeHeatmap(heatmapName);
                     }
                 }
             }

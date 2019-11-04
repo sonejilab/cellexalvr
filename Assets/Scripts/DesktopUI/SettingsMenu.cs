@@ -437,7 +437,7 @@ namespace CellexalVR.DesktopUI
         {
             CellexalLog.Log("Saved changes made in the settings menu.");
             unsavedChanges = false;
-            if (referenceManager.gameManager.multiplayer)
+            if (referenceManager.multiuserMessageSender.multiplayer)
             {
                 referenceManager.configManager.MultiUserSynchronise();
             }

@@ -18,6 +18,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.SceneObjects;
 using CellexalVR.Extensions;
 using CellexalVR.Menu.Buttons.Networks;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -73,7 +74,7 @@ namespace CellexalVR.AnalysisObjects
         private List<CombinedArc> combinedArcs = new List<CombinedArc>();
         private SteamVR_TrackedObject rightController;
         private NetworkGenerator networkGenerator;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private Layout currentLayout;
         private bool[] layoutsCalculated = { false, false };
         private bool calculatingLayout = false;
@@ -101,7 +102,7 @@ namespace CellexalVR.AnalysisObjects
                 rightController = referenceManager.rightController;
             }
             networkGenerator = referenceManager.networkGenerator;
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             networkHandler = GetComponentInParent<NetworkHandler>();
         }
 
@@ -113,12 +114,12 @@ namespace CellexalVR.AnalysisObjects
                 enlarge = false;
                 if (!isReplacement && !Enlarged)
                 {
-                    gameManager.InformEnlargeNetwork(Handler.name, name);
+                    multiuserMessageSender.SendMessageEnlargeNetwork(Handler.name, name);
                     EnlargeNetwork();
                 }
                 if (isReplacement)
                 {
-                    gameManager.InformBringBackNetwork(Handler.name, replacing.name);
+                    multiuserMessageSender.SendMessageBringBackNetwork(Handler.name, replacing.name);
                     BringBackOriginal();
                 }
             }
@@ -157,7 +158,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (interactableObject.IsGrabbed())
                 {
-                    gameManager.InformMoveNetworkCenter(Handler.name, name, transform.position, transform.rotation, transform.localScale);
+                    multiuserMessageSender.SendMessageMoveNetworkCenter(Handler.name, name, transform.position, transform.rotation, transform.localScale);
                 }
             }
 
@@ -200,12 +201,12 @@ namespace CellexalVR.AnalysisObjects
                     enlarge = true;
                     //if (!isReplacement && !Enlarged)
                     //{
-                    //    gameManager.InformEnlargeNetwork(Handler.name, name);
+                    //    multiuserMessageSender.SendMessageEnlargeNetwork(Handler.name, name);
                     //    EnlargeNetwork();
                     //}
                     //if (isReplacement)
                     //{
-                    //    gameManager.InformBringBackNetwork(Handler.name, replacing.name);
+                    //    multiuserMessageSender.SendMessageBringBackNetwork(Handler.name, replacing.name);
                     //    BringBackOriginal();
                     //}
                 }
@@ -677,11 +678,11 @@ namespace CellexalVR.AnalysisObjects
             oldRotation = transform.rotation;
 
             transform.parent = null;
-            if (gameManager.multiplayer)
+            if (multiuserMessageSender.multiplayer)
             {
                 transform.position = new Vector3(0, 1f, 0);
             }
-            if (!gameManager.multiplayer)
+            if (!multiuserMessageSender.multiplayer)
             {
                 transform.position = referenceManager.headset.transform.position;
                 transform.rotation = referenceManager.headset.transform.rotation;

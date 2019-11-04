@@ -22,7 +22,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
         {
             drawTool.SkipNextDraw();
             drawTool.ClearAllLines();
-            referenceManager.gameManager.InformClearAllLines();
+            referenceManager.multiuserMessageSender.SendMessageClearAllLines();
 
         }
     }

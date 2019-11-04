@@ -26,7 +26,7 @@ namespace CellexalVR.Menu.Buttons.Networks
         public override void Click()
         {
             center.SwitchLayout(layout);
-            referenceManager.gameManager.InformSwitchNetworkLayout((int)layout, center.name, center.Handler.name);
+            referenceManager.multiuserMessageSender.SendMessageSwitchNetworkLayout((int)layout, center.name, center.Handler.name);
         }
 
         private void TurnOn()

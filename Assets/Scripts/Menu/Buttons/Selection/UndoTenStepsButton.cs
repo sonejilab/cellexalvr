@@ -35,7 +35,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            referenceManager.gameManager.InformGoBackSteps(10);
+            referenceManager.multiuserMessageSender.SendMessageGoBackSteps(10);
             for (int i = 0; i < 10; i++)
             {
                 selectionManager.GoBackOneStepInHistory();

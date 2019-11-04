@@ -20,7 +20,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             referenceManager.velocityGenerator.ChangeParticle();
-            referenceManager.gameManager.InformChangeParticleMode();
+            referenceManager.multiuserMessageSender.SendMessageChangeParticleMode();
         }
     }
 }

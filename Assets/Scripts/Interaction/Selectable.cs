@@ -41,7 +41,7 @@ namespace CellexalVR.Interaction
                 {
                     sel.GetComponent<Renderer>().material.color = referenceManager.selectionToolCollider.Colors[colorIndex];
                 }
-                referenceManager.gameManager.InformCubeColoured(graphPoint.parent.name, graphPoint.Label,
+                referenceManager.multiuserMessageSender.SendMessageCubeColoured(graphPoint.parent.name, graphPoint.Label,
                                                                 colorIndex, referenceManager.selectionToolCollider.Colors[colorIndex]);
             }
             //if (!selected)

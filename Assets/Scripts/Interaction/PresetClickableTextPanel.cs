@@ -35,17 +35,17 @@ namespace CellexalVR.Interaction
                 if (type == Definitions.Measurement.GENE)
                 {
                     referenceManager.cellManager.ColorGraphsByGene(nameOfThing);
-                    referenceManager.gameManager.InformColorGraphsByGene(nameOfThing);
+                    referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(nameOfThing);
                 }
                 else if (type == Definitions.Measurement.ATTRIBUTE)
                 {
                     referenceManager.cellManager.ColorByAttribute(nameOfThing, true);
-                    referenceManager.gameManager.InformColorByAttribute(nameOfThing, true);
+                    referenceManager.multiuserMessageSender.SendMessageColorByAttribute(nameOfThing, true);
                 }
                 else if (type == Definitions.Measurement.FACS)
                 {
                     referenceManager.cellManager.ColorByIndex(nameOfThing);
-                    referenceManager.gameManager.InformColorByIndex(nameOfThing);
+                    referenceManager.multiuserMessageSender.SendMessageColorByIndex(nameOfThing);
                 }
             }
             else if (operation == Operation.RESET_COLORS)

@@ -25,7 +25,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
         {
             drawTool.SkipNextDraw();
             drawTool.ClearLastLine();
-            referenceManager.gameManager.InformClearLastLine();
+            referenceManager.multiuserMessageSender.SendMessageClearLastLine();
         }
     }
 }

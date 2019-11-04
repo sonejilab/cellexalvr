@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.Menu.Buttons.Attributes
 {
@@ -11,7 +12,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
     {
 
         private GraphGenerator graphGenerator;
-        private GameManager gameManager;
+        private MultiuserMessageSender MultiuserMessageSender;
 
         protected override string Description
         {
@@ -22,7 +23,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
 
             graphGenerator = referenceManager.graphGenerator;
-            gameManager = referenceManager.gameManager;
+            MultiuserMessageSender = referenceManager.multiuserMessageSender;
         }
 
         public override void Click()
@@ -30,7 +31,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             if (referenceManager.attributeSubMenu.attributes.Count > 0)
             {
                 graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
-                referenceManager.gameManager.InformCreateAttributeGraph();
+                referenceManager.multiuserMessageSender.SendMessageCreateAttributeGraph();
             }
         }
 

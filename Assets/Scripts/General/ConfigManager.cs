@@ -255,7 +255,7 @@ namespace CellexalVR.General
         {
             byte[] data = SerializeConfig(CellexalConfig.Config);
 
-            referenceManager.gameManager.InformSynchConfig(data);
+            referenceManager.multiuserMessageSender.SendMessageSynchConfig(data);
 
             string sharedConfigPath = configDir + @"\sharedConfig.xml";
             //if (!File.Exists(sharedConfigPath))

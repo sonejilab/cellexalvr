@@ -5,6 +5,7 @@ using CellexalVR.General;
 using CellexalVR.DesktopUI;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.Multiuser;
 
 namespace CellexalVR.SceneObjects
 {
@@ -39,7 +40,7 @@ namespace CellexalVR.SceneObjects
         private bool moveFloor = false;
         private float currentTime;
         private float arrivalTime;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         // multiple_exp private DatasetList datasetList;
 
         private void OnValidate()
@@ -52,7 +53,7 @@ namespace CellexalVR.SceneObjects
 
         void Start()
         {
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             cylinder = GameObject.Find("Floor/ExpandableFloor").transform;
             cellsToDestroy = new ArrayList();
             pathsToLoad = new List<string>();
@@ -177,7 +178,7 @@ namespace CellexalVR.SceneObjects
                             ResetFolders(true);
                         }
                         // new_keyboard referenceManager.keyboardStatusFolder.ClearKey();
-                        gameManager.InformReadFolder(path);
+                        multiuserMessageSender.SendMessageReadFolder(path);
                     }
 
                     Destroy(cellParent.GetComponent<FixedJoint>());
@@ -221,7 +222,7 @@ namespace CellexalVR.SceneObjects
         // multiple_exp             }
         // multiple_exp 
         // multiple_exp             referenceManager.keyboardStatusFolder.ClearKey();
-        // multiple_exp             gameManager.InformReadFolder(path);
+        // multiple_exp             multiuserMessageSender.SendMessageReadFolder(path);
         // multiple_exp 
         // multiple_exp         }
         // multiple_exp         // must pass over list again to remove the parents. doing so in the

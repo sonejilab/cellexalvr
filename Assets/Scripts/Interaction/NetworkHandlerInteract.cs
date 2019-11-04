@@ -28,7 +28,7 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.gameManager.InformDisableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             // moving many triggers really pushes what unity is capable of
             //foreach (Collider c in GetComponentsInChildren<Collider>())
             //{
@@ -43,9 +43,9 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.gameManager.InformEnableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.gameManager.InformNetworkUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
             //foreach (Collider c in GetComponentsInChildren<Collider>())
             //{
             //    if (c.gameObject.name == "Ring")

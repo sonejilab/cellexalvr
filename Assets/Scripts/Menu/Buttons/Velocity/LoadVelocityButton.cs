@@ -75,12 +75,16 @@ public class LoadVelocityButton : CellexalButton
         else
         {
             Destroy(graphToActivate.velocityParticleEmitter.gameObject);
+            if (graphToActivate.graphPointsInactive)
+            {
+                graphToActivate.ToggleGraphPoints();
+            }
             velocityGenerator.ActiveGraphs.Remove(graphToActivate);
         }
+        referenceManager.multiuserMessageSender.SendMessageReadVelocityFile(shorterFilePath, subGraphName, startVelocity);
         //referenceManager.velocitySubMenu.DeactivateOutlines();
         ToggleOutline(startVelocity);
         //activeOutline.SetActive(true);
-        referenceManager.gameManager.InformReadVelocityFile(shorterFilePath, subGraphName);
     }
 
     public void DeactivateOutline()

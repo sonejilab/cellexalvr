@@ -20,7 +20,7 @@ using CellexalVR.General;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
 
     /// <summary>

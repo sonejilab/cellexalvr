@@ -2,21 +2,22 @@
 using System.Collections;
 using CellexalVR.General;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
-    public class AvatarLeftArm : Photon.MonoBehaviour
+    public class PlayerAnimatorManager : Photon.MonoBehaviour
     {
         #region PUBLIC PROPERTIES
         //public float DirectionDampTime = 5f;
         public Transform target;
-        public Transform leftControllerPos;
-
-
+        public Transform cameraPos;
+        public Transform menu;
+        public Transform menuTarget;
+        
         #endregion
 
 
         #region Private Variables
-        public ReferenceManager referenceManager;
+
         #endregion
 
         #region MONOBEHAVIOUR MESSAGES
@@ -25,14 +26,16 @@ namespace CellexalVR.Multiplayer
         // Use this for initialization
         void Start()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            //leftControllerPos = referenceManager.leftController.transform;
+            if (CrossSceneInformation.Spectator) return;
+            cameraPos = GameObject.Find("Camera (eye)").GetComponent<Transform>();
             target = GetComponent<Transform>();
+            menu = GameObject.Find("Main Menu").GetComponent<Transform>();
+
             if (!target)
             {
                 Debug.LogError("PlayerAnimatorManager is Missing Animator Component", this);
             }
-
+          
 
         }
 
@@ -40,29 +43,28 @@ namespace CellexalVR.Multiplayer
         // Update is called once per frame
         void Update()
         {
-
+            
             if (photonView.isMine == false && PhotonNetwork.connected == true)
             {
                 return;
             }
             if (!target)
             {
-                target = GetComponent<Transform>();
                 return;
             }
 
-            if (leftControllerPos == null)
-            {
-                leftControllerPos = referenceManager.leftController.transform;
+			if (cameraPos == null) {
+				cameraPos = GameObject.Find ("Camera (eye)").GetComponent<Transform> ();
 
-            }
+			}
 
-            target.position = leftControllerPos.position;
-            target.rotation = leftControllerPos.rotation;
-            target.Rotate(-90, 0, 0);
-            // deal with Jumping
+            target.position = cameraPos.position;
+            target.rotation = cameraPos.rotation;
+            target.Rotate(90, 0, 0);
 
-            // only allow jumping if we are running.
+            //menuTarget.position = menu.position;
+            //menuTarget.rotation = menu.rotation;
+            //menuTarget.Rotate(90, 0, 0);
 
         }
 

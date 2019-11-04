@@ -45,7 +45,7 @@ namespace CellexalVR.Interaction
             // the gene name is followed by some other text
             SetPressed(true);
             correlatedGenesList.CalculateCorrelatedGenes(listNode, listNode.Type);
-            referenceManager.gameManager.InformCalculateCorrelatedGenes(listNode.NameOfThing);
+            referenceManager.multiuserMessageSender.SendMessageCalculateCorrelatedGenes(listNode.NameOfThing);
         }
 
         private void Reset()

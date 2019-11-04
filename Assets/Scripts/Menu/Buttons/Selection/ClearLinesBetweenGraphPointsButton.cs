@@ -28,7 +28,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         {
             cellManager.ClearLinesBetweenGraphPoints();
             SetButtonActivated(false);
-            referenceManager.gameManager.InformClearLinesBetweenGps();
+            referenceManager.multiuserMessageSender.SendMessageClearLinesBetweenGps();
         }
 
         private void TurnOn()

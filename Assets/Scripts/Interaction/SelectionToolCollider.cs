@@ -1,6 +1,7 @@
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using CellexalVR.Multiuser;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace CellexalVR.Interaction
         private GraphManager graphManager;
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
-        private GameManager gameManager;
+        private MultiuserMessageSender multiuserMessageSender;
         private bool selActive = false;
         private int currentMeshIndex;
         private Color selectedColor;
@@ -60,7 +61,7 @@ namespace CellexalVR.Interaction
         {
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             rightController = referenceManager.rightController;
-            gameManager = referenceManager.gameManager;
+            multiuserMessageSender = referenceManager.multiuserMessageSender;
             selectionManager = referenceManager.selectionManager;
             if (!CrossSceneInformation.Ghost)
                 radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
@@ -121,7 +122,7 @@ namespace CellexalVR.Interaction
         //        {
         //            sel.GetComponent<Renderer>().material.color = Colors[currentColorIndex];
         //        }
-        //        referenceManager.gameManager.InformCubeColoured(cubeOnLine.graphPoint.parent.name, cubeOnLine.graphPoint.Label,
+        //        referenceManager.multiuserMessageSender.SendMessageCubeColoured(cubeOnLine.graphPoint.parent.name, cubeOnLine.graphPoint.Label,
         //                                                        currentColorIndex, Colors[currentColorIndex]);
         //    }
         //}

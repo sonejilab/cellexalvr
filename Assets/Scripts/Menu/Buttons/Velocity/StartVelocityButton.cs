@@ -20,7 +20,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
             {
                 g.velocityParticleEmitter.Play();
             }
-            referenceManager.gameManager.InformStartVelocity();
+            referenceManager.multiuserMessageSender.SendMessageStartVelocity();
         }
     }
 }

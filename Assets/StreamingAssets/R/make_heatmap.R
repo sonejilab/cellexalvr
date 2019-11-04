@@ -13,7 +13,7 @@ stats_method <- args[5] # method to use for stats
 #message( paste("make_heatmap using grouping file", group_selection_filepath, " and stats method ", stats_method  ) )
 
 # the script that will be run by the r session. Needs to be on the correct format to be read properly by the r source command. Change this line if you want to run your own heatmap function.
-function_str <- paste("make.cellexalvr.heatmap.list(cellexalObj,
+function_str <- paste("cellexalObj = make.cellexalvr.heatmap.list(cellexalObj,
  			\"", group_selection_filepath,
 			"\",", top_genes_number,
 			",\"", output_filepath,

@@ -75,17 +75,17 @@ namespace CellexalVR.Interaction
             //if (Type == Definitions.Measurement.GENE)
             //{
             //    referenceManager.cellManager.ColorGraphsByGene(NameOfThing, ColoringMethod);
-            //    referenceManager.gameManager.InformColorGraphsByGene(NameOfThing);
+            //    referenceManager.MultiuserMessageSender.SendMessageColorGraphsByGene(NameOfThing);
             //}
             //else if (Type == Definitions.Measurement.ATTRIBUTE)
             //{
             //    referenceManager.cellManager.ColorByAttribute(NameOfThing, true);
-            //    referenceManager.gameManager.InformColorByAttribute(NameOfThing, true);
+            //    referenceManager.MultiuserMessageSender.SendMessageColorByAttribute(NameOfThing, true);
             //}
             //else if (Type == Definitions.Measurement.FACS)
             //{
             //    referenceManager.cellManager.ColorByIndex(NameOfThing);
-            //    referenceManager.gameManager.InformColorByIndex(NameOfThing);
+            //    referenceManager.MultiuserMessageSender.SendMessageColorByIndex(NameOfThing);
             //}
             //if (!referenceManager.previousSearchesList.Contains(NameOfThing, Type, referenceManager.graphManager.GeneExpressionColoringMethod))
             //{

@@ -24,7 +24,7 @@ namespace CellexalVR.Menu.Buttons.Tools
         {
             base.Click();
             //referenceManager.rightLaser.enabled = toolActivated;
-            referenceManager.gameManager.InformActivateKeyboard(toolActivated);
+            referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(toolActivated);
             CellexalEvents.KeyboardToggled.Invoke();
         }
 

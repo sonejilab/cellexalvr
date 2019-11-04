@@ -1,7 +1,7 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
 
-namespace CellexalVR.Multiplayer
+namespace CellexalVR.Multiuser
 {
     /// <summary>
     /// Handles movement of the user when in spectator mode. Active e.g. if the user does not have a vr headset and wishes to use the keyboard instead.
