@@ -204,7 +204,6 @@ namespace CellexalVR.AnalysisObjects
                 //    Play();
 
                 //}
-
                 yield return null;
                 yieldsSoFar++;
 

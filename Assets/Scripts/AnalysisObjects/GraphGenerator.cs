@@ -227,7 +227,7 @@ namespace CellexalVR.AnalysisObjects
             float distance = Vector3.Distance(v1, v2);
             return distance * distance;
         }
-        
+
         /// <summary>
         /// Adds arrows representing the axes of the graph.
         /// </summary>
@@ -391,6 +391,15 @@ namespace CellexalVR.AnalysisObjects
             Vector3 nodePos = node.pos;
             node.size = new Vector3(maxX - minX + graphpointMeshSize, maxY - minY + graphpointMeshSize, maxZ - minZ + graphpointMeshSize);
             Vector3 nodeSize = node.size;
+
+            // nodeSize.magnitude < 0.00031622776
+            if (maxX - minX < 0.0000001f && maxY - minY < 0.0000001f && maxZ - minZ < 0.0000001f)
+            {
+                CellexalLog.Log("Removed " + (cluster.Count - 1) + " duplicate point(s) at position " + V2S(node.pos));
+                cluster.Clear();
+                cluster.Add(firstPoint);
+                return SplitClusterRecursive(cluster, node, addClusters);
+            }
 
             // initialise new clusters
             List<HashSet<Graph.GraphPoint>> newClusters = new List<HashSet<Graph.GraphPoint>>(8);
@@ -641,6 +650,14 @@ namespace CellexalVR.AnalysisObjects
 
             graphPointMeshVertices.Dispose();
             graphPointMeshTriangles.Dispose();
+
+            //graphPointMeshVertices.Dispose();
+            //graphPointMeshTriangles.Dispose();
+            //clusterOffsets.Dispose();
+            //positions.Dispose();
+            //resultVertices.Dispose();
+            //resultTriangles.Dispose();
+            //resultUVs.Dispose();
 
             // set up the graph's texture
             newGraph.textureWidth = nbrOfMaxPointsPerClusters;

@@ -131,8 +131,8 @@ namespace CellexalVR.AnalysisLogic
                 emitter.arrowParticleMaterial = arrowMaterial;
                 emitter.circleParticleMaterial = standardMaterial;
                 emitter.graph = graph;
-                emitter.Velocities = velocities;
                 emitter.ArrowEmitRate = 1f / frequency;
+                emitter.Velocities = velocities;
                 emitter.Threshold = threshold;
                 emitter.Speed = speed;
                 emitter.UseGraphPointColors = useGraphPointColors;

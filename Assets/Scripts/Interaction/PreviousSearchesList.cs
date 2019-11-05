@@ -141,7 +141,7 @@ namespace CellexalVR.Interaction
         /// Build the previous serches list.
         /// </summary>
         /// <param name="numberOfPanels">The number of panels to create.</param>
-        /// <param name="prefabInstance"></param>
+        /// <param name="prefabInstance">The prefab instance we are changing.</param>
         public void BuildPreviousSearchesList(int numberOfPanels, PreviousSearchesList prefabInstance)
         {
             if (numberOfPanels < 1)
