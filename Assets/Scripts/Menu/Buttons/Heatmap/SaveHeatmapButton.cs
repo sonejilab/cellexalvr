@@ -24,6 +24,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
             GetComponentInParent<CellexalVR.AnalysisObjects.Heatmap>().SaveImage();
             device.TriggerHapticPulse(2000);
         }
+
         public void FinishedButton()
         {
             spriteRenderer.sprite = doneTex;
