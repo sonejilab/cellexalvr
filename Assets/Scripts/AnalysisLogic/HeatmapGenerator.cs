@@ -117,7 +117,9 @@ namespace CellexalVR.AnalysisLogic
             ConfirmMarkerColor = CellexalConfig.Config.HeatmapConfirmMarkerColor;
         }
 
-
+        /// <summary>
+        /// Removes all heatmaps.
+        /// </summary>
         internal void DeleteHeatmaps()
         {
             foreach (Heatmap h in heatmapList)
@@ -163,7 +165,10 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(GenerateHeatmapRoutine(heatmapName));
         }
 
-
+        /// <summary>
+        /// Removes one heatmap.
+        /// </summary>
+        /// <param name="heatmapName">The heatmap's name.</param>
         public void DeleteHeatmap(string heatmapName)
         {
             Heatmap heatmap = FindHeatmap(heatmapName);
@@ -171,6 +176,11 @@ namespace CellexalVR.AnalysisLogic
             heatmapList.Remove(heatmap);
         }
 
+        /// <summary>
+        /// Finds a heatmap.
+        /// </summary>
+        /// <param name="heatmapName">The heatmap's name.</param>
+        /// <returns>The heatmap, or null if no heatmap by that name exists.</returns>
         public Heatmap FindHeatmap(string heatmapName)
         {
             return heatmapList.Find((Heatmap h) => heatmapName == h.name);
@@ -365,7 +375,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.orderedByAttribute = false;
             //try
             //{
-            StartCoroutine(BuildTextureCoroutine(heatmap.groupWidths, heatmap.attributeWidths, heatmap));
+            StartCoroutine(BuildTextureCoroutine(heatmap));
             //}
             //catch (Exception e)
             //{
@@ -374,7 +384,11 @@ namespace CellexalVR.AnalysisLogic
             //}
         }
 
-        public void BuildTexture(List<Tuple<int, float, int>> groupWidths, List<Tuple<int, float, int>> attributeWidths, Heatmap heatmap)
+        /// <summary>
+        /// Builds a heatmap texture based on already known groupwidths and attribute widths.
+        /// </summary>
+        /// <param name="heatmap">The heatmap to attach the texture to.</param>
+        public void BuildTexture(Heatmap heatmap)
         {
             if (heatmap.buildingTexture)
             {
@@ -383,6 +397,7 @@ namespace CellexalVR.AnalysisLogic
             }
             heatmap.GetComponent<Collider>().enabled = false;
             // merge groups
+            List<Tuple<int, float, int>> groupWidths = heatmap.groupWidths;
             for (int i = 0; i < groupWidths.Count - 1; ++i)
             {
                 // if two groups with the same color are now beside eachother, merge them
@@ -396,7 +411,7 @@ namespace CellexalVR.AnalysisLogic
                     groupWidths.RemoveAt(i + 1);
                 }
             }
-            StartCoroutine(BuildTextureCoroutine(groupWidths, attributeWidths, heatmap));
+            StartCoroutine(BuildTextureCoroutine(heatmap));
         }
 
         /// <summary>
@@ -417,10 +432,14 @@ namespace CellexalVR.AnalysisLogic
             heatmap.genes = newGenes;
             heatmap.groupWidths = newGroupWidths;
             heatmap.UpdateAttributeWidhts();
-            StartCoroutine(BuildTextureCoroutine(heatmap.groupWidths, heatmap.attributeWidths, heatmap));
+            StartCoroutine(BuildTextureCoroutine(heatmap));
         }
 
-        public IEnumerator BuildTextureCoroutine(List<Tuple<int, float, int>> groupWidths, List<Tuple<int, float, int>> attributeWidths, Heatmap heatmap)
+        /// <summary>
+        /// Coroutine that starts a thread and generates the heatmap.
+        /// </summary>
+        /// <param name="heatmap"></param>
+        public IEnumerator BuildTextureCoroutine(Heatmap heatmap)
         {
             heatmap.buildingTexture = true;
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();

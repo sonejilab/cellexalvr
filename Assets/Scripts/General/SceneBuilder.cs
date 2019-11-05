@@ -1,5 +1,6 @@
 ﻿using CellexalVR.Interaction;
 using CellexalVR.Menu;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -84,6 +85,9 @@ namespace CellexalVR.General
             }
         }
 
+        /// <summary>
+        /// Instantiates all gameobjects, runs all OnValidate() and builds all keyboards.
+        /// </summary>
         public void BuildScene()
         {
             //if (Application.isPlaying)
@@ -210,6 +214,9 @@ namespace CellexalVR.General
             }
         }
 
+        /// <summary>
+        /// Removes all other gameobjects in the scene.
+        /// </summary>
         public void RemoveInstances()
         {
             foreach (GameObject gameObject in SceneManager.GetActiveScene().GetRootGameObjects())
@@ -222,6 +229,9 @@ namespace CellexalVR.General
             instances.Clear();
         }
 
+        /// <summary>
+        /// Attempts to set all fields in the inspector.
+        /// </summary>
         public void AutoPopulateGameObjects()
         {
             InputReader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/InputReader.prefab");
@@ -246,6 +256,7 @@ namespace CellexalVR.General
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
         }
 
+        [Obsolete]
         public void SaveAllPrefabs()
         {
             float progress = 0.0f;

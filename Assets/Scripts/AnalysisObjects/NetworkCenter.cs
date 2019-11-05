@@ -562,6 +562,10 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Switches the layout of the network.
+        /// </summary>
+        /// <param name="layout">The layout to switch to.</param>
         public void SwitchLayout(Layout layout)
         {
             if (layout == currentLayout)
@@ -1155,6 +1159,10 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Highlights a gene in this network with a red circle.
+        /// </summary>
+        /// <param name="geneName">The gene to highlight.</param>
         public void HighLightGene(string geneName)
         {
             int nodeHit = nodes.FindIndex(s => s.Label.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));

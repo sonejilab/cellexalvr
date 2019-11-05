@@ -57,9 +57,7 @@ namespace CellexalVR.AnalysisLogic
                 List<Graph.GraphPoint> cellList = new List<Graph.GraphPoint>(referenceManager.graphManager.Graphs[0].points.Values);
                 DumpSelectionToTextFile(cellList, markers[0], markers[1], markers[2]);
             }
-            string[] files = new string[1];
-            files[0] = filePath;
-            referenceManager.inputReader.ReadCoordinates(CellexalUser.UserSpecificFolder, files);
+            referenceManager.inputReader.ReadGraphFromMarkerFile(CellexalUser.UserSpecificFolder, filePath);
             markers.Clear();
             foreach (AddMarkerButton b in GetComponentsInChildren<AddMarkerButton>())
             {

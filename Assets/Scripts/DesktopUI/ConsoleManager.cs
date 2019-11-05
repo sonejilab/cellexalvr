@@ -428,6 +428,9 @@ namespace CellexalVR.DesktopUI
             return shortestCommon;
         }
 
+        /// <summary>
+        /// Clears and hides the bar that show suggestions below the input field.
+        /// </summary>
         public void ClearAndHideSuggestions()
         {
             suggestionField.text = "";

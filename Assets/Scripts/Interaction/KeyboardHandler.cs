@@ -68,6 +68,10 @@ namespace CellexalVR.Interaction
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
 
         }
+
+        /// <summary>
+        /// Gets the scale correction for the keyboard shader.
+        /// </summary>
         public Vector4 ScaleCorrection()
         {
             float scaleCorrectionX = (maxPos.x - minPos.x) / (maxPos.y - minPos.y);

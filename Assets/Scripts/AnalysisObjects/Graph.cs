@@ -181,6 +181,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Starts the maximize animation.
+        /// </summary>
         internal void ShowGraph()
         {
             transform.position = referenceManager.leftController.transform.position;
@@ -277,6 +280,11 @@ namespace CellexalVR.AnalysisObjects
             currentTime += Time.deltaTime;
         }
 
+        /// <summary>
+        /// Scales one <see cref="Vector3"/> of coordinates from the original scale to the graph's desired scale.
+        /// </summary>
+        /// <param name="coords">The coordinates to scale.</param>
+        /// <returns>A scaled <see cref="Vector3"/>.</returns>
         public Vector3 ScaleCoordinates(Vector3 coords)
         {
             // move one of the graph's corners to origo
@@ -291,6 +299,9 @@ namespace CellexalVR.AnalysisObjects
             return coords;
         }
 
+        /// <summary>
+        /// A graph point represents a point in the graphs as well as one cell in the dimension reduced data.
+        /// </summary>
         public class GraphPoint
         {
             private static int indexCounter = 0;
@@ -329,6 +340,9 @@ namespace CellexalVR.AnalysisObjects
                 return Label;
             }
 
+            /// <summary>
+            /// Scales this graph point's coordinates from the graph's original scale to it's desired scale.
+            /// </summary>
             public void ScaleCoordinates()
             {
                 // move one of the graph's corners to origo
@@ -892,8 +906,6 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Method to greate lines between nodes in the octree. This gives a sort of skeleton representation of the graph.
         /// </summary>
-        /// <param name="convhull"></param>
-        /// <returns></returns>
         public IEnumerator CreateGraphSkeleton(bool empty = false)
         {
             if (empty)
@@ -1127,9 +1139,14 @@ namespace CellexalVR.AnalysisObjects
             textureChanged = true;
         }
 
+        /// <summary>
+        /// Colors one graph point based on one of the selection colors.
+        /// </summary>
+        /// <param name="graphPoint">The graph point to color.</param>
+        /// <param name="i">An integer betweeen 0 and the number of selection colors.</param>
+        /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
-
             byte greenChannel = (byte)(outline ? 4 : 0);
             byte redChannel;
             if (i == -1)
@@ -1155,17 +1172,24 @@ namespace CellexalVR.AnalysisObjects
             textureChanged = true;
 
         }
-
+        /// <summary>
+        /// Resets the color of the graph point back to its default.
+        /// </summary>
+        /// <param name="graphPoint">The graphpoint to recolor.</param>
         public void ResetGraphPointColor(GraphPoint graphPoint)
         {
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
             textureChanged = true;
         }
-
+        /// <summary>
+        /// Finds a graph point by its name.
+        /// </summary>
+        /// <param name="label">The name of the graph point</param>
+        /// <returns>The graph point, or null if was not found.</returns>
         public GraphPoint FindGraphPoint(string label)
         {
             var keyExists = points.TryGetValue(label, out GraphPoint gp);
-            return keyExists? gp : null;
+            return keyExists ? gp : null;
         }
 
 
@@ -1235,58 +1259,6 @@ namespace CellexalVR.AnalysisObjects
             //}
 
             graphPointClusters[0].GetComponent<Renderer>().sharedMaterial.mainTexture = texture;
-        }
-
-        /// <summary>
-        /// Finds all <see cref="GraphPoint"/> that are inside a axis aligned box in the graph's local space.
-        /// </summary>
-        /// <param name="min">The box's minimum coordinates.</param>
-        /// <param name="max">The box's maximum coordinates.</param>
-        /// <param name="onlyNotIterated">True if only nodes that which are not yet iterated should be selected.</param>
-        /// <returns>A <see cref="List{CombinedGraphPoint}"/> with all <see cref="GraphPoint"/> that are inside the box.</returns>
-        public List<GraphPoint> MinkowskiDetection_old(Vector3 min, Vector3 max, bool onlyNotIterated = false)
-        {
-            List<GraphPoint> result = new List<GraphPoint>(64);
-            MinkowskiDetectionRecursive_old(min, max, octreeRoot, ref result, onlyNotIterated);
-            return result;
-        }
-
-        private void MinkowskiDetectionRecursive_old(Vector3 min, Vector3 max, OctreeNode node, ref List<GraphPoint> result, bool onlyNotIterated = false)
-        {
-            if (min.x - node.pos.x - node.size.x <= 0
-                   && max.x - node.pos.x >= 0
-                   && min.y - node.pos.y - node.size.y <= 0
-                   && max.y - node.pos.y >= 0
-                   && min.z - node.pos.z - node.size.z <= 0
-                   && max.z - node.pos.z >= 0)
-            {
-                // check if this node is entirely inside the bounding box
-                if (min.x < node.pos.x && max.x > node.pos.x + node.size.x &&
-                    min.y < node.pos.y && max.y > node.pos.y + node.size.y &&
-                    min.z < node.pos.z && max.z > node.pos.z + node.size.z)
-                {
-                    foreach (OctreeNode leaf in node.AllLeavesUnder(onlyNotIterated))
-                    {
-                        leaf.NodeIterated = true;
-                        result.Add(leaf.point);
-                    }
-                }
-                else if (node.point != null && (!onlyNotIterated || !node.NodeIterated))
-                {
-                    node.NodeIterated = true;
-                    result.Add(node.point);
-                }
-                else
-                {
-                    foreach (OctreeNode child in node.children)
-                    {
-                        if (!onlyNotIterated || !node.NodeIterated)
-                        {
-                            MinkowskiDetectionRecursive_old(min, max, child, ref result, onlyNotIterated);
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>

@@ -467,6 +467,9 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
+        /// <summary>
+        /// Adds the currently selected attributes as a selection.
+        /// </summary>
         public void SendToSelection()
         {
             foreach (KeyValuePair<Graph.GraphPoint, int> entry in selectionList)
@@ -499,23 +502,6 @@ namespace CellexalVR.AnalysisLogic
                         cell.SetGroup(-1, true);
                 }
             }
-        }
-
-        public void AddCellsToSelection(BooleanExpression.Expr attributes, int group)
-        {
-            if (attributes == null)
-                return;
-            int numAdded = 0;
-            foreach (var cell in cells.Values)
-            {
-                if (attributes.Eval(cell))
-                {
-                    numAdded++;
-                    // more_cells selectionToolHandler.AddGraphpointToSelection(cell.GraphPoints[0], group, false);
-                    recolored[cell] = selectionToolCollider.currentColorIndex;
-                }
-            }
-            CellexalLog.Log("Added " + numAdded + " cells to selection");
         }
 
         /// <summary>
@@ -659,6 +645,9 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Returns a subset of all cells in the dataset based on a boolean expression.
+        /// </summary>
         public List<Cell> SubSet(BooleanExpression.Expr expr)
         {
             List<Cell> result = new List<Cell>();

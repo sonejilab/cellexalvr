@@ -254,8 +254,6 @@ namespace CellexalVR.AnalysisObjects
             networks.Clear();
         }
 
-
-
         public void AddNetwork(NetworkHandler handler)
         {
             networks.Add(handler);

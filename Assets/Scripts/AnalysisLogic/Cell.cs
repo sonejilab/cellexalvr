@@ -133,6 +133,10 @@ namespace CellexalVR.AnalysisLogic
             //}
         }
 
+        /// <summary>
+        /// Colors this cell by a gene expression color.
+        /// </summary>
+        /// <param name="i">A number between 0 and <see cref="CellexalVR.General.CellexalConfig.Config.GraphNumberOfExpressionColors"/></param>
         public void ColorByGeneExpression(int i)
         {
             foreach (Graph.GraphPoint g in GraphPoints)

@@ -71,6 +71,11 @@ namespace CellexalVR.Extensions
             return colors;
         }
 
+        /// <summary>
+        /// Replaces forward and backward slashes with whatever is appropriate for this system.
+        /// </summary>
+        /// <param name="s">The string to fix.</param>
+        /// <returns>The fixed string.</returns>
         public static string FixFilePath(this string s)
         {
             char directorySeparatorChar = Path.DirectorySeparatorChar;
@@ -79,6 +84,12 @@ namespace CellexalVR.Extensions
             return s;
         }
 
+        /// <summary>
+        /// Finds a child or grand-child or grand-grand-child and so on by its name.
+        /// </summary>
+        /// <param name="aParent">The parent transform.</param>
+        /// <param name="aName">The name of the child.</param>
+        /// <returns>The child, or null if no child was found.</returns>
         public static Transform FindDeepChild(this Transform aParent, string aName)
         {
             Queue<Transform> queue = new Queue<Transform>();
@@ -94,6 +105,11 @@ namespace CellexalVR.Extensions
             return null;
         }
 
+        /// <summary>
+        /// Replaces forward and backward slashes with double backward slashes. Used for passing filepaths as arguments to things that parse escape characters.
+        /// </summary>
+        /// <param name="s">The string to unfix.</param>
+        /// <returns>The unfixed string.</returns>
         public static string UnFixFilePath(this string s)
         {
             string directorySeparatorChar = "\\\\";

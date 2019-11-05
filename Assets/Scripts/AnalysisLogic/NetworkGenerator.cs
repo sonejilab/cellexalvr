@@ -291,6 +291,10 @@ namespace CellexalVR.AnalysisLogic
             return null;
         }
 
+        /// <summary>
+        /// Highlights a gene in all networks with a red circle.
+        /// </summary>
+        /// <param name="geneName">The gene to highlight.</param>
         public void HighLightGene(string geneName)
         {
             foreach (NetworkHandler nh in networkList)

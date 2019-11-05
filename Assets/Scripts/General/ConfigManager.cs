@@ -242,7 +242,7 @@ namespace CellexalVR.General
                     float unityA = byte.Parse(a, System.Globalization.NumberStyles.HexNumber) / 255f;
                     return new Color(unityR, unityG, unityB, unityA);
                 }
-                catch (System.FormatException e)
+                catch (System.FormatException)
                 {
                     // we found something that seemed like an alpha value, but wasn't
                     return new Color(unityR, unityG, unityB);
@@ -251,6 +251,9 @@ namespace CellexalVR.General
             return new Color(unityR, unityG, unityB);
         }
 
+        /// <summary>
+        /// Synchronizes our config with a clients.
+        /// </summary>
         public void MultiUserSynchronise()
         {
             byte[] data = SerializeConfig(CellexalConfig.Config);
@@ -268,7 +271,12 @@ namespace CellexalVR.General
             ReadConfigFile();
         }
 
-        public byte[] SerializeConfig<Config>(Config serializableConfig)
+        /// <summary>
+        /// Serializes the config.
+        /// </summary>
+        /// <param name="serializableConfig">The config to serialize</param>
+        /// <returns>The raw byte data representing the config.</returns>
+        public byte[] SerializeConfig(Config serializableConfig)
         {
             Config config = serializableConfig;
             using (MemoryStream stream = new MemoryStream())
@@ -279,6 +287,11 @@ namespace CellexalVR.General
             }
         }
 
+        /// <summary>
+        /// Deserializes the config.
+        /// </summary>
+        /// <param name="serializedBytes">The raw byte data, preferably coming from <see cref="SerializeConfig(Config)"/>.</param>
+        /// <returns>The deserialized config.</returns>
         public Config DeserializeConfig(byte[] serializedBytes)
         {
             XmlSerializer ser = new XmlSerializer(typeof(Config));
@@ -288,6 +301,10 @@ namespace CellexalVR.General
             }
         }
 
+        /// <summary>
+        /// Synchronized our config with the serialized data from another clients config.
+        /// </summary>
+        /// <param name="data"></param>
         public void SynchroniseConfig(byte[] data)
         {
             Config config = DeserializeConfig(data);

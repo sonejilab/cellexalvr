@@ -33,6 +33,10 @@ namespace CellexalVR.Menu.SubMenus
             CellexalEvents.FilterLoaded.AddListener(CreateButton);
         }
 
+        /// <summary>
+        /// Create buttons for files with velocity information.
+        /// </summary>
+        /// <param name="files">An array of strings of file paths to .mds files with velocity information.</param>
         public void CreateButtons(string[] files)
         {
             filterPaths = files;
@@ -83,6 +87,10 @@ namespace CellexalVR.Menu.SubMenus
             CellexalEvents.FilterLoaded.Invoke();
         }
 
+        /// <summary>
+        /// Deactivates all other filters, except one.
+        /// </summary>
+        /// <param name="buttonToSkip">The button to not deactivate.</param>
         public void DeactivateAllOtherFilters(FilterButton buttonToSkip)
         {
             foreach (FilterButton button in buttons)
@@ -94,6 +102,9 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
+        /// <summary>
+        /// Removes all buttons from the menu.
+        /// </summary>
         public void RemoveButtons()
         {
             foreach (FilterButton button in buttons)

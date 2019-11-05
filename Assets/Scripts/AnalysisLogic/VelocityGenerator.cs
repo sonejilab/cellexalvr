@@ -37,22 +37,26 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        [ConsoleCommand("velocityReader", aliases: "rvf")]
-        public void ReadVelocityFile()
-        {
-            ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\Ivan_MHSPC2\tsne.velo");
-        }
-
         public string[] VelocityFiles()
         {
             return referenceManager.graphManager.velocityFiles.ToArray();
         }
 
+        /// <summary>
+        /// Reads a velocity file and starts the particle system that visualises the velcoity information.
+        /// </summary>
+        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
+        [ConsoleCommand("velocityReader", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
         public void ReadVelocityFile(string path)
         {
             StartCoroutine(ReadVelocityParticleSystem(path));
         }
 
+        /// <summary>
+        /// Reads a velocity file and starts the particle system that visualises the velcoity information for a subgraph.
+        /// </summary>
+        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
+        /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
             StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
@@ -224,6 +228,9 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + threshold;
         }
 
+        /// <summary>
+        /// Toggles the graphpoints in all graphs that are showing velocity information.
+        /// </summary>
         public void ToggleGraphPoints()
         {
             foreach (Graph g in ActiveGraphs)
@@ -232,7 +239,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-
+        /// <summary>
+        /// Changes between constant and synched mode.
+        /// </summary>
         public void ChangeConstantSynchedMode()
         {
             if (ActiveGraphs.Count == 0)
@@ -248,6 +257,9 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
         }
 
+        /// <summary>
+        /// Changes between the gradient and graph point color modes.
+        /// </summary>
         public void ChangeGraphPointColorMode()
         {
             if (ActiveGraphs.Count == 0)
@@ -263,6 +275,9 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: " + (useGraphPointColors ? "Graphpoint colors" : "Gradient");
         }
 
+        /// <summary>
+        /// Changes the particle between the arrow and the circle.
+        /// </summary>
         public void ChangeParticle()
         {
             if (ActiveGraphs.Count == 0)

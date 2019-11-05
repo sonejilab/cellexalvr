@@ -132,6 +132,9 @@ namespace CellexalVR.Menu.Buttons.Attributes
             meshStandardColor = color;
         }
 
+        /// <summary>
+        /// Switches between boolean expression mode and normal mode.
+        /// </summary>
         public void SwitchMode()
         {
             if (CurrentMode == Mode.BOOLEAN_EXPR)

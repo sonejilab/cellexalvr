@@ -158,7 +158,9 @@ namespace CellexalVR.Menu.SubMenus
                 c.enabled = active;
             }
         }
-
+        /// <summary>
+        /// Adds a button to this tab.
+        /// </summary>
         public void AddButton(CellexalButton button)
         {
             //if (!menuToggler)

@@ -584,6 +584,9 @@ namespace CellexalVR.General
             return lastSelectedCells;
         }
 
+        /// <summary>
+        /// Removes all points from the current selection, and clears the selection history.
+        /// </summary>
         public void Clear()
         {
             lastSelectedCells.Clear();
@@ -628,17 +631,6 @@ namespace CellexalVR.General
             //selectedCells.Clear();
             selectionMade = false;
             CellexalEvents.CommandFinished.Invoke(true);
-        }
-
-
-        public void HeatmapCreated()
-        {
-            heatmapCreated = true;
-        }
-
-        public bool GetHeatmapCreated()
-        {
-            return heatmapCreated;
         }
 
         /// <summary>
@@ -785,7 +777,10 @@ namespace CellexalVR.General
             annotatedPoints.Clear();
         }
 
-
+        /// <summary>
+        /// Gets a selection colors.
+        /// </summary>
+        /// <param name="index">The index of the color. Indices outside the range of the array colors will be corrected with remainder division.</param>
         public Color GetColor(int index)
         {
             return CellexalConfig.Config.SelectionToolColors[index % CellexalConfig.Config.SelectionToolColors.Length];

@@ -209,6 +209,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Returns a list of all connected nodes.
+        /// </summary>
         public List<NetworkNode> AllConnectedNodes()
         {
             List<NetworkNode> result = new List<NetworkNode>();
@@ -228,6 +231,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Repositions the edges based on this nodes neighbours. Called many times when a layout is switched for a smooth transitions.
+        /// </summary>
         public void RepositionEdges()
         {
             for (int i = 0; i < edges.Count; ++i)
@@ -236,6 +242,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Colors the edges of this network node according to the coloring method defined in <see cref="CellexalConfig.Config"/>.
+        /// </summary>
         public void ColorEdges()
         {
             float minNegPcor = Center.MinNegPcor;

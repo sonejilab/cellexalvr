@@ -42,6 +42,9 @@ namespace CellexalVR.Interaction
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
+        /// <summary>
+        /// Pulls an object closer to the user.
+        /// </summary>
         public void Pull()
         {
             raycastingSource = this.transform;
@@ -78,6 +81,9 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Pushes an object further from the user.
+        /// </summary>
         public void Push()
         {
             int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");

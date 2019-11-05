@@ -103,6 +103,9 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
+        /// <summary>
+        /// Calculates the 2D layout of all networks.
+        /// </summary>
         public void CalculateLayoutOnAllNetworks()
         {
             foreach (var network in networks)
@@ -111,6 +114,11 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Saves the arcs that go between the networks.
+        /// </summary>
+        /// <param name="keyPairs">An array of <see cref="InputReader.NetworkKeyPair"/>.</param>
+        /// <param name="nodes">All nodes in all networks.</param>
         public void CreateArcs(ref InputReader.NetworkKeyPair[] keyPairs, ref Dictionary<string, NetworkNode> nodes)
         {
             // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
@@ -336,7 +344,10 @@ namespace CellexalVR.AnalysisObjects
             createAnim = true;
         }
 
-        public IEnumerator DeleteNetwork()
+        /// <summary>
+        /// Coroutine that deletes this network.
+        /// </summary>
+        public IEnumerator DeleteNetworkCoroutine()
         {
             if (!removable)
             {
@@ -344,13 +355,6 @@ namespace CellexalVR.AnalysisObjects
                 CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
                 yield break;
             }
-            //foreach (NetworkCenter nc in networks)
-            //{
-            //    if (nc.Enlarged)
-            //    {
-            //        yield return nc.BringBackOriginal();
-            //    }
-            //}
 
             removing = true;
 
@@ -361,6 +365,9 @@ namespace CellexalVR.AnalysisObjects
             referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
         }
 
+        /// <summary>
+        /// Used when another client removes the networks.
+        /// </summary>
         public void DeleteNetworkMultiUser()
         {
             if (!removable)
@@ -368,15 +375,7 @@ namespace CellexalVR.AnalysisObjects
                 Debug.Log("Script is running");
                 CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
             }
-            //foreach (NetworkCenter nc in networks)
-            //{
-            //    if (nc.Enlarged)
-            //    {
-            //        //Destroy(nc.gameObject);
-            //        //networks.Remove(nc);
-            //    }
 
-            //}
             networks.Clear();
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
@@ -399,6 +398,10 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Toggles all colliders in all networks. Used the networks are being grabbed to reduce lag.
+        /// </summary>
+        /// <param name="newState">True to toggle the colliders on, false otherwise.</param>
         internal void ToggleNetworkColliders(bool newState)
         {
             foreach (NetworkCenter network in networks)
@@ -430,6 +433,10 @@ namespace CellexalVR.AnalysisObjects
             return null;
         }
 
+        /// <summary>
+        /// Highlights a gene in all networks with a red circle.
+        /// </summary>
+        /// <param name="geneName">The gene to highlight.</param>
         public void HighLightGene(string geneName)
         {
             foreach (NetworkCenter nc in networks)

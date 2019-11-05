@@ -23,6 +23,10 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Switches the gene expression coloring mode. Called when <see cref="ColoringOptionsPanel.Click"/> is called.
+        /// </summary>
+        /// <param name="mode">The new mode to switch to.</param>
         public void SwitchMode(GraphManager.GeneExpressionColoringMethods mode)
         {
             referenceManager.graphManager.GeneExpressionColoringMethod = mode;
