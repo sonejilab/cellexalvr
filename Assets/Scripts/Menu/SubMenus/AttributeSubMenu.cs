@@ -47,23 +47,9 @@ namespace CellexalVR.Menu.SubMenus
             return button;
         }
 
-        public void AddExpressionButtons(Tuple<string, BooleanExpression.Expr>[] expressions)
-        {
-            if (expressions.Length == 0)
-                return;
-
-            var predefinedExpressionsTab = AddTab(booleanExpressionTabPrefab);
-            foreach (var expression in expressions)
-            {
-                var newButton = Instantiate(booleanExpressionButtonPrefab);
-                predefinedExpressionsTab.AddButton(newButton);
-
-                newButton.GetComponentInChildren<TextMesh>().text = expression.Item1;
-                newButton.Expr = expression.Item2;
-            }
-            predefinedExpressionsTab.SetTabActive(false);
-        }
-
+        /// <summary>
+        /// Destroys all tabs in this menu.
+        /// </summary>
         public override void DestroyTabs()
         {
             base.DestroyTabs();
@@ -71,6 +57,9 @@ namespace CellexalVR.Menu.SubMenus
                 buttons.Clear();
         }
 
+        /// <summary>
+        /// Switches all buttons between boolean expression and single attribute mode.
+        /// </summary>
         public void SwitchButtonStates()
         {
             foreach (var b in buttons)
@@ -114,18 +103,15 @@ namespace CellexalVR.Menu.SubMenus
             return root;
         }
 
+        /// <summary>
+        /// Evaluate the current boolean expression (if we are in boolean expression mode).
+        /// </summary>
         public void EvaluateExpression()
         {
             referenceManager.cellManager.ColorByAttributeExpression(GetExpression());
         }
 
-        public void AddCurrentExpressionAsGroup()
-        {
-            referenceManager.cellManager.AddCellsToSelection(GetExpression(), referenceManager.selectionToolCollider.currentColorIndex);
-            referenceManager.selectionToolCollider.ChangeColor(true);
-        }
-
-        public IEnumerator SelectAllAttributes(bool toggle)
+        public IEnumerator SelectAllAttributesCoroutine(bool toggle)
         {
             foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
             {

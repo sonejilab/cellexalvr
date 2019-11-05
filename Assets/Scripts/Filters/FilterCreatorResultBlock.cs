@@ -60,6 +60,10 @@ namespace CellexalVR.Filters
 
         public enum LoadingTextState { LOADING, FINISHED, INVALID_FILTER, OFF, FILTER_SAVED }
 
+        /// <summary>
+        /// Sets the loading text on the block according to a state.
+        /// </summary>
+        /// <param name="state">The state that we are in.</param>
         public void SetLoadingTextState(LoadingTextState state)
         {
             if (runningCoroutine != null)

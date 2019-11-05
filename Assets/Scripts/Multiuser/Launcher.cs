@@ -174,6 +174,9 @@ namespace CellexalVR.Multiuser
             }
         }
 
+        /// <summary>
+        /// Starts the single player scene.
+        /// </summary>
         public void ConnectSinglePlayer()
         {
             CrossSceneInformation.Tutorial = false;
@@ -181,6 +184,9 @@ namespace CellexalVR.Multiuser
             SceneManager.LoadScene("CellexalVR_Main_Scene");
         }
 
+        /// <summary>
+        /// Starts the tutorial scene.
+        /// </summary>
         public void ConnectTutorialScene()
         {
             CrossSceneInformation.Tutorial = true;
@@ -188,6 +194,9 @@ namespace CellexalVR.Multiuser
             SceneManager.LoadScene("IntroTutorialScene");
         }
 
+        /// <summary>
+        /// Sets the R script path to what the user entered in the text field.
+        /// </summary>
         public void SetRScriptPath()
         {
             string path = inputField.text;

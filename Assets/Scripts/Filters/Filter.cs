@@ -23,6 +23,10 @@ namespace CellexalVR.Filters
             return Expression.Eval(cell);
         }
 
+        /// <summary>
+        /// Gets all the genes in this filter.
+        /// </summary>
+        /// <param name="onlyPercent">True if only genes that have not been converted from percent expressions should be returned.</param>
         public List<string> GetGenes(bool onlyPercent = false)
         {
             List<string> result = new List<string>();
@@ -30,6 +34,10 @@ namespace CellexalVR.Filters
             return result;
         }
 
+        /// <summary>
+        /// Gets all the facs measurements in this filter.
+        /// </summary>
+        /// <param name="onlyPercent">True if only facs measurements that have not been converted from percent expressions should be returned.</param>
         public List<string> GetFacs(bool onlyPercent = false)
         {
             List<string> result = new List<string>();
@@ -37,6 +45,10 @@ namespace CellexalVR.Filters
             return result;
         }
 
+        /// <summary>
+        /// Gets all the attributes in this filter.
+        /// </summary>
+        /// <param name="onlyPercent">True if only attributes that have not been converted from percent expressions should be returned.</param>
         public List<string> GetAttributes()
         {
             List<string> result = new List<string>();

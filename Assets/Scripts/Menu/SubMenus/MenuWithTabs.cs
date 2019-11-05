@@ -46,6 +46,11 @@ namespace CellexalVR.Menu.SubMenus
             CellexalEvents.GraphsUnloaded.AddListener(DestroyTabs);
         }
 
+        /// <summary>
+        /// Finds a button by its name.
+        /// </summary>
+        /// <param name="name">The name of the button.</param>
+        /// <returns>The button, or null if no button was found.</returns>
         public virtual CellexalButton FindButton(string name)
         {
             var button = buttons.Find(x => x.name == name);

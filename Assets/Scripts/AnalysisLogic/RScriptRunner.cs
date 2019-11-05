@@ -196,6 +196,12 @@ namespace CellexalVR.AnalysisLogic
             //}
         }
 
+        /// <summary>
+        /// Runs an R script.
+        /// </summary>
+        /// <param name="path">The path to the R script.</param>
+        /// <param name="args">The arguments, seperated by spaces.</param>
+        /// <returns>The result from the R process.</returns>
         public static string RunRScript(string path, string args = "")
         {
             serverIdle = false;

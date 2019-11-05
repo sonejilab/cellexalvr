@@ -215,6 +215,9 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
+        /// <summary>
+        /// Starts the minimize animation and hides the heatmap.
+        /// </summary>
         internal void HideHeatmap()
         {
             originalPos = transform.position;
@@ -229,6 +232,9 @@ namespace CellexalVR.AnalysisObjects
             minimize = true;
         }
 
+        /// <summary>
+        /// Starts the maximize animation and shows the heatmap.
+        /// </summary>
         private void Minimize()
         {
             float step = speed * Time.deltaTime;
@@ -247,6 +253,9 @@ namespace CellexalVR.AnalysisObjects
             currentTime += Time.deltaTime;
         }
 
+        /// <summary>
+        /// Starts the maximize animation and show the heatmap.
+        /// </summary>
         internal void ShowHeatmap()
         {
             transform.position = referenceManager.minimizedObjectHandler.transform.position;
@@ -256,6 +265,9 @@ namespace CellexalVR.AnalysisObjects
             maximize = true;
         }
 
+        /// <summary>
+        /// Starts the minimize animation and hides the heatmap.
+        /// </summary>
         private void Maximize()
         {
             float step = speed * Time.deltaTime;
@@ -273,6 +285,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Removes the highlight box and the highlight text.
+        /// </summary>
         public void ResetHeatmapHighlight()
         {
             highlightQuad.SetActive(false);
@@ -522,7 +537,7 @@ namespace CellexalVR.AnalysisObjects
             }
             orderedByAttribute = true;
 
-            StartCoroutine(heatmapGenerator.BuildTextureCoroutine(groupWidths, attributeWidths, this));
+            StartCoroutine(heatmapGenerator.BuildTextureCoroutine(this));
         }
 
         /// <summary>

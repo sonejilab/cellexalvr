@@ -74,6 +74,11 @@ namespace CellexalVR.AnalysisObjects
             //CellexalEvents.ConfigLoaded.AddListener(RescaleGraphpointMeshes);
         }
 
+        /// <summary>
+        /// Creates a new graph of the given type.
+        /// </summary>
+        /// <param name="type">The type of graph to create.</param>
+        /// <returns>The new graph.</returns>
         public Graph CreateGraph(GraphType type)
         {
             graphType = type;
@@ -222,7 +227,12 @@ namespace CellexalVR.AnalysisObjects
             float distance = Vector3.Distance(v1, v2);
             return distance * distance;
         }
-
+        
+        /// <summary>
+        /// Adds arrows representing the axes of the graph.
+        /// </summary>
+        /// <param name="graph">The graph to add axes to.</param>
+        /// <param name="axisNames">The labels on the axes.</param>
         public void AddAxes(Graph graph, string[] axisNames)
         {
             graph.axisNames = axisNames;
@@ -764,6 +774,10 @@ namespace CellexalVR.AnalysisObjects
             CreateSubGraphs(attr);
         }
 
+        /// <summary>
+        /// Creates a subgraph based on some attrbiutes.
+        /// </summary>
+        /// <param name="attributes">The attributes to include in the subgraph.</param>
         public void CreateSubGraphs(List<string> attributes)
         {
             BooleanExpression.Expr expr = new BooleanExpression.AttributeExpr(attributes[0], true);

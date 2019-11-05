@@ -526,8 +526,6 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-
-
         public void RemoveGraph()
         {
             graph1.CTCGraphs.Remove(gameObject);

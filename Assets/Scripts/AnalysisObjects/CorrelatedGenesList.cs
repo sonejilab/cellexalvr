@@ -202,6 +202,11 @@ namespace CellexalVR.AnalysisObjects
             //BuildList();
         }
 
+        /// <summary>
+        /// Builds the correlated genes list in a prefab instance.
+        /// </summary>
+        /// <param name="numberOfPanels">The number of panels to spawn.</param>
+        /// <param name="prefabInstance">The prefab isntance that we are modifying.</param>
         public void BuildList(int numberOfPanels, CorrelatedGenesList prefabInstance)
         {
             if (numberOfPanels < 1)

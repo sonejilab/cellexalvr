@@ -13,6 +13,9 @@ namespace CellexalVR.AnalysisLogic
     /// </summary>
     public static class BooleanExpression
     {
+        /// <summary>
+        /// An error message if a filter is not parsed properly.
+        /// </summary>
         public static string ErrorMessage { get; private set; }
 
         private static Dictionary<string, Tuple<Token, Token>> aliases = new Dictionary<string, Tuple<Token, Token>>();
@@ -37,6 +40,9 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("FILTER ERROR: " + message);
         }
 
+        /// <summary>
+        /// Helper class that represents a token when parsin a filter.
+        /// </summary>
         public class Token
         {
             public enum Type
@@ -62,16 +68,26 @@ namespace CellexalVR.AnalysisLogic
                 this.stringIndex = stringIndex;
             }
 
+            /// <summary>
+            /// Checks if this token is an operator. The operators are ==, !=, <, <=, > and >=.
+            /// </summary>
             public bool IsOperator()
             {
                 return type == Type.OP_EQ || type == Type.OP_NEQ || type == Type.OP_GT || type == Type.OP_GTEQ || type == Type.OP_LT || type == Type.OP_LTEQ;
             }
 
+            /// <summary>
+            /// Checks if this token is a type decleration. Types are alias, attribute, facs or gene.
+            /// </summary>
             public bool IsType()
             {
                 return type == Type.TYPE_ALIAS || type == Type.TYPE_ATTR || type == Type.TYPE_FACS || type == Type.TYPE_GENE;
             }
 
+            /// <summary>
+            /// Checks if two tokens are equal. Tokens are equal if they are the same <see cref="type"/>, represents the same <see cref="text"/> at the same <see cref="stringIndex"/>.
+            /// </summary>
+            /// <param name="obj">The object to check for equality.</param>
             public override bool Equals(object obj)
             {
                 if (obj is Token)
@@ -714,6 +730,9 @@ namespace CellexalVR.AnalysisLogic
             private bool OpLessThan(float value1, float value2) { return value1 < value2; }
             private bool OpLessThanEqual(float value1, float value2) { return value1 <= value2; }
 
+            /// <summary>
+            /// Turns a function that evaluates an operator into a string.
+            /// </summary>
             public string OpToString(Func<float, float, bool> op)
             {
 
@@ -754,18 +773,45 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
+            /// <summary>
+            /// Evaluates a cell according to this boolean expression.
+            /// </summary>
+            /// <param name="cell">The cell to evaluate.</param>
+            /// <returns>True if the cell passed this boolean expression, false otherwise.</returns>
             public abstract bool Eval(Cell cell);
 
             public abstract override string ToString();
 
+            /// <summary>
+            /// Gets a list of all genes that this boolean expression contains.
+            /// </summary>
+            /// <param name="result">A reference to a list where the results should be put.</param>
+            /// <param name="onlyPercent">True if only genes that are not yet converted from percent to absolute values should be returned, false otherwise.</param>
             public abstract void GetGenes(ref List<string> result, bool onlyPercent = false);
 
+            /// <summary>
+            /// Gets a list of all facs measurements that this boolean expression contains.
+            /// </summary>
+            /// <param name="result">A reference to a list where the results should be put.</param>
+            /// <param name="onlyPercent">True if only facs measurements that are not yet converted from percent to absolute values should be returned, false otherwise.</param>
             public abstract void GetFacs(ref List<string> result, bool onlyPercent = false);
 
+            /// <summary>
+            /// Gets a list of all attributes that this boolean expression contains.
+            /// </summary>
+            /// <param name="result">A reference to a list where the results should be put.</param>
+            /// <param name="onlyPercent">True if only attributes that are not yet converted from percent to absolute values should be returned, false otherwise.</param>
             public abstract void GetAttributes(ref List<string> result);
 
+            /// <summary>
+            /// Saves the filtermanager that this filter is managed by, must be set before calling <see cref="Eval(Cell)"/>.
+            /// </summary>
             public abstract void SetFilterManager(FilterManager filterManager);
 
+            /// <summary>
+            /// Swaps the percent expressions still in the filter, given the genes/facs ranges.
+            /// </summary>
+            /// <param name="ranges">An array of <see cref="Tuple{string, float, float}"/> where Item1 is the name of the gene/facs, Item2 is the lower range and Item3 is the higher range.</param>
             public abstract void SwapPercentExpressions(Tuple<string, float, float>[] ranges);
         }
 

@@ -148,6 +148,9 @@ namespace CellexalVR.Menu.Buttons
             }
         }
 
+        /// <summary>
+        /// Handles what happens when the user points the controller towards the button and presses the trigger.
+        /// </summary>
         public abstract void Click();
 
         protected virtual void HelpClick()

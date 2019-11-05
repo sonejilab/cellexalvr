@@ -123,7 +123,7 @@ namespace CellexalVR.Tools
                         }
                         else
                         {
-                            StartCoroutine(nh.DeleteNetwork());
+                            StartCoroutine(nh.DeleteNetworkCoroutine());
                         }
                     }
 

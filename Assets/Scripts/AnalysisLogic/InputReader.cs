@@ -191,12 +191,16 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-
-        public void ReadCoordinates(string path, string[] files)
+        /// <summary>
+        /// Reads a facs marker file.
+        /// </summary>
+        /// <param name="path">The path to the directory</param>
+        /// <param name="file">The path to the file.</param>
+        public void ReadGraphFromMarkerFile(string path, string file)
         {
             facsGraphCounter++;
 
-            StartCoroutine(ReadMDSFiles(path, files, GraphGenerator.GraphType.FACS, false));
+            StartCoroutine(ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
 
         /// <summary>
@@ -387,10 +391,9 @@ namespace CellexalVR.AnalysisLogic
             //}
             if (type.Equals(GraphGenerator.GraphType.MDS))
             {
-                StartCoroutine(ReadAttributeFiles(path));
+                StartCoroutine(ReadAttributeFilesCoroutine(path));
                 while (!attributeFileRead)
                     yield return null;
-                ReadBooleanExpressionFiles(path);
                 ReadFacsFiles(path, totalNbrOfCells);
                 ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
@@ -420,7 +423,11 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
-        public IEnumerator ReadAttributeFiles(string path)
+        /// <summary>
+        /// Reads an attribute file.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        public IEnumerator ReadAttributeFilesCoroutine(string path)
         {
             // Read the each .meta.cell file
             // The file format should be
@@ -484,18 +491,6 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             attributeFileRead = true;
             CellexalLog.Log("read attributes in " + stopwatch.Elapsed.ToString());
-        }
-
-        public void ReadBooleanExpressionFiles(string path)
-        {
-            string[] files = Directory.GetFiles(path, "*.ott");
-            List<Tuple<string, BooleanExpression.Expr>> expressions = new List<Tuple<string, BooleanExpression.Expr>>(files.Length);
-            foreach (string file in files)
-            {
-                expressions.Add(new Tuple<string, BooleanExpression.Expr>(file, BooleanExpression.ParseFile(file)));
-            }
-
-            attributeSubMenu.AddExpressionButtons(expressions.ToArray());
         }
 
         private void ReadFilterFiles(string path)

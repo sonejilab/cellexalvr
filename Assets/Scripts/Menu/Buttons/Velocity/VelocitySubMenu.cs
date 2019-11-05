@@ -74,6 +74,12 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
+        /// <summary>
+        /// Finds a button representing a graph with velocity information.
+        /// </summary>
+        /// <param name="filePath">The file path to the file that the graph stemmed from.</param>
+        /// <param name="subGraphName">If this is a subgraph: the name of the subgraph. Otherwise, empty string.</param>
+        /// <returns></returns>
         public LoadVelocityButton FindButton(string filePath, string subGraphName)
         {
             if (subGraphName != string.Empty)

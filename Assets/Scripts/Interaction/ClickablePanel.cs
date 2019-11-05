@@ -56,6 +56,9 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Called when the user points the controller towards this panel and presses the trigger.
+        /// </summary>
         public abstract void Click();
 
 
@@ -83,6 +86,10 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Sets this panel to pressed or not pressed.
+        /// </summary>
+        /// <param name="pressed">True for pressed, false for not pressed.</param>
         public virtual void SetPressed(bool pressed)
         {
             isPressed = pressed;

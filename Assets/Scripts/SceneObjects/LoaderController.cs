@@ -89,7 +89,7 @@ namespace CellexalVR.SceneObjects
                     moveFloor = false;
                 }
             }
-            
+
 
             //if (timeEntered + 2 < Time.time && cellsEntered && !collidersDestroyed)
             //{
@@ -196,7 +196,7 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        [ConsoleCommand("loaderController", aliases: new string[] { "loadallcells", "lac" })]
+        //[ConsoleCommand("loaderController", aliases: new string[] { "loadallcells", "lac" })]
         // multiple_exp     public void LoadAllCells()
         // multiple_exp     {
         // multiple_exp         if (pathsToLoad.Count == 0)
@@ -235,6 +235,9 @@ namespace CellexalVR.SceneObjects
         // multiple_exp         pathsToLoad.Clear();
         // multiple_exp     }
 
+        /// <summary>
+        /// Removes all folders' colliders and gives the rigidbodies.
+        /// </summary>
         public void DestroyFolderColliders()
         {
             // foreach (Collider c in GetComponentsInChildren<Collider>()) {
@@ -280,6 +283,10 @@ namespace CellexalVR.SceneObjects
             inputFolderGenerator.DestroyFolders();
         }
 
+        /// <summary>
+        /// Reset everything back to the state it was before loading the data and returns the loading area.
+        /// </summary>
+        /// <param name="reset">True if everything should be deleted, false if only the loading area should be returned, and everything else kept.</param>
         public void ResetFolders(bool reset)
         {
             if (reset)

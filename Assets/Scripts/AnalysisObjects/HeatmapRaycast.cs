@@ -196,6 +196,11 @@ namespace CellexalVR.AnalysisObjects
             return x >= rectX && y >= rectY && x < rectX + rectWidth && y < rectY + rectHeight;
         }
 
+        /// <summary>
+        /// Handles what happens when the trigger is pressed.
+        /// </summary>
+        /// <param name="hitx">The x coordinate of the hit. Measured in pixels of the texture.</param>
+        /// <param name="hity">The y coordinate of the hit. Measured in pixels of the texture.</param>
         public void HandlePressDown(int hitx, int hity)
         {
             if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY, (int)selectedBoxWidth, (int)selectedBoxHeight))
@@ -537,7 +542,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Moves a part of the heatmap to another part. This can mean moving both rows and coloumns. Entire rows and coloumns and always moved and never split.
+        /// Moves a part of the heatmap to another part. This can mean moving both rows and coloumns. Entire rows and coloumns are always moved and never split.
         /// </summary>
         /// <param name="hitx">The x coordinate where the selection should be moved to.</param>
         /// <param name="hity">The y coordinate where the selection should be moved to.</param>
@@ -645,7 +650,7 @@ namespace CellexalVR.AnalysisObjects
                 }
                 else
                 {
-                    heatmapGenerator.BuildTexture(heatmap.groupWidths, heatmap.attributeWidths, heatmap);
+                    heatmapGenerator.BuildTexture(heatmap);
                 }
             }
         }

@@ -28,7 +28,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         public override void Click()
         {
-            StartCoroutine(attributeSubMenu.SelectAllAttributes(toggle));
+            StartCoroutine(attributeSubMenu.SelectAllAttributesCoroutine(toggle));
             toggle = !toggle;
         }
 

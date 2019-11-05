@@ -231,6 +231,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Starts the velocity particle system.
+        /// </summary>
         public void Play()
         {
             var colorBySpeedModule = particleSystem.colorBySpeed;
@@ -246,6 +249,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Stops the velocity particle system.
+        /// </summary>
         public void Stop()
         {
             particleSystem.Stop();

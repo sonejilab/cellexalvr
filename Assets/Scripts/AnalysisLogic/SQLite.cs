@@ -222,11 +222,9 @@ namespace SQLiter
             _connection.Close();
         }
 
-        public void ValidateDatabase()
-        {
-            QueryRunning = true;
-            StartCoroutine(ValidateDatabaseCoroutine());
-        }
+        /// <summary>
+        /// Validates the database by making sure that the correct tabels exists.
+        /// </summary>
         public IEnumerator ValidateDatabaseCoroutine()
         {
             string query = "select count(*) from sqlite_master where type='table' and name in ('genes', 'cells', 'datavalues');";

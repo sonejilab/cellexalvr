@@ -38,17 +38,25 @@ namespace CellexalVR.SceneObjects
             //}
 
         }
-
+        /// <summary>
+        /// Starts the pulse that goes outwards from the play area.
+        /// </summary>
         public void StartPulse()
         {
             gridMaterial.SetFloat("_PulseToggle", 1.0f);
         }
 
+        /// <summary>
+        /// Stops the pulse that goes outwards from the play area.
+        /// </summary>
         public void StopPulse()
         {
             gridMaterial.SetFloat("_PulseToggle", 0.0f);
         }
 
+        /// <summary>
+        /// Starts the wave that circles around the play area.
+        /// </summary>
         public void StartWave()
         {
             //gridMaterial.SetFloat("_PulseToggle", 0.0f);
@@ -70,6 +78,7 @@ namespace CellexalVR.SceneObjects
 
             gridMaterial.SetFloat("_WaveStartTime", -1f);
         }
+
         private IEnumerator ScriptFinished()
         {
             float waitTime = 0f;
