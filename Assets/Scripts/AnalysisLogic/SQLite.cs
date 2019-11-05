@@ -659,7 +659,7 @@ namespace SQLiter
                            "FROM ((datavalues " +
                            "INNER JOIN cells ON datavalues.cell_id = cells.id) " +
                            "INNER JOIN genes ON datavalues.gene_id = genes.id) " +
-                           "WHERE cname IN (" + cellNames + ") AND gname IN (" + geneNames + ")" +
+                           "WHERE cname IN (" + cellNames + ") AND gname IN (" + geneNames + ") " + 
                            "ORDER BY gname";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();

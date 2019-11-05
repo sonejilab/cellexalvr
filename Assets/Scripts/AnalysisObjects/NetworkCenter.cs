@@ -185,7 +185,7 @@ namespace CellexalVR.AnalysisObjects
             if (numColliders == 0)
             {
                 controllerInside = false;
-                controllerModelSwitcher.SwitchToDesiredModel();
+                //controllerModelSwitcher.SwitchToDesiredModel();
             }
         }
 

@@ -525,13 +525,13 @@ namespace CellexalVR.AnalysisLogic
 
 
             CellexalLog.Log("Reading " + result.Count + " results from database");
-            CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath);
-            //Thread thread = new Thread(() => CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath));
-            //thread.Start();
-            //while (thread.IsAlive)
-            //{
-            //    yield return null;
-            //}
+            //CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath);
+            Thread thread = new Thread(() => CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath));
+            thread.Start();
+            while (thread.IsAlive)
+            {
+                yield return null;
+            }
 
             // the thread is now done and the heatmap has been painted
             // copy the bitmap data over to a unity texture
@@ -637,7 +637,7 @@ namespace CellexalVR.AnalysisLogic
                 //}
                 //}
             }
-
+            heatmap.bitmap.Save(heatmapFilePath, ImageFormat.Png);
             graphics.Dispose();
 
         }
