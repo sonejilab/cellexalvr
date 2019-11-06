@@ -22,7 +22,7 @@ namespace CellexalVR.SceneObjects
             //CellexalEvents.HeatmapCreated.AddListener(StartWave);
             //CellexalEvents.NetworkCreated.AddListener(StartWave);
             CellexalEvents.ScriptFinished.AddListener(() => StartCoroutine(ScriptFinished()));
-            CellexalEvents.ScriptFinished.AddListener(StartWave);
+            //CellexalEvents.ScriptFinished.AddListener(StartWave);
         }
 
         // Update is called once per frame
@@ -82,14 +82,15 @@ namespace CellexalVR.SceneObjects
         private IEnumerator ScriptFinished()
         {
             float waitTime = 0f;
-            while (waitTime < 0.5f)
+            while (waitTime < 1.0f)
             {
                 waitTime += Time.deltaTime;
                 yield return null;
             }
-            if (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            if (!File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock"))
             {
                 StopPulse();
+                StartWave();
             }
         }
     }
