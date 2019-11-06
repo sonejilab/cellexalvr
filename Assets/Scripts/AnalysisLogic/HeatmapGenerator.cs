@@ -148,6 +148,10 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="name">If created via multiplayer. Name it the same as on other client.</param>
         public void CreateHeatmap(string name = "")
         {
+            if (selectionManager.groupCount < 2)
+            {
+                CellexalError.SpawnError("Could not create heatmap", "Not enough groups selected to create a heatmap");
+            }
             // name the heatmap "heatmap_X". Where X is some number.
             string heatmapName = "";
             if (name.Equals(string.Empty))

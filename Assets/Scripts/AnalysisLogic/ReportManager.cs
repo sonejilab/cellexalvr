@@ -70,6 +70,7 @@ namespace CellexalVR.AnalysisLogic
             }
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+            CellexalEvents.ScriptFinished.Invoke();
         }
 
         /// <summary>
