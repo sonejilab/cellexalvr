@@ -30,7 +30,7 @@ namespace CellexalVR.AnalysisLogic
         public SolidBrush[] expressionColors;
 
 
-        private GameObject calculatorCluster;
+        //private GameObject calculatorCluster;
         public SelectionManager selectionManager;
         private ArrayList data;
         private Thread t;
@@ -59,7 +59,7 @@ namespace CellexalVR.AnalysisLogic
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
-            calculatorCluster = referenceManager.calculatorCluster;
+            //calculatorCluster = referenceManager.calculatorCluster;
             //calculatorCluster.SetActive(false);
             GeneratingHeatmaps = false;
             CellexalEvents.ConfigLoaded.AddListener(InitColors);

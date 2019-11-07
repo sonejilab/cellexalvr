@@ -359,7 +359,6 @@ namespace CellexalVR.AnalysisLogic
 
                     fileIndex++;
                     // tell the graph that the info text is ready to be set
-                    combGraph.SetInfoText();
                     // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = true;
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
@@ -380,8 +379,9 @@ namespace CellexalVR.AnalysisLogic
                 // Add axes in bottom corner of graph and scale points differently
                 graphGenerator.SliceClustering();
                 graphGenerator.AddAxes(combGraph, axes);
+                combGraph.SetInfoText();
 
-                CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
+                CellexalLog.Log("Successfully read graph from " + graphFileName + " reading ~" + maximumItemsPerFrame + " lines every frame");
                 //combinedGraphGenerator.isCreating = false;
             }
 

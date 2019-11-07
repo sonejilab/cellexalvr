@@ -94,7 +94,7 @@ namespace CellexalVR.AnalysisLogic
 
             //print(graphName + " - " + graph.GraphName);
 
-            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.pointsPositions.Capacity);
+            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
 
             using (FileStream stream = new FileStream(path, FileMode.Open))
             using (StreamReader reader = new StreamReader(stream))

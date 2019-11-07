@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,16 @@ namespace CellexalVR.AnalysisObjects
         public Material arrowParticleMaterial;
         public Material circleParticleMaterial;
 
-        public float ArrowEmitRate { get; set; }
+        private float arrowEmitRate;
+        public float ArrowEmitRate
+        {
+            get => arrowEmitRate;
+            set
+            {
+                arrowEmitRate = value;
+                itemsPerFrameConstant = emitOrder.Length / (ArrowEmitRate * 90);
+            }
+        }
 
         public float Threshold { get; set; }
 
@@ -38,15 +48,29 @@ namespace CellexalVR.AnalysisObjects
 
         public Dictionary<Graph.GraphPoint, Vector3> Velocities
         {
+            //get
+            //{
+            //    Dictionary<Graph.GraphPoint, Vector3> result = new Dictionary<Graph.GraphPoint, Vector3>(emitOrder.Length);
+            //    foreach (var tuple in emitOrder)
+            //    {
+            //        result[tuple.Item1] = tuple.Item2;
+            //    }
+            //    return result;
+            //}
             set
             {
-                emitOrder = new List<KeyValuePair<Graph.GraphPoint, Vector3>>(value);
-                itemsPerFrameConstant = emitOrder.Count / (ArrowEmitRate * 90);
-                greatestVelocity = Mathf.Sqrt(emitOrder.Max((kvp) => kvp.Value.sqrMagnitude));
-
+                emitOrder = new Tuple<Graph.GraphPoint, Vector3>[value.Count];
+                int i = 0;
+                foreach (var kvp in value)
+                {
+                    emitOrder[i] = new Tuple<Graph.GraphPoint, Vector3>(kvp.Key, kvp.Value);
+                    i++;
+                }
+                itemsPerFrameConstant = emitOrder.Length / (ArrowEmitRate * 90);
+                greatestVelocity = Mathf.Sqrt(value.Max((kvp) => kvp.Value.sqrMagnitude));
             }
         }
-        private List<KeyValuePair<Graph.GraphPoint, Vector3>> emitOrder;
+        private Tuple<Graph.GraphPoint, Vector3>[] emitOrder = new Tuple<Graph.GraphPoint, Vector3>[0];
 
         private bool constantEmitOverTime = true;
         public bool ConstantEmitOverTime
@@ -64,8 +88,29 @@ namespace CellexalVR.AnalysisObjects
         private bool useGraphPointColors;
         public bool UseGraphPointColors { get; set; }
 
+        private float startSize = 1f;
         private bool useArrowParticle = true;
-        public bool UseArrowParticle { get; set; }
+        public bool UseArrowParticle
+        {
+            get => useArrowParticle;
+            set
+            {
+                useArrowParticle = value;
+                ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+                if (!useArrowParticle)
+                {
+                    startSize = 0.004f;
+                    renderer.material = circleParticleMaterial;
+                    renderer.renderMode = ParticleSystemRenderMode.Billboard;
+                }
+                else
+                {
+                    startSize = 1f;
+                    renderer.material = arrowParticleMaterial;
+                    renderer.renderMode = ParticleSystemRenderMode.Stretch;
+                }
+            }
+        }
 
 
         private float oldArrowEmitRate;
@@ -74,6 +119,7 @@ namespace CellexalVR.AnalysisObjects
         private Coroutine currentEmitCoroutine;
         private int nFramesAboveTimeThreshold = 0;
         private float greatestVelocity;
+
 
         private void Start()
         {
@@ -97,7 +143,6 @@ namespace CellexalVR.AnalysisObjects
             if (oldArrowEmitRate != ArrowEmitRate)
             {
                 oldArrowEmitRate = ArrowEmitRate;
-                itemsPerFrameConstant = emitOrder.Count / (ArrowEmitRate * 90);
                 Stop();
                 Play();
             }
@@ -128,57 +173,44 @@ namespace CellexalVR.AnalysisObjects
             Vector3 offset = graphPointMesh.normals[0] * graphPointMesh.bounds.extents.x / 2f;
 
             var emitParams = new ParticleSystem.EmitParams();
-            if (!UseArrowParticle)
-            {
-                //ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
-                emitParams.startSize = 0.004f;
-                ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
-                renderer.material = circleParticleMaterial;
-                renderer.renderMode = ParticleSystemRenderMode.Billboard;
-            }
-            else
-            {
-                emitParams.startSize = 1f;
-                ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
-                renderer.material = arrowParticleMaterial;
-                renderer.renderMode = ParticleSystemRenderMode.Stretch;
-            }
+            emitParams.startSize = startSize;
+
             int nItems = 0;
             int nextYield = ConstantEmitOverTime ? (int)itemsPerFrameConstant : itemsPerFrame;
             int yieldsSoFar = 0;
             float sqrThreshold = Threshold * Threshold;
 
-            if (ConstantEmitOverTime)
-            {
-                for (int i = 0; i < emitOrder.Count - 2; ++i)
-                {
-                    int j = UnityEngine.Random.Range(i, emitOrder.Count);
-                    var temp = emitOrder[i];
-                    emitOrder[i] = emitOrder[j];
-                    emitOrder[j] = temp;
-                }
-            }
+            //if (ConstantEmitOverTime)
+            //{
+            //    for (int i = 0; i < emitOrder.Length - 2; ++i)
+            //    {
+            //        int j = UnityEngine.Random.Range(i, emitOrder.Length);
+            //        var temp = emitOrder[i];
+            //        emitOrder[i] = emitOrder[j];
+            //        emitOrder[j] = temp;
+            //    }
+            //}
 
             do
             {
                 //stopwatch.Restart();
 
-                if (nextYield > emitOrder.Count)
+                if (nextYield > emitOrder.Length)
                 {
-                    nextYield = emitOrder.Count;
+                    nextYield = emitOrder.Length;
                 }
                 // emit one round of particles
                 for (; nItems < nextYield; ++nItems)
                 {
-                    var keyValuePair = emitOrder[nItems];
-                    if (keyValuePair.Value.sqrMagnitude > sqrThreshold)
+                    var graphPoint = emitOrder[nItems];
+                    if (graphPoint.Item2.sqrMagnitude > sqrThreshold)
                     {
-                        emitParams.position = keyValuePair.Key.Position - offset; // + keyValuePair.Value.normalized * graphPointMeshSize;
-                        emitParams.velocity = keyValuePair.Value;
+                        emitParams.position = graphPoint.Item1.Position - offset; // + keyValuePair.Value.normalized * graphPointMeshSize;
+                        emitParams.velocity = graphPoint.Item2;
 
                         if (UseGraphPointColors)
                         {
-                            emitParams.startColor = keyValuePair.Key.GetColor();
+                            emitParams.startColor = graphPoint.Item1.GetColor();
                         }
                         particleSystem.Emit(emitParams, 1);
                     }
@@ -216,7 +248,7 @@ namespace CellexalVR.AnalysisObjects
                     nextYield += itemsPerFrame;
                 }
 
-            } while (nItems < emitOrder.Count);
+            } while (nItems < emitOrder.Length);
 
             if (constantEmitOverTime)
             {
@@ -238,6 +270,18 @@ namespace CellexalVR.AnalysisObjects
             var colorBySpeedModule = particleSystem.colorBySpeed;
             Vector2 range = new Vector2(0, greatestVelocity);
             colorBySpeedModule.range = range;
+
+            if (ConstantEmitOverTime)
+            {
+                for (int i = 0; i < emitOrder.Length - 2; ++i)
+                {
+                    int j = UnityEngine.Random.Range(i, emitOrder.Length);
+                    var temp = emitOrder[i];
+                    emitOrder[i] = emitOrder[j];
+                    emitOrder[j] = temp;
+                }
+            }
+
             if (constantEmitOverTime)
             {
                 DoEmit();

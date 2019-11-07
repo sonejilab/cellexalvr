@@ -211,7 +211,6 @@ namespace CellexalVR.AnalysisObjects
         {
             Graph.GraphPoint gp = new Graph.GraphPoint(cell.Label, x, y, z, newGraph);
             newGraph.points[cell.Label] = gp;
-            newGraph.pointsPositions.Add(new Vector3(x, y, z));
             cell.AddGraphPoint(gp);
             UpdateMinMaxCoords(x, y, z);
             //print("adding points to - " + newGraph.gameObject.name + " - " + newGraph.points.Count);
@@ -268,8 +267,8 @@ namespace CellexalVR.AnalysisObjects
         {
             ScaleAllCoordinates();
 
-            // meshes in unity can have a max of 65534 vertices
-            int maxVerticesPerMesh = 65534;
+            // meshes in unity can have a max of 65535 vertices
+            int maxVerticesPerMesh = 65535;
             nbrOfMaxPointsPerClusters = maxVerticesPerMesh / meshToUse.vertexCount;
             // place all points in one big cluster
             var firstCluster = new HashSet<Graph.GraphPoint>();
@@ -291,12 +290,13 @@ namespace CellexalVR.AnalysisObjects
             //firstCluster.IntersectWith(newGraph.points.Values);
 
             List<HashSet<Graph.GraphPoint>> clusters = SplitCluster(firstCluster);
+
             MakeMeshes(clusters);
         }
 
 
         /// <summary>
-        /// Helper method for clustering. Splits the first cluster.
+        /// Helper method for clustering. Splits the first cluster. This will remove duplicate points that end up on the same position.
         /// </summary>
         /// <param name="cluster">A cluster containing all the points in the graph.</param>
         /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
@@ -307,7 +307,17 @@ namespace CellexalVR.AnalysisObjects
             newGraph.octreeRoot.size = new Vector3(1f, 1f, 1f);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            List<HashSet<Graph.GraphPoint>> clusters = SplitClusterRecursive(cluster, newGraph.octreeRoot, true);
+            List<Graph.GraphPoint> removedDuplicates = new List<Graph.GraphPoint>();
+            List<HashSet<Graph.GraphPoint>> clusters = SplitClusterRecursive(cluster, newGraph.octreeRoot, true, ref removedDuplicates);
+            // remove the duplicates
+            foreach (var c in clusters)
+            {
+                foreach (var gp in removedDuplicates)
+                {
+                    c.Remove(gp);
+                    referenceManager.cellManager.GetCell(gp.Label).GraphPoints.Remove(gp);
+                }
+            }
             // add colliders
             foreach (Graph.OctreeNode node in newGraph.octreeRoot.children)
             {
@@ -325,9 +335,13 @@ namespace CellexalVR.AnalysisObjects
         /// Helper method for clustering. Divides one cluster into up to eight smaller clusters if it is too large and returns the non-empty new clusters.
         /// </summary>
         /// <param name="cluster">The cluster to split.</param>
+        /// <param name="node">The current Octree node to add points and children to.</param>
+        /// <param name="addClusters">True if we are yet to add clusters to return, the result is used for generating meshes.</param>
         /// <returns>A <see cref="List{T}"/> of <see cref="HashSet{T}"/> that each contain one cluster.</returns>
-        private List<HashSet<Graph.GraphPoint>> SplitClusterRecursive(HashSet<Graph.GraphPoint> cluster, Graph.OctreeNode node, bool addClusters)
+        private List<HashSet<Graph.GraphPoint>> SplitClusterRecursive(HashSet<Graph.GraphPoint> cluster, Graph.OctreeNode node, bool addClusters, ref List<Graph.GraphPoint> removedDuplicates)
         {
+
+            //removedDuplicates = new List<Graph.GraphPoint>();
             var result = new List<HashSet<Graph.GraphPoint>>();
             float graphpointMeshSize = meshToUse.bounds.size.x;
             float graphpointMeshExtent = graphpointMeshSize / 2f;
@@ -392,13 +406,22 @@ namespace CellexalVR.AnalysisObjects
             node.size = new Vector3(maxX - minX + graphpointMeshSize, maxY - minY + graphpointMeshSize, maxZ - minZ + graphpointMeshSize);
             Vector3 nodeSize = node.size;
 
-            // nodeSize.magnitude < 0.00031622776
-            if (maxX - minX < 0.0000001f && maxY - minY < 0.0000001f && maxZ - minZ < 0.0000001f)
+            // nodeSize.magnitude < 0.000031622776
+            if (maxX == minX && maxY == minY && maxZ == minZ)
             {
                 CellexalLog.Log("Removed " + (cluster.Count - 1) + " duplicate point(s) at position " + V2S(node.pos));
+                foreach (var gp in cluster)
+                {
+                    if (gp != firstPoint)
+                    {
+                        newGraph.points.Remove(gp.Label);
+                        removedDuplicates.Add(gp);
+                    }
+                }
                 cluster.Clear();
                 cluster.Add(firstPoint);
-                return SplitClusterRecursive(cluster, node, addClusters);
+
+                return SplitClusterRecursive(cluster, node, addClusters, ref removedDuplicates);
             }
 
             // initialise new clusters
@@ -472,7 +495,7 @@ namespace CellexalVR.AnalysisObjects
             //call recursively for each new cluster
             for (int i = 0; i < newClusters.Count; ++i)
             {
-                var returnedClusters = SplitClusterRecursive(newClusters[i], node.children[i], addClusters);
+                var returnedClusters = SplitClusterRecursive(newClusters[i], node.children[i], addClusters, ref removedDuplicates);
                 if (returnedClusters != null)
                 {
                     result.AddRange(returnedClusters);
