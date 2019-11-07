@@ -71,6 +71,11 @@ namespace CellexalVR.Multiuser
             {
                 PhotonNetwork.playerName = "Guest" + Random.Range(1, 9999);
             }
+            if (Screen.width > 1920)
+            {
+                WidthAndHeight = new Vector2(1280, 1024);
+            }
+
 
             // if you wanted more debug out, turn this on:
             // PhotonNetwork.logLevel = NetworkLogLevel.Full;
