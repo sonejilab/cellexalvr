@@ -17,14 +17,16 @@ namespace CellexalVR.Multiuser
     {
         public GUISkin Skin;
         public GameObject mainMenu;
-        public Vector2 WidthAndHeight = new Vector2(1200, 800);
+        public Vector2 WidthAndHeight = new Vector2(800, 600);
         private string roomName = "myLab";
         private string password = "";
         private string roomAndPass = "";
         private int selGridInt = 0;
-        private float virtualWidth = 1920.0f;
-        private float virtualHeight = 1080.0f;
         private Matrix4x4 matrix;
+        private float buttonWidth;
+        private float sizeMultiplier = 1;
+        private int fontsize = 14;
+        private GUIStyle guiStyle = new GUIStyle();
 
         private Vector2 scrollPos = Vector2.zero;
 
@@ -74,15 +76,9 @@ namespace CellexalVR.Multiuser
             // PhotonNetwork.logLevel = NetworkLogLevel.Full;
         }
 
-        private void Start()
-        {
-            matrix = Matrix4x4.TRS (Vector3.zero, Quaternion.identity, new Vector3(Screen.width/virtualWidth, Screen.height/virtualHeight, 1.0f));
-        }
 
         public void OnGUI()
         {
-            GUI.matrix = matrix;
-
             if (this.Skin != null)
             {
                 GUI.skin = this.Skin;
@@ -118,7 +114,7 @@ namespace CellexalVR.Multiuser
             Rect content = new Rect((Screen.width - this.WidthAndHeight.x) / 2, (Screen.height - this.WidthAndHeight.y) / 2, this.WidthAndHeight.x, this.WidthAndHeight.y);
             GUI.Box(content, "Join or Create Room");
             GUILayout.BeginArea(content);
-            
+
 
             GUILayout.Space(80);
 
@@ -140,9 +136,9 @@ namespace CellexalVR.Multiuser
             GUILayout.EndHorizontal();
             GUILayout.Space(15);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Password: \n(4 digit code)");
+            GUILayout.Label("Password(4 digit code): ");
 
-            this.password = GUILayout.PasswordField(this.password, "*"[0], 4);
+            this.password = GUILayout.PasswordField(this.password, "*"[0], 4, GUILayout.MaxWidth(100));
 
             this.roomAndPass = this.roomName + this.password;
 

@@ -8,16 +8,25 @@ using UnityEngine;
 namespace CellexalVR.DesktopUI
 {
 
-    public class SetRScript : MonoBehaviour
+    public class LauncherMenuPanel : MonoBehaviour
     {
 
-        public TMP_InputField inputField;
+        public TMP_InputField rScriptInputField;
+        public TMP_InputField usernameInputField;
 
         private string configDir;
         private string configPath;
         private string sampleConfigPath;
         // Use this for initialization
         void Start()
+        {
+            ReadConfig();
+        }
+
+        /// <summary>
+        /// If a config file exists reads it in and sets the R path to the one in the config.
+        /// </summary>
+        private void ReadConfig()
         {
             configDir = Directory.GetCurrentDirectory() + @"\Config";
             configPath = configDir + @"\config.xml";
@@ -46,8 +55,7 @@ namespace CellexalVR.DesktopUI
             {
                 CrossSceneInformation.RScriptPath = CellexalConfig.Config.RscriptexePath;
             }
-            inputField.text = CellexalConfig.Config.RscriptexePath;
-
+            rScriptInputField.text = CellexalConfig.Config.RscriptexePath;
 
         }
 
@@ -59,6 +67,10 @@ namespace CellexalVR.DesktopUI
 
         public void SetRScriptPath(string[] paths)
         {
+            if (paths == null)
+            {
+                paths[0] = rScriptInputField.text;
+            }
             if (paths.Length == 1)
             {
                 string path = paths[0];
@@ -66,7 +78,7 @@ namespace CellexalVR.DesktopUI
                 {
                     bool hasChanged = path != CellexalConfig.Config.RscriptexePath;
                     CrossSceneInformation.RScriptPath = path;
-                    inputField.text = path;
+                    rScriptInputField.text = path;
                     if (hasChanged)
                     {
                         CellexalConfig.Config.RscriptexePath = path;
@@ -91,9 +103,25 @@ namespace CellexalVR.DesktopUI
                 }
                 else
                 {
-                    inputField.text = "Failed to find R path";
+                    rScriptInputField.text = "Failed to find R path";
                 }
             }
+        }
+
+        public void SetUsername()
+        {
+            //CrossSceneInformation.Username = usernameInputField.text;
+            CellexalUser.Username = usernameInputField.text;
+
+        }
+
+        public void Quit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

@@ -19,6 +19,7 @@ using TMPro;
 using CellexalVR.General;
 using System.IO;
 using System.Xml.Serialization;
+using CellexalVR.DesktopUI;
 
 namespace CellexalVR.Multiuser
 {
@@ -35,6 +36,7 @@ namespace CellexalVR.Multiuser
         //[Tooltip("The UI Label to inform the user that the connection is in progress")]
         //public GameObject progressLabel;
         public TMP_InputField inputField;
+        public LauncherMenuPanel launcherMenuPanel;
 
         #endregion
 
@@ -180,7 +182,8 @@ namespace CellexalVR.Multiuser
         public void ConnectSinglePlayer()
         {
             CrossSceneInformation.Tutorial = false;
-            SetRScriptPath();
+            launcherMenuPanel.SetRScriptPath(new string[0]);
+            launcherMenuPanel.SetUsername();
             SceneManager.LoadScene("CellexalVR_Main_Scene");
         }
 
@@ -190,7 +193,7 @@ namespace CellexalVR.Multiuser
         public void ConnectTutorialScene()
         {
             CrossSceneInformation.Tutorial = true;
-            SetRScriptPath();
+            launcherMenuPanel.SetRScriptPath(new string[0]);
             SceneManager.LoadScene("IntroTutorialScene");
         }
 
