@@ -70,6 +70,7 @@ namespace CellexalVR.AnalysisLogic
             }
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
+            CellexalEvents.ScriptFinished.Invoke();
         }
 
         /// <summary>
@@ -106,6 +107,7 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
 
+            yield return null;
             CellexalEvents.ScriptFinished.Invoke();
             saveButton.changeSprite = false;
             saveButton.descriptionText.text = "";
@@ -159,9 +161,10 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
             heatmap.saveImageButton.FinishedButton();
             heatmap.statusText.text = "";
+            yield return null;
             CellexalEvents.ScriptFinished.Invoke();
             heatmap.removable = false;
-           //saveImageButton.SetButtonActivated(true);
+            //saveImageButton.SetButtonActivated(true);
         }
 
         /// <summary>
@@ -271,6 +274,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
             nc.saveImageButton.FinishedButton();
             //handler.runningScript = false;
+            yield return null;
             CellexalEvents.ScriptFinished.Invoke();
             nc.saveImageButton.descriptionText.text = "";
 

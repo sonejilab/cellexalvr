@@ -39,16 +39,11 @@ namespace CellexalVR.General
         /// </summary>
         public void GenerateList()
         {
-            //ClearList();
+            ClearList();
             if (Directory.Exists(CellexalUser.UserSpecificFolder))
                 htmlFiles = Directory.GetFiles(CellexalUser.UserSpecificFolder, "*.html");
             foreach (string file in htmlFiles)
             {
-                if (files.Contains(file))
-                {
-                    // Node is already in list. Skip it and move on..
-                    continue;
-                }
                 GameObject newNode = Instantiate(reportNodePrefab, Vector3.zero, Quaternion.identity);
                 newNode.transform.parent = transform;
                 newNode.transform.localPosition = new Vector3(0, 0, -heightIncrement * nrOfNodes);
@@ -70,6 +65,7 @@ namespace CellexalVR.General
             foreach (ClickableReportPanel node in GetComponentsInChildren<ClickableReportPanel>())
             {
                 Destroy(node.gameObject);
+                files.Remove(node.name);
             }
             nrOfNodes = 0;
         }

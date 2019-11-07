@@ -36,6 +36,7 @@ namespace CellexalVR.General
         [HideInInspector]
         public int fileCreationCtr = 0;
         public ushort hapticIntensity = 2000;
+        public int groupCount;
 
         private SelectionFromPreviousMenu previousSelectionMenu;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -487,8 +488,14 @@ namespace CellexalVR.General
             DumpSelectionToTextFile();
             lastSelectedCells.Clear();
             IEnumerable<Graph.GraphPoint> uniqueCells = selectedCells.Reverse<Graph.GraphPoint>().Distinct().Reverse();
+            List<int> groups = new List<int>();
             foreach (Graph.GraphPoint gp in uniqueCells)
             {
+                if (!groups.Contains(gp.Group))
+                {
+                    groups.Add(gp.Group);
+                }
+
                 //if (gp.CustomColor)
                 //    gp.SetOutLined(false, gp.Material.color);
                 //else
@@ -505,6 +512,7 @@ namespace CellexalVR.General
                 lastSelectedCells.Add(gp);
                 gp.unconfirmedInSelection = false;
             }
+            groupCount = groups.Count;
             //previousSelectionMenu.CreateButton(selectedCells);
             // clear the list since we are done with it
             selectedCells.Clear();
