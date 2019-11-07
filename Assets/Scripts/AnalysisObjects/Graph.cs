@@ -41,7 +41,6 @@ namespace CellexalVR.AnalysisObjects
         public bool GraphActive = true;
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();
         public Dictionary<string, GraphPoint> subSelectionPoints = new Dictionary<string, GraphPoint>();
-        public List<Vector3> pointsPositions;
         public ReferenceManager referenceManager;
         public List<GameObject> graphPointClusters = new List<GameObject>();
         public int textureWidth;
