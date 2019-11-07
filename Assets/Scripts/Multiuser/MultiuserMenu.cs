@@ -121,8 +121,8 @@ namespace CellexalVR.Multiuser
             // Player name
             GUILayout.BeginHorizontal();
             GUILayout.Label("Player Name:");
-            PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName);
-            GUILayout.Space(158);
+            PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName, GUILayout.Width(200));
+            GUILayout.Space(400);
 
             GUILayout.EndHorizontal();
 
@@ -130,15 +130,15 @@ namespace CellexalVR.Multiuser
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Room Name:");
-            this.roomName = GUILayout.TextField(this.roomName);
-            GUILayout.Space(158);
+            this.roomName = GUILayout.TextField(this.roomName, GUILayout.Width(200));
+            GUILayout.Space(400);
 
             GUILayout.EndHorizontal();
             GUILayout.Space(15);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Password(4 digit code): ");
-
             this.password = GUILayout.PasswordField(this.password, "*"[0], 4, GUILayout.MaxWidth(100));
+            GUILayout.Space(400);
 
             this.roomAndPass = this.roomName + this.password;
 
