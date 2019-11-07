@@ -74,6 +74,10 @@ namespace CellexalVR.Multiuser
 
             // if you wanted more debug out, turn this on:
             // PhotonNetwork.logLevel = NetworkLogLevel.Full;
+            if (Screen.width > 1920)
+            {
+                WidthAndHeight = new Vector2(1280, 1024);
+            }
         }
 
 

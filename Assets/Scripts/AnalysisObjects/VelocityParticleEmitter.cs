@@ -96,18 +96,21 @@ namespace CellexalVR.AnalysisObjects
             set
             {
                 useArrowParticle = value;
-                ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
-                if (!useArrowParticle)
+                if (particleSystem != null)
                 {
-                    startSize = 0.004f;
-                    renderer.material = circleParticleMaterial;
-                    renderer.renderMode = ParticleSystemRenderMode.Billboard;
-                }
-                else
-                {
-                    startSize = 1f;
-                    renderer.material = arrowParticleMaterial;
-                    renderer.renderMode = ParticleSystemRenderMode.Stretch;
+                    ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+                    if (renderer != null && !useArrowParticle)
+                    {
+                        startSize = 0.004f;
+                        renderer.material = circleParticleMaterial;
+                        renderer.renderMode = ParticleSystemRenderMode.Billboard;
+                    }
+                    else
+                    {
+                        startSize = 1f;
+                        renderer.material = arrowParticleMaterial;
+                        renderer.renderMode = ParticleSystemRenderMode.Stretch;
+                    }
                 }
             }
         }
