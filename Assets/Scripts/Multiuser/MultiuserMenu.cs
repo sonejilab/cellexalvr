@@ -17,11 +17,14 @@ namespace CellexalVR.Multiuser
     {
         public GUISkin Skin;
         public GameObject mainMenu;
-        public Vector2 WidthAndHeight = new Vector2(600, 500);
+        public Vector2 WidthAndHeight = new Vector2(1200, 800);
         private string roomName = "myLab";
         private string password = "";
         private string roomAndPass = "";
         private int selGridInt = 0;
+        private float virtualWidth = 1920.0f;
+        private float virtualHeight = 1080.0f;
+        private Matrix4x4 matrix;
 
         private Vector2 scrollPos = Vector2.zero;
 
@@ -71,8 +74,15 @@ namespace CellexalVR.Multiuser
             // PhotonNetwork.logLevel = NetworkLogLevel.Full;
         }
 
+        private void Start()
+        {
+            matrix = Matrix4x4.TRS (Vector3.zero, Quaternion.identity, new Vector3(Screen.width/virtualWidth, Screen.height/virtualHeight, 1.0f));
+        }
+
         public void OnGUI()
         {
+            GUI.matrix = matrix;
+
             if (this.Skin != null)
             {
                 GUI.skin = this.Skin;
@@ -108,12 +118,13 @@ namespace CellexalVR.Multiuser
             Rect content = new Rect((Screen.width - this.WidthAndHeight.x) / 2, (Screen.height - this.WidthAndHeight.y) / 2, this.WidthAndHeight.x, this.WidthAndHeight.y);
             GUI.Box(content, "Join or Create Room");
             GUILayout.BeginArea(content);
+            
 
             GUILayout.Space(80);
 
             // Player name
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Player Name:", GUILayout.Width(200));
+            GUILayout.Label("Player Name:");
             PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName);
             GUILayout.Space(158);
 
@@ -122,16 +133,16 @@ namespace CellexalVR.Multiuser
             GUILayout.Space(15);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Room Name:", GUILayout.Width(200));
+            GUILayout.Label("Room Name:");
             this.roomName = GUILayout.TextField(this.roomName);
             GUILayout.Space(158);
 
             GUILayout.EndHorizontal();
             GUILayout.Space(15);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Password: \n(4 digit code)", GUILayout.Width(200));
+            GUILayout.Label("Password: \n(4 digit code)");
 
-            this.password = GUILayout.PasswordField(this.password, "*"[0], 4, GUILayout.Width(100));
+            this.password = GUILayout.PasswordField(this.password, "*"[0], 4);
 
             this.roomAndPass = this.roomName + this.password;
 
@@ -142,12 +153,12 @@ namespace CellexalVR.Multiuser
             //this.roomName = GUILayout.TextField(this.roomName);
             // Join room by title
             // Create a room (fails if exist or if password does not comply with rules!)
-            if (GUILayout.Button("Create Room", GUILayout.Width(200)))
+            if (GUILayout.Button("Create Room"))
             {
                 int n;
                 if (this.password.Length == 4 && int.TryParse(this.password, out n))
                 {
-                    print("Create room: " + this.roomAndPass);
+                    //print("Create room: " + this.roomAndPass);
                     PhotonNetwork.CreateRoom(this.roomAndPass.ToLower(), new RoomOptions() { MaxPlayers = 10 }, null);
                 }
                 if (!(this.password.Length == 4) || !int.TryParse(this.password, out n))
@@ -156,7 +167,7 @@ namespace CellexalVR.Multiuser
 
                 }
             }
-            if (GUILayout.Button("Join Room", GUILayout.Width(200)))
+            if (GUILayout.Button("Join Room"))
             {
                 PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
             }
@@ -221,7 +232,7 @@ namespace CellexalVR.Multiuser
 
             //GUILayout.Space(20);
 
-            if (GUILayout.Button("Go Back", GUILayout.Width(200)))
+            if (GUILayout.Button("Go Back", GUILayout.MinHeight(50)))
             {
                 this.gameObject.SetActive(false);
                 mainMenu.SetActive(true);
