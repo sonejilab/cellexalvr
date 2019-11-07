@@ -65,10 +65,17 @@ namespace CellexalVR.DesktopUI
 
         }
 
+
+        public void SetRScriptPath()
+        {
+            SetRScriptPath(new string[1]);
+        }
+
         public void SetRScriptPath(string[] paths)
         {
             if (paths == null)
             {
+                paths = new string[1];
                 paths[0] = rScriptInputField.text;
             }
             if (paths.Length == 1)

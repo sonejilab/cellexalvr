@@ -67,10 +67,6 @@ namespace CellexalVR.Multiuser
             }
 
             // generate a name for this player, if none is assigned yet
-            if (String.IsNullOrEmpty(PhotonNetwork.playerName))
-            {
-                PhotonNetwork.playerName = "Guest" + Random.Range(1, 9999);
-            }
             if (Screen.width > 1920)
             {
                 WidthAndHeight = new Vector2(1280, 1024);
@@ -83,6 +79,18 @@ namespace CellexalVR.Multiuser
             {
                 WidthAndHeight = new Vector2(1280, 1024);
             }
+        }
+
+        private void Start()
+        {
+            print(PhotonNetwork.playerName);
+            if (String.IsNullOrEmpty(PhotonNetwork.playerName))
+            {
+                print(CellexalUser.Username);
+                PhotonNetwork.playerName = CellexalUser.Username;
+                //PhotonNetwork.playerName = "Guest" + Random.Range(1, 9999);
+            }
+
         }
 
 
@@ -177,8 +185,8 @@ namespace CellexalVR.Multiuser
                 PhotonNetwork.JoinRoom(this.roomAndPass.ToLower());
             }
 
-            
-            string[] selStrings = {"Normal VR View", "VR Spectator View", "Desktop Spectator View \n Non-VR"};
+
+            string[] selStrings = { "Normal VR View", "VR Spectator View", "Desktop Spectator View \n Non-VR" };
 
             selGridInt = GUILayout.SelectionGrid(selGridInt, selStrings, 1);
             switch (selGridInt)

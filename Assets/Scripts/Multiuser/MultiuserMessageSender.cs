@@ -102,7 +102,7 @@ namespace CellexalVR.Multiuser
                     }
                     if (!PhotonNetwork.isMasterClient)
                     {
-                        coordinator = PhotonNetwork.Instantiate("ClientCoordinator", Vector3.zero, Quaternion.identity, 0).GetComponent<MultiuserMessageReciever>();
+                        coordinator = PhotonNetwork.Instantiate("MultiuserMessageReciever", Vector3.zero, Quaternion.identity, 0).GetComponent<MultiuserMessageReciever>();
                     }
                 }
                 else
@@ -116,7 +116,7 @@ namespace CellexalVR.Multiuser
         {
             if (coordinator == null && multiplayer)
             {
-                coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<MultiuserMessageReciever>();
+                coordinator = GameObject.Find("MultiuserMessageReciever(Clone)").GetComponent<MultiuserMessageReciever>();
             }
 
         }
