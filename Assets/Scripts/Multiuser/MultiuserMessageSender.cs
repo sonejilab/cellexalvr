@@ -793,7 +793,7 @@ namespace CellexalVR.Multiuser
         private IEnumerator FindClientCoordinator()
         {
             yield return new WaitForSeconds(2f);
-            if ((coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<MultiuserMessageReciever>()) == null)
+            if ((coordinator = GameObject.Find("MultiuserMessageReciever(Clone)").GetComponent<MultiuserMessageReciever>()) == null)
             {
                 StartCoroutine(FindClientCoordinator());
             }
@@ -806,7 +806,7 @@ namespace CellexalVR.Multiuser
         private IEnumerator FindServerCoordinator()
         {
             yield return new WaitForSeconds(2f);
-            if ((coordinator = GameObject.Find("ClientCoordinator(Clone)").GetComponent<MultiuserMessageReciever>()) == null)
+            if ((coordinator = GameObject.Find("MultiuserMessageReciever(Clone)").GetComponent<MultiuserMessageReciever>()) == null)
             {
                 StartCoroutine(FindServerCoordinator());
             }
