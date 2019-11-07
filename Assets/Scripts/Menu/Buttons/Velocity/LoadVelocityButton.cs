@@ -67,7 +67,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
         {
             var velocityGenerator = referenceManager.velocityGenerator;
             Graph graphToActivate = subGraph != null ? subGraph : graph;
-            velocityGenerator.ActiveGraphs.ForEach((g) => print("activegraphs: " + g));
+            //velocityGenerator.ActiveGraphs.ForEach((g) => print("activegraphs: " + g));
             bool startVelocity = !velocityGenerator.ActiveGraphs.Contains(graphToActivate);
             if (startVelocity)
             {
