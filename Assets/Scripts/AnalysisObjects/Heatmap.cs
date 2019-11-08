@@ -290,9 +290,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ResetHeatmapHighlight()
         {
-            highlightQuad.SetActive(false);
             highlightInfoText.text = "";
-            highlightGeneText.text = "";
             barInfoText.text = "";
             enlargedGeneText.gameObject.SetActive(false);
         }
