@@ -19,6 +19,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             selectionManager.RecolorSelectionPoints();
+            referenceManager.multiuserMessageSender.SendMessageRecolorSelectionPoints();
         }
 
         // Use this for initialization

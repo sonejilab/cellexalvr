@@ -73,14 +73,14 @@ namespace CellexalVR.DesktopUI
 
         public void SetRScriptPath(string[] paths)
         {
-            if (paths == null)
+            if (paths[0] == null)
             {
-                paths = new string[1];
                 paths[0] = rScriptInputField.text;
             }
             if (paths.Length == 1)
             {
                 string path = paths[0];
+                print(path);
                 if (File.Exists(path) && path.Contains(".exe"))
                 {
                     bool hasChanged = path != CellexalConfig.Config.RscriptexePath;

@@ -28,8 +28,9 @@ namespace CellexalVR.Interaction
             if (!keyboardHandler.Text().Equals(string.Empty))
             {
                 keyboardHandler.OnAnnotate.Invoke(keyboardHandler.Text());
-                keyboardHandler.Clear();
+                keyboardHandler.Clear(true);
             }
+
         }
     }
 }

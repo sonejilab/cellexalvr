@@ -232,6 +232,14 @@ namespace CellexalVR.Multiuser
             CellexalLog.Log("Recieved message to calculate genes correlated to " + geneName);
             referenceManager.correlatedGenesList.CalculateCorrelatedGenes(geneName, Definitions.Measurement.GENE);
         }
+
+        [PunRPC]
+        public void RecieveMessageRecolorSelectionPoints()
+        {
+            CellexalLog.Log("Recieved message to recolor graph points by current selection");
+            referenceManager.selectionManager.RecolorSelectionPoints();
+        }
+
         #endregion
 
         #region Selection
@@ -497,71 +505,165 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move heatmap - Error: " + e);
+                }
+            }
         }
 
         [PunRPC]
         public void RecieveMessageConfirmSelection(string heatmapName, int hitx, int hity, int selectionStartX, int selectionStartY)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move heatmap - Error: " + e);
+                }
+            }
         }
 
         [PunRPC]
         public void RecieveMessageHandleMovingSelection(string heatmapName, int hitx, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandleMovingSelection(hitx, hity);
-        }
-
-        [PunRPC]
-        public void RecieveMessageMoveSelection(string HeatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
-        {
-            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
-        }
-
-        [PunRPC]
-        public void RecieveMessageHandleHitHeatmap(string HeatmapName, int hitx, int hity)
-        {
-            try
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
             {
-                referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().HandleHitHeatmap(hitx, hity);
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Failed to handle hit on heatmap. Stacktrace : " + e.StackTrace);
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().HandleMovingSelection(hitx, hity);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move heatmap - Error: " + e);
+                }
             }
         }
 
         [PunRPC]
-        public void RecieveMessageResetHeatmapHighlight(string HeatmapName)
+        public void RecieveMessageMoveSelection(string heatmapName, int hitx, int hity, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
-            try
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
             {
-                referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).ResetHeatmapHighlight();
-            }
-            catch (NullReferenceException e)
-            {
-                CellexalLog.Log("Failed to reset heatmap highlight. Stacktrace : " + e.StackTrace);
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move heatmap - Error: " + e);
+                }
             }
         }
 
         [PunRPC]
-        public void RecieveMessageResetSelecting(string HeatmapName)
+        public void RecieveMessageHandleHitHeatmap(string heatmapName, int hitx, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(HeatmapName).GetComponent<HeatmapRaycast>().ResetSelecting();
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().HandleHitHeatmap(hitx, hity);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to handle hit on heatmap. Stacktrace : " + e.StackTrace);
+                }
+            }
+        }
+
+        [PunRPC]
+        public void RecieveMessageResetHeatmapHighlight(string heatmapName)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    referenceManager.heatmapGenerator.FindHeatmap(heatmapName).ResetHeatmapHighlight();
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to reset heatmap highlight. Stacktrace : " + e.StackTrace);
+                }
+            }
+        }
+
+        [PunRPC]
+        public void RecieveMessageResetSelecting(string heatmapName)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().ResetSelecting();
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to reset heatmap selecting. Stacktrace : " + e.StackTrace);
+                }
+            }
         }
 
         [PunRPC]
         public void RecieveMessageHandlePressDown(string heatmapName, int hitx, int hity)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).GetComponent<HeatmapRaycast>().HandlePressDown(hitx, hity);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    hm.GetComponent<HeatmapRaycast>().HandlePressDown(hitx, hity);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to handle heatmap press down. Stacktrace : " + e.StackTrace);
+                }
+            }
         }
 
         [PunRPC]
         public void RecieveMessageCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop,
             int selectedGeneBottom, float selectedBoxWidth, float selectedBoxHeight)
         {
-            referenceManager.heatmapGenerator.FindHeatmap(heatmapName).CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight,
-                selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    hm.CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight,
+                        selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to create new heatmap from selection. Stacktrace : " + e.StackTrace);
+                }
+            }
         }
 
         [PunRPC]
@@ -694,7 +796,22 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageEnlargeNetwork(string networkHandlerName, string networkCenterName)
         {
             CellexalLog.Log("Recieved message to enlarge network " + networkCenterName + " in handler " + networkHandlerName);
-            referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName).FindNetworkCenter(networkCenterName).EnlargeNetwork();
+            var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            bool handlerExists = handler != null;
+            if (!handlerExists)
+            {
+                return;
+            }
+            var center = handler.FindNetworkCenter(networkCenterName);
+            bool networkExists = (handlerExists && center != null);
+            if (networkExists)
+            {
+                center.EnlargeNetwork();
+            }
+            else
+            {
+                CellexalLog.Log("Could not find networkcenter " + networkCenterName);
+            }
         }
 
         [PunRPC]
@@ -702,34 +819,62 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to bring back network " + networkCenterName + " in handler " + networkHandlerName);
             var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            bool handlerExists = handler != null;
+            if (!handlerExists)
+            {
+                return;
+            }
             var center = handler.FindNetworkCenter(networkCenterName);
-            center.BringBackOriginal();
+            bool networkExists = (handlerExists && center != null);
+            if (networkExists)
+            {
+                center.BringBackOriginal();
+            }
+            else
+            {
+                CellexalLog.Log("Could not find networkcenter " + networkCenterName);
+            }
         }
 
         [PunRPC]
-        public void RecieveMessageSwitchNetworkLayout(int layout, string networkHandlerName, string networkName)
+        public void RecieveMessageSwitchNetworkLayout(int layout, string networkHandlerName, string networkCenterName)
         {
             CellexalLog.Log("Recieved message to generate networks");
-            print("network names:" + networkName + " " + networkHandlerName);
+            print("network names:" + networkCenterName + " " + networkHandlerName);
             var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
-            var network = handler.FindNetworkCenter(networkName);
-            network.SwitchLayout((NetworkCenter.Layout)layout);
+            bool handlerExists = handler != null;
+            if (!handlerExists)
+            {
+                return;
+            }
+            var center = handler.FindNetworkCenter(networkCenterName);
+            bool networkExists = (handlerExists && center != null);
+            if (networkExists)
+            {
+                center.SwitchLayout((NetworkCenter.Layout)layout);
+            }
+            else
+            {
+                CellexalLog.Log("Could not find networkcenter " + networkCenterName);
+            }
         }
 
         [PunRPC]
         public void RecieveMessageMoveNetworkCenter(string networkHandlerName, string networkCenterName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW, float scaleX, float scaleY, float scaleZ)
         {
             var handler = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
+            bool handlerExists = handler != null;
+            if (!handlerExists)
+            {
+                return;
+            }
             var center = handler.FindNetworkCenter(networkCenterName);
-            bool networkExists = (handler != null && center != null);
+            bool networkExists = (handlerExists && center != null);
             if (networkExists)
             {
-                Vector3 pos = new Vector3(posX, posY, posZ);
-                Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
-                Vector3 scale = new Vector3(scaleX, scaleY, scaleZ);
-                center.transform.position = pos;
-                center.transform.rotation = rot;
-                center.transform.localScale = scale;
+                center.transform.position = new Vector3(posX, posY, posZ);
+                center.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                center.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
             }
             else
             {
@@ -880,7 +1025,14 @@ namespace CellexalVR.Multiuser
             CellexalLog.Log("Recieved message to delete object with name: " + name);
             NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
             //StartCoroutine(nh.DeleteNetwork());
-            nh.DeleteNetworkMultiUser();
+            if (nh)
+            {
+                nh.DeleteNetworkMultiUser();
+            }
+            else
+            {
+                CellexalLog.Log("Could not find network " + name + " to delete.");
+            }
         }
         #endregion
 

@@ -202,6 +202,12 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageColorByIndex", PhotonTargets.Others, indexName);
         }
 
+        public void SendMessageRecolorSelectionPoints()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to recolor color graphs by current selection");
+            coordinator.photonView.RPC("RecieveMessageRecolorSelectionPoints", PhotonTargets.Others);
+        }
         #endregion
 
         #region Keyboard

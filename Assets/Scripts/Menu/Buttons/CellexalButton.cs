@@ -302,6 +302,7 @@ namespace CellexalVR.Menu.Buttons
         }
     }
 
+#if UNITY_EDITOR
     /// <summary>
     /// A custom inspector for all buttons to help show only fields that are used.
     /// </summary>
@@ -338,4 +339,5 @@ namespace CellexalVR.Menu.Buttons
         }
 
     }
+#endif
 }
