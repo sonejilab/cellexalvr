@@ -9,6 +9,16 @@ namespace CellexalVR.Interaction
     /// </summary>
     class ChangeModelAtStart : MonoBehaviour
     {
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                var referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                VRTK.VRTK_SDKManager sdkManager = gameObject.GetComponent<VRTK.VRTK_SDKManager>();
+                sdkManager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
+                sdkManager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
+            }
+        }
 
         public ControllerModelSwitcher modelSwitcher;
 

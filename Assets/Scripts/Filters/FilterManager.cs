@@ -167,7 +167,7 @@ namespace CellexalVR.Filters
             currentFilter.Expression.SetFilterManager(this);
             string filterAsText = currentFilter.Expression.ToString();
             filterPreviewText.text = filterAsText;
-            //referenceManager.multiuserMessageSender.SendMessageSetFilter(filterAsText);
+            referenceManager.multiuserMessageSender.SendMessageSetFilter(filterAsText);
             loadingFilter = false;
             if (resultBlock.isActiveAndEnabled)
             {
@@ -435,7 +435,7 @@ namespace CellexalVR.Filters
             resultBlock.DisconnectAllPorts();
             //if (informMultiUser)
             //{
-            //    referenceManager.multiuserMessageSender.SendMessageResetFilter();
+            referenceManager.multiuserMessageSender.SendMessageResetFilter();
             //}
         }
 

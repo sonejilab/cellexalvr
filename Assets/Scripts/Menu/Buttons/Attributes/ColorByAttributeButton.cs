@@ -117,15 +117,16 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// <param name="color">The color that the cells in possesion of the attribute should get.</param>
         public void SetAttribute(string attribute, string displayedName, Color color)
         {
-            if (displayedName.Length > 8)
-            {
-                string[] shorter = { displayedName.Substring(0, displayedName.Length / 2), displayedName.Substring(displayedName.Length / 2) };
-                description.text = shorter[0] + "\n" + shorter[1];
-            }
-            else
-            {
-                description.text = displayedName;
-            }
+            //if (displayedName.Length > 8)
+            //{
+            //    string[] shorter = { displayedName.Substring(0, displayedName.Length / 2), displayedName.Substring(displayedName.Length / 2) };
+            //    description.text = shorter[0] + "\n" + shorter[1];
+            //}
+            //else
+            //{
+            //    description.text = displayedName;
+            //}
+            description.text = displayedName;
             this.Attribute = attribute;
             // sometimes this is done before Awake() it seems, so we use GetComponent() here
             GetComponent<Renderer>().material.color = color;

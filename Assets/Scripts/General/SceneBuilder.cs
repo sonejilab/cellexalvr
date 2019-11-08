@@ -78,7 +78,7 @@ namespace CellexalVR.General
             {
                 EditorUtility.ClearProgressBar();
             }
-            else if (buildSceneEnumerator != null)
+            else if (gameObject.scene.IsValid() && buildSceneEnumerator != null)
             {
                 if (!((WaitForSecondsRealtime)buildSceneEnumerator.Current).keepWaiting)
                     buildSceneEnumerator.MoveNext();
@@ -127,10 +127,6 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
             InstantiateSceneAsset(ref _SpectatorRig, SpectatorRig);
             yield return new WaitForSecondsRealtime(0.25f);
-            EditorUtility.DisplayProgressBar("Building scene", "Setting references", 0.5f);
-            ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
-            referenceManager.AttemptSetReferences();
-            yield return new WaitForSecondsRealtime(0.1f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
             // run onvalidate on everything
@@ -176,6 +172,8 @@ namespace CellexalVR.General
             //rightRadialMenu.buttons[3].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(true); });
 
             Undo.RecordObject(sdkmanager, "Set controller script alias");
+            ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
+            referenceManager.AttemptSetReferences();
             sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
             sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
 
@@ -184,6 +182,7 @@ namespace CellexalVR.General
 
             _Keyboard.GetComponent<GeneKeyboardHandler>().BuildKeyboard();
             _FilterCreator.GetComponentInChildren<FilterNameKeyboardHandler>(true).BuildKeyboard();
+            // the BuildKeyboard() calls replaces the instantianted prefabs which breaks the fields... thus we have to GameObject.Find() them again
             _FilterCreator = GameObject.Find("Filter Creator");
             _FilterCreator.GetComponentInChildren<OperatorKeyboardHandler>(true).BuildKeyboard();
             _FilterCreator = GameObject.Find("Filter Creator");
@@ -192,6 +191,9 @@ namespace CellexalVR.General
             _WebBrowser.GetComponentInChildren<WebKeyboardHandler>(true).BuildKeyboard();
 
             AutoPopulateGameObjects();
+            yield return new WaitForSecondsRealtime(0.1f);
+            referenceManager = _InputReader.GetComponent<ReferenceManager>();
+            referenceManager.AttemptSetReferences();
             EditorUtility.ClearProgressBar();
             buildingScene = false;
         }
