@@ -55,8 +55,6 @@ namespace CellexalVR.Tools
             {
                 InitiateDelete(objectToDelete);
                 referenceManager.multiuserMessageSender.SendMessageDeleteObject(objectToDelete.gameObject.name, objectToDelete.gameObject.tag);
-                currentTime = 0;
-                shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
             }
 
             if (delete)
@@ -99,6 +97,8 @@ namespace CellexalVR.Tools
         /// <param name="obj">The object to remove.</param>
         public void InitiateDelete(GameObject obj)
         {
+            currentTime = 0;
+            shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
             objectToDelete = obj;
             switch (obj.tag)
             {
@@ -201,7 +201,7 @@ namespace CellexalVR.Tools
                 //}
             }
 
-            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f) 
+            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
                 if (obj.transform.GetComponentInParent<NetworkHandler>() != null)
                 {
