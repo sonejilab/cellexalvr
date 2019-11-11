@@ -982,40 +982,41 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
             GameObject objectToDelete = GameObject.Find(name);
-            if (tag == "SubGraph")
-            {
-                Graph subGraph = objectToDelete.GetComponent<Graph>();
-                if (subGraph.hasVelocityInfo)
-                {
-                    var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
-                    referenceManager.velocitySubMenu.buttons.Remove(veloButton);
-                    Destroy(veloButton.gameObject);
-                }
-                referenceManager.graphManager.Graphs.Remove(subGraph);
-                referenceManager.graphManager.attributeSubGraphs.Remove(subGraph);
-                for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
-                {
-                    subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                }
-                subGraph.CTCGraphs.Clear();
-                Destroy(objectToDelete);
-            }
-            else if (tag == "FacsGraph")
-            {
-                Graph facsGraph = objectToDelete.GetComponent<Graph>();
-                referenceManager.graphManager.Graphs.Remove(facsGraph);
-                referenceManager.graphManager.facsGraphs.Remove(facsGraph);
-                for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
-                {
-                    facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                }
-                facsGraph.CTCGraphs.Clear();
-                Destroy(objectToDelete);
-            }
-            else if (tag == "HeatBoard")
-            {
-                referenceManager.heatmapGenerator.DeleteHeatmap(name);
-            }
+            referenceManager.deleteTool.GetComponent<RemovalController>().InitiateDelete(objectToDelete);
+            //if (tag == "SubGraph")
+            //{
+            //    Graph subGraph = objectToDelete.GetComponent<Graph>();
+            //    if (subGraph.hasVelocityInfo)
+            //    {
+            //        var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
+            //        referenceManager.velocitySubMenu.buttons.Remove(veloButton);
+            //        Destroy(veloButton.gameObject);
+            //    }
+            //    referenceManager.graphManager.Graphs.Remove(subGraph);
+            //    referenceManager.graphManager.attributeSubGraphs.Remove(subGraph);
+            //    for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
+            //    {
+            //        subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+            //    }
+            //    subGraph.CTCGraphs.Clear();
+            //    Destroy(objectToDelete);
+            //}
+            //else if (tag == "FacsGraph")
+            //{
+            //    Graph facsGraph = objectToDelete.GetComponent<Graph>();
+            //    referenceManager.graphManager.Graphs.Remove(facsGraph);
+            //    referenceManager.graphManager.facsGraphs.Remove(facsGraph);
+            //    for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
+            //    {
+            //        facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+            //    }
+            //    facsGraph.CTCGraphs.Clear();
+            //    Destroy(objectToDelete);
+            //}
+            //else if (tag == "HeatBoard")
+            //{
+            //    referenceManager.heatmapGenerator.DeleteHeatmap(name);
+            //}
 
         }
 

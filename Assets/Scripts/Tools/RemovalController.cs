@@ -54,6 +54,7 @@ namespace CellexalVR.Tools
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 InitiateDelete(objectToDelete);
+                referenceManager.multiuserMessageSender.SendMessageDeleteObject(objectToDelete.gameObject.name, objectToDelete.gameObject.tag);
                 currentTime = 0;
                 shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
             }
@@ -96,7 +97,7 @@ namespace CellexalVR.Tools
         /// Also network and heatmap scripts need to be completely finished before the objects can be removed.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
-        void InitiateDelete(GameObject obj)
+        public void InitiateDelete(GameObject obj)
         {
             switch (obj.tag)
             {
@@ -119,7 +120,7 @@ namespace CellexalVR.Tools
                         if (referenceManager.multiuserMessageSender.multiplayer)
                         {
                             nh.DeleteNetworkMultiUser();
-                            referenceManager.multiuserMessageSender.SendMessageDeleteNetwork(nh.name);
+                            //referenceManager.multiuserMessageSender.SendMessageDeleteNetwork(nh.name);
                         }
                         else
                         {
@@ -165,7 +166,7 @@ namespace CellexalVR.Tools
         /// It creates the animation of the delete process. Switch case is used to make sure we send the right message to the other users.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
-        void DeleteObject(GameObject obj)
+        public void DeleteObject(GameObject obj)
         {
             if (!obj)
             {
@@ -182,21 +183,21 @@ namespace CellexalVR.Tools
                 obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
                 obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
 
-                switch (obj.tag)
-                {
-                    case "HeatBoard":
-                        referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                        break;
+                //switch (obj.tag)
+                //{
+                //    case "HeatBoard":
+                //        referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                //        break;
 
-                    case "Network":
-                        referenceManager.multiuserMessageSender.SendMessageMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                        break;
+                //    case "Network":
+                //        referenceManager.multiuserMessageSender.SendMessageMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                //        break;
 
-                    case "SubGraph":
-                    case "FacsGraph":
-                        referenceManager.multiuserMessageSender.SendMessageMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                        break;
-                }
+                //    case "SubGraph":
+                //    case "FacsGraph":
+                //        referenceManager.multiuserMessageSender.SendMessageMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
+                //        break;
+                //}
             }
 
             if (Mathf.Abs(currentTime - deleteTime) <= 0.05f) 
@@ -213,7 +214,7 @@ namespace CellexalVR.Tools
                 else
                 {
                     Destroy(obj);
-                    referenceManager.multiuserMessageSender.SendMessageDeleteObject(obj.name, obj.tag);
+                    //referenceManager.multiuserMessageSender.SendMessageDeleteObject(obj.name, obj.tag);
                 }
                 CellexalLog.Log("Deleted object: " + obj.name);
                 delete = false;
