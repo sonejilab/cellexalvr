@@ -44,8 +44,7 @@ namespace CellexalVR.Filters
             previewWire = Instantiate(wirePrefab, this.transform);
             previewWire.SetActive(false);
             rightController = referenceManager.rightController;
-            CellexalEvents.GraphsUnloaded.AddListener(ClearBoard);
-            CellexalEvents.GraphsUnloaded.AddListener(DeactivateFilterCreatorBoard);
+            CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
         }
 
         private void OnValidate()
@@ -59,6 +58,17 @@ namespace CellexalVR.Filters
                     filterPreviewText = referenceManager.filterBlockBoard.transform.Find("Filter Preview Text").GetComponent<TextMeshPro>();
                 }
             }
+        }
+
+        private void OnGraphsUnloaded()
+        {
+            StopAllCoroutines();
+            runningSwapPercentCoroutine = null;
+            cellsToEvaluate.Clear();
+            evaluating = false;
+            ClearBoard();
+            DeactivateFilterCreatorBoard();
+            currentFilter = null;
         }
 
         /// <summary>
@@ -233,6 +243,7 @@ namespace CellexalVR.Filters
                     string lowerCaseGeneName = tuple.Item1.ToLower();
                     if (currentFilterGenes.Contains(lowerCaseGeneName))
                     {
+
                         // new gene, first two tuples are highest and lowest expression
                         geneName = lowerCaseGeneName;
                         // skip the second tuple
@@ -331,6 +342,9 @@ namespace CellexalVR.Filters
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
         }
 
+        /// <summary>
+        /// Validates if the current filter is contains only genes, attrubutes and facs that exist in the loaded dataset. This function sets <see cref="currentFilter"/> to <see langword="null"/> if the filter is invalid or to <paramref name="filter"/> if it is valid.        /// </summary>
+        /// <param name="filter">The filter to validate.</param>
         private IEnumerator ValidateFilterCoroutine(Filter filter)
         {
             // check that genes exists
