@@ -112,6 +112,7 @@ namespace CellexalVR.Tools
                     }
                     delete = true;
                     CellexalEvents.HeatmapBurned.Invoke();
+                    referenceManager.heatmapGenerator.DeleteHeatmap(obj.gameObject.name);
                     break;
 
                 case "Network":
