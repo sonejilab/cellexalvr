@@ -569,7 +569,7 @@ namespace CellexalVR.Multiuser
                 }
                 catch (Exception e)
                 {
-                    CellexalLog.Log("Could not move heatmap - Error: " + e);
+                    //CellexalLog.Log("Could not move heatmap - Error: " + e);
                 }
             }
         }
@@ -587,7 +587,7 @@ namespace CellexalVR.Multiuser
                 }
                 catch (Exception e)
                 {
-                    CellexalLog.Log("Failed to handle hit on heatmap. Stacktrace : " + e.StackTrace);
+                    //CellexalLog.Log("Failed to handle hit on heatmap. Stacktrace : " + e.StackTrace);
                 }
             }
         }

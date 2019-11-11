@@ -44,7 +44,7 @@ namespace CellexalVR.Multiuser
             // used in MultiuserMessageSender.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
             if (photonView.isMine)
             {
-                PhotonNetwork.player.NickName = PhotonNetwork.playerName;
+                //PhotonNetwork.player.NickName = PhotonNetwork.playerName;
                 PlayerManager.LocalPlayerInstance = this.gameObject;
                 Renderer[] meshList = transform.GetComponentsInChildren<Renderer>();
                 foreach (Renderer r in meshList)

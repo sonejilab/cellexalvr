@@ -34,7 +34,7 @@ namespace CellexalVR.Interaction
                 // moving many triggers really pushes what unity is capable of
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                 {
-                    if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
+                    if (c.gameObject.name != "Ring") // && !c.gameObject.name.Contains("Enlarged_Network"))
                     {
                         c.enabled = false;
                     }
@@ -57,7 +57,7 @@ namespace CellexalVR.Interaction
             {
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                 {
-                    if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
+                    if (c.gameObject.name != "Ring")// && !c.gameObject.name.Contains("Enlarged_Network"))
                     {
                         c.enabled = true;
                     }

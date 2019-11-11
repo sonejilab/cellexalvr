@@ -85,8 +85,9 @@ namespace CellexalVR.Multiuser
         {
             if (String.IsNullOrEmpty(PhotonNetwork.playerName))
             {
-                PhotonNetwork.playerName = CellexalUser.Username;
+                PhotonNetwork.player.NickName = CellexalUser.Username;
                 //PhotonNetwork.playerName = "Guest" + Random.Range(1, 9999);
+                PhotonNetwork.playerName = CellexalUser.Username + Random.Range(1,9999);
             }
 
         }
@@ -136,7 +137,7 @@ namespace CellexalVR.Multiuser
             // Player name
             GUILayout.BeginHorizontal();
             GUILayout.Label("Player Name:");
-            PhotonNetwork.playerName = GUILayout.TextField(PhotonNetwork.playerName, GUILayout.Width(200));
+            PhotonNetwork.player.NickName = GUILayout.TextField(PhotonNetwork.player.NickName, GUILayout.Width(200));
             GUILayout.Space(400);
 
             GUILayout.EndHorizontal();
@@ -306,7 +307,7 @@ namespace CellexalVR.Multiuser
 
         public void OnPhotonJoinRoomFailed(object[] cause)
         {
-            ErrorDialog = "Error: Can't join room (room name or password is incorrect). " + cause[1];
+            ErrorDialog = "Error: Can't join room (room name or password is incorrect or the player name is already taken. Try changing one (or all) of these.). " + cause[1];
             Debug.Log("OnPhotonJoinRoomFailed got called. This can happen if the room is not existing or full or closed.");
         }
 
