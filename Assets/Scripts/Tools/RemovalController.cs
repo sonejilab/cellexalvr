@@ -97,9 +97,9 @@ namespace CellexalVR.Tools
         /// <param name="obj">The object to remove.</param>
         public void InitiateDelete(GameObject obj)
         {
+            objectToDelete = obj;
             currentTime = 0;
             shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
-            objectToDelete = obj;
             switch (obj.tag)
             {
                 case "HeatBoard":
