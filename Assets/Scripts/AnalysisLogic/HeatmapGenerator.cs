@@ -178,8 +178,8 @@ namespace CellexalVR.AnalysisLogic
         public void DeleteHeatmap(string heatmapName)
         {
             Heatmap heatmap = FindHeatmap(heatmapName);
-            Destroy(heatmap.gameObject);
             heatmapList.Remove(heatmap);
+            Destroy(heatmap.gameObject);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace CellexalVR.AnalysisLogic
         /// <returns>The heatmap, or null if no heatmap by that name exists.</returns>
         public Heatmap FindHeatmap(string heatmapName)
         {
-            return heatmapList.Find((Heatmap h) => heatmapName == h.name);
+            return heatmapList.Find((Heatmap h) => h != null ? heatmapName == h.name : false);
         }
 
         /// <summary>
