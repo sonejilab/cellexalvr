@@ -99,6 +99,7 @@ namespace CellexalVR.Tools
         /// <param name="obj">The object to remove.</param>
         public void InitiateDelete(GameObject obj)
         {
+            objectToDelete = obj;
             switch (obj.tag)
             {
                 case "HeatBoard":
