@@ -102,7 +102,7 @@ namespace CellexalVR.Tools
             switch (obj.tag)
             {
                 case "HeatBoard":
-                    if (objectToDelete.GetComponent<Heatmap>().removable)
+                    if (obj.GetComponent<Heatmap>().removable)
                     {
                         Debug.Log("Script is running");
                         CellexalError.SpawnError("Delete failed", "Can not delete heatmap yet. Wait for script to finish before removing it.");
@@ -114,7 +114,7 @@ namespace CellexalVR.Tools
                     break;
 
                 case "Network":
-                    NetworkHandler nh = objectToDelete.GetComponent<NetworkHandler>();
+                    NetworkHandler nh = obj.GetComponent<NetworkHandler>();
                     if (nh)
                     {
                         if (referenceManager.multiuserMessageSender.multiplayer)
@@ -131,7 +131,7 @@ namespace CellexalVR.Tools
                     break;
 
                 case "SubGraph":
-                    Graph subGraph = objectToDelete.GetComponent<Graph>();
+                    Graph subGraph = obj.GetComponent<Graph>();
                     if (subGraph.hasVelocityInfo)
                     {
                         var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
@@ -148,7 +148,7 @@ namespace CellexalVR.Tools
                     break;
 
                 case "FacsGraph":
-                    Graph facsGraph = objectToDelete.GetComponent<Graph>();
+                    Graph facsGraph = obj.GetComponent<Graph>();
                     referenceManager.graphManager.Graphs.Remove(facsGraph);
                     referenceManager.graphManager.facsGraphs.Remove(facsGraph);
                     for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
