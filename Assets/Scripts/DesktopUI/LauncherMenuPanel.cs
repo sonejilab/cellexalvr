@@ -119,16 +119,19 @@ namespace CellexalVR.DesktopUI
         {
             //CrossSceneInformation.Username = usernameInputField.text;
             CellexalUser.Username = usernameInputField.text;
-
+            PhotonNetwork.playerName = CellexalUser.Username + Random.Range(0, 10000);
+            PhotonNetwork.AuthValues = new AuthenticationValues();
+            PhotonNetwork.AuthValues.UserId = PhotonNetwork.playerName;
         }
 
-        public void Quit()
-        {
+
+    public void Quit()
+    {
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
-        }
     }
+}
 }
