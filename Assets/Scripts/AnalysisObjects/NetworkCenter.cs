@@ -726,6 +726,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 button.SetButtonActivated(true);
             }
+            GetComponent<SphereCollider>().enabled = true;
             //handler.runningScript = false;
             //CellexalEvents.ScriptFinished.Invoke();
             //transform.parent = oldParent;

@@ -400,6 +400,7 @@ namespace CellexalVR.AnalysisObjects
             if (transform.localScale.x >= targetScale)
             {
                 createAnim = false;
+                transform.localScale = new Vector3(targetScale, targetScale, targetScale);
                 referenceManager.notificationManager.SpawnNotification("Transcription factor networks finished.");
 
             }
