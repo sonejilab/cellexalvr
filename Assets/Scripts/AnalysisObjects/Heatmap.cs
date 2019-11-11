@@ -293,6 +293,7 @@ namespace CellexalVR.AnalysisObjects
             highlightInfoText.text = "";
             barInfoText.text = "";
             enlargedGeneText.gameObject.SetActive(false);
+            highlightQuad.gameObject.SetActive(false);
         }
 
         /// <summary>

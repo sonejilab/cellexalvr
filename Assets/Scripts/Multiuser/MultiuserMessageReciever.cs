@@ -592,23 +592,6 @@ namespace CellexalVR.Multiuser
             }
         }
 
-        [PunRPC]
-        public void RecieveMessageResetHeatmapHighlight(string heatmapName)
-        {
-            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
-            bool heatmapExists = hm != null;
-            if (heatmapExists)
-            {
-                try
-                {
-                    referenceManager.heatmapGenerator.FindHeatmap(heatmapName).ResetHeatmapHighlight();
-                }
-                catch (Exception e)
-                {
-                    CellexalLog.Log("Failed to reset heatmap highlight. Stacktrace : " + e.StackTrace);
-                }
-            }
-        }
 
         [PunRPC]
         public void RecieveMessageResetSelecting(string heatmapName)
@@ -745,6 +728,24 @@ namespace CellexalVR.Multiuser
                 return;
             }
 
+        }
+
+        [PunRPC]
+        public void RecieveMessageResetHeatmapHighlight(string heatmapName)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            bool heatmapExists = hm != null;
+            if (heatmapExists)
+            {
+                try
+                {
+                    referenceManager.heatmapGenerator.FindHeatmap(heatmapName).ResetHeatmapHighlight();
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to reset heatmap highlight. Stacktrace : " + e.StackTrace);
+                }
+            }
         }
         #endregion
 

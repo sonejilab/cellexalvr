@@ -164,7 +164,7 @@ namespace CellexalVR.AnalysisObjects
                     multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
                     heatmap.ResetHeatmapHighlight();
                     //heatmap.enlargedGeneText.gameObject.SetActive(false);
-                    heatmap.enlargedGeneText.gameObject.SetActive(false);
+                    //heatmap.enlargedGeneText.gameObject.SetActive(false);
                 }
             }
             else
