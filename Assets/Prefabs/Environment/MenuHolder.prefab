@@ -11337,7 +11337,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13906,7 +13906,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24867,7 +24867,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  amount: 2
+  amount: 0.5
 --- !u!1 &1812508271273168
 GameObject:
   m_ObjectHideFlags: 0
@@ -25606,7 +25606,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  amount: 0.5
+  amount: 2
 --- !u!1 &1830597608864874
 GameObject:
   m_ObjectHideFlags: 0
@@ -32907,16 +32907,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 0}
+  descriptionText: {fileID: 114723503269570940}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 0}
   meshHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   meshDeactivatedColor: {r: 0, g: 0, b: 0, a: 0}
-  standardTexture: {fileID: 0}
-  highlightedTexture: {fileID: 0}
-  deactivatedTexture: {fileID: 0}
-  popupChoice: 0
+  standardTexture: {fileID: 21300000, guid: c177061c052cfd040a404b7661a97512, type: 3}
+  highlightedTexture: {fileID: 21300000, guid: 5cc6c0b9088f09e4f9118620ef5499c4, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: c5a8a192b283d5444a498e7ce5d18861, type: 3}
+  popupChoice: 1
   buttonActivated: 0
   storedState: 0
   controllerInside: 0
