@@ -57,11 +57,6 @@ namespace CellexalVR.Tools
                 referenceManager.multiuserMessageSender.SendMessageDeleteObject(objectToDelete.gameObject.name, objectToDelete.gameObject.tag);
             }
 
-            //if (delete)
-            //{
-            //    DeleteObject(objectToDelete);
-            //    currentTime += Time.deltaTime;
-            //}
 
         }
 
@@ -117,49 +112,17 @@ namespace CellexalVR.Tools
                     NetworkHandler nh = obj.GetComponent<NetworkHandler>();
                     if (nh)
                     {
-                        if (referenceManager.multiuserMessageSender.multiplayer)
-                        {
-                            nh.DeleteNetworkMultiUser();
-                            //referenceManager.multiuserMessageSender.SendMessageDeleteNetwork(nh.name);
-                        }
-                        else
-                        {
-                            nh.DeleteNetworkMultiUser();
-                            //StartCoroutine(nh.DeleteNetworkCoroutine());
-                        }
+                        nh.DeleteNetworkMultiUser();
                     }
 
                     break;
 
                 case "SubGraph":
-                    //Graph subGraph = obj.GetComponent<Graph>();
                     referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
-                    //if (subGraph.hasVelocityInfo)
-                    //{
-                    //    var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
-                    //    referenceManager.velocitySubMenu.buttons.Remove(veloButton);
-                    //    Destroy(veloButton.gameObject);
-                    //}
-                    //referenceManager.graphManager.Graphs.Remove(subGraph);
-                    //for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
-                    //{
-                    //    subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                    //}
-                    //subGraph.CTCGraphs.Clear();
-                    //delete = true;
                     break;
 
                 case "FacsGraph":
                     referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
-                    //Graph facsGraph = obj.GetComponent<Graph>();
-                    //referenceManager.graphManager.Graphs.Remove(facsGraph);
-                    //referenceManager.graphManager.facsGraphs.Remove(facsGraph);
-                    //for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
-                    //{
-                    //    facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                    //}
-                    //facsGraph.CTCGraphs.Clear();
-                    //delete = true;
                     break;
             }
         }
@@ -169,69 +132,46 @@ namespace CellexalVR.Tools
         /// It creates the animation of the delete process. Switch case is used to make sure we send the right message to the other users.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
-        private void DeleteObject(GameObject obj)
-        {
-            print("delete obj - " + obj.gameObject.name);
-            if (!obj)
-            {
-                delete = false;
-                GetComponent<MeshRenderer>().material = inactiveMat;
-                return;
-            }
-
-            if (currentTime < deleteTime)
-            {
-                float step = speed * Time.deltaTime;
-                obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
-                obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-                obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
-
-                //switch (obj.tag)
-                //{
-                //    case "HeatBoard":
-                //        referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                //        break;
-
-                //    case "Network":
-                //        referenceManager.multiuserMessageSender.SendMessageMoveNetwork(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                //        break;
-
-                //    case "SubGraph":
-                //    case "FacsGraph":
-                //        referenceManager.multiuserMessageSender.SendMessageMoveGraph(obj.name, obj.transform.position, obj.transform.rotation, obj.transform.localScale);
-                //        break;
-                //}
-            }
-
-            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
-            {
-                if (obj.transform.GetComponentInParent<NetworkHandler>() != null)
-                {
-                    obj = obj.transform.GetComponentInParent<NetworkHandler>().gameObject;
-                    Destroy(obj);
-                }
-                else if (obj.GetComponent<NetworkHandler>())
-                {
-                    Destroy(obj);
-                }
-                else
-                {
-                    Destroy(obj);
-                    //referenceManager.multiuserMessageSender.SendMessageDeleteObject(obj.name, obj.tag);
-                }
-                CellexalLog.Log("Deleted object: " + obj.name);
-                delete = false;
-                GetComponent<MeshRenderer>().material = inactiveMat;
-                GetComponent<Light>().color = Color.white;
-                transform.localScale = Vector3.one * 0.03f;
-                GetComponent<Light>().range = 0.04f;
-            }
-        }
-
-        //public void DeleteObjectAnimation(GameObject obj)
+        //private void DeleteObject(GameObject obj)
         //{
-        //    objectToDelete = obj;
-        //    delete = true;
+        //    print("delete obj - " + obj.gameObject.name);
+        //    if (!obj)
+        //    {
+        //        delete = false;
+        //        GetComponent<MeshRenderer>().material = inactiveMat;
+        //        return;
+        //    }
+
+        //    if (currentTime < deleteTime)
+        //    {
+        //        float step = speed * Time.deltaTime;
+        //        obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
+        //        obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
+        //        obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
+        //    }
+
+        //    if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
+        //    {
+        //        if (obj.transform.GetComponentInParent<NetworkHandler>() != null)
+        //        {
+        //            obj = obj.transform.GetComponentInParent<NetworkHandler>().gameObject;
+        //            Destroy(obj);
+        //        }
+        //        else if (obj.GetComponent<NetworkHandler>())
+        //        {
+        //            Destroy(obj);
+        //        }
+        //        else
+        //        {
+        //            Destroy(obj);
+        //        }
+        //        CellexalLog.Log("Deleted object: " + obj.name);
+        //        delete = false;
+        //        GetComponent<MeshRenderer>().material = inactiveMat;
+        //        GetComponent<Light>().color = Color.white;
+        //        transform.localScale = Vector3.one * 0.03f;
+        //        GetComponent<Light>().range = 0.04f;
+        //    }
         //}
     }
 }

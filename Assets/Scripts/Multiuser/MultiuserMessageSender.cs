@@ -651,12 +651,6 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageDeleteObject", PhotonTargets.Others, objName, objTag);
         }
-
-        public void SendMessageDeleteNetwork(string objName)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDeleteNetwork", PhotonTargets.Others, objName);
-        }
         #endregion
 
         #region Velocity

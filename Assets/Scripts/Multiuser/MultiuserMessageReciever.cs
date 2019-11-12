@@ -982,7 +982,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageDeleteObject(string name, string tag)
         {
             CellexalLog.Log("Recieved message to delete object with name: " + name);
-            GameObject objectToDelete = GameObject.Find(name);
+            //GameObject objectToDelete = GameObject.Find(name);
             if (tag == "SubGraph")
             {
                 referenceManager.graphManager.DeleteGraph(name, tag);
@@ -995,24 +995,12 @@ namespace CellexalVR.Multiuser
             {
                 referenceManager.heatmapGenerator.DeleteHeatmap(name);
             }
-
-        }
-
-        [PunRPC]
-        public void RecieveMessageDeleteNetwork(string name)
-        {
-            CellexalLog.Log("Recieved message to delete object with name: " + name);
-            NetworkHandler nh = GameObject.Find(name).GetComponent<NetworkHandler>();
-            //StartCoroutine(nh.DeleteNetwork());
-            if (nh)
+            else if (tag == "Network")
             {
-                nh.DeleteNetworkMultiUser();
-            }
-            else
-            {
-                CellexalLog.Log("Could not find network " + name + " to delete.");
+                GameObject.Find(name).GetComponent<NetworkHandler>().DeleteNetworkMultiUser();
             }
         }
+
         #endregion
 
         #region Velocity
