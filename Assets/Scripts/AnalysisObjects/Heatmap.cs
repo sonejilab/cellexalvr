@@ -257,7 +257,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 50);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
             {
                 if (delete)
                 {
@@ -286,7 +286,7 @@ namespace CellexalVR.AnalysisObjects
                 r.enabled = true;
             GetComponent<Renderer>().enabled = true;
             currentTime = 0;
-            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
+            shrinkSpeed = (originalScale.x - transform.localScale.x) / animationTime;
             maximize = true;
         }
 

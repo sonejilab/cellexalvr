@@ -215,7 +215,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
             currentTime = 0;
-            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
+            shrinkSpeed = (originalScale.x - transform.localScale.x) / animationTime;
             GetComponent<Renderer>().enabled = true;
             //GetComponent<Collider>().enabled = true;
             maximize = true;
@@ -291,7 +291,7 @@ namespace CellexalVR.AnalysisObjects
             }
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
             {
                 foreach (NetworkCenter network in networks)
                 {

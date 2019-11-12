@@ -111,7 +111,7 @@ namespace CellexalVR.AnalysisObjects
         private Quaternion oldRot;
         private Vector3 oldScale;
         private float currentTime = 0f;
-        private float deleteTime = 0.7f;
+        private float animationTime = 0.7f;
 
 
 #if UNITY_EDITOR
@@ -191,7 +191,7 @@ namespace CellexalVR.AnalysisObjects
             //foreach (Renderer r in GetComponentsInChildren<Renderer>())
             //    r.enabled = true;
             gameObject.SetActive(true);
-            shrinkSpeed = (transform.localScale.x - targetMinScale) / deleteTime;
+            shrinkSpeed = (oldScale.x - transform.localScale.x) / animationTime;
             currentTime = 0;
             maximize = true;
         }
@@ -206,7 +206,7 @@ namespace CellexalVR.AnalysisObjects
             transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * -100);
             //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
             {
                 transform.localScale = oldScale;
                 transform.localPosition = oldPos;
@@ -256,7 +256,7 @@ namespace CellexalVR.AnalysisObjects
                 }
                 CTCGraphs.Clear();
             }
-            shrinkSpeed = (transform.localScale.x - targetMinScale) / deleteTime;
+            shrinkSpeed = (transform.localScale.x - targetMinScale) / animationTime;
             currentTime = 0;
             minimize = true;
             delete = true;
@@ -282,13 +282,13 @@ namespace CellexalVR.AnalysisObjects
             }
             oldPos = transform.position;
             oldScale = transform.localScale;
-            shrinkSpeed = (transform.localScale.x - targetMinScale) / deleteTime;
+            shrinkSpeed = (transform.localScale.x - targetMinScale) / animationTime;
             currentTime = 0;
             minimize = true;
         }
 
         /// <summary>
-        /// Animation for hiding graph.
+        /// Animation for hiding graph. Same animation is used when deleting the graph.
         /// </summary>
         void Minimize()
         {
@@ -310,7 +310,7 @@ namespace CellexalVR.AnalysisObjects
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
             //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
             {
                 if (delete)
                 {
