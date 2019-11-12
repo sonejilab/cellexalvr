@@ -179,7 +179,7 @@ namespace CellexalVR.AnalysisLogic
         {
             Heatmap heatmap = FindHeatmap(heatmapName);
             heatmapList.Remove(heatmap);
-            //Destroy(heatmap.gameObject);
+            heatmap.DeleteHeatmap();
         }
 
         /// <summary>

@@ -99,6 +99,7 @@ namespace CellexalVR.AnalysisObjects
         // For minimization animation
         private bool minimize;
         private bool maximize;
+        private bool delete;
         private float speed;
 
         private bool minimized;
@@ -109,7 +110,7 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 oldPos;
         private Quaternion oldRot;
         private Vector3 oldScale;
-        private float currentTime = 0;
+        private float currentTime = 0f;
         private float deleteTime = 0.7f;
 
 
@@ -223,6 +224,39 @@ namespace CellexalVR.AnalysisObjects
                     c.enabled = true;
             }
         }
+
+        public void DeleteGraph(string tag)
+        {
+            minimize = true;
+            if (tag == "SubGraph")
+            {
+                if (hasVelocityInfo)
+                {
+                    var veloButton = referenceManager.velocitySubMenu.FindButton("", GraphName);
+                    referenceManager.velocitySubMenu.buttons.Remove(veloButton);
+                    Destroy(veloButton.gameObject);
+                }
+                referenceManager.graphManager.Graphs.Remove(this);
+                referenceManager.graphManager.attributeSubGraphs.Remove(this);
+                for (int i = 0; i < CTCGraphs.Count; i++)
+                {
+                    CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                }
+                CTCGraphs.Clear();
+            }
+            else if (tag == "FacsGraph")
+            {
+                referenceManager.graphManager.Graphs.Remove(this);
+                referenceManager.graphManager.facsGraphs.Remove(this);
+                for (int i = 0; i < CTCGraphs.Count; i++)
+                {
+                    CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                }
+                CTCGraphs.Clear();
+            }
+            delete = true;
+        }
+
         /// <summary>
         /// Turns off all renderers and colliders for this graph. And starts the minimazation process by sett minimize to true.
         /// </summary>
@@ -259,9 +293,13 @@ namespace CellexalVR.AnalysisObjects
             {
                 targetPosition = Vector3.zero;
             }
+            else if (delete)
+            {
+                targetPosition = referenceManager.deleteTool.transform.position;
+            }
             else
             {
-                targetPosition = referenceManager.leftController.transform.position;
+                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
             }
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
@@ -269,12 +307,19 @@ namespace CellexalVR.AnalysisObjects
             //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
             if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
-                minimize = false;
-                GraphActive = false;
-                gameObject.SetActive(false);
-                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
-                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
-                minimized = true;
+                if (delete)
+                {
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    minimize = false;
+                    GraphActive = false;
+                    gameObject.SetActive(false);
+                    referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+                    referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+                    minimized = true;
+                }
             }
             currentTime += Time.deltaTime;
         }

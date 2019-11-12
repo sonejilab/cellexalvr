@@ -80,7 +80,6 @@ namespace CellexalVR.DesktopUI
             if (paths.Length == 1)
             {
                 string path = paths[0];
-                print(path);
                 if (File.Exists(path) && path.Contains(".exe"))
                 {
                     bool hasChanged = path != CellexalConfig.Config.RscriptexePath;

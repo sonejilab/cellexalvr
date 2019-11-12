@@ -57,11 +57,11 @@ namespace CellexalVR.Tools
                 referenceManager.multiuserMessageSender.SendMessageDeleteObject(objectToDelete.gameObject.name, objectToDelete.gameObject.tag);
             }
 
-            if (delete)
-            {
-                DeleteObject(objectToDelete);
-                currentTime += Time.deltaTime;
-            }
+            //if (delete)
+            //{
+            //    DeleteObject(objectToDelete);
+            //    currentTime += Time.deltaTime;
+            //}
 
         }
 
@@ -95,10 +95,10 @@ namespace CellexalVR.Tools
         /// Also network and heatmap scripts need to be completely finished before the objects can be removed.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
-        public void InitiateDelete(GameObject obj)
+        private void InitiateDelete(GameObject obj)
         {
             objectToDelete = obj;
-            currentTime = 0;
+            currentTime = 0f;
             shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
             switch (obj.tag)
             {
@@ -110,8 +110,6 @@ namespace CellexalVR.Tools
                         controllerInside = false;
                         return;
                     }
-                    delete = true;
-                    CellexalEvents.HeatmapBurned.Invoke();
                     referenceManager.heatmapGenerator.DeleteHeatmap(obj.gameObject.name);
                     break;
 
@@ -126,39 +124,42 @@ namespace CellexalVR.Tools
                         }
                         else
                         {
-                            StartCoroutine(nh.DeleteNetworkCoroutine());
+                            nh.DeleteNetworkMultiUser();
+                            //StartCoroutine(nh.DeleteNetworkCoroutine());
                         }
                     }
 
                     break;
 
                 case "SubGraph":
-                    Graph subGraph = obj.GetComponent<Graph>();
-                    if (subGraph.hasVelocityInfo)
-                    {
-                        var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
-                        referenceManager.velocitySubMenu.buttons.Remove(veloButton);
-                        Destroy(veloButton.gameObject);
-                    }
-                    referenceManager.graphManager.Graphs.Remove(subGraph);
-                    for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
-                    {
-                        subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                    }
-                    subGraph.CTCGraphs.Clear();
-                    delete = true;
+                    //Graph subGraph = obj.GetComponent<Graph>();
+                    referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
+                    //if (subGraph.hasVelocityInfo)
+                    //{
+                    //    var veloButton = referenceManager.velocitySubMenu.FindButton("", subGraph.GraphName);
+                    //    referenceManager.velocitySubMenu.buttons.Remove(veloButton);
+                    //    Destroy(veloButton.gameObject);
+                    //}
+                    //referenceManager.graphManager.Graphs.Remove(subGraph);
+                    //for (int i = 0; i < subGraph.CTCGraphs.Count; i++)
+                    //{
+                    //    subGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                    //}
+                    //subGraph.CTCGraphs.Clear();
+                    //delete = true;
                     break;
 
                 case "FacsGraph":
-                    Graph facsGraph = obj.GetComponent<Graph>();
-                    referenceManager.graphManager.Graphs.Remove(facsGraph);
-                    referenceManager.graphManager.facsGraphs.Remove(facsGraph);
-                    for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
-                    {
-                        facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
-                    }
-                    facsGraph.CTCGraphs.Clear();
-                    delete = true;
+                    referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
+                    //Graph facsGraph = obj.GetComponent<Graph>();
+                    //referenceManager.graphManager.Graphs.Remove(facsGraph);
+                    //referenceManager.graphManager.facsGraphs.Remove(facsGraph);
+                    //for (int i = 0; i < facsGraph.CTCGraphs.Count; i++)
+                    //{
+                    //    facsGraph.CTCGraphs[i].GetComponent<GraphBetweenGraphs>().RemoveGraph();
+                    //}
+                    //facsGraph.CTCGraphs.Clear();
+                    //delete = true;
                     break;
             }
         }
@@ -168,8 +169,9 @@ namespace CellexalVR.Tools
         /// It creates the animation of the delete process. Switch case is used to make sure we send the right message to the other users.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
-        public void DeleteObject(GameObject obj)
+        private void DeleteObject(GameObject obj)
         {
+            print("delete obj - " + obj.gameObject.name);
             if (!obj)
             {
                 delete = false;
@@ -179,7 +181,6 @@ namespace CellexalVR.Tools
 
             if (currentTime < deleteTime)
             {
-
                 float step = speed * Time.deltaTime;
                 obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
                 obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
@@ -227,10 +228,10 @@ namespace CellexalVR.Tools
             }
         }
 
-        public void DeleteObjectAnimation(GameObject obj)
-        {
-            objectToDelete = obj;
-            delete = true;
-        }
+        //public void DeleteObjectAnimation(GameObject obj)
+        //{
+        //    objectToDelete = obj;
+        //    delete = true;
+        //}
     }
 }

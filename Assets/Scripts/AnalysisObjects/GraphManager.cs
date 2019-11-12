@@ -312,6 +312,20 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
+        /// Delete graph using the delete tool.
+        /// </summary>
+        /// <param name="name">Name of the gameobject</param>
+        /// <param name="tag">Tag of the graph. Behaves differently depending on if it is subgraph or facsgraph. Original graphs cannot be removed.</param>
+        public void DeleteGraph(string name, string tag)
+        {
+            Graph graph = FindGraph(name);
+            if (graph != null)
+            {
+                graph.DeleteGraph(tag);
+            }
+        }
+
+        /// <summary>
         /// Finds a graph.
         /// </summary>
         /// <param name="graphName"> The graph's name, or an empty string for any graph. </param>

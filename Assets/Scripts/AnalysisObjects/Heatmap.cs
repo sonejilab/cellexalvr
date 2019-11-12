@@ -115,6 +115,7 @@ namespace CellexalVR.AnalysisObjects
         private bool minimize;
         private bool maximize;
         private bool highlight;
+        private bool delete;
         private float highlightTime = 0;
         private float currentTime = 0;
         private float deleteTime = 0.7f;
@@ -215,6 +216,12 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
+        public void DeleteHeatmap()
+        {
+            minimize = true;
+            delete = true;
+        }
+
         /// <summary>
         /// Starts the minimize animation and hides the heatmap.
         /// </summary>
@@ -237,18 +244,34 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private void Minimize()
         {
+            Vector3 targetPosition;
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, referenceManager.leftController.transform.position, step);
+            if (delete)
+            {
+                targetPosition = referenceManager.deleteTool.transform.position;
+            }
+            else
+            {
+                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
+            }
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 50);
             if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
-                minimize = false;
-                foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                    r.enabled = false;
-                GetComponent<Renderer>().enabled = false;
-                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
-                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+                if (delete)
+                {
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    minimize = false;
+                    foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                        r.enabled = false;
+                    GetComponent<Renderer>().enabled = false;
+                    referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+                    referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+                }
             }
             currentTime += Time.deltaTime;
         }

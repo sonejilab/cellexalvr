@@ -35,6 +35,7 @@ namespace CellexalVR.AnalysisObjects
         // For minimization animation
         private bool minimize;
         private bool maximize;
+        private bool delete;
         private float speed;
         private float targetMinScale;
         private float targetMaxScale;
@@ -278,7 +279,14 @@ namespace CellexalVR.AnalysisObjects
         void Minimize()
         {
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+            if (delete)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, referenceManager.deleteTool.transform.position, step);
+            }
+            else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, referenceManager.minimizedObjectHandler.transform.position, step);
+            }
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
             if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
@@ -295,30 +303,6 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
             }
             currentTime += Time.deltaTime;
-        }
-
-        /// <summary>
-        /// Animation for deleting network.
-        /// </summary>
-        void DeleteAnimation()
-        {
-            float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, referenceManager.deleteTool.transform.position, step);
-            transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (transform.localScale.x <= targetMinScale)
-            {
-                foreach (NetworkCenter network in networks)
-                {
-                    foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
-                        r.enabled = false;
-                }
-                foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                    r.enabled = false;
-                minimize = false;
-                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
-                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
-            }
         }
 
         /// <summary>
@@ -365,7 +349,7 @@ namespace CellexalVR.AnalysisObjects
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             referenceManager.graphManager.RemoveNetwork(this);
-            referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
+            //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
         }
 
         /// <summary>
@@ -387,7 +371,9 @@ namespace CellexalVR.AnalysisObjects
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             referenceManager.graphManager.RemoveNetwork(this);
-            Destroy(this.gameObject);
+            delete = true;
+            minimize = true;
+            //Destroy(this.gameObject);
             //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
         }
 
