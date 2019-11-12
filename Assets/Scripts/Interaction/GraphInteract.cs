@@ -32,8 +32,6 @@ namespace CellexalVR.Interaction
         {
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
             //StopPositionSync();
-            //referenceManager.controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Normal);
-            //referenceManager.MultiuserMessageSender.SendMessageMoveGraph(GetComponent<Graph>().GraphName, transform.position, transform.rotation, transform.localScale);
             base.OnInteractableObjectGrabbed(e);
         }
 

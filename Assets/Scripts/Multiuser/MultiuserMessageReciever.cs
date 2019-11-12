@@ -383,14 +383,15 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageToggleGrabbable(string name, bool enable)
         {
-            var graph = referenceManager.graphManager.FindGraph(name);
-            if (graph == null)
+            //var graph = referenceManager.graphManager.FindGraph(name);
+            var gameObject = GameObject.Find(name);
+            if (gameObject == null)
             {
-                CellexalLog.Log("Tried to toggle graph colliders but could not find graph " + name);
+                CellexalLog.Log("Tried to toggle object colliders but could not find object with name: " + name);
             }
             else
             {
-                var colliders = graph.GetComponents<Collider>();
+                var colliders = gameObject.GetComponents<Collider>();
                 foreach (Collider c in colliders)
                 {
                     c.enabled = enable;

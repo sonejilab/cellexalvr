@@ -28,7 +28,6 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-            //referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
             if (grabbingObjects.Count == 1)
             {
@@ -50,7 +49,6 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            //referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
