@@ -209,7 +209,10 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        /// <summary
+        /// <summary>
+        /// Color all graphs with the expression of some gene.
+        /// </summary>
+        /// <param name="expressions">An arraylist with <see cref="CellExpressionPair"/>.</param>
         public void ColorAllGraphsByGeneExpression(ArrayList expressions)
         {
             foreach (Graph graph in Graphs)
