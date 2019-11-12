@@ -595,7 +595,6 @@ namespace CellexalVR.AnalysisLogic
             graphics.FillRectangle(Brushes.Black, heatmap.heatmapX, heatmap.heatmapY, heatmap.heatmapWidth, heatmap.heatmapHeight);
             Tuple<string, float> tuple;
             List<Tuple<string, float>> expressions = new List<Tuple<string, float>>();
-            for (int i = 1; i < result.Count;)
             {
                 // new gene
                 string genename = ((Tuple<string, float>)result[i]).Item1;
