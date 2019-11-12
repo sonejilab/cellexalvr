@@ -18,15 +18,16 @@ namespace CellexalVR.Interaction
 
         public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
         {
-
-            referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
+            //referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             GetComponent<MeshCollider>().convex = true;
             base.OnInteractableObjectGrabbed(e);
         }
 
         public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
         {
-            referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
+            //referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             if (grabbingObjects.Count == 0)
                 GetComponent<MeshCollider>().convex = false;
             base.OnInteractableObjectUngrabbed(e);
