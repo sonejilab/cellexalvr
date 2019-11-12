@@ -118,7 +118,7 @@ namespace CellexalVR.AnalysisObjects
         private bool delete;
         private float highlightTime = 0;
         private float currentTime = 0;
-        private float deleteTime = 0.7f;
+        private float animationTime = 0.7f;
         #endregion
 
         private void OnValidate()
@@ -235,7 +235,7 @@ namespace CellexalVR.AnalysisObjects
                 c.enabled = false;
             }
             currentTime = 0;
-            shrinkSpeed = (transform.localScale.x - targetScale) / deleteTime;
+            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
             minimize = true;
         }
 
@@ -257,7 +257,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 50);
-            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
             {
                 if (delete)
                 {
@@ -285,6 +285,8 @@ namespace CellexalVR.AnalysisObjects
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 r.enabled = true;
             GetComponent<Renderer>().enabled = true;
+            currentTime = 0;
+            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
             maximize = true;
         }
 
@@ -297,7 +299,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
             transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * -50);
-            if (transform.localScale.x >= originalScale.x)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
             {
                 transform.localScale = originalScale;
                 transform.position = originalPos;
@@ -306,6 +308,7 @@ namespace CellexalVR.AnalysisObjects
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                     c.enabled = true;
             }
+            currentTime += Time.deltaTime;
         }
 
         /// <summary>

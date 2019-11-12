@@ -48,7 +48,7 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 targetPos;
         private float targetScale;
         private float currentTime = 0;
-        private float deleteTime = 0.7f;
+        private float animationTime = 0.7f;
 
         public int layoutApplied = 0;
 
@@ -214,7 +214,8 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-
+            currentTime = 0;
+            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
             GetComponent<Renderer>().enabled = true;
             //GetComponent<Collider>().enabled = true;
             maximize = true;
@@ -229,7 +230,7 @@ namespace CellexalVR.AnalysisObjects
             transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
             transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * -100);
-            if (transform.localScale.x >= originalScale.x)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
             {
                 transform.localScale = originalScale;
                 transform.localPosition = originalPos;
@@ -251,6 +252,7 @@ namespace CellexalVR.AnalysisObjects
                 GetComponent<Collider>().enabled = true;
                 maximize = false;
             }
+            currentTime += Time.deltaTime;
         }
 
         /// <summary>
@@ -269,7 +271,7 @@ namespace CellexalVR.AnalysisObjects
             originalRot = transform.localRotation;
             originalScale = transform.localScale;
             currentTime = 0;
-            shrinkSpeed = (transform.localScale.x - targetScale) / deleteTime;
+            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
             minimize = true;
         }
 
@@ -289,7 +291,7 @@ namespace CellexalVR.AnalysisObjects
             }
             transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
             {
                 foreach (NetworkCenter network in networks)
                 {

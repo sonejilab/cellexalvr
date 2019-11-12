@@ -191,6 +191,8 @@ namespace CellexalVR.AnalysisObjects
             //foreach (Renderer r in GetComponentsInChildren<Renderer>())
             //    r.enabled = true;
             gameObject.SetActive(true);
+            shrinkSpeed = (transform.localScale.x - targetMinScale) / deleteTime;
+            currentTime = 0;
             maximize = true;
         }
 
@@ -204,7 +206,7 @@ namespace CellexalVR.AnalysisObjects
             transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
             transform.Rotate(Vector3.one * Time.deltaTime * -100);
             //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-            if (transform.localScale.x >= targetMaxScale)
+            if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
             {
                 transform.localScale = oldScale;
                 transform.localPosition = oldPos;
@@ -223,11 +225,11 @@ namespace CellexalVR.AnalysisObjects
                 foreach (Collider c in GetComponentsInChildren<Collider>())
                     c.enabled = true;
             }
+            currentTime += Time.deltaTime;
         }
 
         public void DeleteGraph(string tag)
         {
-            minimize = true;
             if (tag == "SubGraph")
             {
                 if (hasVelocityInfo)
@@ -254,6 +256,9 @@ namespace CellexalVR.AnalysisObjects
                 }
                 CTCGraphs.Clear();
             }
+            shrinkSpeed = (transform.localScale.x - targetMinScale) / deleteTime;
+            currentTime = 0;
+            minimize = true;
             delete = true;
         }
 
