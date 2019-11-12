@@ -306,7 +306,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4792580207310606}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33206758433162778
 MeshFilter:
@@ -1052,6 +1052,7 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
+  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
@@ -1075,7 +1076,6 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_textAlignment: 257
-  m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -1102,6 +1102,7 @@ MonoBehaviour:
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
+  m_VertexBufferAutoSizeReduction: 1
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
@@ -1116,12 +1117,9 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
-  m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 23896076330151522}
   m_subTextObjects:
@@ -11925,9 +11923,7 @@ MonoBehaviour:
   menuControllerMesh: {fileID: 4300000, guid: ed122828051ed1245a82cee44ce7b35a, type: 3}
   selectionToolMeshes:
   - {fileID: 4300000, guid: f4606eb4b78ab994e8a6b08bb5174d40, type: 3}
-  - {fileID: 4300000, guid: 80d420b409a08554aa965aad9a22a620, type: 3}
   - {fileID: 4300000, guid: d854f1e9d24382a4fab37555f42f33e4, type: 3}
-  - {fileID: 4300000, guid: d99404988dfc6e041b5e73a18e168b07, type: 3}
   minimizeMesh: {fileID: 4300000, guid: 68abd0a4163d6224e813ab7ec4ad75df, type: 3}
   normalMaterial: {fileID: 2100000, guid: 16047cef510b68744b3bd259bbfce3ab, type: 2}
   selectionToolHandlerMaterial: {fileID: 2100000, guid: 96b0e99b8991fab4e844e566d297fd42,
@@ -12459,9 +12455,7 @@ Transform:
   m_Children:
   - {fileID: 4901623026242352}
   - {fileID: 4940225777015776}
-  - {fileID: 4588870512039064}
   - {fileID: 4402052942691936}
-  - {fileID: 4563329199448906}
   m_Father: {fileID: 4424463842452488}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12483,9 +12477,7 @@ MonoBehaviour:
   particles: {fileID: 198619358105292146}
   selectionToolColliders:
   - {fileID: 160724176}
-  - {fileID: 65520005156711304}
   - {fileID: 135965618154803798}
-  - {fileID: 64297983899819906}
   Colors: []
   currentColorIndex: 0
   hapticFeedbackThisFrame: 1
@@ -14971,6 +14963,7 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
+  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
@@ -14994,7 +14987,6 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_textAlignment: 258
-  m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -15021,6 +15013,7 @@ MonoBehaviour:
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
+  m_VertexBufferAutoSizeReduction: 1
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
@@ -15035,12 +15028,9 @@ MonoBehaviour:
     lineCount: 0
     pageCount: 0
     materialCount: 1
-  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
-  m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 23588081438827638}
   m_subTextObjects:
@@ -20035,59 +20025,6 @@ Transform:
   m_Father: {fileID: 4578652780889248}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1720419548759726
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4588870512039064}
-  - component: {fileID: 33250028033026780}
-  - component: {fileID: 65520005156711304}
-  m_Layer: 14
-  m_Name: Selection Tool Collider Pointy
-  m_TagString: SelectionTool
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4588870512039064
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720419548759726}
-  m_LocalRotation: {x: 0.067873895, y: -0, z: -0, w: 0.99769396}
-  m_LocalPosition: {x: 0, y: -0.00548, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4792580207310606}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 7.7840004, y: 0, z: 0}
---- !u!33 &33250028033026780
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720419548759726}
-  m_Mesh: {fileID: 4300002, guid: 720e2754d5d776445a36fd59cfd55e39, type: 3}
---- !u!65 &65520005156711304
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720419548759726}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.0021880686, y: 0.002317021, z: 0.06580145}
-  m_Center: {x: 0.000068221125, y: -0.001317581, z: 0.026578382}
 --- !u!1 &1724554744370868
 GameObject:
   m_ObjectHideFlags: 0
@@ -20561,60 +20498,6 @@ Transform:
   m_Father: {fileID: 4244681844511754}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1755159358153858
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4563329199448906}
-  - component: {fileID: 33735700628398150}
-  - component: {fileID: 64297983899819906}
-  m_Layer: 14
-  m_Name: Selection Tool Collider Tearpdrop Huge
-  m_TagString: SelectionTool
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4563329199448906
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755159358153858}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0111, z: 0.0459}
-  m_LocalScale: {x: 1, y: 4.186535, z: 4.186535}
-  m_Children: []
-  m_Father: {fileID: 4792580207310606}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &33735700628398150
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755159358153858}
-  m_Mesh: {fileID: 4300002, guid: 720e2754d5d776445a36fd59cfd55e39, type: 3}
---- !u!64 &64297983899819906
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755159358153858}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: -1
-  m_Mesh: {fileID: 4300000, guid: 70a9c265aa1ce7c469c1a8b0238a6bd1, type: 3}
 --- !u!1 &1758570761568618
 GameObject:
   m_ObjectHideFlags: 0
