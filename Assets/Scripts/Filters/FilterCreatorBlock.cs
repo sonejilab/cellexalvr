@@ -136,6 +136,10 @@ namespace CellexalVR.Filters
         /// </summary>
         internal void DisconnectAllPorts()
         {
+            if (ports == null)
+            {
+                return;
+            }
             foreach (var port in ports)
             {
                 port.Disconnect();
