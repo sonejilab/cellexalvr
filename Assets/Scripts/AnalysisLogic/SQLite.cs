@@ -743,7 +743,7 @@ namespace SQLiter
             for (int i = 0; i < genes.Length; ++i)
             {
                 string gene = genes[i];
-                builder.Append("\"").Append(gene).Append("\"");
+                builder.Append("\"upper(").Append(gene).Append(")\"");
                 if (i < genes.Length - 1)
                 {
                     builder.Append(", ");
@@ -751,7 +751,7 @@ namespace SQLiter
             }
             string geneNames = builder.ToString();
 
-            string query = "select gname, id from genes where gname in (" + geneNames + ")";
+            string query = "select gname, id from genes where upper(gname) in (" + geneNames + ")";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();
             while (t.IsAlive)

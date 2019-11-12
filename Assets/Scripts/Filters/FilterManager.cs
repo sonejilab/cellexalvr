@@ -446,6 +446,10 @@ namespace CellexalVR.Filters
         public void ResetFilter(/*bool informMultiUser = true*/)
         {
             currentFilter = null;
+            StopAllCoroutines();
+            runningSwapPercentCoroutine = null;
+            cellsToEvaluate.Clear();
+            evaluating = false;
             resultBlock.DisconnectAllPorts();
             //if (informMultiUser)
             //{

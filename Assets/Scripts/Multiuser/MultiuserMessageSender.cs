@@ -719,12 +719,14 @@ namespace CellexalVR.Multiuser
         public void SendMessageSetFilter(string filter)
         {
             if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to set filter to " + filter);
             coordinator.photonView.RPC("RecieveMessageSetFilter", PhotonTargets.Others, filter);
         }
 
         public void SendMessageResetFilter()
         {
             if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to reset filter");
             coordinator.photonView.RPC("RecieveMessageResetFilter", PhotonTargets.Others);
         }
         #endregion
