@@ -1,4 +1,4 @@
-﻿namespace CellexalVR.Menu.Buttons.Velocity
+﻿namespace CellexalVR.Menu.Buttons
 {
 
     public class ResetFilterButton : CellexalVR.Menu.Buttons.CellexalButton

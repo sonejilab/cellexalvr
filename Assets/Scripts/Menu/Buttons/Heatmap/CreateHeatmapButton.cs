@@ -27,13 +27,13 @@ namespace CellexalVR.Menu.Buttons.Heatmap
             SetButtonActivated(false);
             CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
-            //CellexalEvents.CreatingHeatmap.AddListener(TurnOff);
+            CellexalEvents.CreatingHeatmap.AddListener(TurnOff);
         }
 
         public override void Click()
         {
             heatmapGenerator.CreateHeatmap("");
-            TurnOff();
+            //TurnOff();
             //referenceManager.controllerModelSwitcher.TurnOffActiveTool(true);
             //gd.CreateManyPlots();
         }
