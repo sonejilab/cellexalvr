@@ -94,7 +94,6 @@ namespace CellexalVR.Tools
         {
             objectToDelete = obj;
             currentTime = 0f;
-            shrinkSpeed = (objectToDelete.transform.localScale.x - targetScale) / deleteTime;
             switch (obj.tag)
             {
                 case "HeatBoard":

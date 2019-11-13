@@ -295,10 +295,10 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (delete)
                 {
-                    for (int i = 0; i < networks.Count; i++)
-                    {
-                        Destroy(networks[i].gameObject);
-                    }
+                    //for (int i = 0; i < networks.Count; i++)
+                    //{
+                    //    Destroy(networks[i].gameObject);
+                    //}
                     Destroy(gameObject);
 
                     return;
@@ -371,16 +371,17 @@ namespace CellexalVR.AnalysisObjects
                 CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
             }
 
-            //for (int i = 0; i < networks.Count; i++)
-            //{
-            //    Destroy(networks[i].gameObject);
-            //}
+            for (int i = 0; i < networks.Count; i++)
+            {
+                Destroy(networks[i].gameObject);
+            }
             networks.Clear();
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             referenceManager.graphManager.RemoveNetwork(this);
             delete = true;
             minimize = true;
+            removing = true; 
             //Destroy(this.gameObject);
             //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
         }
