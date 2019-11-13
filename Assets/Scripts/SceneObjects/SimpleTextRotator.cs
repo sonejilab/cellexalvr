@@ -20,8 +20,11 @@ namespace CellexalVR.SceneObjects
         void Update()
         {
             // some math make the text not be mirrored
-            transform.LookAt(2 * transform.position - CameraToLookAt.position);
-            transform.position = (t1.position + t2.position) / 2;
+            if (t1 != null && t2 != null)
+            {
+                transform.LookAt(2 * transform.position - CameraToLookAt.position);
+                transform.position = (t1.position + t2.position) / 2;
+            }
 
         }
 
