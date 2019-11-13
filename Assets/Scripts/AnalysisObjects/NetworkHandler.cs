@@ -293,6 +293,11 @@ namespace CellexalVR.AnalysisObjects
             transform.Rotate(Vector3.one * Time.deltaTime * 100);
             if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
             {
+                if (delete)
+                {
+                    Destroy(gameObject);
+                    return;
+                }
                 foreach (NetworkCenter network in networks)
                 {
                     foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
