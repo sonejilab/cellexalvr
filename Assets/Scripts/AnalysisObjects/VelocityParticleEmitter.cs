@@ -79,8 +79,11 @@ namespace CellexalVR.AnalysisObjects
             set
             {
                 constantEmitOverTime = value;
-                Stop();
-                Play();
+                if (!constantEmitOverTime)
+                {
+                    CancelInvoke();
+                    InvokeRepeating("DoEmit", 0f, ArrowEmitRate);
+                }
             }
         }
 
@@ -146,8 +149,11 @@ namespace CellexalVR.AnalysisObjects
             if (oldArrowEmitRate != ArrowEmitRate)
             {
                 oldArrowEmitRate = ArrowEmitRate;
-                Stop();
-                Play();
+                if (!constantEmitOverTime)
+                {
+                    CancelInvoke();
+                    InvokeRepeating("DoEmit", 0f, ArrowEmitRate);
+                }
             }
 
             if (graph.transform.hasChanged && transform.localScale != graph.transform.localScale)
