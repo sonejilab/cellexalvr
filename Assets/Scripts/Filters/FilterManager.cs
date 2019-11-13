@@ -389,7 +389,7 @@ namespace CellexalVR.Filters
             List<string> attributes = filter.GetAttributes();
             foreach (string attribute in attributes)
             {
-                if (!cellManager.Attributes.Contains(attribute))
+                if (!cellManager.Attributes.Contains(attribute, StringComparer.OrdinalIgnoreCase))
                 {
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";

@@ -548,7 +548,7 @@ namespace SQLiter
 
         private IEnumerator QueryGeneRangesCoroutine(string[] genes)
         {
-            string genesString = string.Join(", ", genes);
+            string genesString = string.Join("\", \"", genes);
             string query = "select gname, min(value), max(value) from datavalues inner join genes on datavalues.gene_id = genes.id where gname in (\"" + genesString + "\") group by gname";
             Thread t = new Thread(() => QueryThread(query));
             t.Start();

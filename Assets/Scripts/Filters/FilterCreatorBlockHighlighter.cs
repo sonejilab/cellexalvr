@@ -90,6 +90,7 @@ namespace CellexalVR.Filters
                 else if (type == FieldType.ATTRIBUTE_INCLUDE)
                 {
                     textmeshpro.text = textmeshpro.text == "included" ? "not included" : "included";
+                    referenceManager.filterManager.UpdateFilterFromFilterCreator();
                 }
 
                 if (keyboard != null)
