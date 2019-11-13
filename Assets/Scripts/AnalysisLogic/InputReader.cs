@@ -19,6 +19,7 @@ using CellexalVR.Interaction;
 using System.Drawing;
 using System.Drawing.Imaging;
 using CellexalVR.Multiuser;
+using System.Diagnostics;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -538,10 +539,12 @@ namespace CellexalVR.AnalysisLogic
         /// <returns></returns>
         private IEnumerator StartServer(string serverType)
         {
+            Process currentProcess = Process.GetCurrentProcess();
+            int pid = currentProcess.Id;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
             string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder;
+            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder + " " + pid;
 
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
             string value = null;

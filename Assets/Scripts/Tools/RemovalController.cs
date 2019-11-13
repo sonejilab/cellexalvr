@@ -77,10 +77,7 @@ namespace CellexalVR.Tools
 
         private void OnTriggerExit(Collider other)
         {
-            GetComponent<MeshRenderer>().material = inactiveMat;
-            GetComponent<Light>().color = Color.white;
-            transform.localScale = Vector3.one * 0.03f;
-            GetComponent<Light>().range = 0.04f;
+            ResetHighlight();
             controllerInside = false;
         }
 
@@ -111,7 +108,7 @@ namespace CellexalVR.Tools
                     NetworkHandler nh = obj.GetComponent<NetworkHandler>();
                     if (nh)
                     {
-                        nh.DeleteNetworkMultiUser();
+                        nh.DeleteNetwork();
                     }
 
                     break;
@@ -126,51 +123,12 @@ namespace CellexalVR.Tools
             }
         }
 
-        /// <summary>
-        /// Called every frame if bool variable delete is true.
-        /// It creates the animation of the delete process. Switch case is used to make sure we send the right message to the other users.
-        /// </summary>
-        /// <param name="obj">The object to remove.</param>
-        //private void DeleteObject(GameObject obj)
-        //{
-        //    print("delete obj - " + obj.gameObject.name);
-        //    if (!obj)
-        //    {
-        //        delete = false;
-        //        GetComponent<MeshRenderer>().material = inactiveMat;
-        //        return;
-        //    }
-
-        //    if (currentTime < deleteTime)
-        //    {
-        //        float step = speed * Time.deltaTime;
-        //        obj.transform.position = Vector3.MoveTowards(obj.transform.position, transform.position, step);
-        //        obj.transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-        //        obj.transform.Rotate(Vector3.one * Time.deltaTime * 100);
-        //    }
-
-        //    if (Mathf.Abs(currentTime - deleteTime) <= 0.05f)
-        //    {
-        //        if (obj.transform.GetComponentInParent<NetworkHandler>() != null)
-        //        {
-        //            obj = obj.transform.GetComponentInParent<NetworkHandler>().gameObject;
-        //            Destroy(obj);
-        //        }
-        //        else if (obj.GetComponent<NetworkHandler>())
-        //        {
-        //            Destroy(obj);
-        //        }
-        //        else
-        //        {
-        //            Destroy(obj);
-        //        }
-        //        CellexalLog.Log("Deleted object: " + obj.name);
-        //        delete = false;
-        //        GetComponent<MeshRenderer>().material = inactiveMat;
-        //        GetComponent<Light>().color = Color.white;
-        //        transform.localScale = Vector3.one * 0.03f;
-        //        GetComponent<Light>().range = 0.04f;
-        //    }
-        //}
+        public void ResetHighlight()
+        {
+            GetComponent<MeshRenderer>().material = inactiveMat;
+            GetComponent<Light>().color = Color.white;
+            transform.localScale = Vector3.one * 0.03f;
+            GetComponent<Light>().range = 0.04f;
+        }
     }
 }

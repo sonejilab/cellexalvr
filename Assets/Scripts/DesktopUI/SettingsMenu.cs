@@ -207,7 +207,6 @@ namespace CellexalVR.DesktopUI
             }
             if (CellexalConfig.Config.SelectionToolColors.Length < selectionColorButtons.Count)
             {
-                print("sel button count: " + selectionColorButtons.Count + ", config col count: " + CellexalConfig.Config.SelectionToolColors.Length) ;
                 int nrOfselectionColorButtons = selectionColorButtons.Count;
                 for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < nrOfselectionColorButtons; j++)
                 {

@@ -17,6 +17,7 @@ using CellexalVR.Menu.Buttons;
 using CellexalVR.Extensions;
 using System.Linq;
 using CellexalVR.Multiuser;
+using CellexalVR.Tools;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -216,6 +217,9 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
+        /// <summary>
+        /// Starts the deletion of heatmap. Same animation as when minimizing but destroying the object once minimized.
+        /// </summary>
         public void DeleteHeatmap()
         {
             minimize = true;
@@ -261,6 +265,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (delete)
                 {
+                    referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
                     Destroy(this.gameObject);
                 }
                 else

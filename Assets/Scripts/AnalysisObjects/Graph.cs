@@ -7,6 +7,7 @@ using System.Text;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Multiuser;
+using CellexalVR.Tools;
 using SQLiter;
 using TMPro;
 using UnityEngine;
@@ -228,6 +229,10 @@ namespace CellexalVR.AnalysisObjects
             currentTime += Time.deltaTime;
         }
 
+        /// <summary>
+        /// Used to delete a graph. Starts the minimizing animation and then deletes the object.
+        /// </summary>
+        /// <param name="tag"></param>
         public void DeleteGraph(string tag)
         {
             if (tag == "SubGraph")
@@ -301,6 +306,7 @@ namespace CellexalVR.AnalysisObjects
             else if (delete)
             {
                 targetPosition = referenceManager.deleteTool.transform.position;
+                referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
             }
             else
             {

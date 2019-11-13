@@ -998,7 +998,7 @@ namespace CellexalVR.Multiuser
             }
             else if (tag == "Network")
             {
-                GameObject.Find(name).GetComponent<NetworkHandler>().DeleteNetworkMultiUser();
+                GameObject.Find(name).GetComponent<NetworkHandler>().DeleteNetwork();
             }
         }
 

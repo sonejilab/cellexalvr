@@ -295,12 +295,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (delete)
                 {
-                    //for (int i = 0; i < networks.Count; i++)
-                    //{
-                    //    Destroy(networks[i].gameObject);
-                    //}
+                    referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
                     Destroy(gameObject);
-
                     return;
                 }
                 foreach (NetworkCenter network in networks)
@@ -340,30 +336,11 @@ namespace CellexalVR.AnalysisObjects
             createAnim = true;
         }
 
+        /// <summary
         /// <summary>
-        /// Coroutine that deletes this network.
+        /// Used to delete this network. Starts the same animation that is used to minimze but deletes the obj when its been minimized.
         /// </summary>
-        public IEnumerator DeleteNetworkCoroutine()
-        {
-            if (!removable)
-            {
-                Debug.Log("Script is running");
-                CellexalError.SpawnError("Delete failed", "Can not delete network yet. Wait for script to finish before removing it.");
-                yield break;
-            }
-
-            removing = true;
-            networks.Clear();
-            referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
-            referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
-            referenceManager.graphManager.RemoveNetwork(this);
-            //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
-        }
-
-        /// <summary>
-        /// Used when another client removes the networks.
-        /// </summary>
-        public void DeleteNetworkMultiUser()
+        public void DeleteNetwork()
         {
             if (!removable)
             {
