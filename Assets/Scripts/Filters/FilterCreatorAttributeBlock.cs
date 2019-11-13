@@ -57,7 +57,7 @@ namespace CellexalVR.Filters
         public override BooleanExpression.Expr ToExpr()
         {
             UpdateStrings();
-            return new BooleanExpression.AttributeExpr(attributeNameString, includeString == "include");
+            return new BooleanExpression.AttributeExpr(attributeNameString, includeString == "included");
         }
 
         public override void SetCollidersActivated(bool activate)

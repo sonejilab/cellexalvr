@@ -961,7 +961,9 @@ namespace CellexalVR.AnalysisLogic
 
             public override bool Eval(Cell cell)
             {
-                return cell.Attributes.ContainsKey(attribute);
+                // equivalent to:
+                // if (include && attr.contains || !include && !attr.contains)
+                return !(cell.Attributes.ContainsKey(attribute) ^ include);
             }
 
             public override void GetGenes(ref List<string> result, bool onlyPercent = false) { }
