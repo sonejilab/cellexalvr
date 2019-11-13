@@ -295,7 +295,12 @@ namespace CellexalVR.AnalysisObjects
             {
                 if (delete)
                 {
+                    for (int i = 0; i < networks.Count; i++)
+                    {
+                        Destroy(networks[i].gameObject);
+                    }
                     Destroy(gameObject);
+
                     return;
                 }
                 foreach (NetworkCenter network in networks)
@@ -348,10 +353,6 @@ namespace CellexalVR.AnalysisObjects
             }
 
             removing = true;
-            for (int i = 0; i < networks.Count; i++)
-            {
-                Destroy(networks[i].gameObject);
-            }
             networks.Clear();
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
