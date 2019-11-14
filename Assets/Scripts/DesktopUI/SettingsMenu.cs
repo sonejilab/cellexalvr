@@ -63,6 +63,7 @@ namespace CellexalVR.DesktopUI
         [Header("Visual")]
         public TMPro.TMP_Dropdown skyboxDropdown;
         public Toggle notificationToggle;
+        public ColorPickerButton skyboxTintColor;
 
         public Material[] skyboxes;
 
@@ -216,6 +217,9 @@ namespace CellexalVR.DesktopUI
             }
             velocityHighColor.Color = CellexalConfig.Config.VelocityParticlesHighColor;
             velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
+            skyboxTintColor.Color = CellexalConfig.Config.SkyboxTintColor;
+
+            
 
             SetNetworkColoringMethod();
 
