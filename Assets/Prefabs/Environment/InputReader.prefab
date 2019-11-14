@@ -112,10 +112,6 @@ MonoBehaviour:
   rightControllerScriptAlias: {fileID: 0}
   leftControllerScriptAlias: {fileID: 0}
   controllerModelSwitcher: {fileID: 0}
-  HUDFlashInfo: {fileID: 0}
-  HUDGroupInfo: {fileID: 0}
-  FarFlashInfo: {fileID: 0}
-  FarGroupInfo: {fileID: 0}
   headset: {fileID: 0}
   controllerMenuCollider: {fileID: 0}
   rightLaser: {fileID: 0}
@@ -124,7 +120,6 @@ MonoBehaviour:
   selectionToolCollider: {fileID: 0}
   deleteTool: {fileID: 0}
   minimizeTool: {fileID: 0}
-  helpMenu: {fileID: 0}
   drawTool: {fileID: 0}
   webBrowser: {fileID: 0}
   screenshotCamera: {fileID: 0}
@@ -139,15 +134,10 @@ MonoBehaviour:
   filterMenu: {fileID: 0}
   velocitySubMenu: {fileID: 0}
   selectionMenu: {fileID: 0}
-  currentFlashedGeneText: {fileID: 0}
   frontButtons: {fileID: 0}
   rightButtons: {fileID: 0}
   backButtons: {fileID: 0}
   leftButtons: {fileID: 0}
-  frontDescription: {fileID: 0}
-  rightDescription: {fileID: 0}
-  backDescription: {fileID: 0}
-  leftDescription: {fileID: 0}
   menuRotator: {fileID: 0}
   minimizedObjectHandler: {fileID: 0}
   menuToggler: {fileID: 0}
@@ -160,16 +150,13 @@ MonoBehaviour:
   inputFolderGenerator: {fileID: 0}
   loaderController: {fileID: 0}
   configManager: {fileID: 114706478586369516}
-  helperCylinder: {fileID: 0}
   inputReader: {fileID: 114916324322146698}
   database: {fileID: 0}
   logManager: {fileID: 114405805043964006}
   multiuserMessageSender: {fileID: 0}
-  calculatorCluster: {fileID: 0}
   consoleManager: {fileID: 0}
   turnOffThoseLights: {fileID: 0}
   fpsCounter: {fileID: 0}
-  demoManager: {fileID: 0}
   newGraphFromMarkers: {fileID: 0}
   notificationManager: {fileID: 0}
   tutorialManager: {fileID: 0}
