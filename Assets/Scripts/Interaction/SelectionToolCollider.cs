@@ -18,12 +18,36 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
-        public Sprite buttonIcons;
         public ParticleSystem particles;
+        public Material selectionToolMaterial;
         public Collider[] selectionToolColliders;
         public Color[] Colors;
+        public Sprite[] selectionToolShapeButtons;
         public int currentColorIndex = 0;
         public bool hapticFeedbackThisFrame = true;
+
+        private int currentMeshIndex;
+        /// <summary>
+        /// 0: paddle, 1: bludgeon, 2: smaller bludgeon, 4: stick
+        /// </summary>
+        public int CurrentMeshIndex
+        {
+            get => currentMeshIndex;
+            set
+            {
+                currentMeshIndex = value;
+                if (currentMeshIndex >= selectionToolColliders.Length)
+                {
+                    currentMeshIndex = 0;
+                }
+                else if (currentMeshIndex < 0)
+                {
+                    currentMeshIndex = selectionToolColliders.Length - 1;
+                }
+                UpdateShapeIcons();
+            }
+        }
+
 
         private SelectionFromPreviousMenu previousSelectionMenu;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -32,7 +56,6 @@ namespace CellexalVR.Interaction
         private SteamVR_Controller.Device device;
         private MultiuserMessageSender multiuserMessageSender;
         private bool selActive = false;
-        private int currentMeshIndex;
         private Color selectedColor;
         private VRTK_RadialMenu radialMenu;
 
@@ -48,7 +71,7 @@ namespace CellexalVR.Interaction
         {
             previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
             graphManager = referenceManager.graphManager;
-            SetSelectionToolEnabled(false, 0);
+            SetSelectionToolEnabled(false);
 
             if (CellexalConfig.Config != null)
             {
@@ -65,6 +88,7 @@ namespace CellexalVR.Interaction
             selectionManager = referenceManager.selectionManager;
             if (!CrossSceneInformation.Ghost)
                 radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            UpdateShapeIcons();
 
         }
 
@@ -77,12 +101,12 @@ namespace CellexalVR.Interaction
                 if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     particles.gameObject.SetActive(true);
-                    ActivateSelection(true);
+                    selActive = true;
                 }
                 if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     hapticFeedbackThisFrame = true;
-                    var activeCollider = selectionToolColliders[currentMeshIndex];
+                    var activeCollider = selectionToolColliders[CurrentMeshIndex];
                     Vector3 boundsCenter = activeCollider.bounds.center;
                     Vector3 boundsExtents = activeCollider.bounds.extents;
                     foreach (var graph in graphManager.Graphs)
@@ -98,15 +122,16 @@ namespace CellexalVR.Interaction
 
                 else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
                 {
-                    ActivateSelection(false);
+                    selActive = false;
+                    particles.gameObject.SetActive(false);
                 }
             }
             // Sometimes a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
             // if selection tool is inactive.
-            if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
-            {
-                particles.gameObject.SetActive(false);
-            }
+            //if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
+            //{
+            //    particles.gameObject.SetActive(false);
+            //}
 
         }
 
@@ -134,8 +159,6 @@ namespace CellexalVR.Interaction
         public void UpdateColors()
         {
             currentColorIndex = 0;
-            //radialMenu.buttons[1].ButtonIcon = buttonIcons;
-            //radialMenu.buttons[3].ButtonIcon = buttonIcons;
             Colors = CellexalConfig.Config.SelectionToolColors;
             for (int i = 0; i < Colors.Length; i++)
             {
@@ -184,40 +207,33 @@ namespace CellexalVR.Interaction
             int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
             int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
             // VRTK 3.3
-            radialMenu.RegenerateButtons();
+            //radialMenu.RegenerateButtons();
             radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
             radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             selectedColor = Colors[currentColorIndex];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
+
+            var main = particles.main;
+            main.startColor = Colors[currentColorIndex];
         }
 
         /// <summary>
-        /// Activates or deactivates all colliders on the selectiontool.
+        /// Activates or deactivates the selection tool.
         /// </summary>
         /// <param name="enabled"> True if the selection tool should be activated, false if it should be deactivated. </param>
-        /// <param name="meshIndex">The index of the collider that should be activated, if <paramref name="enabled"/> is <code>true</code>.</param>
-        public void SetSelectionToolEnabled(bool enabled, int meshIndex)
+        public void SetSelectionToolEnabled(bool enabled)
         {
-            currentMeshIndex = meshIndex;
             if (enabled)
             {
                 controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
             }
-            if (!enabled && particles != null)
-            {
-                particles.gameObject.SetActive(false);
-            }
-            if (selActive)
-            {
-                particles.gameObject.SetActive(true);
-                var main = particles.main;
-                main.startColor = Colors[currentColorIndex];
-            }
+            //particles.gameObject.SetActive(enabled && particles != null);
+
             for (int i = 0; i < selectionToolColliders.Length; ++i)
             {
-                // if we are turning on the selection tool, enable the collider with the corresponding index as the mesh and disable the other colliders.
-                selectionToolColliders[i].enabled = enabled && selActive && meshIndex == i;
+                // if we are turning on the selection tool, enable the gameobject with the right index and disable the other ones
+                selectionToolColliders[i].gameObject.SetActive(enabled && CurrentMeshIndex == i);
             }
 
         }
@@ -225,12 +241,28 @@ namespace CellexalVR.Interaction
         void ActivateSelection(bool sel)
         {
             selActive = sel;
-            SetSelectionToolEnabled(true, currentMeshIndex);
+            SetSelectionToolEnabled(true);
         }
 
         public bool IsSelectionToolEnabled()
         {
             return GetComponentsInChildren<Collider>().Any(x => x.enabled);
+        }
+
+        private void UpdateShapeIcons()
+        {
+            if (radialMenu)
+            {
+                //radialMenu.RegenerateButtons();
+                print(radialMenu.menuButtons[0] + " " + radialMenu.menuButtons[0].GetComponentInChildren<Image>());
+                if (radialMenu.menuButtons[0] && radialMenu.menuButtons[0].GetComponentInChildren<Image>())
+                {
+                    int buttonIndexUp = currentMeshIndex == selectionToolColliders.Length - 1 ? 0 : currentMeshIndex + 1;
+                    int buttonIndexDown = currentMeshIndex == 0 ? selectionToolColliders.Length - 1 : currentMeshIndex - 1;
+                    radialMenu.menuButtons[0].GetComponentInChildren<Image>().sprite = selectionToolShapeButtons[buttonIndexUp];
+                    radialMenu.menuButtons[2].GetComponentInChildren<Image>().sprite = selectionToolShapeButtons[buttonIndexDown];
+                }
+            }
         }
 
     }

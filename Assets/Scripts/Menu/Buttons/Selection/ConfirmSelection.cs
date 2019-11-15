@@ -33,7 +33,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            referenceManager.selectionToolCollider.SetSelectionToolEnabled(false, 0);
+            referenceManager.selectionToolCollider.SetSelectionToolEnabled(false);
             selectionManager.ConfirmSelection();
             referenceManager.multiuserMessageSender.SendMessageConfirmSelection();
             //controllerModelSwitcher.TurnOffActiveTool(true);

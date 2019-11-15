@@ -19,7 +19,6 @@ namespace CellexalVR.Interaction
         //public Texture normalControllerTexture;
         public Mesh menuControllerMesh;
         //public Texture menuControllerTexture;
-        public Mesh[] selectionToolMeshes;
         public Mesh minimizeMesh;
         public Material normalMaterial;
         public Material selectionToolHandlerMaterial;
@@ -105,7 +104,7 @@ namespace CellexalVR.Interaction
             rightControllerBodyMeshFilter = rightControllerBody.GetComponent<MeshFilter>();
             rightControllerBodyMeshFilter.mesh = normalControllerMesh;
             rightControllerBodyRenderer = rightControllerBody.GetComponent<Renderer>();
-            rightControllerBodyRenderer.material = normalMaterial;
+            rightControllerBodyRenderer.sharedMaterial = normalMaterial;
             leftControllerBodyMeshFilter = leftControllerBody.GetComponent<MeshFilter>();
             leftControllerBodyMeshFilter.mesh = normalControllerMesh;
             leftControllerBodyRenderer = leftControllerBody.GetComponent<Renderer>();
@@ -195,16 +194,17 @@ namespace CellexalVR.Interaction
                     drawTool.SetActive(false);
                     deleteTool.SetActive(false);
                     minimizer.SetActive(false);
+                    selectionToolCollider.SetSelectionToolEnabled(false);
                     rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
                     //rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
-                    rightControllerBodyRenderer.material = normalMaterial;
+                    rightControllerBodyRenderer.sharedMaterial = normalMaterial;
                     break;
 
                 case Model.SelectionTool:
-                    rightControllerBodyMeshFilter.mesh = selectionToolMeshes[selectionToolMeshIndex];
-                    rightControllerBodyRenderer.material = selectionToolHandlerMaterial;
-                    rightControllerBodyRenderer.material.color = desiredColor;
+                    rightControllerBodyMeshFilter.mesh = normalControllerMesh;
+                    rightControllerBodyRenderer.sharedMaterial = selectionToolHandlerMaterial;
+                    rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
                     break;
 
                 case Model.Minimizer:
@@ -227,7 +227,7 @@ namespace CellexalVR.Interaction
             // Deactivate all tools that should not be active.
             if (DesiredModel != Model.SelectionTool)
             {
-                selectionToolCollider.SetSelectionToolEnabled(false, 0);
+                selectionToolCollider.SetSelectionToolEnabled(false);
             }
             if (DesiredModel != Model.DeleteTool)
             {
@@ -262,7 +262,7 @@ namespace CellexalVR.Interaction
             switch (DesiredModel)
             {
                 case Model.SelectionTool:
-                    selectionToolCollider.SetSelectionToolEnabled(true, selectionToolMeshIndex);
+                    selectionToolCollider.SetSelectionToolEnabled(true);
                     break;
                 case Model.DeleteTool:
                     deleteTool.SetActive(true);
@@ -302,7 +302,7 @@ namespace CellexalVR.Interaction
         /// <param name="inMenu"> True if the controller is in the menu and we should temporarily change into the menu model, false otherwise. </param>
         public void TurnOffActiveTool(bool inMenu)
         {
-            selectionToolCollider.SetSelectionToolEnabled(false, 0);
+            selectionToolCollider.SetSelectionToolEnabled(false);
             deleteTool.SetActive(false);
             minimizer.SetActive(false);
             //if (!HelpToolShouldStayActivated)
@@ -349,7 +349,7 @@ namespace CellexalVR.Interaction
 
             if (ActualModel == Model.SelectionTool)
             {
-                rightControllerBodyRenderer.material.color = desiredColor;
+                rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
             }
         }
 
@@ -357,15 +357,7 @@ namespace CellexalVR.Interaction
         {
             if (ActualModel == Model.SelectionTool)
             {
-                if (dir)
-                    selectionToolMeshIndex++;
-                else
-                    selectionToolMeshIndex--;
-
-                if (selectionToolMeshIndex == -1)
-                    selectionToolMeshIndex = selectionToolMeshes.Length - 1;
-                else if (selectionToolMeshIndex == selectionToolMeshes.Length)
-                    selectionToolMeshIndex = 0;
+                selectionToolCollider.CurrentMeshIndex += dir ? 1 : -1;
                 ActivateDesiredTool();
             }
         }

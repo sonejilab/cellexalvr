@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttons:
-  - ButtonIcon: {fileID: 0}
+  - ButtonIcon: {fileID: 21300000, guid: f3230fbeb2d8a0648987e6c03876017d, type: 3}
     OnClick:
       m_PersistentCalls:
         m_Calls:
@@ -139,7 +139,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - ButtonIcon: {fileID: 0}
+  - ButtonIcon: {fileID: 21300000, guid: 4a410a67ab2db2d4bad6cd814f377c9c, type: 3}
     OnClick:
       m_PersistentCalls:
         m_Calls:
@@ -276,7 +276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &224169150601876128
 RectTransform:
   m_ObjectHideFlags: 0
@@ -324,7 +324,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: f3230fbeb2d8a0648987e6c03876017d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1152,7 +1152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &224809373444283346
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1200,7 +1200,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 4a410a67ab2db2d4bad6cd814f377c9c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
