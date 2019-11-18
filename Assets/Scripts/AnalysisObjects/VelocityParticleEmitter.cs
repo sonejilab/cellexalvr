@@ -219,6 +219,9 @@ namespace CellexalVR.AnalysisObjects
 
                         if (UseGraphPointColors)
                         {
+                            //emitParams.startColor = new Color(graphPoint.Item1.GetColor().r,
+                            //    graphPoint.Item1.GetColor().g, graphPoint.Item1.GetColor().b,
+                            //    graphPoint.Item1.GetColor().r);
                             emitParams.startColor = graphPoint.Item1.GetColor();
                         }
                         particleSystem.Emit(emitParams, 1);

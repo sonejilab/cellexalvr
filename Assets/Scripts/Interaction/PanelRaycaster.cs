@@ -93,6 +93,14 @@ namespace CellexalVR.Interaction
             {
                 referenceManager.filterValueKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
             }
+            else
+            {
+                var obj = GameObject.Find("Intro Keyboard");
+                if (obj)
+                {
+                    obj.GetComponent<KeyboardHandler>().SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                }
+            }
 
             /*
             // tell all the panels which materials they should use

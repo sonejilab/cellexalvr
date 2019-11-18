@@ -61,7 +61,7 @@ namespace CellexalVR.Tutorial
         {
             referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             referenceManager.controllerModelSwitcher.SwitchToModel(Interaction.ControllerModelSwitcher.Model.Normal);
-            referenceManager.geneKeyboard.gameObject.SetActive(false);
+            referenceManager.keyboardSwitch.gameObject.SetActive(false);
             username = name;
             CrossSceneInformation.Username = name;
             Destroy(canv);

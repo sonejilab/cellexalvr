@@ -84,12 +84,12 @@ namespace CellexalVR.Multiuser
         private void Start()
         {
             PhotonNetwork.player.NickName = CellexalUser.Username;
-            if (String.IsNullOrEmpty(PhotonNetwork.playerName))
-            {
+            //if (String.IsNullOrEmpty(PhotonNetwork.playerName))
+            //{
                 //PhotonNetwork.player.NickName = CellexalUser.Username;
                 //PhotonNetwork.playerName = CellexalUser.Username + Random.Range(1,9999);
                 //PhotonNetwork.playerName = "Guest" + Random.Range(1, 9999);
-            }
+            //}
 
         }
 

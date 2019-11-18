@@ -17,6 +17,7 @@ namespace CellexalVR.Menu.Buttons
         public GameObject infoMenu;
         public GameObject activeOutline;
 
+
         private int frameCount;
         private readonly string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         // all buttons must override this variable's get property

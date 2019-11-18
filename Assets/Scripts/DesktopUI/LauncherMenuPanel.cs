@@ -61,27 +61,24 @@ namespace CellexalVR.DesktopUI
 
         public void ShowFileDialog()
         {
-            SetRScriptPath(StandaloneFileBrowser.OpenFilePanel("Select File", "", "exe", false));
+            SetTextField(StandaloneFileBrowser.OpenFilePanel("Select File", "", "exe", false));
 
         }
 
+        private void SetTextField(string[] paths)
+        {
+            rScriptInputField.text = paths[0];
+        }
 
         public void SetRScriptPath()
         {
-            SetRScriptPath(new string[1]);
-        }
-
-        public void SetRScriptPath(string[] paths)
-        {
-            if (paths[0] == null)
+            string path = rScriptInputField.text;
+            if (path != "")
             {
-                paths[0] = rScriptInputField.text;
-            }
-            if (paths.Length == 1)
-            {
-                string path = paths[0];
+                print(path);
                 if (File.Exists(path) && path.Contains(".exe"))
                 {
+                    print("path exists");
                     bool hasChanged = path != CellexalConfig.Config.RscriptexePath;
                     CrossSceneInformation.RScriptPath = path;
                     rScriptInputField.text = path;
@@ -109,6 +106,7 @@ namespace CellexalVR.DesktopUI
                 }
                 else
                 {
+                    print("path doesn't exists");
                     rScriptInputField.text = "Failed to find R path";
                 }
             }

@@ -136,8 +136,6 @@ namespace CellexalVR.Tutorial
         [ConsoleCommand("tutorialManager", aliases: new string[] { "loadStep", "ls" })]
         public void LoadTutorialStep(int stepNr)
         {
-            print("LOAD STEP: " + stepNr);
-
             switch (stepNr)
             {
                 //Loading data
