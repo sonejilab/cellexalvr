@@ -447,12 +447,15 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
             CellexalLog.Log("Colored graphs by " + attributeType);
+            int numberOfCells = 0;
+
             foreach (Cell cell in cells.Values)
             {
                 cell.ColorByAttribute(attributeType, color);
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))
                 {
+                    numberOfCells++;
                     if (color && !selectionList.ContainsKey(gp))
                     {
                         selectionList.Add(gp, cell.Attributes[attributeType.ToLower()]);
@@ -461,6 +464,19 @@ namespace CellexalVR.AnalysisLogic
                     {
                         selectionList.Remove(gp);
                     }
+                }
+            }
+            int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
+            Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                if (color)
+                {
+                    graph.GetComponentInChildren<AttributeLegend>().AddAttribute(attributeType, numberOfCells, attributeColor);
+                }
+                else
+                {
+                    graph.GetComponentInChildren<AttributeLegend>().RemoveAttribute(attributeType);
                 }
             }
 

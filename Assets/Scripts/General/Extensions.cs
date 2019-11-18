@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -116,6 +117,22 @@ namespace CellexalVR.Extensions
             s = s.Replace("/", directorySeparatorChar);
             s = s.Replace("\\", directorySeparatorChar);
             return s;
+        }
+
+        /// <summary>
+        /// Finds the index of an object in an array with a custom comparer.
+        /// </summary>
+        /// <returns>The index of <paramref name="value"/> in <paramref name="array"/> or -1 if <paramref name="array"/> does not contain <paramref name="value"/>.</returns>
+        public static int IndexOf<T>(this T[] array, T value, Func<T, T, bool> comparer)
+        {
+            for (int i = 0; i < array.Length; ++i)
+            {
+                if (comparer(array[i], value))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }
