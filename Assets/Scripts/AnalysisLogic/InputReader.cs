@@ -539,12 +539,12 @@ namespace CellexalVR.AnalysisLogic
         /// <returns></returns>
         private IEnumerator StartServer(string serverType)
         {
-            Process currentProcess = Process.GetCurrentProcess();
-            int pid = currentProcess.Id;
+            //For future crash handling of cellexalvrR: Process currentProcess = Process.GetCurrentProcess();
+            //For future crash handling of cellexalvrR: int pid = currentProcess.Id;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
             string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder + " " + pid;
+            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder; // + " " + pid;
 
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
             string value = null;

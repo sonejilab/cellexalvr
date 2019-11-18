@@ -8,6 +8,7 @@
         public override void Click()
         {
             referenceManager.filterManager.ResetFilter();
+            referenceManager.multiuserMessageSender.SendMessageResetFilter();
         }
     }
 }

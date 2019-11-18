@@ -118,7 +118,7 @@ namespace CellexalVR.Filters
                 streamWriter.Write(filterString);
             }
             resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.FILTER_SAVED);
-            referenceManager.filterMenu.AddFilterButton(currentFilter, currentFilterPath);
+            referenceManager.filterMenu.AddFilterButton(currentFilter, filterPath);
         }
 
         /// <summary>
@@ -451,10 +451,6 @@ namespace CellexalVR.Filters
             cellsToEvaluate.Clear();
             evaluating = false;
             resultBlock.DisconnectAllPorts();
-            //if (informMultiUser)
-            //{
-            referenceManager.multiuserMessageSender.SendMessageResetFilter();
-            //}
         }
 
         /// <summary>
