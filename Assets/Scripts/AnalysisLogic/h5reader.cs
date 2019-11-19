@@ -22,6 +22,7 @@ public class h5reader
     string[] index2cellname;
     public bool busy = false;
     public ArrayList _result;
+    public Dictionary<String, float[]> _coordResult;
 
     public float LowestExpression { get; private set; }
     public float HighestExpression { get; private set; }
@@ -43,7 +44,7 @@ public class h5reader
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
         startInfo.WindowStyle = ProcessWindowStyle.Minimized;
-        //startInfo.CreateNoWindow = true;
+        startInfo.CreateNoWindow = true;
 
         startInfo.FileName = "py.exe";
 
@@ -122,6 +123,24 @@ public class h5reader
         watch.Stop();
 
 
+    }
+
+    public IEnumerator GetCoords()
+    {
+        busy = true;
+        _coordResult = new Dictionary<string, float[]>();
+            
+        if (fileType == FileTypes.loom)
+            writer.Write("list(f['col_attrs']['X_phate'][0:5])");
+
+        while (reader.Peek() == 0)
+            yield return null;
+
+        string output = reader.ReadLine();
+        //output = output.Substring(1, output.Length - 2);
+        //string[] splitted = output.Split(',');
+
+        busy = false;
     }
 
 
