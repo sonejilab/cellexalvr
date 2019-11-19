@@ -44,7 +44,7 @@ public class h5reader
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
         startInfo.WindowStyle = ProcessWindowStyle.Minimized;
-        startInfo.CreateNoWindow = true;
+        //startInfo.CreateNoWindow = true;
 
         startInfo.FileName = "py.exe";
 
@@ -122,21 +122,28 @@ public class h5reader
 
         watch.Stop();
 
-
+        GetCoords();
     }
 
-    public IEnumerator GetCoords()
+    public void GetCoords()
     {
         busy = true;
         _coordResult = new Dictionary<string, float[]>();
             
         if (fileType == FileTypes.loom)
-            writer.Write("list(f['col_attrs']['X_phate'][0:5])");
+            writer.WriteLine("list(f['col_attrs']['X_phate'][:])");
 
-        while (reader.Peek() == 0)
-            yield return null;
+        //while (reader.Peek() == 0)
+        //    yield return null;
 
-        string output = reader.ReadLine();
+        int counter = 0;
+        foreach(string line in reader.ReadLine().Split())
+        {
+            
+        }
+        
+        
+        UnityEngine.Debug.Log(output);
         //output = output.Substring(1, output.Length - 2);
         //string[] splitted = output.Split(',');
 
