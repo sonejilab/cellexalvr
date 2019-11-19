@@ -74,6 +74,9 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
 
+        private h5reader h5Reader;
+
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -86,6 +89,8 @@ namespace CellexalVR.AnalysisLogic
         void Awake()
         {
             cells = new Dictionary<string, Cell>();
+            h5Reader = new h5reader();
+
         }
 
         private void Start()
@@ -210,7 +215,9 @@ namespace CellexalVR.AnalysisLogic
         {
             try
             {
-                StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
+
+                //StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
                 //QueryRObject(geneName, coloringMethod, triggerEvent);
 
             }
@@ -281,6 +288,83 @@ namespace CellexalVR.AnalysisLogic
 
         //CellexalEvents.CommandFinished.Invoke(true);
         //}
+
+        private IEnumerator QueryHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
+        {
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+
+            stopwatch.Start();
+            /*
+            if (coroutinesWaiting >= 1)
+            {
+                // If there is already another query  waiting for the current to finish we should probably abort.
+                // This is just to make sure that a bug can't create many many coroutines that will form a long queue.
+                CellexalLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+            coroutinesWaiting++;
+            // if there is already a query running, wait for it to finish
+            while (database.QueryRunning)
+                yield return null;
+
+            coroutinesWaiting--;
+            database.QueryGene(geneName, coloringMethod);
+            // now we have to wait for our query to return the results.
+            while (database.QueryRunning)
+                yield return null;
+            */
+            try
+            {
+                StartCoroutine(h5Reader.colorbygene(geneName, coloringMethod));
+            }
+            catch (Exception e)
+            {
+                print("bug");
+            }
+
+            while (h5Reader.busy)
+                yield return null;
+
+            GetComponent<AudioSource>().Play();
+            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            ArrayList expressions = h5Reader._result;
+
+
+            // stop the coroutine if the gene was not in the database
+            if (expressions.Count == 0)
+            {
+                CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+
+            graphManager.ColorAllGraphsByGeneExpression(expressions);
+
+            //float percentInResults = (float)database._result.Count / cells.Values.Count;
+            //statusDisplay.RemoveStatus(coloringInfoStatusId);
+            //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
+
+            if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
+            {
+                var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+                foreach (Cell c in cells.Values)
+                {
+                    c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+                }
+            }
+            if (triggerEvent)
+            {
+                CellexalEvents.GraphsColoredByGene.Invoke();
+            }
+
+            CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+            stopwatch.Stop();
+            //print("Time : " + stopwatch.Elapsed.ToString());
+            CellexalEvents.CommandFinished.Invoke(true);
+            print("python3 - anndata.h5py " + stopwatch.ElapsedMilliseconds);
+        }
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
