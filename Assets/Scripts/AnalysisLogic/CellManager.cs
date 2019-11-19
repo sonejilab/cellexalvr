@@ -74,7 +74,7 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
 
-        private h5reader h5Reader;
+        public h5reader h5Reader;
 
 
         private void OnValidate()

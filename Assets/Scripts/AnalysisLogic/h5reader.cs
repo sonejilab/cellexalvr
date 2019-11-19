@@ -47,7 +47,7 @@ public class h5reader
 
         startInfo.FileName = "py.exe";
 
-        string file_name = "LCA_142K_umap_phate.loom";
+        string file_name = "Data/LCA_142K_umap_phate.loom";
         startInfo.Arguments = "ann.py " + file_name;
         p.StartInfo = startInfo;
         p.Start();
