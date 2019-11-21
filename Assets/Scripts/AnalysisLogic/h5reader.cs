@@ -128,24 +128,28 @@ public class h5reader
     public void GetCoords()
     {
         busy = true;
+        var watch = Stopwatch.StartNew();
+
         _coordResult = new Dictionary<string, float[]>();
             
         if (fileType == FileTypes.loom)
-            writer.WriteLine("list(f['col_attrs']['X_phate'][:])");
+            writer.WriteLine("f['col_attrs']['X_phate'][:,:].tolist()");
 
         //while (reader.Peek() == 0)
         //    yield return null;
 
-        int counter = 0;
-        foreach(string line in reader.ReadLine().Split())
-        {
-            
-        }
-        
-        
-        UnityEngine.Debug.Log(output);
-        //output = output.Substring(1, output.Length - 2);
-        //string[] splitted = output.Split(',');
+
+        string output = reader.ReadLine().Replace("[", "").Replace("]", "");
+        string[] coords = output.Split(',');
+
+        for (int i = 0; i < 10; i++)
+            UnityEngine.Debug.Log(coords[i]);
+
+
+
+
+        watch.Stop();
+        UnityEngine.Debug.Log("Reading all coords: " + watch.ElapsedMilliseconds);
 
         busy = false;
     }
