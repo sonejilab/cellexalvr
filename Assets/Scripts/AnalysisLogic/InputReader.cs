@@ -265,8 +265,6 @@ namespace CellexalVR.AnalysisLogic
                 while (cellManager.h5Reader.busy)
                     yield return null;
 
-
-
                 string[] coords = cellManager.h5Reader._coordResult;
                 string[] cellnames = cellManager.h5Reader.index2cellname;
                 combGraph.axisNames = new string[] { "x", "y", "z" };
@@ -323,7 +321,6 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="mdsFiles"> The filenames. </param>
         IEnumerator ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
-
             if (!loaderController.loaderMovedDown)
             {
                 loaderController.loaderMovedDown = true;
@@ -388,7 +385,7 @@ namespace CellexalVR.AnalysisLogic
                 using (StreamReader mdsStreamReader = new StreamReader(file))
                 {
                     //List<string> cellnames = new List<string>();
-                    //List<float> xcoords = new List<float>();
+                    //List<float> xcoords = new List<float>();s
                     //List<float> ycoords = new List<float>();
                     //List<float> zcoords = new List<float>();
                     int i = 0;

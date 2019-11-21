@@ -46,7 +46,7 @@ namespace CellexalVR.AnalysisLogic
         /// Reads a velocity file and starts the particle system that visualises the velcoity information.
         /// </summary>
         /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        [ConsoleCommand("velocityReader", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
+        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
         public void ReadVelocityFile(string path)
         {
             StartCoroutine(ReadVelocityParticleSystem(path));
@@ -81,8 +81,8 @@ namespace CellexalVR.AnalysisLogic
             //print(lastSlashIndex);
             //print(lastDotIndex);
 
-            //print(graphName);
-            //print(originalGraph.GraphName);
+            print(graphName);
+            print(originalGraph.GraphName);
             if (subGraphName != string.Empty)
             {
                 graph = referenceManager.graphManager.FindGraph(subGraphName);
@@ -93,9 +93,8 @@ namespace CellexalVR.AnalysisLogic
             }
 
             //print(graphName + " - " + graph.GraphName);
-
+            bool first = true;
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
-
             using (FileStream stream = new FileStream(path, FileMode.Open))
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -105,7 +104,17 @@ namespace CellexalVR.AnalysisLogic
                     string line = reader.ReadLine();
                     string[] words = line.Split(null);
                     string cellName = words[0];
+
+
                     Graph.GraphPoint point = graph.FindGraphPoint(cellName);
+
+                    if (first)
+                    {
+                        print(cellName);
+                        print(point)
+                        first = false;
+                    }
+
                     if (point == null)
                     {
                         continue;
@@ -147,6 +156,98 @@ namespace CellexalVR.AnalysisLogic
                 stream.Close();
 
             }
+
+            ActiveGraphs.Add(graph);
+            CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
+        }
+
+        /// <summary>
+        /// Reads a velocity file and starts the particle system that visualises the velcoity information.
+        /// </summary>
+        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
+        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvfh" })]
+        public void ReadVelocityFileFromHDF5(string path)
+        {
+            StartCoroutine(ReadVelocityParticleSystemFromHDF5(path));
+        }
+
+        /// <summary>
+        /// Reads a velocity file and starts the particle system that visualises the velcoity information for a subgraph.
+        /// </summary>
+        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
+        /// <param name="subGraphName">The name of the subgraph.</param>
+        public void ReadVelocityFileFromHDF5(string path, string subGraphName)
+        {
+            StartCoroutine(ReadVelocityParticleSystemFromHDF5(path, subGraphName));
+        }
+
+        private IEnumerator ReadVelocityParticleSystemFromHDF5(string path, string subGraphName = "")
+        {
+            while (referenceManager.graphGenerator.isCreating)
+            {
+                yield return null;
+            }
+
+            CellexalLog.Log("Started reading velocity file " + path);
+
+            Graph graph;
+            Graph originalGraph;
+            int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
+            int lastDotIndex = path.LastIndexOf('.');
+            //string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
+            string graphName = "UMAP";
+            originalGraph = referenceManager.graphManager.FindGraph(graphName);
+
+            if (subGraphName != string.Empty)
+            {
+                graph = referenceManager.graphManager.FindGraph(subGraphName);
+            }
+            else
+            {
+                graph = originalGraph;
+            }
+
+            //print(graphName + " - " + graph.GraphName);
+
+            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
+
+            while (referenceManager.cellManager.h5Reader.busy)
+                yield return null;
+
+            StartCoroutine(referenceManager.cellManager.h5Reader.GetCoords());
+
+            while (referenceManager.cellManager.h5Reader.busy)
+                yield return null;
+
+            string[] vels = referenceManager.cellManager.h5Reader._coordResult;
+            string[] cellnames = referenceManager.cellManager.h5Reader.index2cellname;
+
+            for (int i = 0; i < cellnames.Length; i++)
+            {
+                print(cellnames[i]);
+                Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
+                velocities[point] = new Vector3(float.Parse(vels[i*3]), float.Parse(vels[i * 3 +1]), float.Parse(vels[i * 3 +2])) / 5f;
+            }
+
+            GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);
+            particleSystemGameObject.name = particleSystemGameObjectName;
+            VelocityParticleEmitter emitter = particleSystemGameObject.GetComponent<VelocityParticleEmitter>();
+            emitter.referenceManager = referenceManager;
+            emitter.arrowParticleMaterial = arrowMaterial;
+            emitter.circleParticleMaterial = standardMaterial;
+            emitter.graph = graph;
+            emitter.ArrowEmitRate = 1f / frequency;
+            emitter.Velocities = velocities;
+            emitter.Threshold = threshold;
+            emitter.Speed = speed;
+            emitter.UseGraphPointColors = useGraphPointColors;
+            emitter.UseArrowParticle = useArrowParticle;
+            graph.velocityParticleEmitter = emitter;
+            if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
+            {
+                graph.ToggleGraphPoints();
+            }
+
 
             ActiveGraphs.Add(graph);
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
