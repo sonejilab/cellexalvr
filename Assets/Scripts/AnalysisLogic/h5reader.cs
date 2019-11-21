@@ -128,9 +128,6 @@ public class h5reader
     {
         busy = true;
         var watch = Stopwatch.StartNew();
-
-        
-
             
         if (fileType == FileTypes.loom)
             writer.WriteLine("f['col_attrs']['X_phate'][:,:].tolist()");
