@@ -180,7 +180,8 @@ namespace CellexalVR.AnalysisLogic
                 throw new System.InvalidOperationException("Empty dataset");
             }
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
-            StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
+            //StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
+            StartCoroutine(H5_ReadMDSFiles(fullPath, mdsFiles));
             graphGenerator.isCreating = true;
         }
 
@@ -203,7 +204,7 @@ namespace CellexalVR.AnalysisLogic
 
             StartCoroutine(ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
-        IEnumerator H5_ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS)
+        IEnumerator H5_ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -220,6 +221,7 @@ namespace CellexalVR.AnalysisLogic
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
             int itemsThisFrame = 0;
             int totalNbrOfCells = 0;
+            mdsFiles = new string[] { "phate", "umap" };
             foreach (string file in mdsFiles)
             {
                 while (graphGenerator.isCreating)
@@ -230,13 +232,12 @@ namespace CellexalVR.AnalysisLogic
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
                 // good programming habits have left us with a nice mix of forward and backward slashes
-                string[] regexResult = Regex.Split(file, @"[\\/]");
-                string graphFileName = regexResult[regexResult.Length - 1];
+
                 //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
                 if (type.Equals(GraphGenerator.GraphType.MDS))
                 {
-                    combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
-                    combGraph.FolderName = regexResult[regexResult.Length - 2];
+                    combGraph.GraphName = file;
+                    //combGraph.FolderName = regexResult[regexResult.Length - 2];
                 }
                 else
                 {
@@ -260,7 +261,7 @@ namespace CellexalVR.AnalysisLogic
                 while (cellManager.h5Reader.busy)
                     yield return null;
 
-                StartCoroutine(cellManager.h5Reader.GetCoords());
+                StartCoroutine(cellManager.h5Reader.GetCoords(file));
 
                 while (cellManager.h5Reader.busy)
                     yield return null;
@@ -310,11 +311,40 @@ namespace CellexalVR.AnalysisLogic
                 {
                     //newGraph.transform.Translate(Vector3.forward * fileIndex);
                 }
-                CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
                 //combinedGraphGenerator.isCreating = false;
             }
+            if (type.Equals(GraphGenerator.GraphType.MDS))
+            {
+                StartCoroutine(ReadAttributeFilesCoroutine(path));
+                while (!attributeFileRead)
+                    yield return null;
+                ReadFacsFiles(path, totalNbrOfCells);
+                ReadFilterFiles(CellexalUser.UserSpecificFolder);
+            }
 
-           
+            //loaderController.loaderMovedDown = true;
+
+
+            //status.UpdateStatus(statusId, "Reading index.facs file");
+            //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+            //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
+            //flashGenesMenu.CreateTabs(path);
+            //status.RemoveStatus(statusId);
+            //statusDisplayHUD.RemoveStatus(statusIdHUD);
+            //statusDisplayFar.RemoveStatus(statusIdFar);
+
+            if (server)
+            {
+                StartCoroutine(StartServer("main"));
+                //StartCoroutine(StartServer("gene"));
+            }
+
+            while (graphGenerator.isCreating)
+            {
+                yield return null;
+            }
+            CellexalEvents.GraphsLoaded.Invoke();
+
         }
         /// <summary>
         /// Coroutine to create graphs.
