@@ -203,7 +203,119 @@ namespace CellexalVR.AnalysisLogic
 
             StartCoroutine(ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
+        IEnumerator H5_ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS)
+        {
+            //int statusId = status.AddStatus("Reading folder " + path);
+            //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
+            //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
+            int fileIndex = 0;
+            //  Read each .mds file
+            //  The file format should be
+            //  cell_id  axis_name1   axis_name2   axis_name3
+            //  CELLNAME_1 X_COORD Y_COORD Z_COORD
+            //  CELLNAME_2 X_COORD Y_COORD Z_COORD
+            //  ...
 
+            float maximumDeltaTime = 0.05f; // 20 fps
+            int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
+            int itemsThisFrame = 0;
+            int totalNbrOfCells = 0;
+            foreach (string file in mdsFiles)
+            {
+                while (graphGenerator.isCreating)
+                {
+                    yield return null;
+                }
+                Graph combGraph = graphGenerator.CreateGraph(type);
+                // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
+                // file will be the full file name e.g C:\...\graph1.mds
+                // good programming habits have left us with a nice mix of forward and backward slashes
+                string[] regexResult = Regex.Split(file, @"[\\/]");
+                string graphFileName = regexResult[regexResult.Length - 1];
+                //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
+                if (type.Equals(GraphGenerator.GraphType.MDS))
+                {
+                    combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+                    combGraph.FolderName = regexResult[regexResult.Length - 2];
+                }
+                else
+                {
+                    string name = "";
+                    foreach (string s in referenceManager.newGraphFromMarkers.markers)
+                    {
+                        name += s + " - ";
+                    }
+                    combGraph.GraphNumber = facsGraphCounter;
+                    combGraph.GraphName = name;
+                }
+                //combGraph.gameObject.name = combGraph.GraphName;
+                //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
+
+                //image1 = new Bitmap(400, 400);
+                //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
+                //int i, j;
+                string[] axes = new string[3];
+
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+                StartCoroutine(cellManager.h5Reader.GetCoords());
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+
+
+                string[] coords = cellManager.h5Reader._coordResult;
+                string[] cellnames = cellManager.h5Reader.index2cellname;
+                combGraph.axisNames = new string[] { "x", "y", "z" };
+                itemsThisFrame = 0;
+                int count = 0;
+                for (int j = 0; j < cellnames.Length; j++)
+                {
+                    string cellname = cellnames[j];
+                    float x = float.Parse(coords[j * 3]);
+                    float y = float.Parse(coords[j * 3 + 1]);
+                    float z = float.Parse(coords[j * 3 + 2]);
+                    Cell cell = cellManager.AddCell(cellname);
+                    graphGenerator.AddGraphPoint(cell, x, y, z);
+                    totalNbrOfCells++;
+                    count++;
+                    if (count > maximumItemsPerFrame)
+                    {
+                        yield return null;
+                        count = 0;
+                        float lastFrame = Time.deltaTime;
+                        if (lastFrame < maximumDeltaTime)
+                        {
+                            // we had some time over last frame
+                            maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
+                        }
+                        else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
+                        {
+                            // we took too much time last frame
+                            maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
+                        }
+
+                    }
+                }
+                combGraph.SetInfoText();
+
+                // Add axes in bottom corner of graph and scale points differently
+                graphGenerator.SliceClustering();
+                graphGenerator.AddAxes(combGraph, axes);
+                graphManager.Graphs.Add(combGraph);
+                if (debug)
+                {
+                    //newGraph.transform.Translate(Vector3.forward * fileIndex);
+                }
+                CellexalLog.Log("Successfully read graph from " + graphFileName + " instantiating ~" + maximumItemsPerFrame + " graphpoints every frame");
+                //combinedGraphGenerator.isCreating = false;
+            }
+
+           
+        }
         /// <summary>
         /// Coroutine to create graphs.
         /// </summary>
