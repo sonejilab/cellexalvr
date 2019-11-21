@@ -111,7 +111,7 @@ namespace CellexalVR.AnalysisLogic
                     if (first)
                     {
                         print(cellName);
-                        print(point)
+                        print(point);
                         first = false;
                     }
 
@@ -195,7 +195,7 @@ namespace CellexalVR.AnalysisLogic
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
             //string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
-            string graphName = "UMAP";
+            string graphName = "umap";
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
 
             if (subGraphName != string.Empty)
@@ -214,7 +214,7 @@ namespace CellexalVR.AnalysisLogic
             while (referenceManager.cellManager.h5Reader.busy)
                 yield return null;
 
-            StartCoroutine(referenceManager.cellManager.h5Reader.GetCoords());
+            StartCoroutine(referenceManager.cellManager.h5Reader.GetVelocites());
 
             while (referenceManager.cellManager.h5Reader.busy)
                 yield return null;
@@ -224,9 +224,8 @@ namespace CellexalVR.AnalysisLogic
 
             for (int i = 0; i < cellnames.Length; i++)
             {
-                print(cellnames[i]);
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
-                velocities[point] = new Vector3(float.Parse(vels[i*3]), float.Parse(vels[i * 3 +1]), float.Parse(vels[i * 3 +2])) / 5f;
+                velocities[point] = new Vector3(float.Parse(vels[i*3]), float.Parse(vels[i * 3 +1]), float.Parse(vels[i * 3 +2])) / 5000f;
             }
 
             GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);
