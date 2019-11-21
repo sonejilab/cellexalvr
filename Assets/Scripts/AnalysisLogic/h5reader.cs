@@ -63,7 +63,7 @@ public class h5reader
         var watch = Stopwatch.StartNew();
         if (Path.GetExtension(file_name) == ".loom")
         {
-            writer.WriteLine("list(f['col_attrs']['obs_names'][:])");
+            writer.WriteLine("f['col_attrs']['obs_names'][:].tolist()");
             fileType = FileTypes.loom;
 
         }
@@ -80,9 +80,14 @@ public class h5reader
         index2cellname = output.Split(',');
         for (int i = 0; i < index2cellname.Length; i++)
         {
-            index2cellname[i] = index2cellname[i].Substring(2, index2cellname[i].Length - 3);
+            if(i > 0)
+                index2cellname[i] = index2cellname[i].Substring(2, index2cellname[i].Length - 3);
+            else if(i == index2cellname.Length - 1)
+                index2cellname[i] = index2cellname[i].Substring(1, index2cellname[i].Length - 2);
+            else
+                index2cellname[i] = index2cellname[i].Substring(1, index2cellname[i].Length - 2);
             cellname2index.Add(index2cellname[i], i);
-            if (i == 100)
+            if (i == 0 || i == 1 || i == index2cellname.Length - 1)
                 UnityEngine.Debug.Log(index2cellname[i]);
 
         }
@@ -124,13 +129,13 @@ public class h5reader
 
     }
 
-    public IEnumerator GetCoords()
+    public IEnumerator GetCoords(string type)
     {
         busy = true;
         var watch = Stopwatch.StartNew();
             
         if (fileType == FileTypes.loom)
-            writer.WriteLine("f['col_attrs']['X_phate'][:,:].tolist()");
+            writer.WriteLine("f['col_attrs']['X_" + type  + "'][:,:].tolist()");
             
         while (reader.Peek() == 0)
             yield return null;
