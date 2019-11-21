@@ -18,11 +18,11 @@ public class h5reader
     Dictionary<string, int> chromeLengths;
     Dictionary<string, int> cellname2index;
     Dictionary<string, int> genename2index;
-    string[] index2genename;
-    string[] index2cellname;
+    public string[] index2genename;
+    public string[] index2cellname;
     public bool busy = false;
     public ArrayList _result;
-    public Dictionary<String, float[]> _coordResult;
+    public string[] _coordResult;
 
     public float LowestExpression { get; private set; }
     public float HighestExpression { get; private set; }
@@ -122,35 +122,29 @@ public class h5reader
 
         watch.Stop();
 
-        GetCoords();
     }
 
-    public void GetCoords()
+    public IEnumerator GetCoords()
     {
         busy = true;
         var watch = Stopwatch.StartNew();
 
-        _coordResult = new Dictionary<string, float[]>();
+        
+
             
         if (fileType == FileTypes.loom)
             writer.WriteLine("f['col_attrs']['X_phate'][:,:].tolist()");
-
-        //while (reader.Peek() == 0)
-        //    yield return null;
+            
+        while (reader.Peek() == 0)
+            yield return null;
 
 
         string output = reader.ReadLine().Replace("[", "").Replace("]", "");
         string[] coords = output.Split(',');
 
-        for (int i = 0; i < 10; i++)
-            UnityEngine.Debug.Log(coords[i]);
-
-
-
-
         watch.Stop();
         UnityEngine.Debug.Log("Reading all coords: " + watch.ElapsedMilliseconds);
-
+        _coordResult = coords;
         busy = false;
     }
 
