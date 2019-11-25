@@ -55,8 +55,8 @@ namespace CellexalVR.SceneObjects
 
             linesBundled = true;
             gbg = t3.GetComponent<GraphBetweenGraphs>();
-
         }
+
         private void OnTriggerEnter(Collider other)
         {
             bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
@@ -136,9 +136,9 @@ namespace CellexalVR.SceneObjects
             device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
+                Highlight(false);
                 RemakeLines(fromPointCluster);
                 controllerInside = false;
-                Highlight(false);
             }
 
             if (t1.hasChanged || t2.hasChanged)

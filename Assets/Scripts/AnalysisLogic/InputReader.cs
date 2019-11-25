@@ -553,10 +553,9 @@ namespace CellexalVR.AnalysisLogic
             {
                 value = RScriptRunner.RunFromCmd(rScriptFilePath, args, true);
             });
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
-
             while (!File.Exists(serverName + ".pid"))
             {
                 if (value != null && !value.Equals(string.Empty))

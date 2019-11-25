@@ -84,7 +84,8 @@ namespace CellexalVR.AnalysisObjects
             graphType = type;
             if (type == GraphType.BETWEEN)
             {
-                meshToUse = graphpointStandardQLargeSzMesh;
+                //meshToUse = graphpointStandardQLargeSzMesh;
+                meshToUse = graphpointLowQLargeSzMesh;
             }
             else if (CellexalConfig.Config.GraphPointQuality == "Standard"
                         && CellexalConfig.Config.GraphPointSize == "Standard")

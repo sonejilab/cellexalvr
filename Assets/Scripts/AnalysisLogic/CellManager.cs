@@ -5,14 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using VRTK;
-using TMPro;
 using System.IO;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
-using CellexalVR.SceneObjects;
 using System.Threading;
 
 namespace CellexalVR.AnalysisLogic
@@ -73,6 +71,7 @@ namespace CellexalVR.AnalysisLogic
         private int coloringInfoStatusId;
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
+        private bool linesBundled;
 
         private void OnValidate()
         {
@@ -226,9 +225,6 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.heatmapGenerator.HighLightGene(geneName);
             referenceManager.networkGenerator.HighLightGene(geneName);
         }
-
-
-
 
         //private void QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
         //{
@@ -587,6 +583,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="points"> The graphpoints to draw the lines from. </param>
         public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
         {
+            ClearLinesBetweenGraphPoints();
             var fromGraph = points[0].parent;
             var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs.Union(graphManager.attributeSubGraphs)).ToList();
             foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
@@ -609,13 +606,33 @@ namespace CellexalVR.AnalysisLogic
                 }
                 if (gbg)
                 {
-                    StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 5,
-                                    neighbourDistance: 0.10f, kernelBandwidth: 1.5f));
+                    linesBundled = points.Count > 500;
+                    StartCoroutine(gbg.ClusterLines(bundle: linesBundled));
                 }
             }
 
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
+        }
 
+        public void BundleAllLines()
+        {
+            foreach (Graph g in graphManager.Graphs)
+            {
+                foreach (GameObject obj in g.CTCGraphs)
+                {
+                    GraphBetweenGraphs gbg = obj.GetComponent<GraphBetweenGraphs>();
+                    if (gbg.gameObject.activeSelf)
+                    {
+                        if (!linesBundled)
+                        {
+                            gbg.RemoveClusters();
+                        }
+                        gbg.RemoveLines();
+                        StartCoroutine(gbg.ClusterLines(bundle: !linesBundled));
+                    }
+                }
+            }
+            linesBundled = !linesBundled;
         }
 
 
