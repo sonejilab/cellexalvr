@@ -225,7 +225,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < cellnames.Length; i++)
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
-                velocities[point] = new Vector3(float.Parse(vels[i*3]), float.Parse(vels[i * 3 +1]), float.Parse(vels[i * 3 +2])) / 5000f;
+                velocities[point] = originalGraph.ScaleCoordinates(new Vector3(float.Parse(vels[i*3]), float.Parse(vels[i * 3 +1]), float.Parse(vels[i * 3 +2]))*30) / 5f;
             }
 
             GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);
