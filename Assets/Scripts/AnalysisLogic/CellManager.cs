@@ -197,6 +197,12 @@ namespace CellexalVR.AnalysisLogic
             ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
         }
 
+        [ConsoleCommand("cellManager", aliases: new string[] { "colorbygeneh", "cbgh" })]
+        public void ColorGraphsByGeneHDF5(string geneName)
+        {
+            ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
+        }
+
         /// <summary>
         /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
         /// </summary>
@@ -206,6 +212,31 @@ namespace CellexalVR.AnalysisLogic
             ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, triggerEvent);
         }
 
+        //summertwerker
+        public void ColorGraphsByGeneHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
+        {
+            try
+            {
+                StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
+
+                //StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                //QueryRObject(geneName, coloringMethod, triggerEvent);
+
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
+                CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+            }
+            //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
+            //{
+            //    SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            //}
+            referenceManager.heatmapGenerator.HighLightGene(geneName);
+            referenceManager.networkGenerator.HighLightGene(geneName);
+        }
+
+
         /// <summary>
         /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
         /// </summary>
@@ -214,9 +245,7 @@ namespace CellexalVR.AnalysisLogic
         {
             try
             {
-                StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
-
-                //StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
                 //QueryRObject(geneName, coloringMethod, triggerEvent);
 
             }

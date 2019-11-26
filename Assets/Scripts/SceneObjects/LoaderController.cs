@@ -6,6 +6,7 @@ using CellexalVR.DesktopUI;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Multiuser;
+using System.IO;
 
 namespace CellexalVR.SceneObjects
 {
@@ -170,7 +171,10 @@ namespace CellexalVR.SceneObjects
                         graphManager.directories.Add(path);
                         try
                         {
-                            inputReader.ReadFolder(path);
+                            if (Path.GetExtension(path) != "")
+                                inputReader.ReadFolder_h5(path);
+                            else
+                                inputReader.ReadFolder(path);
                         }
                         catch (System.InvalidOperationException e)
                         {
