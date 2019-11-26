@@ -81,8 +81,6 @@ namespace CellexalVR.AnalysisLogic
             //print(lastSlashIndex);
             //print(lastDotIndex);
 
-            print(graphName);
-            print(originalGraph.GraphName);
             if (subGraphName != string.Empty)
             {
                 graph = referenceManager.graphManager.FindGraph(subGraphName);
@@ -92,8 +90,9 @@ namespace CellexalVR.AnalysisLogic
                 graph = originalGraph;
             }
 
+            int counter = 0;
+
             //print(graphName + " - " + graph.GraphName);
-            bool first = true;
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
             using (FileStream stream = new FileStream(path, FileMode.Open))
             using (StreamReader reader = new StreamReader(stream))
@@ -107,13 +106,6 @@ namespace CellexalVR.AnalysisLogic
 
 
                     Graph.GraphPoint point = graph.FindGraphPoint(cellName);
-
-                    if (first)
-                    {
-                        print(cellName);
-                        print(point);
-                        first = false;
-                    }
 
                     if (point == null)
                     {
@@ -129,6 +121,12 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 from = originalGraph.ScaleCoordinates(new Vector3(xfrom, yfrom, zfrom));
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
+
+                    if (counter<1)
+                    {
+                        UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
+                        counter++;
+                    }
 
                     velocities[point] = diff / 5f;
                 }
@@ -195,7 +193,7 @@ namespace CellexalVR.AnalysisLogic
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
             //string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
-            string graphName = "umap";
+            string graphName = "PHATE";
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
 
             if (subGraphName != string.Empty)
@@ -225,7 +223,13 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < cellnames.Length; i++)
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
-                velocities[point] = originalGraph.ScaleCoordinates(new Vector3(float.Parse(vels[i*3]), float.Parse(vels[i * 3 +1]), float.Parse(vels[i * 3 +2]))*30) / 5f;
+                Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
+
+                if (i<1)
+                {
+                    UnityEngine.Debug.Log(diff*1000);
+                }
+                velocities[point] = diff;
             }
 
             GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);

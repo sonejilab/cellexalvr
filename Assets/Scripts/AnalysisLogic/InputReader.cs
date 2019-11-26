@@ -251,7 +251,7 @@ namespace CellexalVR.AnalysisLogic
                 //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
                 if (type.Equals(GraphGenerator.GraphType.MDS))
                 {
-                    combGraph.GraphName = proj;
+                    combGraph.GraphName = proj.ToUpper();
                     //combGraph.FolderName = regexResult[regexResult.Length - 2];
                 }
                 else
@@ -405,6 +405,7 @@ namespace CellexalVR.AnalysisLogic
                 if (type.Equals(GraphGenerator.GraphType.MDS))
                 {
                     combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+                    print(combGraph.GraphName);
                     combGraph.FolderName = regexResult[regexResult.Length - 2];
                     graphManager.originalGraphs.Add(combGraph);
                 }
