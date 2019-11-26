@@ -219,7 +219,12 @@ namespace CellexalVR.AnalysisLogic
         }
         IEnumerator H5_ReadMDSFiles(string path, string[] projections, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
-            
+            if (!loaderController.loaderMovedDown)
+            {
+                loaderController.loaderMovedDown = true;
+                loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+
             cellManager.h5Reader = new h5reader(path);
 
             //int statusId = status.AddStatus("Reading folder " + path);

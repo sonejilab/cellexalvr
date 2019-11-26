@@ -3,7 +3,7 @@ using System.IO;
 using System;
 using CellexalVR.SceneObjects;
 using TMPro;
-
+using System.Linq;
 namespace CellexalVR.General
 {
 
@@ -69,6 +69,12 @@ namespace CellexalVR.General
                 referenceManager.tutorialManager.gameObject.SetActive(false);
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
                 directories = Directory.GetDirectories(dataDirectory);
+
+                //summertwerk
+                string[] files = Directory.GetFiles(dataDirectory);
+                directories = directories.Union(files).ToArray();
+                
+                
             }
 
             if (directories.Length == 0)
@@ -83,7 +89,7 @@ namespace CellexalVR.General
             var nfolder = 0;
             foreach (string directory in directories)
             {
-
+                print(directory);
                 int forwardSlashIndex = directory.LastIndexOf('/');
                 int backwardSlashIndex = directory.LastIndexOf('\\');
                 string croppedDirectoryName;
@@ -114,6 +120,7 @@ namespace CellexalVR.General
                     newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
                     newFolder.gameObject.name = croppedDirectoryName + "_box";
                 }
+
             }
         }
 

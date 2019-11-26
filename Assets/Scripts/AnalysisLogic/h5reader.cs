@@ -134,7 +134,6 @@ public class h5reader
         while (reader.Peek() == 0)
             yield return null;
 
-
         string output = reader.ReadLine().Replace("[", "").Replace("]", "");
         string[] coords = output.Split(',');
 
