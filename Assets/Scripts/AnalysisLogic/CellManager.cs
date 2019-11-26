@@ -89,7 +89,6 @@ namespace CellexalVR.AnalysisLogic
         void Awake()
         {
             cells = new Dictionary<string, Cell>();
-            h5Reader = new h5reader();
 
         }
 

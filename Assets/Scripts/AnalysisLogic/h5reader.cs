@@ -20,7 +20,7 @@ public class h5reader
     Dictionary<string, int> genename2index;
     public string[] index2genename;
     public string[] index2cellname;
-    public bool busy = false;
+    public bool busy;
     public ArrayList _result;
     public string[] _coordResult;
     public string[] _velResult;
@@ -36,8 +36,9 @@ public class h5reader
 
     private FileTypes fileType;
     // Start is called before the first frame update
-    public h5reader()
+    public h5reader(string path)
     {
+        busy = true;
         p = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.UseShellExecute = false;
@@ -49,7 +50,7 @@ public class h5reader
 
         startInfo.FileName = "py.exe";
 
-        string file_name = "Data/LCA_142K_umap_phate.loom";
+        string file_name = "Data/" + path;
         startInfo.Arguments = "ann.py " + file_name;
         p.StartInfo = startInfo;
         p.Start();
@@ -64,13 +65,13 @@ public class h5reader
         var watch = Stopwatch.StartNew();
         if (Path.GetExtension(file_name) == ".loom")
         {
-            writer.WriteLine("list(f['col_attrs']['obs_names'][:])");
+            writer.WriteLine("f['col_attrs']['obs_names'][:].tolist()");
             fileType = FileTypes.loom;
 
         }
         else if (Path.GetExtension(file_name) == ".h5ad")
         {
-            writer.Write("[i[0] for i in f['obs'][:]]\n");
+            writer.WriteLine("[i[0] for i in f['obs'][:]]");
             fileType = FileTypes.anndata;
 
         }
@@ -92,18 +93,13 @@ public class h5reader
                 UnityEngine.Debug.Log(index2cellname[i]);
         }
 
-        watch.Stop();
-        UnityEngine.Debug.Log("Ellapsed time: " + watch.ElapsedMilliseconds);
-        //print(output);
-
-        watch = System.Diagnostics.Stopwatch.StartNew();
         if (fileType == FileTypes.loom)
         {
-            writer.Write("list(f['row_attrs']['var_names'][:])\n");
+            writer.WriteLine("f['row_attrs']['var_names'][:].tolist()");
         }
         else if (fileType == FileTypes.anndata)
         {
-            writer.Write("[i[0] for i in f['var'][:]]\n");
+            writer.WriteLine("[i[0] for i in f['var'][:]]");
         }
         output = reader.ReadLine();
         output = output.Substring(1, output.Length - 2);
@@ -120,13 +116,9 @@ public class h5reader
             genename2index.Add(index2genename[i], counter++);
         }
         watch.Stop();
-        UnityEngine.Debug.Log("Ellapsed time: " + watch.ElapsedMilliseconds);
 
-
-        watch = System.Diagnostics.Stopwatch.StartNew();
-
-        watch.Stop();
-
+        UnityEngine.Debug.Log("H5reader created in :" + watch.ElapsedMilliseconds + " ms");
+        busy = false;
     }
 
     public IEnumerator GetCoords(string boi)
@@ -136,6 +128,8 @@ public class h5reader
             
         if (fileType == FileTypes.loom)
             writer.WriteLine("f['col_attrs']['X_"+boi+"'][:,:].tolist()");
+        else if (fileType == FileTypes.anndata)
+            writer.WriteLine("f['obsm']['X_"+boi+"'][:,:].tolist()");
             
         while (reader.Peek() == 0)
             yield return null;
@@ -157,6 +151,8 @@ public class h5reader
 
         if (fileType == FileTypes.loom)
             writer.WriteLine("f['col_attrs']['velocity_phate'][:,:].tolist()");
+        else if (fileType == FileTypes.anndata)
+            writer.WriteLine("f['obsm']['velocity_phate'][:,:].tolist()");
 
         while (reader.Peek() == 0)
             yield return null;

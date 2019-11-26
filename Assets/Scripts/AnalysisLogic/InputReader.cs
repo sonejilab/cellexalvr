@@ -116,6 +116,20 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
         }
+
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolderh", "rfh" })]
+        public void ReadFolderHFConsole(string path)
+        {
+            referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
+            ReadFolder_h5(path);
+        }
+
+        public void ReadFolder_h5(string path)
+        {
+            StartCoroutine(H5_ReadMDSFiles(path, new string[] { "phate", "umap" }));
+            graphGenerator.isCreating = true;
+        }
+
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
@@ -180,8 +194,7 @@ namespace CellexalVR.AnalysisLogic
                 throw new System.InvalidOperationException("Empty dataset");
             }
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
-            //StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
-            StartCoroutine(H5_ReadMDSFiles(fullPath, mdsFiles));
+            StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
             graphGenerator.isCreating = true;
         }
 
@@ -204,8 +217,11 @@ namespace CellexalVR.AnalysisLogic
 
             StartCoroutine(ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
-        IEnumerator H5_ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
+        IEnumerator H5_ReadMDSFiles(string path, string[] projections, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
+            
+            cellManager.h5Reader = new h5reader(path);
+
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
             //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
@@ -221,8 +237,7 @@ namespace CellexalVR.AnalysisLogic
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
             int itemsThisFrame = 0;
             int totalNbrOfCells = 0;
-            mdsFiles = new string[] { "phate", "umap" };
-            foreach (string file in mdsFiles)
+            foreach (string proj in projections)
             {
                 while (graphGenerator.isCreating)
                 {
@@ -236,7 +251,7 @@ namespace CellexalVR.AnalysisLogic
                 //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
                 if (type.Equals(GraphGenerator.GraphType.MDS))
                 {
-                    combGraph.GraphName = file;
+                    combGraph.GraphName = proj;
                     //combGraph.FolderName = regexResult[regexResult.Length - 2];
                 }
                 else
@@ -261,7 +276,7 @@ namespace CellexalVR.AnalysisLogic
                 while (cellManager.h5Reader.busy)
                     yield return null;
 
-                StartCoroutine(cellManager.h5Reader.GetCoords(file));
+                StartCoroutine(cellManager.h5Reader.GetCoords(proj));
 
                 while (cellManager.h5Reader.busy)
                     yield return null;
@@ -311,6 +326,7 @@ namespace CellexalVR.AnalysisLogic
                 }
                 //combinedGraphGenerator.isCreating = false;
             }
+            /*
             if (type.Equals(GraphGenerator.GraphType.MDS))
             {
                 StartCoroutine(ReadAttributeFilesCoroutine(path));
@@ -319,7 +335,7 @@ namespace CellexalVR.AnalysisLogic
                 ReadFacsFiles(path, totalNbrOfCells);
                 ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
-
+            */
             //loaderController.loaderMovedDown = true;
 
 
