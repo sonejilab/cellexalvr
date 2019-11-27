@@ -36,7 +36,7 @@ namespace CellexalVR.SceneObjects
 
         private LineRenderer lineRenderer;
         private Vector3[] linePosistions;
-        private Vector3 fromPos, toPos, midPos, firstAnchor, secondAnchor;
+        public Vector3 fromPos, toPos, midPos, firstAnchor, secondAnchor;
         private Vector3 middle;
         private Vector3 currentTarget;
         private Vector3 currentPos;
@@ -148,7 +148,7 @@ namespace CellexalVR.SceneObjects
             }
             else if (dist <= increment)
             {
-                Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.2f);
+                Color col = new Color(LineColor.r, LineColor.g, LineColor.b, 0.3f);
                 if (posCtr + 1 == linePosistions.Length)
                 {
                     if (centroids)
@@ -156,17 +156,17 @@ namespace CellexalVR.SceneObjects
                         curve = new AnimationCurve();
                         curve.AddKey(0.0f, 1.0f);
                         curve.AddKey(0.1f, 0.05f);
-                        curve.AddKey(0.5f, 0.05f);
+                        curve.AddKey(0.5f, 0.45f);
                         curve.AddKey(0.9f, 0.05f);
                         curve.AddKey(1.0f, 1.0f);
                         lineRenderer.widthMultiplier = 0.05f;
                         lineRenderer.widthCurve = curve;
-                        //midSphere = Instantiate(spherePrefab, t3);
-                        //midSphere.GetComponent<Renderer>().material = sphereMaterial;
-                        //midSphere.GetComponent<Renderer>().material.color = col;
-                        //midSphere.transform.localScale = midClusterHull * 300;
-                        //midSphere.transform.position = midPos;
-                        //midSphere.transform.Rotate(new Vector3(0, 90, 0));
+                        midSphere = Instantiate(spherePrefab, t3);
+                        midSphere.GetComponent<Renderer>().material = sphereMaterial;
+                        midSphere.GetComponent<Renderer>().material.color = col;
+                        midSphere.transform.localScale = midClusterHull * 300;
+                        midSphere.transform.position = midPos;
+                        midSphere.transform.Rotate(new Vector3(0, 90, 0));
                         //lineRenderer.widthMultiplier = fromRadius;
                         //Gradient gradient = new Gradient();
                         //gradient.SetKeys(

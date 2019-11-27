@@ -404,12 +404,17 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageResetGraphPosition", PhotonTargets.Others);
         }
 
-        public void SendMessageDrawLinesBetweenGps()
+        public void SendMessageDrawLinesBetweenGps(bool toggle = false)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDrawLinesBetweenGps", PhotonTargets.Others);
+            coordinator.photonView.RPC("RecieveMessageDrawLinesBetweenGps", PhotonTargets.Others, toggle);
         }
 
+        public void SendMessageBundleAllLines()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageBundleAllLines", PhotonTargets.Others);
+        }
         public void SendMessageClearLinesBetweenGps()
         {
             if (!multiplayer) return;
