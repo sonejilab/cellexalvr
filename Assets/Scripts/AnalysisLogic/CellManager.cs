@@ -148,6 +148,11 @@ namespace CellexalVR.AnalysisLogic
             return cells.Values.ToArray();
         }
 
+        public int GetNumberOfCells()
+        {
+            return cells.Count;
+        }
+
         /// <summary>
         /// Creates a new selection.
         /// </summary>
@@ -317,7 +322,7 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            graphManager.ColorAllGraphsByGeneExpression(expressions);
+            graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
 
             //float percentInResults = (float)database._result.Count / cells.Values.Count;
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
@@ -470,13 +475,14 @@ namespace CellexalVR.AnalysisLogic
             Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
             foreach (Graph graph in graphManager.Graphs)
             {
+                graph.legendManager.ActivateLegend(LegendManager.Legend.AttributeLegend);
                 if (color)
                 {
-                    graph.GetComponentInChildren<AttributeLegend>().AddAttribute(attributeType, numberOfCells, attributeColor);
+                    graph.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
                 }
                 else
                 {
-                    graph.GetComponentInChildren<AttributeLegend>().RemoveAttribute(attributeType);
+                    graph.legendManager.attributeLegend.RemoveGroup(attributeType);
                 }
             }
 

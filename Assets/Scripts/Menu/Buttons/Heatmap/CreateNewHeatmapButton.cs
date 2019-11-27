@@ -1,4 +1,4 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.Interaction;
 
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
@@ -17,7 +17,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
 
         private void Start()
         {
-            heatmapRaycast = GetComponentInParent<AnalysisObjects.HeatmapRaycast>();
+            heatmapRaycast = GetComponentInParent<HeatmapRaycast>();
             heatmap = GetComponentInParent<AnalysisObjects.Heatmap>();
 
         }

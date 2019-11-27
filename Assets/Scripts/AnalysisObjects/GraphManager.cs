@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Linq;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
@@ -18,8 +19,6 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public AudioSource goodSound;
         public List<string> directories;
-        public Shader graphPointNormalShader;
-        public Shader graphPointOutlineShader;
         public SelectionManager selectionManager;
 
         public List<Graph> Graphs;
@@ -212,12 +211,31 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Color all graphs with the expression of some gene.
         /// </summary>
-        /// <param name="expressions">An arraylist with <see cref="CellExpressionPair"/>.</param>
-        public void ColorAllGraphsByGeneExpression(ArrayList expressions)
+        /// <param name="expressions">An arraylist with <see cref="SQLiter.CellExpressionPair"/>.</param>
+        public void ColorAllGraphsByGeneExpression(string geneName, ArrayList expressions)
         {
             foreach (Graph graph in Graphs)
             {
                 graph.ColorByGeneExpression(expressions);
+            }
+
+            // create the gene expression histogram
+            int numberOfBins = CellexalConfig.Config.GraphNumberOfExpressionColors + 1;
+            int[] cellsPerBin = new int[numberOfBins];
+            float highestExpression = float.MinValue;
+            foreach (SQLiter.CellExpressionPair expression in expressions)
+            {
+                cellsPerBin[expression.Color + 1]++;
+                if (expression.Expression > highestExpression)
+                {
+                    highestExpression = expression.Expression;
+                }
+            }
+            cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
+            foreach (Graph graph in Graphs)
+            {
+                graph.legendManager.ActivateLegend(LegendManager.Legend.GeneExpressionLegend);
+                graph.legendManager.GetComponentInChildren<GeneExpressionHistogram>().CreateHistogram(geneName, cellsPerBin, highestExpression.ToString(), GeneExpressionHistogram.YAxisMode.Linear);
             }
         }
 
