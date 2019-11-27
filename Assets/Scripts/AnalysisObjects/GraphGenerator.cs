@@ -29,6 +29,7 @@ namespace CellexalVR.AnalysisObjects
         public GameObject AxesPrefabColoured;
         public GameObject AxesPrefabUncoloured;
         public Material graphPointMaterialPrefab;
+        public Material graphPointTransparentMaterialPrefab;
         public GameObject skeletonPrefab;
         public Mesh graphpointStandardQStandardSzMesh;
         public Mesh graphpointStandardQSmallSzMesh;
@@ -554,6 +555,7 @@ namespace CellexalVR.AnalysisObjects
             int graphPointMeshVertexCount = meshToUse.vertexCount;
             int graphPointMeshTriangleCount = meshToUse.triangles.Length;
             Material graphPointMaterial = Instantiate(graphPointMaterialPrefab);
+            Material graphPointTransparentMaterial = Instantiate(graphPointTransparentMaterialPrefab);
 
             // arrays used by the combine meshes job
             NativeArray<Vector3> graphPointMeshVertices = new NativeArray<Vector3>(meshToUse.vertices, Allocator.TempJob);
@@ -645,6 +647,7 @@ namespace CellexalVR.AnalysisObjects
                 newPart.GetComponent<MeshFilter>().mesh = newMesh;
                 newGraph.graphPointClusters.Add(newPart);
                 newPart.GetComponent<Renderer>().sharedMaterial = graphPointMaterial;
+                //newPart.GetComponent<Renderer>().sharedMaterials = new Material[] { graphPointMaterial, graphPointTransparentMaterial };
 
                 itemsThisFrame++;
                 if (itemsThisFrame >= maximumItemsPerFrame)
@@ -813,6 +816,15 @@ namespace CellexalVR.AnalysisObjects
             "celltype@Caudal.Mesoderm"
         };
             CreateSubGraphs(attr);
+        }
+
+
+        public void MakeAllTransparent(bool toggle)
+        {
+            foreach (Graph graph in referenceManager.graphManager.originalGraphs)
+            {
+                graph.MakeTransparent(toggle);
+            }
         }
 
         /// <summary>

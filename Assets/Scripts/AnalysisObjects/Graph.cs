@@ -132,6 +132,7 @@ namespace CellexalVR.AnalysisObjects
 
         public OctreeNode octreeRoot;
         private GraphGenerator graphGenerator;
+        private bool isTransparent;
 
         private void OnValidate()
         {
@@ -195,6 +196,33 @@ namespace CellexalVR.AnalysisObjects
             shrinkSpeed = (oldScale.x - transform.localScale.x) / animationTime;
             currentTime = 0;
             maximize = true;
+        }
+
+        public void MakeTransparent(bool toggle)
+        {
+            for (int i = 0; i < textureWidth; ++i)
+            {
+                for (int j = 0; j < textureHeight; ++j)
+                {
+                    //texture.SetPixel(i, j, Color.black);
+                    if (toggle)
+                    {
+                        texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
+                    }
+                    else
+                    {
+                        texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
+                    }
+                }
+            }
+            texture.Apply();
+            isTransparent = toggle;
+
+            //texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
+            //foreach (GraphPoint gp in points)
+            //{
+
+            //}
         }
 
         /// <summary>
@@ -1233,7 +1261,14 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="graphPoint">The graphpoint to recolor.</param>
         public void ResetGraphPointColor(GraphPoint graphPoint)
         {
-            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
+            if (isTransparent)
+            {
+                texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
+            }
+            else
+            {
+                texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
+            }
             textureChanged = true;
         }
         /// <summary>

@@ -10,9 +10,12 @@ namespace CellexalVR.Menu.Buttons.Attributes
     /// </summary>
     public class CreateSubGraphButton : CellexalButton
     {
+        public bool transparent;
 
         private GraphGenerator graphGenerator;
         private MultiuserMessageSender MultiuserMessageSender;
+        private bool toggle;
+
 
         protected override string Description
         {
@@ -28,11 +31,17 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         public override void Click()
         {
-            if (referenceManager.attributeSubMenu.attributes.Count > 0)
+            if (!transparent && referenceManager.attributeSubMenu.attributes.Count > 0)
             {
                 graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
                 referenceManager.multiuserMessageSender.SendMessageCreateAttributeGraph();
             }
+            else if (transparent)
+            {
+                graphGenerator.MakeAllTransparent(toggle);
+                toggle = !toggle;
+            }
+
         }
 
         private void TurnOn()
