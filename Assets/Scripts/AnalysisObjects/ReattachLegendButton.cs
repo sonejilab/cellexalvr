@@ -50,7 +50,7 @@ namespace CellexalVR.AnalysisObjects
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 LegendManager parentLegendManager = gameObject.GetComponentInParent<LegendManager>();
-                parentLegendManager.transform.parent = parentLegendManager.attachPoint.transform;
+                //parentLegendManager.transform.parent = parentLegendManager.attachPoint.transform;
                 parentLegendManager.transform.localPosition = Vector3.zero;
                 parentLegendManager.transform.localRotation = Quaternion.identity;
                 Destroy(parentLegendManager.GetComponent<Rigidbody>());

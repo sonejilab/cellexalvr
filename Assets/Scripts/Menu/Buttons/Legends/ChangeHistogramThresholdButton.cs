@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class ChangeHistogramThresholdButton : CellexalVR.Menu.Buttons.CellexalButton
+﻿public class ChangeHistogramThresholdButton : CellexalVR.Menu.Buttons.CellexalButton
 {
 
     public bool increment;
@@ -13,5 +10,4 @@ public class ChangeHistogramThresholdButton : CellexalVR.Menu.Buttons.CellexalBu
         histogram.TallestBarsToSkip += increment ? 1 : -1;
         histogram.RecreateHistogram();
     }
-
 }

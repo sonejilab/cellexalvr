@@ -1,7 +1,7 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.General;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -10,14 +10,22 @@ namespace CellexalVR.AnalysisObjects
     /// </summary>
     public class GroupingLegend : MonoBehaviour
     {
+        public ReferenceManager referenceManager;
         public GameObject entryPrefab;
 
         private List<GroupingLegendEntry> entries = new List<GroupingLegendEntry>();
         private int activeCells = 0;
-        public Graph parentGraph;
 
         private Vector3 startPos = new Vector3(0f, 0.1968f, 0f);
         private Vector3 posInc = new Vector3(0f, -0.0416f, 0f);
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
 
         /// <summary>
         /// Adds a new group to the legend.
@@ -36,7 +44,7 @@ namespace CellexalVR.AnalysisObjects
             activeCells += numberOfCells;
 
             string percentOfSelectedString = ((float)numberOfCells / activeCells).ToString("P");
-            string percentOfAllString = ((float)numberOfCells / parentGraph.points.Count).ToString("P");
+            string percentOfAllString = ((float)numberOfCells / referenceManager.cellManager.GetNumberOfCells()).ToString("P");
             newEntry.SetPanelText(groupName, numberOfCells, percentOfSelectedString, percentOfAllString, color);
             UpdatePercentages();
             entries.Add(newEntry);
@@ -81,7 +89,7 @@ namespace CellexalVR.AnalysisObjects
                 int numberOfCells = remainingEntry.numberOfCells;
                 remainingEntry.numberOfCellsText.text = numberOfCells.ToString();
                 string percentOfSelectedString = ((float)numberOfCells / activeCells).ToString("P");
-                string percentOfAllString = ((float)numberOfCells / parentGraph.points.Count).ToString("P");
+                string percentOfAllString = ((float)numberOfCells / referenceManager.cellManager.GetNumberOfCells()).ToString("P");
                 remainingEntry.UpdatePercentages(percentOfSelectedString, percentOfAllString);
             }
         }

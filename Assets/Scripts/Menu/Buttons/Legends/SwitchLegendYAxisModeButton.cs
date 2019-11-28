@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 
 namespace CellexalVR.Menu.Buttons.Legends
 {
@@ -21,8 +19,9 @@ namespace CellexalVR.Menu.Buttons.Legends
             {
                 currentMode = GeneExpressionHistogram.YAxisMode.Linear;
             }
-
-            gameObject.GetComponentInParent<GeneExpressionHistogram>().RecreateHistogram(currentMode);
+            GeneExpressionHistogram histogram = gameObject.GetComponentInParent<GeneExpressionHistogram>();
+            histogram.DesiredYAxisMode = currentMode;
+            histogram.RecreateHistogram();
         }
     }
 }

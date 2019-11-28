@@ -204,17 +204,12 @@ namespace CellexalVR.General
             //{
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
-            Graph activeGraph = graphPoint.parent;
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
 
-            if (activeGraph.legendManager.activeLegend != LegendManager.Legend.SelectionLegend)
-            {
-                activeGraph.legendManager.ActivateLegend(LegendManager.Legend.SelectionLegend);
-            }
-
-            activeGraph.legendManager.selectionLegend.AddOrUpdateGroup(newGroup.ToString(), 1, color);
+            referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(newGroup.ToString(), 1, color);
             if (!newNode)
             {
-                activeGraph.legendManager.selectionLegend.AddOrUpdateGroup(oldGroup.ToString(), -1, Color.white);
+                referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(oldGroup.ToString(), -1, Color.white);
             }
 
             //try

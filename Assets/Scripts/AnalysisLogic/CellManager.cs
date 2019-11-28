@@ -469,17 +469,14 @@ namespace CellexalVR.AnalysisLogic
             }
             int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
             Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
-            foreach (Graph graph in graphManager.Graphs)
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.AttributeLegend;
+            if (color)
             {
-                graph.legendManager.ActivateLegend(LegendManager.Legend.AttributeLegend);
-                if (color)
-                {
-                    graph.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
-                }
-                else
-                {
-                    graph.legendManager.attributeLegend.RemoveGroup(attributeType);
-                }
+                referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
+            }
+            else
+            {
+                referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }
 
             CellexalEvents.CommandFinished.Invoke(true);

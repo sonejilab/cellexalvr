@@ -1,7 +1,7 @@
 ﻿using CellexalVR.General;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -35,11 +35,15 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public Vector3 HistogramMaxPos { get; private set; }
 
-        public int NumberOfBars { get; private set; }
+        public int NumberOfBars { get => heightsInt.Length; }
 
 
         private int tallestBarsToSkip;
         private List<GameObject> cutOffTops = new List<GameObject>();
+
+        /// <summary>
+        /// The number of tallest bars to skip when scaling the Y axis. Call <see cref="RecreateHistogram"/> after changing this.
+        /// </summary>
         public int TallestBarsToSkip
         {
             get => tallestBarsToSkip;
@@ -53,11 +57,16 @@ namespace CellexalVR.AnalysisObjects
                     tallestBarsToSkip = value;
             }
         }
-        public YAxisMode currentMode;
+
+        /// <summary>
+        /// The desired Y axis scaling mode. Call <see cref="RecreateHistogram"/> after changing this.
+        /// </summary>
+        public YAxisMode DesiredYAxisMode { get; set; }
         public enum YAxisMode { Linear, Logarithmic }
 
         private List<GameObject> bars = new List<GameObject>();
         private int[] heightsInt;
+        private int[] sortedHeightsInt;
         private float[] heightsFloat;
         private Vector3 startPos;
         private LegendManager manager;
@@ -97,68 +106,63 @@ namespace CellexalVR.AnalysisObjects
         public void CreateHistogram(string geneName, int[] bins, string xAxisMaxLabel, YAxisMode barHeightMode, int skip = 0)
         {
             this.geneNameLabel.text = geneName;
+            heightsInt = bins;
+            sortedHeightsInt = new int[bins.Length];
+            Array.Copy(bins, sortedHeightsInt, bins.Length);
+            Array.Sort(sortedHeightsInt);
+
+            DesiredYAxisMode = barHeightMode;
+            TallestBarsToSkip = skip;
+
             string yAxisMaxLabel;
             List<float> barHeights;
-            CalculateBarHeights(bins, barHeightMode, out yAxisMaxLabel, out barHeights, skip);
+            CalculateBarHeights(out yAxisMaxLabel, out barHeights);
             CreateHistogram(xAxisMaxLabel, yAxisMaxLabel, barHeights);
         }
 
         /// <summary>
         /// Calculates the bar heights.
         /// </summary>
-        /// <param name="bins">The original values that the bars represents</param>
-        /// <param name="barHeightMode">The mode to calculate the heights in</param>
         /// <param name="yAxisMaxLabel">The resulting text on the max y label</param>
         /// <param name="barHeights">The resulting heights, range [0, 1]</param>
-        private void CalculateBarHeights(int[] bins, YAxisMode barHeightMode, out string yAxisMaxLabel, out List<float> barHeights, int skip = 0)
+        private void CalculateBarHeights(out string yAxisMaxLabel, out List<float> barHeights)
         {
             string yAxisText = "Number of cells";
-            heightsInt = bins;
-            if (barHeightMode != YAxisMode.Linear)
+
+            if (DesiredYAxisMode != YAxisMode.Linear)
             {
                 yAxisText = "Log(" + yAxisText + ")";
             }
 
-            if (skip > bins.Length)
-            {
-                skip = bins.Length;
-            }
-
+            float largestBin = (float)sortedHeightsInt[sortedHeightsInt.Length - TallestBarsToSkip - 1];
             yAxisLabel.text = yAxisText;
-            barHeights = new List<float>(bins.Length);
-            if (barHeightMode == YAxisMode.Linear)
+            barHeights = new List<float>(heightsInt.Length);
+            if (DesiredYAxisMode == YAxisMode.Linear)
             {
-                int[] sortedBins = new int[bins.Length];
-                Array.Copy(bins, sortedBins, bins.Length);
-                Array.Sort(sortedBins);
-                int largestBin = sortedBins[sortedBins.Length - skip - 1];
-                for (int i = 0; i < bins.Length; ++i)
+                for (int i = 0; i < heightsInt.Length; ++i)
                 {
-                    barHeights.Add((float)bins[i] / largestBin);
+                    barHeights.Add((float)heightsInt[i] / largestBin);
                 }
                 heightsFloat = null;
                 yAxisMaxLabel = largestBin.ToString();
             }
             else
             {
-                heightsFloat = new float[bins.Length];
-                for (int i = 0; i < bins.Length; ++i)
+                heightsFloat = new float[heightsInt.Length];
+                for (int i = 0; i < heightsInt.Length; ++i)
                 {
-                    if (bins[i] == 0)
+                    if (heightsInt[i] == 0)
                     {
                         heightsFloat[i] = 0f;
                     }
                     else
                     {
-                        heightsFloat[i] = Mathf.Log(bins[i]);
+                        heightsFloat[i] = Mathf.Log(heightsInt[i]);
                     }
                 }
 
-                float[] sortedBins = new float[heightsFloat.Length];
-                Array.Copy(heightsFloat, sortedBins, bins.Length);
-                Array.Sort(sortedBins);
+                largestBin = Mathf.Log(largestBin);
 
-                float largestBin = sortedBins[sortedBins.Length - skip - 1];
                 for (int i = 0; i < heightsFloat.Length; ++i)
                 {
                     barHeights.Add(heightsFloat[i] / largestBin);
@@ -186,8 +190,6 @@ namespace CellexalVR.AnalysisObjects
                 Destroy(go);
             }
             cutOffTops.Clear();
-
-            NumberOfBars = barHeights.Count;
 
             for (int i = 0; i < NumberOfBars; ++i)
             {
@@ -223,27 +225,14 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Recreates the current histogram with a new Y axis mode.
-        /// </summary>
-        /// <param name="mode">The new mode.</param>
-        public void RecreateHistogram(YAxisMode mode)
-        {
-            string yAxisMaxLabel;
-            List<float> barHeights;
-            CalculateBarHeights(heightsInt, mode, out yAxisMaxLabel, out barHeights);
-            CreateHistogram(xAxisMaxLabel.text, yAxisMaxLabel, barHeights);
-        }
-
-        /// <summary>
-        /// Recreates the current histogram with a new number of tallest bars to skip when scaling the y axis.
+        /// Recreates the current histogram.
         /// </summary>
         public void RecreateHistogram()
         {
             string yAxisMaxLabel;
             List<float> barHeights;
-            CalculateBarHeights(heightsInt, currentMode, out yAxisMaxLabel, out barHeights, TallestBarsToSkip);
+            CalculateBarHeights(out yAxisMaxLabel, out barHeights);
             CreateHistogram(xAxisMaxLabel.text, yAxisMaxLabel, barHeights);
-
         }
 
         /// <summary>
@@ -318,6 +307,15 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
+        /// Deactivates the selected highlight area and its accompanying text.
+        /// </summary>
+        public void DeactivateSelectedArea()
+        {
+            selectedArea.SetActive(false);
+            selectedAreaInfoText.gameObject.SetActive(false);
+        }
+
+        /// <summary>
         /// Moves a highlight area and its text.
         /// </summary>
         /// <param name="area">The highlight area gameObject</param>
@@ -333,17 +331,33 @@ namespace CellexalVR.AnalysisObjects
                 maxX = temp;
             }
 
-            if (!highlightArea.activeSelf)
+            if (!area.activeSelf)
             {
-                highlightArea.SetActive(true);
-                highlightAreaInfoText.gameObject.SetActive(true);
+                area.SetActive(true);
+                text.gameObject.SetActive(true);
             }
             Vector3 pos = BarPos(minX, maxX, 1f, bars.Count);
             Vector3 scale = BarScale(minX, maxX, 1f, bars.Count, 0.01f);
             area.transform.localPosition = pos;
             area.transform.localScale = scale;
-            Vector3 infoTextPos = new Vector3(pos.x + scale.x / 2f, scale.y, -scale.z);
+            Vector3 infoTextPos = new Vector3(pos.x + scale.x / 2f, scale.y / 2f, -scale.z);
             text.transform.localPosition = infoTextPos;
+
+            int[] selectedSlice = new int[maxX - minX + 1];
+            Array.Copy(heightsInt, minX, selectedSlice, 0, selectedSlice.Length);
+            Array.Sort(selectedSlice);
+            double mean = selectedSlice.Average();
+            float median;
+            int middleIndex = selectedSlice.Length / 2;
+            if (selectedSlice.Length % 2 == 0)
+            {
+                median = (selectedSlice[middleIndex] + selectedSlice[middleIndex - 1]) / 2f;
+            }
+            else
+            {
+                median = selectedSlice[middleIndex];
+            }
+
 
             if (minX != maxX)
             {
@@ -353,7 +367,7 @@ namespace CellexalVR.AnalysisObjects
 
                     sum += heightsInt[i];
                 }
-                highlightAreaInfoText.text = "x: [" + minX + ", " + maxX + "]\ny: " + sum;
+                highlightAreaInfoText.text = "x: [" + minX + ", " + maxX + "]\nsum: " + sum + "\nmean: " + mean + "\nmedian: " + median;
             }
             else
             {

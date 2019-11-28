@@ -232,11 +232,8 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
             cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
-            foreach (Graph graph in Graphs)
-            {
-                graph.legendManager.ActivateLegend(LegendManager.Legend.GeneExpressionLegend);
-                graph.legendManager.GetComponentInChildren<GeneExpressionHistogram>().CreateHistogram(geneName, cellsPerBin, highestExpression.ToString(), GeneExpressionHistogram.YAxisMode.Linear);
-            }
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.GeneExpressionLegend;
+            referenceManager.legendManager.geneExpressionHistogram.CreateHistogram(geneName, cellsPerBin, highestExpression.ToString(), GeneExpressionHistogram.YAxisMode.Linear);
         }
 
         /// <summary>

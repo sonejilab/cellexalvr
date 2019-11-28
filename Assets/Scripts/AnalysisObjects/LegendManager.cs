@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using CellexalVR.Extensions;
 using CellexalVR.General;
-using CellexalVR.Extensions;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -14,9 +13,10 @@ namespace CellexalVR.AnalysisObjects
         public GroupingLegend attributeLegend;
         public GroupingLegend selectionLegend;
         public GeneExpressionHistogram geneExpressionHistogram;
-        public GameObject attachPoint;
-
-        public Legend activeLegend;
+        [HideInInspector]
+        public bool legendActive;
+        [HideInInspector]
+        public Legend desiredLegend;
         public enum Legend { None, AttributeLegend, GeneExpressionLegend, SelectionLegend }
 
         private Vector3 minPos = new Vector3(-0.58539f, -0.28538f, 0f);
@@ -25,18 +25,18 @@ namespace CellexalVR.AnalysisObjects
 
         private void Start()
         {
-            CellexalEvents.GraphsReset.AddListener(DeactivateLegends);
+            CellexalEvents.GraphsReset.AddListener(DeactivateLegend);
             geneExpressionHistogram.referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         /// <summary>
-        /// Deactivates all legends.
+        /// Deactivates all legends. Sets the gameobject to inactive.
         /// </summary>
-        public void DeactivateLegends()
+        public void DeactivateLegend()
         {
-            activeLegend = Legend.None;
             backgroundPlane.SetActive(false);
             gameObject.GetComponent<Collider>().enabled = false;
+            legendActive = false;
             foreach (Transform child in transform)
             {
                 child.gameObject.SetActive(false);
@@ -44,15 +44,23 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Activates a legend.
+        /// Activates the desired legend, as determined by <see cref="desiredLegend"/>.
+        /// </summary>
+        public void ActivateLegend()
+        {
+            ActivateLegend(desiredLegend);
+        }
+
+        /// <summary>
+        /// Activates a legend. Does not set the gameobject active.
         /// </summary>
         /// <param name="legendToActivate">The legend to activate</param>
         public void ActivateLegend(Legend legendToActivate)
         {
-            DeactivateLegends();
+            DeactivateLegend();
             backgroundPlane.SetActive(true);
             gameObject.GetComponent<Collider>().enabled = true;
-
+            legendActive = true;
             switch (legendToActivate)
             {
                 case Legend.AttributeLegend:
@@ -66,7 +74,7 @@ namespace CellexalVR.AnalysisObjects
                     break;
             }
 
-            activeLegend = legendToActivate;
+            desiredLegend = legendToActivate;
         }
 
         /// <summary>

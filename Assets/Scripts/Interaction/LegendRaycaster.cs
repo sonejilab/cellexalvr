@@ -1,5 +1,4 @@
-﻿using System;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using UnityEngine;
 
@@ -16,6 +15,7 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
         private int layerMask;
         private int savedGeneExpressionHistogramHitX = -1;
+        private float clickStartTime;
 
         private void Start()
         {
@@ -58,7 +58,7 @@ namespace CellexalVR.Interaction
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 100f, layerMask);
             if (hit.collider && hit.collider.gameObject == legendManager.gameObject)
             {
-                if (legendManager.activeLegend == LegendManager.Legend.GeneExpressionLegend)
+                if (legendManager.desiredLegend == LegendManager.Legend.GeneExpressionLegend)
                 {
                     var localPos = legendManager.WorldToRelativeHistogramPos(hit.point);
                     if (localPos.x >= 0f && localPos.x <= 1f && localPos.y >= 0f && localPos.y <= 1f)
@@ -106,14 +106,22 @@ namespace CellexalVR.Interaction
 
         private void HandleClickDownGeneExpressionHistogram(Vector3 hit)
         {
+            clickStartTime = Time.time;
             savedGeneExpressionHistogramHitX = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
         }
 
         private void HandleClickUpGeneExpressionHistogram(Vector3 hit)
         {
-            int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
-            legendManager.geneExpressionHistogram.MoveSelectedArea(hitIndex, savedGeneExpressionHistogramHitX);
-            savedGeneExpressionHistogramHitX = -1;
+            if (Time.time - clickStartTime < 0.5f)
+            {
+                legendManager.geneExpressionHistogram.DeactivateSelectedArea();
+            }
+            else
+            {
+                int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
+                legendManager.geneExpressionHistogram.MoveSelectedArea(hitIndex, savedGeneExpressionHistogramHitX);
+                savedGeneExpressionHistogramHitX = -1;
+            }
         }
     }
 }
