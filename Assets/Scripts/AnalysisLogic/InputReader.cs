@@ -121,13 +121,24 @@ namespace CellexalVR.AnalysisLogic
         public void ReadFolderHFConsole(string path)
         {
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
-            ReadFolder_h5(path);
+            ReadFile_h5(path);
         }
-
-        public void ReadFolder_h5(string path)
+        /// <summary>
+        /// Reads one file of data and creates the graphs described by the data.
+        /// </summary>
+        /// 
+        /// <param name="path">path to the file</param>
+        public void ReadFile_h5(string path)
         {
-            StartCoroutine(H5_ReadMDSFiles(path, new string[] { "phate", "umap" }));
-            graphGenerator.isCreating = true;
+            UpdateSelectionToolHandler();
+            attributeFileRead = false;
+            currentPath = path;
+            string workingDirectory = Directory.GetCurrentDirectory();
+            string fullPath = workingDirectory + "\\Data\\" + path;
+            selectionManager.DataDir = fullPath;
+
+            StartCoroutine(H5_readgraphs(path, new string[] { "phate", "umap" }));
+            //graphGenerator.isCreating = true;
         }
 
         /// <summary>
@@ -217,7 +228,14 @@ namespace CellexalVR.AnalysisLogic
 
             StartCoroutine(ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
-        IEnumerator H5_ReadMDSFiles(string path, string[] projections, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
+
+        /// <summary>
+        /// H5 Coroutine to create graphs.
+        /// </summary>
+        /// <param name="path"> The path to the file. </param>
+        /// <param name="projections"> The graphnames. </param>
+
+        IEnumerator H5_readgraphs(string path, string[] projections, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
             if (!loaderController.loaderMovedDown)
             {
@@ -226,6 +244,11 @@ namespace CellexalVR.AnalysisLogic
             }
 
             cellManager.h5Reader = new h5reader(path);
+            StartCoroutine(cellManager.h5Reader.ConnectToFile());
+            while (cellManager.h5Reader.busy)
+                yield return null;
+
+            print("here");
 
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -246,8 +269,10 @@ namespace CellexalVR.AnalysisLogic
             {
                 while (graphGenerator.isCreating)
                 {
+                    print("grape already creawting");
                     yield return null;
                 }
+                print("First time");
                 Graph combGraph = graphGenerator.CreateGraph(type);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
@@ -287,6 +312,7 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
 
                 string[] coords = cellManager.h5Reader._coordResult;
+                print(coords);
                 string[] cellnames = cellManager.h5Reader.index2cellname;
                 combGraph.axisNames = new string[] { "x", "y", "z" };
                 itemsThisFrame = 0;

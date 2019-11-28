@@ -24,6 +24,7 @@ public class h5reader
     public ArrayList _result;
     public string[] _coordResult;
     public string[] _velResult;
+    public string filePath;
 
     public float LowestExpression { get; private set; }
     public float HighestExpression { get; private set; }
@@ -36,7 +37,20 @@ public class h5reader
 
     private FileTypes fileType;
     // Start is called before the first frame update
+    /// <summary>
+    /// H5reader
+    /// </summary>
+    /// <param name="path">filename in the Data folder</param>
     public h5reader(string path)
+    {
+        filePath = path;
+    }
+
+    /// <summary>
+    /// Coroutine for connecting to the file
+    /// </summary>
+    /// <returns>All genenames and cellnames from the file are saved in the class</returns>
+    public IEnumerator ConnectToFile()
     {
         busy = true;
         p = new Process();
@@ -50,7 +64,7 @@ public class h5reader
 
         startInfo.FileName = "py.exe";
 
-        string file_name = "Data/" + path;
+        string file_name = "Data/" + filePath;
         startInfo.Arguments = "ann.py " + file_name;
         p.StartInfo = startInfo;
         p.Start();
@@ -58,10 +72,12 @@ public class h5reader
 
         writer = p.StandardInput;
 
-        Thread.Sleep(500);
+        yield return null;
+
         reader = p.StandardOutput;
 
-        Thread.Sleep(100);
+        yield return null;
+
         var watch = Stopwatch.StartNew();
         if (Path.GetExtension(file_name) == ".loom")
         {
@@ -75,10 +91,14 @@ public class h5reader
             fileType = FileTypes.anndata;
 
         }
+
+        while (reader.Peek() == 0)
+            yield return null;
+
         string output = reader.ReadLine();
+        UnityEngine.Debug.Log(output);
         output = output.Substring(1, output.Length - 2);
         cellname2index = new Dictionary<string, int>();
-        int counter = 0;
         index2cellname = output.Split(',');
         for (int i = 0; i < index2cellname.Length; i++)
         {
@@ -91,6 +111,9 @@ public class h5reader
             cellname2index.Add(index2cellname[i], i);
             if (i == 0 || i == 1 || i == index2cellname.Length - 1)
                 UnityEngine.Debug.Log(index2cellname[i]);
+
+            if (i % (index2cellname.Length / 3) == 0)
+                yield return null;
         }
 
         if (fileType == FileTypes.loom)
@@ -101,12 +124,13 @@ public class h5reader
         {
             writer.WriteLine("[i[0] for i in f['var'][:]]");
         }
+        while (reader.Peek() == 0)
+            yield return null;
         output = reader.ReadLine();
         output = output.Substring(1, output.Length - 2);
         genename2index = new Dictionary<string, int>();
-        counter = 0;
         index2genename = output.Split(',');
-
+        int counter = 0;
         for (int i = 0; i < index2genename.Length; i++)
         {
 
@@ -114,13 +138,22 @@ public class h5reader
             if (i == 100)
                 UnityEngine.Debug.Log(index2genename[i]);
             genename2index.Add(index2genename[i], counter++);
+
+            if (i % (index2genename.Length / 3) == 0)
+                yield return null;
         }
         watch.Stop();
 
-        UnityEngine.Debug.Log("H5reader created in :" + watch.ElapsedMilliseconds + " ms");
+        UnityEngine.Debug.Log("H5reader booted and read all names in :" + watch.ElapsedMilliseconds + " ms");
         busy = false;
+
     }
 
+    /// <summary>
+    /// Get 3D coordinates from file
+    /// </summary>
+    /// <param name="boi">The graph type, (umap or phate)</param>
+    /// <returns>Coroutine, use _coordResult</returns>
     public IEnumerator GetCoords(string boi)
     {
         busy = true;
@@ -143,6 +176,10 @@ public class h5reader
         busy = false;
     }
 
+    /// <summary>
+    /// Get the phate velocities from the file
+    /// </summary>
+    /// <returns>_velResult</returns>
     public IEnumerator GetVelocites()
     {
         busy = true;
@@ -165,6 +202,12 @@ public class h5reader
         busy = false;
     }
 
+    /// <summary>
+    /// Reads expressions of gene on all cells, returns list of CellExpressionPair
+    /// </summary>
+    /// <param name="geneName">gene name</param>
+    /// <param name="coloringMethod">no idea</param>
+    /// <returns>_result</returns>
     public IEnumerator colorbygene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
         busy = true;

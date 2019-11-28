@@ -213,6 +213,12 @@ namespace CellexalVR.AnalysisLogic
         }
 
         //summertwerker
+        /// <summary>
+        /// Color the graph with data from the h5 file
+        /// </summary>
+        /// <param name="geneName">Gene name</param>
+        /// <param name="coloringMethod">Coloring method</param>
+        /// <param name="triggerEvent">Trigger event?</param>
         public void ColorGraphsByGeneHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
         {
             try
@@ -317,6 +323,13 @@ namespace CellexalVR.AnalysisLogic
         //CellexalEvents.CommandFinished.Invoke(true);
         //}
 
+        /// <summary>
+        /// query the h5 file for gene expression data
+        /// </summary>
+        /// <param name="geneName">Gene name</param>
+        /// <param name="coloringMethod">coloring method</param>
+        /// <param name="triggerEvent">trigger event?</param>
+        /// <returns></returns>
         private IEnumerator QueryHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
 

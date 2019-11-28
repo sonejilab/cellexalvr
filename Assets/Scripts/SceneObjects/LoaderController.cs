@@ -172,7 +172,7 @@ namespace CellexalVR.SceneObjects
                         try
                         {
                             if (Path.GetExtension(path) != "")
-                                inputReader.ReadFolder_h5(path);
+                                inputReader.ReadFile_h5(path);
                             else
                                 inputReader.ReadFolder(path);
                         }
