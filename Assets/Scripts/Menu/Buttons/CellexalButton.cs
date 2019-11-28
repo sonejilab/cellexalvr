@@ -124,7 +124,7 @@ namespace CellexalVR.Menu.Buttons
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
                 //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.isActiveAndEnabled && buttonActivated)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible() && buttonActivated)
                 {
                     laserInside = true;
                     frameCount = 0;
@@ -141,7 +141,7 @@ namespace CellexalVR.Menu.Buttons
                 }
                 controllerInside = laserInside;
                 SetHighlighted(laserInside);
-                if (descriptionText.text == Description)
+                if (descriptionText.text == Description && !laserInside)
                 {
                     descriptionText.text = "";
                 }
@@ -259,6 +259,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 if (descriptionText.text == Description)
                 {
+                    print("on trigger exit clear descr text");
                     descriptionText.text = "";
                 }
                 controllerInside = false;
@@ -281,6 +282,10 @@ namespace CellexalVR.Menu.Buttons
                 else if (meshRenderer != null)
                 {
                     meshRenderer.material.color = meshHighlightColor;
+                }
+                if (descriptionText.text == "")
+                {
+                    descriptionText.text = Description;
                 }
             }
             if (!highlight)
