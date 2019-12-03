@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 642767269}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.0185, z: 0.0213}
-  m_LocalScale: {x: 0.6741397, y: 0.6741397, z: 0.6741397}
+  m_LocalScale: {x: 67.41397, y: 67.41397, z: 67.41397}
   m_Children: []
   m_Father: {fileID: 4792580207310606}
   m_RootOrder: 3
@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642767269}
-  m_Mesh: {fileID: 4711208715938537054, guid: 9f08cc369a6629c49ab3e304b8ece5bf, type: 3}
+  m_Mesh: {fileID: 4711208715938537054, guid: 84207164ffbabc24fa8b78bd68a59867, type: 3}
 --- !u!23 &642767271
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -89,8 +89,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.054
-  m_Center: {x: 0.001491949, y: 0.0019182265, z: -0.0006394088}
+  m_Radius: 0.00054
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1477683101
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +119,7 @@ Transform:
   m_GameObject: {fileID: 1477683101}
   m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
   m_LocalPosition: {x: 0, y: -0.0123, z: 0.0266}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.8}
+  m_LocalScale: {x: 40, y: 40, z: 80}
   m_Children: []
   m_Father: {fileID: 4792580207310606}
   m_RootOrder: 4
@@ -131,7 +131,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477683101}
-  m_Mesh: {fileID: 2534964839176971238, guid: 9f08cc369a6629c49ab3e304b8ece5bf, type: 3}
+  m_Mesh: {fileID: 2534964839176971238, guid: 84207164ffbabc24fa8b78bd68a59867, type: 3}
 --- !u!23 &1477683104
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.01, y: 0.01, z: 0.09999996}
+  m_Size: {x: 0.0001, y: 0.0001, z: 0.0009999996}
   m_Center: {x: 0, y: -0.00000047683716, z: 0.00000011920929}
 --- !u!1 &1010099715316252
 GameObject:
@@ -486,7 +486,7 @@ Transform:
   m_GameObject: {fileID: 1027382645685210}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0012, y: -0.0326, z: 0.0948}
-  m_LocalScale: {x: 0.56200534, y: 0.56200534, z: 0.56200534}
+  m_LocalScale: {x: 56.20053, y: 56.20053, z: 56.20053}
   m_Children: []
   m_Father: {fileID: 4792580207310606}
   m_RootOrder: 2
@@ -498,7 +498,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1027382645685210}
-  m_Mesh: {fileID: -205181911015748480, guid: 9f08cc369a6629c49ab3e304b8ece5bf, type: 3}
+  m_Mesh: {fileID: -205181911015748480, guid: 84207164ffbabc24fa8b78bd68a59867, type: 3}
 --- !u!23 &1483922730
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -547,8 +547,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.2
-  m_Center: {x: 0.001491949, y: 0.0019182265, z: -0.0006394088}
+  m_Radius: 0.002
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1045306284060294
 GameObject:
   m_ObjectHideFlags: 0
@@ -11775,7 +11775,7 @@ Transform:
   m_GameObject: {fileID: 1327859366197334}
   m_LocalRotation: {x: -0.4304593, y: -0.56098557, z: 0.4304593, w: 0.56098557}
   m_LocalPosition: {x: 0, y: -0.0176, z: 0.033}
-  m_LocalScale: {x: 0.059657, y: 0.059657, z: 0.059657}
+  m_LocalScale: {x: 5.9657, y: 5.9657, z: 5.9657}
   m_Children: []
   m_Father: {fileID: 4792580207310606}
   m_RootOrder: 1
@@ -11787,7 +11787,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327859366197334}
-  m_Mesh: {fileID: 3256123080762291287, guid: 9f08cc369a6629c49ab3e304b8ece5bf, type: 3}
+  m_Mesh: {fileID: 3256123080762291287, guid: 84207164ffbabc24fa8b78bd68a59867, type: 3}
 --- !u!23 &884252386
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11838,7 +11838,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
-  m_Mesh: {fileID: 3256123080762291287, guid: 9f08cc369a6629c49ab3e304b8ece5bf, type: 3}
+  m_Mesh: {fileID: 3256123080762291287, guid: 84207164ffbabc24fa8b78bd68a59867, type: 3}
 --- !u!1 &1336598004091478
 GameObject:
   m_ObjectHideFlags: 0
