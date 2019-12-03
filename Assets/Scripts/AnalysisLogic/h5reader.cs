@@ -23,8 +23,12 @@ public class h5reader
     public bool busy;
     public ArrayList _result;
     public string[] _coordResult;
+    public string[,] _sep_coordResult;
     public string[] _velResult;
     public string filePath;
+    public Dictionary<string, string> conf;
+    public string conditions;
+    
 
     public float LowestExpression { get; private set; }
     public float HighestExpression { get; private set; }
@@ -43,7 +47,25 @@ public class h5reader
     /// <param name="path">filename in the Data folder</param>
     public h5reader(string path)
     {
+        conf = new Dictionary<string, string>();
         filePath = path;
+        if(!File.Exists(path + ".conf"))
+        {
+            UnityEngine.Debug.Log("No config file for " + path);
+        }
+        else
+        {
+            string[] lines = System.IO.File.ReadAllLines(path +".conf");
+            foreach(string l in lines)
+            {
+                if (l == "")
+                    continue;
+                UnityEngine.Debug.Log(l);
+                string[] kvp = l.Split(' ');
+                conf.Add(kvp[0], kvp[1]);
+                
+            }
+        }
     }
 
     /// <summary>
@@ -64,7 +86,7 @@ public class h5reader
 
         startInfo.FileName = "py.exe";
 
-        string file_name = "Data/" + filePath;
+        string file_name = filePath;
         startInfo.Arguments = "ann.py " + file_name;
         p.StartInfo = startInfo;
         p.Start();
@@ -79,18 +101,7 @@ public class h5reader
         yield return null;
 
         var watch = Stopwatch.StartNew();
-        if (Path.GetExtension(file_name) == ".loom")
-        {
-            writer.WriteLine("f['col_attrs']['obs_names'][:].tolist()");
-            fileType = FileTypes.loom;
-
-        }
-        else if (Path.GetExtension(file_name) == ".h5ad")
-        {
-            writer.WriteLine("[i[0] for i in f['obs'][:]]");
-            fileType = FileTypes.anndata;
-
-        }
+        writer.WriteLine(conf["cellnames"] + "[:].tolist()");
 
         while (reader.Peek() == 0)
             yield return null;
@@ -102,6 +113,11 @@ public class h5reader
         index2cellname = output.Split(',');
         for (int i = 0; i < index2cellname.Length; i++)
         {
+            index2cellname[i] = index2cellname[i].Replace(" ", "").Replace("'", "");
+            
+            if(!cellname2index.ContainsKey(index2cellname[i]))
+                cellname2index.Add(index2cellname[i], i);
+/*
             if (i > 0)
                 index2cellname[i] = index2cellname[i].Substring(2, index2cellname[i].Length - 3);
             else if (i == index2cellname.Length - 1)
@@ -109,35 +125,31 @@ public class h5reader
             else
                 index2cellname[i] = index2cellname[i].Substring(1, index2cellname[i].Length - 2);
             cellname2index.Add(index2cellname[i], i);
+            */
             if (i == 0 || i == 1 || i == index2cellname.Length - 1)
                 UnityEngine.Debug.Log(index2cellname[i]);
-
+                
             if (i % (index2cellname.Length / 3) == 0)
                 yield return null;
         }
+        writer.WriteLine(conf["genenames"] + "[:].tolist()");
 
-        if (fileType == FileTypes.loom)
-        {
-            writer.WriteLine("f['row_attrs']['var_names'][:].tolist()");
-        }
-        else if (fileType == FileTypes.anndata)
-        {
-            writer.WriteLine("[i[0] for i in f['var'][:]]");
-        }
+        
         while (reader.Peek() == 0)
             yield return null;
         output = reader.ReadLine();
         output = output.Substring(1, output.Length - 2);
         genename2index = new Dictionary<string, int>();
         index2genename = output.Split(',');
-        int counter = 0;
         for (int i = 0; i < index2genename.Length; i++)
         {
+            index2genename[i] = index2genename[i].Replace(" ", "").Replace("'", "");
 
-            index2genename[i] = index2genename[i].Substring(2, index2genename[i].Length - 3);
-            if (i == 100)
+            if (i == 0 || i == 1 || i == index2genename.Length - 1)
                 UnityEngine.Debug.Log(index2genename[i]);
-            genename2index.Add(index2genename[i], counter++);
+
+            if(!genename2index.ContainsKey(index2genename[i]))
+                genename2index.Add(index2genename[i], i);
 
             if (i % (index2genename.Length / 3) == 0)
                 yield return null;
@@ -158,21 +170,47 @@ public class h5reader
     {
         busy = true;
         var watch = Stopwatch.StartNew();
-            
-        if (fileType == FileTypes.loom)
-            writer.WriteLine("f['col_attrs']['X_"+boi+"'][:,:].tolist()");
-        else if (fileType == FileTypes.anndata)
-            writer.WriteLine("f['obsm']['X_"+boi+"'][:,:].tolist()");
-            
-        while (reader.Peek() == 0)
-            yield return null;
+        string output;
+        if (bool.Parse(conf["2D_sep"]))
+        {
+            conditions = "2D_sep";
+            writer.WriteLine(conf["X"] + "[:].tolist()");
+            while (reader.Peek() == 0)
+                yield return null;
 
-        string output = reader.ReadLine().Replace("[", "").Replace("]", "");
-        string[] coords = output.Split(',');
+            
+            output = reader.ReadLine().Replace("[", "").Replace("]", "");
+            string[] Xcoords = output.Split(',');
+
+            writer.WriteLine(conf["Y"] + "[:].tolist()");
+            while (reader.Peek() == 0)
+                yield return null;
+
+            output = reader.ReadLine().Replace("[", "").Replace("]", "");
+            string[] Ycoords = output.Split(',');
+
+            _coordResult = Xcoords.Concat(Ycoords).ToArray();
+
+        }
+        else
+        {
+            if (fileType == FileTypes.loom)
+                writer.WriteLine("f['col_attrs']['X_" + boi + "'][:,:].tolist()");
+            else if (fileType == FileTypes.anndata)
+                writer.WriteLine("f['obsm']['X_" + boi + "'][:,:].tolist()");
+
+            while (reader.Peek() == 0)
+                yield return null;
+
+            output = reader.ReadLine().Replace("[", "").Replace("]", "");
+            string[] coords = output.Split(',');
+
+            _coordResult = coords;
+        }
+
 
         watch.Stop();
         UnityEngine.Debug.Log("Reading all coords: " + watch.ElapsedMilliseconds);
-        _coordResult = coords;
         busy = false;
     }
 
@@ -213,6 +251,9 @@ public class h5reader
         busy = true;
         _result = new ArrayList();
         int geneindex = genename2index[geneName.ToUpper()];
+
+
+
 
         if (fileType == FileTypes.anndata)
             writer.Write("list(f['layers']['spliced'][:," + geneindex + "].data)\n");

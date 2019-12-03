@@ -362,7 +362,7 @@ namespace CellexalVR.AnalysisLogic
             }
             catch (Exception e)
             {
-                print("bug");
+                print("bug" + e);
             }
 
             while (h5Reader.busy)

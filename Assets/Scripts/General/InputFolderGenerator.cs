@@ -89,7 +89,6 @@ namespace CellexalVR.General
             var nfolder = 0;
             foreach (string directory in directories)
             {
-                print(directory);
                 int forwardSlashIndex = directory.LastIndexOf('/');
                 int backwardSlashIndex = directory.LastIndexOf('\\');
                 string croppedDirectoryName;

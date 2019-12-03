@@ -137,7 +137,7 @@ namespace CellexalVR.AnalysisLogic
             string fullPath = workingDirectory + "\\Data\\" + path;
             selectionManager.DataDir = fullPath;
 
-            StartCoroutine(H5_readgraphs(path, new string[] { "phate", "umap" }));
+            StartCoroutine(H5_readgraphs(fullPath, new string[] { "phate", "umap" }));
             //graphGenerator.isCreating = true;
         }
 
@@ -319,10 +319,22 @@ namespace CellexalVR.AnalysisLogic
                 int count = 0;
                 for (int j = 0; j < cellnames.Length; j++)
                 {
+
                     string cellname = cellnames[j];
-                    float x = float.Parse(coords[j * 3]);
-                    float y = float.Parse(coords[j * 3 + 1]);
-                    float z = float.Parse(coords[j * 3 + 2]);
+                    float x, y, z;
+                    if(cellManager.h5Reader.conditions == "2D_sep")
+                    {
+                        x = float.Parse(coords[j]);
+                        y = float.Parse(coords[j + cellname.Length - 1]);
+                        z = 0;
+                    }
+                    else
+                    {
+                        x = float.Parse(coords[j * 3]);
+                        y = float.Parse(coords[j * 3 + 1]);
+                        z = float.Parse(coords[j * 3 + 2]);
+                    }
+
                     Cell cell = cellManager.AddCell(cellname);
                     graphGenerator.AddGraphPoint(cell, x, y, z);
                     totalNbrOfCells++;
