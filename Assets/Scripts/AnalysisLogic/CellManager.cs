@@ -72,6 +72,7 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
         private bool linesBundled;
+        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
 
         private void OnValidate()
         {
@@ -449,6 +450,11 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalLog.Log("Colored graphs by " + attributeType);
             int numberOfCells = 0;
+            Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
+            for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
+            {
+                pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+            }
 
             foreach (Cell cell in cells.Values)
             {
@@ -465,6 +471,11 @@ namespace CellexalVR.AnalysisLogic
                     {
                         selectionList.Remove(gp);
                     }
+
+                    foreach (var graphPoint in cell.GraphPoints)
+                    {
+                        pos[graphPoint.parent.GraphName].Add(graphPoint.Position);
+                    }
                 }
             }
             int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
@@ -473,9 +484,19 @@ namespace CellexalVR.AnalysisLogic
             if (color)
             {
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
+                foreach (Graph graph in referenceManager.graphManager.Graphs)
+                {
+                    referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
+                }
+
             }
             else
             {
+                foreach (Graph graph in referenceManager.graphManager.Graphs)
+                {
+                    Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
+                    convexHulls.Remove(graph.GraphName + "_" + attributeType);
+                }
                 referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }
 

@@ -717,7 +717,7 @@ namespace CellexalVR.AnalysisObjects
             isCreating = false;
         }
 
-        private static string V2S(Vector3 v)
+        public static string V2S(Vector3 v)
         {
             return "(" + v.x + ", " + v.y + ", " + v.z + ")";
         }

@@ -247,7 +247,6 @@ namespace CellexalVR.General
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
             floor = GameObject.Find("Floor").GetComponent<Floor>();
 
-
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
             correlatedGenesList = GameObject.Find("Keyboard Setup/Correlated Genes List").GetComponent<CorrelatedGenesList>();
