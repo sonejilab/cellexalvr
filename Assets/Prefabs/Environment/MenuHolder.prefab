@@ -6556,15 +6556,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 114893317898167004}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
   meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
   meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: 9125209e198df94439dfd4b552b3e6c9, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: c94f34ecf70707243bba9e132f7e2ea7, type: 3}
-  deactivatedTexture: {fileID: 21300000, guid: eeee555e05f7a234bbd4a4b223bd860e, type: 3}
+  standardTexture: {fileID: 21300000, guid: a536ab8a7b156f1409aab866d5a86b47, type: 3}
+  highlightedTexture: {fileID: 21300000, guid: e267f6c0a9cfb3a40aa8356e7ce116b8, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 500a0af0bb9db0d4484d516c67c20758, type: 3}
   popupChoice: 1
   buttonActivated: 1
   storedState: 0
