@@ -10,7 +10,7 @@ def crawl(lib, push):
 			print(push + a + ": " + str(lib[a].shape))
 		else:
 			print(push + a + ":")
-			boi[a] = crawl(lib[a], push + "|--")
+			boi[a] = crawl(lib[a], push + str(a)+"/")
 	return boi
 	
 	
