@@ -248,7 +248,6 @@ namespace CellexalVR.AnalysisLogic
             while (cellManager.h5Reader.busy)
                 yield return null;
 
-            print("here");
 
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -269,10 +268,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 while (graphGenerator.isCreating)
                 {
-                    print("grape already creawting");
                     yield return null;
                 }
-                print("First time");
                 Graph combGraph = graphGenerator.CreateGraph(type);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
@@ -312,7 +309,6 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
 
                 string[] coords = cellManager.h5Reader._coordResult;
-                print(coords);
                 string[] cellnames = cellManager.h5Reader.index2cellname;
                 combGraph.axisNames = new string[] { "x", "y", "z" };
                 itemsThisFrame = 0;
@@ -324,9 +320,11 @@ namespace CellexalVR.AnalysisLogic
                     float x, y, z;
                     if(cellManager.h5Reader.conditions == "2D_sep")
                     {
+                        
                         x = float.Parse(coords[j]);
-                        y = float.Parse(coords[j + cellname.Length - 1]);
+                        y = float.Parse(coords[j + cellnames.Length]);
                         z = 0;
+
                     }
                     else
                     {
