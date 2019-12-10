@@ -28,7 +28,8 @@ public class h5reader
     public string filePath;
     public Dictionary<string, string> conf;
     public string conditions;
-    
+    public bool sparse;
+    public bool geneXcell;
 
     public float LowestExpression { get; private set; }
     public float HighestExpression { get; private set; }
@@ -61,9 +62,14 @@ public class h5reader
                 if (l == "")
                     continue;
                 UnityEngine.Debug.Log(l);
-                string[] kvp = l.Split(' ');
+                string[] kvp = l.Split(new char[] { ' ' } , 2);
                 conf.Add(kvp[0], kvp[1]);
-                
+                if (kvp[0] == "sparse")
+                    sparse = bool.Parse(kvp[1]);
+                else if (kvp[0] == "gene_x_cell")
+                    geneXcell = bool.Parse(kvp[1]);
+
+
             }
         }
     }
@@ -94,20 +100,22 @@ public class h5reader
 
         writer = p.StandardInput;
 
-        yield return null;
+        yield return null;  
 
         reader = p.StandardOutput;
 
         yield return null;
 
         var watch = Stopwatch.StartNew();
-        writer.WriteLine(conf["cellnames"] + "[:].tolist()");
+        if (conf.ContainsKey("custom_cellnames"))
+            writer.WriteLine(conf["custom_cellnames"]);
+        else
+            writer.WriteLine(conf["cellnames"] + "[:].tolist()");
 
         while (reader.Peek() == 0)
             yield return null;
 
         string output = reader.ReadLine();
-        UnityEngine.Debug.Log(output);
         output = output.Substring(1, output.Length - 2);
         cellname2index = new Dictionary<string, int>();
         index2cellname = output.Split(',');
@@ -117,22 +125,17 @@ public class h5reader
             
             if(!cellname2index.ContainsKey(index2cellname[i]))
                 cellname2index.Add(index2cellname[i], i);
-/*
-            if (i > 0)
-                index2cellname[i] = index2cellname[i].Substring(2, index2cellname[i].Length - 3);
-            else if (i == index2cellname.Length - 1)
-                index2cellname[i] = index2cellname[i].Substring(1, index2cellname[i].Length - 2);
-            else
-                index2cellname[i] = index2cellname[i].Substring(1, index2cellname[i].Length - 2);
-            cellname2index.Add(index2cellname[i], i);
-            */
+ 
             if (i == 0 || i == 1 || i == index2cellname.Length - 1)
                 UnityEngine.Debug.Log(index2cellname[i]);
                 
             if (i % (index2cellname.Length / 3) == 0)
                 yield return null;
         }
-        writer.WriteLine(conf["genenames"] + "[:].tolist()");
+        if (conf.ContainsKey("custom_genenames"))
+            writer.WriteLine(conf["custom_genenames"]);
+        else
+            writer.WriteLine(conf["genenames"] + "[:].tolist()");
 
         
         while (reader.Peek() == 0)
@@ -143,7 +146,7 @@ public class h5reader
         index2genename = output.Split(',');
         for (int i = 0; i < index2genename.Length; i++)
         {
-            index2genename[i] = index2genename[i].Replace(" ", "").Replace("'", "");
+            index2genename[i] = index2genename[i].Replace(" ", "").Replace("'", "").ToUpper();
 
             if (i == 0 || i == 1 || i == index2genename.Length - 1)
                 UnityEngine.Debug.Log(index2genename[i]);
@@ -156,7 +159,7 @@ public class h5reader
         }
         watch.Stop();
 
-        UnityEngine.Debug.Log("H5reader booted and read all names in :" + watch.ElapsedMilliseconds + " ms");
+        UnityEngine.Debug.Log("H5reader booted and read all names in " + watch.ElapsedMilliseconds + " ms");
         busy = false;
 
     }
@@ -171,7 +174,7 @@ public class h5reader
         busy = true;
         var watch = Stopwatch.StartNew();
         string output;
-        if (bool.Parse(conf["2D_sep"]))
+        if (conf.ContainsKey("2D_sep") && bool.Parse(conf["2D_sep"]))
         {
             conditions = "2D_sep";
             writer.WriteLine(conf["X"] + "[:].tolist()");
@@ -190,14 +193,12 @@ public class h5reader
             string[] Ycoords = output.Split(',');
 
             _coordResult = Xcoords.Concat(Ycoords).ToArray();
+            
 
         }
         else
         {
-            if (fileType == FileTypes.loom)
-                writer.WriteLine("f['col_attrs']['X_" + boi + "'][:,:].tolist()");
-            else if (fileType == FileTypes.anndata)
-                writer.WriteLine("f['obsm']['X_" + boi + "'][:,:].tolist()");
+            writer.WriteLine(conf["X_" + boi] + "[:,:].tolist()");
 
             while (reader.Peek() == 0)
                 yield return null;
@@ -218,16 +219,13 @@ public class h5reader
     /// Get the phate velocities from the file
     /// </summary>
     /// <returns>_velResult</returns>
-    public IEnumerator GetVelocites()
+    public IEnumerator GetVelocites(string graph = "_phate")
     {
         busy = true;
         var watch = Stopwatch.StartNew();
 
-        if (fileType == FileTypes.loom)
-            writer.WriteLine("f['col_attrs']['velocity_phate'][:,:].tolist()");
-        else if (fileType == FileTypes.anndata)
-            writer.WriteLine("f['obsm']['velocity_phate'][:,:].tolist()");
 
+        writer.WriteLine(conf["vel" + graph] + " [:,:].tolist()");
         while (reader.Peek() == 0)
             yield return null;
 
@@ -236,7 +234,7 @@ public class h5reader
         _velResult = output.Split(',');
 
         watch.Stop();
-        UnityEngine.Debug.Log("Reading all velocities: " + watch.ElapsedMilliseconds);
+        UnityEngine.Debug.Log("Read all velocities for "+graph+" in " + watch.ElapsedMilliseconds);
         busy = false;
     }
 
@@ -255,10 +253,21 @@ public class h5reader
 
 
 
-        if (fileType == FileTypes.anndata)
-            writer.Write("list(f['layers']['spliced'][:," + geneindex + "].data)\n");
-        else if (fileType == FileTypes.loom)
-            writer.Write("list(f['layers']['spliced'][" + geneindex + ",:][f['layers']['spliced'][" + geneindex + ",:].nonzero()])\n");
+        if (geneXcell)
+        {
+            if (sparse)
+                writer.WriteLine(conf["cellexpr"] + "[" + geneindex + ",:].data.tolist()");
+            else
+                writer.WriteLine(conf["cellexpr"] +"[" + geneindex + ",:]["+conf["cellexpr"] + "[" + geneindex + ",:].nonzero()].tolist()");
+        }
+        else
+        {
+            if (sparse)
+                writer.WriteLine(conf["cellexpr"] + "[:," + geneindex + "].data.tolist()");
+            else
+                writer.WriteLine(conf["cellexpr"] + "[:," + geneindex + "][" + conf["cellexpr"] + "[:," + geneindex + "].nonzero()].tolist()");
+        }
+
 
         while (reader.Peek() == 0)
             yield return null;
@@ -267,10 +276,12 @@ public class h5reader
         output = output.Substring(1, output.Length - 2);
         string[] splitted = output.Split(',');
 
-        if (fileType == FileTypes.anndata)
-            writer.Write("list(f['layers']['spliced'][:," + geneindex + "].nonzero()[0])\n");
-        else if (fileType == FileTypes.loom)
-            writer.Write("list(f['layers']['spliced'][" + geneindex + ",:].nonzero()[0])\n");
+
+
+        if (geneXcell)
+            writer.WriteLine(conf["cellexpr"] + "[" + geneindex + ",:].nonzero()[0].tolist()");
+        else
+            writer.WriteLine(conf["cellexpr"] + "[:," + geneindex + "].nonzero()[0].tolist()");
 
         while (reader.Peek() == 0)
             yield return null;
@@ -297,7 +308,15 @@ public class h5reader
                 {
                     LowestExpression = expr;
                 }
-                _result.Add(new CellExpressionPair(index2cellname[int.Parse(indices[i])], expr, -1));
+                try
+                {
+                    _result.Add(new CellExpressionPair(index2cellname[int.Parse(indices[i])], expr, -1));
+
+                }catch(Exception e)
+                {
+                    UnityEngine.Debug.Log(indices[i]);
+                    break;
+                }
             }
             if (HighestExpression == LowestExpression)
             {

@@ -229,7 +229,10 @@ namespace CellexalVR.AnalysisLogic
                 {
                     UnityEngine.Debug.Log(diff*1000);
                 }
-                velocities[point] = diff;
+                if (point != null)
+                    velocities[point] = diff;
+                else
+                    print(cellnames[i] + " does not exist");
             }
 
             GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);
