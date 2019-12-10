@@ -53,18 +53,8 @@ public class h5readerAnnotater : MonoBehaviour
             keys.insert(standard_output);
         }
 
-        keys.fillContent(display);
-        //int counter = 0;
-        //foreach(KeyHolder k in keys.subkeys.Values)
-        //{
-        //    counter++;
-        //    GameObject newTextGO = Instantiate(textPrefab, display);
-        //    RectTransform rect = newTextGO.GetComponent<RectTransform>();
-        //    TextMeshProUGUI tmp = newTextGO.GetComponent<TextMeshProUGUI>();
-        //    tmp.text = k.name;
-        //    rect.localPosition = new Vector3(0, -20 * counter, 0);
-        //}
-        //print(keys.outputPrint());
+        float contentSize = keys.fillContent(display,10f);
+        display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
     }
 
     class KeyHolder
@@ -102,23 +92,42 @@ public class h5readerAnnotater : MonoBehaviour
             return ret;
         }
 
-        public void fillContent(RectTransform content)
+        public float fillContent(RectTransform content, float offset = 0f, int depth = 0)
         {
             GameObject go = new GameObject();
-            go.transform.parent = content;
+            go.transform.SetParent(content);
             RectTransform rect = go.AddComponent<RectTransform>();
             go.AddComponent<CanvasRenderer>();
             TextMeshProUGUI tmp = go.AddComponent<TextMeshProUGUI>();
+
             rect.localScale = new Vector3(1, 1, 1);
             rect.anchorMin = new Vector2(0, 1);
             rect.anchorMax = new Vector2(1, 0);
             rect.pivot = new Vector2(0.5f, 1);
-            rect.position = new Vector3(0, 0, 0);
-            //rect.sizeDelta = new Vector2(0, 20);
-            //rect.localPosition = new Vector3(0, 0, 0);
-            tmp.fontSize = 12;
+            rect.localPosition = Vector3.zero;
+
+            rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, offset, 10f);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 0);
+
+            tmp.fontSize = 8;
             tmp.alignment = TextAlignmentOptions.MidlineLeft;
-            tmp.text = name;
+            string text = "";
+            for (int i = 0; i < depth; i++)
+            {
+                text += "--";
+            }
+            text += "> ";
+            tmp.text = text + name;
+
+            float temp = 0f;
+            foreach (KeyHolder k in subkeys.Values)
+            {
+                temp += 10f;
+                temp += k.fillContent(rect, temp,depth+1);
+            }
+                
+
+            return temp;
         }
     }
 }
