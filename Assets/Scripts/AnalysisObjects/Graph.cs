@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.MarchingCubes;
 using CellexalVR.Multiuser;
 using CellexalVR.Tools;
 using SQLiter;
@@ -22,12 +23,15 @@ namespace CellexalVR.AnalysisObjects
     public class Graph : MonoBehaviour
     {
         public GameObject skeletonPrefab;
+        public GameObject contourParent;
+        public Material opaqueMat;
         public GameObject emptySkeletonPrefab;
         public Material skeletonMaterial;
         public Material lineMaterial;
         public GameObject movingOutlineCircle;
         [HideInInspector]
         public GameObject convexHull;
+        public GameObject chunkManagerPrefab;
         //public string DirectoryName { get; set; }
         public List<GameObject> CTCGraphs { get; set; }
         [HideInInspector]
@@ -133,6 +137,9 @@ namespace CellexalVR.AnalysisObjects
         public OctreeNode octreeRoot;
         private GraphGenerator graphGenerator;
         private bool isTransparent;
+        private GameObject contour;
+
+        //private ChunkManager chunkManager;
 
         private void OnValidate()
         {
@@ -159,6 +166,7 @@ namespace CellexalVR.AnalysisObjects
             selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
             startPosition = transform.position;
             nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            //chunkManager = GameObject.Find("ChunkManager").GetComponent<ChunkManager>();
         }
 
         private void Update()
@@ -198,24 +206,31 @@ namespace CellexalVR.AnalysisObjects
             maximize = true;
         }
 
-        public void MakeTransparent(bool toggle)
+        public void MakeAllPointsTransparent(bool toggle)
         {
-            for (int i = 0; i < textureWidth; ++i)
+            foreach (KeyValuePair<string, GraphPoint> gpPair in points)
             {
-                for (int j = 0; j < textureHeight; ++j)
-                {
-                    //texture.SetPixel(i, j, Color.black);
-                    if (toggle)
-                    {
-                        texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
-                    }
-                    else
-                    {
-                        texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
-                    }
-                }
+                MakePointTransparent(gpPair.Value, toggle);
             }
-            texture.Apply();
+
+
+            // for transparancy 0.5 < g < 0.9 
+            //for (int i = 0; i < textureWidth; ++i)
+            //{
+            //    for (int j = 0; j < textureHeight; ++j)
+            //    {
+            //        //texture.SetPixel(i, j, Color.black);
+            //        if (toggle)
+            //        {
+            //            texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
+            //        }
+            //        else
+            //        {
+            //            texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
+            //        }
+            //    }
+            //}
+            //texture.Apply();
             isTransparent = toggle;
 
             //texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
@@ -1029,6 +1044,343 @@ namespace CellexalVR.AnalysisObjects
             //return convexHull;
         }
 
+
+
+        public IEnumerator CreateGeneMesh(string geneName)
+        {
+            string path = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + "gene1vertex" + ".mesh";
+            List<List<Vector3>> meshes = new List<List<Vector3>>();
+            List<Vector3> vertices = new List<Vector3>();
+            CellexalLog.Log("Started reading " + path);
+            //for (int i = 0; i < points.Count; ++i)
+            //{
+            //    vertices[i] = pointsPositions[i];
+            //}
+
+            ChunkManager chunkManager = GameObject.Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
+            yield return null;
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+
+
+            string header = streamReader.ReadLine();
+            while (!streamReader.EndOfStream)
+            {
+                string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                print(coords[0]);
+                GraphPoint gp = FindGraphPoint(coords[0]);
+                int onConvHull = int.Parse(coords[2]);
+                //if (coords.Length != 3)
+                //    continue;
+                //int density = (int)(float.Parse(coords[4]) + float.Parse(coords[5]) + float.Parse(coords[6]) / 3.0);
+                //chunkManager.addDensity((int)float.Parse(coords[1]), (int)float.Parse(coords[2]), (int)float.Parse(coords[3]), onConvHull);
+                chunkManager.addDensity((int)gp.Position.x, (int)gp.Position.y, (int)gp.Position.z, onConvHull);
+                //vertices.Add(new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3])));
+                //if (vertices.Count >= 65535 && !(streamReader.Peek() == -1))
+                //{
+                //    meshes.Add(new List<Vector3>(vertices));
+                //    vertices.Clear();
+                //}
+            }
+            streamReader.Close();
+            fileStream.Close();
+            //meshes.Add(vertices);
+            //triangles = Enumerable.Range(0, vertices.Count).ToList();
+            chunkManager.toggleSurfaceLevelandUpdateCubes(0);
+
+            foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
+            {
+                mf.mesh.RecalculateBounds();
+                mf.mesh.RecalculateNormals();
+            }
+
+
+
+            //meshes.Add(vertices);
+            //triangles = Enumerable.Range(0, vertices.Count).ToList();
+
+            //contour = Instantiate(contourParent);
+            chunkManager.transform.parent = contour.transform;
+            contour.transform.localPosition = Vector3.zero;
+            contour.transform.localScale = Vector3.one * 0.25f;
+            //BoxCollider bc = contour.AddComponent<BoxCollider>();
+            //bc.center = Vector3.one * 4;
+            //bc.size = Vector3.one * 7;
+
+
+            // if vertices are reaching the max nr for a mesh we need to subdivide into several meshes.
+            //if (meshes.Count > 0)
+            //{
+            //    foreach (List<Vector3> vertsList in meshes)
+            //    {
+            //        var convexHull = Instantiate(contourMeshPrefab, contour.transform).GetComponent<MeshFilter>();
+            //        convexHull.gameObject.name = "ConvexHull_" + this.name;
+            //        convexHull.mesh = new Mesh()
+            //        {
+            //            vertices = vertsList.ToArray(),
+            //            triangles = Enumerable.Range(0, vertsList.Count).ToArray() // triangles.ToArray()
+            //        };
+            //        //convexHull.transform.parent = contour.transform;
+            //        //convexHull.transform.localRotation = contour.transform.localRotation;
+            //        //convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+            //        convexHull.mesh.RecalculateBounds();
+            //        convexHull.mesh.RecalculateNormals();
+            //        convexHull.transform.localPosition = contour.transform.localPosition;
+            //        if (geneName == "gene1")
+            //        {
+            //            convexHull.GetComponent<MeshRenderer>().material.color = new Color(255, 0, 0, 0.15f);
+            //        }
+            //        else if (geneName == "gene2")
+            //        {
+            //            convexHull.GetComponent<MeshRenderer>().material.color = new Color(0, 255, 0, 0.15f);
+            //        }
+            //        else
+            //        {
+            //            convexHull.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 255, 0.15f);
+            //        }
+            //        //convexHull.gameObject.AddComponent<BoxCollider>();
+            //    }
+            //}
+
+        }
+
+
+        public IEnumerator CreateMeshFromAShape(string geneName)
+        {
+
+            string path = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + "gene1triang" + ".hull";
+            string vertPath = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + geneName + ".mesh";
+
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+
+            ChunkManager chunkManager = GameObject.Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
+            yield return null;
+            List<List<Vector3>> meshes = new List<List<Vector3>>();
+            List<Vector3> vertices = new List<Vector3>();
+            using (StreamReader sr = new StreamReader(vertPath))
+            {
+                sr.ReadLine();
+                while (!sr.EndOfStream)
+                {
+                    string[] line = sr.ReadLine().Split(null);
+                    var gp = FindGraphPoint(line[1]);
+                    //Color32 tex = texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y);
+                    //print(tex.r);
+                    //float density = tex.r / 30;
+                    //vertices.Add(gp.Position);
+                    //chunkManager.addDensity((int)gp.Position.x, (int)gp.Position.y, (int)gp.Position.z, 1);
+                    chunkManager.addDensity((int)float.Parse(line[1]), (int)float.Parse(line[2]), (int)float.Parse(line[3]), 1);
+                }
+            }
+            List<int> triangles = new List<int>();
+            CellexalLog.Log("Started reading " + path);
+            //int i = 0;
+            //foreach (KeyValuePair<string, GraphPoint> tuple in points)
+            //{
+            //    vertices[i] = tuple.Value.Position;
+            //    i++;
+            //}
+
+            meshes.Add(new List<Vector3>(vertices));
+            //contour = Instantiate(contourParent);
+            chunkManager.toggleSurfaceLevelandUpdateCubes(0);
+
+
+
+            foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
+            {
+                mf.gameObject.GetComponent<Renderer>().material = opaqueMat;
+                mf.mesh.RecalculateBounds();
+                mf.mesh.RecalculateNormals();
+            }
+
+
+
+            //meshes.Add(vertices);
+            //triangles = Enumerable.Range(0, vertices.Count).ToList();
+
+            //contour = Instantiate(contourParent);
+            chunkManager.transform.parent = contour.transform;
+            yield return null;
+            chunkManager.transform.localScale = Vector3.one;
+            chunkManager.transform.localPosition = Vector3.zero;
+            chunkManager.transform.localRotation = Quaternion.identity;
+            //string header = streamReader.ReadLine();
+            //while (!streamReader.EndOfStream)
+            //{
+            //    string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+            //if (coords.Length != 3)
+            //    continue;
+            // subtract 1 because R is 1-indexed
+            //vertices.Add(FindGraphPoint(coords[0]).Position);
+            //if (vertices.Count >= 65535 && !(streamReader.Peek() == -1))
+            //{
+            //    meshes.Add(new List<Vector3>(vertices));
+            //    vertices.Clear();
+            //}
+            //print(vertices[int.Parse(coords[1])]);
+            //triangles.Add(int.Parse(coords[1]) - 1);
+            //triangles.Add(int.Parse(coords[2]) - 1);
+            //triangles.Add(int.Parse(coords[3]) - 1);
+
+
+        }
+        //if (meshes.Count > 0)
+        //{
+        //    foreach (List<Vector3> vertsList in meshes)
+        //    {
+        //        var convexHull = Instantiate(contourMeshPrefab, contour.transform).GetComponent<MeshFilter>();
+        //        convexHull.gameObject.AddComponent<MeshCollider>();
+        //        convexHull.gameObject.name = "ConvexHull_" + this.name;
+        //        convexHull.mesh = new Mesh()
+        //        {
+        //            vertices = vertsList.ToArray(),
+        //            triangles = triangles.ToArray()
+        //            //triangles = Enumerable.Range(0, vertsList.Count).ToArray() // triangles.ToArray()
+        //        };
+        //        convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+        //        convexHull.mesh.RecalculateBounds();
+        //        convexHull.mesh.RecalculateNormals();
+        //        //convexHull.gameObject.AddComponent<BoxCollider>();
+        //    }
+        //}
+        //meshes.Add(vertices);
+
+        //CellexalLog.Log("Created convex hull with " + vertices.Count() + " vertices");
+        //return contour.gameObject;
+
+        public IEnumerator CreateMesh()
+        {
+            // Read the .hull file
+            // The file format should be
+            //  VERTEX_1    VERTEX_2    VERTEX_3
+            //  VERTEX_1    VERTEX_2    VERTEX_3
+            // ...
+            // Each line is 3 integers that corresponds to graphpoints
+            // 1 means the graphpoint that was created from the first line in the .mds file
+            // 2 means the graphpoint that was created from the second line
+            // and so on
+            // Each line in the file connects three graphpoints into a triangle
+            // One problem is that the lines are always ordered numerically so when unity is figuring out 
+            // which way of the triangle is in and which is out, it's pretty much random what the result is.
+            // The "solution" was to place a shader which does not cull the backside of the triangles, so 
+            // both sides are always rendered.
+            //string path = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + GraphName + ".mds";
+            string path = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + GraphName + ".mds";
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+
+            ChunkManager chunkManager = GameObject.Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
+            yield return null;
+            //Vector3[] vertices = new Vector3[points.Count];
+            List<List<Vector3>> meshes = new List<List<Vector3>>();
+            List<Vector3> vertices = new List<Vector3>();
+            CellexalLog.Log("Started reading " + path);
+            //for (int i = 0; i < points.Count; ++i)
+            //{
+            //    vertices[i] = pointsPositions[i];
+            //}
+
+            string header = streamReader.ReadLine();
+            while (!streamReader.EndOfStream)
+            {
+                string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                //if (coords.Length != 3)
+                //    continue;
+                chunkManager.addDensity((int)float.Parse(coords[1]), (int)float.Parse(coords[2]), (int)float.Parse(coords[3]), 1);
+
+                //vertices.Add(new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3])));
+                //if (vertices.Count >= 65535 && !(streamReader.Peek() == -1))
+                //{
+                //    meshes.Add(new List<Vector3>(vertices));
+                //    vertices.Clear();
+                //}
+            }
+            chunkManager.toggleSurfaceLevelandUpdateCubes(0);
+
+
+
+            foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
+            {
+                mf.mesh.RecalculateBounds();
+                mf.mesh.RecalculateNormals();
+            }
+
+
+
+            meshes.Add(vertices);
+            //triangles = Enumerable.Range(0, vertices.Count).ToList();
+
+            streamReader.Close();
+            fileStream.Close();
+
+            contour = Instantiate(contourParent);
+            chunkManager.transform.parent = contour.transform;
+            contour.transform.localScale = Vector3.one * 0.25f;
+            BoxCollider bc = contour.AddComponent<BoxCollider>();
+            bc.center = Vector3.one * 4;
+            bc.size = Vector3.one * 6;
+
+
+            // if vertices are reaching the max nr for a mesh we need to subdivide into several meshes.
+            //if (meshes.Count > 0)
+            //{
+            //    foreach (List<Vector3> vertsList in meshes)
+            //    {
+            //        var convexHull = Instantiate(contourMeshPrefab, contour.transform).GetComponent<MeshFilter>();
+            //        convexHull.gameObject.name = "ConvexHull_" + this.name;
+            //        convexHull.mesh = new Mesh()
+            //        {
+            //            vertices = vertsList.ToArray(),
+            //            triangles = Enumerable.Range(0, vertsList.Count).ToArray() // triangles.ToArray()
+            //        };
+            //        convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+            //        convexHull.mesh.RecalculateBounds();
+            //        convexHull.mesh.RecalculateNormals();
+            //        convexHull.gameObject.AddComponent<BoxCollider>();
+            //    }
+            //}
+            //contour.AddComponent<BoxCollider>();
+            //contour.AddComponent<MeshCollider>();
+            //else
+            //{
+            //    var convexHull = Instantiate(skeletonPrefab).GetComponent<MeshFilter>();
+            //    convexHull.gameObject.name = "ConvexHull_" + this.name;
+            //    convexHull.mesh = new Mesh()
+            //    {
+            //        vertices = vertices.ToArray(),
+            //        triangles = triangles.ToArray()
+            //    };
+            //    convexHull.GetComponent<MeshCollider>().sharedMesh = convexHull.mesh;
+            //    convexHull.mesh.RecalculateBounds();
+            //    convexHull.mesh.RecalculateNormals();
+            //}
+
+
+            //if (gameManager.multiplayer)
+            //{
+            //    convexHull.transform.position = new Vector3(0, 1f, 0);
+            //}
+            //if (!gameManager.multiplayer)
+            //{
+            //    convexHull.transform.position = referenceManager.rightController.transform.position;
+            //}
+            // move the convexhull slightly out of the way of the graph
+            // in a direction sort of pointing towards the middle.
+            // otherwise it lags really bad when the skeleton is first 
+            // moved out of the original graph
+            //Vector3 moveDist = new Vector3(0f, 0.3f, 0f);
+            //if (transform.position.x > 0) moveDist.x = -.2f;
+            //if (transform.position.z > 0) moveDist.z = -.2f;
+            //convexHull.transform.Translate(moveDist);
+            //convexHull.transform.position += referenceManager.rightController.transform.forward * 1f;
+            //convexHull.transform.rotation = transform.rotation;
+            //convexHull.transform.localScale = transform.localScale;
+            //convexHull.transform.position = Vector3.zero;
+            CellexalLog.Log("Created convex hull with " + vertices.Count() + " vertices");
+            //return contour.gameObject;
+        }
         private void DrawDebugCube(Color color, Vector3 min, Vector3 max, bool inWorldSpace = false)
         {
             if (!inWorldSpace)
@@ -1245,6 +1597,19 @@ namespace CellexalVR.AnalysisObjects
             textureChanged = true;
         }
 
+
+        public void MakePointTransparent(GraphPoint graphPoint, bool active)
+        {
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
+            byte greenChannel = (byte)(active ? 180 : 0);
+            Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255);
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
+            textureChanged = true;
+
+        }
+
+
         public void HighlightGraphPoint(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
@@ -1297,9 +1662,11 @@ namespace CellexalVR.AnalysisObjects
                 for (int j = 0; j < textureHeight; ++j)
                 {
                     //texture.SetPixel(i, j, Color.black);
+
                     texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
                 }
             }
+            MakeAllPointsTransparent(true);
 
             int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             Color32[][] colorValues = new Color32[nbrOfExpressionColors][];

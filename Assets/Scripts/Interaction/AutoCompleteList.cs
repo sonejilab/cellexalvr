@@ -48,7 +48,6 @@ namespace CellexalVR.Interaction
         /// </summary>
         private void Init()
         {
-
             StartCoroutine(InitCoroutine());
         }
 

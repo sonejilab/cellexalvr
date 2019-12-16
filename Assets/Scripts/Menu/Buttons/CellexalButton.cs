@@ -259,7 +259,6 @@ namespace CellexalVR.Menu.Buttons
             {
                 if (descriptionText.text == Description)
                 {
-                    print("on trigger exit clear descr text");
                     descriptionText.text = "";
                 }
                 controllerInside = false;

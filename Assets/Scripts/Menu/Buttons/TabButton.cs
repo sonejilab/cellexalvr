@@ -80,7 +80,7 @@ namespace CellexalVR.Menu.Buttons
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10);
                 //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.isActiveAndEnabled)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible())
                 {
                     laserInside = true;
                     frameCount = 0;

@@ -41,37 +41,37 @@ public class GeneExpressionHistogram : MonoBehaviour
     /// </summary>
     /// <param name="barHeights">The height of each bar in the range [0, 1]</param>
     /// <param name="yAxisMaxLabel">The label at the max value of the y-axis</param>
-    public void CreateHistogram(List<float> barHeights, string yAxisMaxLabel, string xAxisMaxLabel)
-    {
-        this.yAxisMaxLabel.text = yAxisMaxLabel;
-        this.xAxisMaxLabel.text = xAxisMaxLabel;
+    //public void CreateHistogram(List<float> barHeights, string yAxisMaxLabel, string xAxisMaxLabel)
+    //{
+    //    this.yAxisMaxLabel.text = yAxisMaxLabel;
+    //    this.xAxisMaxLabel.text = xAxisMaxLabel;
 
-        if (bars.Count != barHeights.Count)
-        {
-            InstantiateBars(barHeights.Count);
-        }
+    //    if (bars.Count != barHeights.Count)
+    //    {
+    //        InstantiateBars(barHeights.Count);
+    //    }
 
-        int numberOfBars = bars.Count;
-        float barWidth = histogramWidth / numberOfBars;
+    //    int numberOfBars = bars.Count;
+    //    float barWidth = histogramWidth / numberOfBars;
 
 
-        for (int i = 0; i < numberOfBars; ++i)
-        {
+    //    for (int i = 0; i < numberOfBars; ++i)
+    //    {
 
-            Color color = referenceManager.graphGenerator.geneExpressionColors[i];
+    //        Color color = referenceManager.graphGenerator.geneExpressionColors[i];
 
-            GameObject bar = bars[i];
-            bar.GetComponent<Renderer>().material.color = color;
-            bar.transform.localRotation = Quaternion.identity;
+    //        GameObject bar = bars[i];
+    //        bar.GetComponent<Renderer>().material.color = color;
+    //        bar.transform.localRotation = Quaternion.identity;
 
-            float xCoord = center.x + barWidth * (i - (numberOfBars / 2));
-            float yCoord = center.y + (histogramHeight * barHeights[i] - histogramHeight) / 2f;
-            bar.transform.localPosition = new Vector3(xCoord, yCoord, center.z);
+    //        float xCoord = center.x + barWidth * (i - (numberOfBars / 2));
+    //        float yCoord = center.y + (histogramHeight * barHeights[i] - histogramHeight) / 2f;
+    //        bar.transform.localPosition = new Vector3(xCoord, yCoord, center.z);
 
-            Vector3 currentScale = bar.transform.localScale;
-            bar.transform.localScale = new Vector3(barWidth, histogramHeight * barHeights[i], currentScale.z);
-        }
-    }
+    //        Vector3 currentScale = bar.transform.localScale;
+    //        bar.transform.localScale = new Vector3(barWidth, histogramHeight * barHeights[i], currentScale.z);
+    //    }
+    //}
 
     /// <summary>
     /// Instantiates or destroys the bars until the desired number of bars are left.

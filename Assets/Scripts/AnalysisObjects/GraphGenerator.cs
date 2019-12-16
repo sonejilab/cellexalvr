@@ -15,6 +15,7 @@ using CellexalVR.DesktopUI;
 using System.Threading;
 using CellexalVR.SceneObjects;
 using Unity.Burst;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -29,7 +30,6 @@ namespace CellexalVR.AnalysisObjects
         public GameObject AxesPrefabColoured;
         public GameObject AxesPrefabUncoloured;
         public Material graphPointMaterialPrefab;
-        public Material graphPointTransparentMaterialPrefab;
         public GameObject skeletonPrefab;
         public Mesh graphpointStandardQStandardSzMesh;
         public Mesh graphpointStandardQSmallSzMesh;
@@ -555,7 +555,6 @@ namespace CellexalVR.AnalysisObjects
             int graphPointMeshVertexCount = meshToUse.vertexCount;
             int graphPointMeshTriangleCount = meshToUse.triangles.Length;
             Material graphPointMaterial = Instantiate(graphPointMaterialPrefab);
-            Material graphPointTransparentMaterial = Instantiate(graphPointTransparentMaterialPrefab);
 
             // arrays used by the combine meshes job
             NativeArray<Vector3> graphPointMeshVertices = new NativeArray<Vector3>(meshToUse.vertices, Allocator.TempJob);
@@ -819,11 +818,25 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
+
+        [ConsoleCommand("graphGenerator", aliases: "cm")]
+        public void CreateMeshFromCommandLine()
+        {
+            CreateMesh();
+        }
+
+
+        public void CreateMesh()
+        {
+            StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>().CreateMesh());
+        }
+
+
         public void MakeAllTransparent(bool toggle)
         {
             foreach (Graph graph in referenceManager.graphManager.originalGraphs)
             {
-                graph.MakeTransparent(toggle);
+                graph.MakeAllPointsTransparent(toggle);
             }
         }
 
@@ -834,7 +847,6 @@ namespace CellexalVR.AnalysisObjects
         public void CreateSubGraphs(List<string> attributes)
         {
             BooleanExpression.Expr expr = new BooleanExpression.AttributeExpr(attributes[0], true);
-
             string name = attributes[0];
             if (name.Contains('@'))
             {

@@ -53,6 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 3}
+  contourParent: {fileID: 6193181967597587923, guid: 078f39c964658d24e9904d26d82070b7,
+    type: 3}
+  opaqueMat: {fileID: 2100000, guid: 0820322eedf035349a7d49bbfff11af4, type: 2}
   emptySkeletonPrefab: {fileID: 1496824086956574, guid: ba53ec2d8cb9b834188ddcc17b5561f2,
     type: 3}
   skeletonMaterial: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
@@ -60,6 +63,8 @@ MonoBehaviour:
   movingOutlineCircle: {fileID: 1620093671004734, guid: b2489140aeb8ccb45b637b27fbf44833,
     type: 3}
   convexHull: {fileID: 0}
+  chunkManagerPrefab: {fileID: 4866979709267056668, guid: 42bb42301be5d3c48a3924c4f686c7f4,
+    type: 3}
   graphManager: {fileID: 0}
   graphNameText: {fileID: 114815460846482644}
   graphInfoText: {fileID: 114460485008951306}
@@ -599,7 +604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4619149877531850
 Transform:
   m_ObjectHideFlags: 0
@@ -2357,7 +2362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5849886007451262668
 Transform:
   m_ObjectHideFlags: 0

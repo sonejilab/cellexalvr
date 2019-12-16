@@ -438,6 +438,12 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageCreateAttributeGraph", PhotonTargets.Others);
         }
+
+        public void SendMessageActivateSlices()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageActivateSlices", PhotonTargets.Others);
+        }
         #endregion
 
         #region Heatmaps

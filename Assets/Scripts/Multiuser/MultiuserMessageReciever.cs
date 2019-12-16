@@ -4,6 +4,7 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons.Attributes;
 using CellexalVR.Menu.Buttons.Facs;
+using CellexalVR.Spatial;
 using CellexalVR.Tools;
 using System;
 using System.Collections.Generic;
@@ -475,6 +476,16 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to create attribute graph");
             referenceManager.graphGenerator.CreateSubGraphs(referenceManager.attributeSubMenu.attributes);
+        }
+
+        [PunRPC]
+        public void RecieveMessageActivateSlices()
+        {
+            CellexalLog.Log("Recieved message to activate slices in spatial graph");
+            foreach (SpatialGraph spatialGraph in referenceManager.graphManager.spatialGraphs)
+            {
+                spatialGraph.ActivateSlices();
+            }
         }
 
         #endregion

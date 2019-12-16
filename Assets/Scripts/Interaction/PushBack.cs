@@ -62,7 +62,7 @@ namespace CellexalVR.Interaction
                 Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = -dir.normalized;
                 hit.transform.position += dir * distanceMultiplier;
-                if (hit.transform.GetComponent<Graph>())
+                if (hit.transform.GetComponent<Graph>() && !hit.transform.gameObject.name.Contains("Slice"))
                 {
                     referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }
@@ -94,7 +94,7 @@ namespace CellexalVR.Interaction
                 Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = dir.normalized;
                 hit.transform.position += dir * distanceMultiplier;
-                if (hit.transform.GetComponent<Graph>())
+                if (hit.transform.GetComponent<Graph>() && !hit.transform.gameObject.name.Contains("Slice"))
                 {
                     referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
                 }

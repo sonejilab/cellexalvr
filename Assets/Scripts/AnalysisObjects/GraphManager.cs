@@ -5,6 +5,7 @@ using System.Collections;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -26,6 +27,7 @@ namespace CellexalVR.AnalysisObjects
         public List<Graph> originalGraphs;
         public List<Graph> facsGraphs;
         public List<Graph> attributeSubGraphs;
+        public List<SpatialGraph> spatialGraphs;
         public List<string> velocityFiles;
 
         private CellManager cellManager;
