@@ -1,14 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using CellexalVR.Interaction;
-using TMPro;
-using CellexalVR.AnalysisLogic;
+using CellexalVR.Multiuser;
 using System;
 using System.Collections.Generic;
-using CellexalVR.Multiuser;
+using UnityEngine;
 
-namespace CellexalVR.AnalysisObjects
+namespace CellexalVR.Interaction
 {
     /// <summary>
     /// This class represents a heatmap. Contains methods for calling r-script, building texture and interaction methods etc.

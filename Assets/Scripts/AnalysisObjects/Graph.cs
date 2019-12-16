@@ -36,9 +36,11 @@ namespace CellexalVR.AnalysisObjects
         public List<GameObject> CTCGraphs { get; set; }
         [HideInInspector]
         public GraphManager graphManager;
+        public GameObject infoParent;
         public TextMeshPro graphNameText;
         public TextMeshPro graphInfoText;
         public TextMeshPro graphNrText;
+        public LegendManager legendManager;
         [HideInInspector]
         public GameObject axes;
         public GameObject annotationsParent;
@@ -1452,7 +1454,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="visible"> True for visible, false for invisible </param>
         public void SetInfoTextVisible(bool visible)
         {
-            graphInfoText.transform.parent.gameObject.SetActive(visible);
+            infoParent.SetActive(visible);
         }
 
         /// <summary>

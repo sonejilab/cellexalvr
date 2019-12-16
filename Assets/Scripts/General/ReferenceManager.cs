@@ -96,6 +96,7 @@ namespace CellexalVR.General
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
         public GraphGenerator graphGenerator;
+        public LegendManager legendManager;
         public InputFolderGenerator inputFolderGenerator;
         public LoaderController loaderController;
         public ConfigManager configManager;
@@ -221,6 +222,7 @@ namespace CellexalVR.General
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();
+            legendManager = managersParent.GetComponentInChildren<LegendManager>();
             inputFolderGenerator = generatorsParent.GetComponentInChildren<InputFolderGenerator>();
             loaderController = GameObject.Find("Tron_Loader").GetComponent<LoaderController>();
             GameObject inputreader = GameObject.Find("InputReader");
@@ -244,7 +246,6 @@ namespace CellexalVR.General
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
             floor = GameObject.Find("Floor").GetComponent<Floor>();
-
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();

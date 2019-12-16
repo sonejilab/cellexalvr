@@ -72,6 +72,7 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
         private bool linesBundled;
+        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
 
         private void OnValidate()
         {
@@ -145,6 +146,11 @@ namespace CellexalVR.AnalysisLogic
         public Cell[] GetCells()
         {
             return cells.Values.ToArray();
+        }
+
+        public int GetNumberOfCells()
+        {
+            return cells.Count;
         }
 
         /// <summary>
@@ -313,7 +319,7 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            graphManager.ColorAllGraphsByGeneExpression(expressions);
+            graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
 
             //float percentInResults = (float)database._result.Count / cells.Values.Count;
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
@@ -444,6 +450,11 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalLog.Log("Colored graphs by " + attributeType);
             int numberOfCells = 0;
+            Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
+            for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
+            {
+                pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+            }
 
             foreach (Cell cell in cells.Values)
             {
@@ -460,20 +471,33 @@ namespace CellexalVR.AnalysisLogic
                     {
                         selectionList.Remove(gp);
                     }
+
+                    foreach (var graphPoint in cell.GraphPoints)
+                    {
+                        pos[graphPoint.parent.GraphName].Add(graphPoint.Position);
+                    }
                 }
             }
             int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
             Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
-            foreach (Graph graph in graphManager.Graphs)
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.AttributeLegend;
+            if (color)
             {
-                if (color)
+                referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
+                foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    graph.GetComponentInChildren<AttributeLegend>().AddAttribute(attributeType, numberOfCells, attributeColor);
+                    referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
                 }
-                else
+
+            }
+            else
+            {
+                foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    graph.GetComponentInChildren<AttributeLegend>().RemoveAttribute(attributeType);
+                    Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
+                    convexHulls.Remove(graph.GraphName + "_" + attributeType);
                 }
+                referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }
 
             CellexalEvents.CommandFinished.Invoke(true);

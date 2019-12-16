@@ -42,6 +42,7 @@ namespace CellexalVR.AnalysisObjects
         public bool isCreating;
         public bool addingToExisting;
         public enum GraphType { MDS, FACS, ATTRIBUTE, BETWEEN };
+        public Color[] geneExpressionColors;
         public Texture2D graphPointColors;
         public int graphCount;
 
@@ -156,6 +157,11 @@ namespace CellexalVR.AnalysisObjects
 
             Color[] lowMidExpressionColors = Extensions.Extensions.InterpolateColors(lowColor, midColor, halfNbrOfExpressionColors);
             Color[] midHighExpressionColors = Extensions.Extensions.InterpolateColors(midColor, highColor, nbrOfExpressionColors - halfNbrOfExpressionColors + 1);
+
+            geneExpressionColors = new Color[CellexalConfig.Config.GraphNumberOfExpressionColors + 1];
+            geneExpressionColors[0] = CellexalConfig.Config.GraphZeroExpressionColor;
+            Array.Copy(lowMidExpressionColors, 0, geneExpressionColors, 1, lowMidExpressionColors.Length);
+            Array.Copy(midHighExpressionColors, 1, geneExpressionColors, 1 + lowMidExpressionColors.Length, midHighExpressionColors.Length - 1);
 
             //// reservered colors
             //graphpointColors[255] = Color.white;
@@ -713,7 +719,7 @@ namespace CellexalVR.AnalysisObjects
             isCreating = false;
         }
 
-        private static string V2S(Vector3 v)
+        public static string V2S(Vector3 v)
         {
             return "(" + v.x + ", " + v.y + ", " + v.z + ")";
         }
