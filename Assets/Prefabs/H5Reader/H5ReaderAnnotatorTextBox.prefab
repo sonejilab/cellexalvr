@@ -181,12 +181,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 814356725583539088}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ecb762e94f13b24bb5532c8fc2a081f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a1e7d8162371f4458c5e600e3e909cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   textBoxPrefab: {fileID: 814356725583539088}
-  name: 
-  go: {fileID: 0}
   rect: {fileID: 329359339518967853}
   tmp: {fileID: 4768764527116960417}
   boxCollider: {fileID: 8361406493238012447}
+  name: 
+  isTop: 0
