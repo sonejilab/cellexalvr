@@ -90,7 +90,7 @@ public class h5reader
         startInfo.WindowStyle = ProcessWindowStyle.Minimized;
         //startInfo.CreateNoWindow = true;
 
-        startInfo.FileName = "python";
+        startInfo.FileName = "py.exe";
 
         string file_name = filePath;
         startInfo.Arguments = "ann.py " + file_name;

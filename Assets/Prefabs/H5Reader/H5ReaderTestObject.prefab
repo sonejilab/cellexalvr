@@ -440,7 +440,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2257501055780044237}
-  - component: {fileID: 2257501055780044236}
+  - component: {fileID: 97806227348415369}
   m_Layer: 0
   m_Name: H5ReaderTestObject
   m_TagString: Untagged
@@ -455,15 +455,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2257501055780044243}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
   m_Children:
   - {fileID: 430350238452495062}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2257501055780044236
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &97806227348415369
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -472,11 +472,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2257501055780044243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 374a7ce7b5b06c143b667a44005521c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 169b4f00cb17fb241b8ffb6879aeb70c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   display: {fileID: 1286342121178022487}
-  textPrefab: {fileID: 3906814846029168988, guid: 66aaaf5abf71a0142985403a43fd9174,
+  textBoxPrefab: {fileID: 814356725583539088, guid: a3b877b25f1d99c4ab08dd444db884cd,
     type: 3}
 --- !u!1 &2826384006770613464
 GameObject:
@@ -757,7 +757,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2257501055780044236}
+      - m_Target: {fileID: 0}
         m_MethodName: testprint
         m_Mode: 1
         m_Arguments:
@@ -782,6 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623775887215d794bbb678468b8edbd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 0}
 --- !u!1 &3483605723681167544
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,7 +983,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2257501055780044236}
+      - m_Target: {fileID: 0}
         m_MethodName: testprint
         m_Mode: 1
         m_Arguments:
@@ -1007,6 +1008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623775887215d794bbb678468b8edbd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 0}
 --- !u!1 &4358161597125272173
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,9 +1044,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -29.49, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6784745091352688084
 MonoBehaviour:
@@ -1289,7 +1291,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 5, y: 100}
+  m_AnchoredPosition: {x: 5, y: 100.00001}
   m_SizeDelta: {x: -10, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &5310274882125596487
@@ -1412,7 +1414,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2257501055780044236}
+      - m_Target: {fileID: 0}
         m_MethodName: testprint
         m_Mode: 1
         m_Arguments:
@@ -1437,6 +1439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623775887215d794bbb678468b8edbd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 0}
 --- !u!1 &6145353370006637295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,7 +1719,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2257501055780044236}
+      - m_Target: {fileID: 0}
         m_MethodName: testprint
         m_Mode: 1
         m_Arguments:
@@ -1741,6 +1744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623775887215d794bbb678468b8edbd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 0}
 --- !u!1 &7149116636921236913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1934,7 +1938,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2946818696819153621}
   m_Direction: 2
   m_Value: 0.00000015258789
-  m_Size: 0.6666667
+  m_Size: 0.66650605
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2127,7 +2131,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2257501055780044236}
+      - m_Target: {fileID: 0}
         m_MethodName: testprint
         m_Mode: 1
         m_Arguments:
@@ -2152,6 +2156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623775887215d794bbb678468b8edbd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 0}
 --- !u!1 &8679958495516567163
 GameObject:
   m_ObjectHideFlags: 0
@@ -2531,7 +2536,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2257501055780044236}
+      - m_Target: {fileID: 0}
         m_MethodName: testprint
         m_Mode: 1
         m_Arguments:
@@ -2556,3 +2561,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623775887215d794bbb678468b8edbd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 0}
