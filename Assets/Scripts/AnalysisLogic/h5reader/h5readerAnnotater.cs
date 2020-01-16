@@ -22,6 +22,7 @@ public class h5readerAnnotater : MonoBehaviour
     StreamReader reader;
     GameObject firstTextBox;
     H5ReaderAnnotatorTextBoxScript keys;
+    Dictionary<string, string> config;
 
     void Start()
     {

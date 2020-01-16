@@ -16,7 +16,10 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
     public TextMeshProUGUI tmp;
     public BoxCollider boxCollider;
     public string name;
-    public bool isTop = false;
+    public bool isTop;
+    private Color hoverColor = Color.red;
+    private Color color = Color.white;
+    private string type = "none";
 
     private void Start()
     {
@@ -37,6 +40,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
             {
                 GameObject go = Instantiate(textBoxPrefab);
                 H5ReaderAnnotatorTextBoxScript script = go.GetComponent<H5ReaderAnnotatorTextBoxScript>();
+                script.isTop = false;
                 script.name = parentKey;
                 subkeys.Add(parentKey, script);
             }
@@ -48,7 +52,9 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
             H5ReaderAnnotatorTextBoxScript script = go.GetComponent<H5ReaderAnnotatorTextBoxScript>();
             script.name = name;
             subkeys.Add(name, script);
+            script.isTop = false;
         }
+
     }
 
     public void fillContent(RectTransform content, int depth = 0)
@@ -102,7 +108,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
         {
             controllerInside = true;
-            tmp.color = Color.red;
+            tmp.color = hoverColor;
         }
     }
 
@@ -111,7 +117,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
         {
             controllerInside = false;
-            tmp.color = Color.white;
+            tmp.color = color;
         }
     }
 
@@ -126,8 +132,18 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
             }
             H5ReaderAnnotatorTextBoxScript parent = this;
             while (!parent.isTop)
-                parent = GetComponentInParent<H5ReaderAnnotatorTextBoxScript>();
+            {
+                parent = parent.transform.parent.GetComponent<H5ReaderAnnotatorTextBoxScript>();
+            }
             parent.updatePosition(10f);
+
+        }
+        if (controllerInside && rightController.transform.Find("h5sphere"))
+        {
+            color = rightController.transform.Find("h5sphere").GetComponent<h5sphereScript>().color;
+            color.a = 1.0f;
+            print(color);
+            tmp.color = color;
         }
     }
 }
