@@ -68,13 +68,7 @@ namespace CellexalVR.General
             {
                 referenceManager.tutorialManager.gameObject.SetActive(false);
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
-                directories = Directory.GetDirectories(dataDirectory);
-
-                //summertwerk
-                string[] files = Directory.GetFiles(dataDirectory);
-                directories = directories.Union(files).ToArray();
-                
-                
+                directories = Directory.GetDirectories(dataDirectory);                
             }
 
             if (directories.Length == 0)

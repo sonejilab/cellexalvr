@@ -30,6 +30,8 @@ public class h5reader
     public string conditions;
     public bool sparse;
     public bool geneXcell;
+    public List<string> projections;
+
 
     public float LowestExpression { get; private set; }
     public float HighestExpression { get; private set; }
@@ -49,25 +51,50 @@ public class h5reader
     public h5reader(string path)
     {
         conf = new Dictionary<string, string>();
-        filePath = path;
-        if(!File.Exists(path + ".conf"))
+
+        UnityEngine.Debug.Log(path);
+        string[] files = Directory.GetFiles(path);
+        string configFile = "";
+        
+        foreach(string s in files)
+        {
+            if (s.EndsWith(".conf"))
+                configFile = s;
+            else if (s.EndsWith(".loom") || s.EndsWith(".h5ad"))
+                filePath = s;
+        }
+        
+
+        if (configFile == "")
         {
             UnityEngine.Debug.Log("No config file for " + path);
         }
         else
         {
-            string[] lines = System.IO.File.ReadAllLines(path +".conf");
-            foreach(string l in lines)
+            projections = new List<string>();
+            string[] lines = File.ReadAllLines(configFile);
+            foreach (string l in lines)
             {
                 if (l == "")
                     continue;
                 UnityEngine.Debug.Log(l);
-                string[] kvp = l.Split(new char[] { ' ' } , 2);
-                conf.Add(kvp[0], kvp[1]);
+                string[] kvp = l.Split(new char[] { ' ' }, 2);
                 if (kvp[0] == "sparse")
                     sparse = bool.Parse(kvp[1]);
                 else if (kvp[0] == "gene_x_cell")
                     geneXcell = bool.Parse(kvp[1]);
+                else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y")) {
+                    string proj = kvp[0].Split('_')[1];
+                    if (!projections.Contains(proj))
+                        projections.Add(proj);
+
+                    conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                }   
+                else if (kvp[0].StartsWith("custom"))
+                    conf.Add(kvp[0], kvp[1]);
+                else
+                    conf.Add(kvp[0], "f['" + kvp[1] + "']");
+
 
 
             }
@@ -174,10 +201,10 @@ public class h5reader
         busy = true;
         var watch = Stopwatch.StartNew();
         string output;
-        if (conf.ContainsKey("2D_sep") && bool.Parse(conf["2D_sep"]))
-        {
+        if (boi == "sep") {
+            UnityEngine.Debug.Log("We got it");
             conditions = "2D_sep";
-            writer.WriteLine(conf["X"] + "[:].tolist()");
+            writer.WriteLine(conf["X_sep"] + "[:].tolist()");
             while (reader.Peek() == 0)
                 yield return null;
 
@@ -185,7 +212,7 @@ public class h5reader
             output = reader.ReadLine().Replace("[", "").Replace("]", "");
             string[] Xcoords = output.Split(',');
 
-            writer.WriteLine(conf["Y"] + "[:].tolist()");
+            writer.WriteLine(conf["Y_sep"] + "[:].tolist()");
             while (reader.Peek() == 0)
                 yield return null;
 

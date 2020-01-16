@@ -171,7 +171,8 @@ namespace CellexalVR.SceneObjects
                         graphManager.directories.Add(path);
                         try
                         {
-                            if (Path.GetExtension(path) != "")
+                            //summertwerk
+                            if (path.EndsWith("_h5") || path.EndsWith("_loom"))
                                 inputReader.ReadFile_h5(path);
                             else
                                 inputReader.ReadFolder(path);
