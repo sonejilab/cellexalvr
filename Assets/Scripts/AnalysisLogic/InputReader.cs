@@ -136,9 +136,11 @@ namespace CellexalVR.AnalysisLogic
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
             selectionManager.DataDir = fullPath;
+            CellexalUser.DataSourceFolder = currentPath;
 
-            StartCoroutine(H5_readgraphs(fullPath, new string[] { "phate", "umap" }));
-            //graphGenerator.isCreating = true;
+
+            StartCoroutine(H5_readgraphs(fullPath));
+            //graphGenerator.isCreating = true;)
         }
 
         /// <summary>
@@ -233,15 +235,15 @@ namespace CellexalVR.AnalysisLogic
         /// H5 Coroutine to create graphs.
         /// </summary>
         /// <param name="path"> The path to the file. </param>
-        /// <param name="projections"> The graphnames. </param>
 
-        IEnumerator H5_readgraphs(string path, string[] projections, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
+        IEnumerator H5_readgraphs(string path, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
             if (!loaderController.loaderMovedDown)
             {
                 loaderController.loaderMovedDown = true;
                 loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
+
 
             cellManager.h5Reader = new h5reader(path);
             StartCoroutine(cellManager.h5Reader.ConnectToFile());
@@ -264,8 +266,10 @@ namespace CellexalVR.AnalysisLogic
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
             int itemsThisFrame = 0;
             int totalNbrOfCells = 0;
-            foreach (string proj in projections)
+            
+            foreach (string proj in cellManager.h5Reader.projections)
             {
+                print(proj);
                 while (graphGenerator.isCreating)
                 {
                     yield return null;
@@ -313,9 +317,9 @@ namespace CellexalVR.AnalysisLogic
                 combGraph.axisNames = new string[] { "x", "y", "z" };
                 itemsThisFrame = 0;
                 int count = 0;
+
                 for (int j = 0; j < cellnames.Length; j++)
                 {
-
                     string cellname = cellnames[j];
                     float x, y, z;
                     if(cellManager.h5Reader.conditions == "2D_sep")
@@ -323,7 +327,7 @@ namespace CellexalVR.AnalysisLogic
                         
                         x = float.Parse(coords[j]);
                         y = float.Parse(coords[j + cellnames.Length]);
-                        z = 0;
+                        z = j*0.001f; //summertwerk, should skala after maxcord
 
                     }
                     else
@@ -337,6 +341,7 @@ namespace CellexalVR.AnalysisLogic
                     graphGenerator.AddGraphPoint(cell, x, y, z);
                     totalNbrOfCells++;
                     count++;
+                    
                     if (count > maximumItemsPerFrame)
                     {
                         yield return null;
@@ -354,6 +359,7 @@ namespace CellexalVR.AnalysisLogic
                         }
 
                     }
+                    
                 }
                 combGraph.SetInfoText();
 
