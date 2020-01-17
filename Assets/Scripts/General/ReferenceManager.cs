@@ -117,6 +117,7 @@ namespace CellexalVR.General
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
         public VelocityGenerator velocityGenerator;
+        public ConvexHullGenerator convexHullGenerator;
         public FilterManager filterManager;
         public ReportManager reportManager;
         public Floor floor;
@@ -243,6 +244,7 @@ namespace CellexalVR.General
             screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
+            convexHullGenerator = generatorsParent.GetComponentInChildren<ConvexHullGenerator>(true);
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
             floor = GameObject.Find("Floor").GetComponent<Floor>();

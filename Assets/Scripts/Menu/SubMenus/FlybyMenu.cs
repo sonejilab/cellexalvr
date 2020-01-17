@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine.Recorder;
-using UnityEngine;
-using UnityEngine.XR.WSA.WebCam;
-using System.Threading;
-using CellexalVR.General;
+﻿using CellexalVR.General;
+using System.Collections.Generic;
 using System.IO;
-using System.Collections;
+using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
 {
@@ -56,10 +52,11 @@ namespace CellexalVR.Menu.SubMenus
             Camera camera = cameraGameObject.GetComponent<Camera>();
             RenderTexture renderTexture = camera.targetTexture;
             RenderTexture.active = renderTexture;
-            Texture2D frame = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+
+            Texture2D frame = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false, !renderTexture.sRGB);
             Rect rect = new Rect(0, 0, renderTexture.width, renderTexture.height);
-            List<string> savedImages = new List<string>();
-            float tInc = 1f / framesPerPos;
+            //List<string> savedImages = new List<string>();
+            float tInc = 1f / (framesPerPos - 1);
             int fileId = 0;
 
             for (int i = 0; i < positions.Count - 1; ++i)
@@ -77,18 +74,20 @@ namespace CellexalVR.Menu.SubMenus
                     frame.ReadPixels(rect, 0, 0);
                     byte[] frameData = frame.EncodeToJPG();
 
-                    Thread thread = new Thread(() =>
-                    {
-                        string fileName = "frame_" + fileId.ToString("D6") + ".jpg";
+                    //byte[] frameData = frame.EncodeToPNG();
 
-                        FileStream fileStream = File.Create(outputPath + @"\" + fileName);
-                        fileStream.Write(frameData, 0, frameData.Length);
-                        fileStream.Flush();
-                        fileStream.Close();
+                    //Thread thread = new Thread(() =>
+                    //{
+                    string fileName = "frame_" + fileId.ToString("D6") + ".jpg";
 
-                        savedImages.Add(fileName);
-                    });
-                    thread.Start();
+                    FileStream fileStream = File.Create(outputPath + @"\" + fileName);
+                    fileStream.Write(frameData, 0, frameData.Length);
+                    fileStream.Flush();
+                    fileStream.Close();
+
+                    //savedImages.Add(fileName);
+                    //});
+                    //thread.Start();
                     fileId++;
                 }
                 //yield return null;

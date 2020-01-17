@@ -51,6 +51,29 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        [ConsoleCommand("heatmapGenerator", folder: "Output\\", aliases: new string[] { "loadheatmapfile", "lhf" })]
+        public void LoadHeatmap(string heatmapName)
+        {
+            statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
+            heatmapName = "Output\\" + heatmapName;
+            CellexalLog.Log("Loading old heatmap from file " + heatmapName);
+            //CellexalEvents.CreatingHeatmap.Invoke();
+            //string heatmapName = "heatmap_" +            System.DateTime.Now.ToString("HH-mm-ss");
+            // the important parts in the GenerateHeatmapRoutine to            build the heatmap ? !
+            var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+
+            heatmap.Init();
+            heatmap.transform.parent = transform;
+            heatmap.transform.localPosition = heatmapPosition;
+            heatmap.selectionNr = selectionNr;
+            heatmapList.Add(heatmap);
+            heatmap.directory = heatmapName;
+            BuildTexture(referenceManager.selectionManager.GetLastSelection(), heatmapName, heatmap);
+            heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
+            heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
+            heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+        }
+
         void Awake()
         {
             t = null;

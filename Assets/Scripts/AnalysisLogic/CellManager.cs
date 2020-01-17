@@ -454,6 +454,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
             {
                 pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+                //pos[referenceManager.graphGenerator.CreateSubGraphs]
             }
 
             foreach (Cell cell in cells.Values)
@@ -486,7 +487,7 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
                 foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
+                    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
                 }
 
             }

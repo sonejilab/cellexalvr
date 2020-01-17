@@ -48,6 +48,13 @@ MonoBehaviour:
     type: 3}
   arrowMaterial: {fileID: 2100000, guid: 6aa41733870aa854081b3a08352ccc61, type: 2}
   standardMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  triprefab: {fileID: 0}
+  sphereprefab: {fileID: 0}
+  convexHullPrefab: {fileID: 0}
+  debug: {fileID: 0}
+  debug1: {fileID: 0}
+  debug2: {fileID: 0}
+  debug3: {fileID: 0}
 --- !u!1 &1136056702234574
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +259,7 @@ MonoBehaviour:
   meshToUse: {fileID: 0}
   isCreating: 0
   addingToExisting: 0
+  geneExpressionColors: []
   graphPointColors: {fileID: 0}
   graphCount: 0
 --- !u!1 &1900129272846280
@@ -286,6 +294,7 @@ Transform:
   - {fileID: 4240884778100542}
   - {fileID: 4796754215416330}
   - {fileID: 4900551920225052}
+  - {fileID: 357420253994774008}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -339,3 +348,49 @@ MonoBehaviour:
   selectionNr: 0
   heatmapsCreated: 0
   selectionManager: {fileID: 0}
+--- !u!1 &7096989317925957970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 357420253994774008}
+  - component: {fileID: 4936361254188363467}
+  m_Layer: 0
+  m_Name: ConvexHullGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &357420253994774008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7096989317925957970}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4982010448198502}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4936361254188363467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7096989317925957970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2b3915d44e6364c8e8aae1f2db3062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  convexHullPrefab: {fileID: 7344177800078177054, guid: c595b76e9b05eef4aa217b65364217f7,
+    type: 3}

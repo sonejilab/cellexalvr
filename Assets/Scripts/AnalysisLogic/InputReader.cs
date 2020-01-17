@@ -303,6 +303,7 @@ namespace CellexalVR.AnalysisLogic
                             continue;
                         }
                         string cellname = words[0];
+                        //print(words[0]);
                         float x = float.Parse(words[1]);
                         float y = float.Parse(words[2]);
                         float z = float.Parse(words[3]);
