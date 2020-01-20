@@ -62,12 +62,13 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         gameObject.name = name;
         transform.SetParent(content);
 
-        rect.localScale = new Vector3(1, 1, 1);
-        rect.anchorMin = new Vector2(0, 1);
-        rect.anchorMax = new Vector2(1, 0);
-        rect.pivot = new Vector2(0.5f, 1);
         rect.localPosition = Vector3.zero;
         rect.localEulerAngles = Vector3.zero;
+        rect.localScale = new Vector3(1, 1, 1);
+        
+        rect.anchorMin = new Vector2(0, 1);
+        rect.anchorMax = new Vector2(1, 1);
+        rect.pivot = new Vector2(0.5f, 1);
 
         tmp.fontSize = 8;
         tmp.alignment = TextAlignmentOptions.MidlineLeft;

@@ -20,12 +20,12 @@ public class h5readerAnnotater : MonoBehaviour
     public GameObject textBoxPrefab;
     Process p;
     StreamReader reader;
-    GameObject firstTextBox;
     H5ReaderAnnotatorTextBoxScript keys;
     Dictionary<string, string> config;
 
     void Start()
     {
+        print("TETS");
         p = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.UseShellExecute = false;
@@ -34,7 +34,7 @@ public class h5readerAnnotater : MonoBehaviour
         startInfo.RedirectStandardError = true;
         startInfo.WindowStyle = ProcessWindowStyle.Minimized;
 
-        startInfo.FileName = "python";
+        startInfo.FileName = "py.exe";
 
         string file_name = "LCA_142K_umap_phate.loom";
         startInfo.Arguments = "crawl.py " + "Data/" + file_name;
@@ -51,6 +51,7 @@ public class h5readerAnnotater : MonoBehaviour
         string standard_output;
         while ((standard_output = reader.ReadLine()) != null)
         {
+            print(standard_output);
             if (standard_output.Contains("xx"))
                 break;
             if (!standard_output.Contains("("))
