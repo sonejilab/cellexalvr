@@ -26,6 +26,8 @@ for(c in configFile){
 print(as.logical(conf$gene_x_cell))
 print(conf)
 
+
+#For h5ad files
 if(endsWith(datafile, ".h5ad")){
 
 
