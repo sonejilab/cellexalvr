@@ -52,7 +52,6 @@ public class h5reader
     {
         conf = new Dictionary<string, string>();
 
-        UnityEngine.Debug.Log(path);
         string[] files = Directory.GetFiles(path);
         string configFile = "";
         
