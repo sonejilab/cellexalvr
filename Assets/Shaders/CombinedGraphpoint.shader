@@ -70,7 +70,6 @@ Shader "Custom/CombinedGraphpoint"
                     float3  lightDir    : TEXCOORD1;
                     float3  normal		: TEXCOORD2;
                     float3  worldPos     : TEXCOORD3;
-                    float4 cullerPos : TEXCOORD4;
                 //    LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
                };
             //    struct v2f 
@@ -98,6 +97,7 @@ Shader "Custom/CombinedGraphpoint"
                 float _Cutoff;
                 float4 _PlanePos;
                 uniform float4x4 _BoxMatrix;
+                uniform float4x4 _BoxMatrix2;
                 float _Culling;
 
 
@@ -109,7 +109,6 @@ Shader "Custom/CombinedGraphpoint"
                     o.uv = v.texcoord.xy;
                     o.lightDir = ObjSpaceLightDir(v.vertex);
                     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-                    o.cullerPos = mul(_BoxMatrix, o.worldPos);
                     o.normal = v.normal;
                     
                    // TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
@@ -153,19 +152,14 @@ Shader "Custom/CombinedGraphpoint"
 
                 fixed4 frag(vertex_output i) : COLOR
                 {
-                    float4 pos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
-                    pos = mul(_BoxMatrix, pos);
-                    float inside = isInsideBox(pos);
+                    float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                    float4 relpos = mul(_BoxMatrix, wpos);
+                    float inside = isInsideBox(relpos);
                     clip(inside);
-                    // if (dot(i.cullerPos.xyz, i.cullerPos.xyz) < 0.25)
-                    //     discard;
-                    // float distance = dot(i.worldPos, _PlanePos.xyz);
-                    // distance = distance + _PlanePos.w;
-                    // // clip(-distance);
-                    // if (distance < 0.01f)
-                    // {
-                    //     discard;
-                    // }
+                    relpos = mul(_BoxMatrix2, wpos);
+                    inside = isInsideBox(relpos);
+                    clip(inside);
+                    
 
                    i.lightDir = normalize(i.lightDir);
                    fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
@@ -222,6 +216,7 @@ Shader "Custom/CombinedGraphpoint"
                 
                 float4 _PlanePos;
                 uniform float4x4 _BoxMatrix;
+                uniform float4x4 _BoxMatrix2;
                 float _Culling;
 
                 struct v2f
@@ -232,7 +227,6 @@ Shader "Custom/CombinedGraphpoint"
                     float3  lightDir    : TEXCOORD2;
                     // LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
                     float3  worldPos    : TEXCOORD3;
-                    float4 cullerPos : TEXCOORD4;
                 };
  
                 v2f vert (appdata_tan v)
@@ -241,7 +235,6 @@ Shader "Custom/CombinedGraphpoint"
                     
                     o.pos = UnityObjectToClipPos(v.vertex);
                     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-                    o.cullerPos = mul(_BoxMatrix, o.worldPos);
                     o.uv = v.texcoord.xy;
                    	
 					o.lightDir = ObjSpaceLightDir(v.vertex);
@@ -287,25 +280,14 @@ Shader "Custom/CombinedGraphpoint"
                 }
                 fixed4 frag(v2f i) : COLOR
                 {
-                    // if (dot(i.cullerPos.xyz, i.cullerPos.xyz) < 0.25)
-                    //     discard;
-
-                    float4 pos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
-                    pos = mul(_BoxMatrix, pos);
-                    float inside = isInsideBox(pos);
+                    float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                    float4 relpos = mul(_BoxMatrix, wpos);
+                    float inside = isInsideBox(relpos);
                     clip(inside);
-                    // float distance = dot(i.worldPos, _PlanePos.xyz);
-                    // distance = distance + _PlanePos.w;
-                    // // clip(-distance);
-                    // if (distance < 0.1f)
-                    // {
-                    //     discard;
-                    // }
-                    // if (_Culling > 0)
-                    // {
-                    //     discard;
-                    // }
-                    // float3 expressionColorData = (tex2D(_MainTex, i.uv));
+                    relpos = mul(_BoxMatrix2, wpos);
+                    inside = isInsideBox(relpos);
+                    clip(inside);                
+                    
                     float3 expressionColorData = tex2D(_MainTex, i.uv);
                     
                     if (expressionColorData.g > 0.9) {

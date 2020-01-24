@@ -12,7 +12,7 @@ namespace Assets.Scripts.SceneObjects
     public class CullingCube : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        //public bool cull;
+        public int boxNr;
 
 
         private Material material;
@@ -34,7 +34,14 @@ namespace Assets.Scripts.SceneObjects
             foreach (Graph graph in referenceManager.graphManager.Graphs)
             {
                 material = graph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial;
-                material.SetMatrix("_BoxMatrix", transform.worldToLocalMatrix);
+                if (boxNr == 0)
+                {
+                    material.SetMatrix("_BoxMatrix", transform.worldToLocalMatrix);
+                }
+                else
+                {
+                    material.SetMatrix("_BoxMatrix2", transform.worldToLocalMatrix);
+                }
             }
         }
     }

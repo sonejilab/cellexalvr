@@ -1,4 +1,5 @@
-﻿using CellexalVR.Tools;
+﻿using Assets.Scripts.SceneObjects;
+using CellexalVR.Tools;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Tools
 {
@@ -9,6 +10,7 @@ namespace CellexalVR.Menu.Buttons.Tools
     {
         public GameObject cullingCubePrefab;
 
+        private int counter;
         protected override string Description
         {
             get { return "Spawn Culling Cube"; }
@@ -17,6 +19,7 @@ namespace CellexalVR.Menu.Buttons.Tools
         public override void Click()
         {
             GameObject cube = Instantiate(cullingCubePrefab);
+            cube.GetComponent<CullingCube>().boxNr = counter;
             if (referenceManager.screenshotCamera.gameObject.activeSelf)
             {
                 spriteRenderer.sprite = standardTexture;
@@ -26,6 +29,9 @@ namespace CellexalVR.Menu.Buttons.Tools
                 spriteRenderer.sprite = deactivatedTexture;
 
             }
+            counter++;
+            if (counter == 2)
+                SetButtonActivated(false);
 
         }
     }
