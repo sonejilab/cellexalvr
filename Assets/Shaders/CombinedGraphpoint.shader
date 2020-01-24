@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
@@ -63,10 +65,12 @@ Shader "Custom/CombinedGraphpoint"
                
                struct vertex_output
                {
-                   float4  pos         : SV_POSITION;
-                   float2  uv          : TEXCOORD0;
-                   float3  lightDir    : TEXCOORD1;
-                   float3  normal		: TEXCOORD2;
+                    float4  pos         : SV_POSITION;
+                    float2  uv          : TEXCOORD0;
+                    float3  lightDir    : TEXCOORD1;
+                    float3  normal		: TEXCOORD2;
+                    float3  worldPos     : TEXCOORD3;
+                    float4 cullerPos : TEXCOORD4;
                 //    LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
                };
             //    struct v2f 
@@ -85,25 +89,29 @@ Shader "Custom/CombinedGraphpoint"
             //        return o;
 			//    }
 
-               
-               sampler2D _MainTex;
-               sampler2D _GraphpointColorTex;
-               float4 _MainTex_ST;
-               fixed4 _LightColor0;
-               float _AlphaTest;
-               float _Cutoff;
+
+                sampler2D _MainTex;
+                sampler2D _GraphpointColorTex;
+                float4 _MainTex_ST;
+                fixed4 _LightColor0;
+                float _AlphaTest;
+                float _Cutoff;
+                float4 _PlanePos;
+                uniform float4x4 _BoxMatrix;
+                float _Culling;
 
 
 
-               vertex_output vert (vertex_input v)
-               {
-                   vertex_output o;
-                   o.pos = UnityObjectToClipPos(v.vertex);
-                   o.uv = v.texcoord.xy;
-				   o.lightDir = ObjSpaceLightDir(v.vertex);
-				   
-				   o.normal = v.normal;
-                   
+                vertex_output vert (vertex_input v)
+                {
+                    vertex_output o;
+                    o.pos = UnityObjectToClipPos(v.vertex);
+                    o.uv = v.texcoord.xy;
+                    o.lightDir = ObjSpaceLightDir(v.vertex);
+                    o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                    o.cullerPos = mul(_BoxMatrix, o.worldPos);
+                    o.normal = v.normal;
+                    
                    // TRANSFER_VERTEX_TO_FRAGMENT(o);                 // Macro to send shadow & attenuation to the fragment shader.
                    
 		           // #ifdef VERTEXLIGHT_ON
@@ -132,9 +140,33 @@ Shader "Custom/CombinedGraphpoint"
 		           // #endif
                    return o;
                }
+                float isInsideBox(float4 pos)
+                {
+                    if (pos.x < -.5 || pos.x > .5)
+                        return 1;
+                    if (pos.y < -.5 || pos.y > .5)
+                        return 1;
+                    if (pos.z < -.5 || pos.z > .5)
+                        return 1;
+                    return -1;
+                }
 
-               fixed4 frag(vertex_output i) : COLOR
-               {
+                fixed4 frag(vertex_output i) : COLOR
+                {
+                    float4 pos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                    pos = mul(_BoxMatrix, pos);
+                    float inside = isInsideBox(pos);
+                    clip(inside);
+                    // if (dot(i.cullerPos.xyz, i.cullerPos.xyz) < 0.25)
+                    //     discard;
+                    // float distance = dot(i.worldPos, _PlanePos.xyz);
+                    // distance = distance + _PlanePos.w;
+                    // // clip(-distance);
+                    // if (distance < 0.01f)
+                    // {
+                    //     discard;
+                    // }
+
                    i.lightDir = normalize(i.lightDir);
                    fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
                    
@@ -188,6 +220,10 @@ Shader "Custom/CombinedGraphpoint"
                 #include "UnityCG.cginc"
                 #include "AutoLight.cginc"
                 
+                float4 _PlanePos;
+                uniform float4x4 _BoxMatrix;
+                float _Culling;
+
                 struct v2f
                 {
                     float4  pos         : SV_POSITION;
@@ -195,7 +231,8 @@ Shader "Custom/CombinedGraphpoint"
                     float3  normal		: TEXCOORD1;
                     float3  lightDir    : TEXCOORD2;
                     // LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
-                    float3  worldPos    : TEXCOORD5;
+                    float3  worldPos    : TEXCOORD3;
+                    float4 cullerPos : TEXCOORD4;
                 };
  
                 v2f vert (appdata_tan v)
@@ -204,6 +241,7 @@ Shader "Custom/CombinedGraphpoint"
                     
                     o.pos = UnityObjectToClipPos(v.vertex);
                     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                    o.cullerPos = mul(_BoxMatrix, o.worldPos);
                     o.uv = v.texcoord.xy;
                    	
 					o.lightDir = ObjSpaceLightDir(v.vertex);
@@ -237,8 +275,36 @@ Shader "Custom/CombinedGraphpoint"
                     return (RGB);
                 }
 
+                float isInsideBox(float4 pos)
+                {
+                    if (pos.x < -.5 || pos.x > .5)
+                        return 1;
+                    if (pos.y < -.5 || pos.y > .5)
+                        return 1;
+                    if (pos.z < -.5 || pos.z > .5)
+                        return 1;
+                    return -1;
+                }
                 fixed4 frag(v2f i) : COLOR
                 {
+                    // if (dot(i.cullerPos.xyz, i.cullerPos.xyz) < 0.25)
+                    //     discard;
+
+                    float4 pos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                    pos = mul(_BoxMatrix, pos);
+                    float inside = isInsideBox(pos);
+                    clip(inside);
+                    // float distance = dot(i.worldPos, _PlanePos.xyz);
+                    // distance = distance + _PlanePos.w;
+                    // // clip(-distance);
+                    // if (distance < 0.1f)
+                    // {
+                    //     discard;
+                    // }
+                    // if (_Culling > 0)
+                    // {
+                    //     discard;
+                    // }
                     // float3 expressionColorData = (tex2D(_MainTex, i.uv));
                     float3 expressionColorData = tex2D(_MainTex, i.uv);
                     
@@ -310,6 +376,9 @@ Shader "Custom/CombinedGraphpoint"
             sampler2D_float _MainTex;
             sampler2D _GraphpointColorTex;
             float _TestPar;
+            float4 _PlanePos;
+            uniform float4x4 _BoxMatrix;
+            float _Culling;
 
             struct appdata
             {
@@ -324,6 +393,7 @@ Shader "Custom/CombinedGraphpoint"
                 float3 viewDir : TEXCOORD1;
                 float4 radius : TEXCOORD2;
                 float3 color : COLOR;
+                //float3 worldPos : TEXCOORD5;
             };
 
             v2g vert(in appdata_base IN)
