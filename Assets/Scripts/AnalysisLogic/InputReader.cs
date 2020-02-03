@@ -91,12 +91,15 @@ namespace CellexalVR.AnalysisLogic
             //headset = referenceManager.headset;
             if (CrossSceneInformation.Spectator)
             {
+                print("spectator");
                 headset = referenceManager.spectatorRig;
                 referenceManager.headset = headset;
+                headset.SetActive(true);
             }
             else
             {
                 headset = referenceManager.headset;
+                referenceManager.spectatorRig.SetActive(false);
             }
             //status = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
@@ -239,7 +242,6 @@ namespace CellexalVR.AnalysisLogic
             int totalNbrOfCells = 0;
             foreach (string file in mdsFiles)
             {
-                print(file);
                 while (graphGenerator.isCreating)
                 {
                     yield return null;
@@ -461,6 +463,7 @@ namespace CellexalVR.AnalysisLogic
             float currentCoord;
             GameObject parent = GameObject.Instantiate(SpatialGraphPrefab);
             SpatialGraph sg = parent.GetComponent<SpatialGraph>();
+            graphManager.spatialGraphs.Add(sg);
             sg.referenceManager = referenceManager;
             float posIncr = 0;
             int sliceNr = 0;
@@ -522,7 +525,9 @@ namespace CellexalVR.AnalysisLogic
                 combGraph.GraphName = "Slice" + sliceNr;
                 combGraph.transform.parent = parent.transform;
                 combGraph.transform.localPosition = new Vector3(0, 0, 0);
+                //combGraph.
                 var gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
+                gs.referenceManager = referenceManager;
                 yield return null;
                 float sliceDist = 0.005f;
                 posIncr += sliceDist;
@@ -556,9 +561,10 @@ namespace CellexalVR.AnalysisLogic
                         combGraph.transform.parent = parent.transform;
                         yield return null;
                         gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
+                        gs.referenceManager = referenceManager;
                         gs.sliceNr = ++sliceNr;
-                        gs.zCoord = posIncr;
                         posIncr += sliceDist;
+                        //print(gs.zCoord);
                         combGraph.transform.localPosition = new Vector3(0, 0, 0);
                         combGraph.GraphName = "Slice" + sliceNr;
                         combGraph.gameObject.name = "Slice" + sliceNr;
@@ -572,7 +578,8 @@ namespace CellexalVR.AnalysisLogic
                         {
                             yield return null;
                         }
-                        gs.zCoord = posIncr;
+                        gs.zCoord = gp.WorldPosition.z;
+                        combGraph.transform.localPosition = new Vector3(0, 0, 0);
                         //gs.AddReplacement();
                         continue;
                     }
