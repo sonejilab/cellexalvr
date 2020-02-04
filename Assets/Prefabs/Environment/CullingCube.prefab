@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5730375503896762356}
   - component: {fileID: 5730375503896762367}
   - component: {fileID: 5730375503896762364}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CullingCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  boxNr: 0
 --- !u!114 &5730375503896762357
 MonoBehaviour:
   m_ObjectHideFlags: 0
