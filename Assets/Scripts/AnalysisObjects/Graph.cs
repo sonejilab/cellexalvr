@@ -8,6 +8,7 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.MarchingCubes;
 using CellexalVR.Multiuser;
+using CellexalVR.Spatial;
 using CellexalVR.Tools;
 using SQLiter;
 using TMPro;
@@ -181,7 +182,18 @@ namespace CellexalVR.AnalysisObjects
 
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
-                multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+                if (GraphName.Contains("Slice"))
+                {
+                    GraphSlice slice = GetComponent<GraphSlice>();
+                    if (slice.sliceMode)
+                    {
+                        multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+                    }
+                }
+                else
+                {
+                    multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+                }
             }
             if (minimize)
             {

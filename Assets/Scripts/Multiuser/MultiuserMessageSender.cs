@@ -444,6 +444,16 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageActivateSlices", PhotonTargets.Others);
         }
+        public void SendMessageSpatialGraphGrabbed(string sliceName, string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpatialGraphGrabbed", PhotonTargets.Others, sliceName, graphName);
+        }
+        public void SendMessageSpatialGraphUnGrabbed(string sliceName, string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpatialGraphUnGrabbed", PhotonTargets.Others, sliceName, graphName);
+        }
         #endregion
 
         #region Heatmaps

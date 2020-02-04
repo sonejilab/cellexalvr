@@ -88,7 +88,7 @@ namespace CellexalVR.Spatial
                     //chunkManager.addDensity(x, y, z + z * (1 % z), 1);
                 }
             }
-            print(i);
+            //print(i);
 
             chunkManager.toggleSurfaceLevelandUpdateCubes(0);
 
@@ -154,10 +154,9 @@ namespace CellexalVR.Spatial
         /// </summary>
         public void ActivateSlices()
         {
-            slicesActive = !slicesActive;
             foreach (GraphSlice gs in GetComponentsInChildren<GraphSlice>())
             {
-                if (slicesActive)
+                if (!slicesActive)
                 {
                     StartCoroutine(gs.ActivateSlice(true));
                 }
@@ -167,6 +166,7 @@ namespace CellexalVR.Spatial
                     ResetSlices();
                 }
             }
+            slicesActive = !slicesActive;
         }
 
         /// <summary>
@@ -180,5 +180,18 @@ namespace CellexalVR.Spatial
             }
 
         }
+
+        public GraphSlice GetSlice(string sliceName)
+        {
+            foreach(GraphSlice slice in GetComponentsInChildren<GraphSlice>())
+            {
+                if (slice.gameObject.name.Equals(sliceName))
+                    return slice;
+            }
+            return null;
+
+        }
+
+
     }
 }

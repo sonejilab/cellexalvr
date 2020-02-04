@@ -366,6 +366,22 @@ namespace CellexalVR.AnalysisObjects
             // no graph found
             return null;
         }
+        public SpatialGraph FindSpatialGraph(string graphName)
+        {
+            if (graphName == "" && spatialGraphs.Count > 0)
+            {
+                return spatialGraphs[0];
+            }
+            foreach (SpatialGraph g in spatialGraphs)
+            {
+                if (g.gameObject.name == graphName)
+                {
+                    return g;
+                }
+            }
+            // no graph found
+            return null;
+        }
 
         /// <summary>
         /// Removes all lines between graphpoints.

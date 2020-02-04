@@ -63,8 +63,11 @@ namespace CellexalVR.Spatial
                 Quaternion tempRot = this.transform.rotation;
                 this.transform.localPosition = originalPos;
                 this.transform.localRotation = originalRot;
+                //referenceManager.multiuserMessageSender.SendMessageMoveGraph(this.transform.name, originalPos, originalRot, this.transform.localScale);
+                //referenceManager.multiuserMessageSender.SendMessageMoveGraph(this.transform.name, originalPos, originalRot, this.transform.localScale);
                 this.transform.parent.position = tempPos;
                 this.transform.parent.rotation = tempRot;
+                referenceManager.multiuserMessageSender.SendMessageMoveGraph(this.transform.parent.name, tempPos, tempRot, this.transform.parent.localScale);
             }
         }
 
@@ -72,19 +75,10 @@ namespace CellexalVR.Spatial
         {
             //spatGraph.transform.SetParent(this.transform);
             //spatGraph.SynchMovement(transform);
-            if (sliceMode)
-            {
-                // Show wire and replacement
-                //replacement.GetComponent<Renderer>().material.color = replacementHighlightCol;
-                //replacement.SetActive(true);
-                //wire.SetActive(true);
-                //var follow = wire.GetComponent<LineRendererFollowTransforms>();
-                //follow.transform1 = e.interactingObject.transform;
-                //follow.transform2 = replacement.transform;
-            }
-            else
+            if (!sliceMode)
             {
                 grabbing = true;
+                //referenceManager.multiuserMessageSender.SendMessageSpatialGraphGrabbed(gameObject.name, transform.parent.gameObject.name);
             }
         }
 
@@ -95,6 +89,7 @@ namespace CellexalVR.Spatial
                 transform.localPosition = originalPos;
                 transform.localRotation = originalRot;
                 grabbing = false;
+                //referenceManager.multiuserMessageSender.SendMessageSpatialGraphUnGrabbed(gameObject.name, transform.parent.gameObject.name);
             }
             else
             {
@@ -180,6 +175,7 @@ namespace CellexalVR.Spatial
                 sliceMode = true;
                 Vector3 startPos = this.transform.localPosition;
                 Vector3 targetPos = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, zCoord);
+                print(this.gameObject.name + " - " + zCoord);
                 float time = 1f;
                 float t = 0f;
                 while (t < time)
@@ -195,6 +191,11 @@ namespace CellexalVR.Spatial
                 sliceMode = false;
                 //graph.transform.localPosition = Vector3.zero;
             }
+        }
+
+        public void ToggleGrabbing(bool toggle)
+        {
+            grabbing = toggle;
         }
 
     }
