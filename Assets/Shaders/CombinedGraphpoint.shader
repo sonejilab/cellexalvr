@@ -26,7 +26,7 @@ Shader "Custom/CombinedGraphpoint"
         _OutlineThickness("Thickness", float) = 0.005
 		_ThickerOutline("ThicknessMultiplier", float) = 4
         _TestPar("test", float) = 0
-        _AlphaTest("Transparancy", Range(0.0, 1.0)) = 0.5
+        _Transparancy("Transparancy", Range(0.0, 1.0)) = 0.1
     }
 
     SubShader
@@ -93,7 +93,7 @@ Shader "Custom/CombinedGraphpoint"
                 sampler2D _GraphpointColorTex;
                 float4 _MainTex_ST;
                 fixed4 _LightColor0;
-                float _AlphaTest;
+                float _Transparancy;
                 float _Cutoff;
                 float4 _PlanePos;
                 uniform float4x4 _BoxMatrix;
@@ -182,7 +182,7 @@ Shader "Custom/CombinedGraphpoint"
                    {
                        color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 2 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
                        color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
-                       color.a = _AlphaTest;
+                       color.a = _Transparancy;
                    }
                    else
                    {

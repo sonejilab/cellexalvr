@@ -284,6 +284,24 @@ namespace CellexalVR.AnalysisObjects
             networks.Remove(handler);
         }
 
+
+        /// <summary>
+        /// Toggles the transparency of all graph points on/off.
+        /// </summary>
+        /// <param name="toggle"></param>
+        public void ToggleGraphPointTransparency(bool toggle)
+        {
+            foreach (Graph graph in Graphs)
+            {
+                graph.MakeAllPointsTransparent(toggle);
+            }
+            foreach (SpatialGraph spatialGraph in spatialGraphs)
+            {
+                spatialGraph.ToggleGraphPointsTransparency(toggle);
+            }
+
+        }
+
         /// <summary>
         /// Clears expression colours from graph but keeps current selection colours.
         /// </summary>

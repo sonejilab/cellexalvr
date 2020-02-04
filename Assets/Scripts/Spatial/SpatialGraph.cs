@@ -20,6 +20,7 @@ namespace CellexalVR.Spatial
         private SteamVR_Controller.Device rdevice;
         private GameObject contour;
         private bool slicesActive;
+        private List<Graph> slices = new List<Graph>();
 
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();
         public GameObject chunkManagerPrefab;
@@ -56,6 +57,7 @@ namespace CellexalVR.Spatial
                 {
                     points[gpPair.Key] = gpPair.Value;
                 }
+                slices.Add(graph);
             }
             yield return null;
         }
@@ -167,6 +169,14 @@ namespace CellexalVR.Spatial
                 }
             }
             slicesActive = !slicesActive;
+        }
+
+        public void ToggleGraphPointsTransparency(bool toggle)
+        {
+            foreach (Graph graph in slices)
+            {
+                graph.MakeAllPointsTransparent(toggle);
+            }
         }
 
         /// <summary>
