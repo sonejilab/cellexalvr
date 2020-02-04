@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -844,7 +844,7 @@ namespace CellexalVR.AnalysisLogic
             }
             mesh.vertices = verts;
             mesh.triangles = tris;
-            MeshUtility.Optimize(mesh);
+            //MeshUtility.Optimize(mesh);
             CellexalLog.Log("Mesh vertices after optimization: " + mesh.vertexCount);
 
             mesh.RecalculateNormals();
