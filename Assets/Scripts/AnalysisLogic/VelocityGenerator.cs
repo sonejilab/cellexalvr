@@ -229,7 +229,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
                 Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
-                diff = originalGraph.ScaleCoordinates(diff, true);
+                diff /= originalGraph.longestAxis;
                 if (i<1)
                 {
                     UnityEngine.Debug.Log(diff);
