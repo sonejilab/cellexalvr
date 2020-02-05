@@ -7,6 +7,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Multiuser;
 using System.IO;
+using System.Linq;
 
 namespace CellexalVR.SceneObjects
 {
@@ -172,7 +173,9 @@ namespace CellexalVR.SceneObjects
                         try
                         {
                             //summertwerk
-                            if (path.EndsWith("_h5") || path.EndsWith("_loom"))
+                            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
+                            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
+                            if (h5 || loom)
                                 inputReader.ReadFile_h5(path);
                             else
                                 inputReader.ReadFolder(path);

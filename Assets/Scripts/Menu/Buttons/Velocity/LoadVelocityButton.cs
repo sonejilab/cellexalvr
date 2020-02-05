@@ -33,7 +33,11 @@ namespace CellexalVR.Menu.Buttons.Velocity
             set
             {
                 filePath = value;
-                shorterFilePath = FixGraphPath(value);
+
+                //summertwerk
+                if (filePath.Contains("."))
+                    shorterFilePath = FixGraphPath(value);
+                else shorterFilePath = filePath;
                 graph = referenceManager.graphManager.FindGraph(shorterFilePath);
                 if (subGraphName != string.Empty)
                 {
@@ -65,6 +69,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
 
         public override void Click()
         {
+            print("Clickked u mofo");
             var velocityGenerator = referenceManager.velocityGenerator;
             Graph graphToActivate = subGraph != null ? subGraph : graph;
             //velocityGenerator.ActiveGraphs.ForEach((g) => print("activegraphs: " + g));

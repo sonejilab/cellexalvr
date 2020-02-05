@@ -54,25 +54,38 @@ namespace CellexalVR.Interaction
 
         private IEnumerator InitCoroutine()
         {
+            string[] results;
+            int longestNameLength = 0;
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             CellexalLog.Log("Started building autocomplete list bk-tree");
             namesOfThings.Clear();
-            SQLiter.SQLite database = referenceManager.database;
-            int longestNameLength = 0;
-            //yield return new WaitForSeconds(2);
-            while (database.QueryRunning)
+            //summertwerk
+            if (referenceManager.cellManager.h5Reader == null)
             {
-                yield return null;
-            }
-            database.QueryGeneNames();
 
-            while (database.QueryRunning)
-            {
-                yield return null;
+
+                
+                SQLiter.SQLite database = referenceManager.database;
+                //yield return new WaitForSeconds(2);
+                while (database.QueryRunning)
+                {
+                    yield return null;
+                }
+                database.QueryGeneNames();
+
+                while (database.QueryRunning)
+                {
+                    yield return null;
+                }
+                //summertwerk
+                results = (string[]) database._result.ToArray(typeof(string));
             }
-            var results = database._result;
-            for (int i = 0; i < results.Count; ++i)
+            else
+            {
+                 results = referenceManager.cellManager.h5Reader.index2genename;
+            }
+            for (int i = 0; i < results.Length; ++i)
             {
                 string name = (string)results[i];
                 if (name.Length > longestNameLength)
