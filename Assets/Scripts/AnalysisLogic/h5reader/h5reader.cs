@@ -21,7 +21,7 @@ public class h5reader
     public string[] index2genename;
     public string[] index2cellname;
     public bool busy;
-    public ArrayList _result;
+    public ArrayList _expressionResult;
     public string[] _coordResult;
     public string[,] _sep_coordResult;
     public string[] _velResult;
@@ -30,12 +30,14 @@ public class h5reader
     public string filePath;
     public Dictionary<string, string> conf;
     public string conditions;
-    public bool sparse;
-    public bool geneXcell;
+
     public List<string> projections;
     public List<string> velocities;
     public List<string> attributes;
-    private bool ascii;
+
+    private bool ascii = false;
+    public bool sparse = false;
+    public bool geneXcell = true;
 
 
     public float LowestExpression { get; private set; }
@@ -335,7 +337,7 @@ public class h5reader
     public IEnumerator colorbygene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod)
     {
         busy = true;
-        _result = new ArrayList();
+        _expressionResult = new ArrayList();
         int geneindex = genename2index[geneName.ToUpper()];
 
 
@@ -398,7 +400,7 @@ public class h5reader
                 }
                 try
                 {
-                    _result.Add(new CellExpressionPair(index2cellname[int.Parse(indices[i])], expr, -1));
+                    _expressionResult.Add(new CellExpressionPair(index2cellname[int.Parse(indices[i])], expr, -1));
 
                 }catch(Exception e)
                 {
@@ -412,7 +414,7 @@ public class h5reader
             }
             float binSize = (HighestExpression - LowestExpression) / CellexalConfig.Config.GraphNumberOfExpressionColors;
 
-            foreach (CellExpressionPair pair in _result)
+            foreach (CellExpressionPair pair in _expressionResult)
             {
                 pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
             }
@@ -448,9 +450,12 @@ public class h5reader
             int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
             for (int j = 0; j < result.Count; ++j)
             {
-                result[j].Color = j / binsize;
-            }
-            _result.AddRange(result);
+                if (binsize > 0)
+                    result[j].Color = j / binsize;
+                else
+                    result[j].Color = j;
+            }   
+            _expressionResult.AddRange(result);
         }
 
         busy = false;
