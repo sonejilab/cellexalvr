@@ -18,6 +18,9 @@ public class h5readerAnnotater : MonoBehaviour
 {
     public RectTransform display;
     public GameObject textBoxPrefab;
+    public GameObject projectionObject3D;
+    public GameObject projectionObject2D;
+    public RectTransform projectionRect;
     Process p;
     StreamReader reader;
     H5ReaderAnnotatorTextBoxScript keys;
@@ -25,7 +28,6 @@ public class h5readerAnnotater : MonoBehaviour
 
     void Start()
     {
-        print("TETS");
         p = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.UseShellExecute = false;
@@ -51,7 +53,6 @@ public class h5readerAnnotater : MonoBehaviour
         string standard_output;
         while ((standard_output = reader.ReadLine()) != null)
         {
-            print(standard_output);
             if (standard_output.Contains("xx"))
                 break;
             if (!standard_output.Contains("("))
@@ -68,6 +69,44 @@ public class h5readerAnnotater : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
             keys.updatePosition(10f);
+        }
+    }
+
+    public void createConfigFile()
+    {
+        string docPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "Data";
+
+        ArrayList list = keys.getTypeInChildren("3D");
+
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "test.conf")))
+        {
+            foreach(H5ReaderAnnotatorTextBoxScript k in list)
+            {
+                string path = k.getPath();
+                string name = k.name.Substring(0, k.name.LastIndexOf(":"));
+                if(name.Substring(0, 2) != "X_")
+                    name = "X_" + name;
+                outputFile.WriteLine(name + " " + path);
+            }
+        }
+    }
+
+    public void addProjectionObject(int type)
+    {
+        GameObject go;
+        ProjectionObjectScript projection;
+        switch (type)
+        {
+            case 0:
+                print("pressed");
+                go = Instantiate(projectionObject3D, projectionRect);
+                projection = go.GetComponent<ProjectionObjectScript>();
+                break;
+            case 1:
+                print("pressed");
+                go = Instantiate(projectionObject2D, projectionRect);
+                projection = go.GetComponent<ProjectionObjectScript>();
+                break;
         }
     }
 }

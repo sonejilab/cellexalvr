@@ -10,7 +10,7 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
     void Start()
     {
         GameObject go = Instantiate(annotatorPrefab, transform);
-        go.transform.localPosition = new Vector3(0.8f, 1.0f, -1.27f);
+        go.transform.localPosition = new Vector3(1.4f, 1.3f, 1.4f);
         go.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 

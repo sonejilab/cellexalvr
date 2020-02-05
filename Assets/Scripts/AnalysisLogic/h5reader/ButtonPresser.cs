@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.General;
+using System.IO;
 
 public class ButtonPresser : MonoBehaviour
 {
     // Start is called before the first frame update
     public BoxCollider collider;
     public ReferenceManager referenceManager;
+    public h5readerAnnotater h5ReaderAnnotater;
+    [SerializeField] private GameObject note;
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private bool controllerInside;
     [SerializeField]private Color color;
+    public string type;
+    public int buttonType;
+    public GameObject projectionObject;
 
     void Start()
     {
@@ -45,25 +51,15 @@ public class ButtonPresser : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            Transform sphere = rightController.transform.Find("h5sphere");
-            h5sphereScript script; 
-            if (!sphere)
+            switch (buttonType)
             {
-                sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
-                script = sphere.gameObject.AddComponent<h5sphereScript>();
-                sphere.parent = rightController.transform;
-                sphere.localPosition = new Vector3(0, 0, 0.12f);
-                sphere.localScale = Vector3.one * 0.03f;
-                sphere.name = "h5sphere";
+                case 1:
+                    h5ReaderAnnotater.addProjectionObject(0);
+                    break;
+                case 2:
+                    h5ReaderAnnotater.createConfigFile();
+                    break;
             }
-            else
-            {
-                script = sphere.gameObject.GetComponent<h5sphereScript>();
-            }
-            sphere.GetComponent<Renderer>().material.color = color;
-            script.color = color;
-            SphereCollider collider = sphere.GetComponent<SphereCollider>();
-            collider.isTrigger = true;
         }
     }
 }

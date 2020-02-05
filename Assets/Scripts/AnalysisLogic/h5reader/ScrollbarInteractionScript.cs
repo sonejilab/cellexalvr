@@ -47,7 +47,7 @@ namespace CellexalVR.Interaction
             {
                 float y = transform.InverseTransformPoint(device.transform.pos).y;
                 float height = rect.rect.height;
-                float temp = Mathf.Clamp01( y / height +0.5f);
+                float temp = Mathf.Clamp01(y / height + 0.5f);
                 scrollbar.value = temp;
             }
         }

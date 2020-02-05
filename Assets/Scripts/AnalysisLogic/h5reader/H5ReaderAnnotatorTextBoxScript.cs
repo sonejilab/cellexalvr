@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using CellexalVR.General;
+using UnityEngine.UI;
+using System.IO;
 
 public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
 {
@@ -11,15 +13,28 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
     private SteamVR_Controller.Device device;
     private bool controllerInside;
     public Dictionary<string, H5ReaderAnnotatorTextBoxScript> subkeys = new Dictionary<string, H5ReaderAnnotatorTextBoxScript>();
+    public H5ReaderAnnotatorTextBoxScript parentScript;
+    public H5ReaderAnnotatorTextBoxScript partnerScript;
     public GameObject textBoxPrefab;
     public RectTransform rect;
     public TextMeshProUGUI tmp;
     public BoxCollider boxCollider;
+
+    public RectTransform expandButtonRect;
+    public BoxCollider expandButtonBoxCollider;
+    public GameObject KeyObject;
+
+
+
     public string name;
     public bool isTop;
-    private Color hoverColor = Color.red;
-    private Color color = Color.white;
-    private string type = "none";
+    private Color hoverColor = Color.white;
+    public Color color = Color.black;
+    private Color highlightColor = Color.yellow;
+    private bool highLightOn = false;
+    public string type = "none";
+    public bool isSelected = false;
+    private float timer = 0f;
 
     private void Start()
     {
@@ -43,6 +58,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
                 script.isTop = false;
                 script.name = parentKey;
                 subkeys.Add(parentKey, script);
+                script.parentScript = this;
             }
             subkeys[parentKey].insert(newName);
         }
@@ -53,8 +69,34 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
             script.name = name;
             subkeys.Add(name, script);
             script.isTop = false;
+            script.parentScript = this;
         }
+    }
 
+    public string getPath()
+    {
+        string path = name.Substring(0, name.LastIndexOf(":"));
+        H5ReaderAnnotatorTextBoxScript p = parentScript;
+        while(p.isTop == false)
+        {
+            path = p.name + Path.DirectorySeparatorChar + path;
+            p = p.parentScript;
+        }
+        return path;
+    }
+
+    public ArrayList getTypeInChildren(string type)
+    {
+        ArrayList list = new ArrayList();
+        foreach (H5ReaderAnnotatorTextBoxScript k in subkeys.Values)
+        {
+            list.AddRange(k.getTypeInChildren(type));
+            if (k.type == type)
+            {
+                list.Add(k);
+            }
+        }
+        return list;
     }
 
     public void fillContent(RectTransform content, int depth = 0)
@@ -66,9 +108,9 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         rect.localEulerAngles = Vector3.zero;
         rect.localScale = new Vector3(1, 1, 1);
         
-        rect.anchorMin = new Vector2(0, 1);
-        rect.anchorMax = new Vector2(1, 1);
-        rect.pivot = new Vector2(0.5f, 1);
+        rect.anchorMin = new Vector2(0, 0);
+        rect.anchorMax = new Vector2(0, 1);
+        rect.pivot = new Vector2(0, 1);
 
         tmp.fontSize = 8;
         tmp.alignment = TextAlignmentOptions.MidlineLeft;
@@ -88,10 +130,16 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
 
     public float updatePosition(float offset = 0f)
     {
-        rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, offset, 10f);
-        rect.sizeDelta = new Vector2(0, rect.sizeDelta.y);
-        boxCollider.center = new Vector3(0, -5, 0);
-        boxCollider.size = new Vector3(160, 10, 1);
+        rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, offset, 0);
+        rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 5f, 0);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        boxCollider.center = new Vector3(rect.rect.width/2, -rect.rect.height/2, 0);
+        boxCollider.size = new Vector3(rect.rect.width, rect.rect.height, 1);
+
+        expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, 10f);
+        expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, -10, 10f);
+        expandButtonBoxCollider.size = expandButtonRect.rect.size;
+
         float temp = 0f;
         foreach (H5ReaderAnnotatorTextBoxScript k in subkeys.Values)
         {
@@ -127,25 +175,38 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            foreach (H5ReaderAnnotatorTextBoxScript key in subkeys.Values)
+            AnchorScript anchor = rightController.GetComponentInChildren<AnchorScript>();
+            if (anchor)
             {
-                key.gameObject.SetActive(!key.gameObject.activeSelf);
-            }
-            H5ReaderAnnotatorTextBoxScript parent = this;
-            while (!parent.isTop)
-            {
-                parent = parent.transform.parent.GetComponent<H5ReaderAnnotatorTextBoxScript>();
-            }
-            parent.updatePosition(10f);
+                anchor.transform.parent = this.transform;
+                LineScript line = anchor.line;
+                if(line.type == "coords")
+                {
+                    line.projectionObjectScript.coordsPath = getPath();
+                }else if(line.type == "velocity")
+                {
+                    line.projectionObjectScript.velocityPath = getPath();
+                }
 
+            }
         }
-        if (controllerInside && rightController.transform.Find("h5sphere"))
+        if (isSelected)
         {
-            color = rightController.transform.Find("h5sphere").GetComponent<h5sphereScript>().color;
-            color.a = 1.0f;
-            print(color);
-            tmp.color = color;
+            timer += UnityEngine.Time.deltaTime;
+            if (timer > 0.5f)
+            {
+                timer = 0f;
+                if (highLightOn)
+                {
+                    tmp.color = color;
+                    highLightOn = false;
+                }else{
+                    tmp.color = highlightColor;
+                    highLightOn = true;
+                }
+            }
         }
+
     }
 }
 
