@@ -266,15 +266,27 @@ namespace CellexalVR.AnalysisLogic
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
             int itemsThisFrame = 0;
             int totalNbrOfCells = 0;
-            
             foreach (string proj in cellManager.h5Reader.projections)
             {
                 print(proj);
+
+
+
                 while (graphGenerator.isCreating)
                 {
                     yield return null;
                 }
                 Graph combGraph = graphGenerator.CreateGraph(type);
+
+
+
+                if (cellManager.h5Reader.velocities.Contains(proj))
+                {
+                    graphManager.velocityFiles.Add(proj);
+                    combGraph.hasVelocityInfo = true;
+                }
+                    
+                
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
                 // good programming habits have left us with a nice mix of forward and backward slashes
@@ -327,7 +339,8 @@ namespace CellexalVR.AnalysisLogic
                         
                         x = float.Parse(coords[j]);
                         y = float.Parse(coords[j + cellnames.Length]);
-                        z = j*0.001f; //summertwerk, should skala after maxcord
+                        z = j * 0.00001f; //summertwerk, should scale after maxcoord
+                        
 
                     }
                     else
@@ -373,6 +386,12 @@ namespace CellexalVR.AnalysisLogic
                 }
                 //combinedGraphGenerator.isCreating = false;
             }
+
+            if (cellManager.h5Reader.attributes.Count > 0)
+            {
+                StartCoroutine(H5_ReadAttributeFilesCoroutine());
+            }
+
             /*
             if (type.Equals(GraphGenerator.GraphType.MDS))
             {
@@ -627,6 +646,71 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+
+        //summertwerk
+        /// <summary>
+        /// Reads all attributes from current h5 file
+        /// </summary>
+        public IEnumerator H5_ReadAttributeFilesCoroutine()
+        {
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            List<string> available_attributes = new List<string>();
+
+            foreach (string attr in cellManager.h5Reader.attributes)
+            {
+
+                print("reading attribute " + attr);
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+                StartCoroutine(cellManager.h5Reader.GetAttributes(attr));
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+
+                string[] attrs = cellManager.h5Reader._attrResult;
+                string[] cellnames = cellManager.h5Reader.index2cellname;
+
+                for (int j = 0; j < cellnames.Length; j++)
+                {
+                    string cellname = cellnames[j];
+                    string attribute_name = attr + "@" + attrs[j];
+                    int index_of_attribute;
+                    if (!available_attributes.Contains(attribute_name))
+                    {
+                        available_attributes.Add(attribute_name);
+                        index_of_attribute = available_attributes.Count - 1;
+                    }
+                    else
+                    {
+                        index_of_attribute = available_attributes.IndexOf(attribute_name);
+                    }
+
+                    cellManager.AddAttribute(cellname, attribute_name, index_of_attribute % CellexalConfig.Config.SelectionToolColors.Length);
+                    if (j % 500 == 0)
+                    {
+                        yield return null;
+                    }
+                }
+               
+            }
+            attributeSubMenu.CreateButtons(available_attributes.ToArray());
+
+            cellManager.Attributes = available_attributes.ToArray();
+            if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
+            {
+                CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
+                    " Consider adding more colours in the settings menu (under Selection Colours)");
+            }
+            stopwatch.Stop();
+            attributeFileRead = true;
+            CellexalLog.Log("h5 read attributes in " + stopwatch.Elapsed.ToString());
+        }
+
         /// <summary>
         /// Reads an attribute file.
         /// </summary>
@@ -663,8 +747,6 @@ namespace CellexalVR.AnalysisLogic
                 int yieldCount = 0;
                 while (!metacellStreamReader.EndOfStream)
                 {
-
-
                     string line = metacellStreamReader.ReadLine();
                     if (line == "")
                         continue;

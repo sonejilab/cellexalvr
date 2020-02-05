@@ -59,7 +59,12 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
-            StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
+            //summertwerk
+            if(referenceManager.cellManager.h5Reader == null)
+                StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
+            else
+                StartCoroutine(ReadVelocityParticleSystemFromHDF5(path, subGraphName));
+
         }
 
         private IEnumerator ReadVelocityParticleSystem(string path, string subGraphName = "")
@@ -193,7 +198,7 @@ namespace CellexalVR.AnalysisLogic
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
             //string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
-            string graphName = "PHATE";
+            string graphName = path.ToUpper();
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
 
             if (subGraphName != string.Empty)
@@ -212,7 +217,7 @@ namespace CellexalVR.AnalysisLogic
             while (referenceManager.cellManager.h5Reader.busy)
                 yield return null;
 
-            StartCoroutine(referenceManager.cellManager.h5Reader.GetVelocites());
+            StartCoroutine(referenceManager.cellManager.h5Reader.GetVelocites(path));
 
             while (referenceManager.cellManager.h5Reader.busy)
                 yield return null;
@@ -224,13 +229,13 @@ namespace CellexalVR.AnalysisLogic
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
                 Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
-
+                diff = originalGraph.ScaleCoordinates(diff, true);
                 if (i<1)
                 {
-                    UnityEngine.Debug.Log(diff*1000);
+                    UnityEngine.Debug.Log(diff);
                 }
                 if (point != null)
-                    velocities[point] = diff;
+                    velocities[point] = diff/150f;
                 else
                     print(cellnames[i] + " does not exist");
             }

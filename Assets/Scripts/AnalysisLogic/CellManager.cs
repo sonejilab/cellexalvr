@@ -74,8 +74,8 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
 
+        //summertwerk
         public h5reader h5Reader;
-
 
         private void OnValidate()
         {
@@ -194,13 +194,11 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
         public void ColorGraphsByGene(string geneName)
         {
-            ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
-        }
-
-        [ConsoleCommand("cellManager", aliases: new string[] { "colorbygeneh", "cbgh" })]
-        public void ColorGraphsByGeneHDF5(string geneName)
-        {
-            ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
+            //summertwerk gone to work
+            if(h5Reader == null)
+                ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            else
+                ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
         }
 
         /// <summary>
