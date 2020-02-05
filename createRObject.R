@@ -3,7 +3,6 @@
 library(Seurat)
 library(loomR)
 library(cellexalvrR)
-library(rgl)
 
 args = commandArgs(TRUE)
 
@@ -86,7 +85,7 @@ if(endsWith(datafile, ".h5ad")){
 
 }else{
 
-	f <- connect(paste(path, datafile, sep="\\"), mode = 'r') 
+	f <- connect(paste(path, datafile, sep="\\"), mode = 'r', skip.validate = TRUE) 
 	dims = f[[conf$cellexpr]]$dims
 	n = dims[1]
 	m = dims[2]
