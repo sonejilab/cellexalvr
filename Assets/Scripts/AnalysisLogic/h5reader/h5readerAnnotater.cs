@@ -26,8 +26,11 @@ public class h5readerAnnotater : MonoBehaviour
     H5ReaderAnnotatorTextBoxScript keys;
     Dictionary<string, string> config;
 
+    private ArrayList projectionObjectScripts;
+
     void Start()
     {
+        projectionObjectScripts = new ArrayList();
         p = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.UseShellExecute = false;
@@ -101,6 +104,7 @@ public class h5readerAnnotater : MonoBehaviour
                 print("pressed");
                 go = Instantiate(projectionObject3D, projectionRect);
                 projection = go.GetComponent<ProjectionObjectScript>();
+                projectionObjectScripts.Add(projection);
                 break;
             case 1:
                 print("pressed");

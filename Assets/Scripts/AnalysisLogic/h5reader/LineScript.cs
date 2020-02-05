@@ -19,7 +19,6 @@ public class LineScript : MonoBehaviour
     void Update()
     {
         line.SetPosition(0, AnchorA.position);
-        
         line.SetPosition(1, AnchorB.position);
     }
 }

@@ -370,7 +370,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2257501055780044243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 374a7ce7b5b06c143b667a44005521c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bfa92db7615c634885e79e4fb698bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   display: {fileID: 1286342121178022487}
@@ -1294,6 +1294,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 593519381794026668, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: gene_names
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
 --- !u!1001 &267648413380394768
@@ -1685,6 +1690,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 593519381794026668, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: gene_expressions
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
@@ -3430,6 +3440,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 593519381794026668, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: cell_names
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
