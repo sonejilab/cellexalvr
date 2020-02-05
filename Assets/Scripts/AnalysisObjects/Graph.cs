@@ -342,10 +342,8 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="diffed">Did the summertwerker already diff this?</param>
         /// <returns>A scaled <see cref="Vector3"/>.</returns>
         /// Summertweriking 
-        public Vector3 ScaleCoordinates(Vector3 coords, bool diffed = false)
+        public Vector3 ScaleCoordinates(Vector3 coords)
         {
-            if (diffed)
-                return coords /= longestAxis;
             // move one of the graph's corners to origo
             coords -= minCoordValues;
 
