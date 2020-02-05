@@ -25,12 +25,17 @@ public class h5reader
     public string[] _coordResult;
     public string[,] _sep_coordResult;
     public string[] _velResult;
+    public string[] _attrResult;
+
     public string filePath;
     public Dictionary<string, string> conf;
     public string conditions;
     public bool sparse;
     public bool geneXcell;
     public List<string> projections;
+    public List<string> velocities;
+    public List<string> attributes;
+    private bool ascii;
 
 
     public float LowestExpression { get; private set; }
@@ -43,7 +48,6 @@ public class h5reader
     }
 
     private FileTypes fileType;
-    // Start is called before the first frame update
     /// <summary>
     /// H5reader
     /// </summary>
@@ -71,6 +75,9 @@ public class h5reader
         else
         {
             projections = new List<string>();
+            velocities = new List<string>();
+            attributes = new List<string>();
+
             string[] lines = File.ReadAllLines(configFile);
             foreach (string l in lines)
             {
@@ -82,13 +89,31 @@ public class h5reader
                     sparse = bool.Parse(kvp[1]);
                 else if (kvp[0] == "gene_x_cell")
                     geneXcell = bool.Parse(kvp[1]);
+                else if(kvp[0] == "ascii")
+                    ascii = bool.Parse(kvp[1]);
                 else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y")) {
                     string proj = kvp[0].Split('_')[1];
                     if (!projections.Contains(proj))
                         projections.Add(proj);
 
                     conf.Add(kvp[0], "f['" + kvp[1] + "']");
-                }   
+                }
+                else if (kvp[0].StartsWith("vel_"))
+                {
+                    string vel = kvp[0].Split('_')[1];
+                    if (!velocities.Contains(vel))
+                        velocities.Add(vel);
+
+                    conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                }
+                else if (kvp[0].StartsWith("attr_"))
+                {
+                    string attr = kvp[0].Split('_')[1];
+                    if (!attributes.Contains(attr))
+                        attributes.Add(attr);
+
+                    conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                }
                 else if (kvp[0].StartsWith("custom"))
                     conf.Add(kvp[0], kvp[1]);
                 else
@@ -134,9 +159,18 @@ public class h5reader
 
         var watch = Stopwatch.StartNew();
         if (conf.ContainsKey("custom_cellnames"))
+        {
             writer.WriteLine(conf["custom_cellnames"]);
+        }
         else
-            writer.WriteLine(conf["cellnames"] + "[:].tolist()");
+        {
+            if (ascii)
+                writer.WriteLine("[s.decode('UTF-8') for s in " + conf["cellnames"] + "[:].tolist()]");
+            else
+                writer.WriteLine(conf["cellnames"] + "[:].tolist()");
+
+        }
+
 
         while (reader.Peek() == 0)
             yield return null;
@@ -159,9 +193,17 @@ public class h5reader
                 yield return null;
         }
         if (conf.ContainsKey("custom_genenames"))
+        {
             writer.WriteLine(conf["custom_genenames"]);
+        }
         else
-            writer.WriteLine(conf["genenames"] + "[:].tolist()");
+        {
+            if (ascii)
+                writer.WriteLine("[s.decode('UTF-8') for s in " + conf["genenames"] + "[:].tolist()]");
+            else
+                writer.WriteLine(conf["genenames"] + "[:].tolist()");
+        }
+
 
         
         while (reader.Peek() == 0)
@@ -188,22 +230,25 @@ public class h5reader
         UnityEngine.Debug.Log("H5reader booted and read all names in " + watch.ElapsedMilliseconds + " ms");
         busy = false;
 
+
+        UnityEngine.Debug.Log("nbr of cells: " + index2cellname.Length + " with distinct names: " + index2cellname.Distinct().Count());
+
     }
 
     /// <summary>
     /// Get 3D coordinates from file
     /// </summary>
-    /// <param name="boi">The graph type, (umap or phate)</param>
+    /// <param name="projection">The graph type, (umap or phate)</param>
     /// <returns>Coroutine, use _coordResult</returns>
-    public IEnumerator GetCoords(string boi)
+    public IEnumerator GetCoords(string projection)
     {
         busy = true;
         var watch = Stopwatch.StartNew();
         string output;
-        if (boi == "sep") {
-            UnityEngine.Debug.Log("We got it");
+
+        if (conf.ContainsKey("Y_" + projection)) {
             conditions = "2D_sep";
-            writer.WriteLine(conf["X_sep"] + "[:].tolist()");
+            writer.WriteLine(conf["X_" + projection] + "[:].tolist()");
             while (reader.Peek() == 0)
                 yield return null;
 
@@ -211,7 +256,7 @@ public class h5reader
             output = reader.ReadLine().Replace("[", "").Replace("]", "");
             string[] Xcoords = output.Split(',');
 
-            writer.WriteLine(conf["Y_sep"] + "[:].tolist()");
+            writer.WriteLine(conf["Y_" + projection] + "[:].tolist()");
             while (reader.Peek() == 0)
                 yield return null;
 
@@ -224,7 +269,7 @@ public class h5reader
         }
         else
         {
-            writer.WriteLine(conf["X_" + boi] + "[:,:].tolist()");
+            writer.WriteLine(conf["X_" + projection] + "[:,:].tolist()");
 
             while (reader.Peek() == 0)
                 yield return null;
@@ -240,7 +285,24 @@ public class h5reader
         UnityEngine.Debug.Log("Reading all coords: " + watch.ElapsedMilliseconds);
         busy = false;
     }
-
+    /// <summary>
+    /// Get the cellattributes from the file
+    /// </summary>
+    /// <returns>_attrResult</returns>
+    public IEnumerator GetAttributes(string attribute)
+    {
+        busy = true;
+        if (ascii)
+            writer.WriteLine("[s.decode('UTF-8') for s in " + conf["attr_" + attribute] + "[:].tolist()]");
+        else
+            writer.WriteLine(conf["attr_" + attribute] + " [:].tolist()");
+        while (reader.Peek() == 0)
+            yield return null;
+        string output = reader.ReadLine().Replace("[", "").Replace("]", "").Replace("'", "").Replace(" ", "");
+        _attrResult = output.Split(',');
+        busy = false;
+    }
+        
     /// <summary>
     /// Get the phate velocities from the file
     /// </summary>
@@ -251,7 +313,7 @@ public class h5reader
         var watch = Stopwatch.StartNew();
 
 
-        writer.WriteLine(conf["vel" + graph] + " [:,:].tolist()");
+        writer.WriteLine(conf["vel_" + graph] + " [:,:].tolist()");
         while (reader.Peek() == 0)
             yield return null;
 
