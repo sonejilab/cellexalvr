@@ -195,7 +195,7 @@ namespace CellexalVR.AnalysisLogic
         public void ColorGraphsByGene(string geneName)
         {
             //summertwerk gone to work
-            if(h5Reader == null)
+            if (h5Reader == null)
                 ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
             else
                 ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
@@ -368,7 +368,7 @@ namespace CellexalVR.AnalysisLogic
 
             GetComponent<AudioSource>().Play();
             SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            ArrayList expressions = h5Reader._result;
+            ArrayList expressions = h5Reader._expressionResult;
 
 
             // stop the coroutine if the gene was not in the database
@@ -574,6 +574,7 @@ namespace CellexalVR.AnalysisLogic
 
             foreach (Cell cell in cells.Values)
             {
+
                 cell.ColorByAttribute(attributeType, color);
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))

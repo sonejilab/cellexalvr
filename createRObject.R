@@ -22,8 +22,6 @@ for(c in configFile){
 	cc = regmatches(c, regexpr(" ", c), invert = TRUE)
 	conf[[cc[[1]][1]]] <- cc[[1]][2]
 }
-print(as.logical(conf$gene_x_cell))
-print(conf)
 
 
 #For h5ad files
@@ -90,7 +88,7 @@ if(endsWith(datafile, ".h5ad")){
 	n = dims[1]
 	m = dims[2]
 
-	if(as.logical(conf$gene_x_cell)){
+	if(is.null(conf[["gene_x_cell"]]) || as.logical(conf$gene_x_cell)){
 		exdata = t(f[[conf$cellexpr]][1:n,1:m])
 	}else{
 		exdata = f[[conf$cellexpr]][1:n,1:m]
@@ -104,16 +102,19 @@ if(endsWith(datafile, ".h5ad")){
 
 	proj.list = list()
 	 	
-	if(is.null(conf[["2D_sep"]]) || !as.logical(conf[["2D_sep"]])){
-		for(x in names(conf)){
-			if(startsWith(x, 'X')){
-				name = strsplit(x, '_')[[1]][2]
+	for(x in names(conf)){
+		if(startsWith(x, 'X')){
+			name = strsplit(x, '_')[[1]][2]
+			y = paste("Y_", name, sep='')
+			if(is.null(conf[[y]])){
 				proj.list[[name]] = t(f[[conf[[x]]]][1:3,1:n])
+			}else{
+				proj.list[[name]] = cbind(f[[conf[[x]]]][1:n], f[[conf[[y]]]][1:n], 0)
 			}
+			
 		}
-	}else{	
-		proj.list[["sep"]] = cbind(f[[conf$X_sep]][1:n], f[[conf$Y_sep]][1:n], 0)
 	}
+	
 
 	cellexalObj <- MakeCellexaVRObj(Matrix::Matrix(exdata, sparse=T), drc.list=proj.list, specie="mouse")
 	ofile = file.path( path, "cellexalObj.RData")
