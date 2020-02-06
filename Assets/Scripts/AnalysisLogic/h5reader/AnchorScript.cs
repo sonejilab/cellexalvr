@@ -67,7 +67,7 @@ public class AnchorScript : MonoBehaviour
                 }
                 else if (type == "gene_expressions")
                 {
-                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("geneexpressions", expandButtonScript.parentScript.getPath());
+                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellexpr", expandButtonScript.parentScript.getPath());
                 }
             }
             else if(isAttachedToHand && !isAnchorA) //Pressing in free space return it

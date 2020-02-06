@@ -16,6 +16,7 @@ using TMPro;
 
 public class h5readerAnnotater : MonoBehaviour
 {
+    public H5ReaderAnnotatorScriptManager manager;
     public RectTransform display;
     public GameObject textBoxPrefab;
     public GameObject projectionObject3D;
@@ -97,7 +98,7 @@ public class h5readerAnnotater : MonoBehaviour
 
     public void createConfigFile()
     {
-
+        print("saving config");
         foreach(ProjectionObjectScript p in projectionObjectScripts)
         {
             print(p.name);
@@ -116,6 +117,7 @@ public class h5readerAnnotater : MonoBehaviour
             
         }
         referenceManager.inputReader.ReadFolder(path);
+        manager.removeAnnotator(path);
     }
 
     public void addProjectionObject(int type)
