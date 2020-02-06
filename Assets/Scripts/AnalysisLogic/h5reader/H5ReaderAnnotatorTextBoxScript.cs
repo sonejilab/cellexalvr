@@ -14,7 +14,6 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
     private bool controllerInside;
     public Dictionary<string, H5ReaderAnnotatorTextBoxScript> subkeys = new Dictionary<string, H5ReaderAnnotatorTextBoxScript>();
     public H5ReaderAnnotatorTextBoxScript parentScript;
-    public H5ReaderAnnotatorTextBoxScript partnerScript;
     public GameObject textBoxPrefab;
     public RectTransform rect;
     public TextMeshProUGUI tmp;
@@ -24,10 +23,12 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
     public BoxCollider expandButtonBoxCollider;
     public GameObject KeyObject;
 
+    public h5readerAnnotater annotater;
 
 
     public string name;
     public bool isTop;
+    public bool isBottom = false;
     private Color hoverColor = Color.white;
     public Color color = Color.black;
     private Color highlightColor = Color.yellow;
@@ -45,8 +46,9 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         rightController = referenceManager.rightController;
     }
 
-    public void insert(string name)
+    public void insert(string name, h5readerAnnotater annotaterScript)
     {
+        annotater = annotaterScript;
         if (name.Contains("/"))
         {
             string parentKey = name.Substring(0, name.IndexOf("/"));
@@ -60,7 +62,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
                 subkeys.Add(parentKey, script);
                 script.parentScript = this;
             }
-            subkeys[parentKey].insert(newName);
+            subkeys[parentKey].insert(newName, annotaterScript);
         }
         else
         {
@@ -69,6 +71,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
             script.name = name;
             subkeys.Add(name, script);
             script.isTop = false;
+            script.isBottom = true;
             script.parentScript = this;
         }
     }
@@ -175,20 +178,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            AnchorScript anchor = rightController.GetComponentInChildren<AnchorScript>();
-            if (anchor)
-            {
-                anchor.transform.parent = this.transform;
-                LineScript line = anchor.line;
-                if(line.type == "coords")
-                {
-                    line.projectionObjectScript.coordsPath = getPath();
-                }else if(line.type == "velocity")
-                {
-                    line.projectionObjectScript.velocityPath = getPath();
-                }
-
-            }
+            
         }
         if (isSelected)
         {

@@ -59,6 +59,9 @@ public class ButtonPresser : MonoBehaviour
                 case 2:
                     h5ReaderAnnotater.createConfigFile();
                     break;
+                case 3:
+                    h5ReaderAnnotater.createConfigFile();
+                    break;
             }
         }
     }

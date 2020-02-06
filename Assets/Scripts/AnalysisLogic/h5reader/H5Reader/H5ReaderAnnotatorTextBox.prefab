@@ -280,6 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  parentScript: {fileID: 0}
   textBoxPrefab: {fileID: 814356725583539088}
   rect: {fileID: 329359339518967853}
   tmp: {fileID: 4768764527116960417}
@@ -288,9 +289,13 @@ MonoBehaviour:
   expandButtonBoxCollider: {fileID: 2807087360894076244}
   KeyObject: {fileID: 5157775088659959204, guid: 150fab86dd539de4a8971f960d727573,
     type: 3}
+  annotater: {fileID: 0}
   name: 
   isTop: 0
+  isBottom: 0
   color: {r: 0, g: 0, b: 0, a: 1}
+  type: none
+  isSelected: 0
 --- !u!1 &7763562334228667164
 GameObject:
   m_ObjectHideFlags: 0
