@@ -24,7 +24,7 @@ public class h5readerAnnotater : MonoBehaviour
     Process p;
     StreamReader reader;
     H5ReaderAnnotatorTextBoxScript keys;
-    Dictionary<string, string> config;
+    public Dictionary<string, string> config;
 
     private ArrayList projectionObjectScripts;
 
@@ -53,6 +53,7 @@ public class h5readerAnnotater : MonoBehaviour
         go.name = file_name;
         keys.name = file_name;
         keys.isTop = true;
+        keys.annotater = this;
         string standard_output;
         while ((standard_output = reader.ReadLine()) != null)
         {
@@ -60,7 +61,7 @@ public class h5readerAnnotater : MonoBehaviour
                 break;
             if (!standard_output.Contains("("))
                 continue;
-            keys.insert(standard_output);
+            keys.insert(standard_output,this);
         }
         keys.fillContent(display);
         float contentSize = keys.updatePosition(10f);
@@ -103,6 +104,8 @@ public class h5readerAnnotater : MonoBehaviour
             case 0:
                 print("pressed");
                 go = Instantiate(projectionObject3D, projectionRect);
+                RectTransform rect = go.GetComponent<RectTransform>();
+                rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width*(1.1f) * projectionObjectScripts.Count, rect.rect.width);
                 projection = go.GetComponent<ProjectionObjectScript>();
                 projectionObjectScripts.Add(projection);
                 break;
