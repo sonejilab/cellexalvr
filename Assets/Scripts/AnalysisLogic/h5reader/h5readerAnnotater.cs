@@ -21,21 +21,32 @@ public class h5readerAnnotater : MonoBehaviour
     public GameObject projectionObject3D;
     public GameObject projectionObject2D;
     public RectTransform projectionRect;
+    public ReferenceManager referenceManager;
+
     Process p;
     StreamReader reader;
     H5ReaderAnnotatorTextBoxScript keys;
     public Dictionary<string, string> config;
     private ArrayList projectionObjectScripts;
-    private string path = "Data/LCA_142K_umap_phate_loom";
+    private string path = "LCA_142K_umap_phate_loom";
 
     void Start()
     {
+        if (!referenceManager)
+        {
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        }
+    }
+
+    public void init(string path)
+    {
+        this.path = path;
         config = new Dictionary<string, string>();
-        string[] files = Directory.GetFiles(path);
-        string filePath = ""; 
+        string[] files = Directory.GetFiles("Data\\" + path);
+        string filePath = "";
         foreach (string s in files)
         {
-             if (s.EndsWith(".loom") || s.EndsWith(".h5ad"))
+            if (s.EndsWith(".loom") || s.EndsWith(".h5ad"))
                 filePath = s;
         }
 
@@ -50,7 +61,7 @@ public class h5readerAnnotater : MonoBehaviour
 
         startInfo.FileName = "py.exe";
 
-        startInfo.Arguments = "crawl.py " +  filePath;
+        startInfo.Arguments = "crawl.py " + filePath;
         p.StartInfo = startInfo;
         p.Start();
         reader = p.StandardOutput;
@@ -69,7 +80,7 @@ public class h5readerAnnotater : MonoBehaviour
                 break;
             if (!standard_output.Contains("("))
                 continue;
-            keys.insert(standard_output,this);
+            keys.insert(standard_output, this);
         }
         keys.fillContent(display);
         float contentSize = keys.updatePosition(10f);
@@ -96,13 +107,15 @@ public class h5readerAnnotater : MonoBehaviour
             config.Add("vel_" + p.name, p.velocityPath);
         }
 
-        using (StreamWriter outputFile = new StreamWriter(Path.Combine(path, "config.conf")))
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine("Data\\" + path, "config.conf")))
         {
             foreach(KeyValuePair<string,string> kvp in config)
             {
                 outputFile.WriteLine(kvp.Key + " " + kvp.Value.ToString());
             }
+            
         }
+        referenceManager.inputReader.ReadFolder(path);
     }
 
     public void addProjectionObject(int type)

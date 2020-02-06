@@ -119,6 +119,11 @@ namespace CellexalVR.General
         public FilterManager filterManager;
         public ReportManager reportManager;
         public Floor floor;
+
+        //h5reader annotator
+        public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
+
+
         #endregion
 
         #region Keyboard
@@ -165,6 +170,7 @@ namespace CellexalVR.General
             // sorry about this monstrosity
             Undo.RecordObject(this, "ReferenceManager Auto-populate");
 
+            h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
             rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
             leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
             rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");

@@ -117,6 +117,8 @@ namespace CellexalVR.AnalysisLogic
             ReadFolder(path);
         }
 
+
+
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
@@ -124,6 +126,15 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="path">path to the file</param>
         public void ReadFile_h5(string path)
         {
+
+            bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
+            if (!confExists)
+            {
+                referenceManager.h5ReaderAnnotatorScriptManager.addAnnotator(path);
+                return;
+            }
+
+
             UpdateSelectionToolHandler();
             attributeFileRead = false;
             currentPath = path;
