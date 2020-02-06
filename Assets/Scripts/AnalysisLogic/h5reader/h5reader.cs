@@ -94,7 +94,7 @@ public class h5reader
                 else if(kvp[0] == "ascii")
                     ascii = bool.Parse(kvp[1]);
                 else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y") || kvp[0].StartsWith("Z")) {
-                    string proj = kvp[0].Split('_')[1];
+                    string proj = kvp[0].Split(new[] { '_' }, 2)[1];
                     if (!projections.Contains(proj))
                         projections.Add(proj);
 
@@ -102,7 +102,7 @@ public class h5reader
                 }
                 else if (kvp[0].StartsWith("vel_"))
                 {
-                    string vel = kvp[0].Split('_')[1];
+                    string vel = kvp[0].Split(new[] { '_' }, 2)[1];
                     if (!velocities.Contains(vel))
                         velocities.Add(vel);
 
@@ -110,7 +110,7 @@ public class h5reader
                 }
                 else if (kvp[0].StartsWith("attr_"))
                 {
-                    string attr = kvp[0].Split('_')[1];
+                    string attr = kvp[0].Split(new[] { '_' }, 2)[1];
                     if (!attributes.Contains(attr))
                         attributes.Add(attr);
 

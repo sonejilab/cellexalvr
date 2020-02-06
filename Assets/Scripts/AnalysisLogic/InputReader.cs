@@ -117,14 +117,8 @@ namespace CellexalVR.AnalysisLogic
             ReadFolder(path);
         }
 
-        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolderh", "rfh" })]
-        public void ReadFolderHFConsole(string path)
-        {
-            referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
-            ReadFile_h5(path);
-        }
         /// <summary>
-        /// Reads one file of data and creates the graphs described by the data.
+        /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
         /// 
         /// <param name="path">path to the file</param>
@@ -150,6 +144,17 @@ namespace CellexalVR.AnalysisLogic
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
+
+            //summertwerk
+            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
+            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
+            if (h5 || loom)
+            {
+                ReadFile_h5(path);
+                return;
+            }
+
+
             UpdateSelectionToolHandler();
             if (PhotonNetwork.isMasterClient)
             {
@@ -398,6 +403,8 @@ namespace CellexalVR.AnalysisLogic
             if (cellManager.h5Reader.attributes.Count > 0)
             {
                 StartCoroutine(H5_ReadAttributeFilesCoroutine());
+                while (!attributeFileRead)
+                    yield return null;
             }
 
             /*

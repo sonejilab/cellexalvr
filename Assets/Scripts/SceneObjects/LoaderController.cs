@@ -172,13 +172,7 @@ namespace CellexalVR.SceneObjects
                         graphManager.directories.Add(path);
                         try
                         {
-                            //summertwerk
-                            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
-                            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
-                            if (h5 || loom)
-                                inputReader.ReadFile_h5(path);
-                            else
-                                inputReader.ReadFolder(path);
+                            inputReader.ReadFolder(path);
                         }
                         catch (System.InvalidOperationException e)
                         {
