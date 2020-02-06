@@ -93,7 +93,7 @@ public class h5reader
                     geneXcell = bool.Parse(kvp[1]);
                 else if(kvp[0] == "ascii")
                     ascii = bool.Parse(kvp[1]);
-                else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y")) {
+                else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y") || kvp[0].StartsWith("Z")) {
                     string proj = kvp[0].Split('_')[1];
                     if (!projections.Contains(proj))
                         projections.Add(proj);
@@ -266,7 +266,22 @@ public class h5reader
             string[] Ycoords = output.Split(',');
 
             _coordResult = Xcoords.Concat(Ycoords).ToArray();
-            
+
+            if(conf.ContainsKey("Z_" + projection))
+            {
+
+                conditions = "3D_sep";
+
+                writer.WriteLine(conf["Z_" + projection] + "[:].tolist()");
+                while (reader.Peek() == 0)
+                    yield return null;
+
+                output = reader.ReadLine().Replace("[", "").Replace("]", "");
+
+                _coordResult = _coordResult.Concat(output.Split(',')).ToArray();
+
+            }
+
 
         }
         else

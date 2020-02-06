@@ -72,7 +72,7 @@ namespace CellexalVR.AnalysisLogic
             if (Attributes.ContainsKey(attributeType.ToLower()))
             {
                 foreach (Graph.GraphPoint g in GraphPoints)
-                {
+                {                    
                     if (color)
                     {
                         g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);

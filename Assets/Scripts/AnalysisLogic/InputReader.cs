@@ -343,6 +343,14 @@ namespace CellexalVR.AnalysisLogic
                         
 
                     }
+                    else if (cellManager.h5Reader.conditions == "3D_sep")
+                    {
+
+                        x = float.Parse(coords[j]);
+                        y = float.Parse(coords[j + cellnames.Length]);
+                        z = float.Parse(coords[j + 2*cellnames.Length]);
+
+                    }
                     else
                     {
                         x = float.Parse(coords[j * 3]);
@@ -678,6 +686,7 @@ namespace CellexalVR.AnalysisLogic
                 for (int j = 0; j < cellnames.Length; j++)
                 {
                     string cellname = cellnames[j];
+
                     string attribute_name = attr + "@" + attrs[j];
                     int index_of_attribute;
                     if (!available_attributes.Contains(attribute_name))
@@ -689,7 +698,8 @@ namespace CellexalVR.AnalysisLogic
                     {
                         index_of_attribute = available_attributes.IndexOf(attribute_name);
                     }
-
+                    
+                    
                     cellManager.AddAttribute(cellname, attribute_name, index_of_attribute % CellexalConfig.Config.SelectionToolColors.Length);
                     if (j % 500 == 0)
                     {

@@ -449,6 +449,10 @@ namespace CellexalVR.AnalysisObjects
             private void SetGroup(int group)
             {
                 this.group = group;
+
+                if (node == null)
+                    print("No node for " + Label);
+
                 if (node.Group != group)
                     node.Group = group;
             }
