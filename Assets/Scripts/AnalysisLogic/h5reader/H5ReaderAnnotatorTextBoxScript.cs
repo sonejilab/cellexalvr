@@ -82,7 +82,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         H5ReaderAnnotatorTextBoxScript p = parentScript;
         while(p.isTop == false)
         {
-            path = p.name + Path.DirectorySeparatorChar + path;
+            path = p.name + "/" + path;
             p = p.parentScript;
         }
         return path;

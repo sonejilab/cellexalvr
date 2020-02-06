@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ProjectionObjectScript : MonoBehaviour
 {
-    public string name;
-    public string coordsPath;
-    public string velocityPath;
+    public string name = "X_test";
+    public string coordsPath = "_";
+    public string velocityPath = "_";
     public LineScript coordsLine;
     public LineScript velocityLine;
 

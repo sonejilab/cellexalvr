@@ -55,11 +55,11 @@ public class AnchorScript : MonoBehaviour
                 }
                 else if (type == "velocity")
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().coordsPath = expandButtonScript.parentScript.getPath();
+                    anchorA.GetComponentInParent<ProjectionObjectScript>().velocityPath = expandButtonScript.parentScript.getPath();
                 }
                 else if (type == "cell_names")
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().coordsPath = expandButtonScript.parentScript.getPath();
+                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellnames", expandButtonScript.parentScript.getPath());
                 }
                 else if (type == "gene_names")
                 {

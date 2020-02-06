@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a12e0e642527bec4dab8238ab75c4f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: X_test
   coordsPath: 
   velocityPath: 
   coordsLine: {fileID: 0}
@@ -683,6 +684,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1069225477291029402, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: coords
+      objectReference: {fileID: 0}
+    - target: {fileID: 5612872643470657085, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: coords
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
 --- !u!4 &7218638037342925004 stripped
@@ -757,6 +768,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069225477291029402, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: velocity
+      objectReference: {fileID: 0}
+    - target: {fileID: 5612872643470657085, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: velocity
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}

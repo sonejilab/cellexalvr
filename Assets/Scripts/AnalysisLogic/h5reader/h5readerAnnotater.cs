@@ -30,7 +30,7 @@ public class h5readerAnnotater : MonoBehaviour
 
     void Start()
     {
-
+        config = new Dictionary<string, string>();
         string[] files = Directory.GetFiles(path);
         string filePath = ""; 
         foreach (string s in files)
@@ -50,7 +50,7 @@ public class h5readerAnnotater : MonoBehaviour
 
         startInfo.FileName = "py.exe";
 
-        startInfo.Arguments = "crawl.py " + path + filePath;
+        startInfo.Arguments = "crawl.py " +  filePath;
         p.StartInfo = startInfo;
         p.Start();
         reader = p.StandardOutput;
@@ -89,6 +89,9 @@ public class h5readerAnnotater : MonoBehaviour
 
         foreach(ProjectionObjectScript p in projectionObjectScripts)
         {
+            print(p.name);
+            print(p.coordsPath);
+            print(p.velocityPath);
             config.Add("X_" + p.name, p.coordsPath);
             config.Add("vel_" + p.name, p.velocityPath);
         }

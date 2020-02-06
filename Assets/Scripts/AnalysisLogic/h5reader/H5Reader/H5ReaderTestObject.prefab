@@ -1798,6 +1798,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1069225477291029402, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: gene_names
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
 --- !u!1001 &4683450281898219865
@@ -1866,6 +1871,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069225477291029402, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: cell_names
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
@@ -2763,6 +2773,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069225477291029402, guid: 76affc993ecf0dc4699fb7becf5a3b1a,
+        type: 3}
+      propertyPath: type
+      value: gene_expressions
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76affc993ecf0dc4699fb7becf5a3b1a, type: 3}
