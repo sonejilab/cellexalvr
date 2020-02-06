@@ -25,11 +25,20 @@ public class h5readerAnnotater : MonoBehaviour
     StreamReader reader;
     H5ReaderAnnotatorTextBoxScript keys;
     public Dictionary<string, string> config;
-
     private ArrayList projectionObjectScripts;
+    private string path = "Data/LCA_142K_umap_phate_loom";
 
     void Start()
     {
+
+        string[] files = Directory.GetFiles(path);
+        string filePath = ""; 
+        foreach (string s in files)
+        {
+             if (s.EndsWith(".loom") || s.EndsWith(".h5ad"))
+                filePath = s;
+        }
+
         projectionObjectScripts = new ArrayList();
         p = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -41,8 +50,7 @@ public class h5readerAnnotater : MonoBehaviour
 
         startInfo.FileName = "py.exe";
 
-        string file_name = "LCA_142K_umap_phate.loom";
-        startInfo.Arguments = "crawl.py " + "Data/" + file_name;
+        startInfo.Arguments = "crawl.py " + path + filePath;
         p.StartInfo = startInfo;
         p.Start();
         reader = p.StandardOutput;
@@ -50,8 +58,8 @@ public class h5readerAnnotater : MonoBehaviour
         //Read all keys from the loom file
         GameObject go = Instantiate(textBoxPrefab);
         keys = go.GetComponent<H5ReaderAnnotatorTextBoxScript>();
-        go.name = file_name;
-        keys.name = file_name;
+        go.name = filePath;
+        keys.name = filePath;
         keys.isTop = true;
         keys.annotater = this;
         string standard_output;
@@ -78,19 +86,18 @@ public class h5readerAnnotater : MonoBehaviour
 
     public void createConfigFile()
     {
-        string docPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "Data";
 
-        ArrayList list = keys.getTypeInChildren("3D");
-
-        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "test.conf")))
+        foreach(ProjectionObjectScript p in projectionObjectScripts)
         {
-            foreach(H5ReaderAnnotatorTextBoxScript k in list)
+            config.Add("X_" + p.name, p.coordsPath);
+            config.Add("vel_" + p.name, p.velocityPath);
+        }
+
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(path, "config.conf")))
+        {
+            foreach(KeyValuePair<string,string> kvp in config)
             {
-                string path = k.getPath();
-                string name = k.name.Substring(0, k.name.LastIndexOf(":"));
-                if(name.Substring(0, 2) != "X_")
-                    name = "X_" + name;
-                outputFile.WriteLine(name + " " + path);
+                outputFile.WriteLine(kvp.Key + " " + kvp.Value.ToString());
             }
         }
     }
