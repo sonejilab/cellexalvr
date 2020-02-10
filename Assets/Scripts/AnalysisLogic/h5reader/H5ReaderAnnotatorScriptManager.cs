@@ -25,17 +25,26 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
 
     public void addAnnotator(string path)
     {
-        GameObject go = Instantiate(annotatorPrefab, transform);
-        h5readerAnnotater script = go.GetComponent<h5readerAnnotater>();
-        script.init(path);
-        script.manager = this;
-        annotators.Add(path,script);
-        go.transform.localPosition = new Vector3(0f, 1.5f, 0f);
-        go.transform.localEulerAngles = new Vector3(0, 0, 0);
+        if (annotators.ContainsKey(path))
+        {
+            annotators[path].gameObject.SetActive(true);
+        }
+        else
+        {
+            GameObject go = Instantiate(annotatorPrefab, transform);
+            h5readerAnnotater script = go.GetComponent<h5readerAnnotater>();
+            script.init(path);
+            script.manager = this;
+            annotators.Add(path, script);
+            go.transform.localPosition = new Vector3(0f, 1.5f, 0f);
+            go.transform.localEulerAngles = new Vector3(0, 0, 0);
+        }
+
     }
 
     public void removeAnnotator(string path)
     {
-        annotators.Remove(path);
+
+        annotators[path].gameObject.SetActive(false);
     }
 }

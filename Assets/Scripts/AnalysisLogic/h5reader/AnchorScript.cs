@@ -69,6 +69,10 @@ public class AnchorScript : MonoBehaviour
                 {
                     anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellexpr", expandButtonScript.parentScript.getPath());
                 }
+                else if (type == "cell_expressions")
+                {
+                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("attr_", expandButtonScript.parentScript.getPath());
+                }
             }
             else if(isAttachedToHand && !isAnchorA) //Pressing in free space return it
             {
