@@ -19,8 +19,7 @@ public class h5readerAnnotater : MonoBehaviour
     public H5ReaderAnnotatorScriptManager manager;
     public RectTransform display;
     public GameObject textBoxPrefab;
-    public GameObject projectionObject3D;
-    public GameObject projectionObject2D;
+    public GameObject projectionObject;
     public RectTransform projectionRect;
     public ReferenceManager referenceManager;
 
@@ -101,11 +100,10 @@ public class h5readerAnnotater : MonoBehaviour
         print("saving config");
         foreach(ProjectionObjectScript p in projectionObjectScripts)
         {
-            print(p.name);
-            print(p.coordsPath);
-            print(p.velocityPath);
-            config.Add("X_" + p.name, p.coordsPath);
-            config.Add("vel_" + p.name, p.velocityPath);
+            foreach(KeyValuePair<string, string> kvp in p.paths)
+            {
+                config.Add(kvp.Key + "_" + p.name, kvp.Value);
+            }
         }
 
         using (StreamWriter outputFile = new StreamWriter(Path.Combine("Data\\" + path, "config.conf")))
@@ -124,20 +122,28 @@ public class h5readerAnnotater : MonoBehaviour
     {
         GameObject go;
         ProjectionObjectScript projection;
+        RectTransform rect;
+
         switch (type)
         {
             case 0:
-                print("pressed");
-                go = Instantiate(projectionObject3D, projectionRect);
-                RectTransform rect = go.GetComponent<RectTransform>();
-                rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width*(1.1f) * projectionObjectScripts.Count, rect.rect.width);
+                print("3D");
+                go = Instantiate(projectionObject, projectionRect);
+                rect = go.GetComponent<RectTransform>();
                 projection = go.GetComponent<ProjectionObjectScript>();
+                projection.init(ProjectionObjectScript.projectionType.p2D_sep);
+                rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * projectionObjectScripts.Count, rect.rect.width);
+
                 projectionObjectScripts.Add(projection);
                 break;
             case 1:
-                print("pressed");
-                go = Instantiate(projectionObject2D, projectionRect);
+                print("2D");
+                go = Instantiate(projectionObject, projectionRect);
                 projection = go.GetComponent<ProjectionObjectScript>();
+                projection.init(ProjectionObjectScript.projectionType.p2D_sep);
+                rect = go.GetComponent<RectTransform>();
+                rect.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * projectionObjectScripts.Count, rect.rect.width);
+                projectionObjectScripts.Add(projection);
                 break;
         }
     }

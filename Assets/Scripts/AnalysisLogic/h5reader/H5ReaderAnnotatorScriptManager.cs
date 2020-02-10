@@ -15,6 +15,7 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
         go.transform.localPosition = new Vector3(1.4f, 1.3f, 1.4f);
         go.transform.localEulerAngles = new Vector3(0, 0, 0);
         */
+        addAnnotator("LCA_142K_umap_phate_loom");
     }
 
     // Update is called once per frame
