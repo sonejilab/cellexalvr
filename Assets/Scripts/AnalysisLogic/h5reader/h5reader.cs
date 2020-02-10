@@ -108,6 +108,14 @@ public class h5reader
 
                     conf.Add(kvp[0], "f['" + kvp[1] + "']");
                 }
+                else if (kvp[0].StartsWith("velX_") || kvp[0].StartsWith("velY_") || kvp[0].StartsWith("velZ_"))
+                {
+                    string vel = kvp[0].Split(new[] { '_' }, 2)[1];
+                    if (!velocities.Contains(vel))
+                        velocities.Add(vel);
+
+                    conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                }
                 else if (kvp[0].StartsWith("attr_"))
                 {
                     string attr = kvp[0].Split(new[] { '_' }, 2)[1];
@@ -324,19 +332,42 @@ public class h5reader
     /// Get the phate velocities from the file
     /// </summary>
     /// <returns>_velResult</returns>
-    public IEnumerator GetVelocites(string graph = "_phate")
+    public IEnumerator GetVelocites(string graph = "phate")
     {
         busy = true;
         var watch = Stopwatch.StartNew();
+        string output;
+        if (conf.ContainsKey("velX_" + graph))
+        {
+            conditions = "2D_sep";
+
+            writer.WriteLine(conf["velX_" + graph] + " [:,:].tolist()");
+            while (reader.Peek() == 0)
+                yield return null;
+
+            output = reader.ReadLine().Replace("[", "").Replace("]", "");
+            string[] Xvel = output.Split(',');
+
+            writer.WriteLine(conf["velY_" + graph] + "[:].tolist()");
+            while (reader.Peek() == 0)
+                yield return null;
+
+            output = reader.ReadLine().Replace("[", "").Replace("]", "");
+            string[] Yvel = output.Split(',');
+
+            _velResult = Xvel.Concat(Yvel).ToArray();
+        }
+        else
+        {
+            writer.WriteLine(conf["vel_" + graph] + " [:,:].tolist()");
+            while (reader.Peek() == 0)
+                yield return null;
 
 
-        writer.WriteLine(conf["vel_" + graph] + " [:,:].tolist()");
-        while (reader.Peek() == 0)
-            yield return null;
-
-
-        string output = reader.ReadLine().Replace("[", "").Replace("]", "");
-        _velResult = output.Split(',');
+            output = reader.ReadLine().Replace("[", "").Replace("]", "");
+            _velResult = output.Split(',');
+        }
+            
 
         watch.Stop();
         UnityEngine.Debug.Log("Read all velocities for "+graph+" in " + watch.ElapsedMilliseconds);

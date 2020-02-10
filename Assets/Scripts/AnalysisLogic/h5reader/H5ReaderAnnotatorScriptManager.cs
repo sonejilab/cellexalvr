@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +10,8 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string path = "LCA_142k_umap_phate_loom";
+        string path = "LCA_142k_umap_phate_loom";
+
         GameObject go = Instantiate(annotatorPrefab, transform);
         h5readerAnnotater script = go.GetComponent<h5readerAnnotater>();
         script.init(path);
@@ -57,3 +58,4 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
         annotators[path].gameObject.SetActive(false);
     }
 }
+

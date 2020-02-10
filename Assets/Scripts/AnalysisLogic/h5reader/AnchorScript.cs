@@ -51,30 +51,31 @@ public class AnchorScript : MonoBehaviour
                 print(2);
                 transform.parent = expandButtonScript.transform;
                 isAttachedToHand = false;
-                if (type == "coords")
+                ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
+                if (projectionObjectScript)
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().coordsPath = expandButtonScript.parentScript.getPath();
+                    anchorA.GetComponentInParent<ProjectionObjectScript>().paths.Add(type, expandButtonScript.parentScript.getPath());
                 }
-                else if (type == "velocity")
+                else
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().velocityPath = expandButtonScript.parentScript.getPath();
+                    if (type == "cell_names")
+                    {
+                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellnames", expandButtonScript.parentScript.getPath());
+                    }
+                    else if (type == "gene_names")
+                    {
+                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("genenames", expandButtonScript.parentScript.getPath());
+                    }
+                    else if (type == "gene_expressions")
+                    {
+                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellexpr", expandButtonScript.parentScript.getPath());
+                    }
+                    else if (type == "cell_expressions")
+                    {
+                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("attr_", expandButtonScript.parentScript.getPath());
+                    }
                 }
-                else if (type == "cell_names")
-                {
-                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellnames", expandButtonScript.parentScript.getPath());
-                }
-                else if (type == "gene_names")
-                {
-                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("genenames", expandButtonScript.parentScript.getPath());
-                }
-                else if (type == "gene_expressions")
-                {
-                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellexpr", expandButtonScript.parentScript.getPath());
-                }
-                else if (type == "cell_expressions")
-                {
-                    anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("attr_", expandButtonScript.parentScript.getPath());
-                }
+                
             }
             else if(isAttachedToHand && !isAnchorA) //Pressing in free space return it
             {
