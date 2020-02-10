@@ -12,10 +12,12 @@ public class AnchorScript : MonoBehaviour
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private bool controllerInside;
-    public LineScript line;
-    public GameObject linePrefab;
+
     public bool isAnchorA;
     public AnchorScript anchorA;
+    public AnchorScript anchorB;
+    public LineScript line;
+
     public ExpandButtonScript expandButtonScript;
     public string type;
     [SerializeField]private bool isAttachedToHand = false;
@@ -78,19 +80,15 @@ public class AnchorScript : MonoBehaviour
             {
                 print(3);
                 transform.parent = anchorA.transform.parent;
-                transform.localPosition = Vector3.zero;
+                transform.localPosition = anchorA.transform.localPosition;
                 isAttachedToHand = false;
-            }else if(isAnchorA)
+            }else if(isAnchorA && line.isExpanded())
             {
                 print(4);
-                GameObject go = Instantiate(linePrefab, transform.parent.parent);
-                LineScript newLine = go.GetComponent<LineScript>();
-                newLine.AnchorA = this.transform;
-                newLine.AnchorB.parent = rightController.transform;
-                newLine.AnchorB.position = rightController.transform.position;
-                newLine.AnchorB.parent = rightController.transform;
-                newLine.AnchorB.GetComponent<AnchorScript>().isAttachedToHand = true;
-                newLine.AnchorB.GetComponent<AnchorScript>().anchorA = this;
+                LineScript newLine = line.addLine();
+                newLine.AnchorB.transform.parent = rightController.transform;
+                newLine.AnchorB.transform.position = rightController.transform.position;
+                newLine.AnchorB.isAttachedToHand = true;
             }
         }
     }
