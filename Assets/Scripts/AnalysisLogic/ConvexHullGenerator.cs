@@ -221,6 +221,10 @@ namespace CellexalVR.AnalysisLogic
 
         private float AreaOf(List<Vector2> points)
         {
+            if (points.Count == 0)
+            {
+                return 0f;
+            }
             // loop over triangles and sum areas
             float area = 0f;
             Vector2 a = points[0];
@@ -233,7 +237,7 @@ namespace CellexalVR.AnalysisLogic
             return area;
         }
 
-        private List<Vector2> SortHull(List<Vector2Int> hullInd, List<Vector2> pos)
+        public List<Vector2> SortHull(List<Vector2Int> hullInd, List<Vector2> pos)
         {
             List<Vector2Int> hullIndCopy = new List<Vector2Int>(hullInd);
             int first = hullIndCopy[0].x;
@@ -755,7 +759,39 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        private Mesh CreateHullMesh(List<Vector3Int> hull, List<Vector3> pos)
+        // checks if a point is inside a polygon
+        private bool PointInsidePolygon(Vector2 point, List<Vector2> poly)
+        {
+            Vector2 poly0 = poly[0];
+            Vector2 v2 = point - poly0;
+
+            for (int i = 1; i < poly.Count - 1; ++i)
+            {
+                Vector2 v0 = poly[i] - poly0;
+                Vector2 v1 = poly[i + 1] - poly0;
+
+                // Compute dot products
+                float dot00 = Vector2.Dot(v0, v0);
+                float dot01 = Vector2.Dot(v0, v1);
+                float dot02 = Vector2.Dot(v0, v2);
+                float dot11 = Vector2.Dot(v1, v1);
+                float dot12 = Vector2.Dot(v1, v2);
+
+                // Compute barycentric coordinates
+                float invDenom = 1f / (dot00 * dot11 - dot01 * dot01);
+                float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+                float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+                // Check if point is in triangle
+                if ((u >= -0.00001f) && (v >= -0.00001f) && (u + v <= 1.00001f))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Mesh CreateHullMesh(List<Vector3Int> hull, List<Vector3> pos)
         {
             Mesh mesh = new Mesh();
             Vector3[] verts = new Vector3[hull.Count * 3];
@@ -779,7 +815,7 @@ namespace CellexalVR.AnalysisLogic
             return mesh;
         }
 
-        private Mesh CreateHullMesh(List<Vector2> pos)
+        public Mesh CreateHullMesh(List<Vector2> pos)
         {
             Mesh mesh = new Mesh();
             Vector3[] verts = new Vector3[pos.Count * 3];
@@ -836,7 +872,6 @@ namespace CellexalVR.AnalysisLogic
             hullGameObject.transform.localRotation = Quaternion.identity;
             //Destroy(hullDebugGO.GetComponent<SphereCollider>());
             //CreateDebugHull(hull, pos, hullGameObject);
-
             List<Vector3Int> hull = QuickHull(pos);
 
             stopwatch.Stop();
@@ -1188,24 +1223,62 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("convexHullGenerator", aliases: new string[] { "coa" })]
         public void CalculateOverlapAll()
         {
+            // GASTRULATION
+            //Directory.CreateDirectory("2d_gas_tsne_unfiltered");
+            //CalculateOverlap2D("2d_tsne", false, "2d_gas_tsne_unfiltered");
+            //Directory.CreateDirectory("2d_gas_umap_unfiltered");
+            //CalculateOverlap2D("2d_umap", false, "2d_gas_umap_unfiltered");
+            //Directory.CreateDirectory("3d_gas_tsne_unfiltered");
+            //CalculateOverlap3D("3d_tsne", false, "3d_gas_tsne_unfiltered");
+            //Directory.CreateDirectory("3d_gas_umap_unfiltered");
+            //CalculateOverlap3D("3d_umap", false, "3d_gas_umap_unfiltered");
 
-            Directory.CreateDirectory("2d_mca_tsne_unfiltered");
-            CalculateOverlap2D("TSNE2d", false, "2d_mca_tsne_unfiltered");
-            Directory.CreateDirectory("2d_mca_umap_unfiltered");
-            CalculateOverlap2D("UMAP2d", false, "2d_mca_umap_unfiltered");
-            Directory.CreateDirectory("3d_mca_tsne_unfiltered");
-            CalculateOverlap3D("TSNE3d", false, "3d_mca_tsne_unfiltered");
-            Directory.CreateDirectory("3d_mca_umap_unfiltered");
-            CalculateOverlap3D("UMAP3d", false, "3d_mca_umap_unfiltered");
+            //Directory.CreateDirectory("2d_gas_tsne_filtered");
+            //CalculateOverlap2D("2d_tsne", true, "2d_gas_tsne_filtered");
+            //Directory.CreateDirectory("2d_gas_umap_filtered");
+            //CalculateOverlap2D("2d_umap", true, "2d_gas_umap_filtered");
+            //Directory.CreateDirectory("3d_gas_tsne_filtered");
+            //CalculateOverlap3D("3d_tsne", true, "3d_gas_tsne_filtered");
+            //Directory.CreateDirectory("3d_gas_umap_filtered");
+            //CalculateOverlap3D("3d_umap", true, "3d_gas_umap_filtered");
 
-            Directory.CreateDirectory("2d_mca_tsne_filtered");
-            CalculateOverlap2D("TSNE2d", true, "2d_mca_tsne_filtered");
-            Directory.CreateDirectory("2d_mca_umap_filtered");
-            CalculateOverlap2D("UMAP2d", true, "2d_mca_umap_filtered");
-            Directory.CreateDirectory("3d_mca_tsne_filtered");
-            CalculateOverlap3D("TSNE3d", true, "3d_mca_tsne_filtered");
-            Directory.CreateDirectory("3d_mca_umap_filtered");
-            CalculateOverlap3D("UMAP3d", true, "3d_mca_umap_filtered");
+            // MCA
+            //Directory.CreateDirectory("2d_mca_tsne_unfiltered");
+            //CalculateOverlap2D("TSNE2d", false, "2d_mca_tsne_unfiltered");
+            //Directory.CreateDirectory("2d_mca_umap_unfiltered");
+            //CalculateOverlap2D("UMAP2d", false, "2d_mca_umap_unfiltered");
+            //Directory.CreateDirectory("3d_mca_tsne_unfiltered");
+            //CalculateOverlap3D("TSNE3d", false, "3d_mca_tsne_unfiltered");
+            //Directory.CreateDirectory("3d_mca_umap_unfiltered");
+            //CalculateOverlap3D("UMAP3d", false, "3d_mca_umap_unfiltered");
+
+            //Directory.CreateDirectory("2d_mca_tsne_filtered");
+            //CalculateOverlap2D("TSNE2d", true, "2d_mca_tsne_filtered");
+            //Directory.CreateDirectory("2d_mca_umap_filtered");
+            //CalculateOverlap2D("UMAP2d", true, "2d_mca_umap_filtered");
+            //Directory.CreateDirectory("3d_mca_tsne_filtered");
+            //CalculateOverlap3D("TSNE3d", true, "3d_mca_tsne_filtered");
+            //Directory.CreateDirectory("3d_mca_umap_filtered");
+            //CalculateOverlap3D("UMAP3d", true, "3d_mca_umap_filtered");
+
+            // ORGANOGENISES
+            Directory.CreateDirectory("2d_org_tsne_unfiltered");
+            CalculateOverlap2D("TSNE2d", false, "2d_org_tsne_unfiltered");
+            Directory.CreateDirectory("2d_org_umap_unfiltered");
+            CalculateOverlap2D("UMAP2d", false, "2d_org_umap_unfiltered");
+            Directory.CreateDirectory("3d_org_tsne_unfiltered");
+            CalculateOverlap3D("TSNE3d", false, "3d_org_tsne_unfiltered");
+            Directory.CreateDirectory("3d_org_umap_unfiltered");
+            CalculateOverlap3D("UMAP3d", false, "3d_org_umap_unfiltered");
+
+            Directory.CreateDirectory("2d_org_tsne_filtered");
+            CalculateOverlap2D("TSNE2d", true, "2d_org_tsne_filtered");
+            Directory.CreateDirectory("2d_org_umap_filtered");
+            CalculateOverlap2D("UMAP2d", true, "2d_org_umap_filtered");
+            Directory.CreateDirectory("3d_org_tsne_filtered");
+            CalculateOverlap3D("TSNE3d", true, "3d_org_tsne_filtered");
+            Directory.CreateDirectory("3d_org_umap_filtered");
+            CalculateOverlap3D("UMAP3d", true, "3d_org_umap_filtered");
         }
 
         [ConsoleCommand("convexHullGenerator", aliases: new string[] { "co2d", "calculateoverlap2d" })]
@@ -1215,38 +1288,42 @@ namespace CellexalVR.AnalysisLogic
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             var graph = referenceManager.graphManager.FindGraph(graphName);
-            List<Vector2> pos = new List<Vector2>();
+            Dictionary<string, List<Vector2>> pos = new Dictionary<string, List<Vector2>>();
             Dictionary<string, List<Vector2>> hulls = new Dictionary<string, List<Vector2>>();
 
             GameObject debugParent = Instantiate(new GameObject(), graph.transform);
 
-            foreach (string attribute in referenceManager.cellManager.Attributes)
+            string[] attributes = referenceManager.cellManager.Attributes;
+            //string[] attributes = new string[] { "Tissue@Bladder", "Tissue@Embryonic-Mesenchyme" };
+
+            foreach (string attribute in attributes)
             {
+                pos[attribute] = new List<Vector2>();
                 string lowerAttribute = attribute.ToLower();
-                int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(lowerAttribute, (s1, s2) => s1.ToLower() == s2.ToLower());
+                int attributeIndex = attributes.IndexOf(lowerAttribute, (s1, s2) => s1.ToLower() == s2.ToLower());
                 Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
                 attributeColor.a = 0.5f;
 
-                pos.Clear();
+                //pos.Clear();
                 foreach (CellexalVR.AnalysisLogic.Cell cell in referenceManager.cellManager.GetCells())
                 {
                     if (cell.Attributes.ContainsKey(lowerAttribute))
                     {
                         Vector3 pos3d = graph.points[cell.Label].Position;
-                        pos.Add(new Vector2(pos3d.x, pos3d.y));
+                        pos[attribute].Add(new Vector2(pos3d.x, pos3d.y));
                     }
                 }
                 if (filter)
-                    FilterOutliers(pos, 3.5f);
+                    FilterOutliers(pos[attribute], 3.5f);
 
-                if (pos.Count < 3)
+                if (pos[attribute].Count < 3)
                 {
                     continue;
                 }
 
 
-                List<Vector2Int> projectedHull = QuickHull(pos);
-                List<Vector2> sortedHull = SortHull(projectedHull, pos);
+                List<Vector2Int> projectedHull = QuickHull(pos[attribute]);
+                List<Vector2> sortedHull = SortHull(projectedHull, pos[attribute]);
                 hulls[attribute] = sortedHull;
 
                 //Mesh projectedMesh = CreateHullMesh(sortedHull);
@@ -1284,10 +1361,43 @@ namespace CellexalVR.AnalysisLogic
                     }
 
                     string attributeName2 = attribute2.Substring(attributeType.Length + 1, attribute2.Length - attributeType.Length - 1);
-                    float area = OverlappingArea(hulls[attribute1], hulls[attribute2]/*, null*/);
+                    //StartCoroutine(OverlappingArea(hulls[attribute1], hulls[attribute2], graph.gameObject));
+
+                    List<Vector2> intersection = IntersectionOf(hulls[attribute1], hulls[attribute2], null);
+                    float area = AreaOf(intersection);
                     float intersectingOfAttribute1 = area / AreaOf(hulls[attribute1]);
                     float intersectingOfAttribute2 = area / AreaOf(hulls[attribute2]);
-                    streams[attributeType].WriteLine(attributeName1 + " " + attributeName2 + " " + area + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2);
+
+                    int attr1PointsInside = 0;
+                    int attr2PointsInside = 0;
+
+                    if (intersection.Count != 0)
+                    {
+
+                        foreach (var p in pos[attribute1])
+                        {
+                            if (PointInsidePolygon(p, intersection))
+                            {
+                                attr1PointsInside++;
+                            }
+                        }
+
+                        foreach (var p in pos[attribute2])
+                        {
+                            if (PointInsidePolygon(p, intersection))
+                            {
+                                attr2PointsInside++;
+                            }
+                        }
+                    }
+
+                    streams[attributeType].WriteLine(attributeName1 + " " + attributeName2
+                        + " " + attr1PointsInside
+                        + " " + attr2PointsInside
+                        + " " + (attr1PointsInside + attr2PointsInside)
+                        + " " + area
+                        + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
+                        );
                     streams[attributeType].Flush();
                 }
             }
@@ -1316,64 +1426,77 @@ namespace CellexalVR.AnalysisLogic
             List<Vector3> dirs = new List<Vector3>();
             List<Vector3> upDirs = new List<Vector3>();
 
-            //dirs.Add(new Vector3(-0.7885272f, 0.5873372f, 0.182373f));
-            //upDirs.Add(new Vector3(-0.2253348f, 0, -0.9742814f));
+            //dirs.Add(new Vector3(-0.8645056f, 0.3613501f, -0.3493653f));
+            //upDirs.Add(new Vector3(0.3746825f, 0f, -0.9271532f));
             InterpolateDirections(dirs, upDirs);
 
             var graph = referenceManager.graphManager.FindGraph(graphName);
             List<Vector3> pos = new List<Vector3>(graph.points.Count);
-            Dictionary<string, List<List<Vector2>>> projections = new Dictionary<string, List<List<Vector2>>>();
-            Dictionary<string, List<GameObject>> projectionsGO = new Dictionary<string, List<GameObject>>();
+            Dictionary<string, List<List<Vector2>>> projectedHulls = new Dictionary<string, List<List<Vector2>>>();
+            Dictionary<string, List<List<Vector2>>> rawProjections = new Dictionary<string, List<List<Vector2>>>();
+            //Dictionary<string, GameObject> projectionsGO = new Dictionary<string, GameObject>();
             Dictionary<string, StreamWriter> streams = new Dictionary<string, StreamWriter>();
             Cell[] cells = referenceManager.cellManager.GetCells();
 
+            // Mesenchymal-Stem-Cell-Cultured Trophoblast-Stem-Cell 0 0 0 0.01117841 0.05680383 -0.8645056 0.3613501 -0.3493653 0.3746825 0 -0.9271532
+
+            //string[] debugAttributes = new string[] { "celltype@Epiblast", "celltype@Primitive.Streak", "celltype@NA", "celltype@ExE.ectoderm" };
+            //foreach (string attribute in debugAttributes)
+
             foreach (string attribute in referenceManager.cellManager.Attributes)
             {
-                projections[attribute] = new List<List<Vector2>>();
+                string lowerAttribute = attribute.ToLower();
+
+                pos.Clear();
+                foreach (CellexalVR.AnalysisLogic.Cell cell in cells)
+                {
+                    if (cell.Attributes.ContainsKey(lowerAttribute))
+                    {
+                        pos.Add(graph.points[cell.Label].Position);
+                    }
+                }
+                if (filter)
+                    FilterOutliers(pos, 5f);
+
+                if (pos.Count < 3)
+                {
+                    //projections[attribute].Add(new List<Vector2>());
+                    continue;
+                }
+
+                projectedHulls[attribute] = new List<List<Vector2>>();
+                rawProjections[attribute] = new List<List<Vector2>>();
+
+                //int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute, (s1, s2) => s1.ToLower() == s2.ToLower());
+                //Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
+                //List<Vector3Int> hull = QuickHull(pos);
+                //Mesh mesh = CreateHullMesh(hull, pos);
+                //GameObject hullGameObject = Instantiate(convexHullPrefab);
+                //hullGameObject.GetComponent<MeshFilter>().mesh = mesh;
+                //hullGameObject.GetComponent<MeshRenderer>().material.color = attributeColor;
+                //hullGameObject.transform.parent = graph.transform;
+                //hullGameObject.transform.localPosition = Vector3.zero;
+                //hullGameObject.transform.localRotation = Quaternion.identity;
+                //hullGameObject.name = "3D hull " + attribute;
+                //projectionsGO[attribute] = hullGameObject;
+
 
                 for (int i = 0; i < dirs.Count; ++i)
                 {
 
-                    pos.Clear();
-                    string lowerAttribute = attribute.ToLower();
-                    foreach (CellexalVR.AnalysisLogic.Cell cell in cells)
-                    {
-                        if (cell.Attributes.ContainsKey(lowerAttribute))
-                        {
-                            pos.Add(graph.points[cell.Label].Position);
-                        }
-                    }
-                    if (filter)
-                        FilterOutliers(pos, 5f);
-
-                    if (pos.Count < 3)
-                    {
-                        projections[attribute].Add(new List<Vector2>());
-                        return;
-                    }
 
                     //if (projections.Count > 2)
                     //{
                     //    break;
                     //}
 
-                    //List<Vector3Int> hull = QuickHull(pos);
-                    //Mesh mesh = CreateHullMesh(hull, pos);
-                    //GameObject hullGameObject = Instantiate(convexHullPrefab);
-                    //hullGameObject.GetComponent<MeshFilter>().mesh = mesh;
-                    //hullGameObject.GetComponent<MeshRenderer>().material.color = attributeColor;
-                    //hullGameObject.transform.parent = graph.transform;
-                    //hullGameObject.transform.localPosition = Vector3.zero;
-                    //hullGameObject.transform.localRotation = Quaternion.identity;
-                    //hullGameObject.name = "3D hull " + attribute;
-
-                    //projectionsGO[attribute] = new List<GameObject>();
 
 
                     List<Vector2> projected = ProjectTo2D(pos, dirs[i], upDirs[i]);
+                    rawProjections[attribute].Add(projected);
                     List<Vector2Int> projectedHull = QuickHull(projected);
                     List<Vector2> sortedHull = SortHull(projectedHull, projected);
-                    projections[attribute].Add(sortedHull);
+                    projectedHulls[attribute].Add(sortedHull);
                     //print(sortedHull.Count);
 
                     //Mesh projectedMesh = CreateHullMesh(sortedHull);
@@ -1382,25 +1505,23 @@ namespace CellexalVR.AnalysisLogic
                     //projectedHullGameObject.GetComponent<MeshRenderer>().material.color = attributeColor;
                     //projectedHullGameObject.transform.parent = graph.transform;
                     //projectedHullGameObject.transform.localPosition = Vector3.zero;
-                    //projectedHullGameObject.transform.Translate(dirs[dirIndex]);
+                    //projectedHullGameObject.transform.Translate(dirs[i]);
                     //projectedHullGameObject.transform.LookAt(graph.transform);
-                    //projectedHullGameObject.name = "2D hull " + attribute + " " + dirIndex;
-                    //projectionsGO[attribute].Add(projectedHullGameObject);
+                    //projectedHullGameObject.name = "2D hull " + attribute + " " + i;
+                    //projectionsGO[attribute] = projectedHullGameObject;
 
                     //GameObject updirGO = Instantiate(convexHullPrefab);
                     //updirGO.transform.parent = graph.transform;
                     //updirGO.transform.localRotation = Quaternion.identity;
-                    //updirGO.transform.localPosition = upDirs[dirIndex];
+                    //updirGO.transform.localPosition = upDirs[i];
 
                 }
             }
 
-            //string[] debugAttributes = new string[] { "celltype@Nascent.mesoderm", "celltype@ExE.mesoderm" };
-            //string[] debugAttributes = referenceManager.cellManager.Attributes.Where((s) => s.Contains("celltype")).Take(5).ToArray();
-            //foreach (string attribute in debugAttributes)
-            for (int i = 0; i < referenceManager.cellManager.Attributes.Length; ++i)
+            var attributes = projectedHulls.Keys;
+            for (int i = 0; i < attributes.Count; ++i)
             {
-                string attribute1 = referenceManager.cellManager.Attributes[i];
+                string attribute1 = attributes.ElementAt(i);
                 string attributeType = attribute1.Substring(0, attribute1.IndexOf('@'));
                 string attributeName1 = attribute1.Substring(attributeType.Length + 1, attribute1.Length - attributeType.Length - 1);
 
@@ -1410,9 +1531,9 @@ namespace CellexalVR.AnalysisLogic
                 }
 
 
-                for (int j = i + 1; j < referenceManager.cellManager.Attributes.Length; ++j)
+                for (int j = i + 1; j < attributes.Count; ++j)
                 {
-                    string attribute2 = referenceManager.cellManager.Attributes[j];
+                    string attribute2 = attributes.ElementAt(j);
                     // only compare attributes of the same type
                     if (attributeType != attribute2.Substring(0, attribute2.IndexOf('@')))
                     {
@@ -1420,10 +1541,12 @@ namespace CellexalVR.AnalysisLogic
                     }
 
                     string attributeName2 = attribute2.Substring(attributeType.Length + 1, attribute2.Length - attributeType.Length - 1);
-                    float minArea = float.MaxValue;
-                    int minAreaDir = -1;
+                    int attr1MinPointsInIntersection = int.MaxValue;
+                    int attr2MinPointsInIntersection = int.MaxValue;
+                    int minPointsInIntersection = int.MaxValue;
+                    int minPointsDir = -1;
 
-                    for (int dir = 0; dir < dirs.Count && minArea > 0f; ++dir)
+                    for (int dir = 0; dir < dirs.Count && minPointsInIntersection > 0; ++dir)
                     {
                         //debugSpheres[0].transform.parent = projectionsGO[attribute1][dir].transform;
                         //debugSpheres[1].transform.parent = projectionsGO[attribute1][dir].transform;
@@ -1431,25 +1554,91 @@ namespace CellexalVR.AnalysisLogic
                         //debugSpheres[3].transform.parent = projectionsGO[attribute1][dir].transform;
                         //print(dir + " " + projections[attribute1].Count + " " + projections[attribute2].Count);
 
-                        //StartCoroutine(OverlappingArea(projections[attribute1][dir], projections[attribute2][dir], projectionsGO[attribute1][dir]));
-                        float area = OverlappingArea(projections[attribute1][dir], projections[attribute2][dir]/*, projectionsGO[attribute1][dir]*/);
+                        //StartCoroutine(OverlappingArea(projections[attribute1][dir], projections[attribute2][dir], graph.gameObject));
+                        //float area = OverlappingArea(projections[attribute1][dir], projections[attribute2][dir], null);
+                        List<Vector2> intersection = IntersectionOf(projectedHulls[attribute1][dir], projectedHulls[attribute2][dir], null);
 
-                        if (area < minArea)
+                        int attr1PointsInside = 0;
+                        int attr2PointsInside = 0;
+                        if (intersection.Count != 0)
                         {
-                            minArea = area;
-                            minAreaDir = dir;
+                            List<Vector2> rawProjection1 = rawProjections[attribute1][dir];
+                            List<Vector2> rawProjection2 = rawProjections[attribute2][dir];
+
+                            for (int k = 0; k < rawProjection1.Count && attr1PointsInside < minPointsInIntersection; ++k)
+                            {
+                                Vector2 p = rawProjection1[k];
+
+                                if (PointInsidePolygon(p, intersection))
+                                {
+                                    attr1PointsInside++;
+                                }
+                            }
+
+                            for (int k = 0; k < rawProjection2.Count && attr1PointsInside + attr2PointsInside < minPointsInIntersection; ++k)
+                            {
+                                Vector2 p = rawProjection2[k];
+
+                                if (PointInsidePolygon(p, intersection))
+                                {
+                                    attr2PointsInside++;
+                                }
+                            }
+                        }
+
+                        if (attr1PointsInside + attr2PointsInside < minPointsInIntersection)
+                        {
+                            attr1MinPointsInIntersection = attr1PointsInside;
+                            attr2MinPointsInIntersection = attr2PointsInside;
+                            minPointsInIntersection = attr1PointsInside + attr2PointsInside;
+                            minPointsDir = dir;
                         }
                     }
-                    if (minAreaDir != -1)
+
+                    //int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute1, (s1, s2) => s1.ToLower() == s2.ToLower());
+                    //Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
+                    //Mesh projectedMesh = CreateHullMesh(projections[attribute1][minAreaDir]);
+                    //GameObject projectedHullGameObject = Instantiate(convexHullPrefab);
+                    //projectedHullGameObject.GetComponent<MeshFilter>().mesh = projectedMesh;
+                    //projectedHullGameObject.GetComponent<MeshRenderer>().material.color = attributeColor;
+                    //projectedHullGameObject.transform.parent = projectionsGO[attribute1].transform;
+                    //projectedHullGameObject.transform.localPosition = Vector3.zero;
+                    //projectedHullGameObject.transform.Translate(dirs[minAreaDir]);
+                    //projectedHullGameObject.transform.LookAt(graph.transform);
+                    //projectedHullGameObject.name = "2D hull min area " + attribute1 + " " + minAreaDir;
+
+                    //projectedMesh = CreateHullMesh(projections[attribute2][minAreaDir]);
+                    //projectedHullGameObject = Instantiate(convexHullPrefab);
+                    //projectedHullGameObject.GetComponent<MeshFilter>().mesh = projectedMesh;
+                    //projectedHullGameObject.GetComponent<MeshRenderer>().material.color = attributeColor;
+                    //projectedHullGameObject.transform.parent = projectionsGO[attribute2].transform;
+                    //projectedHullGameObject.transform.localPosition = Vector3.zero;
+                    //projectedHullGameObject.transform.Translate(dirs[minAreaDir]);
+                    //projectedHullGameObject.transform.LookAt(graph.transform);
+                    //projectedHullGameObject.name = "2D hull min area " + attribute2 + " " + minAreaDir;
+                    //OverlappingArea(projections[attribute1][minAreaDir], projections[attribute2][minAreaDir], projectedHullGameObject);
+
+                    if (minPointsDir != -1)
                     {
-                        float intersectingOfAttribute1 = minArea / AreaOf(projections[attribute1][minAreaDir]);
-                        float intersectingOfAttribute2 = minArea / AreaOf(projections[attribute2][minAreaDir]);
-                        streams[attributeType].WriteLine(attributeName1 + " " + attributeName2 + " " + minArea + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
-                           /* + " " + GraphGenerator.V2S(dirs[minAreaDir]) + " " + GraphGenerator.V2S(upDirs[minAreaDir])*/);
+                        float areaOfAttribute1 = AreaOf(projectedHulls[attribute1][minPointsDir]);
+                        float areaOfAttribute2 = AreaOf(projectedHulls[attribute2][minPointsDir]);
+                        float minArea = AreaOf(IntersectionOf(projectedHulls[attribute1][minPointsDir], projectedHulls[attribute2][minPointsDir], null));
+                        float intersectingOfAttribute1 = minArea / areaOfAttribute1;
+                        float intersectingOfAttribute2 = minArea / areaOfAttribute2;
+                        Vector3 dir = dirs[minPointsDir];
+                        Vector3 upDir = upDirs[minPointsDir];
+                        streams[attributeType].WriteLine(attributeName1 + " " + attributeName2
+                            + " " + attr1MinPointsInIntersection
+                            + " " + attr2MinPointsInIntersection
+                            + " " + minPointsInIntersection
+                            + " " + minArea
+                            + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
+                            + " " + areaOfAttribute1 + " " + areaOfAttribute2
+                            + " " + dir.x + " " + dir.y + " " + dir.z
+                            + " " + upDir.x + " " + upDir.y + " " + upDir.z);
                         streams[attributeType].Flush();
                     }
                 }
-
 
                 //Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
                 //attributeColor.a = 0.5f;
@@ -1458,13 +1647,11 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalLog.Log("Finished generating convex hulls after " + stopwatch.Elapsed.ToString());
 
-
             foreach (var stream in streams.Values)
             {
                 stream.Flush();
                 stream.Close();
             }
-
 
             //StartCoroutine(OverlappingArea(projections[kvp.ElementAt(0)][0], projections[kvp.ElementAt(1)][0]));
             //OverlappingArea(projections[kvp.ElementAt(0)][0], projections[kvp.ElementAt(1)][0]);
@@ -1475,25 +1662,22 @@ namespace CellexalVR.AnalysisLogic
         }
 
         //private IEnumerator OverlappingArea(List<Vector2> hull1, List<Vector2> hull2, GameObject parent)
-        private float OverlappingArea(List<Vector2> hull1, List<Vector2> hull2/*, GameObject parent*/)
+        private float OverlappingArea(List<Vector2> hull1, List<Vector2> hull2, GameObject parent)
+        {
+            return AreaOf(IntersectionOf(hull1, hull2, parent));
+        }
+
+        private List<Vector2> IntersectionOf(List<Vector2> hull1, List<Vector2> hull2, GameObject parent)
         {
             MinMaxCoords(hull1, out Vector2 hull1MinCoords, out Vector2 hull1MaxCoords);
             MinMaxCoords(hull2, out Vector2 hull2MinCoords, out Vector2 hull2MaxCoords);
 
             if (!BoundsIntersect(hull1MinCoords, hull1MaxCoords, hull2MinCoords, hull2MaxCoords))
             {
-                return 0f;
+                return new List<Vector2>();
                 //print(0f);
                 //yield break;
             }
-            //if (BoundsInsideBounds(hull1MinCoords, hull1MaxCoords, hull2MinCoords, hull2MaxCoords))
-            //{
-            //    return AreaOf(hull1);
-            //}
-            //if (BoundsInsideBounds(hull2MinCoords, hull2MaxCoords, hull1MinCoords, hull1MaxCoords))
-            //{
-            //    return AreaOf(hull2);
-            //}
 
             List<Vector2> intersection = new List<Vector2>();
             int hull1index = 0;
@@ -1501,18 +1685,24 @@ namespace CellexalVR.AnalysisLogic
             bool inside1 = false;
             bool inside2 = false;
 
-            while (!(intersection.Count > 2 && intersection[intersection.Count - 1] == intersection[0]) && hull1index < hull1.Count * 2 && hull2index < hull2.Count * 2)
+            while (hull1index < hull1.Count * 2 && hull2index < hull2.Count * 2)
             {
                 //yield return null;
                 //while (!Input.GetKeyDown(KeyCode.T))
                 //{
                 //    yield return null;
                 //}
+                //print(hull1index + " " + hull1.Count * 2 + " " + hull2index + " " + hull2.Count * 2);
 
                 Vector2 line1_1 = hull1[hull1index % hull1.Count];
                 Vector2 line1_2 = hull1[(hull1index + 1) % hull1.Count];
                 Vector2 line2_1 = hull2[hull2index % hull2.Count];
                 Vector2 line2_2 = hull2[(hull2index + 1) % hull2.Count];
+
+                //debugSpheres[0].transform.parent = parent.transform;
+                //debugSpheres[1].transform.parent = parent.transform;
+                //debugSpheres[2].transform.parent = parent.transform;
+                //debugSpheres[3].transform.parent = parent.transform;
 
                 //debugSpheres[0].transform.localPosition = line1_1;
                 //debugSpheres[1].transform.localPosition = line1_2;
@@ -1523,9 +1713,13 @@ namespace CellexalVR.AnalysisLogic
 
                 if (lineSegmentsIntersect)
                 {
-                    if (intersection.Count > 1 && intersectPoint != intersection[intersection.Count - 1])
+                    // prevent vertices being added twice when too close too an edge
+                    if (!(intersection.Count > 0 && intersectPoint == intersection[intersection.Count - 1]))
                     {
-                        // prevent vertices being added twice when too close too an edge
+                        if (intersection.Count > 3 && (intersectPoint == intersection[0]))
+                        {
+                            break;
+                        }
                         intersection.Add(intersectPoint);
                     }
                     // since we are iterating over the shapes counter clock wise, the end point of line 2 being to the right of line 1 means that line 2 is outside hull 1
@@ -1558,6 +1752,10 @@ namespace CellexalVR.AnalysisLogic
                         hull2index++;
                         if (inside2)
                         {
+                            if (intersection.Count > 3 && (line2_2 == intersection[0]))
+                            {
+                                break;
+                            }
                             intersection.Add(line2_2);
                         }
                     }
@@ -1566,6 +1764,10 @@ namespace CellexalVR.AnalysisLogic
                         hull1index++;
                         if (inside1)
                         {
+                            if (intersection.Count > 3 && (line1_2 == intersection[0]))
+                            {
+                                break;
+                            }
                             intersection.Add(line1_2);
                         }
                     }
@@ -1575,6 +1777,10 @@ namespace CellexalVR.AnalysisLogic
                     hull1index++;
                     if (inside1)
                     {
+                        if (intersection.Count > 3 && (line1_2 == intersection[0]))
+                        {
+                            break;
+                        }
                         intersection.Add(line1_2);
                     }
                 }
@@ -1584,6 +1790,10 @@ namespace CellexalVR.AnalysisLogic
                     hull2index++;
                     if (inside2)
                     {
+                        if (intersection.Count > 3 && (line2_2 == intersection[0]))
+                        {
+                            break;
+                        }
                         intersection.Add(line2_2);
                     }
                 }
@@ -1591,34 +1801,52 @@ namespace CellexalVR.AnalysisLogic
 
             if (intersection.Count == 0)
             {
-                return 0f;
-                //yield break;
+
+                if (BoundsInsideBounds(hull1MinCoords, hull1MaxCoords, hull2MinCoords, hull2MaxCoords)
+                    && PointInsidePolygon(hull1[0], hull2))
+                {
+                    return hull1;
+                }
+                else if (BoundsInsideBounds(hull2MinCoords, hull2MaxCoords, hull1MinCoords, hull1MaxCoords)
+                     && PointInsidePolygon(hull2[0], hull1))
+                {
+                    return hull2;
+                }
+                else
+                {
+                    return new List<Vector2>();
+                }
             }
+
             //foreach (Vector2 p in intersection)
             //{
             //    print(GraphGenerator.V2S(p));
             //}
 
-            //GameObject debugIntersectionGameObject = Instantiate(convexHullPrefab);
-            //debugIntersectionGameObject.GetComponent<MeshFilter>().mesh = CreateHullMesh(intersection);
-            //debugIntersectionGameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 0f, 0.5f);
-            //debugIntersectionGameObject.transform.parent = parent.transform;
-            //debugIntersectionGameObject.transform.localPosition = Vector3.zero;
-            //debugIntersectionGameObject.transform.localRotation = Quaternion.identity;
+            //if (parent != null)
+            //{
+            //    GameObject debugIntersectionGameObject = Instantiate(convexHullPrefab);
+            //    debugIntersectionGameObject.GetComponent<MeshFilter>().mesh = CreateHullMesh(intersection);
+            //    debugIntersectionGameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 0f, 0.5f);
+            //    debugIntersectionGameObject.transform.parent = parent.transform;
+            //    debugIntersectionGameObject.transform.localPosition = Vector3.zero;
+            //    debugIntersectionGameObject.transform.localRotation = Quaternion.identity;
+            //    debugIntersectionGameObject.name = "Intersection";
+            //}
 
-            return AreaOf(intersection);
+            return intersection;
             //print(AreaOf(intersection));
         }
 
         private void OnDrawGizmos()
         {
-            Vector3 diff = debugSpheres[1].transform.position - debugSpheres[0].transform.position;
-            Gizmos.color = debugSpheres[0].GetComponent<MeshRenderer>().material.color;
-            Gizmos.DrawLine(debugSpheres[0].transform.position + diff * 100f, debugSpheres[1].transform.position - diff * 100f);
+            //Vector3 diff = debugSpheres[1].transform.position - debugSpheres[0].transform.position;
+            //Gizmos.color = debugSpheres[0].GetComponent<MeshRenderer>().material.color;
+            //Gizmos.DrawLine(debugSpheres[0].transform.position + diff * 100f, debugSpheres[1].transform.position - diff * 100f);
 
-            diff = debugSpheres[3].transform.position - debugSpheres[2].transform.position;
-            Gizmos.color = debugSpheres[2].GetComponent<MeshRenderer>().material.color;
-            Gizmos.DrawLine(debugSpheres[2].transform.position + diff * 100f, debugSpheres[3].transform.position - diff * 100f);
+            //diff = debugSpheres[3].transform.position - debugSpheres[2].transform.position;
+            //Gizmos.color = debugSpheres[2].GetComponent<MeshRenderer>().material.color;
+            //Gizmos.DrawLine(debugSpheres[2].transform.position + diff * 100f, debugSpheres[3].transform.position - diff * 100f);
         }
 
         [ConsoleCommand("convexHullGenerator", aliases: new string[] { "dt", "delaunaytriangulation" })]

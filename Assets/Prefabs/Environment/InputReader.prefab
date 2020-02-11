@@ -134,6 +134,7 @@ MonoBehaviour:
   filterMenu: {fileID: 0}
   velocitySubMenu: {fileID: 0}
   selectionMenu: {fileID: 0}
+  flybyMenu: {fileID: 0}
   frontButtons: {fileID: 0}
   rightButtons: {fileID: 0}
   backButtons: {fileID: 0}
@@ -164,6 +165,7 @@ MonoBehaviour:
   screenCanvas: {fileID: 0}
   helpVideoManager: {fileID: 0}
   velocityGenerator: {fileID: 0}
+  convexHullGenerator: {fileID: 0}
   filterManager: {fileID: 0}
   reportManager: {fileID: 0}
   floor: {fileID: 0}

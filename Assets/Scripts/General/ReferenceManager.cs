@@ -74,6 +74,7 @@ namespace CellexalVR.General
         public FilterMenu filterMenu;
         public VelocitySubMenu velocitySubMenu;
         public GameObject selectionMenu;
+        public FlybyMenu flybyMenu;
         //public TextMesh currentFlashedGeneText;
         public GameObject frontButtons;
         public GameObject rightButtons;

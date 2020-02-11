@@ -435,7 +435,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbyattribute", "cba" })]
-        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false/*, bool two_d = false*/)
         {
             if (!subGraph)
             {
@@ -487,7 +487,29 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
                 foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
+                    //if (two_d)
+                    //{
+                    //    List<Vector2> twoDList = new List<Vector2>();
+                    //    foreach (var p in pos[graph.GraphName])
+                    //    {
+                    //        twoDList.Add(new Vector2(p.x, p.y));
+                    //    }
+
+                    //    var hullInd = referenceManager.convexHullGenerator.QuickHull(twoDList);
+                    //    var hull = referenceManager.convexHullGenerator.SortHull(hullInd, twoDList);
+                    //    var empty = new GameObject();
+                    //    var hullMesh = Instantiate(empty);
+                    //    Destroy(empty);
+                    //    hullMesh.AddComponent<MeshFilter>().mesh = referenceManager.convexHullGenerator.CreateHullMesh(hull);
+                    //    hullMesh.AddComponent<MeshRenderer>().material.color = attributeColor;
+                    //    hullMesh.transform.parent = graph.transform;
+                    //    hullMesh.transform.localPosition = Vector3.zero;
+                    //    hullMesh.transform.localRotation = Quaternion.identity;
+                    //}
+                    //else
+                    //{
                     referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
+                    //}
                 }
 
             }
