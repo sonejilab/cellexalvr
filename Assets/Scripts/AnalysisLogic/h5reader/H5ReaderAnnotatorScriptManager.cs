@@ -10,9 +10,9 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string path = "LCA_142k_umap_phate_loom";
+        //string path = "LCA_142k_umap_phate_loom";
 
-        addAnnotator(path);
+        //addAnnotator(path);
 
         /*
         GameObject go = Instantiate(annotatorPrefab, transform);
@@ -29,7 +29,6 @@ public class H5ReaderAnnotatorScriptManager : MonoBehaviour
 
     public void addAnnotator(string path)
     {
-        print(path);
         if (annotators.ContainsKey(path))
         {
             annotators[path].gameObject.SetActive(true);
