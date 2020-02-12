@@ -93,8 +93,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -275,8 +275,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8498533256896878459}
   m_HandleRect: {fileID: 4486046732495522068}
   m_Direction: 0
-  m_Value: -0.00000036991455
-  m_Size: 0.4499859
+  m_Value: 0.0000285759
+  m_Size: 0.45000303
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -537,6 +537,7 @@ MonoBehaviour:
   projectionObject: {fileID: 0}
   projectionRect: {fileID: 832310194133545968}
   referenceManager: {fileID: 0}
+  configViewer: {fileID: 6854118198645888024}
 --- !u!1 &2437891309351616926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,6 +2031,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: gene_names
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
 --- !u!1001 &4728392318699479474
@@ -2098,6 +2104,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: cell_names
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
@@ -2996,6 +3007,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: cell_expressions
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: isMulti
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
 --- !u!1001 &6756383761678786644
@@ -3064,6 +3085,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: gene_expressions
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}

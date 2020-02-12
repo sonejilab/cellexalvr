@@ -73,6 +73,7 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
             script.isTop = false;
             script.isBottom = true;
             script.parentScript = this;
+            go.SetActive(false);
         }
     }
 
@@ -160,7 +161,6 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
         {
             controllerInside = true;
-            tmp.color = hoverColor;
         }
     }
 
@@ -169,7 +169,6 @@ public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
         if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
         {
             controllerInside = false;
-            tmp.color = color;
         }
     }
 
