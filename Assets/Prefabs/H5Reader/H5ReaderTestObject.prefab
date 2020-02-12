@@ -93,8 +93,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -538,7 +538,7 @@ MonoBehaviour:
     type: 3}
   projectionRect: {fileID: 832310194133545968}
   referenceManager: {fileID: 0}
-  configViewer: {fileID: 0}
+  configViewer: {fileID: 6854118198645888024}
 --- !u!1 &2437891309351616926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,7 +1591,7 @@ PrefabInstance:
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: buttonType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
@@ -1869,7 +1869,7 @@ PrefabInstance:
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: buttonType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
@@ -2032,6 +2032,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: gene_names
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
 --- !u!1001 &4728392318699479474
@@ -2100,6 +2105,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: cell_names
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
@@ -2830,7 +2840,7 @@ PrefabInstance:
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: buttonType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
@@ -2998,6 +3008,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: cell_expressions
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: isMulti
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
 --- !u!1001 &6756383761678786644
@@ -3066,6 +3086,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545390845727312205, guid: 7ac1c7c544560534281ff4a2846a0635,
+        type: 3}
+      propertyPath: type
+      value: gene_expressions
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ac1c7c544560534281ff4a2846a0635, type: 3}
@@ -3536,7 +3561,7 @@ PrefabInstance:
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: buttonType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5955032033527824565, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}

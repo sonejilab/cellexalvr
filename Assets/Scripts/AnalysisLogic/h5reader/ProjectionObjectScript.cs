@@ -55,8 +55,6 @@ public class ProjectionObjectScript : MonoBehaviour
             //go.transform.localPosition = new Vector3(0, -10 * offset, 0);
             go.transform.localPosition += Vector3.up * -10 * offset;
             go.GetComponentInChildren<LineScript>().type = anchor;
-            go.GetComponentInChildren<LineScript>().projectionObjectScript = this;
-
             offset++;
             go.GetComponent<TextMeshProUGUI>().text = anchor;
 

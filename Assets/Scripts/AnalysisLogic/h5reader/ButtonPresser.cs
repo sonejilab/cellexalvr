@@ -15,7 +15,6 @@ public class ButtonPresser : MonoBehaviour
     private SteamVR_Controller.Device device;
     private bool controllerInside;
     [SerializeField]private Color color;
-    public string type;
     public int buttonType;
     public GameObject projectionObject;
 

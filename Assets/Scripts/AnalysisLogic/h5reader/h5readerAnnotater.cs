@@ -22,7 +22,7 @@ public class h5readerAnnotater : MonoBehaviour
     public GameObject projectionObject;
     public RectTransform projectionRect;
     public ReferenceManager referenceManager;
-    public TextMeshPro configViewer;
+    public TextMeshProUGUI configViewer;
 
     Process p;
     StreamReader reader;
@@ -96,8 +96,11 @@ public class h5readerAnnotater : MonoBehaviour
         }
         string text = "";
 
-
-        
+        foreach (KeyValuePair<string, string> entry in config)
+        {
+            text += entry.Key + " " + entry.Value + Environment.NewLine;
+        }
+        configViewer.SetText(text);
     }
 
     public void createConfigFile()

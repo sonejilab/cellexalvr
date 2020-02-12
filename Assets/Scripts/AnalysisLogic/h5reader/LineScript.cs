@@ -7,9 +7,9 @@ public class LineScript : MonoBehaviour
     public AnchorScript AnchorA;
     public AnchorScript AnchorB;
     public LineRenderer line;
-    public ProjectionObjectScript projectionObjectScript;
     public string type;
     public GameObject linePrefab;
+    public bool isMulti;
     private h5readerAnnotater h5ReaderAnnotater;
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class LineScript : MonoBehaviour
         Vector3 start = AnchorA.transform.position;
         Vector3 end = AnchorB.transform.position;
         float dist = Vector3.Distance(start, end);
-        if(dist<0.05f)
+        if(dist<0.02f)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -47,6 +47,7 @@ public class LineScript : MonoBehaviour
         GameObject go = (GameObject)Resources.Load("h5Reader/Line");
         go = Instantiate(go, transform.parent);
         LineScript lineScript = go.GetComponent<LineScript>();
+        lineScript.type = type;
         lineScript.transform.position = transform.position;
         return lineScript;
     }

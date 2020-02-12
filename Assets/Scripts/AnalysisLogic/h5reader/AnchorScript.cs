@@ -19,7 +19,6 @@ public class AnchorScript : MonoBehaviour
     public LineScript line;
 
     public ExpandButtonScript expandButtonScript;
-    public string type;
     [SerializeField]private bool isAttachedToHand = false;
 
     // Start is called before the first frame update
@@ -38,61 +37,106 @@ public class AnchorScript : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            
-            if (!rightController.GetComponentInChildren<AnchorScript>() && !isAnchorA) //Press to move anchor B
+
+            if (!rightController.GetComponentInChildren<AnchorScript>() && !isAnchorA && !isAttachedToHand) //Press to move anchor B
             {
                 print(1);
                 transform.parent = rightController.transform;
                 transform.position = rightController.transform.position;
                 isAttachedToHand = true;
+
+                if (expandButtonScript) //if moving away from expandButton
+                {
+                    Dictionary<string, string> config = anchorA.GetComponentInParent<h5readerAnnotater>().config;
+                    string rem = "";
+                    switch (line.type)
+                    {
+                        case "cell_names": rem = "cellnames"; break;
+                        case "gene_names": rem = "genenames"; break;
+                        case "gene_expressions": rem = "geneexpr"; break;
+                        case "cell_expressions": rem = "attr_" + expandButtonScript.parentScript.name; break;
+                    }
+                    config.Remove(rem);
+                    ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
+                    if (projectionObjectScript && projectionObjectScript.paths.ContainsKey(line.type))
+                    {
+                            projectionObjectScript.paths.Remove(line.type);
+                    }
+
+                }
             }
             else if (expandButtonScript && isAttachedToHand && !isAnchorA) //If inside an expandButton and its attached to the hand let it go
             {
                 print(2);
                 transform.parent = expandButtonScript.transform;
+                transform.localPosition = Vector3.zero;
                 isAttachedToHand = false;
                 string path = expandButtonScript.parentScript.getPath();
                 ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
                 if (projectionObjectScript)
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().paths.Add(type, path);
-                    if(type == "X")
+                    projectionObjectScript.paths.Add(line.type, path);
+                    if(line.type == "X")
                     {
                         int start = path.LastIndexOf('/');
-                        int end = path.IndexOf(':');
-                        string[] names = path.Substring(start, end - start).Split('_');
+                        print(path);
+                        print(start);
+                        string[] names = path.Substring(start).Split('_');
 
                         anchorA.GetComponentInParent<ProjectionObjectScript>().changeName(names[names.Length - 1]);
                     }
                 }
                 else
                 {
-                    if (type == "cell_names")
+                    Dictionary<string, string> config = anchorA.GetComponentInParent<h5readerAnnotater>().config;
+                    if (line.type == "cell_names")
                     {
-                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellnames", expandButtonScript.parentScript.getPath());
+                        if (config.ContainsKey("cellnames"))
+                        {
+                            config["cellnames"] = expandButtonScript.parentScript.getPath();
+                        }
+                        else
+                        {
+                            config.Add("cellnames", expandButtonScript.parentScript.getPath());
+                        }
                     }
-                    else if (type == "gene_names")
+                    else if (line.type == "gene_names")
                     {
-                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("genenames", expandButtonScript.parentScript.getPath());
+                        if (config.ContainsKey("cellnames"))
+                        {
+                            config["genenames"] = expandButtonScript.parentScript.getPath();
+                        }
+                        else
+                        {
+                            config.Add("genenames", expandButtonScript.parentScript.getPath());
+                        }
                     }
-                    else if (type == "gene_expressions")
+                    else if (line.type == "gene_expressions")
                     {
-                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("cellexpr", expandButtonScript.parentScript.getPath());
+                        if (config.ContainsKey("cellnames"))
+                        {
+                            config["geneexpr"] = expandButtonScript.parentScript.getPath();
+                        }
+                        else
+                        {
+                            config.Add("geneexpr", expandButtonScript.parentScript.getPath());
+                        }
                     }
-                    else if (type == "cell_expressions")
+                    else if (line.type == "cell_expressions")
                     {
-                        anchorA.GetComponentInParent<h5readerAnnotater>().config.Add("attr_", expandButtonScript.parentScript.getPath());
+                        print("attr_" + expandButtonScript.parentScript.name);
+                        config.Add("attr_" + expandButtonScript.parentScript.name, expandButtonScript.parentScript.getPath());
                     }
                 }
-                
+
             }
-            else if(isAttachedToHand && !isAnchorA) //Pressing in free space return it
+            else if (isAttachedToHand && !isAnchorA) //Pressing in free space return it
             {
                 print(3);
                 transform.parent = anchorA.transform.parent;
                 transform.localPosition = anchorA.transform.localPosition;
                 isAttachedToHand = false;
-            }else if(isAnchorA && line.isExpanded())
+            } else if (isAnchorA && line.isExpanded() && line.isMulti)
             {
                 print(4);
                 LineScript newLine = line.addLine();
