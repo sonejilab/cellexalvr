@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class LineScript : MonoBehaviour
 {
-    public Transform AnchorA;
-    public Transform AnchorB;
+    public AnchorScript AnchorA;
+    public AnchorScript AnchorB;
     public LineRenderer line;
     public ProjectionObjectScript projectionObjectScript;
     public string type;
-    public ArrayList subLines = new ArrayList();
     public GameObject linePrefab;
     private h5readerAnnotater h5ReaderAnnotater;
     // Start is called before the first frame update
@@ -23,8 +22,8 @@ public class LineScript : MonoBehaviour
     void Update()
     {
         Vector3 dir = -h5ReaderAnnotater.transform.forward;
-        Vector3 start = AnchorA.position;
-        Vector3 end = AnchorB.position;
+        Vector3 start = AnchorA.transform.position;
+        Vector3 end = AnchorB.transform.position;
         if(start == end)
         {
             for (int i = 0; i < 10; i++)
@@ -40,5 +39,19 @@ public class LineScript : MonoBehaviour
                 line.SetPosition(i, pos);
             }
         }
+    }
+
+    public LineScript addLine()
+    {
+        GameObject go = (GameObject)Resources.Load("h5Reader/Line");
+        go = Instantiate(go, transform.parent);
+        LineScript lineScript = go.GetComponent<LineScript>();
+        lineScript.transform.position = transform.position;
+        return lineScript;
+    }
+
+    public bool isExpanded()
+    {
+        return AnchorA.transform.position != AnchorB.transform.position;
     }
 }
