@@ -22,6 +22,7 @@ public class h5readerAnnotater : MonoBehaviour
     public GameObject projectionObject;
     public RectTransform projectionRect;
     public ReferenceManager referenceManager;
+    public TextMeshPro configViewer;
 
     Process p;
     StreamReader reader;
@@ -93,6 +94,10 @@ public class h5readerAnnotater : MonoBehaviour
         {
             keys.updatePosition(10f);
         }
+        string text = "";
+
+
+        configViewer.SetText
     }
 
     public void createConfigFile()

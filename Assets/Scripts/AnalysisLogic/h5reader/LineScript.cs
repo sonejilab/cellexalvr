@@ -24,7 +24,8 @@ public class LineScript : MonoBehaviour
         Vector3 dir = -h5ReaderAnnotater.transform.forward;
         Vector3 start = AnchorA.transform.position;
         Vector3 end = AnchorB.transform.position;
-        if(start == end)
+        float dist = Vector3.Distance(start, end);
+        if(dist<0.05f)
         {
             for (int i = 0; i < 10; i++)
             {

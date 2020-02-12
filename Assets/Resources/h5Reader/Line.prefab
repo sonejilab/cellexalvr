@@ -112,7 +112,7 @@ MonoBehaviour:
   line: {fileID: 6545390845727312205}
   expandButtonScript: {fileID: 0}
   type: 
-  isAttachedToHand: 0
+  isAttachedToHand: 1
 --- !u!54 &2901225936139702173
 Rigidbody:
   m_ObjectHideFlags: 0
