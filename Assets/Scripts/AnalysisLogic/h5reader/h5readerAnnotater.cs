@@ -97,7 +97,7 @@ public class h5readerAnnotater : MonoBehaviour
         string text = "";
 
 
-        configViewer.SetText
+        
     }
 
     public void createConfigFile()
@@ -136,7 +136,7 @@ public class h5readerAnnotater : MonoBehaviour
                 go = Instantiate(projectionObject, projectionRect);
                 rect = go.GetComponent<RectTransform>();
                 projection = go.GetComponent<ProjectionObjectScript>();
-                projection.init(ProjectionObjectScript.projectionType.p2D_sep);
+                projection.init(ProjectionObjectScript.projectionType.p3D);
                 rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * projectionObjectScripts.Count, rect.rect.width);
 
                 projectionObjectScripts.Add(projection);

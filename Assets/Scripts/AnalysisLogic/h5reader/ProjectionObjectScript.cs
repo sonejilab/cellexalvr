@@ -14,20 +14,27 @@ public class ProjectionObjectScript : MonoBehaviour
     }
 
     public projectionType type;
-    public string name = "X_test";
+    public string name = "test";
     public Dictionary<string, string> paths;
-
-    public string coordsPath = "_";
-    public string velocityPath = "_";
     public LineScript coordsLine;
     public LineScript velocityLine;
     public GameObject AnchorPrefab;
 
     public Dictionary<projectionType, string[]> menu_setup;
+    private TextMeshProUGUI nameTextMesh;
 
     void Start()
     {
         paths = new Dictionary<string, string>();
+        nameTextMesh = transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
+    }
+
+
+    public void changeName(string name)
+    {
+        print(name);
+        this.name = name;
+        nameTextMesh.text = name;
     }
 
     public void init(projectionType type)
@@ -48,6 +55,8 @@ public class ProjectionObjectScript : MonoBehaviour
             //go.transform.localPosition = new Vector3(0, -10 * offset, 0);
             go.transform.localPosition += Vector3.up * -10 * offset;
             go.GetComponentInChildren<LineScript>().type = anchor;
+            go.GetComponentInChildren<LineScript>().projectionObjectScript = this;
+
             offset++;
             go.GetComponent<TextMeshProUGUI>().text = anchor;
 

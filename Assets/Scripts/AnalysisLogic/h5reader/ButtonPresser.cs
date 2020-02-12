@@ -57,7 +57,7 @@ public class ButtonPresser : MonoBehaviour
                     h5ReaderAnnotater.addProjectionObject(0);
                     break;
                 case 2:
-                    
+                    h5ReaderAnnotater.addProjectionObject(1);
                     break;
                 case 3:
                     h5ReaderAnnotater.createConfigFile();

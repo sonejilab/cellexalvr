@@ -51,10 +51,19 @@ public class AnchorScript : MonoBehaviour
                 print(2);
                 transform.parent = expandButtonScript.transform;
                 isAttachedToHand = false;
+                string path = expandButtonScript.parentScript.getPath();
                 ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
                 if (projectionObjectScript)
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().paths.Add(type, expandButtonScript.parentScript.getPath());
+                    anchorA.GetComponentInParent<ProjectionObjectScript>().paths.Add(type, path);
+                    if(type == "X")
+                    {
+                        int start = path.LastIndexOf('/');
+                        int end = path.IndexOf(':');
+                        string[] names = path.Substring(start, end - start).Split('_');
+
+                        anchorA.GetComponentInParent<ProjectionObjectScript>().changeName(names[names.Length - 1]);
+                    }
                 }
                 else
                 {
