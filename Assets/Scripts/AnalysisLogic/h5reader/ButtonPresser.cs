@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.General;
 using System.IO;
+using UnityEngine.UI;
 
 public class ButtonPresser : MonoBehaviour
 {
     // Start is called before the first frame update
     public BoxCollider collider;
     public ReferenceManager referenceManager;
-    public h5readerAnnotater h5ReaderAnnotater;
     [SerializeField] private GameObject note;
     private SteamVR_TrackedObject rightController;
     private SteamVR_Controller.Device device;
     private bool controllerInside;
     [SerializeField]private Color color;
-    public int buttonType;
-    public GameObject projectionObject;
+    private Button button;
 
     void Start()
     {
+        button = GetComponent<Button>();
         if (!referenceManager)
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -50,18 +50,7 @@ public class ButtonPresser : MonoBehaviour
         device = SteamVR_Controller.Input((int)rightController.index);
         if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
-            switch (buttonType)
-            {
-                case 1:
-                    h5ReaderAnnotater.addProjectionObject(0);
-                    break;
-                case 2:
-                    h5ReaderAnnotater.addProjectionObject(1);
-                    break;
-                case 3:
-                    h5ReaderAnnotater.createConfigFile();
-                    break;
-            }
+            button.onClick.Invoke();
         }
     }
 }

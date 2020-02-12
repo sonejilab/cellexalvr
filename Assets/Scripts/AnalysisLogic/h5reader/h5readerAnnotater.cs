@@ -28,7 +28,7 @@ public class h5readerAnnotater : MonoBehaviour
     StreamReader reader;
     H5ReaderAnnotatorTextBoxScript keys;
     public Dictionary<string, string> config;
-    private ArrayList projectionObjectScripts;
+    public List<ProjectionObjectScript> projectionObjectScripts;
     private string path = "LCA_142K_umap_phate_loom";
 
     void Start()
@@ -51,7 +51,7 @@ public class h5readerAnnotater : MonoBehaviour
                 filePath = s;
         }
 
-        projectionObjectScripts = new ArrayList();
+        projectionObjectScripts = new List<ProjectionObjectScript>();
         p = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.UseShellExecute = false;
@@ -141,7 +141,6 @@ public class h5readerAnnotater : MonoBehaviour
                 projection = go.GetComponent<ProjectionObjectScript>();
                 projection.init(ProjectionObjectScript.projectionType.p3D);
                 rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * projectionObjectScripts.Count, rect.rect.width);
-
                 projectionObjectScripts.Add(projection);
                 break;
             case 1:

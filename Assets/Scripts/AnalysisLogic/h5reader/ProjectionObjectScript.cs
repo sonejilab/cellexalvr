@@ -14,10 +14,8 @@ public class ProjectionObjectScript : MonoBehaviour
     }
 
     public projectionType type;
-    public string name = "test";
+    public string name = "unnamed-projection";
     public Dictionary<string, string> paths;
-    public LineScript coordsLine;
-    public LineScript velocityLine;
     public GameObject AnchorPrefab;
 
     public Dictionary<projectionType, string[]> menu_setup;
@@ -35,6 +33,12 @@ public class ProjectionObjectScript : MonoBehaviour
         print(name);
         this.name = name;
         nameTextMesh.text = name;
+    }
+
+    public void OnDestroy()
+    {
+        GetComponentInParent<h5readerAnnotater>().projectionObjectScripts.Remove(this);
+        Destroy(this.gameObject);
     }
 
     public void init(projectionType type)
