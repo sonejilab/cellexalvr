@@ -118,8 +118,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8498533256896878459}
   m_HandleRect: {fileID: 4486046732495522068}
   m_Direction: 0
-  m_Value: -0.0000022194872
-  m_Size: 0.45000303
+  m_Value: -0.00000036991455
+  m_Size: 0.4499859
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -373,14 +373,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bfa92db7615c634885e79e4fb698bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 0}
   display: {fileID: 1286342121178022487}
   textBoxPrefab: {fileID: 814356725583539088, guid: 5dada6dbb0666004487b95f95cfc7980,
     type: 3}
-  projectionObject3D: {fileID: 355057606800963750, guid: b5c76b32479ba404c83e58a2dbbd3129,
-    type: 3}
-  projectionObject2D: {fileID: 355057606800963750, guid: b5c76b32479ba404c83e58a2dbbd3129,
+  projectionObject: {fileID: 355057606800963750, guid: b5c76b32479ba404c83e58a2dbbd3129,
     type: 3}
   projectionRect: {fileID: 832310194133545968}
+  referenceManager: {fileID: 0}
 --- !u!1 &2437891309351616926
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +624,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 165.00735, y: 0}
+  m_AnchoredPosition: {x: 164.99844, y: 0}
   m_SizeDelta: {x: 600, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6929035296636578766
@@ -893,8 +893,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7712193526453371382}
   m_HandleRect: {fileID: 2946818696819153621}
   m_Direction: 0
-  m_Value: 0.999997
-  m_Size: 0.35000235
+  m_Value: 0.99998593
+  m_Size: 0.35000238
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
