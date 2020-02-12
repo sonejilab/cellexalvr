@@ -58,7 +58,8 @@ public class ExpandButtonScript : MonoBehaviour
                 {
                     parent = parent.transform.parent.GetComponent<H5ReaderAnnotatorTextBoxScript>();
                 }
-                parent.updatePosition(10f);
+                float contentSize = parent.updatePosition(10f);
+                parent.GetComponentInParent<h5readerAnnotater>().display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
             }
         }
     }

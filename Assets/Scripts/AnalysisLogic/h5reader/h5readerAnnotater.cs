@@ -85,6 +85,7 @@ public class h5readerAnnotater : MonoBehaviour
         }
         keys.fillContent(display);
         float contentSize = keys.updatePosition(10f);
+        print(contentSize);
         display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
     }
 

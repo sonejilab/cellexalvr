@@ -11,8 +11,10 @@ namespace CellexalVR.Interaction
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
         private bool controllerInside;
-        public RectTransform rect;
+        public RectTransform handleRect;
+        public RectTransform slidingArea;
         public Scrollbar scrollbar;
+        public BoxCollider boxCollider;
 
         // Start is called before the first frame update
         private void Start()
@@ -45,12 +47,18 @@ namespace CellexalVR.Interaction
             device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
             {
-                float y = transform.InverseTransformPoint(device.transform.pos).y;
-                float height = rect.rect.height;
+                float y = slidingArea.transform.InverseTransformPoint(device.transform.pos).y;
+                float height = handleRect.rect.height;
                 float temp = Mathf.Clamp01(y / height + 0.5f);
                 scrollbar.value = temp;
             }
+            Vector3 size = handleRect.rect.size;
+            size.z = 10;
+            boxCollider.size = size;
+
+
         }
+
     }
 }
 
