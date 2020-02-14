@@ -12,10 +12,19 @@
 // The green channel values determines the following;
 // g == 0: no outline
 // 0   < g <= 0.1: outline
-// 0.1 < g <= 0.2: velocity
+// 0.1 < g <= 0.2: thicker outline
 // 0.2 < g <= 0.5: not used
-// 0.5 < g <= 0.9 transparancy
+// 0.5 < g <= 0.7 not used
+// 0.7 < g <= 0.9 transparancy
 // 0.9 < g <= 1  : party
+// The blue channel values determines the following;
+// b == 0: not used
+// 0   < b <= 0.1: culling
+// 0.1 < b <= 0.2: not used
+// 0.2 < b <= 0.5: not used
+// 0.5 < b <= 0.7 not used
+// 0.7 < b <= 0.9 not used
+// 0.9 < b <= 1  : not used
 
 Shader "Custom/CombinedGraphpoint"
 {
@@ -27,6 +36,7 @@ Shader "Custom/CombinedGraphpoint"
 		_ThickerOutline("ThicknessMultiplier", float) = 4
         _TestPar("test", float) = 0
         _Transparancy("Transparancy", Range(0.0, 1.0)) = 0.1
+        _Culling("Culling", float) = 1
     }
 
     SubShader
@@ -150,35 +160,39 @@ Shader "Custom/CombinedGraphpoint"
                     return -1;
                 }
 
+                float clip_fragment(float inside_first, float inside_second, float blue_channel)
+                {
+                    if ((inside_first <= 0 || inside_second <= 0) && !(blue_channel > 0 && blue_channel < 0.1))
+                        return -1;
+                    return 1;
+                }
+                
+
                 fixed4 frag(vertex_output i) : COLOR
                 {
+                    i.lightDir = normalize(i.lightDir);
+                    fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
+
+                    // float3 expressionColorData = (tex2D(_MainTex, i.uv));
+                    float3 expressionColorData = tex2D(_MainTex, i.uv);
+                    // the 255.0 / 256.0 is there to shift the x-coordinate slightly to the left, otherwise the rightmost pixel (which in the _MainTex is red = 255) rolls over to the leftmost
+                    float2 colorTexUV = float2(expressionColorData.x * 255.0/256.0, 0.5);
+
+                    float4 color = tex2D(_GraphpointColorTex, colorTexUV);
+                    //color *= fixed4(i.vertexLighting, 1.0);
+                    fixed diff = saturate(dot(i.normal, i.lightDir));
+
                     float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
-                    float4 relpos = mul(_BoxMatrix, wpos);
-                    float inside = isInsideBox(relpos);
-                    clip(inside);
-                    relpos = mul(_BoxMatrix2, wpos);
-                    inside = isInsideBox(relpos);
-                    clip(inside);
-                    
-
-                   i.lightDir = normalize(i.lightDir);
-                   fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
-                   
-                   // float3 expressionColorData = (tex2D(_MainTex, i.uv));
-                   float3 expressionColorData = tex2D(_MainTex, i.uv);
-                   // the 255.0 / 256.0 is there to shift the x-coordinate slightly to the left, otherwise the rightmost pixel (which in the _MainTex is red = 255) rolls over to the leftmost
-                   float2 colorTexUV = float2(expressionColorData.x * 255.0/256.0, 0.5);
-
-				   float4 color = tex2D(_GraphpointColorTex, colorTexUV);
-                   //color *= fixed4(i.vertexLighting, 1.0);
-                   fixed diff = saturate(dot(i.normal, i.lightDir));
-
+                    float4 relpos_box1 = mul(_BoxMatrix, wpos);
+                    float4 relpos_box2 = mul(_BoxMatrix2, wpos);
+                    float do_clip = clip_fragment(isInsideBox(relpos_box1), isInsideBox(relpos_box2), expressionColorData.b);
+                    clip(do_clip*_Culling);    
                 //    int col = expressionColorData.g;
                    
 
                 //    color.a = 0.5;
                 //    if (expressionColorData.r == 254.0/255.0)
-                   if (expressionColorData.g > 0.5 && expressionColorData.g < 0.9) //(colorTexUV.x == 254.0/255.0)
+                   if (expressionColorData.g > 0.7 && expressionColorData.g < 0.9) //(colorTexUV.x == 254.0/255.0)
                    {
                        color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 2 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
                        color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
@@ -278,17 +292,22 @@ Shader "Custom/CombinedGraphpoint"
                         return 1;
                     return -1;
                 }
+                float clip_fragment(float inside_first, float inside_second, float blue_channel)
+                {
+                    if ((inside_first <= 0 || inside_second <= 0 ) && !(blue_channel > 0 && blue_channel < 0.1))
+                        return -1;
+                    return 1;
+                    
+                }
                 fixed4 frag(v2f i) : COLOR
                 {
-                    float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
-                    float4 relpos = mul(_BoxMatrix, wpos);
-                    float inside = isInsideBox(relpos);
-                    clip(inside);
-                    relpos = mul(_BoxMatrix2, wpos);
-                    inside = isInsideBox(relpos);
-                    clip(inside);                
                     
                     float3 expressionColorData = tex2D(_MainTex, i.uv);
+                    float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                    float4 relpos_box1 = mul(_BoxMatrix, wpos);
+                    float4 relpos_box2 = mul(_BoxMatrix2, wpos);
+                    float do_clip = clip_fragment(isInsideBox(relpos_box1), isInsideBox(relpos_box2), expressionColorData.b);
+                    clip(do_clip*_Culling);          
                     
                     if (expressionColorData.g > 0.9) {
                         // party
