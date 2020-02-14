@@ -6,8 +6,8 @@ using static CellexalVR.AnalysisObjects.Graph;
 using CellexalVR.MarchingCubes;
 using CellexalVR.General;
 using System;
-using System.Linq;
 using CellexalVR.AnalysisObjects;
+using VRTK;
 
 namespace CellexalVR.Spatial
 {
@@ -20,8 +20,9 @@ namespace CellexalVR.Spatial
         private SteamVR_Controller.Device rdevice;
         private GameObject contour;
         private bool slicesActive;
-        private List<Graph> slices = new List<Graph>();
+        private Vector3 startPosition;
 
+        public List<Graph> slices = new List<Graph>();
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();
         public GameObject chunkManagerPrefab;
         public GameObject contourParent;
@@ -33,10 +34,15 @@ namespace CellexalVR.Spatial
         void Start()
         {
             rightController = referenceManager.rightController;
+            startPosition = transform.position;
         }
 
         void Update()
         {
+            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            {
+                referenceManager.multiuserMessageSender.SendMessageMoveGraph(gameObject.name, transform.position, transform.rotation, transform.localScale);
+            }
             rdevice = SteamVR_Controller.Input((int)rightController.index);
             if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad) && rdevice.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y < 0.5f)
             {
@@ -46,13 +52,19 @@ namespace CellexalVR.Spatial
                     referenceManager.multiuserMessageSender.SendMessageActivateSlices();
                 }
             }
-
         }
 
         public IEnumerator AddSlices()
         {
             foreach (Graph graph in GetComponentsInChildren<Graph>())
             {
+                foreach (BoxCollider bc in graph.GetComponents<BoxCollider>())
+                {
+                    Vector3 size = bc.size;
+                    size.z += 0.01f;
+                    bc.size = size;
+                    bc.enabled = false;
+                }
                 foreach (KeyValuePair<string, Graph.GraphPoint> gpPair in graph.points)
                 {
                     points[gpPair.Key] = gpPair.Value;
@@ -160,10 +172,20 @@ namespace CellexalVR.Spatial
             {
                 if (!slicesActive)
                 {
+                    Destroy(GetComponent<Rigidbody>());
                     StartCoroutine(gs.ActivateSlice(true));
                 }
                 else
                 {
+                    var rigidbody = gameObject.GetComponent<Rigidbody>();
+                    if (rigidbody == null)
+                    {
+                        rigidbody = gameObject.AddComponent<Rigidbody>();
+                    }
+                    rigidbody.useGravity = false;
+                    rigidbody.isKinematic = false;
+                    rigidbody.drag = 10;
+                    rigidbody.angularDrag = 15;
                     StartCoroutine(gs.ActivateSlice(false));
                     ResetSlices();
                 }
@@ -193,7 +215,7 @@ namespace CellexalVR.Spatial
 
         public GraphSlice GetSlice(string sliceName)
         {
-            foreach(GraphSlice slice in GetComponentsInChildren<GraphSlice>())
+            foreach (GraphSlice slice in GetComponentsInChildren<GraphSlice>())
             {
                 if (slice.gameObject.name.Equals(sliceName))
                     return slice;
@@ -202,6 +224,16 @@ namespace CellexalVR.Spatial
 
         }
 
+        public void ResetPosition()
+        {
+            transform.position = startPosition;
+        }
+
+        public void ResetSizeAndRotation()
+        {
+            transform.localScale = Vector3.one;
+            transform.localRotation = Quaternion.identity;
+        }
 
     }
 }

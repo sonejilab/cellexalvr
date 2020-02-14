@@ -493,26 +493,26 @@ namespace CellexalVR.Multiuser
                 spatialGraph.ActivateSlices();
             }
         }
-        [PunRPC]
-        public void RecieveMessageSpatialGraphGrabbed(string sliceName, string graphName)
-        {
-            foreach (SpatialGraph spatialGraph in referenceManager.graphManager.spatialGraphs)
-            {
-                if (spatialGraph.gameObject.name.Equals(graphName))
-                    spatialGraph.GetSlice(sliceName).ToggleGrabbing(true);
-            }
-        }
+        //[PunRPC]
+        //public void RecieveMessageSpatialGraphGrabbed(string sliceName, string graphName)
+        //{
+        //    foreach (SpatialGraph spatialGraph in referenceManager.graphManager.spatialGraphs)
+        //    {
+        //        if (spatialGraph.gameObject.name.Equals(graphName))
+        //            spatialGraph.GetSlice(sliceName).ToggleGrabbing(true);
+        //    }
+        //}
 
-        [PunRPC]
-        public void RecieveMessageSpatialGraphUnGrabbed(string sliceName, string graphName)
-        {
-            CellexalLog.Log("Recieved message to activate slices in spatial graph");
-            foreach (SpatialGraph spatialGraph in referenceManager.graphManager.spatialGraphs)
-            {
-                if (spatialGraph.gameObject.name.Equals(graphName))
-                    spatialGraph.GetSlice(sliceName).ToggleGrabbing(false);
-            }
-        }
+        //[PunRPC]
+        //public void RecieveMessageSpatialGraphUnGrabbed(string sliceName, string graphName)
+        //{
+        //    CellexalLog.Log("Recieved message to activate slices in spatial graph");
+        //    foreach (SpatialGraph spatialGraph in referenceManager.graphManager.spatialGraphs)
+        //    {
+        //        if (spatialGraph.gameObject.name.Equals(graphName))
+        //            spatialGraph.GetSlice(sliceName).ToggleGrabbing(false);
+        //    }
+        //}
 
 
         #endregion

@@ -547,7 +547,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 pos.Add(gp.Position);
             }
-            DelaunayTriangulation(graph, pos, Color.white, "all");
+            //DelaunayTriangulation(graph, pos, Color.white, "all");
             CellexalEvents.CommandFinished.Invoke(true);
             //StartCoroutine(DelaunayTriangulationCoroutine(graph, pos, Color.white, "all"));
         }

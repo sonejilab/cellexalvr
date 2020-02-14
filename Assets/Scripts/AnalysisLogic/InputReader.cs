@@ -463,6 +463,7 @@ namespace CellexalVR.AnalysisLogic
             float currentCoord;
             GameObject parent = GameObject.Instantiate(SpatialGraphPrefab);
             SpatialGraph sg = parent.GetComponent<SpatialGraph>();
+            sg.gameObject.layer = LayerMask.NameToLayer("GraphLayer");
             graphManager.spatialGraphs.Add(sg);
             sg.referenceManager = referenceManager;
             float posIncr = 0;
@@ -517,7 +518,7 @@ namespace CellexalVR.AnalysisLogic
                 minCoords.y = gps.Min(v => (v.Item2.y));
                 minCoords.z = gps.Min(v => (v.Item2.z));
 
-                Graph combGraph = graphGenerator.CreateGraph(GraphGenerator.GraphType.MDS);
+                Graph combGraph = graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
                 yield return null;
                 graphManager.Graphs.Add(combGraph);
                 graphManager.originalGraphs.Add(combGraph);
@@ -554,7 +555,7 @@ namespace CellexalVR.AnalysisLogic
                         }
                         gs.zCoord = gp.WorldPosition.z;
                         //gs.AddReplacement();
-                        combGraph = graphGenerator.CreateGraph(GraphGenerator.GraphType.MDS);
+                        combGraph = graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
                         yield return null;
                         graphManager.Graphs.Add(combGraph);
                         graphManager.originalGraphs.Add(combGraph);
