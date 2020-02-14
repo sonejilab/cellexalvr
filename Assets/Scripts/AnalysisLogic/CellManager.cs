@@ -486,7 +486,7 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
                 foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
+                    //referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
                 }
 
             }
@@ -494,8 +494,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
-                    convexHulls.Remove(graph.GraphName + "_" + attributeType);
+                    //Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
+                    //convexHulls.Remove(graph.GraphName + "_" + attributeType);
                 }
                 referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }

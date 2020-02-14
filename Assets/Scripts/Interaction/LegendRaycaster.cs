@@ -81,12 +81,22 @@ namespace CellexalVR.Interaction
                         // we hit the legend but not the right area
                         legendManager.geneExpressionHistogram.DeactivateHighlightArea();
                     }
+                    if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
+                    {
+                        // if the trigger was released
+                        savedGeneExpressionHistogramHitX = -1;
+                    }
                 }
             }
             else
             {
                 // we hit nothing of interest
                 legendManager.geneExpressionHistogram.DeactivateHighlightArea();
+            }
+            if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
+            {
+                // if the trigger was released
+                savedGeneExpressionHistogramHitX = -1;
             }
         }
 
@@ -112,7 +122,7 @@ namespace CellexalVR.Interaction
 
         private void HandleClickUpGeneExpressionHistogram(Vector3 hit)
         {
-            if (Time.time - clickStartTime < 0.5f)
+            if (Time.time - clickStartTime < 0.1f)
             {
                 legendManager.geneExpressionHistogram.DeactivateSelectedArea();
             }
