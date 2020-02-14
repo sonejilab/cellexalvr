@@ -295,11 +295,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 graph.MakeAllPointsTransparent(toggle);
             }
-            foreach (SpatialGraph spatialGraph in spatialGraphs)
-            {
-                spatialGraph.ToggleGraphPointsTransparency(toggle);
-            }
-
         }
 
         /// <summary>
@@ -343,8 +338,17 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in Graphs)
             {
+                if (g.GraphName.Contains("Slice"))
+                {
+                    continue;
+                }
                 g.ResetPosition();
                 g.ResetSizeAndRotation();
+            }
+            foreach (SpatialGraph sg in spatialGraphs)
+            {
+                sg.ResetPosition();
+                sg.ResetSizeAndRotation();
             }
             //SetGraphStartPosition();
         }

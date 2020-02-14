@@ -182,18 +182,7 @@ namespace CellexalVR.AnalysisObjects
 
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
-                if (GraphName.Contains("Slice"))
-                {
-                    GraphSlice slice = GetComponent<GraphSlice>();
-                    if (slice.sliceMode)
-                    {
-                        multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-                    }
-                }
-                else
-                {
-                    multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-                }
+                multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
             }
             if (minimize)
             {
@@ -220,6 +209,23 @@ namespace CellexalVR.AnalysisObjects
             maximize = true;
         }
 
+        /// <summary>
+        /// Sets green channel of points so culling will be activated in the shader. 
+        /// This means that inside the culling cube the points will not be visible. 
+        /// </summary>
+        /// <param name="toggle"></param>
+        public void MakeAllPointsCullable(bool toggle)
+        {
+            foreach (KeyValuePair<string, GraphPoint> gpPair in points)
+            {
+                MakePointUnCullable(gpPair.Value, toggle);
+            }
+        }
+
+        /// <summary>
+        /// Sets the green channel of the point so transparency will be activated in the shader.
+        /// </summary>
+        /// <param name="toggle"></param>
         public void MakeAllPointsTransparent(bool toggle)
         {
             foreach (KeyValuePair<string, GraphPoint> gpPair in points)
@@ -227,31 +233,8 @@ namespace CellexalVR.AnalysisObjects
                 MakePointTransparent(gpPair.Value, toggle);
             }
 
-
-            // for transparancy 0.5 < g < 0.9 
-            //for (int i = 0; i < textureWidth; ++i)
-            //{
-            //    for (int j = 0; j < textureHeight; ++j)
-            //    {
-            //        //texture.SetPixel(i, j, Color.black);
-            //        if (toggle)
-            //        {
-            //            texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
-            //        }
-            //        else
-            //        {
-            //            texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(255, 0, 0, 255) });
-            //        }
-            //    }
-            //}
-            //texture.Apply();
             isTransparent = toggle;
 
-            //texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
-            //foreach (GraphPoint gp in points)
-            //{
-
-            //}
         }
 
         /// <summary>
@@ -1569,6 +1552,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="color">The graphpoint's new color.</param>
         public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
         {
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
             // TODO CELLEXAL: make the most expressed a percent of the total or something that isn't a hard coded 27
             if (i > 27 && CellexalConfig.Config.GraphMostExpressedMarker)
@@ -1583,7 +1567,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 i = 255;
             }
-            Color32 finalColor = new Color32((byte)i, 0, 0, 255);
+            Color32 finalColor = new Color32((byte)i, tex.g, tex.b, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
         }
@@ -1596,7 +1580,8 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
-            byte greenChannel = (byte)(outline ? 4 : 0);
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            byte greenChannel = (byte)(outline ? 4 : tex.g);
             byte redChannel;
             if (i == -1)
             {
@@ -1606,29 +1591,56 @@ namespace CellexalVR.AnalysisObjects
             {
                 redChannel = (byte)(nbrOfExpressionColors + i);
             }
-            Color32 finalColor = new Color32(redChannel, greenChannel, 0, 255);
+            Color32 finalColor = new Color32(redChannel, greenChannel, tex.b, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
         }
 
-
+        /// <summary>
+        /// Sets the green channel of the point so transparency will be activated in the shader.
+        /// </summary>
+        /// <param name="toggle"></param>
         public void MakePointTransparent(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
-            // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
-            byte greenChannel = (byte)(active ? 180 : 0);
-            Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255);
+            byte greenChannel;
+            if (tex.g == 190 && tex.r != 254)
+            {
+                greenChannel = (byte)(active ? 190 : 0);
+            }
+            else
+            {
+                greenChannel = (byte)(active ? 190 : tex.g);
+            }
+            Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
 
         }
+
+        /// <summary>
+        /// Sets blue channel of point so culling will be deactivated in the shader. 
+        /// This means that inside the culling cube the poins will still be visible. 
+        /// </summary>
+        /// <param name="toggle"></param>
+        public void MakePointUnCullable(GraphPoint graphPoint, bool culling)
+        {
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            byte blueChannel;
+            blueChannel = (byte)(culling ? 4 : 0);
+            Color32 finalColor = new Color32(tex.r, tex.g, blueChannel, 255);
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
+            textureChanged = true;
+
+        }
+
 
 
         public void HighlightGraphPoint(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
-            byte greenChannel = (byte)(active ? 38 : 0);
+            byte greenChannel = (byte)(active ? 38 : tex.g);
             Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
@@ -1677,10 +1689,11 @@ namespace CellexalVR.AnalysisObjects
                 {
                     //texture.SetPixel(i, j, Color.black);
 
-                    texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 0, 0, 255) });
+                    Color32 tex = texture.GetPixel(i, j);
+                    texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 190, tex.b, 255) });
                 }
             }
-            MakeAllPointsTransparent(true);
+            //MakeAllPointsTransparent(true);
 
             int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
@@ -1702,6 +1715,8 @@ namespace CellexalVR.AnalysisObjects
                 // If this is a subgraph it does not contain all cells...
                 if (points.ContainsKey(pair.Cell))
                 {
+                    referenceManager.cellManager.GetCell(pair.Cell).ExpressionValue = pair.Expression;
+                    //print(referenceManager.cellManager.GetCell(pair.Cell).ExpressionValue);
                     Vector2Int pos = points[pair.Cell].textureCoord;
                     int expressionColorIndex = pair.Color;
                     if (pair.Color >= nbrOfExpressionColors)
@@ -1717,7 +1732,9 @@ namespace CellexalVR.AnalysisObjects
                         circle.transform.parent = transform;
                         topExprCircles.Add(circle);
                     }
-                    texture.SetPixels32(pos.x, pos.y, 1, 1, colorValues[expressionColorIndex]);
+                    Color32 tex = texture.GetPixel(pos.x, pos.y);
+                    Color32 finalCol = new Color32(colorValues[expressionColorIndex][0].r, 0, tex.b, 1);
+                    texture.SetPixels32(pos.x, pos.y, 1, 1, new Color32[] { finalCol });
                 }
             }
 
