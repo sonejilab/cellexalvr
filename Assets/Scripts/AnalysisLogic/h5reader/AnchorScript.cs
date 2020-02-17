@@ -19,7 +19,6 @@ public class AnchorScript : MonoBehaviour
     public LineScript line;
 
     public ExpandButtonScript expandButtonScript;
-    public string type;
     [SerializeField]private bool isAttachedToHand = false;
 
     // Start is called before the first frame update
@@ -58,6 +57,12 @@ public class AnchorScript : MonoBehaviour
                         case "cell_expressions": rem = "attr_" + expandButtonScript.parentScript.name; break;
                     }
                     config.Remove(rem);
+                    ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
+                    if (projectionObjectScript && projectionObjectScript.paths.ContainsKey(line.type))
+                    {
+                            projectionObjectScript.paths.Remove(line.type);
+                    }
+
                 }
             }
             else if (expandButtonScript && isAttachedToHand && !isAnchorA) //If inside an expandButton and its attached to the hand let it go
@@ -66,10 +71,26 @@ public class AnchorScript : MonoBehaviour
                 transform.parent = expandButtonScript.transform;
                 transform.localPosition = Vector3.zero;
                 isAttachedToHand = false;
+
+                string path = expandButtonScript.parentScript.getPath();
+
+                int start = path.LastIndexOf('/');
+                string[] names;
+                if (start != -1)
+                    names = path.Substring(start).Split('_');
+                else
+                    names = path.Split('_');
+
                 ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
                 if (projectionObjectScript)
                 {
-                    anchorA.GetComponentInParent<ProjectionObjectScript>().paths.Add(type, expandButtonScript.parentScript.getPath());
+                    projectionObjectScript.paths.Add(line.type, path);
+                    if(line.type == "X")
+                    {
+                        
+
+                        anchorA.GetComponentInParent<ProjectionObjectScript>().changeName(names[names.Length - 1]);
+                    }
                 }
                 else
                 {
@@ -78,39 +99,38 @@ public class AnchorScript : MonoBehaviour
                     {
                         if (config.ContainsKey("cellnames"))
                         {
-                            config["cellnames"] = expandButtonScript.parentScript.getPath();
+                            config["cellnames"] = path;
                         }
                         else
                         {
-                            config.Add("cellnames", expandButtonScript.parentScript.getPath());
+                            config.Add("cellnames", path);
                         }
                     }
                     else if (line.type == "gene_names")
                     {
                         if (config.ContainsKey("cellnames"))
                         {
-                            config["genenames"] = expandButtonScript.parentScript.getPath();
+                            config["genenames"] = path;
                         }
                         else
                         {
-                            config.Add("genenames", expandButtonScript.parentScript.getPath());
+                            config.Add("genenames", path);
                         }
                     }
                     else if (line.type == "gene_expressions")
                     {
                         if (config.ContainsKey("cellnames"))
                         {
-                            config["geneexpr"] = expandButtonScript.parentScript.getPath();
+                            config["geneexpr"] = path;
                         }
                         else
                         {
-                            config.Add("geneexpr", expandButtonScript.parentScript.getPath());
+                            config.Add("geneexpr", path);
                         }
                     }
                     else if (line.type == "cell_expressions")
                     {
-                        print("attr_" + expandButtonScript.parentScript.name);
-                        config.Add("attr_" + expandButtonScript.parentScript.name, expandButtonScript.parentScript.getPath());
+                        config.Add("attr_" + names[names.Length - 1], path);
                     }
                 }
 

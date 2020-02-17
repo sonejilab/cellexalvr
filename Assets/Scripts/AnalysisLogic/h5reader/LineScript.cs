@@ -7,7 +7,6 @@ public class LineScript : MonoBehaviour
     public AnchorScript AnchorA;
     public AnchorScript AnchorB;
     public LineRenderer line;
-    public ProjectionObjectScript projectionObjectScript;
     public string type;
     public GameObject linePrefab;
     public bool isMulti;
