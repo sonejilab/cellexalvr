@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using System;
+using Assets.Scripts.SceneObjects;
 
 namespace CellexalVR.Filters
 {
@@ -19,6 +20,8 @@ namespace CellexalVR.Filters
 
         public ReferenceManager referenceManager;
         public Filter currentFilter;
+        public GameObject cullingCubePrefab;
+        public int cubeCounter;
 
         // Key.Item1 is a gene name, Key.Item2 is a cell name, Value is the expression
         public Dictionary<Tuple<string, string>, float> GeneExprs { get; set; }
@@ -26,14 +29,45 @@ namespace CellexalVR.Filters
         private string geneName = string.Empty;
         private LegendManager legendManager;
 
-        // Use this for initialization
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
         private void Start()
         {
             GeneExprs = new Dictionary<Tuple<string, string>, float>(new TupleComparer());
             currentFilter = new Filter();
-            legendManager = GetComponent<LegendManager>();
+            legendManager = referenceManager.legendManager;
             CellexalEvents.LegendDetached.AddListener(DeActivateFilter);
         }
+
+        /// <summary>
+        /// Removes the latest added culling cube.
+        /// </summary>
+        public void RemoveCube()
+        {
+            GameObject cubeToDestroy = GameObject.Find("CullingCube" + cubeCounter);
+            Destroy(cubeToDestroy);
+            cubeCounter--;
+            CellexalEvents.CullingCubeRemoved.Invoke();
+        }
+
+        /// <summary>
+        /// Adds one more culling cube. A maximum of two can be added.
+        /// </summary>
+        public void AddCube()
+        {
+            GameObject cube = Instantiate(cullingCubePrefab);
+            cubeCounter++;
+            cube.GetComponent<CullingCube>().boxNr = cubeCounter;
+            cube.gameObject.name = "CullingCube" + cubeCounter;
+            CellexalEvents.CullingCubeSpawned.Invoke();
+        }
+
         /// <summary>
         /// If something has changed on the filter update it. Either new attribute has been added/removed or gene filter has changed etc.
         /// </summary>
@@ -149,9 +183,9 @@ namespace CellexalVR.Filters
         }
 
 
-        public void AddGeneFilter(string gene, int startX, int endX, float highestGeneValue, string geneName)
+        public void AddGeneFilter(string gene, int startX, int endX, float highestGeneValue)
         {
-            this.geneName = geneName;
+            this.geneName = gene.ToLower();
             BooleanExpression.Token greaterToken = new BooleanExpression.Token(BooleanExpression.Token.Type.OP_GTEQ, ">=", startX);
             BooleanExpression.Token lessToken = new BooleanExpression.Token(BooleanExpression.Token.Type.OP_LTEQ, "<=", endX);
             float lowValue = (highestGeneValue / 30) * startX;
@@ -162,7 +196,7 @@ namespace CellexalVR.Filters
             highExpr.SetCullingFilterManager(this);
             BooleanExpression.AndExpr andExpr = new BooleanExpression.AndExpr(lowExpr, highExpr);
             currentFilter.Expression = andExpr;
-            legendManager.geneExpressionHistogram.filterTextLabel.text = currentFilter.Expression.ToString().Trim(new char[] { '(', ')' }); 
+            legendManager.geneExpressionHistogram.filterTextLabel.text = currentFilter.Expression.ToString().Trim(new char[] { '(', ')' });
             UpdateCullingFilter();
         }
 
