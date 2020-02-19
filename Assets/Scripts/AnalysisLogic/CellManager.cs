@@ -413,7 +413,7 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            graphManager.ColorAllGraphsByGeneExpression(expressions);
+            graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
 
             //float percentInResults = (float)database._result.Count / cells.Values.Count;
             //statusDisplay.RemoveStatus(coloringInfoStatusId);

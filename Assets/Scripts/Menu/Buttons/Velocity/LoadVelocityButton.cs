@@ -69,7 +69,6 @@ namespace CellexalVR.Menu.Buttons.Velocity
 
         public override void Click()
         {
-            print("Clickked u mofo");
             var velocityGenerator = referenceManager.velocityGenerator;
             Graph graphToActivate = subGraph != null ? subGraph : graph;
             //velocityGenerator.ActiveGraphs.ForEach((g) => print("activegraphs: " + g));

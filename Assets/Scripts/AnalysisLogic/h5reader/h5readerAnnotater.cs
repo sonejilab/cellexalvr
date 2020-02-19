@@ -112,11 +112,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 return;
             }
 
-            if (!config.ContainsKey("cellexpr")) { 
-                CellexalError.SpawnError("Unfinished config", "Cell expressions have to be added");
-                return;
-            }
-
+    
             using (StreamWriter outputFile = new StreamWriter(Path.Combine("Data\\" + path, "config.conf")))
             {
                 foreach (KeyValuePair<string, string> kvp in config)

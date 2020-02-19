@@ -74,7 +74,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 script.isTop = false;
                 script.isBottom = true;
                 script.parentScript = this;
-                go.SetActive(false);
+                if(!isTop)
+                    go.SetActive(false);
             }
         }
 
