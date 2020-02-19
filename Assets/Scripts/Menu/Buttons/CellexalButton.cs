@@ -124,7 +124,7 @@ namespace CellexalVR.Menu.Buttons
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
                 //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.isActiveAndEnabled && buttonActivated)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible() && buttonActivated)
                 {
                     laserInside = true;
                     frameCount = 0;
@@ -142,12 +142,12 @@ namespace CellexalVR.Menu.Buttons
                 controllerInside = laserInside;
                 SetHighlighted(laserInside);
                 //summertwerk
-                /*
-                if (descriptionText.text == Description)
+                
+                if (descriptionText.text == Description && !laserInside)
                 {
                     descriptionText.text = "";
                 }
-                */
+                
                 frameCount = 0;
             }
         }
@@ -200,9 +200,9 @@ namespace CellexalVR.Menu.Buttons
         }
 
         /// <summary>
-        /// To synchronise the outline in multi-user mode. So the outline doesnt get active if the other users menu or tab is active.
+        /// To synchronise the outline in multi-user mode. So the outline doesnt get active unless the other users menu or tab is active.
         /// </summary>
-        public void ToggleOutline(bool toggle)
+        public void ToggleOutline(bool toggle, bool legend = false)
         {
             var tab = transform.parent.GetComponent<Tab>();
             var menuNoTab = transform.parent.GetComponent<MenuWithoutTabs>();
@@ -210,7 +210,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 activeOutline.SetActive(toggle);
             }
-            else if (menuNoTab != null)
+            else if (menuNoTab != null || legend)
             {
                 activeOutline.SetActive(toggle);
             }
@@ -284,6 +284,10 @@ namespace CellexalVR.Menu.Buttons
                 else if (meshRenderer != null)
                 {
                     meshRenderer.material.color = meshHighlightColor;
+                }
+                if (descriptionText.text == "")
+                {
+                    descriptionText.text = Description;
                 }
             }
             if (!highlight)

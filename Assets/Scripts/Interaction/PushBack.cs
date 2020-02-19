@@ -52,6 +52,10 @@ namespace CellexalVR.Interaction
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist + 5, layerMask);
             if (hit.collider)
             {
+                if (hit.transform.gameObject.name.Contains("Slice"))
+                {
+                    return;
+                }
                 // don't let the thing become smaller than what it was originally
                 // this could cause some problems if the user rescales the objects while they are far away
                 if (Vector3.Distance(hit.transform.position, raycastingSource.position) < 0.5f)
@@ -91,6 +95,10 @@ namespace CellexalVR.Interaction
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
             if (hit.collider)
             {
+                if (hit.transform.gameObject.name.Contains("Slice"))
+                {
+                    return;
+                }
                 Vector3 dir = hit.transform.position - raycastingSource.position;
                 dir = dir.normalized;
                 hit.transform.position += dir * distanceMultiplier;

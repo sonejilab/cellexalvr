@@ -5,14 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using VRTK;
-using TMPro;
 using System.IO;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
-using CellexalVR.SceneObjects;
 using System.Threading;
 
 namespace CellexalVR.AnalysisLogic
@@ -73,6 +71,8 @@ namespace CellexalVR.AnalysisLogic
         private int coloringInfoStatusId;
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
+        private bool linesBundled;
+        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
 
         //summertwerk
         public CellexalVR.AnalysisLogic.H5reader.H5reader h5Reader;
@@ -150,6 +150,43 @@ namespace CellexalVR.AnalysisLogic
         public Cell[] GetCells()
         {
             return cells.Values.ToArray();
+        }
+
+        /// <summary>
+        /// Returns cells that belongs to a certain attribute.
+        /// </summary>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
+        public Cell[] GetCells(string attribute)
+        {
+            return cells.Values.Where(x => x.Attributes.ContainsKey(attribute.ToLower())).ToArray();
+        }
+
+        /// <summary>
+        /// Returns cell that belong to a certain selection group.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
+        public Cell[] GetCells(int group)
+        {
+            return cells.Values.Where(x => (x.GraphPoints[0].Group == group)).ToArray();
+        }
+
+        public int GetNumberOfCells()
+        {
+            return cells.Count;
+        }
+
+
+        public void HighlightCells(Cell[] cellsToHighlight, bool highlight)
+        {
+            foreach (Cell cell in cellsToHighlight)
+            {
+                foreach (Graph.GraphPoint gp in cell.GraphPoints)
+                {
+                    gp.HighlightGraphPoint(highlight);
+                }
+            }
         }
 
         /// <summary>
@@ -265,9 +302,6 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.heatmapGenerator.HighLightGene(geneName);
             referenceManager.networkGenerator.HighLightGene(geneName);
         }
-
-
-
 
         //private void QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
         //{
@@ -440,7 +474,7 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            graphManager.ColorAllGraphsByGeneExpression(expressions);
+            graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
 
             //float percentInResults = (float)database._result.Count / cells.Values.Count;
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
@@ -571,6 +605,11 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalLog.Log("Colored graphs by " + attributeType);
             int numberOfCells = 0;
+            Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
+            for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
+            {
+                pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+            }
 
             foreach (Cell cell in cells.Values)
             {
@@ -588,20 +627,37 @@ namespace CellexalVR.AnalysisLogic
                     {
                         selectionList.Remove(gp);
                     }
+
+                    foreach (var graphPoint in cell.GraphPoints)
+                    {
+                        pos[graphPoint.parent.GraphName].Add(graphPoint.Position);
+                    }
                 }
             }
             int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
             Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
-            foreach (Graph graph in graphManager.Graphs)
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.AttributeLegend;
+            if (color)
             {
-                if (color)
+                referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
+                foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    graph.GetComponentInChildren<AttributeLegend>().AddAttribute(attributeType, numberOfCells, attributeColor);
+                    //referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
                 }
-                else
+
+            }
+            else
+            {
+                foreach (Graph graph in referenceManager.graphManager.Graphs)
                 {
-                    graph.GetComponentInChildren<AttributeLegend>().RemoveAttribute(attributeType);
+                    //Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
+                    //convexHulls.Remove(graph.GraphName + "_" + attributeType);
                 }
+                referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
+            }
+            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            {
+                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
             }
 
             CellexalEvents.CommandFinished.Invoke(true);
@@ -711,6 +767,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="points"> The graphpoints to draw the lines from. </param>
         public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
         {
+            ClearLinesBetweenGraphPoints();
             var fromGraph = points[0].parent;
             var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs.Union(graphManager.attributeSubGraphs)).ToList();
             foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
@@ -733,13 +790,33 @@ namespace CellexalVR.AnalysisLogic
                 }
                 if (gbg)
                 {
-                    StartCoroutine(gbg.ClusterLines(points, fromGraph, toGraph, clusterSize: 5,
-                                    neighbourDistance: 0.10f, kernelBandwidth: 1.5f));
+                    linesBundled = points.Count > 500;
+                    StartCoroutine(gbg.ClusterLines(bundle: linesBundled));
                 }
             }
 
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
+        }
 
+        public void BundleAllLines()
+        {
+            foreach (Graph g in graphManager.Graphs)
+            {
+                foreach (GameObject obj in g.CTCGraphs)
+                {
+                    GraphBetweenGraphs gbg = obj.GetComponent<GraphBetweenGraphs>();
+                    if (gbg.gameObject.activeSelf)
+                    {
+                        if (!linesBundled)
+                        {
+                            gbg.RemoveClusters();
+                        }
+                        gbg.RemoveLines();
+                        StartCoroutine(gbg.ClusterLines(bundle: !linesBundled));
+                    }
+                }
+            }
+            linesBundled = !linesBundled;
         }
 
 

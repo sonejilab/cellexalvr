@@ -7,7 +7,7 @@ def crawl(lib, push):
 	for a in lib.keys():
 		if(hasattr(lib[a],'shape')):
 			boi[a] = lib[a].shape
-			print(push + a + ": " + str(lib[a].shape))
+			print(push + a + ": " + str(lib[a].shape) + "_"+ str(lib[a].dtype.kind))
 		else:
 			print(push + a + ":")
 			boi[a] = crawl(lib[a], push + str(a)+"/")

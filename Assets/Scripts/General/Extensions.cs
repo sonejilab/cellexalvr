@@ -134,5 +134,25 @@ namespace CellexalVR.Extensions
             }
             return -1;
         }
+
+        /// <summary>
+        /// Divides each component of two vectors. Zeros in denumerator vector (<paramref name="v2"/>) will be replaced with 1
+        /// </summary>
+        /// <param name="v1">The first vector</param>
+        /// <param name="v2">The second vector</param>
+        /// <returns>The resulting vector</returns>
+        public static Vector3 InverseScale(this Vector3 v1, Vector3 v2)
+        {
+            if (v2.x == 0f)
+                v2.x = 1f;
+
+            if (v2.y == 0f)
+                v2.y = 1f;
+
+            if (v2.z == 0f)
+                v2.z = 1f;
+
+            return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
+        }
     }
 }

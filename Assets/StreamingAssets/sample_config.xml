@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ConfigDir>\Config</ConfigDir>
-  <RscriptexePath>C:\Program Files\R\R-3.6.0\bin\x64\Rscript.exe</RscriptexePath>
+  <RscriptexePath>REPLACE THIS TEXT WITH PATH TO R EXECUTABLE</RscriptexePath>
   <GraphLoadingCellsPerFrameStartCount>200</GraphLoadingCellsPerFrameStartCount>
   <GraphLoadingCellsPerFrameIncrement>15</GraphLoadingCellsPerFrameIncrement>
   <GraphClustersPerFrameStartCount>5</GraphClustersPerFrameStartCount>
@@ -9,147 +9,165 @@
   <GraphGrabbableCollidersExtensionThresehold>0.05</GraphGrabbableCollidersExtensionThresehold>
   <SelectionToolColors>
     <Color>
-      <r>1</r>
-      <g>0</g>
-      <b>0.000599861145</b>
-      <a>1</a>
-    </Color>
-    <Color>
       <r>0</r>
-      <g>0</g>
+      <g>0.4028449</g>
       <b>1</b>
       <a>1</a>
     </Color>
     <Color>
+      <r>1</r>
+      <g>0.628734052</g>
+      <b>0</b>
+      <a>1</a>
+    </Color>
+    <Color>
       <r>0</r>
-      <g>1</g>
+      <g>0.7526316</g>
+      <b>0.0368421823</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.9681845</r>
+      <g>0.4934338</g>
+      <b>0.9973662</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0</r>
+      <g>0.453628838</g>
+      <b>0.484210521</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.6821781</r>
+      <g>0.2157895</g>
       <b>1</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0</r>
-      <g>1</g>
-      <b>0.144524574</b>
+      <r>0.6488141</r>
+      <g>0.8789474</g>
+      <b>0.235927984</b>
       <a>1</a>
     </Color>
     <Color>
       <r>1</r>
-      <g>1</g>
+      <g>0</g>
+      <b>0</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.060216032</r>
+      <g>0.276446164</g>
+      <b>0.76273644</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>1</r>
+      <g>0.9947233</g>
       <b>0</b>
       <a>1</a>
     </Color>
     <Color>
       <r>1</r>
-      <g>0.305263162</g>
-      <b>0.9730868</b>
+      <g>0.100000024</g>
+      <b>0.670696855</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.5019608</r>
-      <g>0</g>
-      <b>0.5019608</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>0.313725471</r>
-      <g>0.5686275</g>
-      <b>0</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>1</r>
-      <g>0.6</g>
-      <b>0.199999988</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>0</r>
-      <g>1</g>
-      <b>0.501960754</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>0</r>
-      <g>0.5254902</g>
-      <b>0.243137255</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>0.290195942</r>
-      <g>0</g>
+      <r>0.2368421</r>
+      <g>0.616334438</g>
       <b>1</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.6784314</r>
-      <g>1</g>
+      <r>0.7552609</r>
+      <g>0.07155101</g>
+      <b>0.7282216</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.06936268</r>
+      <g>0.823681951</g>
+      <b>0.8204165</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>1</r>
+      <g>0.305882335</g>
+      <b>0.9725491</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.8225353</r>
+      <g>0.886839867</g>
+      <b>0.168032825</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.09236795</r>
+      <g>0.449997753</g>
+      <b>0.297529757</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.7294118</r>
+      <g>0.5294118</g>
+      <b>0.721568644</b>
+      <a>1</a>
+    </Color>
+    <Color>
+      <r>0.0287804585</r>
+      <g>0.9175794</g>
       <b>0</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.481895059</r>
-      <g>0.0253628865</g>
-      <b>0.147039816</b>
+      <r>0.9860005</r>
+      <g>0.5440002</g>
+      <b>0</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0</r>
-      <g>0.6924214</g>
-      <b>0.4502445</b>
+      <r>0.47693792</r>
+      <g>0.9342083</g>
+      <b>0.932228744</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0</r>
-      <g>0.203921556</g>
-      <b>0.443137258</b>
+      <r>0.4483932</r>
+      <g>0.5184188</g>
+      <b>0.0954982042</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.568627357</r>
-      <g>0.46274507</g>
-      <b>1</b>
+      <r>0.703210235</r>
+      <g>0.201826751</g>
+      <b>0.8521574</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.6039216</r>
-      <g>0.458823532</g>
-      <b>0.247058809</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>1</r>
-      <g>0.807843149</g>
-      <b>0.388235331</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>0.509804</r>
-      <g>1</g>
-      <b>0.388235331</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>1</r>
+      <r>0.04705882</r>
       <g>0</g>
-      <b>0.443137169</b>
+      <b>0.4745098</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.152941167</r>
-      <g>0.3882353</g>
-      <b>0.2745098</b>
+      <r>0.523681939</r>
+      <g>0.523681939</g>
+      <b>0.523681939</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.1764706</r>
-      <g>0.2313725</g>
-      <b>0.5058824</b>
+      <r>0.478473216</r>
+      <g>0.12087746</g>
+      <b>0.408841044</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.41568628</r>
-      <g>0.6745098</g>
-      <b>0.164705887</b>
+      <r>0.570211</r>
+      <g>0</g>
+      <b>0</b>
       <a>1</a>
     </Color>
   </SelectionToolColors>
@@ -159,6 +177,12 @@
     <b>1</b>
     <a>1</a>
   </GraphDefaultColor>
+  <GraphZeroExpressionColor>
+    <r>0.30347386</r>
+    <g>0.298682153</g>
+    <b>0.298682153</b>
+    <a>1</a>
+  </GraphZeroExpressionColor>
   <GraphNumberOfExpressionColors>30</GraphNumberOfExpressionColors>
   <GraphLowExpressionColor>
     <r>0</r>
@@ -219,9 +243,9 @@
     <a>1</a>
   </HeatmapHighExpressionColor>
   <HeatmapHighlightMarkerColor>
-    <r>0</r>
-    <g>0</g>
-    <b>0</b>
+    <r>1</r>
+    <g>1</g>
+    <b>1</b>
     <a>1</a>
   </HeatmapHighlightMarkerColor>
   <HeatmapConfirmMarkerColor>
@@ -248,30 +272,38 @@
   </NetworkLineColorPositiveLow>
   <NetworkLineColorNegativeLow>
     <r>0</r>
-    <g>0</g>
-    <b>1</b>
+    <g>1</g>
+    <b>0</b>
     <a>1</a>
   </NetworkLineColorNegativeLow>
   <NetworkLineColorNegativeHigh>
     <r>0</r>
-    <g>1</g>
-    <b>0</b>
+    <g>0</g>
+    <b>1</b>
     <a>1</a>
   </NetworkLineColorNegativeHigh>
   <NumberOfNetworkLineColors>30</NumberOfNetworkLineColors>
   <NetworkLineWidth>0.001</NetworkLineWidth>
   <VelocityParticlesLowColor>
     <r>0</r>
-    <g>0</g>
+    <g>0.0665245056</g>
     <b>1</b>
     <a>1</a>
   </VelocityParticlesLowColor>
   <VelocityParticlesHighColor>
     <r>1</r>
     <g>0</g>
-    <b>0</b>
+    <b>0.000599861145</b>
     <a>1</a>
   </VelocityParticlesHighColor>
   <ConsoleMaxBufferLines>256</ConsoleMaxBufferLines>
   <ShowNotifications>false</ShowNotifications>
+  <GraphPointQuality>Standard</GraphPointQuality>
+  <GraphPointSize>Standard</GraphPointSize>
+  <SkyboxTintColor>
+    <r>0.431578934</r>
+    <g>0.431578934</g>
+    <b>0.431578934</b>
+    <a>1</a>
+  </SkyboxTintColor>
 </Config>

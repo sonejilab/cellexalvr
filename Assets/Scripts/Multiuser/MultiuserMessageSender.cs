@@ -208,6 +208,13 @@ namespace CellexalVR.Multiuser
             CellexalLog.Log("Informing clients to recolor color graphs by current selection");
             coordinator.photonView.RPC("RecieveMessageRecolorSelectionPoints", PhotonTargets.Others);
         }
+        public void SendMessageToggleTransparency(bool toggle)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to clear expression colours");
+            coordinator.photonView.RPC("RecieveMessageToggleTransparency", PhotonTargets.Others, toggle);
+        }
+
         #endregion
 
         #region Keyboard
@@ -404,12 +411,17 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageResetGraphPosition", PhotonTargets.Others);
         }
 
-        public void SendMessageDrawLinesBetweenGps()
+        public void SendMessageDrawLinesBetweenGps(bool toggle = false)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDrawLinesBetweenGps", PhotonTargets.Others);
+            coordinator.photonView.RPC("RecieveMessageDrawLinesBetweenGps", PhotonTargets.Others, toggle);
         }
 
+        public void SendMessageBundleAllLines()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageBundleAllLines", PhotonTargets.Others);
+        }
         public void SendMessageClearLinesBetweenGps()
         {
             if (!multiplayer) return;
@@ -432,6 +444,22 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageCreateAttributeGraph", PhotonTargets.Others);
+        }
+
+        public void SendMessageActivateSlices()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageActivateSlices", PhotonTargets.Others);
+        }
+        public void SendMessageSpatialGraphGrabbed(string sliceName, string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpatialGraphGrabbed", PhotonTargets.Others, sliceName, graphName);
+        }
+        public void SendMessageSpatialGraphUnGrabbed(string sliceName, string graphName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpatialGraphUnGrabbed", PhotonTargets.Others, sliceName, graphName);
         }
         #endregion
 
@@ -728,6 +756,19 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to reset filter");
             coordinator.photonView.RPC("RecieveMessageResetFilter", PhotonTargets.Others);
+        }
+
+        public void SendMessageRemoveCullingCube()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to remove culling cube");
+            coordinator.photonView.RPC("RecieveMessageRemoveCullingCube", PhotonTargets.Others);
+        }
+        public void SendMessageAddCullingCube()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to add culling cube");
+            coordinator.photonView.RPC("RecieveMessageAddCullingCube", PhotonTargets.Others);
         }
         #endregion
 

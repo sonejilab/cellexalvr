@@ -1,9 +1,11 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+//using UnityEditor;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -15,6 +17,10 @@ namespace CellexalVR.AnalysisLogic
         public GameObject particleSystemPrefab;
         public Material arrowMaterial;
         public Material standardMaterial;
+        public GameObject triprefab;
+        public GameObject sphereprefab;
+        public GameObject convexHullPrefab;
+        public Material noCullBackSideMaterial;
 
         private float frequency = 1f;
         private float speed = 8f;
@@ -636,30 +642,41 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
         }
+        */
 
-        private IEnumerator DelaunayTriangulation(string path)
+        [ConsoleCommand("velocityGenerator", aliases: new string[] { "dt", "delaunaytriangulation" })]
+        public void DelaunayTriangulation(string graphName)
         {
-            CellexalLog.Log("Started generating velocity data");
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
-            int lastDotIndex = path.LastIndexOf('.');
-            string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             Graph graph = referenceManager.graphManager.FindGraph(graphName);
-            //graph.octreeRoot.ResetIteration();
-            //Graph.OctreeNode first = graph.octreeRoot.FirstLeafNotIterated();
+
+            if (graph is null)
+            {
+                graph = referenceManager.graphManager.FindGraph("");
+            }
+
+            List<Vector3> pos = new List<Vector3>(graph.points.Count);
+            foreach (var gp in graph.points.Values)
+            {
+                pos.Add(gp.Position);
+            }
+            //DelaunayTriangulation(graph, pos, Color.white, "all");
+            CellexalEvents.CommandFinished.Invoke(true);
+            //StartCoroutine(DelaunayTriangulationCoroutine(graph, pos, Color.white, "all"));
+        }
+
+        public void DelaunayTriangulation(Graph graph, List<Vector3> pos, Color color, string attributeName)
+        {
+            CellexalLog.Log("Started delaunay triangulation");
+
+            System.Diagnostics.Stopwatch stopwatchTotal = new System.Diagnostics.Stopwatch();
+            stopwatchTotal.Start();
 
             // delaunay triangulation
-            List<Vector3> pos = new List<Vector3>();
             List<Vector4Int> tetras = new List<Vector4Int>();
             List<float> circumRadiusesSqr = new List<float>();
             List<Vector3> circumCenters = new List<Vector3>();
             List<Vector4Int> badTetras = new List<Vector4Int>();
-
-            Vector3 slightOffset = graph.diffCoordValues / 10f;
-            Vector3 minCoords = graph.minCoordValues - slightOffset;
-            Vector3 maxCoords = graph.maxCoordValues + slightOffset;
-            float maxDist = graph.diffCoordValues.sqrMagnitude * 0.05f;
+            float maxDist = 0.3f;
 
             // make debug parents
             GameObject empty = new GameObject();
@@ -668,37 +685,11 @@ namespace CellexalVR.AnalysisLogic
             GameObject sphereParent = Instantiate(empty, graph.transform);
             sphereParent.name = "Spheres";
             Destroy(empty);
-            graph.transform.position = new Vector3(100, 100, 100);
-
 
             #region helper_functions
             // helper functions for later
-            Action<Vector4Int> AddCircumRadiusAndCenter = (v) =>
+            void AddCircumRadiusAndCenter(Vector4Int v)
             {
-                //Vector3 sideA = pos[v.x] - pos[v.y];
-                //Vector3 sideB = pos[v.y] - pos[v.z];
-                //Vector3 sideC = pos[v.z] - pos[v.x];
-                //float a = sideA.magnitude; // side 1
-                //float b = sideB.magnitude; // side 2
-                //float c = sideC.magnitude; // side 3
-                ////float s = (a + b + c) / 2f; // semiperimeter
-                //float cr = (a * b * c) / Mathf.Sqrt((a + b + c) * (b + c - a) * (c + a - b) * (a + b - c)); // circumradius
-                //circumRadiuses.Add(cr);
-                //// midpoints if sides AB and BC
-                //Vector3 midpointAB = (pos[v.x] + pos[v.y]) / 2f;
-                //Vector3 midpointBC = (pos[v.y] + pos[v.z]) / 2f;
-                //// normals from midpoints
-                //Vector3 normalAB = sideB - Vector3.Project(sideB, sideA);
-                //Vector3 normalBC = sideC - Vector3.Project(sideC, sideB);
-                //Vector3 midpointDiff = midpointAB - midpointBC;
-                //a = Vector3.Dot(normalAB, normalAB);
-                //b = Vector3.Dot(normalAB, normalBC);
-                //c = Vector3.Dot(normalBC, normalBC);
-                //float d = Vector3.Dot(normalAB, midpointDiff);
-                //float e = Vector3.Dot(normalBC, midpointDiff);
-                //// intersection of the lines normalAB and normalBC going out of the points midpointAB and midpointBC respectively
-                //Vector3 intersect = midpointAB + normalAB * ((b * e - c * d) / (a * c - b * b));
-                //circumCenters.Add(intersect);
                 Vector3 sideA = pos[v.y] - pos[v.x];
                 Vector3 sideB = pos[v.z] - pos[v.x];
                 Vector3 sideC = pos[v.w] - pos[v.x];
@@ -706,29 +697,28 @@ namespace CellexalVR.AnalysisLogic
                 float b = sideB.magnitude; // side 2
                 float c = sideC.magnitude; // side 3
                 Vector3 circumSphereCenter = pos[v.x] + ((a * a * Vector3.Cross(sideB, sideC) + b * b * Vector3.Cross(sideC, sideA) + c * c * Vector3.Cross(sideA, sideB))
-        / (2 * Vector3.Dot(sideA, Vector3.Cross(sideB, sideC))));
+                                             / (2 * Vector3.Dot(sideA, Vector3.Cross(sideB, sideC))));
                 float circumSphereRadius = (pos[v.x] - circumSphereCenter).sqrMagnitude;
 
                 circumRadiusesSqr.Add(circumSphereRadius);
                 circumCenters.Add(circumSphereCenter);
-
-            };
+            }
 
             // first arg is an index in pos, second arg is an index in circumCenters / circumRadiuses
-            Func<int, int, bool> InsideCircumSphere = (p, c) =>
+            bool InsideCircumSphere(int p, int c)
             {
                 float dist = (circumCenters[c] - pos[p]).sqrMagnitude;
-                return dist < maxDist && dist < circumRadiusesSqr[c];
-            };
+                return (p < 3 || dist < maxDist) && dist < circumRadiusesSqr[c];
+            }
 
             // returns true if the edge between the two first args is the same as the edge between the last two args
-            Func<int, int, int, int, bool> EqualEdge = (x1, x2, y1, y2) =>
+            bool EqualEdge(int x1, int x2, int y1, int y2)
             {
                 return x1 == y1 && x2 == y2 || x1 == y2 && x2 == y1;
-            };
+            }
 
             // returns true if an edge is shared in another tetrahedron. first two args are the vertices defining the edge, third arg is the other tetrahedron
-            Func<int, int, Vector4Int, bool> SharesEdge = (v1, v2, other) =>
+            bool SharesEdge(int v1, int v2, Vector4Int other)
             {
                 return EqualEdge(v1, v2, other.x, other.y) ||
                        EqualEdge(v1, v2, other.x, other.z) ||
@@ -736,26 +726,72 @@ namespace CellexalVR.AnalysisLogic
                        EqualEdge(v1, v2, other.y, other.z) ||
                        EqualEdge(v1, v2, other.y, other.w) ||
                        EqualEdge(v1, v2, other.z, other.w);
-            };
+            }
 
             // returns true if a triangle is shared in another tetrahedron, first three args are the vertices of the triangle, fourth arg is the other tetrahedron
-            Func<int, int, int, Vector4Int, bool> SharesTri = (v1, v2, v3, other) =>
+            bool SharesTri(int v1, int v2, int v3, Vector4Int other)
             {
                 return SharesEdge(v1, v2, other) &&
                        SharesEdge(v1, v3, other) &&
                        SharesEdge(v2, v3, other);
 
-            };
+            }
 
-            int debugFrameCount = 0;
-
-            Action<string> DebugPrint = (s) =>
+            // returns true if a tetrahedron contains a vertex that was part of the original tetrahedron, i.e. is part of the edge
+            bool HasEdgeVert(Vector4Int tetra)
             {
-                print(s);
-                //CellexalLog.Log(s);
-            };
+                return tetra.x <= 3 || tetra.y <= 3 || tetra.z <= 3 || tetra.w <= 3;
+            }
 
-            Action DebugInstantiateObjects = () =>
+            bool HasOnlyOneEdgeVert(Vector4Int tetra)
+            {
+                if (tetra.x <= 3)
+                {
+                    return tetra.y > 3 && tetra.z > 3 && tetra.w > 3;
+                }
+                else if (tetra.y <= 3)
+                {
+                    return tetra.x > 3 && tetra.z > 3 && tetra.w > 3;
+                }
+                else if (tetra.z <= 3)
+                {
+                    return tetra.x > 3 && tetra.y > 3 && tetra.w > 3;
+                }
+                else
+                {
+                    return tetra.x > 3 && tetra.y > 3 && tetra.z > 3;
+                }
+
+            }
+
+            // returns the three indices of a tetra that is not on the edge, assuming that _one_ of the vertices are on the edge and the other three are not
+            Vector3Int NonEdgeVertices(Vector4Int tetra)
+            {
+                if (tetra.x <= 3)
+                {
+                    return new Vector3Int(tetra.y, tetra.z, tetra.w);
+                }
+                else if (tetra.y <= 3)
+                {
+                    return new Vector3Int(tetra.x, tetra.z, tetra.w);
+                }
+                else if (tetra.z <= 3)
+                {
+                    return new Vector3Int(tetra.x, tetra.y, tetra.w);
+                }
+                else
+                {
+                    return new Vector3Int(tetra.x, tetra.y, tetra.z);
+                }
+            }
+
+            void DebugPrint(string s)
+            {
+                //print(s);
+                CellexalLog.Log(s);
+            }
+
+            void DebugInstantiateObjects()
             {
                 // remove old debug objects
                 foreach (Transform t in sphereParent.transform)
@@ -769,12 +805,12 @@ namespace CellexalVR.AnalysisLogic
                 UnityEngine.Random.InitState(0);
                 for (int j = 0; j < tetras.Count; ++j)
                 {
-                    Vector4Int tri = tetras[j];
+                    Vector4Int tetra = tetras[j];
                     GameObject go = Instantiate(triprefab, lineParent.transform);
                     //go.transform.parent = graph.transform;
                     //go.transform.localPosition = Vector3.zero;
                     LineRenderer lineRenderer = go.GetComponent<LineRenderer>();
-                    Vector3[] scaled = new Vector3[] { graph.ScaleCoordinates(pos[tri.x]), graph.ScaleCoordinates(pos[tri.y]), graph.ScaleCoordinates(pos[tri.z]), graph.ScaleCoordinates(pos[tri.w]) };
+                    Vector3[] scaled = new Vector3[] { pos[tetra.x], pos[tetra.y], pos[tetra.z], pos[tetra.w] };
                     // move the lines slightly away from eachother
                     float halfWidth = lineRenderer.startWidth / 2f;
                     scaled[0] -= (scaled[1] + scaled[2] + scaled[3]).normalized * halfWidth;
@@ -785,91 +821,33 @@ namespace CellexalVR.AnalysisLogic
                     lineRenderer.startColor = lineRenderer.endColor = UnityEngine.Random.ColorHSV(0, 1, 0.6f, 1, 0.6f, 1, 1, 1);
 
                     //GameObject sphere = Instantiate(sphereprefab, sphereParent.transform);
-                    //sphere.transform.localPosition = graph.ScaleCoordinates(circumCenters[j]);
-                    //Vector3 s = graph.ScaleCoordinates(Vector3.one);
-                    //float maxS = Mathf.Max(s.x, s.y, s.z) * 2;
-                    //sphere.transform.localScale = new Vector3(circumRadiuses[j], circumRadiuses[j], circumRadiuses[j]) * maxS;
+                    //sphere.transform.localPosition = circumCenters[j];
+                    //float radius = Mathf.Sqrt(circumRadiusesSqr[j]);
+                    //sphere.transform.localScale = new Vector3(radius, radius, radius) * 2f;
+                    ////print(" radius " + radius);
                     //Material m = new Material(sphere.GetComponent<MeshRenderer>().material);
                     //m.color = UnityEngine.Random.ColorHSV(0, 1, 0.6f, 1, 0.6f, 1, 0.2f, 0.2f);
 
                     //sphere.GetComponent<MeshRenderer>().material = m;
                 }
-            };
+            }
             #endregion
 
-            //Vector3 smallerMinCoords = minCoords - graph.diffCoordValues;
-            //Vector3 largerMaxCoords = maxCoords + graph.diffCoordValues;
-            //pos.Add(new Vector3(0, largerMaxCoords.y, smallerMinCoords.z));
-            //pos.Add(new Vector3(largerMaxCoords.x, smallerMinCoords.y, smallerMinCoords.z));
-            //pos.Add(new Vector3(smallerMinCoords.x, smallerMinCoords.y, smallerMinCoords.z));
-            //pos.Add(new Vector3(0, 0, largerMaxCoords.z));
-            //tetras.Add(new Vector4Int(0, 1, 2, 3));
-            //AddCircumRadiusAndCenter(tetras[0]);
+            // add a tetrahedron that contains all points
+            pos.InsertRange(0, new Vector3[] {
+                new Vector3(0, 2f, -1f),
+                new Vector3(3f, -2f, -1f),
+                new Vector3(-3f, -2f, -1f),
+                new Vector3(0, 0, 3f)
+            });
+            tetras.Add(new Vector4Int(0, 1, 2, 3));
+            AddCircumRadiusAndCenter(tetras[0]);
 
-            // add grid of points
-            int nDivs = 10;
-            int nPointsPerSide = nDivs + 1;
-            Vector3 inc = (maxCoords - minCoords) / nDivs;
-            Vector3[] gridPos = new Vector3[nPointsPerSide];
-            for (int i = 0; i < nPointsPerSide; ++i)
+            for (int i = 4; i < pos.Count; ++i)
             {
-                gridPos[i] = minCoords + inc * i;
-            }
-            for (int i = 0; i < nPointsPerSide; ++i)
-            {
-                float x = gridPos[i].x;
-                for (int j = 0; j < nPointsPerSide; ++j)
-                {
-                    float y = gridPos[j].y;
-                    for (int k = 0; k < nPointsPerSide; ++k)
-                    {
-                        pos.Add(new Vector3(x, y, gridPos[k].z));
-                    }
-                }
-            }
 
-            int sideArea = nPointsPerSide * nPointsPerSide;
-            int index = 0;
-            int tetraIndex = tetras.Count;
-            for (int i = 0; i < nDivs; ++i, index += nPointsPerSide)
-            {
-                for (int j = 0; j < nDivs; ++j, ++index)
-                {
-                    for (int k = 0; k < nDivs; ++k, ++index)
-                    {
-                        tetras.Add(new Vector4Int(index, index + 1, index + nPointsPerSide, index + sideArea)); // 0 1 10 100
-                        tetras.Add(new Vector4Int(index + 1, index + sideArea, index + sideArea + 1, index + sideArea + nPointsPerSide + 1)); // 1 100 101 111
-                        tetras.Add(new Vector4Int(index + 1, index + nPointsPerSide, index + sideArea, index + sideArea + nPointsPerSide + 1)); // 1 10 100 111
-                        tetras.Add(new Vector4Int(index + 1, index + nPointsPerSide, index + nPointsPerSide + 1, index + sideArea + nPointsPerSide + 1)); // 1 10 11 111
-                        tetras.Add(new Vector4Int(index + nPointsPerSide, index + sideArea, index + sideArea + nPointsPerSide, index + sideArea + nPointsPerSide + 1)); // 10 100 110 111
-
-                        AddCircumRadiusAndCenter(tetras[tetraIndex++]);
-                        AddCircumRadiusAndCenter(tetras[tetraIndex++]);
-                        AddCircumRadiusAndCenter(tetras[tetraIndex++]);
-                        AddCircumRadiusAndCenter(tetras[tetraIndex++]);
-                        AddCircumRadiusAndCenter(tetras[tetraIndex++]);
-                    }
-                }
-            }
-
-            // add the rest of the points
-            int initPosCount = pos.Count;
-            pos.AddRange(graph.pointsPositions);
-
-            DebugPrint("init state, tetras count " + tetras.Count);
-            //DebugInstantiateObjects();
-
-            while (!Input.GetKeyDown(KeyCode.T))
-            {
-                yield return null;
-            }
-
-            for (int i = initPosCount; i < pos.Count; ++i)
-            {
-                Vector3 point = pos[i];
-                badTetras.Clear();
                 // find bad tetras
-                DebugPrint(i + " tetras count " + tetras.Count);
+                badTetras.Clear();
                 for (int j = 0; j < tetras.Count; ++j)
                 {
                     if (InsideCircumSphere(i, j))
@@ -881,7 +859,6 @@ namespace CellexalVR.AnalysisLogic
                         j--;
                     }
                 }
-                DebugPrint(i + " badtetras count " + badTetras.Count);
 
                 // find the boundary of the polygonal hole
                 List<int> polygon = new List<int>();
@@ -923,88 +900,82 @@ namespace CellexalVR.AnalysisLogic
                         polygon.Add(badTetras[j].x);
                         polygon.Add(badTetras[j].y);
                         polygon.Add(badTetras[j].z);
-                        //DebugPrint(i + " " + j + " added " + badTris[j].x + " " + badTris[j].y + " to polygon");
                     }
                     if (!sharedTrixyw)
                     {
                         polygon.Add(badTetras[j].x);
                         polygon.Add(badTetras[j].y);
                         polygon.Add(badTetras[j].w);
-                        //DebugPrint(i + " " + j + " added " + badTris[j].x + " " + badTris[j].z + " to polygon");
                     }
                     if (!sharedTrixzw)
                     {
                         polygon.Add(badTetras[j].x);
                         polygon.Add(badTetras[j].z);
                         polygon.Add(badTetras[j].w);
-                        //DebugPrint(i + " " + j + " added " + badTris[j].x + " " + badTris[j].y + " to polygon");
                     }
                     if (!sharedTriyzw)
                     {
                         polygon.Add(badTetras[j].y);
                         polygon.Add(badTetras[j].z);
                         polygon.Add(badTetras[j].w);
-                        //DebugPrint(i + " " + j + " added " + badTris[j].y + " " + badTris[j].z + " to polygon");
                     }
                 }
-                DebugPrint(i + " polygon count " + polygon.Count);
-                for (int j = 0; j < polygon.Count; j = j + 3)
+
+                for (int j = 0; j < polygon.Count; j += 3)
                 {
-                    Vector4Int newTri = new Vector4Int(polygon[j], polygon[j + 1], polygon[j + 2], i);
-                    tetras.Add(newTri);
-                    AddCircumRadiusAndCenter(newTri);
+                    Vector4Int newTetra = new Vector4Int(polygon[j], polygon[j + 1], polygon[j + 2], i);
+                    if (HasEdgeVert(newTetra))
+                    {
+                        tetras.Add(newTetra);
+                        AddCircumRadiusAndCenter(newTetra);
+                    }
                 }
-
-                //DebugInstantiateObjects();
-
-                DebugPrint(stopwatch.Elapsed.ToString());
-                yield return null;
-                while (!Input.GetKeyDown(KeyCode.T) && debugFrameCount == 0)
-                {
-                    if (Input.GetKeyDown(KeyCode.Y))
-                    {
-                        debugFrameCount = 10;
-                    }
-                    if (Input.GetKeyDown(KeyCode.U))
-                    {
-                        debugFrameCount = 1000;
-                    }
-                    if (i % 100 == 0)
-                    {
-                        DebugPrint(i + " " + stopwatch.Elapsed);
-                    }
-                    yield return null;
-                }
-                if (debugFrameCount > 0)
-                    debugFrameCount--;
-
             }
-            DebugPrint("tetras count after triangulation " + tetras.Count);
-            while (!Input.GetKeyDown(KeyCode.T))
+
+            CellexalLog.Log("Tetrahedrons count after triangulation: " + tetras.Count);
+
+            GameObject convexHullGameObject = Instantiate(convexHullPrefab);
+            MeshFilter meshFilter = convexHullGameObject.GetComponent<MeshFilter>();
+            Mesh mesh = new Mesh();
+            Vector3[] verts = new Vector3[tetras.Count * 3];
+            int[] tris = new int[tetras.Count * 3];
+            for (int i = 0, tetraIndex = 0; tetraIndex < tetras.Count; i += 3, tetraIndex += 1)
             {
-                yield return null;
-            }
-            for (int i = 0; i < tetras.Count; ++i)
-            {
-                Vector4Int t = tetras[i];
-                if (t.x <= 3 || t.y <= 3 || t.z <= 3 || t.w <= 3)
+                if (!HasOnlyOneEdgeVert(tetras[tetraIndex]))
                 {
-                    tetras.RemoveAt(i);
-                    circumCenters.RemoveAt(i);
-                    circumRadiusesSqr.RemoveAt(i);
-                    i--;
+                    continue;
                 }
+
+                Vector3Int nonEdgeVerts = NonEdgeVertices(tetras[tetraIndex]);
+                verts[i] = pos[nonEdgeVerts.x];
+                verts[i + 1] = pos[nonEdgeVerts.y];
+                verts[i + 2] = pos[nonEdgeVerts.z];
+                tris[i] = i;
+                tris[i + 1] = i + 1;
+                tris[i + 2] = i + 2;
             }
-            DebugPrint("tetras count after cleanup " + tetras.Count);
+            mesh.vertices = verts;
+            mesh.triangles = tris;
+            //MeshUtility.Optimize(mesh);
+            CellexalLog.Log("Mesh vertices after optimization: " + mesh.vertexCount);
 
-            DebugInstantiateObjects();
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
 
-            stopwatch.Stop();
-            CellexalLog.Log("Finished generating velocity data in " + stopwatch.Elapsed.ToString());
-            CellexalEvents.CommandFinished.Invoke(true);
-            yield return null;
+            meshFilter.mesh = mesh;
+            convexHullGameObject.name = graph.GraphName + "_" + attributeName;
+            convexHullGameObject.transform.position = graph.transform.position;
+            convexHullGameObject.transform.rotation = graph.transform.rotation;
+            convexHullGameObject.transform.parent = graph.transform;
+            color.a = 0.2f;
+            convexHullGameObject.gameObject.GetComponent<MeshRenderer>().material.color = color;
+            referenceManager.cellManager.convexHulls[graph.GraphName + "_" + attributeName] = convexHullGameObject;
+
+            stopwatchTotal.Stop();
+            CellexalLog.Log("Finished delaunay triangulation in " + stopwatchTotal.Elapsed.ToString());
         }
 
+        /*
         private class GraphNode
         {
             //Vector3 pos;
@@ -1023,7 +994,7 @@ namespace CellexalVR.AnalysisLogic
         }
         */
     }
-    /*
+
     struct Vector4Int
     {
         public int x;
@@ -1044,5 +1015,5 @@ namespace CellexalVR.AnalysisLogic
             return new Vector4Int(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
         }
     }
-    */
+
 }

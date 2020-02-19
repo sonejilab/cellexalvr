@@ -3,6 +3,9 @@
 library(Seurat)
 library(loomR)
 library(cellexalvrR)
+library(Dense2SparseHDF5)
+
+
 
 args = commandArgs(TRUE)
 

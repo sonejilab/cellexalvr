@@ -17,7 +17,7 @@ namespace CellexalVR.Menu.Buttons
         protected bool controllerInside = false;
         protected SteamVR_Controller.Device device;
         private MeshRenderer meshRenderer;
-        private Color standardColor = Color.black;
+        private Color standardColor = Color.grey;
         private Color highlightColor = Color.blue;
         private readonly string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool highlight;
@@ -80,7 +80,7 @@ namespace CellexalVR.Menu.Buttons
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10);
                 //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.isActiveAndEnabled)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible())
                 {
                     laserInside = true;
                     frameCount = 0;

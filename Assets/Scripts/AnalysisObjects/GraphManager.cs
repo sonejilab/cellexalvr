@@ -2,9 +2,11 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Linq;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -18,14 +20,13 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public AudioSource goodSound;
         public List<string> directories;
-        public Shader graphPointNormalShader;
-        public Shader graphPointOutlineShader;
         public SelectionManager selectionManager;
 
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
         public List<Graph> facsGraphs;
         public List<Graph> attributeSubGraphs;
+        public List<SpatialGraph> spatialGraphs;
         public List<string> velocityFiles;
 
         private CellManager cellManager;
@@ -227,12 +228,32 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Color all graphs with the expression of some gene.
         /// </summary>
-        /// <param name="expressions">An arraylist with <see cref="CellExpressionPair"/>.</param>
-        public void ColorAllGraphsByGeneExpression(ArrayList expressions)
+        /// <param name="expressions">An arraylist with <see cref="SQLiter.CellExpressionPair"/>.</param>
+        public void ColorAllGraphsByGeneExpression(string geneName, ArrayList expressions)
         {
             foreach (Graph graph in Graphs)
             {
                 graph.ColorByGeneExpression(expressions);
+            }
+
+            // create the gene expression histogram
+            int numberOfBins = CellexalConfig.Config.GraphNumberOfExpressionColors + 1;
+            int[] cellsPerBin = new int[numberOfBins];
+            float highestExpression = float.MinValue;
+            foreach (SQLiter.CellExpressionPair expression in expressions)
+            {
+                cellsPerBin[expression.Color + 1]++;
+                if (expression.Expression > highestExpression)
+                {
+                    highestExpression = expression.Expression;
+                }
+            }
+            cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.GeneExpressionLegend;
+            referenceManager.legendManager.geneExpressionHistogram.CreateHistogram(geneName, cellsPerBin, highestExpression.ToString(), GeneExpressionHistogram.YAxisMode.Linear);
+            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            {
+                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
             }
         }
 
@@ -282,6 +303,19 @@ namespace CellexalVR.AnalysisObjects
             networks.Remove(handler);
         }
 
+
+        /// <summary>
+        /// Toggles the transparency of all graph points on/off.
+        /// </summary>
+        /// <param name="toggle"></param>
+        public void ToggleGraphPointTransparency(bool toggle)
+        {
+            foreach (Graph graph in Graphs)
+            {
+                graph.MakeAllPointsTransparent(toggle);
+            }
+        }
+
         /// <summary>
         /// Clears expression colours from graph but keeps current selection colours.
         /// </summary>
@@ -323,8 +357,17 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in Graphs)
             {
+                if (g.GraphName.Contains("Slice"))
+                {
+                    continue;
+                }
                 g.ResetPosition();
                 g.ResetSizeAndRotation();
+            }
+            foreach (SpatialGraph sg in spatialGraphs)
+            {
+                sg.ResetPosition();
+                sg.ResetSizeAndRotation();
             }
             //SetGraphStartPosition();
         }
@@ -357,6 +400,22 @@ namespace CellexalVR.AnalysisObjects
             foreach (Graph g in Graphs)
             {
                 if (g.GraphName == graphName)
+                {
+                    return g;
+                }
+            }
+            // no graph found
+            return null;
+        }
+        public SpatialGraph FindSpatialGraph(string graphName)
+        {
+            if (graphName == "" && spatialGraphs.Count > 0)
+            {
+                return spatialGraphs[0];
+            }
+            foreach (SpatialGraph g in spatialGraphs)
+            {
+                if (g.gameObject.name == graphName)
                 {
                     return g;
                 }

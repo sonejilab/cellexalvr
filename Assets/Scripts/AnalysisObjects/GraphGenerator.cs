@@ -15,6 +15,7 @@ using CellexalVR.DesktopUI;
 using System.Threading;
 using CellexalVR.SceneObjects;
 using Unity.Burst;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -26,6 +27,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public GameObject graphpointsPrefab;
         public GameObject graphPrefab;
+        public GameObject spatialSlicePrefab;
         public GameObject AxesPrefabColoured;
         public GameObject AxesPrefabUncoloured;
         public Material graphPointMaterialPrefab;
@@ -40,7 +42,8 @@ namespace CellexalVR.AnalysisObjects
         public string DirectoryName { get; set; }
         public bool isCreating;
         public bool addingToExisting;
-        public enum GraphType { MDS, FACS, ATTRIBUTE, BETWEEN };
+        public enum GraphType { MDS, FACS, ATTRIBUTE, BETWEEN, SPATIAL };
+        public Color[] geneExpressionColors;
         public Texture2D graphPointColors;
         public int graphCount;
 
@@ -84,7 +87,8 @@ namespace CellexalVR.AnalysisObjects
             graphType = type;
             if (type == GraphType.BETWEEN)
             {
-                meshToUse = graphpointStandardQLargeSzMesh;
+                //meshToUse = graphpointStandardQLargeSzMesh;
+                meshToUse = graphpointLowQLargeSzMesh;
             }
             else if (CellexalConfig.Config.GraphPointQuality == "Standard"
                         && CellexalConfig.Config.GraphPointSize == "Standard")
@@ -118,12 +122,19 @@ namespace CellexalVR.AnalysisObjects
 
 
 
-
-            newGraph = Instantiate(graphPrefab).GetComponent<Graph>();
+            if (type == GraphType.SPATIAL)
+            {
+                meshToUse = graphpointStandardQLargeSzMesh;
+                newGraph = Instantiate(spatialSlicePrefab).GetComponent<Graph>();
+            }
+            else
+            {
+                newGraph = Instantiate(graphPrefab).GetComponent<Graph>();
+                newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
+            }
             //graphManager.SetGraphStartPosition();
             newGraph.transform.position = startPositions[graphCount % 6];
             newGraph.referenceManager = referenceManager;
-            newGraph.GetComponent<GraphInteract>().referenceManager = referenceManager;
             isCreating = true;
             graphCount++;
             return newGraph;
@@ -154,6 +165,11 @@ namespace CellexalVR.AnalysisObjects
 
             Color[] lowMidExpressionColors = Extensions.Extensions.InterpolateColors(lowColor, midColor, halfNbrOfExpressionColors);
             Color[] midHighExpressionColors = Extensions.Extensions.InterpolateColors(midColor, highColor, nbrOfExpressionColors - halfNbrOfExpressionColors + 1);
+
+            geneExpressionColors = new Color[CellexalConfig.Config.GraphNumberOfExpressionColors + 1];
+            geneExpressionColors[0] = CellexalConfig.Config.GraphZeroExpressionColor;
+            Array.Copy(lowMidExpressionColors, 0, geneExpressionColors, 1, lowMidExpressionColors.Length);
+            Array.Copy(midHighExpressionColors, 1, geneExpressionColors, 1 + lowMidExpressionColors.Length, midHighExpressionColors.Length - 1);
 
             //// reservered colors
             //graphpointColors[255] = Color.white;
@@ -520,6 +536,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 case GraphType.MDS:
                 case GraphType.BETWEEN:
+                case GraphType.SPATIAL:
                 case GraphType.ATTRIBUTE:
                     newGraph.longestAxis = Mathf.Max(newGraph.diffCoordValues.x, newGraph.diffCoordValues.y, newGraph.diffCoordValues.z);
                     break;
@@ -648,6 +665,7 @@ namespace CellexalVR.AnalysisObjects
                 newPart.GetComponent<MeshFilter>().mesh = newMesh;
                 newGraph.graphPointClusters.Add(newPart);
                 newPart.GetComponent<Renderer>().sharedMaterial = graphPointMaterial;
+                //newPart.GetComponent<Renderer>().sharedMaterials = new Material[] { graphPointMaterial, graphPointTransparentMaterial };
 
                 itemsThisFrame++;
                 if (itemsThisFrame >= maximumItemsPerFrame)
@@ -714,7 +732,7 @@ namespace CellexalVR.AnalysisObjects
             isCreating = false;
         }
 
-        private static string V2S(Vector3 v)
+        public static string V2S(Vector3 v)
         {
             return "(" + v.x + ", " + v.y + ", " + v.z + ")";
         }
@@ -818,6 +836,21 @@ namespace CellexalVR.AnalysisObjects
             CreateSubGraphs(attr);
         }
 
+
+
+        [ConsoleCommand("graphGenerator", aliases: "cm")]
+        public void CreateMeshFromCommandLine()
+        {
+            CreateMesh();
+        }
+
+
+        public void CreateMesh()
+        {
+            StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>().CreateMesh());
+        }
+
+
         /// <summary>
         /// Creates a subgraph based on some attrbiutes.
         /// </summary>
@@ -825,7 +858,6 @@ namespace CellexalVR.AnalysisObjects
         public void CreateSubGraphs(List<string> attributes)
         {
             BooleanExpression.Expr expr = new BooleanExpression.AttributeExpr(attributes[0], true);
-
             string name = attributes[0];
             if (name.Contains('@'))
             {

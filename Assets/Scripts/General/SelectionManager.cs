@@ -204,6 +204,17 @@ namespace CellexalVR.General
             //{
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
+            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            {
+                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
+            }
+
+            referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(newGroup.ToString(), 1, color);
+            if (!newNode)
+            {
+                referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(oldGroup.ToString(), -1, Color.white);
+            }
 
             //try
             //{
@@ -567,7 +578,7 @@ namespace CellexalVR.General
         /// </summary>
         public void SelectAll()
         {
-            Graph g = graphManager.Graphs[0];
+            Graph g = graphManager.originalGraphs.Find(x => !x.GraphName.Contains("Slice"));
             foreach (Cell c in referenceManager.cellManager.GetCells())
             {
                 Graph.GraphPoint gp = g.FindGraphPoint(c.Label);
@@ -579,7 +590,6 @@ namespace CellexalVR.General
                 {
                     AddGraphpointToSelection(gp, selectionToolCollider.currentColorIndex, false);
                 }
-
             }
         }
 
