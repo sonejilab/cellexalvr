@@ -6,7 +6,7 @@ namespace CellexalVR.Menu.Buttons
     public class ToggleTransparencyButton : CellexalButton
     {
         private GraphManager graphManager;
-        private bool toggle;
+        public bool Toggle { get; set; }
 
         protected override string Description
         {
@@ -18,9 +18,9 @@ namespace CellexalVR.Menu.Buttons
 
         public override void Click()
         {
-            referenceManager.multiuserMessageSender.SendMessageClearExpressionColours();
-            graphManager.ToggleGraphPointTransparency(!toggle);
-            toggle = !toggle;
+            referenceManager.multiuserMessageSender.SendMessageToggleTransparency(!Toggle);
+            graphManager.ToggleGraphPointTransparency(!Toggle);
+            Toggle = !Toggle;
         }
 
         // Use this for initialization
