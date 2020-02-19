@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.SceneObjects;
+using CellexalVR.Filters;
 using CellexalVR.General;
 using CellexalVR.Tools;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Tools
 {
     /// <summary>
-    /// Represents the button that spawns a culling cube. A maximum of two can be spawned.
+    /// Represents the button that spawns or removes a culling cube. A maximum of two can be spawned.
     /// </summary>
     public class CullingCubeButton : CellexalButton
     {
@@ -14,7 +15,8 @@ namespace CellexalVR.Menu.Buttons.Tools
         public bool remove;
         public CullingCubeButton otherButton;
 
-        private int counter;
+        private CullingFilterManager cullingFilterManager;
+
         protected override string Description
         {
             get { return remove ?  "Remove Culling Cube" : "Spawn Culling Cube"; }
@@ -22,35 +24,47 @@ namespace CellexalVR.Menu.Buttons.Tools
 
         private void Start()
         {
+            cullingFilterManager = referenceManager.cullingFilterManager;
             if (remove)
                 SetButtonActivated(false);
-            CellexalEvents.CullingCubeSpawned.AddListener(() => counter++);
-            CellexalEvents.CullingCubeRemoved.AddListener(() => counter--);
+            CellexalEvents.CullingCubeSpawned.AddListener(UpdateButtons);
+            CellexalEvents.CullingCubeRemoved.AddListener(UpdateButtons);
         }
 
         public override void Click()
         {
             if (remove)
             {
-                GameObject cubeToDestroy = GameObject.Find("CullingCube" + counter);
-                Destroy(cubeToDestroy);
-                otherButton.SetButtonActivated(true);
-                CellexalEvents.CullingCubeRemoved.Invoke();
-                if (counter == 0)
-                    SetButtonActivated(false);
+                cullingFilterManager.RemoveCube();
+                referenceManager.multiuserMessageSender.SendMessageRemoveCullingCube();
             }
             else
             {
-                GameObject cube = Instantiate(cullingCubePrefab);
-
-                CellexalEvents.CullingCubeSpawned.Invoke();
-                cube.GetComponent<CullingCube>().boxNr = counter;
-                cube.gameObject.name = "CullingCube" + counter;
-                otherButton.SetButtonActivated(true);
-                if (counter == 2)
-                    SetButtonActivated(false);
+                cullingFilterManager.AddCube();
+                referenceManager.multiuserMessageSender.SendMessageAddCullingCube();
             }
 
+        }
+
+        private void UpdateButtons()
+        {
+            int counter = cullingFilterManager.cubeCounter;
+            if (remove && counter == 0)
+            {
+                SetButtonActivated(false);
+            }
+            else if (!remove && counter == 2)
+            {
+                SetButtonActivated(false);
+            }
+            else if (remove && counter > 0)
+            {
+                SetButtonActivated(true);
+            }
+            else if (!remove && counter < 2)
+            {
+                SetButtonActivated(true);
+            }
         }
     }
 }

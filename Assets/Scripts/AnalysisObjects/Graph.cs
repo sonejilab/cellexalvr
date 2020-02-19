@@ -1581,7 +1581,7 @@ namespace CellexalVR.AnalysisObjects
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
-            byte greenChannel = (byte)(outline ? 4 : tex.g);
+            byte greenChannel = (byte)(outline ? 4 : 0);
             byte redChannel;
             if (i == -1)
             {
@@ -1640,7 +1640,7 @@ namespace CellexalVR.AnalysisObjects
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
-            byte greenChannel = (byte)(active ? 38 : tex.g);
+            byte greenChannel = (byte)(active ? 38 : 0);
             Color32 finalColor = new Color32(tex.r, greenChannel, 0, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;

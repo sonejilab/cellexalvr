@@ -407,17 +407,17 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="maxX">The index of the right bar</param>
         public void MoveSelectedArea(int minX, int maxX)
         {
+            selectedAreaInfoText.text = highlightAreaInfoText.text;
             MoveArea(selectedArea, selectedAreaInfoText, minX, maxX);
             if (attached)
             {
-                CullingFilterManager cullingFilterManager = gameObject.GetComponentInParent<CullingFilterManager>();
                 if (minX > maxX)
                 {
                     int temp = minX;
                     minX = maxX;
                     maxX = temp;
                 }
-                cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX, float.Parse(xAxisMaxLabel.text), geneNameLabel.text); // , minX / NumberOfBars, maxX / NumberOfBars);
+                referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX, float.Parse(xAxisMaxLabel.text));
             }
         }
 

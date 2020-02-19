@@ -35,6 +35,8 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.LegendAttached.AddListener(ActivateExtraColumn);
             CellexalEvents.LegendDetached.AddListener(DeActivateExtraColumn);
             CellexalEvents.GraphsReset.AddListener(ClearLegend);
+            CellexalEvents.GraphsColoredByGene.AddListener(ClearLegend);
+            CellexalEvents.GraphsColoredByIndex.AddListener(ClearLegend);
         }
 
         private void ActivateExtraColumn()
@@ -123,7 +125,7 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (GroupingLegendEntry entry in entries)
             {
-                Destroy(entry);
+                Destroy(entry.gameObject);
             }
             entries.Clear();
         }

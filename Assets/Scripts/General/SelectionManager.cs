@@ -205,6 +205,10 @@ namespace CellexalVR.General
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
 
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
+            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            {
+                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
+            }
 
             referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(newGroup.ToString(), 1, color);
             if (!newNode)

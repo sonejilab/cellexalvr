@@ -21,6 +21,7 @@ namespace CellexalVR.AnalysisObjects
         public bool legendActive;
         [HideInInspector]
         public Legend desiredLegend;
+        public Legend currentLegend;
         public enum Legend { None, AttributeLegend, GeneExpressionLegend, SelectionLegend }
 
         private Vector3 minPos = new Vector3(-0.58539f, -0.28538f, 0f);
@@ -31,6 +32,7 @@ namespace CellexalVR.AnalysisObjects
         private GameObject attachArea;
         private Transform originalParent;
         private Vector3 originalbackgroundScale;
+        private bool attached;
 
         private void Start()
         {
@@ -106,6 +108,7 @@ namespace CellexalVR.AnalysisObjects
             scale.x = 0.064f;
             backgroundPlane.transform.localScale = scale;
             CellexalEvents.LegendAttached.Invoke();
+            attached = true;
         }
 
         /// <summary>
@@ -134,6 +137,7 @@ namespace CellexalVR.AnalysisObjects
             backgroundPlane.transform.localPosition = pos;
             backgroundPlane.transform.localScale = originalbackgroundScale;
             CellexalEvents.LegendDetached.Invoke();
+            attached = false;
         }
 
         /// <summary>
@@ -166,10 +170,14 @@ namespace CellexalVR.AnalysisObjects
         public void ActivateLegend(Legend legendToActivate)
         {
             DeactivateLegend();
-            DetachLegendFromCube();
             backgroundPlane.SetActive(true);
             gameObject.GetComponent<Collider>().enabled = true;
             legendActive = true;
+            if (attached)
+            {
+                detachArea.SetActive(true);
+                CellexalEvents.LegendAttached.Invoke();
+            }
             switch (legendToActivate)
             {
                 case Legend.AttributeLegend:
@@ -184,6 +192,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
             desiredLegend = legendToActivate;
+            currentLegend = desiredLegend;
         }
 
         /// <summary>

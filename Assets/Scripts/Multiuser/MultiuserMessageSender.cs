@@ -208,6 +208,13 @@ namespace CellexalVR.Multiuser
             CellexalLog.Log("Informing clients to recolor color graphs by current selection");
             coordinator.photonView.RPC("RecieveMessageRecolorSelectionPoints", PhotonTargets.Others);
         }
+        public void SendMessageToggleTransparency(bool toggle)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to clear expression colours");
+            coordinator.photonView.RPC("RecieveMessageToggleTransparency", PhotonTargets.Others, toggle);
+        }
+
         #endregion
 
         #region Keyboard
@@ -749,6 +756,19 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to reset filter");
             coordinator.photonView.RPC("RecieveMessageResetFilter", PhotonTargets.Others);
+        }
+
+        public void SendMessageRemoveCullingCube()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to remove culling cube");
+            coordinator.photonView.RPC("RecieveMessageRemoveCullingCube", PhotonTargets.Others);
+        }
+        public void SendMessageAddCullingCube()
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to add culling cube");
+            coordinator.photonView.RPC("RecieveMessageAddCullingCube", PhotonTargets.Others);
         }
         #endregion
 

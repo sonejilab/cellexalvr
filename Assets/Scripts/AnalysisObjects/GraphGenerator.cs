@@ -124,6 +124,7 @@ namespace CellexalVR.AnalysisObjects
 
             if (type == GraphType.SPATIAL)
             {
+                meshToUse = graphpointStandardQLargeSzMesh;
                 newGraph = Instantiate(spatialSlicePrefab).GetComponent<Graph>();
             }
             else

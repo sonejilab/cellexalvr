@@ -236,6 +236,10 @@ namespace CellexalVR.AnalysisObjects
             cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.GeneExpressionLegend;
             referenceManager.legendManager.geneExpressionHistogram.CreateHistogram(geneName, cellsPerBin, highestExpression.ToString(), GeneExpressionHistogram.YAxisMode.Linear);
+            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            {
+                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
+            }
         }
 
         /// <summary>

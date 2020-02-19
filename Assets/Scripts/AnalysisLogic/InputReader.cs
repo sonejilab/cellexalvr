@@ -91,7 +91,6 @@ namespace CellexalVR.AnalysisLogic
             //headset = referenceManager.headset;
             if (CrossSceneInformation.Spectator)
             {
-                print("spectator");
                 headset = referenceManager.spectatorRig;
                 referenceManager.headset = headset;
                 headset.SetActive(true);

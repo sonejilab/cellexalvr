@@ -224,7 +224,7 @@ namespace CellexalVR.General
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();
             legendManager = managersParent.GetComponentInChildren<LegendManager>();
-            cullingFilterManager = legendManager.gameObject.GetComponent<CullingFilterManager>();
+            cullingFilterManager = managersParent.GetComponentInChildren<CullingFilterManager>();
             inputFolderGenerator = generatorsParent.GetComponentInChildren<InputFolderGenerator>();
             loaderController = GameObject.Find("Tron_Loader").GetComponent<LoaderController>();
             GameObject inputreader = GameObject.Find("InputReader");
