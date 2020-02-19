@@ -59,6 +59,8 @@ MonoBehaviour:
     type: 3}
   wirePrefab: {fileID: 5259189461818842502, guid: d223b4f0fc9f8a442a7a1c8540ee7892,
     type: 3}
+  brainModel: {fileID: 4577764139173546035, guid: bde05f983b4731849a54cdc40fb9c350,
+    type: 3}
 --- !u!114 &-8860227728147688023
 MonoBehaviour:
   m_ObjectHideFlags: 0

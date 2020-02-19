@@ -30,11 +30,14 @@ namespace CellexalVR.Spatial
         public ReferenceManager referenceManager;
         public GameObject replacementPrefab;
         public GameObject wirePrefab;
+        public GameObject brainModel;
 
         void Start()
         {
             rightController = referenceManager.rightController;
             startPosition = transform.position;
+            GameObject brain = GameObject.Instantiate(brainModel);
+            brain.GetComponent<ReferenceMouseBrain>().spatialGraph = this;
         }
 
         void Update()
@@ -173,6 +176,7 @@ namespace CellexalVR.Spatial
                 if (!slicesActive)
                 {
                     Destroy(GetComponent<Rigidbody>());
+                    Destroy(GetComponent<Collider>());
                     StartCoroutine(gs.ActivateSlice(true));
                 }
                 else
@@ -182,6 +186,7 @@ namespace CellexalVR.Spatial
                     {
                         rigidbody = gameObject.AddComponent<Rigidbody>();
                     }
+                    gameObject.AddComponent<BoxCollider>();
                     rigidbody.useGravity = false;
                     rigidbody.isKinematic = false;
                     rigidbody.drag = 10;
