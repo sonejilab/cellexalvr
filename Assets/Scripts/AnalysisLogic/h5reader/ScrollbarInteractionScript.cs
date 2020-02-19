@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using CellexalVR.General;
 using UnityEngine;
-using CellexalVR.General;
 using UnityEngine.UI;
-namespace CellexalVR.Interaction
+namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class ScrollbarInteractionScript : MonoBehaviour
     {

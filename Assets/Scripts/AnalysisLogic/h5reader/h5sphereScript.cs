@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class h5sphereScript : MonoBehaviour
+namespace CellexalVR.AnalysisLogic.H5reader
 {
-    public Color color;
-    public string Type;
+    public class H5sphereScript : MonoBehaviour
+    {
+        public Color color;
+        public string Type;
+    }
 }

@@ -130,7 +130,7 @@ namespace CellexalVR.AnalysisLogic
             bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
             if (!confExists)
             {
-                referenceManager.h5ReaderAnnotatorScriptManager.addAnnotator(path);
+                referenceManager.h5ReaderAnnotatorScriptManager.AddAnnotator(path);
                 return;
             }
 
@@ -261,7 +261,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
 
-            cellManager.h5Reader = new h5reader(path);
+            cellManager.h5Reader = new H5reader.H5reader(path);
             StartCoroutine(cellManager.h5Reader.ConnectToFile());
             while (cellManager.h5Reader.busy)
                 yield return null;

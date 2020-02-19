@@ -385,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f51706cb39cac97428b9166583551c27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentScript: {fileID: 0}
   image: {fileID: 62715553428396557}
 --- !u!65 &2807087360894076244
 BoxCollider:
@@ -394,8 +395,8 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7763562334228667164}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: -2.5}

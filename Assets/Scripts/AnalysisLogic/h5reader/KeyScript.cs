@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class KeyScript : MonoBehaviour
+namespace CellexalVR.AnalysisLogic.H5reader
 {
-    public H5ReaderAnnotatorTextBoxScript key;
+    public class KeyScript : MonoBehaviour
+    {
+        public H5ReaderAnnotatorTextBoxScript key;
+    }
 }

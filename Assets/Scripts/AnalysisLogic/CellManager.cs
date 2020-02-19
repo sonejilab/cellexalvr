@@ -75,7 +75,7 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Graph.GraphPoint, int> selectionList;
 
         //summertwerk
-        public h5reader h5Reader;
+        public CellexalVR.AnalysisLogic.H5reader.H5reader h5Reader;
 
         private void OnValidate()
         {
@@ -356,7 +356,7 @@ namespace CellexalVR.AnalysisLogic
             */
             try
             {
-                StartCoroutine(h5Reader.colorbygene(geneName, coloringMethod));
+                StartCoroutine(h5Reader.Colorbygene(geneName, coloringMethod));
             }
             catch (Exception e)
             {
@@ -574,8 +574,8 @@ namespace CellexalVR.AnalysisLogic
 
             foreach (Cell cell in cells.Values)
             {
-
                 cell.ColorByAttribute(attributeType, color);
+                if (cell.GraphPoints.Count == 0) continue;
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))
                 {

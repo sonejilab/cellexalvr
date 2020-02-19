@@ -14,7 +14,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using VRTK;
-
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.General
 {
@@ -121,7 +121,7 @@ namespace CellexalVR.General
         public Floor floor;
 
         //h5reader annotator
-        public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
+        public AnalysisLogic.H5reader.H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
 
 
         #endregion

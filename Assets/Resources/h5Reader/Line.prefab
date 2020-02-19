@@ -111,7 +111,6 @@ MonoBehaviour:
   anchorB: {fileID: 1125106670224369538}
   line: {fileID: 6545390845727312205}
   expandButtonScript: {fileID: 0}
-  type: 
   isAttachedToHand: 1
 --- !u!54 &2901225936139702173
 Rigidbody:
@@ -125,7 +124,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -240,7 +239,6 @@ MonoBehaviour:
   anchorB: {fileID: 1125106670224369538}
   line: {fileID: 6545390845727312205}
   expandButtonScript: {fileID: 0}
-  type: 
   isAttachedToHand: 0
 --- !u!54 &1795483698361586660
 Rigidbody:
@@ -254,7 +252,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -307,9 +305,9 @@ MonoBehaviour:
   AnchorA: {fileID: 3094100506620053403}
   AnchorB: {fileID: 1125106670224369538}
   line: {fileID: 7526004818517533027}
-  projectionObjectScript: {fileID: 0}
   type: 
   linePrefab: {fileID: 7924940417778004480}
+  isMulti: 0
 --- !u!120 &7526004818517533027
 LineRenderer:
   m_ObjectHideFlags: 0

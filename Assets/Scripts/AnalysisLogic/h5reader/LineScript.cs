@@ -1,59 +1,61 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class LineScript : MonoBehaviour
+namespace CellexalVR.AnalysisLogic.H5reader
 {
-    public AnchorScript AnchorA;
-    public AnchorScript AnchorB;
-    public LineRenderer line;
-    public string type;
-    public GameObject linePrefab;
-    public bool isMulti;
-    private h5readerAnnotater h5ReaderAnnotater;
-    // Start is called before the first frame update
-    void Start()
+    public class LineScript : MonoBehaviour
     {
-        h5ReaderAnnotater = GetComponentInParent<h5readerAnnotater>();
-        line.positionCount = 10;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 dir = -h5ReaderAnnotater.transform.forward;
-        Vector3 start = AnchorA.transform.position;
-        Vector3 end = AnchorB.transform.position;
-        float dist = Vector3.Distance(start, end);
-        if(dist<0.02f)
+        public AnchorScript AnchorA;
+        public AnchorScript AnchorB;
+        public LineRenderer line;
+        public string type;
+        public GameObject linePrefab;
+        public bool isMulti;
+        private H5readerAnnotater h5ReaderAnnotater;
+        // Start is called before the first frame update
+        void Start()
         {
-            for (int i = 0; i < 10; i++)
+            h5ReaderAnnotater = GetComponentInParent<H5readerAnnotater>();
+            line.positionCount = 10;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            Vector3 dir = -h5ReaderAnnotater.transform.forward;
+            Vector3 start = AnchorA.transform.position;
+            Vector3 end = AnchorB.transform.position;
+            float dist = Vector3.Distance(start, end);
+            if (dist < 0.02f)
             {
-                line.SetPosition(i, start);
+                for (int i = 0; i < 10; i++)
+                {
+                    line.SetPosition(i, start);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Vector3 pos = Vector3.Lerp(start, end, i / 9f) + dir * 0.1f * Mathf.Sin(Mathf.PI * (i / 9f));
+                    line.SetPosition(i, pos);
+                }
             }
         }
-        else
+
+        public LineScript AddLine()
         {
-            for (int i = 0; i < 10; i++)
-            {
-                Vector3 pos = Vector3.Lerp(start, end, i / 9f) + dir * 0.1f * Mathf.Sin(Mathf.PI * (i / 9f));
-                line.SetPosition(i, pos);
-            }
+            GameObject go = (GameObject)Resources.Load("h5Reader/Line");
+            go = Instantiate(go, transform.parent);
+            LineScript lineScript = go.GetComponent<LineScript>();
+            lineScript.type = type;
+            lineScript.transform.position = transform.position;
+            return lineScript;
         }
-    }
 
-    public LineScript addLine()
-    {
-        GameObject go = (GameObject)Resources.Load("h5Reader/Line");
-        go = Instantiate(go, transform.parent);
-        LineScript lineScript = go.GetComponent<LineScript>();
-        lineScript.type = type;
-        lineScript.transform.position = transform.position;
-        return lineScript;
-    }
-
-    public bool isExpanded()
-    {
-        return AnchorA.transform.position != AnchorB.transform.position;
+        public bool IsExpanded()
+        {
+            return AnchorA.transform.position != AnchorB.transform.position;
+        }
     }
 }

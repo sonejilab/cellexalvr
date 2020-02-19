@@ -4,53 +4,56 @@ using UnityEngine;
 using CellexalVR.General;
 using System.IO;
 using UnityEngine.UI;
-
-public class ButtonPresser : MonoBehaviour
+namespace CellexalVR.AnalysisLogic.H5reader
 {
-    // Start is called before the first frame update
-    public BoxCollider collider;
-    public ReferenceManager referenceManager;
-    [SerializeField] private GameObject note;
-    private SteamVR_TrackedObject rightController;
-    private SteamVR_Controller.Device device;
-    private bool controllerInside;
-    [SerializeField]private Color color;
-    private Button button;
-
-    void Start()
+    public class ButtonPresser : MonoBehaviour
     {
-        button = GetComponent<Button>();
-        if (!referenceManager)
+        // Start is called before the first frame update
+        public BoxCollider collider;
+        public ReferenceManager referenceManager;
+        [SerializeField] private GameObject note;
+        private SteamVR_TrackedObject rightController;
+        private SteamVR_Controller.Device device;
+        private bool controllerInside;
+        [SerializeField] private Color color;
+        private Button button;
+
+        void Start()
         {
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            button = GetComponent<Button>();
+            if (!referenceManager)
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+            rightController = referenceManager.rightController;
+            collider.size = new Vector3(70, 30, 1);
+            collider.center = new Vector3(0, -15, 0);
         }
-        rightController = referenceManager.rightController;
-        collider.size = new Vector3(70,30,1);
-        collider.center = new Vector3(0,-15,0);
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+        private void OnTriggerEnter(Collider other)
         {
-            controllerInside = true;
+            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            {
+                controllerInside = true;
+            }
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+        private void OnTriggerExit(Collider other)
         {
-            controllerInside = false;
+            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            {
+                controllerInside = false;
+            }
         }
-    }
 
-    private void Update()
-    {
-        device = SteamVR_Controller.Input((int)rightController.index);
-        if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        private void Update()
         {
-            button.onClick.Invoke();
+            device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                button.onClick.Invoke();
+                
+            }
         }
     }
 }
