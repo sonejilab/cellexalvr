@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
@@ -27,6 +28,10 @@ namespace CellexalVR.Menu.SubMenus
         protected List<ColorByBooleanExpressionButton> booleanExpressionButtons;
 
 
+        public void RecreateButtons()
+        {
+            CreateButtons(categoriesAndNames);
+        }
         public override void CreateButtons(string[] categoriesAndNames)
         {
             base.CreateButtons(categoriesAndNames);
