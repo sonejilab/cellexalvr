@@ -416,31 +416,31 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in originalGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for (int i = 0; i < g.ctcGraphs.Count; i++)
                 {
-                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    GraphBetweenGraphs gbg = g.ctcGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
                 }
-                g.CTCGraphs.Clear();
+                g.ctcGraphs.Clear();
             }
             foreach (Graph g in attributeSubGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for (int i = 0; i < g.ctcGraphs.Count; i++)
                 {
-                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    GraphBetweenGraphs gbg = g.ctcGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
                 }
-                g.CTCGraphs.Clear();
+                g.ctcGraphs.Clear();
 
             }
             foreach (Graph g in facsGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for (int i = 0; i < g.ctcGraphs.Count; i++)
                 {
-                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    GraphBetweenGraphs gbg = g.ctcGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
                 }
-                g.CTCGraphs.Clear();
+                g.ctcGraphs.Clear();
 
             }
         }

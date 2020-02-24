@@ -1174,7 +1174,6 @@ namespace SQLiter
             }
 
             inputReader.SortGenesMeanExpression(ref sortedGenes, ref invertedExpressions);
-            cellManager.SaveFlashingExpression(cellNames.ToArray(), category, invertedExpressions);
             //print("saved " + cellNames.Count + " " + category + " " + expressions[0].Length);
 
             if (DebugMode)

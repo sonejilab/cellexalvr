@@ -26,7 +26,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             //StartCoroutine(cellManager.DrawLinesBetweenGraphPoints(selectionManager.GetLastSelection(), !toggle));
-            referenceManager.cellManager.BundleAllLines();
+            referenceManager.lineBundler.BundleAllLines();
             referenceManager.multiuserMessageSender.SendMessageBundleAllLines();
             //TurnOff();
         }
