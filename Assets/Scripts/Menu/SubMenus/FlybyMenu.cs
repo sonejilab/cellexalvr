@@ -1,10 +1,11 @@
 ﻿using CellexalVR.DesktopUI;
 using CellexalVR.General;
+using CellexalVR.Menu.Buttons.Flyby;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
@@ -15,16 +16,20 @@ namespace CellexalVR.Menu.SubMenus
     public class FlybyMenu : MenuWithoutTabs
     {
         public GameObject cameraGameObject;
-        public GameObject previewSphere;
+        public GameObject previewSpherePrefab;
         public LineRenderer previewLine;
+        public GameObject changeFlybyLineModePrefab;
 
         private List<Vector3> positions = new List<Vector3>();
+        private List<Vector3> bezierPositions = new List<Vector3>();
         private List<Quaternion> rotations = new List<Quaternion>();
         private List<GameObject> previewSpheres = new List<GameObject>();
-        RenderTexture renderTexture;
+        private List<ChangeFlybyLineModeButton> lineModeButtons = new List<ChangeFlybyLineModeButton>();
+        private RenderTexture renderTexture;
         private bool rendering = false;
 
         public enum FlybyRenderQuality { q1080p, q720p, q480p }
+        public enum FlybyLineMode { Linear, Bezier }
 
         private FlybyRenderQuality renderQuality;
         public FlybyRenderQuality RenderQuality
@@ -36,25 +41,21 @@ namespace CellexalVR.Menu.SubMenus
                 switch (value)
                 {
                     case FlybyRenderQuality.q1080p:
-                        renderTexture.width = 1920;
-                        renderTexture.height = 1080;
+                        renderTexture = new RenderTexture(1920, 1080, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
                         break;
                     case FlybyRenderQuality.q720p:
-                        renderTexture.width = 1280;
-                        renderTexture.height = 720;
+                        renderTexture = new RenderTexture(1280, 720, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
                         break;
                     case FlybyRenderQuality.q480p:
-                        renderTexture.width = 854;
-                        renderTexture.height = 480;
+                        renderTexture = new RenderTexture(854, 480, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
                         break;
                 }
             }
         }
 
-
-        //private int captureWidth = 1280;
-        //private int captureHeight = 720;
         private bool sphereGrabbed = false;
+        private int sphereGrabbedIndex = -1;
+        private bool checkpointSphereGrabbed = false;
         private int framesPerSecond = 24;
         private int framesPerPos = 96;
         private int previewPositionIndex = 0;
@@ -88,20 +89,39 @@ namespace CellexalVR.Menu.SubMenus
             }
             positions.Add(position);
             rotations.Add(rotation);
-            GameObject newSphere = Instantiate(previewSphere);
+            GameObject newSphere = Instantiate(previewSpherePrefab);
             newSphere.transform.position = position;
             newSphere.transform.rotation = rotation;
-            newSphere.GetComponent<Interaction.PreviewSphereInteract>().Index = positions.Count - 1;
+            newSphere.GetComponent<Interaction.PreviewSphereInteract>().Index = previewSpheres.Count;
             previewSpheres.Add(newSphere);
 
             if (positions.Count >= 2)
             {
-                cameraGameObject.SetActive(true);
-                previewLine.gameObject.SetActive(true);
-                previewLine.positionCount = positions.Count;
-                previewLine.SetPositions(positions.ToArray());
+
+                Vector3 halfPosition = (positions[positions.Count - 2] + position) / 2f;
+                bezierPositions.Add(halfPosition);
+                GameObject middleButton = Instantiate(changeFlybyLineModePrefab);
+                middleButton.transform.position = halfPosition;
+                ChangeFlybyLineModeButton buttonScript = middleButton.GetComponent<ChangeFlybyLineModeButton>();
+                buttonScript.Index = lineModeButtons.Count;
+                Interaction.PreviewSphereInteract interactScript = middleButton.GetComponent<Interaction.PreviewSphereInteract>();
+                interactScript.Index = lineModeButtons.Count;
+                lineModeButtons.Add(buttonScript);
+
+                if (positions.Count == 2)
+                {
+                    cameraGameObject.SetActive(true);
+                    previewLine.gameObject.SetActive(true);
+                    previewLine.positionCount = 2;
+                    previewLine.SetPositions(positions.ToArray());
+                }
+                else
+                {
+                    previewLine.positionCount += 1;
+                }
+                UpdateLinePosition(previewLine.positionCount - 1, position);
+                RestartPreview();
             }
-            RestartPreview();
         }
 
         /// <summary>
@@ -110,11 +130,144 @@ namespace CellexalVR.Menu.SubMenus
         /// <param name="index">The position/rotation to update.</param>
         /// <param name="newPosition">The new position.</param>
         /// <param name="newRotation">The new rotation.</param>
-        public void UpdatePosition(int index, Vector3 newPosition, Quaternion newRotation)
+        public void UpdatePosition(int index, Vector3 newPosition, Quaternion newRotation, bool checkpointSphere)
         {
-            positions[index] = newPosition;
-            rotations[index] = newRotation;
-            previewLine.SetPosition(index, newPosition);
+            if (checkpointSphere)
+            {
+                positions[index] = newPosition;
+                rotations[index] = newRotation;
+                if (index > 0 && lineModeButtons[index - 1].mode == FlybyLineMode.Linear)
+                {
+                    bezierPositions[index - 1] = HalfwayPosition(index - 1);
+                }
+                if (index < positions.Count - 1 && lineModeButtons[index].mode == FlybyLineMode.Linear)
+                {
+                    bezierPositions[index] = HalfwayPosition(index);
+                }
+                UpdateLinePosition(index, newPosition);
+            }
+            else
+            {
+                bezierPositions[index] = newPosition;
+                UpdateLinePosition(index, positions[index]);
+            }
+
+        }
+
+        /// <summary>
+        /// Updates the position of the line when a sphere is moved.
+        /// </summary>
+        /// <param name="index">The index of the sphere</param>
+        /// <param name="newPosition">The sphere's new position in world coordinates.</param>
+        private void UpdateLinePosition(int index, Vector3 newPosition)
+        {
+            int rightLineIndex = LineIndex(index);
+            previewLine.SetPosition(rightLineIndex, newPosition);
+            if (index < lineModeButtons.Count && lineModeButtons[index].mode == FlybyLineMode.Bezier)
+            {
+                InterpolateBezierCurve(rightLineIndex, positions[index], bezierPositions[index], positions[index + 1]);
+                lineModeButtons[index].UpdateBezierControlPolygon(positions[index], bezierPositions[index], positions[index + 1]);
+            }
+
+            if (index > 0 && lineModeButtons[index - 1].mode == FlybyLineMode.Bezier)
+            {
+                int leftLineIndex = LineIndex(index - 1);
+                InterpolateBezierCurve(leftLineIndex, positions[index - 1], bezierPositions[index - 1], positions[index]);
+                lineModeButtons[index - 1].UpdateBezierControlPolygon(positions[index - 1], bezierPositions[index - 1], positions[index]);
+            }
+        }
+
+        /// <summary>
+        /// Interpolates a quadratic bezier curve given the three coordinates of its control polygon and updates the preview line with the new bexier curve.
+        /// </summary>
+        /// <param name="index">The index of the first position of preview line's <see cref="LineRenderer">'s positions.</see> </param>
+        /// <param name="p0">The first coordinate, where the line starts.</param>
+        /// <param name="p1">The second coordinate, which the line bends towards.</param>
+        /// <param name="p2">The third coordinate, where the line ends.</param>
+        private void InterpolateBezierCurve(int index, Vector3 p0, Vector3 p1, Vector3 p2)
+        {
+            float t = 0f;
+            for (int i = index; i < index + 10; ++i)
+            {
+                Vector3 pos = PointOnBezierCurve(p0, p1, p2, t);
+                previewLine.SetPosition(i, pos);
+                t += 1f / 9f;
+            }
+        }
+
+        /// <summary>
+        /// Calculates one position on a bezier curve.
+        /// </summary>
+        /// <param name="p0">The position of the first vertex of the control polygon.</param>
+        /// <param name="p1">The position of the second vertex of the control polygon.</param>
+        /// <param name="p2">The position of the third vertex of the control polygon.</param>
+        /// <param name="t">How far along the curve to go, range [0, 1].</param>
+        /// <returns>A position on the bezier curve.</returns>
+        private Vector3 PointOnBezierCurve(Vector3 p0, Vector3 p1, Vector3 p2, float t)
+        {
+            float oneMinusT = 1f - t;
+            return oneMinusT * oneMinusT * p0 + 2f * oneMinusT * t * p1 + t * t * p2;
+        }
+
+        /// <summary>
+        /// Updates the mode of a line between two positions. The line on index n is between <see cref="positions"/> index n and n+1.
+        /// </summary>
+        /// <param name="index">The index of the line.</param>
+        /// <param name="newMode">The new mode</param>
+        public void UpdateLineMode(int index, FlybyLineMode newMode)
+        {
+            int lineIndex = LineIndex(index);
+            Vector3[] oldPos = new Vector3[previewLine.positionCount];
+            previewLine.GetPositions(oldPos);
+            Vector3[] newPos;
+            if (newMode == FlybyLineMode.Linear)
+            {
+                newPos = new Vector3[previewLine.positionCount - 9];
+                Array.Copy(oldPos, 0, newPos, 0, lineIndex);
+                Array.Copy(oldPos, lineIndex + 9, newPos, lineIndex, oldPos.Length - lineIndex - 9);
+
+            }
+            else
+            {
+                newPos = new Vector3[previewLine.positionCount + 9];
+                Array.Copy(oldPos, 0, newPos, 0, lineIndex);
+                Array.Copy(oldPos, lineIndex, newPos, lineIndex + 9, oldPos.Length - lineIndex);
+            }
+            previewLine.positionCount = newPos.Length;
+            previewLine.SetPositions(newPos);
+            UpdateLinePosition(index, positions[index]);
+        }
+
+        /// <summary>
+        /// Gets the index of linerenderer's position that corresponds to the index of a checkpoint sphere.
+        /// </summary>
+        /// <param name="sphereIndex">The index if the checkpoint sphere.</param>
+        /// <returns>The index of the position of the linerenderer.</returns>
+        private int LineIndex(int sphereIndex)
+        {
+            int lineIndex = 0;
+            for (int i = 0; i < sphereIndex; ++i)
+            {
+                if (lineModeButtons[i].mode == FlybyLineMode.Bezier)
+                {
+                    lineIndex += 10;
+                }
+                else
+                {
+                    lineIndex++;
+                }
+            }
+            return lineIndex;
+        }
+
+        /// <summary>
+        /// Returns the position halfway between a checkpoint and the next checklpoint.
+        /// </summary>
+        /// <param name="index">The index of the checkpoint.</param>
+        /// <returns>A <see cref="Vector3"/> of the position between the points.</returns>
+        public Vector3 HalfwayPosition(int index)
+        {
+            return (positions[index] + positions[index + 1]) / 2f;
         }
 
         /// <summary>
@@ -122,22 +275,25 @@ namespace CellexalVR.Menu.SubMenus
         /// </summary>
         /// <param name="grabbed">True if the sphere was grabbed, false if it was ungrabbed.</param>
         /// <param name="sphere">The sphere that was grabbed.</param>
-        public void SetSphereGrabbed(bool grabbed, GameObject sphere)
+        /// <param name="index">The index of this sphere</param>
+        /// <param name="checkpointSphere">True if <paramref name="sphere"/> is a checkpoint that the camera passes through, false if it is a <see cref="ChangeFlybyLineModeButton"/>.</param>
+        public void SetSphereGrabbed(bool grabbed, GameObject sphere, int index, bool checkpointSphere)
         {
             sphereGrabbed = grabbed;
+            sphereGrabbedIndex = index;
+            checkpointSphereGrabbed = checkpointSphere;
 
             if (!sphereGrabbed)
             {
                 cameraGameObject.transform.parent = null;
                 RestartPreview();
             }
-            else
+
+            if (sphereGrabbed && checkpointSphere)
             {
                 cameraGameObject.transform.parent = sphere.transform;
                 cameraGameObject.transform.localPosition = Vector3.zero;
                 cameraGameObject.transform.localRotation = Quaternion.identity;
-
-
             }
         }
 
@@ -172,8 +328,16 @@ namespace CellexalVR.Menu.SubMenus
                 Quaternion rot1 = rotations[previewPositionIndex];
                 Quaternion rot2 = rotations[previewPositionIndex + 1];
 
-                cameraGameObject.transform.position = Vector3.Lerp(pos1, pos2, previewT);
                 cameraGameObject.transform.rotation = Quaternion.Lerp(rot1, rot2, previewT);
+
+                if (lineModeButtons[previewPositionIndex].mode == FlybyLineMode.Linear)
+                {
+                    cameraGameObject.transform.position = Vector3.Lerp(pos1, pos2, previewT);
+                }
+                else
+                {
+                    cameraGameObject.transform.position = PointOnBezierCurve(pos1, bezierPositions[previewPositionIndex], pos2, previewT);
+                }
 
                 if (previewT >= 1f)
                 {
@@ -192,6 +356,21 @@ namespace CellexalVR.Menu.SubMenus
                     previewT += Time.deltaTime / 4f;
                 }
             }
+
+            if (sphereGrabbed && checkpointSphereGrabbed)
+            {
+                if (sphereGrabbedIndex < previewSpheres.Count - 1 && lineModeButtons[sphereGrabbedIndex].mode == FlybyLineMode.Linear)
+                {
+                    Vector3 halfPosition = (previewSpheres[sphereGrabbedIndex].transform.position + previewSpheres[sphereGrabbedIndex + 1].transform.position) / 2f;
+                    lineModeButtons[sphereGrabbedIndex].transform.position = halfPosition;
+                }
+
+                if (sphereGrabbedIndex >= 1 && lineModeButtons[sphereGrabbedIndex - 1].mode == FlybyLineMode.Linear)
+                {
+                    Vector3 halfPosition = (previewSpheres[sphereGrabbedIndex].transform.position + previewSpheres[sphereGrabbedIndex - 1].transform.position) / 2f;
+                    lineModeButtons[sphereGrabbedIndex - 1].transform.position = halfPosition;
+                }
+            }
         }
 
         /// <summary>
@@ -205,7 +384,7 @@ namespace CellexalVR.Menu.SubMenus
         private IEnumerator RenderFlybyCoroutine()
         {
             rendering = true;
-            RemovePreviewObjects();
+            HidePreviewObjects();
             // create the necessary folders
             CellexalLog.Log("Started creating flyby");
             string flybyDir = CellexalUser.UserSpecificFolder + @"\Flyby\";
@@ -244,9 +423,16 @@ namespace CellexalVR.Menu.SubMenus
                 for (int frameIndex = 0; frameIndex < framesPerPos; t += tInc, ++frameIndex)
                 {
                     yield return waitForEndOfFrame;
-                    cameraGameObject.transform.position = Vector3.Lerp(pos1, pos2, t);
                     cameraGameObject.transform.rotation = Quaternion.Lerp(rot1, rot2, t);
 
+                    if (lineModeButtons[i].mode == FlybyLineMode.Linear)
+                    {
+                        cameraGameObject.transform.position = Vector3.Lerp(pos1, pos2, t);
+                    }
+                    else
+                    {
+                        cameraGameObject.transform.position = PointOnBezierCurve(pos1, bezierPositions[i], pos2, t);
+                    }
                     RenderTexture.active = renderTexture;
                     camera.Render();
                     frame.ReadPixels(rect, 0, 0, false);
@@ -314,6 +500,7 @@ namespace CellexalVR.Menu.SubMenus
             rendering = false;
             camera.targetTexture = renderTexture;
             cameraGameObject.SetActive(false);
+            RemovePreviewObjects();
             ResetPositions();
             CellexalLog.Log("Finished creating flyby");
         }
@@ -334,6 +521,21 @@ namespace CellexalVR.Menu.SubMenus
             cameraGameObject.SetActive(false);
         }
 
+        public void HidePreviewObjects()
+        {
+            foreach (GameObject sphere in previewSpheres)
+            {
+                sphere.SetActive(false);
+            }
+
+            foreach (ChangeFlybyLineModeButton button in lineModeButtons)
+            {
+                button.gameObject.SetActive(false);
+            }
+
+            previewLine.gameObject.SetActive(false);
+        }
+
         /// <summary>
         /// Removes the preview related gamebobjects.
         /// </summary>
@@ -343,8 +545,14 @@ namespace CellexalVR.Menu.SubMenus
             {
                 Destroy(sphere);
             }
-
             previewSpheres.Clear();
+
+            foreach (ChangeFlybyLineModeButton button in lineModeButtons)
+            {
+                Destroy(button.gameObject);
+            }
+            lineModeButtons.Clear();
+
             previewLine.positionCount = 0;
         }
     }

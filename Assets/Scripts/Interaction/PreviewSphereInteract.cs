@@ -12,6 +12,7 @@ namespace CellexalVR.Interaction
     public class PreviewSphereInteract : MonoBehaviour
     {
         public int Index { get; set; }
+        public bool checkpoint;
 
         public VRTK.VRTK_InteractableObject vrtkInteractableObject;
         private ReferenceManager referenceManager;
@@ -38,17 +39,15 @@ namespace CellexalVR.Interaction
         /// </summary>
         private void UpdatePosition()
         {
-            flybyMenu.UpdatePosition(Index, transform.position, transform.rotation);
-
+            flybyMenu.UpdatePosition(Index, transform.position, transform.rotation, checkpoint);
         }
-
 
         /// <summary>
         /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectGrabbed"/> event.
         /// </summary>
         private void SphereGrabbed(object sender, InteractableObjectEventArgs e)
         {
-            flybyMenu.SetSphereGrabbed(true, gameObject);
+            flybyMenu.SetSphereGrabbed(true, gameObject, Index, checkpoint);
         }
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace CellexalVR.Interaction
         private void SphereUngrabbed(object sender, InteractableObjectEventArgs e)
         {
             UpdatePosition();
-            flybyMenu.SetSphereGrabbed(false, gameObject);
+            flybyMenu.SetSphereGrabbed(false, gameObject, Index, checkpoint);
         }
     }
 }
