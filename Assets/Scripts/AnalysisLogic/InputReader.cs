@@ -649,11 +649,16 @@ namespace CellexalVR.AnalysisLogic
                 metacellFileStream.Close();
                 attributeSubMenu.CreateButtons(actualAttributeTypes);
                 cellManager.Attributes = actualAttributeTypes;
-                if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
+                for (int i = CellexalConfig.Config.SelectionToolColors.Length; i < cellManager.Attributes.Length; i++)
                 {
-                    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
-                        " Consider adding more colours in the settings menu (under Selection Colours)");
+                    referenceManager.settingsMenu.AddSelectionColor(true);
                 }
+                referenceManager.settingsMenu.unsavedChanges = false;
+                //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
+                //{
+                //    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
+                //        " Consider adding more colours in the settings menu (under Selection Colours)");
+                //}
             }
             stopwatch.Stop();
             attributeFileRead = true;
