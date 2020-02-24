@@ -13,6 +13,7 @@ namespace CellexalVR.Menu.SubMenus
         public ReferenceManager referenceManager;
         public TabButton TabButton;
         public bool Active { get; private set; }
+        public TextMeshPro TabName;
 
         protected int buttonIndex = 0;
         protected Vector3 buttonPos = new Vector3(-.396f, .77f, .182f);
@@ -23,7 +24,6 @@ namespace CellexalVR.Menu.SubMenus
         private MenuToggler menuToggler;
 
         //public TextMesh TabName;
-        public TextMeshPro TabName;
         //public string TabName { get; set; }
 
         private void OnValidate()
@@ -51,6 +51,8 @@ namespace CellexalVR.Menu.SubMenus
         /// <param name="active">True if this tab should be shown, false if hidden.</param>
         public virtual void SetTabActive(bool active)
         {
+            MenuWithTabs parentMenu = GetComponentInParent<MenuWithTabs>();
+            parentMenu.currentCategory = TabName.text;
             Active = active;
             if (!menuToggler)
             {

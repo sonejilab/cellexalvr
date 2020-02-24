@@ -125,7 +125,9 @@ namespace CellexalVR.Menu.Buttons
                         if (activeTab != null)
                             tab.SetTabActive(tab == activeTab);
                         else
+                        {
                             tab.SetTabActive(false);
+                        }
                         SetGameObjectAndChildrenEnabled(tab.TabButton.gameObject, true);
                     }
                 }

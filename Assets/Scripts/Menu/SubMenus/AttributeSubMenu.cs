@@ -7,6 +7,7 @@ using CellexalVR.Menu.Buttons.Attributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
@@ -35,6 +36,9 @@ namespace CellexalVR.Menu.SubMenus
         public override void CreateButtons(string[] categoriesAndNames)
         {
             base.CreateButtons(categoriesAndNames);
+            //string[] orderedNames = new string[names.Length];
+            //Array.Copy(names, orderedNames, names.Length);
+            //Array.Sort(orderedNames, StringComparer.InvariantCulture);
             for (int i = 0; i < buttons.Count; ++i)
             {
                 var b = buttons[i];
@@ -43,6 +47,7 @@ namespace CellexalVR.Menu.SubMenus
                 b.GetComponent<ColorByAttributeButton>().SetAttribute(categoriesAndNames[i], names[i], Colors[colorIndex]);
                 b.GetComponent<ColorByAttributeButton>().parentMenu = this;
                 b.gameObject.name = categoriesAndNames[i];
+                GetComponentInChildren<ChangeColorModeButton>().firstTab = tabs[0];
             }
         }
 
@@ -118,13 +123,25 @@ namespace CellexalVR.Menu.SubMenus
 
         public IEnumerator SelectAllAttributesCoroutine(bool toggle)
         {
-            foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
+            if (!toggle)
             {
-                if (b.colored != toggle)
+                referenceManager.graphManager.ResetGraphsColor();
+            }
+            else
+            {
+                foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
                 {
-                    b.ColourAttribute(toggle);
+                    string category = "";
+                    if (b.Attribute.Contains("@"))
+                    {
+                        category = b.Attribute.Split('@')[0];
+                    }
+                    if (b.colored != toggle && category == currentCategory)
+                    {
+                        b.ColourAttribute(toggle);
+                    }
+                    yield return null;
                 }
-                yield return null;
             }
         }
 

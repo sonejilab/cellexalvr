@@ -416,7 +416,6 @@ namespace CellexalVR.DesktopUI
             addSelectionColorButton.transform.SetAsLastSibling();
             selectionColorButtons.Add(colorPicker);
             if (update) UpdateSelectionToolColors();
-
         }
 
         public void RemoveSelectionColor(GameObject button)
