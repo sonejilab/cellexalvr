@@ -35,6 +35,7 @@ namespace CellexalVR.AnalysisLogic
         /// Lowest and highest range of facs measurements. <see cref="Tuple{T1, T2}.Item1"/> is the lowest value and <see cref="Tuple{T1, T2}.Item2"/> is the highest.
         /// </summary>
         public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
+        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
         //public HDF5Handler hDF5Handler;
 
         private SQLite database;
@@ -388,7 +389,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbyattribute", "cba" })]
-        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false/*, bool two_d = false*/)
         {
             if (!subGraph)
             {
@@ -407,6 +408,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
             {
                 pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+                //pos[referenceManager.graphGenerator.CreateSubGraphs]
             }
 
             foreach (Cell cell in cells.Values)
@@ -437,6 +439,10 @@ namespace CellexalVR.AnalysisLogic
             if (color)
             {
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
+                foreach (Graph graph in graphManager.Graphs)
+                {
+                    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
+                }
             }
             else
             {
