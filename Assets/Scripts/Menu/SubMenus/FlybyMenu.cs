@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.Recorder;
 using UnityEngine;
 using UnityEngine.XR.WSA.WebCam;
 using System.Threading;
