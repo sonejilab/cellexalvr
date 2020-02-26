@@ -26,13 +26,14 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public List<ProjectionObjectScript> projectionObjectScripts;
         private string path = "LCA_142K_umap_phate_loom";
 
-        void Start()
+        private void OnValidate()
         {
             if (!referenceManager)
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
         }
+
 
         public void Init(string path)
         {

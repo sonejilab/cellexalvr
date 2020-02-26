@@ -45,9 +45,22 @@ namespace CellexalVR.AnalysisLogic.H5reader
             device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
             {
-                float y = slidingArea.transform.InverseTransformPoint(device.transform.pos).y;
-                float height = handleRect.rect.height;
-                float temp = Mathf.Clamp01(y / height + 0.5f);
+                float temp;
+                //Horizontal
+                if (slidingArea.rect.height > slidingArea.rect.width)
+                {
+                    float y = slidingArea.transform.InverseTransformPoint(device.transform.pos).y;
+                    float height = slidingArea.rect.height;
+                    temp = Mathf.Clamp01(y / height + 0.5f);
+                }
+                else
+                {
+                    float x = slidingArea.transform.InverseTransformPoint(device.transform.pos).x;
+                    float width = slidingArea.rect.width;
+                    temp = Mathf.Clamp01(x / width + 0.5f);
+                }
+
+
                 scrollbar.value = temp;
             }
             Vector3 size = handleRect.rect.size;

@@ -247,6 +247,15 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         }
 
+
+        public void CloseConnection()
+        {
+            UnityEngine.Debug.Log("Closing connection loom");
+            p.CloseMainWindow();
+
+            p.Close();
+        }
+
         /// <summary>
         /// Get 3D coordinates from file
         /// </summary>
