@@ -141,10 +141,13 @@ namespace CellexalVR.Menu.Buttons
                 }
                 controllerInside = laserInside;
                 SetHighlighted(laserInside);
+                //summertwerk
+                
                 if (descriptionText.text == Description && !laserInside)
                 {
                     descriptionText.text = "";
                 }
+                
                 frameCount = 0;
             }
         }

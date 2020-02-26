@@ -33,7 +33,11 @@ namespace CellexalVR.Menu.Buttons.Velocity
             set
             {
                 filePath = value;
-                shorterFilePath = FixGraphPath(value);
+
+                //summertwerk
+                if (filePath.Contains("."))
+                    shorterFilePath = FixGraphPath(value);
+                else shorterFilePath = filePath;
                 graph = referenceManager.graphManager.FindGraph(shorterFilePath);
                 if (subGraphName != string.Empty)
                 {

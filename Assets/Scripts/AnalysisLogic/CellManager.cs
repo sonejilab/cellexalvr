@@ -54,6 +54,9 @@ namespace CellexalVR.AnalysisLogic
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
 
+        //summertwerk
+        public CellexalVR.AnalysisLogic.H5reader.H5reader h5Reader;
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -66,6 +69,7 @@ namespace CellexalVR.AnalysisLogic
         void Awake()
         {
             cells = new Dictionary<string, Cell>();
+
         }
 
         private void Start()
@@ -201,7 +205,11 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
         public void ColorGraphsByGene(string geneName)
         {
-            ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            //summertwerk gone to work
+            if (h5Reader == null)
+                ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            else
+                ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
         }
 
         /// <summary>
@@ -212,6 +220,37 @@ namespace CellexalVR.AnalysisLogic
         {
             ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, triggerEvent);
         }
+
+        //summertwerker
+        /// <summary>
+        /// Color the graph with data from the h5 file
+        /// </summary>
+        /// <param name="geneName">Gene name</param>
+        /// <param name="coloringMethod">Coloring method</param>
+        /// <param name="triggerEvent">Trigger event?</param>
+        public void ColorGraphsByGeneHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
+        {
+            try
+            {
+                StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
+
+                //StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                //QueryRObject(geneName, coloringMethod, triggerEvent);
+
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
+                CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+            }
+            //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
+            //{
+            //    SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            //}
+            referenceManager.heatmapGenerator.HighLightGene(geneName);
+            referenceManager.networkGenerator.HighLightGene(geneName);
+        }
+
 
         /// <summary>
         /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
@@ -237,6 +276,143 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.heatmapGenerator.HighLightGene(geneName);
             referenceManager.networkGenerator.HighLightGene(geneName);
         }
+
+        //private void QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
+        //{
+        //string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_gene_expression.R").FixFilePath();
+        //string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + geneName;
+        ////string func = "write.table(cellexalObj@data[\"" + geneName + "\", cellexalObj@data[\"" +
+        ////    geneName + "\",] > 0], file=\"" + CellexalUser.UserSpecificFolder.UnFixFilePath() +
+        ////    "\\\\gene_expr.txt\", append=FALSE, row.names=TRUE, col.names=FALSE, sep=\" \", quote=FALSE)";
+        ////string result = string.Empty;
+        //while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
+        //{
+        //    yield return null;
+        //}
+        ////Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+        //Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+        //t.Start();
+        //CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
+        //var stopwatch = new System.Diagnostics.Stopwatch();
+        //stopwatch.Start();
+        //while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
+        //{
+        //    yield return null;
+        //}
+
+        //stopwatch.Stop();
+        //CellexalLog.Log("Get gene expression R script finished in " + stopwatch.Elapsed.ToString());
+
+        //stopwatch.Reset();
+        //stopwatch.Start();
+        //ArrayList expressions = hDF5Handler.GetGeneExpressions(geneName, coloringMethod);
+        //GetComponent<AudioSource>().Play();
+
+
+        //graphManager.ColorAllGraphsByGeneExpression(expressions);
+
+
+        //if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
+        //{
+        //    var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+        //    foreach (Cell c in cells.Values)
+        //    {
+        //        c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+        //    }
+        //}
+        //if (triggerEvent)
+        //{
+        //    CellexalEvents.GraphsColoredByGene.Invoke();
+        //}
+        //CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+
+        //CellexalEvents.CommandFinished.Invoke(true);
+        //}
+
+        /// <summary>
+        /// query the h5 file for gene expression data
+        /// </summary>
+        /// <param name="geneName">Gene name</param>
+        /// <param name="coloringMethod">coloring method</param>
+        /// <param name="triggerEvent">trigger event?</param>
+        /// <returns></returns>
+        private IEnumerator QueryHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
+        {
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+
+            stopwatch.Start();
+            /*
+            if (coroutinesWaiting >= 1)
+            {
+                // If there is already another query  waiting for the current to finish we should probably abort.
+                // This is just to make sure that a bug can't create many many coroutines that will form a long queue.
+                CellexalLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+            coroutinesWaiting++;
+            // if there is already a query running, wait for it to finish
+            while (database.QueryRunning)
+                yield return null;
+
+            coroutinesWaiting--;
+            database.QueryGene(geneName, coloringMethod);
+            // now we have to wait for our query to return the results.
+            while (database.QueryRunning)
+                yield return null;
+            */
+            try
+            {
+                StartCoroutine(h5Reader.Colorbygene(geneName, coloringMethod));
+            }
+            catch (Exception e)
+            {
+                print("bug" + e);
+            }
+
+            while (h5Reader.busy)
+                yield return null;
+
+            GetComponent<AudioSource>().Play();
+            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            ArrayList expressions = h5Reader._expressionResult;
+
+
+            // stop the coroutine if the gene was not in the database
+            if (expressions.Count == 0)
+            {
+                CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+
+            graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
+
+            //float percentInResults = (float)database._result.Count / cells.Values.Count;
+            //statusDisplay.RemoveStatus(coloringInfoStatusId);
+            //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
+
+            if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
+            {
+                var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+                foreach (Cell c in cells.Values)
+                {
+                    c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+                }
+            }
+            if (triggerEvent)
+            {
+                CellexalEvents.GraphsColoredByGene.Invoke();
+            }
+
+            CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+            stopwatch.Stop();
+            //print("Time : " + stopwatch.Elapsed.ToString());
+            CellexalEvents.CommandFinished.Invoke(true);
+            print("python3 - anndata.h5py " + stopwatch.ElapsedMilliseconds);
+        }
+
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
@@ -414,6 +590,7 @@ namespace CellexalVR.AnalysisLogic
             foreach (Cell cell in cells.Values)
             {
                 cell.ColorByAttribute(attributeType, color);
+                if (cell.GraphPoints.Count == 0) continue;
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))
                 {

@@ -120,6 +120,38 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
         }
+
+
+
+        /// <summary>
+        /// Reads one folder of data and creates the graphs described by the data.
+        /// </summary>
+        /// 
+        /// <param name="path">path to the file</param>
+        public void ReadFile_h5(string path)
+        {
+
+            bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
+            if (!confExists)
+            {
+                referenceManager.h5ReaderAnnotatorScriptManager.AddAnnotator(path);
+                return;
+            }
+
+
+            UpdateSelectionToolHandler();
+            attributeFileRead = false;
+            currentPath = path;
+            string workingDirectory = Directory.GetCurrentDirectory();
+            string fullPath = workingDirectory + "\\Data\\" + path;
+            selectionManager.DataDir = fullPath;
+            CellexalUser.DataSourceFolder = currentPath;
+
+
+            StartCoroutine(H5_readgraphs(fullPath));
+            //graphGenerator.isCreating = true;)
+        }
+
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
@@ -127,6 +159,17 @@ namespace CellexalVR.AnalysisLogic
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
+
+            //summertwerk
+            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
+            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
+            if (h5 || loom)
+            {
+                ReadFile_h5(path);
+                return;
+            }
+
+
             UpdateSelectionToolHandler();
             if (PhotonNetwork.isMasterClient)
             {
@@ -211,13 +254,217 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
+        /// H5 Coroutine to create graphs.
+        /// </summary>
+        /// <param name="path"> The path to the file. </param>
+
+        IEnumerator H5_readgraphs(string path, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
+        {
+            if (!loaderController.loaderMovedDown)
+            {
+                loaderController.loaderMovedDown = true;
+                loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+
+
+            cellManager.h5Reader = new H5reader.H5reader(path);
+            StartCoroutine(cellManager.h5Reader.ConnectToFile());
+            while (cellManager.h5Reader.busy)
+                yield return null;
+
+
+            //int statusId = status.AddStatus("Reading folder " + path);
+            //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
+            //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
+            int fileIndex = 0;
+            //  Read each .mds file
+            //  The file format should be
+            //  cell_id  axis_name1   axis_name2   axis_name3
+            //  CELLNAME_1 X_COORD Y_COORD Z_COORD
+            //  CELLNAME_2 X_COORD Y_COORD Z_COORD
+            //  ...
+
+            float maximumDeltaTime = 0.05f; // 20 fps
+            int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
+            int itemsThisFrame = 0;
+            int totalNbrOfCells = 0;
+            foreach (string proj in cellManager.h5Reader.projections)
+            {
+                print(proj);
+
+
+
+                while (graphGenerator.isCreating)
+                {
+                    yield return null;
+                }
+                Graph combGraph = graphGenerator.CreateGraph(type);
+
+
+
+                if (cellManager.h5Reader.velocities.Contains(proj))
+                {
+                    graphManager.velocityFiles.Add(proj);
+                    combGraph.hasVelocityInfo = true;
+                }
+                    
+                
+                // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
+                // file will be the full file name e.g C:\...\graph1.mds
+                // good programming habits have left us with a nice mix of forward and backward slashes
+
+                //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
+                if (type.Equals(GraphGenerator.GraphType.MDS))
+                {
+                    combGraph.GraphName = proj.ToUpper();
+                    //combGraph.FolderName = regexResult[regexResult.Length - 2];
+                }
+                else
+                {
+                    string name = "";
+                    foreach (string s in referenceManager.newGraphFromMarkers.markers)
+                    {
+                        name += s + " - ";
+                    }
+                    combGraph.GraphNumber = facsGraphCounter;
+                    combGraph.GraphName = name;
+                }
+                //combGraph.gameObject.name = combGraph.GraphName;
+                //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
+
+                //image1 = new Bitmap(400, 400);
+                //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
+                //int i, j;
+                string[] axes = new string[3];
+
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+                StartCoroutine(cellManager.h5Reader.GetCoords(proj));
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+                string[] coords = cellManager.h5Reader._coordResult;
+                string[] cellnames = cellManager.h5Reader.index2cellname;
+                combGraph.axisNames = new string[] { "x", "y", "z" };
+                itemsThisFrame = 0;
+                int count = 0;
+
+                for (int j = 0; j < cellnames.Length; j++)
+                {
+                    string cellname = cellnames[j];
+                    float x, y, z;
+                    if(cellManager.h5Reader.conditions == "2D_sep")
+                    {
+                        
+                        x = float.Parse(coords[j]);
+                        y = float.Parse(coords[j + cellnames.Length]);
+                        z = j * 0.00001f; //summertwerk, should scale after maxcoord
+                        
+
+                    }
+                    else if (cellManager.h5Reader.conditions == "3D_sep")
+                    {
+
+                        x = float.Parse(coords[j]);
+                        y = float.Parse(coords[j + cellnames.Length]);
+                        z = float.Parse(coords[j + 2*cellnames.Length]);
+
+                    }
+                    else
+                    {
+                        x = float.Parse(coords[j * 3]);
+                        y = float.Parse(coords[j * 3 + 1]);
+                        z = float.Parse(coords[j * 3 + 2]);
+                    }
+
+                    Cell cell = cellManager.AddCell(cellname);
+                    graphGenerator.AddGraphPoint(cell, x, y, z);
+                    totalNbrOfCells++;
+                    count++;
+                    
+                    if (count > maximumItemsPerFrame)
+                    {
+                        yield return null;
+                        count = 0;
+                        float lastFrame = Time.deltaTime;
+                        if (lastFrame < maximumDeltaTime)
+                        {
+                            // we had some time over last frame
+                            maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
+                        }
+                        else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
+                        {
+                            // we took too much time last frame
+                            maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
+                        }
+
+                    }
+                    
+                }
+                combGraph.SetInfoText();
+
+                // Add axes in bottom corner of graph and scale points differently
+                graphGenerator.SliceClustering();
+                graphGenerator.AddAxes(combGraph, axes);
+                graphManager.Graphs.Add(combGraph);
+                if (debug)
+                {
+                    //newGraph.transform.Translate(Vector3.forward * fileIndex);
+                }
+                //combinedGraphGenerator.isCreating = false;
+            }
+
+            if (cellManager.h5Reader.attributes.Count > 0)
+            {
+                StartCoroutine(H5_ReadAttributeFilesCoroutine());
+                while (!attributeFileRead)
+                    yield return null;
+            }
+
+            /*
+            if (type.Equals(GraphGenerator.GraphType.MDS))
+            {
+                StartCoroutine(ReadAttributeFilesCoroutine(path));
+                while (!attributeFileRead)
+                    yield return null;
+                ReadFacsFiles(path, totalNbrOfCells);
+                ReadFilterFiles(CellexalUser.UserSpecificFolder);
+            }
+            */
+            //loaderController.loaderMovedDown = true;
+
+
+            //status.UpdateStatus(statusId, "Reading index.facs file");
+            //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+            //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
+            //flashGenesMenu.CreateTabs(path);
+            //status.RemoveStatus(statusId);
+            //statusDisplayHUD.RemoveStatus(statusIdHUD);
+            //statusDisplayFar.RemoveStatus(statusIdFar);
+
+            if (server)
+            {
+                StartCoroutine(StartServer("main"));
+                //StartCoroutine(StartServer("gene"));
+            }
+
+            while (graphGenerator.isCreating)
+            {
+                yield return null;
+            }
+            CellexalEvents.GraphsLoaded.Invoke();
+
+        }
+        /// <summary>
         /// Coroutine to create graphs.
         /// </summary>
         /// <param name="path"> The path to the folder where the files are. </param>
         /// <param name="mdsFiles"> The filenames. </param>
         IEnumerator ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
-
             if (!loaderController.loaderMovedDown)
             {
                 loaderController.loaderMovedDown = true;
@@ -262,6 +509,7 @@ namespace CellexalVR.AnalysisLogic
                 if (type.Equals(GraphGenerator.GraphType.MDS))
                 {
                     combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+                    print(combGraph.GraphName);
                     combGraph.FolderName = regexResult[regexResult.Length - 2];
                     graphManager.originalGraphs.Add(combGraph);
                 }
@@ -288,7 +536,7 @@ namespace CellexalVR.AnalysisLogic
                 using (StreamReader mdsStreamReader = new StreamReader(file))
                 {
                     //List<string> cellnames = new List<string>();
-                    //List<float> xcoords = new List<float>();
+                    //List<float> xcoords = new List<float>();s
                     //List<float> ycoords = new List<float>();
                     //List<float> zcoords = new List<float>();
                     int i = 0;
@@ -435,6 +683,73 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalEvents.GraphsLoaded.Invoke();
 
+        }
+
+
+        //summertwerk
+        /// <summary>
+        /// Reads all attributes from current h5 file
+        /// </summary>
+        public IEnumerator H5_ReadAttributeFilesCoroutine()
+        {
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            List<string> available_attributes = new List<string>();
+
+            foreach (string attr in cellManager.h5Reader.attributes)
+            {
+
+                print("reading attribute " + attr);
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+                StartCoroutine(cellManager.h5Reader.GetAttributes(attr));
+
+                while (cellManager.h5Reader.busy)
+                    yield return null;
+
+
+                string[] attrs = cellManager.h5Reader._attrResult;
+                string[] cellnames = cellManager.h5Reader.index2cellname;
+
+                for (int j = 0; j < cellnames.Length; j++)
+                {
+                    string cellname = cellnames[j];
+
+                    string attribute_name = attr + "@" + attrs[j];
+                    int index_of_attribute;
+                    if (!available_attributes.Contains(attribute_name))
+                    {
+                        available_attributes.Add(attribute_name);
+                        index_of_attribute = available_attributes.Count - 1;
+                    }
+                    else
+                    {
+                        index_of_attribute = available_attributes.IndexOf(attribute_name);
+                    }
+                    
+                    
+                    cellManager.AddAttribute(cellname, attribute_name, index_of_attribute % CellexalConfig.Config.SelectionToolColors.Length);
+                    if (j % 500 == 0)
+                    {
+                        yield return null;
+                    }
+                }
+               
+            }
+            attributeSubMenu.CreateButtons(available_attributes.ToArray());
+
+            cellManager.Attributes = available_attributes.ToArray();
+            if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
+            {
+                CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
+                    " Consider adding more colours in the settings menu (under Selection Colours)");
+            }
+            stopwatch.Stop();
+            attributeFileRead = true;
+            CellexalLog.Log("h5 read attributes in " + stopwatch.Elapsed.ToString());
         }
 
         /// <summary>

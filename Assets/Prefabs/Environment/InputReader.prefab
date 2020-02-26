@@ -172,6 +172,7 @@ MonoBehaviour:
   filterManager: {fileID: 0}
   reportManager: {fileID: 0}
   floor: {fileID: 0}
+  h5ReaderAnnotatorScriptManager: {fileID: 0}
   geneKeyboard: {fileID: 0}
   keyboardSwitch: {fileID: 0}
   correlatedGenesList: {fileID: 0}

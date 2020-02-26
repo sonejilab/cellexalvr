@@ -350,6 +350,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         /// <param name="coords">The coordinates to scale.</param>
         /// <returns>A scaled <see cref="Vector3"/>.</returns>
+        /// Summertweriking 
         public Vector3 ScaleCoordinates(Vector3 coords)
         {
             // move one of the graph's corners to origo
@@ -457,6 +458,10 @@ namespace CellexalVR.AnalysisObjects
             private void SetGroup(int group)
             {
                 this.group = group;
+
+                if (node == null)
+                    print("No node for " + Label);
+
                 if (node.Group != group)
                     node.Group = group;
             }

@@ -200,12 +200,27 @@ namespace CellexalVR.AnalysisObjects
             return null;
         }
 
+        [ConsoleCommand("graphManager", aliases: new string[] { "checkfornullnodes", "cnn" })]
+        public void CheckNullNodes()
+        {
+            foreach (var c in cellManager.GetCells())
+            {
+                foreach (var gp in c.GraphPoints)
+                {
+                    if (gp.node == null)
+                        CellexalLog.Log(gp.Label + " " + gp.node);
+                }
+            }
+        }
+
+
         [ConsoleCommand("graphManager", aliases: "cg")]
         public void RecolorGraphPoint(string label, int i)
         {
             foreach (var graph in Graphs)
             {
-                graph.ColorGraphPointSelectionColor(graph.FindGraphPoint(label), i, false);
+                var gp = graph.FindGraphPoint(label);
+                graph.ColorGraphPointSelectionColor(gp, i, false);
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }

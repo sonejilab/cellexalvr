@@ -6,6 +6,8 @@ using CellexalVR.DesktopUI;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Multiuser;
+using System.IO;
+using System.Linq;
 
 namespace CellexalVR.SceneObjects
 {
@@ -300,6 +302,13 @@ namespace CellexalVR.SceneObjects
                 referenceManager.keyboardSwitch.SetKeyboardVisible(false);
                 referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
                 referenceManager.velocityGenerator.ActiveGraphs.Clear();
+                //summertwerk
+                if (referenceManager.cellManager.h5Reader != null)
+                {
+                    referenceManager.cellManager.h5Reader.CloseConnection();
+                    referenceManager.cellManager.h5Reader = null;
+
+                }
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
             // must reset loader before generating new folders
