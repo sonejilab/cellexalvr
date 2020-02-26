@@ -245,12 +245,12 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
-                if (file.Contains("slice"))
-                {
-                    StartCoroutine(ReadSpatialMDSFiles(file));
-                    graphGenerator.isCreating = true;
-                    continue;
-                }
+                // spatial if (file.Contains("slice"))
+                // spatial {
+                // spatial     StartCoroutine(ReadSpatialMDSFiles(file));
+                // spatial     graphGenerator.isCreating = true;
+                // spatial     continue;
+                // spatial }
                 Graph combGraph = graphGenerator.CreateGraph(type);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds

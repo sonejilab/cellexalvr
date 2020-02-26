@@ -439,13 +439,17 @@ namespace CellexalVR.AnalysisLogic
             if (color)
             {
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
-                foreach (Graph graph in graphManager.Graphs)
-                {
-                    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
-                }
+                //foreach (Graph graph in graphManager.Graphs)
+                //{
+                //    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
+                //}
             }
             else
             {
+                //foreach (Graph graph in graphManager.Graphs)
+                //{
+                //    Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
+                //}
                 referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
