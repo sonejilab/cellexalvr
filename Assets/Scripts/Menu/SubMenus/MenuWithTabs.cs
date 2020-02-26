@@ -16,6 +16,8 @@ namespace CellexalVR.Menu.SubMenus
         public GameObject nextPageButton;
         public GameObject prevPageButton;
         public TextMeshPro pageNrText;
+        public string[] categoriesAndNames;
+        public string currentCategory;
         //public Dictionary<CellexalButton, bool> savedButtonStates = new Dictionary<CellexalButton, bool>();
 
         protected MenuToggler menuToggler;
@@ -67,7 +69,7 @@ namespace CellexalVR.Menu.SubMenus
         public virtual void CreateButtons(string[] categoriesAndNames)
         {
             DestroyTabs();
-
+            this.categoriesAndNames = categoriesAndNames;
             if (buttons == null)
                 buttons = new List<CellexalButton>();
             foreach (var button in buttons)

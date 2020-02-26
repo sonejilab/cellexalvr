@@ -23,6 +23,7 @@ namespace CellexalVR.DesktopUI
         public TMPro.TMP_InputField usernameInputField;
         public TMPro.TMP_Text usernameText;
         [Header("Heatmap")]
+        public TMPro.TMP_Dropdown heatmapColormapDropdown;
         public ColorPickerButton heatmapHighExpression;
         public ColorPickerButton heatmapMidExpression;
         public ColorPickerButton heatmapLowExpression;
@@ -31,6 +32,7 @@ namespace CellexalVR.DesktopUI
         public TMPro.TMP_Dropdown heatmapAlgorithmDropdown;
         //public UnityEngine.UI.Dropdown heatmapAlgorithm;
         [Header("Graphs")]
+        public TMPro.TMP_Dropdown graphColormapDropdown;
         public TMPro.TMP_Dropdown graphPointQualityDropdown;
         public TMPro.TMP_Dropdown graphPointSizeDropdown;
         public ColorPickerButton graphHighExpression;
@@ -55,7 +57,7 @@ namespace CellexalVR.DesktopUI
         [Header("Selection")]
         public GameObject selectionColorGroup;
         public GameObject selectionColorButtonPrefab;
-        private List<ColorPickerButton> selectionColorButtons;
+        public List<ColorPickerButton> selectionColorButtons;
         public GameObject addSelectionColorButton;
         [Header("Velocity")]
         public ColorPickerButton velocityHighColor;
@@ -69,13 +71,15 @@ namespace CellexalVR.DesktopUI
 
         public List<string> networkAlgorithms;
         public List<string> heatmapAlgorithms;
+        public List<string> heatmapColormaps;
+        public List<string> graphColormaps;
         public List<string> graphPointQualityModes;
         public List<string> graphPointSizeModes;
         public List<string> lineColouringMethods;
 
         private ColorPicker colorPicker;
         private Config beforeChanges;
-        private bool unsavedChanges;
+        public bool unsavedChanges;
 
         private void OnValidate()
         {
@@ -102,6 +106,20 @@ namespace CellexalVR.DesktopUI
                 networkMethods.Add(new TMPro.TMP_Dropdown.OptionData(s));
             }
             networkAlgorithmDropdown.options = networkMethods;
+
+            var hmColormaps = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in heatmapColormaps)
+            {
+                hmColormaps.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            heatmapColormapDropdown.options = hmColormaps;
+
+            var gColormaps = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in graphColormaps)
+            {
+                gColormaps.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            graphColormapDropdown.options = gColormaps;
 
             var heatmapMethods = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in heatmapAlgorithms)
@@ -211,7 +229,7 @@ namespace CellexalVR.DesktopUI
                 int nrOfselectionColorButtons = selectionColorButtons.Count;
                 for (int j = CellexalConfig.Config.SelectionToolColors.Length; j < nrOfselectionColorButtons; j++)
                 {
-                    RemoveSelectionColor(selectionColorButtons[selectionColorButtons.Count - 1].gameObject);
+                    RemoveSelectionColor(selectionColorButtons[selectionColorButtons.Count - 1].transform.parent.gameObject);
                 }
                 addSelectionColorButton.transform.SetAsLastSibling();
             }
@@ -219,7 +237,7 @@ namespace CellexalVR.DesktopUI
             velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
             skyboxTintColor.Color = CellexalConfig.Config.SkyboxTintColor;
 
-            
+
 
             SetNetworkColoringMethod();
 
@@ -294,8 +312,6 @@ namespace CellexalVR.DesktopUI
             CellexalConfig.Config.GraphPointSize = size;
             //referenceManager.heatmapGenerator.InitColors();
         }
-
-
 
         public void SetNumberOfGraphColors()
         {
@@ -385,23 +401,31 @@ namespace CellexalVR.DesktopUI
             referenceManager.notificationManager.active = active;
         }
 
-        public void AddSelectionColor()
+        public void AddSelectionColor(bool update = true)
+        {
+            AddSelectionColor(Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f), update);
+        }
+
+        public void AddSelectionColor(Color color, bool update = true)
         {
             unsavedChanges = true;
             GameObject newButton = Instantiate(selectionColorButtonPrefab, selectionColorGroup.transform);
             newButton.SetActive(true);
+            ColorPickerButton colorPicker = newButton.GetComponentInChildren<ColorPickerButton>();
+            colorPicker.Color = color;
             addSelectionColorButton.transform.SetAsLastSibling();
-            selectionColorButtons.Add(newButton.GetComponentInChildren<ColorPickerButton>());
-            UpdateSelectionToolColors();
+            selectionColorButtons.Add(colorPicker);
+            if (update) UpdateSelectionToolColors();
         }
 
         public void RemoveSelectionColor(GameObject button)
         {
             unsavedChanges = true;
             selectionColorButtons.Remove(button.GetComponentInChildren<ColorPickerButton>());
-            Destroy(button.transform.parent.gameObject);
+            Destroy(button);
             UpdateSelectionToolColors();
         }
+
 
         public void UpdateSelectionToolColors()
         {
@@ -413,6 +437,7 @@ namespace CellexalVR.DesktopUI
             }
             CellexalConfig.Config.SelectionToolColors = colors;
             referenceManager.selectionToolCollider.UpdateColors();
+            referenceManager.attributeSubMenu.RecreateButtons();
             referenceManager.graphGenerator.CreateShaderColors();
         }
 

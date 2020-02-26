@@ -48,7 +48,7 @@ namespace CellexalVR.Menu.Buttons
         protected virtual void Update()
         {
             if (!CrossSceneInformation.Normal) return;
-        
+
             device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
@@ -60,6 +60,10 @@ namespace CellexalVR.Menu.Buttons
             if (!tab.Active && highlight && !controllerInside)
             {
                 highlight = false;
+                SetHighlighted(highlight);
+            }
+            if (highlight && meshRenderer.material.color != highlightColor)
+            {
                 SetHighlighted(highlight);
             }
             CheckForHit();
@@ -79,7 +83,6 @@ namespace CellexalVR.Menu.Buttons
                 RaycastHit hit;
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10);
-                //if (hit.collider) print(hit.collider.transform.gameObject.name);
                 if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible())
                 {
                     laserInside = true;
@@ -93,7 +96,6 @@ namespace CellexalVR.Menu.Buttons
                     laserInside = false;
                     controllerInside = laserInside;
                     SetHighlighted(laserInside);
-                    //if (infoMenu) infoMenu.SetActive(inside);
                 }
                 controllerInside = laserInside;
                 SetHighlighted(laserInside);
@@ -130,14 +132,12 @@ namespace CellexalVR.Menu.Buttons
         /// <param name="highlight"> True if the button should be highlighted, false otherwise. </param>
         public virtual void SetHighlighted(bool h)
         {
-            if (h)
+            highlight = h;
+            if (meshRenderer == null)
             {
-                meshRenderer.material.color = highlightColor;
+                meshRenderer = GetComponent<MeshRenderer>();
             }
-            else
-            {
-                meshRenderer.material.color = standardColor;
-            }
+            meshRenderer.material.color = h ? highlightColor : standardColor;
         }
     }
 }

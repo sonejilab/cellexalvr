@@ -60,13 +60,13 @@ namespace CellexalVR.AnalysisObjects
         {
             if (t1 == null)
             {
-                graph1.CTCGraphs.Remove(gameObject);
+                graph1.ctcGraphs.Remove(gameObject);
                 RemoveGraph();
                 return;
             }
             if (t2 == null)
             {
-                graph2.CTCGraphs.Remove(gameObject);
+                graph2.ctcGraphs.Remove(gameObject);
                 RemoveGraph();
                 return;
             }
@@ -119,8 +119,8 @@ namespace CellexalVR.AnalysisObjects
             }
             referenceManager.graphGenerator.SliceClustering();
             referenceManager.graphManager.Graphs.Add(newGraph);
-            fromGraph.CTCGraphs.Add(newGraph.gameObject);
-            toGraph.CTCGraphs.Add(newGraph.gameObject);
+            fromGraph.ctcGraphs.Add(newGraph.gameObject);
+            toGraph.ctcGraphs.Add(newGraph.gameObject);
             if (!(fromGraph.GraphActive && toGraph.GraphActive))
             {
                 gameObject.SetActive(false);
@@ -604,8 +604,8 @@ namespace CellexalVR.AnalysisObjects
 
         public void RemoveGraph()
         {
-            graph1.CTCGraphs.Remove(gameObject);
-            graph2.CTCGraphs.Remove(gameObject);
+            graph1.ctcGraphs.Remove(gameObject);
+            graph2.ctcGraphs.Remove(gameObject);
             referenceManager.graphManager.Graphs.Remove(GetComponent<Graph>());
             // bundle lines Destroy(velocityParticleSystemFromGraph.gameObject);
             // bundle lines Destroy(velocityParticleSystemMidGraph.gameObject);

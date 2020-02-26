@@ -9,7 +9,6 @@ namespace CellexalVR.Menu.Buttons.Selection
     class DrawLinesBetweenGraphPointsButton : CellexalButton
     {
 
-        private CellManager cellManager;
         //private SelectionToolHandler selectionToolHandler;
         private SelectionManager selectionManager;
 
@@ -20,7 +19,6 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            cellManager = referenceManager.cellManager;
             selectionManager = referenceManager.selectionManager;
             SetButtonActivated(false);
             CellexalEvents.SelectionConfirmed.AddListener(TurnOn);
@@ -31,7 +29,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            StartCoroutine(cellManager.DrawLinesBetweenGraphPoints(selectionManager.GetLastSelection()));
+            StartCoroutine(referenceManager.lineBundler.DrawLinesBetweenGraphPoints(selectionManager.GetLastSelection()));
             referenceManager.multiuserMessageSender.SendMessageDrawLinesBetweenGps();
             TurnOff();
         }

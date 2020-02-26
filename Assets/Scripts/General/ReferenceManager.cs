@@ -74,6 +74,7 @@ namespace CellexalVR.General
         public FilterMenu filterMenu;
         public VelocitySubMenu velocitySubMenu;
         public GameObject selectionMenu;
+        public FlybyMenu flybyMenu;
         //public TextMesh currentFlashedGeneText;
         public GameObject frontButtons;
         public GameObject rightButtons;
@@ -92,6 +93,7 @@ namespace CellexalVR.General
         [Header("Managers, generators and things")]
         public GraphManager graphManager;
         public CellManager cellManager;
+        public LineBundler lineBundler;
         public SelectionManager selectionManager;
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
@@ -117,6 +119,7 @@ namespace CellexalVR.General
         //public GameObject helpVideoPlayer;
         public PlayVideo helpVideoManager;
         public VelocityGenerator velocityGenerator;
+        public ConvexHullGenerator convexHullGenerator;
         public FilterManager filterManager;
         public ReportManager reportManager;
         public Floor floor;
@@ -225,6 +228,7 @@ namespace CellexalVR.General
             GameObject generatorsParent = GameObject.Find("Generators");
             graphManager = managersParent.GetComponentInChildren<GraphManager>();
             cellManager = managersParent.GetComponentInChildren<CellManager>();
+            lineBundler = managersParent.GetComponentInChildren<LineBundler>();
             selectionManager = managersParent.GetComponentInChildren<SelectionManager>();
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
@@ -251,6 +255,7 @@ namespace CellexalVR.General
             screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
+            convexHullGenerator = generatorsParent.GetComponentInChildren<ConvexHullGenerator>(true);
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
             floor = GameObject.Find("Floor").GetComponent<Floor>();

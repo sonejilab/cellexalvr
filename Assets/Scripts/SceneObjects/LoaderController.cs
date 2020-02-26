@@ -300,7 +300,7 @@ namespace CellexalVR.SceneObjects
                 referenceManager.graphGenerator.graphCount = 0;
                 referenceManager.inputReader.QuitServer();
                 referenceManager.keyboardSwitch.SetKeyboardVisible(false);
-                referenceManager.cellManager.ClearLinesBetweenGraphPoints();
+                referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
                 referenceManager.velocityGenerator.ActiveGraphs.Clear();
                 //summertwerk
                 if (referenceManager.cellManager.h5Reader != null)

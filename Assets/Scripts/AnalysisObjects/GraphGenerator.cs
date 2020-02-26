@@ -427,7 +427,8 @@ namespace CellexalVR.AnalysisObjects
             Vector3 nodeSize = node.size;
 
             // nodeSize.magnitude < 0.000031622776
-            if (maxX == minX && maxY == minY && maxZ == minZ)
+            //if (new Vector3(maxX - minX, maxY - minY, maxZ - minZ).sqrMagnitude < 0.0000001f)
+            if (minX == maxX && minY == maxY && minZ == maxZ)
             {
                 CellexalLog.Log("Removed " + (cluster.Count - 1) + " duplicate point(s) at position " + V2S(node.pos));
                 foreach (var gp in cluster)
@@ -442,6 +443,27 @@ namespace CellexalVR.AnalysisObjects
                 cluster.Add(firstPoint);
 
                 return SplitClusterRecursive(cluster, node, addClusters, ref removedDuplicates);
+            }
+
+            int nodeDepth = 0;
+            var parentNode = node;
+            while (parentNode.parent != null)
+            {
+                parentNode = parentNode.parent;
+                nodeDepth++;
+            }
+
+            if (nodeDepth > 25f)
+            {
+
+                CellexalLog.Log("Too many iterations reached when clustering, bailing out");
+                //CellexalLog.Log("points in cluster: " + cluster.Count + " depth: " + nodeDepth);
+                //cluster.All((gp) =>
+                //{
+                //    CellexalLog.Log(GraphGenerator.V2S(gp.Position) + " " + gp.Label);
+                //    return true;
+                //});
+                return result;
             }
 
             // initialise new clusters
@@ -732,9 +754,19 @@ namespace CellexalVR.AnalysisObjects
             isCreating = false;
         }
 
+        public static string V2S(Vector2 v)
+        {
+            return "(" + v.x + ", " + v.y + ")";
+        }
+
         public static string V2S(Vector3 v)
         {
             return "(" + v.x + ", " + v.y + ", " + v.z + ")";
+        }
+
+        public static string V2S(Vector4 v)
+        {
+            return "(" + v.x + ", " + v.y + ", " + v.z + ", " + v.w + ")";
         }
 
         /// <summary>

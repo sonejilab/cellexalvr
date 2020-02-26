@@ -28,51 +28,31 @@ namespace CellexalVR.AnalysisLogic
 
         #endregion
 
-        public GameObject clusterDebugBox;
         public ReferenceManager referenceManager;
-        VRTK_ControllerReference VRTKrightController;
-
-        public GameObject lineBetweenTwoGraphPointsPrefab;
-        public GameObject pointClusterPrefab;
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
         /// <summary>
         /// Lowest and highest range of facs measurements. <see cref="Tuple{T1, T2}.Item1"/> is the lowest value and <see cref="Tuple{T1, T2}.Item2"/> is the highest.
         /// </summary>
         public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
+        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
         //public HDF5Handler hDF5Handler;
-
 
         private SQLite database;
         private SteamVR_TrackedObject rightController;
         private PreviousSearchesList previousSearchesList;
         private Dictionary<string, Cell> cells;
-        private List<GameObject> lines = new List<GameObject>();
         private SelectionToolCollider selectionToolCollider;
         private SelectionManager selectionManager;
         private GraphManager graphManager;
+        private LineBundler lineBundler;
         //private StatusDisplay statusDisplay;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
         private int coroutinesWaiting;
-        //private TextMesh currentFlashedGeneText;
-        //private GameObject HUD;
-        //private GameObject FarDisp;
-        //private TextMeshProUGUI HUDflashInfo;
-        //private TextMeshProUGUI HUDgroupInfo;
-        //private TextMeshProUGUI HUDstatus;
-        //private TextMeshProUGUI FarFlashInfo;
-        //private TextMeshProUGUI FarGroupInfo;
-        //private TextMeshProUGUI FarStatus;
         private List<string[]> prunedGenes = new List<string[]>();
-        private bool flashingGenes = false;
-        private bool loadingFlashingGenes;
-        private int[] savedFlashGenesLengths;
-        private int coloringInfoStatusId;
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
-        private bool linesBundled;
-        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
 
         //summertwerk
         public CellexalVR.AnalysisLogic.H5reader.H5reader h5Reader;
@@ -101,18 +81,12 @@ namespace CellexalVR.AnalysisLogic
             rightController = referenceManager.rightController;
             previousSearchesList = referenceManager.previousSearchesList;
             selectionManager = referenceManager.selectionManager;
+            lineBundler = GetComponent<LineBundler>();
             //statusDisplay = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
             selectionToolCollider = referenceManager.selectionToolCollider;
             graphManager = referenceManager.graphManager;
-            //currentFlashedGeneText = referenceManager.currentFlashedGeneText;
-            //HUD = referenceManager.HUD;
-            //FarDisp = referenceManager.FarDisplay;
-            //HUDflashInfo = referenceManager.HUDFlashInfo;
-            //HUDgroupInfo = referenceManager.HUDGroupInfo;
-            //FarFlashInfo = referenceManager.FarFlashInfo;
-            //FarGroupInfo = referenceManager.FarGroupInfo;
             recolored = new Dictionary<Cell, int>();
             selectionList = new Dictionary<Graph.GraphPoint, int>();
             FacsRanges = new Dictionary<string, Tuple<float, float>>();
@@ -439,6 +413,7 @@ namespace CellexalVR.AnalysisLogic
             print("python3 - anndata.h5py " + stopwatch.ElapsedMilliseconds);
         }
 
+
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -590,7 +565,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbyattribute", "cba" })]
-        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false/*, bool two_d = false*/)
         {
             if (!subGraph)
             {
@@ -609,6 +584,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
             {
                 pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+                //pos[referenceManager.graphGenerator.CreateSubGraphs]
             }
 
             foreach (Cell cell in cells.Values)
@@ -640,19 +616,13 @@ namespace CellexalVR.AnalysisLogic
             if (color)
             {
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
-                foreach (Graph graph in referenceManager.graphManager.Graphs)
+                foreach (Graph graph in graphManager.Graphs)
                 {
-                    //referenceManager.velocityGenerator.DelaunayTriangulation(graph, pos[graph.GraphName], attributeColor, attributeType);
+                    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
                 }
-
             }
             else
             {
-                foreach (Graph graph in referenceManager.graphManager.Graphs)
-                {
-                    //Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
-                    //convexHulls.Remove(graph.GraphName + "_" + attributeType);
-                }
                 referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
@@ -761,105 +731,13 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        /// <summary>
-        /// Draws lines between the graph that was selected from to points in other graphs that share the same cell label.
-        /// </summary>
-        /// <param name="points"> The graphpoints to draw the lines from. </param>
-        public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
-        {
-            ClearLinesBetweenGraphPoints();
-            var fromGraph = points[0].parent;
-            var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs.Union(graphManager.attributeSubGraphs)).ToList();
-            foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
-            {
-                var newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
-                GraphBetweenGraphs gbg = newGraph.gameObject.AddComponent<GraphBetweenGraphs>();
-                if (clusterDebugBox)
-                {
-                    gbg.clusterDebugBox = clusterDebugBox;
-                }
-                gbg.graph1 = fromGraph;
-                gbg.graph2 = toGraph;
-                gbg.referenceManager = referenceManager;
-                gbg.lineBetweenTwoGraphPointsPrefab = lineBetweenTwoGraphPointsPrefab;
-                gbg.pointClusterPrefab = pointClusterPrefab;
-                gbg.CreateGraphBetweenGraphs(points, newGraph, fromGraph, toGraph);
-                while (referenceManager.graphGenerator.isCreating)
-                {
-                    yield return null;
-                }
-                if (gbg)
-                {
-                    linesBundled = points.Count > 500;
-                    StartCoroutine(gbg.ClusterLines(bundle: linesBundled));
-                }
-            }
-
-            CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
-        }
-
-        public void BundleAllLines()
-        {
-            foreach (Graph g in graphManager.Graphs)
-            {
-                foreach (GameObject obj in g.CTCGraphs)
-                {
-                    GraphBetweenGraphs gbg = obj.GetComponent<GraphBetweenGraphs>();
-                    if (gbg.gameObject.activeSelf)
-                    {
-                        if (!linesBundled)
-                        {
-                            gbg.RemoveClusters();
-                        }
-                        gbg.RemoveLines();
-                        StartCoroutine(gbg.ClusterLines(bundle: !linesBundled));
-                    }
-                }
-            }
-            linesBundled = !linesBundled;
-        }
-
-
-        /// <summary>
-        /// Removes all lines between graphs.
-        /// </summary>
-        public void ClearLinesBetweenGraphPoints()
-        {
-            graphManager.ClearLinesBetweenGraphs();
-            CellexalEvents.LinesBetweenGraphsCleared.Invoke();
-        }
-
-        /// <summary>
-        /// Saves a series of expressions that should be flashed.
-        /// </summary>
-        /// <param name="cell"> The cell that these expressions belong to. </param>
-        /// <param name="category"> The expressions' category. </param>
-        /// <param name="expr"> An array containing integers int he range [0,29] that denotes the cell's expression of the gene corresponding to that index. </param>
-        internal void SaveFlashingExpression(string[] cell, string category, int[][] expr)
-        {
-            for (int i = 0; i < cell.Length; ++i)
-            {
-                cells[cell[i]].InitSaveSingleFlashingGenesExpression(category, expr.Length);
-            }
-
-            for (int i = 0; i < expr.Length; ++i)
-            {
-                for (int j = 0; j < expr[i].Length; ++j)
-                {
-                    cells[cell[j]].SaveSingleFlashingGenesExpression(category, i, expr[i][j]);
-                }
-            }
-        }
-
         private void GraphsChanged()
         {
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
             recolored.Clear();
-            ClearLinesBetweenGraphPoints();
+            lineBundler.ClearLinesBetweenGraphPoints();
             referenceManager.attributeSubMenu.attributes.Clear();
             selectionList.Clear();
-
-
         }
 
         /// <summary>

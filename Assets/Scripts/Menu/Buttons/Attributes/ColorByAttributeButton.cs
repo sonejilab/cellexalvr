@@ -189,6 +189,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
             colored = false;
             activeOutline.SetActive(false);
+            storedState = false;
         }
 
 
