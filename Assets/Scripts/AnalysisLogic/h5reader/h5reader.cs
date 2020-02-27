@@ -344,7 +344,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// Get the phate velocities from the file
         /// </summary>
         /// <returns>_velResult</returns>
-        public IEnumerator GetVelocites(string graph = "phate")
+        public IEnumerator GetVelocites(string graph)
         {
             busy = true;
             var watch = Stopwatch.StartNew();

@@ -131,9 +131,11 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter<1)
+                    if (counter<3)
                     {
-                        UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
+                        UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
+
+                        //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
                         counter++;
                     }
 
@@ -226,20 +228,24 @@ namespace CellexalVR.AnalysisLogic
             while (referenceManager.cellManager.h5Reader.busy)
                 yield return null;
 
-            string[] vels = referenceManager.cellManager.h5Reader._coordResult;
+            string[] vels = referenceManager.cellManager.h5Reader._velResult;
             string[] cellnames = referenceManager.cellManager.h5Reader.index2cellname;
 
             for (int i = 0; i < cellnames.Length; i++)
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
                 Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
+
+                //Method
+                diff *= 30; //arbitrary scaling, ofcourse.. DUH!
+                                                  
                 diff /= originalGraph.longestAxis;
-                if (i<1)
+                if (i<3)
                 {
-                    UnityEngine.Debug.Log(diff);
+                    UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
                 }
                 if (point != null)
-                    velocities[point] = diff/150f;
+                    velocities[point] = diff/5;
                 else
                     print(cellnames[i] + " does not exist");
             }
