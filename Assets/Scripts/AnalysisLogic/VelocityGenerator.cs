@@ -53,7 +53,7 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
         public void ReadVelocityFile(string path)
         {
-            StartCoroutine(ReadVelocityParticleSystem(path));
+            ReadVelocityFile(path, "");
         }
 
         /// <summary>
@@ -170,25 +170,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
         }
 
-        /// <summary>
-        /// Reads a velocity file and starts the particle system that visualises the velcoity information.
-        /// </summary>
-        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvfh" })]
-        public void ReadVelocityFileFromHDF5(string path)
-        {
-            StartCoroutine(ReadVelocityParticleSystemFromHDF5(path));
-        }
-
-        /// <summary>
-        /// Reads a velocity file and starts the particle system that visualises the velcoity information for a subgraph.
-        /// </summary>
-        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        /// <param name="subGraphName">The name of the subgraph.</param>
-        public void ReadVelocityFileFromHDF5(string path, string subGraphName)
-        {
-            StartCoroutine(ReadVelocityParticleSystemFromHDF5(path, subGraphName));
-        }
 
         private IEnumerator ReadVelocityParticleSystemFromHDF5(string path, string subGraphName = "")
         {
