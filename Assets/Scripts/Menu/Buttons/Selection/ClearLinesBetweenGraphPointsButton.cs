@@ -18,7 +18,6 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            cellManager = referenceManager.cellManager;
             SetButtonActivated(false);
             CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOn);
             CellexalEvents.LinesBetweenGraphsCleared.AddListener(TurnOff);
@@ -26,7 +25,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            cellManager.ClearLinesBetweenGraphPoints();
+            referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
             SetButtonActivated(false);
             referenceManager.multiuserMessageSender.SendMessageClearLinesBetweenGps();
         }

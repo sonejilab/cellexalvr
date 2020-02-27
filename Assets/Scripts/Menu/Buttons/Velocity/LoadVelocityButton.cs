@@ -33,7 +33,13 @@ namespace CellexalVR.Menu.Buttons.Velocity
             set
             {
                 filePath = value;
-                shorterFilePath = FixGraphPath(value);
+
+                //summertwerk
+                if (filePath.Contains(".")) //A .mds file
+                    shorterFilePath = FixGraphPath(value);
+                else //Just the projection name
+                    shorterFilePath = filePath.ToUpper();
+
                 graph = referenceManager.graphManager.FindGraph(shorterFilePath);
                 if (subGraphName != string.Empty)
                 {
@@ -67,6 +73,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
         {
             var velocityGenerator = referenceManager.velocityGenerator;
             Graph graphToActivate = subGraph != null ? subGraph : graph;
+            
             //velocityGenerator.ActiveGraphs.ForEach((g) => print("activegraphs: " + g));
             bool startVelocity = !velocityGenerator.ActiveGraphs.Contains(graphToActivate);
             if (startVelocity)

@@ -1,4 +1,4 @@
-﻿using CellexalVR.DesktopUI;
+using CellexalVR.DesktopUI;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Flyby;
 using System;

@@ -200,12 +200,27 @@ namespace CellexalVR.AnalysisObjects
             return null;
         }
 
+        [ConsoleCommand("graphManager", aliases: new string[] { "checkfornullnodes", "cnn" })]
+        public void CheckNullNodes()
+        {
+            foreach (var c in cellManager.GetCells())
+            {
+                foreach (var gp in c.GraphPoints)
+                {
+                    if (gp.node == null)
+                        CellexalLog.Log(gp.Label + " " + gp.node);
+                }
+            }
+        }
+
+
         [ConsoleCommand("graphManager", aliases: "cg")]
         public void RecolorGraphPoint(string label, int i)
         {
             foreach (var graph in Graphs)
             {
-                graph.ColorGraphPointSelectionColor(graph.FindGraphPoint(label), i, false);
+                var gp = graph.FindGraphPoint(label);
+                graph.ColorGraphPointSelectionColor(gp, i, false);
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }
@@ -416,31 +431,31 @@ namespace CellexalVR.AnalysisObjects
         {
             foreach (Graph g in originalGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for (int i = 0; i < g.ctcGraphs.Count; i++)
                 {
-                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    GraphBetweenGraphs gbg = g.ctcGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
                 }
-                g.CTCGraphs.Clear();
+                g.ctcGraphs.Clear();
             }
             foreach (Graph g in attributeSubGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for (int i = 0; i < g.ctcGraphs.Count; i++)
                 {
-                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    GraphBetweenGraphs gbg = g.ctcGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
                 }
-                g.CTCGraphs.Clear();
+                g.ctcGraphs.Clear();
 
             }
             foreach (Graph g in facsGraphs)
             {
-                for (int i = 0; i < g.CTCGraphs.Count; i++)
+                for (int i = 0; i < g.ctcGraphs.Count; i++)
                 {
-                    GraphBetweenGraphs gbg = g.CTCGraphs[i].GetComponent<GraphBetweenGraphs>();
+                    GraphBetweenGraphs gbg = g.ctcGraphs[i].GetComponent<GraphBetweenGraphs>();
                     gbg.RemoveGraph();
                 }
-                g.CTCGraphs.Clear();
+                g.ctcGraphs.Clear();
 
             }
         }

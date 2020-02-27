@@ -399,6 +399,8 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0, j = cellsIndexStart; i < numberOfCells; ++i, ++j)
             {
                 newCells[i] = cells[j];
+                //summertwerk
+                if (cells[j].GraphPoints.Count == 0) continue;
                 newGps.Add(cells[j].GraphPoints[0]);
             }
             hm.selection = newGps;
@@ -506,6 +508,7 @@ namespace CellexalVR.AnalysisObjects
             foreach (Tuple<Cell, int> cellAttribute in cellAttributes)
             {
                 currentAttribute = cellAttribute.Item2;
+                if (cellAttribute.Item1.GraphPoints.Count == 0) continue;
                 currentGroup = cellAttribute.Item1.GraphPoints[0].Group;
                 if (prevGroup == -1)
                 {

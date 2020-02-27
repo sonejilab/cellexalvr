@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1865869582214080}
   m_LocalRotation: {x: 0.70055956, y: -0.007472198, z: 0.007336502, w: 0.7135171}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9999999, y: 1.0000002, z: 0.9999999}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -146,6 +146,7 @@ MonoBehaviour:
   menuToggler: {fileID: 0}
   graphManager: {fileID: 0}
   cellManager: {fileID: 0}
+  lineBundler: {fileID: 0}
   selectionManager: {fileID: 0}
   heatmapGenerator: {fileID: 0}
   networkGenerator: {fileID: 0}
@@ -171,6 +172,7 @@ MonoBehaviour:
   filterManager: {fileID: 0}
   reportManager: {fileID: 0}
   floor: {fileID: 0}
+  h5ReaderAnnotatorScriptManager: {fileID: 0}
   geneKeyboard: {fileID: 0}
   keyboardSwitch: {fileID: 0}
   correlatedGenesList: {fileID: 0}

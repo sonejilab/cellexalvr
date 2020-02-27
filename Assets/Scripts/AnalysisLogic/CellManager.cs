@@ -1,4 +1,4 @@
-﻿using SQLiter;
+using SQLiter;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;

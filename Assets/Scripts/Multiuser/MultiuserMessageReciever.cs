@@ -442,7 +442,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageDrawLinesBetweenGps(bool toggle)
         {
             CellexalLog.Log("Recieved message to draw lines between graph points");
-            StartCoroutine(referenceManager.cellManager.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection()));
+            StartCoroutine(referenceManager.lineBundler.DrawLinesBetweenGraphPoints(referenceManager.selectionManager.GetLastSelection()));
             //CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
         }
 
@@ -450,7 +450,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageClearLinesBetweenGps()
         {
             CellexalLog.Log("Recieved message to clear lines between graph points");
-            referenceManager.cellManager.ClearLinesBetweenGraphPoints();
+            referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
             //CellexalEvents.LinesBetweenGraphsCleared.Invoke();
         }
 
@@ -458,7 +458,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageBundleAllLines()
         {
             CellexalLog.Log("Recieved message to clear lines between graph points");
-            referenceManager.cellManager.BundleAllLines();
+            referenceManager.lineBundler.BundleAllLines();
         }
 
 

@@ -225,6 +225,10 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="z">The z-coordinate.</param>
         public Graph.GraphPoint AddGraphPoint(Cell cell, float x, float y, float z)
         {
+            //summertwerk
+            if (newGraph.points.ContainsKey(cell.Label))
+                return null;
+
             Graph.GraphPoint gp = new Graph.GraphPoint(cell.Label, x, y, z, newGraph);
             newGraph.points[cell.Label] = gp;
             cell.AddGraphPoint(gp);

@@ -1,4 +1,4 @@
-﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Filters;
