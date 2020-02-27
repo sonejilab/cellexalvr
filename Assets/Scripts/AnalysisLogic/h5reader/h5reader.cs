@@ -17,8 +17,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
         StreamWriter writer;
         StreamReader reader;
         Dictionary<string, int> chromeLengths;
-        Dictionary<string, int> cellname2index;
-        Dictionary<string, int> genename2index;
+        private Dictionary<string, int> cellname2index;
+        private Dictionary<string, int> genename2index;
+        //Genenames are all saved in uppercase
         public string[] index2genename;
         public string[] index2cellname;
         public bool busy;
@@ -32,6 +33,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public Dictionary<string, string> conf;
         public string conditions;
 
+        //We save all projections and velocities in uppercase, Attributes can be whatever
         public List<string> projections;
         public List<string> velocities;
         public List<string> attributes;
@@ -96,27 +98,27 @@ namespace CellexalVR.AnalysisLogic.H5reader
                         ascii = bool.Parse(kvp[1]);
                     else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y") || kvp[0].StartsWith("Z"))
                     {
-                        string proj = kvp[0].Split(new[] { '_' }, 2)[1];
-                        if (!projections.Contains(proj))
-                            projections.Add(proj);
+                        string[] proj = kvp[0].Split(new[] { '_' }, 2);
+                        if (!projections.Contains(proj[1].ToUpper()))
+                            projections.Add(proj[1].ToUpper());
 
-                        conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                        conf.Add(proj[0] + "_" + proj[1].ToUpper(), "f['" + kvp[1] + "']");
                     }
                     else if (kvp[0].StartsWith("vel_"))
                     {
-                        string vel = kvp[0].Split(new[] { '_' }, 2)[1];
-                        if (!velocities.Contains(vel))
-                            velocities.Add(vel);
+                        string[] vel = kvp[0].Split(new[] { '_' }, 2);
+                        if (!velocities.Contains(vel[1].ToUpper()))
+                            velocities.Add(vel[1].ToUpper());
 
-                        conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                        conf.Add(vel[0] + "_" + vel[1].ToUpper(), "f['" + kvp[1] + "']");
                     }
                     else if (kvp[0].StartsWith("velX_") || kvp[0].StartsWith("velY_") || kvp[0].StartsWith("velZ_"))
                     {
-                        string vel = kvp[0].Split(new[] { '_' }, 2)[1];
-                        if (!velocities.Contains(vel))
-                            velocities.Add(vel);
+                        string[] vel = kvp[0].Split(new[] { '_' }, 2);
+                        if (!velocities.Contains(vel[1].ToUpper()))
+                            velocities.Add(vel[1].ToUpper());
 
-                        conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                        conf.Add(vel[0] + "_" + vel[1].ToUpper(), "f['" + kvp[1] + "']");
                     }
                     else if (kvp[0].StartsWith("attr_"))
                     {
@@ -263,6 +265,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// <returns>Coroutine, use _coordResult</returns>
         public IEnumerator GetCoords(string projection)
         {
+            projection = projection.ToUpper();
             busy = true;
             var watch = Stopwatch.StartNew();
             string output;
@@ -346,6 +349,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// <returns>_velResult</returns>
         public IEnumerator GetVelocites(string graph)
         {
+            graph = graph.ToUpper();
             busy = true;
             var watch = Stopwatch.StartNew();
             string output;

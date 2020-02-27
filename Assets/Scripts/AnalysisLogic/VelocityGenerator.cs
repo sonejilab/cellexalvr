@@ -221,7 +221,7 @@ namespace CellexalVR.AnalysisLogic
                 diff *= 30; //arbitrary scaling, ofcourse.. DUH!
                                                   
                 diff /= originalGraph.longestAxis;
-                if (i<3)
+                if (i<1)
                 {
                     UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
                 }
