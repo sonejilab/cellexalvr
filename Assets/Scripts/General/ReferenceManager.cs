@@ -14,7 +14,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using VRTK;
-
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.General
 {
@@ -93,6 +93,7 @@ namespace CellexalVR.General
         [Header("Managers, generators and things")]
         public GraphManager graphManager;
         public CellManager cellManager;
+        public LineBundler lineBundler;
         public SelectionManager selectionManager;
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
@@ -122,6 +123,11 @@ namespace CellexalVR.General
         public FilterManager filterManager;
         public ReportManager reportManager;
         public Floor floor;
+
+        //h5reader annotator
+        public AnalysisLogic.H5reader.H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
+
+
         #endregion
 
         #region Keyboard
@@ -169,6 +175,7 @@ namespace CellexalVR.General
             // sorry about this monstrosity
             Undo.RecordObject(this, "ReferenceManager Auto-populate");
 
+            h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
             rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
             leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
             rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");
@@ -204,7 +211,8 @@ namespace CellexalVR.General
             filterMenu = mainMenu.GetComponentInChildren<FilterMenu>(true);
             velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);
             selectionMenu = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu");
-            flybyMenu = mainMenu.GetComponentInChildren<FlybyMenu>(true);
+            flybyMenu = mainMenu.GetComponentInChildren<FlybyMenu>();
+
             //TextMesh currentFlashedGeneText;
             frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
             rightButtons = GameObject.Find("MenuHolder/Main Menu/Right Buttons");
@@ -222,6 +230,7 @@ namespace CellexalVR.General
             GameObject generatorsParent = GameObject.Find("Generators");
             graphManager = managersParent.GetComponentInChildren<GraphManager>();
             cellManager = managersParent.GetComponentInChildren<CellManager>();
+            lineBundler = managersParent.GetComponentInChildren<LineBundler>();
             selectionManager = managersParent.GetComponentInChildren<SelectionManager>();
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();

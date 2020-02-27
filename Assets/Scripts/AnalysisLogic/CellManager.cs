@@ -28,51 +28,34 @@ namespace CellexalVR.AnalysisLogic
 
         #endregion
 
-        public GameObject clusterDebugBox;
         public ReferenceManager referenceManager;
-        VRTK_ControllerReference VRTKrightController;
-
-        public GameObject lineBetweenTwoGraphPointsPrefab;
-        public GameObject pointClusterPrefab;
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
         /// <summary>
         /// Lowest and highest range of facs measurements. <see cref="Tuple{T1, T2}.Item1"/> is the lowest value and <see cref="Tuple{T1, T2}.Item2"/> is the highest.
         /// </summary>
         public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
+        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
         //public HDF5Handler hDF5Handler;
-
 
         private SQLite database;
         private SteamVR_TrackedObject rightController;
         private PreviousSearchesList previousSearchesList;
         private Dictionary<string, Cell> cells;
-        private List<GameObject> lines = new List<GameObject>();
         private SelectionToolCollider selectionToolCollider;
         private SelectionManager selectionManager;
         private GraphManager graphManager;
+        private LineBundler lineBundler;
         //private StatusDisplay statusDisplay;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
         private int coroutinesWaiting;
-        //private TextMesh currentFlashedGeneText;
-        //private GameObject HUD;
-        //private GameObject FarDisp;
-        //private TextMeshProUGUI HUDflashInfo;
-        //private TextMeshProUGUI HUDgroupInfo;
-        //private TextMeshProUGUI HUDstatus;
-        //private TextMeshProUGUI FarFlashInfo;
-        //private TextMeshProUGUI FarGroupInfo;
-        //private TextMeshProUGUI FarStatus;
         private List<string[]> prunedGenes = new List<string[]>();
-        private bool flashingGenes = false;
-        private bool loadingFlashingGenes;
-        private int[] savedFlashGenesLengths;
-        private int coloringInfoStatusId;
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
-        private bool linesBundled;
-        public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
+
+        //summertwerk
+        public CellexalVR.AnalysisLogic.H5reader.H5reader h5Reader;
 
         private void OnValidate()
         {
@@ -86,6 +69,7 @@ namespace CellexalVR.AnalysisLogic
         void Awake()
         {
             cells = new Dictionary<string, Cell>();
+
         }
 
         private void Start()
@@ -97,18 +81,12 @@ namespace CellexalVR.AnalysisLogic
             rightController = referenceManager.rightController;
             previousSearchesList = referenceManager.previousSearchesList;
             selectionManager = referenceManager.selectionManager;
+            lineBundler = GetComponent<LineBundler>();
             //statusDisplay = referenceManager.statusDisplay;
             //statusDisplayHUD = referenceManager.statusDisplayHUD;
             //statusDisplayFar = referenceManager.statusDisplayFar;
             selectionToolCollider = referenceManager.selectionToolCollider;
             graphManager = referenceManager.graphManager;
-            //currentFlashedGeneText = referenceManager.currentFlashedGeneText;
-            //HUD = referenceManager.HUD;
-            //FarDisp = referenceManager.FarDisplay;
-            //HUDflashInfo = referenceManager.HUDFlashInfo;
-            //HUDgroupInfo = referenceManager.HUDGroupInfo;
-            //FarFlashInfo = referenceManager.FarFlashInfo;
-            //FarGroupInfo = referenceManager.FarGroupInfo;
             recolored = new Dictionary<Cell, int>();
             selectionList = new Dictionary<Graph.GraphPoint, int>();
             FacsRanges = new Dictionary<string, Tuple<float, float>>();
@@ -227,7 +205,11 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
         public void ColorGraphsByGene(string geneName)
         {
-            ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            //summertwerk gone to work
+            if (h5Reader == null)
+                ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            else
+                ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
         }
 
         /// <summary>
@@ -238,6 +220,37 @@ namespace CellexalVR.AnalysisLogic
         {
             ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, triggerEvent);
         }
+
+        //summertwerker
+        /// <summary>
+        /// Color the graph with data from the h5 file
+        /// </summary>
+        /// <param name="geneName">Gene name</param>
+        /// <param name="coloringMethod">Coloring method</param>
+        /// <param name="triggerEvent">Trigger event?</param>
+        public void ColorGraphsByGeneHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
+        {
+            try
+            {
+                StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
+
+                //StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                //QueryRObject(geneName, coloringMethod, triggerEvent);
+
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
+                CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+            }
+            //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
+            //{
+            //    SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            //}
+            referenceManager.heatmapGenerator.HighLightGene(geneName);
+            referenceManager.networkGenerator.HighLightGene(geneName);
+        }
+
 
         /// <summary>
         /// Colors all GraphPoints in all current Graphs based on their expression of a gene.
@@ -315,6 +328,91 @@ namespace CellexalVR.AnalysisLogic
 
         //CellexalEvents.CommandFinished.Invoke(true);
         //}
+
+        /// <summary>
+        /// query the h5 file for gene expression data
+        /// </summary>
+        /// <param name="geneName">Gene name</param>
+        /// <param name="coloringMethod">coloring method</param>
+        /// <param name="triggerEvent">trigger event?</param>
+        /// <returns></returns>
+        private IEnumerator QueryHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
+        {
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+
+            stopwatch.Start();
+            /*
+            if (coroutinesWaiting >= 1)
+            {
+                // If there is already another query  waiting for the current to finish we should probably abort.
+                // This is just to make sure that a bug can't create many many coroutines that will form a long queue.
+                CellexalLog.Log("WARNING: Not querying database for " + geneName + " because there is already a query waiting.");
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+            coroutinesWaiting++;
+            // if there is already a query running, wait for it to finish
+            while (database.QueryRunning)
+                yield return null;
+
+            coroutinesWaiting--;
+            database.QueryGene(geneName, coloringMethod);
+            // now we have to wait for our query to return the results.
+            while (database.QueryRunning)
+                yield return null;
+            */
+            try
+            {
+                StartCoroutine(h5Reader.Colorbygene(geneName, coloringMethod));
+            }
+            catch (Exception e)
+            {
+                print("bug" + e);
+            }
+
+            while (h5Reader.busy)
+                yield return null;
+
+            GetComponent<AudioSource>().Play();
+            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            ArrayList expressions = h5Reader._expressionResult;
+
+
+            // stop the coroutine if the gene was not in the database
+            if (expressions.Count == 0)
+            {
+                CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
+                CellexalEvents.CommandFinished.Invoke(false);
+                yield break;
+            }
+
+            graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
+
+            //float percentInResults = (float)database._result.Count / cells.Values.Count;
+            //statusDisplay.RemoveStatus(coloringInfoStatusId);
+            //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
+
+            if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
+            {
+                var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
+                foreach (Cell c in cells.Values)
+                {
+                    c.SaveExpression(geneName + " " + coloringMethod, removedGene);
+                }
+            }
+            if (triggerEvent)
+            {
+                CellexalEvents.GraphsColoredByGene.Invoke();
+            }
+
+            CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+            stopwatch.Stop();
+            //print("Time : " + stopwatch.Elapsed.ToString());
+            CellexalEvents.CommandFinished.Invoke(true);
+            print("python3 - anndata.h5py " + stopwatch.ElapsedMilliseconds);
+        }
+
 
         private IEnumerator QueryDatabase(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
@@ -492,6 +590,7 @@ namespace CellexalVR.AnalysisLogic
             foreach (Cell cell in cells.Values)
             {
                 cell.ColorByAttribute(attributeType, color);
+                if (cell.GraphPoints.Count == 0) continue;
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))
                 {
@@ -517,41 +616,13 @@ namespace CellexalVR.AnalysisLogic
             if (color)
             {
                 referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
-                foreach (Graph graph in referenceManager.graphManager.Graphs)
+                foreach (Graph graph in graphManager.Graphs)
                 {
-                    //if (two_d)
-                    //{
-                    //    List<Vector2> twoDList = new List<Vector2>();
-                    //    foreach (var p in pos[graph.GraphName])
-                    //    {
-                    //        twoDList.Add(new Vector2(p.x, p.y));
-                    //    }
-
-                    //    var hullInd = referenceManager.convexHullGenerator.QuickHull(twoDList);
-                    //    var hull = referenceManager.convexHullGenerator.SortHull(hullInd, twoDList);
-                    //    var empty = new GameObject();
-                    //    var hullMesh = Instantiate(empty);
-                    //    Destroy(empty);
-                    //    hullMesh.AddComponent<MeshFilter>().mesh = referenceManager.convexHullGenerator.CreateHullMesh(hull);
-                    //    hullMesh.AddComponent<MeshRenderer>().material.color = attributeColor;
-                    //    hullMesh.transform.parent = graph.transform;
-                    //    hullMesh.transform.localPosition = Vector3.zero;
-                    //    hullMesh.transform.localRotation = Quaternion.identity;
-                    //}
-                    //else
-                    //{
                     referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
-                    //}
                 }
-
             }
             else
             {
-                foreach (Graph graph in referenceManager.graphManager.Graphs)
-                {
-                    //Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
-                    //convexHulls.Remove(graph.GraphName + "_" + attributeType);
-                }
                 referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
             }
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
@@ -660,105 +731,13 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        /// <summary>
-        /// Draws lines between the graph that was selected from to points in other graphs that share the same cell label.
-        /// </summary>
-        /// <param name="points"> The graphpoints to draw the lines from. </param>
-        public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
-        {
-            ClearLinesBetweenGraphPoints();
-            var fromGraph = points[0].parent;
-            var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs.Union(graphManager.attributeSubGraphs)).ToList();
-            foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
-            {
-                var newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
-                GraphBetweenGraphs gbg = newGraph.gameObject.AddComponent<GraphBetweenGraphs>();
-                if (clusterDebugBox)
-                {
-                    gbg.clusterDebugBox = clusterDebugBox;
-                }
-                gbg.graph1 = fromGraph;
-                gbg.graph2 = toGraph;
-                gbg.referenceManager = referenceManager;
-                gbg.lineBetweenTwoGraphPointsPrefab = lineBetweenTwoGraphPointsPrefab;
-                gbg.pointClusterPrefab = pointClusterPrefab;
-                gbg.CreateGraphBetweenGraphs(points, newGraph, fromGraph, toGraph);
-                while (referenceManager.graphGenerator.isCreating)
-                {
-                    yield return null;
-                }
-                if (gbg)
-                {
-                    linesBundled = points.Count > 500;
-                    StartCoroutine(gbg.ClusterLines(bundle: linesBundled));
-                }
-            }
-
-            CellexalEvents.LinesBetweenGraphsDrawn.Invoke();
-        }
-
-        public void BundleAllLines()
-        {
-            foreach (Graph g in graphManager.Graphs)
-            {
-                foreach (GameObject obj in g.CTCGraphs)
-                {
-                    GraphBetweenGraphs gbg = obj.GetComponent<GraphBetweenGraphs>();
-                    if (gbg.gameObject.activeSelf)
-                    {
-                        if (!linesBundled)
-                        {
-                            gbg.RemoveClusters();
-                        }
-                        gbg.RemoveLines();
-                        StartCoroutine(gbg.ClusterLines(bundle: !linesBundled));
-                    }
-                }
-            }
-            linesBundled = !linesBundled;
-        }
-
-
-        /// <summary>
-        /// Removes all lines between graphs.
-        /// </summary>
-        public void ClearLinesBetweenGraphPoints()
-        {
-            graphManager.ClearLinesBetweenGraphs();
-            CellexalEvents.LinesBetweenGraphsCleared.Invoke();
-        }
-
-        /// <summary>
-        /// Saves a series of expressions that should be flashed.
-        /// </summary>
-        /// <param name="cell"> The cell that these expressions belong to. </param>
-        /// <param name="category"> The expressions' category. </param>
-        /// <param name="expr"> An array containing integers int he range [0,29] that denotes the cell's expression of the gene corresponding to that index. </param>
-        internal void SaveFlashingExpression(string[] cell, string category, int[][] expr)
-        {
-            for (int i = 0; i < cell.Length; ++i)
-            {
-                cells[cell[i]].InitSaveSingleFlashingGenesExpression(category, expr.Length);
-            }
-
-            for (int i = 0; i < expr.Length; ++i)
-            {
-                for (int j = 0; j < expr[i].Length; ++j)
-                {
-                    cells[cell[j]].SaveSingleFlashingGenesExpression(category, i, expr[i][j]);
-                }
-            }
-        }
-
         private void GraphsChanged()
         {
             //statusDisplay.RemoveStatus(coloringInfoStatusId);
             recolored.Clear();
-            ClearLinesBetweenGraphPoints();
+            lineBundler.ClearLinesBetweenGraphPoints();
             referenceManager.attributeSubMenu.attributes.Clear();
             selectionList.Clear();
-
-
         }
 
         /// <summary>
