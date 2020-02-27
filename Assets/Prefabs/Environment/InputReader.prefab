@@ -184,6 +184,7 @@ MonoBehaviour:
   filterOperatorKeyboard: {fileID: 0}
   filterValueKeyboard: {fileID: 0}
   filterNameKeyboardAutoCompleteList: {fileID: 0}
+  cullingFilterManager: {fileID: 0}
   settingsMenu: {fileID: 0}
   colorPicker: {fileID: 0}
   spectatorRig: {fileID: 0}
