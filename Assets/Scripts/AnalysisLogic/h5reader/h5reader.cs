@@ -459,7 +459,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     try
                     {
                         _expressionResult.Add(new CellExpressionPair(index2cellname[int.Parse(indices[i])], expr, -1));
-
                     }
                     catch (Exception e)
                     {
@@ -509,9 +508,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
-                    if (binsize > 0)
-                        result[j].Color = j / binsize;
-                    else
                         result[j].Color = j;
                 }
                 _expressionResult.AddRange(result);

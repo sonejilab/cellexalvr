@@ -22,7 +22,26 @@ namespace CellexalVR.AnalysisLogic.H5reader
         Process p;
         StreamReader reader;
         H5ReaderAnnotatorTextBoxScript keys;
-        public Dictionary<string, string> config;
+        private Dictionary<string, string> config;
+
+        /* Saving data types as the following. 'O' seems to work as unicode string aswell 
+        '?'	boolean
+        'b'	(signed) byte
+        'B'	unsigned byte
+        'i'	(signed) integer
+        'u'	unsigned integer
+        'f'	floating-point
+        'c'	complex-floating point
+        'm'	timedelta
+        'M'	datetime
+        'O'	(Python) objects
+        'S', 'a'	zero-terminated bytes (not recommended)
+        'U'	Unicode string
+        'V'	raw data (void)
+        */
+
+        private Dictionary<string, char> configDataTypes;
+
         public List<ProjectionObjectScript> projectionObjectScripts;
         private string path = "LCA_142K_umap_phate_loom";
 
@@ -39,6 +58,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
         {
             this.path = path;
             config = new Dictionary<string, string>();
+            configDataTypes = new Dictionary<string, char>();
+
             string[] files = Directory.GetFiles("Data\\" + path);
             string filePath = "";
             foreach (string s in files)
@@ -85,6 +106,28 @@ namespace CellexalVR.AnalysisLogic.H5reader
             display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
         }
 
+        public void AddToConfig(string key, string value, char dtype)
+        {
+            if (!config.ContainsKey(key))
+                config.Add(key, value);
+            else
+                config[key] = value;
+
+            if (!configDataTypes.ContainsKey(key))
+                configDataTypes.Add(key, dtype);
+            else
+                configDataTypes[key] = dtype;
+        }
+
+        public void RemoveFromConfig(string key)
+        {
+            if(config.ContainsKey(key))
+                config.Remove(key);
+
+            if (configDataTypes.ContainsKey(key))
+                configDataTypes.Remove(key);
+        }
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.M))
@@ -92,6 +135,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 keys.UpdatePosition(10f);
             }
             string text = "";
+
+            if (configDataTypes.ContainsKey("cellnames") && (configDataTypes["cellnames"] == 'S' || configDataTypes["cellnames"] == 'a'))
+                text += "ascii true" + Environment.NewLine;
 
             foreach (KeyValuePair<string, string> entry in config)
             {
@@ -116,6 +162,10 @@ namespace CellexalVR.AnalysisLogic.H5reader
     
             using (StreamWriter outputFile = new StreamWriter(Path.Combine("Data\\" + path, "config.conf")))
             {
+                //The cellnames are saved in ascii, we guess everything is saved in ascii.
+                if (configDataTypes["cellnames"] == 'S' || configDataTypes["cellnames"] == 'a')
+                    outputFile.WriteLine("ascii true");
+
                 foreach (KeyValuePair<string, string> kvp in config)
                 {
                     outputFile.WriteLine(kvp.Key + " " + kvp.Value.ToString());

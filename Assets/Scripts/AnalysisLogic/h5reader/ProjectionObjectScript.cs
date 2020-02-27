@@ -16,33 +16,39 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public projectionType type;
         public string name = "unnamed-projection";
-        public Dictionary<string, string> paths;
+        private Dictionary<string, string> paths;
+        private Dictionary<string, char> dataTypes;
+
         public GameObject AnchorPrefab;
         public H5readerAnnotater h5readerAnnotater;
         public TextMeshProUGUI seperatedText;
         private List<GameObject> instantiatedGameObjects;
 
-        public Dictionary<projectionType, string[]> menu_setup;
+        private Dictionary<projectionType, string[]> menu_setup;
         private TextMeshProUGUI nameTextMesh;
 
         void Start()
         {
             paths = new Dictionary<string, string>();
+            dataTypes = new Dictionary<string, char>();
+
             nameTextMesh = transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        public void AddToPaths(string key, string value)
+        public void AddToPaths(string key, string value, char dtype)
         {
             if (!paths.ContainsKey(key))
             {
                 paths.Add(key, value);
-                h5readerAnnotater.config.Add(key + "_" + name, value);
+                dataTypes.Add(key, dtype);
             }
             else
             {
                 paths[key] = value;
-                h5readerAnnotater.config[key + "_" + name] = value;
+                dataTypes[key] = dtype;
             }
+
+            h5readerAnnotater.AddToConfig(key + "_" + name, value, dtype);
             
 
         }
@@ -52,8 +58,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
             if (paths.ContainsKey(key))
             {
                 paths.Remove(key);
-                h5readerAnnotater.config.Remove(key + "_" + name);
             }
+            if (dataTypes.ContainsKey(key))
+                dataTypes.Remove(key);
+
+            h5readerAnnotater.RemoveFromConfig(key + "_" + name);
 
         }
 
@@ -87,7 +96,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
 
             foreach (string key in paths.Keys)
-                h5readerAnnotater.config.Remove(key + "_" + name);
+                h5readerAnnotater.RemoveFromConfig(key + "_" + name);
 
             Init(type);
         }
@@ -103,7 +112,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public void OnDestroy()
         {
             foreach (string key in paths.Keys)
-                h5readerAnnotater.config.Remove(key + "_" + name);
+                h5readerAnnotater.RemoveFromConfig(key + "_" + name);
 
             h5readerAnnotater.projectionObjectScripts.Remove(this);
             Destroy(this.gameObject);
