@@ -417,7 +417,8 @@ namespace CellexalVR.AnalysisObjects
                     minX = maxX;
                     maxX = temp;
                 }
-                referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX, float.Parse(xAxisMaxLabel.text));
+                referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX,
+                    float.Parse(xAxisMaxLabel.text, System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
             }
         }
 

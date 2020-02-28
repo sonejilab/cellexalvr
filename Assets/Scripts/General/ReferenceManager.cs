@@ -15,6 +15,7 @@ using UnityEditor;
 using UnityEngine;
 using VRTK;
 using CellexalVR.AnalysisLogic.H5reader;
+using UnityEngine.Serialization;
 
 namespace CellexalVR.General
 {
@@ -125,7 +126,8 @@ namespace CellexalVR.General
         public Floor floor;
 
         //h5reader annotator
-        public AnalysisLogic.H5reader.H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
+        public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
+        [FormerlySerializedAs("h5reader")] public H5Reader h5Reader;
 
 
         #endregion
@@ -211,7 +213,6 @@ namespace CellexalVR.General
             filterMenu = mainMenu.GetComponentInChildren<FilterMenu>(true);
             velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);
             selectionMenu = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu");
-            //TextMesh currentFlashedGeneText;
             frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
             rightButtons = GameObject.Find("MenuHolder/Main Menu/Right Buttons");
             backButtons = GameObject.Find("MenuHolder/Main Menu/Back Buttons");
@@ -241,6 +242,7 @@ namespace CellexalVR.General
             configManager = inputreader.GetComponent<ConfigManager>();
             //GameObject helperCylinder;
             inputReader = inputreader.GetComponent<InputReader>();
+            h5Reader = inputreader.GetComponent<H5Reader>();
             database = GameObject.Find("SQLiter").GetComponent<SQLiter.SQLite>();
             logManager = inputreader.GetComponent<LogManager>();
             multiuserMessageSender = managersParent.GetComponentInChildren<MultiuserMessageSender>();

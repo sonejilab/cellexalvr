@@ -15,10 +15,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.SceneObjects;
-using CellexalVR.Interaction;
 using System.Drawing;
-using System.Drawing.Imaging;
-using CellexalVR.Multiuser;
 using System.Diagnostics;
 using CellexalVR.Spatial;
 
@@ -32,38 +29,35 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
         public NetworkCenter networkPrefab;
-        public GameObject SpatialGraphPrefab;
-
+        public GameObject spatialGraphPrefab;
         public TextMeshPro graphName;
 
-        public GameObject lineprefab;
-
-        private char[] separators = new char[] { ' ', '\t' };
-
+        private readonly char[] separators = new char[] {' ', '\t'};
         private GraphManager graphManager;
         private CellManager cellManager;
         private LoaderController loaderController;
         private SQLite database;
-        //private SelectionToolHandler selectionToolHandler;
         private SelectionManager selectionManager;
         private AttributeSubMenu attributeSubMenu;
         private ColorByIndexMenu indexMenu;
         private GraphFromMarkersMenu createFromMarkerMenu;
+
         private GameObject headset;
+
         //private StatusDisplay status;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
-        private MultiuserMessageSender multiuserMessageSender;
         private NetworkGenerator networkGenerator;
         private GraphGenerator graphGenerator;
         private string currentPath;
-        private int facsGraphCounter;
-        private bool attributeFileRead = false;
+        public int facsGraphCounter;
+        public bool attributeFileRead = false;
 
         private Bitmap image1;
 
         [Tooltip("Automatically loads the Bertie dataset")]
         public bool debug = false;
+
 
         //Flag for loading previous sessions
         public bool doLoad = false;
@@ -78,17 +72,14 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
-            multiuserMessageSender = referenceManager.multiuserMessageSender;
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
             loaderController = referenceManager.loaderController;
             database = referenceManager.database;
-            //selectionToolHandler = referenceManager.selectionToolHandler;
             selectionManager = referenceManager.selectionManager;
             attributeSubMenu = referenceManager.attributeSubMenu;
             indexMenu = referenceManager.indexMenu;
             createFromMarkerMenu = referenceManager.createFromMarkerMenu;
-            //headset = referenceManager.headset;
             if (CrossSceneInformation.Spectator)
             {
                 headset = referenceManager.spectatorRig;
@@ -100,37 +91,30 @@ namespace CellexalVR.AnalysisLogic
                 headset = referenceManager.headset;
                 referenceManager.spectatorRig.SetActive(false);
             }
-            //status = referenceManager.statusDisplay;
-            //statusDisplayHUD = referenceManager.statusDisplayHUD;
-            //statusDisplayFar = referenceManager.statusDisplayFar;
+
             networkGenerator = referenceManager.networkGenerator;
             graphGenerator = referenceManager.graphGenerator;
             currentPath = "";
             facsGraphCounter = 0;
-
             RScriptRunner.SetReferenceManager(referenceManager);
             CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
 
-
-        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] {"readfolder", "rf"})]
         public void ReadFolderConsole(string path)
         {
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
         }
 
-
-
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
         /// 
         /// <param name="path">path to the file</param>
-        public void ReadFile_h5(string path)
+        private void ReadFileH5(string path)
         {
-
             bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
             if (!confExists)
             {
@@ -138,18 +122,8 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-
-            UpdateSelectionToolHandler();
-            attributeFileRead = false;
-            currentPath = path;
-            string workingDirectory = Directory.GetCurrentDirectory();
-            string fullPath = workingDirectory + "\\Data\\" + path;
-            selectionManager.DataDir = fullPath;
-            CellexalUser.DataSourceFolder = currentPath;
-
-
-            StartCoroutine(H5_readgraphs(fullPath));
-            //graphGenerator.isCreating = true;)
+            string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
+            StartCoroutine(referenceManager.h5Reader.H5ReadGraphs(fullPath));
         }
 
         /// <summary>
@@ -159,34 +133,14 @@ namespace CellexalVR.AnalysisLogic
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
-
-            //summertwerk
-            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
-            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
-            if (h5 || loom)
-            {
-                ReadFile_h5(path);
-                return;
-            }
-
-
-            UpdateSelectionToolHandler();
             if (PhotonNetwork.isMasterClient)
             {
                 referenceManager.configManager.MultiUserSynchronise();
             }
-            attributeFileRead = false;
-            // multiple_exp if (currentPath.Length > 0)
-            // multiple_exp {
-            // multiple_exp     currentPath += "+" + path;
-            // multiple_exp }
+
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
-            CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
-            CellexalUser.DataSourceFolder = currentPath;
-            //LoadPreviousGroupings();
-            database.InitDatabase(fullPath + "\\database.sqlite");
             if (Directory.Exists(workingDirectory + "\\Output"))
             {
                 if (File.Exists(workingDirectory + "\\Output\\r_log.txt"))
@@ -195,6 +149,11 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(workingDirectory + "\\Output\\r_log.txt");
                 }
             }
+
+            UpdateSelectionToolHandler();
+            attributeFileRead = false;
+            CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
+            CellexalUser.DataSourceFolder = currentPath;
             selectionManager.DataDir = fullPath;
             if (!debug)
             {
@@ -205,27 +164,42 @@ namespace CellexalVR.AnalysisLogic
                     CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(networkDirectory));
                     Directory.CreateDirectory(networkDirectory);
                 }
+
                 string[] networkFilesList = Directory.GetFiles(networkDirectory, "*");
-                CellexalLog.Log("Deleting " + networkFilesList.Length + " files in " + CellexalLog.FixFilePath(networkDirectory));
+                CellexalLog.Log("Deleting " + networkFilesList.Length + " files in " +
+                                CellexalLog.FixFilePath(networkDirectory));
                 foreach (string f in networkFilesList)
                 {
                     File.Delete(f);
                 }
             }
+
+            //summertwerk
+            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
+            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
+            if (h5 || loom)
+            {
+                ReadFileH5(path);
+                return;
+            }
+
+            // multiple_exp if (currentPath.Length > 0)
+            // multiple_exp {
+            // multiple_exp     currentPath += "+" + path;
+            // multiple_exp }
+            //LoadPreviousGroupings();
+            database.InitDatabase(fullPath + "\\database.sqlite");
+
             string[] mdsFiles;
-            if (CrossSceneInformation.Tutorial)
-            {
-                mdsFiles = Directory.GetFiles(fullPath, "DDRTree.mds");
-            }
-            else
-            {
-                mdsFiles = Directory.GetFiles(fullPath, "*.mds");
-            }
+            mdsFiles = Directory.GetFiles(fullPath, CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
+
             if (mdsFiles.Length == 0)
             {
-                CellexalError.SpawnError("Empty dataset", "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
+                CellexalError.SpawnError("Empty dataset",
+                    "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
                 throw new System.InvalidOperationException("Empty dataset");
             }
+
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             StartCoroutine(ReadMDSFiles(fullPath, mdsFiles));
             graphGenerator.isCreating = true;
@@ -250,220 +224,19 @@ namespace CellexalVR.AnalysisLogic
         {
             facsGraphCounter++;
 
-            StartCoroutine(ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
+            StartCoroutine(ReadMDSFiles(path, new string[] {file}, GraphGenerator.GraphType.FACS, false));
         }
 
-        /// <summary>
-        /// H5 Coroutine to create graphs.
-        /// </summary>
-        /// <param name="path"> The path to the file. </param>
 
-        IEnumerator H5_readgraphs(string path, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
-        {
-            if (!loaderController.loaderMovedDown)
-            {
-                loaderController.loaderMovedDown = true;
-                loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
-            }
-
-
-            cellManager.h5Reader = new H5reader.H5reader(path);
-            StartCoroutine(cellManager.h5Reader.ConnectToFile());
-            while (cellManager.h5Reader.busy)
-                yield return null;
-
-
-            //int statusId = status.AddStatus("Reading folder " + path);
-            //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
-            //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
-            int fileIndex = 0;
-            //  Read each .mds file
-            //  The file format should be
-            //  cell_id  axis_name1   axis_name2   axis_name3
-            //  CELLNAME_1 X_COORD Y_COORD Z_COORD
-            //  CELLNAME_2 X_COORD Y_COORD Z_COORD
-            //  ...
-
-            float maximumDeltaTime = 0.05f; // 20 fps
-            int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
-            int itemsThisFrame = 0;
-            int totalNbrOfCells = 0;
-            foreach (string proj in cellManager.h5Reader.projections)
-            {
-                print(proj);
-
-
-
-                while (graphGenerator.isCreating)
-                {
-                    yield return null;
-                }
-                Graph combGraph = graphGenerator.CreateGraph(type);
-
-
-
-                if (cellManager.h5Reader.velocities.Contains(proj))
-                {
-                    graphManager.velocityFiles.Add(proj);
-                    combGraph.hasVelocityInfo = true;
-                }
-                    
-                
-                // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
-                // file will be the full file name e.g C:\...\graph1.mds
-                // good programming habits have left us with a nice mix of forward and backward slashes
-
-                //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
-                if (type.Equals(GraphGenerator.GraphType.MDS))
-                {
-                    combGraph.GraphName = proj.ToUpper();
-                    //combGraph.FolderName = regexResult[regexResult.Length - 2];
-                }
-                else
-                {
-                    string name = "";
-                    foreach (string s in referenceManager.newGraphFromMarkers.markers)
-                    {
-                        name += s + " - ";
-                    }
-                    combGraph.GraphNumber = facsGraphCounter;
-                    combGraph.GraphName = name;
-                }
-                //combGraph.gameObject.name = combGraph.GraphName;
-                //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
-
-                //image1 = new Bitmap(400, 400);
-                //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
-                //int i, j;
-                string[] axes = new string[3];
-
-
-                while (cellManager.h5Reader.busy)
-                    yield return null;
-
-                StartCoroutine(cellManager.h5Reader.GetCoords(proj));
-
-                while (cellManager.h5Reader.busy)
-                    yield return null;
-
-                string[] coords = cellManager.h5Reader._coordResult;
-                string[] cellnames = cellManager.h5Reader.index2cellname;
-                combGraph.axisNames = new string[] { "x", "y", "z" };
-                itemsThisFrame = 0;
-                int count = 0;
-
-                for (int j = 0; j < cellnames.Length; j++)
-                {
-                    string cellname = cellnames[j];
-                    float x, y, z;
-                    if(cellManager.h5Reader.conditions == "2D_sep")
-                    {
-                        
-                        x = float.Parse(coords[j]);
-                        y = float.Parse(coords[j + cellnames.Length]);
-                        z = j * 0.00001f; //summertwerk, should scale after maxcoord
-                        
-
-                    }
-                    else if (cellManager.h5Reader.conditions == "3D_sep")
-                    {
-
-                        x = float.Parse(coords[j]);
-                        y = float.Parse(coords[j + cellnames.Length]);
-                        z = float.Parse(coords[j + 2*cellnames.Length]);
-
-                    }
-                    else
-                    {
-                        x = float.Parse(coords[j * 3]);
-                        y = float.Parse(coords[j * 3 + 1]);
-                        z = float.Parse(coords[j * 3 + 2]);
-                    }
-
-                    Cell cell = cellManager.AddCell(cellname);
-                    graphGenerator.AddGraphPoint(cell, x, y, z);
-                    totalNbrOfCells++;
-                    count++;
-                    
-                    if (count > maximumItemsPerFrame)
-                    {
-                        yield return null;
-                        count = 0;
-                        float lastFrame = Time.deltaTime;
-                        if (lastFrame < maximumDeltaTime)
-                        {
-                            // we had some time over last frame
-                            maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
-                        }
-                        else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
-                        {
-                            // we took too much time last frame
-                            maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
-                        }
-
-                    }
-                    
-                }
-                combGraph.SetInfoText();
-
-                // Add axes in bottom corner of graph and scale points differently
-                graphGenerator.SliceClustering();
-                graphGenerator.AddAxes(combGraph, axes);
-                graphManager.Graphs.Add(combGraph);
-                if (debug)
-                {
-                    //newGraph.transform.Translate(Vector3.forward * fileIndex);
-                }
-                //combinedGraphGenerator.isCreating = false;
-            }
-
-            if (cellManager.h5Reader.attributes.Count > 0)
-            {
-                StartCoroutine(H5_ReadAttributeFilesCoroutine());
-                while (!attributeFileRead)
-                    yield return null;
-            }
-
-            /*
-            if (type.Equals(GraphGenerator.GraphType.MDS))
-            {
-                StartCoroutine(ReadAttributeFilesCoroutine(path));
-                while (!attributeFileRead)
-                    yield return null;
-                ReadFacsFiles(path, totalNbrOfCells);
-                ReadFilterFiles(CellexalUser.UserSpecificFolder);
-            }
-            */
-            //loaderController.loaderMovedDown = true;
-
-
-            //status.UpdateStatus(statusId, "Reading index.facs file");
-            //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
-            //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
-            //flashGenesMenu.CreateTabs(path);
-            //status.RemoveStatus(statusId);
-            //statusDisplayHUD.RemoveStatus(statusIdHUD);
-            //statusDisplayFar.RemoveStatus(statusIdFar);
-
-            if (server)
-            {
-                StartCoroutine(StartServer("main"));
-                //StartCoroutine(StartServer("gene"));
-            }
-
-            while (graphGenerator.isCreating)
-            {
-                yield return null;
-            }
-            CellexalEvents.GraphsLoaded.Invoke();
-
-        }
         /// <summary>
         /// Coroutine to create graphs.
         /// </summary>
         /// <param name="path"> The path to the folder where the files are. </param>
         /// <param name="mdsFiles"> The filenames. </param>
-        IEnumerator ReadMDSFiles(string path, string[] mdsFiles, GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
+        /// <param name="type"></param>
+        /// <param name="server"></param>
+        private IEnumerator ReadMDSFiles(string path, string[] mdsFiles,
+            GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
             if (!loaderController.loaderMovedDown)
             {
@@ -474,7 +247,6 @@ namespace CellexalVR.AnalysisLogic
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
             //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
-            int fileIndex = 0;
             //  Read each .mds file
             //  The file format should be
             //  cell_id  axis_name1   axis_name2   axis_name3
@@ -482,9 +254,8 @@ namespace CellexalVR.AnalysisLogic
             //  CELLNAME_2 X_COORD Y_COORD Z_COORD
             //  ...
 
-            float maximumDeltaTime = 0.05f; // 20 fps
+            const float maximumDeltaTime = 0.05f; // 20 fps
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
-            int itemsThisFrame = 0;
             int totalNbrOfCells = 0;
             foreach (string file in mdsFiles)
             {
@@ -492,6 +263,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
+
                 // spatial if (file.Contains("slice"))
                 // spatial {
                 // spatial     StartCoroutine(ReadSpatialMDSFiles(file));
@@ -506,24 +278,35 @@ namespace CellexalVR.AnalysisLogic
                 string graphFileName = regexResult[regexResult.Length - 1];
                 //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
                 graphManager.Graphs.Add(combGraph);
-                if (type.Equals(GraphGenerator.GraphType.MDS))
+                switch (type)
                 {
-                    combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
-                    print(combGraph.GraphName);
-                    combGraph.FolderName = regexResult[regexResult.Length - 2];
-                    graphManager.originalGraphs.Add(combGraph);
-                }
-                else if (type.Equals(GraphGenerator.GraphType.FACS))
-                {
-                    string name = "";
-                    foreach (string s in referenceManager.newGraphFromMarkers.markers)
+                    case GraphGenerator.GraphType.MDS:
+                        combGraph.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+                        combGraph.FolderName = regexResult[regexResult.Length - 2];
+                        graphManager.originalGraphs.Add(combGraph);
+                        break;
+                    case GraphGenerator.GraphType.FACS:
                     {
-                        name += s + " - ";
+                        string name = "";
+                        foreach (string s in referenceManager.newGraphFromMarkers.markers)
+                        {
+                            name += s + " - ";
+                        }
+
+                        combGraph.GraphNumber = facsGraphCounter;
+                        combGraph.GraphName = name;
+                        combGraph.tag = "FacsGraph";
+                        graphManager.facsGraphs.Add(combGraph);
+                        break;
                     }
-                    combGraph.GraphNumber = facsGraphCounter;
-                    combGraph.GraphName = name;
-                    combGraph.tag = "FacsGraph";
-                    graphManager.facsGraphs.Add(combGraph);
+                    case GraphGenerator.GraphType.ATTRIBUTE:
+                        break;
+                    case GraphGenerator.GraphType.BETWEEN:
+                        break;
+                    case GraphGenerator.GraphType.SPATIAL:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
                 //combGraph.gameObject.name = combGraph.GraphName;
                 //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
@@ -539,11 +322,10 @@ namespace CellexalVR.AnalysisLogic
                     //List<float> xcoords = new List<float>();s
                     //List<float> ycoords = new List<float>();
                     //List<float> zcoords = new List<float>();
-                    int i = 0;
                     // first line is (if correct format) a header and the first word is cell_id (the name of the first column).
                     // If wrong and does not contain header read first line as a cell.
                     string header = mdsStreamReader.ReadLine();
-                    if (header.Split(null)[0].Equals("CellID"))
+                    if (header != null && header.Split(null)[0].Equals("CellID"))
                     {
                         string[] columns = header.Split(null).Skip(1).ToArray();
                         Array.Copy(columns, 0, axes, 0, 3);
@@ -554,7 +336,7 @@ namespace CellexalVR.AnalysisLogic
                             combGraph.hasVelocityInfo = true;
                         }
                     }
-                    else
+                    else if (header != null)
                     {
                         string[] words = header.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words.Length != 4 && words.Length != 7)
@@ -562,21 +344,23 @@ namespace CellexalVR.AnalysisLogic
                             print(words.Length);
                             continue;
                         }
-                        string cellname = words[0];
+
+                        string cellName = words[0];
                         //print(words[0]);
-                        float x = float.Parse(words[1]);
-                        float y = float.Parse(words[2]);
-                        float z = float.Parse(words[3]);
-                        Cell cell = cellManager.AddCell(cellname);
+                        float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        Cell cell = cellManager.AddCell(cellName);
                         graphGenerator.AddGraphPoint(cell, x, y, z);
                         axes[0] = "x";
                         axes[1] = "y";
                         axes[2] = "z";
                     }
+
                     combGraph.axisNames = axes;
+                    var itemsThisFrame = 0;
                     while (!mdsStreamReader.EndOfStream)
                     {
-                        itemsThisFrame = 0;
                         //  status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                         //  statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                         //  statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
@@ -585,23 +369,26 @@ namespace CellexalVR.AnalysisLogic
 
                         for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
                         {
-                            string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                            string[] words = mdsStreamReader.ReadLine()
+                                .Split(separators, StringSplitOptions.RemoveEmptyEntries);
                             if (words.Length != 4 && words.Length != 7)
                             {
                                 print(words.Length);
                                 continue;
                             }
-                            string cellname = words[0];
-                            float x = float.Parse(words[1]);
-                            float y = float.Parse(words[2]);
-                            float z = float.Parse(words[3]);
 
+                            string cellname = words[0];
+                            float x = float.Parse(words[1],
+                                System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                            float y = float.Parse(words[2],
+                                System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                            float z = float.Parse(words[3],
+                                System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             Cell cell = cellManager.AddCell(cellname);
                             graphGenerator.AddGraphPoint(cell, x, y, z);
                             itemsThisFrame++;
                         }
 
-                        i += itemsThisFrame;
                         totalNbrOfCells += itemsThisFrame;
                         // wait for end of frame
                         yield return null;
@@ -612,21 +399,22 @@ namespace CellexalVR.AnalysisLogic
                             // we had some time over last frame
                             maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                         }
-                        else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
+                        else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame >
+                            CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
                         {
                             // we took too much time last frame
                             maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                         }
                     }
 
-                    fileIndex++;
                     // tell the graph that the info text is ready to be set
                     // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = true;
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
                     // more_cells newGraph.CreateColliders();
                     stopwatch.Stop();
-                    CellexalLog.Log("Created " + combGraph.GetComponents<BoxCollider>().Length + " colliders in " + stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
+                    CellexalLog.Log("Created " + combGraph.GetComponents<BoxCollider>().Length + " colliders in " +
+                                    stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
                     //if (doLoad)
                     //{
                     //    graphManager.LoadPosition(newGraph, fileIndex);
@@ -635,7 +423,6 @@ namespace CellexalVR.AnalysisLogic
                     mdsStreamReader.Close();
                     // if (debug)
                     //     newGraph.CreateConvexHull();
-
                 }
 
                 // Add axes in bottom corner of graph and scale points differently
@@ -643,7 +430,8 @@ namespace CellexalVR.AnalysisLogic
                 graphGenerator.AddAxes(combGraph, axes);
                 combGraph.SetInfoText();
 
-                CellexalLog.Log("Successfully read graph from " + graphFileName + " reading ~" + maximumItemsPerFrame + " lines every frame");
+                CellexalLog.Log("Successfully read graph from " + graphFileName + " reading ~" + maximumItemsPerFrame +
+                                " lines every frame");
                 //combinedGraphGenerator.isCreating = false;
             }
 
@@ -681,8 +469,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return null;
             }
-            CellexalEvents.GraphsLoaded.Invoke();
 
+            CellexalEvents.GraphsLoaded.Invoke();
         }
 
 
@@ -692,31 +480,29 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public IEnumerator H5_ReadAttributeFilesCoroutine()
         {
-
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             List<string> available_attributes = new List<string>();
 
-            foreach (string attr in cellManager.h5Reader.attributes)
+            foreach (string attr in referenceManager.h5Reader.attributes)
             {
-
                 print("reading attribute " + attr);
 
-                while (cellManager.h5Reader.busy)
+                while (referenceManager.h5Reader.busy)
                     yield return null;
 
-                StartCoroutine(cellManager.h5Reader.GetAttributes(attr));
+                StartCoroutine(referenceManager.h5Reader.GetAttributes(attr));
 
-                while (cellManager.h5Reader.busy)
+                while (referenceManager.h5Reader.busy)
                     yield return null;
 
 
-                string[] attrs = cellManager.h5Reader._attrResult;
-                string[] cellnames = cellManager.h5Reader.index2cellname;
+                string[] attrs = referenceManager.h5Reader._attrResult;
+                string[] cellNames = referenceManager.h5Reader.index2cellname;
 
-                for (int j = 0; j < cellnames.Length; j++)
+                for (int j = 0; j < cellNames.Length; j++)
                 {
-                    string cellname = cellnames[j];
+                    string cellName = cellNames[j];
 
                     string attribute_name = attr + "@" + attrs[j];
                     int index_of_attribute;
@@ -729,24 +515,27 @@ namespace CellexalVR.AnalysisLogic
                     {
                         index_of_attribute = available_attributes.IndexOf(attribute_name);
                     }
-                    
-                    
-                    cellManager.AddAttribute(cellname, attribute_name, index_of_attribute % CellexalConfig.Config.SelectionToolColors.Length);
+
+
+                    cellManager.AddAttribute(cellName, attribute_name,
+                        index_of_attribute % CellexalConfig.Config.SelectionToolColors.Length);
                     if (j % 500 == 0)
                     {
                         yield return null;
                     }
                 }
-               
             }
+
             attributeSubMenu.CreateButtons(available_attributes.ToArray());
 
             cellManager.Attributes = available_attributes.ToArray();
             if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
             {
-                CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
+                CellexalError.SpawnError("Attributes",
+                    "The number of attributes are higher than the number of colours in your config." +
                     " Consider adding more colours in the settings menu (under Selection Colours)");
             }
+
             stopwatch.Stop();
             attributeFileRead = true;
             CellexalLog.Log("h5 read attributes in " + stopwatch.Elapsed.ToString());
@@ -764,10 +553,10 @@ namespace CellexalVR.AnalysisLogic
                 loaderController.loaderMovedDown = true;
                 loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
+
             List<Tuple<string, Vector3>> gps = new List<Tuple<string, Vector3>>();
             float maximumDeltaTime = 0.05f; // 20 fps
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
-            int itemsThisFrame = 0;
             int totalNbrOfCells = 0;
             //string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + data + "\\tsne.mds";
             float prevCoord = float.NaN;
@@ -775,8 +564,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return null;
             }
-            float currentCoord;
-            GameObject parent = GameObject.Instantiate(SpatialGraphPrefab);
+
+            GameObject parent = GameObject.Instantiate(spatialGraphPrefab);
             SpatialGraph sg = parent.GetComponent<SpatialGraph>();
             sg.gameObject.layer = LayerMask.NameToLayer("GraphLayer");
             graphManager.spatialGraphs.Add(sg);
@@ -789,19 +578,24 @@ namespace CellexalVR.AnalysisLogic
                 string header = mdsStreamReader.ReadLine();
                 while (!mdsStreamReader.EndOfStream)
                 {
-                    itemsThisFrame = 0;
+                    var itemsThisFrame = 0;
                     for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
                     {
-                        string[] words = mdsStreamReader.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                        string[] words = mdsStreamReader.ReadLine()
+                            .Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words.Length != 4 && words.Length != 7)
                         {
                             print(words.Length);
                             continue;
                         }
+
                         string cellname = words[0];
-                        float x = float.Parse(words[1]);
-                        float y = float.Parse(words[2]);
-                        float z = float.Parse(words[3]);
+                        float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        ;
+                        float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        ;
+                        float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        ;
                         gps.Add(new Tuple<string, Vector3>(cellname, new Vector3(x, y, z)));
                         itemsThisFrame++;
                     }
@@ -817,12 +611,14 @@ namespace CellexalVR.AnalysisLogic
                         // we had some time over last frame
                         maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                     }
-                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame > CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
+                    else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame >
+                        CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
                     {
                         // we took too much time last frame
                         maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                     }
                 }
+
                 gps.Sort((x, y) => x.Item2.z.CompareTo(y.Item2.z));
                 Vector3 maxCoords = new Vector3();
                 Vector3 minCoords = new Vector3();
@@ -839,27 +635,28 @@ namespace CellexalVR.AnalysisLogic
                 graphManager.originalGraphs.Add(combGraph);
                 combGraph.gameObject.name = "Slice" + sliceNr;
                 combGraph.GraphName = "Slice" + sliceNr;
-                combGraph.transform.parent = parent.transform;
-                combGraph.transform.localPosition = new Vector3(0, 0, 0);
+                var transform1 = combGraph.transform;
+                transform1.parent = parent.transform;
+                transform1.localPosition = new Vector3(0, 0, 0);
                 //combGraph.
                 var gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
                 gs.referenceManager = referenceManager;
                 yield return null;
-                float sliceDist = 0.005f;
+                const float sliceDist = 0.005f;
                 posIncr += sliceDist;
-                var gpTuple = gps[0];
+                Tuple<string, Vector3> gpTuple = gps[0];
                 Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
                 var gp = graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y, gpTuple.Item2.z);
+                var currentCoord = gpTuple.Item2.z;
                 for (int n = 1; n < gps.Count; n++)
                 {
                     gpTuple = gps[n];
-                    currentCoord = gpTuple.Item2.z;
                     if (n == 1)
                     {
                         prevCoord = currentCoord;
                     }
                     // when we reach new slize (new z coord) build the graph and then start adding to a new one.
-                    else if (currentCoord != prevCoord)
+                    else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
                     {
                         combGraph.maxCoordValues = maxCoords;
                         combGraph.minCoordValues = minCoords;
@@ -868,8 +665,8 @@ namespace CellexalVR.AnalysisLogic
                         {
                             yield return null;
                         }
+
                         gs.zCoord = gp.WorldPosition.z;
-                        //gs.AddReplacement();
                         combGraph = graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
                         yield return null;
                         graphManager.Graphs.Add(combGraph);
@@ -880,7 +677,6 @@ namespace CellexalVR.AnalysisLogic
                         gs.referenceManager = referenceManager;
                         gs.sliceNr = ++sliceNr;
                         posIncr += sliceDist;
-                        //print(gs.zCoord);
                         combGraph.transform.localPosition = new Vector3(0, 0, 0);
                         combGraph.GraphName = "Slice" + sliceNr;
                         combGraph.gameObject.name = "Slice" + sliceNr;
@@ -894,18 +690,19 @@ namespace CellexalVR.AnalysisLogic
                         {
                             yield return null;
                         }
+
                         gs.zCoord = gp.WorldPosition.z;
                         combGraph.transform.localPosition = new Vector3(0, 0, 0);
-                        //gs.AddReplacement();
                         continue;
                     }
+
                     cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
                     gp = graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y, gpTuple.Item2.z);
                     prevCoord = currentCoord;
                 }
+
                 StartCoroutine(sg.AddSlices());
             }
-            //graphGenerator.CreateMesh();
         }
 
         /// <summary>
@@ -922,53 +719,64 @@ namespace CellexalVR.AnalysisLogic
             // ...
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            string[] metacellfiles = Directory.GetFiles(path, "*.meta.cell");
-            foreach (string metacellfile in metacellfiles)
+            string[] metaCellFiles = Directory.GetFiles(path, "*.meta.cell");
+            foreach (string metaCellFile in metaCellFiles)
             {
-                FileStream metacellFileStream = new FileStream(metacellfile, FileMode.Open);
-                StreamReader metacellStreamReader = new StreamReader(metacellFileStream);
+                FileStream metaCellFileStream = new FileStream(metaCellFile, FileMode.Open);
+                StreamReader metaCellStreamReader = new StreamReader(metaCellFileStream);
 
                 // first line is a header line
-                string header = metacellStreamReader.ReadLine();
-                string[] attributeTypes = header.Split(null);
-                string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
-                for (int i = 1; i < attributeTypes.Length; ++i)
+                string header = metaCellStreamReader.ReadLine();
+                if (header != null)
                 {
-                    //if (attributeTypes[i].Length > 10)
-                    //{
-                    //    attributeTypes[i] = attributeTypes[i].Substring(0, 10);
-                    //}
-                    actualAttributeTypes[i - 1] = attributeTypes[i];
-                    //print(attributeTypes[i]);
-                }
-                int yieldCount = 0;
-                while (!metacellStreamReader.EndOfStream)
-                {
-                    string line = metacellStreamReader.ReadLine();
-                    if (line == "")
-                        continue;
-
-                    string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    string cellname = words[0];
-                    for (int j = 1; j < words.Length; ++j)
+                    string[] attributeTypes = header.Split(null);
+                    string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
+                    for (int i = 1; i < attributeTypes.Length; ++i)
                     {
-                        if (words[j] == "1")
-                            cellManager.AddAttribute(cellname, attributeTypes[j], (j - 1) % CellexalConfig.Config.SelectionToolColors.Length);
+                        //if (attributeTypes[i].Length > 10)
+                        //{
+                        //    attributeTypes[i] = attributeTypes[i].Substring(0, 10);
+                        //}
+                        actualAttributeTypes[i - 1] = attributeTypes[i];
+                        //print(attributeTypes[i]);
                     }
-                    yieldCount++;
-                    if (yieldCount % 500 == 0)
-                        yield return null;
 
+                    int yieldCount = 0;
+                    while (!metaCellStreamReader.EndOfStream)
+                    {
+                        string line = metaCellStreamReader.ReadLine();
+                        if (line == "")
+                            continue;
+
+                        if (line != null)
+                        {
+                            string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+
+                            string cellName = words[0];
+                            for (int j = 1; j < words.Length; ++j)
+                            {
+                                if (words[j] == "1")
+                                    cellManager.AddAttribute(cellName, attributeTypes[j],
+                                        (j - 1) % CellexalConfig.Config.SelectionToolColors.Length);
+                            }
+                        }
+
+                        yieldCount++;
+                        if (yieldCount % 500 == 0)
+                            yield return null;
+                    }
+
+                    metaCellStreamReader.Close();
+                    metaCellFileStream.Close();
+                    attributeSubMenu.CreateButtons(actualAttributeTypes);
+                    cellManager.Attributes = actualAttributeTypes;
                 }
-                metacellStreamReader.Close();
-                metacellFileStream.Close();
-                attributeSubMenu.CreateButtons(actualAttributeTypes);
-                cellManager.Attributes = actualAttributeTypes;
+
                 for (int i = CellexalConfig.Config.SelectionToolColors.Length; i < cellManager.Attributes.Length; i++)
                 {
                     referenceManager.settingsMenu.AddSelectionColor(true);
                 }
+
                 referenceManager.settingsMenu.unsavedChanges = false;
                 //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
                 //{
@@ -976,6 +784,7 @@ namespace CellexalVR.AnalysisLogic
                 //        " Consider adding more colours in the settings menu (under Selection Colours)");
                 //}
             }
+
             stopwatch.Stop();
             attributeFileRead = true;
             CellexalLog.Log("read attributes in " + stopwatch.Elapsed.ToString());
@@ -987,44 +796,13 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.filterMenu.CreateButtons(files);
         }
 
-        // public void DrawSomeLines(SQLite database)
-        // {
-        //     StartCoroutine(DrawSomeLinesCoroutine(database));
-        // }
-
-        // public IEnumerator DrawSomeLinesCoroutine(SQLite database)
-        // {
-        //     var line = Instantiate(lineprefab);
-        //     Vector3[] pos = new Vector3[database._result.Count];
-        //     Tuple<string, float>[] exprs = new Tuple<string, float>[database._result.Count];
-        //     for (int i = 0; i < database._result.Count; ++i)
-        //     {
-        //         exprs[i] = (Tuple<string, float>)(database._result[i]);
-        //     }
-        //
-        //     Array.Sort(exprs, (Tuple<string, float> x, Tuple<string, float> y) => (y.Item2.CompareTo(x.Item2)));
-        //
-        //
-        //     var lineRenderer = line.GetComponent<LineRenderer>();
-        //     lineRenderer.startColor = Color.red;
-        //     lineRenderer.endColor = Color.blue;
-        //     for (int i = 0; i < exprs.Length; ++i)
-        //     {
-        //
-        //         lineRenderer.positionCount = i + 1;
-        //         lineRenderer.SetPosition(i, graphManager.FindGraphPoint("DDRTree", exprs[i].Item1).transform.position);
-        //     }
-        //
-        //     yield return null;
-        // }
-
         /// <summary>
         /// Start the R session that will run in the background. 
         /// </summary>
         /// <param name="serverType">If you are running several sessions give a serverType name that works as a prefix so the 
         /// R session knows which file to look for.</param>
         /// <returns></returns>
-        private IEnumerator StartServer(string serverType)
+        public IEnumerator StartServer(string serverType)
         {
             Process currentProcess = Process.GetCurrentProcess();
             int pid = currentProcess.Id;
@@ -1036,10 +814,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
             string value = null;
             Thread t = new Thread(
-            () =>
-            {
-                value = RScriptRunner.RunFromCmd(rScriptFilePath, args, true);
-            });
+                () => { value = RScriptRunner.RunFromCmd(rScriptFilePath, args, true); });
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
@@ -1047,9 +822,11 @@ namespace CellexalVR.AnalysisLogic
             {
                 if (value != null && !value.Equals(string.Empty))
                 {
-                    CellexalError.SpawnError("Failed to start R Server", "Make sure you have set the correct R path in the launcher menu");
+                    CellexalError.SpawnError("Failed to start R Server",
+                        "Make sure you have set the correct R path in the launcher menu");
                     yield break;
                 }
+
                 yield return null;
             }
 
@@ -1057,7 +834,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Start Server finished in " + stopwatch.Elapsed.ToString());
             referenceManager.notificationManager.SpawnNotification(serverType + " R Server Session Initiated.");
             StartCoroutine(referenceManager.reportManager.LogStart());
-
         }
 
         /// <summary>
@@ -1068,65 +844,10 @@ namespace CellexalVR.AnalysisLogic
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.pid");
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.R");
+            if (referenceManager.h5Reader != null)
+                referenceManager.h5Reader.CloseConnection();
             //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
-        }
-
-
-
-
-
-        /// <summary>
-        /// Reads a file containing lists of genes that should be flashed.
-        /// </summary>
-        /// <param name="path"> The path to the file. </param>
-        /// <returns> An array of categories. Each has its name at index zero, and the rest of each array is filled with the content of the category. </returns>
-        public string[][] ReadFlashingGenesFiles(string path)
-        {
-            FileStream fileStream = new FileStream(path, FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-            // The file format should be
-            // CATEGORY_1, CATEGORY 2  ...
-            // GENE_11 ,   GENE_21
-            // GENE_12 ,   GENE_22
-            // ...
-            // All categories and genes should be comma seperated.
-
-            string header = streamReader.ReadLine();
-            string[] words = header.Split(',');
-            List<string>[] genes = new List<string>[words.Length];
-            for (int i = 0; i < words.Length; ++i)
-            {
-                // put the gene category names at the first index of each list.
-                genes[i] = new List<string>();
-                genes[i].Add(words[i].Trim());
-            }
-
-            while (!streamReader.EndOfStream)
-            {
-                string line = streamReader.ReadLine();
-                if (line.Length == 0)
-                    continue;
-                words = line.Split(',');
-                for (int j = 0; j < words.Length; ++j)
-                {
-                    string gene = words[j].Trim();
-                    if (gene != string.Empty)
-                    {
-                        genes[j].Add(gene.ToLower());
-                    }
-                }
-            }
-
-            string[][] result = new string[genes.Length][];
-            for (int i = 0; i < words.Length; ++i)
-            {
-                result[i] = genes[i].ToArray();
-            }
-
-            streamReader.Close();
-            fileStream.Close();
-            return result;
         }
 
         /// <summary>
@@ -1137,16 +858,16 @@ namespace CellexalVR.AnalysisLogic
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            string fullpath = path + "\\index.facs";
+            string fullPath = path + "\\index.facs";
 
-            if (!File.Exists(fullpath))
+            if (!File.Exists(fullPath))
             {
-                print("File " + fullpath + " not found");
+                print("File " + fullPath + " not found");
                 CellexalLog.Log(".facs file not found");
                 return;
             }
 
-            FileStream fileStream = new FileStream(fullpath, FileMode.Open);
+            FileStream fileStream = new FileStream(fullPath, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
 
             // The file format should be:
@@ -1155,14 +876,15 @@ namespace CellexalVR.AnalysisLogic
             // CELLNAME_2  VALUE   VALUE
             // ...
 
-            string headerline = streamReader.ReadLine();
-            if (headerline == null)
+            string headerLine = streamReader.ReadLine();
+            if (headerLine == null)
             {
                 // empty file
                 CellexalLog.Log("Empty index.facs file");
                 return;
             }
-            string[] header = headerline.Split(new string[] { "\t", " " }, StringSplitOptions.RemoveEmptyEntries);
+
+            string[] header = headerLine.Split(new string[] {"\t", " "}, StringSplitOptions.RemoveEmptyEntries);
             float[] min = new float[header.Length];
             float[] max = new float[header.Length];
             string[] values = new string[header.Length + 1];
@@ -1173,10 +895,6 @@ namespace CellexalVR.AnalysisLogic
                 max[i] = float.MinValue;
             }
 
-            // string[] cellnames = new string[nbrOfCells];
-            // float[,] values = new float[nbrOfCells, header.Length];
-
-            // read the file, calculate the min and max values and save all values
             for (i = 0; !streamReader.EndOfStream; ++i)
             {
                 string line = streamReader.ReadLine();
@@ -1184,22 +902,23 @@ namespace CellexalVR.AnalysisLogic
                 string cellName = values[0];
                 for (int j = 0; j < values.Length - 1; ++j)
                 {
-
-                    float value = float.Parse(values[j + 1]);
+                    float value = float.Parse(values[j + 1],
+                        System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                     if (value < min[j])
                         min[j] = value;
                     if (value > max[j])
                         max[j] = value;
-
                 }
+
                 for (int j = 0; j < values.Length - 1; ++j)
                 {
                     // normalize to the range [0, 29]
-                    cellManager.AddFacs(cellName, header[j], float.Parse(values[j + 1]));
+                    cellManager.AddFacs(cellName, header[j],
+                        float.Parse(values[j + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
                     cellManager.AddFacsValue(cellName, header[j], values[j + 1]);
-                    //print(values[j + 1]);
                 }
             }
+
             // set the min and max values
             for (i = 0; i < header.Length; ++i)
             {
@@ -1211,27 +930,26 @@ namespace CellexalVR.AnalysisLogic
             indexMenu.CreateButtons(header);
             createFromMarkerMenu.CreateButtons(header);
             cellManager.Facs = header;
-            CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullpath));
-
+            CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullPath));
             stopwatch.Stop();
-            return;
         }
 
-        private void SplitValues(string line, ref string[] values, char[] seperators)
+        private void SplitValues(string line, ref string[] values, char[] separators)
         {
             int charIndex = 0;
             for (int i = 0; i < values.Length; ++i)
             {
-                int nextSeperator = line.IndexOfAny(seperators, charIndex);
-                if (nextSeperator >= 0)
+                int nextSeparator = line.IndexOfAny(separators, charIndex);
+                if (nextSeparator >= 0)
                 {
-                    values[i] = line.Substring(charIndex, nextSeperator - charIndex);
+                    values[i] = line.Substring(charIndex, nextSeparator - charIndex);
                 }
                 else
                 {
                     values[i] = line.Substring(charIndex);
                 }
-                charIndex = nextSeperator + 1;
+
+                charIndex = nextSeparator + 1;
             }
         }
 
@@ -1240,11 +958,10 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public struct NetworkKeyPair
         {
-            public string color, node1, node2, key1, key2;
+            public string node1, node2, key1, key2;
 
             public NetworkKeyPair(string c, string n1, string n2, string k1, string k2)
             {
-                color = c;
                 key1 = k1;
                 key2 = k2;
                 node1 = n1;
@@ -1259,6 +976,7 @@ namespace CellexalVR.AnalysisLogic
         {
             StartCoroutine(ReadNetworkFilesCoroutine(layoutSeed));
         }
+
         private IEnumerator ReadNetworkFilesCoroutine(int layoutSeed)
         {
             CellexalLog.Log("Started reading network files");
@@ -1266,11 +984,17 @@ namespace CellexalVR.AnalysisLogic
             string networkDirectory = CellexalUser.UserSpecificFolder + @"\Resources\Networks";
             if (!Directory.Exists(networkDirectory))
             {
-                print(string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
-                CellexalError.SpawnError("Error when generating networks", string.Format("No network directory found at {0}, make sure the network generating r script has executed properly.", CellexalLog.FixFilePath(networkDirectory)));
+                print(string.Format(
+                    "No network directory found at {0}, make sure the network generating r script has executed properly.",
+                    CellexalLog.FixFilePath(networkDirectory)));
+                CellexalError.SpawnError("Error when generating networks",
+                    string.Format(
+                        "No network directory found at {0}, make sure the network generating r script has executed properly.",
+                        CellexalLog.FixFilePath(networkDirectory)));
                 CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
+
             string[] cntFilePaths = Directory.GetFiles(networkDirectory, "*.cnt");
             string[] nwkFilePaths = Directory.GetFiles(networkDirectory, "*.nwk");
 
@@ -1280,14 +1004,20 @@ namespace CellexalVR.AnalysisLogic
                 //status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
                 //statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
                 //statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
-                CellexalError.SpawnError("Error when generating networks", string.Format("No .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalError.SpawnError("Error when generating networks",
+                    string.Format(
+                        "No .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.",
+                        CellexalLog.FixFilePath(networkDirectory)));
                 CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
 
             if (cntFilePaths.Length > 1)
             {
-                CellexalError.SpawnError("Error when generating networks", string.Format("More than one .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalError.SpawnError("Error when generating networks",
+                    string.Format(
+                        "More than one .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.",
+                        CellexalLog.FixFilePath(networkDirectory)));
                 CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
@@ -1298,16 +1028,21 @@ namespace CellexalVR.AnalysisLogic
             // make sure there is a .nwk file
             if (nwkFilePaths.Length == 0)
             {
-                CellexalError.SpawnError("Error when generating networks", string.Format("No .nwk file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.", CellexalLog.FixFilePath(networkDirectory)));
+                CellexalError.SpawnError("Error when generating networks",
+                    string.Format(
+                        "No .nwk file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.",
+                        CellexalLog.FixFilePath(networkDirectory)));
                 CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }
+
             FileStream nwkFileStream = new FileStream(nwkFilePaths[0], FileMode.Open);
             StreamReader nwkStreamReader = new StreamReader(nwkFileStream);
             // 1 MB = 1048576 B
             if (nwkFileStream.Length > 1048576)
             {
-                CellexalError.SpawnError("Error when generating networks", string.Format(".nwk file is larger than 1 MB. .nwk file size: {0} B", nwkFileStream.Length));
+                CellexalError.SpawnError("Error when generating networks",
+                    string.Format(".nwk file is larger than 1 MB. .nwk file size: {0} B", nwkFileStream.Length));
                 nwkStreamReader.Close();
                 nwkFileStream.Close();
                 CellexalEvents.CommandFinished.Invoke(false);
@@ -1328,9 +1063,7 @@ namespace CellexalVR.AnalysisLogic
             Dictionary<string, NetworkCenter> networks = new Dictionary<string, NetworkCenter>();
             // these variables are set when the first line is read
             Graph graph = null;
-            GameObject skeleton = null;
             NetworkHandler networkHandler = null;
-            string networkHandlerName = null;
 
             Dictionary<string, float> maxNegPcor = new Dictionary<string, float>();
             Dictionary<string, float> minNegPcor = new Dictionary<string, float>();
@@ -1351,7 +1084,10 @@ namespace CellexalVR.AnalysisLogic
                     graph = graphManager.FindGraph(graphName);
                     if (graph == null)
                     {
-                        CellexalError.SpawnError("Error when generating networks", string.Format("Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.", graphName));
+                        CellexalError.SpawnError("Error when generating networks",
+                            string.Format(
+                                "Could not find the graph named {0} when trying to create a convex hull, make sure there is a .mds and .hull file with the same name in the dataset.",
+                                graphName));
                         CellexalEvents.CommandFinished.Invoke(false);
                         yield break;
                     }
@@ -1362,13 +1098,17 @@ namespace CellexalVR.AnalysisLogic
                         yield return null;
                     }
 
-                    skeleton = graph.convexHull;
+                    var skeleton = graph.convexHull;
                     if (skeleton == null)
                     {
-                        CellexalError.SpawnError("Error when generating networks", string.Format("Could not create a convex hull for the graph named {0}, this could be because the convex hull file is incorrect", graphName));
+                        CellexalError.SpawnError("Error when generating networks",
+                            string.Format(
+                                "Could not create a convex hull for the graph named {0}, this could be because the convex hull file is incorrect",
+                                graphName));
                         CellexalEvents.CommandFinished.Invoke(false);
                         yield break;
                     }
+
                     CellexalLog.Log("Successfully created convex hull of " + graphName);
                     networkHandler = skeleton.GetComponent<NetworkHandler>();
                     foreach (BoxCollider graphCollider in graph.GetComponents<BoxCollider>())
@@ -1377,12 +1117,15 @@ namespace CellexalVR.AnalysisLogic
                         newCollider.center = graphCollider.center;
                         newCollider.size = graphCollider.size;
                     }
-                    networkHandlerName = "NetworkHandler_" + graphName + "-" + (selectionManager.fileCreationCtr + 1);
+
+                    var networkHandlerName =
+                        "NetworkHandler_" + graphName + "-" + (selectionManager.fileCreationCtr + 1);
                     networkHandler.name = networkHandlerName;
                 }
-                float x = float.Parse(words[0]);
-                float y = float.Parse(words[1]);
-                float z = float.Parse(words[2]);
+
+                float x = float.Parse(words[0], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float y = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float z = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                 // the color is a hex string e.g. #FF0099
                 UnityEngine.Color color = new UnityEngine.Color();
                 string colorString = words[3];
@@ -1393,7 +1136,8 @@ namespace CellexalVR.AnalysisLogic
                 maxNegPcor[colorString] = float.MinValue;
                 minNegPcor[colorString] = 0f;
                 Vector3 position = graph.ScaleCoordinates(new Vector3(x, y, z));
-                NetworkCenter network = networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
+                NetworkCenter network =
+                    networkGenerator.CreateNetworkCenter(networkHandler, colorString, position, layoutSeed);
                 foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                 {
                     if (r.gameObject.GetComponent<CellexalButton>() == null)
@@ -1401,6 +1145,7 @@ namespace CellexalVR.AnalysisLogic
                         r.material.color = color;
                     }
                 }
+
                 networks[colorString] = network;
             }
 
@@ -1439,11 +1184,12 @@ namespace CellexalVR.AnalysisLogic
                 string node2 = geneName2 + color;
                 string key1 = words[7];
                 string key2 = words[8];
-                float pcor = float.Parse(words[0]);
+                float pcor = float.Parse(words[0], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
 
                 if (geneName1 == geneName2)
                 {
-                    CellexalError.SpawnError("Error in networkfiles", "Gene \'" + geneName1 + "\' cannot be correlated to itself in file " + nwkFilePaths[0]);
+                    CellexalError.SpawnError("Error in networkfiles",
+                        "Gene \'" + geneName1 + "\' cannot be correlated to itself in file " + nwkFilePaths[0]);
                     cntStreamReader.Close();
                     cntFileStream.Close();
                     nwkStreamReader.Close();
@@ -1466,6 +1212,7 @@ namespace CellexalVR.AnalysisLogic
                     if (pcor > maxPosPcor[color])
                         maxPosPcor[color] = pcor;
                 }
+
                 // add the nodes if they don't already exist
                 if (!nodes.ContainsKey(node1))
                 {
@@ -1487,8 +1234,8 @@ namespace CellexalVR.AnalysisLogic
                 nodes[node1].AddNeighbour(nodes[node2], pcor);
                 // add the keypair
                 tmp.Add(new NetworkKeyPair(color, node1, node2, key1, key2));
-
             }
+
             nwkStreamReader.Close();
             nwkFileStream.Close();
             CellexalLog.Log("Successfully read .nwk file");
@@ -1496,7 +1243,8 @@ namespace CellexalVR.AnalysisLogic
             tmp.CopyTo(keyPairs);
             // sort the array of keypairs
             // if two keypairs are equal (they both contain the same key), they should be next to each other in the list, otherwise sort based on key1
-            Array.Sort(keyPairs, (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
+            Array.Sort(keyPairs,
+                (NetworkKeyPair x, NetworkKeyPair y) => x.key1.Equals(y.key2) ? 0 : x.key1.CompareTo(y.key1));
 
             //yield return null;
             networkHandler.CalculateLayoutOnAllNetworks();
@@ -1517,6 +1265,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 node.ColorEdges();
             }
+
             yield return null;
             // give all nodes in the networks edges
             networkHandler.CreateArcs(ref keyPairs, ref nodes);
@@ -1526,7 +1275,8 @@ namespace CellexalVR.AnalysisLogic
             cntFileStream.Close();
             nwkStreamReader.Close();
             nwkFileStream.Close();
-            CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " + nodes.Values.Count + " nodes");
+            CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " +
+                            nodes.Values.Count + " nodes");
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.ScriptFinished.Invoke();
             networkHandler.CreateNetworkAnimation(graph.transform);
@@ -1543,9 +1293,11 @@ namespace CellexalVR.AnalysisLogic
             //print(groupingsInfoFile);
             if (!File.Exists(groupingsInfoFile))
             {
-                CellexalLog.Log("WARNING: No groupings info file found at " + CellexalLog.FixFilePath(groupingsInfoFile));
+                CellexalLog.Log(
+                    "WARNING: No groupings info file found at " + CellexalLog.FixFilePath(groupingsInfoFile));
                 return;
             }
+
             FileStream fileStream = new FileStream(groupingsInfoFile, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             // skip the header
@@ -1557,7 +1309,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 line = streamReader.ReadLine();
                 if (line == "") continue;
-                words = line.Split(new char[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                words = line.Split(new char[] {'\t', ' '}, StringSplitOptions.RemoveEmptyEntries);
 
                 // set the grouping's name to [the grouping's number]\n[number of colors in grouping]\n[number of cells in groupings]
                 string groupingName = words[0];
@@ -1567,10 +1319,12 @@ namespace CellexalVR.AnalysisLogic
                     CellexalLog.Log("WARNING: Could not find \'.\' in \"" + words[0] + "\"");
                     indexOfLastDot = groupingName.Length - 1;
                 }
+
                 //string groupingNumber = groupingName.Substring(indexOfLastDot, groupingName.Length - indexOfLastDot);
                 groupingNames.Add(groupingName + "\n" + words[1] + "\n" + words[2]);
                 fileLengths.Add(int.Parse(words[2]));
             }
+
             streamReader.Close();
             fileStream.Close();
 
@@ -1579,16 +1333,19 @@ namespace CellexalVR.AnalysisLogic
             string[][] cellNames = new string[groupingNames.Count][];
             int[][] groups = new int[groupingNames.Count][];
             string[] graphNames = new string[groupingNames.Count];
-            Dictionary<int, UnityEngine.Color>[] groupingColors = new Dictionary<int, UnityEngine.Color>[groupingNames.Count];
+            Dictionary<int, UnityEngine.Color>[] groupingColors =
+                new Dictionary<int, UnityEngine.Color>[groupingNames.Count];
             for (int i = 0; i < cellNames.Length; ++i)
             {
                 cellNames[i] = new string[fileLengths[i]];
                 groups[i] = new int[fileLengths[i]];
             }
+
             for (int i = 0; i < groupingNames.Count; ++i)
             {
                 groupingColors[i] = new Dictionary<int, UnityEngine.Color>();
             }
+
             words = null;
             string[] files = Directory.GetFiles(dataFolder, "*.cgr");
             for (int i = 0; i < fileLengths.Count; ++i)
@@ -1601,7 +1358,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     line = streamReader.ReadLine();
                     print(line);
-                    words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
                     cellNames[i][j] = words[0];
 
                     try
@@ -1618,23 +1375,26 @@ namespace CellexalVR.AnalysisLogic
                         {
                             print(s);
                         }
+
                         print(words[3] + " " + file + " " + j + "\n" + e.StackTrace);
                         streamReader.Close();
                         fileStream.Close();
                         return;
                     }
-
                 }
+
                 graphNames[i] = words[2];
                 streamReader.Close();
                 fileStream.Close();
             }
-            referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(), cellNames, groups, groupingColors);
+
+            referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(),
+                cellNames, groups, groupingColors);
             CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
         }
 
 
-        [ConsoleCommand("inputReader", aliases: new string[] { "selectfromprevious", "sfp" })]
+        [ConsoleCommand("inputReader", aliases: new string[] {"selectfromprevious", "sfp"})]
         public void ReadAndSelectPreviousSelection(int index)
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
@@ -1647,7 +1407,9 @@ namespace CellexalVR.AnalysisLogic
             }
             else if (index < 0 || index >= files.Length)
             {
-                CellexalLog.Log(string.Format("Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index, files.Length - 1));
+                CellexalLog.Log(string.Format(
+                    "Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index,
+                    files.Length - 1));
                 CellexalEvents.CommandFinished.Invoke(false);
                 return;
             }
@@ -1660,7 +1422,7 @@ namespace CellexalVR.AnalysisLogic
             while (!streamReader.EndOfStream)
             {
                 string line = streamReader.ReadLine();
-                string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
                 int group = 0;
                 UnityEngine.Color groupColor;
 
@@ -1671,15 +1433,19 @@ namespace CellexalVR.AnalysisLogic
                 }
                 catch (FormatException)
                 {
-                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1, files[index]));
+                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
+                        files[index]));
                     streamReader.Close();
                     fileStream.Close();
                     CellexalEvents.CommandFinished.Invoke(false);
                     return;
                 }
-                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false, groupColor);
+
+                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false,
+                    groupColor);
                 numPointsAdded++;
             }
+
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
             CellexalEvents.CommandFinished.Invoke(true);
             streamReader.Close();
@@ -1703,8 +1469,10 @@ namespace CellexalVR.AnalysisLogic
                 {
                     meanExpressions += expressions[i][j];
                 }
+
                 pairList[i] = new StringFloatPair(genes[i], meanExpressions + expressions[i].Length);
             }
+
             // sort based on mean expressions, will also sort the expression matrix accordingly
             Array.Sort(pairList, expressions);
             for (int i = 0; i < pairList.Length; ++i)
@@ -1732,8 +1500,5 @@ namespace CellexalVR.AnalysisLogic
                 return f.CompareTo(other.f);
             }
         }
-
-
-
     }
 }

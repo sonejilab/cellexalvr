@@ -12,7 +12,6 @@ using System.IO;
 
 namespace CellexalVR.AnalysisLogic
 {
-
     public class ConvexHullGenerator : MonoBehaviour
     {
         public ReferenceManager referenceManager;
@@ -32,7 +31,8 @@ namespace CellexalVR.AnalysisLogic
         #region 2D_helper_functions
 
         // claims points for the hashset outside from the hashset unclaimed, given two points on a line
-        private void ClaimPoints(Vector2 pointOnLine1, Vector2 pointOnLine2, HashSet<int> outside, HashSet<int> unclaimed, List<Vector2> pos)
+        private void ClaimPoints(Vector2 pointOnLine1, Vector2 pointOnLine2, HashSet<int> outside,
+                                    HashSet<int> unclaimed, List<Vector2> pos)
         {
             foreach (int j in unclaimed)
             {
@@ -160,15 +160,15 @@ namespace CellexalVR.AnalysisLogic
                 float x = (B2 * C1 - B1 * C2) / det;
                 float y = (A1 * C2 - A2 * C1) / det;
                 bool online1 = ((Mathf.Min(l1p1.x, l1p2.x) < x || IsAlmostEqual(Mathf.Min(l1p1.x, l1p2.x), x))
-                             && (Mathf.Max(l1p1.x, l1p2.x) > x || IsAlmostEqual(Mathf.Max(l1p1.x, l1p2.x), x))
-                             && (Mathf.Min(l1p1.y, l1p2.y) < y || IsAlmostEqual(Mathf.Min(l1p1.y, l1p2.y), y))
-                             && (Mathf.Max(l1p1.y, l1p2.y) > y || IsAlmostEqual(Mathf.Max(l1p1.y, l1p2.y), y))
-                );
+                                && (Mathf.Max(l1p1.x, l1p2.x) > x || IsAlmostEqual(Mathf.Max(l1p1.x, l1p2.x), x))
+                                && (Mathf.Min(l1p1.y, l1p2.y) < y || IsAlmostEqual(Mathf.Min(l1p1.y, l1p2.y), y))
+                                && (Mathf.Max(l1p1.y, l1p2.y) > y || IsAlmostEqual(Mathf.Max(l1p1.y, l1p2.y), y))
+                    );
                 bool online2 = ((Mathf.Min(l2p1.x, l2p2.x) < x || IsAlmostEqual(Mathf.Min(l2p1.x, l2p2.x), x))
-                             && (Mathf.Max(l2p1.x, l2p2.x) > x || IsAlmostEqual(Mathf.Max(l2p1.x, l2p2.x), x))
-                             && (Mathf.Min(l2p1.y, l2p2.y) < y || IsAlmostEqual(Mathf.Min(l2p1.y, l2p2.y), y))
-                             && (Mathf.Max(l2p1.y, l2p2.y) > y || IsAlmostEqual(Mathf.Max(l2p1.y, l2p2.y), y))
-                );
+                                && (Mathf.Max(l2p1.x, l2p2.x) > x || IsAlmostEqual(Mathf.Max(l2p1.x, l2p2.x), x))
+                                && (Mathf.Min(l2p1.y, l2p2.y) < y || IsAlmostEqual(Mathf.Min(l2p1.y, l2p2.y), y))
+                                && (Mathf.Max(l2p1.y, l2p2.y) > y || IsAlmostEqual(Mathf.Max(l2p1.y, l2p2.y), y))
+                    );
 
                 if (online1 && online2)
                 {
@@ -210,13 +210,13 @@ namespace CellexalVR.AnalysisLogic
         private bool BoundsInsideBounds(Vector2 b1min, Vector2 b1max, Vector2 b2min, Vector2 b2max)
         {
             return b1min.x > b2min.x && b1max.x < b2max.x
-                && b1min.y > b2min.y && b1max.y < b2max.y;
+                                     && b1min.y > b2min.y && b1max.y < b2max.y;
         }
 
         private bool BoundsIntersect(Vector2 b1min, Vector2 b1max, Vector2 b2min, Vector2 b2max)
         {
             return !(b1min.x > b2max.x || b2min.x > b1max.x
-                  || b1min.y > b2max.y || b2min.y > b1max.y);
+                                       || b1min.y > b2max.y || b2min.y > b1max.y);
         }
 
         private float AreaOf(List<Vector2> points)
@@ -918,11 +918,11 @@ namespace CellexalVR.AnalysisLogic
             List<HashSet<int>> outsides = new List<HashSet<int>>() { new HashSet<int>(), new HashSet<int>(), new HashSet<int>(), new HashSet<int>() };
 
             Vector4[] originalPlanes = new Vector4[] {
-            PlaneFromTriangle(pos[initTri1.x], pos[initTri1.y], pos[initTri1.z]),
-            PlaneFromTriangle(pos[initTri2.x], pos[initTri2.y], pos[initTri2.z]),
-            PlaneFromTriangle(pos[initTri3.x], pos[initTri3.y], pos[initTri3.z]),
-            PlaneFromTriangle(pos[initTri4.x], pos[initTri4.y], pos[initTri4.z])
-        };
+                PlaneFromTriangle(pos[initTri1.x], pos[initTri1.y], pos[initTri1.z]),
+                PlaneFromTriangle(pos[initTri2.x], pos[initTri2.y], pos[initTri2.z]),
+                PlaneFromTriangle(pos[initTri3.x], pos[initTri3.y], pos[initTri3.z]),
+                PlaneFromTriangle(pos[initTri4.x], pos[initTri4.y], pos[initTri4.z])
+            };
 
             // let the initial tetrahedron's triangles claim their points
             for (int i = 0; i < 4; ++i)
@@ -1392,12 +1392,12 @@ namespace CellexalVR.AnalysisLogic
                     }
 
                     streams[attributeType].WriteLine(attributeName1 + " " + attributeName2
-                        + " " + attr1PointsInside
-                        + " " + attr2PointsInside
-                        + " " + (attr1PointsInside + attr2PointsInside)
-                        + " " + area
-                        + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
-                        );
+                                                     + " " + attr1PointsInside
+                                                     + " " + attr2PointsInside
+                                                     + " " + (attr1PointsInside + attr2PointsInside)
+                                                     + " " + area
+                                                     + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
+                    );
                     streams[attributeType].Flush();
                 }
             }
@@ -1628,14 +1628,14 @@ namespace CellexalVR.AnalysisLogic
                         Vector3 dir = dirs[minPointsDir];
                         Vector3 upDir = upDirs[minPointsDir];
                         streams[attributeType].WriteLine(attributeName1 + " " + attributeName2
-                            + " " + attr1MinPointsInIntersection
-                            + " " + attr2MinPointsInIntersection
-                            + " " + minPointsInIntersection
-                            + " " + minArea
-                            + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
-                            + " " + areaOfAttribute1 + " " + areaOfAttribute2
-                            + " " + dir.x + " " + dir.y + " " + dir.z
-                            + " " + upDir.x + " " + upDir.y + " " + upDir.z);
+                                                         + " " + attr1MinPointsInIntersection
+                                                         + " " + attr2MinPointsInIntersection
+                                                         + " " + minPointsInIntersection
+                                                         + " " + minArea
+                                                         + " " + intersectingOfAttribute1 + " " + intersectingOfAttribute2
+                                                         + " " + areaOfAttribute1 + " " + areaOfAttribute2
+                                                         + " " + dir.x + " " + dir.y + " " + dir.z
+                                                         + " " + upDir.x + " " + upDir.y + " " + upDir.z);
                         streams[attributeType].Flush();
                     }
                 }
@@ -1808,7 +1808,7 @@ namespace CellexalVR.AnalysisLogic
                     return hull1;
                 }
                 else if (BoundsInsideBounds(hull2MinCoords, hull2MaxCoords, hull1MinCoords, hull1MaxCoords)
-                     && PointInsidePolygon(hull2[0], hull1))
+                         && PointInsidePolygon(hull2[0], hull1))
                 {
                     return hull2;
                 }
@@ -1932,7 +1932,7 @@ namespace CellexalVR.AnalysisLogic
                 float b = sideB.magnitude; // side 2
                 float c = sideC.magnitude; // side 3
                 Vector3 circumSphereCenter = pos[v.x] + ((a * a * Vector3.Cross(sideB, sideC) + b * b * Vector3.Cross(sideC, sideA) + c * c * Vector3.Cross(sideA, sideB))
-                                             / (2 * Vector3.Dot(sideA, Vector3.Cross(sideB, sideC))));
+                                                         / (2 * Vector3.Dot(sideA, Vector3.Cross(sideB, sideC))));
                 float circumSphereRadius = (pos[v.x] - circumSphereCenter).sqrMagnitude;
                 tetras.Add(v);
                 circumRadiusesSqr.Add(circumSphereRadius);
@@ -1945,7 +1945,6 @@ namespace CellexalVR.AnalysisLogic
                 float dist = (circumCenters[c] - pos[p]).sqrMagnitude;
                 return (p < 3 || dist < maxDist) && dist < circumRadiusesSqr[c];
             }
-
             // returns true if the edge between the two first args is the same as the edge between the last two args
             bool EqualEdge(int x1, int x2, int y1, int y2)
             {
@@ -1998,7 +1997,7 @@ namespace CellexalVR.AnalysisLogic
                 }
 
             }
-
+            
             // returns the three indices of a tetra that is not on the edge, assuming that _one_ of the vertices are on the edge and the other three are not
             Vector3Int NonEdgeVertices(Vector4Int tetra)
             {

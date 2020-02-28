@@ -27,16 +27,17 @@ namespace CellexalVR.AnalysisLogic
         public string[] Facs_values { get; set; }
 
         #endregion
-
-        public ReferenceManager referenceManager;
         public float LowestExpression { get; private set; }
         public float HighestExpression { get; private set; }
+
+        public ReferenceManager referenceManager;
         /// <summary>
         /// Lowest and highest range of facs measurements. <see cref="Tuple{T1, T2}.Item1"/> is the lowest value and <see cref="Tuple{T1, T2}.Item2"/> is the highest.
         /// </summary>
         public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
         public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
-        //public HDF5Handler hDF5Handler;
+        //summertwerk
+        private H5reader.H5Reader h5Reader;
 
         private SQLite database;
         private SteamVR_TrackedObject rightController;
@@ -46,16 +47,12 @@ namespace CellexalVR.AnalysisLogic
         private SelectionManager selectionManager;
         private GraphManager graphManager;
         private LineBundler lineBundler;
-        //private StatusDisplay statusDisplay;
-        //private StatusDisplay statusDisplayHUD;
-        //private StatusDisplay statusDisplayFar;
         private int coroutinesWaiting;
-        private List<string[]> prunedGenes = new List<string[]>();
+        private readonly List<string[]> prunedGenes = new List<string[]>();
         private Dictionary<Cell, int> recolored;
         private Dictionary<Graph.GraphPoint, int> selectionList;
+        private AudioSource audioSource;
 
-        //summertwerk
-        public CellexalVR.AnalysisLogic.H5reader.H5reader h5Reader;
 
         private void OnValidate()
         {
@@ -74,6 +71,7 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
+            audioSource = GetComponent<AudioSource>();
             CellexalEvents.GraphsReset.AddListener(GraphsChanged);
             CellexalEvents.GraphsUnloaded.AddListener(GraphsChanged);
 
@@ -90,6 +88,7 @@ namespace CellexalVR.AnalysisLogic
             recolored = new Dictionary<Cell, int>();
             selectionList = new Dictionary<Graph.GraphPoint, int>();
             FacsRanges = new Dictionary<string, Tuple<float, float>>();
+            h5Reader = referenceManager.h5Reader;
         }
 
         /// <summary>
@@ -277,58 +276,6 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.networkGenerator.HighLightGene(geneName);
         }
 
-        //private void QueryRObject(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
-        //{
-        //string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_gene_expression.R").FixFilePath();
-        //string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + geneName;
-        ////string func = "write.table(cellexalObj@data[\"" + geneName + "\", cellexalObj@data[\"" +
-        ////    geneName + "\",] > 0], file=\"" + CellexalUser.UserSpecificFolder.UnFixFilePath() +
-        ////    "\\\\gene_expr.txt\", append=FALSE, row.names=TRUE, col.names=FALSE, sep=\" \", quote=FALSE)";
-        ////string result = string.Empty;
-        //while (selectionManager.RObjectUpdating || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
-        //{
-        //    yield return null;
-        //}
-        ////Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-        //Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-        //t.Start();
-        //CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
-        //var stopwatch = new System.Diagnostics.Stopwatch();
-        //stopwatch.Start();
-        //while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\geneServer.input.R"))
-        //{
-        //    yield return null;
-        //}
-
-        //stopwatch.Stop();
-        //CellexalLog.Log("Get gene expression R script finished in " + stopwatch.Elapsed.ToString());
-
-        //stopwatch.Reset();
-        //stopwatch.Start();
-        //ArrayList expressions = hDF5Handler.GetGeneExpressions(geneName, coloringMethod);
-        //GetComponent<AudioSource>().Play();
-
-
-        //graphManager.ColorAllGraphsByGeneExpression(expressions);
-
-
-        //if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
-        //{
-        //    var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
-        //    foreach (Cell c in cells.Values)
-        //    {
-        //        c.SaveExpression(geneName + " " + coloringMethod, removedGene);
-        //    }
-        //}
-        //if (triggerEvent)
-        //{
-        //    CellexalEvents.GraphsColoredByGene.Invoke();
-        //}
-        //CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
-
-        //CellexalEvents.CommandFinished.Invoke(true);
-        //}
-
         /// <summary>
         /// query the h5 file for gene expression data
         /// </summary>
@@ -364,7 +311,7 @@ namespace CellexalVR.AnalysisLogic
             */
             try
             {
-                StartCoroutine(h5Reader.Colorbygene(geneName, coloringMethod));
+                StartCoroutine(h5Reader.ColorByGene(geneName, coloringMethod));
             }
             catch (Exception e)
             {
@@ -374,7 +321,7 @@ namespace CellexalVR.AnalysisLogic
             while (h5Reader.busy)
                 yield return null;
 
-            GetComponent<AudioSource>().Play();
+            audioSource.Play();
             SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
             ArrayList expressions = h5Reader._expressionResult;
 

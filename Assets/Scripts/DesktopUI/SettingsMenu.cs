@@ -261,7 +261,7 @@ namespace CellexalVR.DesktopUI
             {
                 return defaultValue;
             }
-            return float.Parse(s);
+            return float.Parse(s, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
         }
 
         public void SetUser()

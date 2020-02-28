@@ -64,7 +64,7 @@ namespace CellexalVR.AnalysisLogic
         public void ReadVelocityFile(string path, string subGraphName)
         {
             //summertwerk
-            if(referenceManager.cellManager.h5Reader == null)
+            if (referenceManager.h5Reader == null)
                 StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
             else
                 StartCoroutine(ReadVelocityParticleSystemFromHDF5(path, subGraphName));
@@ -120,20 +120,20 @@ namespace CellexalVR.AnalysisLogic
                     {
                         continue;
                     }
-                    float xfrom = float.Parse(words[1]);
-                    float yfrom = float.Parse(words[2]);
-                    float zfrom = float.Parse(words[3]);
-                    float xto = float.Parse(words[4]);
-                    float yto = float.Parse(words[5]);
-                    float zto = float.Parse(words[6]);
+                    float xfrom = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    float yfrom = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    float zfrom = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    float xto = float.Parse(words[4], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    float yto = float.Parse(words[5], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    float zto = float.Parse(words[6], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
 
                     Vector3 from = originalGraph.ScaleCoordinates(new Vector3(xfrom, yfrom, zfrom));
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter<1)
+                    if (counter < 1)
                     {
-                        UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
+                        UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) * 1000);
                         counter++;
                     }
 
@@ -218,28 +218,37 @@ namespace CellexalVR.AnalysisLogic
 
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
 
-            while (referenceManager.cellManager.h5Reader.busy)
+            while (referenceManager.h5Reader.busy)
                 yield return null;
 
-            StartCoroutine(referenceManager.cellManager.h5Reader.GetVelocites(path));
+            StartCoroutine(referenceManager.h5Reader.GetVelocites(path));
 
-            while (referenceManager.cellManager.h5Reader.busy)
+            while (referenceManager.h5Reader.busy)
                 yield return null;
 
-            string[] vels = referenceManager.cellManager.h5Reader._coordResult;
-            string[] cellnames = referenceManager.cellManager.h5Reader.index2cellname;
+            string[] vels = referenceManager.h5Reader._coordResult;
+            string[] cellnames = referenceManager.h5Reader.index2cellname;
 
             for (int i = 0; i < cellnames.Length; i++)
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
-                Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
+                float diffX = float.Parse(vels[i * 3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffY = float.Parse(vels[i * 3 + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffZ = float.Parse(vels[i * 3 + 2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                //Vector3 diff = originalGraph.ScaleCoordinates(new Vector3(diffX, diffY, diffZ));
+                Vector3 diff = new Vector3(diffX, diffY, diffZ);
+                diff *= 40;
+                //Vector3 diff = new Vector3(
+                //    float.Parse(vels[i * 3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat),
+                //    float.Parse(vels[i * 3 + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat),
+                //    float.Parse(vels[i * 3 + 2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
                 diff /= originalGraph.longestAxis;
-                if (i<1)
+                if (i % 1000 == 0)
                 {
                     UnityEngine.Debug.Log(diff);
                 }
                 if (point != null)
-                    velocities[point] = diff/150f;
+                    velocities[point] = diff / 5f;
                 else
                     print(cellnames[i] + " does not exist");
             }
