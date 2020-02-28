@@ -168,7 +168,7 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(GenerateNetworksCoroutine(layoutSeed));
         }
 
-        IEnumerator GenerateNetworksCoroutine(int layoutSeed)
+        private IEnumerator GenerateNetworksCoroutine(int layoutSeed)
         {
             //int statusId = status.AddStatus("R script generating networks");
             //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");

@@ -11,7 +11,6 @@ namespace CellexalVR.DesktopUI
     /// </summary>
     public class SettingsMenu : MonoBehaviour
     {
-
         public GameObject settingsMenuGameObject;
         public ReferenceManager referenceManager;
         public GameObject unsavedChangesPrompt;

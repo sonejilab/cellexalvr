@@ -12,6 +12,9 @@ using CellexalVR.General;
 
 namespace CellexalVR.AnalysisLogic.H5reader
 {
+    /// <summary>
+    /// Class that handles the reading of hdf5 files.
+    /// </summary>
     public class H5Reader : MonoBehaviour
     {
         private Process p;
@@ -683,11 +686,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
             if (referenceManager.h5Reader.attributes.Count > 0)
             {
-                StartCoroutine(referenceManager.inputReader.H5_ReadAttributeFilesCoroutine());
+                referenceManager.inputReader.attributeReader =
+                    referenceManager.inputReader.gameObject.AddComponent<AttributeReader>();
+                referenceManager.inputReader.attributeReader.referenceManager = referenceManager;
+                StartCoroutine(referenceManager.inputReader.attributeReader.H5ReadAttributeFilesCoroutine());
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
             }
-
             /*
             if (type.Equals(GraphGenerator.GraphType.MDS))
             {

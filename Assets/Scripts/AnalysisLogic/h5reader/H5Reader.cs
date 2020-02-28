@@ -12,6 +12,9 @@ using CellexalVR.General;
 
 namespace CellexalVR.AnalysisLogic.H5reader
 {
+    /// <summary>
+    /// Class that handles the reading of hdf5 files.
+    /// </summary>
     public class H5Reader : MonoBehaviour
     {
         private Process p;
@@ -20,6 +23,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
         private Dictionary<string, int> chromeLengths;
         private Dictionary<string, int> cellname2index;
         Dictionary<string, int> genename2index;
+        
+        //Genenames are all saved in uppercase
         public string[] index2genename;
         public string[] index2cellname;
         public bool busy;
@@ -36,6 +41,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private List<string> projections;
         private List<string> velocities;
+        //We save all projections and velocities in uppercase, Attributes can be whatever
 
         private bool ascii = false;
         private bool sparse = false;
@@ -58,8 +64,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// H5reader
         /// </summary>
         /// <param name="path">filename in the Data folder</param>
-        
-        // public H5Reader(string path)
         private void SetConf(string path)
         {
             conf = new Dictionary<string, string>();
@@ -101,27 +105,25 @@ namespace CellexalVR.AnalysisLogic.H5reader
                         ascii = bool.Parse(kvp[1]);
                     else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y") || kvp[0].StartsWith("Z"))
                     {
-                        string proj = kvp[0].Split(new[] {'_'}, 2)[1];
-                        if (!projections.Contains(proj))
-                            projections.Add(proj);
+                        string[] proj = kvp[0].Split(new[] { '_' }, 2);
+                        if (!projections.Contains(proj[1].ToUpper()))
+                            projections.Add(proj[1].ToUpper());
 
-                        conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                        conf.Add(proj[0] + "_" + proj[1].ToUpper(), "f['" + kvp[1] + "']");
                     }
                     else if (kvp[0].StartsWith("vel_"))
                     {
-                        string vel = kvp[0].Split(new[] {'_'}, 2)[1];
-                        if (!velocities.Contains(vel))
-                            velocities.Add(vel);
-
-                        conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                        string[] vel = kvp[0].Split(new[] { '_' }, 2);
+                        if (!velocities.Contains(vel[1].ToUpper()))
+                            velocities.Add(vel[1].ToUpper());
+                        conf.Add(vel[0] + "_" + vel[1].ToUpper(), "f['" + kvp[1] + "']");
                     }
                     else if (kvp[0].StartsWith("velX_") || kvp[0].StartsWith("velY_") || kvp[0].StartsWith("velZ_"))
                     {
-                        string vel = kvp[0].Split(new[] {'_'}, 2)[1];
-                        if (!velocities.Contains(vel))
-                            velocities.Add(vel);
-
-                        conf.Add(kvp[0], "f['" + kvp[1] + "']");
+                        string[] vel = kvp[0].Split(new[] { '_' }, 2);
+                        if (!velocities.Contains(vel[1].ToUpper()))
+                            velocities.Add(vel[1].ToUpper());
+                        conf.Add(vel[0] + "_" + vel[1].ToUpper(), "f['" + kvp[1] + "']");
                     }
                     else if (kvp[0].StartsWith("attr_"))
                     {
@@ -275,6 +277,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// <returns>Coroutine, use _coordResult</returns>
         public IEnumerator GetCoords(string projection)
         {
+            projection = projection.ToUpper();
             busy = true;
             var watch = Stopwatch.StartNew();
             string output;
@@ -353,8 +356,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// Get the phate velocities from the file
         /// </summary>
         /// <returns>_velResult</returns>
-        public IEnumerator GetVelocites(string graph = "phate")
+        public IEnumerator GetVelocites(string graph)
         {
+            graph = graph.ToUpper();
             busy = true;
             var watch = Stopwatch.StartNew();
             string output;
@@ -524,9 +528,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
-                    if (binsize > 0)
-                        result[j].Color = j / binsize;
-                    else
                         result[j].Color = j;
                 }
 
@@ -685,11 +686,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
             if (referenceManager.h5Reader.attributes.Count > 0)
             {
-                StartCoroutine(referenceManager.inputReader.H5_ReadAttributeFilesCoroutine());
+                referenceManager.inputReader.attributeReader =
+                    referenceManager.inputReader.gameObject.AddComponent<AttributeReader>();
+                referenceManager.inputReader.attributeReader.referenceManager = referenceManager;
+                StartCoroutine(referenceManager.inputReader.attributeReader.H5ReadAttributeFilesCoroutine());
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
             }
-
             /*
             if (type.Equals(GraphGenerator.GraphType.MDS))
             {

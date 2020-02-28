@@ -80,12 +80,9 @@ namespace CellexalVR.Filters
                 foreach (Graph g in referenceManager.graphManager.Graphs)
                 {
                     Graph.GraphPoint otherGp = g.FindGraphPoint(c.Label);
-                    if (otherGp != null)
-                    {
-                        bool pass = (currentFilter.Expression != null) ? currentFilter.Pass(c) : false;
-                        g.MakePointUnCullable(otherGp, pass);
-
-                    }
+                    if (otherGp == null) continue;
+                    bool pass = (currentFilter.Expression != null) && currentFilter.Pass(c);
+                    g.MakePointUnCullable(otherGp, pass);
                 }
             }
         }

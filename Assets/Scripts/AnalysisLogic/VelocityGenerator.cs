@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -209,14 +210,19 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             string[] vels = referenceManager.h5Reader._coordResult;
-            string[] cellnames = referenceManager.h5Reader.index2cellname;
+            string[] cellNames = referenceManager.h5Reader.index2cellname;
 
-            for (int i = 0; i < cellnames.Length; i++)
+            for (int i = 0; i < cellNames.Length; i++)
             {
-                Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
+                Graph.GraphPoint point = graph.FindGraphPoint(cellNames[i]);
 
-                Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
-
+                float diffX = float.Parse(vels[i * 3],
+                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffY = float.Parse(vels[i * 3 + 1],
+                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffZ = float.Parse(vels[i * 3 + 2], 
+                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                Vector3 diff = new Vector3(diffX, diffY, diffZ);
                 //Method
                 diff *= 30; //arbitrary scaling, ofcourse.. DUH!
                                                   
@@ -228,7 +234,7 @@ namespace CellexalVR.AnalysisLogic
                 if (point != null)
                     velocities[point] = diff / 5f;
                 else
-                    print(cellnames[i] + " does not exist");
+                    print(cellNames[i] + " does not exist");
             }
 
             GameObject particleSystemGameObject = Instantiate(particleSystemPrefab, graph.transform);
