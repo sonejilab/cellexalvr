@@ -4,14 +4,12 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using VRTK;
 using System.IO;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
-using System.Threading;
 
 namespace CellexalVR.AnalysisLogic
 {

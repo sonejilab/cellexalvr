@@ -1,4 +1,3 @@
-
 using CellexalVR.DesktopUI;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Flyby;
@@ -29,7 +28,21 @@ namespace CellexalVR.Menu.SubMenus
         private RenderTexture renderTexture;
         private bool rendering = false;
 
-        public enum FlybyRenderQuality { q1080p, q720p, q480p }
+        public enum FlybyRenderQuality
+        {
+            /// <summary>
+            /// 1080p resolution, 1920 x 1080 pixels.
+            /// </summary>
+            q1080p,
+            /// <summary>
+            /// 720 resolution, 1280 x 720 pixels.
+            /// </summary>
+            q720p,
+            /// <summary>
+            /// 480p resolution, 854 x 480 pixels.
+            /// </summary>
+            q480p
+        }
         public enum FlybyLineMode { Linear, Bezier }
 
         private FlybyRenderQuality renderQuality;
@@ -79,7 +92,7 @@ namespace CellexalVR.Menu.SubMenus
         /// <summary>
         /// Record a new position and add it to the path.
         /// </summary>
-        /// <param name="position">The new position.</param>
+        /// <param name="position">The new position in world space.</param>
         /// <param name="rotation">The camera's rotation at this position.</param>
         public void RecordPosition(Vector3 position, Quaternion rotation)
         {
@@ -120,7 +133,7 @@ namespace CellexalVR.Menu.SubMenus
                 {
                     previewLine.positionCount += 1;
                 }
-                UpdateLinePosition(previewLine.positionCount - 1, position);
+                UpdateLinePosition(positions.Count - 1, position);
                 RestartPreview();
             }
         }
@@ -129,7 +142,7 @@ namespace CellexalVR.Menu.SubMenus
         /// Updates a position and rotation on the path.
         /// </summary>
         /// <param name="index">The position/rotation to update.</param>
-        /// <param name="newPosition">The new position.</param>
+        /// <param name="newPosition">The new position in world space.</param>
         /// <param name="newRotation">The new rotation.</param>
         public void UpdatePosition(int index, Vector3 newPosition, Quaternion newRotation, bool checkpointSphere)
         {
@@ -240,7 +253,7 @@ namespace CellexalVR.Menu.SubMenus
         }
 
         /// <summary>
-        /// Gets the index of linerenderer's position that corresponds to the index of a checkpoint sphere.
+        /// Gets the index of the <see cref="LineRenderer"/>'s position that corresponds to the index of a checkpoint sphere.
         /// </summary>
         /// <param name="sphereIndex">The index if the checkpoint sphere.</param>
         /// <returns>The index of the position of the linerenderer.</returns>
@@ -388,14 +401,14 @@ namespace CellexalVR.Menu.SubMenus
             HidePreviewObjects();
             // create the necessary folders
             CellexalLog.Log("Started creating flyby");
-            string flybyDir = CellexalUser.UserSpecificFolder + @"\Flyby\";
+            string flybyDir = CellexalUser.UserSpecificFolder + "/Flyby";
             if (Directory.Exists(flybyDir))
             {
                 Directory.CreateDirectory(flybyDir);
                 CellexalLog.Log("Created directory " + flybyDir);
             }
 
-            string outputDir = flybyDir + @"\Flyby_temp";
+            string outputDir = flybyDir + "/Flyby_temp";
             Directory.CreateDirectory(outputDir);
             Light headsetLight = referenceManager.headset.GetComponentInChildren<Light>();
             if (headsetLight != null)
@@ -424,6 +437,7 @@ namespace CellexalVR.Menu.SubMenus
                 for (int frameIndex = 0; frameIndex < framesPerPos; t += tInc, ++frameIndex)
                 {
                     yield return waitForEndOfFrame;
+                    // move and rotate the camera to the next position
                     cameraGameObject.transform.rotation = Quaternion.Lerp(rot1, rot2, t);
 
                     if (lineModeButtons[i].mode == FlybyLineMode.Linear)
@@ -434,6 +448,7 @@ namespace CellexalVR.Menu.SubMenus
                     {
                         cameraGameObject.transform.position = PointOnBezierCurve(pos1, bezierPositions[i], pos2, t);
                     }
+                    // render the frame
                     RenderTexture.active = renderTexture;
                     camera.Render();
                     frame.ReadPixels(rect, 0, 0, false);
@@ -441,9 +456,10 @@ namespace CellexalVR.Menu.SubMenus
 
                     byte[] frameData = frame.EncodeToJPG();
 
+                    // write the frame to a the disk for ffmpeg
                     string fileName = "frame_" + fileId.ToString("D6") + ".jpg";
 
-                    FileStream fileStream = File.Create(outputDir + @"\" + fileName);
+                    FileStream fileStream = File.Create(outputDir + "/" + fileName);
                     fileStream.Write(frameData, 0, frameData.Length);
                     fileStream.Flush();
                     fileStream.Close();
@@ -452,18 +468,20 @@ namespace CellexalVR.Menu.SubMenus
                 }
             }
             string time = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            string outputPath = flybyDir + "\\flyby_" + time + ".mp4";
+            string outputPath = flybyDir + "/flyby_" + time;
             while (File.Exists(outputPath))
             {
                 // this will likely never happen
                 outputPath += "_d";
             }
+            outputPath += ".mp4";
 
+            // run ffmpeg using the slideshow feature
             using (Process ffmpegProcess = new Process())
             {
                 ProcessStartInfo startInfo = ffmpegProcess.StartInfo;
-                startInfo.FileName = Directory.GetCurrentDirectory() + "\\Assets\\bin\\ffmpeg.exe";
-                startInfo.Arguments = "-framerate 24 -start_number 0 -i " + outputDir + "\\frame_%06d.jpg -frames:v " + fileId + " " + outputPath;
+                startInfo.FileName = Application.streamingAssetsPath + "/ffmpeg/ffmpeg.exe";
+                startInfo.Arguments = "-framerate 24 -start_number 0 -i " + outputDir + "/frame_%06d.jpg -frames:v " + fileId + " " + outputPath;
                 startInfo.UseShellExecute = false;
                 startInfo.CreateNoWindow = true;
                 startInfo.RedirectStandardOutput = true;
@@ -496,6 +514,7 @@ namespace CellexalVR.Menu.SubMenus
             {
                 File.Delete(file);
             }
+            yield return null;
 
             Directory.Delete(outputDir);
             rendering = false;
@@ -506,9 +525,15 @@ namespace CellexalVR.Menu.SubMenus
             CellexalLog.Log("Finished creating flyby");
         }
 
+        /// <summary>
+        /// Logs the output of FFmpeg to the <see cref="CellexalLog"/>.
+        /// </summary>
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            CellexalLog.Log(e.Data);
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                CellexalLog.Log(e.Data);
+            }
         }
 
         /// <summary>
@@ -522,6 +547,9 @@ namespace CellexalVR.Menu.SubMenus
             cameraGameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Hides the preview objects so they won't be rendered in the final flyby video.
+        /// </summary>
         public void HidePreviewObjects()
         {
             foreach (GameObject sphere in previewSpheres)

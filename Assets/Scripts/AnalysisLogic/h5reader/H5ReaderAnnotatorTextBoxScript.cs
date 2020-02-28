@@ -79,6 +79,12 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
         }
 
+        public char GetDataType()
+        { 
+            char dtype = name[name.Length - 1];
+            return dtype;
+        }
+
         public string GetPath()
         {
             string path = name.Substring(0, name.LastIndexOf(":"));

@@ -53,7 +53,7 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
         public void ReadVelocityFile(string path)
         {
-            StartCoroutine(ReadVelocityParticleSystem(path));
+            ReadVelocityFile(path, "");
         }
 
         /// <summary>
@@ -131,9 +131,10 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter < 1)
+                    if (counter<3)
                     {
-                        UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) * 1000);
+                        UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
+                        //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
                         counter++;
                     }
 
@@ -168,25 +169,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
         }
 
-        /// <summary>
-        /// Reads a velocity file and starts the particle system that visualises the velcoity information.
-        /// </summary>
-        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvfh" })]
-        public void ReadVelocityFileFromHDF5(string path)
-        {
-            StartCoroutine(ReadVelocityParticleSystemFromHDF5(path));
-        }
-
-        /// <summary>
-        /// Reads a velocity file and starts the particle system that visualises the velcoity information for a subgraph.
-        /// </summary>
-        /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        /// <param name="subGraphName">The name of the subgraph.</param>
-        public void ReadVelocityFileFromHDF5(string path, string subGraphName)
-        {
-            StartCoroutine(ReadVelocityParticleSystemFromHDF5(path, subGraphName));
-        }
 
         private IEnumerator ReadVelocityParticleSystemFromHDF5(string path, string subGraphName = "")
         {
@@ -232,20 +214,16 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < cellnames.Length; i++)
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellnames[i]);
-                float diffX = float.Parse(vels[i * 3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                float diffY = float.Parse(vels[i * 3 + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                float diffZ = float.Parse(vels[i * 3 + 2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                //Vector3 diff = originalGraph.ScaleCoordinates(new Vector3(diffX, diffY, diffZ));
-                Vector3 diff = new Vector3(diffX, diffY, diffZ);
-                diff *= 40;
-                //Vector3 diff = new Vector3(
-                //    float.Parse(vels[i * 3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat),
-                //    float.Parse(vels[i * 3 + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat),
-                //    float.Parse(vels[i * 3 + 2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
+
+                Vector3 diff = new Vector3(float.Parse(vels[i * 3]), float.Parse(vels[i * 3 + 1]), float.Parse(vels[i * 3 + 2]));
+
+                //Method
+                diff *= 30; //arbitrary scaling, ofcourse.. DUH!
+                                                  
                 diff /= originalGraph.longestAxis;
                 if (i % 1000 == 0)
                 {
-                    UnityEngine.Debug.Log(diff);
+                    UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
                 }
                 if (point != null)
                     velocities[point] = diff / 5f;

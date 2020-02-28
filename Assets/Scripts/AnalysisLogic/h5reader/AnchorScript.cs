@@ -48,17 +48,23 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
                     if (expandButtonScript) //if moving away from expandButton
                     {
-                        Dictionary<string, string> config = anchorA.GetComponentInParent<H5readerAnnotater>().config;
-
-                        if (line.type == "attrs")
-                            config.Remove("attr_" + expandButtonScript.parentScript.name);
-                        else
-                            config.Remove(line.type);
-
                         ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
                         if (projectionObjectScript)
                         {
                             projectionObjectScript.RemoveFromPaths(line.type);
+                        }
+                        else
+                        {
+                            H5readerAnnotater h5ReaderAnnotater = anchorA.GetComponentInParent<H5readerAnnotater>();
+
+                            if (line.type == "attrs")
+                            {
+                                h5ReaderAnnotater.RemoveFromConfig("attr_" + expandButtonScript.parentScript.name);
+                            }
+                            else
+                            {
+                                h5ReaderAnnotater.RemoveFromConfig(line.type);
+                            }
                         }
 
                     }
@@ -71,6 +77,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     isAttachedToHand = false;
 
                     string path = expandButtonScript.parentScript.GetPath();
+                    char dataType = expandButtonScript.parentScript.GetDataType();
 
                     int start = path.LastIndexOf('/');
                     string[] names;
@@ -86,28 +93,19 @@ namespace CellexalVR.AnalysisLogic.H5reader
                         {
                             anchorA.GetComponentInParent<ProjectionObjectScript>().ChangeName(names[names.Length - 1]);
                         }
-                        projectionObjectScript.AddToPaths(line.type, path);
+                        projectionObjectScript.AddToPaths(line.type, path, dataType);
                         
                     }
                     else
                     {
-
-                        Dictionary<string, string> config = anchorA.GetComponentInParent<H5readerAnnotater>().config;
-
+                        H5readerAnnotater h5ReaderAnnotater = anchorA.GetComponentInParent<H5readerAnnotater>();
                         if (line.type == "attrs")
                         {
-                            config.Add("attr_" + names[names.Length - 1], path);
+                            h5ReaderAnnotater.AddToConfig("attr_" + names[names.Length - 1], path, dataType);
                         }
                         else
                         {
-                            if (config.ContainsKey(line.type))
-                            {
-                                config[line.type] = path;
-                            }
-                            else
-                            {
-                                config.Add(line.type, path);
-                            }
+                            h5ReaderAnnotater.AddToConfig(line.type, path, dataType);
                         }
 
                     }
