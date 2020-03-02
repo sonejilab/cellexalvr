@@ -79,6 +79,29 @@ namespace CellexalVR.AnalysisObjects
         private float histogramHeight = 0.4f;
         private float histogramWidth = 0.4f;
 
+        private List<HistogramData?> tabData = new List<HistogramData?>(10);
+        public List<GameObject> tabButtons = new List<GameObject>(10);
+
+        /// <summary>
+        /// Holds all data needed to recreate a histogram.
+        /// Can be used in <see cref="CreateHistogram(HistogramData)"/>.
+        /// </summary>
+        public struct HistogramData
+        {
+            public string name;
+            public string xAxisMaxLabel;
+            public string yAxisMaxLabel;
+            public List<float> barHeights;
+
+            public HistogramData(string geneName, string xAxisMaxLabel, string yAxisMaxLabel, List<float> barHeights)
+            {
+                this.name = geneName;
+                this.xAxisMaxLabel = xAxisMaxLabel;
+                this.yAxisMaxLabel = yAxisMaxLabel;
+                this.barHeights = barHeights;
+            }
+        }
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -97,6 +120,11 @@ namespace CellexalVR.AnalysisObjects
             HistogramMinPos = new Vector3(center.x - histogramWidth / 2f, center.y - histogramHeight / 2f, 0f);
             HistogramMaxPos = new Vector3(center.x + histogramWidth / 2f, center.y + histogramHeight / 2f, 0f);
             CellexalEvents.LegendAttached.AddListener(ActivateExtraColumn);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                tabData.Add(null);
+            }
         }
 
         private void ActivateExtraColumn()
@@ -104,7 +132,7 @@ namespace CellexalVR.AnalysisObjects
             attached = true;
         }
 
-        private void DeActivateExtraColumn()
+        private void DeactivateExtraColumn()
         {
             attached = false;
         }
@@ -117,9 +145,9 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="bins">An array of ints that represents the heights of the bars.</param>
         /// <param name="xAxisMaxLabel">The label at the max value of the x-axis</param>
         /// <param name="barHeightMode">The Y axis mode to use.</param>
+        /// <param name="skip">The number of tallest bars to cut, so the n:th tallest bar uses up all of the y axis.</param>
         public void CreateHistogram(string geneName, int[] bins, string xAxisMaxLabel, YAxisMode barHeightMode, int skip = 0)
         {
-            this.geneNameLabel.text = geneName;
             heightsInt = bins;
             sortedHeightsInt = new int[bins.Length];
             Array.Copy(bins, sortedHeightsInt, bins.Length);
@@ -131,7 +159,30 @@ namespace CellexalVR.AnalysisObjects
             string yAxisMaxLabel;
             List<float> barHeights;
             CalculateBarHeights(out yAxisMaxLabel, out barHeights);
-            CreateHistogram(xAxisMaxLabel, yAxisMaxLabel, barHeights);
+            HistogramData newData = new HistogramData(geneName, xAxisMaxLabel, yAxisMaxLabel, barHeights);
+            CreateHistogram(newData);
+
+            // make sure the order matches the previous searches list
+            if (!tabData.Any((HistogramData? data) => data.HasValue && data.Value.name == geneName))
+            {
+                var locks = referenceManager.previousSearchesList.searchLocks;
+                HistogramData? next = newData;
+                for (int i = 0; i < locks.Count && i < tabData.Count; ++i)
+                {
+                    if (!locks[i].Locked && next.HasValue)
+                    {
+                        HistogramData? temp = tabData[i];
+                        tabData[i] = next;
+                        tabButtons[i].GetComponentInChildren<TextMeshPro>().text = next.Value.name;
+                        next = temp;
+                    }
+                }
+                if (tabData.Count < 10 && next.HasValue)
+                {
+                    tabData.Add(next);
+                    tabButtons[tabData.Count - 1].GetComponentInChildren<TextMeshPro>().text = next.Value.name;
+                }
+            }
         }
 
         /// <summary>
@@ -186,14 +237,20 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        private void CreateHistogram(HistogramData data)
+        {
+            CreateHistogram(data.name, data.xAxisMaxLabel, data.yAxisMaxLabel, data.barHeights);
+        }
+
         /// <summary>
         /// Creates a histogram.
         /// </summary>
         /// <param name="xAxisMaxLabel">The label of the x axis</param>
         /// <param name="yAxisMaxLabel">The label of the y axis</param>
         /// <param name="barHeights">The height of each bar, range [0, 1]</param>
-        private void CreateHistogram(string xAxisMaxLabel, string yAxisMaxLabel, List<float> barHeights)
+        private void CreateHistogram(string geneName, string xAxisMaxLabel, string yAxisMaxLabel, List<float> barHeights)
         {
+            this.geneNameLabel.text = geneName;
             if (bars.Count != barHeights.Count)
             {
                 InstantiateBars(barHeights.Count);
@@ -239,14 +296,14 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Recreates the current histogram.
+        /// Recreates the current histogram. Should be used after <see cref="DesiredYAxisMode"/> or <see cref="TallestBarsToSkip"/> have been changed.
         /// </summary>
         public void RecreateHistogram()
         {
             string yAxisMaxLabel;
             List<float> barHeights;
             CalculateBarHeights(out yAxisMaxLabel, out barHeights);
-            CreateHistogram(xAxisMaxLabel.text, yAxisMaxLabel, barHeights);
+            CreateHistogram(this.geneNameLabel.text, xAxisMaxLabel.text, yAxisMaxLabel, barHeights);
         }
 
         /// <summary>
@@ -311,6 +368,14 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        public void SwitchToTab(int index)
+        {
+            if (tabData[index].HasValue)
+            {
+                CreateHistogram(tabData[index].Value);
+            }
+        }
+
         /// <summary>
         /// Deactivates the highlight area and its accompanying text.
         /// </summary>
@@ -345,6 +410,16 @@ namespace CellexalVR.AnalysisObjects
                 maxX = temp;
             }
 
+            if (minX < 0)
+            {
+                minX = 0;
+            }
+
+            if (maxX >= NumberOfBars)
+            {
+                maxX = NumberOfBars - 1;
+            }
+
             if (!area.activeSelf)
             {
                 area.SetActive(true);
@@ -372,13 +447,11 @@ namespace CellexalVR.AnalysisObjects
                 median = selectedSlice[middleIndex];
             }
 
-
             if (minX != maxX)
             {
                 int sum = 0;
                 for (int i = minX; i <= maxX; ++i)
                 {
-
                     sum += heightsInt[i];
                 }
                 highlightAreaInfoText.text = "x: [" + minX + ", " + maxX + "]\nsum: " + sum + "\nmean: " + mean + "\nmedian: " + median;
@@ -387,7 +460,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 highlightAreaInfoText.text = "x: " + minX + "\ny: " + heightsInt[minX];
             }
-
         }
 
         /// <summary>

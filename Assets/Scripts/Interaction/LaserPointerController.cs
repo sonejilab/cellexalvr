@@ -22,6 +22,8 @@ namespace CellexalVR.Interaction
         private bool touchingObject;
         private bool hitLastFrame;
         private ControllerModelSwitcher controllerModelSwitcher;
+        private int environmentButtonLayer;
+        private int menuLayer;
 
         public ReferenceManager referenceManager;
         public Transform origin;
@@ -42,7 +44,10 @@ namespace CellexalVR.Interaction
             frame = 0;
             tempHit = null;
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
-            layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
+            environmentButtonLayer = LayerMask.NameToLayer("EnvironmentButtonLayer");
+            menuLayer = LayerMask.NameToLayer("MenuLayer");
+            layerMaskMenu = 1 << menuLayer;
+            layerMaskMenu |= 1 << environmentButtonLayer;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             //CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
             //CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
@@ -62,37 +67,45 @@ namespace CellexalVR.Interaction
         private void Frame5Update()
         {
             RaycastHit hit;
-            origin.localRotation = Quaternion.Euler(15f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
-            bool hitMenu = hit.collider != null;
-            if (hitMenu)
+            bool hitMenu = hit.collider != null && hit.collider.gameObject.layer == menuLayer;
+            if (hit.collider != null)
             {
-                tempHit = hit.collider.gameObject;
+                // if we hit anything
                 if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
                 {
-                    //controllerModelSwitcher.TurnOffActiveTool(true);
                     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
                 }
-            }
 
+                if (hit.collider.gameObject.layer == menuLayer)
+                {
+                    // if we hit a button in the menu
+                    origin.localRotation = Quaternion.Euler(15f, 0, 0);
+                    tempHit = hit.collider.gameObject;
+                }
+                else if (hit.collider.gameObject.layer == environmentButtonLayer)
+                {
+                    // if we hit a button in the environment
+                    origin.localRotation = Quaternion.Euler(0, 0, 0);
+                }
+            }
             else
             {
-                origin.localEulerAngles = new Vector3(0f, 0f, 0f);
-            }
-            if (!hitMenu && alwaysActive)
-            {
                 origin.localRotation = Quaternion.Euler(0, 0, 0);
-                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                if (alwaysActive)
                 {
-                    controllerModelSwitcher.ActivateDesiredTool();
+                    if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                    {
+                        controllerModelSwitcher.ActivateDesiredTool();
+                    }
+
+
                 }
-
-
             }
 
             if (!alwaysActive && !Override)
             {
-                // When to switch back to previous model. 
+                // When to switch back to previous model.
                 if (!hit.collider)
                 {
                     if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
