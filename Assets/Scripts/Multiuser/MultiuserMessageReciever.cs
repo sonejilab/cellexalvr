@@ -21,7 +21,6 @@ namespace CellexalVR.Multiuser
     /// </summary>
     public class MultiuserMessageReciever : Photon.MonoBehaviour
     {
-        private List<MultiuserMessageSender> gamemanagers = new List<MultiuserMessageSender>();
         private MultiuserMessageSender multiuserMessageSender;
         public ReferenceManager referenceManager;
 
@@ -42,7 +41,6 @@ namespace CellexalVR.Multiuser
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             multiuserMessageSender = referenceManager.multiuserMessageSender;
-            //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         #region RPCs
@@ -181,6 +179,17 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to remove culling cube");
             referenceManager.cullingFilterManager.RemoveCube();
+        }
+
+        [PunRPC]
+        public void RecieveMessageGenerateRandomColors(int n)
+        {
+            CellexalLog.Log(message: "Recieved message to generate " + n + " random colors");
+        }
+        [PunRPC]
+        public void RecieveMessageGenerateRainbowColors(int n)
+        {
+            CellexalLog.Log(message: "Recieved message to generate " + n + " rainbow colors");
         }
 
 

@@ -73,7 +73,7 @@ namespace CellexalVR.AnalysisLogic
                 i < referenceManager.cellManager.Attributes.Length;
                 i++)
             {
-                referenceManager.settingsMenu.AddSelectionColor(true);
+                referenceManager.settingsMenu.AddSelectionColor();
             }
             referenceManager.settingsMenu.unsavedChanges = false;
             //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
@@ -158,7 +158,7 @@ namespace CellexalVR.AnalysisLogic
                     i < referenceManager.cellManager.Attributes.Length;
                     i++)
                 {
-                    referenceManager.settingsMenu.AddSelectionColor(true);
+                    referenceManager.settingsMenu.AddSelectionColor();
                 }
 
                 referenceManager.settingsMenu.unsavedChanges = false;

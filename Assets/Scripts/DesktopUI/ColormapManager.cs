@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using CellexalVR.General;
 
 namespace CellexalVR.DesktopUI
@@ -11,12 +10,19 @@ namespace CellexalVR.DesktopUI
 
         private SettingsMenu settingsMenu;
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             settingsMenu = GetComponent<SettingsMenu>();
         }
 
         public void GenerateRandomColors(int n = 20)
+        {
+            DoGenerateRandomColors(n);
+            settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRandomColors(n);
+
+        }
+
+        private void DoGenerateRandomColors(int n)
         {
             if (nrGroupsInput.text != "")
             {
@@ -33,7 +39,14 @@ namespace CellexalVR.DesktopUI
             }
             settingsMenu.UpdateSelectionToolColors();
         }
+
         public void GenerateRainbowColors(int n = 20)
+        {
+            DoGenerateRainbowColors(n);
+            settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRainbowColors(n);
+        }
+        
+        private void DoGenerateRainbowColors(int n)
         {
             if (nrGroupsInput.text != "")
             {

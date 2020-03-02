@@ -1,10 +1,6 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu;
-using Photon;
-using System;
 using System.Collections;
-
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,7 +15,6 @@ namespace CellexalVR.Multiuser
         #region Public Properties
 
         public ReferenceManager referenceManager;
-        static public MultiuserMessageSender Instance;
         [Tooltip("The prefab to use for representing the player")]
         public GameObject playerPrefab;
         public GameObject spectatorPrefab;
@@ -31,7 +26,7 @@ namespace CellexalVR.Multiuser
         public bool avatarMenuActive;
 
         private MultiuserMessageReciever coordinator;
-        public bool multiplayer = false;
+        public bool multiplayer;
 
 
         #endregion
@@ -47,7 +42,6 @@ namespace CellexalVR.Multiuser
 
         private void Start()
         {
-            Instance = this;
             waitingCanvas = referenceManager.screenCanvas.gameObject;
             spectatorRig = referenceManager.spectatorRig;
             VRRig = referenceManager.VRRig;
@@ -213,6 +207,18 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to clear expression colours");
             coordinator.photonView.RPC("RecieveMessageToggleTransparency", PhotonTargets.Others, toggle);
+        }
+        public void SendMessageGenerateRandomColors(int n)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to generate random colours");
+            coordinator.photonView.RPC("RecieveMessageGenerateRandomColors", PhotonTargets.Others, n);
+        }
+        public void SendMessageGenerateRainbowColors(int n)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to generate rainbow colours");
+            coordinator.photonView.RPC("RecieveMessageGenerateRainbowColors", PhotonTargets.Others, n);
         }
 
         #endregion

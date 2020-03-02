@@ -1212,8 +1212,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-
-        public void HighlightGraphPoint(GraphPoint graphPoint, bool active)
+        private void HighlightGraphPoint(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
