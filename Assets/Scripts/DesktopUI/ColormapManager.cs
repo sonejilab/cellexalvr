@@ -22,7 +22,7 @@ namespace CellexalVR.DesktopUI
 
         }
 
-        private void DoGenerateRandomColors(int n)
+        public void DoGenerateRandomColors(int n)
         {
             if (nrGroupsInput.text != "")
             {
@@ -46,7 +46,7 @@ namespace CellexalVR.DesktopUI
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRainbowColors(n);
         }
         
-        private void DoGenerateRainbowColors(int n)
+        public void DoGenerateRainbowColors(int n)
         {
             if (nrGroupsInput.text != "")
             {

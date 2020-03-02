@@ -151,6 +151,7 @@ namespace CellexalVR.AnalysisLogic
 
         public void HighlightCells(Cell[] cellsToHighlight, bool highlight)
         {
+            referenceManager.multiuserMessageSender.SendHighlightCells(cellsToHighlight, highlight);
             foreach (Cell cell in cellsToHighlight)
             {
                 foreach (Graph.GraphPoint gp in cell.GraphPoints)

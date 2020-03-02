@@ -10,6 +10,8 @@ using CellexalVR.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CellexalVR.AnalysisLogic;
+using CellexalVR.DesktopUI;
 using UnityEngine;
 
 namespace CellexalVR.Multiuser
@@ -185,14 +187,22 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageGenerateRandomColors(int n)
         {
             CellexalLog.Log(message: "Recieved message to generate " + n + " random colors");
+            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRandomColors(n);
         }
+        
         [PunRPC]
         public void RecieveMessageGenerateRainbowColors(int n)
         {
             CellexalLog.Log(message: "Recieved message to generate " + n + " rainbow colors");
+            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRainbowColors(n);
         }
 
-
+        [PunRPC]
+        public void RecieveMessageHighlightCells(Cell[] cellsToHighlight, bool highlight)
+        {
+            CellexalLog.Log(message: "Recieved message to highlight + " + cellsToHighlight.Length + " cells");
+            referenceManager.cellManager.HighlightCells(cellsToHighlight, highlight);
+        }
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu;
 using System.Collections;
+using CellexalVR.AnalysisLogic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -219,6 +220,14 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to generate rainbow colours");
             coordinator.photonView.RPC("RecieveMessageGenerateRainbowColors", PhotonTargets.Others, n);
+        }
+
+        public void SendHighlightCells(Cell[] cellsToHighlight, bool highlight)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to highlight " + cellsToHighlight.Length + " cells");
+            coordinator.photonView.RPC(methodName: "RecieveHighlightCells", target: PhotonTargets.Others,
+                cellsToHighlight, highlight);
         }
 
         #endregion
