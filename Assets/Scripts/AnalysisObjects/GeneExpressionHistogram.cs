@@ -2,6 +2,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using CellexalVR.Filters;
@@ -409,17 +411,18 @@ namespace CellexalVR.AnalysisObjects
         {
             selectedAreaInfoText.text = highlightAreaInfoText.text;
             MoveArea(selectedArea, selectedAreaInfoText, minX, maxX);
-            if (attached)
+            if (!attached) return;
+            if (minX > maxX)
             {
-                if (minX > maxX)
-                {
-                    int temp = minX;
-                    minX = maxX;
-                    maxX = temp;
-                }
-                referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX,
-                    float.Parse(xAxisMaxLabel.text, System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
+                int temp = minX;
+                minX = maxX;
+                maxX = temp;
             }
+
+            float.TryParse(xAxisMaxLabel.text, NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out float value);
+            referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX,
+                value); // float.Parse(xAxisMaxLabel.text, Thread.CurrentThread.CurrentUICulture)); //, System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
         }
 
     }

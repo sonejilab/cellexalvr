@@ -868,7 +868,6 @@ namespace SQLiter
                 {
                     pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
                 }
-                UnityEngine.Debug.Log(HighestExpression);
             }
             else
             {

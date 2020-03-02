@@ -70,23 +70,17 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="color"> True if the graphpoints should be colored, false  if they should be white. (True means show this attribute, false means hide basically) </param>
         public void ColorByAttribute(string attributeType, bool color)
         {
-            if (Attributes.ContainsKey(attributeType.ToLower()))
-            {
-                foreach (Graph.GraphPoint g in GraphPoints)
-                {                    
-                    if (color)
-                    {
-                        g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);
-                        //g.Material = graphManager.AttributeMaterials[Attributes[attributeType.ToLower()]];
-                        //Debug.Log("ADD GROUP - " + Attributes[attributeType.ToLower()]);
-                        //graphManager.referenceManager.selectionToolHandler.AddGraphpointToSelection(GraphPoints[0], Attributes[attributeType.ToLower()], false, g.Material.color);
-                    }
+            if (!Attributes.ContainsKey(attributeType.ToLower())) return;
+            foreach (Graph.GraphPoint g in GraphPoints)
+            {                    
+                if (color)
+                {
+                    g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);
+                }
 
-                    else
-                    {
-                        //g.Material = graphManager.defaultGraphPointMaterial;
-                        g.ResetColor();
-                    }
+                else
+                {
+                    g.ResetColor();
                 }
             }
         }

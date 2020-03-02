@@ -1267,7 +1267,8 @@ namespace CellexalVR.AnalysisObjects
                     //texture.SetPixel(i, j, Color.black);
 
                     Color32 tex = texture.GetPixel(i, j);
-                    texture.SetPixels32(i, j, 1, 1, new Color32[] { new Color32(254, 190, tex.b, 255) });
+                    texture.SetPixels32(i, j, 1, 1,
+                        new Color32[] { new Color32(254, 190, tex.b, 255) });
                 }
             }
             //MakeAllPointsTransparent(true);

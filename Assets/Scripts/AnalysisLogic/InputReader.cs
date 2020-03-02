@@ -60,6 +60,7 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             cellManager = referenceManager.cellManager;
             database = referenceManager.database;
             selectionManager = referenceManager.selectionManager;

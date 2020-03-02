@@ -347,8 +347,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 writer.WriteLine(conf["attr_" + attribute] + " [:].tolist()");
             while (reader.Peek() == 0)
                 yield return null;
-            string output = reader.ReadLine().Replace("[", "").Replace("]", "").Replace("'", "").Replace(" ", "");
-            _attrResult = output.Split(',');
+            string output = reader.ReadLine()?.Replace("[", "").Replace("]", "").Replace("'", "").Replace(" ", "");
+            if (output != null) _attrResult = output.Split(',');
             busy = false;
         }
 
@@ -623,7 +623,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 string[] coords = referenceManager.h5Reader._coordResult;
                 string[] cellNames = referenceManager.h5Reader.index2cellname;
                 combGraph.axisNames = new string[] {"x", "y", "z"};
-                itemsThisFrame = 0;
                 int count = 0;
                 for (int j = 0; j < cellNames.Length; j++)
                 {

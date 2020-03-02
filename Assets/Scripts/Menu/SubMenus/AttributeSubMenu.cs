@@ -136,9 +136,9 @@ namespace CellexalVR.Menu.SubMenus
                     {
                         category = b.Attribute.Split('@')[0];
                     }
-                    if (b.colored != toggle && category == currentCategory)
+                    if (!b.colored && category == currentCategory)
                     {
-                        b.ColourAttribute(toggle);
+                        b.ColourAttribute(true);
                     }
                     yield return null;
                 }

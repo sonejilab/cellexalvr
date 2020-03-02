@@ -80,6 +80,7 @@ namespace CellexalVR.AnalysisObjects
         private IEnumerator AttachLegendToCube(Transform cubeTransform)
         {
             attachArea.SetActive(false);
+            print(message: attachArea.activeSelf);
             transform.parent = cubeTransform.parent;
             Vector3 startPos = transform.localPosition;
             Vector3 targetPos = new Vector3(-1f, 0.012f, 0.497f);
@@ -107,8 +108,8 @@ namespace CellexalVR.AnalysisObjects
             Vector3 scale = backgroundPlane.transform.localScale;
             scale.x = 0.064f;
             backgroundPlane.transform.localScale = scale;
-            CellexalEvents.LegendAttached.Invoke();
             attached = true;
+            CellexalEvents.LegendAttached.Invoke();
         }
 
         /// <summary>
