@@ -60,7 +60,7 @@ namespace CellexalVR.Interaction
             CellexalLog.Log("Started building autocomplete list bk-tree");
             namesOfThings.Clear();
             //summertwerk
-            if (referenceManager.cellManager.h5Reader == null)
+            if (referenceManager.h5Reader == null)
             {
 
 
@@ -82,7 +82,7 @@ namespace CellexalVR.Interaction
             }
             else
             {
-                 results = referenceManager.cellManager.h5Reader.index2genename;
+                 results = referenceManager.h5Reader.index2genename;
             }
             for (int i = 0; i < results.Length; ++i)
             {

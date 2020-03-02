@@ -11,7 +11,6 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
-
     /// <summary>
     /// This class starts the thread that generates the network files and then tells the inputreader to process them.
     /// </summary>
@@ -169,7 +168,7 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(GenerateNetworksCoroutine(layoutSeed));
         }
 
-        IEnumerator GenerateNetworksCoroutine(int layoutSeed)
+        private IEnumerator GenerateNetworksCoroutine(int layoutSeed)
         {
             //int statusId = status.AddStatus("R script generating networks");
             //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");

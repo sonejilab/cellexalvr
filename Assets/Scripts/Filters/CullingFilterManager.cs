@@ -17,7 +17,6 @@ namespace CellexalVR.Filters
     /// </summary>
     public class CullingFilterManager : MonoBehaviour
     {
-
         public ReferenceManager referenceManager;
         public Filter currentFilter;
         public GameObject cullingCubePrefab;
@@ -71,21 +70,21 @@ namespace CellexalVR.Filters
         /// <summary>
         /// If something has changed on the filter update it. Either new attribute has been added/removed or gene filter has changed etc.
         /// </summary>
-        private void UpdateCullingFilter()
+        private void UpdateCullingFilter(string gene = "")
         {
             foreach (Cell c in referenceManager.cellManager.GetCells())
             {
-                if (!geneName.Equals(string.Empty))
+                if (!gene.Equals(string.Empty))
+                {
+                    geneName = gene.ToLower();
                     GeneExprs[new Tuple<string, string>(geneName, c.Label)] = c.ExpressionValue;
+                }
                 foreach (Graph g in referenceManager.graphManager.Graphs)
                 {
                     Graph.GraphPoint otherGp = g.FindGraphPoint(c.Label);
-                    if (otherGp != null)
-                    {
-                        bool pass = (currentFilter.Expression != null) ? currentFilter.Pass(c) : false;
-                        g.MakePointUnCullable(otherGp, pass);
-
-                    }
+                    if (otherGp == null) continue;
+                    bool pass = (currentFilter.Expression != null) && currentFilter.Pass(c);
+                    g.MakePointUnCullable(otherGp, pass);
                 }
             }
         }
@@ -110,9 +109,11 @@ namespace CellexalVR.Filters
             }
             else
             {
-                BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression, new BooleanExpression.AttributeExpr(attribute, true));
+                BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression,
+                    new BooleanExpression.AttributeExpr(attribute, true));
                 currentFilter.Expression = newExpr;
             }
+
             UpdateCullingFilter();
         }
 
@@ -134,11 +135,12 @@ namespace CellexalVR.Filters
                 currentFilter.Expression = new BooleanExpression.AttributeExpr(currentAttributes[0], true);
                 for (int i = 1; i < currentAttributes.Count; i++)
                 {
-                    BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression, new BooleanExpression.AttributeExpr(currentAttributes[i], true));
+                    BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression,
+                        new BooleanExpression.AttributeExpr(currentAttributes[i], true));
                     currentFilter.Expression = newExpr;
                 }
-
             }
+
             UpdateCullingFilter();
         }
 
@@ -150,9 +152,11 @@ namespace CellexalVR.Filters
             }
             else
             {
-                BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression, new BooleanExpression.SelectionGroupExpr(group, true));
+                BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression,
+                    new BooleanExpression.SelectionGroupExpr(group, true));
                 currentFilter.Expression = newExpr;
             }
+
             UpdateCullingFilter();
         }
 
@@ -174,31 +178,35 @@ namespace CellexalVR.Filters
                 currentFilter.Expression = new BooleanExpression.SelectionGroupExpr(currentGroups[0], true);
                 for (int i = 1; i < currentGroups.Count; i++)
                 {
-                    BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression, new BooleanExpression.SelectionGroupExpr(currentGroups[i], true));
+                    BooleanExpression.OrExpr newExpr = new BooleanExpression.OrExpr(currentFilter.Expression,
+                        new BooleanExpression.SelectionGroupExpr(currentGroups[i], true));
                     currentFilter.Expression = newExpr;
                 }
-
             }
+
             UpdateCullingFilter();
         }
 
 
         public void AddGeneFilter(string gene, int startX, int endX, float highestGeneValue)
         {
-            this.geneName = gene.ToLower();
-            BooleanExpression.Token greaterToken = new BooleanExpression.Token(BooleanExpression.Token.Type.OP_GTEQ, ">=", startX);
-            BooleanExpression.Token lessToken = new BooleanExpression.Token(BooleanExpression.Token.Type.OP_LTEQ, "<=", endX);
+            BooleanExpression.Token greaterToken =
+                new BooleanExpression.Token(BooleanExpression.Token.Type.OP_GTEQ, ">=", startX);
+            BooleanExpression.Token lessToken =
+                new BooleanExpression.Token(BooleanExpression.Token.Type.OP_LTEQ, "<=", endX);
             float lowValue = (highestGeneValue / 30) * startX;
             float highValue = (highestGeneValue / 30) * endX;
+            print(lowValue);
+            print(highValue);
             BooleanExpression.GeneExpr lowExpr = new BooleanExpression.GeneExpr(gene, greaterToken, lowValue, false);
             lowExpr.SetCullingFilterManager(this);
             BooleanExpression.GeneExpr highExpr = new BooleanExpression.GeneExpr(gene, lessToken, highValue, false);
             highExpr.SetCullingFilterManager(this);
             BooleanExpression.AndExpr andExpr = new BooleanExpression.AndExpr(lowExpr, highExpr);
             currentFilter.Expression = andExpr;
-            legendManager.geneExpressionHistogram.filterTextLabel.text = currentFilter.Expression.ToString().Trim(new char[] { '(', ')' });
-            print(legendManager.geneExpressionHistogram.filterTextLabel.text);
-            UpdateCullingFilter();
+            legendManager.geneExpressionHistogram.filterTextLabel.text =
+            currentFilter.Expression.ToString().Trim(new char[] { '(', ')' });
+            UpdateCullingFilter(gene);
         }
 
 

@@ -10,6 +10,8 @@ using CellexalVR.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CellexalVR.AnalysisLogic;
+using CellexalVR.DesktopUI;
 using UnityEngine;
 
 namespace CellexalVR.Multiuser
@@ -21,7 +23,6 @@ namespace CellexalVR.Multiuser
     /// </summary>
     public class MultiuserMessageReciever : Photon.MonoBehaviour
     {
-        private List<MultiuserMessageSender> gamemanagers = new List<MultiuserMessageSender>();
         private MultiuserMessageSender multiuserMessageSender;
         public ReferenceManager referenceManager;
 
@@ -42,7 +43,6 @@ namespace CellexalVR.Multiuser
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             multiuserMessageSender = referenceManager.multiuserMessageSender;
-            //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         #region RPCs
@@ -183,7 +183,26 @@ namespace CellexalVR.Multiuser
             referenceManager.cullingFilterManager.RemoveCube();
         }
 
+        [PunRPC]
+        public void RecieveMessageGenerateRandomColors(int n)
+        {
+            CellexalLog.Log(message: "Recieved message to generate " + n + " random colors");
+            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRandomColors(n);
+        }
+        
+        [PunRPC]
+        public void RecieveMessageGenerateRainbowColors(int n)
+        {
+            CellexalLog.Log(message: "Recieved message to generate " + n + " rainbow colors");
+            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRainbowColors(n);
+        }
 
+        [PunRPC]
+        public void RecieveMessageHighlightCells(Cell[] cellsToHighlight, bool highlight)
+        {
+            CellexalLog.Log(message: "Recieved message to highlight + " + cellsToHighlight.Length + " cells");
+            referenceManager.cellManager.HighlightCells(cellsToHighlight, highlight);
+        }
 
         #endregion
 

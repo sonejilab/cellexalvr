@@ -303,10 +303,10 @@ namespace CellexalVR.SceneObjects
                 referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
                 referenceManager.velocityGenerator.ActiveGraphs.Clear();
                 //summertwerk
-                if (referenceManager.cellManager.h5Reader != null)
+                if (referenceManager.h5Reader != null)
                 {
-                    referenceManager.cellManager.h5Reader.CloseConnection();
-                    referenceManager.cellManager.h5Reader = null;
+                    referenceManager.h5Reader.CloseConnection();
+                    referenceManager.h5Reader = null;
 
                 }
                 CellexalEvents.GraphsUnloaded.Invoke();

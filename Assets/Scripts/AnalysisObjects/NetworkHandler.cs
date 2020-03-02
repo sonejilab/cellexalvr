@@ -3,7 +3,6 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Multiuser;
 using CellexalVR.Tools;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
@@ -118,21 +117,21 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Saves the arcs that go between the networks.
         /// </summary>
-        /// <param name="keyPairs">An array of <see cref="InputReader.NetworkKeyPair"/>.</param>
+        /// <param name="keyPairs">An array of <see cref="NetworkReader.NetworkKeyPair"/>.</param>
         /// <param name="nodes">All nodes in all networks.</param>
-        public void CreateArcs(ref InputReader.NetworkKeyPair[] keyPairs, ref Dictionary<string, NetworkNode> nodes)
+        public void CreateArcs(ref NetworkReader.NetworkKeyPair[] keyPairs, ref Dictionary<string, NetworkNode> nodes)
         {
             // since the list is sorted in a smart way, all keypairs that share a key will be next to eachother
-            var lastKey = new InputReader.NetworkKeyPair("", "", "", "", "");
-            List<InputReader.NetworkKeyPair> lastNodes = new List<InputReader.NetworkKeyPair>();
+            var lastKey = new NetworkReader.NetworkKeyPair("", "", "", "", "");
+            List<NetworkReader.NetworkKeyPair> lastNodes = new List<NetworkReader.NetworkKeyPair>();
             for (int i = 0; i < keyPairs.Length; ++i)
             {
-                InputReader.NetworkKeyPair keypair = keyPairs[i];
+                NetworkReader.NetworkKeyPair keypair = keyPairs[i];
                 // if this keypair shares a key with the last keypair
                 if (lastKey.key1 == keypair.key1 || lastKey.key1 == keypair.key2)
                 {
                     // add arcs to all previous pairs that also shared a key
-                    foreach (InputReader.NetworkKeyPair node in lastNodes)
+                    foreach (NetworkReader.NetworkKeyPair node in lastNodes)
                     {
                         var center = nodes[node.node1].Center;
                         center.AddArc(nodes[node.node1], nodes[node.node2], nodes[keypair.node1], nodes[keypair.node2]);

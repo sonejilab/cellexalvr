@@ -11,7 +11,6 @@ namespace CellexalVR.DesktopUI
     /// </summary>
     public class SettingsMenu : MonoBehaviour
     {
-
         public GameObject settingsMenuGameObject;
         public ReferenceManager referenceManager;
         public GameObject unsavedChangesPrompt;
@@ -261,7 +260,7 @@ namespace CellexalVR.DesktopUI
             {
                 return defaultValue;
             }
-            return float.Parse(s);
+            return float.Parse(s, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
         }
 
         public void SetUser()

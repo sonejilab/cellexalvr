@@ -27,6 +27,7 @@ namespace Assets.Scripts.SceneObjects
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             filterManager = referenceManager.filterManager;
+            CellexalEvents.LegendAttached.AddListener(() => attachOnSideArea.SetActive(false));
         }
 
         private void Update()
