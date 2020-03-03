@@ -22,19 +22,16 @@ namespace CellexalVR.DesktopUI
 
         }
 
-        public void DoGenerateRandomColors(int n)
+        public void DoGenerateRandomColors(int n, bool multiuserUpdate = false)
         {
-
-            if (nrGroupsInput.text != "")
+            if (nrGroupsInput.text != "" && !multiuserUpdate)
             {
                 n = int.Parse(nrGroupsInput.text);
             }
-
             if (n > 254)
             {
                 n = 254;
             }
-
             foreach (ColorPickerButton button in settingsMenu.selectionColorButtons)//for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
             {
                 Destroy(button.transform.parent.gameObject);
@@ -53,14 +50,12 @@ namespace CellexalVR.DesktopUI
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRainbowColors(n);
         }
 
-        public void DoGenerateRainbowColors(int n)
+        public void DoGenerateRainbowColors(int n, bool multiuserUpdate = false)
         {
-
-            if (nrGroupsInput.text != "")
+            if (nrGroupsInput.text != "" && !multiuserUpdate)
             {
                 n = int.Parse(nrGroupsInput.text);
             }
-
             if (n > 254)
             {
                 n = 254;

@@ -7,7 +7,9 @@
     public override void Click()
     {
         var histogram = gameObject.GetComponentInParent<CellexalVR.AnalysisObjects.GeneExpressionHistogram>();
-        histogram.TallestBarsToSkip += increment ? 1 : -1;
+        int i = increment ? 1 : -1;
+        histogram.TallestBarsToSkip += i;
         histogram.RecreateHistogram();
+        referenceManager.multiuserMessageSender.SendMessageChangeThreshold(i);
     }
 }

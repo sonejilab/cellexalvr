@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu;
 using System.Collections;
+using System.Collections.Generic;
 using CellexalVR.AnalysisLogic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,9 +26,9 @@ namespace CellexalVR.Multiuser
         public GameObject spectatorRig;
         public GameObject VRRig;
         public bool avatarMenuActive;
+        public bool multiplayer;
 
         private MultiuserMessageReciever coordinator;
-        public bool multiplayer;
 
 
         #endregion
@@ -157,6 +158,81 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageDisableColliders", PhotonTargets.Others, name);
         }
 
+        public void SendMessageToggleLaser(bool active, Transform origin, Vector3 hit)
+        {
+            if (!multiplayer) return;
+            Vector3 position = origin.position;
+            coordinator.photonView.RPC("RecieveMessageToggleLaser", PhotonTargets.Others,
+                active, position.x, position.y, position.z,
+                hit.x, hit.y, hit.z, coordinator.photonView.ownerId);
+        }
+
+        public void SendMessageMoveLaser(Transform origin, Vector3 hit)
+        {
+            if (!multiplayer) return;
+            Vector3 originPosition = origin.position;
+            coordinator.photonView.RPC("RecieveMessageMoveLaser", PhotonTargets.Others,
+                originPosition.x, originPosition.y, originPosition.z,
+                hit.x, hit.y, hit.z, coordinator.photonView.ownerId);
+        }
+        #endregion
+        
+        #region Legend
+        public void SendMessageMoveLegend(Vector3 pos, Quaternion rot, Vector3 scale)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageMoveLegend", PhotonTargets.Others,
+                pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
+        }
+
+        public void SendMessageChangeLegend(string legendName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageChangeLegend",
+                PhotonTargets.Others, legendName);
+        }
+
+        public void SendMessageChangeTab(int index)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageChangeTab",
+                PhotonTargets.Others, index);
+        }
+
+        public void SendMessageDeactivateSelectedArea()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageDeactivateSelectedArea",
+                PhotonTargets.Others);
+        }
+
+        public void SendMessageMoveSelectedArea(int hitIndex, int savedGeneExpressionHistogramHitX)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageMoveSelectedArea",
+                PhotonTargets.Others, hitIndex, savedGeneExpressionHistogramHitX);
+        }
+
+        public void SendMessageMoveHighlightArea(int minX, int maxX)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageMoveHighlightArea",
+                PhotonTargets.Others, minX, maxX);
+        }
+
+        public void SendMessageSwitchMode(string mode)
+        {
+           if (!multiplayer) return;
+           coordinator.photonView.RPC("RecieveMessageSwitchMode",
+               PhotonTargets.Others, mode);
+        }
+
+        public void SendMessageChangeThreshold(int increment)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageChangeThreshold",
+                PhotonTargets.Others, increment);
+        }
         #endregion
 
         #region Coloring
@@ -213,13 +289,15 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to generate random colours");
-            coordinator.photonView.RPC("RecieveMessageGenerateRandomColors", PhotonTargets.Others, n);
+            coordinator.photonView.RPC("RecieveMessageGenerateRandomColors",
+                PhotonTargets.Others, n);
         }
         public void SendMessageGenerateRainbowColors(int n)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to generate rainbow colours");
-            coordinator.photonView.RPC("RecieveMessageGenerateRainbowColors", PhotonTargets.Others, n);
+            coordinator.photonView.RPC("RecieveMessageGenerateRainbowColors",
+                PhotonTargets.Others, n);
         }
 
         public void SendHighlightCells(Cell[] cellsToHighlight, bool highlight)

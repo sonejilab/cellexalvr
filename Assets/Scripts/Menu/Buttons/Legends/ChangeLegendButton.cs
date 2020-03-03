@@ -14,6 +14,7 @@ namespace CellexalVR.Menu.Buttons.Legends
         public override void Click()
         {
             referenceManager.legendManager.ActivateLegend(legendToActivate);
+            referenceManager.multiuserMessageSender.SendMessageChangeLegend(legendToActivate.ToString());
         }
     }
 }

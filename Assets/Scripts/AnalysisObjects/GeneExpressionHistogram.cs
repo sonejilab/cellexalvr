@@ -494,7 +494,7 @@ namespace CellexalVR.AnalysisObjects
             float.TryParse(xAxisMaxLabel.text, NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out float value);
             referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX,
-                value); // float.Parse(xAxisMaxLabel.text, Thread.CurrentThread.CurrentUICulture)); //, System.Globalization.CultureInfo.InvariantCulture.NumberFormat));
+                value); 
         }
 
     }

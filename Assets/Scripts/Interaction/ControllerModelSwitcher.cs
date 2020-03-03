@@ -128,7 +128,7 @@ namespace CellexalVR.Interaction
                  && leftControllerBody.GetComponent<MeshFilter>() != null && leftControllerBody.GetComponent<Renderer>() != null;
         }
 
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.name.Equals("Menu Selecter Collider"))
             {
@@ -139,7 +139,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        void OnTriggerExit(Collider other)
+        private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.name.Equals("Menu Selecter Collider"))
             {

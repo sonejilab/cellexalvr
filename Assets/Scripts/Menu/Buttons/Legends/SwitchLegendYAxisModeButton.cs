@@ -22,6 +22,7 @@ namespace CellexalVR.Menu.Buttons.Legends
             GeneExpressionHistogram histogram = gameObject.GetComponentInParent<GeneExpressionHistogram>();
             histogram.DesiredYAxisMode = currentMode;
             histogram.RecreateHistogram();
+            referenceManager.multiuserMessageSender.SendMessageSwitchMode(currentMode.ToString());
         }
     }
 }

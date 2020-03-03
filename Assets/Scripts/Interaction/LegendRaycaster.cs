@@ -7,6 +7,8 @@ namespace CellexalVR.Interaction
 
     public class LegendRaycaster : MonoBehaviour
     {
+        public int savedGeneExpressionHistogramHitX = -1;
+        
         private ReferenceManager referenceManager;
         private LegendManager legendManager;
         private SteamVR_Controller.Device device;
@@ -14,7 +16,6 @@ namespace CellexalVR.Interaction
         private Transform raycastingSource;
         private ControllerModelSwitcher controllerModelSwitcher;
         private int layerMask;
-        private int savedGeneExpressionHistogramHitX = -1;
         private float clickStartTime;
 
         private void Start()
@@ -28,30 +29,30 @@ namespace CellexalVR.Interaction
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
                 legendManager = gameObject.GetComponent<LegendManager>();
             }
-            layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
+            layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
 
         }
 
-        void Update()
+        private void Update()
         {
-            if (CrossSceneInformation.Normal || CrossSceneInformation.Tutorial)
+            if (!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial) return;
+            device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
+            bool correctModel = controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
+                                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser
+                                || referenceManager.rightLaser.enabled;
+            if (correctModel)
             {
-                device = SteamVR_Controller.Input((int)rightController.index);
-                bool correctModel = controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-                                    || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
-                                    || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser;
-                if (correctModel)
-                {
-                    Raycast();
-                }
+                Raycast();
             }
         }
 
         private void Raycast()
         {
             raycastingSource = referenceManager.rightLaser.transform;
-            RaycastHit hit;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 100f, layerMask);
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
+                out var hit, 100f, layerMask);
             if (hit.collider && hit.collider.gameObject == legendManager.gameObject)
             {
                 if (legendManager.desiredLegend == LegendManager.Legend.GeneExpressionLegend)
@@ -99,15 +100,17 @@ namespace CellexalVR.Interaction
         private void HandleHitGeneExpressionHistogram(Vector3 hit)
         {
             int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
-
-            if (savedGeneExpressionHistogramHitX != -1)
-            {
-                legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, savedGeneExpressionHistogramHitX);
-            }
-            else
-            {
-                legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, hitIndex);
-            }
+            int maxX = savedGeneExpressionHistogramHitX != -1 ? savedGeneExpressionHistogramHitX : hitIndex;
+            legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, maxX);
+            referenceManager.multiuserMessageSender.SendMessageMoveHighlightArea(hitIndex, maxX);
+            // if (savedGeneExpressionHistogramHitX != -1)
+            // {
+            //     legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, savedGeneExpressionHistogramHitX);
+            // }
+            // else
+            // {
+            //     legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, hitIndex);
+            // }
         }
 
         private void HandleClickDownGeneExpressionHistogram(Vector3 hit)
@@ -121,12 +124,15 @@ namespace CellexalVR.Interaction
             if (Time.time - clickStartTime < 0.1f)
             {
                 legendManager.geneExpressionHistogram.DeactivateSelectedArea();
+                referenceManager.multiuserMessageSender.SendMessageDeactivateSelectedArea();
             }
             else
             {
                 int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
                 legendManager.geneExpressionHistogram.MoveSelectedArea(hitIndex, savedGeneExpressionHistogramHitX);
                 savedGeneExpressionHistogramHitX = -1;
+                referenceManager.multiuserMessageSender.SendMessageMoveSelectedArea(hitIndex,
+                    savedGeneExpressionHistogramHitX);
             }
         }
     }

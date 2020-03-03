@@ -39,7 +39,6 @@ namespace CellexalVR.Interaction
         private float selectedBoxHeight;
         private Cell[] cellsToHighlight = new Cell[0];
 
-        // Use this for initialization
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -50,7 +49,7 @@ namespace CellexalVR.Interaction
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
 
-            layerMask = 1 << LayerMask.NameToLayer("GraphLayer");
+            layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
@@ -58,7 +57,6 @@ namespace CellexalVR.Interaction
             heatmap = GetComponent<Heatmap>();
         }
 
-        // Update is called once per frame
         private void Update()
         {
             if (device == null && CrossSceneInformation.Normal)
@@ -66,19 +64,19 @@ namespace CellexalVR.Interaction
                 device = SteamVR_Controller.Input((int)rightController.index);
             }
 
-            if (CrossSceneInformation.Normal || CrossSceneInformation.Tutorial)
+            if (!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial
+                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
+            bool correctModel = controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
+                                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser
+                                || referenceManager.rightLaser.enabled;
+            if (correctModel)
             {
-                bool correctModel = controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-                                    || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
-                                    || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser;
-                if (correctModel)
-                {
-                    Raycast();
-                }
+                Raycast();
             }
         }
 
-        void Raycast()
+        private void Raycast()
         {
             raycastingSource = referenceManager.rightLaser.transform;
             //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);

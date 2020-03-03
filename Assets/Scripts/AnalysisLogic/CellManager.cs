@@ -60,11 +60,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-
-        void Awake()
+        private void Awake()
         {
             cells = new Dictionary<string, Cell>();
-
         }
 
         private void Start()

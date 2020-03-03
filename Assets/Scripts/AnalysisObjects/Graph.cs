@@ -125,6 +125,7 @@ namespace CellexalVR.AnalysisObjects
         public OctreeNode octreeRoot;
         private GraphGenerator graphGenerator;
         private bool isTransparent;
+        private Transform graphTransform;
 
         private void OnValidate()
         {
@@ -136,12 +137,13 @@ namespace CellexalVR.AnalysisObjects
 
         void Start()
         {
+            graphTransform = transform;
             graphManager = referenceManager.graphManager;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             graphManager = referenceManager.graphManager;
             graphGenerator = referenceManager.graphGenerator;
             selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
-            startPosition = transform.position;
+            startPosition = graphTransform.position;
             nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
         }
 
@@ -155,7 +157,8 @@ namespace CellexalVR.AnalysisObjects
 
             if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
             {
-                multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
+                multiuserMessageSender.SendMessageMoveGraph(GraphName,
+                    graphTransform.position, graphTransform.rotation, graphTransform.localScale);
             }
             if (minimize)
             {
