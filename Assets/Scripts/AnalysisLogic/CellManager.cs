@@ -561,7 +561,7 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.AttributeLegend;
             if (color)
             {
-                referenceManager.legendManager.attributeLegend.AddGroup(attributeType, numberOfCells, attributeColor);
+                referenceManager.legendManager.attributeLegend.AddEntry(attributeType, numberOfCells, attributeColor);
                 //foreach (Graph graph in graphManager.Graphs)
                 //{
                 //    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
@@ -573,7 +573,7 @@ namespace CellexalVR.AnalysisLogic
                 //{
                 //    Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
                 //}
-                referenceManager.legendManager.attributeLegend.RemoveGroup(attributeType);
+                referenceManager.legendManager.attributeLegend.RemoveEntry(attributeType);
             }
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
             {

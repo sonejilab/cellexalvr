@@ -154,5 +154,23 @@ namespace CellexalVR.Extensions
 
             return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
         }
+
+        public static string ToString(this CellexalVR.AnalysisObjects.LegendManager.Legend legend)
+        {
+            switch (legend)
+            {
+                case CellexalVR.AnalysisObjects.LegendManager.Legend.None:
+                    return "none";
+                case CellexalVR.AnalysisObjects.LegendManager.Legend.AttributeLegend:
+                    return "attribute legend";
+                case CellexalVR.AnalysisObjects.LegendManager.Legend.SelectionLegend:
+                    return "selection legend";
+                case CellexalVR.AnalysisObjects.LegendManager.Legend.GeneExpressionLegend:
+                    return "gene expression histogram";
+                default:
+                    return "";
+            }
+        }
+
     }
 }
