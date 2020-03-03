@@ -20,6 +20,7 @@ TagManager:
   - FilterBlock
   - SubGraph
   - FacsGraph
+  - Subgraph
   layers:
   - Default
   - TransparentFX
@@ -38,7 +39,7 @@ TagManager:
   - SelectionToolLayer
   - SelectableLayer
   - KeyboardLayer
-  - 
+  - EnvironmentButtonLayer
   - 
   - 
   - 
