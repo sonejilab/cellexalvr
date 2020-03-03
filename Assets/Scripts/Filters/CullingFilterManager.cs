@@ -205,8 +205,7 @@ namespace CellexalVR.Filters
             BooleanExpression.AndExpr andExpr = new BooleanExpression.AndExpr(lowExpr, highExpr);
             currentFilter.Expression = andExpr;
             legendManager.geneExpressionHistogram.filterTextLabel.text =
-                currentFilter.Expression.ToString().Trim(new char[] {'(', ')'});
-            print(currentFilter.Expression.ToString().Trim(new char[] {'(', ')'}));
+            currentFilter.Expression.ToString().Trim(new char[] { '(', ')' });
             UpdateCullingFilter(gene);
         }
 

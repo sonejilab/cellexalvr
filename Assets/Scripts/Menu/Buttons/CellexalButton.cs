@@ -57,6 +57,7 @@ namespace CellexalVR.Menu.Buttons
         private int layerMaskGraph;
         private int layerMaskMenu;
         private int layerMaskKeyboard;
+        private int layermaskEnvironmentButton;
         private int layerMask;
         private bool laserInside;
 
@@ -83,7 +84,8 @@ namespace CellexalVR.Menu.Buttons
             layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
             layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
-            layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskNetwork;
+            layermaskEnvironmentButton = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
+            layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskNetwork | layermaskEnvironmentButton;
 
         }
 
@@ -142,12 +144,12 @@ namespace CellexalVR.Menu.Buttons
                 controllerInside = laserInside;
                 SetHighlighted(laserInside);
                 //summertwerk
-                
+
                 if (descriptionText.text == Description && !laserInside)
                 {
                     descriptionText.text = "";
                 }
-                
+
                 frameCount = 0;
             }
         }
