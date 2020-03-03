@@ -24,10 +24,17 @@ namespace CellexalVR.DesktopUI
 
         public void DoGenerateRandomColors(int n)
         {
+
             if (nrGroupsInput.text != "")
             {
                 n = int.Parse(nrGroupsInput.text);
             }
+
+            if (n > 254)
+            {
+                n = 254;
+            }
+
             foreach (ColorPickerButton button in settingsMenu.selectionColorButtons)//for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
             {
                 Destroy(button.transform.parent.gameObject);
@@ -45,19 +52,26 @@ namespace CellexalVR.DesktopUI
             DoGenerateRainbowColors(n);
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRainbowColors(n);
         }
-        
+
         public void DoGenerateRainbowColors(int n)
         {
+
             if (nrGroupsInput.text != "")
             {
                 n = int.Parse(nrGroupsInput.text);
             }
+
+            if (n > 254)
+            {
+                n = 254;
+            }
+
             foreach (ColorPickerButton button in settingsMenu.selectionColorButtons)//for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
             {
                 Destroy(button.transform.parent.gameObject);
             }
             settingsMenu.selectionColorButtons.Clear();
-            for (float j = 0f; j < 1.0f; j += 1.0f/(float)n)   
+            for (float j = 0f; j < 1.0f; j += 1.0f / (float)n)
             {
                 Color col = Color.HSVToRGB(j, 0.8f, 0.8f);
                 settingsMenu.AddSelectionColor(col, false);

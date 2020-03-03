@@ -45,12 +45,17 @@ namespace CellexalVR.Extensions
             {
                 return new UnityEngine.Color[] { color1 };
             }
-            var colors = new UnityEngine.Color[numColors];
             if (numColors < 1)
             {
                 CellexalError.SpawnError("Error when interpolating colors", "Can not interpolate less than 1 color.");
                 return null;
             }
+            else if (numColors > 255)
+            {
+
+            }
+
+            var colors = new UnityEngine.Color[numColors];
 
             int divider = numColors - 1;
 

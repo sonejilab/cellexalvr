@@ -149,16 +149,17 @@ namespace CellexalVR.AnalysisObjects
             Color midColor = CellexalConfig.Config.GraphMidExpressionColor;
             Color highColor = CellexalConfig.Config.GraphHighExpressionColor;
             int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+
             int nbrOfSelectionColors = CellexalConfig.Config.SelectionToolColors.Length;
 
-            if (nbrOfExpressionColors + nbrOfSelectionColors > 250)
+            if (nbrOfExpressionColors + nbrOfSelectionColors > 254)
             {
-                nbrOfExpressionColors = 250 - nbrOfSelectionColors;
-                CellexalLog.Log(string.Format("ERROR: Can not have more than 254 total expression and selection colors. Reducing expression colors to {0}. Change NumberOfExpressionColors and SelectionToolColors in the config.txt.", nbrOfExpressionColors));
+                nbrOfSelectionColors = 254 - nbrOfExpressionColors;
+                CellexalLog.Log(string.Format("ERROR: Can not have more than 254 total expression and selection colors. Reducing selection colors to {0}. Change NumberOfExpressionColors and SelectionToolColors in the settings menu or config.xml.", nbrOfExpressionColors));
             }
             else if (nbrOfExpressionColors < 3)
             {
-                CellexalLog.Log("ERROR: Can not have less than 3 gene expression colors. Increasing to 3. Change NumberOfExpressionColors in the config.txt.");
+                CellexalLog.Log("ERROR: Can not have less than 3 gene expression colors. Increasing to 3. Change NumberOfExpressionColors in the settings menu or config.xml.");
                 nbrOfExpressionColors = 3;
             }
             int halfNbrOfExpressionColors = nbrOfExpressionColors / 2;
