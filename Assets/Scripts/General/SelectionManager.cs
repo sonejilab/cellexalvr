@@ -210,10 +210,10 @@ namespace CellexalVR.General
                 referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
             }
 
-            referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(newGroup.ToString(), 1, color);
+            referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(newGroup.ToString(), 1, color);
             if (!newNode)
             {
-                referenceManager.legendManager.selectionLegend.AddOrUpdateGroup(oldGroup.ToString(), -1, Color.white);
+                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
             }
 
             //try

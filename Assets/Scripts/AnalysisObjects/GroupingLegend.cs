@@ -14,8 +14,15 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public GameObject entryPrefab;
         public GameObject extraColumn;
+        public TMPro.TextMeshPro pageNumberText;
 
-        private List<GroupingLegendEntry> entries = new List<GroupingLegendEntry>();
+        /// <summary>
+        /// List of pages with entries, access an entry with <code>entries[pageNbr][entryNbr]</code>
+        /// </summary>
+        private List<List<GroupingLegendEntry>> entries = new List<List<GroupingLegendEntry>>();
+        private int currentPageNbr = 0;
+        private int maxEntriesPerPage = 8;
+        private int addEntryToPageIndex = 0;
         private int activeCells = 0;
         private bool attached;
 
@@ -44,11 +51,14 @@ namespace CellexalVR.AnalysisObjects
             extraColumn.SetActive(true);
             GroupingLegendEntry groupingLegendEntry = entryPrefab.GetComponent<GroupingLegendEntry>();
             AdjustEntry(groupingLegendEntry, true);
-
-            foreach (GroupingLegendEntry entry in entries)
+            foreach (List<GroupingLegendEntry> page in entries)
             {
-                AdjustEntry(entry, true);
+                foreach (GroupingLegendEntry entry in page)
+                {
+                    AdjustEntry(entry, true);
+                }
             }
+
             attached = true;
         }
         private void DeActivateExtraColumn()
@@ -56,11 +66,14 @@ namespace CellexalVR.AnalysisObjects
             extraColumn.SetActive(false);
             GroupingLegendEntry groupingLegendEntry = entryPrefab.GetComponent<GroupingLegendEntry>();
             AdjustEntry(groupingLegendEntry, false);
-
-            foreach (GroupingLegendEntry entry in entries)
+            foreach (List<GroupingLegendEntry> page in entries)
             {
-                AdjustEntry(entry, false);
+                foreach (GroupingLegendEntry entry in page)
+                {
+                    AdjustEntry(entry, false);
+                }
             }
+
             attached = false;
         }
 
@@ -83,12 +96,24 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="groupName">The name of the group.</param>
         /// <param name="numberOfCells">The number of cells the group has.</param>
         /// <param name="color">The color that represents the group.</param>
-        public void AddGroup(string groupName, int numberOfCells, Color color)
+        public void AddEntry(string groupName, int numberOfCells, Color color)
         {
+            if (entries.Count == 0)
+            {
+                entries.Add(new List<GroupingLegendEntry>());
+            }
+
+            if (entries[addEntryToPageIndex].Count >= maxEntriesPerPage)
+            {
+                entries.Add(new List<GroupingLegendEntry>());
+                addEntryToPageIndex++;
+                pageNumberText.text = "Page " + (currentPageNbr + 1) + " / " + entries.Count;
+            }
+
             GameObject newEntryGameObject = Instantiate(entryPrefab);
             newEntryGameObject.SetActive(true);
             newEntryGameObject.transform.parent = transform;
-            newEntryGameObject.transform.localPosition = startPos + posInc * entries.Count;
+            newEntryGameObject.transform.localPosition = startPos + posInc * entries[addEntryToPageIndex].Count;
             newEntryGameObject.transform.localRotation = Quaternion.identity;
             GroupingLegendEntry newEntry = newEntryGameObject.GetComponent<GroupingLegendEntry>();
             newEntry.filterButton.SetActive(attached);
@@ -100,34 +125,53 @@ namespace CellexalVR.AnalysisObjects
             newEntry.SetPanelText(groupName, numberOfCells, percentOfSelectedString, percentOfAllString, color);
             UpdatePercentages();
             newEntry.transform.localScale = Vector3.one;
-            entries.Add(newEntry);
+
+            entries[addEntryToPageIndex].Add(newEntry);
+
+            if (addEntryToPageIndex != currentPageNbr)
+            {
+                newEntryGameObject.SetActive(false);
+            }
+
         }
 
         /// <summary>
         /// Removes a group from the legend.
         /// </summary>
         /// <param name="groupName">The name of the group to remove.</param>
-        public void RemoveGroup(string groupName)
+        public void RemoveEntry(string groupName)
         {
-            int index = entries.FindIndex((item) => item.groupName.text == groupName);
-            if (index != -1)
+            int pageIndex = 0;
+            int index = -1;
+            // find the right page
+            for (; pageIndex < entries.Count; ++pageIndex)
             {
-                GroupingLegendEntry entry = entries[index];
-                entries.RemoveAt(index);
-                activeCells -= entry.numberOfCells;
-                Destroy(entry.gameObject);
-                UpdatePercentages();
-                UpdatePositions();
+                index = entries[pageIndex].FindIndex((item) => item.groupName.text == groupName);
+                if (index != -1)
+                {
+                    // remove the entry and return
+                    GroupingLegendEntry entry = entries[pageIndex][index];
+                    entries.RemoveAt(index);
+                    activeCells -= entry.numberOfCells;
+                    Destroy(entry.gameObject);
+                    UpdatePercentages();
+                    UpdatePositions();
+                    return;
+                }
             }
         }
 
         private void ClearLegend()
         {
-            foreach (GroupingLegendEntry entry in entries)
+            foreach (List<GroupingLegendEntry> page in entries)
             {
-                Destroy(entry.gameObject);
+                foreach (GroupingLegendEntry entry in page)
+                {
+                    Destroy(entry.gameObject);
+                }
             }
             entries.Clear();
+            currentPageNbr = 0;
         }
 
         /// <summary>
@@ -135,10 +179,29 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private void UpdatePositions()
         {
-            for (int i = 0; i < entries.Count; ++i)
+
+            for (int pageNbr = 0; pageNbr < entries.Count; pageNbr++)
             {
-                entries[i].transform.localPosition = startPos + i * posInc;
+                List<GroupingLegendEntry> page = entries[pageNbr];
+                if (pageNbr < entries.Count - 2 && page.Count < 8 && entries[pageNbr + 1].Count > 0)
+                {
+                    // too few entries in this page, take some from the next page
+                    page.AddRange(entries[pageNbr + 1].Take(8 - page.Count));
+                }
+
+                for (int i = 0; i < page.Count; ++i)
+                {
+                    page[i].transform.localPosition = startPos + i * posInc;
+                }
             }
+
+            if (entries[entries.Count - 1].Count == 0)
+            {
+                // remove the last page if it is empty
+                entries.RemoveAt(entries.Count - 1);
+            }
+
+
         }
 
         /// <summary>
@@ -146,13 +209,16 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private void UpdatePercentages()
         {
-            foreach (GroupingLegendEntry remainingEntry in entries)
+            foreach (List<GroupingLegendEntry> page in entries)
             {
-                int numberOfCells = remainingEntry.numberOfCells;
-                remainingEntry.numberOfCellsText.text = numberOfCells.ToString();
-                string percentOfSelectedString = ((float)numberOfCells / activeCells).ToString("P");
-                string percentOfAllString = ((float)numberOfCells / referenceManager.cellManager.GetNumberOfCells()).ToString("P");
-                remainingEntry.UpdatePercentages(percentOfSelectedString, percentOfAllString);
+                foreach (GroupingLegendEntry remainingEntry in page)
+                {
+                    int numberOfCells = remainingEntry.numberOfCells;
+                    remainingEntry.numberOfCellsText.text = numberOfCells.ToString();
+                    string percentOfSelectedString = ((float)numberOfCells / activeCells).ToString("P");
+                    string percentOfAllString = ((float)numberOfCells / referenceManager.cellManager.GetNumberOfCells()).ToString("P");
+                    remainingEntry.UpdatePercentages(percentOfSelectedString, percentOfAllString);
+                }
             }
         }
 
@@ -162,21 +228,27 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="groupName">The name of the group.</param>
         /// <param name="numberOfCellsToAdd">The number of cells to add or remove from the group.</param>
         /// <param name="color">The color the group should have if it is created. If <paramref name="numberOfCellsToAdd"/> is negative (cells are removed from the group), this parameter does not matter.</param>
-        public void AddOrUpdateGroup(string groupName, int numberOfCellsToAdd, Color color)
+        public void AddOrUpdateEntry(string groupName, int numberOfCellsToAdd, Color color)
         {
-            GroupingLegendEntry foundEntry = entries.FirstOrDefault((entry) => entry.groupName.text == groupName);
+            GroupingLegendEntry foundEntry = null;
+            int pageIndex = 0;
+            while (foundEntry == null && pageIndex < entries.Count)
+            {
+                foundEntry = entries[pageIndex].FirstOrDefault((entry) => entry.groupName.text == groupName);
+                pageIndex++;
+            }
             if (foundEntry)
             {
                 foundEntry.numberOfCells += numberOfCellsToAdd;
                 if (foundEntry.numberOfCells == 0)
                 {
-                    RemoveGroup(groupName);
+                    RemoveEntry(groupName);
                 }
                 UpdatePercentages();
             }
             else
             {
-                AddGroup(groupName, numberOfCellsToAdd, color);
+                AddEntry(groupName, numberOfCellsToAdd, color);
                 //if (attached)
                 //{
                 //    referenceManager.cullingFilterManager.AddSelectionGroupToFilter(groupName);
@@ -184,6 +256,33 @@ namespace CellexalVR.AnalysisObjects
             }
 
             activeCells += numberOfCellsToAdd;
+        }
+
+        /// <summary>
+        /// Changes the current page.
+        /// </summary>
+        /// <param name="incrementPageNbr">True if the page number should be incremented by one, false if it should be decremented by one.</param>
+        public void ChangePage(bool incrementPageNbr)
+        {
+            if (currentPageNbr == 0 && !incrementPageNbr ||
+                currentPageNbr == entries.Count - 1 && incrementPageNbr)
+            {
+                return;
+            }
+
+            foreach (GroupingLegendEntry entry in entries[currentPageNbr])
+            {
+                entry.gameObject.SetActive(false);
+            }
+
+            currentPageNbr += incrementPageNbr ? 1 : -1;
+
+            foreach (GroupingLegendEntry entry in entries[currentPageNbr])
+            {
+                entry.gameObject.SetActive(true);
+            }
+
+            pageNumberText.text = "Page " + (currentPageNbr + 1) + " / " + entries.Count;
         }
     }
 }
