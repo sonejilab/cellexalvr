@@ -107,6 +107,7 @@ namespace CellexalVR.DesktopUI
             settingsMenu.heatmapMidExpression.Color = CellexalConfig.Config.HeatmapMidExpressionColor;
             settingsMenu.heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
         }
+        
         public void SetGraphColormap()
         {
             settingsMenu.unsavedChanges = true;
@@ -131,6 +132,7 @@ namespace CellexalVR.DesktopUI
                     CellexalConfig.Config.GraphLowExpressionColor = new Color(0.050383f, 0.029803f, 0.527975f);
                     break;
             }
+            settingsMenu.referenceManager.graphGenerator.CreateShaderColors();
             settingsMenu.graphHighExpression.Color = CellexalConfig.Config.GraphHighExpressionColor;
             settingsMenu.graphMidExpression.Color = CellexalConfig.Config.GraphMidExpressionColor;
             settingsMenu.graphLowExpression.Color = CellexalConfig.Config.GraphLowExpressionColor;
