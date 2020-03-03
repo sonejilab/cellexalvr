@@ -31,7 +31,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public ArrayList _expressionResult;
         public string[] _coordResult;
         public string[,] _sep_coordResult;
-        private string[] _velResult;
+        public string[] _velResult;
         public string[] _attrResult;
         public List<string> attributes;
 
