@@ -209,30 +209,28 @@ namespace CellexalVR.AnalysisLogic
             while (referenceManager.h5Reader.busy)
                 yield return null;
 
-            string[] vels = referenceManager.h5Reader._coordResult;
+            string[] vels = referenceManager.h5Reader._velResult;
             string[] cellNames = referenceManager.h5Reader.index2cellname;
 
             for (int i = 0; i < cellNames.Length; i++)
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellNames[i]);
 
-                float diffX = float.Parse(vels[i * 3],
-                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                float diffY = float.Parse(vels[i * 3 + 1],
-                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                float diffZ = float.Parse(vels[i * 3 + 2], 
-                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffX = float.Parse(vels[i * 3]); //,System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffY = float.Parse(vels[i * 3 + 1]); //, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float diffZ = float.Parse(vels[i * 3 + 2]);// System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                 Vector3 diff = new Vector3(diffX, diffY, diffZ);
                 //Method
-                diff *= 30; //arbitrary scaling, ofcourse.. DUH!
+                Vector3 diffScaled = diff * 30; //arbitrary scaling, ofcourse.. DUH!
                                                   
-                diff /= originalGraph.longestAxis;
+                diffScaled /= originalGraph.longestAxis;
                 if (i % 1000 == 0)
                 {
                     UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
+                    UnityEngine.Debug.Log("(" + diffScaled.x + ", " + diffScaled.y + ", " + diffScaled.z + ")");
                 }
                 if (point != null)
-                    velocities[point] = diff / 5f;
+                    velocities[point] = diffScaled / 5f;
                 else
                     print(cellNames[i] + " does not exist");
             }
