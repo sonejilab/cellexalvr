@@ -55,3 +55,7 @@
 */lfs/*.meta linguist-generated
 */lfs/*.prefab linguist-generated
 */lfs/*.unity linguist-generated
+
+# FFmpeg zip
+Assets/StreamingAssets/ffmpeg/ffmpeg.exe
+Assets/StreamingAssets/ffmpeg/ffmpeg.zip
