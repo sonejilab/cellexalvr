@@ -78,6 +78,7 @@ namespace CellexalVR.DesktopUI
 
         private ColorPicker colorPicker;
         private Config beforeChanges;
+        [HideInInspector]
         public bool unsavedChanges;
 
         private void OnValidate()

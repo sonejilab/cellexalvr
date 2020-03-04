@@ -1,5 +1,6 @@
 ﻿using CellexalVR.Filters;
 using CellexalVR.General;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private List<List<GroupingLegendEntry>> entries = new List<List<GroupingLegendEntry>>();
         private int currentPageNbr = 0;
-        private int maxEntriesPerPage = 8;
+        private int maxEntriesPerPage = 10;
         private int addEntryToPageIndex = 0;
         private int activeCells = 0;
         private bool attached;
@@ -151,7 +152,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     // remove the entry and return
                     GroupingLegendEntry entry = entries[pageIndex][index];
-                    entries.RemoveAt(index);
+                    entries[pageIndex].RemoveAt(index);
                     activeCells -= entry.numberOfCells;
                     Destroy(entry.gameObject);
                     UpdatePercentages();
@@ -175,18 +176,30 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Updates the positions of all groups. Should be called when a group is removed.
+        /// Updates the positions of all groups. Should be called when an entry is removed.
         /// </summary>
         private void UpdatePositions()
         {
+            if (entries.Count == 0)
+            {
+                return;
+            }
 
             for (int pageNbr = 0; pageNbr < entries.Count; pageNbr++)
             {
                 List<GroupingLegendEntry> page = entries[pageNbr];
-                if (pageNbr < entries.Count - 2 && page.Count < 8 && entries[pageNbr + 1].Count > 0)
+                if (pageNbr < entries.Count - 1 && page.Count < maxEntriesPerPage && entries[pageNbr + 1].Count > 0)
                 {
                     // too few entries in this page, take some from the next page
-                    page.AddRange(entries[pageNbr + 1].Take(8 - page.Count));
+                    int entriesToMove = Math.Min(maxEntriesPerPage - page.Count, entries[pageNbr + 1].Count);
+                    page.AddRange(entries[pageNbr + 1].Take(entriesToMove));
+
+                    bool activateMoved = pageNbr == currentPageNbr;
+                    for (int i = 0; i < entriesToMove; ++i)
+                    {
+                        entries[pageNbr + 1][i].gameObject.SetActive(activateMoved);
+                    }
+                    entries[pageNbr + 1].RemoveRange(0, entriesToMove);
                 }
 
                 for (int i = 0; i < page.Count; ++i)
@@ -195,12 +208,17 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            if (entries[entries.Count - 1].Count == 0)
+            if (addEntryToPageIndex > 0 && entries[entries.Count - 1].Count == 0)
             {
                 // remove the last page if it is empty
                 entries.RemoveAt(entries.Count - 1);
+                addEntryToPageIndex--;
+                if (currentPageNbr == entries.Count)
+                {
+                    ChangePage(false);
+                }
+                pageNumberText.text = "Page " + (currentPageNbr + 1) + " / " + entries.Count;
             }
-
 
         }
 
@@ -264,15 +282,20 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="incrementPageNbr">True if the page number should be incremented by one, false if it should be decremented by one.</param>
         public void ChangePage(bool incrementPageNbr)
         {
-            if (currentPageNbr == 0 && !incrementPageNbr ||
+            if (entries.Count == 0 ||
+                currentPageNbr == 0 && !incrementPageNbr ||
                 currentPageNbr == entries.Count - 1 && incrementPageNbr)
             {
                 return;
             }
 
-            foreach (GroupingLegendEntry entry in entries[currentPageNbr])
+            // if we are on the last page and it is removed the current page number can be outside the actual pages
+            if (currentPageNbr >= 0 && currentPageNbr < entries.Count)
             {
-                entry.gameObject.SetActive(false);
+                foreach (GroupingLegendEntry entry in entries[currentPageNbr])
+                {
+                    entry.gameObject.SetActive(false);
+                }
             }
 
             currentPageNbr += incrementPageNbr ? 1 : -1;
