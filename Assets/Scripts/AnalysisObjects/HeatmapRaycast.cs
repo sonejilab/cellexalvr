@@ -161,7 +161,7 @@ namespace CellexalVR.Interaction
                 {
                     // if we hit the heatmap but not any area of interest, like the borders or any space in between
                     multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
-                    heatmap.ResetHeatmapHighlight();
+                    ResetHeatmapHighlight();
                     //heatmap.enlargedGeneText.gameObject.SetActive(false);
                     //heatmap.enlargedGeneText.gameObject.SetActive(false);
                 }
@@ -170,7 +170,7 @@ namespace CellexalVR.Interaction
             {
                 // if we don't hit the heatmap at all
                 multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
-                heatmap.ResetHeatmapHighlight();
+                ResetHeatmapHighlight();
             }
             if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             {
@@ -562,6 +562,15 @@ namespace CellexalVR.Interaction
         {
             selecting = false;
             movingSelection = false;
+        }
+
+        public void ResetHeatmapHighlight()
+        {
+            if (cellsToHighlight != null && cellsToHighlight.Length > 0)
+            {
+                cellManager.HighlightCells(cellsToHighlight, false);
+            }
+            heatmap.ResetHeatmapHighlight();
         }
 
         /// <summary>
