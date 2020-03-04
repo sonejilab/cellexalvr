@@ -18,6 +18,7 @@ namespace CellexalVR.General
         void Update()
         {
             transform.LookAt(CameraToLookAt);
+            transform.Rotate(0f, 180f, 0f);
         }
     }
 }

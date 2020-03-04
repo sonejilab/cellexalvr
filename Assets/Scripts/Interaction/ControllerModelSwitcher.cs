@@ -171,7 +171,6 @@ namespace CellexalVR.Interaction
                 case Model.Keyboard:
                     //keyboard.SetKeyboardVisible(true);
                     //rightLaser.enabled = true;
-                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 

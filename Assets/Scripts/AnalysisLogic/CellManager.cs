@@ -526,12 +526,12 @@ namespace CellexalVR.AnalysisLogic
             }
             CellexalLog.Log("Colored graphs by " + attributeType);
             int numberOfCells = 0;
-            Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
-            for (int i = 0; i < referenceManager.graphManager.Graphs.Count; ++i)
-            {
-                pos[referenceManager.graphManager.Graphs[i].GraphName] = new List<Vector3>();
+            // Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
+            // foreach (Graph graph in referenceManager.graphManager.Graphs)
+            // {
+            //     pos[graph.GraphName] = new List<Vector3>();
                 //pos[referenceManager.graphGenerator.CreateSubGraphs]
-            }
+            // }
 
             foreach (Cell cell in cells.Values)
             {
@@ -550,10 +550,10 @@ namespace CellexalVR.AnalysisLogic
                         selectionList.Remove(gp);
                     }
 
-                    foreach (var graphPoint in cell.GraphPoints)
-                    {
-                        pos[graphPoint.parent.GraphName].Add(graphPoint.Position);
-                    }
+                    // foreach (var graphPoint in cell.GraphPoints)
+                    // {
+                    //     pos[graphPoint.parent.GraphName].Add(graphPoint.Position);
+                    // }
                 }
             }
             int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());

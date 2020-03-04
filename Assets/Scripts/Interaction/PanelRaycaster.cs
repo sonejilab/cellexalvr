@@ -1,5 +1,6 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
+using VRTK;
 
 namespace CellexalVR.Interaction
 {
@@ -43,11 +44,13 @@ namespace CellexalVR.Interaction
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
+
             if (CrossSceneInformation.Normal)
             {
                 rightController = referenceManager.rightController;
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
+
             if (referenceManager.geneKeyboard)
             {
                 referenceManager.geneKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
@@ -59,9 +62,14 @@ namespace CellexalVR.Interaction
 
                 foreach (var panel in GetComponentsInChildren<PreviousSearchesLock>(true))
                 {
-                    panel.SetMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial, newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial, newLockedHighlightMaterial, referenceManager.geneKeyboard.ScaleCorrection());
+                    panel.SetMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial,
+                        newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial,
+                        newLockedHighlightMaterial, referenceManager.geneKeyboard.ScaleCorrection());
                 }
-                referenceManager.geneKeyboard.AddMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial, newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial, newLockedHighlightMaterial);
+
+                referenceManager.geneKeyboard.AddMaterials(newUnlockedNormalMaterial, newUnlockedHighlightMaterial,
+                    newUnlockedHighlightMaterial, newLockedNormalMaterial, newLockedHighlightMaterial,
+                    newLockedHighlightMaterial);
 
                 Material newCorrelatedGenesNormalMaterial = new Material(correlatedGenesNormalMaterial);
                 Material newCorrelatedGenesHighlightMaterial = new Material(correlatedGenesHighlightMaterial);
@@ -69,29 +77,42 @@ namespace CellexalVR.Interaction
 
                 foreach (var panel in GetComponentsInChildren<CorrelatedGenesPanel>(true))
                 {
-                    panel.SetMaterials(newCorrelatedGenesNormalMaterial, newCorrelatedGenesHighlightMaterial, newCorrelatedGenesPressedMaterial, referenceManager.geneKeyboard.ScaleCorrection());
+                    panel.SetMaterials(newCorrelatedGenesNormalMaterial, newCorrelatedGenesHighlightMaterial,
+                        newCorrelatedGenesPressedMaterial, referenceManager.geneKeyboard.ScaleCorrection());
                 }
-                referenceManager.geneKeyboard.AddMaterials(newCorrelatedGenesNormalMaterial, newCorrelatedGenesHighlightMaterial, newCorrelatedGenesPressedMaterial);
+
+                referenceManager.geneKeyboard.AddMaterials(newCorrelatedGenesNormalMaterial,
+                    newCorrelatedGenesHighlightMaterial, newCorrelatedGenesPressedMaterial);
             }
+
             if (referenceManager.folderKeyboard)
             {
-                referenceManager.folderKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                referenceManager.folderKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+                    keyPressedMaterial);
             }
+
             if (referenceManager.webBrowserKeyboard)
             {
-                referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+                    keyPressedMaterial);
             }
+
             if (referenceManager.filterNameKeyboard)
             {
-                referenceManager.filterNameKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                referenceManager.filterNameKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+                    keyPressedMaterial);
             }
+
             if (referenceManager.filterOperatorKeyboard)
             {
-                referenceManager.filterOperatorKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                referenceManager.filterOperatorKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+                    keyPressedMaterial);
             }
+
             if (referenceManager.filterValueKeyboard)
             {
-                referenceManager.filterValueKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial, keyPressedMaterial);
+                referenceManager.filterValueKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+                    keyPressedMaterial);
             }
 
             /*
@@ -141,24 +162,26 @@ namespace CellexalVR.Interaction
         private void Update()
         {
             if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
-                !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled()))
+                                                     !grabbingObject && !referenceManager.selectionToolCollider
+                                                         .IsSelectionToolEnabled()))
                 return;
 
             var raycastingSource = referenceManager.rightLaser.transform;
-            var device = SteamVR_Controller.Input((int)rightController.index);
+            var device = SteamVR_Controller.Input((int) rightController.index);
             var ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 // if we hit something this frame.
                 var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
-
-
                 if (hitPanel != null)
                 {
+                    referenceManager.rightLaser.tracerVisibility =
+                        VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                     {
                         controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
                     }
+
                     //referenceManager.laserPointerController.ToggleLaser(true);
                     var keyboardHandler = hitPanel.GetComponentInParent<KeyboardHandler>();
                     Vector2 uv2 = keyboardHandler.ToUv2Coord(hit.point);
@@ -187,6 +210,7 @@ namespace CellexalVR.Interaction
                     {
                         keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
                     }
+
                     // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                     lastHit.SetHighlighted(false);
                     lastHit = null;
@@ -195,7 +219,6 @@ namespace CellexalVR.Interaction
 
                     referenceManager.laserPointerController.Override = false;
                 }
-
             }
             else if (lastHit != null)
             {
@@ -209,9 +232,9 @@ namespace CellexalVR.Interaction
                 {
                     keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
                 }
+
                 lastHit = null;
             }
-
         }
     }
 }

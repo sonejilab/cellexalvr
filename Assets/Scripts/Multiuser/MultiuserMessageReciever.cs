@@ -124,8 +124,7 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageToggleLaser(bool active, float originX, float originY, float originZ,
-            float hitX, float hitY, float hitZ, int ownerId)
+        public void RecieveMessageToggleLaser(bool active, int ownerId)
         {
             if (ownerId == referenceManager.multiuserMessageSender.photonView.ownerId) return;
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
@@ -135,8 +134,6 @@ namespace CellexalVR.Multiuser
                 lr = mlm.AddLaser(ownerId);
             }
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
-            lr.SetPosition(0, new Vector3(originX, originY, originZ));
-            lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
             lr.gameObject.SetActive(active);
         }
 

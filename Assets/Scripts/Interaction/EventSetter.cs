@@ -74,7 +74,7 @@ namespace CellexalVR.Interaction
 
         public void RightMenuUpHoldEvent()
         {
-            if (referenceManager.rightLaser.IsTracerVisible() &&
+            if (referenceManager.rightLaser.enabled &&
                 referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
             {
                 pushBack.Push();
@@ -83,7 +83,7 @@ namespace CellexalVR.Interaction
 
         public void RightMenuDownHoldEvent()
         {
-            if (referenceManager.rightLaser.IsTracerVisible() &&
+            if (referenceManager.rightLaser.enabled &&
                 referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
             {
                 pushBack.Pull();

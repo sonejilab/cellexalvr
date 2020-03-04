@@ -153,7 +153,7 @@ namespace CellexalVR.SceneObjects
             moveLoader = true;
         }
 
-        void OnTriggerEnter(Collider collider)
+        private void OnTriggerEnter(Collider collider)
         {
             if (collider.gameObject.CompareTag("Sphere"))
             {

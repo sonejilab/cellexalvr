@@ -158,13 +158,11 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageDisableColliders", PhotonTargets.Others, name);
         }
 
-        public void SendMessageToggleLaser(bool active, Transform origin, Vector3 hit)
+        public void SendMessageToggleLaser(bool active)
         {
             if (!multiplayer) return;
-            Vector3 position = origin.position;
             coordinator.photonView.RPC("RecieveMessageToggleLaser", PhotonTargets.Others,
-                active, position.x, position.y, position.z,
-                hit.x, hit.y, hit.z, coordinator.photonView.ownerId);
+                active, coordinator.photonView.ownerId);
         }
 
         public void SendMessageMoveLaser(Transform origin, Vector3 hit)

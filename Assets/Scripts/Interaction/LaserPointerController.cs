@@ -13,9 +13,11 @@ namespace CellexalVR.Interaction
     public class LaserPointerController : MonoBehaviour
     {
         private int frame;
-        private GameObject tempHit;
-        private int layerMask;
-        private int layerMaskKeyboard;
+        private int layerMaskEnv;
+        private int layerMaskMenu;
+        private int environmentButtonLayer;
+        private int menuLayer;
+        private int keyboardLayer;
 
         private int layerMaskController;
 
@@ -26,8 +28,6 @@ namespace CellexalVR.Interaction
         private bool touchingObject;
         private bool hitLastFrame;
         private ControllerModelSwitcher controllerModelSwitcher;
-        private int environmentButtonLayer;
-        private int menuLayer;
 
         public ReferenceManager referenceManager;
         public Transform origin;
@@ -46,12 +46,12 @@ namespace CellexalVR.Interaction
         void Start()
         {
             frame = 0;
-            tempHit = null;
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             environmentButtonLayer = LayerMask.NameToLayer("EnvironmentButtonLayer");
+            keyboardLayer = LayerMask.NameToLayer("KeyboardLayer");
             menuLayer = LayerMask.NameToLayer("MenuLayer");
-            layerMask = 1 << menuLayer;
-            layerMask |= 1 << environmentButtonLayer;
+            layerMaskMenu = 1 << menuLayer;
+            layerMaskEnv = 1 << environmentButtonLayer | 1 << keyboardLayer;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             //CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
             //CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
@@ -69,51 +69,48 @@ namespace CellexalVR.Interaction
         private void Frame5Update()
         {
             RaycastHit hit;
-            Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMask);
+            origin.localRotation = Quaternion.Euler(25f, 0, 0);
+            Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
             if (hit.collider)
             {
-                // if we hit anything
-                if (hit.collider.gameObject.layer == menuLayer)
+                // if we hit a button in the menu
+                referenceManager.rightLaser.enabled = true;
+                if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
                 {
-                    // if we hit a button in the menu
-                    referenceManager.rightLaser.enabled = true;
-                    origin.localRotation = Quaternion.Euler(15f, 0, 0);
-                    tempHit = hit.collider.gameObject;
-                    if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
-                    {
-                        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
-                    }
+                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
                 }
-                else if (hit.collider.gameObject.layer == environmentButtonLayer)
-                {
-                    // if we hit a button in the environment
-                    if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                    {
-                        controllerModelSwitcher.ActivateDesiredTool();
-                    }
-
-                    referenceManager.rightLaser.enabled = true;
-                    referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
-                    origin.localRotation = Quaternion.Euler(0, 0, 0);
-                    referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
-                }
+                return;
             }
-            else
+            origin.localRotation = Quaternion.Euler(0f, 0, 0);
+            Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
+            if (hit.collider)
             {
+                // if we hit a button in the environment (keyboard or env button)
+                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                {
+                    controllerModelSwitcher.ActivateDesiredTool();
+                }
+
+                referenceManager.rightLaser.enabled = true;
+                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 origin.localRotation = Quaternion.Euler(0, 0, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
-                if (alwaysActive)
+                return;
+            }
+            origin.localRotation = Quaternion.Euler(0, 0, 0);
+            referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
+            if (alwaysActive)
+            {
+                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                 {
-                    if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                    {
-                        controllerModelSwitcher.ActivateDesiredTool();
-                    }
+                    controllerModelSwitcher.ActivateDesiredTool();
                 }
-                else
-                {
-                    referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-                    referenceManager.rightLaser.enabled = false;
-                }
+            }
+            else if (referenceManager.rightLaser.enabled) 
+            {
+                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+                referenceManager.rightLaser.enabled = false;
+                referenceManager.multiuserMessageSender.SendMessageToggleLaser(false);
             }
 
             if (alwaysActive || Override) return;
@@ -124,24 +121,22 @@ namespace CellexalVR.Interaction
             }
         }
 
-
         // Toggle Laser from laser button. Laser should then be active until toggled off.
         public void ToggleLaser(bool active)
         {
             alwaysActive = active;
-            referenceManager.rightLaser.tracerVisibility = active ?
-                VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn :
-                VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+            referenceManager.rightLaser.tracerVisibility = active
+                ? VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn
+                : VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
 
             //referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
                 referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
             origin.localRotation = Quaternion.identity;
-            RaycastHit laserHit = referenceManager.rightLaser.GetDestinationHit();
-            referenceManager.multiuserMessageSender.SendMessageToggleLaser(active, origin, laserHit.point);
+            referenceManager.multiuserMessageSender.SendMessageToggleLaser(active);
         }
 
-        void TouchingObject(bool touch)
+        private void TouchingObject(bool touch)
         {
             referenceManager.rightLaser.enabled = !touch;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)

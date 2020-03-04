@@ -1,4 +1,6 @@
-﻿using CellexalVR.SceneObjects;
+﻿using System.Collections.Generic;
+using CellexalVR.General;
+using CellexalVR.SceneObjects;
 using CellexalVR.Tutorial;
 using UnityEngine;
 
@@ -12,6 +14,21 @@ namespace CellexalVR.Interaction
         public GameObject throwMarker;
         private CellsToLoad reset;
         private BringBackObj resetObj;
+        private List<GameObject> throwMarkers = new List<GameObject>();
+
+        private void Start()
+        {
+            CellexalEvents.GraphsLoaded.AddListener(ClearMarkers);
+        }
+
+        private void ClearMarkers()
+        {
+            foreach (GameObject marker in throwMarkers)
+            {
+                Destroy(marker);
+            }
+            throwMarkers.Clear();
+        }
 
         private void FixedUpdate()
         {
@@ -20,6 +37,7 @@ namespace CellexalVR.Interaction
                 var marker = Instantiate(throwMarker);
                 marker.transform.position = reset.gameObject.transform.position;
                 marker.transform.LookAt(Vector3.zero);
+                throwMarkers.Add(marker);
                 TextMesh textmesh = marker.GetComponentInChildren<TextMesh>();
                 float distance = Vector3.Distance(Vector3.zero, marker.transform.position);
                 textmesh.text = distance + " m!";
@@ -32,6 +50,7 @@ namespace CellexalVR.Interaction
                 var marker = Instantiate(throwMarker);
                 marker.transform.position = resetObj.gameObject.transform.position;
                 marker.transform.LookAt(Vector3.zero);
+                throwMarkers.Add(marker);
                 TextMesh textmesh = marker.GetComponentInChildren<TextMesh>();
                 float distance = Vector3.Distance(Vector3.zero, marker.transform.position);
                 textmesh.text = distance + " m!";

@@ -189,10 +189,10 @@ namespace CellexalVR.AnalysisObjects
                     }
                     yield return null;
                 }
-                if (clusters.Count > 0)
-                {
-                    AddParticles(graph1, graph2);
-                }
+                // if (clusters.Count > 0)
+                // {
+                //     AddParticles(graph1, graph2);
+                // }
             }
 
             yield return null;
@@ -595,7 +595,6 @@ namespace CellexalVR.AnalysisObjects
             }
             foreach (GameObject obj in particleSystems)
             {
-                print("Destroy ps");
                 Destroy(obj);
             }
             particleSystems.Clear();
