@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4057009611922964}
   - component: {fileID: 33585651276989058}
   - component: {fileID: 23109400750933390}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Heatboard Backside
   m_TagString: HeatBoard
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 65461805522477278}
   - component: {fileID: 212553960895205308}
   - component: {fileID: 114527806273188160}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: GO Analysis Button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 33633902300321650}
   - component: {fileID: 23935802497975350}
   - component: {fileID: 65312592390557510}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Left Side Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,7 +300,7 @@ GameObject:
   - component: {fileID: 4221891150752330}
   - component: {fileID: 33725666399917188}
   - component: {fileID: 23247609112159624}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Moving Marker Quad Y
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 33591482654792772}
   - component: {fileID: 222628750242176764}
   - component: {fileID: 114085194017171334}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Highlight Marker Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -581,7 +581,7 @@ GameObject:
   - component: {fileID: 4571133091875870}
   - component: {fileID: 33431010593856678}
   - component: {fileID: 23452331074222536}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Highlight Marker Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -661,7 +661,7 @@ GameObject:
   - component: {fileID: 33091442038129060}
   - component: {fileID: 222780446146799892}
   - component: {fileID: 114395360405538306}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Status Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -865,7 +865,7 @@ GameObject:
   - component: {fileID: 33006634576879074}
   - component: {fileID: 222182426453860668}
   - component: {fileID: 114362847402628706}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Buttons Description Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1074,7 +1074,7 @@ GameObject:
   - component: {fileID: 64373526009168968}
   - component: {fileID: 54283347973449174}
   - component: {fileID: 1590412641064584483}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Heatboard
   m_TagString: HeatBoard
   m_Icon: {fileID: 0}
@@ -1328,7 +1328,7 @@ GameObject:
   - component: {fileID: 65735461862260468}
   - component: {fileID: 212536343117244114}
   - component: {fileID: 114900856164061844}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Save Heatmap Button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -1448,7 +1448,7 @@ GameObject:
   - component: {fileID: 4837238345390544}
   - component: {fileID: 33781567092213330}
   - component: {fileID: 23476945988537276}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Confirm Marker Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1523,7 +1523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4755575079968828}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Left Side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1568,7 +1568,7 @@ GameObject:
   - component: {fileID: 33278290103194386}
   - component: {fileID: 222112461497853226}
   - component: {fileID: 114230615009697458}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: HighlightGeneText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1771,7 +1771,7 @@ GameObject:
   - component: {fileID: 65560021837603544}
   - component: {fileID: 212472031655170656}
   - component: {fileID: 114806923698322708}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Recolour Heatmap Button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -1891,7 +1891,7 @@ GameObject:
   - component: {fileID: 65827202820445754}
   - component: {fileID: 212754480679624130}
   - component: {fileID: 114749635933191596}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Create new heatmap button
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -2010,7 +2010,7 @@ GameObject:
   - component: {fileID: 4562163557657150}
   - component: {fileID: 33114940810854664}
   - component: {fileID: 23897295222511826}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Left Side Background Backside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2087,7 +2087,7 @@ GameObject:
   - component: {fileID: 4310061517961730}
   - component: {fileID: 33247603310950640}
   - component: {fileID: 23360884901442750}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Heatboard Backside outline
   m_TagString: HeatBoard
   m_Icon: {fileID: 0}
@@ -2165,7 +2165,7 @@ GameObject:
   - component: {fileID: 33382916712497472}
   - component: {fileID: 23582278204048046}
   - component: {fileID: 120058366770951280}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: HighlightGene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2340,7 +2340,7 @@ GameObject:
   - component: {fileID: 222998020381580234}
   - component: {fileID: 114284576377539384}
   - component: {fileID: 120468694892291922}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: GeneName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2637,7 +2637,7 @@ GameObject:
   - component: {fileID: 4259163770222306}
   - component: {fileID: 33420061837342780}
   - component: {fileID: 23443152591704726}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Moving Marker Quad X
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2716,7 +2716,7 @@ GameObject:
   - component: {fileID: 4410415972967414746}
   - component: {fileID: 7538830225386713178}
   - component: {fileID: 6631209821389576899}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Bar Description Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2921,7 +2921,7 @@ GameObject:
   - component: {fileID: 7845704167530007967}
   - component: {fileID: 3799112481271525604}
   - component: {fileID: 3720813009349744937}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Reorder
   m_TagString: Menu Controller Collider
   m_Icon: {fileID: 0}
@@ -3042,7 +3042,7 @@ GameObject:
   - component: {fileID: 4544728945964017931}
   - component: {fileID: 6252656793907282161}
   - component: {fileID: 8109866695869690209}
-  m_Layer: 16
+  m_Layer: 17
   m_Name: Bar Info Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

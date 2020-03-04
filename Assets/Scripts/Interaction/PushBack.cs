@@ -24,6 +24,7 @@ namespace CellexalVR.Interaction
         private bool push;
         private bool pull;
         private int maxDist = 10;
+        private int layerMask;
 
         private void OnValidate()
         {
@@ -33,13 +34,15 @@ namespace CellexalVR.Interaction
             }
         }
 
-        void Start()
+        private void Start()
         {
             if (CrossSceneInformation.Ghost || CrossSceneInformation.Spectator)
             {
                 Destroy(this);
             }
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer")
+                | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
         }
 
         /// <summary>
@@ -48,40 +51,37 @@ namespace CellexalVR.Interaction
         public void Pull()
         {
             raycastingSource = this.transform;
-            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist + 5, layerMask);
-            if (hit.collider)
+            if (!hit.collider) return;
+            if (hit.transform.gameObject.name.Contains("Slice"))
             {
-                if (hit.transform.gameObject.name.Contains("Slice"))
-                {
-                    return;
-                }
-                // don't let the thing become smaller than what it was originally
-                // this could cause some problems if the user rescales the objects while they are far away
-                if (Vector3.Distance(hit.transform.position, raycastingSource.position) < 0.5f)
-                {
-                    pull = false;
-                    return;
-                }
-                Vector3 dir = hit.transform.position - raycastingSource.position;
-                dir = -dir.normalized;
-                hit.transform.position += dir * distanceMultiplier;
-                if (hit.transform.GetComponent<Graph>())
-                {
-                    referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-                }
-                else if (hit.transform.GetComponent<NetworkCenter>())
-                {
-                    hit.transform.LookAt(raycastingSource.transform);
-                    hit.transform.Rotate(0, 0, 180);
-                    referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-                }
-                else if (hit.transform.GetComponent<Heatmap>())
-                {
-                    hit.transform.LookAt(raycastingSource.transform);
-                    hit.transform.Rotate(0, 180, 0);
-                    referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-                }
+                return;
+            }
+            // don't let the thing become smaller than what it was originally
+            // this could cause some problems if the user rescales the objects while they are far away
+            if (Vector3.Distance(hit.transform.position, raycastingSource.position) < 0.5f)
+            {
+                pull = false;
+                return;
+            }
+            Vector3 dir = hit.transform.position - raycastingSource.position;
+            dir = -dir.normalized;
+            hit.transform.position += dir * distanceMultiplier;
+            if (hit.transform.GetComponent<Graph>())
+            {
+                referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<NetworkCenter>())
+            {
+                hit.transform.LookAt(raycastingSource.transform);
+                hit.transform.Rotate(0, 0, 180);
+                referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<Heatmap>())
+            {
+                hit.transform.LookAt(raycastingSource.transform);
+                hit.transform.Rotate(0, 180, 0);
+                referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
         }
 
@@ -90,34 +90,31 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Push()
         {
-            int layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer");
             raycastingSource = this.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
-            if (hit.collider)
+            if (!hit.collider) return;
+            if (hit.transform.gameObject.name.Contains("Slice"))
             {
-                if (hit.transform.gameObject.name.Contains("Slice"))
-                {
-                    return;
-                }
-                Vector3 dir = hit.transform.position - raycastingSource.position;
-                dir = dir.normalized;
-                hit.transform.position += dir * distanceMultiplier;
-                if (hit.transform.GetComponent<Graph>())
-                {
-                    referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-                }
-                else if (hit.transform.GetComponent<NetworkCenter>())
-                {
-                    hit.transform.LookAt(referenceManager.headset.transform);
-                    hit.transform.Rotate(0, 0, 180);
-                    referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-                }
-                else if (hit.transform.GetComponent<Heatmap>())
-                {
-                    hit.transform.LookAt(referenceManager.headset.transform);
-                    hit.transform.Rotate(0, 180, 0);
-                    referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-                }
+                return;
+            }
+            Vector3 dir = hit.transform.position - raycastingSource.position;
+            dir = dir.normalized;
+            hit.transform.position += dir * distanceMultiplier;
+            if (hit.transform.GetComponent<Graph>())
+            {
+                referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<NetworkCenter>())
+            {
+                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.Rotate(0, 0, 180);
+                referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<Heatmap>())
+            {
+                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.Rotate(0, 180, 0);
+                referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
         }
 

@@ -33,7 +33,6 @@ namespace CellexalVR.AnalysisLogic
         private CellManager cellManager;
         private SQLite database;
         private SelectionManager selectionManager;
-        private AttributeSubMenu attributeSubMenu;
         private ColorByIndexMenu indexMenu;
         private GraphFromMarkersMenu createFromMarkerMenu;
         private MDSReader mdsReader;
@@ -64,7 +63,6 @@ namespace CellexalVR.AnalysisLogic
             cellManager = referenceManager.cellManager;
             database = referenceManager.database;
             selectionManager = referenceManager.selectionManager;
-            attributeSubMenu = referenceManager.attributeSubMenu;
             indexMenu = referenceManager.indexMenu;
             createFromMarkerMenu = referenceManager.createFromMarkerMenu;
             if (CrossSceneInformation.Spectator)
@@ -230,8 +228,8 @@ namespace CellexalVR.AnalysisLogic
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
             string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
             string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
-            string args = serverName + " " + dataSourceFolder + " " + CellexalUser.UserSpecificFolder + " " + pid;
-
+            string args = serverName + " " + dataSourceFolder + " " +
+                          CellexalUser.UserSpecificFolder + " " + pid;
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
             string value = null;
             Thread t = new Thread(

@@ -14,7 +14,7 @@ namespace CellexalVR.Interaction
     {
         private int frame;
         private GameObject tempHit;
-        private int layerMaskMenu;
+        private int layerMask;
         private int layerMaskKeyboard;
 
         private int layerMaskController;
@@ -50,8 +50,8 @@ namespace CellexalVR.Interaction
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             environmentButtonLayer = LayerMask.NameToLayer("EnvironmentButtonLayer");
             menuLayer = LayerMask.NameToLayer("MenuLayer");
-            layerMaskMenu = 1 << menuLayer;
-            layerMaskMenu |= 1 << environmentButtonLayer;
+            layerMask = 1 << menuLayer;
+            layerMask |= 1 << environmentButtonLayer;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             //CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
             //CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
@@ -69,25 +69,31 @@ namespace CellexalVR.Interaction
         private void Frame5Update()
         {
             RaycastHit hit;
-            Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
-            bool hitMenu = hit.collider != null && hit.collider.gameObject.layer == menuLayer;
-            if (hit.collider != null)
+            Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMask);
+            if (hit.collider)
             {
                 // if we hit anything
-                if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
-                {
-                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
-                }
-
                 if (hit.collider.gameObject.layer == menuLayer)
                 {
                     // if we hit a button in the menu
+                    referenceManager.rightLaser.enabled = true;
                     origin.localRotation = Quaternion.Euler(15f, 0, 0);
                     tempHit = hit.collider.gameObject;
+                    if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+                    {
+                        controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
+                    }
                 }
                 else if (hit.collider.gameObject.layer == environmentButtonLayer)
                 {
                     // if we hit a button in the environment
+                    if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                    {
+                        controllerModelSwitcher.ActivateDesiredTool();
+                    }
+
+                    referenceManager.rightLaser.enabled = true;
+                    referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     origin.localRotation = Quaternion.Euler(0, 0, 0);
                     referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 }
@@ -103,21 +109,18 @@ namespace CellexalVR.Interaction
                         controllerModelSwitcher.ActivateDesiredTool();
                     }
                 }
+                else
+                {
+                    referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+                    referenceManager.rightLaser.enabled = false;
+                }
             }
 
-            if (!alwaysActive && !Override)
+            if (alwaysActive || Override) return;
+            if (hit.collider) return;
+            if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
             {
-                // When to switch back to previous model.
-                if (!hit.collider)
-                {
-                    if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                    {
-                        controllerModelSwitcher.ActivateDesiredTool();
-                    }
-
-                    //referenceManager.rightLaser.enabled = false;
-                    referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-                }
+                controllerModelSwitcher.ActivateDesiredTool();
             }
         }
 
@@ -126,14 +129,9 @@ namespace CellexalVR.Interaction
         public void ToggleLaser(bool active)
         {
             alwaysActive = active;
-            if (active)
-            {
-                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
-            }
-            else
-            {
-                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-            }
+            referenceManager.rightLaser.tracerVisibility = active ?
+                VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn :
+                VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
 
             //referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
