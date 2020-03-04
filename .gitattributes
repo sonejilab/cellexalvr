@@ -57,5 +57,5 @@
 */lfs/*.unity linguist-generated
 
 # FFmpeg zip
-Assets/StreamingAssets/ffmpeg/ffmpeg.exe
-Assets/StreamingAssets/ffmpeg/ffmpeg.zip
+Assets/StreamingAssets/ffmpeg/ffmpeg.exe filter=lfs diff=lfs merge=lfs -text
+Assets/StreamingAssets/ffmpeg/ffmpeg.zip filter=lfs diff=lfs merge=lfs -text
