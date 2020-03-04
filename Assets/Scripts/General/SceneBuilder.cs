@@ -61,6 +61,8 @@ namespace CellexalVR.General
         private GameObject _WaitingCanvas;
         public GameObject SpectatorRig;
         private GameObject _SpectatorRig;
+        public GameObject H5Reader;
+        private GameObject _H5Reader;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -126,6 +128,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas);
             InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
             InstantiateSceneAsset(ref _SpectatorRig, SpectatorRig);
+            InstantiateSceneAsset(ref _H5Reader, H5Reader);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 

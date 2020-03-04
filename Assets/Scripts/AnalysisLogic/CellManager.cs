@@ -388,7 +388,9 @@ namespace CellexalVR.AnalysisLogic
             // stop the coroutine if the gene was not in the database
             if (expressions.Count == 0)
             {
-                CellexalLog.Log("WARNING: The gene " + geneName + " was not found in the database");
+                string message = "The gene " + geneName + " was not found in the database";
+                CellexalLog.Log(message);
+                StartCoroutine(referenceManager.geneKeyboard.ShowMessage(message, 5f));
                 CellexalEvents.CommandFinished.Invoke(false);
                 yield break;
             }

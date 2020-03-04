@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using System.Collections;
 #if UNITY_EDITOR
 using System.Reflection;
+
 #endif
 
 namespace CellexalVR.Interaction
@@ -15,7 +16,9 @@ namespace CellexalVR.Interaction
     /// Class for events that the keyboard trigger.
     /// </summary>
     [Serializable]
-    public class KeyboardEvent : UnityEvent<string> { }
+    public class KeyboardEvent : UnityEvent<string>
+    {
+    }
 
     /// <summary>
     /// Handles the keyboard and what happens when keys are pressed.
@@ -34,16 +37,14 @@ namespace CellexalVR.Interaction
         public KeyboardEvent OnEdit;
         public KeyboardEvent OnEditMultiuser;
         public KeyboardEvent OnEnter;
+
         public KeyboardEvent OnAnnotate;
         //public GameObject testCube;
 
         protected KeyboardPanel[] sortedKeys;
-        [HideInInspector]
-        public Vector2 minPos;
-        [HideInInspector]
-        public Vector2 maxPos;
-        [HideInInspector]
-        public List<Material> materials;
+        [HideInInspector] public Vector2 minPos;
+        [HideInInspector] public Vector2 maxPos;
+        [HideInInspector] public List<Material> materials;
 
         private bool displayingPlaceHolder = true;
         protected string prefabFolderPath = "Assets/Prefabs/Keyboards";
@@ -56,9 +57,13 @@ namespace CellexalVR.Interaction
         public int CurrentLayout { get; protected set; }
         abstract public string[][] Layouts { get; protected set; }
 
-        public virtual void Shift() { }
+        public virtual void Shift()
+        {
+        }
 
-        public virtual void NumChar() { }
+        public virtual void NumChar()
+        {
+        }
 
         protected virtual void Start()
         {
@@ -66,7 +71,6 @@ namespace CellexalVR.Interaction
             SwitchLayout(Layouts[0]);
             //GatherKeys();
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
-
         }
 
         /// <summary>
@@ -79,6 +83,30 @@ namespace CellexalVR.Interaction
         }
 
         /// <summary>
+        /// Shows a message for a certain time or if the user starts typing again.
+        /// Called if something went wrong or anything to inform the user.
+        /// </summary>
+        public IEnumerator ShowMessage(string message, float time = 5f)
+        {
+            float currentTime = 0f;
+            output.text = message;
+            while (currentTime < time)
+            {
+                if (!output.text.Equals(message))
+                {
+                    break;
+                }
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+            if (output.text.Equals(message))
+            {
+                output.text = "";
+            }
+        }
+
+
+        /// <summary>
         /// Sets the materials on all keys. See <see cref="ClickablePanel.SetMaterials(Material, Material, Material)"/>.
         /// </summary>
         public void SetMaterials(Material keyNormalMaterial, Material keyHighlightMaterial, Material keyPressedMaterial)
@@ -87,6 +115,7 @@ namespace CellexalVR.Interaction
             {
                 GatherKeys();
             }
+
             pulseDuration = keyNormalMaterial.GetFloat("_PulseDuration");
 
             // set up the scale correction shader property so the rings on the keyboard are properly displayed
@@ -108,7 +137,8 @@ namespace CellexalVR.Interaction
 
             foreach (ClickablePanel panel in GetComponentsInChildren<ClickablePanel>(true))
             {
-                panel.SetMaterials(adjustedKeyNormalMaterial, adjustedKeyHighlightedMaterial, adjustedKeyPressedMaterial, scaleCorrection);
+                panel.SetMaterials(adjustedKeyNormalMaterial, adjustedKeyHighlightedMaterial,
+                    adjustedKeyPressedMaterial, scaleCorrection);
             }
         }
 
@@ -154,6 +184,7 @@ namespace CellexalVR.Interaction
                 t += Time.deltaTime;
                 yield return null;
             }
+
             SetFloats("_PulseStartTime", -1f);
         }
 
@@ -174,7 +205,9 @@ namespace CellexalVR.Interaction
         {
             public int Compare(KeyboardItem a, KeyboardItem b)
             {
-                return a.position.y == b.position.y ? (int)(a.position.x - b.position.x) : (int)(b.position.y - a.position.y);
+                return a.position.y == b.position.y
+                    ? (int) (a.position.x - b.position.x)
+                    : (int) (b.position.y - a.position.y);
             }
         }
 
@@ -193,14 +226,18 @@ namespace CellexalVR.Interaction
             prefabInstance.maxPos = new Vector2(float.MinValue, float.MinValue);
 
             KeyboardItem[] items = prefabInstance.GetComponentsInChildren<KeyboardItem>(true);
-            KeyboardItem[] itemsUnderKeyObject = prefabInstance.keysParentObject.GetComponentsInChildren<KeyboardItem>(true);
+            KeyboardItem[] itemsUnderKeyObject =
+                prefabInstance.keysParentObject.GetComponentsInChildren<KeyboardItem>(true);
             prefabInstance.sortedKeys = prefabInstance.GetComponentsInChildren<KeyboardPanel>(true);
             // sort by position, y first then x
             if (itemsUnderKeyObject.Length != prefabInstance.sortedKeys.Length)
             {
-                Debug.LogError("Can not build keyboard, different number of keys found. Items under key object: " + itemsUnderKeyObject.Length + " keyboardpanels found: " + prefabInstance.sortedKeys.Length);
+                Debug.LogError("Can not build keyboard, different number of keys found. Items under key object: " +
+                               itemsUnderKeyObject.Length + " keyboardpanels found: " +
+                               prefabInstance.sortedKeys.Length);
                 return false;
             }
+
             Array.Sort(itemsUnderKeyObject, prefabInstance.sortedKeys, new KeyboardItemComparer());
             // find the smallest and largest positions for later
             foreach (var item in items)
@@ -209,6 +246,7 @@ namespace CellexalVR.Interaction
                 {
                     continue;
                 }
+
                 Vector2 thisMinPos = item.position - new Vector2(item.size.x / 2f, 0f);
                 Vector2 thisMaxPos = item.position + new Vector2(item.size.x / 2f, item.size.y);
                 if (thisMinPos.x < minPos.x)
@@ -219,6 +257,7 @@ namespace CellexalVR.Interaction
                 {
                     prefabInstance.maxPos.x = thisMaxPos.x;
                 }
+
                 if (thisMinPos.y < minPos.y)
                 {
                     prefabInstance.minPos.y = thisMinPos.y;
@@ -228,6 +267,7 @@ namespace CellexalVR.Interaction
                     prefabInstance.maxPos.y = thisMaxPos.y;
                 }
             }
+
             return true;
         }
 
@@ -244,10 +284,13 @@ namespace CellexalVR.Interaction
 
                 if (layout.Length != sortedKeys.Length)
                 {
-                    Debug.LogError("Invalid number of keys on " + gameObject.name + ", string array layout length: " + layout.Length + ", number of found Keyboard panel gameobjects: " + sortedKeys.Length);
+                    Debug.LogError("Invalid number of keys on " + gameObject.name + ", string array layout length: " +
+                                   layout.Length + ", number of found Keyboard panel gameobjects: " +
+                                   sortedKeys.Length);
                     return;
                 }
             }
+
             // everything seems ok, switch the layout
             for (int i = 0; i < sortedKeys.Length; ++i)
             {
@@ -296,10 +339,12 @@ namespace CellexalVR.Interaction
             {
                 output.text = output.text.Remove(output.text.Length - 1);
             }
+
             if (OnEdit != null)
             {
                 OnEdit.Invoke(Text());
             }
+
             if (invokeMultiuserEvent)
             {
                 referenceManager.multiuserMessageSender.SendMessageBackspaceKeyClicked();
@@ -326,6 +371,7 @@ namespace CellexalVR.Interaction
             {
                 OnEdit.Invoke(Text());
             }
+
             if (invokeMultiuserEvent)
             {
                 referenceManager.multiuserMessageSender.SendMessageClearKeyClicked();
@@ -341,10 +387,12 @@ namespace CellexalVR.Interaction
             {
                 o.text = output.text;
             }
+
             if (invoke && OnEnter != null)
             {
                 OnEnter.Invoke(Text());
             }
+
             //referenceManager.cellManager.ColorGraphsByGene(output.text);
             //referenceManager.previousSearchesList.AddEntry(output.text, Extensions.Definitions.Measurement.GENE, referenceManager.graphManager.GeneExpressionColoringMethod);
             //referenceManager.MultiuserMessageSender.SendMessageColorGraphsByGene(output.text);
@@ -393,6 +441,7 @@ namespace CellexalVR.Interaction
             {
                 displayingPlaceHolder = false;
             }
+
             output.text = text;
             foreach (var o in additionalOutputs)
             {
@@ -466,8 +515,10 @@ namespace CellexalVR.Interaction
 
             UnityEditor.EditorUtility.DisplayProgressBar("Building keyboard", "Applying overrides", 0.1f);
             UnityEditor.Undo.RecordObject(outerMostPrefabInstance, "Apply keyboard override");
-            UnityEditor.PrefabUtility.ApplyPrefabInstance(outerMostPrefabInstance, UnityEditor.InteractionMode.AutomatedAction);
-            UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(outerMostPrefabInstance, prefabPath, UnityEditor.InteractionMode.AutomatedAction);
+            UnityEditor.PrefabUtility.ApplyPrefabInstance(outerMostPrefabInstance,
+                UnityEditor.InteractionMode.AutomatedAction);
+            UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(outerMostPrefabInstance, prefabPath,
+                UnityEditor.InteractionMode.AutomatedAction);
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(outerMostPrefabInstance.scene);
             UnityEditor.EditorUtility.DisplayProgressBar("Building keyboard", "Opening prefab", 0.2f);
             outerMostPrefab = UnityEditor.PrefabUtility.LoadPrefabContents(prefabPath);
@@ -492,7 +543,8 @@ namespace CellexalVR.Interaction
         {
             UnityEditor.AssetDatabase.StopAssetEditing();
             UnityEditor.EditorUtility.DisplayProgressBar("Building keyboard", "Saving prefab", 0.9f);
-            UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(prefab, prefabPath, UnityEditor.InteractionMode.AutomatedAction);
+            UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(prefab, prefabPath,
+                UnityEditor.InteractionMode.AutomatedAction);
             UnityEditor.PrefabUtility.UnloadPrefabContents(prefab);
 
 
@@ -506,7 +558,6 @@ namespace CellexalVR.Interaction
         /// <returns>True if the keyboard was successfully built, false otherwise.</returns>
         public virtual bool BuildKeyboard(KeyboardHandler prefab)
         {
-
             string keyboardMeshesBaseFolder = prefabFolderPath + "/KeyboardMeshes";
             if (!UnityEditor.AssetDatabase.IsValidFolder(keyboardMeshesBaseFolder))
             {
@@ -520,11 +571,12 @@ namespace CellexalVR.Interaction
             }
             else
             {
-                foreach (var asset in UnityEditor.AssetDatabase.FindAssets("", new string[] { keyboardMeshesFolder }))
+                foreach (var asset in UnityEditor.AssetDatabase.FindAssets("", new string[] {keyboardMeshesFolder}))
                 {
                     UnityEditor.AssetDatabase.DeleteAsset(UnityEditor.AssetDatabase.GUIDToAssetPath(asset));
                 }
             }
+
             if (!prefab.GatherKeys(prefab))
             {
                 return false;
@@ -550,6 +602,7 @@ namespace CellexalVR.Interaction
                 {
                     position = new Vector3(item.position.x / height, item.position.y / height, 0);
                 }
+
                 float yPos = item.position.y * height / size.y;
                 position += new Vector3(0f, yPos, 0f);
                 item.transform.localPosition = position;
@@ -575,9 +628,10 @@ namespace CellexalVR.Interaction
                         {
                             text.transform.localPosition = new Vector3(0f, 0f, -0.01f);
                         }
-                        text.transform.localScale = Vector3.one * (height / ((size.y - 1) / 4));
 
+                        text.transform.localScale = Vector3.one * (height / ((size.y - 1) / 4));
                     }
+
                     Vector2 min = item.position - new Vector2(item.size.x / 2f, 0f) - minPos;
                     Vector2 max = item.position + new Vector2(item.size.x / 2f, item.size.y) - minPos;
                     Vector2 smallUV = new Vector2(min.x / size.x, min.y / size.y);
@@ -594,16 +648,18 @@ namespace CellexalVR.Interaction
                     {
                         DestroyImmediate(panel.GetComponent<MeshCollider>());
                     }
+
                     if (panel.GetComponent<BoxCollider>() == null)
                     {
                         panel.gameObject.AddComponent<BoxCollider>();
                     }
+
                     var boxCollider = panel.gameObject.GetComponent<BoxCollider>();
                     boxCollider.center = mesh.bounds.center;
                     boxCollider.size = mesh.bounds.size;
                     panel.transform.localScale = new Vector3(1f, 1f, 1f);
-
                 }
+
                 //print("assigning (" + smallUV.x + ", " + smallUV.y + ") (" + largeUV.x + ", " + largeUV.y + ") to " + panel.Text);
             }
 
@@ -613,6 +669,7 @@ namespace CellexalVR.Interaction
             {
                 prefab.output.text = placeholder;
             }
+
             return true;
         }
 
@@ -626,14 +683,15 @@ namespace CellexalVR.Interaction
         /// <param name="anglePerUnit">Radians per unit of <paramref name="size"/>. Affects how wide the panel becomes.</param>
         /// <param name="keyboardSize">The size of the keyboard, in the same units as <paramref name="size"/>.</param>
         /// <returns></returns>
-        public Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit, Vector2 keyboardSize)
+        public Mesh CreateNineSlicedQuad(Vector2 uv2min, Vector2 uv2max, Vector2 size, float anglePerUnit,
+            Vector2 keyboardSize)
         {
             // left, right, bottom and top margins
             float l = 0.1f, r = 0.1f;
             float b = 0.1f, t = 0.1f;
             float uvl = l / 2f, uvr = r / 2f;
             float uvb = b / 2f, uvt = t / 2f;
-            int xSegments = (int)size.x;
+            int xSegments = (int) size.x;
             float maxXCoord = size.x / 2f;
             float minXCoord = -maxXCoord;
             float adjHeight = height / keyboardSize.y;
@@ -646,13 +704,15 @@ namespace CellexalVR.Interaction
             float adjt = t * adjHeight;
             anglePerUnit = -anglePerUnit;
             // pre-calculate some values
-            float[] cosVals = new float[] {
+            float[] cosVals = new float[]
+            {
                 Mathf.Cos(anglePerUnit * minXCoord) * distance - distance,
                 Mathf.Cos(anglePerUnit * (minXCoord + l)) * distance - distance,
                 Mathf.Cos(anglePerUnit * (maxXCoord - r)) * distance - distance,
                 Mathf.Cos(anglePerUnit * maxXCoord) * distance - distance
             };
-            float[] sinVals = new float[] {
+            float[] sinVals = new float[]
+            {
                 Mathf.Sin(anglePerUnit * minXCoord) * distance,
                 Mathf.Sin(anglePerUnit * (minXCoord + l)) * distance,
                 Mathf.Sin(anglePerUnit * (maxXCoord - r)) * distance,
@@ -661,11 +721,16 @@ namespace CellexalVR.Interaction
 
             Vector3[] verts = new Vector3[16 + 4 * (xSegments - 1)];
             // set up the corners
-            Vector3[] vertCorners = new Vector3[] {
-                new Vector3(cosVals[0], maxYCoord, sinVals[0]), new Vector3(cosVals[0], maxYCoord - adjt, sinVals[0]), new Vector3(cosVals[0], adjb, sinVals[0]), new Vector3(cosVals[0], 0f, sinVals[0]),
-                new Vector3(cosVals[1], maxYCoord, sinVals[1]), new Vector3(cosVals[1], maxYCoord - adjt, sinVals[1]), new Vector3(cosVals[1], adjb, sinVals[1]), new Vector3(cosVals[1], 0f, sinVals[1]),
-                new Vector3(cosVals[2], maxYCoord, sinVals[2]), new Vector3(cosVals[2], maxYCoord - adjt, sinVals[2]), new Vector3(cosVals[2], adjb, sinVals[2]), new Vector3(cosVals[2], 0f, sinVals[2]),
-                new Vector3(cosVals[3], maxYCoord, sinVals[3]), new Vector3(cosVals[3], maxYCoord - adjt, sinVals[3]), new Vector3(cosVals[3], adjb, sinVals[3]), new Vector3(cosVals[3], 0f, sinVals[3])
+            Vector3[] vertCorners = new Vector3[]
+            {
+                new Vector3(cosVals[0], maxYCoord, sinVals[0]), new Vector3(cosVals[0], maxYCoord - adjt, sinVals[0]),
+                new Vector3(cosVals[0], adjb, sinVals[0]), new Vector3(cosVals[0], 0f, sinVals[0]),
+                new Vector3(cosVals[1], maxYCoord, sinVals[1]), new Vector3(cosVals[1], maxYCoord - adjt, sinVals[1]),
+                new Vector3(cosVals[1], adjb, sinVals[1]), new Vector3(cosVals[1], 0f, sinVals[1]),
+                new Vector3(cosVals[2], maxYCoord, sinVals[2]), new Vector3(cosVals[2], maxYCoord - adjt, sinVals[2]),
+                new Vector3(cosVals[2], adjb, sinVals[2]), new Vector3(cosVals[2], 0f, sinVals[2]),
+                new Vector3(cosVals[3], maxYCoord, sinVals[3]), new Vector3(cosVals[3], maxYCoord - adjt, sinVals[3]),
+                new Vector3(cosVals[3], adjb, sinVals[3]), new Vector3(cosVals[3], 0f, sinVals[3])
             };
 
             Array.Copy(vertCorners, 0, verts, 0, 8);
@@ -673,11 +738,13 @@ namespace CellexalVR.Interaction
 
             // do the same for the uv
             Vector2[] uv = new Vector2[verts.Length];
-            Vector2[] uvCorners = new Vector2[] {
-                new Vector2(0f, 1f),       new Vector2(0f, 1f - uvt),       new Vector2(0f, uvb),       new Vector2(0f, 0f),
-                new Vector2(uvl, 1f),      new Vector2(uvl, 1f - uvt),      new Vector2(uvl, uvb),      new Vector2(uvl, 0f),
-                new Vector2(1f - uvr, 1f), new Vector2(1f - uvr, 1f - uvt), new Vector2(1f - uvr, uvb), new Vector2(1f - uvr, 0f),
-                new Vector2(1f, 1f),       new Vector2(1f, 1f - uvt),       new Vector2(1f, uvb),       new Vector2(1f, 0f)
+            Vector2[] uvCorners = new Vector2[]
+            {
+                new Vector2(0f, 1f), new Vector2(0f, 1f - uvt), new Vector2(0f, uvb), new Vector2(0f, 0f),
+                new Vector2(uvl, 1f), new Vector2(uvl, 1f - uvt), new Vector2(uvl, uvb), new Vector2(uvl, 0f),
+                new Vector2(1f - uvr, 1f), new Vector2(1f - uvr, 1f - uvt), new Vector2(1f - uvr, uvb),
+                new Vector2(1f - uvr, 0f),
+                new Vector2(1f, 1f), new Vector2(1f, 1f - uvt), new Vector2(1f, uvb), new Vector2(1f, 0f)
             };
 
             Array.Copy(uvCorners, 0, uv, 0, 8);
@@ -732,11 +799,16 @@ namespace CellexalVR.Interaction
             float uv2l = l / keyboardSize.x, uv2r = r / keyboardSize.x;
             float uv2b = b / keyboardSize.y, uv2t = t / keyboardSize.y;
             // set up the corners 
-            Vector2[] uv2Corners = new Vector2[] {
-                new Vector2(uv2min.x,        uv2max.y), new Vector2(uv2min.x,        uv2max.y - uv2t), new Vector2(uv2min.x,        uv2min.y + uv2b), new Vector2(uv2min.x,        uv2min.y),
-                new Vector2(uv2min.x + uv2l, uv2max.y), new Vector2(uv2min.x + uv2l, uv2max.y - uv2t), new Vector2(uv2min.x + uv2l, uv2min.y + uv2b), new Vector2(uv2min.x + uv2l, uv2min.y),
-                new Vector2(uv2max.x - uv2r, uv2max.y), new Vector2(uv2max.x - uv2r, uv2max.y - uv2t), new Vector2(uv2max.x - uv2r, uv2min.y + uv2b), new Vector2(uv2max.x - uv2r, uv2min.y),
-                new Vector2(uv2max.x,        uv2max.y), new Vector2(uv2max.x,        uv2max.y - uv2t), new Vector2(uv2max.x,        uv2min.y + uv2b), new Vector2(uv2max.x,        uv2min.y)
+            Vector2[] uv2Corners = new Vector2[]
+            {
+                new Vector2(uv2min.x, uv2max.y), new Vector2(uv2min.x, uv2max.y - uv2t),
+                new Vector2(uv2min.x, uv2min.y + uv2b), new Vector2(uv2min.x, uv2min.y),
+                new Vector2(uv2min.x + uv2l, uv2max.y), new Vector2(uv2min.x + uv2l, uv2max.y - uv2t),
+                new Vector2(uv2min.x + uv2l, uv2min.y + uv2b), new Vector2(uv2min.x + uv2l, uv2min.y),
+                new Vector2(uv2max.x - uv2r, uv2max.y), new Vector2(uv2max.x - uv2r, uv2max.y - uv2t),
+                new Vector2(uv2max.x - uv2r, uv2min.y + uv2b), new Vector2(uv2max.x - uv2r, uv2min.y),
+                new Vector2(uv2max.x, uv2max.y), new Vector2(uv2max.x, uv2max.y - uv2t),
+                new Vector2(uv2max.x, uv2min.y + uv2b), new Vector2(uv2max.x, uv2min.y)
             };
             Array.Copy(uv2Corners, 0, uv2, 0, 8);
             Array.Copy(uv2Corners, 8, uv2, uv2.Length - 8, 8);
@@ -769,5 +841,4 @@ namespace CellexalVR.Interaction
         }
 #endif
     }
-
 }

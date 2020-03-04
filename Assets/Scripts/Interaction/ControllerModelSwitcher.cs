@@ -171,7 +171,7 @@ namespace CellexalVR.Interaction
                 case Model.Keyboard:
                     //keyboard.SetKeyboardVisible(true);
                     //rightLaser.enabled = true;
-                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
+                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
@@ -179,13 +179,13 @@ namespace CellexalVR.Interaction
                     webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
                     //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     //rightLaser.enabled = true;
-                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
+                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.TwoLasers:
                     //rightLaser.enabled = true;
-                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
+                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
@@ -195,7 +195,7 @@ namespace CellexalVR.Interaction
                     deleteTool.SetActive(false);
                     minimizer.SetActive(false);
                     selectionToolCollider.SetSelectionToolEnabled(false);
-                    rightLaser.tracerVisibility = VRTK_StraightPointerRenderer.VisibilityStates.AlwaysOn;
+                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     //rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                     rightControllerBodyRenderer.sharedMaterial = normalMaterial;

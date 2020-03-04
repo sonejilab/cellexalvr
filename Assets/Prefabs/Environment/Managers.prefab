@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 196824001}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Extra Column
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 205451628}
   - component: {fileID: 205451630}
   - component: {fileID: 205451629}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 482579264}
   - component: {fileID: 482579263}
   - component: {fileID: 482579262}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: ActiveOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 525472590}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Extra Column
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 534507860}
   - component: {fileID: 534507859}
   - component: {fileID: 534507858}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 602444944}
   - component: {fileID: 602444943}
   - component: {fileID: 602444942}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Add to filter button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -571,7 +571,7 @@ GameObject:
   - component: {fileID: 1024447895}
   - component: {fileID: 1024447894}
   - component: {fileID: 1024447893}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Filter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -775,7 +775,7 @@ GameObject:
   - component: {fileID: 1084133577}
   - component: {fileID: 1084133576}
   - component: {fileID: 1084133575}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Filter Text Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1026,7 +1026,7 @@ GameObject:
   - component: {fileID: 1245275577}
   - component: {fileID: 1245275576}
   - component: {fileID: 1245275575}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Add to filter button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1146,7 +1146,7 @@ GameObject:
   - component: {fileID: 1266392676}
   - component: {fileID: 1266392678}
   - component: {fileID: 1266392677}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1255,7 +1255,7 @@ GameObject:
   - component: {fileID: 1374850737}
   - component: {fileID: 1374850736}
   - component: {fileID: 1374850735}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1459,7 +1459,7 @@ GameObject:
   - component: {fileID: 1593668533}
   - component: {fileID: 1593668532}
   - component: {fileID: 1593668531}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1662,7 +1662,7 @@ GameObject:
   - component: {fileID: 1856146505}
   - component: {fileID: 1856146504}
   - component: {fileID: 1856146503}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: ActiveOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1798,7 +1798,7 @@ GameObject:
   - component: {fileID: 2023742480}
   - component: {fileID: 2023742479}
   - component: {fileID: 2023742478}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Filter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41731,7 +41731,7 @@ GameObject:
   - component: {fileID: 2176446051259295829}
   - component: {fileID: 8474065695395168549}
   - component: {fileID: 3896810237388364119}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Attributes text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42137,7 +42137,7 @@ GameObject:
   - component: {fileID: 5961715013830313580}
   - component: {fileID: 1280416022307635073}
   - component: {fileID: 2118684761763199925}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: X-axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42216,7 +42216,7 @@ GameObject:
   - component: {fileID: 3795877658884223910}
   - component: {fileID: 3501067255455892290}
   - component: {fileID: 8792411380709906807}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of all text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42420,7 +42420,7 @@ GameObject:
   - component: {fileID: 7627819703002247177}
   - component: {fileID: 8389073926255211876}
   - component: {fileID: 7619012353499587355}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: X-axis label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42861,7 +42861,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8766947657241599157}
   - component: {fileID: 4889248537707476020}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Selection Legend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42917,7 +42917,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1754574493677511563}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Detach From Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42956,7 +42956,7 @@ GameObject:
   - component: {fileID: 8832444306895497985}
   - component: {fileID: 1535068839537011728}
   - component: {fileID: 2779318873134750969}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Group name text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43158,7 +43158,7 @@ GameObject:
   - component: {fileID: 4978501216146662414}
   - component: {fileID: 5636833268662904776}
   - component: {fileID: 5998453696157119461}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Background plane backside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43355,7 +43355,7 @@ GameObject:
   - component: {fileID: 4367187287450909501}
   - component: {fileID: 4554683798970169735}
   - component: {fileID: 6399688028265647853}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: HighlightArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43432,7 +43432,7 @@ GameObject:
   - component: {fileID: 8425387892807336580}
   - component: {fileID: 1508227352525613431}
   - component: {fileID: 7193643300308608936}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Y-axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43749,7 +43749,7 @@ GameObject:
   - component: {fileID: 2103027251012644287}
   - component: {fileID: 5514166448884035270}
   - component: {fileID: 6297155861274910177}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Color square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44030,7 +44030,7 @@ GameObject:
   - component: {fileID: 2517077114023954291}
   - component: {fileID: 6043043223747790121}
   - component: {fileID: 854497943663707278}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Histogram bar prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44109,7 +44109,7 @@ GameObject:
   - component: {fileID: 1858303048035782123}
   - component: {fileID: 3766072022483250997}
   - component: {fileID: 8076202639289362557}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Attributes text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44309,7 +44309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7098288216498695335}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Switch Legend buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44588,7 +44588,7 @@ GameObject:
   - component: {fileID: 1922542240835964125}
   - component: {fileID: 5112503602645852160}
   - component: {fileID: 1672748119226641746}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Page Number Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45030,7 +45030,7 @@ GameObject:
   - component: {fileID: 507158528182104290}
   - component: {fileID: 1302329501604243077}
   - component: {fileID: 7041803699396424657}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Background plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45111,7 +45111,7 @@ GameObject:
   - component: {fileID: 1019453006450749784}
   - component: {fileID: 5372376093302542365}
   - component: {fileID: 5914324995767133207}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of selected text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45315,7 +45315,7 @@ GameObject:
   - component: {fileID: 8756539999912642631}
   - component: {fileID: 6203087840724483313}
   - component: {fileID: 8752953527171074752}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of all text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45519,7 +45519,7 @@ GameObject:
   - component: {fileID: 3425229540640162649}
   - component: {fileID: 7860547805992214492}
   - component: {fileID: 9093337724224426412}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Selected Area Info Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45927,7 +45927,7 @@ GameObject:
   - component: {fileID: 2369605010170589472}
   - component: {fileID: 1606526785170842884}
   - component: {fileID: 8591449929584338244}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Color square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46003,7 +46003,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3863759548845349855}
   - component: {fileID: 1748032380410687359}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Gene Histogram
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46282,7 +46282,7 @@ GameObject:
   - component: {fileID: 434804322954224351}
   - component: {fileID: 4359411784610371539}
   - component: {fileID: 3740191111347664261}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Number of cells text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46483,7 +46483,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6939526149026584012}
   - component: {fileID: 7886611384669554522}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Attribute Legend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46539,7 +46539,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7365536347589794431}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Dividers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46576,7 +46576,7 @@ GameObject:
   - component: {fileID: 5008623851104508879}
   - component: {fileID: 6792229130389848897}
   - component: {fileID: 1225616577345113668}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46778,7 +46778,7 @@ GameObject:
   - component: {fileID: 6572840973058932256}
   - component: {fileID: 2479024363118332219}
   - component: {fileID: 5338305126979743909}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Top divider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46855,7 +46855,7 @@ GameObject:
   - component: {fileID: 1310331120239701500}
   - component: {fileID: 5310715711219119690}
   - component: {fileID: 2688721814584963685}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Buttons Above Background Backside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46930,7 +46930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3640981474150516330}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Histogram
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46982,7 +46982,7 @@ GameObject:
   - component: {fileID: 5951103574679741657}
   - component: {fileID: 2423178820180858368}
   - component: {fileID: 3553222973006368552}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Y-axis min label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47182,7 +47182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6323913024597800292}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Tab buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47550,7 +47550,7 @@ GameObject:
   - component: {fileID: 8501395465230917175}
   - component: {fileID: 4293689708006668194}
   - component: {fileID: 4831299347154944987}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of all text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47958,7 +47958,7 @@ GameObject:
   - component: {fileID: 6331751572094827726}
   - component: {fileID: 3418215293237732935}
   - component: {fileID: 5540308104524933571}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: SelectedArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48037,7 +48037,7 @@ GameObject:
   - component: {fileID: 5399569263332013173}
   - component: {fileID: 343245559393783471}
   - component: {fileID: 563674354595047878}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of selected text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48853,7 +48853,7 @@ GameObject:
   - component: {fileID: 1866003172178123821}
   - component: {fileID: 5905265901219390145}
   - component: {fileID: 4239595637532110725}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Y-axis max label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49175,7 +49175,7 @@ GameObject:
   - component: {fileID: 6911736153482624999}
   - component: {fileID: 1312688210810399420}
   - component: {fileID: 1010768603813109712}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Buttons Above Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49373,7 +49373,7 @@ GameObject:
   - component: {fileID: 7451027093864576269}
   - component: {fileID: 6305812518816063262}
   - component: {fileID: 6442830544544738691}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Right border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49570,7 +49570,7 @@ GameObject:
   - component: {fileID: 7235395269847489818}
   - component: {fileID: 8576834293746933204}
   - component: {fileID: 4409487378285775770}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Top divider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49647,7 +49647,7 @@ GameObject:
   - component: {fileID: 381048032722423612}
   - component: {fileID: 6350146579298430176}
   - component: {fileID: 2459650519855637513}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49846,7 +49846,7 @@ GameObject:
   - component: {fileID: 4568153634101374106}
   - component: {fileID: 6810592838881003708}
   - component: {fileID: 8145293905513375714}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: X-axis min label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50050,7 +50050,7 @@ GameObject:
   - component: {fileID: 4221906226358788715}
   - component: {fileID: 1188209019762614130}
   - component: {fileID: 7859970444289768521}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Number of cells text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50254,7 +50254,7 @@ GameObject:
   - component: {fileID: 2886417479919553853}
   - component: {fileID: 5313530297351070691}
   - component: {fileID: 6614869400365105102}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Number of cells text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50454,7 +50454,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4940710013038522511}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Dividers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50695,7 +50695,7 @@ GameObject:
   - component: {fileID: 8785611635445729211}
   - component: {fileID: 3079694509060507158}
   - component: {fileID: 7005393815842721615}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50771,7 +50771,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1879508283971982049}
   - component: {fileID: 7698585568757455883}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Entry prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50834,7 +50834,7 @@ GameObject:
   - component: {fileID: 713327553975874733}
   - component: {fileID: 8388933751113835123}
   - component: {fileID: 6486204470640247154}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Legend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50986,7 +50986,7 @@ GameObject:
   - component: {fileID: 2200481536698776059}
   - component: {fileID: 7798792354831295151}
   - component: {fileID: 5980596020199031266}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51065,7 +51065,7 @@ GameObject:
   - component: {fileID: 1547047583523146586}
   - component: {fileID: 7245204334571806538}
   - component: {fileID: 8701665522711666602}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Current gene text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51268,7 +51268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5860344492738524743}
   - component: {fileID: 4708209573858119403}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Entry prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51329,7 +51329,7 @@ GameObject:
   - component: {fileID: 5913227047839166188}
   - component: {fileID: 6634781963256934933}
   - component: {fileID: 7190391207364013484}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: X-axis max label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51654,7 +51654,7 @@ GameObject:
   - component: {fileID: 8503074321663569211}
   - component: {fileID: 5411073778591552765}
   - component: {fileID: 5438112076755999550}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Page Number Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51976,7 +51976,7 @@ GameObject:
   - component: {fileID: 1894489761237629483}
   - component: {fileID: 3490664808466157304}
   - component: {fileID: 6892018681771891079}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52175,7 +52175,7 @@ GameObject:
   - component: {fileID: 7207075579384992867}
   - component: {fileID: 2950712367336158437}
   - component: {fileID: 5464778444694081052}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Y-axis label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52378,7 +52378,7 @@ GameObject:
   - component: {fileID: 64524456676083682}
   - component: {fileID: 9164918644662512137}
   - component: {fileID: 1350127969}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Detach Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52703,7 +52703,7 @@ GameObject:
   - component: {fileID: 1030437401477063180}
   - component: {fileID: 5320925784519839056}
   - component: {fileID: 7348771558026414777}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Attribute name text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52907,7 +52907,7 @@ GameObject:
   - component: {fileID: 6007403531991755588}
   - component: {fileID: 396360460679760935}
   - component: {fileID: 4148042641095017136}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of all text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53111,7 +53111,7 @@ GameObject:
   - component: {fileID: 7715862197113538127}
   - component: {fileID: 1254355358842536527}
   - component: {fileID: 7556289061081842996}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Button Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53315,7 +53315,7 @@ GameObject:
   - component: {fileID: 1636908211055386918}
   - component: {fileID: 1392746433321112189}
   - component: {fileID: 1944324730903501729}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Highlight Area Info Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53521,7 +53521,7 @@ GameObject:
   - component: {fileID: 3435562961959962768}
   - component: {fileID: 3519670022791413266}
   - component: {fileID: 3132651306809486832}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53723,7 +53723,7 @@ GameObject:
   - component: {fileID: 1320467231208699013}
   - component: {fileID: 2884522200156391554}
   - component: {fileID: 5164721830471961099}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53802,7 +53802,7 @@ GameObject:
   - component: {fileID: 2945469574119355266}
   - component: {fileID: 7388548776604934784}
   - component: {fileID: 5455053925899686704}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of selected text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54006,7 +54006,7 @@ GameObject:
   - component: {fileID: 294736157001955777}
   - component: {fileID: 8177126499653792339}
   - component: {fileID: 2888790359894814839}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Number of cells text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54739,7 +54739,7 @@ GameObject:
   - component: {fileID: 7519611997985449598}
   - component: {fileID: 2263605897508901652}
   - component: {fileID: 2895285081891950300}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Top border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54818,7 +54818,7 @@ GameObject:
   - component: {fileID: 4143097790479088186}
   - component: {fileID: 6543293012909176233}
   - component: {fileID: 4358487077619232571}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Percent of selected text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55020,7 +55020,7 @@ GameObject:
   - component: {fileID: 6687992848136023243}
   - component: {fileID: 8795520642323239421}
   - component: {fileID: 569102358687369300}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55337,7 +55337,7 @@ GameObject:
   - component: {fileID: 5160435618788729947}
   - component: {fileID: 4314043665476031066}
   - component: {fileID: 5325992111964193473}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Bottom border
   m_TagString: Untagged
   m_Icon: {fileID: 0}

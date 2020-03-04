@@ -37,11 +37,12 @@ namespace CellexalVR.Interaction
         {
             if (!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial) return;
             device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
-            bool correctModel = controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-                                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard
-                                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.WebBrowser
-                                || referenceManager.rightLaser.enabled;
+            if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial)
+                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu)
+            {
+                return;
+            }
+            bool correctModel = referenceManager.rightLaser.enabled;
             if (correctModel)
             {
                 Raycast();
