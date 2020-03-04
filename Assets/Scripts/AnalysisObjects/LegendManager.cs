@@ -33,35 +33,42 @@ namespace CellexalVR.AnalysisObjects
         private Transform originalParent;
         private Vector3 originalbackgroundScale;
         private bool attached;
-
+        private ReferenceManager referenceManager;
+        private Transform legendTransform;
+        
         private void Start()
         {
+            legendTransform = transform;
             CellexalEvents.GraphsReset.AddListener(DeactivateLegend);
-            geneExpressionHistogram.referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            geneExpressionHistogram.referenceManager = referenceManager;
             interactableObject = GetComponent<VRTK.VRTK_InteractableObject>();
             interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
-            originalParent = transform.parent;
+            originalParent = legendTransform.parent;
             originalbackgroundScale = backgroundPlane.transform.localScale;
+        }
+
+        private void Update()
+        {
+            if (!interactableObject.IsGrabbed()) return;
+            referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendTransform.position, legendTransform.rotation,
+                legendTransform.localScale);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name == "AttachOnSide")
-            {
-                legendInsideCube = true;
-                cullingCubeTransform = other.transform;
-                attachArea = cullingCubeTransform.parent.GetComponent<CullingCube>().attachOnSideArea;
-                attachArea.SetActive(true);
-            }
+            if (other.gameObject.name != "AttachOnSide") return;
+            legendInsideCube = true;
+            cullingCubeTransform = other.transform;
+            attachArea = cullingCubeTransform.parent.GetComponent<CullingCube>().attachOnSideArea;
+            attachArea.SetActive(true);
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name == "AttachOnSide")
-            {
-                legendInsideCube = false;
-                attachArea = cullingCubeTransform.parent.GetComponent<CullingCube>().attachOnSideArea;
-                attachArea.SetActive(false);
-            }
+            if (other.gameObject.name != "AttachOnSide") return;
+            legendInsideCube = false;
+            attachArea = cullingCubeTransform.parent.GetComponent<CullingCube>().attachOnSideArea;
+            attachArea.SetActive(false);
         }
 
         private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)

@@ -14,6 +14,7 @@ namespace CellexalVR.Menu.Buttons.Legends
         public override void Click()
         {
             referenceManager.legendManager.geneExpressionHistogram.SwitchToTab(index);
+            referenceManager.multiuserMessageSender.SendMessageChangeTab(index);
         }
     }
 }
