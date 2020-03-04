@@ -76,4 +76,4 @@ The folder structure when it comes to prefabs, materials and scripts is hopefull
 ## Notes
 If you lose your config.xml there is a sample one at [Assets/StreamingAssets/sample_config.xml](Assets/StreamingAssets/sample_config.xml). If you run CellexalVR without a `config.xml` file, the sample one will be copied to `Config/config.xml`.
 
-This software uses code of [FFmpeg](http://ffmpeg.org) licensed under the )[LGPLv2.1](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html and its source can be downloaded [here](https://www.ffmpeg.org/download.html#get-sources).
+This software uses code of [FFmpeg](http://ffmpeg.org) licensed under the [LGPLv2.1](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html) and its source can be downloaded [here](https://www.ffmpeg.org/download.html#get-sources).
