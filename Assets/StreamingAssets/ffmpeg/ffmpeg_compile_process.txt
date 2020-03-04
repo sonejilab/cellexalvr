@@ -1,0 +1,7 @@
+FFmpeg was compiled using gcc, Windows subsystem for Linux with MinGW as the target on a Windows 10 system.
+
+No changes were made to the FFmpeg source code.
+
+Commands used were:
+./configure --arch=x86_64 --target-os=mingw64 --cross-prefix=/usr/bin/x86_64-w64-mingw32- --pkg-config=pkg-config
+make
