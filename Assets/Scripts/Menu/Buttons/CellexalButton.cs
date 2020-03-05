@@ -341,7 +341,7 @@ namespace CellexalVR.Menu.Buttons
                 buttonScript.highlightedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Highlighted texture", buttonScript.highlightedTexture, typeof(UnityEngine.Sprite), true);
                 buttonScript.deactivatedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Deactivated texture", buttonScript.deactivatedTexture, typeof(UnityEngine.Sprite), true);
             }
-            EditorUtility.SetDirty(buttonScript);
+            //EditorUtility.SetDirty(buttonScript);
             base.OnInspectorGUI();
 
             serializedObject.ApplyModifiedProperties();

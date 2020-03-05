@@ -39,7 +39,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public Vector3 HistogramMaxPos { get; private set; }
 
-        public int NumberOfBars { get => heightsInt.Length; }
+        public int NumberOfBars { get => CellexalConfig.Config.GraphNumberOfExpressionColors + 1; }
 
 
         private int tallestBarsToSkip;
@@ -69,10 +69,6 @@ namespace CellexalVR.AnalysisObjects
         public enum YAxisMode { Linear, Logarithmic }
 
         private List<GameObject> bars = new List<GameObject>();
-        private int[] heightsInt;
-        private int[] sortedHeightsInt;
-        private float[] heightsFloat;
-        private Vector3 startPos;
         private LegendManager manager;
         private bool attached;
 
@@ -81,26 +77,94 @@ namespace CellexalVR.AnalysisObjects
         private float histogramHeight = 0.4f;
         private float histogramWidth = 0.4f;
 
-        private List<HistogramData?> tabData = new List<HistogramData?>(10);
+        private List<HistogramData> tabData = new List<HistogramData>(10);
+        private int currentTab = 0;
         public List<GameObject> tabButtons = new List<GameObject>(10);
 
         /// <summary>
         /// Holds all data needed to recreate a histogram.
         /// Can be used in <see cref="CreateHistogram(HistogramData)"/>.
         /// </summary>
-        public struct HistogramData
+        public class HistogramData
         {
             public string name;
             public string xAxisMaxLabel;
             public string yAxisMaxLabel;
+            public string yAxisLabel;
             public List<float> barHeights;
+            public int[] heightsInt;
+            public YAxisMode yAxisMode;
+            public int tallestBarsToSkip;
 
-            public HistogramData(string geneName, string xAxisMaxLabel, string yAxisMaxLabel, List<float> barHeights)
+
+
+
+            /// <summary>
+            /// Creates a new histogram data entry.
+            /// </summary>
+            /// <param name="geneName">The name of the gene the histogram covers.</param>
+            /// <param name="heightsInt"></param>
+            public HistogramData(string geneName, int[] heightsInt)
             {
                 this.name = geneName;
-                this.xAxisMaxLabel = xAxisMaxLabel;
-                this.yAxisMaxLabel = yAxisMaxLabel;
-                this.barHeights = barHeights;
+                this.heightsInt = heightsInt;
+            }
+
+            /// <summary>
+            /// Calculates the bar heights.
+            /// </summary>
+            /// <param name="yAxisMode">The desired <see cref="GeneExpressionHistogram.YAxisMode"/>.</param>
+            /// <param name="tallestBarsToSkip">The number of tallest bar to skip when scaling the y-axis.</param>
+            public void CalculateBarHeights(YAxisMode yAxisMode, int tallestBarsToSkip)
+            {
+                this.yAxisMode = yAxisMode;
+                this.tallestBarsToSkip = tallestBarsToSkip;
+
+                if (yAxisMode == YAxisMode.Linear)
+                {
+                    yAxisLabel = "Number of cells";
+                }
+                else
+                {
+                    yAxisLabel = "Log(Number of cells)";
+                }
+
+                int[] sortedHeightsInt = new int[heightsInt.Length];
+                Array.Copy(heightsInt, sortedHeightsInt, heightsInt.Length);
+                Array.Sort(sortedHeightsInt);
+                float largestBin = (float)sortedHeightsInt[sortedHeightsInt.Length - tallestBarsToSkip - 1];
+                barHeights = new List<float>(heightsInt.Length);
+                if (yAxisMode == YAxisMode.Linear)
+                {
+                    for (int i = 0; i < heightsInt.Length; ++i)
+                    {
+                        barHeights.Add((float)heightsInt[i] / largestBin);
+                    }
+                    yAxisMaxLabel = largestBin.ToString();
+                }
+                else
+                {
+                    for (int i = 0; i < heightsInt.Length; ++i)
+                    {
+                        if (heightsInt[i] == 0)
+                        {
+                            barHeights.Add(0f);
+                        }
+                        else
+                        {
+                            barHeights.Add(Mathf.Log(heightsInt[i]));
+                        }
+                    }
+
+                    largestBin = Mathf.Log(largestBin);
+
+                    for (int i = 0; i < barHeights.Count; ++i)
+                    {
+                        barHeights[i] = barHeights[i] / largestBin;
+                    }
+                    yAxisMaxLabel = largestBin.ToString();
+
+                }
             }
         }
 
@@ -150,92 +214,34 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="skip">The number of tallest bars to cut, so the n:th tallest bar uses up all of the y axis.</param>
         public void CreateHistogram(string geneName, int[] bins, string xAxisMaxLabel, YAxisMode barHeightMode, int skip = 0)
         {
-            heightsInt = bins;
-            sortedHeightsInt = new int[bins.Length];
-            Array.Copy(bins, sortedHeightsInt, bins.Length);
-            Array.Sort(sortedHeightsInt);
-
             DesiredYAxisMode = barHeightMode;
             TallestBarsToSkip = skip;
 
-            string yAxisMaxLabel;
-            List<float> barHeights;
-            CalculateBarHeights(out yAxisMaxLabel, out barHeights);
-            HistogramData newData = new HistogramData(geneName, xAxisMaxLabel, yAxisMaxLabel, barHeights);
+            HistogramData newData = new HistogramData(geneName, bins);
+            newData.CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
+
             CreateHistogram(newData);
 
             // make sure the order matches the previous searches list
-            if (!tabData.Any((HistogramData? data) => data.HasValue && data.Value.name == geneName))
+            if (!tabData.Any((HistogramData data) => data != null && data.name == geneName))
             {
                 var locks = referenceManager.previousSearchesList.searchLocks;
-                HistogramData? next = newData;
+                HistogramData next = newData;
                 for (int i = 0; i < locks.Count && i < tabData.Count; ++i)
                 {
-                    if (!locks[i].Locked && next.HasValue)
+                    if (!locks[i].Locked && next != null)
                     {
-                        HistogramData? temp = tabData[i];
+                        HistogramData temp = tabData[i];
                         tabData[i] = next;
-                        tabButtons[i].GetComponentInChildren<TextMeshPro>().text = next.Value.name;
+                        tabButtons[i].GetComponentInChildren<TextMeshPro>().text = next.name;
                         next = temp;
                     }
                 }
-                if (tabData.Count < 10 && next.HasValue)
+                if (tabData.Count < 10 && next != null)
                 {
                     tabData.Add(next);
-                    tabButtons[tabData.Count - 1].GetComponentInChildren<TextMeshPro>().text = next.Value.name;
+                    tabButtons[tabData.Count - 1].GetComponentInChildren<TextMeshPro>().text = next.name;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Calculates the bar heights.
-        /// </summary>
-        /// <param name="yAxisMaxLabel">The resulting text on the max y label</param>
-        /// <param name="barHeights">The resulting heights, range [0, 1]</param>
-        private void CalculateBarHeights(out string yAxisMaxLabel, out List<float> barHeights)
-        {
-            string yAxisText = "Number of cells";
-
-            if (DesiredYAxisMode != YAxisMode.Linear)
-            {
-                yAxisText = "Log(" + yAxisText + ")";
-            }
-
-            float largestBin = (float)sortedHeightsInt[sortedHeightsInt.Length - TallestBarsToSkip - 1];
-            yAxisLabel.text = yAxisText;
-            barHeights = new List<float>(heightsInt.Length);
-            if (DesiredYAxisMode == YAxisMode.Linear)
-            {
-                for (int i = 0; i < heightsInt.Length; ++i)
-                {
-                    barHeights.Add((float)heightsInt[i] / largestBin);
-                }
-                heightsFloat = null;
-                yAxisMaxLabel = largestBin.ToString();
-            }
-            else
-            {
-                heightsFloat = new float[heightsInt.Length];
-                for (int i = 0; i < heightsInt.Length; ++i)
-                {
-                    if (heightsInt[i] == 0)
-                    {
-                        heightsFloat[i] = 0f;
-                    }
-                    else
-                    {
-                        heightsFloat[i] = Mathf.Log(heightsInt[i]);
-                    }
-                }
-
-                largestBin = Mathf.Log(largestBin);
-
-                for (int i = 0; i < heightsFloat.Length; ++i)
-                {
-                    barHeights.Add(heightsFloat[i] / largestBin);
-                }
-                yAxisMaxLabel = largestBin.ToString();
-
             }
         }
 
@@ -302,10 +308,8 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void RecreateHistogram()
         {
-            string yAxisMaxLabel;
-            List<float> barHeights;
-            CalculateBarHeights(out yAxisMaxLabel, out barHeights);
-            CreateHistogram(this.geneNameLabel.text, xAxisMaxLabel.text, yAxisMaxLabel, barHeights);
+            tabData[currentTab].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
+            CreateHistogram(tabData[currentTab]);
         }
 
         /// <summary>
@@ -366,15 +370,22 @@ namespace CellexalVR.AnalysisObjects
                     Destroy(bars[bars.Count - 1 - i]);
                 }
                 bars.RemoveRange(bars.Count - numberOfBarsToRemove, numberOfBarsToRemove);
-
             }
         }
 
+        /// <summary>
+        /// Switches to another previously generated histogram.
+        /// </summary>
+        /// <param name="index">The tab to switch to.</param>
         public void SwitchToTab(int index)
         {
-            if (tabData[index].HasValue)
+            HistogramData data = tabData[index];
+            if (data != null)
             {
-                CreateHistogram(tabData[index].Value);
+                currentTab = index;
+                TallestBarsToSkip = data.tallestBarsToSkip;
+                DesiredYAxisMode = data.yAxisMode;
+                CreateHistogram(data);
             }
         }
 
@@ -435,7 +446,8 @@ namespace CellexalVR.AnalysisObjects
             text.transform.localPosition = infoTextPos;
 
             int[] selectedSlice = new int[maxX - minX + 1];
-            Array.Copy(heightsInt, minX, selectedSlice, 0, selectedSlice.Length);
+            var data = tabData[currentTab];
+            Array.Copy(data.heightsInt, minX, selectedSlice, 0, selectedSlice.Length);
             Array.Sort(selectedSlice);
             double mean = selectedSlice.Average();
             float median;
@@ -454,13 +466,13 @@ namespace CellexalVR.AnalysisObjects
                 int sum = 0;
                 for (int i = minX; i <= maxX; ++i)
                 {
-                    sum += heightsInt[i];
+                    sum += data.heightsInt[i];
                 }
                 highlightAreaInfoText.text = "x: [" + minX + ", " + maxX + "]\nsum: " + sum + "\nmean: " + mean + "\nmedian: " + median;
             }
             else
             {
-                highlightAreaInfoText.text = "x: " + minX + "\ny: " + heightsInt[minX];
+                highlightAreaInfoText.text = "x: " + minX + "\ny: " + data.heightsInt[minX];
             }
         }
 
@@ -494,7 +506,7 @@ namespace CellexalVR.AnalysisObjects
             float.TryParse(xAxisMaxLabel.text, NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out float value);
             referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX,
-                value); 
+                value);
         }
 
     }

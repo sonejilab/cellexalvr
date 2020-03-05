@@ -35,11 +35,11 @@ namespace CellexalVR.AnalysisObjects
         private bool attached;
         private ReferenceManager referenceManager;
         private Transform legendTransform;
-        
+
         private void Start()
         {
             legendTransform = transform;
-            CellexalEvents.GraphsReset.AddListener(DeactivateLegend);
+            //CellexalEvents.GraphsReset.AddListener(DeactivateLegend);
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             geneExpressionHistogram.referenceManager = referenceManager;
             interactableObject = GetComponent<VRTK.VRTK_InteractableObject>();
