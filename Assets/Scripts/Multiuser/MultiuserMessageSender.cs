@@ -174,7 +174,7 @@ namespace CellexalVR.Multiuser
                 hit.x, hit.y, hit.z, coordinator.photonView.ownerId);
         }
         #endregion
-        
+
         #region Legend
 
 
@@ -195,6 +195,22 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageChangeLegend",
                 PhotonTargets.Others, legendName);
+        }
+
+        public void SendMessageAttributeLegendChangePage(bool dir)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageAttributeLegendChangePage",
+                PhotonTargets.Others, dir);
+
+        }
+
+        public void SendMessageSelectionLegendChangePage(bool dir)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSelectionLegendChangePage",
+                PhotonTargets.Others, dir);
+
         }
 
         public void SendMessageChangeTab(int index)
@@ -227,9 +243,9 @@ namespace CellexalVR.Multiuser
 
         public void SendMessageSwitchMode(string mode)
         {
-           if (!multiplayer) return;
-           coordinator.photonView.RPC("RecieveMessageSwitchMode",
-               PhotonTargets.Others, mode);
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSwitchMode",
+                PhotonTargets.Others, mode);
         }
 
         public void SendMessageChangeThreshold(int increment)

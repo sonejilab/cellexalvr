@@ -200,6 +200,18 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
+        public void RecieveMessageAttributeLegendChangePage(bool dir)
+        {
+            referenceManager.legendManager.attributeLegend.ChangePage(dir);
+        }
+
+        [PunRPC]
+        public void RecieveMessageSelectionLegendChangePage(bool dir)
+        {
+            referenceManager.legendManager.selectionLegend.ChangePage(dir);
+        }
+
+        [PunRPC]
         public void RecieveMessageChangeTab(int index)
         {
             referenceManager.legendManager.geneExpressionHistogram.SwitchToTab(index);
