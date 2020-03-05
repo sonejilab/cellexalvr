@@ -31,8 +31,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
         {
             paths = new Dictionary<string, string>();
             dataTypes = new Dictionary<string, char>();
-
             nameTextMesh = transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
         }
 
         public void AddToPaths(string key, string value, char dtype)
@@ -47,10 +52,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 paths[key] = value;
                 dataTypes[key] = dtype;
             }
-
             h5readerAnnotater.AddToConfig(key + "_" + name, value, dtype);
-            
-
         }
 
         public void RemoveFromPaths(string key)
@@ -116,6 +118,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
             h5readerAnnotater.projectionObjectScripts.Remove(this);
             Destroy(this.gameObject);
+            RectTransform rect;
+            int counter = 0;
+            foreach (ProjectionObjectScript p in h5readerAnnotater.projectionObjectScripts)
+            {
+                rect = p.GetComponent<RectTransform>();
+                rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * counter++, rect.rect.width);
+            }
         }
 
         public void Init(projectionType type)
@@ -128,9 +137,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     Destroy(g);
             }
             instantiatedGameObjects = new List<GameObject>();
-
-            
-
 
             if (type == projectionType.p2D_sep || type == projectionType.p3D_sep)
                 seperatedText.text = "unsep";
@@ -156,15 +162,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 offset++;
                 go.GetComponent<TextMeshProUGUI>().text = anchor;
                 instantiatedGameObjects.Add(go);
-
             }
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
     }
 }
