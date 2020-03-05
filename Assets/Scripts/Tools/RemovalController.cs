@@ -8,7 +8,6 @@ namespace CellexalVR.Tools
     /// </summary>
     public class RemovalController : MonoBehaviour
     {
-
         public Material inactiveMat;
         public Material activeMat;
         public ReferenceManager referenceManager;
@@ -16,11 +15,6 @@ namespace CellexalVR.Tools
         private bool controllerInside;
         private bool delete;
         private Transform target;
-        private float speed;
-        private float targetScale;
-        private float currentTime;
-        private float deleteTime = 0.7f;
-        private float shrinkSpeed;
         private GameObject objectToDelete;
         private bool runningScript;
 
@@ -38,9 +32,6 @@ namespace CellexalVR.Tools
         void Start()
         {
             rightController = referenceManager.rightController;
-            speed = 1.5f;
-            shrinkSpeed = 2f;
-            targetScale = 0.1f;
         }
 
         void Update()
@@ -90,7 +81,6 @@ namespace CellexalVR.Tools
         private void InitiateDelete(GameObject obj)
         {
             objectToDelete = obj;
-            currentTime = 0f;
             switch (obj.tag)
             {
                 case "HeatBoard":

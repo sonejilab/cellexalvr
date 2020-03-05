@@ -18,9 +18,9 @@ namespace CellexalVR.Tools
         public GameObject minimizedObjectContainerPrefab;
 
         private MenuToggler menuToggler;
-        private Vector3 startPos = new Vector3(-.34f, .34f, .073f);
-        private Vector3 dNextPosRow = new Vector3(.17f, 0, 0);
-        private Vector3 dNextPosCol = new Vector3(0, -.17f, 0);
+        private Vector3 startPos = new Vector3(.34f, .34f, .073f);
+        private Vector3 dNextPosRow = new Vector3(0f, -.17f, 0);
+        private Vector3 dNextPosCol = new Vector3(.17f, 0f, 0);
         private bool[,] spaceTaken = new bool[5, 5];
         private List<GameObject> minimizedObjects = new List<GameObject>(25);
 
@@ -32,7 +32,7 @@ namespace CellexalVR.Tools
             }
         }
 
-        void Start()
+        private void Start()
         {
             for (int i = 0; i < spaceTaken.GetLength(0); ++i)
             {
@@ -52,10 +52,10 @@ namespace CellexalVR.Tools
         /// <param name="description"> A text that will be placed on top of the minimized object. </param>
         internal void MinimizeObject(GameObject objectToMinimize, string description)
         {
-            var jail = Instantiate(minimizedObjectContainerPrefab);
+            var jail = Instantiate(minimizedObjectContainerPrefab, transform, true);
             minimizedObjects.Add(jail);
-            jail.transform.parent = transform;
             jail.transform.localRotation = Quaternion.identity;
+            jail.transform.Rotate(0f, 0f, -90f);
             jail.transform.localScale = new Vector3(.166f, .166f, .13f);
             var container = jail.GetComponent<MinimizedObjectContainer>();
             container.MinimizedObject = objectToMinimize;
@@ -68,18 +68,16 @@ namespace CellexalVR.Tools
             //    container.GetComponent<Renderer>().enabled = false;
             //    container.GetComponent<Collider>().enabled = false;
             //}
-            for (int i = 0; i < spaceTaken.GetLength(0); ++i)
+            for (int j = 0; j < spaceTaken.GetLength(0); ++j)
             {
-                for (int j = 0; j < spaceTaken.GetLength(1); ++j)
+                for (int i = 0; i < spaceTaken.GetLength(1); ++i)
                 {
-                    if (!spaceTaken[i, j])
-                    {
-                        spaceTaken[i, j] = true;
-                        container.SpaceX = i;
-                        container.SpaceY = j;
-                        jail.transform.localPosition = startPos + dNextPosRow * i + dNextPosCol * j;
-                        goto afterLoop;
-                    }
+                    if (spaceTaken[i, j]) continue;
+                    spaceTaken[i, j] = true;
+                    container.SpaceX = i;
+                    container.SpaceY = j;
+                    jail.transform.localPosition = startPos + dNextPosRow * i + dNextPosCol * j;
+                    goto afterLoop;
                 }
             }
             afterLoop:
@@ -100,7 +98,7 @@ namespace CellexalVR.Tools
         /// <summary>
         /// Clears the area where the minimized objects are. Does not restore any of the minimized objects.
         /// </summary>
-        public void Clear()
+        private void Clear()
         {
             for (int i = 0; i < minimizedObjects.Count; ++i)
             {

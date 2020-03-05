@@ -162,8 +162,8 @@ namespace CellexalVR.Interaction
         private void Update()
         {
             if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
-                                                     !grabbingObject && !referenceManager.selectionToolCollider
-                                                         .IsSelectionToolEnabled()))
+                !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
+                controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu))
                 return;
 
             var raycastingSource = referenceManager.rightLaser.transform;
