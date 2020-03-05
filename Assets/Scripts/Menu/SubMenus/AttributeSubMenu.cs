@@ -125,6 +125,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             if (!toggle)
             {
+                referenceManager.multiuserMessageSender.SendMessageResetGraphColor();
                 referenceManager.graphManager.ResetGraphsColor();
             }
             else
