@@ -1,4 +1,5 @@
-﻿
+﻿using CellexalVR.Extensions;
+
 namespace CellexalVR.Menu.Buttons.Legends
 {
 
@@ -9,7 +10,7 @@ namespace CellexalVR.Menu.Buttons.Legends
     {
         public AnalysisObjects.LegendManager.Legend legendToActivate;
 
-        protected override string Description => "Switch legend to " + legendToActivate.ToString();
+        protected override string Description => "Switch to " + legendToActivate.ToDescriptionString();
 
         public override void Click()
         {

@@ -5,24 +5,22 @@ namespace CellexalVR.Menu.Buttons.Legends
 
     public class SwitchLegendYAxisModeButton : CellexalButton
     {
-        protected override string Description => "Switch Y axis mode";
+        public GeneExpressionHistogram histogram;
 
-        private GeneExpressionHistogram.YAxisMode currentMode;
+        protected override string Description => "Switch Y axis mode";
 
         public override void Click()
         {
-            if (currentMode == GeneExpressionHistogram.YAxisMode.Linear)
+            if (histogram.DesiredYAxisMode == GeneExpressionHistogram.YAxisMode.Linear)
             {
-                currentMode = GeneExpressionHistogram.YAxisMode.Logarithmic;
+                histogram.DesiredYAxisMode = GeneExpressionHistogram.YAxisMode.Logarithmic;
             }
-            else if (currentMode == GeneExpressionHistogram.YAxisMode.Logarithmic)
+            else if (histogram.DesiredYAxisMode == GeneExpressionHistogram.YAxisMode.Logarithmic)
             {
-                currentMode = GeneExpressionHistogram.YAxisMode.Linear;
+                histogram.DesiredYAxisMode = GeneExpressionHistogram.YAxisMode.Linear;
             }
-            GeneExpressionHistogram histogram = gameObject.GetComponentInParent<GeneExpressionHistogram>();
-            histogram.DesiredYAxisMode = currentMode;
             histogram.RecreateHistogram();
-            referenceManager.multiuserMessageSender.SendMessageSwitchMode(currentMode.ToString());
+            referenceManager.multiuserMessageSender.SendMessageSwitchMode(histogram.DesiredYAxisMode.ToString());
         }
     }
 }

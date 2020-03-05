@@ -173,6 +173,9 @@ namespace CellexalVR.AnalysisObjects
             }
             entries.Clear();
             currentPageNbr = 0;
+            addEntryToPageIndex = 0;
+            pageNumberText.text = "Page 1/1";
+
         }
 
         /// <summary>

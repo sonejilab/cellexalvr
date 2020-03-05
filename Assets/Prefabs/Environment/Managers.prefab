@@ -55326,6 +55326,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
+  histogram: {fileID: 1748032380410687359}
 --- !u!1 &9015590292066718942
 GameObject:
   m_ObjectHideFlags: 0

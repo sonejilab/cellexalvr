@@ -160,7 +160,7 @@ namespace CellexalVR.Extensions
             return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
         }
 
-        public static string ToString(this CellexalVR.AnalysisObjects.LegendManager.Legend legend)
+        public static string ToDescriptionString(this CellexalVR.AnalysisObjects.LegendManager.Legend legend)
         {
             switch (legend)
             {

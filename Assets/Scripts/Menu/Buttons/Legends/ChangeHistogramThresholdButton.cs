@@ -2,7 +2,7 @@
 {
 
     public bool increment;
-    protected override string Description => "Change number of tallest bars to skip when scaling y axis";
+    protected override string Description => (increment ? "Increase" : "Decrease") + " number of tallest bars to skip when scaling y axis";
 
     public override void Click()
     {
