@@ -9,7 +9,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public GameObject annotatorPrefab;
         public Dictionary<string, H5readerAnnotater> annotators = new Dictionary<string, H5readerAnnotater>();
         // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             //string path = "LCA_142k_umap_phate_loom";
 
@@ -23,7 +23,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
 
         }

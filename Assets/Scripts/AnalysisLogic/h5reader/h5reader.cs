@@ -79,7 +79,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     filePath = s;
             }
 
-
             if (configFile == "")
             {
                 UnityEngine.Debug.Log("No config file for " + path);
@@ -171,9 +170,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
             string file_name = filePath;
             startInfo.Arguments = "ann.py " + file_name;
             p.StartInfo = startInfo;
-            p.Start();
-
-
             writer = p.StandardInput;
 
             yield return null;
@@ -181,6 +177,15 @@ namespace CellexalVR.AnalysisLogic.H5reader
             reader = p.StandardOutput;
 
             yield return null;
+            Thread t = new Thread(
+                () =>
+                {
+                    bool start = p.Start();
+                });
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            t.Start();
+
 
             var watch = Stopwatch.StartNew();
             if (conf.ContainsKey("custom_cellnames"))
@@ -477,7 +482,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     }
                 }
 
-                if (HighestExpression == LowestExpression)
+                if (Math.Abs(HighestExpression - LowestExpression) < 0.001)
                 {
                     HighestExpression += 1;
                 }
