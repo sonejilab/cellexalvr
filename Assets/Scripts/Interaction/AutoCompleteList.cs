@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace CellexalVR.Interaction
 {
@@ -60,11 +61,15 @@ namespace CellexalVR.Interaction
             CellexalLog.Log("Started building autocomplete list bk-tree");
             namesOfThings.Clear();
             //summertwerk
-            if (referenceManager.h5Reader == null)
+            if (referenceManager.inputReader.h5readers.Count > 0)
             {
 
+                //Grabbing the first h5reader since we dont know the path
+                results = referenceManager.inputReader.h5readers.First().Value.index2genename;
 
-                
+            }
+            else
+            {
                 SQLiter.SQLite database = referenceManager.database;
                 //yield return new WaitForSeconds(2);
                 while (database.QueryRunning)
@@ -78,11 +83,7 @@ namespace CellexalVR.Interaction
                     yield return null;
                 }
                 //summertwerk
-                results = (string[]) database._result.ToArray(typeof(string));
-            }
-            else
-            {
-                 results = referenceManager.h5Reader.index2genename;
+                results = (string[])database._result.ToArray(typeof(string));
             }
             for (int i = 0; i < results.Length; ++i)
             {
