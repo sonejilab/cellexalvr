@@ -60,7 +60,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private FileTypes fileType;
         private ReferenceManager referenceManager;
-
         /// <summary>
         /// H5reader
         /// </summary>
