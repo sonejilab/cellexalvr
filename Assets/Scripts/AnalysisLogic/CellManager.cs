@@ -34,8 +34,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
         public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
-        //summertwerk
-        private H5reader.H5Reader h5Reader;
+
 
         private SQLite database;
         private SteamVR_TrackedObject rightController;
@@ -84,7 +83,6 @@ namespace CellexalVR.AnalysisLogic
             recolored = new Dictionary<Cell, int>();
             selectionList = new Dictionary<Graph.GraphPoint, int>();
             FacsRanges = new Dictionary<string, Tuple<float, float>>();
-            h5Reader = referenceManager.h5Reader;
         }
 
         /// <summary>
@@ -201,11 +199,7 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
         public void ColorGraphsByGene(string geneName)
         {
-            //summertwerk gone to work
-            if (h5Reader == null)
                 ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
-            else
-                ColorGraphsByGeneHDF5(geneName, graphManager.GeneExpressionColoringMethod, true);
         }
 
         /// <summary>
@@ -214,38 +208,9 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="geneName"> The name of the gene. </param>
         public void ColorGraphsByGene(string geneName, bool triggerEvent = true)
         {
-            ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, triggerEvent);
+                ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, triggerEvent);
         }
 
-        //summertwerker
-        /// <summary>
-        /// Color the graph with data from the h5 file
-        /// </summary>
-        /// <param name="geneName">Gene name</param>
-        /// <param name="coloringMethod">Coloring method</param>
-        /// <param name="triggerEvent">Trigger event?</param>
-        public void ColorGraphsByGeneHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent = true)
-        {
-            try
-            {
-                StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
-
-                //StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
-                //QueryRObject(geneName, coloringMethod, triggerEvent);
-
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
-                CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
-            }
-            //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
-            //{
-            //    SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            //}
-            referenceManager.heatmapGenerator.HighLightGene(geneName);
-            referenceManager.networkGenerator.HighLightGene(geneName);
-        }
 
 
         /// <summary>
@@ -256,7 +221,11 @@ namespace CellexalVR.AnalysisLogic
         {
             try
             {
-                StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                if(referenceManager.h5Reader == null)
+                    StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                else
+                    StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
+
                 //QueryRObject(geneName, coloringMethod, triggerEvent);
 
             }
@@ -308,19 +277,19 @@ namespace CellexalVR.AnalysisLogic
             */
             try
             {
-                StartCoroutine(h5Reader.ColorByGene(geneName, coloringMethod));
+                StartCoroutine(referenceManager.h5Reader.ColorByGene(geneName, coloringMethod));
             }
             catch (Exception e)
             {
                 print("bug" + e);
             }
 
-            while (h5Reader.busy)
+            while (referenceManager.h5Reader.busy)
                 yield return null;
 
             audioSource.Play();
             SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            ArrayList expressions = h5Reader._expressionResult;
+            ArrayList expressions = referenceManager.h5Reader._expressionResult;
 
 
             // stop the coroutine if the gene was not in the database

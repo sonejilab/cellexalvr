@@ -265,7 +265,10 @@ namespace CellexalVR.AnalysisLogic
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.R");
             if (referenceManager.h5Reader != null)
+            {
                 referenceManager.h5Reader.CloseConnection();
+                referenceManager.h5Reader = null;
+            }
             //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
         }
