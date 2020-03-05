@@ -126,6 +126,7 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageToggleLaser(bool active, int ownerId)
         {
+            print(ownerId + " - toggle laser");
             if (ownerId == photonView.ownerId) return;
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
@@ -141,9 +142,8 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageMoveLaser(float originX, float originY, float originZ,
             float hitX, float hitY, float hitZ, int ownerId)
         {
-
+            print(ownerId + " - move laser");
             if (ownerId == photonView.ownerId) return;
-
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
             if (!lr)
