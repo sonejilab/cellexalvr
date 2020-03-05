@@ -49,7 +49,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public void RemoveAnnotator(string path)
         {
-
             annotators[path].gameObject.SetActive(false);
         }
     }
