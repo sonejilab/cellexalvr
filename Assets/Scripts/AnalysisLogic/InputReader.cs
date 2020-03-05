@@ -44,6 +44,7 @@ namespace CellexalVR.AnalysisLogic
         private GraphGenerator graphGenerator;
         private string currentPath;
         private Bitmap image1;
+        public Dictionary<string, H5Reader> h5readers;
 
         [Tooltip("Automatically loads the Bertie dataset")]
         public bool debug;
@@ -59,6 +60,7 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
+            h5readers = new Dictionary<string, H5Reader>();
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             cellManager = referenceManager.cellManager;
             database = referenceManager.database;
@@ -106,9 +108,10 @@ namespace CellexalVR.AnalysisLogic
             }
 
             string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
-            H5Reader h5Reader = gameObject.AddComponent<H5Reader>();
-            referenceManager.h5Reader = h5Reader;
-            StartCoroutine(referenceManager.h5Reader.H5ReadGraphs(fullPath));
+            GameObject go = new GameObject(path);
+            H5Reader h5Reader = go.AddComponent<H5Reader>();
+            h5readers.Add(path, h5Reader);
+            StartCoroutine(h5Reader.H5ReadGraphs(fullPath));
         }
 
         /// <summary>
@@ -264,11 +267,19 @@ namespace CellexalVR.AnalysisLogic
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.pid");
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.R");
-            if (referenceManager.h5Reader != null)
+
+            List<string> h5ReadersToRemove = new List<string>();
+
+            foreach(KeyValuePair<string, H5Reader> kvp in referenceManager.inputReader.h5readers)
             {
-                referenceManager.h5Reader.CloseConnection();
-                referenceManager.h5Reader = null;
+                kvp.Value.CloseConnection();
+                Destroy(kvp.Value.gameObject);
+                h5ReadersToRemove.Add(kvp.Key);
             }
+
+            foreach (string reader in h5ReadersToRemove)
+                h5readers.Remove(reader);
+
             //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
         }

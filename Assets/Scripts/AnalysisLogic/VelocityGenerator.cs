@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -64,11 +65,14 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
+            print(path);
             //summertwerk
-            if (referenceManager.h5Reader == null)
-                StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
+            if (referenceManager.inputReader.h5readers.Count > 0)
+            {
+                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value ,path, subGraphName));
+            }
             else
-                StartCoroutine(ReadVelocityParticleSystemFromHDF5(path, subGraphName));
+                StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
 
         }
 
@@ -171,7 +175,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        private IEnumerator ReadVelocityParticleSystemFromHDF5(string path, string subGraphName = "")
+        private IEnumerator ReadVelocityParticleSystemFromHDF5(H5Reader h5Reader, string path, string subGraphName = "")
         {
             while (referenceManager.graphGenerator.isCreating)
             {
@@ -199,18 +203,19 @@ namespace CellexalVR.AnalysisLogic
 
             //print(graphName + " - " + graph.GraphName);
 
+
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
 
-            while (referenceManager.h5Reader.busy)
+            while (h5Reader.busy)
                 yield return null;
 
-            StartCoroutine(referenceManager.h5Reader.GetVelocites(path));
+            StartCoroutine(h5Reader.GetVelocites(path));
 
-            while (referenceManager.h5Reader.busy)
+            while (h5Reader.busy)
                 yield return null;
 
-            string[] vels = referenceManager.h5Reader._velResult;
-            string[] cellNames = referenceManager.h5Reader.index2cellname;
+            string[] vels = h5Reader._velResult;
+            string[] cellNames = h5Reader.index2cellname;
 
             for (int i = 0; i < cellNames.Length; i++)
             {

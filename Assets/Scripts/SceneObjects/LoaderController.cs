@@ -8,6 +8,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.Multiuser;
 using System.IO;
 using System.Linq;
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.SceneObjects
 {
@@ -302,13 +303,7 @@ namespace CellexalVR.SceneObjects
                 referenceManager.keyboardSwitch.SetKeyboardVisible(false);
                 referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
                 referenceManager.velocityGenerator.ActiveGraphs.Clear();
-                //summertwerk
-                if (referenceManager.h5Reader != null)
-                {
-                    referenceManager.h5Reader.CloseConnection();
-                    referenceManager.h5Reader = null;
 
-                }
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
             // must reset loader before generating new folders
