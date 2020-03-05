@@ -20,5 +20,7 @@ public class ToggleLegendButton : CellexalButton
             legendManager.DeactivateLegend();
             legendManager.DetachLegendFromCube();
         }
+        referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendManager.transform.position,
+            legendManager.transform.rotation, legendManager.transform.localScale);
     }
 }

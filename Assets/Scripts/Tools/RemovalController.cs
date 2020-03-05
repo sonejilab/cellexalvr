@@ -29,12 +29,12 @@ namespace CellexalVR.Tools
             }
         }
 
-        void Start()
+        private void Start()
         {
             rightController = referenceManager.rightController;
         }
 
-        void Update()
+        private void Update()
         {
             if (device == null)
             {

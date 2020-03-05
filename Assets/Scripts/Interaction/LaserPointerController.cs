@@ -83,7 +83,6 @@ namespace CellexalVR.Interaction
             }
             origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
-            print(controllerModelSwitcher.ActualModel.ToString());
             if (hit.collider && 
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
@@ -98,7 +97,7 @@ namespace CellexalVR.Interaction
                 {
                     controllerModelSwitcher.ActivateDesiredTool();
                 }
-
+                referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 referenceManager.rightLaser.enabled = true;
                 referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
