@@ -53,7 +53,7 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        void Start()
+        private void Start()
         {
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             cylinder = GameObject.Find("Floor/ExpandableFloor").transform;
@@ -66,7 +66,7 @@ namespace CellexalVR.SceneObjects
             // multiple_exp datasetList = GetComponentInChildren<DatasetList>();
         }
 
-        void Update()
+        private void Update()
         {
             if (moveLoader)
             {
@@ -82,14 +82,13 @@ namespace CellexalVR.SceneObjects
                     //sound.Stop();
                 }
             }
-            if (moveFloor)
+
+            if (!moveFloor) return;
+            currentTime += Time.deltaTime;
+            cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
+            if (Mathf.Abs(cylinder.transform.localScale.x - finalScale.x) <= 0.005)
             {
-                currentTime += Time.deltaTime;
-                cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
-                if (Mathf.Abs(cylinder.transform.localScale.x - finalScale.x) <= 0.005)
-                {
-                    moveFloor = false;
-                }
+                moveFloor = false;
             }
 
 
@@ -109,7 +108,7 @@ namespace CellexalVR.SceneObjects
         /// <summary>
         /// Resets some important variables used by the loader.
         /// </summary>
-        public void ResetLoaderBooleans()
+        private void ResetLoaderBooleans()
         {
             cellsEntered = false;
             timeEntered = 0;

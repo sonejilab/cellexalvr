@@ -17,6 +17,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
     /// </summary>
     public class H5Reader : MonoBehaviour
     {
+        private Thread t;
         private Process p;
         private StreamWriter writer;
         private StreamReader reader;
@@ -59,7 +60,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private FileTypes fileType;
         private ReferenceManager referenceManager;
-
         /// <summary>
         /// H5reader
         /// </summary>
@@ -170,7 +170,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             string file_name = filePath;
             startInfo.Arguments = "ann.py " + file_name;
             p.StartInfo = startInfo;
-            Thread t = new Thread(
+            t = new Thread(
                 () =>
                 {
                     bool start = p.Start();
@@ -178,7 +178,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
-
+            Thread.Sleep(300);
             writer = p.StandardInput;
 
             yield return null;
@@ -270,9 +270,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
         {
             print("Closing connection");
             UnityEngine.Debug.Log("Closing connection loom");
+            writer.WriteLine("sys.exit()");
             p.CloseMainWindow();
 
             p.Close();
+             
         }
 
         /// <summary>
