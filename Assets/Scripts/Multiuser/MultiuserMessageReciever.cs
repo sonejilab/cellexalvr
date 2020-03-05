@@ -344,9 +344,10 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageHighlightCells(Cell[] cellsToHighlight, bool highlight)
+        public void RecieveMessageHighlightCells(int group, bool highlight)
         {
-            CellexalLog.Log(message: "Recieved message to highlight + " + cellsToHighlight.Length + " cells");
+            CellexalLog.Log(message: "Recieved message to highlight + " + group + " cells");
+            Cell[] cellsToHighlight = referenceManager.cellManager.GetCells(group);
             referenceManager.cellManager.HighlightCells(cellsToHighlight, highlight);
         }
 

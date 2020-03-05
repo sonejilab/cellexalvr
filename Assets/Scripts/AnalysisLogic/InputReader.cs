@@ -121,10 +121,6 @@ namespace CellexalVR.AnalysisLogic
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path)
         {
-            if (PhotonNetwork.isMasterClient)
-            {
-                referenceManager.configManager.MultiUserSynchronise();
-            }
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
@@ -192,6 +188,10 @@ namespace CellexalVR.AnalysisLogic
             //LoadPreviousGroupings();
             //string[] spatialMds = Directory.GetFiles(fullPath, "*.spatialmds");
             //StartCoroutine(ReadSpatialMDSFiles(fullPath, spatialMds));
+            if (PhotonNetwork.isMasterClient)
+            {
+                referenceManager.configManager.MultiUserSynchronise();
+            }
         }
 
         private void UpdateSelectionToolHandler()

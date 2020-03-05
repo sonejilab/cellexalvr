@@ -21,7 +21,8 @@ namespace CellexalVR.Multiuser
 
         public LineRenderer AddLaser(int id)
         {
-            GameObject newLaser = GameObject.Instantiate(new GameObject(), this.transform);
+            GameObject newLaser = new GameObject();
+            newLaser.transform.parent = transform;
             newLaser.gameObject.name = id.ToString();
             lasers.Add(newLaser);
             return newLaser.AddComponent<LineRenderer>();

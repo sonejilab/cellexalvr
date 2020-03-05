@@ -318,9 +318,9 @@ namespace CellexalVR.Interaction
             heatmap.enlargedGeneText.gameObject.SetActive(false);
             if (cellsToHighlight != null && cellsToHighlight.Length > 0)
             {
-                cellManager.HighlightCells(cellsToHighlight, false);
+                cellManager.HighlightCells(cellsToHighlight, false, group);
                 cellsToHighlight = cellManager.GetCells(group);
-                cellManager.HighlightCells(cellsToHighlight, true);
+                cellManager.HighlightCells(cellsToHighlight, true, group);
             }
         }
 

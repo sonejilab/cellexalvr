@@ -321,12 +321,12 @@ namespace CellexalVR.Multiuser
                 PhotonTargets.Others, n);
         }
 
-        public void SendHighlightCells(Cell[] cellsToHighlight, bool highlight)
+        public void SendMessageHighlightCells(int group, bool highlight)
         {
             if (!multiplayer) return;
-            CellexalLog.Log("Informing clients to highlight " + cellsToHighlight.Length + " cells");
+            CellexalLog.Log("Informing clients to highlight " + group + " cells");
             coordinator.photonView.RPC(methodName: "RecieveHighlightCells", target: PhotonTargets.Others,
-                cellsToHighlight, highlight);
+                group, highlight);
         }
 
         #endregion
