@@ -126,15 +126,13 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageToggleLaser(bool active, int ownerId)
         {
-            if (ownerId == referenceManager.multiuserMessageSender.photonView.ownerId) return;
+            if (ownerId == photonView.ownerId) return;
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
-            ;
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
             }
-
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
@@ -143,16 +141,15 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageMoveLaser(float originX, float originY, float originZ,
             float hitX, float hitY, float hitZ, int ownerId)
         {
-            if (ownerId == referenceManager.multiuserMessageSender.photonView.ownerId) return;
+
+            if (ownerId == photonView.ownerId) return;
 
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
-            ;
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
             }
-
             lr.SetPosition(0, new Vector3(originX, originY, originZ));
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
         }
@@ -271,7 +268,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageColoringMethodChanged(int newMode)
         {
             CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
-            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods) newMode);
+            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
         }
 
         //[PunRPC]
@@ -1099,7 +1096,7 @@ namespace CellexalVR.Multiuser
             bool networkExists = (handlerExists && center != null);
             if (networkExists)
             {
-                center.SwitchLayout((NetworkCenter.Layout) layout);
+                center.SwitchLayout((NetworkCenter.Layout)layout);
             }
             else
             {
