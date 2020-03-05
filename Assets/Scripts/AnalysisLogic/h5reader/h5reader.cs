@@ -17,6 +17,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
     /// </summary>
     public class H5Reader : MonoBehaviour
     {
+        private Thread t;
         private Process p;
         private StreamWriter writer;
         private StreamReader reader;
@@ -78,7 +79,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 else if (s.EndsWith(".loom") || s.EndsWith(".h5ad"))
                     filePath = s;
             }
-
 
             if (configFile == "")
             {
@@ -171,9 +171,15 @@ namespace CellexalVR.AnalysisLogic.H5reader
             string file_name = filePath;
             startInfo.Arguments = "ann.py " + file_name;
             p.StartInfo = startInfo;
-            p.Start();
-
-
+            t = new Thread(
+                () =>
+                {
+                    bool start = p.Start();
+                });
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            t.Start();
+            Thread.Sleep(300);
             writer = p.StandardInput;
 
             yield return null;
@@ -265,9 +271,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
         {
             print("Closing connection");
             UnityEngine.Debug.Log("Closing connection loom");
+            writer.WriteLine("sys.exit()");
             p.CloseMainWindow();
 
             p.Close();
+             
         }
 
         /// <summary>
@@ -477,7 +485,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     }
                 }
 
-                if (HighestExpression == LowestExpression)
+                if (Math.Abs(HighestExpression - LowestExpression) < 0.001)
                 {
                     HighestExpression += 1;
                 }
