@@ -26,7 +26,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             Vector3 start = AnchorA.transform.position;
             Vector3 end = AnchorB.transform.position;
             float dist = Vector3.Distance(start, end);
-            if (dist < 0.02f)
+            if (dist < 0.02f || !AnchorB.isActiveAndEnabled)
             {
                 for (int i = 0; i < 10; i++)
                 {

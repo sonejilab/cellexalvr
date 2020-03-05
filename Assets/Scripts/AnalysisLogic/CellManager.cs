@@ -10,6 +10,7 @@ using CellexalVR.Interaction;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -221,10 +222,16 @@ namespace CellexalVR.AnalysisLogic
         {
             try
             {
-                if(referenceManager.h5Reader == null)
-                    StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                KeyValuePair<string, H5Reader> kvp;
+                if (referenceManager.inputReader.h5readers.Count > 0)
+                {
+                    kvp = referenceManager.inputReader.h5readers.First();
+                    StartCoroutine(QueryHDF5(kvp.Value, geneName, coloringMethod, triggerEvent));
+                }
                 else
-                    StartCoroutine(QueryHDF5(geneName, coloringMethod, triggerEvent));
+                {
+                    StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                }
 
                 //QueryRObject(geneName, coloringMethod, triggerEvent);
 
@@ -249,7 +256,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="coloringMethod">coloring method</param>
         /// <param name="triggerEvent">trigger event?</param>
         /// <returns></returns>
-        private IEnumerator QueryHDF5(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
+        private IEnumerator QueryHDF5(H5Reader h5Reader ,string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod, bool triggerEvent)
         {
 
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -277,19 +284,19 @@ namespace CellexalVR.AnalysisLogic
             */
             try
             {
-                StartCoroutine(referenceManager.h5Reader.ColorByGene(geneName, coloringMethod));
+                StartCoroutine(h5Reader.ColorByGene(geneName, coloringMethod));
             }
             catch (Exception e)
             {
                 print("bug" + e);
             }
 
-            while (referenceManager.h5Reader.busy)
+            while (h5Reader.busy)
                 yield return null;
 
             audioSource.Play();
             SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            ArrayList expressions = referenceManager.h5Reader._expressionResult;
+            ArrayList expressions = h5Reader._expressionResult;
 
 
             // stop the coroutine if the gene was not in the database

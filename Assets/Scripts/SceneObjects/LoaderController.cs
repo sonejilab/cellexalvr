@@ -8,6 +8,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.Multiuser;
 using System.IO;
 using System.Linq;
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.SceneObjects
 {
@@ -53,7 +54,7 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        void Start()
+        private void Start()
         {
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             cylinder = GameObject.Find("Floor/ExpandableFloor").transform;
@@ -66,7 +67,7 @@ namespace CellexalVR.SceneObjects
             // multiple_exp datasetList = GetComponentInChildren<DatasetList>();
         }
 
-        void Update()
+        private void Update()
         {
             if (moveLoader)
             {
@@ -82,14 +83,13 @@ namespace CellexalVR.SceneObjects
                     //sound.Stop();
                 }
             }
-            if (moveFloor)
+
+            if (!moveFloor) return;
+            currentTime += Time.deltaTime;
+            cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
+            if (Mathf.Abs(cylinder.transform.localScale.x - finalScale.x) <= 0.005)
             {
-                currentTime += Time.deltaTime;
-                cylinder.transform.localScale = Vector3.Lerp(startScale, finalScale, currentTime / arrivalTime);
-                if (Mathf.Abs(cylinder.transform.localScale.x - finalScale.x) <= 0.005)
-                {
-                    moveFloor = false;
-                }
+                moveFloor = false;
             }
 
 
@@ -109,7 +109,7 @@ namespace CellexalVR.SceneObjects
         /// <summary>
         /// Resets some important variables used by the loader.
         /// </summary>
-        public void ResetLoaderBooleans()
+        private void ResetLoaderBooleans()
         {
             cellsEntered = false;
             timeEntered = 0;
@@ -302,13 +302,7 @@ namespace CellexalVR.SceneObjects
                 referenceManager.keyboardSwitch.SetKeyboardVisible(false);
                 referenceManager.lineBundler.ClearLinesBetweenGraphPoints();
                 referenceManager.velocityGenerator.ActiveGraphs.Clear();
-                //summertwerk
-                if (referenceManager.h5Reader != null)
-                {
-                    referenceManager.h5Reader.CloseConnection();
-                    referenceManager.h5Reader = null;
 
-                }
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
             // must reset loader before generating new folders

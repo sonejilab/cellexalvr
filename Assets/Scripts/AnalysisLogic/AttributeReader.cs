@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using CellexalVR.General;
 using UnityEngine;
+using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -18,27 +19,28 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Reads all attributes from current h5 file
         /// </summary>
-        public IEnumerator H5ReadAttributeFilesCoroutine()
+        public IEnumerator H5ReadAttributeFilesCoroutine(H5Reader h5Reader)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             List<string> available_attributes = new List<string>();
 
-            foreach (string attr in referenceManager.h5Reader.attributes)
+
+            foreach (string attr in h5Reader.attributes)
             {
                 print("reading attribute " + attr);
 
-                while (referenceManager.h5Reader.busy)
+                while (h5Reader.busy)
                     yield return null;
 
-                StartCoroutine(referenceManager.h5Reader.GetAttributes(attr));
+                StartCoroutine(h5Reader.GetAttributes(attr));
 
-                while (referenceManager.h5Reader.busy)
+                while (h5Reader.busy)
                     yield return null;
 
 
-                string[] attrs = referenceManager.h5Reader._attrResult;
-                string[] cellNames = referenceManager.h5Reader.index2cellname;
+                string[] attrs = h5Reader._attrResult;
+                string[] cellNames = h5Reader.index2cellname;
 
                 for (int j = 0; j < cellNames.Length; j++)
                 {

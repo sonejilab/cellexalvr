@@ -126,8 +126,6 @@ namespace CellexalVR.General
 
         //h5reader annotator
         public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
-        [FormerlySerializedAs("h5reader")] public H5Reader h5Reader;
-
 
         #endregion
 
@@ -242,7 +240,6 @@ namespace CellexalVR.General
             configManager = inputreader.GetComponent<ConfigManager>();
             //GameObject helperCylinder;
             inputReader = inputreader.GetComponent<InputReader>();
-            h5Reader = inputreader.GetComponent<H5Reader>();
             database = GameObject.Find("SQLiter").GetComponent<SQLiter.SQLite>();
             logManager = inputreader.GetComponent<LogManager>();
             multiuserMessageSender = managersParent.GetComponentInChildren<MultiuserMessageSender>();
