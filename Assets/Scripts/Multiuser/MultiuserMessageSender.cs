@@ -176,6 +176,13 @@ namespace CellexalVR.Multiuser
         #endregion
         
         #region Legend
+
+
+        public void SendMessageToggleLegend()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleLegend", PhotonTargets.Others);
+        }
         public void SendMessageMoveLegend(Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;

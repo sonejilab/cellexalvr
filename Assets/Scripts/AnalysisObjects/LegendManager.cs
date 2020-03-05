@@ -17,12 +17,17 @@ namespace CellexalVR.AnalysisObjects
         public GroupingLegend selectionLegend;
         public GameObject detachArea;
         public GeneExpressionHistogram geneExpressionHistogram;
-        [HideInInspector]
-        public bool legendActive;
-        [HideInInspector]
-        public Legend desiredLegend;
+        [HideInInspector] public bool legendActive;
+        [HideInInspector] public Legend desiredLegend;
         public Legend currentLegend;
-        public enum Legend { None, AttributeLegend, GeneExpressionLegend, SelectionLegend }
+
+        public enum Legend
+        {
+            None,
+            AttributeLegend,
+            GeneExpressionLegend,
+            SelectionLegend
+        }
 
         private Vector3 minPos = new Vector3(-0.58539f, -0.28538f, 0f);
         private Vector3 maxPos = new Vector3(-0.0146f, 0.2852f, 0f);
@@ -51,7 +56,8 @@ namespace CellexalVR.AnalysisObjects
         private void Update()
         {
             if (!interactableObject.IsGrabbed()) return;
-            referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendTransform.position, legendTransform.rotation,
+            referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendTransform.position,
+                legendTransform.rotation,
                 legendTransform.localScale);
         }
 
@@ -63,6 +69,7 @@ namespace CellexalVR.AnalysisObjects
             attachArea = cullingCubeTransform.parent.GetComponent<CullingCube>().attachOnSideArea;
             attachArea.SetActive(true);
         }
+
         private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.name != "AttachOnSide") return;
@@ -106,6 +113,7 @@ namespace CellexalVR.AnalysisObjects
                 t += (Time.deltaTime / time);
                 yield return null;
             }
+
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
             Destroy(GetComponent<Rigidbody>());
             detachArea.SetActive(true);
@@ -138,6 +146,7 @@ namespace CellexalVR.AnalysisObjects
                 rigidbody.angularDrag = 15;
                 GetComponent<VRTK_InteractableObject>().isGrabbable = true;
             }
+
             detachArea.SetActive(false);
             legendInsideCube = false;
             Vector3 pos = backgroundPlane.transform.localPosition;
@@ -169,6 +178,10 @@ namespace CellexalVR.AnalysisObjects
         public void ActivateLegend()
         {
             ActivateLegend(desiredLegend);
+            Transform transform1 = transform;
+            transform1.position = referenceManager.mainMenu.transform.position;
+            transform1.rotation = referenceManager.mainMenu.transform.rotation;
+            transform.Rotate(new Vector3(90f, 0f, 0f), Space.Self);
         }
 
         /// <summary>
@@ -186,6 +199,7 @@ namespace CellexalVR.AnalysisObjects
                 detachArea.SetActive(true);
                 CellexalEvents.LegendAttached.Invoke();
             }
+
             switch (legendToActivate)
             {
                 case Legend.AttributeLegend:
@@ -219,7 +233,8 @@ namespace CellexalVR.AnalysisObjects
             Vector3 localPos = transform.InverseTransformPoint(worldPos);
             //print("world and local " + worldPos + " " + localPos + " " + (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos));
             localPos.z = 0f;
-            return (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos);
+            return (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(
+                geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos);
         }
     }
 }

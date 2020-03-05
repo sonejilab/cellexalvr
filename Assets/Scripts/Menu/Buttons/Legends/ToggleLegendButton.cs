@@ -10,12 +10,10 @@ public class ToggleLegendButton : CellexalButton
     {
         LegendManager legendManager = referenceManager.legendManager;
         GameObject mainMenu = referenceManager.mainMenu;
+        referenceManager.multiuserMessageSender.SendMessageToggleLegend();
         if (!referenceManager.legendManager.legendActive)
         {
             legendManager.ActivateLegend();
-            legendManager.transform.position = mainMenu.transform.position;
-            legendManager.transform.rotation = mainMenu.transform.rotation;
-            legendManager.transform.Rotate(new Vector3(90f, 0f, 0f), Space.Self);
         }
         else
         {

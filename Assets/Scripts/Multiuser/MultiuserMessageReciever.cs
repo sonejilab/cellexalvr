@@ -128,11 +128,13 @@ namespace CellexalVR.Multiuser
         {
             if (ownerId == referenceManager.multiuserMessageSender.photonView.ownerId) return;
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
-            LineRenderer lr = mlm.GetLaser(ownerId);;
+            LineRenderer lr = mlm.GetLaser(ownerId);
+            ;
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
             }
+
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
@@ -142,13 +144,15 @@ namespace CellexalVR.Multiuser
             float hitX, float hitY, float hitZ, int ownerId)
         {
             if (ownerId == referenceManager.multiuserMessageSender.photonView.ownerId) return;
-            
+
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponent<MultiuserLaserManager>();
-            LineRenderer lr = mlm.GetLaser(ownerId);;
+            LineRenderer lr = mlm.GetLaser(ownerId);
+            ;
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
             }
+
             lr.SetPosition(0, new Vector3(originX, originY, originZ));
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
         }
@@ -156,6 +160,19 @@ namespace CellexalVR.Multiuser
         #endregion
 
         #region Legend
+
+        [PunRPC]
+        public void RecieveMessageToggleLegend()
+        {
+            if (referenceManager.legendManager.legendActive)
+            {
+                referenceManager.legendManager.DeactivateLegend();
+            }
+            else
+            {
+                referenceManager.legendManager.ActivateLegend();
+            }
+        }
 
         [PunRPC]
         public void RecieveMessageMoveLegend(float posX, float posY, float posZ,
