@@ -180,8 +180,8 @@ namespace CellexalVR.AnalysisObjects
         {
             ActivateLegend(desiredLegend);
             Transform transform1 = transform;
-            transform1.position = referenceManager.mainMenu.transform.position;
-            transform1.rotation = referenceManager.mainMenu.transform.rotation;
+            var cameraTransform = referenceManager.headset.transform;
+            transform1.position = cameraTransform.position + cameraTransform.forward * 0.7f;
             transform.Rotate(new Vector3(90f, 0f, 0f), Space.Self);
         }
 

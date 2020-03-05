@@ -132,6 +132,7 @@ namespace CellexalVR.Multiuser
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
+                print("Add laser");
             }
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
@@ -147,6 +148,7 @@ namespace CellexalVR.Multiuser
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
+                print("Add laser");
             }
             lr.SetPosition(0, new Vector3(originX, originY, originZ));
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
