@@ -51,6 +51,7 @@ namespace CellexalVR.AnalysisObjects
             interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
             originalParent = legendTransform.parent;
             originalbackgroundScale = backgroundPlane.transform.localScale;
+            CellexalEvents.GraphsReset.AddListener(ClearLegends);
         }
 
         private void Update()
@@ -215,6 +216,12 @@ namespace CellexalVR.AnalysisObjects
 
             desiredLegend = legendToActivate;
             currentLegend = desiredLegend;
+        }
+
+        public void ClearLegends()
+        {
+            attributeLegend.ClearLegend();
+            selectionLegend.ClearLegend();
         }
 
         /// <summary>

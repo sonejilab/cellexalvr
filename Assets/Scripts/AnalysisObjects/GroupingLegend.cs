@@ -42,7 +42,6 @@ namespace CellexalVR.AnalysisObjects
         {
             CellexalEvents.LegendAttached.AddListener(ActivateExtraColumn);
             CellexalEvents.LegendDetached.AddListener(DeActivateExtraColumn);
-            CellexalEvents.GraphsReset.AddListener(ClearLegend);
             CellexalEvents.GraphsColoredByGene.AddListener(ClearLegend);
             CellexalEvents.GraphsColoredByIndex.AddListener(ClearLegend);
         }
@@ -162,7 +161,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        private void ClearLegend()
+        public void ClearLegend()
         {
             foreach (List<GroupingLegendEntry> page in entries)
             {
