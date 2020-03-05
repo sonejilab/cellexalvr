@@ -83,9 +83,17 @@ namespace CellexalVR.Interaction
             }
             origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
-            if (hit.collider)
+            print(controllerModelSwitcher.ActualModel.ToString());
+            if (hit.collider && 
+                controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
+                controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+            
             {
                 // if we hit a button in the environment (keyboard or env button)
+                // if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
+                // {
+                //     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                // }
                 if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                 {
                     controllerModelSwitcher.ActivateDesiredTool();
@@ -93,11 +101,9 @@ namespace CellexalVR.Interaction
 
                 referenceManager.rightLaser.enabled = true;
                 referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
-                origin.localRotation = Quaternion.Euler(0, 0, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 return;
             }
-            origin.localRotation = Quaternion.Euler(0, 0, 0);
             referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
             if (alwaysActive)
             {
@@ -106,7 +112,8 @@ namespace CellexalVR.Interaction
                     controllerModelSwitcher.ActivateDesiredTool();
                 }
             }
-            else if (referenceManager.rightLaser.enabled) 
+            else if (referenceManager.rightLaser.enabled &&
+                     controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard) 
             {
                 referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
                 referenceManager.rightLaser.enabled = false;

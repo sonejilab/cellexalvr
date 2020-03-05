@@ -168,25 +168,21 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Creates a new heatmap using the last confirmed selection.
         /// </summary>
-        /// <param name="name">If created via multiplayer. Name it the same as on other client.</param>
-        public void CreateHeatmap(string name = "")
+        /// <param name="heatmapName">If created via multiplayer. Name it the same as on other client.</param>
+        public void CreateHeatmap(string heatmapName = "")
         {
-            if (selectionManager.groupCount < 2)
-            {
-                CellexalLog.Log("Could not create heatmap. Not enough groups selected to create a heatmap");
-                CellexalError.SpawnError("Could not create heatmap", "Not enough groups selected to create a heatmap");
-                return;
-            }
+            // if (selectionManager.groupCount < 2)
+            // {
+            //     CellexalLog.Log("Could not create heatmap. Not enough groups selected to create a heatmap");
+            //     CellexalError.SpawnError("Could not create heatmap", "Not enough groups selected to create a heatmap");
+            //     return;
+            // }
+            
             // name the heatmap "heatmap_X". Where X is some number.
-            string heatmapName = "";
-            if (name.Equals(string.Empty))
+            if (heatmapName.Equals(string.Empty))
             {
                 heatmapName = "heatmap_" + System.DateTime.Now.ToString("HH-mm-ss");
                 referenceManager.multiuserMessageSender.SendMessageCreateHeatmap(heatmapName);
-            }
-            else
-            {
-                heatmapName = name;
             }
             statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
             CellexalLog.Log("Creating heatmap");
