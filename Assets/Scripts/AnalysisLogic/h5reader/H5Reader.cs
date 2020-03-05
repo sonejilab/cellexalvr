@@ -37,6 +37,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public List<string> attributes;
 
         private string filePath;
+        public string identifier;
         private Dictionary<string, string> conf;
         private string conditions;
 
@@ -561,10 +562,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
             SetConf(path);
 
-            referenceManager.h5Reader = this;
-
-            StartCoroutine(referenceManager.h5Reader.ConnectToFile());
-            while (referenceManager.h5Reader.busy)
+            StartCoroutine(ConnectToFile());
+            while (busy)
                 yield return null;
 
             //int statusId = status.AddStatus("Reading folder " + path);
@@ -581,7 +580,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             int itemsThisFrame = 0;
 
             int totalNbrOfCells = 0;
-            foreach (string proj in referenceManager.h5Reader.projections)
+            foreach (string proj in projections)
             {
                 while (referenceManager.graphGenerator.isCreating)
                 {
@@ -589,7 +588,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 }
 
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
-                if (referenceManager.h5Reader.velocities.Contains(proj))
+                if (velocities.Contains(proj))
                 {
                     referenceManager.graphManager.velocityFiles.Add(proj);
                     combGraph.hasVelocityInfo = true;
@@ -622,20 +621,20 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
                 //int i, j;
                 string[] axes = new string[3];
-                while (referenceManager.h5Reader.busy)
+                while (busy)
                     yield return null;
-                StartCoroutine(referenceManager.h5Reader.GetCoords(proj));
-                while (referenceManager.h5Reader.busy)
+                StartCoroutine(GetCoords(proj));
+                while (busy)
                     yield return null;
-                string[] coords = referenceManager.h5Reader._coordResult;
-                string[] cellNames = referenceManager.h5Reader.index2cellname;
+                string[] coords = _coordResult;
+                string[] cellNames = index2cellname;
                 combGraph.axisNames = new string[] {"x", "y", "z"};
                 int count = 0;
                 for (int j = 0; j < cellNames.Length; j++)
                 {
                     string cellName = cellNames[j];
                     float x, y, z;
-                    switch (referenceManager.h5Reader.conditions)
+                    switch (conditions)
                     {
                         case "2D_sep":
                             x = float.Parse(coords[j], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
@@ -690,12 +689,12 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 referenceManager.graphManager.Graphs.Add(combGraph);
             }
 
-            if (referenceManager.h5Reader.attributes.Count > 0)
+            if (attributes.Count > 0)
             {
                 referenceManager.inputReader.attributeReader =
                     referenceManager.inputReader.gameObject.AddComponent<AttributeReader>();
                 referenceManager.inputReader.attributeReader.referenceManager = referenceManager;
-                StartCoroutine(referenceManager.inputReader.attributeReader.H5ReadAttributeFilesCoroutine());
+                StartCoroutine(referenceManager.inputReader.attributeReader.H5ReadAttributeFilesCoroutine(this));
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
             }
