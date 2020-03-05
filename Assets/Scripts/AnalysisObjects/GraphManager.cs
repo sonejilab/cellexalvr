@@ -239,14 +239,10 @@ namespace CellexalVR.AnalysisObjects
             // create the gene expression histogram
             int numberOfBins = CellexalConfig.Config.GraphNumberOfExpressionColors + 1;
             int[] cellsPerBin = new int[numberOfBins];
-            float highestExpression = float.MinValue;
+            float highestExpression = referenceManager.database.HighestExpression;
             foreach (SQLiter.CellExpressionPair expression in expressions)
             {
                 cellsPerBin[expression.Color + 1]++;
-                if (expression.Expression > highestExpression)
-                {
-                    highestExpression = expression.Expression;
-                }
             }
             cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.GeneExpressionLegend;

@@ -205,7 +205,6 @@ namespace CellexalVR.AnalysisObjects
 
         /// <summary>
         /// Creates a new histogram with the specifed barheights.
-        /// This function will remove the previous histogram.
         /// </summary>
         /// <param name="geneName">The name of the gene</param>
         /// <param name="bins">An array of ints that represents the heights of the bars.</param>

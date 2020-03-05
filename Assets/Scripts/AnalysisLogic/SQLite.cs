@@ -897,10 +897,10 @@ namespace SQLiter
                 // sort the list based on gene expressions
                 result.Sort();
 
-                int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
+                float binsize = (float)result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
-                    result[j].Color = j / binsize;
+                    result[j].Color = (int)(j / binsize);
                 }
                 _result.AddRange(result);
             }
