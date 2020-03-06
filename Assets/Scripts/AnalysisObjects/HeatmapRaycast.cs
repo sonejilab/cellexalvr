@@ -69,7 +69,7 @@ namespace CellexalVR.Interaction
             {
                 return;
             }
-            bool correctModel =  referenceManager.rightLaser.enabled;
+            bool correctModel = referenceManager.rightLaser.enabled;
             if (correctModel)
             {
                 Raycast();
@@ -86,7 +86,7 @@ namespace CellexalVR.Interaction
             {
                 int hitx = (int)(hit.textureCoord.x * heatmap.bitmapWidth);
                 int hity = (int)(hit.textureCoord.y * heatmap.bitmapHeight);
-                if (CoordinatesInsideRect(hitx, hity, heatmap.geneListX, heatmap.heatmapY, heatmap.geneListWidth, heatmap.heatmapHeight))
+                if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.geneListX, heatmap.heatmapY, heatmap.geneListWidth, heatmap.heatmapHeight))
                 {
                     // if we hit the list of genes
                     multiuserMessageSender.SendMessageHandleHitGenesList(name, hity);

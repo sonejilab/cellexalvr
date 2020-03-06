@@ -169,9 +169,17 @@ namespace CellexalVR.Interaction
                 radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
                 try
                 {
-                    //radialMenu.RegenerateButtons();
-                    radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
-                    radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
+                    if (Colors.Length > 1)
+                    {
+                        //radialMenu.RegenerateButtons();
+                        radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
+                        radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
+                    }
+                    else if (Colors.Length > 0)
+                    {
+                        radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[0];
+                        radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[0];
+                    }
                 }
                 catch (NullReferenceException e)
                 {
