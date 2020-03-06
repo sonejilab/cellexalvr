@@ -140,7 +140,6 @@ namespace CellexalVR.Multiuser
         public void SendMessageLoadingMenu(bool delete)
         {
             if (!multiplayer) return;
-            print("Sending to client to reset folders");
             coordinator.photonView.RPC("RecieveMessageLoadingMenu", PhotonTargets.Others, delete);
         }
         #endregion
@@ -574,6 +573,21 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageSpatialGraphUnGrabbed", PhotonTargets.Others, sliceName, graphName);
+        }
+
+        public void SendMessageHighlightCluster(bool highlight, string graphName, int id)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageHighlightCluster", PhotonTargets.Others,
+                highlight, graphName, id);
+        }
+
+        public void SendMessageToggleBundle(string graphName, int id)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleBundle", PhotonTargets.Others,
+                graphName, id);
+
         }
         #endregion
 

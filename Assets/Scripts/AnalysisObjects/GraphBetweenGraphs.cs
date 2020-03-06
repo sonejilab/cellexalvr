@@ -44,8 +44,10 @@ namespace CellexalVR.AnalysisObjects
         private List<Graph.GraphPoint> graphPoints;
         private List<Vector3> centroids = new List<Vector3>();
         private List<Vector3> toGraphCentroids = new List<Vector3>();
-        List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = new List<Tuple<HashSet<Graph.GraphPoint>, Vector3>>();
-        List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = new List<Tuple<HashSet<Graph.GraphPoint>, Vector3>>();
+        private List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = new List<Tuple<HashSet<Graph.GraphPoint>, Vector3>>();
+        private List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = new List<Tuple<HashSet<Graph.GraphPoint>, Vector3>>();
+
+        private int clusterNr;
         //private bool isLargeSet;
         // Use this for initialization
         void Start()
@@ -374,6 +376,7 @@ namespace CellexalVR.AnalysisObjects
                 toCluster.Add(to.FindGraphPoint(gp.Label));
             }
             PointCluster pointCluster = Instantiate(pointClusterPrefab).GetComponent<PointCluster>();
+            pointCluster.ClusterId = clusterNr;
             pointCluster.gameObject.name = "PointCluster" + clusterCount++;
             pointClusters.Add(pointCluster);
             pointCluster.rightController = referenceManager.rightController;
@@ -444,9 +447,10 @@ namespace CellexalVR.AnalysisObjects
                     velocitiesMidGraph[gp] = dir / 5f;
                 }
             }
+            clusterNr++;
         }
 
-        public LineBetweenTwoPoints AddBundledLine(Graph from, Graph to, IEnumerable<Graph.GraphPoint> cluster)
+        private LineBetweenTwoPoints AddBundledLine(Graph from, Graph to, IEnumerable<Graph.GraphPoint> cluster)
         {
             LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab).GetComponent<LineBetweenTwoPoints>();
             line.t1 = from.transform;
@@ -644,9 +648,18 @@ namespace CellexalVR.AnalysisObjects
             //trailModule.widthOverTrail = 0.010f;
             //trailModule.dieWithParticles = true;
             //emitter.particleMaterial = referenceManager.velocityGenerator.standardMaterial;
+        }
 
-
-
+        public PointCluster GetCluster(int id)
+        {
+            foreach (PointCluster cluster in pointClusters)
+            {
+                if (cluster.ClusterId == id)
+                {
+                    return cluster;
+                }
+            }
+            return null;
         }
     }
 }

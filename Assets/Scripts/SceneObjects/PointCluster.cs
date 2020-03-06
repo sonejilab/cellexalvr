@@ -6,7 +6,6 @@ using CellexalVR.General;
 
 namespace CellexalVR.SceneObjects
 {
-
     public class PointCluster : MonoBehaviour
     {
         public Transform t1, t2, t3;
@@ -19,6 +18,7 @@ namespace CellexalVR.SceneObjects
         public GameObject velocityFromGraph;
         public GameObject velocityMidGraph;
         public GameObject velocityToGraph;
+        public int ClusterId { get; set; }
 
 
         private Vector3 fromPos, toPos, midPos, firstAnchor, secondAnchor;
@@ -33,7 +33,7 @@ namespace CellexalVR.SceneObjects
         private GraphBetweenGraphs gbg;
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             fromPos = t1.TransformPoint(fromGraphCentroid);
             toPos = t2.TransformPoint(toGraphCentroid);
@@ -59,24 +59,24 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
-            if (touched)
-            {
-                Highlight(true);
-                controllerInside = true;
-                gbg.TogglePointClusterColliders(false, gameObject.name);
-            }
+            bool touched = other.gameObject.name.Equals(laserCollider) ||
+                           other.gameObject.name.Equals(controllerCollider);
+            if (!touched) return;
+            Highlight(true);
+            referenceManager.multiuserMessageSender.SendMessageHighlightCluster(true, gbg.gameObject.name, ClusterId);
+            controllerInside = true;
+            gbg.TogglePointClusterColliders(false, gameObject.name);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
-            if (touched)
-            {
-                Highlight(false);
-                controllerInside = false;
-                gbg.TogglePointClusterColliders(true, gameObject.name);
-            }
+            bool touched = other.gameObject.name.Equals(laserCollider) ||
+                           other.gameObject.name.Equals(controllerCollider);
+            if (!touched) return;
+            Highlight(false);
+            referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name, ClusterId);
+            controllerInside = false;
+            gbg.TogglePointClusterColliders(true, gameObject.name);
         }
 
         public void Highlight(bool highlight)
@@ -88,17 +88,21 @@ namespace CellexalVR.SceneObjects
                 {
                     foreach (LineBetweenTwoPoints line in lines)
                     {
-                        line.GetComponent<LineRenderer>().startColor = line.GetComponent<LineRenderer>().endColor = Color.white;
+                        line.GetComponent<LineRenderer>().startColor =
+                            line.GetComponent<LineRenderer>().endColor = Color.white;
                     }
                 }
+
                 foreach (Graph.GraphPoint gp in fromPointCluster)
                 {
                     gp.HighlightGraphPoint(true);
                 }
+
                 foreach (Graph.GraphPoint gp in midPointCluster)
                 {
                     gp.HighlightGraphPoint(true);
                 }
+
                 foreach (Graph.GraphPoint gp in toPointCluster)
                 {
                     gp.HighlightGraphPoint(true);
@@ -110,19 +114,23 @@ namespace CellexalVR.SceneObjects
                 {
                     gp.HighlightGraphPoint(false);
                 }
+
                 foreach (Graph.GraphPoint gp in midPointCluster)
                 {
                     gp.HighlightGraphPoint(false);
                 }
+
                 foreach (Graph.GraphPoint gp in toPointCluster)
                 {
                     gp.HighlightGraphPoint(false);
                 }
+
                 if (linesBundled)
                 {
                     foreach (LineBetweenTwoPoints line in lines)
                     {
-                        line.GetComponent<LineRenderer>().startColor = line.GetComponent<LineRenderer>().endColor = LineColor;
+                        line.GetComponent<LineRenderer>().startColor =
+                            line.GetComponent<LineRenderer>().endColor = LineColor;
                     }
                 }
 
@@ -131,13 +139,16 @@ namespace CellexalVR.SceneObjects
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
+            device = SteamVR_Controller.Input((int) rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 Highlight(false);
+                referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name,
+                    ClusterId);
                 RemakeLines(fromPointCluster);
+                referenceManager.multiuserMessageSender.SendMessageToggleBundle(gbg.gameObject.name, ClusterId);
                 controllerInside = false;
             }
 
@@ -153,7 +164,7 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        private void RemakeLines(IEnumerable<Graph.GraphPoint> cluster)
+        public void RemakeLines(IEnumerable<Graph.GraphPoint> cluster)
         {
             Graph from = t1.GetComponent<Graph>();
             Graph to = t2.GetComponent<Graph>();
@@ -174,6 +185,7 @@ namespace CellexalVR.SceneObjects
                         line.GetComponent<LineRenderer>().enabled = true;
                     }
                 }
+
                 linesBundled = false;
             }
 
@@ -183,6 +195,7 @@ namespace CellexalVR.SceneObjects
                 {
                     l.GetComponent<LineRenderer>().enabled = false;
                 }
+
                 lineRenderer.enabled = true;
                 //LineBetweenTwoPoints line = mid.AddBundledLine(from, to, cluster);
                 //lineRenderer = line.GetComponent<LineRenderer>();
@@ -195,11 +208,7 @@ namespace CellexalVR.SceneObjects
                 //line.toPointCluster = toPointCluster;
 
                 linesBundled = true;
-
-
             }
-
         }
-
     }
 }

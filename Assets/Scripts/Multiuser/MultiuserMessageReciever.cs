@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
+using CellexalVR.SceneObjects;
 using UnityEditor;
 using UnityEngine;
 
@@ -348,7 +349,6 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageHighlightCells(int group, bool highlight)
         {
-            CellexalLog.Log(message: "Recieved message to highlight + " + group + " cells");
             Cell[] cellsToHighlight = referenceManager.cellManager.GetCells(group);
             referenceManager.cellManager.HighlightCells(cellsToHighlight, highlight);
         }
@@ -366,28 +366,24 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageKeyClicked(string key)
         {
-            CellexalLog.Log("Recieved message to add  " + key + " to search field");
             referenceManager.geneKeyboard.AddText(key, false);
         }
 
         [PunRPC]
         public void RecieveMessageKBackspaceKeyClicked()
         {
-            CellexalLog.Log("Recieved message to click backspace");
             referenceManager.geneKeyboard.BackSpace(false);
         }
 
         [PunRPC]
         public void RecieveMessageClearKeyClicked()
         {
-            CellexalLog.Log("Recieved message to clear search field");
             referenceManager.geneKeyboard.Clear(false);
         }
 
         [PunRPC]
         public void RecieveMessageSearchLockToggled(int index)
         {
-            CellexalLog.Log("Recieved message to toggle lock number " + index);
             referenceManager.previousSearchesList.searchLocks[index].Click();
         }
 
@@ -707,6 +703,27 @@ namespace CellexalVR.Multiuser
         //            spatialGraph.GetSlice(sliceName).ToggleGrabbing(false);
         //    }
         //}
+
+        [PunRPC]
+        public void RecieveMessageHighlightCluster(bool highlight, string graphName, int id)
+        {
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            if (g == null) return;
+            PointCluster cluster = g.GetComponent<GraphBetweenGraphs>().GetCluster(id);
+            if (cluster == null) return;
+            cluster.Highlight(highlight);
+        }
+
+        [PunRPC]
+        public void RecieveMessageToggleBundle(string graphName, int id)
+        {
+            Graph g = referenceManager.graphManager.FindGraph(graphName);
+            if (g == null) return;
+            PointCluster cluster = g.GetComponent<GraphBetweenGraphs>().GetCluster(id);
+            if (cluster == null) return;
+            cluster.RemakeLines(cluster.fromPointCluster);
+        }
+
 
         #endregion
 
@@ -1186,6 +1203,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageMinimizeGraph(string graphName)
         {
             Graph g = referenceManager.graphManager.FindGraph(graphName);
+            if (g == null) return;
             g.HideGraph();
             referenceManager.minimizedObjectHandler.MinimizeObject(g.gameObject, graphName);
         }
@@ -1194,6 +1212,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageShowGraph(string graphName, string jailName)
         {
             Graph g = referenceManager.graphManager.FindGraph(graphName);
+            if (g == null) return;
             GameObject jail = GameObject.Find(jailName);
             MinimizedObjectHandler handler = referenceManager.minimizedObjectHandler;
             g.ShowGraph();
@@ -1205,6 +1224,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageMinimizeNetwork(string networkName)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
+            if (nh == null) return;
             nh.HideNetworks();
             referenceManager.minimizedObjectHandler.MinimizeObject(nh.gameObject, networkName);
         }

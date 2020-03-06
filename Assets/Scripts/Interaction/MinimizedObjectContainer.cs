@@ -108,6 +108,7 @@ namespace CellexalVR.Interaction
             // When laser is deactivated on trigger exit is not called so we check if the box is colliding with the laser.
             // To deactivate button again check every 10th frame if laser pointer collider is colliding.
             if (frameCount % 10 != 0) return;
+            frameCount = 0;
             Transform transform1 = transform;
             Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 5f,
                 Quaternion.identity, layerMask);
