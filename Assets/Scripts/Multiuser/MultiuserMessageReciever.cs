@@ -127,7 +127,11 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageToggleLaser(bool active, int ownerId)
         {
-            if (ownerId == photonView.ownerId) return;
+            if (ownerId == photonView.ownerId)
+            {
+                print("my own laser");
+                return;
+            }
             MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
             if (!lr)

@@ -161,7 +161,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageToggleLaser", PhotonTargets.Others,
-                active, coordinator.photonView.ownerId);
+                active, photonView.ownerId);
         }
 
         public void SendMessageMoveLaser(Transform origin, Vector3 hit)
@@ -170,7 +170,7 @@ namespace CellexalVR.Multiuser
             Vector3 originPosition = origin.position;
             coordinator.photonView.RPC("RecieveMessageMoveLaser", PhotonTargets.Others,
                 originPosition.x, originPosition.y, originPosition.z,
-                hit.x, hit.y, hit.z, coordinator.photonView.ownerId);
+                hit.x, hit.y, hit.z, photonView.ownerId);
         }
         #endregion
 
