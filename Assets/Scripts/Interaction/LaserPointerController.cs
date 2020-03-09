@@ -103,7 +103,6 @@ namespace CellexalVR.Interaction
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 return;
             }
-            referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
             if (alwaysActive)
             {
                 if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
