@@ -178,6 +178,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
+            while (t.ThreadState != System.Threading.ThreadState.Stopped)
+                yield return null;
 
             writer = p.StandardInput;
 
@@ -436,20 +438,24 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 yield return null;
 
             string output = reader.ReadLine();
-            output = output.Substring(1, output.Length - 2);
+            UnityEngine.Debug.Log(output);
+
+            //output = output.Substring(1, output.Length - 2);
+            output = output.Replace("[","").Replace("]", "");
             string[] splitted = output.Split(',');
 
-
+            
             if (geneXcell)
                 writer.WriteLine(conf["cellexpr"] + "[" + geneindex + ",:].nonzero()[0].tolist()");
             else
                 writer.WriteLine(conf["cellexpr"] + "[:," + geneindex + "].nonzero()[0].tolist()");
-
+                
             while (reader.Peek() == 0)
                 yield return null;
 
             output = reader.ReadLine();
-            //UnityEngine.Debug.Log(output);
+            
+            UnityEngine.Debug.Log(output);
             output = output.Substring(1, output.Length - 2);
             string[] indices = output.Split(',');
             LowestExpression = float.MaxValue;

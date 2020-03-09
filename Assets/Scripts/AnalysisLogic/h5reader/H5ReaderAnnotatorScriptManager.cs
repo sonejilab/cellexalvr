@@ -1,3 +1,4 @@
+using CellexalVR.General;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,14 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public GameObject annotatorPrefab;
         public Dictionary<string, H5readerAnnotater> annotators = new Dictionary<string, H5readerAnnotater>();
+        private ReferenceManager referenceManager;
         // Start is called before the first frame update
         private void Start()
         {
+            if (!referenceManager)
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
             //string path = "LCA_142k_umap_phate_loom";
 
             //AddAnnotator("LCA_142k_umap_phate_loom");
@@ -41,8 +47,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 script.Init(path);
                 script.manager = this;
                 annotators.Add(path, script);
-                go.transform.localPosition = new Vector3(-0.5f, 1.5f, 0f);
-                go.transform.localEulerAngles = new Vector3(0, 180f, 0);
+
             }
 
         }
