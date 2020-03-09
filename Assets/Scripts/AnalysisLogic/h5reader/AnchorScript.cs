@@ -80,18 +80,18 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     char dataType = expandButtonScript.parentScript.GetDataType();
 
                     int start = path.LastIndexOf('/');
-                    string[] names;
+                    string name;
                     if (start != -1)
-                        names = path.Substring(start).Split('_');
+                        name = path.Substring(start);
                     else
-                        names = path.Split('_');
+                        name = path;
 
                     ProjectionObjectScript projectionObjectScript = anchorA.GetComponentInParent<ProjectionObjectScript>();
                     if (projectionObjectScript)
                     {
                         if (line.type == "X")
                         {
-                            anchorA.GetComponentInParent<ProjectionObjectScript>().ChangeName(names[names.Length - 1]);
+                            anchorA.GetComponentInParent<ProjectionObjectScript>().ChangeName(name);
                         }
                         projectionObjectScript.AddToPaths(line.type, path, dataType);
                         
@@ -101,7 +101,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                         H5readerAnnotater h5ReaderAnnotater = anchorA.GetComponentInParent<H5readerAnnotater>();
                         if (line.type == "attrs")
                         {
-                            h5ReaderAnnotater.AddToConfig("attr_" + names[names.Length - 1], path, dataType);
+                            h5ReaderAnnotater.AddToConfig("attr_" + name, path, dataType);
                         }
                         else
                         {
