@@ -112,6 +112,10 @@ namespace CellexalVR.AnalysisLogic
             H5Reader h5Reader = go.AddComponent<H5Reader>();
             h5readers.Add(path, h5Reader);
             StartCoroutine(h5Reader.H5ReadGraphs(fullPath));
+            if (PhotonNetwork.isMasterClient)
+            {
+                referenceManager.configManager.MultiUserSynchronise();
+            }
         }
 
         /// <summary>
