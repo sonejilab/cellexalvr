@@ -78,10 +78,14 @@ namespace CellexalVR.AnalysisLogic
 
         private IEnumerator ReadVelocityParticleSystem(string path, string subGraphName = "")
         {
+
             while (referenceManager.graphGenerator.isCreating)
             {
                 yield return null;
             }
+
+            path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
+                              path + ".mds";
 
             CellexalLog.Log("Started reading velocity file " + path);
 
