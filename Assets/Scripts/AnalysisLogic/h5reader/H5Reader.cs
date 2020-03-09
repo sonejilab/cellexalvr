@@ -71,10 +71,10 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 conf = recievedConfig;
                 return;
             }
-
+            string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
             conf = new Dictionary<string, string>();
 
-            string[] files = Directory.GetFiles(path);
+            string[] files = Directory.GetFiles(fullPath);
             string configFile = "";
 
             foreach (string s in files)
