@@ -242,25 +242,16 @@ namespace CellexalVR.AnalysisObjects
                     tabButtons[tabData.Count - 1].GetComponentInChildren<TextMeshPro>().text = next.name;
                 }
             }
+            SwitchToTab(0);
         }
 
         private void CreateHistogram(HistogramData data)
         {
-            CreateHistogram(data.name, data.xAxisMaxLabel, data.yAxisMaxLabel, data.barHeights);
-        }
 
-        /// <summary>
-        /// Creates a histogram.
-        /// </summary>
-        /// <param name="xAxisMaxLabel">The label of the x axis</param>
-        /// <param name="yAxisMaxLabel">The label of the y axis</param>
-        /// <param name="barHeights">The height of each bar, range [0, 1]</param>
-        private void CreateHistogram(string geneName, string xAxisMaxLabel, string yAxisMaxLabel, List<float> barHeights)
-        {
-            this.geneNameLabel.text = geneName;
-            if (bars.Count != barHeights.Count)
+            this.geneNameLabel.text = data.name;
+            if (bars.Count != data.barHeights.Count)
             {
-                InstantiateBars(barHeights.Count);
+                InstantiateBars(data.barHeights.Count);
             }
 
             foreach (GameObject go in cutOffTops)
@@ -276,13 +267,13 @@ namespace CellexalVR.AnalysisObjects
                 GameObject bar = bars[i];
                 bar.GetComponent<Renderer>().material.color = color;
                 bar.transform.localRotation = Quaternion.identity;
-                float height = Mathf.Min(barHeights[i], 1f);
+                float height = Mathf.Min(data.barHeights[i], 1f);
 
                 var pos = BarPos(i, i, height, NumberOfBars);
                 Vector3 currentScale = bar.transform.localScale;
                 var scale = BarScale(i, i, height, NumberOfBars, currentScale.z);
 
-                if (barHeights[i] > 1f)
+                if (data.barHeights[i] > 1f)
                 {
                     GameObject cutOffGameObject = Instantiate(cutOffBarTopShape);
                     cutOffGameObject.transform.parent = histogramParent.transform;
@@ -298,8 +289,10 @@ namespace CellexalVR.AnalysisObjects
                 bar.transform.localScale = scale;
             }
 
-            this.yAxisMaxLabel.text = yAxisMaxLabel;
-            this.xAxisMaxLabel.text = xAxisMaxLabel;
+            yAxisMaxLabel.text = data.yAxisMaxLabel;
+            xAxisMaxLabel.text = data.xAxisMaxLabel;
+            yAxisLabel.text = data.yAxisLabel;
+
         }
 
         /// <summary>
@@ -381,10 +374,13 @@ namespace CellexalVR.AnalysisObjects
             HistogramData data = tabData[index];
             if (data != null)
             {
+                tabButtons[currentTab].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = Color.black;
+                tabButtons[index].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = new Color(0.1411f, 0.6588f, 0.6385f);
                 currentTab = index;
                 TallestBarsToSkip = data.tallestBarsToSkip;
                 DesiredYAxisMode = data.yAxisMode;
                 CreateHistogram(data);
+                DeactivateSelectedArea();
             }
         }
 
