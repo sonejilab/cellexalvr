@@ -64,8 +64,14 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// H5reader
         /// </summary>
         /// <param name="path">filename in the Data folder</param>
-        private void SetConf(string path)
+        public void SetConf(string path, Dictionary<string, string> recievedConfig)
         {
+            if(recievedConfig != null)
+            {
+                conf = recievedConfig;
+                return;
+            }
+
             conf = new Dictionary<string, string>();
 
             string[] files = Directory.GetFiles(path);
@@ -90,6 +96,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 attributes = new List<string>();
 
                 string[] lines = File.ReadAllLines(configFile);
+
                 foreach (string l in lines)
                 {
                     if (l == "" || l.StartsWith("//"))
@@ -137,6 +144,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     else
                         conf.Add(kvp[0], "f['" + kvp[1] + "']");
                 }
+                referenceManager.multiuserMessageSender.SendMessageReadH5Config(path, conf);
             }
         }
 
@@ -563,7 +571,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 referenceManager.loaderController.loaderMovedDown = true;
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
-            SetConf(path);
 
             StartCoroutine(ConnectToFile());
             while (busy)

@@ -98,19 +98,22 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// 
         /// <param name="path">path to the file</param>
-        private void ReadFileH5(string path)
+        private void ReadFileH5(string path, Dictionary<string, string> h5config)
         {
             bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
             if (!confExists)
             {
-                referenceManager.h5ReaderAnnotatorScriptManager.AddAnnotator(path);
-                return;
+                if(h5config == null)
+                    referenceManager.h5ReaderAnnotatorScriptManager.AddAnnotator(path);
+                    return;
+                    
             }
 
             string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
             GameObject go = new GameObject(path);
             H5Reader h5Reader = go.AddComponent<H5Reader>();
             h5readers.Add(path, h5Reader);
+            h5Reader.SetConf(path, h5config);
             StartCoroutine(h5Reader.H5ReadGraphs(fullPath));
             if (PhotonNetwork.isMasterClient)
             {
@@ -123,7 +126,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="path"> The path to the folder. </param>
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
-        public void ReadFolder(string path)
+        public void ReadFolder(string path, Dictionary<string, string> h5config = null)
         {
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
@@ -165,7 +168,7 @@ namespace CellexalVR.AnalysisLogic
             bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
             if (h5 || loom)
             {
-                ReadFileH5(path);
+                ReadFileH5(path, h5config);
                 return;
             }
             database.InitDatabase(fullPath + "\\database.sqlite");
@@ -196,6 +199,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 referenceManager.configManager.MultiUserSynchronise();
             }
+
         }
 
         private void UpdateSelectionToolHandler()

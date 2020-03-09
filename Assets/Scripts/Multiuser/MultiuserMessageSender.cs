@@ -138,7 +138,16 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to read folder " + path);
+
             coordinator.photonView.RPC("RecieveMessageReadFolder", PhotonTargets.Others, path);
+        }
+
+        public void SendMessageReadH5Config(string path, Dictionary<string,string> h5config)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients of h5 config");
+
+            coordinator.photonView.RPC("RecieveMessageH5Config", PhotonTargets.Others, path, h5config);
         }
 
         public void SendMessageSynchConfig(byte[] data)

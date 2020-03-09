@@ -58,8 +58,16 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageReadFolder(string path)
         {
             CellexalLog.Log("Recieved message to read folder at " + path);
+
             referenceManager.inputReader.ReadFolder(path);
             referenceManager.inputFolderGenerator.DestroyFolders();
+        }
+
+        [PunRPC]
+        public void RecieveMessageH5Config(string path, Dictionary<string, string> h5config)
+        {
+            CellexalLog.Log("Recieved message with h5 config");
+            referenceManager.inputReader.ReadFolder(path, h5config);
         }
 
         [PunRPC]
