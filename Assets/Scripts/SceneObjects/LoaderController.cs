@@ -172,6 +172,7 @@ namespace CellexalVR.SceneObjects
                         graphManager.directories.Add(path);
                         try
                         {
+                            multiuserMessageSender.SendMessageReadFolder(path);
                             inputReader.ReadFolder(path);
                         }
                         catch (System.InvalidOperationException e)
@@ -180,7 +181,6 @@ namespace CellexalVR.SceneObjects
                             ResetFolders(true);
                         }
                         // new_keyboard referenceManager.keyboardStatusFolder.ClearKey();
-                        multiuserMessageSender.SendMessageReadFolder(path);
                     }
 
                     Destroy(cellParent.GetComponent<FixedJoint>());
