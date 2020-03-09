@@ -113,7 +113,6 @@ namespace CellexalVR.Multiuser
 
             Collider[] children = obj.GetComponentsInChildren<Collider>();
             int i = 0;
-
             foreach (KeyValuePair<Collider, bool> pair in colliders)
             {
                 if (pair.Key)
@@ -127,12 +126,9 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageToggleLaser(bool active, int ownerId)
         {
-            if (ownerId == photonView.ownerId)
-            {
-                print("my own laser");
-                return;
-            }
-            MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
+            if (ownerId != photonView.ownerId) return;
+            MultiuserLaserManager mlm =
+                referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
             if (!lr)
             {
@@ -147,8 +143,9 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageMoveLaser(float originX, float originY, float originZ,
             float hitX, float hitY, float hitZ, int ownerId)
         {
-            if (ownerId == photonView.ownerId) return;
-            MultiuserLaserManager mlm = referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
+            if (ownerId != photonView.ownerId) return;
+            MultiuserLaserManager mlm =
+                referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
             LineRenderer lr = mlm.GetLaser(ownerId);
             if (!lr)
             {
@@ -285,7 +282,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageColoringMethodChanged(int newMode)
         {
             CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
-            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
+            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods) newMode);
         }
 
         //[PunRPC]
@@ -728,7 +725,6 @@ namespace CellexalVR.Multiuser
             cluster.RemakeLines(cluster.fromPointCluster);
         }
 
-
         #endregion
 
         #region Heatmaps
@@ -1130,7 +1126,7 @@ namespace CellexalVR.Multiuser
             bool networkExists = (handlerExists && center != null);
             if (networkExists)
             {
-                center.SwitchLayout((NetworkCenter.Layout)layout);
+                center.SwitchLayout((NetworkCenter.Layout) layout);
             }
             else
             {
