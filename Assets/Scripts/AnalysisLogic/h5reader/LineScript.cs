@@ -23,7 +23,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         void Update()
         {
             Vector3 dir = -h5ReaderAnnotater.transform.forward;
-            Vector3 start = AnchorA.transform.position;
+            Vector3 start = AnchorA.rect.position;
             Vector3 end = AnchorB.transform.position;
             float dist = Vector3.Distance(start, end);
             if (dist < 0.02f || !AnchorB.isActiveAndEnabled)
@@ -32,9 +32,12 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 {
                     line.SetPosition(i, start);
                 }
+                if (dist < 0.02f)
+                    AnchorB.GetComponent<MeshRenderer>().enabled = false;
             }
             else
             {
+                AnchorB.GetComponent<MeshRenderer>().enabled = true;
                 for (int i = 0; i < 10; i++)
                 {
                     Vector3 pos = Vector3.Lerp(start, end, i / 9f) + dir * 0.1f * Mathf.Sin(Mathf.PI * (i / 9f));

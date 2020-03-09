@@ -103,10 +103,11 @@ namespace CellexalVR.AnalysisLogic
             bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
             if (!confExists)
             {
-                if(h5config == null)
+                if (h5config == null)
+                {
                     referenceManager.h5ReaderAnnotatorScriptManager.AddAnnotator(path);
                     return;
-                    
+                }
             }
 
             string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
