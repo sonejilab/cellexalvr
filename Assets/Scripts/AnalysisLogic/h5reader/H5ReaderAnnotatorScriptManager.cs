@@ -39,7 +39,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 GameObject go = Instantiate(annotatorPrefab, transform);
                 H5readerAnnotater script = go.GetComponent<H5readerAnnotater>();
                 script.Init(path);
-                script.manager = this;
                 annotators.Add(path, script);
                 go.transform.localPosition = new Vector3(-0.5f, 1.5f, 0f);
                 go.transform.localEulerAngles = new Vector3(0, 180f, 0);

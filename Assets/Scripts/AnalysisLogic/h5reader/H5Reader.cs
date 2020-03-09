@@ -163,7 +163,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
             startInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            //startInfo.CreateNoWindow = true;
+            startInfo.CreateNoWindow = true;
 
             startInfo.FileName = "py.exe";
 
