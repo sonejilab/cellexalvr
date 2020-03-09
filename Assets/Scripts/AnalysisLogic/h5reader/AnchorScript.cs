@@ -15,6 +15,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         private bool controllerInside;
 
         public bool isAnchorA;
+        public RectTransform rect;
         public AnchorScript anchorA;
         public AnchorScript anchorB;
         public LineScript line;
@@ -114,8 +115,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 else if (isAttachedToHand && !isAnchorA) //Pressing in free space return it
                 {
                     print(3);
-                    transform.parent = anchorA.transform.parent;
-                    transform.localPosition = anchorA.transform.localPosition;
+                    transform.parent = anchorA.rect.parent;
+                    transform.localPosition = anchorA.rect.localPosition;
                     isAttachedToHand = false;
                 }
                 else if (isAnchorA && line.IsExpanded() && line.isMulti)
@@ -135,7 +136,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = true;
-                GetComponent<Renderer>().material.color = Color.yellow;
+                if(!isAnchorA)
+                    GetComponent<Renderer>().material.color = Color.yellow;
             }
             ExpandButtonScript ebs = other.gameObject.GetComponent<ExpandButtonScript>();
             if (ebs && ebs.parentScript.isBottom)
@@ -149,7 +151,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = false;
-                GetComponent<Renderer>().material.color = Color.white;
+                if (!isAnchorA)
+                    GetComponent<Renderer>().material.color = Color.white;
             }
             ExpandButtonScript ebs = other.gameObject.GetComponent<ExpandButtonScript>();
             if (ebs == expandButtonScript)

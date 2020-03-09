@@ -66,7 +66,8 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageH5Config(string path, Dictionary<string, string> h5config)
         {
-            CellexalLog.Log("Recieved message with h5 config");
+            CellexalLog.Log("Recieved message to read folder at " + path + " with h5 config with size " + h5config.Count);
+            
             referenceManager.inputReader.ReadFolder(path, h5config);
         }
 

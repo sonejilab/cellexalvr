@@ -66,11 +66,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// <param name="path">filename in the Data folder</param>
         public void SetConf(string path, Dictionary<string, string> recievedConfig)
         {
-            if(recievedConfig != null)
-            {
-                conf = recievedConfig;
-                return;
-            }
+            projections = new List<string>();
+            velocities = new List<string>();
+            attributes = new List<string>();
             string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
             conf = new Dictionary<string, string>();
 
@@ -85,16 +83,48 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     filePath = s;
             }
 
+            if (recievedConfig != null)
+            {
+                conf = recievedConfig;
+                foreach (KeyValuePair<string, string> kvp in conf)
+                {
+                    if (kvp.Key == "sparse")
+                        sparse = bool.Parse(kvp.Value);
+                    else if (kvp.Key == "gene_x_cell")
+                        geneXcell = bool.Parse(kvp.Value);
+                    else if (kvp.Key == "ascii")
+                        ascii = bool.Parse(kvp.Value);
+
+                    if (kvp.Key.StartsWith("X") || kvp.Key.StartsWith("Y") || kvp.Key.StartsWith("Z"))
+                    {
+                        string proj = kvp.Key.Split(new[] { '_' }, 2)[1];
+
+                        if (!projections.Contains(proj.ToUpper()))
+                            projections.Add(proj.ToUpper());
+                    }
+                    if (kvp.Key.StartsWith("vel"))
+                    {
+                        string vel = kvp.Key.Split(new[] { '_' }, 2)[1];
+                        if (!velocities.Contains(vel.ToUpper()))
+                            velocities.Add(vel.ToUpper());
+                    }
+                    if (kvp.Key.StartsWith("attr")) { 
+                        string attr = kvp.Key.Split(new[] { '_' }, 2)[1];
+                        if (!attributes.Contains(attr))
+                             attributes.Add(attr);
+                    }
+                }
+
+                return;
+            }
+
             if (configFile == "")
             {
                 UnityEngine.Debug.Log("No config file for " + path);
             }
             else
             {
-                projections = new List<string>();
-                velocities = new List<string>();
-                attributes = new List<string>();
-
+               
                 string[] lines = File.ReadAllLines(configFile);
 
                 foreach (string l in lines)
@@ -104,11 +134,23 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     UnityEngine.Debug.Log(l);
                     string[] kvp = l.Split(new char[] {' '}, 2);
                     if (kvp[0] == "sparse")
+                    {
                         sparse = bool.Parse(kvp[1]);
+                        conf.Add(kvp[0], kvp[1]);
+
+                    }
                     else if (kvp[0] == "gene_x_cell")
+                    {
                         geneXcell = bool.Parse(kvp[1]);
+                        conf.Add(kvp[0], kvp[1]);
+
+                    }
                     else if (kvp[0] == "ascii")
+                    {
                         ascii = bool.Parse(kvp[1]);
+                        conf.Add(kvp[0], kvp[1]);
+
+                    }
                     else if (kvp[0].StartsWith("X") || kvp[0].StartsWith("Y") || kvp[0].StartsWith("Z"))
                     {
                         string[] proj = kvp[0].Split(new[] { '_' }, 2);
@@ -133,7 +175,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     }
                     else if (kvp[0].StartsWith("attr_"))
                     {
-                        string attr = kvp[0].Split(new[] {'_'}, 2)[1];
+                        string attr = kvp[0].Split(new[] { '_' }, 2)[1];
                         if (!attributes.Contains(attr))
                             attributes.Add(attr);
 
@@ -171,7 +213,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
             startInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            startInfo.CreateNoWindow = true;
+            startInfo.CreateNoWindow = false;
 
             startInfo.FileName = "py.exe";
 
@@ -198,17 +240,20 @@ namespace CellexalVR.AnalysisLogic.H5reader
             yield return null;
 
             var watch = Stopwatch.StartNew();
+            string line;
             if (conf.ContainsKey("custom_cellnames"))
             {
-                writer.WriteLine(conf["custom_cellnames"]);
+                line = conf["custom_cellnames"];
             }
             else
             {
                 if (ascii)
-                    writer.WriteLine("[s.decode('UTF-8') for s in " + conf["cellnames"] + "[:].tolist()]");
+                    line = "[s.decode('UTF-8') for s in " + conf["cellnames"] + "[:].tolist()]";
                 else
-                    writer.WriteLine(conf["cellnames"] + "[:].tolist()");
+                    line = conf["cellnames"] + "[:].tolist()";
             }
+            print("writing line " + line);
+            writer.WriteLine(line);
 
 
             while (reader.Peek() == 0)
