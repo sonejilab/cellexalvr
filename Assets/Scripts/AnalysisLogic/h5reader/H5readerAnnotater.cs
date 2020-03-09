@@ -11,7 +11,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
     public class H5readerAnnotater : MonoBehaviour
     {
-        public H5ReaderAnnotatorScriptManager manager;
         public RectTransform display;
         public GameObject textBoxPrefab;
         public GameObject projectionObject;
@@ -45,7 +44,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public List<ProjectionObjectScript> projectionObjectScripts;
         private string path = "LCA_142K_umap_phate_loom";
 
-        private void OnValidate()
+        private void Start()
         {
             if (!referenceManager)
             {
@@ -173,7 +172,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
             }
             referenceManager.inputReader.ReadFolder(path);
-            manager.RemoveAnnotator(path);
+            referenceManager.h5ReaderAnnotatorScriptManager.RemoveAnnotator(path);
+            //manager.RemoveAnnotator(path);
         }
 
         public void AddProjectionObject(int type)
