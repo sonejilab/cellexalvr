@@ -460,7 +460,7 @@ namespace CellexalVR.Filters
                     }
                 }
             }
-
+            UpdateFilterFromFilterCreator();
         }
 
         private void DeactivateFilterCreatorBoard()
