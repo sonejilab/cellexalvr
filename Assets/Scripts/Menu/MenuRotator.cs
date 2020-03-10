@@ -20,9 +20,12 @@ namespace CellexalVR.Menu
         void Start()
         {
             // Reset rotation in case it is changed in the editor.
-            transform.localRotation = Quaternion.identity;
+            transform.localRotation = Quaternion.Euler(-15f, 0f, 0f);
             SideFacingPlayer = Rotation.Front;
         }
+
+        public bool AllowRotation { get; set; } = false;
+
         /// <summary>
         /// Editor script to ensure all menus and submenus have the same material without having to populate manually. 
         /// </summary>
@@ -46,7 +49,7 @@ namespace CellexalVR.Menu
         /// </summary>
         public void RotateRight(int times = 1)
         {
-            if (!isRotating)
+            if (AllowRotation && !isRotating)
             {
                 switch (SideFacingPlayer)
                 {
@@ -73,7 +76,7 @@ namespace CellexalVR.Menu
         /// </summary>
         public void RotateLeft(int times = 1)
         {
-            if (!isRotating)
+            if (AllowRotation && !isRotating)
             {
                 switch (SideFacingPlayer)
                 {
@@ -95,46 +98,61 @@ namespace CellexalVR.Menu
         }
 
 
-        protected virtual void OnDisable()
+        /// <summary>
+        /// Stops the menu from rotating and returns the final z angle.
+        /// </summary>
+        public void StopRotating()
         {
             if (isRotating)
             {
-                if (rotatedTotal < 0)
-                {
-                    transform.Rotate(0, 0, -180 - rotatedTotal);
-                }
-                else
-                {
-                    transform.Rotate(0, 0, 180 - rotatedTotal);
-                }
+                StopAllCoroutines();
                 isRotating = false;
             }
+
+            float zAngles = transform.localEulerAngles.z;
+            switch (SideFacingPlayer)
+            {
+                case Rotation.Front:
+                    zAngles = 0f;
+                    break;
+                case Rotation.Right:
+                    zAngles = 90f;
+                    break;
+                case Rotation.Back:
+                    zAngles = 180f;
+                    break;
+                case Rotation.Left:
+                    zAngles = -90f;
+                    break;
+            }
+            transform.localRotation = Quaternion.Euler(-15f, 0f, zAngles);
         }
         /// <summary>
         /// Rotates the menu.
         /// </summary>
         /// <param name="zAngles"> The amount of degrees it should be rotated. Positive values rotate the menu clockwise, negative values rotate it counter-clockwise. </param>
-        /// <param name="inTime"> THe number of seconds it should take the menu to rotate the specified degrees. </param>
+        /// <param name="inTime"> The number of seconds it should take the menu to rotate the specified degrees. </param>
         IEnumerator RotateMe(float zAngles, float inTime)
         {
             isRotating = true;
             // how much we have rotated so far
             rotatedTotal = 0;
             float zAnglesAbs = Mathf.Abs(zAngles);
-            // how much we should rotate each frame
-            float rotationPerFrame = zAngles / (zAnglesAbs * inTime);
+            // how much we should rotate each second
+            float rotationPerSecond = zAngles / inTime;
             while (rotatedTotal < zAnglesAbs && rotatedTotal > -zAnglesAbs)
             {
-                rotatedTotal += rotationPerFrame;
+                float rotationThisFrame = rotationPerSecond * Time.deltaTime;
+                rotatedTotal += rotationThisFrame;
                 // if we are about to rotate it too far
                 if (rotatedTotal > zAnglesAbs || rotatedTotal < -zAnglesAbs)
                 {
                     // only rotate the menu as much as there is left to rotate
-                    transform.Rotate(0, 0, rotationPerFrame - (rotatedTotal - zAngles));
+                    transform.Rotate(0, 0, rotationThisFrame - (rotatedTotal - zAngles));
                 }
                 else
                 {
-                    transform.Rotate(0, 0, rotationPerFrame);
+                    transform.Rotate(0, 0, rotationThisFrame);
                 }
                 yield return null;
             }

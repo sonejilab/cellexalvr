@@ -19,13 +19,13 @@ namespace CellexalVR.Menu
 
         private SteamVR_Controller.Device device;
         private GameObject menu;
+        private MenuRotator menuRotator;
         // These dictionaries holds the things that were turned off when the menu was deactivated
         private Dictionary<Renderer, bool> renderers = new Dictionary<Renderer, bool>();
         private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
         private Collider boxCollider;
         private SteamVR_TrackedObject leftController;
         private ControllerModelSwitcher controllerModelSwitcher;
-        private float tempRotation; // save rotation when disabling menu for when reactivating
         private bool animate;
         private float currentTime;
         private float arrivalTime = 1f;
@@ -48,6 +48,7 @@ namespace CellexalVR.Menu
         {
             menu = referenceManager.mainMenu;
             menuHolder = menu.transform.parent.gameObject;
+            menuRotator = referenceManager.menuRotator;
             boxCollider = GetComponent<Collider>();
             leftController = referenceManager.leftController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
@@ -76,9 +77,10 @@ namespace CellexalVR.Menu
                     finalScale = originalScale;
                     finalPosition = new Vector3(0f, 0f, 0.17f);
                     menu.transform.parent = leftController.transform;
-                    menu.transform.localEulerAngles = new Vector3(-15, 0, tempRotation);
                     menu.transform.localPosition = menuCube.transform.localPosition;
                 }
+                menuRotator.AllowRotation = !MenuActive;
+                menuRotator.StopRotating();
             }
 
             if (animate)
@@ -101,7 +103,6 @@ namespace CellexalVR.Menu
         {
             MenuActive = !MenuActive;
             menuCube.SetActive(!MenuActive);
-            tempRotation = menu.transform.localEulerAngles.z;
             if (!MenuActive)
             {
                 menu.transform.parent = menuHolder.transform;
