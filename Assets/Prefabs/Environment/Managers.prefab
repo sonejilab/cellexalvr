@@ -55381,6 +55381,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4923016933376072}
     m_Modifications:
+    - target: {fileID: 4554160474521982984, guid: 1d2ef86c63ae23042bbd9d2304b8abb2,
+        type: 3}
+      propertyPath: laserMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: dee83b4df08c2044dbb7465644a06cc2, type: 2}
     - target: {fileID: 655420842724348148, guid: 1d2ef86c63ae23042bbd9d2304b8abb2,
         type: 3}
       propertyPath: m_Name

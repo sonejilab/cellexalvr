@@ -5,6 +5,7 @@ namespace CellexalVR.Multiuser
 {
     public class MultiuserLaserManager : MonoBehaviour
     {
+        public Material laserMaterial;
         private List<GameObject> lasers = new List<GameObject>();
 
         public LineRenderer GetLaser(int id)
@@ -24,8 +25,11 @@ namespace CellexalVR.Multiuser
             GameObject newLaser = new GameObject();
             newLaser.transform.parent = transform;
             newLaser.gameObject.name = id.ToString();
+            LineRenderer lr = newLaser.AddComponent<LineRenderer>();
+            lr.material = laserMaterial;
+            lr.startWidth = lr.endWidth = 0.015f;
             lasers.Add(newLaser);
-            return newLaser.AddComponent<LineRenderer>();
+            return lr;
         }
     }
 }

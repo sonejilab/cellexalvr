@@ -97,7 +97,7 @@ namespace CellexalVR.Interaction
                 {
                     controllerModelSwitcher.ActivateDesiredTool();
                 }
-                //referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
+                referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 referenceManager.rightLaser.enabled = true;
                 referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
