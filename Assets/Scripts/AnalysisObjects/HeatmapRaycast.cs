@@ -370,7 +370,7 @@ namespace CellexalVR.Interaction
             ResetHeatmapHighlight(false);
             cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
             if (heatmap.barInfoText.text == cellManager.Attributes[attribute] && cellsToHighlight.Length == 0) return;
-            cellManager.HighlightCells(cellsToHighlight, true);
+            cellManager.HighlightCells(cellsToHighlight, true, attribute);
             heatmap.barInfoText.text = attribute >= 0 ? cellManager.Attributes[attribute] : "No attribute";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
             //highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth, 0.003f / highlightMarkerHeight, 0.003f);
@@ -609,7 +609,7 @@ namespace CellexalVR.Interaction
         {
             if (cellsToHighlight != null && cellsToHighlight.Length > 0)
             {
-                cellManager.HighlightCells(cellsToHighlight, false);
+                cellManager.HighlightCells(cellsToHighlight, false, -1);
                 cellsToHighlight = new Cell[0];
             }
             if (resetText) heatmap.ResetHeatmapHighlight();

@@ -66,8 +66,9 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageH5Config(string path, Dictionary<string, string> h5config)
         {
-            CellexalLog.Log("Recieved message to read folder at " + path + " with h5 config with size " + h5config.Count);
-            
+            CellexalLog.Log(
+                "Recieved message to read folder at " + path + " with h5 config with size " + h5config.Count);
+
             referenceManager.inputReader.ReadFolder(path, h5config);
         }
 
@@ -143,6 +144,7 @@ namespace CellexalVR.Multiuser
             {
                 lr = mlm.AddLaser(ownerId);
             }
+
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
@@ -159,6 +161,7 @@ namespace CellexalVR.Multiuser
             {
                 lr = mlm.AddLaser(ownerId);
             }
+
             lr.SetPosition(0, new Vector3(originX, originY, originZ));
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
         }
@@ -357,7 +360,15 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageHighlightCells(int group, bool highlight)
         {
-            Cell[] cellsToHighlight = referenceManager.cellManager.GetCells(group);
+            Cell[] cellsToHighlight;
+            if (group != -1)
+            {
+                cellsToHighlight = referenceManager.cellManager.GetCells(group);
+            }
+            else
+            {
+                cellsToHighlight = referenceManager.cellManager.GetCells();
+            }
             referenceManager.cellManager.HighlightCells(cellsToHighlight, highlight);
         }
 
@@ -1364,9 +1375,7 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
             var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
-            
 
-            
 
             Graph graph = referenceManager.graphManager.FindGraph(subGraphName);
             //if (subGraphName != string.Empty)
