@@ -206,7 +206,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 MakePointTransparent(gpPair.Value, toggle);
             }
-
             isTransparent = toggle;
 
         }
@@ -214,7 +213,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Animation for showing graph.
         /// </summary>
-        void Maximize()
+        private void Maximize()
         {
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, oldPos, step);
@@ -1180,7 +1179,7 @@ namespace CellexalVR.AnalysisObjects
         /// Sets the green channel of the point so transparency will be activated in the shader.
         /// </summary>
         /// <param name="toggle"></param>
-        public void MakePointTransparent(GraphPoint graphPoint, bool active)
+        private void MakePointTransparent(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             byte greenChannel;
@@ -1210,7 +1209,6 @@ namespace CellexalVR.AnalysisObjects
             Color32 finalColor = new Color32(tex.r, tex.g, blueChannel, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
-
         }
 
 
@@ -1218,7 +1216,15 @@ namespace CellexalVR.AnalysisObjects
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
-            byte greenChannel = (byte)(active ? 38 : 0);
+            byte greenChannel;
+            if (!isTransparent)
+            {
+                greenChannel = (byte)(active ? 38 : 0);
+            }
+            else
+            {
+                greenChannel = (byte)(active ? 38 : 190);
+            }
             Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
             textureChanged = true;
@@ -1228,7 +1234,7 @@ namespace CellexalVR.AnalysisObjects
         /// Resets the color of the graph point back to its default.
         /// </summary>
         /// <param name="graphPoint">The graphpoint to recolor.</param>
-        public void ResetGraphPointColor(GraphPoint graphPoint)
+        private void ResetGraphPointColor(GraphPoint graphPoint)
         {
             if (isTransparent)
             {

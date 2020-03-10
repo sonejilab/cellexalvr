@@ -8,13 +8,7 @@ namespace CellexalVR.Menu.Buttons
         private GraphManager graphManager;
         public bool Toggle { get; set; }
 
-        protected override string Description
-        {
-            get
-            {
-                return "Toggle transparency of all graph points";
-            }
-        }
+        protected override string Description => "Toggle transparency of all graph points";
 
         public override void Click()
         {

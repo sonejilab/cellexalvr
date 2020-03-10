@@ -9,7 +9,6 @@ namespace CellexalVR.Multiuser
 
         public LineRenderer GetLaser(int id)
         {
-            print("Get Laser");
             foreach (GameObject laser in lasers)
             {
                 if (laser.gameObject.name == id.ToString())
@@ -22,7 +21,6 @@ namespace CellexalVR.Multiuser
 
         public LineRenderer AddLaser(int id)
         {
-            print("Add Laser");
             GameObject newLaser = new GameObject();
             newLaser.transform.parent = transform;
             newLaser.gameObject.name = id.ToString();

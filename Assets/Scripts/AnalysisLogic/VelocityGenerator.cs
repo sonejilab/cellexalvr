@@ -233,11 +233,6 @@ namespace CellexalVR.AnalysisLogic
                 Vector3 diffScaled = diff * 30; //arbitrary scaling, ofcourse.. DUH!
                                                   
                 diffScaled /= originalGraph.longestAxis;
-                if (i % 1000 == 0)
-                {
-                    UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
-                    UnityEngine.Debug.Log("(" + diffScaled.x + ", " + diffScaled.y + ", " + diffScaled.z + ")");
-                }
                 if (point != null)
                     velocities[point] = diffScaled / 5f;
                 else
