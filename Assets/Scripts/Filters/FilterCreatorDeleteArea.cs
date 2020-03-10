@@ -5,6 +5,7 @@ namespace CellexalVR.Filters
 
     public class FilterCreatorDeleteArea : MonoBehaviour
     {
+        public FilterManager filterManager;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -17,6 +18,7 @@ namespace CellexalVR.Filters
                 filterCreatorBlock.DisconnectAllPorts();
 
                 Destroy(filterCreatorBlock.gameObject);
+                filterManager.UpdateFilterFromFilterCreator();
             }
         }
     }
