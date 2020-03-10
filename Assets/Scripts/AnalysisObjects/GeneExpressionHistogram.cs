@@ -193,6 +193,39 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        public void ClearLegend()
+        {
+            for (int i = 0; i < tabData.Count; ++i)
+            {
+                tabData[i] = null;
+            }
+
+            foreach (GameObject go in bars)
+            {
+                Destroy(go);
+            }
+            bars.Clear();
+
+            foreach (GameObject go in cutOffTops)
+            {
+                Destroy(go);
+            }
+            cutOffTops.Clear();
+
+            foreach (var tabButton in tabButtons)
+            {
+                tabButton.GetComponentInChildren<TextMeshPro>().text = "";
+            }
+            tabButtons[currentTab].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = Color.black;
+
+            geneNameLabel.text = "";
+            DeactivateHighlightArea();
+            DeactivateSelectedArea();
+
+
+
+        }
+
         private void ActivateExtraColumn()
         {
             attached = true;
@@ -300,8 +333,11 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void RecreateHistogram()
         {
-            tabData[currentTab].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
-            CreateHistogram(tabData[currentTab]);
+            if (tabData[currentTab] != null)
+            {
+                tabData[currentTab].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
+                CreateHistogram(tabData[currentTab]);
+            }
         }
 
         /// <summary>
@@ -411,6 +447,11 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="maxX">The right index of the highlight area</param>
         private void MoveArea(GameObject area, TextMeshPro text, int minX, int maxX)
         {
+            if (bars.Count == 0)
+            {
+                return;
+            }
+
             if (minX > maxX)
             {
                 int temp = minX;

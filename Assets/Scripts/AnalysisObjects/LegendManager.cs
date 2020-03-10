@@ -52,6 +52,7 @@ namespace CellexalVR.AnalysisObjects
             originalParent = legendTransform.parent;
             originalbackgroundScale = backgroundPlane.transform.localScale;
             CellexalEvents.GraphsReset.AddListener(ClearLegends);
+            CellexalEvents.GraphsUnloaded.AddListener(ClearLegends);
         }
 
         private void Update()
@@ -179,10 +180,10 @@ namespace CellexalVR.AnalysisObjects
         public void ActivateLegend()
         {
             ActivateLegend(desiredLegend);
-            Transform transform1 = transform;
             var cameraTransform = referenceManager.headset.transform;
-            transform1.position = cameraTransform.position + cameraTransform.forward * 0.7f;
-            transform.Rotate(new Vector3(90f, 0f, 0f), Space.Self);
+            transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
+            transform.LookAt(cameraTransform);
+            transform.Rotate(0f, 180f, 0f);
         }
 
         /// <summary>
@@ -220,6 +221,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void ClearLegends()
         {
+            geneExpressionHistogram.ClearLegend();
             attributeLegend.ClearLegend();
             selectionLegend.ClearLegend();
         }
