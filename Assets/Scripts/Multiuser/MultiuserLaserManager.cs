@@ -27,7 +27,7 @@ namespace CellexalVR.Multiuser
             newLaser.gameObject.name = id.ToString();
             LineRenderer lr = newLaser.AddComponent<LineRenderer>();
             lr.material = laserMaterial;
-            lr.startWidth = lr.endWidth = 0.015f;
+            lr.startWidth = lr.endWidth = 0.005f;
             lasers.Add(newLaser);
             return lr;
         }

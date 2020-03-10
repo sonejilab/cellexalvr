@@ -144,7 +144,6 @@ namespace CellexalVR.Multiuser
             {
                 lr = mlm.AddLaser(ownerId);
             }
-
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
@@ -160,6 +159,7 @@ namespace CellexalVR.Multiuser
             if (!lr)
             {
                 lr = mlm.AddLaser(ownerId);
+                lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
 
             lr.SetPosition(0, new Vector3(originX, originY, originZ));
@@ -369,6 +369,7 @@ namespace CellexalVR.Multiuser
             {
                 cellsToHighlight = referenceManager.cellManager.GetCells();
             }
+
             referenceManager.cellManager.HighlightCells(cellsToHighlight, highlight);
         }
 
