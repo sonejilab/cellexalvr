@@ -162,7 +162,7 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Clears the bk tree
         /// </summary>
-        public void Clear()
+        private void Clear()
         {
             ClearList();
             root = null;

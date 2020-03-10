@@ -157,6 +157,14 @@ namespace SimpleWebBrowser
         //        _mainEngine.RunJSOnce(JSInitializationCode);
         //}
 
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
         // Use this for initialization
         void Start()
         {

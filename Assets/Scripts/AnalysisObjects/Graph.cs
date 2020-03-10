@@ -1217,7 +1217,7 @@ namespace CellexalVR.AnalysisObjects
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
             byte greenChannel;
-            if (!isTransparent)
+            if (!isTransparent && tex.r != 254)
             {
                 greenChannel = (byte)(active ? 38 : 0);
             }

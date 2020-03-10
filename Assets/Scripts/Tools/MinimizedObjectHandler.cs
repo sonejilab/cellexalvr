@@ -20,7 +20,7 @@ namespace CellexalVR.Tools
         private MenuToggler menuToggler;
         private Vector3 startPos = new Vector3(.34f, .34f, .073f);
         private Vector3 dNextPosRow = new Vector3(0f, -.17f, 0);
-        private Vector3 dNextPosCol = new Vector3(.17f, 0f, 0);
+        private Vector3 dNextPosCol = new Vector3(-.17f, 0f, 0);
         private bool[,] spaceTaken = new bool[5, 5];
         private List<GameObject> minimizedObjects = new List<GameObject>(25);
 

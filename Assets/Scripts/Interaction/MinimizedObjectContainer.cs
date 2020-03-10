@@ -28,7 +28,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public int SpaceY { get; set; }
 
-        private bool controllerInside = false;
+        public bool controllerInside = false;
 
         private string laserColliderName =
             "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
@@ -108,29 +108,27 @@ namespace CellexalVR.Interaction
             // When laser is deactivated on trigger exit is not called so we check if the box is colliding with the laser.
             // To deactivate button again check every 10th frame if laser pointer collider is colliding.
             if (frameCount % 10 != 0) return;
-            frameCount = 0;
-            Transform transform1 = transform;
-            Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 5f,
-                Quaternion.identity, layerMask);
-
-            if (collidesWith.Length == 0)
-            {
-                controllerInside = false;
-                return;
-            }
-
-            for (int i = 0; i < collidesWith.Length; i++)
-            {
-                Collider col = collidesWith[i];
-                if (col.gameObject.name != laserColliderName) continue;
-                if (i == 0) return;
-                MinimizedObjectContainer moc = col.GetComponent<MinimizedObjectContainer>();
-                if (moc)
-                {
-                    moc.controllerInside = false;
-                    GetComponent<Renderer>().material.color = orgColor;
-                }
-            }
+            // frameCount = 0;
+            // Transform transform1 = transform;
+            // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
+            //     transform1.rotation, layerMask);
+            //
+            // if (collidesWith.Length == 0)
+            // {
+            //     controllerInside = false;
+            //     return;
+            // }
+            //
+            // foreach (Collider col in collidesWith)
+            // {
+            //     if (col.gameObject.name == laserColliderName)
+            //     {
+            //         controllerInside = true;
+            //         return;
+            //     }
+            // }
+            // controllerInside = false;
+            // GetComponent<Renderer>().material.color = orgColor;
         }
 
         private void OnDrawGizmos()
@@ -142,20 +140,17 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name == laserColliderName)
-            {
-                controllerInside = true;
-                GetComponent<Renderer>().material.color = Color.cyan;
-            }
+            if (other.gameObject.name != laserColliderName) return;
+            controllerInside = true;
+            GetComponent<Renderer>().material.color = Color.cyan;
+            // Handler.UpdateHighlight(this);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name == laserColliderName && !controllerInside)
-            {
-                controllerInside = false;
-                GetComponent<Renderer>().material.color = orgColor;
-            }
+            if (other.gameObject.name != laserColliderName) return;
+            controllerInside = false;
+            GetComponent<Renderer>().material.color = orgColor;
         }
     }
 }
