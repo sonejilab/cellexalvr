@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using System.IO;
+﻿using CellexalVR.General;
 using System;
-using CellexalVR.General;
+using System.IO;
+using UnityEngine;
 
 namespace CellexalVR.DesktopUI
 {
     /// <summary>
-    /// Represents the buttons that open a folder or
+    /// Represents the buttons that open a folder or a file.
     /// </summary>
     public class OpenFolderButton : MonoBehaviour
     {
@@ -24,11 +24,16 @@ namespace CellexalVR.DesktopUI
             else if (path == "$UNITY_LOG")
             {
 #if UNITY_EDITOR
-                fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "Local", "Unity", "Editor", "Player.log");
+                fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "Local", "Unity", "Editor", "Editor.log");
 #else
                 fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "LocalLow", Application.companyName, Application.productName, "Player.log");
 #endif
             }
+            else if (path == "$SCRIPTS_FOLDER")
+            {
+                fullPath = Path.Combine(Application.streamingAssetsPath, "R");
+            }
+
             System.Diagnostics.Process.Start(fullPath);
         }
     }

@@ -82,6 +82,8 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
         {
+            Rigidbody rigidBody = this.GetComponent<Rigidbody>();
+            referenceManager.multiuserMessageSender.SendMessageLegendUngrabbed(rigidBody.velocity, rigidBody.angularVelocity);
             if (legendInsideCube)
             {
                 StartCoroutine(AttachLegendToCube(cullingCubeTransform));

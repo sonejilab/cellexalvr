@@ -214,6 +214,13 @@ namespace CellexalVR.Multiuser
                 pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
+        public void SendMessageLegendUngrabbed(Vector3 vel, Vector3 angVel)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageLegendUngrabbed", PhotonTargets.Others, vel.x,
+                vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+        }
+
         public void SendMessageChangeLegend(string legendName)
         {
             if (!multiplayer) return;
@@ -810,7 +817,6 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageNetworkCenterUngrabbed", PhotonTargets.Others, networkHandlerName,
                 networkCenterName, vel.x, vel.y, vel.z, angVel.x, angVel.y, angVel.z);
         }
-
 
         public void SendMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
         {

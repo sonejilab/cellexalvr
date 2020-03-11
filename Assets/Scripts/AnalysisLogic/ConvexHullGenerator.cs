@@ -809,7 +809,7 @@ namespace CellexalVR.AnalysisLogic
             }
             mesh.vertices = verts;
             mesh.triangles = tris;
-            MeshUtility.Optimize(mesh);
+            mesh.Optimize();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
@@ -834,7 +834,7 @@ namespace CellexalVR.AnalysisLogic
 
             mesh.vertices = verts;
             mesh.triangles = tris;
-            MeshUtility.Optimize(mesh);
+            mesh.Optimize();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
@@ -1997,7 +1997,7 @@ namespace CellexalVR.AnalysisLogic
                 }
 
             }
-            
+
             // returns the three indices of a tetra that is not on the edge, assuming that _one_ of the vertices are on the edge and the other three are not
             Vector3Int NonEdgeVertices(Vector4Int tetra)
             {
@@ -2210,7 +2210,7 @@ namespace CellexalVR.AnalysisLogic
             }
             mesh.vertices = verts;
             mesh.triangles = tris;
-            MeshUtility.Optimize(mesh);
+            mesh.Optimize();
             CellexalLog.Log("Mesh vertices after optimization: " + mesh.vertexCount);
 
             mesh.RecalculateNormals();

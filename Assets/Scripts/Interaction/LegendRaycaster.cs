@@ -7,8 +7,9 @@ namespace CellexalVR.Interaction
 
     public class LegendRaycaster : MonoBehaviour
     {
+        [HideInInspector]
         public int savedGeneExpressionHistogramHitX = -1;
-        
+
         private ReferenceManager referenceManager;
         private LegendManager legendManager;
         private SteamVR_Controller.Device device;
