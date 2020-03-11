@@ -217,10 +217,10 @@ namespace CellexalVR.AnalysisObjects
         /// Used to disable colliders of nodes to avoid the controller being inside many nodes at the same time. 
         /// </summary>
         /// <param name="b">Toggle on/off</param>
-        /// <param name="exepction">The first node that the controller entered should be the only one to stay active.</param>
-        public void ToggleNodeColliders(bool b, string exepction)
+        /// <param name="exception">The first node that the controller entered should be the only one to stay active.</param>
+        public void ToggleNodeColliders(bool b, string exception)
         {
-            foreach (NetworkNode node in nodes.FindAll(n => n.gameObject.name != exepction))
+            foreach (NetworkNode node in nodes.FindAll(n => n.gameObject.name != exception))
             {
                 node.UnHighlight();
                 node.GetComponent<BoxCollider>().enabled = b;
@@ -1164,13 +1164,20 @@ namespace CellexalVR.AnalysisObjects
         /// Highlights a gene in this network with a red circle.
         /// </summary>
         /// <param name="geneName">The gene to highlight.</param>
-        public void HighLightGene(string geneName)
+        public void HighLightGene(string geneName, bool highlight = true)
         {
             int nodeHit = nodes.FindIndex(s => s.Label.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
             if (nodeHit != -1)
             {
                 NetworkNode nn = nodes[nodeHit];
-                nn.Highlight();
+                if (highlight)
+                {
+                    nn.Highlight();
+                }
+                else
+                {
+                    nn.UnHighlight();
+                }
                 if (highlightCircle != null)
                 {
                     Destroy(highlightCircle);
@@ -1182,6 +1189,26 @@ namespace CellexalVR.AnalysisObjects
                 highlightCircle.transform.parent = transform;
             }
             //int nodeHit = Array.FindIndex(nodes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+
+        public void HighlightNode(string name, bool highlight)
+        {
+            foreach (var node in nodes)
+            {
+                if (node.geneName.text == name)
+                {
+                    if (highlight)
+                    {
+                        node.Highlight();
+                    }
+                    else
+                    {
+                        node.UnHighlight();
+                    }
+                    return;
+                }
+            }
         }
     }
 }

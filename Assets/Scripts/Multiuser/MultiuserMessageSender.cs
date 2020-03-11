@@ -142,7 +142,7 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageReadFolder", PhotonTargets.Others, path);
         }
 
-        public void SendMessageReadH5Config(string path, Dictionary<string,string> h5config)
+        public void SendMessageReadH5Config(string path, Dictionary<string, string> h5config)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients of h5 config");
@@ -807,6 +807,19 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageNetworkCenterUngrabbed", PhotonTargets.Others, networkHandlerName,
                 networkCenterName, vel.x, vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+        }
+
+
+        public void SendMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageHighlightNetworkNode", PhotonTargets.Others, handlerName, centerName, geneName);
+        }
+
+        public void SendMessageUnhighlightNetworkNode(string handlerName, string centerName, string geneName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageUnhighlightNetworkNode", PhotonTargets.Others, handlerName, centerName, geneName);
         }
 
         public void SendMessageSetArcsVisible(bool toggleToState, string networkName)
