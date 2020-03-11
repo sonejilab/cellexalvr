@@ -376,6 +376,7 @@ namespace CellexalVR.AnalysisObjects
                 toCluster.Add(to.FindGraphPoint(gp.Label));
             }
             PointCluster pointCluster = Instantiate(pointClusterPrefab).GetComponent<PointCluster>();
+            pointCluster.referenceManager = referenceManager;
             pointCluster.ClusterId = clusterNr;
             pointCluster.gameObject.name = "PointCluster" + clusterCount++;
             pointClusters.Add(pointCluster);

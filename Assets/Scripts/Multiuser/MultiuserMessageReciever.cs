@@ -194,6 +194,18 @@ namespace CellexalVR.Multiuser
             legend.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
         }
 
+        public void RecieveMessageNetworkUngrabbed(float velX, float velY, float velZ,
+    float angVelX, float angVelY, float angVelZ)
+        {
+            LegendManager legend = referenceManager.legendManager;
+            if (legend)
+            {
+                Rigidbody r = legend.GetComponent<Rigidbody>();
+                r.velocity = new Vector3(velX, velY, velZ);
+                r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
+            }
+        }
+
         [PunRPC]
         public void RecieveMessageChangeLegend(string legendName)
         {
