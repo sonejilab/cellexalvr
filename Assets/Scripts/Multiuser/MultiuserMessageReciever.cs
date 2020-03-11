@@ -292,7 +292,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageColoringMethodChanged(int newMode)
         {
             CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
-            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods) newMode);
+            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
         }
 
         //[PunRPC]
@@ -1145,7 +1145,7 @@ namespace CellexalVR.Multiuser
             bool networkExists = (handlerExists && center != null);
             if (networkExists)
             {
-                center.SwitchLayout((NetworkCenter.Layout) layout);
+                center.SwitchLayout((NetworkCenter.Layout)layout);
             }
             else
             {
@@ -1194,6 +1194,18 @@ namespace CellexalVR.Multiuser
                     r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
                 }
             }
+        }
+
+        [PunRPC]
+        public void RecieveMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
+        {
+            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, true);
+        }
+
+        [PunRPC]
+        public void RecieveMessageUnhighlightNetworkNode(string handlerName, string centerName, string geneName)
+        {
+            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, false);
         }
 
         [PunRPC]

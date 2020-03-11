@@ -35,7 +35,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public HashSet<NetworkNode> neighbours = new HashSet<NetworkNode>();
         public List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
-        
+
 
         private List<Color> edgeColors = new List<Color>();
         private Vector3 normalScale;
@@ -98,7 +98,7 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider) ;
+            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
             if (active && touched && !Center.controllerInsideSomeNode)
             {
                 Center.ToggleNodeColliders(false, gameObject.name);
@@ -108,6 +108,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     NetworkNode nn = obj.GetComponent<NetworkNode>();
                     nn.Highlight();
+                    referenceManager.multiuserMessageSender.SendMessageHighlightNetworkNode(Center.Handler.name, Center.name, nn.geneName.text);
                 }
             }
         }
@@ -136,6 +137,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     NetworkNode nn = obj.GetComponent<NetworkNode>();
                     nn.UnHighlight();
+                    referenceManager.multiuserMessageSender.SendMessageUnhighlightNetworkNode(Center.Handler.name, Center.name, nn.geneName.text);
                 }
 
             }

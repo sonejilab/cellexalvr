@@ -357,7 +357,7 @@ namespace CellexalVR.AnalysisObjects
             referenceManager.graphManager.RemoveNetwork(this);
             delete = true;
             minimize = true;
-            removing = true; 
+            removing = true;
             //Destroy(this.gameObject);
             //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
         }
@@ -421,6 +421,7 @@ namespace CellexalVR.AnalysisObjects
             foreach (NetworkCenter nc in networks)
             {
                 nc.HighLightGene(geneName);
+                referenceManager.multiuserMessageSender.SendMessageHighlightNetworkNode(name, nc.name, geneName);
             }
         }
     }
