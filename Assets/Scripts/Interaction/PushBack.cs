@@ -42,7 +42,7 @@ namespace CellexalVR.Interaction
             }
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer")
-                | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
+                | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer") | 1 << LayerMask.NameToLayer("Ignore Raycast");
         }
 
         /// <summary>

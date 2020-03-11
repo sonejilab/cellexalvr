@@ -131,9 +131,9 @@ namespace CellexalVR.Interaction
             {
                 int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
                 legendManager.geneExpressionHistogram.MoveSelectedArea(hitIndex, savedGeneExpressionHistogramHitX);
-                savedGeneExpressionHistogramHitX = -1;
                 referenceManager.multiuserMessageSender.SendMessageMoveSelectedArea(hitIndex,
                     savedGeneExpressionHistogramHitX);
+                savedGeneExpressionHistogramHitX = -1;
             }
         }
     }
