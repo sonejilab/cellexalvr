@@ -96,6 +96,7 @@ namespace CellexalVR.Multiuser
 
                     player.gameObject.name = PhotonNetwork.playerName + player.GetPhotonView().ownerId;
                     players.Add(player);
+                    player.GetPhotonView().owner.TagObject = player;
 
 
                     coordinator = PhotonNetwork
