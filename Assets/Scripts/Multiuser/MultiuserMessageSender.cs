@@ -31,6 +31,7 @@ namespace CellexalVR.Multiuser
         public bool multiplayer;
 
         private MultiuserMessageReciever coordinator;
+        private List<GameObject> players = new List<GameObject>();
 
         #endregion
 
@@ -69,7 +70,7 @@ namespace CellexalVR.Multiuser
                     GameObject player = new GameObject();
                     if (CrossSceneInformation.Spectator)
                     {
-                        player = PhotonNetwork.Instantiate(this.spectatorPrefab.name, new Vector3(0f, 5f, 0f),
+                        player = PhotonNetwork.Instantiate(spectatorPrefab.name, new Vector3(0f, 5f, 0f),
                             Quaternion.identity, 0);
                         Destroy(VRRig);
                         spectatorRig.SetActive(true);
@@ -78,7 +79,7 @@ namespace CellexalVR.Multiuser
                     else if (CrossSceneInformation.Ghost)
                     {
                         Destroy(spectatorRig);
-                        player = PhotonNetwork.Instantiate(this.ghostPrefab.name, new Vector3(0f, 5f, 0f),
+                        player = PhotonNetwork.Instantiate(ghostPrefab.name, new Vector3(0f, 5f, 0f),
                             Quaternion.identity, 0);
                         Destroy(referenceManager.leftControllerScriptAlias);
                         Destroy(referenceManager.rightControllerScriptAlias);
@@ -89,11 +90,12 @@ namespace CellexalVR.Multiuser
                     else if (!CrossSceneInformation.Spectator)
                     {
                         Destroy(spectatorRig);
-                        player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f),
+                        player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 5f, 0f),
                             Quaternion.identity, 0);
                     }
 
-                    player.gameObject.name = PhotonNetwork.playerName;
+                    player.gameObject.name = PhotonNetwork.playerName + player.GetPhotonView().ownerId;
+                    players.Add(player);
 
 
                     coordinator = PhotonNetwork
@@ -183,7 +185,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageToggleLaser", PhotonTargets.Others,
-                active, coordinator.photonView.ownerId);
+                active, coordinator.photonView.ownerId, players[0].gameObject.name);
         }
 
         public void SendMessageMoveLaser(Transform origin, Vector3 hit)
@@ -192,7 +194,7 @@ namespace CellexalVR.Multiuser
             Vector3 originPosition = origin.position;
             coordinator.photonView.RPC("RecieveMessageMoveLaser", PhotonTargets.Others,
                 originPosition.x, originPosition.y, originPosition.z,
-                hit.x, hit.y, hit.z, coordinator.photonView.ownerId);
+                hit.x, hit.y, hit.z, coordinator.photonView.ownerId, players[0].gameObject.name);
         }
 
         #endregion

@@ -134,15 +134,15 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageToggleLaser(bool active, int ownerId)
+        public void RecieveMessageToggleLaser(bool active, int ownerId, string ownerName)
         {
             if (ownerId != photonView.ownerId) return;
             MultiuserLaserManager mlm =
                 referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
-            LineRenderer lr = mlm.GetLaser(ownerId);
-            if (!lr)
+            bool exists  = mlm.lasers.TryGetValue(ownerId, out LineRenderer lr);
+            if (!exists)
             {
-                lr = mlm.AddLaser(ownerId);
+                lr = mlm.AddLaser(ownerId, ownerName);
             }
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
@@ -150,19 +150,19 @@ namespace CellexalVR.Multiuser
 
         [PunRPC]
         public void RecieveMessageMoveLaser(float originX, float originY, float originZ,
-            float hitX, float hitY, float hitZ, int ownerId)
+            float hitX, float hitY, float hitZ, int ownerId, string ownerName)
         {
             if (ownerId != photonView.ownerId) return;
             MultiuserLaserManager mlm =
                 referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
-            LineRenderer lr = mlm.GetLaser(ownerId);
-            if (!lr)
+            // LineRenderer lr = mlm.GetLaser(ownerId);
+            bool exists  = mlm.lasers.TryGetValue(ownerId, out LineRenderer lr);
+            if (!exists)
             {
-                lr = mlm.AddLaser(ownerId);
+                lr = mlm.AddLaser(ownerId, ownerName);
                 lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
-
-            lr.SetPosition(0, new Vector3(originX, originY, originZ));
+            lr.SetPosition(0, mlm.laserDict[ownerId].position);
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
         }
 

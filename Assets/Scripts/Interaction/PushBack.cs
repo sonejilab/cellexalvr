@@ -83,6 +83,11 @@ namespace CellexalVR.Interaction
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
+            else if (hit.transform.GetComponent<LegendManager>())
+            {
+                hit.transform.LookAt(raycastingSource.transform);
+                referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
+            }
         }
 
         /// <summary>
@@ -115,6 +120,11 @@ namespace CellexalVR.Interaction
                 hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<LegendManager>())
+            {
+                hit.transform.LookAt(raycastingSource.transform);
+                referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
         }
 

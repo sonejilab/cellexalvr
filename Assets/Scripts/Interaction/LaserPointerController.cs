@@ -105,6 +105,7 @@ namespace CellexalVR.Interaction
             }
             if (alwaysActive)
             {
+                referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                 {
                     controllerModelSwitcher.ActivateDesiredTool();
