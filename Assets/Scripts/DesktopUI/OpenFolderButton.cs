@@ -29,6 +29,11 @@ namespace CellexalVR.DesktopUI
                 fullPath = Path.Combine(Environment.GetEnvironmentVariable("AppData"), "..", "LocalLow", Application.companyName, Application.productName, "Player.log");
 #endif
             }
+            else if (path == "$SCRIPTS_FOLDER")
+            {
+                fullPath = Path.Combine(Application.streamingAssetsPath, "R");
+            }
+
             System.Diagnostics.Process.Start(fullPath);
         }
     }

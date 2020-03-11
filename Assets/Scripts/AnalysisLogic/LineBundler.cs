@@ -12,11 +12,11 @@ namespace CellexalVR.AnalysisLogic
     /// </summary>
     public class LineBundler : MonoBehaviour
     {
+        public ReferenceManager referenceManager;
         public GameObject lineBetweenTwoGraphPointsPrefab;
         public GameObject pointClusterPrefab;
         public GameObject clusterDebugBox;
 
-        private ReferenceManager referenceManager;
         private GraphManager graphManager;
         private bool linesBundled;
         private void OnValidate()
