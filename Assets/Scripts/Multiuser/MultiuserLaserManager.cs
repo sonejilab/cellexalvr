@@ -34,7 +34,7 @@ namespace CellexalVR.Multiuser
             LineRenderer lr = newLaser.AddComponent<LineRenderer>();
             lr.material = laserMaterial;
             lr.startWidth = lr.endWidth = 0.002f;
-            lasers.Add(lr);
+            lasers[id] = lr;
             laserDict[id] = player.GetComponent<PlayerManager>().rightHand;
             // var views = PhotonNetwork.playerList;
             // lasers.Add(new Tuple<GameObject, Vector3>(newLaser, originPoint));
