@@ -194,7 +194,7 @@ namespace CellexalVR.Multiuser
             legend.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
         }
 
-        public void RecieveMessageNetworkUngrabbed(float velX, float velY, float velZ,
+        public void RecieveMessageLegendUngrabbed(float velX, float velY, float velZ,
     float angVelX, float angVelY, float angVelZ)
         {
             LegendManager legend = referenceManager.legendManager;
