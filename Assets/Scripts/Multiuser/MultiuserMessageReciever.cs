@@ -139,12 +139,13 @@ namespace CellexalVR.Multiuser
             if (ownerId != photonView.ownerId) return;
             MultiuserLaserManager mlm =
                 referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
-            bool exists  = mlm.lasers.TryGetValue(ownerId, out LineRenderer lr);
+            bool exists  = mlm.lasersLineRends.TryGetValue(ownerId, out LineRenderer lr);
             if (!exists)
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
             }
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+            lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
 
@@ -156,13 +157,13 @@ namespace CellexalVR.Multiuser
             MultiuserLaserManager mlm =
                 referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
             // LineRenderer lr = mlm.GetLaser(ownerId);
-            bool exists  = mlm.lasers.TryGetValue(ownerId, out LineRenderer lr);
+            bool exists  = mlm.lasersLineRends.TryGetValue(ownerId, out LineRenderer lr);
             if (!exists)
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
-                lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+                lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
-            lr.SetPosition(0, mlm.laserDict[ownerId].position);
+            lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
         }
 
@@ -856,17 +857,15 @@ namespace CellexalVR.Multiuser
         {
             Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
             bool heatmapExists = hm != null;
-            if (heatmapExists)
+            if (!heatmapExists) return;
+            try
             {
-                try
-                {
-                    hm.GetComponent<HeatmapRaycast>().MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight,
-                        selectedGeneTop, selectedGeneBottom);
-                }
-                catch (Exception e)
-                {
-                    //CellexalLog.Log("Could not move heatmap - Error: " + e);
-                }
+                hm.GetComponent<HeatmapRaycast>().MoveSelection(hitx, hity, selectedGroupLeft, selectedGroupRight,
+                    selectedGeneTop, selectedGeneBottom);
+            }
+            catch (Exception)
+            {
+                // CellexalLog.Log("Could not move heatmap - Error: " + e);
             }
         }
 
@@ -881,7 +880,7 @@ namespace CellexalVR.Multiuser
                 {
                     hm.GetComponent<HeatmapRaycast>().HandleHitHeatmap(hitx, hity);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //CellexalLog.Log("Failed to handle hit on heatmap. Stacktrace : " + e.StackTrace);
                 }

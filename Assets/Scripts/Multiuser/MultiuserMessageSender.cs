@@ -822,13 +822,15 @@ namespace CellexalVR.Multiuser
         public void SendMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHighlightNetworkNode", PhotonTargets.Others, handlerName, centerName, geneName);
+            coordinator.photonView.RPC("RecieveMessageHighlightNetworkNode", PhotonTargets.Others, handlerName,
+                centerName, geneName);
         }
 
         public void SendMessageUnhighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageUnhighlightNetworkNode", PhotonTargets.Others, handlerName, centerName, geneName);
+            coordinator.photonView.RPC("RecieveMessageUnhighlightNetworkNode", PhotonTargets.Others, handlerName,
+                centerName, geneName);
         }
 
         public void SendMessageSetArcsVisible(bool toggleToState, string networkName)
@@ -1040,6 +1042,8 @@ namespace CellexalVR.Multiuser
             multiplayer = true;
             Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
             CellexalLog.Log("A client connected to our server");
+            print(other.NickName + other.ID);
+            StartCoroutine(FindPlayer());
 
             //Debug.Log("MASTER JOINED ROOM");
             //LoadArena();
@@ -1056,6 +1060,20 @@ namespace CellexalVR.Multiuser
             multiplayer = true;
             CellexalLog.Log("We joined a server");
             StartCoroutine(FindServerCoordinator());
+            StartCoroutine(FindPlayer());
+        }
+
+        private IEnumerator FindPlayer()
+        {
+            yield return new WaitForSeconds(2f);
+            GameObject otherPlayer = GameObject.Find(playerPrefab.gameObject.name + "(Clone)");
+            while (otherPlayer != null)
+            {
+                otherPlayer.gameObject.name = otherPlayer.GetPhotonView().owner.NickName +
+                                              otherPlayer.GetPhotonView().ownerId;
+                otherPlayer = GameObject.Find(playerPrefab.gameObject.name + "(Clone)");
+                yield return null;
+            }
         }
 
         private IEnumerator FindClientCoordinator()
