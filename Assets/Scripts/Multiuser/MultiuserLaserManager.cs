@@ -8,9 +8,11 @@ namespace CellexalVR.Multiuser
     public class MultiuserLaserManager : MonoBehaviour
     {
         public Material laserMaterial;
-        public Dictionary<int, Transform> laserDict = new Dictionary<int, Transform>();
+        [HideInInspector]
+        public Dictionary<int, Transform> laserTransforms = new Dictionary<int, Transform>();
         // lasers contain a list of the gameobjects and the origin point.
-        public Dictionary<int, LineRenderer> lasers = new Dictionary<int, LineRenderer>();
+        [HideInInspector]
+        public Dictionary<int, LineRenderer> lasersLineRends = new Dictionary<int, LineRenderer>();
         // private List<Tuple<GameObject, Vector3>> lasers = new List<Tuple<GameObject, Vector3>>();
 
         // public LineRenderer GetLaser(int id)
@@ -29,13 +31,14 @@ namespace CellexalVR.Multiuser
         {
             GameObject newLaser = new GameObject();
             GameObject player = GameObject.Find(ownerName);
+            print(ownerName + " - " + (player == null));
             newLaser.transform.parent = player.transform;
             newLaser.gameObject.name = id.ToString();
             LineRenderer lr = newLaser.AddComponent<LineRenderer>();
             lr.material = laserMaterial;
             lr.startWidth = lr.endWidth = 0.002f;
-            lasers[id] = lr;
-            laserDict[id] = player.GetComponent<PlayerManager>().rightHand;
+            lasersLineRends[id] = lr;
+            laserTransforms[id] = player.GetComponent<PlayerManager>().rightHand;
             // var views = PhotonNetwork.playerList;
             // lasers.Add(new Tuple<GameObject, Vector3>(newLaser, originPoint));
             return lr;
