@@ -143,6 +143,7 @@ namespace CellexalVR.Multiuser
             if (!exists)
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
+                if (lr == null) return;
             }
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
@@ -161,6 +162,7 @@ namespace CellexalVR.Multiuser
             if (!exists)
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
+                if (lr == null) return;
                 lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
             lr.SetPosition(0, mlm.laserTransforms[ownerId].position);

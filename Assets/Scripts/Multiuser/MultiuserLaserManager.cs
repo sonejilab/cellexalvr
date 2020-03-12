@@ -31,7 +31,7 @@ namespace CellexalVR.Multiuser
         {
             GameObject newLaser = new GameObject();
             GameObject player = GameObject.Find(ownerName);
-            print(ownerName + " - " + (player == null));
+            if (player == null) return null;
             newLaser.transform.parent = player.transform;
             newLaser.gameObject.name = id.ToString();
             LineRenderer lr = newLaser.AddComponent<LineRenderer>();

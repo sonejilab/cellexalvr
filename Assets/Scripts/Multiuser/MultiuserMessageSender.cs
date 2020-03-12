@@ -359,7 +359,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to highlight " + group + " cells");
-            coordinator.photonView.RPC(methodName: "RecieveHighlightCells", target: PhotonTargets.Others,
+            coordinator.photonView.RPC(methodName: "RecieveMessageHighlightCells", target: PhotonTargets.Others,
                 group, highlight);
         }
 
