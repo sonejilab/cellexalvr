@@ -177,7 +177,7 @@ namespace CellexalVR.AnalysisLogic
             //     CellexalError.SpawnError("Could not create heatmap", "Not enough groups selected to create a heatmap");
             //     return;
             // }
-            
+
             // name the heatmap "heatmap_X". Where X is some number.
             if (heatmapName.Equals(string.Empty))
             {
@@ -618,6 +618,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 // new gene
                 string genename = ((Tuple<string, float>)result[i]).Item1;
+
                 ycoord = heatmap.heatmapY + genePositions[genename] * ycoordInc;
                 // the arraylist should contain the gene id and that gene's highest expression before all the expressions
                 i += 1;
@@ -630,7 +631,8 @@ namespace CellexalVR.AnalysisLogic
                         break;
                     expressions.Add(tuple);
                 }
-                expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => ((int)((t2.Item2 - t1.Item2) * 10000)));
+
+                expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => t1.Item2.CompareTo(t2.Item2));
                 float binsize = (float)expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
                 int expressionIndex = 0;
 
@@ -645,10 +647,10 @@ namespace CellexalVR.AnalysisLogic
 
                 for (int j = 0; j < expressions.Count; ++j)
                 {
+
                     string cellName = expressions[j].Item1;
                     float expression = expressions[j].Item2;
                     xcoord = heatmap.heatmapX + cellsPosition[cellName] * xcoordInc;
-
                     graphics.FillRectangle(heatmapBrushes[(int)expression], xcoord, ycoord, xcoordInc, ycoordInc);
                 }
 
