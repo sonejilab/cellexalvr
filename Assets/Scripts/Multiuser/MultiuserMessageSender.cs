@@ -215,11 +215,14 @@ namespace CellexalVR.Multiuser
                 pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-        public void SendMessageLegendUngrabbed(Vector3 vel, Vector3 angVel)
+        public void SendMessageLegendUngrabbed(Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageLegendUngrabbed", PhotonTargets.Others, vel.x,
-                vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+            coordinator.photonView.RPC("RecieveMessageLegendUngrabbed", PhotonTargets.Others,
+                pos.x, pos.y, pos.z,
+                rot.x, rot.y, rot.z, rot.w,
+                vel.x, vel.y, vel.z,
+                angVel.x, angVel.y, angVel.z);
         }
 
         public void SendMessageChangeLegend(string legendName)
@@ -772,11 +775,14 @@ namespace CellexalVR.Multiuser
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-        public void SendMessageNetworkUngrabbed(string networkName, Vector3 vel, Vector3 angVel)
+        public void SendMessageNetworkUngrabbed(string networkName, Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageNetworkUngrabbed", PhotonTargets.Others, networkName, vel.x,
-                vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+            coordinator.photonView.RPC("RecieveMessageNetworkUngrabbed", PhotonTargets.Others, networkName,
+                pos.x, pos.y, pos.z,
+                rot.x, rot.y, rot.z, rot.w,
+                vel.x, vel.y, vel.z,
+                angVel.x, angVel.y, angVel.z);
         }
 
         public void SendMessageEnlargeNetwork(string networkHandlerName, string networkName)
@@ -814,12 +820,16 @@ namespace CellexalVR.Multiuser
                 networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-        public void SendMessageNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName, Vector3 vel,
-            Vector3 angVel)
+        public void SendMessageNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName,
+            Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageNetworkCenterUngrabbed", PhotonTargets.Others, networkHandlerName,
-                networkCenterName, vel.x, vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+                networkCenterName,
+                pos.x, pos.y, pos.z,
+                rot.x, rot.y, rot.z, rot.w,
+                vel.x, vel.y, vel.z,
+                angVel.x, angVel.y, angVel.z);
         }
 
         public void SendMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
