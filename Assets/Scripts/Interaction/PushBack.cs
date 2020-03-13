@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.AnalysisLogic;
+using UnityEngine;
 using VRTK;
 using CellexalVR.General;
 using CellexalVR.AnalysisObjects;
@@ -64,28 +65,34 @@ namespace CellexalVR.Interaction
                 pull = false;
                 return;
             }
-            Vector3 dir = hit.transform.position - raycastingSource.position;
+
+            var position = hit.transform.position;
+            Vector3 dir = position - raycastingSource.position;
             dir = -dir.normalized;
-            hit.transform.position += dir * distanceMultiplier;
+            position += dir * distanceMultiplier;
+            hit.transform.position = position;
             if (hit.transform.GetComponent<Graph>())
             {
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
-            else if (hit.transform.GetComponent<NetworkCenter>())
+            else if (hit.transform.GetComponent<NetworkHandler>())
             {
-                hit.transform.LookAt(raycastingSource.transform);
+                hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 0, 180);
                 referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
-            else if (hit.transform.GetComponent<Heatmap>())
+            else if (hit.transform.GetComponent<NetworkCenter>())
             {
-                hit.transform.LookAt(raycastingSource.transform);
-                hit.transform.Rotate(0, 180, 0);
-                referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+                NetworkHandler handler = hit.transform.GetComponent<NetworkCenter>().Handler;
+                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.Rotate(0, 0, 180);
+                referenceManager.multiuserMessageSender.SendMessageMoveNetworkCenter(handler.gameObject.name, hit.transform.gameObject.name,
+                    hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<LegendManager>())
             {
                 hit.transform.LookAt(raycastingSource.transform);
+                hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
         }
@@ -102,29 +109,41 @@ namespace CellexalVR.Interaction
             {
                 return;
             }
-            Vector3 dir = hit.transform.position - raycastingSource.position;
+
+            Vector3 position = hit.transform.position;
+            Vector3 dir = position - raycastingSource.position;
             dir = dir.normalized;
-            hit.transform.position += dir * distanceMultiplier;
+            position += dir * distanceMultiplier;
+            hit.transform.position = position;
             if (hit.transform.GetComponent<Graph>())
             {
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
-            else if (hit.transform.GetComponent<NetworkCenter>())
+            else if (hit.transform.GetComponent<NetworkHandler>())
             {
                 hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 0, 180);
                 referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<NetworkCenter>())
+            {
+                NetworkHandler handler = hit.transform.GetComponent<NetworkCenter>().Handler;
+                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.Rotate(0, 0, 180);
+                referenceManager.multiuserMessageSender.SendMessageMoveNetworkCenter(handler.gameObject.name, hit.transform.gameObject.name,
+                    hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<LegendManager>())
+            {
+                hit.transform.LookAt(raycastingSource.transform);
+                hit.transform.Rotate(0, 180, 0);
+                referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<Heatmap>())
             {
                 hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
-            }
-            else if (hit.transform.GetComponent<LegendManager>())
-            {
-                hit.transform.LookAt(raycastingSource.transform);
-                referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
         }
 

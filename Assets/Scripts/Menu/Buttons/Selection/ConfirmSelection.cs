@@ -12,10 +12,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         private SelectionManager selectionManager;
         private ControllerModelSwitcher controllerModelSwitcher;
 
-        protected override string Description
-        {
-            get { return "Confirm selection"; }
-        }
+        protected override string Description => "Confirm selection";
 
         protected void Start()
         {

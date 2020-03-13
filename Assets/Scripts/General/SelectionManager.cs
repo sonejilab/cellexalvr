@@ -685,6 +685,7 @@ namespace CellexalVR.General
                     CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
                     if (selectionHistory != null)
                         CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+                    string graphName = selection[0].parent.GraphName;
                     foreach (Graph.GraphPoint gp in selection)
                     {
                         file.Write(gp.Label);
@@ -696,7 +697,7 @@ namespace CellexalVR.General
                         // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
                         file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
                         file.Write("\t");
-                        file.Write(gp.parent.GraphName);
+                        file.Write(graphName);
                         file.Write("\t");
                         file.Write(gp.Group);
                         file.WriteLine();

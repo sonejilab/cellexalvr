@@ -143,6 +143,18 @@ namespace CellexalVR.AnalysisLogic
             return cells.Values.Where(x => (x.GraphPoints[0].Group == group)).ToArray();
         }
 
+        /// <summary>
+        /// Returns cell that belong to a certain selection group within a certain sub selection of cells.
+        /// </summary>
+        /// <param name="group">The cells beloning to this particular group will be returned.</param>
+        /// <param name="subSelection">The subselection of cells to select from.</param>
+        /// <returns></returns>
+        public Cell[] GetCells(int group, Cell[] subSelection)
+         {
+             return subSelection.Where(x => (x.GraphPoints[0].Group == group)).ToArray();
+         }
+                
+
         public int GetNumberOfCells()
         {
             return cells.Count;

@@ -6,24 +6,13 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     ///</summary>
     public class ReorderByAttributeButton : CellexalButton
     {
-        private bool toggle;
+        // private bool toggle;
         private CellexalVR.AnalysisObjects.Heatmap heatmap;
         private CellexalVR.AnalysisLogic.HeatmapGenerator heatmapGenerator;
 
-        protected override string Description
-        {
-            get
-            {
-                if (!toggle)
-                {
-                    return "Reorder heatmap so attribute bar is sorted in each group";
-                }
-                else
-                {
-                    return "Switch back to original ordering";
-                }
-            }
-        }
+        protected override string Description =>
+            !heatmap.orderedByAttribute ? "Reorder heatmap so attribute bar is sorted in each group"
+                : "Switch back to original ordering";
 
         protected override void Awake()
         {

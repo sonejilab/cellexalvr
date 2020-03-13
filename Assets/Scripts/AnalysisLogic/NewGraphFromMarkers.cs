@@ -66,7 +66,7 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        /// <summary>
+        /// <summary
         /// Dumping the selection with ids and facs values on the same format as the mds files so it can be read in by the inputreader.
         /// </summary>
         /// <param name="points">The points to save to the file. Either a selection or all the points in the graph.</param>

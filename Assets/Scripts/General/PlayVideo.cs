@@ -29,7 +29,7 @@ namespace CellexalVR.General
 
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             //Application.runInBackground = true;
             videoPlayer = GetComponent<VideoPlayer>();

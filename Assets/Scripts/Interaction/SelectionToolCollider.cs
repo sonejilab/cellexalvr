@@ -181,7 +181,7 @@ namespace CellexalVR.Interaction
                         radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[0];
                     }
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     CellexalLog.Log("Could not recreate buttons on controller. Could be that controllers were inactive at the time");
                     return;

@@ -44,11 +44,10 @@ namespace CellexalVR.Tools
 
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
+                if (objectToDelete == null) return;
                 InitiateDelete(objectToDelete);
                 referenceManager.multiuserMessageSender.SendMessageDeleteObject(objectToDelete.gameObject.name, objectToDelete.gameObject.tag);
             }
-
-
         }
 
         private void OnTriggerEnter(Collider other)

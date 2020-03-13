@@ -7,7 +7,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Changes the right controller's model at the start of the program, this is needed because the controllermodelswitcher's gameobject is inactive so it can't run a coroutine
     /// </summary>
-    class ChangeModelAtStart : MonoBehaviour
+    internal class ChangeModelAtStart : MonoBehaviour
     {
         private void OnValidate()
         {

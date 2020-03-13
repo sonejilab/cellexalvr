@@ -351,7 +351,7 @@ namespace CellexalVR.AnalysisLogic
                 var gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
                 gs.referenceManager = referenceManager;
                 yield return null;
-                const float sliceDist = 0.005f;
+                // const float sliceDist = 0.005f;
                 Tuple<string, Vector3> gpTuple = gps[0];
                 Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
                 var gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
