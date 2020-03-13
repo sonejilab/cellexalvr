@@ -543,11 +543,14 @@ namespace CellexalVR.Multiuser
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-        public void SendMessageGraphUngrabbed(string moveGraphName, Vector3 vel, Vector3 angVel)
+        public void SendMessageGraphUngrabbed(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageGraphUngrabbed", PhotonTargets.Others, moveGraphName, vel.x,
-                vel.y, vel.z, angVel.x, angVel.y, angVel.z);
+            coordinator.photonView.RPC("RecieveMessageGraphUngrabbed", PhotonTargets.Others, moveGraphName,
+                pos.x, pos.y, pos.z,
+                rot.x, rot.y, rot.z, rot.w,
+                vel.x, vel.y, vel.z,
+                angVel.x, angVel.y, angVel.z);
         }
 
         public void SendMessageToggleGrabbable(string name, bool b)
