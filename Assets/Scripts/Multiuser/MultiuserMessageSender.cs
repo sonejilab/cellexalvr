@@ -1042,12 +1042,10 @@ namespace CellexalVR.Multiuser
             multiplayer = true;
             Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
             CellexalLog.Log("A client connected to our server");
-            print(other.NickName + other.ID);
-            StartCoroutine(FindPlayer());
-
             //Debug.Log("MASTER JOINED ROOM");
             //LoadArena();
             StartCoroutine(FindClientCoordinator());
+            StartCoroutine(FindPlayer());
             if (coordinator != null)
             {
                 waitingCanvas.SetActive(false);
@@ -1067,13 +1065,13 @@ namespace CellexalVR.Multiuser
         {
             yield return new WaitForSeconds(2f);
             GameObject otherPlayer = GameObject.Find(playerPrefab.gameObject.name + "(Clone)");
-            while (otherPlayer != null)
+            while (otherPlayer == null)
             {
-                otherPlayer.gameObject.name = otherPlayer.GetPhotonView().owner.NickName +
-                                              otherPlayer.GetPhotonView().ownerId;
                 otherPlayer = GameObject.Find(playerPrefab.gameObject.name + "(Clone)");
                 yield return null;
             }
+            otherPlayer.gameObject.name = otherPlayer.GetPhotonView().owner.NickName +
+                                          otherPlayer.GetPhotonView().ownerId;
         }
 
         private IEnumerator FindClientCoordinator()

@@ -165,8 +165,10 @@ namespace CellexalVR.Multiuser
                 if (lr == null) return;
                 lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
-            lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
-            lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
+            // lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
+            // lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
+            if (!lr.gameObject.activeSelf) lr.gameObject.SetActive(true);
+            
         }
 
         #endregion
@@ -1327,7 +1329,7 @@ namespace CellexalVR.Multiuser
             }
             else if (tag == "Network")
             {
-                GameObject.Find(name).GetComponent<NetworkHandler>().DeleteNetwork();
+                GameObject.Find(name)?.GetComponent<NetworkHandler>().DeleteNetwork();
             }
         }
 
