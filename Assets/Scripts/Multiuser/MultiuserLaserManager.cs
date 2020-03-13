@@ -39,8 +39,6 @@ namespace CellexalVR.Multiuser
             lr.startWidth = lr.endWidth = 0.002f;
             lasersLineRends[id] = lr;
             laserTransforms[id] = player.GetComponent<PlayerManager>().rightHand;
-            lr.SetPosition(0, laserTransforms[id].position);
-            lr.SetPosition(1, laserTransforms[id].position + Vector3.forward * 10);
             // var views = PhotonNetwork.playerList;
             // lasers.Add(new Tuple<GameObject, Vector3>(newLaser, originPoint));
             return lr;

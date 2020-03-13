@@ -108,7 +108,7 @@ namespace CellexalVR.Interaction
                 Vector3 hitPoint;
                 if (!hit.collider)
                 {
-                    hitPoint = origin.position + (Vector3.forward * 10);
+                    hitPoint = origin.position + (origin.forward * 10);
                 }
                 else
                 {
