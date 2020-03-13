@@ -139,7 +139,7 @@ namespace CellexalVR.Multiuser
             if (ownerId != photonView.ownerId) return;
             MultiuserLaserManager mlm =
                 referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
-            bool exists  = mlm.lasersLineRends.TryGetValue(ownerId, out LineRenderer lr);
+            bool exists = mlm.lasersLineRends.TryGetValue(ownerId, out LineRenderer lr);
             if (!exists)
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
@@ -158,7 +158,7 @@ namespace CellexalVR.Multiuser
             MultiuserLaserManager mlm =
                 referenceManager.multiuserMessageSender.GetComponentInChildren<MultiuserLaserManager>();
             // LineRenderer lr = mlm.GetLaser(ownerId);
-            bool exists  = mlm.lasersLineRends.TryGetValue(ownerId, out LineRenderer lr);
+            bool exists = mlm.lasersLineRends.TryGetValue(ownerId, out LineRenderer lr);
             if (!exists)
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
@@ -598,13 +598,18 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageGraphUngrabbed(string graphName, float velX, float velY, float velZ, float angVelX,
-            float angVelY, float angVelZ)
+        public void RecieveMessageGraphUngrabbed(string graphName,
+            float posX, float posY, float posZ,
+            float rotX, float rotY, float rotZ, float rotW,
+            float velX, float velY, float velZ,
+            float angVelX, float angVelY, float angVelZ)
         {
             Graph g = referenceManager.graphManager.FindGraph(graphName);
             if (g)
             {
                 Rigidbody r = g.GetComponent<Rigidbody>();
+                g.transform.position = new Vector3(posX, posY, posZ);
+                g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                 r.velocity = new Vector3(velX, velY, velZ);
                 r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
             }

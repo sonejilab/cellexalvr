@@ -39,7 +39,7 @@ namespace CellexalVR.Interaction
         {
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.multiuserMessageSender.SendMessageGraphUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageGraphUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
             //referenceManager.rightLaser.enabled = true;
             //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
             //runningCoroutine = StartCoroutine(KeepGraphPositionSynched());
