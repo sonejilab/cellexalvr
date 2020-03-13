@@ -168,7 +168,7 @@ namespace CellexalVR.Multiuser
             // lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
             // lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
             if (!lr.gameObject.activeSelf) lr.gameObject.SetActive(true);
-            
+
         }
 
         #endregion
@@ -200,13 +200,18 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageLegendUngrabbed(float velX, float velY, float velZ,
-    float angVelX, float angVelY, float angVelZ)
+        public void RecieveMessageLegendUngrabbed(
+            float posX, float posY, float posZ,
+            float rotX, float rotY, float rotZ, float rotW,
+            float velX, float velY, float velZ,
+            float angVelX, float angVelY, float angVelZ)
         {
             LegendManager legend = referenceManager.legendManager;
             if (legend)
             {
                 Rigidbody r = legend.GetComponent<Rigidbody>();
+                legend.transform.position = new Vector3(posX, posY, posZ);
+                legend.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                 r.velocity = new Vector3(velX, velY, velZ);
                 r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
             }
@@ -1090,12 +1095,17 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageNetworkUngrabbed(string networkName, float velX, float velY, float velZ,
+        public void RecieveMessageNetworkUngrabbed(string networkName,
+            float posX, float posY, float posZ,
+            float rotX, float rotY, float rotZ, float rotW,
+            float velX, float velY, float velZ,
             float angVelX, float angVelY, float angVelZ)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkName);
             if (nh)
             {
+                nh.transform.position = new Vector3(posX, posY, posZ);
+                nh.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                 Rigidbody r = nh.GetComponent<Rigidbody>();
                 r.velocity = new Vector3(velX, velY, velZ);
                 r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
@@ -1202,7 +1212,10 @@ namespace CellexalVR.Multiuser
 
         [PunRPC]
         public void RecieveMessageNetworkCenterUngrabbed(string networkHandlerName, string networkCenterName,
-            float velX, float velY, float velZ, float angVelX, float angVelY, float angVelZ)
+            float posX, float posY, float posZ,
+            float rotX, float rotY, float rotZ, float rotW,
+            float velX, float velY, float velZ,
+            float angVelX, float angVelY, float angVelZ)
         {
             NetworkHandler nh = referenceManager.networkGenerator.FindNetworkHandler(networkHandlerName);
             if (nh)
@@ -1210,6 +1223,8 @@ namespace CellexalVR.Multiuser
                 NetworkCenter nc = nh.FindNetworkCenter(networkCenterName);
                 if (nc)
                 {
+                    nc.transform.position = new Vector3(posX, posY, posZ);
+                    nc.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                     Rigidbody r = nc.GetComponent<Rigidbody>();
                     r.velocity = new Vector3(velX, velY, velZ);
                     r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);

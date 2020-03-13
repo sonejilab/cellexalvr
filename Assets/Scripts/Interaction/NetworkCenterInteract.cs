@@ -52,7 +52,7 @@ namespace CellexalVR.Interaction
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
             if (grabbingObjects.Count == 0)
             {
                 foreach (Collider c in GetComponentsInChildren<Collider>())

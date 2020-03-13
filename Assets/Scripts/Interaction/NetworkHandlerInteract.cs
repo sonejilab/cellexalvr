@@ -45,7 +45,7 @@ namespace CellexalVR.Interaction
         {
             referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
             //foreach (Collider c in GetComponentsInChildren<Collider>())
             //{
             //    if (c.gameObject.name == "Ring")
