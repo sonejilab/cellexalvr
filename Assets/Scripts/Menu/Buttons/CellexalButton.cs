@@ -215,7 +215,7 @@ namespace CellexalVR.Menu.Buttons
             else if (menuNoTab != null || legend)
             {
                 activeOutline.SetActive(toggle);
-            }
+           }
             storedState = toggle;
         }
         

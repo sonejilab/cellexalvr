@@ -23,7 +23,7 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         public override void Click()
         {
-            // ToggleOutline(!toggle);
+            ToggleOutline(!toggle);
             referenceManager.annotationManager.ToggleAnnotationFile(Path, !toggle);
             toggle = !toggle;
         }

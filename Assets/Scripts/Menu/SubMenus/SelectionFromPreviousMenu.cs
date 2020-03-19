@@ -12,9 +12,8 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// Represents the sub menu that pops up when the <see cref="ColorByIndexButton"/> is pressed.
     /// </summary>
-    public class SelectionFromPreviousMenu : MonoBehaviour
+    public class SelectionFromPreviousMenu : MenuWithoutTabs
     {
-        public ReferenceManager referenceManager;
         [FormerlySerializedAs("buttonPrefab")] public GameObject selectionButtonPrefab;
         public GameObject annotationButtonPrefab;
 
@@ -50,7 +49,6 @@ namespace CellexalVR.Menu.SubMenus
         {
             string path = CellexalUser.UserSpecificFolder;
             string[] files = Directory.GetFiles(path, "selection*.txt");
-            print(files.Length);
             int i = 0;
             foreach (string file in files)
             {

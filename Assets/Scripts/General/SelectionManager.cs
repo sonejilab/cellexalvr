@@ -349,7 +349,7 @@ namespace CellexalVR.General
                 //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
                 //HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
                 //FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-                //info.graphPoint.ResetColor();
+                // info.graphPoint.ResetColor();
             }
 
             historyIndexOffset++;
@@ -629,6 +629,7 @@ namespace CellexalVR.General
             selectionHistory.Clear();
             selectedCells.Clear();
             historyIndexOffset = 0;
+            CellexalEvents.SelectionCanceled.Invoke();
         }
 
         /// <summary>
@@ -661,12 +662,12 @@ namespace CellexalVR.General
             //    other.ResetColor();
             //}
 
-            //CellexalEvents.SelectionCanceled.Invoke();
             historyIndexOffset = selectionHistory.Count;
             CellexalEvents.BeginningOfHistoryReached.Invoke();
             //selectedCells.Clear();
             selectionMade = false;
             CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.SelectionCanceled.Invoke();
         }
 
         /// <summary>

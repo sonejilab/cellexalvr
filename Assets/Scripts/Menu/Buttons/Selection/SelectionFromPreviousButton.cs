@@ -32,12 +32,19 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             bool tempToggle = toggle;
-            CellexalEvents.SelectedFromFile.Invoke();
+            if (toggle)
+            {
+                referenceManager.selectionManager.CancelSelection();
+            }
+            else
+            {
+                referenceManager.inputReader.ReadSelectionFile(Path);
+            }
+
             ToggleOutline(!tempToggle);
             toggle = !tempToggle;
-            referenceManager.inputReader.ReadSelectionFile(Path);
         }
-        
+
         private void ResetButton()
         {
             toggle = false;

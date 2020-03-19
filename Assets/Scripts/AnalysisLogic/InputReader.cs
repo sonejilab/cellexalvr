@@ -14,6 +14,7 @@ using CellexalVR.Extensions;
 using System.Drawing;
 using System.Diagnostics;
 using CellexalVR.AnalysisLogic.H5reader;
+using TMPro;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -572,7 +573,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("Could not find file:" + path);
                 return;
             }
-            
+
             FileStream fileStream = new FileStream(path, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             SelectionManager selectionManager = referenceManager.selectionManager;
@@ -590,9 +591,9 @@ namespace CellexalVR.AnalysisLogic
                 {
                     group = int.Parse(words[3]);
                     ColorUtility.TryParseHtmlString(words[1], out groupColor);
-                    if (referenceManager.selectionToolCollider.Colors.Contains(groupColor))
+                    if (!CellexalConfig.Config.SelectionToolColors.Any(x => CompareColor(x, groupColor)))
                     {
-                        referenceManager.settingsMenu.AddSelectionColor(groupColor);
+                        print(groupColor);
                     }
                 }
                 catch (FormatException)
@@ -605,13 +606,14 @@ namespace CellexalVR.AnalysisLogic
                     return;
                 }
 
-                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false,
-                    groupColor);
+                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]),
+                    group, false, groupColor);
                 numPointsAdded++;
             }
 
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
             CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.SelectedFromFile.Invoke();
             streamReader.Close();
             fileStream.Close();
         }
@@ -639,6 +641,21 @@ namespace CellexalVR.AnalysisLogic
 
             string path = files[index];
             ReadSelectionFile(path);
+        }
+
+        /// <summary>
+        /// Helper function used to decide if two colors are (by some margin) equal.
+        /// E.g. Used when reading in selections and deciding if a new color needs to be added or if it already exists in the config.
+        /// Alpha channel is ignored.
+        /// </summary>
+        /// <param name="a">First color.</param>
+        /// <param name="b">Second color.</param>
+        /// <param name="tolerance">Function returns true if the distance between them are equal or lower than this value.</param>
+        private bool CompareColor(UnityEngine.Color a, UnityEngine.Color b, float tolerance = 0.1f)
+        {
+            float diff = Vector3.Distance(new Vector3(a.r, a.g, a.b),
+                new Vector3(b.r, b.g, b.b));
+            return diff <= tolerance;
         }
     }
 }
