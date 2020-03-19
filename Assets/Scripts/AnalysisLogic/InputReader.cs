@@ -37,7 +37,9 @@ namespace CellexalVR.AnalysisLogic
         private GraphFromMarkersMenu createFromMarkerMenu;
         private MDSReader mdsReader;
         private NetworkReader networkReader;
+
         private GameObject headset;
+
         //private StatusDisplay status;
         //private StatusDisplay statusDisplayHUD;
         //private StatusDisplay statusDisplayFar;
@@ -78,11 +80,12 @@ namespace CellexalVR.AnalysisLogic
                 headset = referenceManager.headset;
                 referenceManager.spectatorRig.SetActive(false);
             }
+
             graphGenerator = referenceManager.graphGenerator;
             currentPath = "";
             facsGraphCounter = 0;
             RScriptRunner.SetReferenceManager(referenceManager);
-            CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
+            // CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
 
@@ -155,6 +158,7 @@ namespace CellexalVR.AnalysisLogic
                     CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(networkDirectory));
                     Directory.CreateDirectory(networkDirectory);
                 }
+
                 string[] networkFilesList = Directory.GetFiles(networkDirectory, "*");
                 CellexalLog.Log("Deleting " + networkFilesList.Length + " files in " +
                                 CellexalLog.FixFilePath(networkDirectory));
@@ -172,6 +176,7 @@ namespace CellexalVR.AnalysisLogic
                 ReadFileH5(path, h5config);
                 return;
             }
+
             database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
@@ -188,7 +193,7 @@ namespace CellexalVR.AnalysisLogic
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
             graphGenerator.isCreating = true;
-            
+
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {
             // multiple_exp     currentPath += "+" + path;
@@ -200,7 +205,6 @@ namespace CellexalVR.AnalysisLogic
             {
                 referenceManager.configManager.MultiUserSynchronise();
             }
-
         }
 
         private void UpdateSelectionToolHandler()
@@ -209,7 +213,7 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.networkGenerator.selectionManager = referenceManager.selectionManager;
             referenceManager.graphManager.selectionManager = referenceManager.selectionManager;
         }
-        
+
         /// <summary>
         /// Reads a facs marker file.
         /// </summary>
@@ -279,7 +283,7 @@ namespace CellexalVR.AnalysisLogic
 
             List<string> h5ReadersToRemove = new List<string>();
 
-            foreach(KeyValuePair<string, H5Reader> kvp in referenceManager.inputReader.h5readers)
+            foreach (KeyValuePair<string, H5Reader> kvp in referenceManager.inputReader.h5readers)
             {
                 kvp.Value.CloseConnection();
                 Destroy(kvp.Value.gameObject);
@@ -472,7 +476,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             words = null;
-            string[] files = Directory.GetFiles(dataFolder, "*.cgr");
+            string[] files = Directory.GetFiles(dataFolder, "selection*.txt");
             for (int i = 0; i < fileLengths.Count; ++i)
             {
                 string file = files[i];
@@ -518,6 +522,100 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
         }
 
+        public void ReadAnnotationFile(string path)
+        {
+            //string dataFolder = CellexalUser.UserSpecificFolder;
+            if (!File.Exists(path))
+            {
+                CellexalLog.Log("Could not find file:" + path);
+                return;
+            }
+
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+            List<Cell> cellsToAnnotate = new List<Cell>();
+            Graph graph = referenceManager.graphManager.Graphs[0];
+            int numPointsAdded = 0;
+            string line = streamReader.ReadLine();
+            string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string firstCellName = words[0];
+            cellsToAnnotate.Add(referenceManager.cellManager.GetCell(firstCellName));
+            string annotation = words[1];
+            while (!streamReader.EndOfStream)
+            {
+                line = streamReader.ReadLine();
+                words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                if (words[1] != annotation)
+                {
+                    referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, path);
+                    cellsToAnnotate.Clear();
+                    annotation = words[1];
+                }
+
+                cellsToAnnotate.Add(referenceManager.cellManager.GetCell(words[0]));
+                numPointsAdded++;
+            }
+
+            referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, path);
+            cellsToAnnotate.Clear();
+            CellexalLog.Log(string.Format("Added {0} points to annotation", numPointsAdded));
+            CellexalEvents.CommandFinished.Invoke(true);
+            streamReader.Close();
+            fileStream.Close();
+        }
+
+        public void ReadSelectionFile(string path)
+        {
+            //string dataFolder = CellexalUser.UserSpecificFolder;
+            if (!File.Exists(path))
+            {
+                CellexalLog.Log("Could not find file:" + path);
+                return;
+            }
+            
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+            SelectionManager selectionManager = referenceManager.selectionManager;
+            selectionManager.CancelSelection();
+            GraphManager graphManager = referenceManager.graphManager;
+            int numPointsAdded = 0;
+            while (!streamReader.EndOfStream)
+            {
+                string line = streamReader.ReadLine();
+                string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                int group;
+                UnityEngine.Color groupColor;
+
+                try
+                {
+                    group = int.Parse(words[3]);
+                    ColorUtility.TryParseHtmlString(words[1], out groupColor);
+                    if (referenceManager.selectionToolCollider.Colors.Contains(groupColor))
+                    {
+                        referenceManager.settingsMenu.AddSelectionColor(groupColor);
+                    }
+                }
+                catch (FormatException)
+                {
+                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
+                        path));
+                    streamReader.Close();
+                    fileStream.Close();
+                    CellexalEvents.CommandFinished.Invoke(false);
+                    return;
+                }
+
+                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false,
+                    groupColor);
+                numPointsAdded++;
+            }
+
+            CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+            CellexalEvents.CommandFinished.Invoke(true);
+            streamReader.Close();
+            fileStream.Close();
+        }
+
 
         [ConsoleCommand("inputReader", aliases: new string[] {"selectfromprevious", "sfp"})]
         public void ReadAndSelectPreviousSelection(int index)
@@ -539,42 +637,8 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            FileStream fileStream = new FileStream(files[index], FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-            var selectionManager = referenceManager.selectionManager;
-            GraphManager graphManager = referenceManager.graphManager;
-            int numPointsAdded = 0;
-            while (!streamReader.EndOfStream)
-            {
-                string line = streamReader.ReadLine();
-                string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
-                int group = 0;
-                UnityEngine.Color groupColor;
-
-                try
-                {
-                    group = int.Parse(words[3]);
-                    ColorUtility.TryParseHtmlString(words[1], out groupColor);
-                }
-                catch (FormatException)
-                {
-                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
-                        files[index]));
-                    streamReader.Close();
-                    fileStream.Close();
-                    CellexalEvents.CommandFinished.Invoke(false);
-                    return;
-                }
-
-                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false,
-                    groupColor);
-                numPointsAdded++;
-            }
-
-            CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
-            CellexalEvents.CommandFinished.Invoke(true);
-            streamReader.Close();
-            fileStream.Close();
+            string path = files[index];
+            ReadSelectionFile(path);
         }
     }
 }

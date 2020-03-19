@@ -218,9 +218,7 @@ namespace CellexalVR.Menu.Buttons
             }
             storedState = toggle;
         }
-
-
-
+        
         protected void OnTriggerEnter(Collider other)
         {
             if (!buttonActivated) return;

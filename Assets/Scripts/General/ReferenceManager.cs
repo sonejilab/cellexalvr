@@ -95,6 +95,7 @@ namespace CellexalVR.General
         public CellManager cellManager;
         public LineBundler lineBundler;
         public SelectionManager selectionManager;
+        public AnnotationManager annotationManager;
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
         public GraphGenerator graphGenerator;
@@ -229,6 +230,7 @@ namespace CellexalVR.General
             cellManager = managersParent.GetComponentInChildren<CellManager>();
             lineBundler = managersParent.GetComponentInChildren<LineBundler>();
             selectionManager = managersParent.GetComponentInChildren<SelectionManager>();
+            annotationManager = managersParent.GetComponentInChildren<AnnotationManager>();
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();
