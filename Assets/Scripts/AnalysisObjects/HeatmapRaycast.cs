@@ -34,6 +34,7 @@ namespace CellexalVR.Interaction
         private int selectedGeneTop;
 
         private int selectedGeneBottom;
+        private int currentGroup = -1;
 
         // these are the actual coordinates and size of the box
         private float selectedBoxX;
@@ -319,9 +320,9 @@ namespace CellexalVR.Interaction
         public void HandleHitGroupingBar(int hitx)
         {
             // get this groups width and xcoordinate
-            float groupX, groupWidth;
-            int group;
-            FindGroupInfo(hitx, out groupX, out groupWidth, out group);
+            FindGroupInfo(hitx, out float groupX, out float groupWidth, out int @group);
+            if (currentGroup == group) return;
+            currentGroup = group;
 
             float highlightMarkerWidth = groupWidth / heatmap.bitmapWidth;
             float highlightMarkerHeight = ((float) heatmap.groupBarHeight / heatmap.bitmapHeight);
@@ -351,6 +352,8 @@ namespace CellexalVR.Interaction
             // get this groups width and xcoordinate
             FindAttributeInfo(hitx, out float attributeX, out float attributeWidth, out int attribute);
 
+            if (currentGroup == attribute) return;
+            currentGroup = attribute;
             float highlightMarkerWidth = attributeWidth / heatmap.bitmapWidth;
             float highlightMarkerHeight = ((float) heatmap.attributeBarHeight / heatmap.bitmapHeight);
             float highlightMarkerX = attributeX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
