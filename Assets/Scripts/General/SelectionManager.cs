@@ -109,6 +109,66 @@ namespace CellexalVR.General
             CellexalEvents.GraphsReset.AddListener(Clear);
         }
 
+        public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
+        {
+            if (graphPoint == null || graphPoint.Group == -1)
+            {
+                return;
+            }
+
+            Graph parentGraph = graphPoint.parent;
+            if (parentGraph.tag.Equals("Untagged"))
+            {
+                GraphBetweenGraphs ctcGraph = parentGraph.GetComponent<GraphBetweenGraphs>();
+                graphPoint = ctcGraph.graph1.FindGraphPoint(graphPoint.Label);
+            }
+
+            int oldGroup = graphPoint.Group;
+
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                graph.FindGraphPoint(graphPoint.Label)?.ResetColor();
+            }
+
+            bool newNode = !graphPoint.unconfirmedInSelection;
+            graphPoint.unconfirmedInSelection = true;
+            if (historyIndexOffset != 0)
+            {
+                // if we have undone some selected graphpoints, then they should be removed from the history
+                selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
+                historyIndexOffset = 0;
+                // turn off the redo buttons
+                CellexalEvents.EndOfHistoryReached.Invoke();
+            }
+
+            selectionHistory.Add(new HistoryListInfo(graphPoint, -1, oldGroup, newNode));
+
+            referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
+            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            {
+                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
+            }
+
+            if (!newNode)
+            {
+                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
+            }
+
+            selectedCells.Remove(graphPoint);
+            bool hapticFeedback = true;
+            if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
+            {
+                selectionToolCollider.hapticFeedbackThisFrame = false;
+                SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(hapticIntensity);
+            }
+
+            if (selectedCells.Count == 0)
+            {
+                CellexalEvents.GraphsReset.Invoke();
+                print("no more points");
+            }
+        }
+
         /// <summary>
         /// Adds a graphpoint to the current selection, and changes its color to the current color of the selection tool.
         /// This method is called by a child object that holds the collider.
@@ -117,6 +177,7 @@ namespace CellexalVR.General
         {
             AddGraphpointToSelection(graphPoint, selectionToolCollider.currentColorIndex, true,
                 selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
+
             multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label,
                 selectionToolCollider.currentColorIndex,
                 selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
@@ -131,6 +192,7 @@ namespace CellexalVR.General
             {
                 referenceManager.filterManager.AddCellToEval(graphPoint, newGroup);
             }
+
             else
             {
                 AddGraphpointToSelection(graphPoint, newGroup, true, selectionToolCollider.Colors[newGroup]);
@@ -155,13 +217,11 @@ namespace CellexalVR.General
             Graph parentGraph = graphPoint.parent;
             if (parentGraph.tag.Equals("Untagged"))
             {
-                GraphBetweenGraphs ctcGraph = graphPoint.parent.GetComponent<GraphBetweenGraphs>();
+                GraphBetweenGraphs ctcGraph = parentGraph.GetComponent<GraphBetweenGraphs>();
                 graphPoint = ctcGraph.graph1.FindGraphPoint(graphPoint.Label);
             }
-            // more_cells if (CurrentFilter != null && !CurrentFilter.Pass(graphPoint)) return;
 
             int oldGroup = graphPoint.Group;
-
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
@@ -210,7 +270,6 @@ namespace CellexalVR.General
             //if (newGroup != oldGroup || newNode)
             //{
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
-
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
             {
@@ -233,7 +292,6 @@ namespace CellexalVR.General
             //{
             //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
             //}
-
             if (newNode)
             {
                 //multiuserMessageSender.SendMessageSelectedAdd(graphPoint.GraphName, graphPoint.Label);
@@ -244,6 +302,7 @@ namespace CellexalVR.General
 
                 selectedCells.Add(graphPoint);
             }
+
             else
             {
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
@@ -294,6 +353,7 @@ namespace CellexalVR.General
         public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color, bool cube)
         {
             Graph.GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+
             AddGraphpointToSelection(gp, newGroup, true, color);
             foreach (Selectable sel in gp.lineBetweenCellsCubes)
             {
@@ -319,6 +379,7 @@ namespace CellexalVR.General
                 CellexalEvents.BeginningOfHistoryReached.Invoke();
                 //selectionToolMenu.UndoSelection();
             }
+
             else if (indexToMoveTo < 0)
             {
                 // no more history
@@ -344,6 +405,7 @@ namespace CellexalVR.General
                 info.graphPoint.unconfirmedInSelection = false;
                 //info.graphPoint.ResetColor();
             }
+
             else
             {
                 //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
@@ -395,6 +457,7 @@ namespace CellexalVR.General
                 selectedCells.Add(info.graphPoint);
                 info.graphPoint.unconfirmedInSelection = true;
             }
+
             else
             {
                 //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
@@ -417,8 +480,10 @@ namespace CellexalVR.General
             int indexToMoveTo = selectionHistory.Count - historyIndexOffset - 1;
             int group = selectionHistory[indexToMoveTo].toGroup;
             Color color = group != -1 ? selectionToolCollider.Colors[group] : Color.white;
+
             Color nextColor;
             do
+
             {
                 GoBackOneStepInHistory();
                 indexToMoveTo--;
@@ -441,8 +506,10 @@ namespace CellexalVR.General
             int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
             int group = selectionHistory[indexToMoveTo].toGroup;
             Color color = group != -1 ? selectionToolCollider.Colors[group] : Color.white;
+
             Color nextColor;
             do
+
             {
                 GoForwardOneStepInHistory();
                 indexToMoveTo++;
@@ -515,6 +582,7 @@ namespace CellexalVR.General
             DumpSelectionToTextFile();
             lastSelectedCells.Clear();
             IEnumerable<Graph.GraphPoint> uniqueCells = selectedCells.Reverse<Graph.GraphPoint>().Distinct().Reverse();
+
             List<int> groups = new List<int>();
             foreach (Graph.GraphPoint gp in uniqueCells)
             {
@@ -550,6 +618,7 @@ namespace CellexalVR.General
             heatmapCreated = false;
             selectionMade = false;
             selectionConfirmed = true;
+
             //selectionToolMenu.ConfirmSelection();
             CellexalEvents.CommandFinished.Invoke(true);
         }
@@ -557,13 +626,17 @@ namespace CellexalVR.General
         private IEnumerator UpdateRObjectGrouping()
         {
             RObjectUpdating = true;
+
             // wait one frame to let ConfirmSelection finish.
             yield return null;
+
             //string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
                                                                       + (fileCreationCtr - 1) + ".txt").UnFixFilePath();
+
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
+
             // Wait for server to start up and not be busy
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
                                 !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
@@ -653,17 +726,20 @@ namespace CellexalVR.General
         public void CancelSelection()
         {
             int stepsToGoBack = selectionHistory.Count - historyIndexOffset;
-            for (int i = 0; i <= stepsToGoBack; i++)
+            for (int i = 0;
+                i <= stepsToGoBack;
+                i++)
             {
                 GoBackOneStepInHistory();
             }
+
             //foreach (Graph.GraphPoint other in selectedCells)
             //{
             //    other.ResetColor();
             //}
-
             historyIndexOffset = selectionHistory.Count;
             CellexalEvents.BeginningOfHistoryReached.Invoke();
+
             //selectedCells.Clear();
             selectionMade = false;
             CellexalEvents.CommandFinished.Invoke(true);
@@ -696,6 +772,7 @@ namespace CellexalVR.General
 
                 filePath = savedSelectionsPath + filePath + ".txt";
             }
+
             else
             {
                 filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
@@ -741,7 +818,6 @@ namespace CellexalVR.General
                 }
             }
         }
-
 
 
         /// <summary>

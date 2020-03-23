@@ -101,7 +101,7 @@ namespace CellexalVR.General
                 GameObject annotationText = Instantiate(annotationTextPrefab, graph.annotationsParent.transform);
                 AnnotationTextPanel textPanel = annotationText.GetComponent<AnnotationTextPanel>();
                 textPanel.referenceManager = referenceManager;
-                textPanel.Cells = cellsToAnnotate;
+                textPanel.SetCells(cellsToAnnotate);
                 annotationText.gameObject.name = annotation;
                 Vector3 position = graph.FindGraphPoint(cellsToAnnotate[0].Label).Position;
                 annotationText.transform.localPosition = position;

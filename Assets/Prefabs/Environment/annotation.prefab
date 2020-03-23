@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4797987828010194}
   - component: {fileID: 114684577063068414}
   - component: {fileID: -7935683564047479893}
+  - component: {fileID: -2293804011561639268}
   m_Layer: 8
   m_Name: annotation
   m_TagString: Untagged
@@ -59,6 +60,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+--- !u!65 &-2293804011561639268
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705337094365442}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.08, y: 0.08, z: 0.08}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1827710696690374
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,7 +83,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4860151372477748}
   - component: {fileID: 120057868480878522}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +212,7 @@ GameObject:
   - component: {fileID: 23865567327643584}
   - component: {fileID: 222275630159482768}
   - component: {fileID: 114298053613656698}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,7 +314,7 @@ MonoBehaviour:
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -366,19 +380,19 @@ MonoBehaviour:
   m_margin: {x: 39.023445, y: 0, z: 42.772137, w: -1.598897}
   m_textInfo:
     textComponent: {fileID: 114298053613656698}
-    characterCount: 6
+    characterCount: 0
     spriteCount: 0
     spaceCount: 0
-    wordCount: 1
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
   m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 0}
+  m_renderer: {fileID: 23865567327643584}
   m_subTextObjects:
   - {fileID: 0}
   - {fileID: 0}
