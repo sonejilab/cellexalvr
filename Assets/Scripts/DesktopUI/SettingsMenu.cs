@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
+using System.IO;
 
 namespace CellexalVR.DesktopUI
 {
@@ -68,6 +69,7 @@ namespace CellexalVR.DesktopUI
         [Header("Profile")]
         public TMPro.TMP_Dropdown profileDropdown;
         public TMPro.TMP_InputField newProfileInputField;
+        public Toggle datasetSpecificProfileToggle;
         public Button deleteProfileButton;
 
         public Material[] skyboxes;
@@ -86,6 +88,7 @@ namespace CellexalVR.DesktopUI
         public bool unsavedChanges;
 
         private string currentProfilePath;
+        private bool datasetLoaded = false;
 
         private void OnValidate()
         {
@@ -98,6 +101,9 @@ namespace CellexalVR.DesktopUI
         private void Awake()
         {
             CellexalEvents.ConfigLoaded.AddListener(SetValues);
+            CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
+            CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+
             colorPicker = referenceManager.colorPicker;
             var skyboxOptions = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (Material mat in skyboxes)
@@ -165,11 +171,15 @@ namespace CellexalVR.DesktopUI
             var profiles = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in CellexalConfig.savedConfigs.Keys)
             {
-                profiles.Add(new TMPro.TMP_Dropdown.OptionData(s));
+                if (s != "default")
+                {
+                    profiles.Add(new TMPro.TMP_Dropdown.OptionData(s));
+                }
             }
             profiles.Sort((TMPro.TMP_Dropdown.OptionData d1, TMPro.TMP_Dropdown.OptionData d2) => (d1.text.CompareTo(d2.text)));
+            // make sure default profile is at the top of the list
+            profiles.Insert(0, new TMPro.TMP_Dropdown.OptionData("default"));
             profileDropdown.options = profiles;
-
 
         }
 
@@ -256,14 +266,28 @@ namespace CellexalVR.DesktopUI
             velocityHighColor.Color = CellexalConfig.Config.VelocityParticlesHighColor;
             velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
             skyboxTintColor.Color = CellexalConfig.Config.SkyboxTintColor;
-
-
+            // can not change the default profiles dataset specificity
+            datasetSpecificProfileToggle.enabled = (profileDropdown.value != 0) && datasetLoaded;
+            datasetSpecificProfileToggle.isOn = (CellexalConfig.Config.ConfigDir != Directory.GetCurrentDirectory() + "\\Config");
+            print(CellexalConfig.Config.ConfigDir + " ==?== " + Directory.GetCurrentDirectory() + "\\Config");
 
             SetNetworkColoringMethod();
 
             //LayoutRebuilder.MarkLayoutForRebuild((RectTransform)selectionColorGroup.transform);
             unsavedChanges = false;
             beforeChanges = new Config(CellexalConfig.Config);
+        }
+
+        private void OnGraphsLoaded()
+        {
+            datasetLoaded = true;
+            datasetSpecificProfileToggle.enabled = (profileDropdown.value != 0);
+        }
+
+        private void OnGraphsUnloaded()
+        {
+            datasetLoaded = false;
+            datasetSpecificProfileToggle.enabled = false;
         }
 
         private int TryParse(string s, int defaultValue)
@@ -542,6 +566,18 @@ namespace CellexalVR.DesktopUI
             profileDropdown.options.Remove(currentProfile);
             profileDropdown.value = 0;
             LoadProfile();
+        }
+
+        public void SetDatasetSpecificProfile()
+        {
+            if (datasetSpecificProfileToggle.isOn)
+            {
+                CellexalConfig.Config.ConfigDir = CellexalUser.DataSourceFolder;
+            }
+            else
+            {
+                CellexalConfig.Config.ConfigDir = Directory.GetCurrentDirectory() + "\\Config";
+            }
         }
 
         public void ChangeMade()
