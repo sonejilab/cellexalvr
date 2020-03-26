@@ -150,14 +150,20 @@ namespace CellexalVR.General
             {
                 CellexalLog.consoleManager = referenceManager.consoleManager;
             }
-            // read all configs and set the default config as the current one
             configPaths = new List<string>();
+            ReadConfigFiles(configDir);
+        }
+
+        private void ReadConfigFiles(string folderPath)
+        {
+            // read all configs and set the default config as the current one
             configPaths.AddRange(Directory.GetFiles(configDir, "*.xml", SearchOption.TopDirectoryOnly));
             CellexalConfig.savedConfigs = new Dictionary<string, Config>();
             foreach (string path in configPaths)
             {
                 ReadConfigFile(path);
             }
+
             CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
 
             //SaveConfigFile();
@@ -167,6 +173,7 @@ namespace CellexalVR.General
             watcher.Filter = "*.xml";
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.EnableRaisingEvents = true;
+
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
@@ -251,7 +258,11 @@ namespace CellexalVR.General
 
         public string ProfileNameToConfigPath(string profileName)
         {
-            return configDir + "\\" + profileName + "_config.xml";
+            if (!CellexalConfig.savedConfigs.ContainsKey(profileName))
+            {
+                return "";
+            }
+            return Directory.GetCurrentDirectory() + "\\" + CellexalConfig.savedConfigs[profileName].ConfigDir + "\\" + profileName + "_config.xml";
         }
 
         /// <summary>

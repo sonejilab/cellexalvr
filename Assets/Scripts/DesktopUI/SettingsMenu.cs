@@ -267,9 +267,10 @@ namespace CellexalVR.DesktopUI
             velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
             skyboxTintColor.Color = CellexalConfig.Config.SkyboxTintColor;
             // can not change the default profiles dataset specificity
+            string currentProfile = profileDropdown.options[profileDropdown.value].text;
+            currentProfilePath = referenceManager.configManager.ProfileNameToConfigPath(currentProfile);
             datasetSpecificProfileToggle.enabled = (profileDropdown.value != 0) && datasetLoaded;
-            datasetSpecificProfileToggle.isOn = (CellexalConfig.Config.ConfigDir != Directory.GetCurrentDirectory() + "\\Config");
-            print(CellexalConfig.Config.ConfigDir + " ==?== " + Directory.GetCurrentDirectory() + "\\Config");
+            datasetSpecificProfileToggle.isOn = (CellexalConfig.Config.ConfigDir != "Config");
 
             SetNetworkColoringMethod();
 
@@ -570,14 +571,20 @@ namespace CellexalVR.DesktopUI
 
         public void SetDatasetSpecificProfile()
         {
+            string currentProfile = profileDropdown.options[profileDropdown.value].text;
+
             if (datasetSpecificProfileToggle.isOn)
             {
-                CellexalConfig.Config.ConfigDir = CellexalUser.DataSourceFolder;
+                CellexalConfig.Config.ConfigDir = "Data\\" + CellexalUser.DataSourceFolder;
             }
             else
             {
-                CellexalConfig.Config.ConfigDir = Directory.GetCurrentDirectory() + "\\Config";
+                CellexalConfig.Config.ConfigDir = "Config";
             }
+            string newFullPath = referenceManager.configManager.ProfileNameToConfigPath(currentProfile);
+            print(currentProfilePath + " " + newFullPath);
+            File.Move(currentProfilePath, newFullPath);
+            currentProfilePath = newFullPath;
         }
 
         public void ChangeMade()
