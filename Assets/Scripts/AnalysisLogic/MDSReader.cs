@@ -79,22 +79,20 @@ namespace CellexalVR.AnalysisLogic
                         break;
                     case GraphGenerator.GraphType.FACS:
                     {
-                        string name = "";
+                        string graphName = "";
                         foreach (string s in referenceManager.newGraphFromMarkers.markers)
                         {
-                            name += s + " - ";
+                            graphName += s + " - ";
                         }
 
                         combGraph.GraphNumber = referenceManager.inputReader.facsGraphCounter;
-                        combGraph.GraphName = name;
+                        combGraph.GraphName = graphName;
                         combGraph.tag = "FacsGraph";
                         referenceManager.graphManager.facsGraphs.Add(combGraph);
                         break;
                     }
                     case GraphGenerator.GraphType.ATTRIBUTE:
-                        break;
                     case GraphGenerator.GraphType.BETWEEN:
-                        break;
                     case GraphGenerator.GraphType.SPATIAL:
                         break;
                     default:

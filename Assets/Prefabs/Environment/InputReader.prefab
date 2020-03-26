@@ -178,6 +178,7 @@ MonoBehaviour:
   coloringOptionsList: {fileID: 0}
   folderKeyboard: {fileID: 0}
   webBrowserKeyboard: {fileID: 0}
+  sessionHistoryList: {fileID: 0}
   filterBlockBoard: {fileID: 0}
   filterNameKeyboard: {fileID: 0}
   filterOperatorKeyboard: {fileID: 0}

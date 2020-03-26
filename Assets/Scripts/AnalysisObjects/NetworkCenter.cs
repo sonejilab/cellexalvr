@@ -51,6 +51,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 layoutSeed = value;
                 rand = new System.Random(value);
+                print(rand.NextDouble());
             }
         }
         public bool Enlarged { get; private set; }
@@ -93,7 +94,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        void Start()
+        private void Start()
         {
             var referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             if (CrossSceneInformation.Normal)
@@ -106,7 +107,7 @@ namespace CellexalVR.AnalysisObjects
             networkHandler = GetComponentInParent<NetworkHandler>();
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             // moving kinematic rigidbodies
             if (enlarge)
@@ -165,7 +166,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
@@ -174,7 +175,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        void OnTriggerExit(Collider other)
+        private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             {
@@ -301,9 +302,9 @@ namespace CellexalVR.AnalysisObjects
             }
             else if (layout == Layout.TWO_D)
             {
-                foreach (var node in nodes)
+                for (int i = 0; i < nodes.Count; i++)
                 {
-                    positions[node] = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, 0f);
+                    positions[nodes[i]] = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, 0f);
                 }
             }
 

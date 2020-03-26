@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -186,7 +187,7 @@ namespace CellexalVR.AnalysisLogic
             //string function = "make.cellexalvr.network";
             //string script = function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", method=\"" + networkMethod + "\")";
             string groupingFilePath = (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
-            string outputFilePath = (CellexalUser.UserSpecificFolder + @"\Resources\Networks").UnFixFilePath();
+            string outputFilePath = (CellexalUser.UserSpecificFolder + @"\Resources\Networks" + selectionNr).UnFixFilePath();
             networkMethod = CellexalConfig.Config.NetworkAlgorithm;
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + groupingFilePath + " " + outputFilePath + " " + networkMethod;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_networks.R").FixFilePath();
@@ -229,7 +230,7 @@ namespace CellexalVR.AnalysisLogic
             //    referenceManager.floor.StopPulse();
             //}
 
-            inputReader.ReadNetworkFiles(layoutSeed);
+            inputReader.ReadNetworkFiles(layoutSeed, outputFilePath, groupingFilePath);
         }
 
         /// <summary>

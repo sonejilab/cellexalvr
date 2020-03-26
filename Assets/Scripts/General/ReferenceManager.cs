@@ -140,6 +140,7 @@ namespace CellexalVR.General
         public ColoringOptionsList coloringOptionsList;
         public KeyboardHandler folderKeyboard;
         public KeyboardHandler webBrowserKeyboard;
+        public SessionHistoryList sessionHistoryList;
 
         #endregion
 
@@ -269,6 +270,7 @@ namespace CellexalVR.General
             coloringOptionsList = GameObject.Find("Keyboard Setup/Coloring Options List").GetComponent<ColoringOptionsList>();
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
             webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
+            sessionHistoryList = geneKeyboard.GetComponentInChildren<SessionHistoryList>();
 
             GameObject filterCreator = GameObject.Find("Filter Creator");
             filterBlockBoard = filterCreator.transform.Find("Filter Block Board").gameObject;

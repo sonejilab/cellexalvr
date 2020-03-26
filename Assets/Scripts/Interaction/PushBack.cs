@@ -77,8 +77,8 @@ namespace CellexalVR.Interaction
             }
             else if (hit.transform.GetComponent<NetworkHandler>())
             {
-                hit.transform.LookAt(referenceManager.headset.transform);
-                hit.transform.Rotate(0, 0, 180);
+                // hit.transform.LookAt(referenceManager.headset.transform);
+                // hit.transform.Rotate(0, 0, 180);
                 referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<NetworkCenter>())
@@ -121,8 +121,8 @@ namespace CellexalVR.Interaction
             }
             else if (hit.transform.GetComponent<NetworkHandler>())
             {
-                hit.transform.LookAt(referenceManager.headset.transform);
-                hit.transform.Rotate(0, 0, 180);
+                // hit.transform.LookAt(referenceManager.headset.transform);
+                // hit.transform.Rotate(0, 0, 180);
                 referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<NetworkCenter>())

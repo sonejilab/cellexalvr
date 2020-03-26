@@ -801,6 +801,11 @@ namespace CellexalVR.General
                     }
                 }
 
+                if (!referenceManager.sessionHistoryList.Contains(filePath, Definitions.HistoryEvent.SELECTION))
+                {
+                    referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
+                }
+
                 StartCoroutine(UpdateRObjectGrouping());
             }
         }

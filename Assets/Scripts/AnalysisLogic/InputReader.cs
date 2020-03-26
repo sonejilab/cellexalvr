@@ -404,11 +404,15 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Reads the files containg networks.
         /// </summary>
-        public void ReadNetworkFiles(int layoutSeed)
+        public void ReadNetworkFiles(int layoutSeed, string path, string selectionFile)
         {
-            networkReader = gameObject.AddComponent<NetworkReader>();
-            networkReader.referenceManager = referenceManager;
-            StartCoroutine(networkReader.ReadNetworkFilesCoroutine(layoutSeed));
+            if (!networkReader)
+            {
+                networkReader = gameObject.AddComponent<NetworkReader>();
+                networkReader.referenceManager = referenceManager;
+            }
+
+            StartCoroutine(networkReader.ReadNetworkFilesCoroutine(layoutSeed, path, selectionFile));
         }
 
 
@@ -565,13 +569,14 @@ namespace CellexalVR.AnalysisLogic
             fileStream.Close();
         }
 
-        public void ReadSelectionFile(string path)
+        public List<Graph.GraphPoint> ReadSelectionFile(string path, bool select = true)
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;
+            List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
             if (!File.Exists(path))
             {
                 CellexalLog.Log("Could not find file:" + path);
-                return;
+                return new List<Graph.GraphPoint>();
             }
 
             FileStream fileStream = new FileStream(path, FileMode.Open);
@@ -593,7 +598,8 @@ namespace CellexalVR.AnalysisLogic
                     ColorUtility.TryParseHtmlString(words[1], out groupColor);
                     if (!CellexalConfig.Config.SelectionToolColors.Any(x => CompareColor(x, groupColor)))
                     {
-                        print(groupColor);
+                        referenceManager.settingsMenu.AddSelectionColor(groupColor);
+                        // print(groupColor);
                     }
                 }
                 catch (FormatException)
@@ -603,12 +609,17 @@ namespace CellexalVR.AnalysisLogic
                     streamReader.Close();
                     fileStream.Close();
                     CellexalEvents.CommandFinished.Invoke(false);
-                    return;
+                    return new List<Graph.GraphPoint>();
                 }
 
-                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]),
-                    group, false, groupColor);
-                numPointsAdded++;
+                Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
+                selection.Add(graphPoint);
+                if (select)
+                {
+                    selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]),
+                        group, false, groupColor);
+                    numPointsAdded++;
+                }
             }
 
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
@@ -616,6 +627,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.SelectedFromFile.Invoke();
             streamReader.Close();
             fileStream.Close();
+            return selection;
         }
 
 
