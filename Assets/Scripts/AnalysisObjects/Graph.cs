@@ -64,7 +64,6 @@ namespace CellexalVR.AnalysisObjects
                 graphName = value;
                 // We don't want two objects with the exact same name. Could cause issues in find graph and in multi user sessions.
                 GameObject existingGraph = GameObject.Find(graphName);
-                print(graphName);
                 while (existingGraph != null)
                 {
                     graphName += "_Copy";
@@ -79,7 +78,7 @@ namespace CellexalVR.AnalysisObjects
 
         public string FolderName
         {
-            get { return folderName; }
+            get => folderName;
             set
             {
                 folderName = value;
@@ -409,7 +408,6 @@ namespace CellexalVR.AnalysisObjects
             }
 
             public bool unconfirmedInSelection;
-            public List<Selectable> lineBetweenCellsCubes;
 
             public Vector3 WorldPosition
             {
@@ -427,7 +425,6 @@ namespace CellexalVR.AnalysisObjects
                 group = -1;
                 unconfirmedInSelection = false;
                 indexCounter++;
-                lineBetweenCellsCubes = new List<Selectable>();
             }
 
             public override string ToString()

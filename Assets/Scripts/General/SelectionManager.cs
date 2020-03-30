@@ -355,10 +355,10 @@ namespace CellexalVR.General
             Graph.GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
 
             AddGraphpointToSelection(gp, newGroup, true, color);
-            foreach (Selectable sel in gp.lineBetweenCellsCubes)
-            {
-                sel.GetComponent<Renderer>().material.color = color;
-            }
+            // foreach (Selectable sel in gp.lineBetweenCellsCubes)
+            // {
+            //     sel.GetComponent<Renderer>().material.color = color;
+            // }
         }
 
 
@@ -579,12 +579,15 @@ namespace CellexalVR.General
             }
 
             // create .txt file with latest selection
-            DumpSelectionToTextFile();
             lastSelectedCells.Clear();
+            // Ensure points are unique. Because distinct keeps first occurence but we want to keep last we need to reverse the list before using it and then reverse back.
             IEnumerable<Graph.GraphPoint> uniqueCells = selectedCells.Reverse<Graph.GraphPoint>().Distinct().Reverse();
+            // Remove line below if the cells should be in the same order as they were selected no matter which group.  
+            IEnumerable<Graph.GraphPoint> sortedUniqueCells = uniqueCells.OrderBy(x => x.Group);
+            DumpSelectionToTextFile(sortedUniqueCells.ToList());
 
             List<int> groups = new List<int>();
-            foreach (Graph.GraphPoint gp in uniqueCells)
+            foreach (Graph.GraphPoint gp in sortedUniqueCells)
             {
                 if (!groups.Contains(gp.Group))
                 {

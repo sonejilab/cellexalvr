@@ -1052,5 +1052,78 @@ namespace CellexalVR.AnalysisObjects
                 subGraph.hasVelocityInfo = true;
             }
         }
+
+        public void UpdateMeshToUse()
+        {
+            switch (CellexalConfig.Config.GraphPointQuality)
+            {
+                case "Standard" when CellexalConfig.Config.GraphPointSize == "Standard":
+                    meshToUse = graphpointStandardQStandardSzMesh;
+                    break;
+                case "Low" when CellexalConfig.Config.GraphPointSize == "Standard":
+                    meshToUse = graphpointLowQStandardSzMesh;
+                    break;
+                case "Standard" when CellexalConfig.Config.GraphPointSize == "Small":
+                case "Low" when CellexalConfig.Config.GraphPointSize == "Small":
+                    meshToUse = graphpointLowQSmallSzMesh;
+                    break;
+                case "Standard" when CellexalConfig.Config.GraphPointSize == "Large":
+                    meshToUse = graphpointStandardQLargeSzMesh;
+                    break;
+                default:
+                    meshToUse = graphpointLowQLargeSzMesh;
+                    break;
+            }
+        }
+        
+
+        /// <summary>
+        /// Rebuilding graphs while when mesh has changed such as to another size or quality. The color of the points are kept
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator RebuildGraphs()
+        {
+            print("Rebuild graphs");
+            foreach (Graph graph in graphManager.originalGraphs)
+            {
+                newGraph = graph;
+                Texture2D oldTexture = graph.texture;
+                graph.minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+                graph.maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+                Dictionary<string, Color32> oldTextureColors = new Dictionary<string, Color32>();
+                foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
+                {
+                    UpdateMinMaxCoords(point.Value.Position.x, point.Value.Position.y, point.Value.Position.z);
+                    oldTextureColors[point.Key] =
+                        oldTexture.GetPixel(point.Value.textureCoord.x, point.Value.textureCoord.y);
+                }
+
+
+                foreach (GameObject cluster in newGraph.graphPointClusters)
+                {
+                    Destroy(cluster);
+                    yield return null;
+                }
+
+                isCreating = true;
+
+                SliceClustering();
+                while (isCreating)
+                {
+                    yield return null;
+                }
+
+                foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
+                {
+                    Vector2Int pos = point.Value.textureCoord;
+                    Color32 oldColor = oldTextureColors[point.Key];
+                    graph.texture.SetPixels32(pos.x, pos.y, 1, 1, new Color32[] {oldColor});
+                }
+
+                graph.texture.Apply();
+                graph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial.mainTexture = graph.texture;
+            }
+        }
     }
 }
+

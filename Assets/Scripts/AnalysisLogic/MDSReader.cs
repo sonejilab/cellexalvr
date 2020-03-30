@@ -98,12 +98,7 @@ namespace CellexalVR.AnalysisLogic
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
-                //combGraph.gameObject.name = combGraph.GraphName;
-                //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
 
-                //image1 = new Bitmap(400, 400);
-                //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
-                //int i, j;
                 string[] axes = new string[3];
                 string[] velo = new string[3];
                 using (StreamReader mdsStreamReader = new StreamReader(file))
@@ -163,7 +158,6 @@ namespace CellexalVR.AnalysisLogic
                                 .Split(separators, StringSplitOptions.RemoveEmptyEntries);
                             if (words.Length != 4 && words.Length != 7)
                             {
-                                print(words.Length);
                                 continue;
                             }
 
