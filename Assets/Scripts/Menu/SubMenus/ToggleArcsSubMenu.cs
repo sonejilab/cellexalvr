@@ -32,7 +32,7 @@ namespace CellexalVR.Menu.SubMenus
         private ToggleArcsButton previouslyClickedButton;
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
-        private List<ToggleArcsButton> toggleArcButtonList = new List<ToggleArcsButton>();
+        public List<ToggleArcsButton> toggleArcButtonList = new List<ToggleArcsButton>();
 
 
         /// <summary>
@@ -89,7 +89,11 @@ namespace CellexalVR.Menu.SubMenus
             if (previouslyClickedButton == null)
             {
                 previewWire.SetActive(true);
+                previewWire.GetComponent<Renderer>().enabled = true;
                 attachPoint.SetActive(true);
+                attachPoint.transform.position =
+                    (referenceManager.laserPointerController.origin.transform.position) +
+                    (referenceManager.laserPointerController.origin.transform.forward / 25f);
                 LineRendererFollowTransforms follow = previewWire.GetComponent<LineRendererFollowTransforms>();
                 follow.bendLine = true;
                 follow.transform1 = attachPoint.transform;
@@ -115,6 +119,22 @@ namespace CellexalVR.Menu.SubMenus
             previouslyClickedButton.ClearArcs();
             previewWire.SetActive(false);
             attachPoint.SetActive(false);
+            NetworkHandler networkHandler = previouslyClickedButton.GetComponentInParent<NetworkHandler>();
+            if (networkHandler == null)
+            {
+                // Clear wire from skeleton(network handler) as well.
+                ToggleArcsButton[] handlerButtons =
+                    previouslyClickedButton.network.Handler.GetComponentsInChildren<ToggleArcsButton>();
+                ToggleArcsButton handlerButton =
+                    handlerButtons.First(x => x.network == previouslyClickedButton.network);
+                handlerButton.ClearArcs();
+            }
+            else
+            {
+                ToggleArcsButton[] subMenuButtons = GetComponentsInChildren<ToggleArcsButton>();
+                ToggleArcsButton subMenuButton = subMenuButtons.First(x => x.network == previouslyClickedButton.network);
+                subMenuButton.ClearArcs();
+            }
             previouslyClickedButton = null;
         }
 
@@ -126,19 +146,19 @@ namespace CellexalVR.Menu.SubMenus
         {
             if (toggle)
             {
-                for (int i = 0; i < toggleArcButtonList.Count - 1; i++)
+                for (int i = 0; i < toggleArcButtonList.Count / 2 - 1; i++)
                 {
                     ToggleArcsButton button = toggleArcButtonList[i];
                     referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggle, button.network.name);
                     button.network.SetCombinedArcsVisible(false);
-                    for (int j = i + 1; j < toggleArcButtonList.Count; j++)
+                    for (int j = i + 1; j < toggleArcButtonList.Count / 2; j++)
                     {
                         ToggleArcsButton nextButton = toggleArcButtonList[j];
                         button.ConnectTo(nextButton);
                     }
                 }
 
-                ToggleArcsButton lastButton = toggleArcButtonList[toggleArcButtonList.Count - 1];
+                ToggleArcsButton lastButton = toggleArcButtonList[toggleArcButtonList.Count / 2 - 1];
                 lastButton.network.SetCombinedArcsVisible(false);
                 GetComponentInChildren<ToggleAllCombinedArcsButton>().CurrentState = false;
                 referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggle, lastButton.network.name);
@@ -166,7 +186,6 @@ namespace CellexalVR.Menu.SubMenus
                 return;
             }
 
-            print("Do undo");
             previewWire.SetActive(false);
             attachPoint.SetActive(false);
             previouslyClickedButton = null;

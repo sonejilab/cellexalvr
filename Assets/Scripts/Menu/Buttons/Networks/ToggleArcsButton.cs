@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Menu.SubMenus;
@@ -19,11 +20,13 @@ namespace CellexalVR.Menu.Buttons.Networks
         // public Color color;
 
         [HideInInspector] public ToggleAllCombinedArcsButton combinedNetworksButton;
+
         public NetworkCenter network;
         // public GameObject parentNetwork;
 
         private List<ToggleArcsButton> connectedButtons = new List<ToggleArcsButton>();
         private ToggleArcsSubMenu arcsSubMenu;
+        private bool cellsHighlighted;
 
         public Color ButtonColor
         {
@@ -40,6 +43,7 @@ namespace CellexalVR.Menu.Buttons.Networks
         }
 
         protected override string Description => "" /*Toggle all arcs connected to this network*/;
+
         // private NetworkHandler networkHandler;
         private Color color;
         public bool selected;
@@ -65,42 +69,54 @@ namespace CellexalVR.Menu.Buttons.Networks
         {
             if (other.network == network || connectedButtons.Contains(other)) return false;
 
-            GameObject newWire = null;
-            // if (other.wire != null)
-            // {
-            //     newWire = other.wire;
-            // }
-            //
-            // if (newWire != null)
-            // {
-            //     // if we have a wire but we have already fetched a wire, destroy ours
-            //     Destroy(wire.gameObject);
-            //     wire = null;
-            // }
-            // else
-            // {
-            //     // if we have a wire but we did not fetch one before, use ours
-            //     newWire = wire;
-            // }
-
-            // if there was no wire we could use, create one
-            if (newWire == null)
+            NetworkHandler networkHandler = GetComponentInParent<NetworkHandler>();
+            Transform parentTransform;
+            GameObject wire = AddWire(this, other,
+                networkHandler == null ? arcsSubMenu.transform : networkHandler.transform);
+            if (networkHandler == null)
             {
-                newWire = Instantiate(arcsSubMenu.wirePrefab, arcsSubMenu.transform);
+                // Add corresponding wire to skeleton(network handler) as well.
+                parentTransform = network.Handler.transform;
+                ToggleArcsButton[] buttonsOnHandler = network.Handler.GetComponentsInChildren<ToggleArcsButton>();
+                ToggleArcsButton buttonOnHandler = buttonsOnHandler.First(x => x.network == network);
+                ToggleArcsButton otherHandlerButton =
+                    buttonsOnHandler.First(x => x.network == other.network);
+                GameObject extraWire = AddWire(buttonOnHandler, otherHandlerButton, parentTransform);
+                extraWire.GetComponent<LineRenderer>().enabled = true;
+            }
+            else
+            {
+                // Add corresponding wire to arcs menu as well.
+                parentTransform = arcsSubMenu.transform;
+                ToggleArcsButton[] buttonsOnMenu = arcsSubMenu.GetComponentsInChildren<ToggleArcsButton>();
+                ToggleArcsButton buttonOnMenu = buttonsOnMenu.First(x => x.network == network);
+                ToggleArcsButton otherButtonOnMenu =
+                    buttonsOnMenu.First(x => x.network == other.network);
+                GameObject extraWire = AddWire(buttonOnMenu, otherButtonOnMenu, parentTransform);
+                extraWire.GetComponent<LineRenderer>().enabled = arcsSubMenu.Active;
+                wire.GetComponent<LineRenderer>().enabled = true;
             }
 
+
+            return true;
+        }
+
+        private GameObject AddWire(ToggleArcsButton button1, ToggleArcsButton button2, Transform parentTransform)
+        {
+            GameObject newWire = Instantiate(arcsSubMenu.wirePrefab);
+            newWire.transform.parent = parentTransform;
             LineRendererFollowTransforms line = newWire.GetComponent<LineRendererFollowTransforms>();
             line.bendLine = true;
-            line.transform1 = transform;
-            line.transform2 = other.transform;
+            line.transform1 = button1.transform.transform;
+            line.transform2 = button2.transform.transform;
             wires.Add(newWire);
-            other.wires.Add(newWire);
-            network.SetArcsVisible(true, other.network);
-            connectedButtons.Add(other);
-            other.connectedButtons.Add(this);
+            button2.wires.Add(newWire);
+            network.SetArcsVisible(true, button2.network);
+            connectedButtons.Add(button2);
+            button2.connectedButtons.Add(this);
             newWire.SetActive(true);
             selected = false;
-            return true;
+            return newWire;
         }
 
         public void ClearArcs()
@@ -126,26 +142,15 @@ namespace CellexalVR.Menu.Buttons.Networks
         public void SetNetwork(NetworkCenter network)
         {
             this.network = network;
-
-            string str = network.name.Split('_')[0];
-            this.network.name = str;
         }
 
-        private void OnTriggerEnter(Collider other)
+        public override void SetHighlighted(bool highlight)
         {
-            if (other.CompareTag("Controller"))
-            {
-                // parent.UnhighlightAllPorts();
-                SetHighlighted(true);
-            }
+            if (cellsHighlighted == highlight) return;
+            base.SetHighlighted(highlight);
+            cellsHighlighted = highlight;
+            referenceManager.cellManager.HighlightCells(network.cellsInGroup, highlight);
         }
 
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Controller"))
-            {
-                SetHighlighted(false);
-            }
-        }
     }
 }

@@ -21,6 +21,7 @@ namespace CellexalVR.AnalysisObjects
         public Material normalMaterial;
         public List<NetworkCenter> Replacements { get; private set; }
         public bool removable;
+
         public bool removing = false;
         // public GameObject wirePrefab;
 
@@ -119,26 +120,6 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        public void NetworkButtonClicked(ToggleArcsButton clickedButton)
-        {
-            buttonClickedThisFrame = true;
-            if (previouslyClickedButton == null)
-            {
-                previewWire.SetActive(true);
-                LineRendererFollowTransforms follow = previewWire.GetComponent<LineRendererFollowTransforms>();
-                follow.transform1 = referenceManager.rightController.transform;
-                follow.transform2 = clickedButton.transform;
-                previouslyClickedButton = clickedButton;
-            }
-            else
-            {
-                previewWire.SetActive(false);
-                clickedButton.ConnectTo(previouslyClickedButton);
-                previouslyClickedButton = null;
-            }
-        }
-
-
         /// <summary>
         /// Calculates the 2D layout of all networks.
         /// </summary>
@@ -203,6 +184,20 @@ namespace CellexalVR.AnalysisObjects
                 // toggle the arcs off
                 network.SetArcsVisible(false);
                 network.SetCombinedArcsVisible(false);
+                // Also add toggle arcs buttons. 
+                GameObject newButton = Instantiate(referenceManager.arcsSubMenu.buttonPrefab, transform);
+                newButton.layer = LayerMask.NameToLayer("EnvironmentButtonLayer");
+                ToggleArcsButton toggleArcButton = newButton.GetComponent<ToggleArcsButton>();
+                referenceManager.arcsSubMenu.toggleArcButtonList.Add(toggleArcButton);
+                newButton.transform.localScale = network.transform.localScale / 6;
+                newButton.transform.localPosition = network.transform.localPosition + new Vector3(0, 0.13f, 0);
+                newButton.name = network.gameObject.name + "_ArcButton";
+                newButton.gameObject.SetActive(true);
+                newButton.GetComponent<Renderer>().enabled = true;
+                newButton.GetComponent<Collider>().enabled = true;
+                Color color = network.GetComponent<Renderer>().material.color;
+                toggleArcButton.ButtonColor = color;
+                toggleArcButton.SetNetwork(network);
             }
 
             // figure out how many combined arcs there are
@@ -228,6 +223,9 @@ namespace CellexalVR.AnalysisObjects
         {
             networks.Add(network);
             networks.RemoveAll(item => item == null);
+            // print(referenceManager == null);
+            // print((referenceManager.arcsSubMenu == null));
+            // print((referenceManager.arcsSubMenu.buttonPrefab == null));
         }
 
         /// <summary>

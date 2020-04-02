@@ -594,13 +594,17 @@ namespace CellexalVR.AnalysisLogic
 
                 try
                 {
-                    group = int.Parse(words[3]);
-                    ColorUtility.TryParseHtmlString(words[1], out groupColor);
+                    // group = int.Parse(words[3]);
+                    string colorString = words[1];
+                    ColorUtility.TryParseHtmlString(colorString, out groupColor);
                     if (!CellexalConfig.Config.SelectionToolColors.Any(x => CompareColor(x, groupColor)))
                     {
                         referenceManager.settingsMenu.AddSelectionColor(groupColor);
+                        referenceManager.settingsMenu.unsavedChanges = false;
                         // print(groupColor);
                     }
+
+                    group = referenceManager.selectionToolCollider.GetColorIndex(colorString);
                 }
                 catch (FormatException)
                 {
@@ -663,7 +667,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="a">First color.</param>
         /// <param name="b">Second color.</param>
         /// <param name="tolerance">Function returns true if the distance between them are equal or lower than this value.</param>
-        private bool CompareColor(UnityEngine.Color a, UnityEngine.Color b, float tolerance = 0.1f)
+        private static bool CompareColor(UnityEngine.Color a, UnityEngine.Color b, float tolerance = 0.1f)
         {
             float diff = Vector3.Distance(new Vector3(a.r, a.g, a.b),
                 new Vector3(b.r, b.g, b.b));

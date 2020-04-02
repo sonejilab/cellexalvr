@@ -72,7 +72,7 @@ namespace CellexalVR.Interaction
                 {
                     currentColorIndex = tempColorIndex;
                 }
-                
+
                 UpdateShapeIcons();
             }
         }
@@ -319,6 +319,25 @@ namespace CellexalVR.Interaction
                         selectionToolShapeButtons[buttonIndexDown];
                 }
             }
+        }
+
+        public int GetColorIndex(string colorString)
+        {
+            for (int i = 0; i < referenceManager.selectionToolCollider.Colors.Length; i++)
+            {
+                Color selectionColor = referenceManager.selectionToolCollider.Colors[i];
+                string selectionColorString = "#"+ColorUtility.ToHtmlStringRGB(selectionColor);
+                if (selectionColorString.Equals(colorString)) return i;
+            }
+
+            return -1;
+        }
+
+        public int GetColorIndex(Color color)
+        {
+            string colorString = ColorUtility.ToHtmlStringRGB(color);
+            print(colorString);
+            return GetColorIndex(colorString);
         }
     }
 }

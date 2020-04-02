@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
@@ -185,8 +186,9 @@ namespace CellexalVR.AnalysisLogic
                 maxNegPcor[colorString] = float.MinValue;
                 minNegPcor[colorString] = 0f;
                 Vector3 position = graph.ScaleCoordinates(new Vector3(x, y, z));
+                int group = referenceManager.selectionToolCollider.GetColorIndex(colorString);
                 NetworkCenter network =
-                    referenceManager.networkGenerator.CreateNetworkCenter(networkHandler, colorString, position,
+                    referenceManager.networkGenerator.CreateNetworkCenter(networkHandler, group, position,
                         layoutSeed);
                 foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
                 {
