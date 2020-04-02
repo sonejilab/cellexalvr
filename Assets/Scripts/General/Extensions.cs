@@ -77,6 +77,8 @@ namespace CellexalVR.Extensions
                 
             }
         }
+
+        public static Color TronColor = new Color(.465f, .765f, .875f);
     }
 
     public enum AttributeLogic
