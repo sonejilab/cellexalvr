@@ -1083,7 +1083,6 @@ namespace CellexalVR.AnalysisObjects
         /// <returns></returns>
         public IEnumerator RebuildGraphs()
         {
-            print("Rebuild graphs");
             foreach (Graph graph in graphManager.originalGraphs)
             {
                 newGraph = graph;

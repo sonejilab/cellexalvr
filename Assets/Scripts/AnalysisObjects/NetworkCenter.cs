@@ -51,7 +51,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 layoutSeed = value;
                 rand = new System.Random(value);
-                print(rand.NextDouble());
             }
         }
         public bool Enlarged { get; private set; }
@@ -889,6 +888,14 @@ namespace CellexalVR.AnalysisObjects
         public void SetArcsVisible(bool toggleToState)
         {
             foreach (Arc arc in arcs)
+            {
+                arc.gameObject.SetActive(toggleToState);
+            }
+        }
+
+        public void SetArcsVisible(bool toggleToState, NetworkCenter otherCenter)
+        {
+            foreach (Arc arc in arcs.Where(x => x.center2 == otherCenter))
             {
                 arc.gameObject.SetActive(toggleToState);
             }

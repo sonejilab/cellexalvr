@@ -1072,7 +1072,7 @@ namespace CellexalVR.AnalysisObjects
             line.material = lineMaterial;
             line.startWidth = line.endWidth = 0.02f;
             line.useWorldSpace = false;
-            line.alignment = LineAlignment.TransformZ;
+            // line.alignment = LineAlignment.TransformZ;
             line.positionCount = posCount;
             line.SetPositions(sortedNodes.ToArray());
             convexHull.SetActive(true);
