@@ -14,7 +14,6 @@ using CellexalVR.Extensions;
 using System.Drawing;
 using System.Diagnostics;
 using CellexalVR.AnalysisLogic.H5reader;
-using TMPro;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -47,7 +46,7 @@ namespace CellexalVR.AnalysisLogic
         private GraphGenerator graphGenerator;
         private string currentPath;
         private Bitmap image1;
-        public Dictionary<string, H5Reader> h5readers;
+        public Dictionary<string, H5Reader> h5readers = new Dictionary<string, H5Reader>();
 
         [Tooltip("Automatically loads the Bertie dataset")]
         public bool debug;
@@ -96,6 +95,13 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
         }
+        
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] {"readprevioussession", "rps"})]
+        public void ReadPreviousSessionConsole(string path, string fromPreviousSession = "")
+        {
+            // referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
+            ReadFolder(path, null, fromPreviousSession);
+        }
 
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
@@ -131,7 +137,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="path"> The path to the folder. </param>
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
-        public void ReadFolder(string path, Dictionary<string, string> h5config = null)
+        public void ReadFolder(string path, Dictionary<string, string> h5config = null, string fromPreviousSession = "")
         {
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
@@ -193,6 +199,8 @@ namespace CellexalVR.AnalysisLogic
             mdsReader = gameObject.AddComponent<MDSReader>();
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
+            StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
+
             graphGenerator.isCreating = true;
 
             // multiple_exp if (currentPath.Length > 0)
@@ -237,14 +245,24 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="serverType">If you are running several sessions give a serverType name that works as a prefix so the 
         /// R session knows which file to look for.</param>
+        /// <param name="fromPreviousSession">If you are reloading a previous session then the r object to load is found in that folder instead.</param>
         /// <returns></returns>
-        public IEnumerator StartServer(string serverType)
+        public IEnumerator StartServer(string serverType, string fromPreviousSession = "")
         {
             Process currentProcess = Process.GetCurrentProcess();
             int pid = currentProcess.Id;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
             string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
-            string dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
+            string dataSourceFolder;
+            if (!fromPreviousSession.Equals(string.Empty))
+            {
+                dataSourceFolder = fromPreviousSession;
+            }
+            else
+            {
+                dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
+            }
+
             string args = serverName + " " + dataSourceFolder + " " +
                           CellexalUser.UserSpecificFolder + " " + pid;
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
@@ -563,12 +581,13 @@ namespace CellexalVR.AnalysisLogic
 
             referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, path);
             cellsToAnnotate.Clear();
-            CellexalLog.Log(string.Format("Added {0} points to annotation", numPointsAdded));
+            CellexalLog.Log($"Added {numPointsAdded} points to annotation");
             CellexalEvents.CommandFinished.Invoke(true);
             streamReader.Close();
             fileStream.Close();
         }
 
+        [ConsoleCommand("inputReader", aliases: new string[] {"readselectionfile", "rsf"})]
         public List<Graph.GraphPoint> ReadSelectionFile(string path, bool select = true)
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;

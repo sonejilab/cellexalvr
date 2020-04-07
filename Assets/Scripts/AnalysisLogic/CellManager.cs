@@ -712,7 +712,7 @@ namespace CellexalVR.AnalysisLogic
                 cell.ColorByGeneExpression(group);
             }
 
-            if (referenceManager.sessionHistoryList.Contains(name, Definitions.HistoryEvent.FACS))
+            if (!referenceManager.sessionHistoryList.Contains(name, Definitions.HistoryEvent.FACS))
             {
                 referenceManager.sessionHistoryList.AddEntry(name, Definitions.HistoryEvent.FACS);
             }

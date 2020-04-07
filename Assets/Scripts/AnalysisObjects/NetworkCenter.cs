@@ -195,7 +195,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 controllerInside = true;
                 numColliders++;
-                if (cellsInGroup.Length > 0)
+                if (cellsInGroup != null)
                 {
                     referenceManager.cellManager.HighlightCells(cellsInGroup, true);
                 }
@@ -216,7 +216,7 @@ namespace CellexalVR.AnalysisObjects
             if (numColliders == 0)
             {
                 controllerInside = false;
-                if (cellsInGroup.Length > 0)
+                if (cellsInGroup != null)
                 {
                     referenceManager.cellManager.HighlightCells(cellsInGroup, false);
                 }

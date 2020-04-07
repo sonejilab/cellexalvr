@@ -535,7 +535,6 @@ namespace CellexalVR.AnalysisLogic
             //};
             SQLiter.SQLite db = heatmap.gameObject.AddComponent<SQLiter.SQLite>();
             db.referenceManager = referenceManager;
-            print(heatmap.directory);
             db.InitDatabase(heatmap.directory + ".sqlite3");
 
             yield return StartCoroutine(db.ValidateDatabaseCoroutine());

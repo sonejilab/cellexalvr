@@ -105,6 +105,7 @@ namespace CellexalVR.General
         public ConfigManager configManager;
         //public GameObject helperCylinder;
         public InputReader inputReader;
+        public ReportReader reportReader;
         public SQLite database;
         public LogManager logManager;
         public MultiuserMessageSender multiuserMessageSender;
@@ -260,6 +261,7 @@ namespace CellexalVR.General
             convexHullGenerator = generatorsParent.GetComponentInChildren<ConvexHullGenerator>(true);
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
+            reportReader = reportManager.GetComponent<ReportReader>();
             floor = GameObject.Find("Floor").GetComponent<Floor>();
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();

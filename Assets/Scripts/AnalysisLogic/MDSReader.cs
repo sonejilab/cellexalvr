@@ -234,10 +234,6 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
 
-            if (server)
-            {
-                StartCoroutine(referenceManager.inputReader.StartServer("main"));
-            }
             while (referenceManager.graphGenerator.isCreating)
             {
                 yield return null;
