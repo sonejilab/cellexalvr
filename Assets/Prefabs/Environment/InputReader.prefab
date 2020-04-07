@@ -153,6 +153,7 @@ MonoBehaviour:
   loaderController: {fileID: 0}
   configManager: {fileID: 114706478586369516}
   inputReader: {fileID: 114916324322146698}
+  reportReader: {fileID: 0}
   database: {fileID: 0}
   logManager: {fileID: 114405805043964006}
   multiuserMessageSender: {fileID: 0}
