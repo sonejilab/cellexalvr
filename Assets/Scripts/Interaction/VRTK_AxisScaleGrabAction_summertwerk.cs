@@ -5,15 +5,44 @@ namespace VRTK.SecondaryControllerGrabActions
 {
     public class VRTK_AxisScaleGrabAction_summertwerk : VRTK_AxisScaleGrabAction
     {
-        Vector3 old_mid_point;
-        ConfigurableJoint joint;
-        
-        public override void Initialise(VRTK_InteractableObject currentGrabbdObject, VRTK_InteractGrab currentPrimaryGrabbingObject, VRTK_InteractGrab currentSecondaryGrabbingObject, Transform primaryGrabPoint, Transform secondaryGrabPoint)
-        {
+        Joint joint;
+        Vector3 a;
+        Vector3 b;
 
-            base.Initialise(currentGrabbdObject, currentPrimaryGrabbingObject, currentSecondaryGrabbingObject, primaryGrabPoint, secondaryGrabPoint);
-            joint = GetComponent<ConfigurableJoint>();
+
+        public override void Initialise(VRTK_InteractableObject currentGrabbedObject, VRTK_InteractGrab currentPrimaryGrabbingObject, VRTK_InteractGrab currentSecondaryGrabbingObject, Transform primaryGrabPoint, Transform secondaryGrabPoint)
+        {
+            
+            base.Initialise(currentGrabbedObject, currentPrimaryGrabbingObject, currentSecondaryGrabbingObject, primaryGrabPoint, secondaryGrabPoint);
+            a = primaryGrabbingObject.transform.position;
+            b = secondaryGrabbingObject.transform.position;
+            joint = GetComponent<Joint>();
+
         }
+
+        protected override void UniformScale()
+        {
+            
+            Vector3 aa = primaryGrabbingObject.transform.position;
+            Vector3 bb = secondaryGrabbingObject.transform.position;
+            float c = (a - b).magnitude;
+            float cc = (aa - bb).magnitude;
+
+            float newScale =  (cc / c);
+            Vector3 axis = -Vector3.Cross(bb - aa, b - a);
+            float angle = Vector3.Angle(bb - aa, b - a);
+
+            grabbedObject.transform.RotateAround(aa, axis, angle);
+            grabbedObject.transform.localScale *= newScale;
+
+            joint.autoConfigureConnectedAnchor = false;
+            joint.connectedAnchor = Vector3.zero;
+            
+            a = aa;
+            b = bb;
+
+        }
+
 
         protected override void ApplyScale(Vector3 newScale)
         {
@@ -27,18 +56,6 @@ namespace VRTK.SecondaryControllerGrabActions
             {
                 grabbedObject.transform.localScale = new Vector3(finalScaleX, finalScaleY, finalScaleZ); ;
             }
-            joint.xMotion = ConfigurableJointMotion.Free;
-            joint.yMotion = ConfigurableJointMotion.Free;
-            joint.zMotion = ConfigurableJointMotion.Free;
-            Vector3 mid_point = Vector3.Lerp(primaryGrabbingObject.transform.position, secondaryGrabbingObject.transform.position, 0.5f);
-            Vector3 change = mid_point - old_mid_point;
-            print(change);
-            grabbedObject.transform.Translate(change);
-            old_mid_point = mid_point;
-            joint.xMotion = ConfigurableJointMotion.Locked;
-            joint.yMotion = ConfigurableJointMotion.Locked;
-            joint.zMotion = ConfigurableJointMotion.Locked;
-
         }
     }
 }
