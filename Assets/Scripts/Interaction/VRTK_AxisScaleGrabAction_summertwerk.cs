@@ -28,34 +28,21 @@ namespace VRTK.SecondaryControllerGrabActions
             float c = (a - b).magnitude;
             float cc = (aa - bb).magnitude;
 
-            float newScale =  (cc / c);
             Vector3 axis = -Vector3.Cross(bb - aa, b - a);
             float angle = Vector3.Angle(bb - aa, b - a);
 
             grabbedObject.transform.RotateAround(aa, axis, angle);
-            grabbedObject.transform.localScale *= newScale;
+
+            Vector3 newScale = grabbedObject.transform.localScale * (cc / c);
+            ApplyScale(newScale);
 
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = Vector3.zero;
-            
+
             a = aa;
             b = bb;
 
         }
 
-
-        protected override void ApplyScale(Vector3 newScale)
-        {
-            Vector3 existingScale = grabbedObject.transform.localScale;
-
-            float finalScaleX = (lockAxis.xState ? existingScale.x : newScale.x);
-            float finalScaleY = (lockAxis.yState ? existingScale.y : newScale.y);
-            float finalScaleZ = (lockAxis.zState ? existingScale.z : newScale.z);
-
-            if (finalScaleX > 0 && finalScaleY > 0 && finalScaleZ > 0)
-            {
-                grabbedObject.transform.localScale = new Vector3(finalScaleX, finalScaleY, finalScaleZ); ;
-            }
-        }
     }
 }
