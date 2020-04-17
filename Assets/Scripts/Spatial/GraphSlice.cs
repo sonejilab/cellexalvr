@@ -14,7 +14,6 @@ namespace CellexalVR.Spatial
     /// </summary>
     public class GraphSlice : MonoBehaviour
     {
-
         public ReferenceManager referenceManager;
         public bool sliceMode;
         public GameObject replacement;
@@ -88,14 +87,13 @@ namespace CellexalVR.Spatial
                 t += (Time.deltaTime / time);
                 yield return null;
             }
+
             this.transform.localPosition = originalPos;
             this.transform.localRotation = originalRot;
             //wire.SetActive(false);
             //replacement.GetComponent<Renderer>().material.color = replacementCol;
             //replacement.SetActive(false);
-
         }
-
 
 
         /// <summary>
@@ -119,7 +117,6 @@ namespace CellexalVR.Spatial
             lr.startColor = lr.endColor = new Color(255, 255, 255, 0.1f);
             lr.startWidth = lr.endWidth /= 2;
             wire.SetActive(false);
-
         }
 
         /// <summary>
@@ -128,35 +125,32 @@ namespace CellexalVR.Spatial
         /// </summary>
         /// <param name="activate"></param>
         /// <returns></returns>
-        public IEnumerator ActivateSlice(bool activate)
+        public void ActivateSlice(bool activate, bool move = true)
         {
             foreach (BoxCollider bc in GetComponents<BoxCollider>())
             {
                 bc.enabled = activate;
             }
+
             if (activate)
             {
-                var rigidbody = gameObject.GetComponent<Rigidbody>();
+                Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
                 if (rigidbody == null)
                 {
                     rigidbody = gameObject.AddComponent<Rigidbody>();
                 }
+
                 rigidbody.useGravity = false;
                 rigidbody.isKinematic = false;
                 rigidbody.drag = 10;
                 rigidbody.angularDrag = 15;
                 GetComponent<VRTK_InteractableObject>().isGrabbable = true;
                 sliceMode = true;
-                Vector3 startPos = this.transform.localPosition;
-                Vector3 targetPos = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, zCoord);
-                float time = 1f;
-                float t = 0f;
-                while (t < time)
+                if (move)
                 {
-                    float progress = Mathf.SmoothStep(0, time, t);
-                    this.transform.localPosition = Vector3.Lerp(startPos, targetPos, progress);
-                    t += (Time.deltaTime / time);
-                    yield return null;
+                    Vector3 targetPos = new Vector3(transform.localPosition.x, transform.localPosition.y, zCoord);
+                    float time = 1f;
+                    StartCoroutine(MoveSlice(targetPos.x, targetPos.y, targetPos.z, time));
                 }
             }
             else
@@ -168,5 +162,18 @@ namespace CellexalVR.Spatial
             }
         }
 
+        public IEnumerator MoveSlice(float x, float y, float z, float animationTime)
+        {
+            Vector3 startPos = transform.localPosition;
+            Vector3 targetPosition = new Vector3(x, y, z);
+            float t = 0f;
+            while (t < animationTime)
+            {
+                float progress = Mathf.SmoothStep(0, animationTime, t);
+                transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
+                t += (Time.deltaTime / animationTime);
+                yield return null;
+            }
+        }
     }
 }
