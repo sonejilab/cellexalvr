@@ -11,11 +11,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
         // Start is called before the first frame update
         public BoxCollider collider;
         public ReferenceManager referenceManager;
-        [SerializeField] private GameObject note;
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
         private bool controllerInside;
-        [SerializeField] private Color color;
         private Button button;
 
         void Start()
@@ -35,6 +33,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = true;
+                if(button.transition == Button.Transition.ColorTint)
+                    button.targetGraphic.color = button.colors.highlightedColor;
             }
         }
 
@@ -43,6 +43,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = false;
+                if (button.transition == Button.Transition.ColorTint)
+                    button.targetGraphic.color = button.colors.normalColor;
             }
         }
 

@@ -21,7 +21,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public GameObject AnchorPrefab;
         public H5readerAnnotater h5readerAnnotater;
-        public TextMeshProUGUI seperatedText;
         private List<GameObject> instantiatedGameObjects;
 
         private Dictionary<projectionType, string[]> menu_setup;
@@ -88,14 +87,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     break;
             }
 
-            if (seperatedText.text == "sep")
-            {
-                seperatedText.text = "unsep";
-            }
-            else if (seperatedText.text == "unsep")
-            {
-                seperatedText.text = "sep";
-            }
 
             foreach (string key in paths.Keys)
                 h5readerAnnotater.RemoveFromConfig(key + "_" + name);
@@ -138,11 +129,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
             instantiatedGameObjects = new List<GameObject>();
 
-            if (type == projectionType.p2D_sep || type == projectionType.p3D_sep)
-                seperatedText.text = "unsep";
-            else
-                seperatedText.text = "sep";
-
             menu_setup = new Dictionary<projectionType, string[]>
             {
                  { projectionType.p3D, new string[] { "X", "vel" } },
@@ -158,9 +144,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
             {
                 go = Instantiate(AnchorPrefab, gameObject.transform, false);
                 go.transform.localPosition += Vector3.up * -10 * offset;
+                go.transform.localPosition += Vector3.back * 0.1f; 
                 go.GetComponentInChildren<LineScript>().type = anchor;
                 offset++;
                 go.GetComponent<TextMeshProUGUI>().text = anchor;
+                
                 instantiatedGameObjects.Add(go);
             }
         }

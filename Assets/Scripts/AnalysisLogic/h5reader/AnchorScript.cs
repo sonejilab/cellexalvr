@@ -7,8 +7,6 @@ namespace CellexalVR.AnalysisLogic.H5reader
     public class AnchorScript : MonoBehaviour
     {
 
-        BoxCollider boxCollider;
-
         public ReferenceManager referenceManager;
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
@@ -22,7 +20,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public ExpandButtonScript expandButtonScript;
         [SerializeField] private bool isAttachedToHand = false;
-
+        
         // Start is called before the first frame update
         void Start()
         {

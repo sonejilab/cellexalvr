@@ -168,7 +168,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            //if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            
+            if (other.gameObject.name.Equals("AnchorB"))
             {
                 controllerInside = true;
             }
@@ -176,7 +178,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.name.Equals("AnchorB"))
             {
                 controllerInside = false;
             }
