@@ -30,7 +30,7 @@ namespace CellexalVR.Interaction
         private int tempColorIndex;
 
         /// <summary>
-        /// 0: paddle, 1: bludgeon, 2: smaller bludgeon, 4: stick
+        /// 0: paddle, 1: bludgeon, 2: smaller bludgeon, 4: stick, 5-8: same shapes but removes selected points instead (white color).
         /// </summary>
         public int CurrentMeshIndex
         {
@@ -43,6 +43,7 @@ namespace CellexalVR.Interaction
                     if (currentColorIndex > Colors.Length) currentColorIndex = tempColorIndex;
                     currentMeshIndex = 0;
                 }
+                // Change to remove selection tool: Store old color index and change to white color.
                 else if (currentMeshIndex > selectionToolColliders.Length / 2 - 1 && currentColorIndex <= Colors.Length)
                 {
                     tempColorIndex = currentColorIndex;
@@ -50,6 +51,7 @@ namespace CellexalVR.Interaction
                     ParticleSystem.MainModule main = particles.main;
                     main.startColor = Color.white;
                 }
+                // Change to remove selection tool: Store color index so when we switch back to normal selection tool we get the correct color.
                 else if (currentMeshIndex < 0)
                 {
                     if (currentColorIndex > Colors.Length)
@@ -79,9 +81,13 @@ namespace CellexalVR.Interaction
 
         public int CurrentColorIndex
         {
-            get => currentColorIndex;
             set
             {
+                Collider currentCollider = selectionToolColliders[currentMeshIndex];
+                Color col = Colors[currentColorIndex];
+                col.a = 0.1f;
+                currentCollider.GetComponent<Renderer>().material.color = col;
+
                 ParticleSystem.MainModule main = particles.main;
                 main.startColor = Colors[currentColorIndex];
             }
@@ -93,7 +99,6 @@ namespace CellexalVR.Interaction
         private SteamVR_Controller.Device device;
         private MultiuserMessageSender multiuserMessageSender;
         private bool selActive = false;
-        private Color selectedColor;
         private VRTK_RadialMenu radialMenu;
 
         private void OnValidate()
@@ -104,7 +109,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             graphManager = referenceManager.graphManager;
             SetSelectionToolEnabled(false);
@@ -220,7 +225,6 @@ namespace CellexalVR.Interaction
                     return;
                 }
 
-                selectedColor = Colors[currentColorIndex];
                 var main = particles.main;
                 main.startColor = Colors[currentColorIndex];
             }
@@ -233,6 +237,7 @@ namespace CellexalVR.Interaction
         public void ChangeColor(bool dir)
         {
             if (currentColorIndex > Colors.Length) return;
+            if (currentMeshIndex > 4) return; // Remove selection active: color should be white.
             if (currentColorIndex == Colors.Length - 1 && dir)
             {
                 currentColorIndex = 0;
@@ -257,7 +262,6 @@ namespace CellexalVR.Interaction
             radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
             radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
-            selectedColor = Colors[currentColorIndex];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
             CurrentColorIndex = currentColorIndex;
         }
