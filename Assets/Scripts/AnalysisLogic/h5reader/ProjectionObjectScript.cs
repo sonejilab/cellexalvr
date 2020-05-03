@@ -26,11 +26,20 @@ namespace CellexalVR.AnalysisLogic.H5reader
         private Dictionary<projectionType, string[]> menu_setup;
         private TextMeshProUGUI nameTextMesh;
 
-        void Start()
+        void Awake()
         {
             paths = new Dictionary<string, string>();
             dataTypes = new Dictionary<string, char>();
             nameTextMesh = transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
+
+
+            menu_setup = new Dictionary<projectionType, string[]>
+            {
+                 { projectionType.p3D, new string[] { "X", "vel" } },
+                 { projectionType.p2D_sep, new string[] { "X", "Y", "velX", "velY" } },
+                 { projectionType.p3D_sep, new string[] { "X", "Y", "Z", "velX", "velY", "velZ" } },
+                 { projectionType.p2D, new string[] { "X", "velX"} }
+            };
         }
 
         // Update is called once per frame
@@ -128,14 +137,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     Destroy(g);
             }
             instantiatedGameObjects = new List<GameObject>();
-
-            menu_setup = new Dictionary<projectionType, string[]>
-            {
-                 { projectionType.p3D, new string[] { "X", "vel" } },
-                 { projectionType.p2D_sep, new string[] { "X", "Y", "velX", "velY" } },
-                 { projectionType.p3D_sep, new string[] { "X", "Y", "Z", "velX", "velY", "velZ" } },
-                 { projectionType.p2D, new string[] { "X", "velX"} }
-            };
+                
 
             int offset = 0;
             GameObject go;
@@ -148,7 +150,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 go.GetComponentInChildren<LineScript>().type = anchor;
                 offset++;
                 go.GetComponent<TextMeshProUGUI>().text = anchor;
-                
+
+
                 instantiatedGameObjects.Add(go);
             }
         }

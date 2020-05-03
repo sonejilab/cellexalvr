@@ -24,8 +24,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             rightController = referenceManager.rightController;
-            collider.size = new Vector3(70, 30, 1);
-            collider.center = new Vector3(0, -15, 0);
+
         }
 
         private void OnTriggerEnter(Collider other)

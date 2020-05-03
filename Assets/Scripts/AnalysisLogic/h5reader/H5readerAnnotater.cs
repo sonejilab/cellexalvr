@@ -188,9 +188,10 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     print("3D");
                     go = Instantiate(projectionObject, projectionRect);
                     rect = go.GetComponent<RectTransform>();
+                    rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * projectionObjectScripts.Count, rect.rect.width);
+
                     projection = go.GetComponent<ProjectionObjectScript>();
                     projection.Init(ProjectionObjectScript.projectionType.p3D);
-                    rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.rect.width * (1.1f) * projectionObjectScripts.Count, rect.rect.width);
                     projectionObjectScripts.Add(projection);
                     projection.h5readerAnnotater = this;
                     break;

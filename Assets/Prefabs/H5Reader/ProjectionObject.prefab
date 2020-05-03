@@ -442,7 +442,7 @@ PrefabInstance:
     - target: {fileID: 9009360273030987979, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnDestroy
+      value: SwitchToSeparate
       objectReference: {fileID: 0}
     - target: {fileID: 9009360273030987979, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
@@ -464,6 +464,16 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9009360273030987979, guid: 7c59b24b896803349b913a697bfdba5c,
+        type: 3}
+      propertyPath: m_Transition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9009360273030987979, guid: 7c59b24b896803349b913a697bfdba5c,
+        type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 8396268298512058629}
     - target: {fileID: 3549827046853418142, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: m_Sprite
@@ -498,6 +508,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5027720791889466779}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8396268298512058629 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3549827046853418142, guid: 7c59b24b896803349b913a697bfdba5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5027720791889466779}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8628664216812109178
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -695,6 +717,16 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9009360273030987979, guid: 7c59b24b896803349b913a697bfdba5c,
+        type: 3}
+      propertyPath: m_Transition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9009360273030987979, guid: 7c59b24b896803349b913a697bfdba5c,
+        type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 5115148575985115620}
     - target: {fileID: 3549827046853418142, guid: 7c59b24b896803349b913a697bfdba5c,
         type: 3}
       propertyPath: m_Sprite
@@ -729,3 +761,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 8628664216812109178}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5115148575985115620 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3549827046853418142, guid: 7c59b24b896803349b913a697bfdba5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8628664216812109178}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

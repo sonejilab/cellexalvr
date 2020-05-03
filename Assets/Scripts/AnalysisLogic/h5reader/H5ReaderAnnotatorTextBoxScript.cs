@@ -148,8 +148,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             boxCollider.center = new Vector3(rect.rect.width / 2, -rect.rect.height / 2, 0);
             boxCollider.size = new Vector3(rect.rect.width, rect.rect.height, 1);
 
-            expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, 10f);
-            expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, -10, 10f);
+            expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, -2f, 8f);
+            expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, -15f, 8f);
             expandButtonBoxCollider.size = new Vector3(expandButtonRect.rect.size.x, expandButtonRect.rect.size.y, 5);
             
             
