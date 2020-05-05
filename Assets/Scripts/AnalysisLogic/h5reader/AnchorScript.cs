@@ -40,13 +40,22 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     LineScript newLine = line.AddLine();
                     newLine.AnchorB.transform.parent = rightController.transform;
                     newLine.AnchorB.transform.position = rightController.transform.position;
+                    newLine.AnchorB.transform.localPosition = new Vector3(0, -0.01f, 0.02f);
                     newLine.AnchorB.isAttachedToHand = true;
                 }
                 else
                 {
+                    if (expandButtonScript)
+                    {
+                        expandButtonScript.pressButton();
+                    }
+
                     transform.parent = rightController.transform;
                     transform.position = rightController.transform.position;
+                    transform.localPosition = new Vector3(0, -0.01f, 0.02f);
                     isAttachedToHand = true;
+
+
                 }
             }
         }

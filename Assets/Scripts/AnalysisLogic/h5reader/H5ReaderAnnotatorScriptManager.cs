@@ -52,9 +52,15 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
         }
 
-        public void RemoveAnnotator(string path)
+        public void RemoveAnnotator(string path,bool destroy = false)
         {
             annotators[path].gameObject.SetActive(false);
+
+            if (destroy)
+            {
+                Destroy(annotators[path].gameObject);
+                annotators.Remove(path);
+            }
         }
 
         IEnumerator SpawnAnimation(GameObject go)

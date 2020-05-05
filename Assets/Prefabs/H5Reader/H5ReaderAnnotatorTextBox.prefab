@@ -311,6 +311,7 @@ GameObject:
   - component: {fileID: 2807087360894076244}
   - component: {fileID: 1080121469794146302}
   - component: {fileID: 62794044311268819}
+  - component: {fileID: 7561778320961391235}
   m_Layer: 0
   m_Name: ExpandButton
   m_TagString: Untagged
@@ -393,6 +394,8 @@ MonoBehaviour:
   plusImage: {fileID: 21300000, guid: de983323dd88606468144dbda2b252ee, type: 3}
   minusImage: {fileID: 21300000, guid: 3e9a020f8bc016744a94078060fe7029, type: 3}
   circleImage: {fileID: 21300000, guid: 35e49080679e5384c9dc5eb819466146, type: 3}
+  anchorInside: 0
+  anchor: {fileID: 0}
 --- !u!65 &2807087360894076244
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -424,10 +427,10 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.89299846, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.9372188, b: 0, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -476,3 +479,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collider: {fileID: 2807087360894076244}
   referenceManager: {fileID: 0}
+--- !u!95 &7561778320961391235
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7763562334228667164}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a291bce3e3f1cb84e9ecdbf69cc2000d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

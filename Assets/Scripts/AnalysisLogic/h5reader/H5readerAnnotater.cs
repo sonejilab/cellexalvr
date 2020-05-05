@@ -17,6 +17,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public RectTransform projectionRect;
         public ReferenceManager referenceManager;
         public TextMeshProUGUI configViewer;
+        public TextMeshProUGUI title;
+        public Animator configAnimator;
+        
 
         Process p;
         StreamReader reader;
@@ -103,6 +106,24 @@ namespace CellexalVR.AnalysisLogic.H5reader
             float contentSize = keys.UpdatePosition(10f);
             print(contentSize);
             display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
+
+            title.text = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+
+        }
+
+        public void Destroy()
+        {
+            referenceManager.h5ReaderAnnotatorScriptManager.RemoveAnnotator(path,true);
+            referenceManager.loaderController.ResetFolders(false);
+        }
+
+        public void ExpandConfigViewer()
+        {
+            if(configViewer.gameObject.activeInHierarchy)
+                configAnimator.Play("deexpandConfig");
+            else
+                configAnimator.Play("expandConfig");
+            
         }
 
         public void AddToConfig(string key, string value, char dtype)
@@ -120,8 +141,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public void RemoveFromConfig(string key)
         {
-            if(config.ContainsKey(key))
+            print("Removing key" + key);
+
+            if (config.ContainsKey(key))
+            {
+                print("actually");
                 config.Remove(key);
+            } 
 
             if (configDataTypes.ContainsKey(key))
                 configDataTypes.Remove(key);

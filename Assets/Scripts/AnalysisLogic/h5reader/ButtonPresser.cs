@@ -32,8 +32,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
             if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = true;
+                print(button.transition.ToString());
                 if(button.transition == Button.Transition.ColorTint)
                     button.targetGraphic.color = button.colors.highlightedColor;
+                if (button.transition == Button.Transition.Animation)
+                    button.animator.Play("Highlighted");
+                if (button.transition == Button.Transition.SpriteSwap)
+                    ((Image)button.targetGraphic).sprite = button.spriteState.highlightedSprite;
             }
         }
 
@@ -44,6 +49,10 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 controllerInside = false;
                 if (button.transition == Button.Transition.ColorTint)
                     button.targetGraphic.color = button.colors.normalColor;
+                if (button.transition == Button.Transition.Animation)
+                    button.animator.Play("Normal");
+                if (button.transition == Button.Transition.SpriteSwap)
+                    ((Image)button.targetGraphic).sprite = button.spriteState.pressedSprite;
             }
         }
 

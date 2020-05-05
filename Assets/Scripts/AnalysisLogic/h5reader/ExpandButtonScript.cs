@@ -69,7 +69,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public void pressButton()
         {
-            AnchorScript a = GetComponentInChildren<AnchorScript>();
+            AnchorScript anchorScript = GetComponentInChildren<AnchorScript>();
             if (!parentScript.isBottom)
             {
                 isExpanded = !isExpanded;
@@ -95,27 +95,30 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 float contentSize = parent.UpdatePosition(10f);
                 parent.GetComponentInParent<H5readerAnnotater>().display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
             }
-            else if (a)
+            else if (anchorScript)
             {
-                a.transform.parent = rightController.transform;
-                a.transform.position = rightController.transform.position;
-                a.isAttachedToHand = true;
-                ProjectionObjectScript projectionObjectScript = a.anchorA.GetComponentInParent<ProjectionObjectScript>();
+                anchorScript.transform.parent = rightController.transform;
+                anchorScript.transform.position = rightController.transform.position;
+                anchorScript.transform.localPosition = new Vector3(0, -0.01f, 0.02f);
+                anchorScript.isAttachedToHand = true;
+                ProjectionObjectScript projectionObjectScript = anchorScript.anchorA.GetComponentInParent<ProjectionObjectScript>();
                 if (projectionObjectScript)
                 {
-                    projectionObjectScript.RemoveFromPaths(a.line.type);
+                    projectionObjectScript.RemoveFromPaths(anchorScript.line.type);
                 }
                 else
                 {
-                    H5readerAnnotater h5ReaderAnnotater = a.anchorA.GetComponentInParent<H5readerAnnotater>();
+                    H5readerAnnotater h5ReaderAnnotater = anchorScript.anchorA.GetComponentInParent<H5readerAnnotater>();
 
-                    if (a.line.type == "attrs")
+
+                    if (anchorScript.line.type == "attrs")
                     {
-                        h5ReaderAnnotater.RemoveFromConfig("attr_" + parentScript.name);
+
+                        h5ReaderAnnotater.RemoveFromConfig("attr_" + parentScript.GetName());
                     }
                     else
                     {
-                        h5ReaderAnnotater.RemoveFromConfig(a.line.type);
+                        h5ReaderAnnotater.RemoveFromConfig(anchorScript.line.type);
                     }
                 }
             }else if (anchor)
@@ -126,13 +129,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
                 string path = parentScript.GetPath();
                 char dataType = parentScript.GetDataType();
-
-                int start = path.LastIndexOf('/');
-                string name;
-                if (start != -1)
-                    name = path.Substring(start);
-                else
-                    name = path;
+                string name = parentScript.GetName();
 
                 ProjectionObjectScript projectionObjectScript = anchor.anchorA.GetComponentInParent<ProjectionObjectScript>();
                 if (projectionObjectScript)

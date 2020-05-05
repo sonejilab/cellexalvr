@@ -46,6 +46,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
         }
 
+        public void OnDestroy()
+        {
+            Destroy(AnchorB.gameObject);
+        }
+
         public LineScript AddLine()
         {
             GameObject go = (GameObject)Resources.Load("h5Reader/Line");
@@ -53,6 +58,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             LineScript lineScript = go.GetComponent<LineScript>();
             lineScript.type = type;
             lineScript.transform.position = transform.position;
+            lineScript.line.startColor = line.startColor;
+            lineScript.line.endColor = line.endColor;
             return lineScript;
         }
 

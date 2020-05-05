@@ -117,6 +117,13 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 h5readerAnnotater.RemoveFromConfig(key + "_" + name);
 
             h5readerAnnotater.projectionObjectScripts.Remove(this);
+            if (instantiatedGameObjects != null)
+            {
+                foreach (GameObject g in instantiatedGameObjects)
+                {
+                    Destroy(g);
+                }
+            }
             Destroy(this.gameObject);
             RectTransform rect;
             int counter = 0;
