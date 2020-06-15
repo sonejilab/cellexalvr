@@ -162,6 +162,10 @@ namespace CellexalVR.AnalysisLogic
 
         public void HighlightCells(Cell[] cellsToHighlight, bool highlight)
         {
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                graph.MakeAllPointsTransparent(highlight);
+            }
             foreach (Cell cell in cellsToHighlight)
             {
                 foreach (Graph.GraphPoint gp in cell.GraphPoints)
@@ -173,6 +177,10 @@ namespace CellexalVR.AnalysisLogic
 
         public void HighlightCells(Cell[] cellsToHighlight, bool highlight, int group)
         {
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                graph.MakeAllPointsTransparent(highlight);
+            }
             referenceManager.multiuserMessageSender.SendMessageHighlightCells(group, highlight);
             foreach (Cell cell in cellsToHighlight)
             {
@@ -640,7 +648,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 if (expr.Eval(cell))
                 {
-                    cell.SetGroup(selectionToolCollider.currentColorIndex, true);
+                    cell.SetGroup(selectionToolCollider.CurrentColorIndex, true);
                 }
                 else
                 {

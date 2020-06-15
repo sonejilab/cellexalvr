@@ -23,7 +23,6 @@ namespace CellexalVR.Interaction
         public Collider[] selectionToolColliders;
         public Color[] Colors;
         public Sprite[] selectionToolShapeButtons;
-        public int currentColorIndex = 0;
         public bool hapticFeedbackThisFrame = true;
 
         private int currentMeshIndex;
@@ -40,55 +39,77 @@ namespace CellexalVR.Interaction
                 currentMeshIndex = value;
                 if (currentMeshIndex >= selectionToolColliders.Length)
                 {
-                    if (currentColorIndex > Colors.Length) currentColorIndex = tempColorIndex;
                     currentMeshIndex = 0;
+                    if (CurrentColorIndex > Colors.Length) CurrentColorIndex = tempColorIndex;
                 }
                 // Change to remove selection tool: Store old color index and change to white color.
-                else if (currentMeshIndex > selectionToolColliders.Length / 2 - 1 && currentColorIndex <= Colors.Length)
+                else if (currentMeshIndex > (selectionToolColliders.Length / 2) - 1 &&
+                         CurrentColorIndex <= Colors.Length)
                 {
-                    tempColorIndex = currentColorIndex;
-                    currentColorIndex = Colors.Length + 1;
+                    tempColorIndex = CurrentColorIndex;
+                    CurrentColorIndex = Colors.Length + 1;
                     ParticleSystem.MainModule main = particles.main;
                     main.startColor = Color.white;
                 }
                 // Change to remove selection tool: Store color index so when we switch back to normal selection tool we get the correct color.
                 else if (currentMeshIndex < 0)
                 {
-                    if (currentColorIndex > Colors.Length)
+                    currentMeshIndex = selectionToolColliders.Length - 1;
+                    if (CurrentColorIndex > Colors.Length)
                     {
-                        currentColorIndex = tempColorIndex;
+                        CurrentColorIndex = tempColorIndex;
                     }
 
                     else
                     {
-                        tempColorIndex = currentColorIndex;
-                        currentColorIndex = Colors.Length + 1;
-                        ParticleSystem.MainModule main = particles.main;
-                        main.startColor = Color.white;
+                        tempColorIndex = CurrentColorIndex;
+                        CurrentColorIndex = Colors.Length + 1;
                     }
-
-                    currentMeshIndex = selectionToolColliders.Length - 1;
                 }
+                // Get back to normal mesh and switch back to color we had before.
                 else if ((currentMeshIndex >= 0 && currentMeshIndex <= selectionToolColliders.Length / 2 - 1)
-                         && (currentColorIndex > Colors.Length))
+                         && (CurrentColorIndex > Colors.Length))
                 {
-                    currentColorIndex = tempColorIndex;
+                    CurrentColorIndex = tempColorIndex;
                 }
 
                 UpdateShapeIcons();
             }
         }
 
+        private int currentColorIndex;
+
         public int CurrentColorIndex
         {
+            get => currentColorIndex;
             set
             {
-                Collider currentCollider = selectionToolColliders[currentMeshIndex];
+                ParticleSystem.MainModule main;
+                currentColorIndex = value;
+                if (currentColorIndex > Colors.Length)
+                {
+                    main = particles.main;
+                    main.startColor = Color.white;
+                    for (int i = selectionToolColliders.Length / 2; i < selectionToolColliders.Length; i++)
+                    {
+                        Collider collider = selectionToolColliders[i];
+                        Color removalColor = Color.white;
+                        removalColor.a = 0.1f;
+                        collider.GetComponent<Renderer>().material.color = removalColor;
+                    }
+
+                    return;
+                }
+
                 Color col = Colors[currentColorIndex];
                 col.a = 0.1f;
-                currentCollider.GetComponent<Renderer>().material.color = col;
+                for (int i = 0; i < selectionToolColliders.Length / 2; i++)
+                {
+                    Collider collider = selectionToolColliders[i];
+                    collider.GetComponent<Renderer>().material.color = col;
+                }
 
-                ParticleSystem.MainModule main = particles.main;
+                main = particles.main;
                 main.startColor = Colors[currentColorIndex];
             }
         }
@@ -236,34 +257,34 @@ namespace CellexalVR.Interaction
         /// <param name="dir"> The direction to move in the array of colors. true for increment, false for decrement </param>
         public void ChangeColor(bool dir)
         {
-            if (currentColorIndex > Colors.Length) return;
-            if (currentMeshIndex > 4) return; // Remove selection active: color should be white.
-            if (currentColorIndex == Colors.Length - 1 && dir)
+            if (CurrentColorIndex > Colors.Length) return;
+            if (CurrentMeshIndex > 4) return; // Remove selection active: color should be white.
+            if (CurrentColorIndex == Colors.Length - 1 && dir)
             {
-                currentColorIndex = 0;
+                CurrentColorIndex = 0;
             }
-            else if (currentColorIndex == 0 && !dir)
+            else if (CurrentColorIndex == 0 && !dir)
             {
-                currentColorIndex = Colors.Length - 1;
+                CurrentColorIndex = Colors.Length - 1;
             }
             else if (dir)
             {
-                currentColorIndex++;
+                CurrentColorIndex++;
             }
             else
             {
-                currentColorIndex--;
+                CurrentColorIndex--;
             }
 
-            int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
-            int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
+            int buttonIndexLeft = CurrentColorIndex == 0 ? Colors.Length - 1 : CurrentColorIndex - 1;
+            int buttonIndexRight = CurrentColorIndex == Colors.Length - 1 ? 0 : CurrentColorIndex + 1;
             // VRTK 3.3
             //radialMenu.RegenerateButtons();
             radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
             radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
-            controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
-            CurrentColorIndex = currentColorIndex;
+            controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
+            //CurrentColorIndex = currentColorIndex;
         }
 
         /// <summary>
@@ -275,13 +296,13 @@ namespace CellexalVR.Interaction
             if (enabled)
             {
                 // controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
-                if (currentColorIndex > Colors.Length)
+                if (CurrentColorIndex > Colors.Length)
                 {
                     controllerModelSwitcher.SwitchControllerModelColor(Color.white);
                 }
                 else
                 {
-                    controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
+                    controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
                 }
             }
             //particles.gameObject.SetActive(enabled && particles != null);
@@ -327,10 +348,17 @@ namespace CellexalVR.Interaction
 
         public int GetColorIndex(string colorString)
         {
-            for (int i = 0; i < referenceManager.selectionToolCollider.Colors.Length; i++)
+            Color[] colorArray; // = new Color[CellexalConfig.Config.SelectionToolColors.Length];
+            // if using spectator mode or for other reasons the selectionToolCollider hasnt been activated
+            // return the index from the config.
+            colorArray = Colors.Length == 0
+                ? CellexalConfig.Config.SelectionToolColors
+                : referenceManager.selectionToolCollider.Colors;
+
+            for (int i = 0; i < colorArray.Length; i++)
             {
-                Color selectionColor = referenceManager.selectionToolCollider.Colors[i];
-                string selectionColorString = "#"+ColorUtility.ToHtmlStringRGB(selectionColor);
+                Color selectionColor = colorArray[i];
+                string selectionColorString = "#" + ColorUtility.ToHtmlStringRGB(selectionColor);
                 if (selectionColorString.Equals(colorString)) return i;
             }
 
