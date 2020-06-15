@@ -61,6 +61,8 @@ MonoBehaviour:
     type: 3}
   brainModel: {fileID: 4577764139173546035, guid: bde05f983b4731849a54cdc40fb9c350,
     type: 3}
+  cubePrefab: {fileID: -927199367670048503, guid: cce4d2d505711a44e9de6478005bcec7,
+    type: 3}
 --- !u!114 &-8860227728147688023
 MonoBehaviour:
   m_ObjectHideFlags: 0

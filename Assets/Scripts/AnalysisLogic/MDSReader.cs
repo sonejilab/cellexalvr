@@ -22,6 +22,7 @@ namespace CellexalVR.AnalysisLogic
 
         private readonly char[] separators = new char[] {' ', '\t'};
 
+
         /// <summary>
         /// Coroutine to create graphs.
         /// </summary>
@@ -64,6 +65,7 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.graphGenerator.isCreating = true;
                     continue;
                 }
+
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
@@ -211,14 +213,48 @@ namespace CellexalVR.AnalysisLogic
                     //     newGraph.CreateConvexHull();
                 }
 
+                // If high quality mesh is used. Use LOD groups to swap to low q when further away.
+                // Improves performance a lot with many points.
+                int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
+                combGraph.LODGroups = n;
+                combGraph.textures = new Texture2D[n];
+                for (int i = 0; i < n; i++)
+                {
+                    referenceManager.graphGenerator.isCreating = true;
+                    GameObject lodGroup = new GameObject();
+                    lodGroup.transform.parent = combGraph.transform;
+                    lodGroup.transform.localPosition = Vector3.zero;
+                    lodGroup.gameObject.name = $"LODGroup{i}";
+                    combGraph.LODGroupParents.Add(lodGroup);
+                    // referenceManager.graphGenerator.lodGroups.Add(lodGroup);
+                    if (i > 0)
+                    {
+                        referenceManager.graphGenerator.meshToUse =
+                            referenceManager.graphGenerator.graphpointLowQLargeSzMesh;
+                        referenceManager.graphGenerator.UpdateCoords();
+                    }
+
+                    
+                    referenceManager.graphGenerator.SliceClustering(lodGroup: i);
+                    string outputString = "Successfully read graph from " + graphFileName + " reading ~" +
+                                          maximumItemsPerFrame +
+                                          " lines every frame";
+                    CellexalLog.Log(outputString);
+                    while (referenceManager.graphGenerator.isCreating)
+                    {
+                        yield return null;
+                    }
+                }
+
+                if (n > 1)
+                {
+                    combGraph.gameObject.AddComponent<LODGroup>();
+                    referenceManager.graphGenerator.UpdateLODGroups(combGraph);
+                }
+
                 // Add axes in bottom corner of graph and scale points differently
-                referenceManager.graphGenerator.SliceClustering();
-                referenceManager.graphGenerator.AddAxes(combGraph, axes);
                 combGraph.SetInfoText();
-                string outputString = "Successfully read graph from " + graphFileName + " reading ~" +
-                                      maximumItemsPerFrame +
-                                      " lines every frame";
-                CellexalLog.Log(outputString);
+                referenceManager.graphGenerator.AddAxes(combGraph, axes);
             }
 
             if (type.Equals(GraphGenerator.GraphType.MDS))
@@ -348,7 +384,8 @@ namespace CellexalVR.AnalysisLogic
                 // const float sliceDist = 0.005f;
                 Tuple<string, Vector3> gpTuple = gps[0];
                 Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x,
+                    gpTuple.Item2.y,
                     gpTuple.Item2.z);
                 float currentCoord = gpTuple.Item2.z;
                 for (int n = 1; n < gps.Count; n++)

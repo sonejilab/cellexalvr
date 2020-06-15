@@ -7,7 +7,6 @@ using CellexalVR.MarchingCubes;
 using CellexalVR.General;
 using System;
 using CellexalVR.AnalysisObjects;
-using Unity.Mathematics;
 using VRTK;
 
 namespace CellexalVR.Spatial

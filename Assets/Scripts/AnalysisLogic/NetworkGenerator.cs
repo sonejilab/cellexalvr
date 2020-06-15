@@ -8,7 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using CellexalVR.Menu.Buttons.Networks;
+#if UNITY_EDITOR
 using UnityEditorInternal;
+#endif
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic

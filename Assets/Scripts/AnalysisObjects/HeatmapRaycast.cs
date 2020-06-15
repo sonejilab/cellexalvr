@@ -41,6 +41,7 @@ namespace CellexalVR.Interaction
         private float selectedBoxWidth;
         private float selectedBoxHeight;
         private Cell[] cellsToHighlight = new Cell[0];
+        private int currentHighlightedGroup;
 
         private void Start()
         {
@@ -335,10 +336,12 @@ namespace CellexalVR.Interaction
             heatmap.barInfoText.text = "Group nr: " + group;
             heatmap.highlightInfoText.text = "";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
+            if (currentHighlightedGroup == group) return;
             ResetHeatmapHighlight(false);
             cellsToHighlight = cellManager.GetCells(group, heatmap.cells);
             if (cellsToHighlight.Length <= 0) return;
             cellManager.HighlightCells(cellsToHighlight, true, group);
+            currentHighlightedGroup = group;
         }
 
         /// <summary>
@@ -360,11 +363,10 @@ namespace CellexalVR.Interaction
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             heatmap.highlightQuad.SetActive(true);
-            if (attribute >= cellManager.Attributes.Length || attribute < 0)
-                return;
+            if (attribute >= cellManager.Attributes.Length || attribute < 0) return;
+            if (heatmap.barInfoText.text == cellManager.Attributes[attribute]) return;
             ResetHeatmapHighlight(false);
             cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
-            if (heatmap.barInfoText.text == cellManager.Attributes[attribute] && cellsToHighlight.Length == 0) return;
             cellManager.HighlightCells(cellsToHighlight, true, attribute);
             heatmap.barInfoText.text = attribute >= 0 ? cellManager.Attributes[attribute] : "No attribute";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
@@ -601,6 +603,7 @@ namespace CellexalVR.Interaction
 
         private void ResetHeatmapHighlight(bool resetText = true)
         {
+            currentHighlightedGroup = -1;
             if (cellsToHighlight != null && cellsToHighlight.Length > 0)
             {
                 cellManager.HighlightCells(cellsToHighlight, false, -1);

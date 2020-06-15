@@ -175,12 +175,12 @@ namespace CellexalVR.General
         /// </summary>
         public void AddGraphpointToSelection(Graph.GraphPoint graphPoint)
         {
-            AddGraphpointToSelection(graphPoint, selectionToolCollider.currentColorIndex, true,
-                selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
+            AddGraphpointToSelection(graphPoint, selectionToolCollider.CurrentColorIndex, true,
+                selectionToolCollider.Colors[selectionToolCollider.CurrentColorIndex]);
 
             multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label,
-                selectionToolCollider.currentColorIndex,
-                selectionToolCollider.Colors[selectionToolCollider.currentColorIndex]);
+                selectionToolCollider.CurrentColorIndex,
+                selectionToolCollider.Colors[selectionToolCollider.CurrentColorIndex]);
         }
 
         /// <summary>
@@ -211,6 +211,7 @@ namespace CellexalVR.General
         {
             if (graphPoint == null)
             {
+                print("is null");
                 return;
             }
 
@@ -225,6 +226,7 @@ namespace CellexalVR.General
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
+                // print($"graph: {graph.GraphName}, point: {graphPoint.Label}");
                 if (gp != null)
                 {
                     gp.ColorSelectionColor(newGroup, true);
@@ -678,11 +680,11 @@ namespace CellexalVR.General
                 Graph.GraphPoint gp = g.FindGraphPoint(c.Label);
                 if (filterManager.currentFilter != null)
                 {
-                    referenceManager.filterManager.AddCellToEval(gp, selectionToolCollider.currentColorIndex);
+                    referenceManager.filterManager.AddCellToEval(gp, selectionToolCollider.CurrentColorIndex);
                 }
                 else
                 {
-                    AddGraphpointToSelection(gp, selectionToolCollider.currentColorIndex, false);
+                    AddGraphpointToSelection(gp, selectionToolCollider.CurrentColorIndex, false);
                 }
             }
         }

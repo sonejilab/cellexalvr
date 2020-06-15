@@ -17,6 +17,8 @@ using CellexalVR.Extensions;
 using CellexalVR.SceneObjects;
 using Unity.Burst;
 using CellexalVR.Spatial;
+using UnityEditor;
+using UnityEngine.Rendering;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -56,6 +58,7 @@ namespace CellexalVR.AnalysisObjects
         public Color[] geneExpressionColors;
         public Texture2D graphPointColors;
         public int graphCount;
+        public List<GameObject> lodGroups;
 
         private GraphType graphType;
         private Graph newGraph;
@@ -232,10 +235,13 @@ namespace CellexalVR.AnalysisObjects
             graphPointMaterialPrefab.SetTexture("_GraphpointColorTex", graphPointColors);
             foreach (Graph graph in graphManager.Graphs)
             {
-                if (graph.graphPointClusters.Count > 0)
+                foreach (List<GameObject> lodGroup in graph.LODGroupClusters.Values)
                 {
-                    graph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial
-                        .SetTexture("_GraphpointColorTex", graphPointColors);
+                    if (lodGroup.Count > 0)
+                    {
+                        lodGroup[0].GetComponent<Renderer>().sharedMaterial
+                            .SetTexture("_GraphpointColorTex", graphPointColors);
+                    }
                 }
             }
         }
@@ -308,13 +314,22 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Divides the graph into clusters. The graph starts out as one large cluster and is recursively divided into smaller and smaller clusters until all clusters can be rendered in Unity using a single mesh.
         /// </summary>
-        public void SliceClustering(Dictionary<string, Graph.GraphPoint> points = null)
+        public void SliceClustering(Dictionary<string, Graph.GraphPoint> points = null, int lodGroup = 0)
         {
+            // GameObject lodGroup = new GameObject();
+            // lodGroup.transform.parent = newGraph.transform;
+            // lodGroup.transform.localPosition = Vector3.zero;
+            // currentLODGroup = lodGroup.transform;
+            // if (i > 0) meshToUse = graphpointLowQLargeSzMesh;
             ScaleAllCoordinates();
 
             // meshes in unity can have a max of 65535 vertices
-            int maxVerticesPerMesh = 65535;
+
+            // int maxVerticesPerMesh = 250000;
+            int maxVerticesPerMesh = 4000000;
+            //int maxVerticesPerMesh = 200000;
             nbrOfMaxPointsPerClusters = maxVerticesPerMesh / meshToUse.vertexCount;
+            // nbrOfMaxPointsPerClusters = SystemInfo.maxTextureSize;
             // place all points in one big cluster
             var firstCluster = new HashSet<Graph.GraphPoint>();
             if (points == null)
@@ -335,7 +350,7 @@ namespace CellexalVR.AnalysisObjects
 
             List<HashSet<Graph.GraphPoint>> clusters = SplitCluster(firstCluster);
 
-            MakeMeshes(clusters);
+            MakeMeshes(clusters, lodGroup);
         }
 
 
@@ -629,21 +644,25 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Creates the meshes from the clusters given by <see cref="SplitCluster(HashSet{CombinedGraphPoint})"/>.
         /// </summary>
-        private void MakeMeshes(List<HashSet<Graph.GraphPoint>> clusters)
+        private void MakeMeshes(List<HashSet<Graph.GraphPoint>> clusters, int lodGroup = 0)
         {
-            StartCoroutine(MakeMeshesCoroutine(clusters));
+            StartCoroutine(MakeMeshesCoroutine(clusters, lodGroup: lodGroup));
         }
 
         /// <summary>
         /// Coroutine that makes some meshes every frame. Uses the new job system to do things parallel.
         /// </summary>
         private IEnumerator MakeMeshesCoroutine(List<HashSet<Graph.GraphPoint>> clusters,
-            BooleanExpression.Expr expr = null)
+            BooleanExpression.Expr expr = null, int lodGroup = 0)
         {
+            newGraph.LODGroupClusters[lodGroup] = new List<GameObject>(nbrOfClusters);
+            // GameObject lodGroup = new GameObject();
+            // lodGroup.transform.parent = newGraph.transform;
+            // lodGroup.transform.localPosition = Vector3.zero;
+            // lodGroup.gameObject.name = $"LODgroup{k}";
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            newGraph.graphPointClusters = new List<GameObject>(nbrOfClusters);
             int graphPointMeshVertexCount = meshToUse.vertexCount;
             int graphPointMeshTriangleCount = meshToUse.triangles.Length;
             Material graphPointMaterial = Instantiate(graphPointMaterialPrefab);
@@ -676,7 +695,7 @@ namespace CellexalVR.AnalysisObjects
                 foreach (var point in cluster)
                 {
                     positions[clusterOffsets[i] + j] = point.Position;
-                    point.SetTextureCoord(new Vector2Int(j, i));
+                    point.SetTextureCoord(new Vector2Int(j, i), lodGroup);
 
                     //debugPoints.Remove(point);
 
@@ -713,8 +732,12 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 GameObject newPart;
-                newPart = Instantiate(graphpointsPrefab, newGraph.transform);
+                // newPart = Instantiate(graphpointsPrefab, newGraph.transform);
+                // print($"group {lodGroups[lodGroup]}");
+                newPart = Instantiate(graphpointsPrefab, newGraph.LODGroupParents[lodGroup].transform);
+
                 var newMesh = new Mesh();
+                newMesh.indexFormat = IndexFormat.UInt32;
                 int clusterOffset = clusterOffsets[i];
                 int clusterSize = 0;
                 if (i < clusterOffsets.Length - 1)
@@ -732,17 +755,21 @@ namespace CellexalVR.AnalysisObjects
                 int triangleOffset = clusterOffset * graphPointMeshTriangleCount;
 
                 // copy the vertices, uvs and triangles to the new mesh
-                newMesh.vertices = new NativeSlice<Vector3>(job.resultVertices, vertexOffset, nbrOfVerticesInCluster)
+                newMesh.vertices =
+                    new NativeSlice<Vector3>(job.resultVertices, vertexOffset, nbrOfVerticesInCluster)
+                        .ToArray();
+                newMesh.uv = new NativeSlice<Vector2>(job.resultUVs, vertexOffset, nbrOfVerticesInCluster)
                     .ToArray();
-                newMesh.uv = new NativeSlice<Vector2>(job.resultUVs, vertexOffset, nbrOfVerticesInCluster).ToArray();
-                newMesh.triangles = new NativeSlice<int>(job.resultTriangles, triangleOffset, nbrOfTrianglesInCluster)
-                    .ToArray();
+                newMesh.triangles =
+                    new NativeSlice<int>(job.resultTriangles, triangleOffset, nbrOfTrianglesInCluster)
+                        .ToArray();
 
                 newMesh.RecalculateBounds();
                 newMesh.RecalculateNormals();
 
                 newPart.GetComponent<MeshFilter>().mesh = newMesh;
-                newGraph.graphPointClusters.Add(newPart);
+                // newGraph.graphPointClusters.Add(newPart);
+                newGraph.LODGroupClusters[lodGroup].Add(newPart);
                 newPart.GetComponent<Renderer>().sharedMaterial = graphPointMaterial;
                 //newPart.GetComponent<Renderer>().sharedMaterials = new Material[] { graphPointMaterial, graphPointTransparentMaterial };
 
@@ -776,19 +803,23 @@ namespace CellexalVR.AnalysisObjects
             graphPointMeshVertices.Dispose();
             graphPointMeshTriangles.Dispose();
 
-            //graphPointMeshVertices.Dispose();
-            //graphPointMeshTriangles.Dispose();
-            //clusterOffsets.Dispose();
-            //positions.Dispose();
-            //resultVertices.Dispose();
-            //resultTriangles.Dispose();
-            //resultUVs.Dispose();
+            // graphPointMeshVertices.Dispose();
+            // graphPointMeshTriangles.Dispose();
+            // clusterOffsets.Dispose();
+            // positions.Dispose();
+            // resultVertices.Dispose();
+            // resultTriangles.Dispose();
+            // resultUVs.Dispose();
 
             // set up the graph's texture
-            newGraph.textureWidth = nbrOfMaxPointsPerClusters;
-            newGraph.textureHeight = nbrOfClusters;
+            //print(SystemInfo.maxTextureSize);
+            newGraph.textureWidths[lodGroup] = 16000;// nbrOfMaxPointsPerClusters;
+            newGraph.textureHeights[lodGroup] = 170000 / 16000;
+            print(newGraph.textureWidths[lodGroup] * newGraph.textureHeights[lodGroup]);
+            //newGraph.textureHeights[lodGroup] = nbrOfClusters;
             //Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
-            Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32,
+            Texture2D texture = new Texture2D(newGraph.textureWidths[lodGroup], newGraph.textureHeights[lodGroup],
+                TextureFormat.ARGB32,
                 false, true);
 
             texture.filterMode = FilterMode.Point;
@@ -802,16 +833,18 @@ namespace CellexalVR.AnalysisObjects
             }
 
             texture.Apply();
-            newGraph.texture = texture;
-            var sharedMaterial = newGraph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial;
-            sharedMaterial.mainTexture = newGraph.texture;
+            newGraph.textures[lodGroup] = texture;
+
+            // var sharedMaterial = newGraph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial;
+            var sharedMaterial = newGraph.LODGroupClusters[lodGroup][0].GetComponent<Renderer>().sharedMaterial;
+            sharedMaterial.mainTexture = newGraph.textures[lodGroup];
 
             Shader graphpointShader = sharedMaterial.shader;
             sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
 
-            stopwatch.Stop();
-            CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName,
-                stopwatch.Elapsed.ToString()));
+            // stopwatch.Stop();
+            // CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName,
+            //     stopwatch.Elapsed.ToString()));
             isCreating = false;
         }
 
@@ -912,6 +945,16 @@ namespace CellexalVR.AnalysisObjects
                 newGraph.maxCoordValues.y = y;
             if (z > newGraph.maxCoordValues.z)
                 newGraph.maxCoordValues.z = z;
+        }
+
+        public void UpdateCoords()
+        {
+            newGraph.minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            newGraph.maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            foreach (Graph.GraphPoint point in newGraph.points.Values)
+            {
+                UpdateMinMaxCoords(point.Position.x, point.Position.y, point.Position.z);
+            }
         }
 
         [ConsoleCommand("graphGenerator", aliases: "csg")]
@@ -1075,7 +1118,7 @@ namespace CellexalVR.AnalysisObjects
                     break;
             }
         }
-        
+
 
         /// <summary>
         /// Rebuilding graphs while when mesh has changed such as to another size or quality. The color of the points are kept
@@ -1086,22 +1129,25 @@ namespace CellexalVR.AnalysisObjects
             foreach (Graph graph in graphManager.originalGraphs)
             {
                 newGraph = graph;
-                Texture2D oldTexture = graph.texture;
+                Texture2D oldTexture = graph.textures[0];
                 graph.minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
                 graph.maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
                 Dictionary<string, Color32> oldTextureColors = new Dictionary<string, Color32>();
-                foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
-                {
-                    UpdateMinMaxCoords(point.Value.Position.x, point.Value.Position.y, point.Value.Position.z);
-                    oldTextureColors[point.Key] =
-                        oldTexture.GetPixel(point.Value.textureCoord.x, point.Value.textureCoord.y);
-                }
+                // foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
+                // {
+                //     UpdateMinMaxCoords(point.Value.Position.x, point.Value.Position.y, point.Value.Position.z);
+                //     oldTextureColors[point.Key] =
+                //         oldTexture.GetPixel(point.Value.textureCoord[g].x, point.Value.textureCoord[g].y);
+                // }
 
 
-                foreach (GameObject cluster in newGraph.graphPointClusters)
+                foreach (List<GameObject> lodGroup in newGraph.LODGroupClusters.Values)
                 {
-                    Destroy(cluster);
-                    yield return null;
+                    foreach (GameObject cluster in lodGroup)
+                    {
+                        Destroy(cluster);
+                        yield return null;
+                    }
                 }
 
                 isCreating = true;
@@ -1112,17 +1158,47 @@ namespace CellexalVR.AnalysisObjects
                     yield return null;
                 }
 
-                foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
+                // foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
+                // {
+                //     Vector2Int pos = point.Value.textureCoord;
+                //     Color32 oldColor = oldTextureColors[point.Key];
+                //     graph.textures[0].SetPixels32(pos.x, pos.y, 1, 1, new Color32[] {oldColor});
+                // }
+
+                graph.textures[0].Apply();
+                graph.LODGroupClusters[0][0].GetComponent<Renderer>().sharedMaterial.mainTexture = graph.textures[0];
+            }
+        }
+
+
+        public void UpdateLODGroups(Graph graph)
+        {
+            LODGroup lodGroup = graph.GetComponent<LODGroup>();
+            LOD[] lods = new LOD[3];
+            for (int i = 0; i < 2; i++)
+            {
+                Renderer[] renderers = new Renderer[graph.LODGroupClusters[i].Count];
+                for (int j = 0; j < graph.LODGroupClusters[i].Count; j++)
                 {
-                    Vector2Int pos = point.Value.textureCoord;
-                    Color32 oldColor = oldTextureColors[point.Key];
-                    graph.texture.SetPixels32(pos.x, pos.y, 1, 1, new Color32[] {oldColor});
+                    renderers[j] = graph.LODGroupClusters[i][j].GetComponent<Renderer>();
                 }
 
-                graph.texture.Apply();
-                graph.graphPointClusters[0].GetComponent<Renderer>().sharedMaterial.mainTexture = graph.texture;
+                // float transitionHeight = 1.0f / 
+                lods[i] = new LOD(1.0f / (2*i + 1.2f) , renderers);
             }
+
+            GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            g.transform.parent = newGraph.transform;
+            g.transform.localPosition = Vector3.zero;
+            g.layer = LayerMask.NameToLayer("GraphLayer");
+            Renderer[] lastRenderers = new Renderer[1];
+            lastRenderers[0] = g.GetComponent<Renderer>();
+            lastRenderers[0].material = graphPointMaterialPrefab;
+            lods[2] = new LOD(1.0f / 7, lastRenderers);
+            lodGroup.fadeMode = LODFadeMode.CrossFade;
+            lodGroup.animateCrossFading = true;
+            lodGroup.SetLODs(lods);
+            lodGroup.RecalculateBounds();
         }
     }
 }
-

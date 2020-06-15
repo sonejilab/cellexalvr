@@ -166,11 +166,11 @@ namespace CellexalVR.AnalysisObjects
             var graph = Graphs[0];
             for (int i = 0; i < 256; ++i)
             {
-                graph.texture.SetPixels32(i, 0, 1, 1, new Color32[] { new Color32((byte)i, 0, 0, 1) });
+                graph.textures[0].SetPixels32(i, 0, 1, 1, new Color32[] { new Color32((byte)i, 0, 0, 1) });
             }
-            graph.texture.Apply();
+            graph.textures[0].Apply();
 
-            var data = graph.texture.GetRawTextureData();
+            var data = graph.textures[0].GetRawTextureData();
             for (int i = 0; i < data.Length; i += 4)
             {
                 print(i + ": " + data[i] + " " + data[i + 1] + " " + data[i + 2] + " " + data[i + 3]);
