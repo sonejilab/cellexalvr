@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 114212794373154340}
   - component: {fileID: 114490444003295042}
   m_Layer: 8
-  m_Name: Graph Prefab
+  m_Name: Graph_Prefab
   m_TagString: Graph
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,18 +53,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonPrefab: {fileID: 1496824086956574, guid: 024d0ef0598115f438d6bdc6ae34d164,
     type: 3}
-  contourParent: {fileID: 6193181967597587923, guid: 078f39c964658d24e9904d26d82070b7,
-    type: 3}
-  opaqueMat: {fileID: 2100000, guid: 0820322eedf035349a7d49bbfff11af4, type: 2}
   emptySkeletonPrefab: {fileID: 1496824086956574, guid: ba53ec2d8cb9b834188ddcc17b5561f2,
     type: 3}
-  skeletonMaterial: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
   lineMaterial: {fileID: 2100000, guid: fb5aa86d27fbc354a9c1a52db2f254bf, type: 2}
   movingOutlineCircle: {fileID: 1620093671004734, guid: b2489140aeb8ccb45b637b27fbf44833,
     type: 3}
   convexHull: {fileID: 0}
-  chunkManagerPrefab: {fileID: 4866979709267056668, guid: 42bb42301be5d3c48a3924c4f686c7f4,
-    type: 3}
+  ctcGraphs: []
   graphManager: {fileID: 0}
   infoParent: {fileID: 1389011759643290}
   graphNameText: {fileID: 114815460846482644}
@@ -76,10 +71,8 @@ MonoBehaviour:
   axisNames: []
   GraphActive: 1
   referenceManager: {fileID: 0}
-  graphPointClusters: []
-  textureWidth: 0
-  textureHeight: 0
-  texture: {fileID: 2800000, guid: 0fc7c3250f854e545874eecd0dfce9eb, type: 3}
+  LODGroups: 2
+  textures: []
   minCoordValues: {x: 3.4028235e+38, y: 3.4028235e+38, z: 3.4028235e+38}
   maxCoordValues: {x: -3.4028235e+38, y: -3.4028235e+38, z: -3.4028235e+38}
   topExprCircles: []
@@ -2403,6 +2396,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   entryPrefab: {fileID: 5259322938831472050}
   extraColumn: {fileID: 0}
+  pageNumberText: {fileID: 0}
 --- !u!1 &6433478820048451786
 GameObject:
   m_ObjectHideFlags: 0
