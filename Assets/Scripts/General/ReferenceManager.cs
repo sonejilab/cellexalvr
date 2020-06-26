@@ -14,6 +14,7 @@ using UnityEditor;
 using UnityEngine;
 using VRTK;
 using CellexalVR.AnalysisLogic.H5reader;
+using CellexalVR.PDFViewer;
 using UnityEngine.Serialization;
 
 namespace CellexalVR.General
@@ -125,6 +126,7 @@ namespace CellexalVR.General
         public FilterManager filterManager;
         public ReportManager reportManager;
         public Floor floor;
+        public PDFViewer.PDFMesh pdfMesh;
 
         //h5reader annotator
         public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
@@ -263,6 +265,7 @@ namespace CellexalVR.General
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
             reportReader = reportManager.GetComponent<ReportReader>();
             floor = GameObject.Find("Floor").GetComponent<Floor>();
+            pdfMesh = GameObject.Find("PDFViewer").GetComponentInChildren<PDFMesh>();
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();

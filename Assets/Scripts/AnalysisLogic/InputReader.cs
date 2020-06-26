@@ -14,6 +14,7 @@ using CellexalVR.Extensions;
 using System.Drawing;
 using System.Diagnostics;
 using CellexalVR.AnalysisLogic.H5reader;
+using CellexalVR.PDFViewer;
 using UnityEngine.XR;
 
 namespace CellexalVR.AnalysisLogic
@@ -38,6 +39,7 @@ namespace CellexalVR.AnalysisLogic
         private GraphFromMarkersMenu createFromMarkerMenu;
         private MDSReader mdsReader;
         private NetworkReader networkReader;
+        private PDFMesh pdfMesh;
 
         private GameObject headset;
 
@@ -85,6 +87,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             graphGenerator = referenceManager.graphGenerator;
+            pdfMesh = referenceManager.pdfMesh;
             currentPath = "";
             facsGraphCounter = 0;
             RScriptRunner.SetReferenceManager(referenceManager);
@@ -205,6 +208,8 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
 
             graphGenerator.isCreating = true;
+            
+            pdfMesh.ReadPDF(fullPath);
 
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {
