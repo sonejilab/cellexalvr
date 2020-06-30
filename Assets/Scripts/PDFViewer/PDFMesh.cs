@@ -279,8 +279,8 @@ namespace CellexalVR.PDFViewer
 
             else
             {
-                settingsHandlerCurved.SetActive(true);
                 settingsHandlerPocket.SetActive(false);
+                settingsHandlerCurved.SetActive(true);
                 settingsHandlerPocket.transform.parent = transform;
             }
         }

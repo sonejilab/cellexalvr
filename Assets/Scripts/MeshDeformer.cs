@@ -93,6 +93,7 @@ namespace CellexalVR
             //     HandleInput(new Ray(referenceManager.rightController.transform.position,
             //         referenceManager.rightController.transform.forward));
             // }
+            
             if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
             {
                 firstRay = new Ray(referenceManager.rightController.transform.position,

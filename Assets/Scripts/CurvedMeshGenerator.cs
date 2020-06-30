@@ -5,6 +5,10 @@ using UnityEngine;
 using VRTK;
 using CellexalVR.DesktopUI;
 using CellexalVR.General;
+using CellexalVR.Interaction;
+using CellexalVR.PDFViewer;
+using TMPro;
+using UnityEngine.UI;
 
 namespace CellexalVR
 {
@@ -19,9 +23,6 @@ namespace CellexalVR
         public Material material;
         public int verticalSplit = 1;
         public int horizontalSplit = 1;
-        public GameObject meshObjPrefab;
-
-
         private MeshFilter filter;
 
         // private Mesh mesh;
@@ -30,8 +31,8 @@ namespace CellexalVR
         private Vector3[] vertices;
         private Color32[] desktopUV;
         private Vector2[] uvs;
-        private List<GameObject> bezierNodesObjects = new List<GameObject>();
-        private List<Vector3> bezierNodes = new List<Vector3>();
+        private List<GameObject> meshNodes = new List<GameObject>();
+        private List<Vector3> meshNodePositions = new List<Vector3>();
         private List<GameObject> splitMeshes = new List<GameObject>();
         private Vector3[] tempPositions;
         private Quaternion[] tempRotations;
@@ -40,22 +41,17 @@ namespace CellexalVR
         private bool updatingMesh;
         private float tempCurvatureXValue;
         private MeshCollider collider;
+        private PDFMesh pdfMesh;
 
-        [SerializeField, Range(0f, 1f)] private float curvatureX = 0f;
+        [SerializeField, Range(0f, 2f)] public float curvatureX = 0.3f;
 
         public float CurvatureX
         {
             get => curvatureX;
-            set
-            {
-                curvatureX = 1 / value;
-
-
-                // scale.y += 0
-            }
+            set { curvatureX = 1 / value; }
         }
 
-        [SerializeField, Range(0f, 1f)] private float curvatureY = 0f;
+        [SerializeField, Range(0f, 2f)] public float curvatureY = 0f;
 
         public float CurvatureY
         {
@@ -63,9 +59,18 @@ namespace CellexalVR
             set => curvatureY = 1 / value;
         }
 
-        private float curvatureXLastFrame = 0f;
-        private float curvatureYLastFrame = 0f;
-        
+        [SerializeField, Range(0f, 5f)] public float radius = 1f;
+
+        public float Radius => radius;
+
+
+        private GameObject child;
+        private Vector3 scale;
+        private float curvatureXLastFrame;
+        private float curvatureYLastFrame;
+        private float radiusLastFrame;
+        private int nrOfPagesLastFrame;
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -76,150 +81,155 @@ namespace CellexalVR
 
         private void Awake()
         {
+            curvatureXLastFrame = curvatureX;
+            curvatureYLastFrame = curvatureY;
+            radiusLastFrame = radius;
+            // nrOfPagesLastFrame = nrOfPages;
+            scale = Vector3.one;
+            pdfMesh = GetComponentInParent<PDFMesh>();
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             // Generate nodes for bezier curves that make up the structure of the mesh.
-            GenerateBezierNodes();
+            // CellexalEvents.GraphsLoaded.AddListener(() => GenerateNodes(PDFMesh.ViewingMode.PocketMovable));
             // Generate the mesh.
             // StartCoroutine(UpdateMesh());
-            GenerateMeshes();
+            // CellexalEvents.GraphsLoaded.AddListener(GenerateMeshes);
+            // CellexalEvents.GraphsLoaded.AddListener(() =>
+            // StartCoroutine(pdfMesh.ShowMultiplePagesCoroutine(pdfMesh.currentPage, pdfMesh.currentNrOfPages)));
+            // GenerateMeshes();
             // UpdateMesh();
             // Generate(); if generating a cube use this one.
         }
 
-        private void Update()
+        public void GenerateNodes(PDFMesh.ViewingMode viewingMode, float r = 1.0f, float curvature = 0.3f)
         {
-            // bool changed = false;
-            // foreach (GameObject obj in bezierNodes.Where(obj => obj.transform.hasChanged))
-            // {
-            //     obj.transform.hasChanged = false;
-            //     changed = true;
-            // }
-            //
-            // if (changed) UpdateMesh();
-        }
-
-
-        private void GenerateBezierNodes()
-        {
-            foreach (GameObject bn in bezierNodesObjects)
+            if (r == 0) r = 1;
+            if (curvature == 0) curvature = 0.3f; 
+            foreach (GameObject bn in meshNodes)
             {
                 Destroy(bn);
             }
 
-            bezierNodesObjects.Clear();
-            bezierNodes.Clear();
+            meshNodes.Clear();
+            meshNodePositions.Clear();
 
-            double yAngle = -Math.PI;
-            float radius = 1f;
-            float radiusInc = 0.1f * curvatureY;
-            for (int k = 0; k < 4; k++)
+            if (viewingMode == PDFMesh.ViewingMode.CurvedStationary)
             {
-                float yPos = k / (float) (4); //(float) (Math.Cos(yAngle)) + 1;
+                xSize = 40;
+                ySize = 10;
+                GenerateCurvedNodes(r, curvature);
+                GenerateMeshes();
+                GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            }
+
+            else
+            {
+                xSize = 7;
+                ySize = 10;
+                GenerateStraightNodes();
+                GenerateMeshes();
+            }
+
+            if (!showNodes) return;
+            foreach (Vector3 p in meshNodePositions)
+            {
+                GameObject
+                    bezierNode =
+                        Instantiate(bezierNodePrefab, transform); // = Instantiate(cubePrefab, transform);
+                bezierNode.transform.localPosition = p;
+                bezierNode.transform.localScale =
+                    new Vector3(bezierNode.transform.localScale.x / transform.localScale.x,
+                        bezierNode.transform.localScale.y, bezierNode.transform.localScale.z);
+                bezierNode.GetComponent<MeshRenderer>().enabled = showNodes;
+                bezierNode.transform.hasChanged = false;
+                meshNodes.Add(bezierNode);
+            }
+        }
+
+
+        private void GenerateCurvedNodes(float r = 1.0f, float curvature = 0.3f)
+        {
+            double yAngle = -Math.PI;
+            for (int y = 0; y < ySize; y++)
+            {
+                float yPos = (float) Math.PI * y / (float) (ySize); //(float) (Math.Cos(yAngle)) + 1;
                 float zPos = (float) (Math.Sin(yAngle)) * curvatureY;
                 Vector3 p2 = new Vector3(0, yPos, zPos);
-                double angle = -(Math.PI);
-                for (int m = 0; m < 4; m++)
+                for (int x = 0; x < xSize; x++)
                 {
-                    float xPos = p2.x + (float) Math.Cos(angle); // * radius;
+                    float xPos = p2.x + (float) (r * Math.Cos((x + xSize / 2) * -Math.PI * curvature / xSize));
                     yPos = p2.y;
-                    zPos = p2.z + (float) (Math.Sin(angle) * curvatureX);
+                    zPos = p2.z + (float) (r * Math.Sin(
+                        (x + xSize / 2) * -Math.PI * curvature / xSize)); // * curvatureX);
 
                     Vector3 p = new Vector3(xPos, yPos, zPos);
-                    angle -= (Math.PI) / 3;
-                    bezierNodes.Add(p);
-                    if (showNodes)
-                    {
-                        GameObject
-                            bezierNode =
-                                Instantiate(bezierNodePrefab, transform); // = Instantiate(cubePrefab, transform);
-                        bezierNode.transform.localPosition = p;
-                        bezierNode.transform.localScale =
-                            new Vector3(bezierNode.transform.localScale.x / transform.localScale.x,
-                                bezierNode.transform.localScale.y, bezierNode.transform.localScale.z);
-                        bezierNode.GetComponent<MeshRenderer>().enabled = showNodes;
-                        bezierNode.transform.hasChanged = false;
-                        if (k == ySize / 2)
-                        {
-                            bezierNode.GetComponent<Renderer>().material.color = Color.red;
-                        }
-
-                        bezierNodesObjects.Add(bezierNode);
-                    }
+                    meshNodePositions.Add(p);
                 }
 
-                yAngle -= Math.PI / (3);
+                yAngle -= Math.PI / (ySize - 1);
+            }
+        }
 
-                // if (k < ySize / 2)
-                // {
-                //     radiusInc -= 0.01f * curvatureY; // * (k % (ySize / 2));
-                //     radius += radiusInc;
-                // }
-                //
-                // else if (k == ySize / 2)
-                // {
-                //     radius += radiusInc;
-                // }
-                //
-                // else
-                // {
-                //     radiusInc += 0.01f * curvatureY; // * (k % (ySize/2));
-                //     radius -= radiusInc;
-                // }
-
-                // if (k < (ySize / 3))
-                // {
-                //     radiusInc -= 0.01f * curvatureY * (k % (ySize/2));
-                //     radius += radiusInc;
-                // }
-                //
-                //
-                // else if (k > 2 * (ySize / 3))
-                // {
-                //     radiusInc += 0.01f * curvatureY * (k % (ySize/2));
-                //     radius -= radiusInc;
-                // }
+        private void GenerateStraightNodes()
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    Vector3 p = new Vector3(x / 10f, y / 10f, 0);
+                    meshNodePositions.Add(p);
+                }
             }
         }
 
         private void LateUpdate()
         {
+            if (GetComponentInChildren<MeshDeformer>() == null) return;
             tempPositions = new Vector3[splitMeshes.Count];
             tempRotations = new Quaternion[splitMeshes.Count];
             tempScales = new Vector3[splitMeshes.Count];
-            for (int i = 0; i < splitMeshes.Count; i++)
-            {
-                tempPositions[i] = splitMeshes[i].transform.localPosition;
-                tempRotations[i] = splitMeshes[i].transform.localRotation;
-                tempScales[i] = splitMeshes[i].transform.localScale;
-            }
+            // for (int i = 0; i < splitMeshes.Count; i++)
+            // {
+            //     tempPositions[i] = splitMeshes[i].transform.localPosition;
+            //     tempRotations[i] = splitMeshes[i].transform.localRotation;
+            //     tempScales[i] = splitMeshes[i].transform.localScale;
+            // }
+
             if (updatingMesh) return;
-            if (curvatureXLastFrame != curvatureX)
+            if (radiusLastFrame != radius)
             {
-                // Vector3 scale = transform.localScale;
-                // float diffX = curvatureX - curvatureXLastFrame;
-                // scale.y += diffX / 2;
-                // scale.x -= diffX / 2;
-                // transform.localScale = scale;
-                GenerateBezierNodes();
+                GenerateNodes(PDFMesh.ViewingMode.CurvedStationary);
                 GenerateMeshes();
-                curvatureXLastFrame = curvatureX;
+                radiusLastFrame = radius;
             }
+
+            else if (nrOfPagesLastFrame != pdfMesh.currentNrOfPages)
+            {
+                GenerateNodes(PDFMesh.ViewingMode.CurvedStationary);
+                GenerateMeshes();
+                nrOfPagesLastFrame = pdfMesh.currentNrOfPages;
+            }
+
             else if (curvatureYLastFrame != curvatureY)
             {
-                // Vector3 scale = transform.localScale;
-                // float diffY = curvatureY - curvatureYLastFrame;
-                // scale.x += diffY;
-                // transform.localScale = scale;
-                GenerateBezierNodes();
+                GenerateNodes(PDFMesh.ViewingMode.CurvedStationary);
                 GenerateMeshes();
                 curvatureYLastFrame = curvatureY;
             }
 
-            for (int i = 0; i < splitMeshes.Count; i++)
+            else if (curvatureXLastFrame != curvatureX)
             {
-                splitMeshes[i].transform.localPosition = tempPositions[i];
-                splitMeshes[i].transform.localRotation = tempRotations[i];
-                splitMeshes[i].transform.localScale = tempScales[i];
+                GenerateNodes(PDFMesh.ViewingMode.CurvedStationary);
+                GenerateMeshes();
+                curvatureXLastFrame = curvatureX;
             }
+
+            if (splitMeshes.Count != tempPositions.Length) return;
+            // for (int i = 0; i < splitMeshes.Count; i++)
+            // {
+            //     splitMeshes[i].transform.localPosition = tempPositions[i];
+            //     splitMeshes[i].transform.localRotation = tempRotations[i];
+            //     splitMeshes[i].transform.localScale = tempScales[i];
+            // }
         }
 
 
@@ -259,8 +269,14 @@ namespace CellexalVR
         }
 
 
-        private void GenerateMeshes()
+        public void GenerateMeshes()
         {
+            if (child != null)
+            {
+                scale = child.transform.localScale;
+            }
+
+
             foreach (GameObject obj in splitMeshes)
             {
                 Destroy(obj);
@@ -271,29 +287,33 @@ namespace CellexalVR
             {
                 for (int j = 0; j < horizontalSplit; j++)
                 {
-                    GameObject obj = Instantiate(meshObjPrefab);
-                    obj.GetComponent<MeshDeformer>().referenceManager = referenceManager;
-                    obj.transform.parent = transform;
-                    Vector3 position = obj.transform.localPosition;
-                    position.x = 0.05f * i;
-                    position.y = 0.05f * j;
-                    obj.transform.localPosition = position;
-                    obj.transform.localScale = Vector3.one;
-                    Mesh mesh = GenerateMesh(obj, i * xSize / verticalSplit, (i + 1) * xSize / verticalSplit,
+                    // GameObject newChild = Instantiate(meshObjPrefab, pageParent);
+
+                    GetComponent<MeshDeformer>().referenceManager = referenceManager;
+                    // newChild.transform.parent = transform;
+                    // Vector3 position = obj.transform.localPosition;
+                    // position.x = -0.05f * i;
+                    // position.y = -0.05f * j;
+                    // position.z = 0;
+                    transform.localPosition = Vector3.zero;
+                    Mesh mesh = GenerateMesh(i * xSize / verticalSplit, (i + 1) * xSize / verticalSplit,
                         j * ySize / horizontalSplit, (j + 1) * ySize / horizontalSplit);
-                    obj.GetComponent<MeshFilter>().mesh = mesh;
-                    Renderer renderer = obj.GetComponent<MeshRenderer>();
+                    
+                    GetComponent<MeshFilter>().mesh = mesh;
+                    Renderer renderer = GetComponent<MeshRenderer>();
                     renderer.material = material;
-                    renderer.material.SetFloat("_XGridSize", xSize);
-                    renderer.material.SetFloat("_YGridSize", ySize);
-                    obj.GetComponent<MeshCollider>().sharedMesh = mesh;
-                    splitMeshes.Add(obj);
+                    renderer.material.SetFloat("_XGridSize", xSize - 1);
+                    renderer.material.SetFloat("_YGridSize", ySize - 1);
+                    GetComponent<MeshCollider>().sharedMesh = mesh;
+                    // splitMeshes.Add(newChild);
+
+                    transform.localScale = scale;
                 }
             }
-
         }
 
-        private Mesh GenerateMesh(GameObject obj, int xStart = 0, int xEnd = 0, int yStart = 0, int yEnd = 0)
+
+        private Mesh GenerateMesh(int xStart = 0, int xEnd = 0, int yStart = 0, int yEnd = 0)
         {
             if (xEnd == 0) xEnd = xSize;
             if (yEnd == 0) yEnd = ySize;
@@ -304,327 +324,82 @@ namespace CellexalVR
             mesh.name = "Procedural Curved Mesh";
 
             vertices = new Vector3[(xEnd - xStart + 1) * (yEnd - yStart + 1)];
-            // Vector2[] uvs = new Vector2[vertices.Length];
-            Color32[] desktopUV = new Color32[vertices.Length];
+            uvs = new Vector2[vertices.Length];
+            desktopUV = new Color32[vertices.Length];
             // Vector4[] tangents = new Vector4[vertices.Length];
             // Vector4 tangent = new Vector4(1f, 0f, 0f, -1f);
             int z = 1;
-            for (int v = 0, y = yStart, k = 0; y <= yEnd; y++, k += 3)
+            // for (int v = 0, y = yStart, k = 0; y <= yEnd; y++, k += 3)
+            // {
+            // float tY = (float) y / (float) (ySize);
+            // Vector3 pY1 = CalculateBezierPoint(tY, bezierNodes[0], bezierNodes[4],
+            //     bezierNodes[8], bezierNodes[12]);
+            // Vector3 pY2 = CalculateBezierPoint(tY, bezierNodes[1], bezierNodes[5],
+            //     bezierNodes[9], bezierNodes[13]);
+            // Vector3 pY3 = CalculateBezierPoint(tY, bezierNodes[2], bezierNodes[6],
+            //     bezierNodes[10], bezierNodes[14]);
+            // Vector3 pY4 = CalculateBezierPoint(tY, bezierNodes[3], bezierNodes[7],
+            //     bezierNodes[11], bezierNodes[15]);
+            // for (int x = xStart; x <= xEnd; x++, v++)
+            // {
+            // float t = (float) x / (float) (xSize);
+            // Vector3 p0 = new Vector3(bezierNodes[0].x, pY1.y, pY1.z);
+            // Vector3 p1 = new Vector3(bezierNodes[1].x, pY2.y, pY2.z);
+            // Vector3 p2 = new Vector3(bezierNodes[2].x, pY3.y, pY3.z);
+            // Vector3 p3 = new Vector3(bezierNodes[3].x, pY4.y, pY4.z);
+            // Vector3 p = CalculateBezierPoint(t, p0, p1, p2, p3);
+            // print($"y+k: {y+k}, y+k+1: {y+k+1}, y+k+2: {y+k+2}, y+k+3: {y+k+3}");
+            // vertices[v] = p;
+            // vertices[v].x += 0.5f; // easier to deal with if it goes from 0 to 1;
+            // uvs[i] = new Vector2((float) x / xSize, (float) y / ySize);
+            // desktopUV[v] = new Color32((byte) x, (byte) y, (byte) z, 0);
+            // tangents[i] = tangent;
+            //     }
+            // }
+
+            for (int y = 0, v = 0; y < ySize; y++)
             {
-                float tY = (float) y / (float) (ySize - 1);
-                Vector3 pY1 = CalculateBezierPoint(tY, bezierNodes[0], bezierNodes[4],
-                    bezierNodes[8], bezierNodes[12]);
-                Vector3 pY2 = CalculateBezierPoint(tY, bezierNodes[1], bezierNodes[5],
-                    bezierNodes[9], bezierNodes[13]);
-                Vector3 pY3 = CalculateBezierPoint(tY, bezierNodes[2], bezierNodes[6],
-                    bezierNodes[10], bezierNodes[14]);
-                Vector3 pY4 = CalculateBezierPoint(tY, bezierNodes[3], bezierNodes[7],
-                    bezierNodes[11], bezierNodes[15]);
-                for (int x = xStart; x <= xEnd; x++, v++)
+                for (int x = 0; x < xSize; x++, v++)
                 {
-                    float t = (float) x / (float) (xSize - 1);
-                    Vector3 p0 = new Vector3(bezierNodes[0].x, pY1.y, pY1.z);
-                    Vector3 p1 = new Vector3(bezierNodes[1].x, pY2.y, pY2.z);
-                    Vector3 p2 = new Vector3(bezierNodes[2].x, pY3.y, pY3.z);
-                    Vector3 p3 = new Vector3(bezierNodes[3].x, pY4.y, pY4.z);
-                    Vector3 p = CalculateBezierPoint(t, p0, p1, p2, p3);
-                    // print($"y+k: {y+k}, y+k+1: {y+k+1}, y+k+2: {y+k+2}, y+k+3: {y+k+3}");
-                    vertices[v] = p;
-                    // vertices[v].x += 0.5f; // easier to deal with if it goes from 0 to 1;
-                    // uvs[i] = new Vector2((float) x / xSize, (float) y / ySize);
-                    desktopUV[v] = new Color32((byte) x, (byte) y, (byte) z, 0);
-                    // tangents[i] = tangent;
+                    SetVertex(v, x, y, 1);
                 }
             }
 
             mesh.vertices = vertices;
-            // GetComponent<MeshDeformer>().UpdateVertices(vertices);
-            // mesh.uv = uvs;
             mesh.colors32 = desktopUV;
+
+            // mesh.uv = uvs;
             // mesh.tangents = tangents;
 
 
             int ti = 0;
             int yMax = yEnd - yStart;
             int xMax = xEnd - xStart;
+
             int[] triangles = new int[yMax * xMax * 6];
-            for (int vi = 0, y = yStart; y < yEnd; y++, vi++)
+            for (int vi = 0, y = yStart;
+                y < yEnd - 1;
+                y++, vi++)
             {
-                for (int x = xStart; x < xEnd; x++, vi++)
+                for (int x = xStart; x < xEnd - 1; x++, vi++)
                 {
-                    ti = SetQuad(triangles, ti, vi, vi + xMax + 1, vi + 1, vi + xMax + 2);
+                    ti = SetQuad(triangles, ti, vi, vi + xMax, vi + 1, vi + xMax + 1);
                 }
             }
 
             mesh.triangles = triangles;
-
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
 
-
-            // GetComponent<BoxCollider>().center = new Vector3(0.5f, 0.5f, 0.5f);
-            // GetComponent<BoxCollider>().size = transform.localScale;
-
-
-            // meshCollider = gameObject.AddComponent<MeshCollider>();
-            // meshCollider.sharedMesh = null;
-
-            // collider = GetComponent<MeshCollider>();
-            // if (!collider)
-            // {
-            //     collider = gameObject.AddComponent<MeshCollider>();
-            // }
-
-            // Vector3 size = collider.bounds.size;
-            // size = mesh.bounds.size;
-            // Vector3 center = mesh.bounds.center;
-            // size.z = 0.05f;
-            // collider.size = size;
-            // collider.center = center;
-            // collider.isTrigger = true;
-            // collider.convex = true;
-            // meshCollider.sharedMesh = mesh;
             updatingMesh = false;
             return mesh;
         }
 
-
-        private void Generate()
-        {
-            // GetComponent<MeshFilter>().mesh = mesh = new Mesh();
-            // mesh.name = "Procedural Cube";
-            CreateVertices();
-            // CreateTriangles();
-            gameObject.AddComponent<BoxCollider>();
-        }
-
-        private void CreateVertices()
-        {
-            int cornerVertices = 8;
-            int edgeVertices = (xSize + ySize + zSize - 3) * 4;
-            int faceVertices = (
-                (xSize - 1) * (ySize - 1) +
-                (xSize - 1) * (zSize - 1) +
-                (ySize - 1) * (zSize - 1)) * 2;
-            vertices = new Vector3[cornerVertices + edgeVertices + faceVertices];
-            desktopUV = new Color32[vertices.Length];
-            uvs = new Vector2[vertices.Length];
-            int v = 0;
-
-            for (int y = 0; y <= ySize; y++)
-            {
-                for (int x = 0; x <= xSize; x++)
-                {
-                    SetVertex(v++, x, y, 0);
-                }
-
-                for (int z = 1; z <= zSize; z++)
-                {
-                    SetVertex(v++, xSize, y, z);
-                    // vertices[v++] = new Vector3(xSize, y, z);
-                }
-
-                for (int x = xSize - 1; x >= 0; x--)
-                {
-                    SetVertex(v++, x, y, zSize);
-                    // vertices[v++] = new Vector3(x, y, zSize);
-                }
-
-                for (int z = zSize - 1; z > 0; z--)
-                {
-                    SetVertex(v++, 0, y, z);
-                    // vertices[v++] = new Vector3(0, y, z);
-                }
-            }
-
-            for (int z = 1; z < zSize; z++)
-            {
-                for (int x = 1; x < xSize; x++)
-                {
-                    SetVertex(v++, x, ySize, z);
-                    // vertices[v++] = new Vector3(x, ySize, z);
-                }
-            }
-
-            for (int z = 1; z < zSize; z++)
-            {
-                for (int x = 1; x < xSize; x++)
-                {
-                    SetVertex(v++, x, 0, z);
-                    // vertices[v++] = new Vector3(x, 0, z);
-                }
-            }
-
-            // mesh.vertices = vertices;
-            // mesh.colors32 = desktopUV;
-            // mesh.uv = uvs;
-        }
-
         private void SetVertex(int i, int x, int y, int z)
         {
-            vertices[i] = new Vector3(x, y, z);
+            Vector3 node = meshNodePositions[i];
+            vertices[i] = new Vector3(node.x, node.y, node.z);
             desktopUV[i] = new Color32((byte) x, (byte) y, (byte) z, 0);
-            uvs[i] = new Vector2(x, y);
-        }
-
-        private void CreateTriangles()
-        {
-            int[] trianglesZ = new int[(xSize * ySize) * 12];
-            int[] trianglesX = new int[(ySize * zSize) * 12];
-            int[] trianglesY = new int[(xSize * zSize) * 12];
-            int ring = (xSize + zSize) * 2;
-            int tZ = 0, tX = 0, tY = 0, v = 0;
-            for (int y = 0; y < ySize; y++, v++)
-            {
-                for (int q = 0; q < xSize; q++, v++)
-                {
-                    tZ = SetQuad(trianglesZ, tZ, v, v + ring, v + 1, v + ring + 1);
-                }
-
-                for (int q = 0; q < zSize; q++, v++)
-                {
-                    tX = SetQuad(trianglesX, tX, v, v + ring, v + 1, v + ring + 1);
-                }
-
-                for (int q = 0; q < xSize; q++, v++)
-                {
-                    tZ = SetQuad(trianglesZ, tZ, v, v + ring, v + 1, v + ring + 1);
-                }
-
-                for (int q = 0; q < zSize - 1; q++, v++)
-                {
-                    tX = SetQuad(trianglesX, tX, v, v + ring, v + 1, v + ring + 1);
-                }
-
-                tX = SetQuad(trianglesX, tX, v, v + ring, v - ring + 1, v + 1);
-            }
-
-
-            // for (int y = 0; y < ySize; y++, v++)
-            // {
-            //     for (int q = 0; q < xSize; q++, v++)
-            //     {
-            //         tZ = SetQuad(trianglesZ, tZ, v, v + ring, v + 1, v + ring + 1);
-            //     }
-            //
-            //     for (int q = 0; q < zSize; q++, v++)
-            //     {
-            //         tX = SetQuad(trianglesX, tX, v, v + 1, v + ring, v + ring + 1);
-            //     }
-            //
-            //     for (int q = 0; q < xSize; q++, v++)
-            //     {
-            //         tZ = SetQuad(trianglesZ, tZ, v, v + 1, v + ring, v + ring + 1);
-            //     }
-            //
-            //     for (int q = 0; q < zSize - 1; q++, v++)
-            //     {
-            //         tX = SetQuad(trianglesX, tX, v, v + 1, v + ring, v + ring + 1);
-            //     }
-            //
-            //     tX = SetQuad(trianglesX, tX, v, v + ring, v - ring + 1, v + 1);
-            // }
-
-            tY = CreateTopFace(trianglesY, tY, ring);
-            tY = CreateBottomFace(trianglesY, tY, ring);
-            // mesh.subMeshCount = 3;
-            // mesh.SetTriangles(trianglesZ, 0);
-            // mesh.SetTriangles(trianglesX, 1);
-            // mesh.SetTriangles(trianglesY, 2);
-            // mesh.triangles = triangles;
-        }
-
-        private int CreateTopFace(int[] triangles, int t, int ring)
-        {
-            int v = ring * ySize;
-            for (int x = 0; x < xSize - 1; x++, v++)
-            {
-                t = SetQuad(triangles, t, v, v + ring - 1, v + 1, v + ring);
-            }
-
-            t = SetQuad(triangles, t, v, v + ring - 1, v + 1, v + 2);
-
-            int vMin = ring * (ySize + 1) - 1;
-            int vMid = vMin + 1;
-            int vMax = v + 2;
-            // int diff = 1;
-
-            for (int z = 1; z < zSize - 1; z++, vMin--, vMid++, vMax++)
-            {
-                t = SetQuad(triangles, t, vMin, vMin - 1, vMid, vMid + xSize - 1);
-                for (int x = 1; x < xSize - 1; x++, vMid++)
-                {
-                    t = SetQuad(
-                        triangles, t,
-                        vMid, vMid + xSize - 1, vMid + 1, vMid + xSize);
-                }
-
-                t = SetQuad(triangles, t, vMid, vMid + xSize - 1, vMax, vMax + 1);
-            }
-
-            int vTop = vMin - 2;
-            t = SetQuad(triangles, t, vMin, vMin - 1, vMid, vMin - 2);
-            for (int x = 1; x < xSize - 1; x++, vTop--, vMid++)
-            {
-                t = SetQuad(triangles, t, vMid, vTop, vMid + 1, vTop - 1);
-            }
-
-            t = SetQuad(triangles, t, vMid, vTop, vTop - 2, vTop - 1);
-            // for (int z = 1; z < zSize - 1; z++, vMin--, vMax++, vMax++)
-            // {
-            //     t = SetQuad(triangles, t, vMin, vMin - 1, vMid, vMid - xSize + 1);
-            //     for (int x = 1; x < xSize - 1; x++, vMid++, diff -= 2)
-            //     {
-            //         t = SetQuad(triangles, t, vMid, vMid - xSize + diff, vMid + 1, vMid - xSize + (diff - 1));
-            //     }
-            //
-            //     t = SetQuad(triangles, t, vMid, vMid - xSize + diff, vMax, vMax + 1);
-            // }
-
-
-            return t;
-        }
-
-
-        private int CreateBottomFace(int[] triangles, int t, int ring)
-        {
-            int v = 1;
-            int vMid = vertices.Length - (xSize - 1) * (zSize - 1);
-            t = SetQuad(triangles, t, ring - 1, 0, vMid, 1);
-            for (int x = 1; x < xSize - 1; x++, v++, vMid++)
-            {
-                t = SetQuad(triangles, t, vMid, v, vMid + 1, v + 1);
-            }
-
-            t = SetQuad(triangles, t, vMid, v, v + 2, v + 1);
-
-            int vMin = ring - 2;
-            vMid -= xSize - 2;
-            int vMax = v + 2;
-
-            for (int z = 1; z < zSize - 1; z++, vMin--, vMid++, vMax++)
-            {
-                t = SetQuad(triangles, t, vMin, vMin + 1, vMid + xSize - 1, vMid);
-                for (int x = 1; x < xSize - 1; x++, vMid++)
-                {
-                    t = SetQuad(
-                        triangles, t,
-                        vMid + xSize - 1, vMid, vMid + xSize, vMid + 1);
-                }
-
-                t = SetQuad(triangles, t, vMax + 1, vMid + xSize - 1, vMid, vMax);
-            }
-
-            int vTop = vMin - 1;
-            t = SetQuad(triangles, t, vTop + 1, vTop + 2, vTop, vMid);
-            for (int x = 1; x < xSize - 1; x++, vTop--, vMid++)
-            {
-                t = SetQuad(triangles, t, vTop, vMid, vTop - 1, vMid + 1);
-            }
-
-            t = SetQuad(triangles, t, vTop, vMid, vTop - 1, vTop - 2);
-
-            return t;
         }
 
         private static int SetQuad(int[] triangles, int i, int v00, int v01, int v10, int v11)
@@ -635,6 +410,5 @@ namespace CellexalVR
             triangles[i + 5] = v11;
             return i + 6;
         }
-
     }
 }

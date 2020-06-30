@@ -36,11 +36,14 @@ namespace CellexalVR.Interaction
             float xValue = xMaxPos * relativeVal;
             handleStartPosition.x = xValue;
 
+            xValue /= xMaxPos;
+
             handle.transform.localPosition = handleStartPosition;
             handleInteractable = handle.GetComponent<VRTK_InteractableObject>();
             handleInteractable.InteractableObjectUngrabbed += OnRelease;
             header.text = headerText;
-            sliderValueText.text = $"{((int) (xValue)).ToString()}%";
+            sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
+            value = minValue + xValue * (maxValue - minValue);
         }
 
         private void OnValidate()
@@ -49,7 +52,13 @@ namespace CellexalVR.Interaction
             float relativeVal = startValue / maxValue;
             float xValue = xMaxPos * relativeVal;
             handleStartPosition.x = xValue;
+            xValue /= xMaxPos;
+            value = minValue + xValue * (maxValue - minValue);
             handle.transform.localPosition = handleStartPosition;
+            Vector3 fillAreaScale = fillArea.transform.localScale;
+            fillAreaScale.x = 0.001f * xValue;
+            fillArea.transform.localScale = fillAreaScale;
+            sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
         }
 
         // Update is called once per frame
