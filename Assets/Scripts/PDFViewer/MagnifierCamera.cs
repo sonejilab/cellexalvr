@@ -60,7 +60,6 @@ namespace CellexalVR.PDFViewer
         {
             if (!Physics.Raycast(ray,out RaycastHit hit, Mathf.Infinity, layerMask)) return;
 
-            print(hit.collider.gameObject.name);
             magnifyingCamera.gameObject.SetActive(hit.collider.transform.gameObject.name.Equals("Page(Clone)"));
             screenQuad.SetActive(hit.collider.transform.gameObject.name.Equals("Page(Clone)"));
 

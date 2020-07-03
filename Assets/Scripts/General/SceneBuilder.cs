@@ -63,6 +63,8 @@ namespace CellexalVR.General
         private GameObject _SpectatorRig;
         public GameObject H5Reader;
         private GameObject _H5Reader;
+        public GameObject PDFViewer;
+        private GameObject _PDFViewer;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -129,6 +131,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
             InstantiateSceneAsset(ref _SpectatorRig, SpectatorRig);
             InstantiateSceneAsset(ref _H5Reader, H5Reader);
+            InstantiateSceneAsset(ref _PDFViewer, PDFViewer);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
@@ -260,6 +263,7 @@ namespace CellexalVR.General
             WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/ScreenCanvas.prefab");
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
+            PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
         }
 
         [Obsolete]
