@@ -1,6 +1,8 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -17,10 +19,7 @@ namespace CellexalVR.Menu.Buttons
 
         protected override string Description
         {
-            get
-            {
-                return "Close menu";
-            }
+            get { return "Close menu"; }
         }
 
         public override void Click()
@@ -45,10 +44,13 @@ namespace CellexalVR.Menu.Buttons
                     r.enabled = false;
                 foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
                     c.enabled = false;
+                foreach (Canvas canvas in menuToClose.GetComponentsInChildren<Canvas>())
+                    canvas.enabled = false;
             }
+
             //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
             MenuWithTabs subMenu = menuToClose.GetComponent<MenuWithTabs>();
-            
+
             textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
             foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
             {

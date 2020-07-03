@@ -9,9 +9,14 @@ using VRTK;
 
 namespace CellexalVR.Interaction
 {
+    /// <summary>
+    /// General slider script that can be used to change a value that has a max and min value.
+    /// One or more function(s) being called when the slider handle is grabbed and one or more when the handle is released;
+    /// </summary>
     public class VRSlider : MonoBehaviour
     {
         public GameObject handle;
+        public GameObject attachPoint;
         public GameObject fillArea;
         public TextMeshProUGUI sliderValueText;
         public TextMeshProUGUI header;
@@ -20,8 +25,22 @@ namespace CellexalVR.Interaction
         public float maxValue;
         public float startValue;
         public UnityEvent OnHandleRelease;
-        public UnityEvent OnHandleGrabbed;
-        [HideInInspector] public float value;
+
+
+        public float Value
+        {
+            get => value;
+            set => this.value = value;
+        }
+
+        private float value;
+
+        [Serializable]
+        public class OnHandleGrabbedEvent : UnityEvent<float>
+        {
+        };
+
+        public OnHandleGrabbedEvent OnHandleGrabbed = new OnHandleGrabbedEvent();
 
         private Vector3 handleStartPosition;
         private float xMaxPos = 100;
@@ -43,7 +62,7 @@ namespace CellexalVR.Interaction
             handleInteractable.InteractableObjectUngrabbed += OnRelease;
             header.text = headerText;
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
-            value = minValue + xValue * (maxValue - minValue);
+            Value = minValue + xValue * (maxValue - minValue);
         }
 
         private void OnValidate()
@@ -53,7 +72,7 @@ namespace CellexalVR.Interaction
             float xValue = xMaxPos * relativeVal;
             handleStartPosition.x = xValue;
             xValue /= xMaxPos;
-            value = minValue + xValue * (maxValue - minValue);
+            Value = minValue + xValue * (maxValue - minValue);
             handle.transform.localPosition = handleStartPosition;
             Vector3 fillAreaScale = fillArea.transform.localScale;
             fillAreaScale.x = 0.001f * xValue;
@@ -61,14 +80,8 @@ namespace CellexalVR.Interaction
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
         }
 
-        // Update is called once per frame
         private void Update()
         {
-            if (handleInteractable.IsGrabbed())
-            {
-                OnHandleGrabbed.Invoke();
-            }
-
             float xValue = handle.transform.localPosition.x;
 
             if (xValue >= 100)
@@ -81,10 +94,18 @@ namespace CellexalVR.Interaction
                 xValue = 0;
             }
 
+            if (handleInteractable.IsGrabbed())
+            {
+                OnHandleGrabbed.Invoke(Value);
+            }
 
             handle.transform.localPosition = new Vector3(xValue, 5, 0);
         }
 
+        /// <summary>
+        /// The position of the handle goes from 0 - 100.
+        /// This is used to determine the value which depends on the min and max set for the slider.
+        /// </summary>
         public void UpdateSliderValue()
         {
             float xValue = handle.transform.localPosition.x;
@@ -101,12 +122,26 @@ namespace CellexalVR.Interaction
             handle.transform.localPosition = new Vector3(xValue, 5, 0);
 
             xValue /= xMaxPos;
-            value = minValue + xValue * (maxValue - minValue);
+            Value = minValue + xValue * (maxValue - minValue);
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
             Vector3 fillAreaScale = fillArea.transform.localScale;
             fillAreaScale.x = 0.001f * xValue;
             fillArea.transform.localScale = fillAreaScale;
         }
+
+
+        // private void OnTriggerEnter(Collider other)
+        // {
+        //     if (attachPoint == null) return;
+        //     attachPoint.SetActive(true);
+        //
+        // }
+        //
+        // private void OnTriggerExit(Collider other)
+        // {
+        //     if (attachPoint == null) return;
+        //     attachPoint.SetActive(false);
+        // }
 
         private void OnRelease(object sender, VRTK.InteractableObjectEventArgs e)
         {

@@ -165,7 +165,6 @@ namespace CellexalVR.General
             if (selectedCells.Count == 0)
             {
                 CellexalEvents.GraphsReset.Invoke();
-                print("no more points");
             }
         }
 

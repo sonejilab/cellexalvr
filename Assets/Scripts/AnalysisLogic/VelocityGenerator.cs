@@ -25,16 +25,20 @@ namespace CellexalVR.AnalysisLogic
         private float frequency = 1f;
         private float speed = 8f;
         private float threshold = 0f;
+        private float particleSize = 0.01f;
+        private const float particleSizeStartValue = 0.01f;
         private bool constantEmitOverTime = true;
         private bool graphPointsToggled = false;
         private bool useGraphPointColors = false;
         private bool useArrowParticle = true;
 
         private string particleSystemGameObjectName = "Velocity Particle System";
+
         private void Start()
         {
             ActiveGraphs = new List<Graph>();
         }
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -52,7 +56,7 @@ namespace CellexalVR.AnalysisLogic
         /// Reads a velocity file and starts the particle system that visualises the velcoity information.
         /// </summary>
         /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
+        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] {"readvelocityfile", "rvf"})]
         public void ReadVelocityFile(string path)
         {
             ReadVelocityFile(path, "");
@@ -65,33 +69,32 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
-            print(path);
+            // print(path);
             //summertwerk
             if (referenceManager.inputReader.h5readers.Count > 0)
             {
-                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value ,path, subGraphName));
+                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value,
+                    path, subGraphName));
             }
             else
                 StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
-
         }
 
         private IEnumerator ReadVelocityParticleSystem(string path, string subGraphName = "")
         {
-
             while (referenceManager.graphGenerator.isCreating)
             {
                 yield return null;
             }
 
-            path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
-                              path + ".mds";
+            // path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
+            //        path + ".mds";
 
             CellexalLog.Log("Started reading velocity file " + path);
 
             Graph graph;
             Graph originalGraph;
-            int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
+            int lastSlashIndex = path.LastIndexOfAny(new char[] {'/', '\\'});
             int lastDotIndex = path.LastIndexOf('.');
             string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
@@ -110,8 +113,8 @@ namespace CellexalVR.AnalysisLogic
 
             int counter = 0;
 
-            //print(graphName + " - " + graph.GraphName);
-            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
+            Dictionary<Graph.GraphPoint, Vector3> velocities =
+                new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
             using (FileStream stream = new FileStream(path, FileMode.Open))
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -129,6 +132,7 @@ namespace CellexalVR.AnalysisLogic
                     {
                         continue;
                     }
+
                     float xfrom = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                     float yfrom = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                     float zfrom = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
@@ -140,9 +144,9 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter<3)
+                    if (counter < 3)
                     {
-                        UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
+                        // UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
                         //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
                         counter++;
                     }
@@ -163,6 +167,7 @@ namespace CellexalVR.AnalysisLogic
                 emitter.Speed = speed;
                 emitter.UseGraphPointColors = useGraphPointColors;
                 emitter.UseArrowParticle = useArrowParticle;
+                emitter.ParticleSize = particleSize;
                 graph.velocityParticleEmitter = emitter;
                 if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
                 {
@@ -171,7 +176,6 @@ namespace CellexalVR.AnalysisLogic
 
                 reader.Close();
                 stream.Close();
-
             }
 
             ActiveGraphs.Add(graph);
@@ -190,7 +194,7 @@ namespace CellexalVR.AnalysisLogic
 
             Graph graph;
             Graph originalGraph;
-            int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
+            int lastSlashIndex = path.LastIndexOfAny(new char[] {'/', '\\'});
             int lastDotIndex = path.LastIndexOf('.');
             //string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             string graphName = path.ToUpper();
@@ -208,7 +212,8 @@ namespace CellexalVR.AnalysisLogic
             //print(graphName + " - " + graph.GraphName);
 
 
-            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
+            Dictionary<Graph.GraphPoint, Vector3> velocities =
+                new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
 
             while (h5Reader.busy)
                 yield return null;
@@ -225,13 +230,19 @@ namespace CellexalVR.AnalysisLogic
             {
                 Graph.GraphPoint point = graph.FindGraphPoint(cellNames[i]);
 
-                float diffX = float.Parse(vels[i * 3]); //,System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                float diffY = float.Parse(vels[i * 3 + 1]); //, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                float diffZ = float.Parse(vels[i * 3 + 2]);// System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float
+                    diffX = float.Parse(
+                        vels[i * 3]); //,System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float
+                    diffY = float.Parse(
+                        vels[i * 3 + 1]); //, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                float
+                    diffZ = float.Parse(
+                        vels[i * 3 + 2]); // System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                 Vector3 diff = new Vector3(diffX, diffY, diffZ);
                 //Method
                 Vector3 diffScaled = diff * 30; //arbitrary scaling, ofcourse.. DUH!
-                                                  
+
                 diffScaled /= originalGraph.longestAxis;
                 if (point != null)
                     velocities[point] = diffScaled / 5f;
@@ -252,6 +263,7 @@ namespace CellexalVR.AnalysisLogic
             emitter.Speed = speed;
             emitter.UseGraphPointColors = useGraphPointColors;
             emitter.UseArrowParticle = useArrowParticle;
+            emitter.ParticleSize = particleSize;
             graph.velocityParticleEmitter = emitter;
             if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
             {
@@ -289,6 +301,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 newFrequencyString = newFrequencyString.Substring(0, 8);
             }
+
             referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
         }
 
@@ -312,6 +325,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 g.velocityParticleEmitter.Speed = speed;
             }
+
             referenceManager.velocitySubMenu.speedText.text = "Speed: " + speed;
         }
 
@@ -337,6 +351,26 @@ namespace CellexalVR.AnalysisLogic
             }
 
             referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + threshold;
+        }
+
+
+        /// <summary>
+        /// Changes the size of the animated particles. Useful for larger graphs.
+        /// </summary>
+        /// <param name="value"></param>
+        public void ChangeParticleSize(float value)
+        {
+            // Make lower ranges even smaller.
+            particleSize = value;
+            if (value <= particleSizeStartValue / 2)
+            {
+                particleSize /= 2f;
+            }
+            
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.ParticleSize = particleSize;
+            }
         }
 
         /// <summary>
@@ -365,7 +399,9 @@ namespace CellexalVR.AnalysisLogic
             {
                 g.velocityParticleEmitter.ConstantEmitOverTime = constantEmitOverTime;
             }
-            referenceManager.velocitySubMenu.constantSynchedModeText.text = "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
+
+            referenceManager.velocitySubMenu.constantSynchedModeText.text =
+                "Mode: " + (constantEmitOverTime ? "Constant" : "Synched");
         }
 
         /// <summary>
@@ -383,7 +419,9 @@ namespace CellexalVR.AnalysisLogic
             {
                 g.velocityParticleEmitter.UseGraphPointColors = useGraphPointColors;
             }
-            referenceManager.velocitySubMenu.graphPointColorsModeText.text = "Mode: " + (useGraphPointColors ? "Graphpoint colors" : "Gradient");
+
+            referenceManager.velocitySubMenu.graphPointColorsModeText.text =
+                "Mode: " + (useGraphPointColors ? "Graphpoint colors" : "Gradient");
         }
 
         /// <summary>
@@ -401,7 +439,9 @@ namespace CellexalVR.AnalysisLogic
             {
                 g.velocityParticleEmitter.UseArrowParticle = useArrowParticle;
             }
-            referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: " + (useArrowParticle ? "Arrow" : "Circle");
+
+            referenceManager.velocitySubMenu.particleMaterialText.text =
+                "Mode: " + (useArrowParticle ? "Arrow" : "Circle");
         }
 
         /*

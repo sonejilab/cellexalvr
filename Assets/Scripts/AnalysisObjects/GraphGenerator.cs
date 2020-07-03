@@ -316,18 +316,12 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void SliceClustering(Dictionary<string, Graph.GraphPoint> points = null, int lodGroup = 0)
         {
-            // GameObject lodGroup = new GameObject();
-            // lodGroup.transform.parent = newGraph.transform;
-            // lodGroup.transform.localPosition = Vector3.zero;
-            // currentLODGroup = lodGroup.transform;
-            // if (i > 0) meshToUse = graphpointLowQLargeSzMesh;
             ScaleAllCoordinates();
-
             // meshes in unity can have a max of 65535 vertices
 
             // int maxVerticesPerMesh = 250000;
-            int maxVerticesPerMesh = 4000000;
-            //int maxVerticesPerMesh = 200000;
+            int maxVerticesPerMesh = 16000 * meshToUse.vertexCount;
+            // int maxVerticesPerMesh = 200000;
             nbrOfMaxPointsPerClusters = maxVerticesPerMesh / meshToUse.vertexCount;
             // nbrOfMaxPointsPerClusters = SystemInfo.maxTextureSize;
             // place all points in one big cluster
@@ -813,9 +807,8 @@ namespace CellexalVR.AnalysisObjects
 
             // set up the graph's texture
             //print(SystemInfo.maxTextureSize);
-            newGraph.textureWidths[lodGroup] = 16000;// nbrOfMaxPointsPerClusters;
-            newGraph.textureHeights[lodGroup] = 170000 / 16000;
-            print(newGraph.textureWidths[lodGroup] * newGraph.textureHeights[lodGroup]);
+            newGraph.textureWidths[lodGroup] = nbrOfMaxPointsPerClusters; //16000
+            newGraph.textureHeights[lodGroup] = nbrOfClusters;//170000 / 16000;
             //newGraph.textureHeights[lodGroup] = nbrOfClusters;
             //Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
             Texture2D texture = new Texture2D(newGraph.textureWidths[lodGroup], newGraph.textureHeights[lodGroup],

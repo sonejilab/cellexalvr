@@ -43,7 +43,7 @@ namespace CellexalVR.Interaction
         }
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             frame = 0;
             referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
@@ -71,7 +71,7 @@ namespace CellexalVR.Interaction
             RaycastHit hit;
             origin.localRotation = Quaternion.Euler(25f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
-            if (hit.collider)
+            if (hit.collider && hit.collider.tag != "BlockLaser")
             {
                 // if we hit a button in the menu
                 referenceManager.rightLaser.enabled = true;
@@ -83,7 +83,7 @@ namespace CellexalVR.Interaction
             }
             origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
-            if (hit.collider && 
+            if (hit.collider && hit.collider.tag != "BlockLaser" &&
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
             

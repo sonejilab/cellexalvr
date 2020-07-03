@@ -44,7 +44,24 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        private float particleSize;
+        
+
         [HideInInspector]
+        public float ParticleSize
+        {
+            get => particleSize;
+            set
+            {
+                particleSize = value;
+                if (particleSystem != null)
+                {
+                    ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+                    renderer.minParticleSize = renderer.maxParticleSize = value;
+                }
+            }
+        }
+
         public new ParticleSystem particleSystem;
 
         public Dictionary<Graph.GraphPoint, Vector3> Velocities

@@ -51,6 +51,12 @@ namespace CellexalVR.General
             referenceManager.consoleManager.RunCommandFile(commandFile);
         }
 
+        /// <summary>
+        /// Reads a report html file and converts it to a command file that CellexalVR can read and execute line by line.
+        /// </summary>
+        /// <param name="reportPath"></param>
+        /// <param name="dataFolderPart"></param>
+        /// <param name="reportFolder"></param>
         private void CreateCommandFileFromHtmlReport(string reportPath, string dataFolderPart, string reportFolder)
         {
             HtmlDocument doc = new HtmlDocument();

@@ -25,6 +25,7 @@ namespace CellexalVR.Menu.Buttons.Selection
             CellexalEvents.LinesBetweenGraphsCleared.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.LinesBetweenGraphsDrawn.AddListener(TurnOff);
+            CellexalEvents.GraphsReset.AddListener(TurnOff);
         }
 
         public override void Click()
