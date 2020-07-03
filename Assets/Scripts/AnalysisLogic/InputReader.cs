@@ -201,6 +201,7 @@ namespace CellexalVR.AnalysisLogic
                 throw new System.InvalidOperationException("Empty dataset");
             }
 
+            pdfMesh.ReadPDF(fullPath);
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             mdsReader = gameObject.AddComponent<MDSReader>();
             mdsReader.referenceManager = referenceManager;
@@ -209,7 +210,6 @@ namespace CellexalVR.AnalysisLogic
 
             graphGenerator.isCreating = true;
             
-            pdfMesh.ReadPDF(fullPath);
 
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {
