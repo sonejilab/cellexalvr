@@ -60,7 +60,8 @@ namespace CellexalVR.Menu.Buttons.Networks
         {
             // combinedNetworksButton.SetCombinedArcsVisible(false);
             // network.SetArcsVisible(toggleToState);
-            // referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggleToState, network.name);
+            // referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(this.name);
+            referenceManager.multiuserMessageSender.SendMessageNetworkArcButtonClicked(this.name);
             arcsSubMenu.NetworkArcsButtonClicked(this);
         }
 

@@ -163,7 +163,7 @@ namespace CellexalVR.PDFViewer
         /// </summary>
         /// <param name="startPage"></param>
         /// <param name="nrOfPages"></param>
-        /// <returns></returns>
+        /// <returns></returnst
         private IEnumerator ShowPagesCoroutine(int startPage, int nrOfPages)
         {
             List<UnityEngine.Color[]> allTexturePixels = new List<UnityEngine.Color[]>();

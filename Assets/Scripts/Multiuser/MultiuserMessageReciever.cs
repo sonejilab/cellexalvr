@@ -171,6 +171,25 @@ namespace CellexalVR.Multiuser
 
         }
 
+        public void RecieveMessageUpdateSliderValue(string sliderType, float value)
+        {
+            VRSlider.SliderType slider = (VRSlider.SliderType) Enum.Parse(typeof(VRSlider.SliderType), sliderType);
+
+            switch (slider)
+            {
+                case VRSlider.SliderType.VelocityParticleSize:
+                    referenceManager.velocitySubMenu.GetComponentInChildren<VRSlider>().UpdateSliderValue(value);
+                    break;
+                case VRSlider.SliderType.PDFCurvature:
+                case VRSlider.SliderType.PDFRadius:
+                case VRSlider.SliderType.PDFWidth:
+                case VRSlider.SliderType.PDFHeight:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         #endregion
 
         #region Legend
@@ -1244,14 +1263,15 @@ namespace CellexalVR.Multiuser
             referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, false);
         }
 
-        [PunRPC]
-        public void RecieveMessageSetArcsVisible(bool toggleToState, string networkName)
-        {
-            CellexalLog.Log("Toggle arcs of " + networkName);
-            NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
-            network.SetCombinedArcsVisible(false);
-            network.SetArcsVisible(toggleToState);
-        }
+        // [PunRPC]
+        // public void RecieveMessageSetArcsVisible(bool toggleToState, string buttonName)
+        // {
+        //     CellexalLog.Log("Toggle arcs of " + buttonName);
+        //     referenceManager.arcsSubMenu.NetworkArcsButtonClickedMultiUser(toggleToState, buttonName);
+        //     // NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
+        //     // network.SetCombinedArcsVisible(false);
+        //     // network.SetArcsVisible(toggleToState);
+        // }
 
         [PunRPC]
         public void RecieveMessageSetCombinedArcsVisible(bool toggleToState, string networkName)
@@ -1260,6 +1280,18 @@ namespace CellexalVR.Multiuser
             NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
             network.SetArcsVisible(false);
             network.SetCombinedArcsVisible(toggleToState);
+        }
+
+        [PunRPC]
+        public void RecieveMessageToggleAllArcs(bool toggleToState)
+        {
+            referenceManager.arcsSubMenu.ToggleAllArcs(toggleToState);
+        }
+
+        [PunRPC]
+        public void RecieveMessageNetworkArcButtonClicked(string buttonName)
+        {
+            referenceManager.arcsSubMenu.NetworkArcsButtonClickedMultiUser(buttonName);
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
+using CellexalVR.General;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,15 +25,27 @@ namespace CellexalVR.Interaction
         public float minValue;
         public float maxValue;
         public float startValue;
-        public UnityEvent OnHandleRelease;
+        public ReferenceManager referenceManager;
 
+        public enum SliderType
+        {
+            VelocityParticleSize,
+            PDFCurvature,
+            PDFRadius,
+            PDFWidth,
+            PDFHeight
+        };
 
+        public SliderType sliderType;
+        
         public float Value
         {
             get => value;
             set => this.value = value;
         }
 
+        public UnityEvent OnHandleRelease;
+        
         private float value;
 
         [Serializable]
@@ -78,6 +91,7 @@ namespace CellexalVR.Interaction
             fillAreaScale.x = 0.001f * xValue;
             fillArea.transform.localScale = fillAreaScale;
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
+            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
         private void Update()
@@ -129,6 +143,20 @@ namespace CellexalVR.Interaction
             fillArea.transform.localScale = fillAreaScale;
         }
 
+        /// <summary>
+        /// If slider value is to be updated from outside (e.g. multi user) then update handler first then value.
+        /// </summary>
+        /// <param name="value"></param>
+        public void UpdateSliderValue(float value)
+        {
+            handle.transform.localPosition = new Vector3(value, 5, 0);
+            UpdateSliderValue();
+        }
+
+        public void UpdateSliderValueMultiUser()
+        {
+            referenceManager.multiuserMessageSender.SendMessageUpdateSliderValue(sliderType, handle.transform.localPosition.x);
+        }
 
         // private void OnTriggerEnter(Collider other)
         // {

@@ -25,6 +25,7 @@ namespace CellexalVR.Menu.Buttons.Networks
                 // referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(currentState, network.name);
             // }
             referenceManager.arcsSubMenu.ToggleAllArcs(currentState);
+            referenceManager.multiuserMessageSender.SendMessageToggleAllArcs(currentState);
         }
 
         /// <summary>

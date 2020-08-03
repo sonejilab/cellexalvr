@@ -107,6 +107,19 @@ namespace CellexalVR.Menu.SubMenus
                 clickedButton.ConnectTo(previouslyClickedButton);
                 previouslyClickedButton = null;
             }
+
+            // referenceManager.multiuserMessageSender.SendMessageNetworkArcButtonClicked(previouslyClickedButton == null, previouslyClickedButton.name);
+        }
+
+        public void NetworkArcsButtonClickedMultiUser(string buttonName)
+        {
+            ToggleArcsButton button = FindButton(buttonName);
+            if (button == null)
+            {
+                CellexalLog.Log($"Could not find arc button with name: {buttonName}");
+                return;
+            }
+            NetworkArcsButtonClicked(button);
         }
 
         /// <summary>
@@ -132,9 +145,11 @@ namespace CellexalVR.Menu.SubMenus
             else
             {
                 ToggleArcsButton[] subMenuButtons = GetComponentsInChildren<ToggleArcsButton>();
-                ToggleArcsButton subMenuButton = subMenuButtons.First(x => x.network == previouslyClickedButton.network);
+                ToggleArcsButton subMenuButton =
+                    subMenuButtons.First(x => x.network == previouslyClickedButton.network);
                 subMenuButton.ClearArcs();
             }
+
             previouslyClickedButton = null;
         }
 
@@ -149,7 +164,7 @@ namespace CellexalVR.Menu.SubMenus
                 for (int i = 0; i < toggleArcButtonList.Count / 2 - 1; i++)
                 {
                     ToggleArcsButton button = toggleArcButtonList[i];
-                    referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggle, button.network.name);
+                    // referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggle, button.network.name);
                     button.network.SetCombinedArcsVisible(false);
                     for (int j = i + 1; j < toggleArcButtonList.Count / 2; j++)
                     {
@@ -161,7 +176,7 @@ namespace CellexalVR.Menu.SubMenus
                 ToggleArcsButton lastButton = toggleArcButtonList[toggleArcButtonList.Count / 2 - 1];
                 lastButton.network.SetCombinedArcsVisible(false);
                 GetComponentInChildren<ToggleAllCombinedArcsButton>().CurrentState = false;
-                referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggle, lastButton.network.name);
+                // referenceManager.multiuserMessageSender.SendMessageSetArcsVisible(toggle, lastButton.network.name);
             }
 
             else
@@ -245,7 +260,7 @@ namespace CellexalVR.Menu.SubMenus
                 var toggleArcButton = newButton.GetComponent<ToggleArcsButton>();
                 toggleArcButtonList.Add(toggleArcButton);
                 newButton.transform.localPosition = buttonPos;
-                newButton.name = "Network" + i + "_ArcButton";
+                newButton.name = tabName + "_Network" + i + "_ArcButton";
                 newButton.gameObject.SetActive(true);
                 Color color = network.GetComponent<Renderer>().material.color;
                 toggleArcButton.ButtonColor = color;
@@ -289,6 +304,11 @@ namespace CellexalVR.Menu.SubMenus
                 DestroyTab(nh.name.Split('_')[1]);
                 CreateToggleArcsButtons(nh.networks.ToArray());
             }
+        }
+
+        public ToggleArcsButton FindButton(string buttonName)
+        {
+            return toggleArcButtonList.FirstOrDefault(b => b.name == name);
         }
     }
 }
