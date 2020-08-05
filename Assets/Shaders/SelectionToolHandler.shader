@@ -69,7 +69,7 @@
                 //hue *= saturate(noise + 0.8);
 			    o.Metallic = _Metallic * shift;
 			    o.Smoothness = _Glossiness * shift;
-			    o.Emission = _Emission * shift/15;
+			    //o.Emission = _Emission * shift/15;
 			}
 			
 			
