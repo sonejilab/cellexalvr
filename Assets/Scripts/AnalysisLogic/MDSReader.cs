@@ -21,6 +21,7 @@ namespace CellexalVR.AnalysisLogic
         public ReferenceManager referenceManager;
 
         private readonly char[] separators = new char[] {' ', '\t'};
+        private int nrOfLODGroups;
 
 
         /// <summary>
@@ -38,6 +39,8 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.loaderController.loaderMovedDown = true;
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
+
+            nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
 
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -59,6 +62,7 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
                 }
 
+                // TODO: Make a more robust way of deciding if it should be loaded as a spatial graph.
                 if (file.Contains("slice"))
                 {
                     StartCoroutine(ReadSpatialMDSFiles(file));
@@ -214,27 +218,32 @@ namespace CellexalVR.AnalysisLogic
                 }
 
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
-                // Improves performance a lot with many points.
+                // Improves performance a lot when analysing larger graphs.
                 int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
                 combGraph.LODGroups = n;
                 combGraph.textures = new Texture2D[n];
                 for (int i = 0; i < n; i++)
                 {
                     referenceManager.graphGenerator.isCreating = true;
-                    GameObject lodGroup = new GameObject();
-                    lodGroup.transform.parent = combGraph.transform;
-                    lodGroup.transform.localPosition = Vector3.zero;
-                    lodGroup.gameObject.name = $"LODGroup{i}";
-                    combGraph.LODGroupParents.Add(lodGroup);
-                    // referenceManager.graphGenerator.lodGroups.Add(lodGroup);
+                    // GameObject lodGroup = new GameObject();
+                    // lodGroup.transform.parent = combGraph.transform;
+                    // lodGroup.transform.localPosition = Vector3.zero;
+                    // lodGroup.gameObject.name = $"LODGroup{i}";
+                    // combGraph.LODGroupParents.Add(lodGroup);
+                    // if (i > 0)
+                    // {
+                    //     referenceManager.graphGenerator.meshToUse =
+                    //         referenceManager.graphGenerator.graphpointLowQLargeSzMesh;
+                    //     referenceManager.graphGenerator.UpdateCoords();
+                    // }
+
+                    AddLODGroup(combGraph, i);
+
                     if (i > 0)
                     {
-                        referenceManager.graphGenerator.meshToUse =
-                            referenceManager.graphGenerator.graphpointLowQLargeSzMesh;
                         referenceManager.graphGenerator.UpdateCoords();
                     }
 
-                    
                     referenceManager.graphGenerator.SliceClustering(lodGroup: i);
                     string outputString = "Successfully read graph from " + graphFileName + " reading ~" +
                                           maximumItemsPerFrame +
@@ -246,7 +255,7 @@ namespace CellexalVR.AnalysisLogic
                     }
                 }
 
-                if (n > 1)
+                if (nrOfLODGroups > 1)
                 {
                     combGraph.gameObject.AddComponent<LODGroup>();
                     referenceManager.graphGenerator.UpdateLODGroups(combGraph);
@@ -255,6 +264,12 @@ namespace CellexalVR.AnalysisLogic
                 // Add axes in bottom corner of graph and scale points differently
                 combGraph.SetInfoText();
                 referenceManager.graphGenerator.AddAxes(combGraph, axes);
+            }
+
+
+            while (referenceManager.graphGenerator.isCreating)
+            {
+                yield return null;
             }
 
             if (type.Equals(GraphGenerator.GraphType.MDS))
@@ -275,12 +290,26 @@ namespace CellexalVR.AnalysisLogic
             //statusDisplayHUD.RemoveStatus(statusIdHUD);
             //statusDisplayFar.RemoveStatus(statusIdFar);
 
-            while (referenceManager.graphGenerator.isCreating)
-            {
-                yield return null;
-            }
 
             CellexalEvents.GraphsLoaded.Invoke();
+        }
+
+        /// <summary>
+        /// Helper function to add level of detail group when building graphs.
+        /// </summary>
+        private void AddLODGroup(Graph combGraph, int i)
+        {
+            GameObject lodGroup = new GameObject();
+            lodGroup.transform.parent = combGraph.transform;
+            lodGroup.transform.localPosition = Vector3.zero;
+            lodGroup.gameObject.name = $"LODGroup{i}";
+            combGraph.LODGroupParents.Add(lodGroup);
+            if (i > 0)
+            {
+                referenceManager.graphGenerator.meshToUse =
+                    referenceManager.graphGenerator.graphpointLowQLargeSzMesh;
+                // referenceManager.graphGenerator.UpdateCoords();
+            }
         }
 
         /// <summary>
@@ -296,9 +325,11 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
 
+            // int nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
             List<Tuple<string, Vector3>> gps = new List<Tuple<string, Vector3>>();
             const float maximumDeltaTime = 0.05f; // 20 fps
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
+
             //string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + data + "\\tsne.mds";
             float prevCoord = float.NaN;
             while (referenceManager.graphGenerator.isCreating)
@@ -311,6 +342,7 @@ namespace CellexalVR.AnalysisLogic
             sg.gameObject.layer = LayerMask.NameToLayer("GraphLayer");
             referenceManager.graphManager.spatialGraphs.Add(sg);
             sg.referenceManager = referenceManager;
+
             int sliceNr = 0;
             using (StreamReader mdsStreamReader = new StreamReader(file))
             {
@@ -331,11 +363,8 @@ namespace CellexalVR.AnalysisLogic
 
                         string cellName = words[0];
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        ;
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        ;
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        ;
                         gps.Add(new Tuple<string, Vector3>(cellName, new Vector3(x, y, z)));
                         itemsThisFrame++;
                     }
@@ -357,93 +386,126 @@ namespace CellexalVR.AnalysisLogic
                         maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                     }
                 }
+            }
 
-                gps.Sort((x, y) => x.Item2.z.CompareTo(y.Item2.z));
-                Vector3 maxCoords = new Vector3();
-                Vector3 minCoords = new Vector3();
-                maxCoords.x = gps.Max(v => (v.Item2.x));
-                maxCoords.y = gps.Max(v => (v.Item2.y));
-                maxCoords.z = gps.Max(v => (v.Item2.z));
-                minCoords.x = gps.Min(v => (v.Item2.x));
-                minCoords.y = gps.Min(v => (v.Item2.y));
-                minCoords.z = gps.Min(v => (v.Item2.z));
+            gps.Sort((x, y) => x.Item2.z.CompareTo(y.Item2.z));
+            Vector3 maxCoords = new Vector3();
+            Vector3 minCoords = new Vector3();
+            maxCoords.x = gps.Max(v => (v.Item2.x));
+            maxCoords.y = gps.Max(v => (v.Item2.y));
+            maxCoords.z = gps.Max(v => (v.Item2.z));
+            minCoords.x = gps.Min(v => (v.Item2.x));
+            minCoords.y = gps.Min(v => (v.Item2.y));
+            minCoords.z = gps.Min(v => (v.Item2.z));
+            Graph combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
+            yield return null;
+            referenceManager.graphManager.Graphs.Add(combGraph);
+            referenceManager.graphManager.originalGraphs.Add(combGraph);
+            combGraph.gameObject.name = "Slice" + sliceNr;
+            combGraph.GraphName = "Slice" + sliceNr;
+            Transform transform1 = combGraph.transform;
+            transform1.parent = parent.transform;
+            transform1.localPosition = new Vector3(0, 0, 0);
+            combGraph.LODGroups = nrOfLODGroups;
+            combGraph.textures = new Texture2D[nrOfLODGroups];
+            GraphSlice gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
+            gs.referenceManager = referenceManager;
+            yield return null;
 
-                Graph combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
-                yield return null;
-                referenceManager.graphManager.Graphs.Add(combGraph);
-                referenceManager.graphManager.originalGraphs.Add(combGraph);
-                combGraph.gameObject.name = "Slice" + sliceNr;
-                combGraph.GraphName = "Slice" + sliceNr;
-                Transform transform1 = combGraph.transform;
-                transform1.parent = parent.transform;
-                transform1.localPosition = new Vector3(0, 0, 0);
-                //combGraph.
-                GraphSlice gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
-                gs.referenceManager = referenceManager;
-                yield return null;
-                // const float sliceDist = 0.005f;
-                Tuple<string, Vector3> gpTuple = gps[0];
-                Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x,
-                    gpTuple.Item2.y,
-                    gpTuple.Item2.z);
-                float currentCoord = gpTuple.Item2.z;
-                for (int n = 1; n < gps.Count; n++)
+            // const float sliceDist = 0.005f;
+            Tuple<string, Vector3> gpTuple = gps[0];
+            Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
+
+            Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x,
+                gpTuple.Item2.y,
+                gpTuple.Item2.z);
+
+            float currentCoord = gpTuple.Item2.z;
+            for (int n = 1; n < gps.Count; n++)
+            {
+                gpTuple = gps[n];
+                currentCoord = gpTuple.Item2.z;
+                if (n == 1)
                 {
-                    gpTuple = gps[n];
-                    currentCoord = gpTuple.Item2.z;
-                    if (n == 1)
-                    {
-                        prevCoord = currentCoord;
-                    }
-                    // when we reach new slice (new z coordinate) build the graph and then start adding to a new one.
-                    else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
-                    {
-                        combGraph.maxCoordValues = maxCoords;
-                        combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering();
-                        while (referenceManager.graphGenerator.isCreating)
-                        {
-                            yield return null;
-                        }
-
-                        gs.zCoord = gp.WorldPosition.z;
-                        combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
-                        yield return null;
-                        referenceManager.graphManager.Graphs.Add(combGraph);
-                        referenceManager.graphManager.originalGraphs.Add(combGraph);
-                        combGraph.transform.parent = parent.transform;
-                        yield return null;
-                        gs = combGraph.gameObject.AddComponent<GraphSlice>();
-                        gs.referenceManager = referenceManager;
-                        gs.sliceNr = ++sliceNr;
-                        combGraph.transform.localPosition = new Vector3(0, 0, 0);
-                        combGraph.GraphName = "Slice" + sliceNr;
-                        combGraph.gameObject.name = "Slice" + sliceNr;
-                    }
-                    else if (n == gps.Count - 1)
-                    {
-                        combGraph.maxCoordValues = maxCoords;
-                        combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering();
-                        while (referenceManager.graphGenerator.isCreating)
-                        {
-                            yield return null;
-                        }
-
-                        gs.zCoord = gp.WorldPosition.z;
-                        combGraph.transform.localPosition = new Vector3(0, 0, 0);
-                        continue;
-                    }
-
-                    cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                    gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
-                        gpTuple.Item2.z);
                     prevCoord = currentCoord;
                 }
+                // when we reach new slice (new z coordinate) build the graph and then start adding to a new one.
+                else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
+                {
+                    gs.zCoord = gp.WorldPosition.z;
+                    for (int i = 0; i < nrOfLODGroups; i++)
+                    {
+                        referenceManager.graphGenerator.isCreating = true;
+                        AddLODGroup(combGraph, i);
 
-                StartCoroutine(sg.AddSlices());
+                        combGraph.maxCoordValues = maxCoords;
+                        combGraph.minCoordValues = minCoords;
+                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
+                        while (referenceManager.graphGenerator.isCreating)
+                        {
+                            yield return null;
+                        }
+                    }
+
+                    if (nrOfLODGroups > 1)
+                    {
+                        combGraph.gameObject.AddComponent<LODGroup>();
+                        referenceManager.graphGenerator.UpdateLODGroups(combGraph);
+                    }
+
+                    combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
+                    combGraph.LODGroups = nrOfLODGroups;
+                    combGraph.textures = new Texture2D[nrOfLODGroups];
+                    yield return null;
+                    referenceManager.graphManager.Graphs.Add(combGraph);
+                    referenceManager.graphManager.originalGraphs.Add(combGraph);
+                    combGraph.transform.parent = parent.transform;
+                    yield return null;
+                    gs = combGraph.gameObject.AddComponent<GraphSlice>();
+                    gs.referenceManager = referenceManager;
+                    gs.sliceNr = ++sliceNr;
+                    combGraph.transform.localPosition = new Vector3(0, 0, 0);
+                    combGraph.GraphName = "Slice" + sliceNr;
+                    combGraph.gameObject.name = "Slice" + sliceNr;
+                }
+                // last gp: finish the final slice
+                else if (n == gps.Count - 1)
+                {
+                    gs.zCoord = gp.WorldPosition.z;
+                    for (int i = 0; i < nrOfLODGroups; i++)
+                    {
+                        cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
+                        gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                            gpTuple.Item2.z);
+                        combGraph.maxCoordValues = maxCoords;
+                        combGraph.minCoordValues = minCoords;
+                        referenceManager.graphGenerator.isCreating = true;
+                        AddLODGroup(combGraph, i);
+                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
+                        while (referenceManager.graphGenerator.isCreating)
+                        {
+                            yield return null;
+                        }
+                    }
+
+                    if (nrOfLODGroups > 1)
+                    {
+                        combGraph.gameObject.AddComponent<LODGroup>();
+                        referenceManager.graphGenerator.UpdateLODGroups(combGraph);
+                    }
+
+                    combGraph.transform.localPosition = new Vector3(0, 0, 0);
+                    continue;
+                }
+
+                cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
+                gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                    gpTuple.Item2.z);
+                prevCoord = currentCoord;
             }
+
+
+            StartCoroutine(sg.AddSlices());
         }
     }
 }

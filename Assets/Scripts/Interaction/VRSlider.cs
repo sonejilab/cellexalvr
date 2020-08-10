@@ -91,7 +91,10 @@ namespace CellexalVR.Interaction
             fillAreaScale.x = 0.001f * xValue;
             fillArea.transform.localScale = fillAreaScale;
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
-            referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
         }
 
         private void Update()

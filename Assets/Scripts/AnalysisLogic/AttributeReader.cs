@@ -77,6 +77,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 referenceManager.settingsMenu.AddSelectionColor();
             }
+
             referenceManager.settingsMenu.unsavedChanges = false;
             //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
             //{
@@ -146,7 +147,7 @@ namespace CellexalVR.AnalysisLogic
                         }
 
                         yieldCount++;
-                        if (yieldCount % 500 == 0)
+                        if (yieldCount % 50 == 0)
                             yield return null;
                     }
 
@@ -155,14 +156,9 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.attributeSubMenu.CreateButtons(actualAttributeTypes);
                     referenceManager.cellManager.Attributes = actualAttributeTypes;
                 }
+                print(referenceManager.cellManager.Attributes.Length);
 
-                for (int i = CellexalConfig.Config.SelectionToolColors.Length;
-                    i < referenceManager.cellManager.Attributes.Length;
-                    i++)
-                {
-                    referenceManager.settingsMenu.AddSelectionColor();
-                }
-
+                referenceManager.settingsMenu.AddSelectionColors(CellexalConfig.Config.SelectionToolColors.Length);
                 referenceManager.settingsMenu.unsavedChanges = false;
                 //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
                 //{

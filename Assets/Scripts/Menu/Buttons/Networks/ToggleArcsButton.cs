@@ -4,8 +4,6 @@ using UnityEngine;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Menu.SubMenus;
 using CellexalVR.SceneObjects;
-using JetBrains.Annotations;
-using UnityEngine.Experimental.PlayerLoop;
 
 namespace CellexalVR.Menu.Buttons.Networks
 {
