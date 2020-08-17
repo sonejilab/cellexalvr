@@ -220,39 +220,11 @@ namespace CellexalVR.AnalysisLogic
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
                 // Improves performance a lot when analysing larger graphs.
                 int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-                combGraph.LODGroups = n;
-                combGraph.textures = new Texture2D[n];
-                for (int i = 0; i < n; i++)
+                StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
+
+                while (referenceManager.graphGenerator.isCreating)
                 {
-                    referenceManager.graphGenerator.isCreating = true;
-                    // GameObject lodGroup = new GameObject();
-                    // lodGroup.transform.parent = combGraph.transform;
-                    // lodGroup.transform.localPosition = Vector3.zero;
-                    // lodGroup.gameObject.name = $"LODGroup{i}";
-                    // combGraph.LODGroupParents.Add(lodGroup);
-                    // if (i > 0)
-                    // {
-                    //     referenceManager.graphGenerator.meshToUse =
-                    //         referenceManager.graphGenerator.graphpointLowQLargeSzMesh;
-                    //     referenceManager.graphGenerator.UpdateCoords();
-                    // }
-
-                    AddLODGroup(combGraph, i);
-
-                    if (i > 0)
-                    {
-                        referenceManager.graphGenerator.UpdateCoords();
-                    }
-
-                    referenceManager.graphGenerator.SliceClustering(lodGroup: i);
-                    string outputString = "Successfully read graph from " + graphFileName + " reading ~" +
-                                          maximumItemsPerFrame +
-                                          " lines every frame";
-                    CellexalLog.Log(outputString);
-                    while (referenceManager.graphGenerator.isCreating)
-                    {
-                        yield return null;
-                    }
+                    yield return null;
                 }
 
                 if (nrOfLODGroups > 1)
@@ -264,12 +236,13 @@ namespace CellexalVR.AnalysisLogic
                 // Add axes in bottom corner of graph and scale points differently
                 combGraph.SetInfoText();
                 referenceManager.graphGenerator.AddAxes(combGraph, axes);
-            }
 
-
-            while (referenceManager.graphGenerator.isCreating)
-            {
-                yield return null;
+                //status.UpdateStatus(statusId, "Reading index.facs file");
+                //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+                //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
+                //status.RemoveStatus(statusId);
+                //statusDisplayHUD.RemoveStatus(statusIdHUD);
+                //statusDisplayFar.RemoveStatus(statusIdFar);
             }
 
             if (type.Equals(GraphGenerator.GraphType.MDS))
@@ -283,34 +256,10 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.inputReader.ReadFacsFiles(path, totalNbrOfCells);
                 referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
-            //status.UpdateStatus(statusId, "Reading index.facs file");
-            //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
-            //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
-            //status.RemoveStatus(statusId);
-            //statusDisplayHUD.RemoveStatus(statusIdHUD);
-            //statusDisplayFar.RemoveStatus(statusIdFar);
-
 
             CellexalEvents.GraphsLoaded.Invoke();
         }
 
-        /// <summary>
-        /// Helper function to add level of detail group when building graphs.
-        /// </summary>
-        private void AddLODGroup(Graph combGraph, int i)
-        {
-            GameObject lodGroup = new GameObject();
-            lodGroup.transform.parent = combGraph.transform;
-            lodGroup.transform.localPosition = Vector3.zero;
-            lodGroup.gameObject.name = $"LODGroup{i}";
-            combGraph.LODGroupParents.Add(lodGroup);
-            if (i > 0)
-            {
-                referenceManager.graphGenerator.meshToUse =
-                    referenceManager.graphGenerator.graphpointLowQLargeSzMesh;
-                // referenceManager.graphGenerator.UpdateCoords();
-            }
-        }
 
         /// <summary>
         /// For spatial data we want to have each slice as a separate graph to be able to interact with them individually.
@@ -433,18 +382,13 @@ namespace CellexalVR.AnalysisLogic
                 else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
                 {
                     gs.zCoord = gp.WorldPosition.z;
-                    for (int i = 0; i < nrOfLODGroups; i++)
-                    {
-                        referenceManager.graphGenerator.isCreating = true;
-                        AddLODGroup(combGraph, i);
+                    combGraph.maxCoordValues = maxCoords;
+                    combGraph.minCoordValues = minCoords;
+                    StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
 
-                        combGraph.maxCoordValues = maxCoords;
-                        combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
-                        while (referenceManager.graphGenerator.isCreating)
-                        {
-                            yield return null;
-                        }
+                    while (referenceManager.graphGenerator.isCreating)
+                    {
+                        yield return null;
                     }
 
                     if (nrOfLODGroups > 1)
@@ -472,20 +416,16 @@ namespace CellexalVR.AnalysisLogic
                 else if (n == gps.Count - 1)
                 {
                     gs.zCoord = gp.WorldPosition.z;
-                    for (int i = 0; i < nrOfLODGroups; i++)
+                    cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
+                    gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                        gpTuple.Item2.z);
+                    combGraph.maxCoordValues = maxCoords;
+                    combGraph.minCoordValues = minCoords;
+                    StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
+
+                    while (referenceManager.graphGenerator.isCreating)
                     {
-                        cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                        gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
-                            gpTuple.Item2.z);
-                        combGraph.maxCoordValues = maxCoords;
-                        combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.isCreating = true;
-                        AddLODGroup(combGraph, i);
-                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
-                        while (referenceManager.graphGenerator.isCreating)
-                        {
-                            yield return null;
-                        }
+                        yield return null;
                     }
 
                     if (nrOfLODGroups > 1)
