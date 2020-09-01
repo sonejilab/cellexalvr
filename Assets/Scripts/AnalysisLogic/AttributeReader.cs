@@ -157,8 +157,14 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.cellManager.Attributes = actualAttributeTypes;
                 }
 
-                referenceManager.settingsMenu.AddSelectionColors(CellexalConfig.Config.SelectionToolColors.Length);
-                referenceManager.settingsMenu.unsavedChanges = false;
+                int nrOfAttributes = referenceManager.cellManager.Attributes.Length;
+                int nrOfSelToolColors = CellexalConfig.Config.SelectionToolColors.Length;
+                if (nrOfAttributes > nrOfSelToolColors)
+                {
+                    referenceManager.settingsMenu.AddSelectionColors(nrOfAttributes - nrOfSelToolColors);
+                    referenceManager.settingsMenu.unsavedChanges = false;
+                }
+
                 //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
                 //{
                 //    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
