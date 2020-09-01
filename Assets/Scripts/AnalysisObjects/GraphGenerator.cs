@@ -316,7 +316,10 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void SliceClustering(Dictionary<string, Graph.GraphPoint> points = null, int lodGroup = 0)
         {
-            ScaleAllCoordinates();
+            if (lodGroup == 0)
+            {
+                ScaleAllCoordinates();
+            }
             // meshes in unity can have a max of 65535 vertices
 
             // int maxVerticesPerMesh = 250000;
@@ -808,7 +811,7 @@ namespace CellexalVR.AnalysisObjects
             // set up the graph's texture
             //print(SystemInfo.maxTextureSize);
             newGraph.textureWidths[lodGroup] = nbrOfMaxPointsPerClusters; //16000
-            newGraph.textureHeights[lodGroup] = nbrOfClusters;//170000 / 16000;
+            newGraph.textureHeights[lodGroup] = nbrOfClusters; //170000 / 16000;
             //newGraph.textureHeights[lodGroup] = nbrOfClusters;
             //Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
             Texture2D texture = new Texture2D(newGraph.textureWidths[lodGroup], newGraph.textureHeights[lodGroup],
@@ -1177,17 +1180,18 @@ namespace CellexalVR.AnalysisObjects
                 }
 
                 // float transitionHeight = 1.0f / 
-                lods[i] = new LOD(1.0f / (2*i + 1.2f) , renderers);
+                lods[i] = new LOD(1.0f / (2 * i * 5 + 1.2f), renderers);
             }
 
             GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             g.transform.parent = newGraph.transform;
             g.transform.localPosition = Vector3.zero;
             g.layer = LayerMask.NameToLayer("GraphLayer");
+            g.GetComponent<Collider>().enabled = false;
             Renderer[] lastRenderers = new Renderer[1];
             lastRenderers[0] = g.GetComponent<Renderer>();
             lastRenderers[0].material = graphPointMaterialPrefab;
-            lods[2] = new LOD(1.0f / 7, lastRenderers);
+            lods[2] = new LOD(1.0f / 20, lastRenderers);
             lodGroup.fadeMode = LODFadeMode.CrossFade;
             lodGroup.animateCrossFading = true;
             lodGroup.SetLODs(lods);

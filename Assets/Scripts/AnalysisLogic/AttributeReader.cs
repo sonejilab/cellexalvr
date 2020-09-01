@@ -156,7 +156,6 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.attributeSubMenu.CreateButtons(actualAttributeTypes);
                     referenceManager.cellManager.Attributes = actualAttributeTypes;
                 }
-                print(referenceManager.cellManager.Attributes.Length);
 
                 referenceManager.settingsMenu.AddSelectionColors(CellexalConfig.Config.SelectionToolColors.Length);
                 referenceManager.settingsMenu.unsavedChanges = false;

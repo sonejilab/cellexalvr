@@ -432,7 +432,6 @@ namespace CellexalVR.AnalysisLogic
                 // when we reach new slice (new z coordinate) build the graph and then start adding to a new one.
                 else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
                 {
-                    gs.zCoord = gp.WorldPosition.z;
                     for (int i = 0; i < nrOfLODGroups; i++)
                     {
                         referenceManager.graphGenerator.isCreating = true;
@@ -445,7 +444,10 @@ namespace CellexalVR.AnalysisLogic
                         {
                             yield return null;
                         }
+
                     }
+
+                    gs.zCoord = gp.WorldPosition.z;
 
                     if (nrOfLODGroups > 1)
                     {
@@ -471,21 +473,22 @@ namespace CellexalVR.AnalysisLogic
                 // last gp: finish the final slice
                 else if (n == gps.Count - 1)
                 {
-                    gs.zCoord = gp.WorldPosition.z;
+                    cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
+                    gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                            gpTuple.Item2.z);
                     for (int i = 0; i < nrOfLODGroups; i++)
                     {
-                        cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                        gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
-                            gpTuple.Item2.z);
-                        combGraph.maxCoordValues = maxCoords;
-                        combGraph.minCoordValues = minCoords;
                         referenceManager.graphGenerator.isCreating = true;
                         AddLODGroup(combGraph, i);
+                        combGraph.maxCoordValues = maxCoords;
+                        combGraph.minCoordValues = minCoords;
                         referenceManager.graphGenerator.SliceClustering(lodGroup: i);
                         while (referenceManager.graphGenerator.isCreating)
                         {
                             yield return null;
                         }
+                        
+                        gs.zCoord = gp.WorldPosition.z;
                     }
 
                     if (nrOfLODGroups > 1)
