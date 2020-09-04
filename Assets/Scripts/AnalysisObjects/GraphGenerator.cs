@@ -320,7 +320,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Helper function to add level of detail group when building graphs.
         /// </summary>
-        private void AddLODGroup(Graph combGraph, int i)
+        public void AddLODGroup(Graph combGraph, int i)
         {
             GameObject lodGroup = new GameObject();
             lodGroup.transform.parent = combGraph.transform;
@@ -372,6 +372,10 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void SliceClustering(Dictionary<string, Graph.GraphPoint> points = null, int lodGroup = 0)
         {
+            if (lodGroup == 0)
+            {
+                ScaleAllCoordinates();
+            }
             // meshes in unity can have a max of 65535 vertices
 
             // int maxVerticesPerMesh = 250000;
@@ -1250,8 +1254,18 @@ namespace CellexalVR.AnalysisObjects
                 }
 
                 // float transitionHeight = 1.0f / 
-                lods[i] = new LOD(1.0f / (4 * i + 1.2f), renderers);
+                lods[i] = new LOD(1.0f / (2 * i * 5 + 1.2f), renderers);
             }
+
+            GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            g.transform.parent = newGraph.transform;
+            g.transform.localPosition = Vector3.zero;
+            g.layer = LayerMask.NameToLayer("GraphLayer");
+            g.GetComponent<Collider>().enabled = false;
+            Renderer[] lastRenderers = new Renderer[1];
+            lastRenderers[0] = g.GetComponent<Renderer>();
+            lastRenderers[0].material = graphPointMaterialPrefab;
+            lods[2] = new LOD(1.0f / 20, lastRenderers);
 
             // GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             // g.transform.parent = newGraph.transform;
