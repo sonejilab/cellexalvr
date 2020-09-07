@@ -1257,24 +1257,6 @@ namespace CellexalVR.AnalysisObjects
                 lods[i] = new LOD(1.0f / (2 * i * 5 + 1.2f), renderers);
             }
 
-            GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            g.transform.parent = newGraph.transform;
-            g.transform.localPosition = Vector3.zero;
-            g.layer = LayerMask.NameToLayer("GraphLayer");
-            g.GetComponent<Collider>().enabled = false;
-            Renderer[] lastRenderers = new Renderer[1];
-            lastRenderers[0] = g.GetComponent<Renderer>();
-            lastRenderers[0].material = graphPointMaterialPrefab;
-            lods[2] = new LOD(1.0f / 20, lastRenderers);
-
-            // GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            // g.transform.parent = newGraph.transform;
-            // g.transform.localPosition = Vector3.zero;
-            // g.layer = LayerMask.NameToLayer("GraphLayer");
-            // Renderer[] lastRenderers = new Renderer[1];
-            // lastRenderers[0] = g.GetComponent<Renderer>();
-            // lastRenderers[0].material = graphPointMaterialPrefab;
-            // lods[2] = new LOD(1.0f / 7, lastRenderers);
             lodGroup.fadeMode = LODFadeMode.CrossFade;
             lodGroup.animateCrossFading = true;
             lodGroup.SetLODs(lods);
