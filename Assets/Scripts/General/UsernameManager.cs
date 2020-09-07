@@ -60,12 +60,8 @@ namespace CellexalVR.General
         }
 
         /// <summary>
-        /// The folder containing the source data that we are currently working on.
-        /// This should not be a full path, but rather a relative path from the Data folder.
+        /// The full path to the folder containing the source data that we are currently working on.
         /// </summary>
-        /// <example>
-        /// Loading "Cellexal/Data/data_set_1" means this should be set to "data_set_1"
-        /// </example>
         public static string DataSourceFolder
         {
             get

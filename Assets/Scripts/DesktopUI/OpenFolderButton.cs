@@ -10,7 +10,17 @@ namespace CellexalVR.DesktopUI
     /// </summary>
     public class OpenFolderButton : MonoBehaviour
     {
+        public ReferenceManager referenceManager;
         public string path;
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            }
+        }
+
 
         public void OpenFolder()
         {
@@ -32,6 +42,10 @@ namespace CellexalVR.DesktopUI
             else if (path == "$SCRIPTS_FOLDER")
             {
                 fullPath = Path.Combine(Application.streamingAssetsPath, "R");
+            }
+            else if (path == "$CONFIG")
+            {
+                fullPath = referenceManager.configManager.currentProfileFullPath;
             }
 
             System.Diagnostics.Process.Start(fullPath);

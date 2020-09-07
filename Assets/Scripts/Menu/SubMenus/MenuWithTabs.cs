@@ -1,17 +1,16 @@
-﻿using CellexalVR.Menu.Buttons;
+﻿using CellexalVR.General;
+using CellexalVR.Menu.Buttons;
 using System.Collections.Generic;
-using UnityEngine;
-using CellexalVR.General;
 using TMPro;
+using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
 {
     /// <summary>
     /// Represents a menu that has tabs. Tabs are meant to function much like tabs in a web browser.
     /// </summary>
-    public class MenuWithTabs : MonoBehaviour
+    public class MenuWithTabs : SubMenu
     {
-        public ReferenceManager referenceManager;
         public Tab tabPrefab;
         public GameObject nextPageButton;
         public GameObject prevPageButton;
@@ -38,9 +37,6 @@ namespace CellexalVR.Menu.SubMenus
 
         public CellexalButton prefab;
 
-        protected List<CellexalButton> buttons;
-
-
         protected int buttonsPerTab = 20;
         protected string[] names;
         protected string[] categories;
@@ -57,32 +53,21 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
-        protected virtual void Start()
+        protected override void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             menuToggler = referenceManager.menuToggler;
             CellexalEvents.GraphsUnloaded.AddListener(DestroyTabs);
+            base.Start();
         }
-
-        /// <summary>
-        /// Finds a button by its name.
-        /// </summary>
-        /// <param name="name">The name of the button.</param>
-        /// <returns>The button, or null if no button was found.</returns>
-        public virtual CellexalButton FindButton(string name)
-        {
-            var button = buttons.Find(x => x.name == name);
-            return button;
-        }
-
 
         public virtual void CreateButtons(string[] categoriesAndNames)
         {
             DestroyTabs();
             this.categoriesAndNames = categoriesAndNames;
-            if (buttons == null)
-                buttons = new List<CellexalButton>();
-            foreach (var button in buttons)
+            if (cellexalButtons == null)
+                cellexalButtons = new List<CellexalButton>();
+            foreach (var button in cellexalButtons)
             {
                 // wait 0.1 seconds so we are out of the loop before we start destroying stuff
                 if (button != null)
@@ -90,7 +75,7 @@ namespace CellexalVR.Menu.SubMenus
                     Destroy(button.gameObject, .1f);
                 }
             }
-            buttons.Clear();
+            cellexalButtons.Clear();
             //TurnOffAllTabs();
             categories = new string[categoriesAndNames.Length];
             names = new string[categoriesAndNames.Length];
@@ -135,7 +120,7 @@ namespace CellexalVR.Menu.SubMenus
 
                 //if (buttonIndex < Colors.Length)
                 //    newButton.GetComponent<Renderer>().material.color = Colors[buttonIndex];
-                buttons.Add(newButton);
+                cellexalButtons.Add(newButton);
                 newTab.AddButton(newButton);
             }
             // set the names of the attributes after the buttons have been created.
@@ -218,6 +203,16 @@ namespace CellexalVR.Menu.SubMenus
             }
             ResetTabButtonPosition();
             tabs.Clear();
+        }
+
+        public override void SetMenuActive(bool active)
+        {
+            base.SetMenuActive(active);
+            TurnOffAllTabs();
+            if (tabs.Count > 0)
+            {
+                tabs[currentPage].SetTabActive(true);
+            }
         }
 
         /// <summary>

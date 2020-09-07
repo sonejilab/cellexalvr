@@ -1,6 +1,8 @@
-﻿using System.IO;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml.Serialization;
+using UnityEngine;
+
 namespace CellexalVR.General
 {
     /// <summary>
@@ -9,6 +11,8 @@ namespace CellexalVR.General
     public static class CellexalConfig
     {
         public static Config Config { get; set; }
+
+        public static Dictionary<string, Config> savedConfigs { get; set; }
     }
 
     /// <summary>
@@ -101,6 +105,8 @@ namespace CellexalVR.General
             NetworkLineColorNegativeHigh = c.NetworkLineColorNegativeHigh;
             NumberOfNetworkLineColors = c.NumberOfNetworkLineColors;
             NetworkLineWidth = c.NetworkLineWidth;
+            VelocityParticlesLowColor = c.VelocityParticlesLowColor;
+            VelocityParticlesHighColor = c.VelocityParticlesHighColor;
             ConsoleMaxBufferLines = c.ConsoleMaxBufferLines;
             ShowNotifications = c.ShowNotifications;
             GraphPointQuality = c.GraphPointQuality;
@@ -115,8 +121,11 @@ namespace CellexalVR.General
     public class ConfigManager : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        public string currentProfileFullPath;
+
         private string configDir;
-        private string configPath;
+        private string defaultConfigPath;
+        private List<string> configPaths;
         private string sampleConfigPath;
         private bool multiUserSynchronise;
 
@@ -131,20 +140,43 @@ namespace CellexalVR.General
         private void Start()
         {
             configDir = Directory.GetCurrentDirectory() + @"\Config";
-            configPath = configDir + @"\config.xml";
+            defaultConfigPath = configDir + @"\default_config.xml";
+            currentProfileFullPath = defaultConfigPath;
             sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.xml";
+            if (!File.Exists(defaultConfigPath))
+            {
+                File.Copy(sampleConfigPath, defaultConfigPath);
+                CellexalLog.Log("WARNING: No default config file found at " + defaultConfigPath + ". A sample config file has been created.");
+            }
+
             if (CellexalLog.consoleManager == null)
             {
                 CellexalLog.consoleManager = referenceManager.consoleManager;
             }
-            ReadConfigFile();
+            configPaths = new List<string>();
+            ReadConfigFiles(configDir);
+            CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
+            CellexalEvents.ConfigLoaded.Invoke();
+        }
+
+        public void ReadConfigFiles(string folderPath)
+        {
+            // read all configs and set the default config as the current one
+            configPaths.AddRange(Directory.GetFiles(folderPath, "*.xml", SearchOption.TopDirectoryOnly));
+            CellexalConfig.savedConfigs = new Dictionary<string, Config>();
+            foreach (string path in configPaths)
+            {
+                ReadConfigFile(path);
+            }
+
             //SaveConfigFile();
             // set up a filesystemwatcher that notifies us if the file is changed and we should reload it
             FileSystemWatcher watcher = new FileSystemWatcher(configDir);
             watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "config.xml";
+            watcher.Filter = "*.xml";
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.EnableRaisingEvents = true;
+
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
@@ -153,7 +185,7 @@ namespace CellexalVR.General
             if (!multiUserSynchronise)
             {
                 // Make the ReadConfigFile execute in the main thread
-                SQLiter.LoomManager.Loom.QueueOnMainThread(() => ReadConfigFile());
+                SQLiter.LoomManager.Loom.QueueOnMainThread(() => ReadConfigFile(e.Name));
             }
         }
 
@@ -162,11 +194,15 @@ namespace CellexalVR.General
         /// </summary>
         public void ResetToDefault()
         {
-            File.Copy(sampleConfigPath, configPath, true);
-            ReadConfigFile();
+            File.Copy(sampleConfigPath, defaultConfigPath, true);
+            ReadConfigFile(defaultConfigPath);
         }
 
-        private void ReadConfigFile()
+        /// <summary>
+        /// Reads a config file.
+        /// </summary>
+        /// <param name="configPath">The full path to the config file.</param>
+        public void ReadConfigFile(string configPath)
         {
             // make sure the folder and the file exists.
             if (!Directory.Exists("Config"))
@@ -177,22 +213,31 @@ namespace CellexalVR.General
 
             if (!File.Exists(configPath))
             {
-                File.Copy(sampleConfigPath, configPath);
-                CellexalLog.Log("WARNING: No config file found at " + configPath + ". A sample config file has been created.");
+                CellexalLog.Log("WARNING: No config file found at " + configPath + ". Reading default config instead.");
+                if (!File.Exists(defaultConfigPath))
+                {
+                    File.Copy(sampleConfigPath, defaultConfigPath);
+                    CellexalLog.Log("WARNING: No default config file found at " + defaultConfigPath + ". A sample config file has been created.");
+                }
+                configPath = defaultConfigPath;
             }
-            CellexalLog.Log("Started reading the config file");
-
+            CellexalLog.Log("Started reading a config file");
+            int indexOfLastSlash = Mathf.Max(configPath.LastIndexOf('/'), configPath.LastIndexOf('\\'));
+            int indexOfLastUnderscore = configPath.LastIndexOf('_');
+            string profileName = configPath.Substring(indexOfLastSlash + 1, indexOfLastUnderscore - indexOfLastSlash - 1);
             FileStream fileStream = new FileStream(configPath, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             XmlSerializer serializer = new XmlSerializer(typeof(Config));
-            CellexalConfig.Config = (Config)serializer.Deserialize(streamReader);
+            CellexalConfig.savedConfigs[profileName] = (Config)serializer.Deserialize(streamReader);
             streamReader.Close();
             fileStream.Close();
-            CellexalEvents.ConfigLoaded.Invoke();
-
         }
 
-        public void SaveConfigFile()
+        /// <summary>
+        /// Saves the current config as a file. If a file already exists at the specified path, it will be overwritten.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        public void SaveConfigFile(string path)
         {
             if (!Directory.Exists("Config"))
             {
@@ -202,7 +247,7 @@ namespace CellexalVR.General
 
             CellexalLog.Log("Started saving the config file");
 
-            FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
             StreamWriter streamWriter = new StreamWriter(fileStream);
 
             XmlSerializer ser = new XmlSerializer(typeof(Config));
@@ -210,6 +255,15 @@ namespace CellexalVR.General
             streamWriter.Close();
             fileStream.Close();
 
+        }
+
+        public string ProfileNameToConfigPath(string profileName)
+        {
+            if (!CellexalConfig.savedConfigs.ContainsKey(profileName))
+            {
+                return "";
+            }
+            return Directory.GetCurrentDirectory() + "\\" + CellexalConfig.savedConfigs[profileName].ConfigDir + "\\" + profileName + "_config.xml";
         }
 
         /// <summary>
@@ -266,9 +320,9 @@ namespace CellexalVR.General
             //    File.Create(sharedConfigPath);
             //}
 
-            configPath = sharedConfigPath;
-            SaveConfigFile();
-            ReadConfigFile();
+            defaultConfigPath = sharedConfigPath;
+            SaveConfigFile(sharedConfigPath);
+            ReadConfigFile(sharedConfigPath);
         }
 
         /// <summary>
@@ -338,9 +392,9 @@ namespace CellexalVR.General
             CellexalConfig.Config.VelocityParticlesHighColor = config.VelocityParticlesHighColor;
 
             string sharedConfigPath = configDir + @"\sharedConfig.xml";
-            configPath = sharedConfigPath;
-            SaveConfigFile();
-            ReadConfigFile();
+            defaultConfigPath = sharedConfigPath;
+            SaveConfigFile(sharedConfigPath);
+            ReadConfigFile(sharedConfigPath);
         }
 
     }
