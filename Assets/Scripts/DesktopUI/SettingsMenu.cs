@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
+using System.IO;
 
 namespace CellexalVR.DesktopUI
 {
@@ -62,6 +63,11 @@ namespace CellexalVR.DesktopUI
         [Header("Visual")] public TMPro.TMP_Dropdown skyboxDropdown;
         public Toggle notificationToggle;
         public ColorPickerButton skyboxTintColor;
+        [Header("Profile")]
+        public TMPro.TMP_Dropdown profileDropdown;
+        public TMPro.TMP_InputField newProfileInputField;
+        public Toggle datasetSpecificProfileToggle;
+        public Button deleteProfileButton;
 
         public Material[] skyboxes;
 
@@ -77,6 +83,9 @@ namespace CellexalVR.DesktopUI
         private Config beforeChanges;
         [HideInInspector] public bool unsavedChanges;
 
+        private string currentProfilePath;
+        private bool datasetLoaded = false;
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -88,6 +97,9 @@ namespace CellexalVR.DesktopUI
         private void Awake()
         {
             CellexalEvents.ConfigLoaded.AddListener(SetValues);
+            CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
+            CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+
             colorPicker = referenceManager.colorPicker;
             var skyboxOptions = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (Material mat in skyboxes)
@@ -154,6 +166,24 @@ namespace CellexalVR.DesktopUI
             networkLineColoringMethodDropdown.options = lineMethods;
 
             selectionColorButtons = new List<ColorPickerButton>();
+        }
+
+        private void Start()
+        {
+            currentProfilePath = referenceManager.configManager.ProfileNameToConfigPath("default");
+            var profiles = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in CellexalConfig.savedConfigs.Keys)
+            {
+                if (s != "default")
+                {
+                    profiles.Add(new TMPro.TMP_Dropdown.OptionData(s));
+                }
+            }
+            profiles.Sort((TMPro.TMP_Dropdown.OptionData d1, TMPro.TMP_Dropdown.OptionData d2) => (d1.text.CompareTo(d2.text)));
+            // make sure default profile is at the top of the list
+            profiles.Insert(0, new TMPro.TMP_Dropdown.OptionData("default"));
+            profileDropdown.options = profiles;
+
         }
 
         void Update()
@@ -245,13 +275,29 @@ namespace CellexalVR.DesktopUI
             velocityHighColor.Color = CellexalConfig.Config.VelocityParticlesHighColor;
             velocityLowColor.Color = CellexalConfig.Config.VelocityParticlesLowColor;
             skyboxTintColor.Color = CellexalConfig.Config.SkyboxTintColor;
-
+            // can not change the default profiles dataset specificity
+            string currentProfile = profileDropdown.options[profileDropdown.value].text;
+            currentProfilePath = referenceManager.configManager.ProfileNameToConfigPath(currentProfile);
+            datasetSpecificProfileToggle.enabled = (profileDropdown.value != 0) && datasetLoaded;
+            datasetSpecificProfileToggle.isOn = (CellexalConfig.Config.ConfigDir != "Config");
 
             SetNetworkColoringMethod();
 
             //LayoutRebuilder.MarkLayoutForRebuild((RectTransform)selectionColorGroup.transform);
             unsavedChanges = false;
             beforeChanges = new Config(CellexalConfig.Config);
+        }
+
+        private void OnGraphsLoaded()
+        {
+            datasetLoaded = true;
+            datasetSpecificProfileToggle.enabled = (profileDropdown.value != 0);
+        }
+
+        private void OnGraphsUnloaded()
+        {
+            datasetLoaded = false;
+            datasetSpecificProfileToggle.enabled = false;
         }
 
         private int TryParse(string s, int defaultValue)
@@ -493,6 +539,93 @@ namespace CellexalVR.DesktopUI
             }
         }
 
+        public void LoadProfile()
+        {
+            referenceManager.configManager.SaveConfigFile(currentProfilePath);
+
+            string profileName = profileDropdown.options[profileDropdown.value].text;
+            string configPath = referenceManager.configManager.ProfileNameToConfigPath(profileName);
+            CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
+            referenceManager.configManager.currentProfileFullPath = configPath;
+            currentProfilePath = configPath;
+        }
+
+        public void NewProfile()
+        {
+            string profileName = newProfileInputField.text;
+            bool profileExists = false;
+            for (int i = 0; i < profileDropdown.options.Count; i++)
+            {
+                TMPro.TMP_Dropdown.OptionData profileOption = profileDropdown.options[i];
+                if (profileOption.text == profileName)
+                {
+                    // profile already exists
+                    profileDropdown.value = i;
+                    profileExists = true;
+                    break;
+                }
+            }
+
+            if (!profileExists)
+            {
+                // insert the new profile and keep the list sorted
+                bool inserted = false;
+                for (int i = 0; i < profileDropdown.options.Count; ++i)
+                {
+                    if (profileDropdown.options[i].text.CompareTo(profileName) > 0)
+                    {
+                        profileDropdown.options.Insert(i, new TMPro.TMP_Dropdown.OptionData(profileName));
+                        profileDropdown.value = i;
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (!inserted)
+                {
+                    profileDropdown.options.Add(new TMPro.TMP_Dropdown.OptionData(profileName));
+                    profileDropdown.value = profileDropdown.options.Count - 1;
+                }
+            }
+
+            string configPath = referenceManager.configManager.ProfileNameToConfigPath(profileName);
+            referenceManager.configManager.SaveConfigFile(configPath);
+
+            CellexalConfig.savedConfigs[profileName] = new Config(CellexalConfig.Config);
+            newProfileInputField.text = "";
+            LoadProfile();
+        }
+
+        public void DeleteProfile()
+        {
+            if (profileDropdown.value == 0)
+            {
+                // don't delete default profile
+                return;
+            }
+            TMPro.TMP_Dropdown.OptionData currentProfile = profileDropdown.options[profileDropdown.value];
+            profileDropdown.options.Remove(currentProfile);
+            profileDropdown.value = 0;
+            LoadProfile();
+        }
+
+        public void SetDatasetSpecificProfile()
+        {
+            string currentProfile = profileDropdown.options[profileDropdown.value].text;
+
+            if (datasetSpecificProfileToggle.isOn)
+            {
+                CellexalConfig.Config.ConfigDir = "Data\\" + CellexalUser.DataSourceFolder;
+            }
+            else
+            {
+                CellexalConfig.Config.ConfigDir = "Config";
+            }
+            string newFullPath = referenceManager.configManager.ProfileNameToConfigPath(currentProfile);
+            print(currentProfilePath + " " + newFullPath);
+            File.Move(currentProfilePath, newFullPath);
+            currentProfilePath = newFullPath;
+        }
+
         public void ChangeMade()
         {
             unsavedChanges = true;
@@ -508,7 +641,7 @@ namespace CellexalVR.DesktopUI
             }
             else
             {
-                referenceManager.configManager.SaveConfigFile();
+                referenceManager.configManager.SaveConfigFile(currentProfilePath);
             }
 
             unsavedChangesPrompt.SetActive(false);

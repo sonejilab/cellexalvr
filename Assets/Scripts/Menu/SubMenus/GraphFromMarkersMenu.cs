@@ -13,9 +13,9 @@ namespace CellexalVR.Menu.SubMenus
         public override void CreateButtons(string[] categoriesAndNames)
         {
             base.CreateButtons(categoriesAndNames);
-            for (int i = 0; i < buttons.Count; ++i)
+            for (int i = 0; i < cellexalButtons.Count; ++i)
             {
-                var b = buttons[i].GetComponent<AddMarkerButton>();
+                var b = cellexalButtons[i].GetComponent<AddMarkerButton>();
                 b.referenceManager = referenceManager;
                 //int colorIndex = i % Colors.Length;
                 b.SetIndex(names[i]);
@@ -26,7 +26,7 @@ namespace CellexalVR.Menu.SubMenus
 
         public override CellexalButton FindButton(string name)
         {
-            var button = buttons.Find(x => x.GetComponent<AddMarkerButton>().indexName == name);
+            var button = cellexalButtons.Find(x => x.GetComponent<AddMarkerButton>().indexName == name);
             return button;
         }
 

@@ -175,7 +175,7 @@ namespace CellexalVR.SceneObjects
                         {
                             if (path.Contains(".html"))
                             {
-                                referenceManager.reportReader.ReadFolder(path);
+                                // referenceManager.reportReader.ReadFolder(path);
                             }
                             else
                             {

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
 {
-    public class VelocitySubMenu : MenuWithoutTabs
+    public class VelocitySubMenu : SubMenu
     {
         public GameObject velocityDataPrefab;
         public TextMeshPro constantSynchedModeText;
@@ -23,7 +23,7 @@ namespace CellexalVR.Menu.SubMenus
         Vector3 positionIncCol = new Vector3(0.185f, 0f, 0f);
         Vector3 positionIncRow = new Vector3(0f, 0f, -0.2f);
 
-        private void Start()
+        protected override void Start()
         {
             CellexalEvents.GraphsLoaded.AddListener(CreateButtons);
             CellexalEvents.GraphsUnloaded.AddListener(DestroyButtons);
@@ -33,6 +33,7 @@ namespace CellexalVR.Menu.SubMenus
             graphPointColorsModeText.text = "Mode: Gradient";
             constantSynchedModeText.text = "Mode: Constant";
             particleMaterialText.text = "Mode: Arrow";
+            base.Start();
         }
 
         public void CreateButton(string filePath, string subGraphName = "")

@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// The menu that holds t he buttons for choosing and creating filters.
     /// </summary>
-    public class FilterMenu : MenuWithoutTabs
+    public class FilterMenu : SubMenu
     {
 
         public FilterButton buttonPrefab;

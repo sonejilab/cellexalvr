@@ -13,7 +13,7 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// The submenu for creating flybys. A flyby is a (short) video where a camera pans through some positions to highlight some intersting thing in some intersting data.
     /// </summary>
-    public class FlybyMenu : MenuWithoutTabs
+    public class FlybyMenu : SubMenu
     {
         public GameObject cameraGameObject;
         public GameObject previewSpherePrefab;
@@ -76,7 +76,7 @@ namespace CellexalVR.Menu.SubMenus
         private float previewT = 0;
         private float tInc;
 
-        public void Start()
+        protected override void Start()
         {
             renderTexture = new RenderTexture(1920, 1080, 16, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
             cameraGameObject.GetComponentInChildren<Camera>(true).targetTexture = renderTexture;
@@ -87,6 +87,7 @@ namespace CellexalVR.Menu.SubMenus
             cameraGameObject.transform.parent = null;
             cameraGameObject.transform.localScale = new Vector3(10f, 10f, 10f);
             cameraGameObject.GetComponent<MeshRenderer>().enabled = true;
+            base.Start();
         }
 
         /// <summary>

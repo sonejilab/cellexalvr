@@ -340,6 +340,8 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   heatmapPrefab: {fileID: 1546507171833466, guid: 08f944bd386aa3c4eb320f9aee06c9ac,
     type: 3}
+  heatmapTexturePrefab: {fileID: 798507360788260049, guid: bf7b28a6f7811f44ca7a4cb8e3653382,
+    type: 3}
   heatmapTexture: {fileID: 2800000, guid: 3dd503a730010b04d935bb95de5412ad, type: 3}
   selectionNr: 0
   heatmapsCreated: 0

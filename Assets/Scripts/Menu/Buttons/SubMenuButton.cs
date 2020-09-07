@@ -16,6 +16,7 @@ namespace CellexalVR.Menu.Buttons
 
         private Tab activeTab;
 
+
         protected override string Description
         {
             get { return description; }
@@ -26,7 +27,7 @@ namespace CellexalVR.Menu.Buttons
             // The gameobject should be active but the renderers and colliders should be disabled.
             // This makes the buttons in the menu able to receive events while not being shown.
             menu.SetActive(true);
-            SetMenuActivated(false);
+            //SetMenuActivated(false);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
         }
@@ -38,9 +39,9 @@ namespace CellexalVR.Menu.Buttons
 
         public void OpenMenu()
         {
-            DeactivateButtonsRecursive(buttonsToDeactivate);
+            //DeactivateButtonsRecursive(buttonsToDeactivate);
             textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
-            SetMenuActivated(true);
+            //SetMenuActivated(true);
             //if (menu.GetComponent<VelocitySubMenu>() != null)
             //{
             //    menu.GetComponent<VelocitySubMenu>().Active = true;
@@ -53,11 +54,10 @@ namespace CellexalVR.Menu.Buttons
                 firstTab.TabButton.SetHighlighted(true);
                 // menu.GetComponent<MenuWithTabs>().active = true;
             }
-
-            var subMenuWithouthTabs = menu.GetComponent<MenuWithoutTabs>();
-            if (subMenuWithouthTabs != null)
+            var subMenu = menu.GetComponent<SubMenu>();
+            if (subMenu != null)
             {
-                subMenuWithouthTabs.SetMenuActive(true);
+                subMenu.SetMenuActive(true);
             }
 
             descriptionText.text = "";
@@ -100,46 +100,8 @@ namespace CellexalVR.Menu.Buttons
             Collider menuCollider = menu.GetComponent<Collider>();
             if (menuCollider)
                 menuCollider.enabled = activate;
-            // Go through all the objects in the menu
-            foreach (Transform t in menu.transform)
-            {
-                // For everything that is not a tab, just deal with it normally
-                Tab tab = t.GetComponent<Tab>();
-                if (!tab)
-                {
-                    SetGameObjectAndChildrenEnabled(t.gameObject, activate);
-                }
-                else
-                {
-                    // for everything that is a tab
-                    if (!activate)
-                    {
-                        // if we are turning off the menu
-                        // save the active tab
-                        if (tab.Active)
-                            activeTab = tab;
-                        tab.SetTabActive(false);
-                        SetGameObjectAndChildrenEnabled(tab.TabButton.gameObject, false);
-                    }
-                    else
-                    {
-                        // if we are turning on the menu
-                        // skip the tab prefabs
-                        if (menuWithTabs && tab == menuWithTabs.tabPrefab) continue;
 
-                        // if we have a saved tab that should be active, turn on that one and turn off the other ones.
-                        // if there is no saved active tab, turn all tabs off
-                        if (activeTab != null)
-                            tab.SetTabActive(tab == activeTab);
-                        else
-                        {
-                            tab.SetTabActive(false);
-                        }
-
-                        SetGameObjectAndChildrenEnabled(tab.TabButton.gameObject, true);
-                    }
-                }
-            }
+            menu.GetComponent<SubMenu>().SetMenuActive(activate);
         }
 
         private void SetGameObjectAndChildrenEnabled(GameObject obj, bool active)
