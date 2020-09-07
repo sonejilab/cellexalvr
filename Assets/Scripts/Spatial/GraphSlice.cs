@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 using VRTK.GrabAttachMechanics;
@@ -20,6 +21,7 @@ namespace CellexalVR.Spatial
         public GameObject wire;
         public int sliceNr;
         public float zCoord;
+        public Dictionary<int, List<GameObject>> lodGroupClusters = new Dictionary<int, List<GameObject>>();
 
 
         protected Graph graph;

@@ -355,7 +355,7 @@ namespace CellexalVR.AnalysisLogic
             Transform transform1 = combGraph.transform;
             transform1.parent = parent.transform;
             transform1.localPosition = new Vector3(0, 0, 0);
-            combGraph.LODGroups = nrOfLODGroups;
+            combGraph.lodGroups = nrOfLODGroups;
             combGraph.textures = new Texture2D[nrOfLODGroups];
             GraphSlice gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
             gs.referenceManager = referenceManager;
@@ -413,7 +413,7 @@ namespace CellexalVR.AnalysisLogic
                         }
 
                         combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
-                        combGraph.LODGroups = nrOfLODGroups;
+                        combGraph.lodGroups = nrOfLODGroups;
                         combGraph.textures = new Texture2D[nrOfLODGroups];
                         yield return null;
                         referenceManager.graphManager.Graphs.Add(combGraph);

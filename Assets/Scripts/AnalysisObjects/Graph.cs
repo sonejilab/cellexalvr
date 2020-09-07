@@ -39,10 +39,11 @@ namespace CellexalVR.AnalysisObjects
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();
         public Dictionary<string, GraphPoint> subSelectionPoints = new Dictionary<string, GraphPoint>();
         public ReferenceManager referenceManager;
-        public int LODGroups = 2;
+        public int lodGroups = 2;
+        public bool scaled;
 
-        public Dictionary<int, List<GameObject>> LODGroupClusters = new Dictionary<int, List<GameObject>>();
-        public List<GameObject> LODGroupParents = new List<GameObject>();
+        public Dictionary<int, List<GameObject>> lodGroupClusters = new Dictionary<int, List<GameObject>>();
+        public List<GameObject> lodGroupParents = new List<GameObject>();
 
         // public int textureWidth;
         // public int textureHeight;
@@ -1138,7 +1139,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ResetColors(bool resetGroup = true)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 for (int i = 0; i < textureWidths[g]; ++i)
                 {
@@ -1164,7 +1165,7 @@ namespace CellexalVR.AnalysisObjects
         public void ToggleGraphPoints()
         {
             graphPointsInactive = !graphPointsInactive;
-            foreach (List<GameObject> lodGroup in LODGroupClusters.Values)
+            foreach (List<GameObject> lodGroup in lodGroupClusters.Values)
             {
                 foreach (GameObject cluster in lodGroup)
                 {
@@ -1182,7 +1183,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void Party()
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 for (int i = 0; i < textureWidths[g]; ++i)
                 {
@@ -1219,7 +1220,7 @@ namespace CellexalVR.AnalysisObjects
         public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
         {
             print("color gene expr");
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
@@ -1256,7 +1257,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 byte greenChannel = (byte) (outline ? 4 : 0);
@@ -1285,7 +1286,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="toggle"></param>
         private void MakePointTransparent(GraphPoint graphPoint, bool active)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 byte greenChannel;
@@ -1313,7 +1314,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="toggle"></param>
         public void MakePointUnCullable(GraphPoint graphPoint, bool culling)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 byte blueChannel = (byte) (culling ? 4 : 0);
@@ -1328,7 +1329,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void HighlightGraphPoint(GraphPoint graphPoint, bool active)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
@@ -1356,7 +1357,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="graphPoint">The graphpoint to recolor.</param>
         private void ResetGraphPointColor(GraphPoint graphPoint)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 if (isTransparent)
                 {
@@ -1391,7 +1392,7 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="expressions">An arraylist with <see cref="CellExpressionPair"/>.</param>
         public void ColorByGeneExpression(ArrayList expressions)
         {
-            for (int g = 0; g < LODGroups; g++)
+            for (int g = 0; g < lodGroups; g++)
             {
                 // expression values are saved in the textures red channel
                 // cells that have 0 (or whatever the lowest is) expression are not in the results
@@ -1463,7 +1464,7 @@ namespace CellexalVR.AnalysisObjects
 
                 textures[g].Apply();
                 // texture2.Apply();
-                LODGroupClusters[g][0].GetComponent<Renderer>().sharedMaterial.mainTexture = textures[g];
+                lodGroupClusters[g][0].GetComponent<Renderer>().sharedMaterial.mainTexture = textures[g];
                 // graphPointClusters[graphPointClusters.Count - 1].GetComponent<Renderer>().sharedMaterial.mainTexture = texture2;
             }
         }
