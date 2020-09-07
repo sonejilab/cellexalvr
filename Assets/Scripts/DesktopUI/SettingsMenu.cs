@@ -507,7 +507,8 @@ namespace CellexalVR.DesktopUI
 
             string profileName = profileDropdown.options[profileDropdown.value].text;
             string configPath = referenceManager.configManager.ProfileNameToConfigPath(profileName);
-            referenceManager.configManager.ReadConfigFile(configPath);
+            CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
+            referenceManager.configManager.currentProfileFullPath = configPath;
             currentProfilePath = configPath;
         }
 

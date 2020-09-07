@@ -121,6 +121,8 @@ namespace CellexalVR.General
     public class ConfigManager : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        public string currentProfileFullPath;
+
         private string configDir;
         private string defaultConfigPath;
         private List<string> configPaths;
@@ -139,6 +141,7 @@ namespace CellexalVR.General
         {
             configDir = Directory.GetCurrentDirectory() + @"\Config";
             defaultConfigPath = configDir + @"\default_config.xml";
+            currentProfileFullPath = defaultConfigPath;
             sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.xml";
             if (!File.Exists(defaultConfigPath))
             {
@@ -152,19 +155,19 @@ namespace CellexalVR.General
             }
             configPaths = new List<string>();
             ReadConfigFiles(configDir);
+            CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
+            CellexalEvents.ConfigLoaded.Invoke();
         }
 
-        private void ReadConfigFiles(string folderPath)
+        public void ReadConfigFiles(string folderPath)
         {
             // read all configs and set the default config as the current one
-            configPaths.AddRange(Directory.GetFiles(configDir, "*.xml", SearchOption.TopDirectoryOnly));
+            configPaths.AddRange(Directory.GetFiles(folderPath, "*.xml", SearchOption.TopDirectoryOnly));
             CellexalConfig.savedConfigs = new Dictionary<string, Config>();
             foreach (string path in configPaths)
             {
                 ReadConfigFile(path);
             }
-
-            CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
 
             //SaveConfigFile();
             // set up a filesystemwatcher that notifies us if the file is changed and we should reload it
@@ -225,11 +228,9 @@ namespace CellexalVR.General
             FileStream fileStream = new FileStream(configPath, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             XmlSerializer serializer = new XmlSerializer(typeof(Config));
-            CellexalConfig.Config = (Config)serializer.Deserialize(streamReader);
-            CellexalConfig.savedConfigs[profileName] = CellexalConfig.Config;
+            CellexalConfig.savedConfigs[profileName] = (Config)serializer.Deserialize(streamReader);
             streamReader.Close();
             fileStream.Close();
-            CellexalEvents.ConfigLoaded.Invoke();
         }
 
         /// <summary>

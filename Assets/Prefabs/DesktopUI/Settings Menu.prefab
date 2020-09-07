@@ -3252,6 +3252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   path: /Output
 --- !u!1 &1052186985402390
 GameObject:
@@ -11176,6 +11177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   path: $UNITY_LOG
 --- !u!1 &1310177255574194
 GameObject:
@@ -16644,6 +16646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   path: /Assets/StreamingAssets/R
 --- !u!1 &1469776635787200
 GameObject:
@@ -21281,6 +21284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   path: /Data
 --- !u!1 &1614891456109832
 GameObject:
@@ -21962,6 +21966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   path: $LOG
 --- !u!1 &1622472716989318
 GameObject:
@@ -23927,7 +23932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: /Config/config.xml
+  referenceManager: {fileID: 0}
+  path: $CONFIG
 --- !u!1 &1683131584752896
 GameObject:
   m_ObjectHideFlags: 0
@@ -25218,6 +25224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99ffa146f5bfb24083b21f08f769ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
   path: /Output/r_log.txt
 --- !u!1 &1738597807732116
 GameObject:

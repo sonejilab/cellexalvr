@@ -15,6 +15,7 @@ namespace CellexalVR.Menu.Buttons
 
         private Tab activeTab;
 
+
         protected override string Description
         {
             get { return description; }
@@ -25,7 +26,7 @@ namespace CellexalVR.Menu.Buttons
             // The gameobject should be active but the renderers and colliders should be disabled.
             // This makes the buttons in the menu able to receive events while not being shown.
             menu.SetActive(true);
-            SetMenuActivated(false);
+            //SetMenuActivated(false);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
         }
@@ -37,9 +38,9 @@ namespace CellexalVR.Menu.Buttons
 
         public void OpenMenu()
         {
-            DeactivateButtonsRecursive(buttonsToDeactivate);
+            //DeactivateButtonsRecursive(buttonsToDeactivate);
             textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
-            SetMenuActivated(true);
+            //SetMenuActivated(true);
             //if (menu.GetComponent<VelocitySubMenu>() != null)
             //{
             //    menu.GetComponent<VelocitySubMenu>().Active = true;
@@ -51,10 +52,10 @@ namespace CellexalVR.Menu.Buttons
                 firstTab.SetTabActive(true);
                 firstTab.TabButton.SetHighlighted(true);
             }
-            var subMenuWithouthTabs = menu.GetComponent<MenuWithoutTabs>();
-            if (subMenuWithouthTabs != null)
+            var subMenu = menu.GetComponent<SubMenu>();
+            if (subMenu != null)
             {
-                subMenuWithouthTabs.SetMenuActive(true);
+                subMenu.SetMenuActive(true);
             }
             descriptionText.text = "";
         }
@@ -92,6 +93,9 @@ namespace CellexalVR.Menu.Buttons
             Collider menuCollider = menu.GetComponent<Collider>();
             if (menuCollider)
                 menuCollider.enabled = activate;
+
+            menu.GetComponent<SubMenu>().SetMenuActive(activate);
+            return;
             // Go through all the objects in the menu
             foreach (Transform t in menu.transform)
             {

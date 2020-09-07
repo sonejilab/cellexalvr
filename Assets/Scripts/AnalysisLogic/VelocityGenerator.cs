@@ -65,15 +65,16 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
-            print(path);
+            //print(path);
             //summertwerk
             if (referenceManager.inputReader.h5readers.Count > 0)
             {
-                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value ,path, subGraphName));
+                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value, path, subGraphName));
             }
             else
+            {
                 StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
-
+            }
         }
 
         private IEnumerator ReadVelocityParticleSystem(string path, string subGraphName = "")
@@ -84,8 +85,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
 
-            path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
-                              path + ".mds";
+            //path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + path + ".mds";
 
             CellexalLog.Log("Started reading velocity file " + path);
 
@@ -108,7 +108,7 @@ namespace CellexalVR.AnalysisLogic
                 graph = originalGraph;
             }
 
-            int counter = 0;
+            //int counter = 0;
 
             //print(graphName + " - " + graph.GraphName);
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
@@ -140,12 +140,12 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter<3)
-                    {
-                        UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
-                        //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
-                        counter++;
-                    }
+                    //if (counter<3)
+                    //{
+                    //    UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
+                    //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
+                    //    counter++;
+                    //}
 
                     velocities[point] = diff / 5f;
                 }
@@ -231,7 +231,7 @@ namespace CellexalVR.AnalysisLogic
                 Vector3 diff = new Vector3(diffX, diffY, diffZ);
                 //Method
                 Vector3 diffScaled = diff * 30; //arbitrary scaling, ofcourse.. DUH!
-                                                  
+
                 diffScaled /= originalGraph.longestAxis;
                 if (point != null)
                     velocities[point] = diffScaled / 5f;
@@ -264,7 +264,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Changes how often the particles should be emitted.
+        /// Changes how often the particles should be emitted. Frequencies lower than 1/32 are set to 1/32 and frequencies greater than 32 are set to 32.
         /// </summary>
         /// <param name="amount">Amount to multiply the frequency by.</param>
         public void ChangeFrequency(float amount)
@@ -293,7 +293,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.001 are set to 0.001.
+        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.5 are set to 0.5 and speeds greater than 32 are set to 32.
         /// </summary>
         /// <param name="amount">The amount to change the speed by.</param>
         public void ChangeSpeed(float amount)

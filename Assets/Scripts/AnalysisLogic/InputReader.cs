@@ -188,7 +188,7 @@ namespace CellexalVR.AnalysisLogic
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
             graphGenerator.isCreating = true;
-
+            referenceManager.configManager.ReadConfigFiles(fullPath);
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {
             // multiple_exp     currentPath += "+" + path;

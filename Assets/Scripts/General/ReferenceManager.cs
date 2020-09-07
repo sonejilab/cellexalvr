@@ -65,6 +65,10 @@ namespace CellexalVR.General
         #region Menu
         [Header("Menu")]
         public GameObject mainMenu;
+        public GameObject frontButtons;
+        public GameObject rightButtons;
+        public GameObject backButtons;
+        public GameObject leftButtons;
         public ToggleArcsSubMenu arcsSubMenu;
         public AttributeSubMenu attributeSubMenu;
         public ColorByIndexMenu indexMenu;
@@ -76,10 +80,6 @@ namespace CellexalVR.General
         public GameObject selectionMenu;
         public FlybyMenu flybyMenu;
         //public TextMesh currentFlashedGeneText;
-        public GameObject frontButtons;
-        public GameObject rightButtons;
-        public GameObject backButtons;
-        public GameObject leftButtons;
         //public TextMesh frontDescription;
         //public TextMesh rightDescription;
         //public TextMesh backDescription;
@@ -87,6 +87,7 @@ namespace CellexalVR.General
         public MenuRotator menuRotator;
         public MinimizedObjectHandler minimizedObjectHandler;
         public MenuToggler menuToggler;
+        public MenuUnfolder menuUnfolder;
         #endregion
 
         #region Managers, generators and things
@@ -201,8 +202,12 @@ namespace CellexalVR.General
             teleportLaser = leftControllerScriptAlias.GetComponentInChildren<VRTK_BezierPointerRenderer>(true).gameObject;
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");
+            frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
+            rightButtons = GameObject.Find("MenuHolder/Main Menu/Right Buttons");
+            backButtons = GameObject.Find("MenuHolder/Main Menu/Back Buttons");
+            leftButtons = GameObject.Find("MenuHolder/Main Menu/Left Buttons");
             arcsSubMenu = mainMenu.GetComponentInChildren<ToggleArcsSubMenu>(true);
-            attributeSubMenu = mainMenu.GetComponentInChildren<AttributeSubMenu>(true);
+            attributeSubMenu = leftButtons.GetComponentInChildren<AttributeSubMenu>(true);
             indexMenu = mainMenu.GetComponentInChildren<ColorByIndexMenu>(true);
             createFromMarkerMenu = mainMenu.GetComponentInChildren<GraphFromMarkersMenu>(true);
             selectionFromPreviousMenu = mainMenu.GetComponentInChildren<SelectionFromPreviousMenu>(true);
@@ -211,10 +216,6 @@ namespace CellexalVR.General
             velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);
             selectionMenu = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu");
             flybyMenu = mainMenu.GetComponentInChildren<FlybyMenu>();
-            frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
-            rightButtons = GameObject.Find("MenuHolder/Main Menu/Right Buttons");
-            backButtons = GameObject.Find("MenuHolder/Main Menu/Back Buttons");
-            leftButtons = GameObject.Find("MenuHolder/Main Menu/Left Buttons");
             //frontDescription = frontButtons.transform.Find("Description Text Front Side").GetComponent<TextMesh>();
             //rightDescription = rightButtons.transform.Find("Description Text Right Side").GetComponent<TextMesh>();
             //backDescription = backButtons.transform.Find("Description Text Back Side").GetComponent<TextMesh>();
@@ -222,6 +223,7 @@ namespace CellexalVR.General
             menuRotator = mainMenu.GetComponent<MenuRotator>();
             minimizedObjectHandler = GameObject.Find("MenuHolder/Main Menu/Jail").GetComponent<MinimizedObjectHandler>();
             menuToggler = leftController.GetComponent<MenuToggler>();
+            menuUnfolder = mainMenu.GetComponent<MenuUnfolder>();
 
             GameObject managersParent = GameObject.Find("Managers");
             GameObject generatorsParent = GameObject.Find("Generators");

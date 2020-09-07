@@ -1,23 +1,21 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-using System;
-using VRTK;
-using System.Collections;
-using System.Drawing.Imaging;
-using System.Threading;
-using TMPro;
-using System.Drawing;
-using CellexalVR.Menu.Buttons.Heatmap;
-using CellexalVR.Menu.Buttons.Report;
-using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.Extensions;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
-using CellexalVR.Extensions;
-using System.Linq;
+using CellexalVR.Menu.Buttons.Heatmap;
+using CellexalVR.Menu.Buttons.Report;
 using CellexalVR.Multiuser;
 using CellexalVR.Tools;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using TMPro;
+using UnityEngine;
+using VRTK;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -28,7 +26,9 @@ namespace CellexalVR.AnalysisObjects
     {
         #region Public variables
         public ReferenceManager referenceManager;
-        public Texture texture;
+        public List<Bitmap> textureBitmaps;
+        public List<System.Drawing.Graphics> textureGraphics;
+        public List<GameObject> textureGameObjects;
         public TextMeshPro infoText;
         public TextMeshPro statusText;
         public TextMeshPro barInfoText;
@@ -45,7 +45,6 @@ namespace CellexalVR.AnalysisObjects
         public TextMeshPro highlightInfoText;
         public bool removable;
         public string directory;
-        public Bitmap bitmap;
         public List<Graph.GraphPoint> selection;
 
         /// <summary>
@@ -139,6 +138,14 @@ namespace CellexalVR.AnalysisObjects
             target = new Vector3(1.4f, 1.2f, 0.05f);
             originalPos = originalScale = new Vector3();
             originalRot = new Quaternion();
+        }
+
+        private void OnDestroy()
+        {
+            foreach (System.Drawing.Graphics graphics in textureGraphics)
+            {
+                graphics.Dispose();
+            }
         }
 
         public void Init()
@@ -376,7 +383,6 @@ namespace CellexalVR.AnalysisObjects
             hm.transform.parent = referenceManager.heatmapGenerator.transform;
             heatmapGenerator.AddHeatmapToList(hm);
             hm.name = name + "_" + heatmapGenerator.heatmapsCreated;
-            heatmapGenerator.heatmapsCreated++;
             hm.transform.Translate(0.1f, 0.1f, 0.1f, Space.Self);
             hm.groupingColors = groupingColors;
             hm.attributeColors = attributeColors;
@@ -625,8 +631,6 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-
-
         /// <summary>
         /// Updates this heatmap's image.
         /// </summary>
@@ -670,6 +674,86 @@ namespace CellexalVR.AnalysisObjects
             //containedCells = colors;
             infoText.text = "Total number of cells: " + colors.Count;
             // infoText.text += "\nNumber of colours: " + numberOfColours;
+        }
+
+        /// <summary>
+        /// Recolours the graphs based on the currently selected area on the heatmap.
+        /// Each cell is coloured 52445t 453et rrfgssfdvfsvxfsagfds
+        /// </summary>
+        public void CumulativeRecolourFromSelection(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+        {
+            StartCoroutine(CumulativeRecolourFromSelectionCoroutine(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom));
+        }
+
+        private IEnumerator CumulativeRecolourFromSelectionCoroutine(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+        {
+            // find the index of the left-most and the right-most selected cells in the heatmap
+            int selectedCellLeft = 0;
+            for (int i = 0; i < selectedGroupLeft; ++i)
+            {
+                selectedCellLeft += groupWidths[i].Item3;
+            }
+            int selectedCellRight = selectedCellLeft;
+            for (int i = selectedGroupLeft; i < selectedGroupRight; ++i)
+            {
+                selectedCellRight += groupWidths[i].Item3;
+            }
+
+            // get cell names
+            string[] cells = new string[selectedCellLeft - selectedCellRight];
+            for (int i = selectedCellLeft; i < selectedCellRight; ++i)
+            {
+                cells[i] = selection[i].Label;
+            }
+
+            // get gene names
+            string[] genes = new string[selectedGeneBottom - selectedGeneTop];
+            for (int i = selectedGeneTop; i < selectedGeneBottom; ++i)
+            {
+                genes[i] = this.genes[i];
+            }
+
+            // query for expressions
+            SQLiter.SQLite db = gameObject.GetComponent<SQLiter.SQLite>();
+            db.QueryGenesInCells(cells, genes);
+            while (db.QueryRunning)
+            {
+                yield return null;
+            }
+
+            // read results and average out expressions
+            Dictionary<string, float> expressions = new Dictionary<string, float>();
+            foreach (string cell in cells)
+            {
+                expressions[cell] = 0f;
+            }
+
+            for (int i = 2; i < db._result.Count;)
+            {
+                // skip the min value, we don't need it
+                //float geneMin = ((Tuple<string, float>)db._result[i]).Item2;
+                i++;
+                float geneMax = ((Tuple<string, float>)db._result[i]).Item2;
+                i++;
+                Tuple<string, float> tuple;
+                do
+                {
+                    tuple = (Tuple<string, float>)db._result[i];
+                    expressions[tuple.Item1] += tuple.Item2 / geneMax;
+                }
+                while (!genes.Contains(tuple.Item1));
+            }
+            int numExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors - 1;
+            GraphManager graphManager = referenceManager.graphManager;
+            foreach (var graph in graphManager.Graphs)
+            {
+                foreach (var expression in expressions)
+                {
+                    int colorIndex = (int)(expression.Value / numExpressionColors);
+                    graph.ColorGraphPointGeneExpression(graph.FindGraphPoint(expression.Key), colorIndex, false);
+                }
+
+            }
         }
     }
 }

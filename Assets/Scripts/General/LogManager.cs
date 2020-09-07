@@ -83,9 +83,9 @@ namespace CellexalVR.General
                 {
                     logWriter.WriteLine(s);
                 }
-                logThisLater.Clear();
                 logWriter.Flush();
             }
+            logThisLater.Clear();
         }
 
         /// <summary>
@@ -102,6 +102,7 @@ namespace CellexalVR.General
             logThisLater.Add(message);
         }
 
+
         /// <summary>
         /// Logs multiple messages. This method will append a linebreak between each message.
         /// </summary>
@@ -112,6 +113,15 @@ namespace CellexalVR.General
             {
                 Log(s);
             }
+        }
+
+        /// <summary>
+        /// Saves someting that should be logged later. Call <see cref="LogBacklog"/> whenever you are ready to log everything passed to all calls this function since the last call to <see cref="LogBacklog"/>.
+        /// </summary>
+        /// <param name="message">The message that should be written to the log later.</param>
+        public static void LogLater(string message)
+        {
+            logThisLater.Add(message);
         }
 
         /// <summary>
@@ -178,7 +188,7 @@ namespace CellexalVR.General
         {
             SteamVR_Events.RenderModelLoaded.Listen(OnRenderModelLoaded);
             SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
-            InvokeRepeating("LogBacklog", 10f, 10f);
+            //InvokeRepeating("LogBacklog", 10f, 10f);
         }
 
         private void LogBacklog()
@@ -191,7 +201,7 @@ namespace CellexalVR.General
             SteamVR_Events.RenderModelLoaded.Remove(OnRenderModelLoaded);
             SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
             CellexalLog.LogBacklog();
-            CancelInvoke();
+            //CancelInvoke();
         }
 
         private void OnRenderModelLoaded(SteamVR_RenderModel model, bool success)
