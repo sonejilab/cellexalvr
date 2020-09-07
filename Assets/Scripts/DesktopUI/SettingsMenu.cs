@@ -170,6 +170,11 @@ namespace CellexalVR.DesktopUI
 
         private void Start()
         {
+            CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+        }
+
+        private void OnConfigLoaded()
+        {
             currentProfilePath = referenceManager.configManager.ProfileNameToConfigPath("default");
             var profiles = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in CellexalConfig.savedConfigs.Keys)
@@ -184,6 +189,7 @@ namespace CellexalVR.DesktopUI
             profiles.Insert(0, new TMPro.TMP_Dropdown.OptionData("default"));
             profileDropdown.options = profiles;
 
+            CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
         }
 
         void Update()
