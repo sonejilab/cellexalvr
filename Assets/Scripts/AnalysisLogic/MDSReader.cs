@@ -306,7 +306,6 @@ namespace CellexalVR.AnalysisLogic
                             ?.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words != null && (words.Length != 4 && words.Length != 7))
                         {
-                            print(words.Length);
                             continue;
                         }
 

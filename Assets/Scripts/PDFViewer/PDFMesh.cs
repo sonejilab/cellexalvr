@@ -29,8 +29,6 @@ namespace CellexalVR.PDFViewer
         public VRSlider radiusSlider;
         public VRSlider scaleXSliderStationary;
         public VRSlider scaleYSliderStationary;
-        public VRSlider scaleXSliderPocket;
-        public VRSlider scaleYSliderPocket;
         public GameObject settingsHandlerCurved;
         public GameObject settingsHandlerPocket;
         [HideInInspector] public int currentPage;

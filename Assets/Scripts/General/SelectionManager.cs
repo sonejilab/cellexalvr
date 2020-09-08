@@ -210,7 +210,6 @@ namespace CellexalVR.General
         {
             if (graphPoint == null)
             {
-                print("is null");
                 return;
             }
 

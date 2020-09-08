@@ -19,8 +19,8 @@ namespace CellexalVR.Interaction
         public GameObject handle;
         public GameObject attachPoint;
         public GameObject fillArea;
-        public TextMeshProUGUI sliderValueText;
-        public TextMeshProUGUI header;
+        public TextMeshPro sliderValueText;
+        public TextMeshPro header;
         public string headerText;
         public float minValue;
         public float maxValue;
