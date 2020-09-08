@@ -367,6 +367,7 @@ namespace CellexalVR.AnalysisObjects
         public IEnumerator SliceClusteringLOD(int lodGroups, Dictionary<string, Graph.GraphPoint> points = null,
             GraphSlice slice = null, bool scale = true)
         {
+            ScaleAllCoordinates();
             newGraph.lodGroups = lodGroups;
             newGraph.textures = new Texture2D[lodGroups];
 
@@ -378,21 +379,12 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < lodGroups; i++)
             {
                 isCreating = true;
-                if (i == 0 && scale)
-                {
-                    print("scale coords");
-                    ScaleAllCoordinates();
-                }
 
                 if (lodGroups > 0)
                 {
                     AddLODGroup(newGraph, i, slice);
                 }
 
-                if (i > 0 && scale)
-                {
-                    referenceManager.graphGenerator.UpdateCoords();
-                }
 
                 SliceClustering(points, lodGroup: i, slice: slice);
 
@@ -792,7 +784,7 @@ namespace CellexalVR.AnalysisObjects
                 p.ScaleCoordinates();
                 return true;
             });
-            newGraph.scaled = true;
+            // newGraph.scaled = true;
         }
 
         /// <summary>
