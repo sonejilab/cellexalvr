@@ -124,6 +124,7 @@ namespace CellexalVR.General
         public string currentProfileFullPath;
 
         private string configDir;
+        private string sharedConfigDir;
         private string defaultConfigPath;
         private List<string> configPaths;
         private string sampleConfigPath;
@@ -140,6 +141,20 @@ namespace CellexalVR.General
         private void Start()
         {
             configDir = Directory.GetCurrentDirectory() + @"\Config";
+            if (!Directory.Exists(configDir))
+            {
+                CellexalLog.Log("Config directory not found, creating " + configDir);
+                Directory.CreateDirectory(configDir);
+            }
+
+            sharedConfigDir = configDir + "\\Shared";
+            if (!Directory.Exists(sharedConfigDir))
+            {
+
+                CellexalLog.Log("Shared config directory not found, creating " + sharedConfigDir);
+                Directory.CreateDirectory(sharedConfigDir);
+            }
+
             defaultConfigPath = configDir + @"\default_config.xml";
             currentProfileFullPath = defaultConfigPath;
             sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.xml";
@@ -314,7 +329,8 @@ namespace CellexalVR.General
 
             referenceManager.multiuserMessageSender.SendMessageSynchConfig(data);
 
-            string sharedConfigPath = configDir + @"\sharedConfig.xml";
+
+            string sharedConfigPath = sharedConfigDir + @"\shared_config.xml";
             //if (!File.Exists(sharedConfigPath))
             //{
             //    File.Create(sharedConfigPath);
@@ -391,7 +407,7 @@ namespace CellexalVR.General
             CellexalConfig.Config.VelocityParticlesLowColor = config.VelocityParticlesLowColor;
             CellexalConfig.Config.VelocityParticlesHighColor = config.VelocityParticlesHighColor;
 
-            string sharedConfigPath = configDir + @"\sharedConfig.xml";
+            string sharedConfigPath = sharedConfigDir + @"\shared_config.xml";
             defaultConfigPath = sharedConfigPath;
             SaveConfigFile(sharedConfigPath);
             ReadConfigFile(sharedConfigPath);
