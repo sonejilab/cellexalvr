@@ -45,17 +45,18 @@ namespace CellexalVR.Menu.SubMenus
             previewWire.SetActive(false);
         }
 
-        private void Start()
+        protected override void Start()
         {
             StartCoroutine(SetControllers());
             attachPoint = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias/AttachPoint");
+            base.Start();
         }
 
         private IEnumerator SetControllers()
         {
             yield return new WaitForSeconds(2);
             rightController = referenceManager.rightController;
-            device = SteamVR_Controller.Input((int) rightController.index);
+            device = SteamVR_Controller.Input((int)rightController.index);
         }
 
         private void Update()
@@ -63,7 +64,7 @@ namespace CellexalVR.Menu.SubMenus
             if (device == null)
             {
                 rightController = referenceManager.rightController;
-                device = SteamVR_Controller.Input((int) rightController.index);
+                device = SteamVR_Controller.Input((int)rightController.index);
             }
             else if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
