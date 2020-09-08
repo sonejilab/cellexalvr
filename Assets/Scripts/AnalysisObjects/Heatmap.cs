@@ -97,7 +97,7 @@ namespace CellexalVR.AnalysisObjects
         [HideInInspector]
         public int attributeWidth = 0;
         #endregion region
-        
+
 
         #region Private variables
         private MultiuserMessageSender multiuserMessageSender;
@@ -710,9 +710,9 @@ namespace CellexalVR.AnalysisObjects
 
             // get gene names
             string[] genes = new string[selectedGeneBottom - selectedGeneTop];
-            for (int i = selectedGeneTop; i < selectedGeneBottom; ++i)
+            for (int i = selectedGeneTop, j = 0; i < selectedGeneBottom; ++i, ++j)
             {
-                genes[i] = this.genes[i];
+                genes[j] = this.genes[i];
             }
 
             // query for expressions
