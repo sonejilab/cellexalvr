@@ -10,6 +10,10 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class MinimizedObjectContainer : MonoBehaviour
     {
+        public Renderer rendererToHighlight;
+        public Material normalMaterial;
+        public Material highlightMaterial;
+
         private SteamVR_TrackedObject rightController;
         private MinimizeTool minimizeTool;
         private Color orgColor;
@@ -46,7 +50,7 @@ namespace CellexalVR.Interaction
             }
 
             this.name = "Jail_" + MinimizedObject.name;
-            orgColor = GetComponent<Renderer>().material.color;
+            //orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
             layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
         }
@@ -58,7 +62,7 @@ namespace CellexalVR.Interaction
                 return;
             }
 
-            var device = SteamVR_Controller.Input((int) rightController.index);
+            var device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 if (MinimizedObject.CompareTag("Graph"))
@@ -104,10 +108,10 @@ namespace CellexalVR.Interaction
                 Destroy(gameObject);
             }
 
-            frameCount++;
+            //frameCount++;
             // When laser is deactivated on trigger exit is not called so we check if the box is colliding with the laser.
             // To deactivate button again check every 10th frame if laser pointer collider is colliding.
-            if (frameCount % 10 != 0) return;
+            //if (frameCount % 10 != 0) return;
             // frameCount = 0;
             // Transform transform1 = transform;
             // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
@@ -131,26 +135,28 @@ namespace CellexalVR.Interaction
             // GetComponent<Renderer>().material.color = orgColor;
         }
 
-        private void OnDrawGizmos()
-        {
-            //Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
-            Gizmos.DrawSphere(transform.position, (transform.localScale / 3).x);
-        }
+        //private void OnDrawGizmos()
+        //{
+        //    Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
+        //    Gizmos.DrawSphere(transform.position, (transform.localScale / 3).x);
+        //}
 
 
         private void OnTriggerEnter(Collider other)
         {
+            //print("ontriggerenter " + other.gameObject.name + ", " + laserColliderName);
             if (other.gameObject.name != laserColliderName) return;
             controllerInside = true;
-            GetComponent<Renderer>().material.color = Color.cyan;
+            rendererToHighlight.sharedMaterial = highlightMaterial;
             // Handler.UpdateHighlight(this);
         }
 
         private void OnTriggerExit(Collider other)
         {
+            //print("ontriggerexit " + other.gameObject.name + ", " + laserColliderName);
             if (other.gameObject.name != laserColliderName) return;
             controllerInside = false;
-            GetComponent<Renderer>().material.color = orgColor;
+            rendererToHighlight.sharedMaterial = normalMaterial;
         }
     }
 }

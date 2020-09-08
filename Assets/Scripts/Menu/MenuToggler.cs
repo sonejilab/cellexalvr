@@ -13,13 +13,14 @@ namespace CellexalVR.Menu
     {
         public ReferenceManager referenceManager;
         public bool MenuActive { get; set; }
-        public GameObject teleportLaser;
         public GameObject menuCube;
-        public GameObject menuHolder;
 
+        private GameObject menuHolder;
+        private GameObject teleportLaser;
         private SteamVR_Controller.Device device;
         private GameObject menu;
         private MenuRotator menuRotator;
+        private MenuUnfolder menuUnfolder;
         // These dictionaries holds the things that were turned off when the menu was deactivated
         private Dictionary<Renderer, bool> renderers = new Dictionary<Renderer, bool>();
         private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
@@ -33,7 +34,7 @@ namespace CellexalVR.Menu
         private Vector3 finalScale;
         private Vector3 startPosition;
         private Vector3 finalPosition;
-        private Vector3 originalScale = new Vector3(0.26f, 0.26f, 0.32f);
+        private Vector3 originalScale = new Vector3(0.25f, 0.25f, 0.25f);
         private readonly int animateSpeed = 8;
 
         private void OnValidate()
@@ -49,6 +50,7 @@ namespace CellexalVR.Menu
             menu = referenceManager.mainMenu;
             menuHolder = menu.transform.parent.gameObject;
             menuRotator = referenceManager.menuRotator;
+            menuUnfolder = referenceManager.menuUnfolder;
             boxCollider = GetComponent<Collider>();
             leftController = referenceManager.leftController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
@@ -60,7 +62,7 @@ namespace CellexalVR.Menu
         void Update()
         {
             device = SteamVR_Controller.Input((int)leftController.index);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf)
+            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf && menuUnfolder.Folded)
             {
                 animate = true;
                 currentTime = 0f;
@@ -177,6 +179,31 @@ namespace CellexalVR.Menu
             if (MenuActive) return;
 
             SaveAndSetVisible(item, true, false);
+        }
+
+        /// <summary>
+        /// Removes the gameobject and all subsequent child gameobjects from the list of gameobjects to show when the menu is turned back on.
+        /// </summary>
+        /// <param name="item">The gameobject to remove.</param>
+        public void RemoveObjectToActivate(GameObject item)
+        {
+            if (MenuActive) return;
+
+            foreach (Renderer r in item.GetComponentsInChildren<Renderer>())
+            {
+                if (r)
+                {
+                    renderers.Remove(r);
+                }
+            }
+            foreach (Collider c in item.GetComponentsInChildren<Collider>())
+            {
+                if (c)
+                {
+                    colliders.Remove(c);
+                }
+            }
+
         }
 
         /// <summary>

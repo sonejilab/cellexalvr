@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 797481884179529250}
+  currentProfileFullPath: 
 --- !u!114 &797481884179529250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +124,10 @@ MonoBehaviour:
   screenshotCamera: {fileID: 0}
   teleportLaser: {fileID: 0}
   mainMenu: {fileID: 0}
+  frontButtons: {fileID: 0}
+  rightButtons: {fileID: 0}
+  backButtons: {fileID: 0}
+  leftButtons: {fileID: 0}
   arcsSubMenu: {fileID: 0}
   attributeSubMenu: {fileID: 0}
   indexMenu: {fileID: 0}
@@ -133,13 +138,10 @@ MonoBehaviour:
   velocitySubMenu: {fileID: 0}
   selectionMenu: {fileID: 0}
   flybyMenu: {fileID: 0}
-  frontButtons: {fileID: 0}
-  rightButtons: {fileID: 0}
-  backButtons: {fileID: 0}
-  leftButtons: {fileID: 0}
   menuRotator: {fileID: 0}
   minimizedObjectHandler: {fileID: 0}
   menuToggler: {fileID: 0}
+  menuUnfolder: {fileID: 0}
   graphManager: {fileID: 0}
   cellManager: {fileID: 0}
   lineBundler: {fileID: 0}

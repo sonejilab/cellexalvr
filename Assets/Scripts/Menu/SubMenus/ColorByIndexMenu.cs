@@ -24,9 +24,9 @@ namespace CellexalVR.Menu.SubMenus
         {
             base.CreateButtons(names);
 
-            for (int i = 0; i < buttons.Count; ++i)
+            for (int i = 0; i < cellexalButtons.Count; ++i)
             {
-                var b = buttons[i].GetComponent<ColorByIndexButton>();
+                var b = cellexalButtons[i].GetComponent<ColorByIndexButton>();
                 b.referenceManager = referenceManager;
                 b.SetIndex(names[i]);
                 b.parentMenu = this;

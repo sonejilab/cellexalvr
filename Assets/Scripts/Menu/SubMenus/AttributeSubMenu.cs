@@ -1,13 +1,10 @@
 ﻿using CellexalVR.AnalysisLogic;
-using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Attributes;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
@@ -33,15 +30,16 @@ namespace CellexalVR.Menu.SubMenus
         {
             CreateButtons(categoriesAndNames);
         }
+
         public override void CreateButtons(string[] categoriesAndNames)
         {
             base.CreateButtons(categoriesAndNames);
             //string[] orderedNames = new string[names.Length];
             //Array.Copy(names, orderedNames, names.Length);
             //Array.Sort(orderedNames, StringComparer.InvariantCulture);
-            for (int i = 0; i < buttons.Count; ++i)
+            for (int i = 0; i < cellexalButtons.Count; ++i)
             {
-                var b = buttons[i];
+                var b = cellexalButtons[i];
                 b.referenceManager = referenceManager;
                 int colorIndex = i % Colors.Length;
                 b.GetComponent<ColorByAttributeButton>().SetAttribute(categoriesAndNames[i], names[i], Colors[colorIndex]);
@@ -53,7 +51,7 @@ namespace CellexalVR.Menu.SubMenus
 
         public override CellexalButton FindButton(string name)
         {
-            var button = buttons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == name);
+            var button = cellexalButtons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == name);
             return button;
         }
 
@@ -63,8 +61,8 @@ namespace CellexalVR.Menu.SubMenus
         public override void DestroyTabs()
         {
             base.DestroyTabs();
-            if (buttons != null)
-                buttons.Clear();
+            if (cellexalButtons != null)
+                cellexalButtons.Clear();
         }
 
         /// <summary>
@@ -72,12 +70,13 @@ namespace CellexalVR.Menu.SubMenus
         /// </summary>
         public void SwitchButtonStates()
         {
-            foreach (var b in buttons)
+            foreach (var b in cellexalButtons)
             {
                 ColorByAttributeButton button = b.GetComponent<ColorByAttributeButton>();
                 button.SwitchMode();
             }
         }
+
         /// <summary>
         /// Builds a tree of and expressions and not expressions that corresponds to the current state of the attribute buttons.
         /// </summary>
@@ -86,7 +85,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             BooleanExpression.Expr root = null;
             // go over each button and check its state.
-            foreach (var b in buttons)
+            foreach (var b in cellexalButtons)
             {
                 ColorByAttributeButton button = b.GetComponent<ColorByAttributeButton>();
                 if (button.CurrentBooleanExpressionState != AttributeLogic.INVALID && button.CurrentBooleanExpressionState != AttributeLogic.NOT_INCLUDED)

@@ -175,7 +175,11 @@ namespace CellexalVR.Menu.Buttons
 
         public virtual void SetButtonActivated(bool activate)
         {
-            //print(name + " setbuttonactivated");
+            if (name == "Close Menu Button" && transform.parent.parent.name == "Attribute Menu")
+            {
+                print(activate);
+            }
+
             if (!activate)
             {
                 descriptionText.text = "";
@@ -216,7 +220,7 @@ namespace CellexalVR.Menu.Buttons
         public void ToggleOutline(bool toggle, bool legend = false)
         {
             var tab = transform.parent.GetComponent<Tab>();
-            var menuNoTab = transform.parent.GetComponent<MenuWithoutTabs>();
+            var menuNoTab = transform.parent.GetComponent<SubMenu>();
             if (tab != null && tab.Active)
             {
                 activeOutline.SetActive(toggle);

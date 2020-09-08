@@ -12,7 +12,7 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// Represents the sub menu that pops up when the <see cref="ColorByIndexButton"/> is pressed.
     /// </summary>
-    public class SelectionFromPreviousMenu : MenuWithoutTabs
+    public class SelectionFromPreviousMenu : SubMenu
     {
         [FormerlySerializedAs("buttonPrefab")] public GameObject selectionButtonPrefab;
         public GameObject annotationButtonPrefab;
@@ -37,12 +37,13 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
-        private void Start()
+        protected override void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             menuToggler = referenceManager.menuToggler;
             CellexalEvents.GraphsLoaded.AddListener(ReadSelectionFiles);
             CellexalEvents.GraphsLoaded.AddListener(ReadAnnotationFiles);
+            base.Start();
         }
 
         private void ReadSelectionFiles()

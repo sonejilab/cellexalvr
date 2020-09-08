@@ -31,7 +31,7 @@ namespace CellexalVR.AnalysisLogic
         public bool attributeFileRead;
         public AttributeReader attributeReader;
 
-        private readonly char[] separators = {' ', '\t'};
+        private readonly char[] separators = { ' ', '\t' };
         private CellManager cellManager;
         private SQLite database;
         private SelectionManager selectionManager;
@@ -95,7 +95,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] {"readfolder", "rf"})]
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolderConsole(string path)
         {
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
@@ -209,8 +209,7 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
 
             graphGenerator.isCreating = true;
-            
-
+            referenceManager.configManager.ReadConfigFiles(fullPath);
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {
             // multiple_exp     currentPath += "+" + path;
@@ -239,7 +238,7 @@ namespace CellexalVR.AnalysisLogic
         public void ReadGraphFromMarkerFile(string path, string file)
         {
             facsGraphCounter++;
-            StartCoroutine(mdsReader.ReadMDSFiles(path, new string[] {file}, GraphGenerator.GraphType.FACS, false));
+            StartCoroutine(mdsReader.ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
 
         public void ReadFilterFiles(string path)
@@ -308,18 +307,19 @@ namespace CellexalVR.AnalysisLogic
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
             File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.R");
 
-            List<string> h5ReadersToRemove = new List<string>();
-
-            foreach (KeyValuePair<string, H5Reader> kvp in referenceManager.inputReader.h5readers)
+            if (h5readers != null)
             {
-                kvp.Value.CloseConnection();
-                Destroy(kvp.Value.gameObject);
-                h5ReadersToRemove.Add(kvp.Key);
+                List<string> h5ReadersToRemove = new List<string>();
+                foreach (KeyValuePair<string, H5Reader> kvp in h5readers)
+                {
+                    kvp.Value.CloseConnection();
+                    Destroy(kvp.Value.gameObject);
+                    h5ReadersToRemove.Add(kvp.Key);
+                }
+
+                foreach (string reader in h5ReadersToRemove)
+                    h5readers.Remove(reader);
             }
-
-            foreach (string reader in h5ReadersToRemove)
-                h5readers.Remove(reader);
-
             //File.Delete(CellexalUser.UserSpecificFolder + "\\geneServer.pid");
             CellexalLog.Log("Stopped Server");
         }
@@ -358,7 +358,7 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            string[] header = headerLine.Split(new string[] {"\t", " "}, StringSplitOptions.RemoveEmptyEntries);
+            string[] header = headerLine.Split(new string[] { "\t", " " }, StringSplitOptions.RemoveEmptyEntries);
             float[] min = new float[header.Length];
             float[] max = new float[header.Length];
             string[] values = new string[header.Length + 1];
@@ -469,7 +469,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 line = streamReader.ReadLine();
                 if (line == "") continue;
-                words = line.Split(new char[] {'\t', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                words = line.Split(new char[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 // set the grouping's name to [the grouping's number]\n[number of colors in grouping]\n[number of cells in groupings]
                 string groupingName = words[0];
@@ -518,7 +518,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     line = streamReader.ReadLine();
                     print(line);
-                    words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                    words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     cellNames[i][j] = words[0];
 
                     try

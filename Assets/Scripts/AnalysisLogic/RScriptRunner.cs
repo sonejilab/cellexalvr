@@ -109,7 +109,7 @@ namespace CellexalVR.AnalysisLogic
                 if (ex.GetType() == typeof(System.ComponentModel.Win32Exception) ||
                     ex.GetType() == typeof(ArgumentException))
                 {
-                    return "Failed to Start Server"; 
+                    return "Failed to Start Server";
                     //CellexalEvents.ScriptFailed.Invoke();
                 }
                 throw new Exception("R Script failed: " + result, ex);
@@ -175,14 +175,15 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+
         /// <summary>
-        /// Run Rscript on a running r server session instead of starting a new process and loading the object again. 
+        /// Run R code on a running r server session instead of starting a new process and loading the object again. 
         /// Send it to the server by writing the command to run into the "<servername>.input.R". 
         /// The R backend will read this file once every second and run the commands inside it via "source(input.R)".
         /// </summary>
         /// <param name="s">s is the full string to be written into the input.R file which the server will then read.</param>
         /// <param name="isFile">If the s argument instead is a filePath the function copies that entire file to input.R</param>
-        public static void RunScript(string s)
+        public static void WriteToServer(string s)
         {
             string inputFilePath = CellexalUser.UserSpecificFolder + "\\server";
             File.WriteAllText(inputFilePath + ".input.R", s);

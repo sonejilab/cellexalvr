@@ -83,7 +83,6 @@ namespace CellexalVR.DesktopUI
 
             history.AddFirst("");
             currentHistoryNode = history.First;
-
             //float fontMultiplier = Screen.dpi / 100f;
             //outputField.pointSize *= fontMultiplier;
             //inputField.pointSize *= fontMultiplier;
