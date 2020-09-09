@@ -73,6 +73,13 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
         }
+        
+        
+        private void Awake()
+        {
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+        }
+        
 
         private void Start()
         {
