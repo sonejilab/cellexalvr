@@ -611,7 +611,7 @@ namespace CellexalVR.AnalysisLogic
                         break;
                     expressions.Add(tuple);
                 }
-                expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => ((int)((t2.Item2 - t1.Item2) * 10000)));
+                expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => ((int)((t1.Item2 - t2.Item2) * 10000)));
                 float binsize = (float)expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
                 int expressionIndex = 0;
 
