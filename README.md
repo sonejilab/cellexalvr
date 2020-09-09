@@ -15,13 +15,13 @@ There are a few things that must be done if you are planning to run CellexalVR f
 * * 16 GB RAM
 * Make sure you have an HTC Vive that is set up properly.
 * Make sure [SteamVR](https://steamcommunity.com/steamvr) is installed. (This should get installed when you configure your Vive for the first time)
-* Make sure at least [R 3.5.0](https://cran.r-project.org/src/base/R-3/) is installed.
+* Make sure at least [R 3.6.0](https://cran.r-project.org/src/base/R-3/) is installed.
 * Install the [CellexalVR R package](https://www.github.com/sonejilab/cellexalvrr) by running `devtools::install_github("sonejilab/cellexalvrr")` in an R terminal. This requires the `devtools` package, you can install it with `install.packages("devtools")`.
 * If you want to make use of the html reports, you need to install [pandoc](https://pandoc.org/).
 * Create a folder called `Data` where CellexalVR is installed.
 * Put your data inside a new folder with a sensible name in the `Data` folder.
 * If you have multiple sets of data, place them into one folder each within the `Data` folder.
-* When you start CellexalVR for the first time, enter the path to your `Rscript.exe` in the text box, or adjust the text between the `RscriptFilePath` tags in the `Config/config.xml` file to where you installed R. It should look something like `<RscriptFilePath>C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe</RscriptFilePath>`.
+* When you start CellexalVR for the first time, enter the path to your `Rscript.exe` in the text box, or adjust the text between the `RscriptFilePath` tags in the `Config/config.xml` file to where you installed R. It should look something like `<RscriptFilePath>C:\Program Files\R\R-3.6.0\bin\x64\Rscript.exe</RscriptFilePath>`.
 The folder structure should then be
 ```
 CellexalVR
