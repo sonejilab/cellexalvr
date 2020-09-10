@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
+using CellexalVR.Menu.Buttons.Selection;
 using CellexalVR.SceneObjects;
 using UnityEditor;
 using UnityEngine;
@@ -559,6 +560,25 @@ namespace CellexalVR.Multiuser
             {
                 referenceManager.selectionManager.GoForwardOneStepInHistory();
             }
+        }
+
+        [PunRPC]
+        public void ReciveMessageToggleAnnotationFile(string path, bool toggle)
+        {
+            referenceManager.annotationManager.ToggleAnnotationFile(path, toggle);
+            SelectAnnotationButton button = referenceManager.selectionFromPreviousMenu.FindAnnotationButton(path);
+            button.ToggleOutline(toggle);
+            button.toggle = !toggle;
+        }
+        
+        
+        [PunRPC]
+        public void ReciveMessageToggleSelectionFile(string path)
+        {
+            referenceManager.inputReader.ReadSelectionFile(path);
+            SelectionFromPreviousButton button = referenceManager.selectionFromPreviousMenu.FindSelectionButton(path);
+            button.ToggleOutline(true);
+            button.toggle = true;
         }
 
         #endregion

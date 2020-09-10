@@ -12,11 +12,11 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
         public TextMeshPro buttonDescription;
         public string Path { get; set; }
+        public bool toggle;
         private string graphName;
         private string[] selectionCellNames;
         private int[] selectionGroups;
         private Dictionary<int, Color> groupingColors;
-        private bool toggle;
 
         protected override string Description => "Create a selection from " + Path;
 

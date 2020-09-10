@@ -515,6 +515,12 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageRemoveCells", PhotonTargets.Others);
         }
 
+        public void SendMessageToggleAnnotationFile(string path, bool toggle)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleAnnotationFile", PhotonTargets.Others, path, toggle);
+        }
+
         #endregion
 
         #region Draw tool

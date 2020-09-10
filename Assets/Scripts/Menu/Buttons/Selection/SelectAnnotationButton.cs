@@ -8,7 +8,7 @@ namespace CellexalVR.Menu.Buttons.Selection
     {
         public string Path { get; set; }
         public TextMeshPro buttonDescription;
-        private bool toggle;
+        public bool toggle;
 
 
         protected override string Description => "Add previous annotations.";
@@ -25,6 +25,7 @@ namespace CellexalVR.Menu.Buttons.Selection
         {
             ToggleOutline(!toggle);
             referenceManager.annotationManager.ToggleAnnotationFile(Path, !toggle);
+            referenceManager.multiuserMessageSender.SendMessageToggleAnnotationFile(Path, !toggle);
             toggle = !toggle;
         }
 
