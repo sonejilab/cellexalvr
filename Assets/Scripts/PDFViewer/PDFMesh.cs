@@ -154,6 +154,15 @@ namespace CellexalVR.PDFViewer
             }
         }
 
+
+        public void ShowPagesMultiUser()
+        {
+            ShowMultiplePages();
+            referenceManager.multiuserMessageSender.SendMessageShowPDFPages();
+        }
+        
+        
+        
         /// <summary>
         /// Renders the page images as textures on top of the generated mesh.
         /// If multiple pages are to be displayed,
@@ -328,7 +337,7 @@ namespace CellexalVR.PDFViewer
                 settingsHandlerCurved.transform.Rotate(0, 180, 0);
             }
         }
-
+        
 
         /// <summary>
         /// Used to show or hide the pdf mesh and the settings handle.

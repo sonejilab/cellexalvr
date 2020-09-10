@@ -17,7 +17,6 @@ namespace CellexalVR.Interaction
     public class VRSlider : MonoBehaviour
     {
         public GameObject handle;
-        public GameObject attachPoint;
         public GameObject fillArea;
         public TextMeshPro sliderValueText;
         public TextMeshPro header;
@@ -156,23 +155,13 @@ namespace CellexalVR.Interaction
             UpdateSliderValue();
         }
 
+        /// <summary>
+        /// Inform other users in session to also update slider value. 
+        /// </summary>
         public void UpdateSliderValueMultiUser()
         {
             referenceManager.multiuserMessageSender.SendMessageUpdateSliderValue(sliderType, handle.transform.localPosition.x);
         }
-
-        // private void OnTriggerEnter(Collider other)
-        // {
-        //     if (attachPoint == null) return;
-        //     attachPoint.SetActive(true);
-        //
-        // }
-        //
-        // private void OnTriggerExit(Collider other)
-        // {
-        //     if (attachPoint == null) return;
-        //     attachPoint.SetActive(false);
-        // }
 
         private void OnRelease(object sender, VRTK.InteractableObjectEventArgs e)
         {

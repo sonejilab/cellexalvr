@@ -206,6 +206,12 @@ namespace CellexalVR.Multiuser
                 value);
         }
 
+        public void SendMessageShowPDFPages()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageShowPDFPages", PhotonTargets.Others);
+        }
+
         #endregion
 
         #region Legend

@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Velocity;
 using System.Collections.Generic;
+using CellexalVR.Interaction;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace CellexalVR.Menu.SubMenus
         public TextMeshPro graphPointColorsModeText;
         public TextMeshPro particleMaterialText;
         public List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
+        public VRSlider particleSizeSlider;
 
         private int buttonNbr;
         Vector3 startPosition = new Vector3(-0.37f, 1f, -0.15f);

@@ -3844,7 +3844,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handle: {fileID: 1538530988}
-  attachPoint: {fileID: 0}
   fillArea: {fileID: 568251374}
   sliderValueText: {fileID: 8358913102054646302}
   header: {fileID: 1599932262391255055}
@@ -3858,7 +3857,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7486006706990871526}
-        m_MethodName: ShowMultiplePages
+        m_MethodName: ShowPagesMultiUser
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3887,6 +3886,17 @@ MonoBehaviour:
       - m_Target: {fileID: 7486006706990871526}
         m_MethodName: ChangeCurvature
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2725706378602269480}
+        m_MethodName: UpdateSliderValueMultiUser
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6076,7 +6086,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handle: {fileID: 2086910691857091762}
-  attachPoint: {fileID: 0}
   fillArea: {fileID: 2086910692768711152}
   sliderValueText: {fileID: 4059949740402001506}
   header: {fileID: 3483821979860983195}
@@ -6119,6 +6128,17 @@ MonoBehaviour:
       - m_Target: {fileID: 7486006706990871526}
         m_MethodName: ScaleY
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8132551775069871914}
+        m_MethodName: UpdateSliderValueMultiUser
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8182,7 +8202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handle: {fileID: 6129125600200084142}
-  attachPoint: {fileID: 0}
   fillArea: {fileID: 6129125602181449708}
   sliderValueText: {fileID: 7721411693200355105}
   header: {fileID: 670671256426536867}
@@ -8225,6 +8244,17 @@ MonoBehaviour:
       - m_Target: {fileID: 7486006706990871526}
         m_MethodName: ScaleX
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8132551775069871914}
+        m_MethodName: UpdateSliderValueMultiUser
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8780,7 +8810,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handle: {fileID: 6431657038192934787}
-  attachPoint: {fileID: 0}
   fillArea: {fileID: 6431657036417315521}
   sliderValueText: {fileID: 1083594951507776832}
   header: {fileID: 2999374520654925125}
@@ -8794,7 +8823,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7486006706990871526}
-        m_MethodName: ShowMultiplePages
+        m_MethodName: ShowPagesMultiUser
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8823,6 +8852,17 @@ MonoBehaviour:
       - m_Target: {fileID: 7486006706990871526}
         m_MethodName: ChangeRadius
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8976362889163024903}
+        m_MethodName: UpdateSliderValueMultiUser
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

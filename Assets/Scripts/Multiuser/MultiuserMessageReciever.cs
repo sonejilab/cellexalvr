@@ -145,6 +145,7 @@ namespace CellexalVR.Multiuser
                 lr = mlm.AddLaser(ownerId, ownerName);
                 if (lr == null) return;
             }
+
             lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
@@ -165,10 +166,10 @@ namespace CellexalVR.Multiuser
                 if (lr == null) return;
                 lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
+
             lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
             if (!lr.gameObject.activeSelf) lr.gameObject.SetActive(true);
-
         }
 
         public void RecieveMessageUpdateSliderValue(string sliderType, float value)
@@ -178,17 +179,34 @@ namespace CellexalVR.Multiuser
             switch (slider)
             {
                 case VRSlider.SliderType.VelocityParticleSize:
-                    referenceManager.velocitySubMenu.GetComponentInChildren<VRSlider>().UpdateSliderValue(value);
+                    VRSlider veloSlider = referenceManager.velocitySubMenu.particleSizeSlider;
+                    veloSlider.UpdateSliderValue(value);
+                    referenceManager.velocityGenerator.ChangeParticleSize(veloSlider.Value);
                     break;
                 case VRSlider.SliderType.PDFCurvature:
+                    VRSlider curvatureSlider = referenceManager.pdfMesh.curvatureSlider;
+                    curvatureSlider.UpdateSliderValue(value);
+                    referenceManager.pdfMesh.ChangeCurvature(curvatureSlider.Value);
+                    break;
                 case VRSlider.SliderType.PDFRadius:
+                    referenceManager.pdfMesh.radiusSlider.UpdateSliderValue(value);
+                    break;
                 case VRSlider.SliderType.PDFWidth:
+                    referenceManager.pdfMesh.scaleXSliderStationary.UpdateSliderValue(value);
+                    break;
                 case VRSlider.SliderType.PDFHeight:
+                    referenceManager.pdfMesh.scaleYSliderStationary.UpdateSliderValue(value);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public void RecieveMessageShowPDFPages()
+        {
+            referenceManager.pdfMesh.ShowMultiplePages();
+        }
+        
 
         #endregion
 
@@ -334,7 +352,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageColoringMethodChanged(int newMode)
         {
             CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
-            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
+            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods) newMode);
         }
 
         //[PunRPC]
@@ -1195,7 +1213,7 @@ namespace CellexalVR.Multiuser
             bool networkExists = (handlerExists && center != null);
             if (networkExists)
             {
-                center.SwitchLayout((NetworkCenter.Layout)layout);
+                center.SwitchLayout((NetworkCenter.Layout) layout);
             }
             else
             {
@@ -1254,13 +1272,15 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
-            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, true);
+            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)
+                ?.HighlightNode(geneName, true);
         }
 
         [PunRPC]
         public void RecieveMessageUnhighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
-            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, false);
+            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)
+                ?.HighlightNode(geneName, false);
         }
 
         // [PunRPC]
