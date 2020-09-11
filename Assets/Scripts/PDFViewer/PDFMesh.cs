@@ -84,20 +84,6 @@ namespace CellexalVR.PDFViewer
         }
 
 
-        // private void Update()
-        // {
-        //     if (currentViewingMode == ViewingMode.PocketMovable && pageMesh != null)
-        //     {
-        // settingsHandlerPocket.transform.localScale = settingsHandlerStartScale;
-        // settingsHandlerPocket.transform.position = pageMesh.settingsHandlerTransform.position;
-        // settingsHandlerPocket.transform.rotation = pageMesh.transform.rotation;
-        // settingsHandlerPocket.transform.Rotate(0, 0, 90);
-        // Vector3 pagePos = pageMesh.transform.position;
-        // settingsHandlerPocket.transform.position = pageMesh.transform.position;
-        //     }
-        //     
-        // }
-
         /// <summary>
         /// Reads the pdf file and converts to images to be able to render the pdf as textures.
         /// Each page becomes a separate image.
@@ -105,14 +91,20 @@ namespace CellexalVR.PDFViewer
         /// <param name="path"></param>
         public void ReadPDF(string path)
         {
+            string folder = $"{CellexalUser.UserSpecificFolder}\\PDFImages";
+            if (Directory.Exists(folder))
+            {
+                // pdf conversion already done, no need to continue.
+                return;
+            }
+
+            Directory.CreateDirectory(folder);
+
             int i = 0;
             string[] files = Directory.GetFiles(path, "*.pdf");
             if (files.Length == 0)
             {
                 CellexalLog.Log("Tried to find article pdf in data folder but none were found.");
-                // CellexalEvents.GraphsLoaded.RemoveListener(CreatePage);
-                // CellexalEvents.GraphsLoaded.RemoveListener(ShowMultiplePages);
-                // CellexalEvents.GraphsLoaded.RemoveListener(() => SetSettingsHandle(currentViewingMode));
                 return;
             }
 
@@ -127,7 +119,7 @@ namespace CellexalVR.PDFViewer
                     {
                         bitmap.FillRect(0, 0, width, height, FS_COLOR.White);
                         page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, RenderFlags.FPDF_LCD_TEXT);
-                        string savePath = $"{CellexalUser.UserSpecificFolder}//page{++i}.png";
+                        string savePath = $"{folder}\\page{++i}.png";
                         bitmap.Image.Save(savePath, ImageFormat.Png);
                     }
 
@@ -144,7 +136,7 @@ namespace CellexalVR.PDFViewer
 
         public void ShowPage(int pageNr)
         {
-            string path = $"{CellexalUser.UserSpecificFolder}\\page{pageNr}.png";
+            string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{pageNr}.png";
             currentPage = pageNr;
             texture.LoadImage(File.ReadAllBytes(path));
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
@@ -160,9 +152,8 @@ namespace CellexalVR.PDFViewer
             ShowMultiplePages();
             referenceManager.multiuserMessageSender.SendMessageShowPDFPages();
         }
-        
-        
-        
+
+
         /// <summary>
         /// Renders the page images as textures on top of the generated mesh.
         /// If multiple pages are to be displayed,
@@ -178,7 +169,7 @@ namespace CellexalVR.PDFViewer
             int height = 0;
             for (int i = startPage; i < startPage + nrOfPages; i++)
             {
-                string path = $"{CellexalUser.UserSpecificFolder}\\page{i}.png";
+                string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{i}.png";
                 byte[] imageByteArray = File.ReadAllBytes(path);
                 Texture2D imageTexture = new Texture2D(2, 2);
                 imageTexture.LoadImage(imageByteArray);
@@ -337,7 +328,7 @@ namespace CellexalVR.PDFViewer
                 settingsHandlerCurved.transform.Rotate(0, 180, 0);
             }
         }
-        
+
 
         /// <summary>
         /// Used to show or hide the pdf mesh and the settings handle.
@@ -351,7 +342,6 @@ namespace CellexalVR.PDFViewer
             CreatePage();
             ShowMultiplePages();
             SetSettingsHandle(currentViewingMode);
-
         }
 
         //private Apitron.PDF.Rasterizer.Document _document = new Document(new FileStream("path", FileMode.Create));

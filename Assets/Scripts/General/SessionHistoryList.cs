@@ -135,6 +135,18 @@ namespace CellexalVR.General
             }
         }
 
+        public ClickableHistoryPanel GetPanel(string panelName)
+        {
+            foreach (ClickableHistoryPanel panel in sessionHistoryListNodes)
+            {
+                if (panel.NameOfThing.Equals(panelName)) continue;
+                return panel;
+            }
+
+            return null;
+        }
+        
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

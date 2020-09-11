@@ -503,6 +503,18 @@ namespace CellexalVR.Multiuser
             referenceManager.selectionManager.RecolorSelectionPoints();
         }
 
+        [PunRPC]
+        public void RecieveMessageHandleHistoryPanelClick(string panelName)
+        {
+            ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
+            if (!panel)
+            {
+                CellexalLog.Log($"Could not find history panel with name: {panelName}");
+                return;
+            } 
+            panel.HandleClick();
+        }
+
         #endregion
 
         #region Selection

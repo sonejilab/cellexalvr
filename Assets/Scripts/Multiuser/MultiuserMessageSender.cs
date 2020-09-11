@@ -447,6 +447,19 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
 
+        public void SendMessageHandleHistoryPanelClick(string panelName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageHandleHistoryPanelClick", PhotonTargets.Others, panelName);
+            ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
+            if (!panel)
+            {
+                CellexalLog.Log($"Could not find history panel with name: {panelName}");
+                return;
+            } 
+            panel.HandleClick();
+        }
+
         #endregion
 
         #region Selection
