@@ -21,12 +21,12 @@ There are a few things that must be done if you are planning to run CellexalVR f
 * Create a folder called `Data` where CellexalVR is installed.
 * Put your data inside a new folder with a sensible name in the `Data` folder.
 * If you have multiple sets of data, place them into one folder each within the `Data` folder.
-* When you start CellexalVR for the first time, enter the path to your `Rscript.exe` in the text box, or adjust the text between the `RscriptFilePath` tags in the `Config/config.xml` file to where you installed R. It should look something like `<RscriptFilePath>C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe</RscriptFilePath>`.
+* When you start CellexalVR for the first time, enter the path to your `Rscript.exe` in the text box, or adjust the text between the `RscriptFilePath` tags in the `Config/default_config.xml` file to where you installed R. It should look something like `<RscriptFilePath>C:\Program Files\R\R-3.5.0\bin\x64\Rscript.exe</RscriptFilePath>`.
 The folder structure should then be
 ```
 CellexalVR
 |- Config
-|  |- config.xml
+|  |- default_config.xml
 |
 |- Data
 |  |- data_set_1
