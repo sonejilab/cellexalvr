@@ -680,7 +680,7 @@ namespace CellexalVR.AnalysisObjects
 
         /// <summary>
         /// Recolours the graphs based on the currently selected area on the heatmap.
-        /// Each cell is coloured 52445t 453et rrfgssfdvfsvxfsagfds
+        /// All cells in all graphs are coloured based on the median expression of the selected genes.
         /// </summary>
         public void CumulativeRecolourFromSelection(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
@@ -701,13 +701,6 @@ namespace CellexalVR.AnalysisObjects
                 selectedCellRight += groupWidths[i].Item3;
             }
 
-            // get cell names
-            string[] cells = new string[selectedCellLeft - selectedCellRight];
-            for (int i = selectedCellLeft; i < selectedCellRight; ++i)
-            {
-                cells[i] = selection[i].Label;
-            }
-
             // get gene names
             string[] genes = new string[selectedGeneBottom - selectedGeneTop];
             for (int i = selectedGeneTop, j = 0; i < selectedGeneBottom; ++i, ++j)
@@ -716,46 +709,27 @@ namespace CellexalVR.AnalysisObjects
             }
 
             // query for expressions
-            SQLiter.SQLite db = gameObject.GetComponent<SQLiter.SQLite>();
-            db.QueryGenesInCells(cells, genes);
+            SQLiter.SQLite db = referenceManager.database;
+            db.QueryMedianGeneExpressions(genes);
             while (db.QueryRunning)
             {
                 yield return null;
             }
+            referenceManager.graphManager.ColorAllGraphsByGeneExpression("Median of selected genes", db._result);
 
-            // read results and average out expressions
-            Dictionary<string, float> expressions = new Dictionary<string, float>();
-            foreach (string cell in cells)
-            {
-                expressions[cell] = 0f;
-            }
-
-            for (int i = 2; i < db._result.Count;)
-            {
-                // skip the min value, we don't need it
-                //float geneMin = ((Tuple<string, float>)db._result[i]).Item2;
-                i++;
-                float geneMax = ((Tuple<string, float>)db._result[i]).Item2;
-                i++;
-                Tuple<string, float> tuple;
-                do
-                {
-                    tuple = (Tuple<string, float>)db._result[i];
-                    expressions[tuple.Item1] += tuple.Item2 / geneMax;
-                }
-                while (!genes.Contains(tuple.Item1));
-            }
-            int numExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors - 1;
-            GraphManager graphManager = referenceManager.graphManager;
-            foreach (var graph in graphManager.Graphs)
-            {
-                foreach (var expression in expressions)
-                {
-                    int colorIndex = (int)(expression.Value / numExpressionColors);
-                    graph.ColorGraphPointGeneExpression(graph.FindGraphPoint(expression.Key), colorIndex, false);
-                }
-
-            }
+            //float highestExpression = ((Tuple<string, float>)db._result[0]).Item2;
+            //int numExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            //GraphManager graphManager = referenceManager.graphManager;
+            //foreach (var graph in graphManager.Graphs)
+            //{
+            //    graph.ColorByGeneExpression(new ArrayList());
+            //    for (int i = 1; i < db._result.Count; ++i)
+            //    {
+            //        Tuple<string, float> cellExpr = (Tuple<string, float>)db._result[i];
+            //        int colorIndex = (int)((cellExpr.Item2 / highestExpression) * numExpressionColors);
+            //        graph.ColorGraphPointGeneExpression(graph.FindGraphPoint(cellExpr.Item1), colorIndex, false);
+            //    }
+            //}
         }
     }
 }

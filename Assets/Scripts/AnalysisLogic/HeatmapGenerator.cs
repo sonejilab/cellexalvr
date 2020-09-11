@@ -55,7 +55,7 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        [ConsoleCommand("heatmapGenerator", folder: "Output", aliases: new string[] {"loadheatmapfile", "lhf"})]
+        [ConsoleCommand("heatmapGenerator", folder: "Output", aliases: new string[] { "loadheatmapfile", "lhf" })]
         public void LoadHeatmap(string heatmapName, string fromSelectionFile = "")
         {
             string[] words = heatmapName.Split(Path.DirectorySeparatorChar);
@@ -136,8 +136,8 @@ namespace CellexalVR.AnalysisLogic
                 if (r < 0) r = 0;
                 if (g < 0) g = 0;
                 if (b < 0) b = 0;
-                expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int) (Mathf.Sqrt(r) * 255),
-                    (int) (Mathf.Sqrt(g) * 255), (int) (Mathf.Sqrt(b) * 255)));
+                expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255),
+                    (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
             }
 
             for (int i = numberOfExpressionColors / 2 + 1, j = 1; i < numberOfExpressionColors; ++i, ++j)
@@ -148,8 +148,8 @@ namespace CellexalVR.AnalysisLogic
                 if (r < 0) r = 0;
                 if (g < 0) g = 0;
                 if (b < 0) b = 0;
-                expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int) (Mathf.Sqrt(r) * 255),
-                    (int) (Mathf.Sqrt(g) * 255), (int) (Mathf.Sqrt(b) * 255)));
+                expressionColors[i] = new SolidBrush(System.Drawing.Color.FromArgb((int)(Mathf.Sqrt(r) * 255),
+                    (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
             }
 
             HighlightMarkerColor = CellexalConfig.Config.HeatmapHighlightMarkerColor;
@@ -172,7 +172,7 @@ namespace CellexalVR.AnalysisLogic
             heatmapList.Clear();
         }
 
-        [ConsoleCommand("heatmapGenerator", aliases: new string[] {"generateheatmap", "gh"})]
+        [ConsoleCommand("heatmapGenerator", aliases: new string[] { "generateheatmap", "gh" })]
         public void CreateHeatmap()
         {
             statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
@@ -367,7 +367,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.attributeColors = new Dictionary<int, UnityEngine.Color>();
             heatmap.groupWidths = new List<Tuple<int, float, int>>();
             heatmap.groupingColors = new Dictionary<int, UnityEngine.Color>();
-            float cellWidth = (float) heatmap.heatmapWidth / selection.Count;
+            float cellWidth = (float)heatmap.heatmapWidth / selection.Count;
             int lastGroup = -1;
             int groupWidth = 0;
             heatmap.attributeWidth = 0;
@@ -391,7 +391,7 @@ namespace CellexalVR.AnalysisLogic
                 if (group != lastGroup)
                 {
                     heatmap.groupWidths.Add(new Tuple<int, float, int>(lastGroup, groupWidth * cellWidth,
-                        (int) groupWidth));
+                        (int)groupWidth));
                     groupWidth = 0;
                     lastGroup = group;
                 }
@@ -703,7 +703,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 1; i < result.Count;)
             {
                 // new gene
-                string genename = ((Tuple<string, float>) result[i]).Item1;
+                string genename = ((Tuple<string, float>)result[i]).Item1;
 
                 ycoord = heatmap.heatmapY + genePositions[genename] * ycoordInc;
                 // the arraylist should contain the gene id and that gene's highest expression before all the expressions
@@ -711,7 +711,7 @@ namespace CellexalVR.AnalysisLogic
                 expressions.Clear();
                 while (i < result.Count)
                 {
-                    tuple = (Tuple<string, float>) result[i];
+                    tuple = (Tuple<string, float>)result[i];
                     i++;
                     if (geneIds.ContainsKey(tuple.Item1))
                         break;
@@ -719,12 +719,12 @@ namespace CellexalVR.AnalysisLogic
                 }
 
                 expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => t1.Item2.CompareTo(t2.Item2));
-                float binsize = (float) expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
+                float binsize = (float)expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
                 int expressionIndex = 0;
 
                 for (int j = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
                 {
-                    int nextLimit = (int) (binsize * (j + 1));
+                    int nextLimit = (int)(binsize * (j + 1));
                     for (; expressionIndex < nextLimit && expressionIndex < expressions.Count; ++expressionIndex)
                     {
                         expressions[expressionIndex] = new Tuple<string, float>(expressions[expressionIndex].Item1, j);
@@ -802,8 +802,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 UnityEngine.Color unitycolor = entry.Value;
 
-                groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int) (unitycolor.r * 255),
-                    (int) (unitycolor.g * 255), (int) (unitycolor.b * 255)));
+                groupBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255),
+                    (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
             }
 
             // get the attribute colors
@@ -811,8 +811,8 @@ namespace CellexalVR.AnalysisLogic
             foreach (var entry in heatmap.attributeColors)
             {
                 UnityEngine.Color unitycolor = entry.Value;
-                attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int) (unitycolor.r * 255),
-                    (int) (unitycolor.g * 255), (int) (unitycolor.b * 255)));
+                attributeBrushes[entry.Key] = new SolidBrush(System.Drawing.Color.FromArgb((int)(unitycolor.r * 255),
+                    (int)(unitycolor.g * 255), (int)(unitycolor.b * 255)));
             }
 
             // draw a background
@@ -936,6 +936,12 @@ namespace CellexalVR.AnalysisLogic
         {
             heatmapList.Add(heatmap);
             heatmap.selectionNr = selectionNr;
+        }
+
+        [ConsoleCommand("heatmapGenerator", aliases: new string[] { "cumulativerecolour", "cr" })]
+        public void CumulativeRecolour()
+        {
+            heatmapList[0].CumulativeRecolourFromSelection(0, 2, 0, 100);
         }
     }
 }

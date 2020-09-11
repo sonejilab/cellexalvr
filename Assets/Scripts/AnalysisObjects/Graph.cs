@@ -1177,7 +1177,7 @@ namespace CellexalVR.AnalysisObjects
 
         public Color GetGraphPointColor(GraphPoint gp)
         {
-            int group = (int) (255 * textures[0].GetPixel(gp.textureCoord[0].x, gp.textureCoord[0].y).r);
+            int group = (int)(255 * textures[0].GetPixel(gp.textureCoord[0].x, gp.textureCoord[0].y).r);
             return graphGenerator.graphPointColors.GetPixel(group, 0);
         }
 
@@ -1219,7 +1219,6 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="color">The graphpoint's new color.</param>
         public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
         {
-            print("color gene expr");
             for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
@@ -1230,9 +1229,9 @@ namespace CellexalVR.AnalysisObjects
                     i = 255;
                 }
 
-                Color32 finalColor = new Color32((byte) i, tex.g, tex.b, 255);
+                Color32 finalColor = new Color32((byte)i, tex.g, tex.b, 255);
                 textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] {finalColor});
+                    new Color32[] { finalColor });
                 // texture2.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
                 //     new Color32[] {finalColor});
             }
@@ -1260,7 +1259,7 @@ namespace CellexalVR.AnalysisObjects
             for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                byte greenChannel = (byte) (outline ? 4 : 0);
+                byte greenChannel = (byte)(outline ? 4 : 0);
                 byte redChannel;
                 if (i == -1)
                 {
@@ -1268,12 +1267,12 @@ namespace CellexalVR.AnalysisObjects
                 }
                 else
                 {
-                    redChannel = (byte) (nbrOfExpressionColors + i);
+                    redChannel = (byte)(nbrOfExpressionColors + i);
                 }
 
                 Color32 finalColor = new Color32(redChannel, greenChannel, tex.b, 255);
                 textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] {finalColor});
+                    new Color32[] { finalColor });
                 // textures[g].Apply();
             }
 
@@ -1292,16 +1291,16 @@ namespace CellexalVR.AnalysisObjects
                 byte greenChannel;
                 if (tex.g == 190 && tex.r != 254)
                 {
-                    greenChannel = (byte) (active ? 190 : 0);
+                    greenChannel = (byte)(active ? 190 : 0);
                 }
                 else
                 {
-                    greenChannel = (byte) (active ? 190 : tex.g);
+                    greenChannel = (byte)(active ? 190 : tex.g);
                 }
 
                 Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
                 textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] {finalColor});
+                    new Color32[] { finalColor });
             }
 
             textureChanged = true;
@@ -1317,10 +1316,10 @@ namespace CellexalVR.AnalysisObjects
             for (int g = 0; g < lodGroups; g++)
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                byte blueChannel = (byte) (culling ? 4 : 0);
+                byte blueChannel = (byte)(culling ? 4 : 0);
                 Color32 finalColor = new Color32(tex.r, tex.g, blueChannel, 255);
                 textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] {finalColor});
+                    new Color32[] { finalColor });
             }
 
             textureChanged = true;
@@ -1336,16 +1335,16 @@ namespace CellexalVR.AnalysisObjects
                 byte greenChannel;
                 if (!isTransparent && tex.r != 254)
                 {
-                    greenChannel = (byte) (active ? 38 : 0);
+                    greenChannel = (byte)(active ? 38 : 0);
                 }
                 else
                 {
-                    greenChannel = (byte) (active ? 38 : 190);
+                    greenChannel = (byte)(active ? 38 : 190);
                 }
 
                 Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
                 textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] {finalColor});
+                    new Color32[] { finalColor });
             }
 
             textureChanged = true;
@@ -1362,12 +1361,12 @@ namespace CellexalVR.AnalysisObjects
                 if (isTransparent)
                 {
                     textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                        new Color32[] {new Color32(254, 0, 0, 255)});
+                        new Color32[] { new Color32(254, 0, 0, 255) });
                 }
                 else
                 {
                     textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                        new Color32[] {new Color32(255, 0, 0, 255)});
+                        new Color32[] { new Color32(255, 0, 0, 255) });
                 }
             }
 
@@ -1406,7 +1405,7 @@ namespace CellexalVR.AnalysisObjects
                         // print(g + textures.Length);
                         Color32 tex = textures[g].GetPixel(i, j);
                         textures[g].SetPixels32(i, j, 1, 1,
-                            new Color32[] {new Color32(254, 190, tex.b, 255)});
+                            new Color32[] { new Color32(254, 190, tex.b, 255) });
                         // Color32 tex2 = texture2.GetPixel(i, j);
                         // texture2.SetPixels32(i, j, 1, 1,
                         //     new Color32[] {new Color32(254, 190, tex2.b, 255)});
@@ -1418,15 +1417,15 @@ namespace CellexalVR.AnalysisObjects
                 Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
                 for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
                 {
-                    colorValues[i] = new Color32[] {new Color32(i, 0, 0, 1)};
+                    colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
                 }
 
-                for (byte i = (byte) (nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
+                for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
                 {
-                    colorValues[i] = new Color32[] {new Color32(i, 0, 0, 1)};
+                    colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
                 }
 
-                int topExpressedThreshold = (int) (nbrOfExpressionColors - nbrOfExpressionColors / 10f);
+                int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
                 if (CellexalConfig.Config.GraphMostExpressedMarker)
                 {
                     ClearTopExprCircles();
@@ -1458,7 +1457,7 @@ namespace CellexalVR.AnalysisObjects
 
                         Color32 tex = textures[g].GetPixel(pos.x, pos.y);
                         Color32 finalCol = new Color32(colorValues[expressionColorIndex][0].r, 0, tex.b, 1);
-                        textures[g].SetPixels32(pos.x, pos.y, 1, 1, new Color32[] {finalCol});
+                        textures[g].SetPixels32(pos.x, pos.y, 1, 1, new Color32[] { finalCol });
                     }
                 }
 

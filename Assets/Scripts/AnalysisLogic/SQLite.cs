@@ -726,6 +726,129 @@ namespace SQLiter
         }
 
         /// <summary>
+        /// Queries the database for the median expressions of some genes. This fills the <see cref="_result"/> with <see cref="Tuple{string, float}"/> that each contain the median expression of a cell.
+        /// </summary>
+        /// <param name="genes">A list of genes to query for.</param>
+        public void QueryMedianGeneExpressions(string[] genes)
+        {
+            QueryRunning = true;
+            StartCoroutine(QueryMedianGeneExpressionsCoroutine(genes));
+        }
+
+        private IEnumerator QueryMedianGeneExpressionsCoroutine(string[] genes)
+        {
+            //genes = new string[] { "gata1" };
+            string joinedGenes = "\"" + string.Join("\", \"", genes) + "\"";
+            string query = "SELECT cname, value " +
+                "FROM datavalues " +
+                "INNER JOIN genes ON datavalues.gene_id = genes.id " +
+                "INNER JOIN cells ON datavalues.cell_id = cells.id " +
+                "WHERE gname IN (" + joinedGenes + ") " +
+                "ORDER BY cname, value DESC;";
+            Thread t = new Thread(() => QueryThread(query));
+            t.Start();
+            while (t.IsAlive)
+            {
+                yield return null;
+            }
+
+            _result.Clear();
+            // list is sorted on cellnames, then expression values
+            int numGenes = genes.Length;
+            bool numGenesEven = numGenes % 2 == 0;
+            int midPoint = numGenes / 2;
+            if (numGenesEven)
+            {
+                midPoint--;
+            }
+            int numGenesLeft = numGenes - 1;
+            bool valueAdded = false;
+            float lastExpression = 0f;
+            string lastCellName = "";
+            float highestExpression = 0f;
+
+            while (_reader.Read())
+            {
+                string cellName = _reader.GetString(0);
+                if (lastCellName == "")
+                {
+                    lastCellName = cellName;
+                }
+
+                if (lastCellName != cellName)
+                {
+                    // if we encounter a new cell
+                    if (!valueAdded)
+                    {
+                        // if a value has not been added, figure out what to add
+                        if (!numGenesEven)
+                        {
+                            // the number of genes are odd and we did not reach a (non-zero) value to add, add 0
+                            _result.Add(new CellExpressionPair(lastCellName, 0f, -1));
+                        }
+                        else if (numGenesLeft == midPoint)
+                        {
+                            // the number of genes is even and the last iteration we filled in lastExpression
+                            _result.Add(new CellExpressionPair(lastCellName, lastExpression / 2f, -1));
+                        }
+                        else
+                        {
+                            // the number of genes is even and we did not get to the point where we could fill in lastExpression
+                            _result.Add(new CellExpressionPair(lastCellName, 0f, -1));
+                        }
+
+                    }
+
+                    if (((CellExpressionPair)_result[_result.Count - 1]).Expression > highestExpression)
+                    {
+                        highestExpression = ((CellExpressionPair)_result[_result.Count - 1]).Expression;
+                    }
+
+                    numGenesLeft = numGenes - 1;
+                    valueAdded = false;
+                    lastCellName = cellName;
+                    lastExpression = 0f;
+                }
+
+                if (midPoint == numGenesLeft)
+                {
+                    float expression = _reader.GetFloat(1);
+                    if (!numGenesEven)
+                    {
+                        _result.Add(new CellExpressionPair(cellName, expression, -1));
+                    }
+                    else
+                    {
+                        _result.Add(new CellExpressionPair(cellName, (lastExpression + expression) / 2f, -1));
+                    }
+                    valueAdded = true;
+                }
+                else if (midPoint + 1 == numGenesLeft && numGenesEven)
+                {
+                    // we will need this next iteration
+                    lastExpression = _reader.GetFloat(1);
+                }
+
+                numGenesLeft--;
+            }
+            //_result.Insert(0, new Tuple<string, float>("", highestExpression));
+            int numExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            foreach (CellExpressionPair pair in _result)
+            {
+                if (pair.Expression == highestExpression)
+                {
+                    pair.Color = numExpressionColors - 1;
+                }
+                else
+                {
+                    pair.Color = (int)(pair.Expression / highestExpression * numExpressionColors);
+                }
+            }
+
+            QueryRunning = false;
+        }
+
+        /// <summary>
         /// Queries the databsae for the gene ids of multiple genes.
         /// This method will put <see cref="Tuple"/> with gene names as string and gene ids as string in <see cref="_result"/>.
         /// </summary>
