@@ -447,6 +447,19 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
 
+        public void SendMessageHandleHistoryPanelClick(string panelName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageHandleHistoryPanelClick", PhotonTargets.Others, panelName);
+            ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
+            if (!panel)
+            {
+                CellexalLog.Log($"Could not find history panel with name: {panelName}");
+                return;
+            } 
+            panel.HandleClick();
+        }
+
         #endregion
 
         #region Selection
@@ -513,6 +526,12 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             //Debug.Log("Informing clients to remove selected cells");
             coordinator.photonView.RPC("RecieveMessageRemoveCells", PhotonTargets.Others);
+        }
+
+        public void SendMessageToggleAnnotationFile(string path, bool toggle)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleAnnotationFile", PhotonTargets.Others, path, toggle);
         }
 
         #endregion

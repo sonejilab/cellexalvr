@@ -808,6 +808,8 @@ namespace CellexalVR.General
                 {
                     referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
                 }
+                
+                referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
 
                 StartCoroutine(UpdateRObjectGrouping());
             }

@@ -219,7 +219,7 @@ namespace CellexalVR.General
             colorByGeneMenu = mainMenu.GetComponentInChildren<ColorByGeneMenu>(true);
             filterMenu = mainMenu.GetComponentInChildren<FilterMenu>(true);
             velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);
-            selectionMenu = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu");
+            selectionMenu = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Selection Tool Menu");
             flybyMenu = mainMenu.GetComponentInChildren<FlybyMenu>();
             //frontDescription = frontButtons.transform.Find("Description Text Front Side").GetComponent<TextMesh>();
             //rightDescription = rightButtons.transform.Find("Description Text Right Side").GetComponent<TextMesh>();

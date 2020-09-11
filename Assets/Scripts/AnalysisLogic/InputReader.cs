@@ -548,11 +548,15 @@ namespace CellexalVR.AnalysisLogic
                 fileStream.Close();
             }
 
-            referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(),
-                cellNames, groups, groupingColors);
+            // referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(),
+                // cellNames, groups, groupingColors);
             CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
         }
 
+        /// <summary>
+        /// Read input from annotation file. File should contain cell ids in one column and annotation in one.
+        /// </summary>
+        /// <param name="path">Path to annotation file.</param>
         public void ReadAnnotationFile(string path)
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;
@@ -595,6 +599,13 @@ namespace CellexalVR.AnalysisLogic
             fileStream.Close();
         }
 
+        /// <summary>
+        /// Make selection from reading either previously made selection in session or an externally made selection.
+        /// File contains cell ids and group colour and name of graph it was selected from.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="select"></param>
+        /// <returns></returns>
         [ConsoleCommand("inputReader", aliases: new string[] {"readselectionfile", "rsf"})]
         public List<Graph.GraphPoint> ReadSelectionFile(string path, bool select = true)
         {

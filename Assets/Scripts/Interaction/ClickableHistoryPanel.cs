@@ -77,6 +77,16 @@ namespace CellexalVR.Interaction
 
         public override void Click()
         {
+            HandleClick();
+            referenceManager.multiuserMessageSender.SendMessageHandleHistoryPanelClick(NameOfThing);
+        }
+
+        /// <summary>
+        /// Do actions depending on type of button. Public method so it can be called from multi user message reciever.
+        /// </summary>
+        public void HandleClick()
+        {
+            
             string[] words;
             string selectionName;
             switch (Type)
@@ -91,7 +101,6 @@ namespace CellexalVR.Interaction
                     words = NameOfThing.Split(new string[] {" from "}, StringSplitOptions.None);
                     string networkName = words[0].FixFilePath();
                     selectionName = words[1].FixFilePath();
-                    print(ID);
                     referenceManager.inputReader.ReadNetworkFiles(ID, networkName, selectionName);
                     break;
                 case Definitions.HistoryEvent.SELECTION:

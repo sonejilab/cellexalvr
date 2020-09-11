@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
+using CellexalVR.Menu.Buttons.Selection;
 using CellexalVR.SceneObjects;
 using UnityEditor;
 using UnityEngine;
@@ -502,6 +503,18 @@ namespace CellexalVR.Multiuser
             referenceManager.selectionManager.RecolorSelectionPoints();
         }
 
+        [PunRPC]
+        public void RecieveMessageHandleHistoryPanelClick(string panelName)
+        {
+            ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
+            if (!panel)
+            {
+                CellexalLog.Log($"Could not find history panel with name: {panelName}");
+                return;
+            } 
+            panel.HandleClick();
+        }
+
         #endregion
 
         #region Selection
@@ -559,6 +572,25 @@ namespace CellexalVR.Multiuser
             {
                 referenceManager.selectionManager.GoForwardOneStepInHistory();
             }
+        }
+
+        [PunRPC]
+        public void ReciveMessageToggleAnnotationFile(string path, bool toggle)
+        {
+            referenceManager.annotationManager.ToggleAnnotationFile(path, toggle);
+            SelectAnnotationButton button = referenceManager.selectionFromPreviousMenu.FindAnnotationButton(path);
+            button.ToggleOutline(toggle);
+            button.toggle = !toggle;
+        }
+        
+        
+        [PunRPC]
+        public void ReciveMessageToggleSelectionFile(string path)
+        {
+            referenceManager.inputReader.ReadSelectionFile(path);
+            SelectionFromPreviousButton button = referenceManager.selectionFromPreviousMenu.FindSelectionButton(path);
+            button.ToggleOutline(true);
+            button.toggle = true;
         }
 
         #endregion
