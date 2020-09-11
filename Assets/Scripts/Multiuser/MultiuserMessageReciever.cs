@@ -175,7 +175,7 @@ namespace CellexalVR.Multiuser
 
         public void RecieveMessageUpdateSliderValue(string sliderType, float value)
         {
-            VRSlider.SliderType slider = (VRSlider.SliderType) Enum.Parse(typeof(VRSlider.SliderType), sliderType);
+            VRSlider.SliderType slider = (VRSlider.SliderType)Enum.Parse(typeof(VRSlider.SliderType), sliderType);
 
             switch (slider)
             {
@@ -207,7 +207,7 @@ namespace CellexalVR.Multiuser
         {
             referenceManager.pdfMesh.ShowMultiplePages();
         }
-        
+
 
         #endregion
 
@@ -353,7 +353,7 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageColoringMethodChanged(int newMode)
         {
             CellexalLog.Log("Recieved message to change coloring mode to " + newMode);
-            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods) newMode);
+            referenceManager.coloringOptionsList.SwitchMode((GraphManager.GeneExpressionColoringMethods)newMode);
         }
 
         //[PunRPC]
@@ -511,7 +511,7 @@ namespace CellexalVR.Multiuser
             {
                 CellexalLog.Log($"Could not find history panel with name: {panelName}");
                 return;
-            } 
+            }
             panel.HandleClick();
         }
 
@@ -582,8 +582,8 @@ namespace CellexalVR.Multiuser
             button.ToggleOutline(toggle);
             button.toggle = !toggle;
         }
-        
-        
+
+
         [PunRPC]
         public void ReciveMessageToggleSelectionFile(string path)
         {
@@ -1126,6 +1126,16 @@ namespace CellexalVR.Multiuser
             }
         }
 
+        [PunRPC]
+        public void RecieveMessageCumulativeRecolorFromSelection(string heatmapName, int groupLeft, int groupRight, int selectedTop, int selectedBottom)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            if (hm != null)
+            {
+                hm.CumulativeRecolorFromSelection(groupLeft, groupRight, selectedTop, selectedBottom);
+            }
+        }
+
         #endregion
 
         #region Networks
@@ -1245,7 +1255,7 @@ namespace CellexalVR.Multiuser
             bool networkExists = (handlerExists && center != null);
             if (networkExists)
             {
-                center.SwitchLayout((NetworkCenter.Layout) layout);
+                center.SwitchLayout((NetworkCenter.Layout)layout);
             }
             else
             {

@@ -751,7 +751,7 @@ namespace CellexalVR.Interaction
         public void CumulativeRecolourFromSelection()
         {
             //multiuserMessageSender.SendMessageCreateNewHeatmapFromSelection(heatmap.name, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
-            heatmap.CumulativeRecolourFromSelection(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+            heatmap.CumulativeRecolorFromSelection(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
 
         }
     }

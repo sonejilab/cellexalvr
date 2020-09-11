@@ -682,12 +682,16 @@ namespace CellexalVR.AnalysisObjects
         /// Recolours the graphs based on the currently selected area on the heatmap.
         /// All cells in all graphs are coloured based on the median expression of the selected genes.
         /// </summary>
-        public void CumulativeRecolourFromSelection(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+        /// <param name="selectedGroupLeft">The index of the left-most selected group.</param>
+        /// <param name="selectedGroupRight">The index of the right-most selected group.</param>
+        /// <param name="selectedGeneTop">The index of the top-most selected gene.</param>
+        /// <param name="selectedGeneBottom">The index of the bottom-most selected gene.</param>
+        public void CumulativeRecolorFromSelection(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
-            StartCoroutine(CumulativeRecolourFromSelectionCoroutine(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom));
+            StartCoroutine(CumulativeRecolorFromSelectionCoroutine(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom));
         }
 
-        private IEnumerator CumulativeRecolourFromSelectionCoroutine(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
+        private IEnumerator CumulativeRecolorFromSelectionCoroutine(int selectedGroupLeft, int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
             // find the index of the left-most and the right-most selected cells in the heatmap
             int selectedCellLeft = 0;
@@ -716,20 +720,6 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
             referenceManager.graphManager.ColorAllGraphsByGeneExpression("Median of selected genes", db._result);
-
-            //float highestExpression = ((Tuple<string, float>)db._result[0]).Item2;
-            //int numExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
-            //GraphManager graphManager = referenceManager.graphManager;
-            //foreach (var graph in graphManager.Graphs)
-            //{
-            //    graph.ColorByGeneExpression(new ArrayList());
-            //    for (int i = 1; i < db._result.Count; ++i)
-            //    {
-            //        Tuple<string, float> cellExpr = (Tuple<string, float>)db._result[i];
-            //        int colorIndex = (int)((cellExpr.Item2 / highestExpression) * numExpressionColors);
-            //        graph.ColorGraphPointGeneExpression(graph.FindGraphPoint(cellExpr.Item1), colorIndex, false);
-            //    }
-            //}
         }
     }
 }

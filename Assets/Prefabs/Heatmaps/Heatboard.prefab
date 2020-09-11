@@ -1175,6 +1175,7 @@ MonoBehaviour:
   movingQuadX: {fileID: 1969411457497442}
   movingQuadY: {fileID: 1103328620606090}
   selectionNr: 0
+  selectionFile: 
   enlargedGeneText: {fileID: 114284576377539384}
   highlightGeneText: {fileID: 114230615009697458}
   highlightInfoText: {fileID: 0}
@@ -2921,6 +2922,7 @@ GameObject:
   - component: {fileID: 1699309269668327392}
   - component: {fileID: 8047600289831777170}
   - component: {fileID: 7434663971112664215}
+  - component: {fileID: 2303859936358959968}
   m_Layer: 17
   m_Name: Recolour Graphs From Selection Button
   m_TagString: Menu Controller Collider
@@ -2992,7 +2994,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9c8cdaef3a98b6f4c937a4da9acea2e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 89eb42bdee148944e9499d6b0aaf326e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3003,6 +3005,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2303859936358959968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742093460330672067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: defef4db310f0c946bac31ab589207d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  descriptionText: {fileID: 114362847402628706}
+  infoMenu: {fileID: 0}
+  activeOutline: {fileID: 0}
+  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
+  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  standardTexture: {fileID: 21300000, guid: 89eb42bdee148944e9499d6b0aaf326e, type: 3}
+  highlightedTexture: {fileID: 21300000, guid: 155ee5291db81af45b412786365fbd3a, type: 3}
+  deactivatedTexture: {fileID: 21300000, guid: 87c631a195cdb254a91f7a05b6749f5f, type: 3}
+  popupChoice: 1
+  buttonActivated: 1
+  storedState: 0
+  controllerInside: 0
 --- !u!1 &3149247155114247192
 GameObject:
   m_ObjectHideFlags: 0

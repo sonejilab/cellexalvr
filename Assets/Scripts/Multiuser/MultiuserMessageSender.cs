@@ -6,6 +6,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.Interaction;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Runtime.Remoting.Messaging;
 
 namespace CellexalVR.Multiuser
 {
@@ -456,7 +457,7 @@ namespace CellexalVR.Multiuser
             {
                 CellexalLog.Log($"Could not find history panel with name: {panelName}");
                 return;
-            } 
+            }
             panel.HandleClick();
         }
 
@@ -688,7 +689,6 @@ namespace CellexalVR.Multiuser
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-
         public void SendMessageCreateHeatmap(string hmName)
         {
             if (!multiplayer) return;
@@ -789,6 +789,12 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageResetInfoTexts", PhotonTargets.Others, heatmapName);
+        }
+
+        public void SendMessageCumulativeRecolorFromSelection(string heatmapName, int groupLeft, int groupRight, int selectedTop, int selectedBottom)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageCumulativeRecolorFromSelection", PhotonTargets.Others, heatmapName, groupLeft, groupRight, selectedTop, selectedBottom);
         }
 
         #endregion

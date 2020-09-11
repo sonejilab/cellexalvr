@@ -737,7 +737,6 @@ namespace SQLiter
 
         private IEnumerator QueryMedianGeneExpressionsCoroutine(string[] genes)
         {
-            //genes = new string[] { "gata1" };
             string joinedGenes = "\"" + string.Join("\", \"", genes) + "\"";
             string query = "SELECT cname, value " +
                 "FROM datavalues " +
@@ -831,7 +830,7 @@ namespace SQLiter
 
                 numGenesLeft--;
             }
-            //_result.Insert(0, new Tuple<string, float>("", highestExpression));
+
             int numExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             foreach (CellExpressionPair pair in _result)
             {

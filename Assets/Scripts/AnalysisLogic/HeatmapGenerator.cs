@@ -937,11 +937,5 @@ namespace CellexalVR.AnalysisLogic
             heatmapList.Add(heatmap);
             heatmap.selectionNr = selectionNr;
         }
-
-        [ConsoleCommand("heatmapGenerator", aliases: new string[] { "cumulativerecolour", "cr" })]
-        public void CumulativeRecolour()
-        {
-            heatmapList[0].CumulativeRecolourFromSelection(0, 2, 0, 100);
-        }
     }
 }
