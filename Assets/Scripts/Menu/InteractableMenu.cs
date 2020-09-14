@@ -48,7 +48,7 @@ namespace CellexalVR.Menu
         /// </summary>
         private void MenuGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
         {
-            MeshCollider thisCollider = gameObject.GetComponent<MeshCollider>();
+            Collider thisCollider = gameObject.GetComponent<Collider>();
             if (transform.parent != null)
             {
                 oldParent = transform.parent;
@@ -84,10 +84,11 @@ namespace CellexalVR.Menu
 
 
                 reattachCollider = reattachGameObject.GetComponent<MeshCollider>();
-                reattachCollider.sharedMesh = thisCollider.sharedMesh;
-                reattachCollider.convex = thisCollider.convex;
-                reattachCollider.isTrigger = thisCollider.isTrigger;
-                reattachGameObject.GetComponent<MeshFilter>().sharedMesh = thisCollider.sharedMesh;
+                Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
+                reattachCollider.sharedMesh = mesh;
+                reattachCollider.convex = true;
+                reattachCollider.isTrigger = true;
+                reattachGameObject.GetComponent<MeshFilter>().sharedMesh = mesh;
             }
 
             // disable all colliders and save their states, they are restored when the menu is ungrabbed

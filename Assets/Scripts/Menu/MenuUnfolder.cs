@@ -84,7 +84,7 @@ namespace CellexalVR.Menu
             }
 
             // top side
-            Vector3 topStart = new Vector3(0f, 0.5f, 0.5f);
+            Vector3 topStart = new Vector3(0f, 0.5f, 0.625f);
             Vector3 topFinal;
             Vector3 topStartScale;
             Vector3 topFinalScale;
@@ -103,8 +103,8 @@ namespace CellexalVR.Menu
             if (fold)
             {
                 topFinal = new Vector3(0f, 0f, 0.5f);
-                topStartScale = new Vector3(3f, 0.1f, 0.03f);
-                topFinalScale = new Vector3(1f, 1f, 0.03f);
+                topStartScale = new Vector3(3f, 0.1f, 0.05f);
+                topFinalScale = new Vector3(1f, 1f, 0.05f);
                 sideFinal0 = new Vector3(-0.5f, -0.5f, 0f);
                 sideFinal2 = new Vector3(0.5f, -0.5f, 0f);
                 sideFinal3 = new Vector3(0.5f, -0.5f, 0f);
@@ -113,8 +113,8 @@ namespace CellexalVR.Menu
             else
             {
                 topFinal = new Vector3(0f, -0.5f, 0f);
-                topStartScale = new Vector3(1f, 1f, 0.03f);
-                topFinalScale = new Vector3(3f, 0.1f, 0.03f);
+                topStartScale = new Vector3(1f, 1f, 0.05f);
+                topFinalScale = new Vector3(3f, 0.1f, 0.05f);
                 sideFinal0 = -sideStart0;
                 sideFinal2 = -sideStart2;
                 sideFinal3 = new Vector3(-0.5f, 0.5f, 0f);
@@ -204,7 +204,7 @@ namespace CellexalVR.Menu
                 };
                 topSideTargetPosition = new Vector3(0f, 0f, 0.5f);
                 topSideTargetRotation = Quaternion.identity;
-                topSideTargetScale = new Vector3(1f, 1f, 0.03f);
+                topSideTargetScale = new Vector3(1f, 1f, 0.05f);
             }
             else
             {
@@ -219,9 +219,9 @@ namespace CellexalVR.Menu
                     new Vector3(1f, 0f, 0f),
                     new Vector3(2f, 0f, 0f)
                 };
-                topSideTargetPosition = new Vector3(0f, 0.5f, 0.55f);
+                topSideTargetPosition = new Vector3(0f, 0.5f, 0.6875f);
                 topSideTargetRotation = Quaternion.Euler(-90f, 0f, 0f);
-                topSideTargetScale = new Vector3(3f, 0.1f, 0.03f);
+                topSideTargetScale = new Vector3(3f, 0.1f, 0.05f);
             }
 
             // set the rotations and positions on final time after the animation
