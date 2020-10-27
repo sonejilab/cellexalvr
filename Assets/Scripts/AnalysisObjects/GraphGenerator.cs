@@ -1382,7 +1382,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
             LOD[] lods = new LOD[2];
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < nrOfLODGroups; i++)
             {
                 Renderer[] renderers;
                 if (graph != null)
@@ -1403,9 +1403,17 @@ namespace CellexalVR.AnalysisObjects
                     // }
                 }
 
-                // float transitionHeight = 1.0f / 
-                lods[i] = new LOD(1.0f / (4 * i + 1.2f), renderers);
+                if (i == nrOfLODGroups - 1)
+                {
+                    lods[i] = new LOD(0, renderers);
+                }
+
+                else
+                {
+                    lods[i] = new LOD(1.0f / 1.2f, renderers);
+                }
             }
+
 
             // GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             // g.transform.parent = newGraph.transform;
