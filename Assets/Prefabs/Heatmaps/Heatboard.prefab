@@ -1164,7 +1164,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
   textureGameObjects: []
-  infoText: {fileID: 0}
   statusText: {fileID: 114395360405538306}
   barInfoText: {fileID: 8109866695869690209}
   saveImageButton: {fileID: 114900856164061844}
@@ -1178,28 +1177,13 @@ MonoBehaviour:
   selectionFile: 
   enlargedGeneText: {fileID: 114284576377539384}
   highlightGeneText: {fileID: 114230615009697458}
-  highlightInfoText: {fileID: 0}
+  highlightInfoText: {fileID: 114085194017171334}
   removable: 0
   directory: 
   createAnim: 0
   orderedByAttribute: 0
   buildingTexture: 0
   genes: []
-  bitmapWidth: 4096
-  bitmapHeight: 4096
-  heatmapX: 250
-  heatmapY: 330
-  heatmapWidth: 3596
-  heatmapHeight: 3596
-  geneListX: 3846
-  geneListWidth: 250
-  attributeBarY: 10
-  groupBarY: 170
-  groupBarHeight: 140
-  attributeBarHeight: 140
-  noAttribute: -2
-  lastAttribute: -1
-  attributeWidth: 0
 --- !u!114 &114329533491564300
 MonoBehaviour:
   m_ObjectHideFlags: 0

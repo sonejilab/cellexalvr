@@ -29,7 +29,7 @@ namespace CellexalVR.AnalysisObjects
         public List<Bitmap> textureBitmaps;
         public List<System.Drawing.Graphics> textureGraphics;
         public List<GameObject> textureGameObjects;
-        public TextMeshPro infoText;
+        //public TextMeshPro infoText;
         public TextMeshPro statusText;
         public TextMeshPro barInfoText;
         public SaveHeatmapButton saveImageButton;
@@ -66,36 +66,8 @@ namespace CellexalVR.AnalysisObjects
         public bool buildingTexture = false;
         [HideInInspector]
         public string[] genes;
-        [HideInInspector]
-        public int bitmapWidth = 4096;
-        [HideInInspector]
-        public int bitmapHeight = 4096;
-        [HideInInspector]
-        public int heatmapX = 250;
-        //[HideInInspector]
-        public int heatmapY = 330;
-        //[HideInInspector]
-        public int heatmapWidth = 3596;
-        //[HideInInspector]
-        public int heatmapHeight = 3596;
-        //[HideInInspector]
-        public int geneListX = 3846;
-        //[HideInInspector]
-        public int geneListWidth = 250;
-        //[HideInInspector]
-        public int attributeBarY = 10;
-        //[HideInInspector]
-        public int groupBarY = 170;
-        //[HideInInspector]
-        public int groupBarHeight = 140;
-        //[HideInInspector]
-        public int attributeBarHeight = 140;
-        [HideInInspector]
-        public int noAttribute = -2; // different from -1 and other colour indices.
-        [HideInInspector]
-        public int lastAttribute = -1;
-        [HideInInspector]
-        public int attributeWidth = 0;
+        public HeatmapLayout layout;
+
         #endregion region
 
 
@@ -113,7 +85,6 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 originalPos;
         private Quaternion originalRot;
         private Vector3 originalScale;
-        private float targetMinScale;
         private bool minimize;
         private bool maximize;
         private bool highlight;
@@ -122,6 +93,40 @@ namespace CellexalVR.AnalysisObjects
         private float currentTime = 0;
         private float animationTime = 0.7f;
         #endregion
+
+        public class HeatmapLayout
+        {
+            [HideInInspector]
+            public int bitmapWidth = 4096;
+            [HideInInspector]
+            public int bitmapHeight = 4096;
+            [HideInInspector]
+            public int heatmapX = 250;
+            //[HideInInspector]
+            public int heatmapY = 330;
+            //[HideInInspector]
+            public int heatmapWidth = 3596;
+            //[HideInInspector]
+            public int heatmapHeight = 3596;
+            //[HideInInspector]
+            public int geneListX = 3846;
+            //[HideInInspector]
+            public int geneListWidth = 250;
+            //[HideInInspector]
+            public int attributeBarY = 10;
+            //[HideInInspector]
+            public int groupBarY = 170;
+            //[HideInInspector]
+            public int groupBarHeight = 140;
+            //[HideInInspector]
+            public int attributeBarHeight = 140;
+            [HideInInspector]
+            public int noAttribute = -2; // different from -1 and other colour indices.
+            [HideInInspector]
+            public int lastAttribute = -1;
+            [HideInInspector]
+            public int attributeWidth = 0;
+        }
 
         private void OnValidate()
         {
@@ -154,6 +159,7 @@ namespace CellexalVR.AnalysisObjects
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             GetComponent<HeatmapGrab>().referenceManager = referenceManager;
+            layout = new HeatmapLayout();
             //if (CrossSceneInformation.Normal)
             //{
             //    rightController = referenceManager.rightController;
@@ -346,10 +352,10 @@ namespace CellexalVR.AnalysisObjects
             int geneHit = Array.FindIndex(genes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
             if (geneHit != -1)
             {
-                float highlightMarkerWidth = (float)geneListWidth / bitmapWidth;
-                float highlightMarkerHeight = ((float)heatmapHeight / bitmapHeight) / genes.Length;
-                float highlightMarkerX = (float)geneListX / bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-                float highlightMarkerY = -(float)heatmapY / bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
+                float highlightMarkerWidth = (float)layout.geneListWidth / layout.bitmapWidth;
+                float highlightMarkerHeight = ((float)layout.heatmapHeight / layout.bitmapHeight) / genes.Length;
+                float highlightMarkerX = (float)layout.geneListX / layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+                float highlightMarkerY = -(float)layout.heatmapY / layout.bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
 
                 highlightGeneQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, 0);
                 highlightGeneQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
@@ -420,7 +426,7 @@ namespace CellexalVR.AnalysisObjects
 
             // rebuild the groupwidth and list with the new widths.
             List<Tuple<int, float, int>> newGroupWidths = new List<Tuple<int, float, int>>();
-            float newXCoordInc = (float)heatmapWidth / newCells.Length;
+            float newXCoordInc = (float)layout.heatmapWidth / newCells.Length;
             for (int i = selectedGroupLeft; i <= selectedGroupRight; ++i)
             {
                 Tuple<int, float, int> old = groupWidths[i];
@@ -453,9 +459,9 @@ namespace CellexalVR.AnalysisObjects
         {
             cellAttributes = new List<Tuple<Cell, int>>();
             attributeColors = new Dictionary<int, UnityEngine.Color>();
-            float cellWidth = (float)heatmapWidth / cells.Length;
-            lastAttribute = -1;
-            attributeWidth = 0;
+            float cellWidth = (float)layout.heatmapWidth / cells.Length;
+            layout.lastAttribute = -1;
+            layout.attributeWidth = 0;
             attributeWidths = new List<Tuple<int, float, int>>();
             for (int i = 0; i < cells.Length; ++i)
             {
@@ -463,7 +469,7 @@ namespace CellexalVR.AnalysisObjects
                 var attributes = cell.Attributes;
                 AddAttributeWidth(attributes, cellWidth, cell);
             }
-            attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, attributeWidth));
+            attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, layout.attributeWidth));
         }
 
         /// <summary>
@@ -479,22 +485,22 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                attribute = noAttribute;
-                attributeColors[noAttribute] = UnityEngine.Color.black;
+                attribute = layout.noAttribute;
+                attributeColors[layout.noAttribute] = UnityEngine.Color.black;
             }
             cellAttributes.Add(new Tuple<Cell, int>(cell, attribute));
-            if (lastAttribute == -1)
+            if (layout.lastAttribute == -1)
             {
-                lastAttribute = attribute;
+                layout.lastAttribute = attribute;
             }
 
-            if (attribute != lastAttribute)
+            if (attribute != layout.lastAttribute)
             {
-                attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, (int)attributeWidth));
-                attributeWidth = 0;
-                lastAttribute = attribute;
+                attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int)layout.attributeWidth));
+                layout.attributeWidth = 0;
+                layout.lastAttribute = attribute;
             }
-            attributeWidth++;
+            layout.attributeWidth++;
         }
 
         /// <summary>
@@ -506,9 +512,9 @@ namespace CellexalVR.AnalysisObjects
             int currentGroup = -1;
             int prevGroup = -1;
             int currentAttribute = 0;
-            attributeWidth = 0;
-            lastAttribute = -1;
-            float cellWidth = (float)heatmapWidth / cells.Length;
+            layout.attributeWidth = 0;
+            layout.lastAttribute = -1;
+            float cellWidth = (float)layout.heatmapWidth / cells.Length;
             List<Tuple<Cell, int>> cellGroup = new List<Tuple<Cell, int>>();
             List<Tuple<Cell, int>> reorderedGroup = new List<Tuple<Cell, int>>();
             List<Tuple<Cell, int>> reorderedList = new List<Tuple<Cell, int>>();
@@ -534,47 +540,47 @@ namespace CellexalVR.AnalysisObjects
                     cellGroup.Clear();
                     cellGroup.Add(cellAttribute);
                     prevGroup = currentGroup;
-                    attributeWidth = 0;
-                    lastAttribute = -1;
+                    layout.attributeWidth = 0;
+                    layout.lastAttribute = -1;
                     foreach (Tuple<Cell, int> ca in reorderedGroup)
                     {
-                        if (lastAttribute == -1)
+                        if (layout.lastAttribute == -1)
                         {
-                            lastAttribute = ca.Item2;
+                            layout.lastAttribute = ca.Item2;
                         }
 
-                        if (ca.Item2 != lastAttribute)
+                        if (ca.Item2 != layout.lastAttribute)
                         {
-                            attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, (int)attributeWidth));
-                            attributeWidth = 0;
-                            lastAttribute = ca.Item2;
+                            attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int)layout.attributeWidth));
+                            layout.attributeWidth = 0;
+                            layout.lastAttribute = ca.Item2;
                         }
-                        attributeWidth++;
+                        layout.attributeWidth++;
                     }
-                    attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, attributeWidth));
+                    attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, layout.attributeWidth));
                 }
             }
             //last group
             reorderedGroup = cellGroup.OrderBy(x => x.Item2).ToList();
             reorderedList.ToList().AddRange(reorderedList);
-            attributeWidth = 0;
-            lastAttribute = -1;
+            layout.attributeWidth = 0;
+            layout.lastAttribute = -1;
             foreach (Tuple<Cell, int> ca in reorderedGroup)
             {
-                if (lastAttribute == -1)
+                if (layout.lastAttribute == -1)
                 {
-                    lastAttribute = ca.Item2;
+                    layout.lastAttribute = ca.Item2;
                 }
 
-                if (ca.Item2 != lastAttribute)
+                if (ca.Item2 != layout.lastAttribute)
                 {
-                    attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, (int)attributeWidth));
-                    attributeWidth = 0;
-                    lastAttribute = ca.Item2;
+                    attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int)layout.attributeWidth));
+                    layout.attributeWidth = 0;
+                    layout.lastAttribute = ca.Item2;
                 }
-                attributeWidth++;
+                layout.attributeWidth++;
             }
-            attributeWidths.Add(new Tuple<int, float, int>(lastAttribute, attributeWidth * cellWidth, attributeWidth));
+            attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, layout.attributeWidth));
             for (int i = 0; i < reorderedList.Count; i++)
             {
                 cells[i] = reorderedList[i].Item1;
@@ -674,7 +680,7 @@ namespace CellexalVR.AnalysisObjects
         {
             // containedCells = new Dictionary<Cell, Color>();
             //containedCells = colors;
-            infoText.text = "Total number of cells: " + colors.Count;
+            //infoText.text = "Total number of cells: " + colors.Count;
             // infoText.text += "\nNumber of colours: " + numberOfColours;
         }
 

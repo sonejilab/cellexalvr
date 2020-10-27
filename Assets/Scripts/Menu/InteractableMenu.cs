@@ -169,29 +169,29 @@ namespace CellexalVR.Menu
             }
         }
     }
-#if UNITY_EDITOR
-    [CustomEditor(typeof(InteractableMenu))]
-    [CanEditMultipleObjects]
-    public class InteractableMenuInspector : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-            InteractableMenu script = target as InteractableMenu;
-            script.referenceManager = (ReferenceManager)EditorGUILayout.ObjectField("Reference Manager", script.referenceManager, typeof(ReferenceManager), true);
-            script.interactableObject = (VRTK.VRTK_InteractableObject)EditorGUILayout.ObjectField("Interactable Object", script.interactableObject, typeof(VRTK.VRTK_InteractableObject), true);
-            script.isSubMenu = EditorGUILayout.Toggle("Is Sub Menu", script.isSubMenu);
-            if (script.isSubMenu)
-            {
-                script.subMenu = (SubMenu)EditorGUILayout.ObjectField("Sub Menu", script.subMenu, typeof(SubMenu), true);
-            }
-            else
-            {
-                script.menuUnfolder = (MenuUnfolder)EditorGUILayout.ObjectField("Menu Unfolder", script.menuUnfolder, typeof(MenuUnfolder), true);
-            }
-            script.reattachPrefab = (GameObject)EditorGUILayout.ObjectField("Reattach Prefab", script.reattachPrefab, typeof(GameObject), true);
-            serializedObject.ApplyModifiedProperties();
-        }
-    }
-#endif
+    //#if UNITY_EDITOR
+    //    [CustomEditor(typeof(InteractableMenu))]
+    //    [CanEditMultipleObjects]
+    //    public class InteractableMenuInspector : Editor
+    //    {
+    //        public override void OnInspectorGUI()
+    //        {
+    //            serializedObject.Update();
+    //            InteractableMenu script = target as InteractableMenu;
+    //            script.referenceManager = (ReferenceManager)EditorGUILayout.ObjectField("Reference Manager", script.referenceManager, typeof(ReferenceManager), true);
+    //            script.interactableObject = (VRTK.VRTK_InteractableObject)EditorGUILayout.ObjectField("Interactable Object", script.interactableObject, typeof(VRTK.VRTK_InteractableObject), true);
+    //            script.isSubMenu = EditorGUILayout.Toggle("Is Sub Menu", script.isSubMenu);
+    //            if (script.isSubMenu)
+    //            {
+    //                script.subMenu = (SubMenu)EditorGUILayout.ObjectField("Sub Menu", script.subMenu, typeof(SubMenu), true);
+    //            }
+    //            else
+    //            {
+    //                script.menuUnfolder = (MenuUnfolder)EditorGUILayout.ObjectField("Menu Unfolder", script.menuUnfolder, typeof(MenuUnfolder), true);
+    //            }
+    //            script.reattachPrefab = (GameObject)EditorGUILayout.ObjectField("Reattach Prefab", script.reattachPrefab, typeof(GameObject), true);
+    //            serializedObject.ApplyModifiedProperties();
+    //        }
+    //    }
+    //#endif
 }

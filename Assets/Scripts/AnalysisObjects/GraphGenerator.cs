@@ -1410,7 +1410,7 @@ namespace CellexalVR.AnalysisObjects
 
                 else
                 {
-                    lods[i] = new LOD(1f/2f, renderers);
+                    lods[i] = new LOD(1f/1.3f, renderers);
                 }
             }
 
