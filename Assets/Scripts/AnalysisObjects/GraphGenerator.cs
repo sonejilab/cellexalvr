@@ -1360,7 +1360,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-        public void UpdateLODGroups(Graph graph = null, GraphSlice slice = null)
+        public void UpdateLODGroups(Graph graph = null, int nrOfLODGroups = 1, GraphSlice slice = null)
         {
             LODGroup lodGroup;
             if (graph != null)
@@ -1405,12 +1405,13 @@ namespace CellexalVR.AnalysisObjects
 
                 if (i == nrOfLODGroups - 1)
                 {
-                    lods[i] = new LOD(0, renderers);
+                    print(nrOfLODGroups);
+                    lods[i] = new LOD(0f, renderers);
                 }
 
                 else
                 {
-                    lods[i] = new LOD(1.0f / 1.2f, renderers);
+                    lods[i] = new LOD(1f/2f, renderers);
                 }
             }
 
