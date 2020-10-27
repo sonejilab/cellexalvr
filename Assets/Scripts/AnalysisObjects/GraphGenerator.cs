@@ -1405,7 +1405,6 @@ namespace CellexalVR.AnalysisObjects
 
                 if (i == nrOfLODGroups - 1)
                 {
-                    print(nrOfLODGroups);
                     lods[i] = new LOD(0f, renderers);
                 }
 

@@ -230,7 +230,7 @@ namespace CellexalVR.AnalysisLogic
                 if (nrOfLODGroups > 1)
                 {
                     combGraph.gameObject.AddComponent<LODGroup>();
-                    referenceManager.graphGenerator.UpdateLODGroups(combGraph);
+                    referenceManager.graphGenerator.UpdateLODGroups(combGraph, nrOfLODGroups);
                 }
 
                 // Add axes in bottom corner of graph and scale points differently
