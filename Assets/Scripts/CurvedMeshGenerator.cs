@@ -287,26 +287,18 @@ namespace CellexalVR
             {
                 for (int j = 0; j < horizontalSplit; j++)
                 {
-                    // GameObject newChild = Instantiate(meshObjPrefab, pageParent);
-
                     GetComponent<MeshDeformer>().referenceManager = referenceManager;
-                    // newChild.transform.parent = transform;
-                    // Vector3 position = obj.transform.localPosition;
-                    // position.x = -0.05f * i;
-                    // position.y = -0.05f * j;
-                    // position.z = 0;
                     transform.localPosition = Vector3.zero;
                     Mesh mesh = GenerateMesh(i * xSize / verticalSplit, (i + 1) * xSize / verticalSplit,
                         j * ySize / horizontalSplit, (j + 1) * ySize / horizontalSplit);
-                    
                     GetComponent<MeshFilter>().mesh = mesh;
                     Renderer renderer = GetComponent<MeshRenderer>();
                     renderer.material = material;
                     renderer.material.SetFloat("_XGridSize", xSize - 1);
                     renderer.material.SetFloat("_YGridSize", ySize - 1);
-                    GetComponent<MeshCollider>().sharedMesh = mesh;
-                    // splitMeshes.Add(newChild);
-
+                    MeshCollider mc = GetComponent<MeshCollider>();
+                    mc.sharedMesh = mesh;
+                    mc.gameObject.layer = LayerMask.NameToLayer("GraphLayer");
                     transform.localScale = scale;
                 }
             }

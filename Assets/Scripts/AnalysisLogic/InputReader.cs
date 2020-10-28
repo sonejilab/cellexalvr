@@ -65,7 +65,7 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
-            XRSettings.eyeTextureResolutionScale = 2.0f;
+            XRSettings.eyeTextureResolutionScale = 1.5f;
             // QualitySettings.vSyncCount = 0;
             h5readers = new Dictionary<string, H5Reader>();
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;

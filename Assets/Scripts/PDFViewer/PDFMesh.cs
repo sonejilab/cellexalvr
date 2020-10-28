@@ -95,6 +95,9 @@ namespace CellexalVR.PDFViewer
             if (Directory.Exists(folder))
             {
                 // pdf conversion already done, no need to continue.
+                string[] images = Directory.GetFiles(folder);
+                totalNrOfpages = images.Length;
+                CellexalEvents.PDFArticleRead.Invoke();
                 return;
             }
 
@@ -125,34 +128,16 @@ namespace CellexalVR.PDFViewer
 
                     totalNrOfpages++;
                 }
-
-                // float w = doc.Pages[0].Width / 72.0f * 96;
-                // float h = doc.Pages[0].Height / 72.0f * 96;
             }
 
             CellexalEvents.PDFArticleRead.Invoke();
         }
-
-
-        public void ShowPage(int pageNr)
-        {
-            string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{pageNr}.png";
-            currentPage = pageNr;
-            texture.LoadImage(File.ReadAllBytes(path));
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
-            {
-                if (r.gameObject.GetComponent<MeshDeformer>() == null) continue;
-                r.material.SetTexture("_MainTex", texture);
-            }
-        }
-
 
         public void ShowPagesMultiUser()
         {
             ShowMultiplePages();
             referenceManager.multiuserMessageSender.SendMessageShowPDFPages();
         }
-
 
         /// <summary>
         /// Renders the page images as textures on top of the generated mesh.
@@ -222,6 +207,13 @@ namespace CellexalVR.PDFViewer
             ShowMultiplePages();
         }
 
+        public void ChangePage(int i)
+        {
+            if ((currentPage == 1 && i < 0) || (currentPage + nrOfPages + i - 1) > totalNrOfpages) return;
+            currentPage += i;
+            StartCoroutine(ShowPagesCoroutine(currentPage, nrOfPages));
+        }
+
         public void ChangeCurvature(float value)
         {
             CreatePage();
@@ -236,14 +228,6 @@ namespace CellexalVR.PDFViewer
         {
             StartCoroutine(ShowPagesCoroutine(currentPage, nrOfPages));
         }
-
-        public void ChangePage(int i)
-        {
-            if ((currentPage == 1 && i < 0) || (currentPage + nrOfPages + i - 1) > totalNrOfpages) return;
-            currentPage += i;
-            StartCoroutine(ShowPagesCoroutine(currentPage, nrOfPages));
-        }
-
 
         public void ScaleX(float value)
         {
@@ -276,7 +260,7 @@ namespace CellexalVR.PDFViewer
                     pageParent.localScale = Vector3.one;
                     CreatePage();
                     SetSettingsHandle(ViewingMode.PocketMovable);
-                    StartCoroutine(ShowPagesCoroutine(1, 1));
+                    StartCoroutine(ShowPagesCoroutine(currentPage, nrOfPages));
                     break;
                 case ViewingMode.PocketMovable:
                     pageParent.localScale = new Vector3(0.5f, 0.25f, 0.5f);
@@ -312,6 +296,9 @@ namespace CellexalVR.PDFViewer
                 pageMesh.transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
                 pageMesh.transform.LookAt(referenceManager.headset.transform.position);
                 pageMesh.transform.Rotate(0, 180, 0);
+
+                nrOfPages = 1;
+                currentPage = 1;
             }
 
             else
@@ -329,7 +316,6 @@ namespace CellexalVR.PDFViewer
             }
         }
 
-
         /// <summary>
         /// Used to show or hide the pdf mesh and the settings handle.
         /// </summary>
@@ -337,13 +323,15 @@ namespace CellexalVR.PDFViewer
         public void TogglePDF(bool toggle)
         {
             pageParent.gameObject.SetActive(toggle);
-
-            if (!toggle) return;
+            if (!toggle)
+            {
+                settingsHandlerCurved.SetActive(false);
+                settingsHandlerPocket.SetActive(false);
+                return;
+            }
             CreatePage();
             ShowMultiplePages();
             SetSettingsHandle(currentViewingMode);
         }
-
-        //private Apitron.PDF.Rasterizer.Document _document = new Document(new FileStream("path", FileMode.Create));
     }
 }

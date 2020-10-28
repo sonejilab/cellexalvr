@@ -7,7 +7,6 @@ using Unity.Jobs;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Jobs;
-using TMPro;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.AnalysisLogic;
@@ -17,6 +16,7 @@ using CellexalVR.Extensions;
 using CellexalVR.SceneObjects;
 using Unity.Burst;
 using CellexalVR.Spatial;
+using TMPro;
 using UnityEditor;
 using UnityEngine.Rendering;
 

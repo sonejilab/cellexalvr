@@ -43,7 +43,7 @@ namespace CellexalVR.AnalysisLogic
             var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs.Union(graphManager.attributeSubGraphs)).ToList();
             foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
             {
-                var newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
+                Graph newGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.BETWEEN);
                 GraphBetweenGraphs gbg = newGraph.gameObject.AddComponent<GraphBetweenGraphs>();
                 if (clusterDebugBox)
                 {
