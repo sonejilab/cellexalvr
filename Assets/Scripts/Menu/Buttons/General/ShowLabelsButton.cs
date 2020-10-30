@@ -11,35 +11,26 @@ namespace CellexalVR.Menu.Buttons.General
         private GraphManager graphManager;
         private bool activate;
 
-        void Start()
+        private void Start()
         {
             graphManager = referenceManager.graphManager;
-            //GetComponent<SimpleTextRotator>().SetTransforms(this.transform, this.transform);
-            activate = false;
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
 
-        protected override string Description
-        {
-            get
-            {
-                return "Show Labels Of Objects";
-            }
-        }
+        protected override string Description => "Show Labels Of Objects";
 
         public override void Click()
         {
-            graphManager.SetInfoPanelsVisible(activate);
-            activate = !activate;
+            graphManager.ToggleInfoPanels();
         }
 
-        void TurnOn()
+        private void TurnOn()
         {
             SetButtonActivated(true);
         }
 
-        void TurnOff()
+        private void TurnOff()
         {
             SetButtonActivated(false);
         }

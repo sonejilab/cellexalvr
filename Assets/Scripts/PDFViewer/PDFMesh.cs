@@ -101,9 +101,6 @@ namespace CellexalVR.PDFViewer
                 return;
             }
 
-            Directory.CreateDirectory(folder);
-
-            int i = 0;
             string[] files = Directory.GetFiles(path, "*.pdf");
             if (files.Length == 0)
             {
@@ -111,7 +108,9 @@ namespace CellexalVR.PDFViewer
                 return;
             }
 
+            Directory.CreateDirectory(folder);
             string pdfPath = files[0];
+            int i = 0;
             using (PdfDocument doc = PdfDocument.Load(pdfPath))
             {
                 foreach (PdfPage page in doc.Pages)

@@ -85,7 +85,6 @@ namespace CellexalVR.Tools
                 case "HeatBoard":
                     if (obj.GetComponent<Heatmap>().removable)
                     {
-                        Debug.Log("Script is running");
                         CellexalError.SpawnError("Delete failed", "Can not delete heatmap yet. Wait for script to finish before removing it.");
                         controllerInside = false;
                         return;
@@ -103,9 +102,6 @@ namespace CellexalVR.Tools
                     break;
 
                 case "SubGraph":
-                    referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
-                    break;
-
                 case "FacsGraph":
                     referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
                     break;

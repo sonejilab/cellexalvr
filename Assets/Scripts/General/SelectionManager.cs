@@ -763,7 +763,7 @@ namespace CellexalVR.General
         /// The file contains the cell id and the colour of the selection group and which graph it was selected from.
         /// </summary>
         /// <param name="selection"></param>
-        public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string filePath = "")
+        public string DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string filePath = "")
         {
             if (filePath != "")
             {
@@ -813,6 +813,8 @@ namespace CellexalVR.General
 
                 StartCoroutine(UpdateRObjectGrouping());
             }
+
+            return filePath;
         }
 
         /// <summary>

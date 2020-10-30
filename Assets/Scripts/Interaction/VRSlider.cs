@@ -115,7 +115,7 @@ namespace CellexalVR.Interaction
                 OnHandleGrabbed.Invoke(Value);
             }
 
-            handle.transform.localPosition = new Vector3(xValue, 5, 0);
+            handle.transform.localPosition = new Vector3(xValue, handleStartPosition.y, 0);
         }
 
         /// <summary>

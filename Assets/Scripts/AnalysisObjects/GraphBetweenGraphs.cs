@@ -102,7 +102,7 @@ namespace CellexalVR.AnalysisObjects
             newGraph.tag = "Untagged";
             newGraph.transform.position = fromGraph.transform.position + (toGraph.transform.position - fromGraph.transform.position) / 2f;
             newGraph.transform.localScale /= 2;
-            newGraph.SetInfoTextVisible(false);
+            newGraph.ToggleInfoText();
             foreach (Graph.GraphPoint g in points)
             {
                 Graph.GraphPoint sourceCell = fromGraph.points[g.Label];

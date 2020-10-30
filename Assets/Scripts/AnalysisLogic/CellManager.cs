@@ -166,6 +166,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 graph.MakeAllPointsTransparent(highlight);
             }
+
             foreach (Cell cell in cellsToHighlight)
             {
                 foreach (Graph.GraphPoint gp in cell.GraphPoints)
@@ -181,6 +182,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 graph.MakeAllPointsTransparent(highlight);
             }
+
             referenceManager.multiuserMessageSender.SendMessageHighlightCells(group, highlight);
             foreach (Cell cell in cellsToHighlight)
             {
@@ -232,7 +234,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
+        [ConsoleCommand("cellManager", aliases: new string[] {"colorbygene", "cbg"})]
         public void ColorGraphsByGene(string geneName)
         {
             ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
@@ -330,7 +332,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             audioSource.Play();
-            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
             ArrayList expressions = h5Reader._expressionResult;
 
 
@@ -402,7 +404,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             GetComponent<AudioSource>().Play();
-            SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
+            SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
             ArrayList expressions = database._result;
 
             // stop the coroutine if the gene was not in the database
@@ -472,7 +474,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             Pair<string, float>[] results =
-                (Pair<string, float>[])database._result.ToArray(typeof(Pair<string, float>));
+                (Pair<string, float>[]) database._result.ToArray(typeof(Pair<string, float>));
             Array.Sort(results, (Pair<string, float> x, Pair<string, float> y) => y.Second.CompareTo(x.Second));
             string[] genes = new string[20];
             float[] values = new float[20];
@@ -544,7 +546,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
-        [ConsoleCommand("cellManager", aliases: new string[] { "colorbyattribute", "cba" })]
+        [ConsoleCommand("cellManager", aliases: new string[] {"colorbyattribute", "cba"})]
         public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
         {
             if (!subGraph)
@@ -670,7 +672,15 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="group"> The attribute value </param>
         public void AddAttribute(string cellname, string attributeType, int group)
         {
-            cells[cellname].AddAttribute(attributeType, group);
+            try
+            {
+                cells[cellname].AddAttribute(attributeType, group);
+            }
+            catch (Exception e)
+            {
+                // could not find cell
+                // CellexalLog.Log($"Could not find cell : {cellname}"); // if many points are missing this logging them becomes very laggy...
+            }
         }
 
         internal void AddFacs(string cellName, string facs, float value)
@@ -687,7 +697,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Color all graphpoints according to a column in the index.facs file.
         /// </summary>
-        [ConsoleCommand("cellManager", aliases: new string[] { "colorbyindex", "cbi" })]
+        [ConsoleCommand("cellManager", aliases: new string[] {"colorbyindex", "cbi"})]
         public void ColorByIndex(string name)
         {
             if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod))
@@ -718,7 +728,7 @@ namespace CellexalVR.AnalysisLogic
                 }
                 else
                 {
-                    group = (int)((cell.Facs[name] - range.Item1) / (range.Item2 - range.Item1) * nColors);
+                    group = (int) ((cell.Facs[name] - range.Item1) / (range.Item2 - range.Item1) * nColors);
                 }
 
                 cell.ColorByGeneExpression(group);

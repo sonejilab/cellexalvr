@@ -147,7 +147,7 @@ namespace CellexalVR.AnalysisLogic
                         }
 
                         yieldCount++;
-                        if (yieldCount % 50 == 0)
+                        if (yieldCount % 1000 == 0)
                             yield return null;
                     }
 

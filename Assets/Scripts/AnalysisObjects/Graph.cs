@@ -1106,9 +1106,9 @@ namespace CellexalVR.AnalysisObjects
         /// Set this graph's info panel visible or not visible.
         /// </summary>
         /// <param name="visible"> True for visible, false for invisible </param>
-        public void SetInfoTextVisible(bool visible)
+        public void ToggleInfoText()
         {
-            infoParent.SetActive(visible);
+            infoParent.SetActive(!infoParent.gameObject.activeSelf);
         }
 
         /// <summary>
@@ -1260,6 +1260,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 byte greenChannel = (byte)(outline ? 4 : 0);
+                byte blueChannel = (byte) (outline ? 38 : 0);
                 byte redChannel;
                 if (i == -1)
                 {
@@ -1270,7 +1271,7 @@ namespace CellexalVR.AnalysisObjects
                     redChannel = (byte)(nbrOfExpressionColors + i);
                 }
 
-                Color32 finalColor = new Color32(redChannel, greenChannel, tex.b, 255);
+                Color32 finalColor = new Color32(redChannel, greenChannel, blueChannel, 255);
                 textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
                     new Color32[] { finalColor });
                 // textures[g].Apply();

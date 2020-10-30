@@ -14,6 +14,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using VRTK;
 
@@ -27,6 +28,7 @@ namespace CellexalVR.AnalysisObjects
         #region Public variables
 
         public ReferenceManager referenceManager;
+
         //public TextMeshPro infoText;
         public TextMeshPro statusText;
         public TextMeshPro barInfoText;
@@ -73,8 +75,9 @@ namespace CellexalVR.AnalysisObjects
 
         // For creation animation
         private float targetScale;
-        private float speed;
-        private float shrinkSpeed;
+        private float positionSpeed;
+        private float sizeSpeed;
+        private Vector3 targetPosition;
 
         private Vector3 target;
 
@@ -82,6 +85,7 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 originalPos;
         private Quaternion originalRot;
         private Vector3 originalScale;
+        private float minScale;
         private bool minimize;
         private bool maximize;
         private bool highlight;
@@ -144,8 +148,8 @@ namespace CellexalVR.AnalysisObjects
         private void Start()
         {
             targetScale = 2f;
-            speed = 2f;
-            shrinkSpeed = 3f;
+            positionSpeed = 2f;
+            sizeSpeed = 3f;
             transform.localScale = new Vector3(0f, 0f, 0f);
             target = new Vector3(1.4f, 1.2f, 0.05f);
             originalPos = originalScale = new Vector3();
@@ -234,9 +238,9 @@ namespace CellexalVR.AnalysisObjects
                 return;
             }
 
-            float step = speed * Time.deltaTime;
+            float step = positionSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, target, step);
-            transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
+            transform.localScale += Vector3.one * Time.deltaTime * sizeSpeed;
         }
 
         /// <summary>
@@ -244,8 +248,8 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void DeleteHeatmap()
         {
-            minimize = true;
             delete = true;
+            HideHeatmap();
         }
 
         /// <summary>
@@ -261,18 +265,6 @@ namespace CellexalVR.AnalysisObjects
                 c.enabled = false;
             }
 
-            currentTime = 0;
-            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
-            minimize = true;
-        }
-
-        /// <summary>
-        /// Starts the maximize animation and shows the heatmap.
-        /// </summary>
-        private void Minimize()
-        {
-            Vector3 targetPosition;
-            float step = speed * Time.deltaTime;
             if (delete)
             {
                 targetPosition = referenceManager.deleteTool.transform.position;
@@ -282,10 +274,32 @@ namespace CellexalVR.AnalysisObjects
                 targetPosition = referenceManager.minimizedObjectHandler.transform.position;
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
-            transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * 50);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
+            sizeSpeed = (transform.localScale.x - minScale) / animationTime;
+            positionSpeed = Vector3.Distance(transform.localPosition, targetPosition) / animationTime;
+            currentTime = 0;
+            minimize = true;
+        }
+
+        /// <summary>
+        /// Starts the maximize animation and shows the heatmap.
+        /// </summary>
+        private void Minimize()
+        {
+            if (delete)
+            {
+                targetPosition = referenceManager.deleteTool.transform.position;
+            }
+            else
+            {
+                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
+            }
+
+            float dT = Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, 2f * dT);
+            // transform.localScale = Vector3.MoveTowards(transform.localScale, Vector3.one * 0.01f, 2f * dT);
+            transform.localScale -= Vector3.one * dT * sizeSpeed;
+            // transform.Rotate(Vector3.one * Time.deltaTime * 50);
+            if (Mathf.Abs(currentTime - animationTime) <= 0.02f || transform.localScale.x <= 0)
             {
                 if (delete)
                 {
@@ -297,7 +311,7 @@ namespace CellexalVR.AnalysisObjects
                     minimize = false;
                     foreach (Renderer r in GetComponentsInChildren<Renderer>())
                         r.enabled = false;
-                    GetComponent<Renderer>().enabled = false;
+                    // GetComponent<Renderer>().enabled = false;
                     referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
                     referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
                 }
@@ -314,9 +328,9 @@ namespace CellexalVR.AnalysisObjects
             transform.position = referenceManager.minimizedObjectHandler.transform.position;
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 r.enabled = true;
-            GetComponent<Renderer>().enabled = true;
+            sizeSpeed = (originalScale.x - transform.localScale.x) / animationTime;
+            positionSpeed = Vector3.Distance(transform.localPosition, targetPosition) / animationTime;
             currentTime = 0;
-            shrinkSpeed = (originalScale.x - transform.localScale.x) / animationTime;
             maximize = true;
         }
 
@@ -325,11 +339,14 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private void Maximize()
         {
-            float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
-            transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * -50);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
+            // float positionStep = positionSpeed * Time.deltaTime;
+            // float sizeStep = sizeSpeed * Time.deltaTime;
+            float dT = Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, originalPos, 2f * dT);
+            // transform.localScale = Vector3.MoveTowards(transform.localScale, originalScale, 2f * dT);
+            transform.localScale += Vector3.one * dT * sizeSpeed;
+            // transform.Rotate(Vector3.one * Time.deltaTime * -50);
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x >= originalScale.x)
             {
                 transform.localScale = originalScale;
                 transform.position = originalPos;
@@ -446,8 +463,9 @@ namespace CellexalVR.AnalysisObjects
 
             // need to dump selection to txt file for GO analysis script. But file creation counter should not increment
             // in case networks should be created on the selection that created the original heatmap.
-            referenceManager.selectionManager.DumpSelectionToTextFile(newGps);
-            referenceManager.selectionManager.fileCreationCtr--;
+            string selectionFile = referenceManager.selectionManager.DumpSelectionToTextFile(newGps);
+            hm.selectionFile = selectionFile;
+            // referenceManager.selectionManager.fileCreationCtr--;
             hm.Init();
             try
             {

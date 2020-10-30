@@ -355,11 +355,11 @@ namespace CellexalVR.AnalysisLogic
         {
             // Make lower ranges differ more.
             particleSize = value;
-            if (value <= particleSizeStartValue / 2)
-            {
-                particleSize /= 2f;
-            }
-            
+            // if (value <= particleSizeStartValue / 2)
+            // {
+            //     particleSize /= 2f;
+            // }
+            //
             foreach (Graph g in ActiveGraphs)
             {
                 g.velocityParticleEmitter.ParticleSize = particleSize;

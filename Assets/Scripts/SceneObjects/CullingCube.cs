@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Filters;
@@ -29,31 +30,30 @@ namespace Assets.Scripts.SceneObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             filterManager = referenceManager.filterManager;
             CellexalEvents.LegendAttached.AddListener(() => attachOnSideArea.SetActive(false));
+            foreach (List<GameObject> lodGroup in referenceManager.graphManager.Graphs.SelectMany(graph => graph.lodGroupClusters.Values))
+            {
+                material = lodGroup[0].GetComponent<Renderer>().sharedMaterial;
+                material.SetFloat("_CullingActive", 1f);
+            }
         }
 
         private void Update()
         {
             if (referenceManager.graphGenerator.isCreating) return;
-            foreach (Graph graph in referenceManager.graphManager.Graphs)
+            foreach (List<GameObject> lodGroup in referenceManager.graphManager.Graphs.SelectMany(graph => graph.lodGroupClusters.Values))
             {
-                foreach (List<GameObject> lodGroup in graph.lodGroupClusters.Values)
-                {
-                    material = lodGroup[0].GetComponent<Renderer>().sharedMaterial;
-                    material.SetMatrix(boxNr == 1 ? "_BoxMatrix" : "_BoxMatrix2", transform.worldToLocalMatrix);
-                }
+                material = lodGroup[0].GetComponent<Renderer>().sharedMaterial;
+                material.SetMatrix(boxNr == 1 ? "_BoxMatrix" : "_BoxMatrix2", transform.worldToLocalMatrix);
             }
         }
 
         public void InverseCulling(bool invert)
         {
             float value = invert ? -1 : 1;
-            foreach (Graph graph in referenceManager.graphManager.Graphs)
+            foreach (List<GameObject> lodGroup in referenceManager.graphManager.Graphs.SelectMany(graph => graph.lodGroupClusters.Values))
             {
-                foreach (List<GameObject> lodGroup in graph.lodGroupClusters.Values)
-                {
-                    material = lodGroup[0].GetComponent<Renderer>().sharedMaterial;
-                    material.SetFloat("_Culling", value);
-                }
+                material = lodGroup[0].GetComponent<Renderer>().sharedMaterial;
+                material.SetFloat("_Culling", value);
             }
         }
 
@@ -67,9 +67,7 @@ namespace Assets.Scripts.SceneObjects
                 Graph.GraphPoint gp = g.FindGraphPoint(c.Label);
                 filterManager.ActivateCullingFilter();
                 referenceManager.filterManager.AddCellToEval(gp, referenceManager.selectionToolCollider.CurrentColorIndex);
-
             }
         }
     }
 }
-

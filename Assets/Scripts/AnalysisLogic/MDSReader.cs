@@ -62,13 +62,13 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
                 }
 
-                // TODO: Make a more robust way of deciding if it should be loaded as a spatial graph.
-                if (file.Contains("slice"))
-                {
-                    StartCoroutine(ReadSpatialMDSFiles(file));
-                    referenceManager.graphGenerator.isCreating = true;
-                    continue;
-                }
+                // // TODO: Make a more robust way of deciding if it should be loaded as a spatial graph.
+                // if (file.Contains("slice"))
+                // {
+                //     StartCoroutine(ReadSpatialMDSFiles(file));
+                //     referenceManager.graphGenerator.isCreating = true;
+                //     continue;
+                // }
 
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
@@ -313,6 +313,7 @@ namespace CellexalVR.AnalysisLogic
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        Cell cell = referenceManager.cellManager.AddCell(cellName);
                         gps.Add(new Tuple<string, Vector3>(cellName, new Vector3(x, y, z)));
                         itemsThisFrame++;
                     }
@@ -362,9 +363,9 @@ namespace CellexalVR.AnalysisLogic
 
             // const float sliceDist = 0.005f;
             Tuple<string, Vector3> gpTuple = gps[0];
-            Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
+            Cell c = referenceManager.cellManager.GetCell(gpTuple.Item1);
 
-            Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x,
+            Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(c, gpTuple.Item2.x,
                 gpTuple.Item2.y,
                 gpTuple.Item2.z);
 
@@ -383,15 +384,15 @@ namespace CellexalVR.AnalysisLogic
                     for (int i = 0; i < nrOfLODGroups; i++)
                     {
                         referenceManager.graphGenerator.isCreating = true;
-                        referenceManager.graphGenerator.AddLODGroup(combGraph, i);
-
-                        combGraph.maxCoordValues = maxCoords;
-                        combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
-                        while (referenceManager.graphGenerator.isCreating)
-                        {
-                            yield return null;
-                        }
+                        // referenceManager.graphGenerator.AddLODGroup(combGraph, i);
+                        //
+                        // combGraph.maxCoordValues = maxCoords;
+                        // combGraph.minCoordValues = minCoords;
+                        // referenceManager.graphGenerator.SliceClustering(lodGroup: i);
+                        // while (referenceManager.graphGenerator.isCreating)
+                        // {
+                        //     yield return null;
+                        // }
 
                         gs.zCoord = gp.WorldPosition.z;
                         combGraph.maxCoordValues = maxCoords;
@@ -431,8 +432,8 @@ namespace CellexalVR.AnalysisLogic
                 // last gp: finish the final slice
                 else if (n == gps.Count - 1)
                 {
-                    cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                    gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                    c = referenceManager.cellManager.GetCell(gpTuple.Item1);
+                    gp = referenceManager.graphGenerator.AddGraphPoint(c, gpTuple.Item2.x, gpTuple.Item2.y,
                         gpTuple.Item2.z);
                     for (int i = 0; i < nrOfLODGroups; i++)
                     {
@@ -458,8 +459,8 @@ namespace CellexalVR.AnalysisLogic
                         continue;
                     }
 
-                    cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                    gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                    c = referenceManager.cellManager.GetCell(gpTuple.Item1);
+                    gp = referenceManager.graphGenerator.AddGraphPoint(c, gpTuple.Item2.x, gpTuple.Item2.y,
                         gpTuple.Item2.z);
                     prevCoord = currentCoord;
                 }
@@ -470,4 +471,3 @@ namespace CellexalVR.AnalysisLogic
         }
     }
 }
-

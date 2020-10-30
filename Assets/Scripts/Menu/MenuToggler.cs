@@ -51,6 +51,7 @@ namespace CellexalVR.Menu
             menuHolder = menu.transform.parent.gameObject;
             menuRotator = referenceManager.menuRotator;
             menuUnfolder = referenceManager.menuUnfolder;
+            menu.transform.localScale = menuCube.transform.localScale;
             boxCollider = GetComponent<Collider>();
             leftController = referenceManager.leftController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
@@ -59,7 +60,7 @@ namespace CellexalVR.Menu
             MenuActive = false;
         }
 
-        void Update()
+        private void Update()
         {
             device = SteamVR_Controller.Input((int)leftController.index);
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf && menuUnfolder.Folded)
@@ -85,23 +86,20 @@ namespace CellexalVR.Menu
                 menuRotator.StopRotating();
             }
 
-            if (animate)
+            if (!animate) return;
+            currentTime += Time.deltaTime;
+            float step = (currentTime * animateSpeed) / arrivalTime;
+            menu.transform.localScale = Vector3.Lerp(startScale, finalScale, step);
+            menu.transform.localPosition = Vector3.Lerp(startPosition, finalPosition, step);
+            if (Mathf.Abs(menu.transform.localScale.x - finalScale.x) <= 0.001f)
             {
-                currentTime += Time.deltaTime;
-                float step = (currentTime * animateSpeed) / arrivalTime;
-                menu.transform.localScale = Vector3.Lerp(startScale, finalScale, step);
-                menu.transform.localPosition = Vector3.Lerp(startPosition, finalPosition, step);
-                if (Mathf.Abs(menu.transform.localScale.x - finalScale.x) <= 0.001f)
-                {
-                    animate = false;
-                    ToggleMenu();
-                }
-
+                animate = false;
+                ToggleMenu();
             }
 
         }
 
-        public void ToggleMenu()
+        private void ToggleMenu()
         {
             MenuActive = !MenuActive;
             menuCube.SetActive(!MenuActive);

@@ -25,11 +25,11 @@ namespace CellexalVR.Menu.SubMenus
 
         // hard coded positions :)
         private Vector3 selectionButtonPos = new Vector3(-.39f, .77f, .282f);
-        private Vector3 selectionButtonPosInc = new Vector3(.25f, 0, 0);
-        private Vector3 selectionButtonPosNewRowInc = new Vector3(0, 0, -.15f);
+        private readonly Vector3 selectionButtonPosInc = new Vector3(.25f, 0, 0);
+        private readonly Vector3 selectionButtonPosNewRowInc = new Vector3(0, 0, -.15f);
         private Vector3 annotationButtonPos = new Vector3(-.39f, .77f, -.20f);
-        private Vector3 annotationButtonPosInc = new Vector3(.25f, 0, 0);
-        private Vector3 annotationButtonPosNewRowInc = new Vector3(0, 0, -.15f);
+        private readonly Vector3 annotationButtonPosInc = new Vector3(.25f, 0, 0);
+        private readonly Vector3 annotationButtonPosNewRowInc = new Vector3(0, 0, -.15f);
         // private List<GameObject> selectionButtons = new List<GameObject>();
         // private List<GameObject> annotationButtons = new List<GameObject>();
 
@@ -61,6 +61,7 @@ namespace CellexalVR.Menu.SubMenus
             }
 
             annotationButtonPos = new Vector3(-.39f, .77f, -.20f);
+            selectionButtonPos = new Vector3(-.39f, .77f, .282f);
             prevSelectionButtons.Clear();
             string path = CellexalUser.UserSpecificFolder;
             string[] files = Directory.GetFiles(path, "selection*.txt");

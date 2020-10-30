@@ -120,8 +120,8 @@ namespace CellexalVR.General
                     newFolder.gameObject.name = croppedDirectoryName + "_box";
                 }
             }
-
-            GeneratePreviousSessionFolders(filter);
+            
+            // GeneratePreviousSessionFolders(filter);
         }
 
 

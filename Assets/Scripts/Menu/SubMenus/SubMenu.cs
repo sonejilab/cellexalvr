@@ -59,7 +59,7 @@ namespace CellexalVR.Menu.SubMenus
             }
             foreach (Canvas canvas in GetComponentsInChildren<Canvas>())
             {
-                canvas.enabled = false;
+                canvas.enabled = active;
             }
 
             if (interactableMenu && !Attached)

@@ -4,6 +4,7 @@ using CellexalVR.Interaction;
 using CellexalVR.Multiuser;
 using CellexalVR.Tools;
 using System.Collections.Generic;
+using System.Linq;
 using CellexalVR.Extensions;
 using CellexalVR.Menu.Buttons.Networks;
 using CellexalVR.SceneObjects;
@@ -42,7 +43,8 @@ namespace CellexalVR.AnalysisObjects
         private float speed;
         private float targetMinScale;
         private float targetMaxScale;
-        private float shrinkSpeed;
+        private float sizeSpeed;
+        private float positionSpeed;
         private Vector3 originalPos;
         private Quaternion originalRot;
         private Vector3 originalScale;
@@ -72,7 +74,8 @@ namespace CellexalVR.AnalysisObjects
         private void Start()
         {
             speed = 1.5f;
-            shrinkSpeed = 2f;
+            sizeSpeed = 2f;
+            positionSpeed = 2f;
             targetMinScale = 0.05f;
             targetMaxScale = targetScale = 1f;
             targetPos = originalPos = originalScale = new Vector3();
@@ -248,23 +251,25 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            currentTime = 0;
-            shrinkSpeed = (originalScale.x - transform.localScale.x) / animationTime;
+            sizeSpeed = (originalScale.x - transform.localScale.x) / animationTime;
+            positionSpeed = Vector3.Distance(originalPos, transform.localPosition) / animationTime;
             GetComponent<Renderer>().enabled = true;
             //GetComponent<Collider>().enabled = true;
+            currentTime = 0;
             maximize = true;
         }
 
         /// <summary>
         /// Animation for showing network.
         /// </summary>
-        void Maximize()
+        private void Maximize()
         {
-            float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, originalPos, step);
-            transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * -100);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
+            // float positionStep = positionSpeed * Time.deltaTime;
+            float dT = Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, originalPos, 2f * dT);
+            transform.localScale = Vector3.MoveTowards(transform.localScale, originalScale, 2f * dT);
+            // transform.Rotate(Vector3.one * Time.deltaTime * -100);
+            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x >= originalScale.x)
             {
                 transform.localScale = originalScale;
                 transform.localPosition = originalPos;
@@ -272,6 +277,11 @@ namespace CellexalVR.AnalysisObjects
                 foreach (NetworkCenter network in Replacements)
                 {
                     network.GetComponent<Collider>().enabled = true;
+                }
+
+                foreach (ToggleArcsButton button in GetComponentsInChildren<ToggleArcsButton>())
+                {
+                    button.GetComponent<Collider>().enabled = true;
                 }
 
                 foreach (NetworkCenter network in networks)
@@ -307,31 +317,33 @@ namespace CellexalVR.AnalysisObjects
             originalPos = transform.position;
             originalRot = transform.localRotation;
             originalScale = transform.localScale;
+            sizeSpeed = (transform.localScale.x - targetScale) / animationTime;
+            positionSpeed = Vector3.Distance(transform.localPosition, targetPos) / animationTime;
             currentTime = 0;
-            shrinkSpeed = (transform.localScale.x - targetScale) / animationTime;
             minimize = true;
         }
 
         /// <summary>
         /// Animation for hiding network.
         /// </summary>
-        void Minimize()
+        private void Minimize()
         {
-            float step = speed * Time.deltaTime;
+            // float positionStep = positionSpeed * Time.deltaTime;
+            float dT = Time.deltaTime;
             if (delete)
             {
                 transform.position = Vector3.MoveTowards(transform.position,
-                    referenceManager.deleteTool.transform.position, step);
+                    referenceManager.deleteTool.transform.position, 2f * dT);
             }
             else
             {
                 transform.position = Vector3.MoveTowards(transform.position,
-                    referenceManager.minimizedObjectHandler.transform.position, step);
+                    referenceManager.minimizedObjectHandler.transform.position, 2f * dT);
             }
 
-            transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
+            transform.localScale = Vector3.MoveTowards(transform.localScale, Vector3.one * 0.01f, 2f * dT);
+            // transform.Rotate(Vector3.one * Time.deltaTime * 100);
+            if (Mathf.Abs(currentTime - animationTime) <= 0.02f || transform.localScale.x <= 0f)
             {
                 if (delete)
                 {
@@ -401,21 +413,26 @@ namespace CellexalVR.AnalysisObjects
 
             networks.Clear();
             referenceManager.arcsSubMenu.DestroyTab(name.Split('_')[1]); // Get last part of nw name   
+            foreach (GameObject wire in referenceManager.arcsSubMenu.toggleArcButtonList.SelectMany(toggleArcsButton => toggleArcsButton.wires))
+            {
+                Destroy(wire);
+            }
+
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             referenceManager.graphManager.RemoveNetwork(this);
             delete = true;
-            minimize = true;
+            HideNetworks();
             removing = true;
             //Destroy(this.gameObject);
             //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
         }
 
 
-        void NetworkAnimation()
+        private void NetworkAnimation()
         {
             float step = speed * Time.deltaTime;
             //transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
-            transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
+            transform.localScale += Vector3.one * Time.deltaTime * sizeSpeed;
             if (transform.localScale.x >= targetScale)
             {
                 createAnim = false;

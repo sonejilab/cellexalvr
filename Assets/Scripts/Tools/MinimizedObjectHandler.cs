@@ -54,12 +54,12 @@ namespace CellexalVR.Tools
         /// <param name="description"> A text that will be placed on top of the minimized object. </param>
         internal void MinimizeObject(GameObject objectToMinimize, string description)
         {
-            var jail = Instantiate(minimizedObjectContainerPrefab, transform, true);
+            GameObject jail = Instantiate(minimizedObjectContainerPrefab, transform, true);
             minimizedObjects.Add(jail);
             jail.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             //jail.transform.Rotate(0f, 0f, -90f);
             jail.transform.localScale = new Vector3(1f, 1f, 1f);
-            var container = jail.GetComponent<MinimizedObjectContainer>();
+            MinimizedObjectContainer container = jail.GetComponent<MinimizedObjectContainer>();
             container.MinimizedObject = objectToMinimize;
             container.Handler = this;
             AutoMoveAndRotate rotateScript = jail.GetComponentInChildren<AutoMoveAndRotate>();

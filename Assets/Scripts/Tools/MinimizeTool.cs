@@ -30,7 +30,7 @@ namespace CellexalVR.Tools
             }
         }
 
-        void Start()
+        private void Start()
         {
             rightController = referenceManager.rightController;
             leftController = referenceManager.leftController;
@@ -39,9 +39,9 @@ namespace CellexalVR.Tools
 
         }
 
-        void Update()
+        private void Update()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
+            SteamVR_Controller.Device device = SteamVR_Controller.Input((int)rightController.index);
             if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 controllerInside = false;
@@ -93,7 +93,6 @@ namespace CellexalVR.Tools
 
         private void OnTriggerEnter(Collider other)
         {
-
             numberColliders++;
             if (other.CompareTag("Graph") || other.CompareTag("SubGraph") || other.CompareTag("FacsGraph")
                 || other.CompareTag("HeatBoard") || other.CompareTag("Network"))

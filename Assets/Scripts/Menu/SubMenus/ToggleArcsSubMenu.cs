@@ -20,7 +20,8 @@ namespace CellexalVR.Menu.SubMenus
         public GameObject buttonPrefab;
         public GameObject wirePrefab;
         public GameObject attachPoint;
-
+        public RemoveNetworkArcsButton removeNetworkArcsButton;
+        
         // hard coded positions :)
         private Vector3 buttonPos = new Vector3(-0.38f, 2.40f, 0.22f);
         private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
@@ -29,7 +30,7 @@ namespace CellexalVR.Menu.SubMenus
         private Color[] colors;
         private GameObject previewWire;
         private bool buttonClickedThisFrame;
-        private ToggleArcsButton previouslyClickedButton;
+        [SerializeField] private ToggleArcsButton previouslyClickedButton;
         private SteamVR_TrackedObject rightController;
         private SteamVR_Controller.Device device;
         public List<ToggleArcsButton> toggleArcButtonList = new List<ToggleArcsButton>();
@@ -51,6 +52,7 @@ namespace CellexalVR.Menu.SubMenus
             attachPoint = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias/AttachPoint");
             base.Start();
         }
+
 
         private IEnumerator SetControllers()
         {
@@ -75,7 +77,7 @@ namespace CellexalVR.Menu.SubMenus
 
         private bool IsInsideButton()
         {
-            return toggleArcButtonList == null || toggleArcButtonList.Any(button => button.controllerInside);
+            return !(toggleArcButtonList == null && !toggleArcButtonList.Any(button => button.controllerInside) && !removeNetworkArcsButton.controllerInside);
         }
 
         /// <summary>

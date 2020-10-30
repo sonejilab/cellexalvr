@@ -461,11 +461,11 @@ namespace CellexalVR.AnalysisObjects
         /// Set all graphs' info panels to visible or not visible.
         /// </summary>
         /// <param name="visible"> TRue for visible, false for invisible </param>
-        public void SetInfoPanelsVisible(bool visible)
+        public void ToggleInfoPanels()
         {
             foreach (Graph g in Graphs)
             {
-                g.SetInfoTextVisible(visible);
+                g.ToggleInfoText();
             }
         }
 
