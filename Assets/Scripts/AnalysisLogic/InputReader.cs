@@ -83,7 +83,7 @@ namespace CellexalVR.AnalysisLogic
             else
             {
                 headset = referenceManager.headset;
-                referenceManager.spectatorRig.SetActive(false);
+                // referenceManager.spectatorRig.SetActive(false);
             }
 
             graphGenerator = referenceManager.graphGenerator;
