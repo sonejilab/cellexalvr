@@ -56,6 +56,7 @@ namespace CellexalVR.Multiuser
 
         private void HandleInput()
         {
+            if (referenceManager.consoleManager.consoleGameObject.activeSelf) return;
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 ToggleSpectator(!active);

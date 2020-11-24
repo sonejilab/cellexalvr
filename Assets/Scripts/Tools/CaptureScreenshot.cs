@@ -5,85 +5,62 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Threading;
+using Boo.Lang;
+using Menu.Buttons.General;
 using UnityEngine;
 
 namespace CellexalVR.Tools
 {
-
     /// <summary>
     /// This class takes screenshots of what the user sees in the virtual environment.
     /// </summary>
     public class CaptureScreenshot : MonoBehaviour
     {
-        public SteamVR_TrackedObject rightController;
-        public ScreenCanvas screenCanvas;
-        public GameObject panel;
         public Camera snapShotCamera;
-        public GameObject screenQuad;
         public int picWidth;
         public int picHeight;
         public GameObject quadPrefab;
-        
-        private SteamVR_Controller.Device device;
+        public Light flash;
+
         private float fadeTime = 0.7f;
         private float elapsedTime = 0.0f;
         private float colorAlpha;
         private int screenshotCounter;
-        public ReferenceManager referenceManager;
-        //private string directory = Directory.GetCurrentDirectory() + "\\Output\";
-
-        private void OnValidate()
-        {
-            if (gameObject.scene.IsValid())
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-        }
+        private ScreenshotLayerToggleButton[] layerButtons = new ScreenshotLayerToggleButton[] { };
+        private readonly List<string> layersToRender = new List<string>();
 
         private void Start()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            screenCanvas = referenceManager.screenCanvas;
-        }
-
-        private void Update()
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            layerButtons = GetComponentsInChildren<ScreenshotLayerToggleButton>();
+            foreach (ScreenshotLayerToggleButton button in layerButtons)
             {
-                // StartCoroutine(Capture());
-                StartCoroutine(RenderSnapShot());
+                button.CurrentState = true;
             }
+            
+            gameObject.SetActive(false);
         }
 
-        private IEnumerator RenderSnapShot()
+        public void Capture()
         {
-            Texture2D snapTex = new Texture2D(picWidth, picHeight, TextureFormat.ARGB32, false);
-            
-            RenderTexture.active = snapShotCamera.targetTexture;
-            snapTex.ReadPixels(snapShotCamera.pixelRect,0, 0);
-            snapTex.Apply();
-            
-            byte[] image = snapTex.EncodeToPNG();
-            File.WriteAllBytes("testsc.png", image);
-
-            GameObject quad = Instantiate(quadPrefab, transform);
-            quad.SetActive(true);
-            quad.GetComponent<MeshRenderer>().material.mainTexture = snapTex;
-            yield return new WaitForSeconds(1.5f);
-            Destroy(snapTex);
-            Destroy(quad);
-
+            StartCoroutine(CaptureCoroutine());
         }
-        
 
         /// <summary>
-        /// Method to capture screenshot. Disables the UI canvas so it does not show up on the image.
+        /// Method to capture the screenshot. Renders the pixels from the screenshot camera. Saves it to the screenshot directory. 
         /// </summary>
         /// <returns></returns>
-        private IEnumerator Capture()
+        private IEnumerator CaptureCoroutine()
         {
+            flash.enabled = true;
+            yield return null;
+            Texture2D snapTex = new Texture2D(picWidth, picHeight, TextureFormat.ARGB32, false);
+
+            RenderTexture.active = snapShotCamera.targetTexture;
+            snapTex.ReadPixels(snapShotCamera.pixelRect, 0, 0);
+            snapTex.Apply();
+            flash.enabled = false;
+            
+
             string screenshotImageDirectory = CellexalUser.UserSpecificFolder;
             if (!Directory.Exists(screenshotImageDirectory))
             {
@@ -99,20 +76,44 @@ namespace CellexalVR.Tools
             }
 
             string screenshotImageFilePath = screenshotImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+            byte[] image = snapTex.EncodeToPNG();
+            File.WriteAllBytes(screenshotImageFilePath, image);
 
-            panel.SetActive(false);
-            ScreenCapture.CaptureScreenshot(screenshotImageFilePath);
-            CellexalLog.Log("Screenshot taken!");
+            GameObject quad = Instantiate(quadPrefab, transform);
+            quad.SetActive(true);
+            quad.GetComponent<MeshRenderer>().material.mainTexture = snapTex;
+            yield return new WaitForSeconds(1.5f);
+            Destroy(snapTex);
+            Destroy(quad);
+        }
 
-            screenCanvas.FadeAnimation(1f);
-            yield return new WaitForSeconds(0.5f);
-#if try_this_later
-            string logScreenShotRScriptPath = (Application.streamingAssetsPath + @"\log_screenshot.R");
-            Thread t = new Thread(() => RScriptRunner.RunRScript(logScreenShotRScriptPath, screenshotImageFilePath));
-            t.Start();
-#endif
-            panel.SetActive(true);
-            screenshotCounter++;
+        public void ToggleLayerToCapture(string layerName, bool toggle)
+        {
+            if (toggle && !layersToRender.Contains(layerName))
+            {
+                layersToRender.Add(layerName);
+            }
+            else
+            {
+                layersToRender.Remove(layerName);
+            }
+
+            snapShotCamera.cullingMask = LayerMask.GetMask(layersToRender.ToArray());
+        }
+
+        public void ToggleAllLayers(bool toggle)
+        {
+            foreach (ScreenshotLayerToggleButton button in layerButtons)
+            {
+                button.CurrentState = toggle;
+            }
+
+            // first 8 layers are the built in ones. unity allows 32 layers max.
+            for (int i = 0; i < 8; i++)
+            {
+                string layerName = LayerMask.LayerToName(i);
+                ToggleLayerToCapture(layerName, toggle);
+            }
         }
 
         /// <summary>
@@ -122,23 +123,24 @@ namespace CellexalVR.Tools
         {
             string args = screenshotImageFilePath;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\screenshot_report.R";
+
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
                 rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
                 yield return null;
             }
+
             //t = new Thread(() => RScriptRunner.RunScript(script));
             Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
             CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-
             while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
             {
                 yield return null;
@@ -147,6 +149,5 @@ namespace CellexalVR.Tools
             stopwatch.Stop();
             CellexalLog.Log("R log script finished in " + stopwatch.Elapsed.ToString());
         }
-
     }
 }
