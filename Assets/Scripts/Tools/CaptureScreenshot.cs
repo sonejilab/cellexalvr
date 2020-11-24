@@ -18,7 +18,12 @@ namespace CellexalVR.Tools
         public SteamVR_TrackedObject rightController;
         public ScreenCanvas screenCanvas;
         public GameObject panel;
-
+        public Camera snapShotCamera;
+        public GameObject screenQuad;
+        public int picWidth;
+        public int picHeight;
+        public GameObject quadPrefab;
+        
         private SteamVR_Controller.Device device;
         private float fadeTime = 0.7f;
         private float elapsedTime = 0.0f;
@@ -35,29 +40,49 @@ namespace CellexalVR.Tools
             }
         }
 
-        void Start()
+        private void Start()
         {
             device = SteamVR_Controller.Input((int)rightController.index);
-
             screenCanvas = referenceManager.screenCanvas;
         }
 
-        void Update()
+        private void Update()
         {
             device = SteamVR_Controller.Input((int)rightController.index);
             //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
             if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
-                StartCoroutine(Capture());
+                // StartCoroutine(Capture());
+                StartCoroutine(RenderSnapShot());
             }
+        }
+
+        private IEnumerator RenderSnapShot()
+        {
+            Texture2D snapTex = new Texture2D(picWidth, picHeight, TextureFormat.ARGB32, false);
+            
+            RenderTexture.active = snapShotCamera.targetTexture;
+            snapTex.ReadPixels(snapShotCamera.pixelRect,0, 0);
+            snapTex.Apply();
+            
+            byte[] image = snapTex.EncodeToPNG();
+            File.WriteAllBytes("testsc.png", image);
+
+            GameObject quad = Instantiate(quadPrefab, transform);
+            quad.SetActive(true);
+            quad.GetComponent<MeshRenderer>().material.mainTexture = snapTex;
+            yield return new WaitForSeconds(1.5f);
+            Destroy(snapTex);
+            Destroy(quad);
 
         }
+        
 
         /// <summary>
         /// Method to capture screenshot. Disables the UI canvas so it does not show up on the image.
         /// </summary>
         /// <returns></returns>
-        IEnumerator Capture()
+        private IEnumerator Capture()
         {
             string screenshotImageDirectory = CellexalUser.UserSpecificFolder;
             if (!Directory.Exists(screenshotImageDirectory))
@@ -93,8 +118,7 @@ namespace CellexalVR.Tools
         /// <summary>
         /// Calls R logging function to save screenshot for session report.
         /// </summary
-
-        IEnumerator LogScreenshot(string screenshotImageFilePath)
+        private IEnumerator LogScreenshot(string screenshotImageFilePath)
         {
             string args = screenshotImageFilePath;
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\screenshot_report.R";
