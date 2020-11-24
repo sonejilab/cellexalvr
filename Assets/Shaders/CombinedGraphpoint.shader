@@ -10,9 +10,9 @@
 // (x is the number of available colors) chooses a color from the
 // _ExpressionColors array. The value 255 is reserved for white.
 // The green channel values determines the following;
-// g == 0: no outline
-// 0   < g <= 0.1: outline
-// 0.1 < g <= 0.2: thicker outline
+// g == 0:
+// 0   < g <= 0.1: pulsating with tint color
+// 0.1 < g <= 0.2: shinier appearance (for highlighting)
 // 0.2 < g <= 0.5: not used
 // 0.5 < g <= 0.7 not used
 // 0.7 < g <= 0.9 transparancy
@@ -53,7 +53,7 @@ Shader "Custom/CombinedGraphpoint"
             "IgnoreProjector" = "True"
         }
         Blend SrcAlpha OneMinusSrcAlpha 
-        ZWrite Off
+//        ZWrite Off
         LOD 100
         // graphpoint pass forward base
         // draws the graphpoint mesh lit by directional light
@@ -283,7 +283,7 @@ Shader "Custom/CombinedGraphpoint"
                 {
                     ClipLOD(i.pos.xy, unity_LODFade.x);
                     i.lightDir = normalize(i.lightDir);
-                    //fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
+                    fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
 
                     // float3 expressionColorData = (tex2D(_MainTex, i.uv));
                     float3 expressionColorData = tex2D(_MainTex, i.uv);
@@ -303,8 +303,8 @@ Shader "Custom/CombinedGraphpoint"
 
                    if (expressionColorData.g > 0.7 && expressionColorData.g < 0.9) //(colorTexUV.x == 254.0/255.0)
                    {
-                       color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 2 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
-                       color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
+                       color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 15 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
+                       color.rgb += (color.rgb * _LightColor0.rgb * diff) * (atten * 2); // Diffuse and specular.
                        color.a = _Transparancy;
                    }
                    
@@ -322,27 +322,25 @@ Shader "Custom/CombinedGraphpoint"
 				        light.dir = lightDir;
 				        light.ndotl = DotClamped(i.normal, lightDir);
 				        UnityIndirect indirectLight;
-				        indirectLight.diffuse = 0.05;
-				        indirectLight.specular = 0.05;
+				        indirectLight.diffuse = 0.25;
+				        indirectLight.specular = 0.20;
 				        //_Metallic = lerp(0.0, 1.0, (sin(_Time.w * _PulseSpeed) + 1) / 2);
 				        //_Smoothness = lerp(0.0, 1.0, (sin(_Time.w * _PulseSpeed) + 1) / 2);
                    		albedo = DiffuseAndSpecularFromMetallic(albedo, _Metallic, specularTint, oneMinusReflectivity);
-                   		
-                   		if (expressionColorData.g < 0.1)
-                   		{
-			                fixed3 tintedColor = lerp(color.a, _Tint.a, (sin(_Time.w * _PulseSpeed) + 1) / 2);
-                   		    color.a *= tintedColor;
-                   		}
-                   		
                    		color.rgb += UNITY_BRDF_PBS(albedo, specularTint, oneMinusReflectivity, _Smoothness, i.normal, viewDir, light, indirectLight);
                    }
                    
-                   
                    else 
                    {
-                       color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 8 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
-                       color.rgb += (color.rgb * _LightColor0.rgb * diff) /** (atten * 2)*/; // Diffuse and specular.
+                       color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 15 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
+                       color.rgb += (color.rgb * _LightColor0.rgb * diff) * (atten * 2); // Diffuse and specular.
                        color.a = 1.0;
+                   }
+                   
+                   if (expressionColorData.b > 0.1 && expressionColorData.b <= 0.2)
+                   {
+			           fixed3 tintedColor = lerp(color.a, _Tint.a, (sin(_Time.w * _PulseSpeed) + 1) / 2);
+                       color.a *= tintedColor;
                    }
                     //color.a = color.a + _LightColor0.a * atten;
                    return color;
