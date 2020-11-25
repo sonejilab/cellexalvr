@@ -5,9 +5,6 @@ Shader "Custom/FloorPulse"
         _MainTex("Main Texture", 2D) = "white" {}
         _RotationTex("Rotating Texture", 2D) = "white" {}
         _Tint("Tint Color", Color) = (1, 1, 1, 1)
-        _FadedTex("Faded Texture", 2D) = "white" {}
-        _LaserHitColor("Laser Hit Color", Color) = (1, 1, 1, 1)
-        _FadeRadius("Texture fade radius", float) = 5.0
         _WaveColor("Wave Color", Color) = (1, 1, 1, 1)
 		_WaveCoords("Wave and Laser Coords", Vector) = (0.5, 0.5, 0, 0)
 		_WaveStartTime("Wave Start Time", float) = 0.0

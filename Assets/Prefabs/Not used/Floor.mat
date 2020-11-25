@@ -69,7 +69,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _LaserHitThickness: 0.1
-    - _Metallic: 0
+    - _Metallic: 0.741
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02

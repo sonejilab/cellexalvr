@@ -71,7 +71,9 @@ MonoBehaviour:
   axisNames: []
   GraphActive: 1
   referenceManager: {fileID: 0}
-  LODGroups: 2
+  lodGroups: 2
+  scaled: 0
+  lodGroupParents: []
   textures: []
   minCoordValues: {x: 3.4028235e+38, y: 3.4028235e+38, z: 3.4028235e+38}
   maxCoordValues: {x: -3.4028235e+38, y: -3.4028235e+38, z: -3.4028235e+38}
