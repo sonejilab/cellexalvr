@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Schema;
 using CellexalVR.General;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using VRTK;
 
 namespace CellexalVR.Interaction
 {
@@ -57,7 +53,7 @@ namespace CellexalVR.Interaction
         private Vector3 handleStartPosition;
         private float xMaxPos = 100;
         private float xMinPos = 0;
-        private VRTK_InteractableObject handleInteractable;
+        // private VRTK_InteractableObject handleInteractable;
 
         // Start is called before the first frame update
         private void Start()
@@ -70,8 +66,8 @@ namespace CellexalVR.Interaction
             xValue /= xMaxPos;
 
             handle.transform.localPosition = handleStartPosition;
-            handleInteractable = handle.GetComponent<VRTK_InteractableObject>();
-            handleInteractable.InteractableObjectUngrabbed += OnRelease;
+            // handleInteractable = handle.GetComponent<VRTK_InteractableObject>();
+            // handleInteractable.InteractableObjectUngrabbed += OnRelease;
             header.text = headerText;
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
             Value = minValue + xValue * (maxValue - minValue);
@@ -110,10 +106,10 @@ namespace CellexalVR.Interaction
                 xValue = 0;
             }
 
-            if (handleInteractable.IsGrabbed())
-            {
-                OnHandleGrabbed.Invoke(Value);
-            }
+            // if (handleInteractable.IsGrabbed())
+            // {
+            //     OnHandleGrabbed.Invoke(Value);
+            // }
 
             handle.transform.localPosition = new Vector3(xValue, handleStartPosition.y, 0);
         }
@@ -163,9 +159,9 @@ namespace CellexalVR.Interaction
             referenceManager.multiuserMessageSender.SendMessageUpdateSliderValue(sliderType, handle.transform.localPosition.x);
         }
 
-        private void OnRelease(object sender, VRTK.InteractableObjectEventArgs e)
-        {
-            OnHandleRelease.Invoke();
-        }
+        // private void OnRelease(object sender, VRTK.InteractableObjectEventArgs e)
+        // {
+        //     OnHandleRelease.Invoke();
+        // }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using CellexalVR.General;
+using Valve.VR;
+
 namespace CellexalVR.Interaction
 {
     /// <summary>
@@ -9,8 +11,8 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
         public GameObject errorMessage;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         private bool controllerInside;
 
         private void OnValidate()
@@ -54,8 +56,9 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // SteamVR 2.0
+            // device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside) //&& device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 Destroy(errorMessage);
             }

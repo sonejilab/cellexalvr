@@ -16,7 +16,7 @@ namespace CellexalVR.Interaction
         private bool coroutineRunning = false;
         private int controllersInside;
 
-        void Start()
+        private void Start()
         {
             // calcuate an array of how much to rotate the lid every frame.
             // uses a sinus function to make it a bit more smooth.
@@ -24,16 +24,17 @@ namespace CellexalVR.Interaction
             var total = 0f;
             for (int i = 0; i < moveTime; ++i)
             {
-                dAngle[i] = Mathf.Sin(Mathf.PI * ((float)i / moveTime));
+                dAngle[i] = Mathf.Sin(Mathf.PI * ((float) i / moveTime));
                 total += Mathf.Abs(dAngle[i]);
             }
+
             for (int i = 0; i < moveTime; ++i)
             {
                 dAngle[i] *= 90 / total;
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (!coroutineRunning && desiredState != lidOpen)
             {
@@ -42,36 +43,32 @@ namespace CellexalVR.Interaction
             }
         }
 
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            if (!other.tag.Equals("Player")) return; //== "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            controllersInside++;
+            desiredState = true;
+            if (!coroutineRunning && !lidOpen)
             {
-                controllersInside++;
-                desiredState = true;
-                if (!coroutineRunning && !lidOpen)
+                StartCoroutine(SetLidOpen(true));
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (!other.tag.Equals("Player")) return; //(other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            controllersInside--;
+            if (controllersInside == 0)
+            {
+                desiredState = false;
+                if (!coroutineRunning && lidOpen)
                 {
-                    StartCoroutine(SetLidOpen(true));
+                    StartCoroutine(SetLidOpen(false));
                 }
             }
         }
 
-        void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
-            {
-                controllersInside--;
-                if (controllersInside == 0)
-                {
-                    desiredState = false;
-                    if (!coroutineRunning && lidOpen)
-                    {
-                        StartCoroutine(SetLidOpen(false));
-                    }
-                }
-            }
-        }
-
-        IEnumerator SetLidOpen(bool open)
+        private IEnumerator SetLidOpen(bool open)
         {
             lidOpen = open;
             coroutineRunning = true;
@@ -85,8 +82,8 @@ namespace CellexalVR.Interaction
                 transform.Rotate(Vector3.forward, angle);
                 yield return null;
             }
+
             coroutineRunning = false;
         }
-
     }
 }

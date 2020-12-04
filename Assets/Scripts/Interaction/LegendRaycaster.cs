@@ -1,6 +1,8 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
 {
@@ -12,8 +14,8 @@ namespace CellexalVR.Interaction
 
         private ReferenceManager referenceManager;
         private LegendManager legendManager;
-        private SteamVR_Controller.Device device;
-        private SteamVR_TrackedObject rightController;
+        private Hand rightHand;
+        // private SteamVR_Controller.Device device;
         private Transform raycastingSource;
         private ControllerModelSwitcher controllerModelSwitcher;
         private int layerMask;
@@ -21,12 +23,9 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             if (CrossSceneInformation.Normal)
             {
-                rightController = referenceManager.rightController;
-                raycastingSource = rightController.transform;
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
                 legendManager = gameObject.GetComponent<LegendManager>();
             }
@@ -36,14 +35,9 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial) return;
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial)
-                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu)
-            {
-                return;
-            }
-            bool correctModel = referenceManager.rightLaser.enabled;
+            if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial) || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return; // not currently using legends in these game modes
+            if (Player.instance.rightHand == null || Player.instance.leftHand == null) return; // hands are not initiated. can not raycast
+            bool correctModel = referenceManager.laserPointerController.rightLaser.active;
             if (correctModel)
             {
                 Raycast();
@@ -52,9 +46,9 @@ namespace CellexalVR.Interaction
 
         private void Raycast()
         {
-            raycastingSource = referenceManager.rightLaser.transform;
+            raycastingSource = referenceManager.laserPointerController.rightLaser.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
-                out var hit, 100f, layerMask);
+                out RaycastHit hit, 100f, layerMask);
             if (hit.collider && hit.collider.gameObject == legendManager.gameObject)
             {
                 if (legendManager.desiredLegend == LegendManager.Legend.GeneExpressionLegend)
@@ -63,28 +57,28 @@ namespace CellexalVR.Interaction
                     if (localPos.x >= 0f && localPos.x <= 1f && localPos.y >= 0f && localPos.y <= 1f)
                     {
                         HandleHitGeneExpressionHistogram(localPos);
-                        if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                        {
-                            // if the trigger was pressed
-                            HandleClickDownGeneExpressionHistogram(localPos);
-                        }
+                        // if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                        // {
+                        //     // if the trigger was pressed
+                        //     HandleClickDownGeneExpressionHistogram(localPos);
+                        // }
                         // we hit the gene expression histogram, in the histogram area
-                        else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-                        {
-                            // if the trigger was released
-                            HandleClickUpGeneExpressionHistogram(localPos);
-                        }
+                        // else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                        // {
+                        //     // if the trigger was released
+                        //     HandleClickUpGeneExpressionHistogram(localPos);
+                        // }
                     }
                     else
                     {
                         // we hit the legend but not the right area
                         legendManager.geneExpressionHistogram.DeactivateHighlightArea();
                     }
-                    if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
-                    {
-                        // if the trigger was released
-                        savedGeneExpressionHistogramHitX = -1;
-                    }
+                    // if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
+                    // {
+                    //     // if the trigger was released
+                    //     savedGeneExpressionHistogramHitX = -1;
+                    // }
                 }
             }
             else
@@ -92,11 +86,13 @@ namespace CellexalVR.Interaction
                 // we hit nothing of interest
                 legendManager.geneExpressionHistogram.DeactivateHighlightArea();
             }
-            if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
-            {
-                // if the trigger was released
-                savedGeneExpressionHistogramHitX = -1;
-            }
+            
+            // SteamVR 2.0
+            // if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
+            // {
+            //     // if the trigger was released
+            //     savedGeneExpressionHistogramHitX = -1;
+            // }
         }
 
         private void HandleHitGeneExpressionHistogram(Vector3 hit)

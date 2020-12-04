@@ -1,13 +1,13 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
-using VRTK;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
 {
     /// <summary>
     /// Interaction with Web browser. Keyboard is set inactive when grabbing for more reliable moving of the key-panels.
     /// </summary>
-    public class BrowserGrab : VRTK_InteractableObject
+    public class BrowserGrab : InteractableObjectBasic // VRTK_InteractableObject
     {
         public ReferenceManager referenceManager;
         public GameObject keyboard;
@@ -20,8 +20,17 @@ namespace CellexalVR.Interaction
             }
         }
 
-        public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
+        protected override void Awake()
         {
+            base.Awake();
+            InteractableObjectGrabbed += Grabbed;
+            InteractableObjectUnGrabbed += UnGrabbed;
+        }
+
+
+        private void Grabbed(object sender, Hand hand)
+        {
+            base.OnInteractableObjectGrabbed(hand);
             keyboard.SetActive(false);
             if (referenceManager == null)
             {
@@ -29,16 +38,15 @@ namespace CellexalVR.Interaction
             }
             referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             //GetComponent<MeshCollider>().convex = true;
-            base.OnInteractableObjectGrabbed(e);
         }
 
-        public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
+        private void UnGrabbed(object sender, Hand hand)
         {
+            base.OnInteractableObjectUnGrabbed(hand);
             keyboard.SetActive(true);
             referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             //if (grabbingObjects.Count == 0)
             //    GetComponent<MeshCollider>().convex = false;
-            base.OnInteractableObjectUngrabbed(e);
         }
 
         //private void OnTriggerEnter(Collider other)

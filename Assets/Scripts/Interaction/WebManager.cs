@@ -34,10 +34,10 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (GetComponent<VRTK.VRTK_InteractableObject>().IsGrabbed())
-            {
-                referenceManager.multiuserMessageSender.SendMessageMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
-            }
+            // if (GetComponent<VRTK.VRTK_InteractableObject>().IsGrabbed())
+            // {
+            //     referenceManager.multiuserMessageSender.SendMessageMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
+            // }
         }
 
         public void EnterKey()

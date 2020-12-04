@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using CellexalVR.Tools;
 using UnityEngine;
+using Valve.VR;
 
 namespace CellexalVR.Interaction
 {
@@ -14,7 +15,7 @@ namespace CellexalVR.Interaction
         public Material normalMaterial;
         public Material highlightMaterial;
 
-        private SteamVR_TrackedObject rightController;
+        private SteamVR_Behaviour_Pose rightController;
         private MinimizeTool minimizeTool;
         private Color orgColor;
         public GameObject MinimizedObject { get; set; }
@@ -45,7 +46,7 @@ namespace CellexalVR.Interaction
         {
             if (!CrossSceneInformation.Spectator)
             {
-                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_Behaviour_Pose>();
                 minimizeTool = Handler.referenceManager.minimizeTool;
             }
 
@@ -62,8 +63,9 @@ namespace CellexalVR.Interaction
                 return;
             }
 
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // SteamVR 2.0
+            // var device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)// && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 if (MinimizedObject.CompareTag("Graph"))
                 {

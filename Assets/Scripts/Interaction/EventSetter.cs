@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using CellexalVR.General;
-using VRTK;
-using CellexalVR.Menu;
 
 namespace CellexalVR.Interaction
 {
@@ -74,8 +72,8 @@ namespace CellexalVR.Interaction
 
         public void RightMenuUpHoldEvent()
         {
-            if (referenceManager.rightLaser.enabled &&
-                referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+            // if (referenceManager.rightLaser.enabled &&
+                // referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
             {
                 pushBack.Push();
             }
@@ -83,8 +81,8 @@ namespace CellexalVR.Interaction
 
         public void RightMenuDownHoldEvent()
         {
-            if (referenceManager.rightLaser.enabled &&
-                referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+            // if (referenceManager.rightLaser.enabled &&
+            //     referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
             {
                 pushBack.Pull();
             }

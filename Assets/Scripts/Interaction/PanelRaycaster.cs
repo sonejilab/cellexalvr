@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
-using VRTK;
+using Valve.VR;
+using Valve.VR.Extras;
 
 namespace CellexalVR.Interaction
 {
@@ -24,10 +25,10 @@ namespace CellexalVR.Interaction
         public Material correlatedGenesPressedMaterial;
 
 
-        private SteamVR_TrackedObject rightController;
+        private SteamVR_Behaviour_Pose rightController;
         private ClickablePanel lastHit = null;
         private bool grabbingObject = false;
-
+        private SteamVR_LaserPointer laserPointer;
         private ControllerModelSwitcher controllerModelSwitcher;
 
         private void OnValidate()
@@ -40,6 +41,9 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
+            laserPointer = referenceManager.laserPointerController.rightLaser;
+            laserPointer.PointerClick += PanelClick;
+            
             if (referenceManager == null)
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -159,31 +163,36 @@ namespace CellexalVR.Interaction
             CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
         }
 
+        private void PanelClick(object sender, PointerEventArgs e)
+        {
+            ClickablePanel panel = e.target.GetComponent<ClickablePanel>();
+            if (e.fromInputSource != SteamVR_Input_Sources.RightHand || panel == null) return;
+            KeyboardHandler keyBoardHandler = e.target.GetComponentInParent<KeyboardHandler>();
+            panel.Click();
+            Vector2 uv2 = keyBoardHandler.ToUv2Coord(e.point);
+            keyBoardHandler.Pulse(uv2);
+        }
+
         private void Update()
         {
             if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
-                !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
-                controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu))
+                                                     !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
+                                                     controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu))
                 return;
 
-            var raycastingSource = referenceManager.rightLaser.transform;
-            var device = SteamVR_Controller.Input((int) rightController.index);
-            var ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            Transform raycastingSource = referenceManager.laserPointerController.rightLaser.holder.transform;
+            Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 // if we hit something this frame.
-                var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
+                ClickablePanel hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
                 if (hitPanel != null)
                 {
-                    referenceManager.rightLaser.tracerVisibility =
-                        VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                     {
                         controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
                     }
-
-                    //referenceManager.laserPointerController.ToggleLaser(true);
-                    var keyboardHandler = hitPanel.GetComponentInParent<KeyboardHandler>();
+                    KeyboardHandler keyboardHandler = hitPanel.GetComponentInParent<KeyboardHandler>();
                     Vector2 uv2 = keyboardHandler.ToUv2Coord(hit.point);
                     referenceManager.laserPointerController.Override = true;
                     if (lastHit != null && lastHit != hitPanel)
@@ -191,16 +200,8 @@ namespace CellexalVR.Interaction
                         // if we hit a different panel last frame, un-highlight it
                         lastHit.SetHighlighted(false);
                     }
-
                     hitPanel.SetHighlighted(true);
                     keyboardHandler.UpdateLaserCoords(uv2);
-
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    {
-                        hitPanel.Click();
-                        keyboardHandler.Pulse(uv2);
-                    }
-
                     lastHit = hitPanel;
                 }
                 else if (lastHit != null)
@@ -215,8 +216,6 @@ namespace CellexalVR.Interaction
                     lastHit.SetHighlighted(false);
                     lastHit = null;
                     controllerModelSwitcher.SwitchToDesiredModel();
-                    //referenceManager.laserPointerController.ToggleLaser(false);
-
                     referenceManager.laserPointerController.Override = false;
                 }
             }
@@ -224,7 +223,6 @@ namespace CellexalVR.Interaction
             {
                 var keyboardHandler = lastHit.GetComponentInParent<KeyboardHandler>();
                 controllerModelSwitcher.SwitchToDesiredModel();
-                //referenceManager.laserPointerController.ToggleLaser(false);
                 referenceManager.laserPointerController.Override = false;
                 // if we hit nothing this frame, but hit something last frame.
                 lastHit.SetHighlighted(false);
@@ -232,7 +230,6 @@ namespace CellexalVR.Interaction
                 {
                     keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
                 }
-
                 lastHit = null;
             }
         }

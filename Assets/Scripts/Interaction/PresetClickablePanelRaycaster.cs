@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using CellexalVR.General;
+using Valve.VR;
+
 namespace CellexalVR.Interaction
 {
     /// <summary>
@@ -9,11 +11,12 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private SteamVR_TrackedObject rightController;
+        private SteamVR_Behaviour_Pose rightController;
         private ClickablePanel lastHit = null;
         private bool hitDemoPanelLastFrame = false;
         private ControllerModelSwitcher controllerModelSwitcher;
         private int panelLayerMask;
+        private Transform raycastingSource;
 
         private void OnValidate()
         {
@@ -32,8 +35,9 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            var raycastingSource = referenceManager.rightLaser.transform;
-            var device = SteamVR_Controller.Input((int)rightController.index);
+            // SteamVR 2.0
+            // raycastingSource = referenceManager.rightLaser.transform;
+            // var device = SteamVR_Controller.Input((int)rightController.index);
             var ray = new Ray(raycastingSource.position, referenceManager.rightController.transform.forward);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 10f, panelLayerMask))
@@ -52,10 +56,10 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    {
-                        hitPanel.Click();
-                    }
+                    // if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    // {
+                    //     hitPanel.Click();
+                    // }
                     lastHit = hitPanel;
                 }
                 else if (lastHit != null)

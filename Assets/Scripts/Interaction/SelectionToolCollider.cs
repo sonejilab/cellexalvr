@@ -1,13 +1,11 @@
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using VRTK;
+using Valve.VR;
 
 namespace CellexalVR.Interaction
 {
@@ -116,11 +114,11 @@ namespace CellexalVR.Interaction
 
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         private MultiuserMessageSender multiuserMessageSender;
         private bool selActive = false;
-        private VRTK_RadialMenu radialMenu;
+        // private VRTK_RadialMenu radialMenu;
 
         private void OnValidate()
         {
@@ -150,55 +148,56 @@ namespace CellexalVR.Interaction
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             selectionManager = referenceManager.selectionManager;
             if (!CrossSceneInformation.Ghost)
-                radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+                // radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
             UpdateShapeIcons();
         }
 
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int) rightController.index);
+            // SteamVR 2.0
+            // device = SteamVR_Controller.Input((int) rightController.index);
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    particles.gameObject.SetActive(true);
-                    selectionToolMaterial.SetFloat("_SelectionActive", 1);
-                    selActive = true;
-                }
+                // if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                // {
+                //     particles.gameObject.SetActive(true);
+                //     selectionToolMaterial.SetFloat("_SelectionActive", 1);
+                //     selActive = true;
+                // }
 
-                if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    hapticFeedbackThisFrame = true;
-                    var activeCollider = selectionToolColliders[CurrentMeshIndex];
-                    Vector3 boundsCenter = activeCollider.bounds.center;
-                    Vector3 boundsExtents = activeCollider.bounds.extents;
-                    foreach (var graph in graphManager.Graphs)
-                    {
-                        //print(graph.GraphName + graph.GraphActive);
-                        var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter,
-                            boundsExtents, currentColorIndex);
-                        foreach (var point in closestPoints)
-                        {
-                            if (CurrentMeshIndex > 3)
-                            {
-                                selectionManager.RemoveGraphpointFromSelection(point);
-                            }
-
-                            else
-                            {
-                                selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
-                            }
-                        }
-                    }
-                }
-
-                else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    selActive = false;
-                    particles.gameObject.SetActive(false);
-                    selectionToolMaterial.SetFloat("_SelectionActive", 0);
-                }
+                // if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+                // {
+                //     hapticFeedbackThisFrame = true;
+                //     var activeCollider = selectionToolColliders[CurrentMeshIndex];
+                //     Vector3 boundsCenter = activeCollider.bounds.center;
+                //     Vector3 boundsExtents = activeCollider.bounds.extents;
+                //     foreach (var graph in graphManager.Graphs)
+                //     {
+                //         //print(graph.GraphName + graph.GraphActive);
+                //         var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter,
+                //             boundsExtents, currentColorIndex);
+                //         foreach (var point in closestPoints)
+                //         {
+                //             if (CurrentMeshIndex > 3)
+                //             {
+                //                 selectionManager.RemoveGraphpointFromSelection(point);
+                //             }
+                //
+                //             else
+                //             {
+                //                 selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
+                //             }
+                //         }
+                //     }
+                // }
+                //
+                // else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                // {
+                //     selActive = false;
+                //     particles.gameObject.SetActive(false);
+                //     selectionToolMaterial.SetFloat("_SelectionActive", 0);
+                // }
             }
 
             // Sometimes a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
@@ -224,19 +223,19 @@ namespace CellexalVR.Interaction
 
             if (!CrossSceneInformation.Ghost)
             {
-                radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+                // radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
                 try
                 {
                     if (Colors.Length > 1)
                     {
                         //radialMenu.RegenerateButtons();
-                        radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
-                        radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
+                        // radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[Colors.Length - 1];
+                        // radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[1];
                     }
                     else if (Colors.Length > 0)
                     {
-                        radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[0];
-                        radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[0];
+                        // radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[0];
+                        // radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[0];
                     }
                 }
                 catch (NullReferenceException)
@@ -280,8 +279,8 @@ namespace CellexalVR.Interaction
             int buttonIndexRight = CurrentColorIndex == Colors.Length - 1 ? 0 : CurrentColorIndex + 1;
             // VRTK 3.3
             //radialMenu.RegenerateButtons();
-            radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
-            radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
+            // radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
+            // radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
             //CurrentColorIndex = currentColorIndex;
@@ -327,22 +326,22 @@ namespace CellexalVR.Interaction
 
         private void UpdateShapeIcons()
         {
-            if (radialMenu)
+            // if (radialMenu)
             {
                 //radialMenu.RegenerateButtons();
                 //print(radialMenu.menuButtons[0] + " " + radialMenu.menuButtons[0].GetComponentInChildren<Image>());
-                if (radialMenu.menuButtons[0] && radialMenu.menuButtons[0].GetComponentInChildren<Image>())
-                {
-                    int buttonIndexUp = currentMeshIndex == selectionToolColliders.Length - 1
-                        ? 0
-                        : currentMeshIndex + 1;
-                    int buttonIndexDown =
-                        currentMeshIndex == 0 ? selectionToolColliders.Length - 1 : currentMeshIndex - 1;
-                    radialMenu.menuButtons[0].GetComponentInChildren<Image>().sprite =
-                        selectionToolShapeButtons[buttonIndexUp];
-                    radialMenu.menuButtons[2].GetComponentInChildren<Image>().sprite =
-                        selectionToolShapeButtons[buttonIndexDown];
-                }
+                // if (radialMenu.menuButtons[0] && radialMenu.menuButtons[0].GetComponentInChildren<Image>())
+                // {
+                //     int buttonIndexUp = currentMeshIndex == selectionToolColliders.Length - 1
+                //         ? 0
+                //         : currentMeshIndex + 1;
+                //     int buttonIndexDown =
+                //         currentMeshIndex == 0 ? selectionToolColliders.Length - 1 : currentMeshIndex - 1;
+                //     radialMenu.menuButtons[0].GetComponentInChildren<Image>().sprite =
+                //         selectionToolShapeButtons[buttonIndexUp];
+                //     radialMenu.menuButtons[2].GetComponentInChildren<Image>().sprite =
+                //         selectionToolShapeButtons[buttonIndexDown];
+                // }
             }
         }
 
