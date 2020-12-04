@@ -1,7 +1,8 @@
-using UnityEngine;
-using VRTK;
-using CellexalVR.General;
 using System;
+using UnityEngine;
+using CellexalVR.General;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
 {
@@ -12,21 +13,40 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
+        public GameObject rightController;
+        public GameObject leftController;
         public SteamVR_RenderModel renderModel;
         public GameObject rightControllerBody;
         public GameObject leftControllerBody;
+
         public Mesh normalControllerMesh;
+
         //public Texture normalControllerTexture;
         public Mesh menuControllerMesh;
+
         //public Texture menuControllerTexture;
         public Mesh minimizeMesh;
         public Material normalMaterial;
         public Material selectionToolHandlerMaterial;
         public Material leftControllerMaterial;
 
-        public enum Model { Normal, SelectionTool, Menu, Minimizer, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool, WebBrowser };
+        public enum Model
+        {
+            Normal,
+            SelectionTool,
+            Menu,
+            Minimizer,
+            DeleteTool,
+            HelpTool,
+            Keyboard,
+            TwoLasers,
+            DrawTool,
+            WebBrowser
+        };
+
         // what model we actually want
         public Model DesiredModel { get; set; }
+
         // what model is actually displayed, useful for when we want to change the model temporarily
         // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
         // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
@@ -45,10 +65,13 @@ namespace CellexalVR.Interaction
         private MeshFilter leftControllerBodyMeshFilter;
         private Renderer leftControllerBodyRenderer;
         private Color desiredColor;
+
         private LaserPointerController laserPointerController;
-        private VRTK_StraightPointerRenderer rightLaser;
-        private VRTK_StraightPointerRenderer leftLaser;
+
+        // private VRTK_StraightPointerRenderer rightLaser;
+        // private VRTK_StraightPointerRenderer leftLaser;
         private int selectionToolMeshIndex = 0;
+
         // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
         // Otherwise you can't point the helptool towards the keyboard.
         public bool HelpToolShouldStayActivated { get; set; }
@@ -61,7 +84,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             //selectionToolHandler = referenceManager.selectionToolHandler;
             selectionToolCollider = referenceManager.selectionToolCollider;
@@ -72,8 +95,8 @@ namespace CellexalVR.Interaction
             minimizer = referenceManager.minimizeTool.gameObject;
             DesiredModel = Model.Normal;
             laserPointerController = referenceManager.laserPointerController;
-            rightLaser = referenceManager.rightLaser;
-            leftLaser = referenceManager.leftLaser;
+            // rightLaser = referenceManager.rightLaser;
+            // leftLaser = referenceManager.leftLaser;
 
             if (CrossSceneInformation.Spectator)
                 gameObject.SetActive(false);
@@ -83,24 +106,33 @@ namespace CellexalVR.Interaction
             //}
             //else
             //{
-            SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
+            // SteamVR_Events.RenderModelLoaded.Listen(OnControllerLoaded);
             //}
         }
 
-        // Used when starting the program to know when steamvr has loaded the model and applied a meshfilter and meshrenderer for us to use.
-        void OnControllerLoaded(SteamVR_RenderModel renderModel, bool success)
+        private void Start()
         {
-            if (!success) return;
-            if (!CrossSceneInformation.Spectator)
-            {
-                //Valve.VR.ETrackedDeviceProperty.Prop_RenderModelName_String
-                //SetMeshes();
-                //print(renderModel.renderModelName);
-            }
+            // var controllR = Instantiate(rightController);
+            // var controllL = Instantiate(leftController);
+            // GetComponent<Hand>().AttachObject(controllL, GrabTypes.Grip);
         }
+
+        // Used when starting the program to know when steamvr has loaded the model and applied a meshfilter and meshrenderer for us to use. (Doesnt work in steam vr 2.3)
+        // void OnControllerLoaded(SteamVR_RenderModel renderModel, bool success)
+        // {
+        //     if (!success) return;
+        //     if (!CrossSceneInformation.Spectator)
+        //     {
+        //         //Valve.VR.ETrackedDeviceProperty.Prop_RenderModelName_String
+        //         SetMeshes();
+        //         print(renderModel.renderModelName);
+        //     }
+        // }
 
         public void SetMeshes()
         {
+            rightControllerBody = Player.instance.rightHand.GetComponentInChildren<SteamVR_RenderModel>(true).transform.Find("body").gameObject;
+            leftControllerBody = Player.instance.leftHand.GetComponentInChildren<SteamVR_RenderModel>(true).transform.Find("body").gameObject;
             rightControllerBodyMeshFilter = rightControllerBody.GetComponent<MeshFilter>();
             rightControllerBodyMeshFilter.mesh = normalControllerMesh;
             rightControllerBodyRenderer = rightControllerBody.GetComponent<Renderer>();
@@ -116,7 +148,7 @@ namespace CellexalVR.Interaction
 
         /// <summary>
         /// Used when starting the program.
-        /// It takes some time for steamvr and vrtk to set everything up, and for some time
+        /// It takes some time for steamvr to set everything up, and for some time
         /// these variables will be null because the components are not yet added to the gameobjects.
         /// </summary>
         /// <returns></returns>
@@ -124,8 +156,8 @@ namespace CellexalVR.Interaction
         {
             if (CrossSceneInformation.Spectator)
                 return true;
-            return rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null
-                 && leftControllerBody.GetComponent<MeshFilter>() != null && leftControllerBody.GetComponent<Renderer>() != null;
+            return Player.instance != null && Player.instance.rightHand.GetComponentInChildren<SteamVR_RenderModel>() != null; //rightControllerBody != null && leftControllerBody != null;
+            //&& rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null && leftControllerBody.GetComponent<MeshFilter>() != null && leftControllerBody.GetComponent<Renderer>() != null;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -157,6 +189,7 @@ namespace CellexalVR.Interaction
             {
                 SetMeshes();
             }
+
             ActualModel = model;
             switch (model)
             {
@@ -170,21 +203,21 @@ namespace CellexalVR.Interaction
 
                 case Model.Keyboard:
                     //keyboard.SetKeyboardVisible(true);
-                    //rightLaser.enabled = true;
-                    laserPointerController.origin.localRotation = Quaternion.identity;
+                    laserPointerController.rightLaser.enabled = true;
+                    // laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
                     //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     //rightLaser.enabled = true;
-                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                    // rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.TwoLasers:
                     //rightLaser.enabled = true;
-                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                    // rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
@@ -194,7 +227,7 @@ namespace CellexalVR.Interaction
                     deleteTool.SetActive(false);
                     minimizer.SetActive(false);
                     selectionToolCollider.SetSelectionToolEnabled(false);
-                    rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                    // rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     //rightLaser.enabled = true;
                     rightControllerBodyMeshFilter.mesh = normalControllerMesh;
                     rightControllerBodyRenderer.sharedMaterial = normalMaterial;
@@ -209,7 +242,6 @@ namespace CellexalVR.Interaction
                 case Model.Minimizer:
                     rightControllerBodyMeshFilter.mesh = minimizeMesh;
                     break;
-
             }
         }
 
@@ -223,41 +255,49 @@ namespace CellexalVR.Interaction
             {
                 HelpToolShouldStayActivated = false;
             }
+
             // Deactivate all tools that should not be active.
             if (DesiredModel != Model.SelectionTool)
             {
                 selectionToolCollider.SetSelectionToolEnabled(false);
             }
+
             if (DesiredModel != Model.DeleteTool)
             {
                 deleteTool.SetActive(false);
             }
+
             if (DesiredModel != Model.Minimizer)
             {
                 minimizer.SetActive(false);
             }
+
             if (DesiredModel != Model.HelpTool && !HelpToolShouldStayActivated)
             {
                 //helpTool.SetToolActivated(false);
             }
+
             // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
             if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
             {
                 //laserPointerController.ToggleLaser(false);
-                //leftLaser.enabled = false;
+                // leftLaser.enabled = false;
                 //keyboard.SetKeyboardVisible(false);
                 //rightLaser.enabled = false;
                 //referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(false);
             }
+
             if (DesiredModel != Model.TwoLasers)
             {
                 laserPointerController.ToggleLaser(false);
-                leftLaser.enabled = false;
+                // leftLaser.enabled = false;
             }
+
             if (DesiredModel != Model.DrawTool)
             {
                 drawTool.SetActive(false);
             }
+
             switch (DesiredModel)
             {
                 case Model.SelectionTool:
@@ -285,12 +325,13 @@ namespace CellexalVR.Interaction
                     break;
                 case Model.TwoLasers:
                     laserPointerController.ToggleLaser(true);
-                    leftLaser.enabled = true;
+                    // leftLaser.enabled = true;
                     break;
                 case Model.DrawTool:
                     drawTool.SetActive(true);
                     break;
             }
+
             SwitchToDesiredModel();
             CellexalEvents.ModelChanged.Invoke();
         }

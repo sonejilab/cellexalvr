@@ -1,8 +1,7 @@
 using CellexalVR.General;
-using CellexalVR.Menu.Buttons;
 using UnityEngine;
-using Valve.VR;
-using VRTK;
+using Valve.VR.Extras;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
 {
@@ -33,6 +32,8 @@ namespace CellexalVR.Interaction
         public Transform origin;
         public bool Override { get; set; }
         public bool alwaysActive;
+        public SteamVR_LaserPointer rightLaser;
+        public SteamVR_LaserPointer leftLaser;
 
         private void OnValidate()
         {
@@ -46,7 +47,7 @@ namespace CellexalVR.Interaction
         private void Start()
         {
             frame = 0;
-            referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
+            // referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             environmentButtonLayer = LayerMask.NameToLayer("EnvironmentButtonLayer");
             keyboardLayer = LayerMask.NameToLayer("KeyboardLayer");
             menuLayer = LayerMask.NameToLayer("MenuLayer");
@@ -59,6 +60,8 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
+            if (leftLaser == null) leftLaser = Player.instance.leftHand.GetComponent<SteamVR_LaserPointer>();
+            if (rightLaser == null) rightLaser = Player.instance.rightHand.GetComponent<SteamVR_LaserPointer>();
             frame++;
             if (frame < 5) return;
             frame = 0;
@@ -69,19 +72,19 @@ namespace CellexalVR.Interaction
         private void Frame5Update()
         {
             RaycastHit hit;
-            origin.localRotation = Quaternion.Euler(25f, 0, 0);
+            // origin.localRotation = Quaternion.Euler(25f, 0, 0); // rotate laser for menu. not working as intended in steamvr 2.0
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
             if (hit.collider && hit.collider.tag != "BlockLaser")
             {
                 // if we hit a button in the menu
-                referenceManager.rightLaser.enabled = true;
+                rightLaser.pointer.SetActive(true);
                 if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
                 {
                     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
                 }
                 return;
             }
-            origin.localRotation = Quaternion.Euler(0f, 0, 0);
+            // origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
             if (hit.collider && hit.collider.tag != "BlockLaser" &&
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
@@ -89,17 +92,14 @@ namespace CellexalVR.Interaction
             
             {
                 // if we hit a button in the environment (keyboard or env button)
-                // if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
+                // if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                 // {
-                //     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                //     controllerModelSwitcher.ActivateDesiredTool();
                 // }
-                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                {
-                    controllerModelSwitcher.ActivateDesiredTool();
-                }
                 referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
-                referenceManager.rightLaser.enabled = true;
-                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                
+                rightLaser.pointer.SetActive(true);
+                // rightLaser = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 return;
             }
@@ -120,11 +120,11 @@ namespace CellexalVR.Interaction
                     controllerModelSwitcher.ActivateDesiredTool();
                 }
             }
-            else if (referenceManager.rightLaser.enabled &&
-                     controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard) 
+            else if (rightLaser.pointer.activeSelf &&
+                     controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
             {
-                referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-                referenceManager.rightLaser.enabled = false;
+                rightLaser.pointer.SetActive(false);
+                // referenceManager.rightLaser.enabled = false;
                 referenceManager.multiuserMessageSender.SendMessageToggleLaser(false);
             }
 
@@ -140,23 +140,24 @@ namespace CellexalVR.Interaction
         public void ToggleLaser(bool active)
         {
             alwaysActive = active;
-            referenceManager.rightLaser.tracerVisibility = active
-                ? VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn
-                : VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+            rightLaser.pointer.SetActive(active);
+                // rightLaser.tracerVisibility = active
+                //  ? VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn
+                //  : VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
 
-            //referenceManager.rightLaser.enabled = active;
-            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-                referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+            // referenceManager.rightLaser.enabled = active;
+             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+                 leftLaser.pointer.SetActive(true);
             origin.localRotation = Quaternion.identity;
             referenceManager.multiuserMessageSender.SendMessageToggleLaser(active);
         }
 
         private void TouchingObject(bool touch)
         {
-            referenceManager.rightLaser.enabled = !touch;
+            rightLaser.pointer.SetActive(touch);
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
             {
-                referenceManager.leftLaser.enabled = !touch;
+                leftLaser.pointer.SetActive(!touch);
             }
 
             touchingObject = touch;

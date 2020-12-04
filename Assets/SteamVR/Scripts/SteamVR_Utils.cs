@@ -8,9 +8,59 @@ using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
 using Valve.VR;
+using System.IO;
 
 public static class SteamVR_Utils
 {
+	public class Event
+	{
+		public delegate void Handler(params object[] args);
+
+		public static void Listen(string message, Handler action)
+		{
+			var actions = listeners[message] as Handler;
+			if (actions != null)
+			{
+				listeners[message] = actions + action;
+			}
+			else
+			{
+				listeners[message] = action;
+			}
+		}
+
+		public static void Remove(string message, Handler action)
+		{
+			var actions = listeners[message] as Handler;
+			if (actions != null)
+			{
+				listeners[message] = actions - action;
+			}
+		}
+
+		public static void Send(string message, params object[] args)
+		{
+			var actions = listeners[message] as Handler;
+			if (actions != null)
+			{
+				actions(args);
+			}
+		}
+
+		private static Hashtable listeners = new Hashtable();
+	}
+
+
+	public static bool IsValid(Vector3 vector)
+	{
+		return (float.IsNaN(vector.x) == false && float.IsNaN(vector.y) == false && float.IsNaN(vector.z) == false);
+	}
+	public static bool IsValid(Quaternion rotation)
+	{
+		return (float.IsNaN(rotation.x) == false && float.IsNaN(rotation.y) == false && float.IsNaN(rotation.z) == false && float.IsNaN(rotation.w) == false) &&
+			(rotation.x != 0 || rotation.y != 0 || rotation.z != 0 || rotation.w != 0);
+	}
+
 	// this version does not clamp [0..1]
 	public static Quaternion Slerp(Quaternion A, Quaternion B, float t)
 	{
@@ -132,6 +182,70 @@ public static class SteamVR_Utils
 		return new Vector3(x, y, z);
 	}
 
+	public static float GetLossyScale(Transform t)
+	{
+		return t.lossyScale.x;
+	}
+
+	private const string secretKey = "foobar";
+
+	public static string GetBadMD5Hash(string usedString)
+	{
+		byte[] bytes = System.Text.Encoding.UTF8.GetBytes(usedString + secretKey);
+
+		return GetBadMD5Hash(bytes);
+	}
+	public static string GetBadMD5Hash(byte[] bytes)
+	{
+		System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+		byte[] hash = md5.ComputeHash(bytes);
+
+		System.Text.StringBuilder sb = new System.Text.StringBuilder();
+		for (int i = 0; i < hash.Length; i++)
+		{
+			sb.Append(hash[i].ToString("x2"));
+		}
+
+		return sb.ToString();
+	}
+	public static string GetBadMD5HashFromFile(string filePath)
+	{
+		if (File.Exists(filePath) == false)
+			return null;
+
+		string data = File.ReadAllText(filePath);
+		return GetBadMD5Hash(data + secretKey);
+	}
+
+	public static string SanitizePath(string path, bool allowLeadingSlash = true)
+	{
+		if (path.Contains("\\\\"))
+			path = path.Replace("\\\\", "\\");
+		if (path.Contains("//"))
+			path = path.Replace("//", "/");
+
+		if (allowLeadingSlash == false)
+		{
+			if (path[0] == '/' || path[0] == '\\')
+				path = path.Substring(1);
+		}
+
+		return path;
+	}
+
+	public static System.Type FindType(string typeName)
+	{
+		var type = System.Type.GetType(typeName);
+		if (type != null) return type;
+		foreach (var a in System.AppDomain.CurrentDomain.GetAssemblies())
+		{
+			type = a.GetType(typeName);
+			if (type != null)
+				return type;
+		}
+		return null;
+	}
+
 	[System.Serializable]
 	public struct RigidTransform
 	{
@@ -171,19 +285,19 @@ public static class SteamVR_Utils
 		{
 			var m = Matrix4x4.identity;
 
-			m[0, 0] =  pose.m0;
-			m[0, 1] =  pose.m1;
+			m[0, 0] = pose.m0;
+			m[0, 1] = pose.m1;
 			m[0, 2] = -pose.m2;
-			m[0, 3] =  pose.m3;
+			m[0, 3] = pose.m3;
 
-			m[1, 0] =  pose.m4;
-			m[1, 1] =  pose.m5;
+			m[1, 0] = pose.m4;
+			m[1, 1] = pose.m5;
 			m[1, 2] = -pose.m6;
-			m[1, 3] =  pose.m7;
+			m[1, 3] = pose.m7;
 
 			m[2, 0] = -pose.m8;
 			m[2, 1] = -pose.m9;
-			m[2, 2] =  pose.m10;
+			m[2, 2] = pose.m10;
 			m[2, 3] = -pose.m11;
 
 			this.pos = m.GetPosition();
@@ -194,25 +308,25 @@ public static class SteamVR_Utils
 		{
 			var m = Matrix4x4.identity;
 
-			m[0, 0] =  pose.m0;
-			m[0, 1] =  pose.m1;
+			m[0, 0] = pose.m0;
+			m[0, 1] = pose.m1;
 			m[0, 2] = -pose.m2;
-			m[0, 3] =  pose.m3;
+			m[0, 3] = pose.m3;
 
-			m[1, 0] =  pose.m4;
-			m[1, 1] =  pose.m5;
+			m[1, 0] = pose.m4;
+			m[1, 1] = pose.m5;
 			m[1, 2] = -pose.m6;
-			m[1, 3] =  pose.m7;
+			m[1, 3] = pose.m7;
 
 			m[2, 0] = -pose.m8;
 			m[2, 1] = -pose.m9;
-			m[2, 2] =  pose.m10;
+			m[2, 2] = pose.m10;
 			m[2, 3] = -pose.m11;
 
-			m[3, 0] =  pose.m12;
-			m[3, 1] =  pose.m13;
+			m[3, 0] = pose.m12;
+			m[3, 1] = pose.m13;
 			m[3, 2] = -pose.m14;
-			m[3, 3] =  pose.m15;
+			m[3, 3] = pose.m15;
 
 			this.pos = m.GetPosition();
 			this.rot = m.GetRotation();
@@ -223,25 +337,25 @@ public static class SteamVR_Utils
 			var m = Matrix4x4.TRS(pos, rot, Vector3.one);
 			var pose = new HmdMatrix44_t();
 
-			pose.m0  =  m[0, 0];
-            pose.m1  =  m[0, 1];
-			pose.m2  = -m[0, 2];
-			pose.m3  =  m[0, 3];
+			pose.m0 = m[0, 0];
+			pose.m1 = m[0, 1];
+			pose.m2 = -m[0, 2];
+			pose.m3 = m[0, 3];
 
-			pose.m4  =  m[1, 0];
-			pose.m5  =  m[1, 1];
-			pose.m6  = -m[1, 2];
-			pose.m7  =  m[1, 3];
+			pose.m4 = m[1, 0];
+			pose.m5 = m[1, 1];
+			pose.m6 = -m[1, 2];
+			pose.m7 = m[1, 3];
 
-			pose.m8  = -m[2, 0];
-			pose.m9  = -m[2, 1];
-			pose.m10 =  m[2, 2];
+			pose.m8 = -m[2, 0];
+			pose.m9 = -m[2, 1];
+			pose.m10 = m[2, 2];
 			pose.m11 = -m[2, 3];
 
-			pose.m12 =  m[3, 0];
-			pose.m13 =  m[3, 1];
+			pose.m12 = m[3, 0];
+			pose.m13 = m[3, 1];
 			pose.m14 = -m[3, 2];
-			pose.m15 =  m[3, 3];
+			pose.m15 = m[3, 3];
 
 			return pose;
 		}
@@ -251,19 +365,19 @@ public static class SteamVR_Utils
 			var m = Matrix4x4.TRS(pos, rot, Vector3.one);
 			var pose = new HmdMatrix34_t();
 
-			pose.m0  =  m[0, 0];
-            pose.m1  =  m[0, 1];
-			pose.m2  = -m[0, 2];
-			pose.m3  =  m[0, 3];
+			pose.m0 = m[0, 0];
+			pose.m1 = m[0, 1];
+			pose.m2 = -m[0, 2];
+			pose.m3 = m[0, 3];
 
-			pose.m4  =  m[1, 0];
-			pose.m5  =  m[1, 1];
-			pose.m6  = -m[1, 2];
-			pose.m7  =  m[1, 3];
+			pose.m4 = m[1, 0];
+			pose.m5 = m[1, 1];
+			pose.m6 = -m[1, 2];
+			pose.m7 = m[1, 3];
 
-			pose.m8  = -m[2, 0];
-			pose.m9  = -m[2, 1];
-			pose.m10 =  m[2, 2];
+			pose.m8 = -m[2, 0];
+			pose.m9 = -m[2, 1];
+			pose.m10 = m[2, 2];
 			pose.m11 = -m[2, 3];
 
 			return pose;
@@ -278,6 +392,8 @@ public static class SteamVR_Utils
 			}
 			return false;
 		}
+
+
 
 		public override int GetHashCode()
 		{
@@ -536,11 +652,11 @@ public static class SteamVR_Utils
 
 						RenderTexture.active = targetTexture;
 						texture.ReadPixels(new Rect(0, 0, targetTexture.width, targetTexture.height), uTarget, vTarget + vTargetOffset);
-						RenderTexture.active = null;                 
+						RenderTexture.active = null;
 					}
 
 					// Update progress
-					var progress = (float)( v * ( uTotal * 2.0f ) + u + i*uTotal) / (float)(vTotal * ( uTotal * 2.0f ) );
+					var progress = (float)(v * (uTotal * 2.0f) + u + i * uTotal) / (float)(vTotal * (uTotal * 2.0f));
 					OpenVR.Screenshots.UpdateScreenshotProgress(screenshotHandle, progress);
 				}
 			}
@@ -594,4 +710,3 @@ public static class SteamVR_Utils
 		Object.DestroyImmediate(texture);
 	}
 }
-
