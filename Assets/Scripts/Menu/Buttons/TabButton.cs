@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -13,22 +14,14 @@ namespace CellexalVR.Menu.Buttons
         public Tab tab;
         public MenuWithTabs Menu;
 
-        protected SteamVR_TrackedObject rightController;
-        protected bool controllerInside = false;
-        protected SteamVR_Controller.Device device;
+        private bool controllerInside;
         private MeshRenderer meshRenderer;
         private Color standardColor = Color.grey;
         private Color highlightColor = Color.blue;
-
-        private readonly string laserCollider =
-            "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
-
         private bool highlight;
-
         private int frameCount;
-
-        // private bool laserInside;
         private Transform raycastingSource;
+        private readonly string laserColliderName = "Pointer";
 
         private void OnValidate()
         {
@@ -42,20 +35,13 @@ namespace CellexalVR.Menu.Buttons
         {
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.material.color = standardColor;
-            if (!CrossSceneInformation.Spectator)
-            {
-                rightController = referenceManager.rightController;
-            }
-
             this.tag = "Menu Controller Collider";
         }
 
         protected virtual void Update()
         {
             if (!CrossSceneInformation.Normal) return;
-
-            device = SteamVR_Controller.Input((int) rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 Menu.TurnOffAllTabs();
                 tab.SetTabActive(true);
@@ -75,6 +61,7 @@ namespace CellexalVR.Menu.Buttons
             }
 
             CheckForHit();
+            frameCount++;
         }
 
         /// <summary>
@@ -84,16 +71,13 @@ namespace CellexalVR.Menu.Buttons
         private void CheckForHit()
         {
             if (!Menu.Active || tab.Active) return;
-
             if (frameCount % 10 != 0) return;
-            // laserInside = false;
             RaycastHit hit;
-            raycastingSource = referenceManager.laserPointerController.origin;
+            raycastingSource = referenceManager.laserPointerController.rightLaser.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit,
                 10);
-            if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.enabled)
+            if (hit.collider && hit.collider.transform == transform && referenceManager.laserPointerController.rightLaser.enabled)
             {
-                // laserInside = true;
                 frameCount = 0;
                 controllerInside = true;
                 SetHighlighted(true);
@@ -106,7 +90,7 @@ namespace CellexalVR.Menu.Buttons
             // if (!hit.collider || !hit.collider.transform == transform)
             // {
             // laserInside = false;
-            return;
+            // return;
             // }
             // controllerInside = laserInside;
             // SetHighlighted(controllerInside);
@@ -114,7 +98,7 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name == laserCollider)
+            if (other.gameObject.name == laserColliderName)
             {
                 highlight = true;
                 controllerInside = true;
@@ -124,7 +108,7 @@ namespace CellexalVR.Menu.Buttons
 
         protected void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name == laserCollider)
+            if (other.gameObject.name == laserColliderName)
             {
                 controllerInside = false;
                 if (!tab.Active)

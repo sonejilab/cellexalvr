@@ -12,10 +12,11 @@ using CellexalVR.Tutorial;
 using SQLiter;
 using UnityEditor;
 using UnityEngine;
-using VRTK;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.PDFViewer;
-using UnityEngine.Serialization;
+using Valve.VR;
+using Valve.VR.Extras;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.General
 {
@@ -25,11 +26,13 @@ namespace CellexalVR.General
     public class ReferenceManager : MonoBehaviour
     {
         #region Controller things
+
         [Header("Controller things")]
-        public SteamVR_TrackedObject rightController;
-        public SteamVR_TrackedObject leftController;
-        public GameObject rightControllerScriptAlias;
-        public GameObject leftControllerScriptAlias;
+        // public SteamVR_TrackedObject rightController;
+        // public SteamVR_TrackedObject leftController;
+        public Player player;
+        public SteamVR_Behaviour_Pose rightController;
+        public SteamVR_Behaviour_Pose leftController;
         public ControllerModelSwitcher controllerModelSwitcher;
         //public GroupInfoDisplay groupInfoDisplay;
         //public StatusDisplay statusDisplay;
@@ -43,8 +46,8 @@ namespace CellexalVR.General
         //public TextMeshProUGUI FarGroupInfo;
         public GameObject headset;
         public BoxCollider controllerMenuCollider;
-        public VRTK_StraightPointerRenderer rightLaser;
-        public VRTK_StraightPointerRenderer leftLaser;
+        // public SteamVR_LaserPointer rightLaser;
+        // public SteamVR_LaserPointer leftLaser;
         public LaserPointerController laserPointerController;
 
         #endregion
@@ -180,31 +183,30 @@ namespace CellexalVR.General
             // sorry about this monstrosity
             Undo.RecordObject(this, "ReferenceManager Auto-populate");
 
-            h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
-            rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
-            leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
-            rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");
-            leftControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/LeftControllerScriptAlias");
+            player = Player.instance;
+            rightController = player.hands[1].GetComponent<SteamVR_Behaviour_Pose>();
+            leftController = player.hands[0].GetComponent<SteamVR_Behaviour_Pose>();
             controllerModelSwitcher = leftController.GetComponent<ControllerModelSwitcher>();
             //TextMeshProUGUI HUDFlashInfo;
             //TextMeshProUGUI HUDGroupInfo;
             //TextMeshProUGUI FarFlashInfo;
             //TextMeshProUGUI FarGroupInfo;
+            h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
 
-            headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
+            headset = player.hmdTransform.gameObject; 
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
-            rightLaser = rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
-            leftLaser = leftControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
-            laserPointerController = rightControllerScriptAlias.GetComponent<LaserPointerController>();
+            // rightLaser = rightController.GetComponent<SteamVR_LaserPointer>();
+            // leftLaser = leftController.GetComponent<SteamVR_LaserPointer>();
+            laserPointerController = rightController.GetComponent<LaserPointerController>();
 
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
-            deleteTool = rightController.transform.Find("Delete Tool").gameObject;
+            deleteTool = rightController.transform.Find("Tools/Delete Tool").gameObject;
             minimizeTool = rightController.GetComponentInChildren<MinimizeTool>(true);
-            //GameObject helpMenu;
+            // GameObject helpMenu;
             drawTool = rightController.GetComponentInChildren<DrawTool>();
             webBrowser = GameObject.Find("WebBrowser");
-            screenshotCamera = GameObject.Find("SnapShotCam").GetComponent<CaptureScreenshot>();
-            teleportLaser = leftControllerScriptAlias.GetComponentInChildren<VRTK_BezierPointerRenderer>(true).gameObject;
+            screenshotCamera = GameObject.Find("SnapShotCamera").GetComponent<CaptureScreenshot>();
+            teleportLaser = GameObject.Find("Teleporting");
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");
             frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
@@ -259,7 +261,7 @@ namespace CellexalVR.General
             newGraphFromMarkers = createFromMarkerMenu.GetComponent<NewGraphFromMarkers>();
             notificationManager = managersParent.GetComponentInChildren<NotificationManager>();
             tutorialManager = managersParent.GetComponentInChildren<TutorialManager>();
-            screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
+            // screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
             convexHullGenerator = generatorsParent.GetComponentInChildren<ConvexHullGenerator>(true);
@@ -291,7 +293,7 @@ namespace CellexalVR.General
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();
 
             spectatorRig = GameObject.Find("SpectatorRig");
-            VRRig = GameObject.Find("[VRTK]3.3");
+            VRRig = GameObject.Find("CellexalVRPlayer");
 
             UnityEditor.PrefabUtility.ApplyPrefabInstance(gameObject, UnityEditor.InteractionMode.AutomatedAction);
             UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(gameObject, "Assets/Prefabs/Environment/InputReader.prefab", UnityEditor.InteractionMode.AutomatedAction);

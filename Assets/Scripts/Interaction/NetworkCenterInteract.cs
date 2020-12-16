@@ -9,7 +9,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Handles what happens when a network center is interacted with.
     /// </summary>
-    class NetworkCenterInteract : Interactable  //VRTK_InteractableObject
+    class NetworkCenterInteract : InteractableObjectBasic
     {
         public ReferenceManager referenceManager;
 
@@ -21,55 +21,63 @@ namespace CellexalVR.Interaction
             }
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            InteractableObjectGrabbed += Grabbed;
+            InteractableObjectUnGrabbed += UnGrabbed;
+        }
+
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            GetComponent<Interactable>().highlightOnHover = false;
         }
 
-        // public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
-        // {
-        //     referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
-        //     if (grabbingObjects.Count == 1)
-        //     {
-        //         // moving many triggers really pushes what unity is capable of
-        //         foreach (Collider c in GetComponentsInChildren<Collider>())
-        //         {
-        //             if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
-        //             {
-        //                 c.enabled = false;
-        //             }
-        //             //else if (c.gameObject.name == "Ring")
-        //             //{
-        //             //    ((MeshCollider)c).convex = true;
-        //             //}
-        //         }
-        //     }
-        //     base.OnInteractableObjectGrabbed(e);
-        // }
-        //
-        // public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
-        // {
-        //     referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
-        //     NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
-        //     Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-        //     referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
-        //     if (grabbingObjects.Count == 0)
-        //     {
-        //         foreach (Collider c in GetComponentsInChildren<Collider>())
-        //         {
-        //             if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
-        //             {
-        //                 c.enabled = true;
-        //             }
-        //             //else if (c.gameObject.name == "Ring")
-        //             //{
-        //             //    ((MeshCollider)c).convex = false;
-        //             //}
-        //
-        //         }
-        //     }
-        //     base.OnInteractableObjectUngrabbed(e);
-        // }
+        private void Grabbed(object sender, Hand hand)
+        {
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
+            // moving many triggers really pushes what unity is capable of
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+            {
+                if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
+                {
+                    c.enabled = false;
+                }
+
+                //else if (c.gameObject.name == "Ring")
+                //{
+                //    ((MeshCollider)c).convex = true;
+                //}
+            }
+
+            CellexalEvents.ObjectUngrabbed.Invoke();
+            base.OnInteractableObjectGrabbed(hand);
+        }
+
+        private void UnGrabbed(object sender, Hand hand)
+        {
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
+            NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, transform.position, transform.rotation, rigidbody.velocity,
+                rigidbody.angularVelocity);
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+            {
+                if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
+                {
+                    c.enabled = true;
+                }
+
+                //else if (c.gameObject.name == "Ring")
+                //{
+                //    ((MeshCollider)c).convex = false;
+                //}
+            }
+
+            CellexalEvents.ObjectGrabbed.Invoke();
+            base.OnInteractableObjectUnGrabbed(hand);
+        }
 
 
         //private void OnTriggerEnter(Collider other)
@@ -79,7 +87,6 @@ namespace CellexalVR.Interaction
         //    {
         //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
         //        {
-        //            CellexalEvents.ObjectGrabbed.Invoke();
         //        }
         //    }
         //}
@@ -91,7 +98,6 @@ namespace CellexalVR.Interaction
         //    {
         //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
         //        {
-        //            CellexalEvents.ObjectUngrabbed.Invoke();
         //        }
         //    }
         //}

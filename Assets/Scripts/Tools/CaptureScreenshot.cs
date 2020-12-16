@@ -1,11 +1,10 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
-using CellexalVR.SceneObjects;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using Boo.Lang;
 using Menu.Buttons.General;
 using UnityEngine;
 
@@ -21,6 +20,7 @@ namespace CellexalVR.Tools
         public int picHeight;
         public GameObject quadPrefab;
         public Light flash;
+        public Color backgroundColor;
 
         private float fadeTime = 0.7f;
         private float elapsedTime = 0.0f;
@@ -99,6 +99,20 @@ namespace CellexalVR.Tools
             }
 
             snapShotCamera.cullingMask = LayerMask.GetMask(layersToRender.ToArray());
+        }
+
+        public void ToggleBackground(bool toggle)
+        {
+            if (toggle)
+            {
+                snapShotCamera.clearFlags = CameraClearFlags.Skybox;
+            }
+
+            else
+            {
+                snapShotCamera.clearFlags = CameraClearFlags.SolidColor;
+                snapShotCamera.backgroundColor = backgroundColor;
+            }
         }
 
         public void ToggleAllLayers(bool toggle)

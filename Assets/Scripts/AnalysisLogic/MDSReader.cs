@@ -20,7 +20,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
 
-        private readonly char[] separators = new char[] {' ', '\t'};
+        private readonly char[] separators = new char[] {' ', '\t', ','};
         private int nrOfLODGroups;
 
 
@@ -118,9 +118,9 @@ namespace CellexalVR.AnalysisLogic
                     // first line is (if correct format) a header and the first word is cell_id (the name of the first column).
                     // If wrong and does not contain header read first line as a cell.
                     string header = mdsStreamReader.ReadLine();
-                    if (header != null && header.Split(null)[0].Equals("CellID"))
+                    if (header != null && header.Split(separators)[0].Equals("CellID"))
                     {
-                        string[] columns = header.Split(null).Skip(1).ToArray();
+                        string[] columns = header.Split(separators).Skip(1).ToArray();
                         Array.Copy(columns, 0, axes, 0, 3);
                         if (columns.Length == 6)
                         {
@@ -134,12 +134,10 @@ namespace CellexalVR.AnalysisLogic
                         string[] words = header.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words.Length != 4 && words.Length != 7)
                         {
-                            print(words.Length);
                             continue;
                         }
 
                         string cellName = words[0];
-                        //print(words[0]);
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);

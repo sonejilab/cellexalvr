@@ -3,9 +3,6 @@ using CellexalVR.General;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VRTK;
-using VRTK.GrabAttachMechanics;
-using VRTK.SecondaryControllerGrabActions;
 
 namespace CellexalVR.Spatial
 {
@@ -23,14 +20,11 @@ namespace CellexalVR.Spatial
         public float zCoord;
         public Dictionary<int, List<GameObject>> lodGroupClusters = new Dictionary<int, List<GameObject>>();
 
-
-        protected Graph graph;
-
+        private Graph graph;
         private Vector3 originalPos;
         private Vector3 originalSc;
         private Quaternion originalRot;
         private SpatialGraph spatGraph;
-        private VRTK.VRTK_InteractableObject interactableObject;
         private GameObject wirePrefab;
         private GameObject replacementPrefab;
         private Color replacementCol;
@@ -43,9 +37,9 @@ namespace CellexalVR.Spatial
         {
             graph = gameObject.GetComponent<Graph>();
             spatGraph = transform.parent.gameObject.GetComponent<SpatialGraph>();
-            interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
-            interactableObject.InteractableObjectGrabbed += OnGrabbed;
-            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
+            // interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
+            // interactableObject.InteractableObjectGrabbed += OnGrabbed;
+            // interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
             originalPos = transform.localPosition;
             originalRot = transform.localRotation;
             originalSc = transform.localScale;
@@ -53,20 +47,20 @@ namespace CellexalVR.Spatial
             //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
         }
 
-        private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
-        {
-            if (grabbing)
-                return;
-            if (!sliceMode)
-            {
-                grabbing = true;
-            }
-        }
+        // private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        // {
+        //     if (grabbing)
+        //         return;
+        //     if (!sliceMode)
+        //     {
+        //         grabbing = true;
+        //     }
+        // }
 
-        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
-        {
-            grabbing = false;
-        }
+        // private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        // {
+        //     grabbing = false;
+        // }
 
         /// <summary>
         /// Animation to move the slice back to its original position within the parent object.
@@ -146,7 +140,7 @@ namespace CellexalVR.Spatial
                 rigidbody.isKinematic = false;
                 rigidbody.drag = 10;
                 rigidbody.angularDrag = 15;
-                GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+                // GetComponent<VRTK_InteractableObject>().isGrabbable = true;
                 sliceMode = true;
                 if (move)
                 {
@@ -158,7 +152,7 @@ namespace CellexalVR.Spatial
             }
             else
             {
-                GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+                // GetComponent<VRTK_InteractableObject>().isGrabbable = false;
                 Destroy(GetComponent<Rigidbody>());
                 sliceMode = false;
                 //graph.transform.localPosition = Vector3.zero;

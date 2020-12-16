@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using CellexalVR.General;
-using VRTK;
 using TMPro;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Tutorial
 {
@@ -15,29 +16,23 @@ namespace CellexalVR.Tutorial
         public GameObject canvas;
 
         private string username;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_TrackedObject leftController;
-        private SteamVR_Controller.Device deviceR;
-        private SteamVR_Controller.Device deviceL;
+        private Hand rightHand;
+        private Hand leftHand;
         private GameObject canv;
         private bool final;
         private bool keyboard;
 
-        // Use this for initialization
-        void Start()
+        private void Start()
         {
-            rightController = referenceManager.rightController;
-            leftController = referenceManager.leftController;
-
             CellexalEvents.ControllersInitiated.AddListener(Initiate);
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
-            deviceR = SteamVR_Controller.Input((int)rightController.index);
-            deviceL = SteamVR_Controller.Input((int)leftController.index);
-            if (deviceR.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) || deviceL.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            rightHand = Player.instance.rightHand;
+            leftHand = Player.instance.leftHand;
+            if (rightHand.grabPinchAction.GetStateDown(SteamVR_Input_Sources.Any)) 
             {
                 if (referenceManager.keyboardSwitch.isActiveAndEnabled && !keyboard)
                 {
@@ -59,7 +54,7 @@ namespace CellexalVR.Tutorial
 
         public void SetUsername(string name)
         {
-            referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
+            referenceManager.laserPointerController.rightLaser.enabled = false;
             referenceManager.controllerModelSwitcher.SwitchToModel(Interaction.ControllerModelSwitcher.Model.Normal);
             referenceManager.geneKeyboard.gameObject.SetActive(false);
             username = name;

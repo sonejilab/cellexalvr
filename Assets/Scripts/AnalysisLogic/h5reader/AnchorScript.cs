@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.General;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class AnchorScript : MonoBehaviour
     {
-
         BoxCollider boxCollider;
+        public SteamVR_Action_Boolean clickAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
-        public ReferenceManager referenceManager;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
         private bool controllerInside;
 
         public bool isAnchorA;
@@ -23,28 +24,15 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public ExpandButtonScript expandButtonScript;
         [SerializeField] private bool isAttachedToHand = false;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Update()
         {
-            if (!referenceManager)
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-            rightController = referenceManager.rightController;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && clickAction.GetStateDown(inputSource))
             {
 
-                if (!rightController.GetComponentInChildren<AnchorScript>() && !isAnchorA && !isAttachedToHand) //Press to move anchor B
+                if (!Player.instance.rightHand.GetComponentInChildren<AnchorScript>() && !isAnchorA && !isAttachedToHand) //Press to move anchor B
                 {
-                    print(1);
-                    transform.parent = rightController.transform;
-                    transform.position = rightController.transform.position;
+                    transform.parent = Player.instance.rightHand.transform;
+                    transform.position = Player.instance.rightHand.transform.position;
                     isAttachedToHand = true;
 
                     if (expandButtonScript) //if moving away from expandButton
@@ -123,8 +111,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 {
                     print(4);
                     LineScript newLine = line.AddLine();
-                    newLine.AnchorB.transform.parent = rightController.transform;
-                    newLine.AnchorB.transform.position = rightController.transform.position;
+                    newLine.AnchorB.transform.parent = Player.instance.rightHand.transform;
+                    newLine.AnchorB.transform.position = Player.instance.rightHand.transform.position;
                     newLine.AnchorB.isAttachedToHand = true;
                 }
             }
@@ -132,8 +120,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerEnter(Collider other)
         {
-
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.tag.Equals("Player"))
             {
                 controllerInside = true;
                 if(!isAnchorA)
@@ -148,7 +135,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.tag.Equals("Player"))
             {
                 controllerInside = false;
                 if (!isAnchorA)

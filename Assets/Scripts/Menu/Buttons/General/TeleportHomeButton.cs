@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using VRTK;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.Buttons.General
 {
@@ -23,10 +23,9 @@ namespace CellexalVR.Menu.Buttons.General
             playArea.position = Vector3.zero;
         }
 
-        // Use this for initialization
-        void Start()
+        private void Start()
         {
-            playArea = VRTK_DeviceFinder.PlayAreaTransform();
+            playArea = Player.instance.transform;
         }
 
     }

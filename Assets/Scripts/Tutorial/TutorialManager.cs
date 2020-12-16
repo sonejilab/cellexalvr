@@ -6,6 +6,8 @@ using CellexalVR.Menu.Buttons.Networks;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Tutorial
 {
@@ -48,7 +50,7 @@ namespace CellexalVR.Tutorial
         //private GameObject controllerHints;
 
         private int currentStep = 0;
-        private SteamVR_Controller.Device device;
+        // private SteamVR_Controller.Device device;
         private GameObject rgripRight;
         private GameObject lgripRight;
         private GameObject rgripLeft;
@@ -81,23 +83,21 @@ namespace CellexalVR.Tutorial
             }
         }
 
-        // Use this for initialization
-        void Start()
+        private void Start()
         {
-            if (referenceManager.rightController.isActiveAndEnabled && referenceManager.leftController.isActiveAndEnabled)
+            if (Player.instance.rightHand != null && Player.instance.leftHand != null)
             {
-                SetReferences();
+                TrySetReferences();
             }
             //screenCanvas = referenceManager.
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-
-            if (referenceManager.rightController.isActiveAndEnabled && referenceManager.leftController.isActiveAndEnabled && !referencesSet)
+            if (Player.instance.rightHand.GetComponentInChildren<SteamVR_RenderModel>() != null &&
+                Player.instance.leftHand.GetComponentInChildren<SteamVR_RenderModel>() != null && !referencesSet)
             {
-                SetReferences();
+                TrySetReferences();
             }
 
             else if (!referencesSet)
@@ -110,8 +110,7 @@ namespace CellexalVR.Tutorial
                 LoadTutorialStep(1);
             }
 
-            device = SteamVR_Controller.Input((int)referenceManager.leftController.index);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 if (referenceManager.mainMenu.GetComponent<MeshRenderer>().enabled)
                 {
@@ -298,7 +297,6 @@ namespace CellexalVR.Tutorial
                 case 8:
                     currentStep = 8;
                     CellexalEvents.NetworkEnlarged.RemoveListener(TurnOnSpot);
-
                     CellexalEvents.NetworkCreated.AddListener(NetworksCreated);
                     CellexalEvents.HeatmapCreated.AddListener(HeatmapCreated);
                     //CellexalEvents.HeatmapCreated.AddListener(FinalLevel);
@@ -459,37 +457,38 @@ namespace CellexalVR.Tutorial
         /// <summary>
         /// Set all references to objects to later be highlighted at different stages in the tutorial. Has to be done after controllers are initialized.
         /// </summary>
-        void SetReferences()
+        private void TrySetReferences()
         {
             // This currently doesnt work properly if the user is using something other than HTC vive controllers since the names will be different.
             // Menu
-            rgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/rgrip");
+            SteamVR_RenderModel rmodel = Player.instance.rightHand.GetComponentInChildren<SteamVR_RenderModel>();
+            SteamVR_RenderModel lmodel = Player.instance.leftHand.GetComponentInChildren<SteamVR_RenderModel>();
+            if (rmodel == null || lmodel == null) return;
+            rgripRight = rmodel.transform.Find("rgrip").gameObject;
             if (rgripRight == null)
             {
-                rgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/handgrip");
+                rgripRight = rmodel.transform.Find("handgrip").gameObject;
             }
-            lgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/lgrip");
+            lgripRight = rmodel.transform.Find("lgrip").gameObject;
             if (lgripRight == null)
             {
-                lgripRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/handgrip");
+                lgripRight = rmodel.transform.Find("handgrip").gameObject;
             }
-            triggerRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/trigger");
-            trackpadRight = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)/Model/trackpad");
+            triggerRight = rmodel.transform.Find("trigger").gameObject;
+            trackpadRight = rmodel.transform.Find("trackpad").gameObject;
 
-            rgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/rgrip");
+            rgripLeft = lmodel.transform.Find("rgrip").gameObject;
             if (rgripLeft == null)
             {
-                rgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/handgrip");
+                rgripLeft = lmodel.transform.Find("handgrip").gameObject;
             }
-            lgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/lgrip");
+            lgripLeft = lmodel.transform.Find("lgrip").gameObject;
             if (lgripLeft == null)
             {
-                lgripLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/handgrip");
+                lgripLeft = lmodel.transform.Find("handgrip").gameObject;
             }
-            triggerLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/trigger");
-            trackpadLeft = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)/Model/trackpad");
-            //controllerHints = GameObject.Find("[CameraRig]/Controller (left)/Helper Text");
-            //controllerHints.SetActive(true);
+            triggerLeft = lmodel.transform.Find("trigger").gameObject;
+            trackpadLeft = lmodel.transform.Find("trackpad").gameObject;
 
             // Buttons
             keyboardButton = GameObject.Find("MenuHolder/Main Menu/Left Buttons/Toggle Keyboard Button");
@@ -501,7 +500,6 @@ namespace CellexalVR.Tutorial
             //deleteButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Delete Tool Button");
             laserButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Laser Tool Button");
             closeMenuButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Close Button Box/Close Menu Button");
-
 
             //screenCanvas = referenceManager.screenCanvas.gameObject;
             referencesSet = true;

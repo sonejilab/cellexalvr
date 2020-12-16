@@ -1,5 +1,9 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using JetBrains.Annotations;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu
 {
@@ -9,19 +13,37 @@ namespace CellexalVR.Menu
     /// </summary>
     public class MenuRotator : MonoBehaviour
     {
-        public Rotation SideFacingPlayer { get; set; }
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.LeftHand;
         public Material menuMaterial;
+        public SteamVR_Action_Boolean rotateRight = SteamVR_Input.GetBooleanAction("RightClick");
+        public SteamVR_Action_Boolean rotateLeft = SteamVR_Input.GetBooleanAction("LeftClick");
 
+        private Rotation SideFacingPlayer { get; set; }
         private bool isRotating = false;
         private Vector3 fromAngle;
         private float rotatedTotal;
         public enum Rotation { Front, Right, Back, Left }
 
-        void Start()
+        private void Start()
         {
             // Reset rotation in case it is changed in the editor.
-            transform.localRotation = Quaternion.Euler(-15f, 0f, 0f);
+            // rotateRight.AddOnStateDownListener(OnRightStateDown, inputSource);
+            // rotateLeft.AddOnStateDownListener(OnLeftStateDown, inputSource);
+            transform.localRotation = Quaternion.Euler(-25f, 0f, 0f);
             SideFacingPlayer = Rotation.Front;
+        }
+
+        private void Update()
+        {
+            if (rotateLeft.GetStateDown(inputSource))
+            {
+                RotateLeft();
+            }
+            
+            else if (rotateRight.GetStateDown(inputSource))
+            {
+                RotateRight();
+            }
         }
 
         public bool AllowRotation { get; set; } = false;
@@ -125,7 +147,7 @@ namespace CellexalVR.Menu
                     zAngles = -90f;
                     break;
             }
-            transform.localRotation = Quaternion.Euler(-15f, 0f, zAngles);
+            transform.localRotation = Quaternion.Euler(-25f, 0f, zAngles);
         }
         /// <summary>
         /// Rotates the menu.

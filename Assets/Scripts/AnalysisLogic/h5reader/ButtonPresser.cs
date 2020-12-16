@@ -4,35 +4,29 @@ using UnityEngine;
 using CellexalVR.General;
 using System.IO;
 using UnityEngine.UI;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class ButtonPresser : MonoBehaviour
     {
-        // Start is called before the first frame update
         public BoxCollider collider;
-        public ReferenceManager referenceManager;
         [SerializeField] private GameObject note;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
         private bool controllerInside;
         [SerializeField] private Color color;
         private Button button;
 
-        void Start()
+        private void Start()
         {
             button = GetComponent<Button>();
-            if (!referenceManager)
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-            rightController = referenceManager.rightController;
             collider.size = new Vector3(70, 30, 1);
             collider.center = new Vector3(0, -15, 0);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.tag.Equals("Player"))
             {
                 controllerInside = true;
             }
@@ -40,7 +34,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.tag.Equals("Player"))
             {
                 controllerInside = false;
             }
@@ -48,8 +42,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 button.onClick.Invoke();
                 

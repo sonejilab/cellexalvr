@@ -1,6 +1,8 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using UnityEngine;
+using Valve.VR;
+
 namespace CellexalVR.Tools
 {
     /// <summary>
@@ -11,6 +13,8 @@ namespace CellexalVR.Tools
         public Material inactiveMat;
         public Material activeMat;
         public ReferenceManager referenceManager;
+        public SteamVR_Action_Boolean removeAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
         private bool controllerInside;
         private bool delete;
@@ -18,8 +22,8 @@ namespace CellexalVR.Tools
         private GameObject objectToDelete;
         private bool runningScript;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
 
         private void OnValidate()
         {
@@ -36,13 +40,7 @@ namespace CellexalVR.Tools
 
         private void Update()
         {
-            if (device == null)
-            {
-                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-                device = SteamVR_Controller.Input((int)rightController.index);
-            }
-
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && removeAction.GetStateDown(inputSource))
             {
                 if (objectToDelete == null) return;
                 InitiateDelete(objectToDelete);

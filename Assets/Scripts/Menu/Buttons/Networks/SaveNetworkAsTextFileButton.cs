@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.Buttons.Networks
 {
@@ -25,7 +26,7 @@ namespace CellexalVR.Menu.Buttons.Networks
         public override void Click()
         {
             parent.SaveNetworkAsTextFile();
-            device.TriggerHapticPulse(2000);
+            Player.instance.rightHand.TriggerHapticPulse(2000);
         }
 
         private void TurnOn()

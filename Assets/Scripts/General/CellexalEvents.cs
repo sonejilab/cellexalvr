@@ -67,7 +67,7 @@ namespace CellexalVR.General
 
         public static UnityEvent UsernameChanged = new UnityEvent();
         public static UnityEvent LogInitialized = new UnityEvent();
-
+        
         public class CommandFinishedEvent : UnityEvent<bool> { }
         public static CommandFinishedEvent CommandFinished = new CommandFinishedEvent();
 

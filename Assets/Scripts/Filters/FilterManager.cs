@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Filters
 {
@@ -24,7 +26,6 @@ namespace CellexalVR.Filters
         public TextMeshPro filterPreviewText;
         public Filter currentFilter;
 
-        private SteamVR_TrackedObject rightController;
         private List<Tuple<Graph.GraphPoint, int>> queuedCells = new List<Tuple<Graph.GraphPoint, int>>(256);
         private List<Tuple<Graph.GraphPoint, int>> cellsToEvaluate = new List<Tuple<Graph.GraphPoint, int>>(256);
         private bool loadingFilter = false;
@@ -45,7 +46,6 @@ namespace CellexalVR.Filters
             GeneExprs = new Dictionary<Tuple<string, string>, float>(new TupleComparer());
             previewWire = Instantiate(wirePrefab, this.transform);
             previewWire.SetActive(false);
-            rightController = referenceManager.rightController;
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
         }
 
@@ -220,8 +220,7 @@ namespace CellexalVR.Filters
 
         private void LateUpdate()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (!portClickedThisFrame && previouslyClickedPort != null && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (!portClickedThisFrame && previouslyClickedPort != null && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 previewWire.SetActive(false);
                 previouslyClickedPort = null;

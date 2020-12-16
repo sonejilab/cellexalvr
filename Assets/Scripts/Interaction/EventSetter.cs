@@ -45,10 +45,10 @@ namespace CellexalVR.Interaction
             //}
         }
 
-        public void LeftMenuDownClickEvent()
-        {
-            referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
-        }
+        // public void LeftMenuDownClickEvent()
+        // {
+        //     referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
+        // }
 
 
         public void RightMenuLeftClickEvent()
@@ -62,13 +62,13 @@ namespace CellexalVR.Interaction
 
         }
 
-        public void RightMenuUpClickEvent()
-        {
-            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
-            {
-                referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(true);
-            }
-        }
+        // public void RightMenuUpClickEvent()
+        // {
+        //     if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
+        //     {
+        //         referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(true);
+        //     }
+        // }
 
         public void RightMenuUpHoldEvent()
         {
@@ -88,13 +88,13 @@ namespace CellexalVR.Interaction
             }
         }
 
-        public void RightMenuDownClickEvent()
-        {
-            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
-            {
-                referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
-            }
-        }
+        // public void RightMenuDownClickEvent()
+        // {
+        //     if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
+        //     {
+        //         referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
+        //     }
+        // }
 
         public void GeneKeyboardEnterEvent(string geneName)
         {

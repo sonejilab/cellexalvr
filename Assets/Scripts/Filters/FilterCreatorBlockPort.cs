@@ -3,6 +3,8 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 using CellexalVR.SceneObjects;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Filters
 {
@@ -19,13 +21,10 @@ namespace CellexalVR.Filters
         public GameObject wire;
 
         private bool controllerInside = false;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
         private MeshRenderer meshRenderer;
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
             meshRenderer = GetComponent<MeshRenderer>();
         }
 
@@ -42,7 +41,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Controller"))
+            if (other.CompareTag("Player"))
             {
                 parent.UnhighlightAllPorts();
                 SetHighlighted(true);
@@ -51,7 +50,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Controller"))
+            if (other.CompareTag("Player"))
             {
                 SetHighlighted(false);
             }
@@ -59,8 +58,7 @@ namespace CellexalVR.Filters
 
         private void Update()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 filterManager.PortClicked(this);
             }

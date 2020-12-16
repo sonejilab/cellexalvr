@@ -7,9 +7,6 @@ using UnityEngine;
 using Color = UnityEngine.Color;
 using System.Drawing;
 using System.Drawing.Imaging;
-using VRTK;
-using VRTK.GrabAttachMechanics;
-using VRTK.SecondaryControllerGrabActions;
 using System.IO;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.General;
@@ -19,6 +16,8 @@ using CellexalVR.SceneObjects;
 using CellexalVR.Extensions;
 using CellexalVR.Menu.Buttons.Networks;
 using CellexalVR.Multiuser;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -37,6 +36,8 @@ namespace CellexalVR.AnalysisObjects
         public int selectionNr;
         public SaveNetworkAsImageButton saveImageButton;
         public GameObject movingOutlineCircle;
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand; //which controller
+        // public SteamVR_Action_Boolean grabPinch = SteamVR_Input.GetBooleanAction("TriggerClick");
 
         private int group;
 
@@ -80,7 +81,6 @@ namespace CellexalVR.AnalysisObjects
         public bool controllerInsideSomeNode;
 
         private ControllerModelSwitcher controllerModelSwitcher;
-        private SteamVR_Controller.Device device;
         private bool controllerInside = false;
         private Vector3 oldLocalPosition;
         private Vector3 oldScale;
@@ -92,7 +92,6 @@ namespace CellexalVR.AnalysisObjects
         [HideInInspector] public NetworkCenter replacing;
         private List<Arc> arcs = new List<Arc>();
         private List<CombinedArc> combinedArcs = new List<CombinedArc>();
-        private SteamVR_TrackedObject rightController;
         private NetworkGenerator networkGenerator;
         private MultiuserMessageSender multiuserMessageSender;
         private Layout currentLayout;
@@ -119,7 +118,6 @@ namespace CellexalVR.AnalysisObjects
             if (CrossSceneInformation.Normal)
             {
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-                rightController = referenceManager.rightController;
             }
 
             networkGenerator = referenceManager.networkGenerator;
@@ -147,16 +145,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        void Update()
+        private void Update()
         {
             // handle input
-            //device = SteamVR_Controller.Input((int)rightController.index);
-            //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            //{
-            //    controllerInside = false;
-            //    numColliders = 0;
-            //    enlarge = true;
-            //}
             if (gameObject.transform.hasChanged && !networkHandler.removing)
             {
                 foreach (Arc a in arcs)
@@ -175,10 +166,10 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            var interactableObject = GetComponent<VRTK_InteractableObject>();
+            InteractableObjectBasic interactableObject = GetComponent<InteractableObjectBasic>();
             if (interactableObject)
             {
-                if (interactableObject.IsGrabbed())
+                if (interactableObject.isGrabbed)
                 {
                     multiuserMessageSender.SendMessageMoveNetworkCenter(Handler.name, name, transform.position,
                         transform.rotation, transform.localScale);
@@ -189,8 +180,8 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name ==
-                "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
+            if (other.CompareTag("Player")
+                /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             )
             {
                 controllerInside = true;
@@ -204,8 +195,8 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name ==
-                "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
+            if (other.CompareTag("Player")
+                /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             )
             {
                 numColliders--;
@@ -227,12 +218,11 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.name ==
-                "ControllerCollider(Clone)" /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
+            if (other.CompareTag("Player")
+                /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             )
             {
-                device = SteamVR_Controller.Input((int)rightController.index);
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && controllerInside)
+                if (Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType) && controllerInside)
                 {
                     numColliders = 0;
                     controllerInside = false;
@@ -724,18 +714,9 @@ namespace CellexalVR.AnalysisObjects
             rigidbody.isKinematic = false;
             rigidbody.drag = 10;
             rigidbody.angularDrag = 15;
-            var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
+            NetworkCenterInteract interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
             interactableObject.referenceManager = referenceManager;
-            interactableObject.isGrabbable = true;
-            interactableObject.isUsable = false;
-            var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
-            var scalescript = gameObject.AddComponent<VRTK_AxisScaleGrabAction>();
-            scalescript.uniformScaling = true;
-            interactableObject.grabAttachMechanicScript = grabAttach;
-            interactableObject.secondaryGrabActionScript = scalescript;
 
-            grabAttach.precisionGrab = true;
-            grabAttach.breakForce = float.PositiveInfinity;
 
             // save the old variables
             oldParent = transform.parent;
@@ -809,7 +790,6 @@ namespace CellexalVR.AnalysisObjects
                 // destroying without this also caused crashes
                 Destroy(GetComponent<Collider>());
                 Destroy(GetComponent<Renderer>());
-                //rightController.gameObject.GetComponentInChildren<VRTK_InteractTouch>().ForceStopTouching();
                 gameObject.SetActive(false);
                 // calling Destroy without the time delay caused the program to crash pretty reliably
                 new WaitForSeconds(0.1f);
@@ -828,12 +808,6 @@ namespace CellexalVR.AnalysisObjects
             //handler.runningScript = true;
             //CellexalEvents.ScriptRunning.Invoke();
             name = oldName;
-            // the ForceStopInteracting waits until the end of the frame before it stops interacting
-            // so we also have to wait one frame until proceeding
-            if (gameObject.GetComponent<VRTK_InteractableObject>() != null)
-            {
-                gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
-            }
 
             yield return null;
             // now we can do things
@@ -845,13 +819,8 @@ namespace CellexalVR.AnalysisObjects
             transform.localScale = oldScale;
             // this network will now be part of the convex hull which already has a rigidbody and these scripts
             Destroy(gameObject.GetComponent<NetworkCenterInteract>());
-            Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
-            Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
             Destroy(gameObject.GetComponent<Rigidbody>());
 
-            // we must wait one more frame here or VRTK_InteractTouch gets a bunch of null exceptions.
-            // probably because it is still using these colliders
-            yield return new WaitForSeconds(0.3f);
             // Disable the network nodes' colliders
             foreach (Transform child in transform)
             {

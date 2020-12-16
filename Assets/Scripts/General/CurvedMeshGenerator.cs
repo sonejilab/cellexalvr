@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VRTK;
-using CellexalVR.DesktopUI;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.PDFViewer;
-using TMPro;
-using UnityEngine.UI;
 
 namespace CellexalVR
 {
@@ -26,7 +21,7 @@ namespace CellexalVR
         private MeshFilter filter;
 
         // private Mesh mesh;
-        private VRTK_InteractableObject interactableObj;
+        private InteractableObjectBasic interactableObject;
 
         private Vector3[] vertices;
         private Color32[] desktopUV;
@@ -118,7 +113,7 @@ namespace CellexalVR
                 ySize = 10;
                 GenerateCurvedNodes(r, curvature);
                 GenerateMeshes();
-                GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+                GetComponent<InteractableObjectBasic>().isGrabbable = false;
             }
 
             else

@@ -16,7 +16,6 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
             CellexalEvents.GraphsReset.AddListener(ResetButton);
             CellexalEvents.AnnotationsCleared.AddListener(ResetButton);
         }

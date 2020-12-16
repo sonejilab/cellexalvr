@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.Extras;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
 {
@@ -15,12 +18,12 @@ namespace CellexalVR.Interaction
     public class HeatmapRaycast : MonoBehaviour
     {
         private ReferenceManager referenceManager;
+        private Hand rightHand;
+        private SteamVR_LaserPointer laser;
         private GraphManager graphManager;
         private CellManager cellManager;
         private HeatmapGenerator heatmapGenerator;
         private Heatmap heatmap;
-        private SteamVR_Controller.Device device;
-        private SteamVR_TrackedObject rightController;
         private Transform raycastingSource;
         private MultiuserMessageSender multiuserMessageSender;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -48,33 +51,27 @@ namespace CellexalVR.Interaction
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             if (CrossSceneInformation.Normal)
             {
-                rightController = referenceManager.rightController;
-                raycastingSource = rightController.transform;
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
-
             layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             heatmapGenerator = referenceManager.heatmapGenerator;
             heatmap = GetComponent<Heatmap>();
+            rightHand = Player.instance.rightHand;
+            laser = rightHand.GetComponent<SteamVR_LaserPointer>();
         }
 
         private void Update()
         {
-            if (device == null && CrossSceneInformation.Normal)
-            {
-                device = SteamVR_Controller.Input((int)rightController.index);
-            }
-
             if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial)
                 || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu)
             {
                 return;
             }
 
-            bool correctModel = referenceManager.rightLaser.enabled;
+            bool correctModel = laser.enabled;
             if (correctModel)
             {
                 Raycast();
@@ -83,8 +80,7 @@ namespace CellexalVR.Interaction
 
         private void Raycast()
         {
-            raycastingSource = referenceManager.rightLaser.transform;
-            //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
+            raycastingSource = laser.transform;
             RaycastHit hit;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit,
                 Mathf.Infinity, layerMask);
@@ -99,7 +95,7 @@ namespace CellexalVR.Interaction
                     multiuserMessageSender.SendMessageHandleHitGenesList(name, hity);
                     int geneHit = HandleHitGeneList(hity);
 
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    if (rightHand.grabPinchAction.GetStateDown(rightHand.handType))
                     {
                         multiuserMessageSender.SendMessageColorGraphsByGene(heatmap.genes[geneHit]);
                         referenceManager.cellManager.ColorGraphsByGene(heatmap.genes[geneHit],
@@ -128,33 +124,33 @@ namespace CellexalVR.Interaction
                     heatmap.enlargedGeneText.gameObject.SetActive(false);
                     multiuserMessageSender.SendMessageResetInfoTexts(name);
                     // if we hit the actual heatmap
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    if (rightHand.grabPinchAction.GetStateDown(rightHand.handType))
                     {
                         multiuserMessageSender.SendMessageHandlePressDown(name, hitx, hity);
                         HandlePressDown(hitx, hity);
                     }
 
-                    if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    if (rightHand.grabPinchAction.GetState(rightHand.handType))
                     {
                         // called when choosing a box selection
                         multiuserMessageSender.SendMessageHandleBoxSelection(name, hitx, hity, selectionStartX,
                             selectionStartY);
                         HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    else if (rightHand.grabPinchAction.GetState(rightHand.handType) && selecting)
                     {
                         // called when letting go of the trigger to finalize a box selection
                         multiuserMessageSender.SendMessageConfirmSelection(name, hitx, hity, selectionStartX,
                             selectionStartY);
                         ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
-                    else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    else if (rightHand.grabPinchAction.GetState(rightHand.handType) && movingSelection)
                     {
                         // called when moving a selection
                         multiuserMessageSender.SendMessageHandleMovingSelection(name, hitx, hity);
                         HandleMovingSelection(hitx, hity);
                     }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    else if (rightHand.grabPinchAction.GetStateUp(rightHand.handType) && movingSelection)
                     {
                         // called when letting go of the trigger to move the selection
                         multiuserMessageSender.SendMessageMoveSelection(name, hitx, hity, selectedGroupLeft,
@@ -185,8 +181,7 @@ namespace CellexalVR.Interaction
                 multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
                 ResetHeatmapHighlight();
             }
-
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            if (rightHand.grabPinchAction.GetStateUp(rightHand.handType))
             {
                 // if the raycast leaves the heatmap and the user lets go of the trigger
                 multiuserMessageSender.SendMessageResetSelecting(name);

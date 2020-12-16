@@ -11,6 +11,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.AnalysisLogic.H5reader;
+using Valve.VR;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -41,7 +42,7 @@ namespace CellexalVR.AnalysisLogic
 
 
         private SQLite database;
-        private SteamVR_TrackedObject rightController;
+        private SteamVR_Behaviour_Pose rightController;
         private PreviousSearchesList previousSearchesList;
         private Dictionary<string, Cell> cells;
         private SelectionToolCollider selectionToolCollider;
@@ -75,7 +76,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.GraphsUnloaded.AddListener(GraphsChanged);
 
             database = referenceManager.database;
-            rightController = referenceManager.rightController;
+            // rightController = referenceManager.rightController;
             previousSearchesList = referenceManager.previousSearchesList;
             selectionManager = referenceManager.selectionManager;
             lineBundler = GetComponent<LineBundler>();
@@ -332,7 +333,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             audioSource.Play();
-            SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
+            // SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
             ArrayList expressions = h5Reader._expressionResult;
 
 
@@ -404,7 +405,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             GetComponent<AudioSource>().Play();
-            SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
+            // SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
             ArrayList expressions = database._result;
 
             // stop the coroutine if the gene was not in the database

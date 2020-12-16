@@ -9,7 +9,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Handles what happens when a graph is interacted with.
     /// </summary>
-    public class GraphInteract : InteractableObjectBasic //VRTK_InteractableObject
+    public class GraphInteract : InteractableObjectBasic 
     {
         public ReferenceManager referenceManager;
 
@@ -20,7 +20,6 @@ namespace CellexalVR.Interaction
             base.Awake();
             InteractableObjectGrabbed += Grabbed;
             InteractableObjectUnGrabbed += UnGrabbed;
-
         }
         
         private void Start()

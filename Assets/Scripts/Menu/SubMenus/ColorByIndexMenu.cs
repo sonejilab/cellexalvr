@@ -29,6 +29,7 @@ namespace CellexalVR.Menu.SubMenus
                 var b = cellexalButtons[i].GetComponent<ColorByIndexButton>();
                 b.referenceManager = referenceManager;
                 b.SetIndex(names[i]);
+                b.gameObject.name = names[i];
                 b.parentMenu = this;
             }
         }

@@ -1,4 +1,5 @@
-﻿using CellexalVR.Menu.SubMenus;
+﻿using CellexalVR.Interaction;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Flyby
@@ -12,10 +13,10 @@ namespace CellexalVR.Menu.Buttons.Flyby
         public int Index { get; set; }
         public LineRenderer lineRenderer;
 
-        public VRTK.VRTK_InteractableObject vrtkInteractableObject;
         public FlybyMenu.FlybyLineMode mode = FlybyMenu.FlybyLineMode.Linear;
 
         private FlybyMenu flybyMenu;
+        private InteractableObjectBasic interactableObject;
 
         protected override string Description => "Click to change line mode";
 
@@ -43,7 +44,7 @@ namespace CellexalVR.Menu.Buttons.Flyby
 
             flybyMenu.UpdateLineMode(Index, mode);
             lineRenderer.gameObject.SetActive(!switchToLinear);
-            vrtkInteractableObject.isGrabbable = !switchToLinear;
+            interactableObject.isGrabbable = !switchToLinear;
         }
 
         public void UpdateBezierControlPolygon(Vector3 p0, Vector3 p1, Vector3 p2)

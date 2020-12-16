@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.Interaction;
 using CellexalVR.General;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu
 {
@@ -17,7 +19,8 @@ namespace CellexalVR.Menu
 
         private GameObject menuHolder;
         private GameObject teleportLaser;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose leftController;
+        // private SteamVR_Controller.Device device;
         private GameObject menu;
         private MenuRotator menuRotator;
         private MenuUnfolder menuUnfolder;
@@ -25,7 +28,6 @@ namespace CellexalVR.Menu
         private Dictionary<Renderer, bool> renderers = new Dictionary<Renderer, bool>();
         private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
         private Collider boxCollider;
-        private SteamVR_TrackedObject leftController;
         private ControllerModelSwitcher controllerModelSwitcher;
         private bool animate;
         private float currentTime;
@@ -62,8 +64,7 @@ namespace CellexalVR.Menu
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)leftController.index);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf && menuUnfolder.Folded)
+            if (menuUnfolder.Folded && Player.instance.leftHand.grabPinchAction.GetStateDown(Player.instance.leftHand.handType))
             {
                 animate = true;
                 currentTime = 0f;
@@ -103,6 +104,7 @@ namespace CellexalVR.Menu
         {
             MenuActive = !MenuActive;
             menuCube.SetActive(!MenuActive);
+            referenceManager.teleportLaser.SetActive(!MenuActive);
             if (!MenuActive)
             {
                 menu.transform.parent = menuHolder.transform;
@@ -111,7 +113,7 @@ namespace CellexalVR.Menu
             else
             {
                 menu.transform.parent = leftController.transform;
-                menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
+                menu.transform.localPosition = new Vector3(0f, 0f, 0.20f);
             }
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();

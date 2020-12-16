@@ -5,6 +5,8 @@ using System;
 using System.Linq;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -36,18 +38,13 @@ namespace CellexalVR.AnalysisObjects
         public HashSet<NetworkNode> neighbours = new HashSet<NetworkNode>();
         public List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>> edges = new List<Tuple<NetworkNode, NetworkNode, LineRenderer, float>>();
 
-
         private List<Color> edgeColors = new List<Color>();
         private Vector3 normalScale;
         private Vector3 largerScale;
         private bool controllerInside;
-        private SteamVR_TrackedObject rightController;
         private CellManager cellManager;
-        private SteamVR_Controller.Device device;
         private bool edgesAdded;
         private float lineWidth;
-        private string controllerCollider = "ControllerCollider(Clone)";
-        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
 
         private void OnValidate()
         {
@@ -57,7 +54,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        void Start()
+        private void Start()
         {
             GetComponent<Renderer>().sharedMaterial = standardMaterial;
             GetComponent<Collider>().enabled = false;
@@ -67,7 +64,7 @@ namespace CellexalVR.AnalysisObjects
             this.name = geneName.text;
         }
 
-        void Update()
+        private void Update()
         {
             // some math make the text not be mirrored
             transform.LookAt(2 * transform.position - CameraToLookAt.position);
@@ -98,7 +95,7 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.CompareTag("Player"); //|| other.gameObject.name.Equals(laserCollider);
             if (active && touched && !Center.controllerInsideSomeNode)
             {
                 Center.ToggleNodeColliders(false, gameObject.name);
@@ -115,8 +112,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerStay(Collider other)
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
                 referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(Label.ToLower());
@@ -127,7 +123,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.CompareTag("Player"); //|| other.gameObject.name.Equals(laserCollider);
             if (touched)
             {
                 Center.ToggleNodeColliders(true, gameObject.name);
@@ -148,7 +144,6 @@ namespace CellexalVR.AnalysisObjects
         {
             this.referenceManager = referenceManager;
             cellManager = referenceManager.cellManager;
-            rightController = referenceManager.rightController;
         }
 
         /// <summary>

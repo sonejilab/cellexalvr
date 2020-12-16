@@ -50,7 +50,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Pull()
         {
-            raycastingSource = this.transform;
+            raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist + 5, layerMask);
             if (!hit.collider) return;
             if (hit.transform.gameObject.name.Contains("Slice"))
@@ -100,7 +100,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Push()
         {
-            raycastingSource = this.transform;
+            raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
             if (!hit.collider) return;
             if (hit.transform.gameObject.name.Contains("Slice"))

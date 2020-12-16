@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
-using VRTK;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEditor;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -16,9 +17,6 @@ namespace CellexalVR.Menu.Buttons
         public TMPro.TextMeshPro descriptionText;
         public GameObject infoMenu;
         public GameObject activeOutline;
-
-        public readonly string laserColliderName =
-            "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
 
         private int frameCount;
 
@@ -37,8 +35,6 @@ namespace CellexalVR.Menu.Buttons
         [HideInInspector] public Sprite deactivatedTexture = null;
         [HideInInspector] public int popupChoice = 0;
 
-        protected SteamVR_TrackedObject rightController;
-        protected SteamVR_Controller.Device device;
         protected SpriteRenderer spriteRenderer;
         protected MeshRenderer meshRenderer;
         [HideInInspector] public bool buttonActivated = true;
@@ -52,6 +48,7 @@ namespace CellexalVR.Menu.Buttons
         private int layermaskEnvironmentButton;
         private int layerMask;
         private bool laserInside;
+        private readonly string laserColliderName = "Pointer";
 
 
         private void OnValidate()
@@ -69,11 +66,8 @@ namespace CellexalVR.Menu.Buttons
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
 
-            rightController = referenceManager.rightController;
-            device = SteamVR_Controller.Input((int) rightController.index);
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            //this.tag = "Menu Controller Collider";
             layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
             layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
@@ -93,14 +87,12 @@ namespace CellexalVR.Menu.Buttons
 
         private void CheckForClick()
         {
-            device = SteamVR_Controller.Input((int) rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType)) 
             {
                 Click();
             }
 
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) &&
-                device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y < 0.5f)
+            if (controllerInside && SteamVR_Input.GetBooleanAction("DownClick").GetStateDown(Player.instance.rightHand.handType)) 
             {
                 HelpClick();
             }
@@ -117,40 +109,19 @@ namespace CellexalVR.Menu.Buttons
             {
                 laserInside = false;
                 RaycastHit hit;
-                raycastingSource = referenceManager.laserPointerController.origin;
+                raycastingSource = referenceManager.laserPointerController.rightLaser.holder.transform;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
                     out hit, 10, layerMask);
-                //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.enabled)
+                if (hit.collider && hit.collider.transform == transform && referenceManager.laserPointerController.rightLaser.enabled)
                 {
-                    // laserInside = true;
                     frameCount = 0;
                     controllerInside = true;
                     SetHighlighted(true);
                     return;
                 }
-
                 controllerInside = false;
                 SetHighlighted(false);
                 frameCount = 0;
-                // if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.enabled && buttonActivated)
-                // {
-                //     laserInside = true;
-                //     frameCount = 0;
-                //     controllerInside = laserInside;
-                //     SetHighlighted(laserInside);
-                //     return;
-                // }
-                // if (!(hit.collider || hit.transform == transform))
-                // {
-                //     laserInside = false;
-                //     controllerInside = laserInside;
-                //     SetHighlighted(laserInside);
-                //     //if (infoMenu) infoMenu.SetActive(inside);
-                // }
-                // controllerInside = laserInside;
-                // SetHighlighted(laserInside);
-                //summertwerk
 
                 if (descriptionText.text == Description && !laserInside)
                 {
@@ -175,11 +146,6 @@ namespace CellexalVR.Menu.Buttons
 
         public virtual void SetButtonActivated(bool activate)
         {
-            if (name == "Close Menu Button" && transform.parent.parent.name == "Attribute Menu")
-            {
-                print(activate);
-            }
-
             if (!activate)
             {
                 descriptionText.text = "";
@@ -233,17 +199,16 @@ namespace CellexalVR.Menu.Buttons
             storedState = toggle;
         }
 
-        // protected void OnTriggerEnter(Collider other)
-        // {
-        //     if (!buttonActivated) return;
-        //     //print(name + " ontriggerenter");
-        //     if (other.gameObject.name == laserColliderName)
-        //     {
-        //         descriptionText.text = Description;
-        //         controllerInside = true;
-        //         SetHighlighted(true);
-        //     }
-        // }
+        protected void OnTriggerEnter(Collider other)
+        {
+            if (!buttonActivated) return;
+            if (other.gameObject.name == laserColliderName)
+            {
+                descriptionText.text = Description;
+                controllerInside = true;
+                SetHighlighted(true);
+            }
+        }
 
         // In case OnTriggerExit doesnt get called by laser pointer we need to manually do the unhighlighting.
         protected void Exit()
@@ -270,25 +235,25 @@ namespace CellexalVR.Menu.Buttons
             }
         }
 
-        // protected void OnTriggerExit(Collider other)
-        // {
-        //     if (!buttonActivated || laserInside) return;
-        //     //print(name + " ontriggerexit");
-        //     if (other.gameObject.name == laserColliderName)
-        //     {
-        //         if (descriptionText.text == Description)
-        //         {
-        //             descriptionText.text = "";
-        //         }
-        //
-        //         controllerInside = false;
-        //         SetHighlighted(false);
-        //         //if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
-        //         //{
-        //         //    infoMenu.SetActive(false);
-        //         //}
-        //     }
-        // }
+        protected void OnTriggerExit(Collider other)
+        {
+            if (!buttonActivated || laserInside) return;
+            //print(name + " ontriggerexit");
+            if (other.gameObject.name == laserColliderName)
+            {
+                if (descriptionText.text == Description)
+                {
+                    descriptionText.text = "";
+                }
+        
+                controllerInside = false;
+                SetHighlighted(false);
+                //if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
+                //{
+                //    infoMenu.SetActive(false);
+                //}
+            }
+        }
 
         public virtual void SetHighlighted(bool highlight)
         {

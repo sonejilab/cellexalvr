@@ -1,4 +1,5 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
@@ -7,7 +8,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Handles what happens when a network handler is interacted with.
     /// </summary>
-    class NetworkHandlerInteract : Interactable //VRTK_InteractableObject
+    class NetworkHandlerInteract : InteractableObjectBasic
     {
         public ReferenceManager referenceManager;
 
@@ -19,64 +20,56 @@ namespace CellexalVR.Interaction
             }
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            InteractableObjectGrabbed += Grabbed;
+            InteractableObjectUnGrabbed += UnGrabbed;
+        }
+
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
-        // public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
-        // {
-        //     referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
-        //     // moving many triggers really pushes what unity is capable of
-        //     //foreach (Collider c in GetComponentsInChildren<Collider>())
-        //     //{
-        //     //    if (c.gameObject.name == "Ring")
-        //     //    {
-        //     //        ((MeshCollider)c).convex = true;
-        //     //    }
-        //     //}
-        //     GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
-        //     base.OnInteractableObjectGrabbed(e);
-        // }
-        //
-        // public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
-        // {
-        //     referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
-        //     Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-        //     referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
-        //     //foreach (Collider c in GetComponentsInChildren<Collider>())
-        //     //{
-        //     //    if (c.gameObject.name == "Ring")
-        //     //    {
-        //     //        ((MeshCollider)c).convex = false;
-        //     //    }
-        //     //}
-        //     GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
-        //     base.OnInteractableObjectUngrabbed(e);
-        // }
+        private void Grabbed(object sender, Hand hand)
+        {
+            base.OnInteractableObjectGrabbed(hand);
+            referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
+            GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
+        }
 
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-        //        || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-        //    {
-        //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-        //        {
-        //            CellexalEvents.ObjectGrabbed.Invoke();
-        //        }
-        //    }
-        //}
+        private void UnGrabbed(object sender, Hand hand)
+        {
+            base.OnInteractableObjectUnGrabbed(hand);
+            referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
+            Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+            referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
+            GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
+        }
 
-        //private void OnTriggerExit(Collider other)
-        //{
-        //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-        //        || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-        //    {
-        //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-        //        {
-        //            CellexalEvents.ObjectUngrabbed.Invoke();
-        //        }
-        //    }
-        //}
+        private void OnTriggerEnter(Collider other)
+        {
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+            {
+                if (other.CompareTag("Player"))
+                {
+                    CellexalEvents.ObjectGrabbed.Invoke();
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
+                || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+            {
+                if (other.CompareTag("Player"))
+                {
+                    CellexalEvents.ObjectUngrabbed.Invoke();
+                }
+            }
+        }
     }
 }

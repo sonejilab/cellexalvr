@@ -111,7 +111,7 @@ namespace CellexalVR.General
                     newFolder.transform.parent = transform;
                     newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
                     newFolder.transform.Rotate(0, -90f, 0);
-                    newFolder.GetComponentInChildren<CellsToLoad>().SavePosition();
+                    newFolder.GetComponentInChildren<CellsToLoad>().SavePosition(newFolder.transform);
                     nfolder++;
 
                     // Set text on folder box
@@ -156,7 +156,7 @@ namespace CellexalVR.General
                     newFolder.transform.parent = transform;
                     newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
                     newFolder.transform.Rotate(0, -90f, 0);
-                    newFolder.GetComponentInChildren<CellsToLoad>().SavePosition();
+                    newFolder.GetComponentInChildren<CellsToLoad>().SavePosition(newFolder.transform);
                     nfolder++;
 
                     // Set text on folder box

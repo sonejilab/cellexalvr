@@ -11,7 +11,6 @@ using CellexalVR.Tools;
 using SQLiter;
 using TMPro;
 using UnityEngine;
-using VRTK;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -178,10 +177,8 @@ namespace CellexalVR.AnalysisObjects
                 textureChanged = false;
             }
 
-            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (GetComponent<InteractableObjectBasic>().isGrabbed)
             {
-                multiuserMessageSender.SendMessageMoveGraph(GraphName,
-                    graphTransform.position, graphTransform.rotation, graphTransform.localScale);
             }
 
             if (minimize)

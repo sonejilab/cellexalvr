@@ -9,6 +9,7 @@ using CellexalVR.SceneObjects;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.SubMenus
 {
@@ -31,8 +32,8 @@ namespace CellexalVR.Menu.SubMenus
         private GameObject previewWire;
         private bool buttonClickedThisFrame;
         [SerializeField] private ToggleArcsButton previouslyClickedButton;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         public List<ToggleArcsButton> toggleArcButtonList = new List<ToggleArcsButton>();
 
 
@@ -49,7 +50,7 @@ namespace CellexalVR.Menu.SubMenus
         protected override void Start()
         {
             StartCoroutine(SetControllers());
-            attachPoint = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias/AttachPoint");
+            attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
             base.Start();
         }
 
@@ -57,20 +58,12 @@ namespace CellexalVR.Menu.SubMenus
         private IEnumerator SetControllers()
         {
             yield return new WaitForSeconds(2);
-            rightController = referenceManager.rightController;
-            device = SteamVR_Controller.Input((int)rightController.index);
         }
 
         private void Update()
         {
-            if (device == null)
+            if (Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
-                rightController = referenceManager.rightController;
-                device = SteamVR_Controller.Input((int)rightController.index);
-            }
-            else if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                // print(toggleArcButtonList.Count.ToString() + IsInsideButton());
                 if (!IsInsideButton()) UndoSelectedNetwork();
             }
         }

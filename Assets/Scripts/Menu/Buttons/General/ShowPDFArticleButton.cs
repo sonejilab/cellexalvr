@@ -1,6 +1,4 @@
 ﻿using CellexalVR.General;
-using UnityEngine;
-using VRTK;
 
 namespace CellexalVR.Menu.Buttons.General
 {

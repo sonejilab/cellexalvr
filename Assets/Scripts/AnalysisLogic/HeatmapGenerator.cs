@@ -35,7 +35,7 @@ namespace CellexalVR.AnalysisLogic
         public SelectionManager selectionManager;
         private ArrayList data;
         private Thread t;
-        private SteamVR_Controller.Device device;
+        // private SteamVR_Controller.Device device;
         private Vector3 heatmapPosition;
         private List<Heatmap> heatmapList = new List<Heatmap>();
         private string statsMethod;

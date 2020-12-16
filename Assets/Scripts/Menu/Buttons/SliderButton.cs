@@ -15,6 +15,7 @@ namespace CellexalVR.Menu.Buttons
         public GameObject slider;
         public float slideTime;
         public GameObject background;
+        public bool startState;
 
         protected bool currentState;
 
@@ -26,7 +27,16 @@ namespace CellexalVR.Menu.Buttons
                 if (value == currentState) return;
                 StartCoroutine(SlideToNewState());
             }
-            
+        }
+
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid())
+            {
+                slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
+                slider.transform.localPosition += new Vector3(0, 0, -0.9f);
+                // UpdateColors(startState);
+            }
         }
 
         private void Start()
@@ -71,11 +81,11 @@ namespace CellexalVR.Menu.Buttons
             slider.GetComponent<Renderer>().material.color = highlight ? (new Color(0.8f, 0.8f, 0.8f)) : Color.gray;
         }
 
-        private void UpdateColors()
+        private void UpdateColors(bool forceState = false)
         {
             foreach (Renderer rend in background.GetComponentsInChildren<Renderer>())
             {
-                rend.material.color = currentState ? new Color(0.37f, 1f, 0.53f) : new Color(0.24f, 0.24f, 0.24f);
+                rend.material.color = currentState || forceState ? new Color(0.37f, 1f, 0.53f) : new Color(0.24f, 0.24f, 0.24f);
             }
         }
     }

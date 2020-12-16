@@ -400,7 +400,6 @@ namespace CellexalVR.AnalysisObjects
             pointCluster.ClusterId = clusterNr;
             pointCluster.gameObject.name = "PointCluster" + clusterCount++;
             pointClusters.Add(pointCluster);
-            pointCluster.rightController = referenceManager.rightController;
             Vector3 fromCentroid = CalculateCentroid(fromCluster);
             Vector3 midCentroid = CalculateCentroid(midCluster);
             Vector3 toCentroid = CalculateCentroid(toCluster);

@@ -1,24 +1,27 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
 using System.Collections.Generic;
+using CellexalVR.Interaction;
 using UnityEditor;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu
 {
-
     /// <summary>
     /// Makes a menu/submenu grabbable and movable.
     /// </summary>
-    [RequireComponent(typeof(VRTK.VRTK_InteractableObject), typeof(VRTK.GrabAttachMechanics.VRTK_FixedJointGrabAttach))]
+    [RequireComponent(typeof(Interactable), typeof(InteractableObjectBasic))]
     public class InteractableMenu : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public VRTK.VRTK_InteractableObject interactableObject;
+        public InteractableObjectBasic interactableObject;
         public bool isSubMenu = true;
         public SubMenu subMenu;
         public MenuUnfolder menuUnfolder;
         public GameObject reattachPrefab;
+        public Transform reattachPoint;
 
         private bool insideReattachCollider = false;
         private GameObject reattachGameObject;
@@ -31,8 +34,9 @@ namespace CellexalVR.Menu
 
         private void Start()
         {
+            interactableObject = GetComponent<InteractableObjectBasic>();
             interactableObject.InteractableObjectGrabbed += MenuGrabbed;
-            interactableObject.InteractableObjectUngrabbed += MenuUngrabbed;
+            interactableObject.InteractableObjectUnGrabbed += MenuUnGrabbed;
         }
 
         private void OnValidate()
@@ -46,28 +50,27 @@ namespace CellexalVR.Menu
         /// <summary>
         /// Called when the menu is grabbed to potentially detach it.
         /// </summary>
-        private void MenuGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void MenuGrabbed(object sender, Hand hand)
         {
             Collider thisCollider = gameObject.GetComponent<Collider>();
-            if (transform.parent != null)
+            if (interactableObject.GetPreviousParent() != null)
             {
-                oldParent = transform.parent;
-                oldPos = transform.localPosition;
-                oldRot = transform.localRotation;
-                oldScale = transform.localScale;
                 transform.parent = null;
-                // stop vrtk_interactableobject from parenting the menu back where it was
-                interactableObject.OverridePreviousState(null, false, true);
                 if (isSubMenu)
                 {
                     subMenu.Attached = false;
                     subMenu.SetUnderlyingContentActive(true);
-                    // vrtk_interactableobject adds a rigidbody for us so we don't have to, just fix the settings
-                    Rigidbody rb = subMenu.gameObject.AddComponent<Rigidbody>();
+                    Rigidbody rb = subMenu.GetComponent<Rigidbody>();
+                    if (rb == null)
+                    {
+                        rb = subMenu.gameObject.AddComponent<Rigidbody>();
+                    }
+
                     rb.mass = 1f;
                     rb.drag = 10f;
                     rb.angularDrag = 15f;
                     rb.useGravity = false;
+                    rb.isKinematic = false;
                 }
                 else
                 {
@@ -75,13 +78,17 @@ namespace CellexalVR.Menu
                 }
 
                 // create a collider on the main menu where this menu was to detect when it is being reattached
-                reattachGameObject = Instantiate(reattachPrefab);
-                reattachGameObject.SetActive(true);
-                reattachGameObject.transform.parent = oldParent;
-                reattachGameObject.transform.localPosition = oldPos;
-                reattachGameObject.transform.localRotation = oldRot;
-                reattachGameObject.transform.localScale = oldScale;
+                if (reattachGameObject == null)
+                {
+                    reattachGameObject = Instantiate(reattachPrefab);
+                }
 
+                reattachGameObject.SetActive(true);
+
+                reattachGameObject.transform.parent = interactableObject.GetPreviousParent();
+                reattachGameObject.transform.localPosition = interactableObject.GetPreviousPosition();
+                reattachGameObject.transform.localRotation = interactableObject.GetPreviousRotation();
+                reattachGameObject.transform.localScale = interactableObject.GetPreviousScale();
 
                 reattachCollider = reattachGameObject.GetComponent<MeshCollider>();
                 Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
@@ -104,7 +111,7 @@ namespace CellexalVR.Menu
 
         private void OnTriggerEnter(Collider other)
         {
-            if (interactableObject.IsGrabbed() && other == reattachCollider)
+            if (interactableObject.isGrabbed && other == reattachCollider)
             {
                 insideReattachCollider = true;
                 reattachGameObject.GetComponent<MeshRenderer>().enabled = true;
@@ -113,7 +120,7 @@ namespace CellexalVR.Menu
 
         private void OnTriggerExit(Collider other)
         {
-            if (interactableObject.IsGrabbed() && other == reattachCollider)
+            if (interactableObject.isGrabbed && other == reattachCollider)
             {
                 insideReattachCollider = false;
                 reattachGameObject.GetComponent<MeshRenderer>().enabled = false;
@@ -128,10 +135,10 @@ namespace CellexalVR.Menu
                 return;
             }
 
-            transform.parent = oldParent;
-            transform.localPosition = oldPos;
-            transform.localRotation = oldRot;
-            transform.localScale = oldScale;
+            transform.parent = interactableObject.GetPreviousParent();
+            transform.localPosition = interactableObject.GetPreviousPosition();
+            transform.localRotation = interactableObject.GetPreviousRotation();
+            transform.localScale = interactableObject.GetPreviousScale();
             insideReattachCollider = false;
             Destroy(reattachGameObject);
             if (isSubMenu)
@@ -141,6 +148,7 @@ namespace CellexalVR.Menu
                 {
                     subMenu.SetUnderlyingContentActive(false);
                 }
+
                 Destroy(subMenu.GetComponent<Rigidbody>());
             }
             else
@@ -152,7 +160,7 @@ namespace CellexalVR.Menu
         /// <summary>
         /// Called when the menu is ungrabbed to potentially reattach it.
         /// </summary>
-        private void MenuUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void MenuUnGrabbed(object sender, Hand hand)
         {
             // reset the state of all the colliders
             foreach (var colliderState in colliderStates)
@@ -167,8 +175,14 @@ namespace CellexalVR.Menu
             {
                 ReattachMenu();
             }
+
+            else
+            {
+                transform.parent = null;
+            }
         }
     }
+
     //#if UNITY_EDITOR
     //    [CustomEditor(typeof(InteractableMenu))]
     //    [CanEditMultipleObjects]
@@ -179,7 +193,6 @@ namespace CellexalVR.Menu
     //            serializedObject.Update();
     //            InteractableMenu script = target as InteractableMenu;
     //            script.referenceManager = (ReferenceManager)EditorGUILayout.ObjectField("Reference Manager", script.referenceManager, typeof(ReferenceManager), true);
-    //            script.interactableObject = (VRTK.VRTK_InteractableObject)EditorGUILayout.ObjectField("Interactable Object", script.interactableObject, typeof(VRTK.VRTK_InteractableObject), true);
     //            script.isSubMenu = EditorGUILayout.Toggle("Is Sub Menu", script.isSubMenu);
     //            if (script.isSubMenu)
     //            {

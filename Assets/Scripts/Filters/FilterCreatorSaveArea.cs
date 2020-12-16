@@ -1,5 +1,7 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Filters
 {
@@ -11,8 +13,6 @@ namespace CellexalVR.Filters
         public GameObject rightBorder;
         public GameObject bottomBorder;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
         private bool controllerInside;
         private Color originalColor;
 
@@ -27,12 +27,11 @@ namespace CellexalVR.Filters
         private void Start()
         {
             originalColor = leftBorder.GetComponent<Renderer>().material.color;
-            rightController = referenceManager.rightController;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = true;
                 leftBorder.GetComponent<Renderer>().material.color = Color.green;
@@ -43,7 +42,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = false;
                 leftBorder.GetComponent<Renderer>().material.color = originalColor;
@@ -54,8 +53,7 @@ namespace CellexalVR.Filters
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 referenceManager.filterManager.SaveFilter();
                 // Save filter

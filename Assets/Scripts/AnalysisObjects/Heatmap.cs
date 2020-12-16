@@ -16,7 +16,6 @@ using System.Linq;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using VRTK;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -71,8 +70,6 @@ namespace CellexalVR.AnalysisObjects
 
         private MultiuserMessageSender multiuserMessageSender;
         private HeatmapGenerator heatmapGenerator;
-
-
         // For creation animation
         private float targetScale;
         private float positionSpeed;
@@ -170,11 +167,6 @@ namespace CellexalVR.AnalysisObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             GetComponent<HeatmapGrab>().referenceManager = referenceManager;
             layout = new HeatmapLayout();
-            //if (CrossSceneInformation.Normal)
-            //{
-            //    rightController = referenceManager.rightController;
-            //    controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            //}
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             highlightQuad.SetActive(false);
             highlightGeneQuad.SetActive(false);
@@ -193,10 +185,6 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            //if (device == null && CrossSceneInformation.Normal)
-            //{
-            //    device = SteamVR_Controller.Input((int)rightController.index);
-            //}
             if (createAnim)
             {
                 CreateHeatmapAnimation();
@@ -224,7 +212,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (GetComponent<InteractableObjectBasic>().isGrabbed)
             {
                 multiuserMessageSender.SendMessageMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }
@@ -339,13 +327,9 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private void Maximize()
         {
-            // float positionStep = positionSpeed * Time.deltaTime;
-            // float sizeStep = sizeSpeed * Time.deltaTime;
             float dT = Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, originalPos, 2f * dT);
-            // transform.localScale = Vector3.MoveTowards(transform.localScale, originalScale, 2f * dT);
             transform.localScale += Vector3.one * dT * sizeSpeed;
-            // transform.Rotate(Vector3.one * Time.deltaTime * -50);
             if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x >= originalScale.x)
             {
                 transform.localScale = originalScale;

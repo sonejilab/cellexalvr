@@ -7,7 +7,8 @@ using CellexalVR.MarchingCubes;
 using CellexalVR.General;
 using System;
 using CellexalVR.AnalysisObjects;
-using VRTK;
+using CellexalVR.Interaction;
+using Valve.VR;
 
 namespace CellexalVR.Spatial
 {
@@ -16,8 +17,8 @@ namespace CellexalVR.Spatial
     /// </summary>
     public class SpatialGraph : MonoBehaviour
     {
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device rdevice;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device rdevice;
         private GameObject contour;
         private Vector3 startPosition;
         private Rigidbody _rigidBody;
@@ -58,32 +59,32 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (GetComponent<InteractableObjectBasic>().isGrabbed)
             {
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(gameObject.name, transform.position,
                     transform.rotation, transform.localScale);
             }
 
             // transform.LookAt(referenceManager.headset.transform);
-            rdevice = SteamVR_Controller.Input((int) rightController.index);
-            if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad) &&
-                rdevice.GetAxis().y < 0.5f)
-            {
-                if (rdevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    ActivateSlices();
-                    referenceManager.multiuserMessageSender.SendMessageActivateSlices();
-                }
-            }
-
-            if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad) &&
-                rdevice.GetAxis().y > 0.5f)
-            {
-                if (rdevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    StartCoroutine(FlipSlices());
-                }
-            }
+            // rdevice = SteamVR_Controller.Input((int) rightController.index);
+            // if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad) &&
+            //     rdevice.GetAxis().y < 0.5f)
+            // {
+            //     if (rdevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            //     {
+            //         ActivateSlices();
+            //         referenceManager.multiuserMessageSender.SendMessageActivateSlices();
+            //     }
+            // }
+            //
+            // if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad) &&
+            //     rdevice.GetAxis().y > 0.5f)
+            // {
+            //     if (rdevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            //     {
+            //         StartCoroutine(FlipSlices());
+            //     }
+            // }
 
             if (_rigidBody != null && _rigidBody.velocity.magnitude > 2f && !dispersing)
             {

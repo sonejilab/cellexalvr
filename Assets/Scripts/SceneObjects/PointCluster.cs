@@ -3,6 +3,8 @@ using System.Collections;
 using CellexalVR.AnalysisObjects;
 using System.Collections.Generic;
 using CellexalVR.General;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.SceneObjects
 {
@@ -13,7 +15,6 @@ namespace CellexalVR.SceneObjects
         public IEnumerable<Graph.GraphPoint> fromPointCluster, midPointCluster, toPointCluster;
         public Color LineColor { get; set; }
         public ReferenceManager referenceManager;
-        public SteamVR_TrackedObject rightController;
         public LineRenderer lineRenderer;
         public GameObject velocityFromGraph;
         public GameObject velocityMidGraph;
@@ -23,10 +24,7 @@ namespace CellexalVR.SceneObjects
 
         private Vector3 fromPos, toPos, midPos, firstAnchor, secondAnchor;
         private BoxCollider bcFrom, bcMid, bcTo;
-        private string controllerCollider = "ControllerCollider(Clone)";
-        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool controllerInside;
-        private SteamVR_Controller.Device device;
         private Vector3[] linePosistions;
         private List<LineBetweenTwoPoints> lines = new List<LineBetweenTwoPoints>();
         private bool linesBundled;
@@ -59,8 +57,7 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) ||
-                           other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.CompareTag("Player");
             if (!touched) return;
             Highlight(true);
             referenceManager.multiuserMessageSender.SendMessageHighlightCluster(true, gbg.gameObject.name, ClusterId);
@@ -70,8 +67,8 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) ||
-                           other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.CompareTag("Player");
+                           // other.gameObject.name.Equals(controllerCollider);
             if (!touched) return;
             Highlight(false);
             referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name, ClusterId);
@@ -138,11 +135,9 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        // Update is called once per frame
         private void Update()
         {
-            device = SteamVR_Controller.Input((int) rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 Highlight(false);
                 referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name,

@@ -108,7 +108,7 @@ namespace CellexalVR.Menu.SubMenus
                         pageNrText.text = "p. " + (currentPage + 1) + "/" + (pageCounter + 1);
                     }
                     newTab = AddTab(tabPrefab);
-                    newTab.TabButton.GetComponentInChildren<TextMeshPro>().text = categories[i];
+                    newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = categories[i];
                     buttonIndex = 0;
 
                 }
@@ -156,8 +156,8 @@ namespace CellexalVR.Menu.SubMenus
             }
             //newTab.SetTabActive(false);
             //newTab.transform.parent = transform;
-            newTab.TabButton.gameObject.transform.localPosition = tabButtonPos;
-            newTab.TabButton.Menu = this;
+            newTab.tabButton.gameObject.transform.localPosition = tabButtonPos;
+            newTab.tabButton.Menu = this;
             tabButtonPos += tabButtonPosInc;
             tabs.Add(newTab);
             if (!menuToggler)

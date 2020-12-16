@@ -14,6 +14,11 @@ namespace Menu.Buttons.General
             {
                 referenceManager.screenshotCamera.ToggleAllLayers(currentState);
             }
+            else if (layerName.Equals("Background"))
+            {
+                referenceManager.screenshotCamera.ToggleBackground(currentState);
+
+            }
             else
             {
                 referenceManager.screenshotCamera.ToggleLayerToCapture(layerName, currentState);

@@ -2,6 +2,7 @@
 using System.Collections;
 using CellexalVR.General;
 using CellexalVR.Spatial;
+using Valve.VR;
 
 namespace CellexalVR.Spatial
 {
@@ -13,8 +14,8 @@ namespace CellexalVR.Spatial
         public ReferenceManager referenceManager;
 
         private bool attached;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         private bool controllerInside;
 
         private void OnValidate()
@@ -55,8 +56,8 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)// && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 AttachToGraph();
             }

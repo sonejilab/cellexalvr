@@ -518,6 +518,7 @@ namespace CellexalVR.DesktopUI
         public void UpdateSelectionToolColors()
         {
             Color[] colors = new Color[selectionColorButtons.Count];
+            if (colors.Length == 0) return;
             for (int i = 0; i < selectionColorButtons.Count; ++i)
             {
                 selectionColorButtons[i].selectionToolColorIndex = i;

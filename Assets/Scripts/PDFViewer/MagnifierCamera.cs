@@ -13,8 +13,9 @@ namespace CellexalVR.PDFViewer
         public GameObject screenQuad;
         public GameObject cubePrefab;
 
-        private SteamVR_Controller.Device device;
-        private SteamVR_TrackedObject rightController;
+        // private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        
         private GameObject cube;
         private LayerMask layerMask;
 
@@ -33,26 +34,26 @@ namespace CellexalVR.PDFViewer
 
         private void Update()
         {
-            int index = (int) referenceManager.rightController.index;
-            device = SteamVR_Controller.Input(index);
+            // int index = (int) referenceManager.rightController.index;
+            // device = SteamVR_Controller.Input(index);
 
             Transform rightControllerTransform = referenceManager.rightController.transform;
 
-            if (device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
-            {
-                Vector2 touchPad = (device.GetAxis());
-                if (touchPad.y < 0.3)
-                {
-                    Ray ray = new Ray(rightControllerTransform.position, rightControllerTransform.forward);
-                    Magnify(ray);
-                }
-            }
-
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
-            {
-                magnifyingCamera.gameObject.SetActive(false);
-                screenQuad.SetActive(false);
-            }
+            // if (device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+            // {
+            //     Vector2 touchPad = (device.GetAxis());
+            //     if (touchPad.y < 0.3)
+            //     {
+            //         Ray ray = new Ray(rightControllerTransform.position, rightControllerTransform.forward);
+            //         Magnify(ray);
+            //     }
+            // }
+            //
+            // if (device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+            // {
+            //     magnifyingCamera.gameObject.SetActive(false);
+            //     screenQuad.SetActive(false);
+            // }
         }
 
 

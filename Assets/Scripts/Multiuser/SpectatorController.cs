@@ -12,6 +12,7 @@ namespace CellexalVR.Multiuser
         public float speed = 1f;
         public GameObject CtrlsCanvas;
         public GameObject TextCanvas;
+        public GameObject avatar;
         private bool active;
 
         public ReferenceManager referenceManager;
@@ -117,6 +118,7 @@ namespace CellexalVR.Multiuser
 
         private void ToggleSpectator(bool toggle)
         {
+            avatar.SetActive(toggle);
             CtrlsCanvas.SetActive(!toggle);
             TextCanvas.SetActive(toggle);
             spectatorCamera.enabled = toggle;

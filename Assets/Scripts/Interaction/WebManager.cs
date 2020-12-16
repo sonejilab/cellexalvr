@@ -9,13 +9,13 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class WebManager : MonoBehaviour
     {
-
         public SimpleWebBrowser.WebBrowser webBrowser;
         public TMPro.TextMeshPro output;
         public bool isVisible;
         public ReferenceManager referenceManager;
 
         private bool firstActivated;
+        private InteractableObjectBasic interactableObjectBasic;
 
         private void OnValidate()
         {
@@ -27,17 +27,18 @@ namespace CellexalVR.Interaction
 
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             SetVisible(false);
+            interactableObjectBasic = GetComponent<InteractableObjectBasic>();
         }
 
         private void Update()
         {
-            // if (GetComponent<VRTK.VRTK_InteractableObject>().IsGrabbed())
-            // {
-            //     referenceManager.multiuserMessageSender.SendMessageMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
-            // }
+            if (interactableObjectBasic.isGrabbed)
+            {
+                referenceManager.multiuserMessageSender.SendMessageMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
+            }
         }
 
         public void EnterKey()

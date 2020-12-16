@@ -3,31 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CellexalVR.General;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class ExpandButtonScript : MonoBehaviour
     {
-        private ReferenceManager referenceManager;
         public H5ReaderAnnotatorTextBoxScript parentScript;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
         private bool controllerInside;
         public Image image;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
-            if (!referenceManager)
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-            rightController = referenceManager.rightController;
             parentScript = GetComponentInParent<H5ReaderAnnotatorTextBoxScript>();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = true;
                 image.color = Color.red;
@@ -36,7 +30,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = false;
                 image.color = Color.white;
@@ -45,8 +39,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 if (!parentScript.isBottom)
                 {

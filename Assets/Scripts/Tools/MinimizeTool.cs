@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using UnityEngine;
+using Valve.VR;
 
 namespace CellexalVR.Tools
 {
@@ -13,9 +14,11 @@ namespace CellexalVR.Tools
     public class MinimizeTool : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        public SteamVR_Action_Boolean minimizeAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_TrackedObject leftController;
+        private SteamVR_Behaviour_Pose rightController;
+        private SteamVR_Behaviour_Pose leftController;
         private MinimizedObjectHandler jail;
         private ControllerModelSwitcher controllerModelSwitcher;
         private bool controllerInside = false;
@@ -41,8 +44,7 @@ namespace CellexalVR.Tools
 
         private void Update()
         {
-            SteamVR_Controller.Device device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && minimizeAction.GetStateDown(inputSource))
             {
                 controllerInside = false;
                 if (collidingWith.CompareTag("Graph") || collidingWith.CompareTag("SubGraph")

@@ -21,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Report
         public override void Click()
         {
             referenceManager.reportManager.GOanalysis(gameObject.GetComponentInParent<AnalysisObjects.Heatmap>());
-            device.TriggerHapticPulse(2000);
+            // device.TriggerHapticPulse(2000);
         }
 
 

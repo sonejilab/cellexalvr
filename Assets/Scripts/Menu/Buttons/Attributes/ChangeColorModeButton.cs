@@ -46,7 +46,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             menuButton.SetMenuActivated(true);
             GetComponentInParent<MenuWithTabs>().TurnOffAllTabs();
             firstTab.SetTabActive(true);
-            firstTab.TabButton.SetHighlighted(true);
+            firstTab.tabButton.SetHighlighted(true);
             
             rainbowColors = !rainbowColors;
             //TurnOff();

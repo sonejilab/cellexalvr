@@ -15,7 +15,6 @@ namespace CellexalVR.Interaction
         private ReferenceManager referenceManager;
         private LegendManager legendManager;
         private Hand rightHand;
-        // private SteamVR_Controller.Device device;
         private Transform raycastingSource;
         private ControllerModelSwitcher controllerModelSwitcher;
         private int layerMask;
@@ -57,28 +56,28 @@ namespace CellexalVR.Interaction
                     if (localPos.x >= 0f && localPos.x <= 1f && localPos.y >= 0f && localPos.y <= 1f)
                     {
                         HandleHitGeneExpressionHistogram(localPos);
-                        // if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                        // {
-                        //     // if the trigger was pressed
-                        //     HandleClickDownGeneExpressionHistogram(localPos);
-                        // }
+                        if (rightHand.grabPinchAction.GetStateDown(rightHand.handType))
+                        {
+                            // if the trigger was pressed
+                            HandleClickDownGeneExpressionHistogram(localPos);
+                        }
                         // we hit the gene expression histogram, in the histogram area
-                        // else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-                        // {
-                        //     // if the trigger was released
-                        //     HandleClickUpGeneExpressionHistogram(localPos);
-                        // }
+                        else if (rightHand.grabPinchAction.GetStateUp(rightHand.handType))
+                        {
+                            // if the trigger was released
+                            HandleClickUpGeneExpressionHistogram(localPos);
+                        }
                     }
                     else
                     {
                         // we hit the legend but not the right area
                         legendManager.geneExpressionHistogram.DeactivateHighlightArea();
                     }
-                    // if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
-                    // {
-                    //     // if the trigger was released
-                    //     savedGeneExpressionHistogramHitX = -1;
-                    // }
+                    if (rightHand.grabPinchAction.GetStateUp(rightHand.handType))
+                    {
+                        // if the trigger was released
+                        savedGeneExpressionHistogramHitX = -1;
+                    }
                 }
             }
             else
@@ -87,12 +86,11 @@ namespace CellexalVR.Interaction
                 legendManager.geneExpressionHistogram.DeactivateHighlightArea();
             }
             
-            // SteamVR 2.0
-            // if (device.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
-            // {
-            //     // if the trigger was released
-            //     savedGeneExpressionHistogramHitX = -1;
-            // }
+            if (rightHand.grabPinchAction.GetStateUp(rightHand.handType))
+            {
+                // if the trigger was released
+                savedGeneExpressionHistogramHitX = -1;
+            }
         }
 
         private void HandleHitGeneExpressionHistogram(Vector3 hit)

@@ -11,6 +11,8 @@ namespace CellexalVR.Interaction
     public class PanelRaycaster : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        public SteamVR_Action_Boolean clickAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
         // materials used by buttons
         public Material keyNormalMaterial;
@@ -24,8 +26,6 @@ namespace CellexalVR.Interaction
         public Material correlatedGenesHighlightMaterial;
         public Material correlatedGenesPressedMaterial;
 
-
-        private SteamVR_Behaviour_Pose rightController;
         private ClickablePanel lastHit = null;
         private bool grabbingObject = false;
         private SteamVR_LaserPointer laserPointer;
@@ -42,8 +42,8 @@ namespace CellexalVR.Interaction
         private void Start()
         {
             laserPointer = referenceManager.laserPointerController.rightLaser;
-            laserPointer.PointerClick += PanelClick;
-            
+            // laserPointer.PointerClick += PanelClick;
+
             if (referenceManager == null)
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -51,7 +51,6 @@ namespace CellexalVR.Interaction
 
             if (CrossSceneInformation.Normal)
             {
-                rightController = referenceManager.rightController;
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
 
@@ -163,15 +162,11 @@ namespace CellexalVR.Interaction
             CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
         }
 
-        private void PanelClick(object sender, PointerEventArgs e)
-        {
-            ClickablePanel panel = e.target.GetComponent<ClickablePanel>();
-            if (e.fromInputSource != SteamVR_Input_Sources.RightHand || panel == null) return;
-            KeyboardHandler keyBoardHandler = e.target.GetComponentInParent<KeyboardHandler>();
-            panel.Click();
-            Vector2 uv2 = keyBoardHandler.ToUv2Coord(e.point);
-            keyBoardHandler.Pulse(uv2);
-        }
+        // private void PanelClick(object sender, PointerEventArgs e)
+        // {
+        //     if (e.fromInputSource != SteamVR_Input_Sources.RightHand || lastHit == null) return;
+        //     KeyboardHandler keyBoardHandler = lastHit.GetComponentInParent<KeyboardHandler>();
+        // }
 
         private void Update()
         {
@@ -202,6 +197,11 @@ namespace CellexalVR.Interaction
                     }
                     hitPanel.SetHighlighted(true);
                     keyboardHandler.UpdateLaserCoords(uv2);
+                    if (clickAction.GetStateDown(inputSource))
+                    {
+                        lastHit.Click();
+                        keyboardHandler.Pulse(uv2);
+                    }
                     lastHit = hitPanel;
                 }
                 else if (lastHit != null)

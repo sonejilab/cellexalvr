@@ -1,5 +1,6 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
+using Valve.VR;
 
 namespace CellexalVR.SceneObjects
 {
@@ -9,8 +10,8 @@ namespace CellexalVR.SceneObjects
         public ReferenceManager referenceManager;
 
         private bool controllerInside = false;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         private bool animateDown = false;
         private bool animateUp = false;
         private Renderer rend;
@@ -31,8 +32,8 @@ namespace CellexalVR.SceneObjects
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)// && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 animateDown = true;
             }

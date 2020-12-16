@@ -51,7 +51,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 var firstTab = tabs[0];
                 firstTab.SetTabActive(true);
-                firstTab.TabButton.SetHighlighted(true);
+                firstTab.tabButton.SetHighlighted(true);
                 // menu.GetComponent<MenuWithTabs>().active = true;
             }
             var subMenu = menu.GetComponent<SubMenu>();

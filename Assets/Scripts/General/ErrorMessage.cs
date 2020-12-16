@@ -1,5 +1,8 @@
 ﻿using TMPro;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
+
 namespace CellexalVR.General
 {
     /// <summary>
@@ -64,16 +67,12 @@ namespace CellexalVR.General
     /// </summary>
     public class ErrorMessage : MonoBehaviour
     {
-
         public ReferenceManager referenceManager;
-
         public GameObject errorMessageGameObject;
         public GameObject errorMessageBackground;
         public TextMeshPro errorTitle;
         public TextMeshPro errorMessage;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
         private bool controllerInside;
         private bool errorMessageShown = false;
         private bool backgroundQuadInitialised = false;
@@ -93,7 +92,6 @@ namespace CellexalVR.General
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            rightController = referenceManager.rightController;
             transform.LookAt(referenceManager.headset.transform.position);
             transform.Rotate(0, 90, 90);
             errorMessageAnimator = errorMessageGameObject.GetComponent<Animator>();
@@ -101,7 +99,7 @@ namespace CellexalVR.General
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = true;
             }
@@ -109,7 +107,7 @@ namespace CellexalVR.General
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = false;
             }
@@ -117,8 +115,7 @@ namespace CellexalVR.General
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 if (errorMessageShown)
                 {

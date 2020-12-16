@@ -2,6 +2,8 @@
 using System.Collections;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Filters
 {
@@ -18,12 +20,10 @@ namespace CellexalVR.Filters
         public TMPro.TextMeshPro textmeshpro;
 
         private FilterManager filterManager;
-        private SteamVR_TrackedObject rightController;
         private bool controllerInside;
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
             filterManager = referenceManager.filterManager;
         }
 
@@ -39,7 +39,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Controller"))
+            if (other.CompareTag("Player"))
             {
                 if (parent.HighlightedSection != null)
                 {
@@ -53,7 +53,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Controller"))
+            if (other.CompareTag("Player"))
             {
                 controllerInside = false;
                 if (parent.HighlightedSection == this)
@@ -66,8 +66,7 @@ namespace CellexalVR.Filters
 
         private void Update()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 KeyboardHandler keyboard = null;
                 if (type == FieldType.NAME)

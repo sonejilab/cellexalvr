@@ -3,7 +3,9 @@ using CellexalVR.General;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CellexalVR.Interaction;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Filters
 {
@@ -15,12 +17,12 @@ namespace CellexalVR.Filters
     {
         public ReferenceManager referenceManager;
         public FilterManager filterManager;
-
         public bool isPrefab = true;
+        public virtual FilterCreatorBlockHighlighter HighlightedSection { get; set; }
 
         protected List<FilterCreatorBlockPort> ports;
         protected GameObject filterBlockBoard;
-        public virtual FilterCreatorBlockHighlighter HighlightedSection { get; set; }
+        private InteractableObjectBasic interactableObject;
 
         protected virtual void Start()
         {
@@ -30,24 +32,24 @@ namespace CellexalVR.Filters
                 ports.Add(port);
             }
             filterBlockBoard = referenceManager.filterBlockBoard;
-            VRTK.VRTK_InteractableObject interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
+            interactableObject = gameObject.GetComponent<InteractableObjectBasic>();
             interactableObject.InteractableObjectGrabbed += OnGrabbed;
-            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
+            interactableObject.InteractableObjectUnGrabbed += OnUnGrabbed;
         }
 
-        private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnGrabbed(object sender, Hand hand)
         {
             if (isPrefab)
             {
                 // create a new prefab to replace us
                 GameObject newPrefab = Instantiate(gameObject, transform.position, transform.rotation, transform.parent);
                 newPrefab.GetComponent<FilterCreatorBlock>().isPrefab = true;
-                newPrefab.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = true;
+                newPrefab.GetComponent<InteractableObjectBasic>().isGrabbable = true;
                 transform.localScale = Vector3.one;
             }
         }
-
-        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        
+        private void OnUnGrabbed(object sender, Hand hand)
         {
             if (isPrefab)
             {
@@ -55,7 +57,7 @@ namespace CellexalVR.Filters
                 transform.parent = filterBlockBoard.transform;
                 SetCollidersActivated(true);
             }
-
+        
             StartCoroutine(MoveToBoardCoroutine());
         }
 

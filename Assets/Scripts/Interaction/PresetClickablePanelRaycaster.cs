@@ -10,8 +10,9 @@ namespace CellexalVR.Interaction
     public class PresetClickablePanelRaycaster : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        public SteamVR_Action_Boolean clickAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
-        private SteamVR_Behaviour_Pose rightController;
         private ClickablePanel lastHit = null;
         private bool hitDemoPanelLastFrame = false;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -28,16 +29,12 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             panelLayerMask = 1 << LayerMask.NameToLayer("SelectableLayer");
         }
 
         private void Update()
         {
-            // SteamVR 2.0
-            // raycastingSource = referenceManager.rightLaser.transform;
-            // var device = SteamVR_Controller.Input((int)rightController.index);
             var ray = new Ray(raycastingSource.position, referenceManager.rightController.transform.forward);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 10f, panelLayerMask))
@@ -56,10 +53,10 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
-                    // if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    // {
-                    //     hitPanel.Click();
-                    // }
+                    if (clickAction.GetStateDown(inputSource))
+                    {
+                        hitPanel.Click();
+                    }
                     lastHit = hitPanel;
                 }
                 else if (lastHit != null)

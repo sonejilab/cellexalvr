@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using Valve.VR;
 
 namespace CellexalVR.General
 {
@@ -37,8 +38,8 @@ namespace CellexalVR.General
         private SelectionFromPreviousMenu previousSelectionMenu;
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         private List<Graph.GraphPoint> selectedCells = new List<Graph.GraphPoint>();
         private List<Graph.GraphPoint> lastSelectedCells = new List<Graph.GraphPoint>();
         private bool selectionMade = false;
@@ -159,7 +160,7 @@ namespace CellexalVR.General
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
                 selectionToolCollider.hapticFeedbackThisFrame = false;
-                SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(hapticIntensity);
+                // SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(hapticIntensity);
             }
 
             if (selectedCells.Count == 0)
@@ -323,7 +324,7 @@ namespace CellexalVR.General
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
                 selectionToolCollider.hapticFeedbackThisFrame = false;
-                SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(hapticIntensity);
+                // SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(hapticIntensity);
             }
 
             //}

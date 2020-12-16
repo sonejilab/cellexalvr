@@ -1,4 +1,5 @@
 ﻿using CellexalVR.Interaction;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
@@ -7,7 +8,6 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     /// </summary>
     class CreateNewHeatmapButton : CellexalButton
     {
-        private CellexalVR.AnalysisObjects.Heatmap heatmap;
         private HeatmapRaycast heatmapRaycast;
 
         protected override string Description
@@ -18,14 +18,13 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         private void Start()
         {
             heatmapRaycast = GetComponentInParent<HeatmapRaycast>();
-            heatmap = GetComponentInParent<AnalysisObjects.Heatmap>();
 
         }
 
         public override void Click()
         {
             heatmapRaycast.CreateNewHeatmapFromSelection();
-            device.TriggerHapticPulse(2000);
+            Player.instance.rightHand.TriggerHapticPulse(2000);
         }
     }
 }

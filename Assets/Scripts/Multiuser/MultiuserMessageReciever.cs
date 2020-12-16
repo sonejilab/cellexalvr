@@ -147,8 +147,8 @@ namespace CellexalVR.Multiuser
                 if (lr == null) return;
             }
 
-            lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
-            lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+            // lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+            // lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
 
@@ -165,7 +165,7 @@ namespace CellexalVR.Multiuser
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
                 if (lr == null) return;
-                lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+                // lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
 
             lr.SetPosition(0, mlm.laserTransforms[ownerId].position);

@@ -48,7 +48,6 @@ namespace CellexalVR.Multiuser
 
         private void Start()
         {
-            waitingCanvas = referenceManager.screenCanvas.gameObject;
             spectatorRig = referenceManager.spectatorRig;
             VRRig = referenceManager.VRRig;
 
@@ -83,8 +82,8 @@ namespace CellexalVR.Multiuser
                         Destroy(spectatorRig);
                         player = PhotonNetwork.Instantiate(ghostPrefab.name, new Vector3(0f, 5f, 0f),
                             Quaternion.identity, 0);
-                        Destroy(referenceManager.leftControllerScriptAlias);
-                        Destroy(referenceManager.rightControllerScriptAlias);
+                        // Destroy(referenceManager.leftControllerScriptAlias);
+                        // Destroy(referenceManager.rightControllerScriptAlias);
                         referenceManager.leftController.GetComponent<MenuToggler>().menuCube.SetActive(false);
                         Destroy(referenceManager.leftController.GetComponent<MenuToggler>());
                     }

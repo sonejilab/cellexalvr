@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
@@ -14,15 +15,11 @@ namespace CellexalVR.Menu.Buttons.Heatmap
             get { return "Save Heatmap Image To Disk"; }
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         public override void Click()
         {
             GetComponentInParent<CellexalVR.AnalysisObjects.Heatmap>().SaveImage();
-            device.TriggerHapticPulse(2000);
+            Player.instance.rightHand.TriggerHapticPulse(2000);
+            
         }
 
         public void FinishedButton()

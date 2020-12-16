@@ -7,7 +7,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Valve.VR.InteractionSystem;
-using VRTK;
 
 namespace CellexalVR.General
 {
@@ -19,8 +18,8 @@ namespace CellexalVR.General
         private GameObject _InputReader;
         public GameObject CameraRig;
         private GameObject _CameraRig;
-        public GameObject VRTK;
-        private GameObject _VRTK;
+        // public GameObject VRTK;
+        // private GameObject _VRTK;
         public GameObject Managers;
         private GameObject _Managers;
         public GameObject Generators;
@@ -49,6 +48,8 @@ namespace CellexalVR.General
         private GameObject _WebBrowser;
         public GameObject FilterCreator;
         private GameObject _FilterCreator;
+        public GameObject Teleporting;
+        private GameObject _Teleporting;
 
 
         public GameObject SettingsMenu;
@@ -57,14 +58,14 @@ namespace CellexalVR.General
         private GameObject _Console;
         public GameObject FPSCanvas;
         private GameObject _FPSCanvas;
-        public GameObject WaitingCanvas;
-        private GameObject _WaitingCanvas;
         public GameObject SpectatorRig;
         private GameObject _SpectatorRig;
         public GameObject H5Reader;
         private GameObject _H5Reader;
         public GameObject PDFViewer;
         private GameObject _PDFViewer;
+        public GameObject SnapShotCamera;
+        private GameObject _SnapShotCamera;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -111,8 +112,8 @@ namespace CellexalVR.General
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Instantiating objects", 0.1f);
             InstantiateSceneAsset(ref _CameraRig, CameraRig);
-            _CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
-            InstantiateSceneAsset(ref _VRTK, VRTK);
+            // _CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
+            // InstantiateSceneAsset(ref _VRTK, VRTK);
             InstantiateSceneAsset(ref _Managers, Managers);
             InstantiateSceneAsset(ref _Generators, Generators);
             InstantiateSceneAsset(ref _SQLiter, SQLiter);
@@ -128,10 +129,11 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _SettingsMenu, SettingsMenu);
             InstantiateSceneAsset(ref _Console, Console);
             InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas);
-            InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
             InstantiateSceneAsset(ref _SpectatorRig, SpectatorRig);
             InstantiateSceneAsset(ref _H5Reader, H5Reader);
             InstantiateSceneAsset(ref _PDFViewer, PDFViewer);
+            InstantiateSceneAsset(ref _SnapShotCamera, SnapShotCamera);
+            InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
@@ -153,7 +155,7 @@ namespace CellexalVR.General
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Setting references", 0.7f);
             // set up missing references
-            VRTK_SDKManager sdkmanager = _CameraRig.GetComponent<VRTK_SDKManager>();
+            // VRTK_SDKManager sdkmanager = _CameraRig.GetComponent<VRTK_SDKManager>();
             _CameraRig.GetComponentInChildren<Player>().hands = _CameraRig.GetComponentsInChildren<Hand>();
 
             // set up radial menu buttons
@@ -177,11 +179,11 @@ namespace CellexalVR.General
             //rightRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
             //rightRadialMenu.buttons[3].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(true); });
 
-            Undo.RecordObject(sdkmanager, "Set controller script alias");
+            // Undo.RecordObject(sdkmanager, "Set controller script alias");
             ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
             referenceManager.AttemptSetReferences();
-            sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
-            sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
+            // sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
+            // sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
 
             //referenceManager.leftControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildLeftRadialMenu();
             //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
@@ -243,8 +245,8 @@ namespace CellexalVR.General
         public void AutoPopulateGameObjects()
         {
             InputReader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/InputReader.prefab");
-            CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK]3.3.prefab");
-            VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK_Scripts].prefab");
+            CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/CellexalVRPlayer.prefab");
+            // VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK_Scripts].prefab");
             Managers = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Managers.prefab");
             Generators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Generators.prefab");
             SQLiter = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SQLiter.prefab");
@@ -260,10 +262,11 @@ namespace CellexalVR.General
             SettingsMenu = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Settings Menu.prefab");
             Console = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Console.prefab");
             FPSCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/FPS canvas.prefab");
-            WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/ScreenCanvas.prefab");
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
             PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
+            Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SteamVR/InteractionSystem/Teleport/Prefabs/Teleporting.prefab");
+            SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SnapShotCamera.prefab");
         }
 
         [Obsolete]

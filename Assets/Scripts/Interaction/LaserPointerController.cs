@@ -43,11 +43,9 @@ namespace CellexalVR.Interaction
             }
         }
 
-        // Use this for initialization
         private void Start()
         {
             frame = 0;
-            // referenceManager.rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             environmentButtonLayer = LayerMask.NameToLayer("EnvironmentButtonLayer");
             keyboardLayer = LayerMask.NameToLayer("KeyboardLayer");
             menuLayer = LayerMask.NameToLayer("MenuLayer");
@@ -99,7 +97,6 @@ namespace CellexalVR.Interaction
                 referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 
                 rightLaser.pointer.SetActive(true);
-                // rightLaser = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 return;
             }
@@ -141,10 +138,6 @@ namespace CellexalVR.Interaction
         {
             alwaysActive = active;
             rightLaser.pointer.SetActive(active);
-                // rightLaser.tracerVisibility = active
-                //  ? VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn
-                //  : VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-
             // referenceManager.rightLaser.enabled = active;
              if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
                  leftLaser.pointer.SetActive(true);

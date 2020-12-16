@@ -20,10 +20,8 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         protected override string Description => "Create a selection from " + Path;
 
-
         private void Start()
         {
-            rightController = referenceManager.rightController;
             CellexalEvents.SelectionCanceled.AddListener(ResetButton);
             CellexalEvents.SelectionStarted.AddListener(ResetButton);
             CellexalEvents.SelectedFromFile.AddListener(ResetButton);

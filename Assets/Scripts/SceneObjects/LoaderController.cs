@@ -9,6 +9,7 @@ using CellexalVR.Multiuser;
 using System.IO;
 using System.Linq;
 using CellexalVR.AnalysisLogic.H5reader;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.SceneObjects
 {
@@ -190,6 +191,7 @@ namespace CellexalVR.SceneObjects
                         }
                     }
 
+                    Destroy(cellParent.GetComponent<Throwable>());
                     Destroy(cellParent.GetComponent<FixedJoint>());
                     Destroy(cellParent.GetComponent<Rigidbody>());
                     foreach (Transform child in cellParent)

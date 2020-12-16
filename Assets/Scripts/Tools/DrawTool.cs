@@ -2,6 +2,7 @@
 using CellexalVR.Menu.Buttons;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
 
 namespace CellexalVR.Tools
 {
@@ -13,8 +14,10 @@ namespace CellexalVR.Tools
         public GameObject linePrefab;
         public ReferenceManager referenceManager;
         public Color LineColor = Color.white;
+        public SteamVR_Action_Boolean drawAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
-        private SteamVR_TrackedObject rightController;
+        private SteamVR_Behaviour_Pose rightController;
         private BoxCollider controllerMenuCollider;
         private List<LineRenderer> temporaryLines = new List<LineRenderer>();
         private List<LineRenderer> lines = new List<LineRenderer>();
@@ -43,12 +46,10 @@ namespace CellexalVR.Tools
 
         private void Update()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-
             if (drawing)
             {
                 // this happens every frame the trigger is pressed
-                var newLine = SpawnNewLine(LineColor, new Vector3[] { lastPosition, transform.position });
+                var newLine = SpawnNewLine(LineColor, new Vector3[] {lastPosition, transform.position});
                 temporaryLines.Add(newLine);
             }
             else
@@ -59,7 +60,8 @@ namespace CellexalVR.Tools
                 {
                     Destroy(tempLine.gameObject);
                 }
-                trailLines[temporaryLinesIndex] = SpawnNewLine(LineColor, new Vector3[] { lastPosition, transform.position });
+
+                trailLines[temporaryLinesIndex] = SpawnNewLine(LineColor, new Vector3[] {lastPosition, transform.position});
                 if (temporaryLinesIndex == trailLines.Length - 1)
                 {
                     temporaryLinesIndex = 0;
@@ -70,7 +72,7 @@ namespace CellexalVR.Tools
                 }
             }
 
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (drawAction.GetStateDown(inputSource))
             {
                 //// this happens only once when the trigger is pressed
                 if (skipNextDraw)
@@ -81,8 +83,8 @@ namespace CellexalVR.Tools
                 {
                     // if the trigger was pressed we need to make sure that the controller is not inside a button.
                     drawing = true;
-
                 }
+
                 for (int i = 0; i < trailLines.Length; i++)
                 {
                     if (trailLines[i] != null)
@@ -92,7 +94,8 @@ namespace CellexalVR.Tools
                     }
                 }
             }
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+
+            if (drawAction.GetStateUp(inputSource))
             {
                 // this happens only once when the controller trigger is released
                 if (drawing)
@@ -101,6 +104,7 @@ namespace CellexalVR.Tools
                     MergeLinesIntoOne();
                 }
             }
+
             lastPosition = transform.position;
         }
 
@@ -127,6 +131,7 @@ namespace CellexalVR.Tools
                 ycoords[i] = newLinePositions[i - 1].y;
                 zcoords[i] = newLinePositions[i - 1].z;
             }
+
             referenceManager.multiuserMessageSender.SendMessageDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
 
             LineRenderer newLine = SpawnNewLine(LineColor, newLinePositions);
@@ -139,10 +144,12 @@ namespace CellexalVR.Tools
             {
                 newLine.transform.parent = collidesWith[0].transform;
             }
+
             foreach (LineRenderer line in temporaryLines)
             {
                 Destroy(line.gameObject);
             }
+
             temporaryLines.Clear();
         }
 
@@ -233,6 +240,7 @@ namespace CellexalVR.Tools
             {
                 Destroy(line.gameObject);
             }
+
             lines.Clear();
         }
 

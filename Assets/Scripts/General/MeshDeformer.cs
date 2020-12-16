@@ -3,6 +3,7 @@ using System.Net;
 using CellexalVR.General;
 using UnityEngine;
 using UnityEngine.XR;
+using Valve.VR;
 
 namespace CellexalVR
 {
@@ -21,8 +22,8 @@ namespace CellexalVR
         
         private Mesh deformingMesh;
         private Vector3[] vertexVelocities;
-        private SteamVR_Controller.Device device;
-        private SteamVR_TrackedObject rightController;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
 
         private float uniformScale = 1f;
 
@@ -72,8 +73,6 @@ namespace CellexalVR
             deformingMesh.RecalculateNormals();
             deformingMesh.RecalculateBounds();
 
-            int index = (int) referenceManager.rightController.index;
-            device = SteamVR_Controller.Input(index);
             if (Input.GetMouseButton(0))
             {
                 // print("Down");
@@ -94,12 +93,12 @@ namespace CellexalVR
             //         referenceManager.rightController.transform.forward));
             // }
             
-            if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                firstRay = new Ray(referenceManager.rightController.transform.position,
-                    referenceManager.rightController.transform.forward);
-                HandleInputOneClick(firstRay);
-            }
+            // if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+            // {
+            //     firstRay = new Ray(referenceManager.rightController.transform.position,
+            //         referenceManager.rightController.transform.forward);
+            //     HandleInputOneClick(firstRay);
+            // }
 
             // if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             // {

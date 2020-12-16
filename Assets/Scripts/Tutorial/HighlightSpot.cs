@@ -1,6 +1,4 @@
-﻿using CellexalVR.General;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace CellexalVR.Tutorial
@@ -19,47 +17,13 @@ namespace CellexalVR.Tutorial
         private float fadeTime = 4.0f;
         private float elapsedTime = 0.0f;
         private float colorAlpha;
-        // Use this for initialization
-        void Start()
-        {
 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            //if (loadLevel)
-            //{
-            //    if (elapsedTime < fadeTime / 2.0f)
-            //    {
-            //        print("fade to black");
-            //        elapsedTime += Time.deltaTime;
-            //        colorAlpha += 0.05f;
-            //        screenCanvas.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
-            //    }
-            //    else if (elapsedTime < fadeTime && elapsedTime > (fadeTime / 2.0f))
-            //    {
-            //        print("fade back");
-            //        elapsedTime += Time.deltaTime;
-            //        colorAlpha -= 0.05f;
-            //        screenCanvas.GetComponent<Image>().color = new Color(0, 0, 0, colorAlpha);
-            //    }
-            //    else
-            //    {
-            //        loadLevel = false;
-            //        tutorialManager.screenCanvas.SetActive(false);
-            //        CrossSceneInformation.Tutorial = false;
-            //        GetComponentInParent<TutorialManager>().referenceManager.loaderController.ResetFolders(true);
-            //        transform.parent.gameObject.SetActive(false);
-            //    }
-            //}
-        }
 
         private void OnTriggerEnter(Collider other)
         {
             if (this.name == "Portal")
             {
-                if (other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+                if (other.CompareTag("Player")) 
                 {
                     tutorialManager.CompleteTutorial();
                 }

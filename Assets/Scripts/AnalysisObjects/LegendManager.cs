@@ -2,8 +2,9 @@
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using System.Collections;
+using CellexalVR.Interaction;
 using UnityEngine;
-using VRTK;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -32,7 +33,7 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 minPos = new Vector3(-0.58539f, -0.28538f, 0f);
         private Vector3 maxPos = new Vector3(-0.0146f, 0.2852f, 0f);
         private bool legendInsideCube;
-        private VRTK.VRTK_InteractableObject interactableObject;
+        private InteractableObjectBasic interactableObject;
         private Transform cullingCubeTransform;
         private GameObject attachArea;
         private Transform originalParent;
@@ -47,8 +48,8 @@ namespace CellexalVR.AnalysisObjects
             //CellexalEvents.GraphsReset.AddListener(DeactivateLegend);
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             geneExpressionHistogram.referenceManager = referenceManager;
-            interactableObject = GetComponent<VRTK.VRTK_InteractableObject>();
-            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
+            interactableObject = GetComponent<InteractableObjectBasic>();
+            interactableObject.InteractableObjectUnGrabbed += OnUnGrabbed;
             originalParent = legendTransform.parent;
             originalbackgroundScale = backgroundPlane.transform.localScale;
             CellexalEvents.GraphsReset.AddListener(ClearLegends);
@@ -57,7 +58,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (!interactableObject.IsGrabbed()) return;
+            if (!interactableObject.isGrabbed) return;
             referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendTransform.position,
                 legendTransform.rotation,
                 legendTransform.localScale);
@@ -80,9 +81,9 @@ namespace CellexalVR.AnalysisObjects
             attachArea.SetActive(false);
         }
 
-        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnUnGrabbed(object sender, Hand hand)
         {
-            Rigidbody rigidBody = this.GetComponent<Rigidbody>();
+            Rigidbody rigidBody = GetComponent<Rigidbody>();
             referenceManager.multiuserMessageSender.SendMessageLegendUngrabbed(transform.position, transform.rotation, rigidBody.velocity, rigidBody.angularVelocity);
             if (legendInsideCube)
             {
@@ -118,7 +119,7 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
 
-            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            interactableObject.isGrabbable = false;
             Destroy(GetComponent<Rigidbody>());
             detachArea.SetActive(true);
             Vector3 pos = backgroundPlane.transform.localPosition;
@@ -148,7 +149,7 @@ namespace CellexalVR.AnalysisObjects
                 rigidbody.isKinematic = false;
                 rigidbody.drag = 10;
                 rigidbody.angularDrag = 15;
-                GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+                interactableObject.isGrabbable = true;
             }
 
             detachArea.SetActive(false);
@@ -242,7 +243,6 @@ namespace CellexalVR.AnalysisObjects
         public Vector3 WorldToRelativeHistogramPos(Vector3 worldPos)
         {
             Vector3 localPos = transform.InverseTransformPoint(worldPos);
-            //print("world and local " + worldPos + " " + localPos + " " + (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos));
             localPos.z = 0f;
             return (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(
                 geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos);

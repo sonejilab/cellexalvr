@@ -1,8 +1,11 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Tools;
+using JetBrains.Annotations;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.Extras;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
 {
@@ -14,8 +17,9 @@ namespace CellexalVR.Interaction
         public Renderer rendererToHighlight;
         public Material normalMaterial;
         public Material highlightMaterial;
+        public SteamVR_Action_Boolean action = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
-        private SteamVR_Behaviour_Pose rightController;
         private MinimizeTool minimizeTool;
         private Color orgColor;
         public GameObject MinimizedObject { get; set; }
@@ -32,11 +36,7 @@ namespace CellexalVR.Interaction
         /// Has a range of [0, 4]
         /// </summary>
         public int SpaceY { get; set; }
-
         public bool controllerInside = false;
-
-        private string laserColliderName =
-            "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
 
         private int frameCount;
         private int layerMask;
@@ -46,11 +46,13 @@ namespace CellexalVR.Interaction
         {
             if (!CrossSceneInformation.Spectator)
             {
-                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_Behaviour_Pose>();
                 minimizeTool = Handler.referenceManager.minimizeTool;
             }
+            
+            Handler.referenceManager.laserPointerController.rightLaser.PointerIn += OnPointerIn;
+            Handler.referenceManager.laserPointerController.rightLaser.PointerOut += OnPointerOut;
 
-            this.name = "Jail_" + MinimizedObject.name;
+            name = "Jail_" + MinimizedObject.name;
             //orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
             layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
@@ -63,9 +65,7 @@ namespace CellexalVR.Interaction
                 return;
             }
 
-            // SteamVR 2.0
-            // var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside)// && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside && action.GetStateDown(inputSource))
             {
                 if (MinimizedObject.CompareTag("Graph"))
                 {
@@ -144,19 +144,17 @@ namespace CellexalVR.Interaction
         //}
 
 
-        private void OnTriggerEnter(Collider other)
+        private void OnPointerIn(object sender, PointerEventArgs e)
         {
-            //print("ontriggerenter " + other.gameObject.name + ", " + laserColliderName);
-            if (other.gameObject.name != laserColliderName) return;
+            if (e.target != transform) return;
             controllerInside = true;
             rendererToHighlight.sharedMaterial = highlightMaterial;
             // Handler.UpdateHighlight(this);
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnPointerOut(object sender, PointerEventArgs e)
         {
-            //print("ontriggerexit " + other.gameObject.name + ", " + laserColliderName);
-            if (other.gameObject.name != laserColliderName) return;
+            if (e.target != transform) return;
             controllerInside = false;
             rendererToHighlight.sharedMaterial = normalMaterial;
         }
