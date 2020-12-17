@@ -3,6 +3,7 @@ using CellexalVR.General;
 using CellexalVR.Multiuser;
 using System;
 using System.Linq;
+using CellexalVR.AnalysisLogic;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
@@ -20,7 +21,7 @@ namespace CellexalVR.Interaction
         public SteamVR_Action_Boolean changeMeshIncr = SteamVR_Input.GetBooleanAction("UpClick");
         public SteamVR_Action_Boolean changeMeshDecr = SteamVR_Input.GetBooleanAction("DownClick");
         public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
-        
+
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
         public ParticleSystem particles;
@@ -161,17 +162,17 @@ namespace CellexalVR.Interaction
                 {
                     ChangeColor(true);
                 }
-                
+
                 else if (changeColorDecr.GetStateDown(inputSource))
                 {
                     ChangeColor(false);
                 }
-                
+
                 else if (changeMeshIncr.GetStateDown(inputSource))
                 {
                     controllerModelSwitcher.SwitchSelectionToolMesh(true);
                 }
-                
+
                 else if (changeMeshDecr.GetStateDown(inputSource))
                 {
                     controllerModelSwitcher.SwitchSelectionToolMesh(false);
@@ -200,7 +201,7 @@ namespace CellexalVR.Interaction
                             {
                                 selectionManager.RemoveGraphpointFromSelection(point);
                             }
-                
+
                             else
                             {
                                 selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
@@ -208,7 +209,7 @@ namespace CellexalVR.Interaction
                         }
                     }
                 }
-                
+
                 else if (activateAction.GetStateUp(inputSource))
                 {
                     selActive = false;
@@ -291,6 +292,7 @@ namespace CellexalVR.Interaction
             {
                 CurrentColorIndex--;
             }
+
             controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
 
             int buttonIndexLeft = CurrentColorIndex == 0 ? Colors.Length - 1 : CurrentColorIndex - 1;
@@ -361,6 +363,7 @@ namespace CellexalVR.Interaction
             }
         }
 
+
         public int GetColorIndex(string colorString)
         {
             Color[] colorArray; // = new Color[CellexalConfig.Config.SelectionToolColors.Length];
@@ -382,9 +385,20 @@ namespace CellexalVR.Interaction
 
         public int GetColorIndex(Color color)
         {
-            string colorString = ColorUtility.ToHtmlStringRGB(color);
-            print(colorString);
-            return GetColorIndex(colorString);
+            Color[] colorArray; // = new Color[CellexalConfig.Config.SelectionToolColors.Length];
+            // if using spectator mode or for other reasons the selectionToolCollider hasnt been activated
+            // return the index from the config.
+            colorArray = Colors.Length == 0
+                ? CellexalConfig.Config.SelectionToolColors
+                : referenceManager.selectionToolCollider.Colors;
+
+            for (int i = 0; i < colorArray.Length; i++)
+            {
+                Color selectionColor = colorArray[i];
+                if (InputReader.CompareColor(selectionColor, color)) return i;
+            }
+
+            return -1;
         }
     }
 }

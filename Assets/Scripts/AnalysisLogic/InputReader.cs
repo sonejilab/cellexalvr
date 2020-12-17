@@ -639,10 +639,8 @@ namespace CellexalVR.AnalysisLogic
                     {
                         referenceManager.settingsMenu.AddSelectionColor(groupColor);
                         referenceManager.settingsMenu.unsavedChanges = false;
-                        // print(groupColor);
                     }
-
-                    group = referenceManager.selectionToolCollider.GetColorIndex(colorString);
+                    group = referenceManager.selectionToolCollider.GetColorIndex(groupColor);
                 }
                 catch (FormatException)
                 {
@@ -705,7 +703,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="a">First color.</param>
         /// <param name="b">Second color.</param>
         /// <param name="tolerance">Function returns true if the distance between them are equal or lower than this value.</param>
-        private static bool CompareColor(UnityEngine.Color a, UnityEngine.Color b, float tolerance = 0.1f)
+        public static bool CompareColor(UnityEngine.Color a, UnityEngine.Color b, float tolerance = 0.1f)
         {
             float diff = Vector3.Distance(new Vector3(a.r, a.g, a.b),
                 new Vector3(b.r, b.g, b.b));
