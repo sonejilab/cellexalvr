@@ -13,8 +13,8 @@ namespace CellexalVR.Interaction
     public class PointerGrab : MonoBehaviour
     {
         public float distanceMultiplier = 0.1f;
-        public SteamVR_Action_Boolean pullAction = SteamVR_Input.GetBooleanAction("DownClick");
-        public SteamVR_Action_Boolean pushAction = SteamVR_Input.GetBooleanAction("UpClick");
+        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
+        public Vector2 touchpadPosition;
 
         private ReferenceManager referenceManager;
         private SteamVR_LaserPointer laserPointer;
@@ -47,15 +47,18 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (!referenceManager.laserPointerController.rightLaser.pointer.activeSelf || !referenceManager.laserPointerController.leftLaser.pointer.activeSelf) return;
-            if (pullAction.GetState(hand.handType))
+            if (!laserPointer.pointer.activeSelf) return;
+            if (controllerAction.GetState(hand.handType))
             {
-                Pull();
-            }
-
-            if (pushAction.GetState(hand.handType))
-            {
-                Push();
+                touchpadPosition = SteamVR_Input.GetVector2("TouchpadPosition", hand.handType);
+                if (touchpadPosition.y < -0.5f) 
+                {
+                    Pull();
+                }
+                if (touchpadPosition.y > 0.5f)
+                {
+                    Push();
+                }
             }
         }
 

@@ -87,12 +87,12 @@ namespace CellexalVR.Menu.Buttons
 
         private void CheckForClick()
         {
-            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType)) 
+            if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 Click();
             }
 
-            if (controllerInside && SteamVR_Input.GetBooleanAction("DownClick").GetStateDown(Player.instance.rightHand.handType)) 
+            if (controllerInside && SteamVR_Input.GetBooleanAction("TouchpadPress").GetStateDown(Player.instance.rightHand.handType))
             {
                 HelpClick();
             }
@@ -119,6 +119,7 @@ namespace CellexalVR.Menu.Buttons
                     SetHighlighted(true);
                     return;
                 }
+
                 controllerInside = false;
                 SetHighlighted(false);
                 frameCount = 0;
@@ -234,26 +235,32 @@ namespace CellexalVR.Menu.Buttons
                 infoMenu.SetActive(false);
             }
         }
-
-        protected void OnTriggerExit(Collider other)
-        {
-            if (!buttonActivated || laserInside) return;
-            //print(name + " ontriggerexit");
-            if (other.gameObject.name == laserColliderName)
-            {
-                if (descriptionText.text == Description)
-                {
-                    descriptionText.text = "";
-                }
         
-                controllerInside = false;
-                SetHighlighted(false);
-                //if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
-                //{
-                //    infoMenu.SetActive(false);
-                //}
-            }
-        }
+        // Trigger exits with laser pointer does not behave as expected with update to steam vr 2.0. Using raycasts in checkforhit instead.
+        // protected void OnTriggerExit(Collider other)
+        // {
+        //     RaycastHit hit;
+        //     raycastingSource = referenceManager.laserPointerController.rightLaser.holder.transform;
+        //     Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
+        //         out hit, 10, layerMask); // sometimes laser exits while pointing at the button. this is to make sure we really did exit the collider.
+        //     if ((hit.collider != null && hit.collider.transform == transform) || !buttonActivated || laserInside) return;
+        //     //print(name + " ontriggerexit");
+        //     if (other.gameObject.name == laserColliderName)
+        //     {
+        //         if (descriptionText.text == Description)
+        //         {
+        //             descriptionText.text = "";
+        //         }
+        //
+        //         controllerInside = false;
+        //         SetHighlighted(false);
+        //         //if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
+        //         //{
+        //         //    infoMenu.SetActive(false);
+        //         //}
+        //         print($"on trigger exit : {gameObject.name}");
+        //     }
+        // }
 
         public virtual void SetHighlighted(bool highlight)
         {

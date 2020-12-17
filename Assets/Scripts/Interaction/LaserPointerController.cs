@@ -80,14 +80,16 @@ namespace CellexalVR.Interaction
                 {
                     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
                 }
+
                 return;
             }
+
             // origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
             if (hit.collider && hit.collider.tag != "BlockLaser" &&
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-            
+
             {
                 // if we hit a button in the environment (keyboard or env button)
                 // if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
@@ -95,11 +97,12 @@ namespace CellexalVR.Interaction
                 //     controllerModelSwitcher.ActivateDesiredTool();
                 // }
                 referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
-                
+
                 rightLaser.pointer.SetActive(true);
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hit.point);
                 return;
             }
+
             if (alwaysActive)
             {
                 Vector3 hitPoint;
@@ -111,6 +114,7 @@ namespace CellexalVR.Interaction
                 {
                     hitPoint = hit.point;
                 }
+
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hitPoint);
                 if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                 {
@@ -138,9 +142,10 @@ namespace CellexalVR.Interaction
         {
             alwaysActive = active;
             rightLaser.pointer.SetActive(active);
+            leftLaser.pointer.SetActive(active);
             // referenceManager.rightLaser.enabled = active;
-             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
-                 leftLaser.pointer.SetActive(true);
+            if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
+                leftLaser.pointer.SetActive(true);
             origin.localRotation = Quaternion.identity;
             referenceManager.multiuserMessageSender.SendMessageToggleLaser(active);
         }

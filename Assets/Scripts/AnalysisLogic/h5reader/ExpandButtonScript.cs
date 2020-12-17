@@ -21,7 +21,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 controllerInside = true;
                 image.color = Color.red;
@@ -30,7 +30,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 controllerInside = false;
                 image.color = Color.white;

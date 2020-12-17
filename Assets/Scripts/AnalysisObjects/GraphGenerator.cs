@@ -468,21 +468,24 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            // add colliders
-            foreach (Graph.OctreeNode node in on.children)
+            // add colliders if they are not already added.
+            if (newGraph.GetComponent<BoxCollider>() == null)
             {
-                BoxCollider collider;
-                if (slice != null)
+                foreach (Graph.OctreeNode node in on.children)
                 {
-                    collider = slice.gameObject.AddComponent<BoxCollider>();
-                }
-                else
-                {
-                    collider = newGraph.gameObject.AddComponent<BoxCollider>();
-                }
+                    BoxCollider collider;
+                    if (slice != null)
+                    {
+                        collider = slice.gameObject.AddComponent<BoxCollider>();
+                    }
+                    else
+                    {
+                        collider = newGraph.gameObject.AddComponent<BoxCollider>();
+                    }
 
-                collider.center = node.pos + node.size / 2f;
-                collider.size = node.size;
+                    collider.center = node.pos + node.size / 2f;
+                    collider.size = node.size;
+                }
             }
 
             // if (slice?.LODGroupClusters[0]?.Count > 0)
@@ -1395,7 +1398,7 @@ namespace CellexalVR.AnalysisObjects
 
                 else
                 {
-                    lods[i] = new LOD(1f/1.3f, renderers);
+                    lods[i] = new LOD(1f / 1.3f, renderers);
                 }
             }
 

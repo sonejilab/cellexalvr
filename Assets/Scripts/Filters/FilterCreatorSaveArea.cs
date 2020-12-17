@@ -31,7 +31,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 controllerInside = true;
                 leftBorder.GetComponent<Renderer>().material.color = Color.green;
@@ -42,7 +42,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 controllerInside = false;
                 leftBorder.GetComponent<Renderer>().material.color = originalColor;

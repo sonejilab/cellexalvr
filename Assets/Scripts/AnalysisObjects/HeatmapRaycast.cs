@@ -137,7 +137,7 @@ namespace CellexalVR.Interaction
                             selectionStartY);
                         HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
-                    else if (rightHand.grabPinchAction.GetState(rightHand.handType) && selecting)
+                    else if (rightHand.grabPinchAction.GetStateUp(rightHand.handType) && selecting)
                     {
                         // called when letting go of the trigger to finalize a box selection
                         multiuserMessageSender.SendMessageConfirmSelection(name, hitx, hity, selectionStartX,

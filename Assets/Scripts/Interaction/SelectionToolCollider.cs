@@ -16,10 +16,8 @@ namespace CellexalVR.Interaction
     public class SelectionToolCollider : MonoBehaviour
     {
         public SteamVR_Action_Boolean activateAction = SteamVR_Input.GetBooleanAction("TriggerClick");
-        public SteamVR_Action_Boolean changeColorIncr = SteamVR_Input.GetBooleanAction("RightClick");
-        public SteamVR_Action_Boolean changeColorDecr = SteamVR_Input.GetBooleanAction("LeftClick");
-        public SteamVR_Action_Boolean changeMeshIncr = SteamVR_Input.GetBooleanAction("UpClick");
-        public SteamVR_Action_Boolean changeMeshDecr = SteamVR_Input.GetBooleanAction("DownClick");
+        public SteamVR_Action_Boolean touchpadPressAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
+        public Vector2 touchpadPosition;
         public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
 
         public ReferenceManager referenceManager;
@@ -158,24 +156,29 @@ namespace CellexalVR.Interaction
         {
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
-                if (changeColorIncr.GetStateDown(inputSource))
+                if (touchpadPressAction.GetStateDown(inputSource))
+                {
+                    touchpadPosition = SteamVR_Input.GetVector2("TouchpadPosition", inputSource);
+                    
+                if (touchpadPosition.x > 0.5f)
                 {
                     ChangeColor(true);
                 }
 
-                else if (changeColorDecr.GetStateDown(inputSource))
+                else if (touchpadPosition.x < -0.5f)
                 {
                     ChangeColor(false);
                 }
 
-                else if (changeMeshIncr.GetStateDown(inputSource))
+                else if (touchpadPosition.y > 0.5f)
                 {
                     controllerModelSwitcher.SwitchSelectionToolMesh(true);
                 }
 
-                else if (changeMeshDecr.GetStateDown(inputSource))
+                else if (touchpadPosition.y < -0.5f)
                 {
                     controllerModelSwitcher.SwitchSelectionToolMesh(false);
+                }
                 }
 
                 else if (activateAction.GetStateDown(inputSource))

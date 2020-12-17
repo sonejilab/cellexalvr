@@ -7,7 +7,6 @@ using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Menu
 {
-
     /// <summary>
     /// Holds the logic for rotating the menu.
     /// </summary>
@@ -15,14 +14,21 @@ namespace CellexalVR.Menu
     {
         public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.LeftHand;
         public Material menuMaterial;
-        public SteamVR_Action_Boolean rotateRight = SteamVR_Input.GetBooleanAction("RightClick");
-        public SteamVR_Action_Boolean rotateLeft = SteamVR_Input.GetBooleanAction("LeftClick");
+        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
+        public Vector2 touchpadPosition;
 
         private Rotation SideFacingPlayer { get; set; }
         private bool isRotating = false;
         private Vector3 fromAngle;
         private float rotatedTotal;
-        public enum Rotation { Front, Right, Back, Left }
+
+        public enum Rotation
+        {
+            Front,
+            Right,
+            Back,
+            Left
+        }
 
         private void Start()
         {
@@ -35,14 +41,17 @@ namespace CellexalVR.Menu
 
         private void Update()
         {
-            if (rotateLeft.GetStateDown(inputSource))
+            if (controllerAction.GetStateDown(inputSource))
             {
-                RotateLeft();
-            }
-            
-            else if (rotateRight.GetStateDown(inputSource))
-            {
-                RotateRight();
+                touchpadPosition = SteamVR_Input.GetVector2("TouchpadPosition", inputSource);
+                if (touchpadPosition.x > 0.5f)
+                {
+                    RotateLeft();
+                }
+                else if (touchpadPosition.x < -0.5f)
+                {
+                    RotateRight();
+                }
             }
         }
 
@@ -115,6 +124,7 @@ namespace CellexalVR.Menu
                         SideFacingPlayer = Rotation.Front;
                         break;
                 }
+
                 StartCoroutine(RotateMe(90f * times, 0.15f));
             }
         }
@@ -147,8 +157,10 @@ namespace CellexalVR.Menu
                     zAngles = -90f;
                     break;
             }
+
             transform.localRotation = Quaternion.Euler(-25f, 0f, zAngles);
         }
+
         /// <summary>
         /// Rotates the menu.
         /// </summary>
@@ -176,10 +188,11 @@ namespace CellexalVR.Menu
                 {
                     transform.Rotate(0, 0, rotationThisFrame);
                 }
+
                 yield return null;
             }
+
             isRotating = false;
         }
     }
-
 }

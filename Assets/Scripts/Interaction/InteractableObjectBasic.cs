@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using Valve.VR;
-using Valve.VR.Extras;
+﻿using Valve.VR;
 
 namespace CellexalVR.Interaction
 {

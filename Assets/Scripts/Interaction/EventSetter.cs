@@ -11,8 +11,6 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private PushBack pushBack;
-
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -20,81 +18,6 @@ namespace CellexalVR.Interaction
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
         }
-
-        private void Start()
-        {
-            pushBack = GetComponentInParent<PushBack>();
-        }
-
-        public void LeftMenuLeftClickEvent()
-        {
-            referenceManager.menuRotator.RotateRight(1);
-        }
-
-        public void LeftMenuRightClickEvent()
-        {
-            referenceManager.menuRotator.RotateLeft(1);
-        }
-
-        public void LeftMenuUpClickEvent()
-        {
-            referenceManager.teleportLaser.SetActive(!referenceManager.teleportLaser.activeSelf);
-            //if (referenceManager.leftController.GetComponent<MenuToggler>().MenuActive)
-            //{
-            //    referenceManager.leftController.GetComponent<MenuToggler>().ToggleMenu();
-            //}
-        }
-
-        // public void LeftMenuDownClickEvent()
-        // {
-        //     referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
-        // }
-
-
-        public void RightMenuLeftClickEvent()
-        {
-            referenceManager.selectionToolCollider.ChangeColor(false);
-        }
-
-        public void RightMenuRightClickEvent()
-        {
-            referenceManager.selectionToolCollider.ChangeColor(true);
-
-        }
-
-        // public void RightMenuUpClickEvent()
-        // {
-        //     if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
-        //     {
-        //         referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(true);
-        //     }
-        // }
-
-        public void RightMenuUpHoldEvent()
-        {
-            // if (referenceManager.rightLaser.enabled &&
-                // referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
-            {
-                pushBack.Push();
-            }
-        }
-
-        public void RightMenuDownHoldEvent()
-        {
-            // if (referenceManager.rightLaser.enabled &&
-            //     referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
-            {
-                pushBack.Pull();
-            }
-        }
-
-        // public void RightMenuDownClickEvent()
-        // {
-        //     if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
-        //     {
-        //         referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
-        //     }
-        // }
 
         public void GeneKeyboardEnterEvent(string geneName)
         {

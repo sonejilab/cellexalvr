@@ -57,7 +57,7 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            bool touched = other.CompareTag("Player");
+            bool touched = other.CompareTag("Controller");
             if (!touched) return;
             Highlight(true);
             referenceManager.multiuserMessageSender.SendMessageHighlightCluster(true, gbg.gameObject.name, ClusterId);
@@ -67,7 +67,7 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.CompareTag("Player");
+            bool touched = other.CompareTag("Controller");
                            // other.gameObject.name.Equals(controllerCollider);
             if (!touched) return;
             Highlight(false);

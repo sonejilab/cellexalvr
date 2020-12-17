@@ -31,6 +31,7 @@ namespace CellexalVR.AnalysisObjects
         public GameObject arcDescriptionPrefab;
         public GameObject simpleArcDescriptionPrefab;
         public List<Color> combinedArcsColors;
+        public BoxCollider ringCollider;
         public NetworkHandler Handler { get; set; }
         public ReferenceManager referenceManager;
         public int selectionNr;
@@ -180,7 +181,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")
+            if (other.CompareTag("Controller")
                 /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             )
             {
@@ -195,7 +196,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player")
+            if (other.CompareTag("Controller")
                 /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             )
             {
@@ -218,7 +219,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.CompareTag("Player")
+            if (other.CompareTag("Controller")
                 /*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             )
             {
@@ -716,7 +717,8 @@ namespace CellexalVR.AnalysisObjects
             rigidbody.angularDrag = 15;
             NetworkCenterInteract interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
             interactableObject.referenceManager = referenceManager;
-
+            Interactable interactable = gameObject.GetComponent<Interactable>();
+            interactable.handFollowTransform = false;
 
             // save the old variables
             oldParent = transform.parent;
@@ -837,6 +839,7 @@ namespace CellexalVR.AnalysisObjects
                 button.SetButtonActivated(false);
             }
 
+            ringCollider.enabled = false;
             CellexalEvents.NetworkUnEnlarged.Invoke();
             //CellexalEvents.ScriptFinished.Invoke();
             //handler.runningScript = false;

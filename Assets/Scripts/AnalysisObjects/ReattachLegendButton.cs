@@ -19,7 +19,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 SetHighlighted(true);
             }
@@ -27,7 +27,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 SetHighlighted(false);
             }

@@ -53,7 +53,7 @@ namespace CellexalVR.Interaction
             if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
                 || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
             {
-                if (other.CompareTag("Player"))
+                if (other.CompareTag("Controller"))
                 {
                     CellexalEvents.ObjectGrabbed.Invoke();
                 }
@@ -65,7 +65,7 @@ namespace CellexalVR.Interaction
             if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
                 || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
             {
-                if (other.CompareTag("Player"))
+                if (other.CompareTag("Controller"))
                 {
                     CellexalEvents.ObjectUngrabbed.Invoke();
                 }

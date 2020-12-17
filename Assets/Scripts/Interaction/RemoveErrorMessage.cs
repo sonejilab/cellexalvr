@@ -15,7 +15,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 controllerInside = true;
                 GetComponent<Renderer>().material.color = Color.red;
@@ -24,7 +24,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 controllerInside = false;
                 GetComponent<Renderer>().material.color = Color.white;

@@ -22,7 +22,7 @@ namespace CellexalVR.Menu.Buttons.Tools
                 spriteRenderer.sprite = standardTexture;
                 referenceManager.screenshotCamera.gameObject.SetActive(false);
                 referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = false;
-                referenceManager.screenCanvas.gameObject.SetActive(false);
+                // referenceManager.screenCanvas.gameObject.SetActive(false);
             }
             else
             {
@@ -30,7 +30,7 @@ namespace CellexalVR.Menu.Buttons.Tools
                 spriteRenderer.sprite = deactivatedTexture;
                 referenceManager.screenshotCamera.gameObject.SetActive(true);
                 referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = true;
-                referenceManager.screenCanvas.gameObject.SetActive(true);
+                // referenceManager.screenCanvas.gameObject.SetActive(true);
 
             }
 

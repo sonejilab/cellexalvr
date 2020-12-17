@@ -95,7 +95,7 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.CompareTag("Player"); //|| other.gameObject.name.Equals(laserCollider);
+            bool touched = other.CompareTag("Controller"); //|| other.gameObject.name.Equals(laserCollider);
             if (active && touched && !Center.controllerInsideSomeNode)
             {
                 Center.ToggleNodeColliders(false, gameObject.name);
@@ -123,7 +123,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.CompareTag("Player"); //|| other.gameObject.name.Equals(laserCollider);
+            bool touched = other.CompareTag("Controller"); //|| other.gameObject.name.Equals(laserCollider);
             if (touched)
             {
                 Center.ToggleNodeColliders(true, gameObject.name);

@@ -41,7 +41,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 parent.UnhighlightAllPorts();
                 SetHighlighted(true);
@@ -50,7 +50,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Controller"))
             {
                 SetHighlighted(false);
             }
