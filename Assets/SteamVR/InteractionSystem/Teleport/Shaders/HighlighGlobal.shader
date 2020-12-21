@@ -8,7 +8,8 @@ Shader "Valve/VR/HighlightPlanar"
 {
 	Properties
 	{
-		_Color( "Tint Color", Color ) = ( 1, 1, 1, 1 )
+		_Color( "Color", Color ) = ( 1, 1, 1, 1 )
+		_TintColor( "Tint Color", Color ) = ( 1, 1, 1, 1 )
 		_SeeThru( "SeeThru", Range( 0.0, 1.0 ) ) = 0.25
 		_Darken( "Darken", Range( 0.0, 1.0 ) ) = 0.0
 		_Scl("Mapping Scale", Float) = 2.0

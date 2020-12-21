@@ -840,8 +840,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonAction:
-    actionPath: 
-    needsReinit: 1
+    actionPath: /actions/default/in/SkeletonLeftHand
+    needsReinit: 0
   inputSource: 1
   rangeOfMotion: 0
   skeletonRoot: {fileID: 4000010709239554}
@@ -867,7 +867,7 @@ MonoBehaviour:
   mirroring: 2
   fallbackPoser: {fileID: 114000012036868996}
   fallbackCurlAction:
-    actionPath: /actions/CellexalVR/in/Squeeze
+    actionPath: /actions/default/in/Squeeze
     needsReinit: 0
 --- !u!1 &1000013396909066
 GameObject:

@@ -48,7 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 797481884179529250}
-  spatialGraphPrefab: {fileID: 0}
+  spatialGraphPrefab: {fileID: 4866979709267056668, guid: 775827d6390ac5848a4f11b8f83d64f5,
+    type: 3}
   facsGraphCounter: 0
   attributeFileRead: 0
   attributeReader: {fileID: 0}
@@ -106,15 +107,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f587f3de672fd44a9f56f7a325dc237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   rightController: {fileID: 0}
   leftController: {fileID: 0}
-  rightControllerScriptAlias: {fileID: 0}
-  leftControllerScriptAlias: {fileID: 0}
   controllerModelSwitcher: {fileID: 0}
   headset: {fileID: 0}
   controllerMenuCollider: {fileID: 0}
-  rightLaser: {fileID: 0}
-  leftLaser: {fileID: 0}
   laserPointerController: {fileID: 0}
   selectionToolCollider: {fileID: 0}
   deleteTool: {fileID: 0}
@@ -155,7 +153,6 @@ MonoBehaviour:
   loaderController: {fileID: 0}
   configManager: {fileID: 114706478586369516}
   inputReader: {fileID: 114916324322146698}
-  reportReader: {fileID: 0}
   database: {fileID: 0}
   logManager: {fileID: 114405805043964006}
   multiuserMessageSender: {fileID: 0}
@@ -172,6 +169,7 @@ MonoBehaviour:
   filterManager: {fileID: 0}
   reportManager: {fileID: 0}
   floor: {fileID: 0}
+  pdfMesh: {fileID: 0}
   h5ReaderAnnotatorScriptManager: {fileID: 0}
   geneKeyboard: {fileID: 0}
   keyboardSwitch: {fileID: 0}

@@ -35,7 +35,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
                 slider.transform.localPosition += new Vector3(0, 0, -0.9f);
-                // UpdateColors(startState);
+                currentState = startState;
             }
         }
 

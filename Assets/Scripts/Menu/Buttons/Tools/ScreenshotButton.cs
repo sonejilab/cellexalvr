@@ -1,5 +1,7 @@
 ﻿using CellexalVR.Tools;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
+
 namespace CellexalVR.Menu.Buttons.Tools
 {
     /// <summary>
@@ -18,20 +20,19 @@ namespace CellexalVR.Menu.Buttons.Tools
         {
             if (referenceManager.screenshotCamera.gameObject.activeSelf)
             {
-                //canvas.SetActive(false);
                 spriteRenderer.sprite = standardTexture;
                 referenceManager.screenshotCamera.gameObject.SetActive(false);
                 referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = false;
-                // referenceManager.screenCanvas.gameObject.SetActive(false);
             }
             else
             {
-                //canvas.SetActive(true);
                 spriteRenderer.sprite = deactivatedTexture;
-                referenceManager.screenshotCamera.gameObject.SetActive(true);
-                referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = true;
-                // referenceManager.screenCanvas.gameObject.SetActive(true);
-
+                CaptureScreenshot screenshotCamera = referenceManager.screenshotCamera;
+                screenshotCamera.gameObject.SetActive(true);
+                screenshotCamera.transform.position = referenceManager.headset.transform.position + referenceManager.headset.transform.forward * 0.7f;
+                screenshotCamera.transform.LookAt(referenceManager.headset.transform);
+                screenshotCamera.transform.Rotate(0, 180, 0);
+                screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = true;
             }
 
         }

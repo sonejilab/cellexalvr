@@ -81,14 +81,14 @@ namespace CellexalVR.Menu
                 if (reattachGameObject == null)
                 {
                     reattachGameObject = Instantiate(reattachPrefab);
+                    reattachGameObject.transform.parent = hand.currentAttachedObjectInfo.Value.originalParent?.transform;
+                    reattachGameObject.transform.localPosition = interactableObject.GetPreviousPosition();
+                    reattachGameObject.transform.localRotation = interactableObject.GetPreviousRotation();
+                    reattachGameObject.transform.localScale = interactableObject.GetPreviousScale();
                 }
 
                 reattachGameObject.SetActive(true);
 
-                reattachGameObject.transform.parent = interactableObject.GetPreviousParent();
-                reattachGameObject.transform.localPosition = interactableObject.GetPreviousPosition();
-                reattachGameObject.transform.localRotation = interactableObject.GetPreviousRotation();
-                reattachGameObject.transform.localScale = interactableObject.GetPreviousScale();
 
                 reattachCollider = reattachGameObject.GetComponent<MeshCollider>();
                 Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;

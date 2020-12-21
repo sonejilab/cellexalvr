@@ -18,8 +18,6 @@ namespace CellexalVR.General
         private GameObject _InputReader;
         public GameObject CameraRig;
         private GameObject _CameraRig;
-        // public GameObject VRTK;
-        // private GameObject _VRTK;
         public GameObject Managers;
         private GameObject _Managers;
         public GameObject Generators;

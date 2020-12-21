@@ -13,11 +13,12 @@ namespace CellexalVR.SceneObjects
 
         private void Update()
         {
+            if (transform1 == null || transform2 == null) return;
             if (bendLine)
             {
-                Vector3 dir = -transform1.transform.forward + transform1.transform.up;
+                Vector3 dir = -transform1.forward + transform1.up;
                 Vector3 start = transform1.position;
-                Vector3 end = transform2.transform.position;
+                Vector3 end = transform2.position;
                 if (!transform1.hasChanged && !transform2.hasChanged) return;
                 for (int i = 0; i < 20; i++)
                 {

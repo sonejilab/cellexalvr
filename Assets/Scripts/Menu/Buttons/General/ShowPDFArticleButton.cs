@@ -15,6 +15,7 @@ namespace CellexalVR.Menu.Buttons.General
         {
             SetButtonActivated(false);
             CellexalEvents.PDFArticleRead.AddListener(() => SetButtonActivated(true));
+            CellexalEvents.GraphsUnloaded.AddListener(() => SetButtonActivated(false));
         }
 
         public override void Click()

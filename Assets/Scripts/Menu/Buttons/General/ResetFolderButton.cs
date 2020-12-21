@@ -49,6 +49,7 @@ namespace CellexalVR.Menu.Buttons.General
             controllerModelSwitcher.ActivateDesiredTool();
             referenceManager.loaderController.ResetFolders(deleteSceneObjs);
             referenceManager.multiuserMessageSender.SendMessageLoadingMenu(deleteSceneObjs);
+            referenceManager.pdfMesh.TogglePDF(false);
         }
 
         //void CloseSubMenu()

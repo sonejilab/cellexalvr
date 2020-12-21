@@ -1,6 +1,7 @@
 ﻿using CellexalVR.DesktopUI;
 using System.Collections;
 using System.Collections.Generic;
+using CellexalVR.Interaction;
 using UnityEngine;
 
 namespace CellexalVR.Menu
@@ -248,6 +249,8 @@ namespace CellexalVR.Menu
             }
             animationCoroutine = null;
             animationRunning = false;
+
+            GetComponent<InteractableObjectBasic>().allowLeftHandGrab = !fold;
         }
 
     }

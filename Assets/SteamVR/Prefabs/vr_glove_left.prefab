@@ -1033,8 +1033,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonAction:
-    actionPath: /actions/CellexalVR/in/SkeletonLeftHand
-    needsReinit: 0
+    actionPath: 
+    needsReinit: 1
   inputSource: 1
   rangeOfMotion: 1
   skeletonRoot: {fileID: 4000012684619030}

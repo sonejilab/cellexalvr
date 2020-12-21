@@ -203,8 +203,8 @@ namespace CellexalVR.DesktopUI
 
             outputField.text = outputBufferString;
             if (outputField.textComponent.textInfo == null) return;
-            outputField.MoveTextEnd(false);
-            outputField.textComponent.ForceMeshUpdate();
+            // outputField.MoveTextEnd(false);
+            // outputField.textComponent.ForceMeshUpdate();
             //Canvas.ForceUpdateCanvases();
 
             ClearAndHideSuggestions();

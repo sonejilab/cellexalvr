@@ -77,7 +77,7 @@ namespace CellexalVR.Interaction
 
         private void OnPointerGrab(object sender, PointerEventArgs e)
         {
-            if (!laserPointer.enabled || e.target == null || e.target.gameObject.name.Equals("Main Menu")) return;
+            if (!laserPointer.enabled || e.target == null || e.target.gameObject.layer.Equals(LayerMask.NameToLayer("MenuLayer"))) return;
             InteractableObjectBasic interactable = e.target.GetComponent<InteractableObjectBasic>();
             if (interactable == null) return;
             AttachObjectToPointer(e.target);
@@ -86,7 +86,7 @@ namespace CellexalVR.Interaction
 
         private void OnPointerUnGrab(object sender, PointerEventArgs e)
         {
-            if (!laserPointer.enabled || e.target == null || e.target.gameObject.name.Equals("Main Menu")) return;
+            if (!laserPointer.enabled || e.target == null || e.target.gameObject.layer.Equals(LayerMask.NameToLayer("MenuLayer"))) return;
             InteractableObjectBasic interactable = e.target.GetComponent<InteractableObjectBasic>();
             if (interactable == null) return;
             DetachObjectFromPointer(e.target);

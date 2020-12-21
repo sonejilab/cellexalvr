@@ -876,9 +876,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1387235877190310}
-  menuToClose: {fileID: 1651170864016864}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1040812649693362
 GameObject:
@@ -1103,6 +1101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   buttonPrefab: {fileID: 114593888938353832}
   loadingText: {fileID: 1490240046192646}
 --- !u!64 &64750586391372516
@@ -2200,9 +2201,10 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   toggleToState: 0
+  wires: []
   combinedNetworksButton: {fileID: 0}
   network: {fileID: 0}
-  parentNetwork: {fileID: 1820261618689896}
+  selected: 0
 --- !u!1 &1108893510427172
 GameObject:
   m_ObjectHideFlags: 0
@@ -5054,9 +5056,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1361347919782116}
-  menuToClose: {fileID: 1979306088517432}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1230570608950112
 GameObject:
@@ -6058,9 +6058,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 0}
-  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
   deleteSceneObjs: 0
 --- !u!1 &1288754331672834
@@ -7675,9 +7673,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1979306088517432}
-  menuToClose: {fileID: 1983818837840078}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1347229911085882
 GameObject:
@@ -8459,8 +8455,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   selectionButtonPrefab: {fileID: 1646565348093598}
   annotationButtonPrefab: {fileID: 0}
+  prevSelectionButtons: []
+  prevAnnotationButtons: []
 --- !u!64 &64186082733829424
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9870,9 +9871,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1361347919782116}
-  menuToClose: {fileID: 1744093784968664}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1442829636306802
 GameObject:
@@ -11577,6 +11576,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   tabPrefab: {fileID: 114825059768503924}
   nextPageButton: {fileID: 0}
   prevPageButton: {fileID: 0}
@@ -11812,9 +11814,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1276816513378876}
-  menuToClose: {fileID: 1296042963586858}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
   deleteSceneObjs: 1
 --- !u!1 &1536993653121604
@@ -12759,9 +12759,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1387235877190310}
-  menuToClose: {fileID: 1632828801980612}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1590347247999772
 GameObject:
@@ -13520,9 +13518,12 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  toggleToState: 0
+  rightSide: {fileID: 0}
+  leftSide: {fileID: 0}
+  slider: {fileID: 0}
+  slideTime: 0
+  background: {fileID: 0}
   networks: []
-  parentNetworks: []
 --- !u!1 &1618614415249810
 GameObject:
   m_ObjectHideFlags: 0
@@ -14104,9 +14105,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1124660884337110}
-  menuToClose: {fileID: 1382405152097756}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1630521282402868
 GameObject:
@@ -14330,6 +14329,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   tabPrefab: {fileID: 114946134704591456}
   nextPageButton: {fileID: 0}
   prevPageButton: {fileID: 0}
@@ -14338,6 +14340,11 @@ MonoBehaviour:
   currentCategory: 
   prefab: {fileID: 0}
   buttonPrefab: {fileID: 1820261618689896}
+  wirePrefab: {fileID: 0}
+  attachPoint: {fileID: 0}
+  removeNetworkArcsButton: {fileID: 0}
+  previouslyClickedButton: {fileID: 0}
+  toggleArcButtonList: []
 --- !u!64 &64456917631142330
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -14790,6 +14797,7 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   buttonDescription: {fileID: 0}
+  toggle: 0
 --- !u!1 &1648266977514546
 GameObject:
   m_ObjectHideFlags: 0
@@ -15209,9 +15217,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1361347919782116}
-  menuToClose: {fileID: 1505657253877736}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1657984658943880
 GameObject:
@@ -17119,6 +17125,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   tabPrefab: {fileID: 114414786721078602}
   nextPageButton: {fileID: 0}
   prevPageButton: {fileID: 0}
@@ -18438,9 +18447,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1124660884337110}
-  menuToClose: {fileID: 1851108567111014}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1775010328235362
 GameObject:
@@ -18957,9 +18964,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1387235877190310}
-  menuToClose: {fileID: 1124660884337110}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1795300569077102
 GameObject:
@@ -20088,6 +20093,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   tabPrefab: {fileID: 114865094941565096}
   nextPageButton: {fileID: 0}
   prevPageButton: {fileID: 0}
@@ -20506,7 +20514,11 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  toggleToState: 1
+  rightSide: {fileID: 0}
+  leftSide: {fileID: 0}
+  slider: {fileID: 0}
+  slideTime: 0
+  background: {fileID: 0}
 --- !u!1 &1862458679728920
 GameObject:
   m_ObjectHideFlags: 0
@@ -21563,9 +21575,10 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   toggleToState: 1
+  wires: []
   combinedNetworksButton: {fileID: 0}
   network: {fileID: 0}
-  parentNetwork: {fileID: 1820261618689896}
+  selected: 0
 --- !u!1 &1911925367481842
 GameObject:
   m_ObjectHideFlags: 0
@@ -22475,9 +22488,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 1361347919782116}
-  menuToClose: {fileID: 1060157167286256}
-  textMeshToUndarken: {fileID: 0}
+  menuToClose: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1942275247919110
 GameObject:
@@ -22599,9 +22610,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  buttonsToActivate: {fileID: 0}
   menuToClose: {fileID: 0}
-  textMeshToUndarken: {fileID: 0}
   deactivateMenu: 0
 --- !u!1 &1945526472562212
 GameObject:
@@ -22922,7 +22931,11 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  toggleToState: 0
+  rightSide: {fileID: 0}
+  leftSide: {fileID: 0}
+  slider: {fileID: 0}
+  slideTime: 0
+  background: {fileID: 0}
 --- !u!1 &1960611462399282
 GameObject:
   m_ObjectHideFlags: 0
@@ -23945,6 +23958,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
+  interactableMenu: {fileID: 0}
+  buttonsToDeactivate: {fileID: 0}
+  textmeshToDarken: {fileID: 0}
   buttonPrefab: {fileID: 114815673227893322}
   newFilterButton: {fileID: 0}
 --- !u!1 &1983442556602820
@@ -24333,9 +24349,12 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  toggleToState: 1
+  rightSide: {fileID: 0}
+  leftSide: {fileID: 0}
+  slider: {fileID: 0}
+  slideTime: 0
+  background: {fileID: 0}
   networks: []
-  parentNetworks: []
 --- !u!1 &1993297920283388
 GameObject:
   m_ObjectHideFlags: 0

@@ -69,7 +69,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _LaserHitThickness: 0.1
-    - _Metallic: 0.741
+    - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -91,3 +91,4 @@ Material:
     - _PulseCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _ScaleCorrection: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 0.122641504, g: 0.11512104, b: 0.11512104, a: 1}
+  m_BuildTextureStacks: []

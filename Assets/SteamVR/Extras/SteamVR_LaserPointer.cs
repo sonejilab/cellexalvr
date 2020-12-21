@@ -10,7 +10,7 @@ namespace Valve.VR.Extras
         public SteamVR_Behaviour_Pose pose;
 
         //public SteamVR_Action_Boolean interactWithUI = SteamVR_Input.__actions_default_in_InteractUI;
-        public SteamVR_Action_Boolean triggerClick = SteamVR_Input.GetBooleanAction("TriggerPress");
+        public SteamVR_Action_Boolean triggerClick = SteamVR_Input.GetBooleanAction("TriggerClick");
         public SteamVR_Action_Boolean grabAction = SteamVR_Input.GetBooleanAction("GrabGrip");
 
         public bool active = true;
@@ -128,7 +128,7 @@ namespace Valve.VR.Extras
 
             Ray raycast = new Ray(transform.position, transform.forward);
             RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit);
+            bool bHit = Physics.Raycast(raycast, out hit); 
 
             if (previousContact && previousContact != hit.transform)
             {

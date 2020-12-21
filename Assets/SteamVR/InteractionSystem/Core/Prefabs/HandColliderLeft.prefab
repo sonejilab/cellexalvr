@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000012765033070}
   - component: {fileID: 135000014125725866}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_ring_2_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000010324375676}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000012962541566}
   - component: {fileID: 135000013343303422}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_index_1_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -83,7 +83,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000010943680784}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -98,7 +98,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000010748827216}
   - component: {fileID: 135000010226986612}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_index_2_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011220539174}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -142,7 +142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000012995160158}
   - component: {fileID: 135000012534657806}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_middle_2_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -171,7 +171,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011237366522}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 4000011957011620}
   - component: {fileID: 33000013448054712}
   - component: {fileID: 135000010524601854}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Sphere (3)
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011304683130}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.035
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 4000011912412668}
   - component: {fileID: 33000010571670074}
   - component: {fileID: 135000012858158250}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Sphere (2)
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011613764148}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.025
@@ -292,7 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000014196080978}
   - component: {fileID: 135000013103434970}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_middle_0_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -321,7 +321,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011641533962}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.02
@@ -336,7 +336,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000012050390454}
   - component: {fileID: 135000011157456608}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_index_0_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -365,7 +365,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011917277578}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.02
@@ -380,7 +380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000010317872206}
   - component: {fileID: 135000013583319202}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_ring_1_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000012155149048}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 4000013385037612}
   - component: {fileID: 33000012082552246}
   - component: {fileID: 135000013296820600}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Sphere
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -462,7 +462,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000012230303462}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.04
@@ -477,7 +477,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000011150399860}
   - component: {fileID: 135000011597655318}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: thumb_distal
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -506,7 +506,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000012988446628}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -520,7 +520,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000014135373018}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: spheres
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -555,7 +555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000013920263390}
   - component: {fileID: 135000010489002386}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_pinky_2_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -584,7 +584,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000013250311742}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.01
@@ -598,7 +598,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000012788572454}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: fingers
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000010973331830}
   - component: {fileID: 135000010580124084}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_middle_1_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -669,7 +669,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000013484163102}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.015
@@ -685,7 +685,7 @@ GameObject:
   - component: {fileID: 4000011495277878}
   - component: {fileID: 114000010572907066}
   - component: {fileID: 54000013135273658}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: HandColliderLeft
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -769,7 +769,7 @@ GameObject:
   - component: {fileID: 4000010454108534}
   - component: {fileID: 33000012180426442}
   - component: {fileID: 135000010938669188}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Sphere (1)
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -806,7 +806,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000013918884664}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.025
@@ -821,7 +821,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000014174024032}
   - component: {fileID: 135000010608582948}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: finger_pinky_1_r
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -850,7 +850,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000014019763194}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.01

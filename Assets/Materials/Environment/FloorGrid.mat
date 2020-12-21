@@ -35,6 +35,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DetailTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -69,6 +73,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
+    - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -76,10 +81,12 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
+    - _InnerClipRadius: 1.000062
     - _LaserHitThickness: 0.05
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OuterClipRadius: 1.000056
     - _Parallax: 0.02
     - _PulseDuration: 2
     - _PulseFade: 0.25
@@ -94,16 +101,21 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Threshold: 0.25
     - _UVSec: 0
     - _WaveDuration: 2
     - _WaveMaxRadius: 1
     - _WaveSpeed: 0.8
     - _WaveStartTime: -1
     - _WaveThickness: 0.1
+    - _WindQuality: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0.2354416, b: 0.32987696, a: 1}
+    - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
     - _LaserHitColor: {r: 0.033018887, g: 0.8257702, b: 1, a: 1}
     - _PulseColor: {r: 0, g: 0.84705883, b: 1, a: 1}
     - _PulseCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
@@ -111,3 +123,4 @@ Material:
     - _Tint: {r: 0, g: 0.24330287, b: 0.3019608, a: 0.3137255}
     - _WaveColor: {r: 1, g: 0.5537269, b: 0, a: 1}
     - _WaveCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
+  m_BuildTextureStacks: []

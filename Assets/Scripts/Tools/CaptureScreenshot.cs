@@ -34,7 +34,7 @@ namespace CellexalVR.Tools
             layerButtons = GetComponentsInChildren<ScreenshotLayerToggleButton>();
             foreach (ScreenshotLayerToggleButton button in layerButtons)
             {
-                button.CurrentState = true;
+                ToggleLayerToCapture(button.layerName, button.startState);
             }
             
             gameObject.SetActive(false);
