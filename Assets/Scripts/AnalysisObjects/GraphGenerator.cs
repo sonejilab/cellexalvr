@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AnalysisLogic;
 using Unity.Jobs;
 using Unity.Collections;
 using UnityEngine;
@@ -13,6 +14,7 @@ using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.Spatial;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine.Rendering;
 
 namespace CellexalVR.AnalysisObjects
@@ -25,6 +27,7 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
         public GameObject graphpointsPrefab;
         public GameObject graphPrefab;
+        public PointCloud pointCloudPrefab;
         public GameObject spatialSlicePrefab;
         public GameObject AxesPrefabColoured;
         public GameObject AxesPrefabUncoloured;

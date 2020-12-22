@@ -170,7 +170,7 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
+            if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal &&
                                                      !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
                                                      controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu))
                 return;

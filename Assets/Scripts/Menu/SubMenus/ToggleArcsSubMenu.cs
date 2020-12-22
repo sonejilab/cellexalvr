@@ -62,7 +62,7 @@ namespace CellexalVR.Menu.SubMenus
 
         private void Update()
         {
-            if (Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
+            if (Player.instance.rightHand != null && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 if (!IsInsideButton()) UndoSelectedNetwork();
             }
