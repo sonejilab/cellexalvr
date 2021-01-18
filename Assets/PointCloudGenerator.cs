@@ -1,17 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using AnalysisLogic;
+using CellexalVR;
+using CellexalVR.AnalysisObjects;
 // using CellexalVR.AnalysisLogic;
 // using CellexalVR.AnalysisObjects;
 // using CellexalVR.General;
 using Unity.Mathematics;
 using UnityEngine;
+using Unity.Entities;
+using Unity.Transforms;
 using Random = Unity.Mathematics.Random;
 
 namespace DefaultNamespace
 {
+    public struct Point : IComponentData
+    {
+        public int group;
+        public bool selected;
+        public int xindex;
+        public int yindex;
+    }
+    
     public class PointCloudGenerator : MonoBehaviour
     {
         public static PointCloudGenerator instance;
@@ -33,11 +46,13 @@ namespace DefaultNamespace
         private int graphNr;
         private Random random;
         private float spawnTimer;
-        private bool spawned;
+        private EntityManager entityManager;
 
         private void Awake()
         {
             instance = this;
+            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
         }
 
         public PointCloud CreateNewPointCloud()
@@ -98,6 +113,27 @@ namespace DefaultNamespace
             return scaledCoord;
         }
 
+        public void SpawnPoints(PointCloud pc, Graph g, bool spatial)
+        {
+            creatingGraph = true;
+            ScaleAllCoordinates();
+            pc.minCoordValues = minCoordValues;
+            pc.maxCoordValues = maxCoordValues;
+            pc.scaledOffset = scaledOffset;
+            pc.longestAxis = longestAxis;
+            graphNr++;
+            // foreach (KeyValuePair<string, float3> pointPair in points)
+            // {
+            //     ScaleCoordinate(pointPair.Key);
+            // }
+            
+            
+            // StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
+            StartCoroutine(pc.CreatePositionTextureMap(g.points.Values.ToList()));
+            // pc.gameObject.SetActive(false);
+            creatingGraph = false;
+        }
+        
         public void SpawnPoints(PointCloud pc, bool spatial)
         {
             creatingGraph = true;
@@ -109,11 +145,22 @@ namespace DefaultNamespace
             graphNr++;
             foreach (KeyValuePair<string, float3> pointPair in points)
             {
-                float3 scaledPos = ScaleCoordinate(pointPair.Key);
+                float3 pos = ScaleCoordinate(pointPair.Key);
+                // Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
+                // Transform parentTransform = pc.transform;
+                // float3 wPos = math.transform(parentTransform.localToWorldMatrix, pos);
+                // entityManager.SetComponentData(e, new Translation {Value = wPos});
+                // entityManager.AddComponent(e, typeof(Point));
+                // entityManager.SetComponentData(e, new Point
+                // {
+                //     group = 0,
+                //     selected = false
+                // });
             }
-
-            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList());
-            // pc.gameObject.SetActive(false);
+            
+            
+            StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
+            StartCoroutine(pc.CreateColorTextureMap());
             creatingGraph = false;
         }
 

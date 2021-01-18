@@ -50,7 +50,11 @@ namespace CellexalVR.Menu.SubMenus
         protected override void Start()
         {
             StartCoroutine(SetControllers());
-            attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
+            if (Player.instance.rightHand != null)
+            {
+                attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
+            }
+
             base.Start();
         }
 

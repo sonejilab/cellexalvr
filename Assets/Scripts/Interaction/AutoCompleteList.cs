@@ -39,7 +39,7 @@ namespace CellexalVR.Interaction
             namesOfThings = new List<Tuple<string, Definitions.Measurement>>();
             if (buildTree)
             {
-                CellexalEvents.GraphsLoaded.AddListener(Init);
+                // CellexalEvents.GraphsLoaded.AddListener(Init);
             }
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }

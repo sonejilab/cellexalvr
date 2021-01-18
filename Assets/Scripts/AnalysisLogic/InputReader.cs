@@ -135,8 +135,9 @@ namespace CellexalVR.AnalysisLogic
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
             string[] files = Directory.GetFiles(fullPath, "*.mds");
-            foreach (string mdsFile in files)
-            {
+            string mdsFile = files[0];
+            // foreach (string mdsFile in files)
+            // {
                 using (StreamReader streamReader = new StreamReader(mdsFile))
                 {
                     streamReader.ReadLine();
@@ -152,9 +153,10 @@ namespace CellexalVR.AnalysisLogic
                     }
                 }
                 pointCloudGenerator.SpawnPoints(pc, false);
-                pointCloudGenerator.ReadMetaData(pc, fullPath);
-                pointCloudGenerator.ColorPoints(pc);
-            }
+                // pointCloudGenerator.ReadMetaData(pc, fullPath);
+                // pointCloudGenerator.ColorPoints(pc);
+            // }
+            GC.Collect();
         }
 
         /// <summary>
@@ -236,7 +238,7 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            database.InitDatabase(fullPath + "\\database.sqlite");
+            // database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
 
@@ -252,7 +254,7 @@ namespace CellexalVR.AnalysisLogic
             mdsReader = gameObject.AddComponent<MDSReader>();
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
-            StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
+            // StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
 
             graphGenerator.isCreating = true;
             referenceManager.configManager.ReadConfigFiles(fullPath);

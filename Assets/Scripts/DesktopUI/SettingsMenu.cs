@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using System.IO;
+using Random = UnityEngine.Random;
 
 namespace CellexalVR.DesktopUI
 {
@@ -693,6 +695,7 @@ namespace CellexalVR.DesktopUI
             CellexalLog.LogBacklog();
             // terminate server session
             referenceManager.inputReader.QuitServer();
+            GC.Collect();
             // Application.Quit() does not work in the unity editor, only in standalone builds.
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;

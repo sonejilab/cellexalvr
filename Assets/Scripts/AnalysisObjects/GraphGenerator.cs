@@ -418,6 +418,9 @@ namespace CellexalVR.AnalysisObjects
 
             try
             {
+                // referenceManager.inputReader.pointCloudGenerator.maxCoordValues = newGraph.maxCoordValues;
+                // referenceManager.inputReader.pointCloudGenerator.minCoordValues = newGraph.minCoordValues;
+                // referenceManager.inputReader.pointCloudGenerator.SpawnPoints(newGraph.GetComponent<PointCloud>(), newGraph, false);
                 MakeMeshes(clusters, lodGroup: lodGroup, points: points, slice: slice);
             }
             catch (Exception e)
