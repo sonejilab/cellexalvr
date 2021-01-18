@@ -53,13 +53,19 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0.001
+      - m_Value: 0.005
         m_Name: Size
         m_Overridden: 1
+      - m_Value: 0
+        m_Name: SelectionRadius
+        m_Overridden: 0
     m_Vector2f:
       m_Array: []
     m_Vector3f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: SelectionPosition
+        m_Overridden: 0
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -72,6 +78,12 @@ VisualEffect:
       - m_Value: 500000
         m_Name: SpawnRate
         m_Overridden: 1
+      - m_Value: 10000000
+        m_Name: Lifetime
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: particleId
+        m_Overridden: 0
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
@@ -248,3 +260,5 @@ MonoBehaviour:
     y: 0
     z: 0
   pcID: 0
+  selectionSphere: {fileID: 5380066663937704635, guid: 3ff64b8dbbe0da64498bdc20e4ffebde,
+    type: 3}

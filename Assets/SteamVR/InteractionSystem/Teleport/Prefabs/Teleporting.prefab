@@ -1136,14 +1136,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   floorFixupMaximumTraceDistance: 1
-  areaVisibleMaterial: {fileID: 2100000, guid: 5f649883aab635740a41d91edf1080a4, type: 2}
-  areaLockedMaterial: {fileID: 2100000, guid: f6802bd638faedf4dbe4a57c1f222991, type: 2}
-  areaHighlightedMaterial: {fileID: 2100000, guid: a8cac5516702311429fe7478ff4d7d05,
+  areaVisibleMaterial: {fileID: 2100000, guid: 42e2d33cb8e988945826a8a0f5c0f543, type: 2}
+  areaLockedMaterial: {fileID: 2100000, guid: 0fe9e4228ebb3bc469ead815cd305d91, type: 2}
+  areaHighlightedMaterial: {fileID: 2100000, guid: 9001ec1e087534147bd9f18cbf931597,
     type: 2}
-  pointVisibleMaterial: {fileID: 2100000, guid: 510c6e0b8b5c948458c2b4bc3de5a637,
+  pointVisibleMaterial: {fileID: 2100000, guid: bda4e134e1985594ea5aa36ca5a739e2,
     type: 2}
-  pointLockedMaterial: {fileID: 2100000, guid: f855134cdd14ab54fa2838027b3eec2f, type: 2}
-  pointHighlightedMaterial: {fileID: 2100000, guid: f71819766ca687246a2150260bcfc1c5,
+  pointLockedMaterial: {fileID: 2100000, guid: c8665e1aa63020343bc825410291e43a, type: 2}
+  pointHighlightedMaterial: {fileID: 2100000, guid: 92c458d658d953f4588489c06de30b56,
     type: 2}
   destinationReticleTransform: {fileID: 450016}
   invalidReticleTransform: {fileID: 460596}
@@ -1192,7 +1192,7 @@ MonoBehaviour:
   arcDuration: 3
   segmentBreak: 0.025
   arcSpeed: 0.2
-  material: {fileID: 2100000, guid: 140bd0e59d9bee94f9f0284c9eef5b32, type: 2}
+  material: {fileID: 2100000, guid: da2a09186fc8dfa4c9f1c2933159f94f, type: 2}
   traceLayerMask: 0
 --- !u!114 &114000010264285480
 MonoBehaviour:
