@@ -41,6 +41,7 @@ namespace CellexalVR.Menu.Buttons
 
         private void Start()
         {
+            currentState = startState;
             UpdateColors();
         }
 
@@ -66,6 +67,7 @@ namespace CellexalVR.Menu.Buttons
                 slider.transform.localPosition = Vector3.Lerp(startPosition, targetPosition, step);
                 yield return null;
             }
+
             UpdateColors();
             ActionsAfterSliding();
         }

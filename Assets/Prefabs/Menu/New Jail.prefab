@@ -53,6 +53,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -64,6 +65,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -107,11 +109,10 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -277,10 +278,11 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 60b4d44b99973ea4e827c9c46613b856, type: 2}
+  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -288,6 +290,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -350,6 +353,10 @@ MonoBehaviour:
   rendererToHighlight: {fileID: 5248256038210808542}
   normalMaterial: {fileID: 2100000, guid: 7115980ddd5af5c43b9306acdb53a507, type: 2}
   highlightMaterial: {fileID: 2100000, guid: a0c88934fce781d48a8f4b0e151c7f9e, type: 2}
+  action:
+    actionPath: /actions/default/in/TriggerClick
+    needsReinit: 0
+  inputSource: 2
   controllerInside: 0
 --- !u!65 &8326848811694224900
 BoxCollider:
@@ -371,11 +378,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8326848811694224901}
     m_Modifications:
-    - target: {fileID: 8278229902550299503, guid: 6cb9be8f91597d8438cc040d7772d461,
-        type: 3}
-      propertyPath: m_Name
-      value: mockup_graph_2
-      objectReference: {fileID: 0}
     - target: {fileID: 4952121088169476476, guid: 6cb9be8f91597d8438cc040d7772d461,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -445,6 +447,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 9.5048
+      objectReference: {fileID: 0}
+    - target: {fileID: 8278229902550299503, guid: 6cb9be8f91597d8438cc040d7772d461,
+        type: 3}
+      propertyPath: m_Name
+      value: mockup_graph_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9be8f91597d8438cc040d7772d461, type: 3}

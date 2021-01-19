@@ -104,7 +104,7 @@ namespace CellexalVR.Menu
         {
             MenuActive = !MenuActive;
             menuCube.SetActive(!MenuActive);
-            referenceManager.teleportLaser.SetActive(!MenuActive);
+            Teleport.instance.gameObject.SetActive(!MenuActive);
             if (!MenuActive)
             {
                 menu.transform.parent = menuHolder.transform;

@@ -71,7 +71,7 @@ namespace CellexalVR.Interaction
                 return;
             }
 
-            bool correctModel = laser.enabled;
+            bool correctModel = laser != null && laser.enabled;
             if (correctModel)
             {
                 Raycast();

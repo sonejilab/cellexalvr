@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using Menu.Buttons.General;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Tools
 {
@@ -32,11 +33,11 @@ namespace CellexalVR.Tools
         private void Start()
         {
             layerButtons = GetComponentsInChildren<ScreenshotLayerToggleButton>();
-            foreach (ScreenshotLayerToggleButton button in layerButtons)
-            {
-                button.CurrentState = true;
-            }
-            
+            // foreach (ScreenshotLayerToggleButton button in layerButtons)
+            // {
+            //     button.CurrentState = true;
+            // }
+
             gameObject.SetActive(false);
         }
 
@@ -59,7 +60,7 @@ namespace CellexalVR.Tools
             snapTex.ReadPixels(snapShotCamera.pixelRect, 0, 0);
             snapTex.Apply();
             flash.enabled = false;
-            
+
 
             string screenshotImageDirectory = CellexalUser.UserSpecificFolder;
             if (!Directory.Exists(screenshotImageDirectory))
@@ -127,6 +128,18 @@ namespace CellexalVR.Tools
             {
                 string layerName = LayerMask.LayerToName(i);
                 ToggleLayerToCapture(layerName, toggle);
+            }
+        }
+
+        public void Toggle(bool toggle)
+        {
+            gameObject.SetActive(toggle);
+            if (toggle)
+            {
+                // Transform cameraPosition = Player.instance.headCollider.transform;
+                transform.localPosition = Player.instance.hmdTransform.position + Player.instance.hmdTransform.forward * 0.7f;
+                transform.LookAt(Player.instance.hmdTransform.position);
+                transform.Rotate(0, 180, 0);
             }
         }
 

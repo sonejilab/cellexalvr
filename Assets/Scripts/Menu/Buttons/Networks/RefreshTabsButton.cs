@@ -24,14 +24,14 @@ namespace CellexalVR.Menu.Buttons.Networks
 
         public override void Click()
         {
-            referenceManager.arcsSubMenu.RefreshTabs();
-            foreach (Renderer r in toggleArcsMenu.GetComponentsInChildren<Renderer>())
-                r.enabled = false;
-            foreach (Collider c in toggleArcsMenu.GetComponentsInChildren<Collider>())
-                c.enabled = false;
-
-            CellexalEvents.MenuClosed.Invoke();
-
+            // referenceManager.arcsSubMenu.RefreshTabs();
+            // foreach (Renderer r in toggleArcsMenu.GetComponentsInChildren<Renderer>())
+            //     r.enabled = false;
+            // foreach (Collider c in toggleArcsMenu.GetComponentsInChildren<Collider>())
+            //     c.enabled = false;
+            //
+            // CellexalEvents.MenuClosed.Invoke();
+            //
             arcsMenuButton.SetMenuActivated(true);
         }
 

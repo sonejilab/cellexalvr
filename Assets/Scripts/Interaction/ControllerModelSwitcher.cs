@@ -159,7 +159,7 @@ namespace CellexalVR.Interaction
         {
             if (CrossSceneInformation.Spectator)
                 return true;
-            return Player.instance != null && Player.instance.rightHand.GetComponentInChildren<SteamVR_RenderModel>() != null; //rightControllerBody != null && leftControllerBody != null;
+            return Player.instance.rightHand != null && Player.instance.rightHand.GetComponentInChildren<SteamVR_RenderModel>() != null; //rightControllerBody != null && leftControllerBody != null;
             //&& rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null && leftControllerBody.GetComponent<MeshFilter>() != null && leftControllerBody.GetComponent<Renderer>() != null;
         }
 
@@ -220,6 +220,7 @@ namespace CellexalVR.Interaction
                 case Model.TwoLasers:
                     //rightLaser.enabled = true;
                     laserPointerController.origin.localRotation = Quaternion.identity;
+                    referenceManager.teleportLaser.SetActive(false);
                     break;
 
                 case Model.Menu:
@@ -238,6 +239,7 @@ namespace CellexalVR.Interaction
                     selectionToolCollider.ChangeColor(true);
                     selectionToolCollider.ChangeColor(false); // force correct color and mesh activation
                     rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
+                    referenceManager.teleportLaser.SetActive(false);
                     break;
 
                 case Model.Minimizer:
@@ -263,6 +265,11 @@ namespace CellexalVR.Interaction
                 selectionToolCollider.SetSelectionToolEnabled(false);
             }
 
+            if (DesiredModel != Model.SelectionTool && DesiredModel != Model.TwoLasers)
+            {
+                referenceManager.teleportLaser.SetActive(true);
+            }
+            
             if (DesiredModel != Model.DeleteTool)
             {
                 deleteTool.SetActive(false);

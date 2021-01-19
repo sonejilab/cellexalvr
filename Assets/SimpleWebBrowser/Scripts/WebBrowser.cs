@@ -8,16 +8,16 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using Valve.VR;
 
 namespace SimpleWebBrowser
 {
-
-
-
-
     public class WebBrowser : MonoBehaviour
     {
-
+        public SteamVR_Action_Boolean clickAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+        public SteamVR_Action_Boolean scrollDownAction = SteamVR_Input.GetBooleanAction("DownClick");
+        public SteamVR_Action_Boolean scrollUpAction = SteamVR_Input.GetBooleanAction("UpClick");
+        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
         #region General
 
         [Header("General settings")] public int Width = 1024;
@@ -42,9 +42,6 @@ namespace SimpleWebBrowser
         //public List<GameObject> AdditionalBrowserObjects
 
         #endregion
-
-
-
         [Header("UI settings")]
         [SerializeField]
         public BrowserUI mainUIPanel;
@@ -79,14 +76,11 @@ namespace SimpleWebBrowser
         //status - threading
         private bool _setUrl = false;
         private string _setUrlString = "";
-
-        private SteamVR_TrackedObject rightController;
         private WebManager webManager;
-
 
         public ReferenceManager referenceManager;
         public GameObject browserPrefab;
-        public SteamVR_Controller.Device device;
+        // public SteamVR_Controller.Device device;
         private int layerMaskMenu;
         #region JS Query events
 
@@ -98,21 +92,10 @@ namespace SimpleWebBrowser
 
 
         private Material _mainMaterial;
-
-
-
-
-
         private BrowserEngine _mainEngine;
-
-
-
         private bool _focused = false;
-
-
         private int posX = 0;
         private int posY = 0;
-
 
         //why Unity does not store the links in package?
         void InitPrefabLinks()
@@ -182,8 +165,6 @@ namespace SimpleWebBrowser
                 Port = 8000 + r.Next(1000);
             }
 
-
-
             _mainEngine.InitPlugin(Width, Height, MemoryFile, Port, InitialURL, EnableWebRTC);
             //run initialization
             if (JSInitializationCode.Trim() != "")
@@ -195,8 +176,6 @@ namespace SimpleWebBrowser
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            rightController = referenceManager.rightController;
-            device = SteamVR_Controller.Input((int)rightController.index);
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
             if (MainCamera == null)
             {
@@ -208,14 +187,7 @@ namespace SimpleWebBrowser
             _mainMaterial = GetComponent<MeshRenderer>().material;
             _mainMaterial.SetTexture("_MainTex", _mainEngine.BrowserTexture);
             _mainMaterial.SetTextureScale("_MainTex", new Vector2(-1, 1));
-
-
             mainUIPanel.MainCanvas.worldCamera = MainCamera;
-
-
-
-
-
             // _mainInput = MainUrlInput.GetComponent<Input>();
             mainUIPanel.KeepUIVisible = KeepUIVisible;
             if (!KeepUIVisible)
@@ -461,13 +433,14 @@ namespace SimpleWebBrowser
         private Vector2 GetScreenCoords()
         {
             RaycastHit hit;
-            if (!Physics.Raycast(referenceManager.rightLaser.transform.position, referenceManager.rightLaser.transform.forward, out hit, 10f))
+            if (!Physics.Raycast(referenceManager.laserPointerController.rightLaser.transform.position,
+                referenceManager.laserPointerController.rightLaser.transform.forward, out hit, 10f))
                 return new Vector2(-1f, -1f);
 
+            // For desktop mouse interaction. 
             //if (!hit.collider)
             //{
             //    //MainCamera.ScreenPointToRay(Input.mousePosition), out hit))
-            //    print("no hit");
             //}
             Texture tex = _mainMaterial.mainTexture;
 
@@ -492,11 +465,21 @@ namespace SimpleWebBrowser
             _mainEngine.SendMouseEvent(msg);
         }
 
-        private void ProcessScrollInput(int px, int py)
+        private void ScrollDown()
         {
-            Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-            //float scroll = Input.GetAxis("Mouse ScrollWheel");
-            float scroll = touchpad.y * 0.01f;
+            Vector2 pixelUV = GetScreenCoords();
+            ProcessScrollInput((int)pixelUV.x, (int)pixelUV.y, -2.0f);
+        }
+
+        private void ScrollUp()
+        {
+            Vector2 pixelUV = GetScreenCoords();
+            ProcessScrollInput((int)pixelUV.x, (int)pixelUV.y, 2.0f);
+        }
+
+        private void ProcessScrollInput(int px, int py, float scrollDelta = 0.0f)
+        {
+            float scroll = scrollDelta * 0.01f;
             scroll = scroll * _mainEngine.BrowserTexture.height;
 
             int scInt = (int)scroll;
@@ -527,18 +510,27 @@ namespace SimpleWebBrowser
         #endregion
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            //print("update in web browser " + device.Get());
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (clickAction.GetStateDown(inputSource))
             {
                 OnTriggerPressed();
             }
 
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            if (clickAction.GetStateUp(inputSource))
             {
                 OnTriggerUp();
+            }
+
+            if (scrollDownAction.GetState(inputSource))
+            {
+                ScrollDown();
+                // ProcessScrollInput((int)pixelUV.x, (int)pixelUV.y);
+            }
+
+            if (scrollUpAction.GetState(inputSource))
+            {
+                ScrollUp();
             }
             // If sockets get disconnected or similar error we need to recreate object.
             if (webManager.isVisible)

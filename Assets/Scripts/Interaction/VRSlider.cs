@@ -52,6 +52,9 @@ namespace CellexalVR.Interaction
         public OnHandleGrabbedEvent OnHandleGrabbed = new OnHandleGrabbedEvent();
 
         private Vector3 handleStartPosition;
+        private Vector3 handleStartScale;
+        private Vector3 handleStartRotation;
+        private Transform handleParent;
         private float xMaxPos = 100;
         private float xMinPos = 0;
         private InteractableObjectBasic handleInteractable;
@@ -59,7 +62,10 @@ namespace CellexalVR.Interaction
         // Start is called before the first frame update
         private void Start()
         {
+            handleParent = handle.transform.parent;
             handleStartPosition = handle.transform.localPosition;
+            handleStartScale = handle.transform.localScale;
+            handleStartRotation = handle.transform.eulerAngles;
             float relativeVal = startValue / maxValue;
             float xValue = xMaxPos * relativeVal;
             handleStartPosition.x = xValue;
@@ -95,24 +101,20 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            float xValue = handle.transform.localPosition.x;
-
+            float xValue = handleParent.InverseTransformPoint(handle.transform.position).x;
             if (xValue >= 100)
             {
                 xValue = 100;
             }
-
             if (xValue <= 0)
             {
                 xValue = 0;
             }
-
             if (handleInteractable.isGrabbed)
             {
                 OnHandleGrabbed.Invoke(Value);
             }
-
-            handle.transform.localPosition = new Vector3(xValue, handleStartPosition.y, 0);
+            handle.transform.position = handleParent.TransformPoint(new Vector3(xValue, handleStartPosition.y, 0));
         }
 
         /// <summary>
@@ -121,19 +123,19 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void UpdateSliderValue()
         {
-            float xValue = handle.transform.localPosition.x;
+            float xValue = handleParent.InverseTransformPoint(handle.transform.position).x;
             if (xValue >= 100)
             {
                 xValue = 100;
             }
 
-            if (xValue <= 0)
+            if (xValue < 0)
             {
                 xValue = 0;
             }
 
-            handle.transform.localPosition = new Vector3(xValue, 5, 0);
-
+            handle.transform.position = handleParent.TransformPoint(new Vector3(xValue, 5, 0));
+            handle.transform.rotation = Quaternion.Euler(handleStartRotation);
             xValue /= xMaxPos;
             Value = minValue + xValue * (maxValue - minValue);
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
@@ -148,7 +150,7 @@ namespace CellexalVR.Interaction
         /// <param name="value"></param>
         public void UpdateSliderValue(float value)
         {
-            handle.transform.localPosition = new Vector3(value, 5, 0);
+            handle.transform.position = handleParent.TransformPoint(new Vector3(value, 5, 0));
             UpdateSliderValue();
         }
 
@@ -163,6 +165,8 @@ namespace CellexalVR.Interaction
         private void OnRelease(object sender, Hand hand)
         {
             OnHandleRelease.Invoke();
+            handle.transform.localRotation = Quaternion.Euler(-90, 0, 0);
+            handle.transform.localScale = handleStartScale;
         }
     }
 }

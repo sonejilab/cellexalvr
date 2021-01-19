@@ -45,7 +45,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.tag.Equals("Player")) return; //== "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            if (!other.tag.Equals("Controller")) return; //== "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             controllersInside++;
             desiredState = true;
             if (!coroutineRunning && !lidOpen)
@@ -56,7 +56,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (!other.tag.Equals("Player")) return; //(other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            if (!other.tag.Equals("Controller")) return; //(other.gameObject.name == "ControllerCollider(Clone)" /*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
             controllersInside--;
             if (controllersInside == 0)
             {

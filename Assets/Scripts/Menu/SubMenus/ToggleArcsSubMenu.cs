@@ -50,7 +50,7 @@ namespace CellexalVR.Menu.SubMenus
         protected override void Start()
         {
             StartCoroutine(SetControllers());
-            attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
+            // attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
             base.Start();
         }
 
@@ -62,6 +62,7 @@ namespace CellexalVR.Menu.SubMenus
 
         private void Update()
         {
+            if (Player.instance.rightHand == null) return;
             if (Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 if (!IsInsideButton()) UndoSelectedNetwork();

@@ -718,6 +718,7 @@ namespace CellexalVR.AnalysisObjects
             NetworkCenterInteract interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
             interactableObject.referenceManager = referenceManager;
             Interactable interactable = gameObject.GetComponent<Interactable>();
+            interactable.highlightOnHover = false;
             interactable.handFollowTransform = false;
 
             // save the old variables

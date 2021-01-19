@@ -254,10 +254,11 @@ MonoBehaviour:
     type: 3}
   meshToUse: {fileID: 0}
   isCreating: 0
-  addingToExisting: 0
+  nrOfLODGroups: 1
   geneExpressionColors: []
   graphPointColors: {fileID: 0}
   graphCount: 0
+  newGraph: {fileID: 0}
 --- !u!1 &1900129272846280
 GameObject:
   m_ObjectHideFlags: 0

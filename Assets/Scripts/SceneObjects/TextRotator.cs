@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 
 namespace CellexalVR.SceneObjects
@@ -15,7 +16,7 @@ namespace CellexalVR.SceneObjects
 
         void Start()
         {
-            CameraToLookAt = GameObject.Find("Camera (eye)").transform;
+            CameraToLookAt = Player.instance.hmdTransform; //GameObject.Find("Camera (eye)").transform;
         }
 
         void Update()
