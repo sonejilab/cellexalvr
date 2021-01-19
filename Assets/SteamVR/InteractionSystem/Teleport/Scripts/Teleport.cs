@@ -170,7 +170,7 @@ namespace Valve.VR.InteractionSystem
 			float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
 			invalidReticleMinScale *= invalidReticleStartingScale;
 			invalidReticleMaxScale *= invalidReticleStartingScale;
-		}
+        }
 
 
 		//-------------------------------------------------
