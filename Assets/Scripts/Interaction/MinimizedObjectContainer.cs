@@ -136,49 +136,7 @@ namespace CellexalVR.Interaction
                 controllerInside = false;
                 rendererToHighlight.sharedMaterial = normalMaterial;
                 frameCount = 0;
-                // Transform transform1 = transform;
-                // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
-                //     transform1.rotation, layerMask);
-                //
-                // if (collidesWith.Length == 0)
-                // {
-                //     controllerInside = false;
-                //     return;
-                // }
-                //
-                // foreach (Collider col in collidesWith)
-                // {
-                //     if (col.gameObject.name == laserColliderName)
-                //     {
-                //         controllerInside = true;
-                //         return;
-                //     }
-                // }
-
-                // GetComponent<Renderer>().material.color = orgColor;
             }
-
-            //private void OnDrawGizmos()
-            //{
-            //    Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
-            //    Gizmos.DrawSphere(transform.position, (transform.localScale / 3).x);
-            //}
-
-
-            // private void OnPointerIn(object sender, PointerEventArgs e)
-            // {
-            //     if (e.target != transform) return;
-            //     controllerInside = true;
-            //     rendererToHighlight.sharedMaterial = highlightMaterial;
-            //     // Handler.UpdateHighlight(this);
-            // }
-
-            // private void OnPointerOut(object sender, PointerEventArgs e)
-            // {
-            //     if (e.target != transform) return;
-            //     controllerInside = false;
-            //     rendererToHighlight.sharedMaterial = normalMaterial;
-            // }
         }
     }
 }

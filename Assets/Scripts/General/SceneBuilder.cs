@@ -265,8 +265,8 @@ namespace CellexalVR.General
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
             PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
-            Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SteamVR/InteractionSystem/Teleport/Prefabs/Teleporting.prefab");
-            SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SnapShotCamera.prefab");
+            Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Teleport.prefab");
+            SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SnapShotCam.prefab");
         }
 
         [Obsolete]

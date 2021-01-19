@@ -137,7 +137,7 @@ namespace CellexalVR.Interaction
             else if (hit.transform.GetComponent<NetworkCenter>())
             {
                 NetworkHandler handler = hit.transform.GetComponent<NetworkCenter>().Handler;
-                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.LookAt(Player.instance.hmdTransform);
                 hit.transform.Rotate(0, 0, 180);
                 referenceManager.multiuserMessageSender.SendMessageMoveNetworkCenter(handler.gameObject.name, hit.transform.gameObject.name,
                     hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
@@ -155,7 +155,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         private void Push()
         {
-            raycastingSource = this.transform;
+            raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out RaycastHit hit, maxDist, layerMask);
             if (!hit.collider) return;
             if (hit.transform.gameObject.name.Contains("Slice"))
@@ -179,7 +179,7 @@ namespace CellexalVR.Interaction
             else if (hit.transform.GetComponent<NetworkCenter>())
             {
                 NetworkHandler handler = hit.transform.GetComponent<NetworkCenter>().Handler;
-                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.LookAt(Player.instance.hmdTransform);
                 hit.transform.Rotate(0, 0, 180);
                 referenceManager.multiuserMessageSender.SendMessageMoveNetworkCenter(handler.gameObject.name, hit.transform.gameObject.name,
                     hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
@@ -192,7 +192,7 @@ namespace CellexalVR.Interaction
             }
             else if (hit.transform.GetComponent<Heatmap>())
             {
-                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.LookAt(Player.instance.hmdTransform);
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }

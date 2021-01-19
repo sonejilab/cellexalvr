@@ -10,6 +10,7 @@ using Patagames.Pdf;
 using Patagames.Pdf.Enums;
 using Patagames.Pdf.Net;
 using TMPro;
+using Valve.VR.InteractionSystem;
 
 
 namespace CellexalVR.PDFViewer
@@ -20,6 +21,7 @@ namespace CellexalVR.PDFViewer
     /// </summary>
     public class PDFMesh : MonoBehaviour
     {
+        public ReferenceManager referenceManager;
         public GameObject meshObjPrefab;
         public Transform pageParent;
         public TextMeshPro nrOfPagesText;
@@ -47,7 +49,6 @@ namespace CellexalVR.PDFViewer
         private CurvedMeshGenerator curvedMeshGenerator;
         private Vector3 settingsHandlerStartScale;
         private MeshDeformer pageMesh;
-        private ReferenceManager referenceManager;
 
         private void OnValidate()
         {
@@ -308,9 +309,9 @@ namespace CellexalVR.PDFViewer
                 pageParent.transform.localPosition = new Vector3(0, 0.5f, 0);
                 settingsHandlerPocket.transform.parent = transform;
 
-                Transform cameraTransform = referenceManager.headset.transform;
+                Transform cameraTransform = Player.instance.hmdTransform;
                 settingsHandlerCurved.transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
-                settingsHandlerCurved.transform.LookAt(referenceManager.headset.transform.position);
+                settingsHandlerCurved.transform.LookAt(Player.instance.hmdTransform.position);
                 settingsHandlerCurved.transform.Rotate(0, 180, 0);
             }
         }

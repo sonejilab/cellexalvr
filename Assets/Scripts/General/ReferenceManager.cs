@@ -193,7 +193,7 @@ namespace CellexalVR.General
             //TextMeshProUGUI FarGroupInfo;
             h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
 
-            headset = player.hmdTransform.gameObject; 
+            headset = Player.instance.hmdTransform.gameObject; 
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
             // rightLaser = rightController.GetComponent<SteamVR_LaserPointer>();
             // leftLaser = leftController.GetComponent<SteamVR_LaserPointer>();
@@ -206,7 +206,7 @@ namespace CellexalVR.General
             drawTool = rightController.GetComponentInChildren<DrawTool>();
             webBrowser = GameObject.Find("WebBrowser");
             screenshotCamera = GameObject.Find("SnapShotCam").GetComponent<CaptureScreenshot>();
-            teleportLaser = GameObject.Find("Teleporting");
+            teleportLaser = GameObject.Find("Teleport");
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");
             frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");

@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.Extras;
 using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Interaction
@@ -19,6 +20,7 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
         private int layerMask;
         private float clickStartTime;
+        private SteamVR_LaserPointer laser;
 
         private void Start()
         {
@@ -29,6 +31,8 @@ namespace CellexalVR.Interaction
                 legendManager = gameObject.GetComponent<LegendManager>();
             }
             layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
+            rightHand = Player.instance.rightHand;
+            laser = rightHand.GetComponent<SteamVR_LaserPointer>();
 
         }
 
@@ -36,7 +40,7 @@ namespace CellexalVR.Interaction
         {
             if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial) || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return; // not currently using legends in these game modes
             if (Player.instance.rightHand == null || Player.instance.leftHand == null) return; // hands are not initiated. can not raycast
-            bool correctModel = referenceManager.laserPointerController.rightLaser.active;
+            bool correctModel = laser != null && laser.enabled;
             if (correctModel)
             {
                 Raycast();
@@ -45,10 +49,10 @@ namespace CellexalVR.Interaction
 
         private void Raycast()
         {
-            raycastingSource = referenceManager.laserPointerController.rightLaser.transform;
+            raycastingSource = laser.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
                 out RaycastHit hit, 100f, layerMask);
-            if (hit.collider && hit.collider.gameObject == legendManager.gameObject)
+            if (hit.collider && hit.transform == transform)
             {
                 if (legendManager.desiredLegend == LegendManager.Legend.GeneExpressionLegend)
                 {
@@ -95,6 +99,7 @@ namespace CellexalVR.Interaction
 
         private void HandleHitGeneExpressionHistogram(Vector3 hit)
         {
+            print("hit legend");
             int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
             int maxX = savedGeneExpressionHistogramHitX != -1 ? savedGeneExpressionHistogramHitX : hitIndex;
             legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, maxX);

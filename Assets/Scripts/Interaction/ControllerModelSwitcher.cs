@@ -106,6 +106,8 @@ namespace CellexalVR.Interaction
             {
                 TrySetMeshes();
             }
+            referenceManager.teleportLaser.GetComponentInChildren<Teleport>(true).gameObject.SetActive(true);;
+            referenceManager.floor.GetComponentInChildren<TeleportArea>(true).gameObject.SetActive(true);
         }
 
         public void TrySetMeshes()
