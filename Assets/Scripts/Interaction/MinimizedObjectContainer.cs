@@ -22,6 +22,7 @@ namespace CellexalVR.Interaction
 
         private MinimizeTool minimizeTool;
         private Color orgColor;
+        private string laserColliderName = "Pointer";
         public GameObject MinimizedObject { get; set; }
         public MinimizedObjectHandler Handler { get; set; }
 
@@ -36,24 +37,26 @@ namespace CellexalVR.Interaction
         /// Has a range of [0, 4]
         /// </summary>
         public int SpaceY { get; set; }
+
         public bool controllerInside = false;
 
         private int frameCount;
         private int layerMask;
 
+        private Transform raycastingSource;
 
         private void Start()
         {
+            raycastingSource = this.Handler.referenceManager.laserPointerController.rightLaser.transform;
             if (!CrossSceneInformation.Spectator)
             {
                 minimizeTool = Handler.referenceManager.minimizeTool;
             }
-            
-            Handler.referenceManager.laserPointerController.rightLaser.PointerIn += OnPointerIn;
-            Handler.referenceManager.laserPointerController.rightLaser.PointerOut += OnPointerOut;
+
+            // Handler.referenceManager.laserPointerController.rightLaser.PointerIn += OnPointerIn;
+            // Handler.referenceManager.laserPointerController.rightLaser.PointerOut += OnPointerOut;
 
             name = "Jail_" + MinimizedObject.name;
-            //orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
             layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
         }
@@ -64,6 +67,8 @@ namespace CellexalVR.Interaction
             {
                 return;
             }
+
+            CheckForHit();
 
             if (controllerInside && action.GetStateDown(inputSource))
             {
@@ -109,54 +114,71 @@ namespace CellexalVR.Interaction
                 Handler.ContainerRemoved(this);
                 Destroy(gameObject);
             }
+        }
 
-            //frameCount++;
-            // When laser is deactivated on trigger exit is not called so we check if the box is colliding with the laser.
-            // To deactivate button again check every 10th frame if laser pointer collider is colliding.
-            //if (frameCount % 10 != 0) return;
-            // frameCount = 0;
-            // Transform transform1 = transform;
-            // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
-            //     transform1.rotation, layerMask);
-            //
-            // if (collidesWith.Length == 0)
+        private void CheckForHit()
+        {
+            frameCount++;
+            if (frameCount % 10 == 0)
+            {
+                controllerInside = false;
+                RaycastHit hit;
+                Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
+                    out hit, 10, ~layerMask);
+                if (hit.collider && hit.collider.transform == transform && this.Handler.referenceManager.laserPointerController.rightLaser.enabled)
+                {
+                    frameCount = 0;
+                    controllerInside = true;
+                    rendererToHighlight.sharedMaterial = highlightMaterial;
+                    return;
+                }
+
+                controllerInside = false;
+                rendererToHighlight.sharedMaterial = normalMaterial;
+                frameCount = 0;
+                // Transform transform1 = transform;
+                // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
+                //     transform1.rotation, layerMask);
+                //
+                // if (collidesWith.Length == 0)
+                // {
+                //     controllerInside = false;
+                //     return;
+                // }
+                //
+                // foreach (Collider col in collidesWith)
+                // {
+                //     if (col.gameObject.name == laserColliderName)
+                //     {
+                //         controllerInside = true;
+                //         return;
+                //     }
+                // }
+
+                // GetComponent<Renderer>().material.color = orgColor;
+            }
+
+            //private void OnDrawGizmos()
+            //{
+            //    Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
+            //    Gizmos.DrawSphere(transform.position, (transform.localScale / 3).x);
+            //}
+
+
+            // private void OnPointerIn(object sender, PointerEventArgs e)
             // {
+            //     if (e.target != transform) return;
+            //     controllerInside = true;
+            //     rendererToHighlight.sharedMaterial = highlightMaterial;
+            //     // Handler.UpdateHighlight(this);
+            // }
+
+            // private void OnPointerOut(object sender, PointerEventArgs e)
+            // {
+            //     if (e.target != transform) return;
             //     controllerInside = false;
-            //     return;
+            //     rendererToHighlight.sharedMaterial = normalMaterial;
             // }
-            //
-            // foreach (Collider col in collidesWith)
-            // {
-            //     if (col.gameObject.name == laserColliderName)
-            //     {
-            //         controllerInside = true;
-            //         return;
-            //     }
-            // }
-            // controllerInside = false;
-            // GetComponent<Renderer>().material.color = orgColor;
-        }
-
-        //private void OnDrawGizmos()
-        //{
-        //    Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider>().size / 2);
-        //    Gizmos.DrawSphere(transform.position, (transform.localScale / 3).x);
-        //}
-
-
-        private void OnPointerIn(object sender, PointerEventArgs e)
-        {
-            if (e.target != transform) return;
-            controllerInside = true;
-            rendererToHighlight.sharedMaterial = highlightMaterial;
-            // Handler.UpdateHighlight(this);
-        }
-
-        private void OnPointerOut(object sender, PointerEventArgs e)
-        {
-            if (e.target != transform) return;
-            controllerInside = false;
-            rendererToHighlight.sharedMaterial = normalMaterial;
         }
     }
 }
