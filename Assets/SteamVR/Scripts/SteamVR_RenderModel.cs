@@ -8,9 +8,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using Valve.VR;
-using Application = UnityEngine.Application;
 
 namespace Valve.VR
 {

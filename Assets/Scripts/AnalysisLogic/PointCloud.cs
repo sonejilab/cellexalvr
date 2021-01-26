@@ -58,7 +58,7 @@ namespace AnalysisLogic
                 vfx.SetTexture("ColorMapTex", colorMap);
             }
             
-            print(vfx.aliveParticleCount);
+            // print(vfx.aliveParticleCount);
 
             vfx.SetVector3("SelectionPosition", selectionSphere.position);
             vfx.SetFloat("SelectionRadius", selectionSphere.localScale.x / 2f);

@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: CombinedGraphpoint_Material
   m_Shader: {fileID: 4800000, guid: f5514974f8ca64745b506f67e15494a1, type: 3}
-  m_ShaderKeywords: _CLIPPING_SHADOWS _GLOSSYREFLECTIONS_OFF _NORMALMAP _SPECULARHIGHLIGHTS_OFF
-    _TESTCLIPPING_ON
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _CLIPPING_SHADOWS _GLOSSYREFLECTIONS_OFF
+    _NORMALMAP _SPECULARHIGHLIGHTS_OFF _TESTCLIPPING_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0

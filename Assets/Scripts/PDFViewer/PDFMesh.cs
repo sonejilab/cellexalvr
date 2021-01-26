@@ -6,9 +6,9 @@ using System.IO;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using UnityEngine;
-using Patagames.Pdf;
-using Patagames.Pdf.Enums;
-using Patagames.Pdf.Net;
+// using Patagames.Pdf;
+// using Patagames.Pdf.Enums;
+// using Patagames.Pdf.Net;
 using TMPro;
 
 
@@ -111,23 +111,23 @@ namespace CellexalVR.PDFViewer
             Directory.CreateDirectory(folder);
             string pdfPath = files[0];
             int i = 0;
-            using (PdfDocument doc = PdfDocument.Load(pdfPath))
-            {
-                foreach (PdfPage page in doc.Pages)
-                {
-                    int width = (int) (page.Width / 72.0f * 96);
-                    int height = (int) (page.Height / 72.0f * 96);
-                    using (PdfBitmap bitmap = new PdfBitmap(width, height, true))
-                    {
-                        bitmap.FillRect(0, 0, width, height, FS_COLOR.White);
-                        page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, RenderFlags.FPDF_LCD_TEXT);
-                        string savePath = $"{folder}\\page{++i}.png";
-                        bitmap.Image.Save(savePath, ImageFormat.Png);
-                    }
-
-                    totalNrOfpages++;
-                }
-            }
+            // using (PdfDocument doc = PdfDocument.Load(pdfPath))
+            // {
+            //     foreach (PdfPage page in doc.Pages)
+            //     {
+            //         int width = (int) (page.Width / 72.0f * 96);
+            //         int height = (int) (page.Height / 72.0f * 96);
+            //         using (PdfBitmap bitmap = new PdfBitmap(width, height, true))
+            //         {
+            //             bitmap.FillRect(0, 0, width, height, FS_COLOR.White);
+            //             page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, RenderFlags.FPDF_LCD_TEXT);
+            //             string savePath = $"{folder}\\page{++i}.png";
+            //             bitmap.Image.Save(savePath, ImageFormat.Png);
+            //         }
+            //
+            //         totalNrOfpages++;
+            //     }
+            // }
 
             CellexalEvents.PDFArticleRead.Invoke();
         }

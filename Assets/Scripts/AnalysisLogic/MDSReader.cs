@@ -73,8 +73,8 @@ namespace CellexalVR.AnalysisLogic
                 // }
 
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
-                PointCloud pc = combGraph.GetComponent<PointCloud>();
-                pc.Initialize(referenceManager.graphManager.Graphs.Count);
+                // PointCloud pc = combGraph.GetComponent<PointCloud>();
+                // pc.Initialize(referenceManager.graphManager.Graphs.Count);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
                 // good programming habits have left us with a nice mix of forward and backward slashes

@@ -1126,7 +1126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportAction:
-    actionPath: /actions/default/in/Teleport
+    actionPath: /actions/default/in/TouchpadPress
     needsReinit: 0
   touchPadPos: {x: 0, y: 0}
   traceLayerMask:
@@ -1136,7 +1136,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   floorFixupMaximumTraceDistance: 1
-  areaVisibleMaterial: {fileID: 2100000, guid: 42e2d33cb8e988945826a8a0f5c0f543, type: 2}
+  areaVisibleMaterial: {fileID: 2100000, guid: d2bbbd01c5b7a6b4bb5a1316f21fc1ff, type: 2}
   areaLockedMaterial: {fileID: 2100000, guid: 0fe9e4228ebb3bc469ead815cd305d91, type: 2}
   areaHighlightedMaterial: {fileID: 2100000, guid: 9001ec1e087534147bd9f18cbf931597,
     type: 2}

@@ -37,8 +37,8 @@ namespace Valve.VR.InteractionSystem
         public const AttachmentFlags defaultAttachmentFlags = AttachmentFlags.ParentToHand |
                                                               AttachmentFlags.DetachOthers |
                                                               AttachmentFlags.DetachFromOtherHand |
-                                                              AttachmentFlags.TurnOnKinematic;
-                                                              // AttachmentFlags.SnapOnAttach;
+                                                              AttachmentFlags.TurnOnKinematic |
+                                                              AttachmentFlags.SnapOnAttach;
 
         public Hand otherHand;
         public SteamVR_Input_Sources handType;
@@ -422,9 +422,7 @@ namespace Valve.VR.InteractionSystem
                     HideSkeleton();
 
                 if (attachedObject.interactable.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
-                {
                     HideController();
-                }
 
                 if (attachedObject.interactable.handAnimationOnPickup != 0)
                     SetAnimationState(attachedObject.interactable.handAnimationOnPickup);

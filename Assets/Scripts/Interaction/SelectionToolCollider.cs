@@ -15,6 +15,7 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class SelectionToolCollider : MonoBehaviour
     {
+        public static SelectionToolCollider instance;
         public SteamVR_Action_Boolean activateAction = SteamVR_Input.GetBooleanAction("TriggerClick");
         public SteamVR_Action_Boolean touchpadPressAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
         public Vector2 touchpadPosition;
@@ -27,6 +28,7 @@ namespace CellexalVR.Interaction
         public Collider[] selectionToolColliders;
         public Color[] Colors;
         public bool hapticFeedbackThisFrame = true;
+        public bool selActive = false;
 
         private int currentMeshIndex;
         private int tempColorIndex;
@@ -120,7 +122,6 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
         private MultiuserMessageSender multiuserMessageSender;
-        private bool selActive = false;
 
         private void OnValidate()
         {
@@ -132,6 +133,7 @@ namespace CellexalVR.Interaction
 
         private void Awake()
         {
+            instance = this;
             graphManager = referenceManager.graphManager;
             SetSelectionToolEnabled(false);
 

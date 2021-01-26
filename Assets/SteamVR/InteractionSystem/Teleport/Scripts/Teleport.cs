@@ -146,7 +146,7 @@ namespace Valve.VR.InteractionSystem
 		void Awake()
         {
             _instance = this;
-			touchPadPos = SteamVR_Input.GetVector2("TouchPadPosition", SteamVR_Input_Sources.Any);
+			touchPadPos = SteamVR_Input.GetVector2("TouchPadPosition", SteamVR_Input_Sources.LeftHand);
 			chaperoneInfoInitializedAction = ChaperoneInfo.InitializedAction( OnChaperoneInfoInitialized );
 
 			pointerLineRenderer = GetComponentInChildren<LineRenderer>();
@@ -170,7 +170,7 @@ namespace Valve.VR.InteractionSystem
 			float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
 			invalidReticleMinScale *= invalidReticleStartingScale;
 			invalidReticleMaxScale *= invalidReticleStartingScale;
-		}
+        }
 
 
 		//-------------------------------------------------
@@ -1036,6 +1036,10 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		public bool IsEligibleForTeleport( Hand hand )
 		{
+			if (hand.handType != SteamVR_Input_Sources.LeftHand)
+			{
+				return false;
+			}
 			if ( hand == null )
 			{
 				return false;
@@ -1121,7 +1125,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
                 {
-                    return teleportAction.GetState(hand.handType); // && SteamVR_Input.GetVector2("TouchPadPosition", hand.handType).y < -0.5f;
+                    return teleportAction.GetState(hand.handType) && SteamVR_Input.GetVector2("TouchPadPosition", hand.handType).y < -0.5f;
 
 				}
 			}
@@ -1141,9 +1145,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
                 {
-                    return teleportAction.GetStateDown(hand.handType); // && SteamVR_Input.GetVector2("TouchPadPosition", hand.handType).y < -0.5f;
-
-                    //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
+                    return teleportAction.GetStateDown(hand.handType) && SteamVR_Input.GetVector2("TouchPadPosition", hand.handType).y < -0.5f;
 				}
 			}
 

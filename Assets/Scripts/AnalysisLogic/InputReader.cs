@@ -111,7 +111,7 @@ namespace CellexalVR.AnalysisLogic
         public void ReadBigFolderConsole(string path)
         {
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
-            ReadBigFolder(path);
+            StartCoroutine(ReadBigFolder(path));
             // ReadFolder(path);
         }
 
@@ -123,13 +123,14 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        private void ReadBigFolder(string path)
+        private IEnumerator ReadBigFolder(string path)
         {
             if (!referenceManager.loaderController.loaderMovedDown)
             {
                 referenceManager.loaderController.loaderMovedDown = true;
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
+
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             PointCloud pc = pointCloudGenerator.CreateNewPointCloud();
             string workingDirectory = Directory.GetCurrentDirectory();
@@ -138,23 +139,30 @@ namespace CellexalVR.AnalysisLogic
             string mdsFile = files[0];
             // foreach (string mdsFile in files)
             // {
-                using (StreamReader streamReader = new StreamReader(mdsFile))
+            float x;
+            float y;
+            float z;
+            using (StreamReader streamReader = new StreamReader(mdsFile))
+            {
+                streamReader.ReadLine();
+
+                int i = 0;
+                while (!streamReader.EndOfStream)
                 {
-                    streamReader.ReadLine();
-                
-                    while (!streamReader.EndOfStream)
-                    {
-                        string[] words = streamReader.ReadLine().Split(separators);
-                        float x = (float.Parse(words[1])); // / 30.0f) + 1.5f;
-                        float y = (float.Parse(words[2])); // / 30.0f) + 1;
-                        float z = float.Parse(words[3]); // / 30.0f;
-                        Cell cell = cellManager.AddCell(words[0]);
-                        pointCloudGenerator.AddGraphPoint(cell.Label, x, y, z);
-                    }
+                    if (i % 10000 == 0) yield return null;
+                    string[] words = streamReader.ReadLine().Split(separators);
+                    x = (float.Parse(words[1])); // / 30.0f) + 1.5f;
+                    y = (float.Parse(words[2])); // / 30.0f) + 1;
+                    z = float.Parse(words[3]); // / 30.0f;
+                    // Cell cell = cellManager.AddCell(words[0]);
+                    pointCloudGenerator.AddGraphPoint(words[0], x, y, z);
+                    i++;
                 }
-                pointCloudGenerator.SpawnPoints(pc, false);
-                // pointCloudGenerator.ReadMetaData(pc, fullPath);
-                // pointCloudGenerator.ColorPoints(pc);
+            }
+
+            pointCloudGenerator.SpawnPoints(pc, false);
+            // pointCloudGenerator.ReadMetaData(pc, fullPath);
+            // pointCloudGenerator.ColorPoints(pc);
             // }
             GC.Collect();
         }
@@ -238,7 +246,7 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            // database.InitDatabase(fullPath + "\\database.sqlite");
+            database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
 
@@ -254,7 +262,7 @@ namespace CellexalVR.AnalysisLogic
             mdsReader = gameObject.AddComponent<MDSReader>();
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
-            // StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
+            StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
 
             graphGenerator.isCreating = true;
             referenceManager.configManager.ReadConfigFiles(fullPath);

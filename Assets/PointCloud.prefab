@@ -75,7 +75,7 @@ VisualEffect:
       - m_Value: 500000
         m_Name: NrOfParticles
         m_Overridden: 1
-      - m_Value: 500000
+      - m_Value: 100000
         m_Name: SpawnRate
         m_Overridden: 1
       - m_Value: 10000000
@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionTextureMap: {fileID: 0}
+  colorMap: {fileID: 0}
   minCoordValues:
     x: 0
     y: 0

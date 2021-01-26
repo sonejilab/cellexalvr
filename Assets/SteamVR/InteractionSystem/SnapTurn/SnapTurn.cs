@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Valve Corporation, All rights reserved. ======================================================================================================
 
 
+
 using UnityEngine;
 using System.Collections;
 
@@ -63,17 +64,15 @@ namespace Valve.VR.InteractionSystem
 
                 // only allow snap turning when not holding something
 
-                bool rightHandValid = (player.rightHand != null
-                                       && player.rightHand.currentAttachedObject != null
-                                       && player.rightHand.currentAttachedTeleportManager != null
-                                       && player.rightHand.currentAttachedTeleportManager.teleportAllowed)
-                                      || player.rightHand.currentAttachedObject == null;
+                bool rightHandValid = player.rightHand.currentAttachedObject == null ||
+                    (player.rightHand.currentAttachedObject != null
+                    && player.rightHand.currentAttachedTeleportManager != null
+                    && player.rightHand.currentAttachedTeleportManager.teleportAllowed);
 
-                bool leftHandValid = (player.leftHand != null
-                                      && player.leftHand.currentAttachedObject != null
-                                      && player.leftHand.currentAttachedTeleportManager != null
-                                      && player.leftHand.currentAttachedTeleportManager.teleportAllowed)
-                                     || player.leftHand.currentAttachedObject == null;
+                bool leftHandValid = player.leftHand.currentAttachedObject == null ||
+                    (player.leftHand.currentAttachedObject != null
+                    && player.leftHand.currentAttachedTeleportManager != null
+                    && player.leftHand.currentAttachedTeleportManager.teleportAllowed);
 
 
                 bool leftHandTurnLeft = snapLeftAction.GetStateDown(SteamVR_Input_Sources.LeftHand) && leftHandValid;
@@ -95,7 +94,6 @@ namespace Valve.VR.InteractionSystem
 
 
         private Coroutine rotateCoroutine;
-
         public void RotatePlayer(float angle)
         {
             if (rotateCoroutine != null)
@@ -151,9 +149,7 @@ namespace Valve.VR.InteractionSystem
             {
                 yield return null;
                 UpdateOrientation(fx);
-            }
-
-            ;
+            };
 
             fx.SetActive(false);
             canRotate = true;

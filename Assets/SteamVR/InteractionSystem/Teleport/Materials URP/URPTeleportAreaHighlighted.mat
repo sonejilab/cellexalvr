@@ -120,7 +120,7 @@ Material:
     - g_flReflectanceMin: 0
     - g_flReflectanceScale: 1
     m_Colors:
-    - _BaseColor: {r: 0.18325105, g: 0.7196769, b: 0.743, a: 0.61960787}
+    - _BaseColor: {r: 0.18325102, g: 0.7196769, b: 0.743, a: 0.015686275}
     - _BaseColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 0.18325105, g: 0.7196769, b: 0.743, a: 0.61960787}
