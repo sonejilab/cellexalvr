@@ -135,7 +135,7 @@ namespace CellexalVR.Interaction
         {
             instance = this;
             graphManager = referenceManager.graphManager;
-            SetSelectionToolEnabled(false);
+            // SetSelectionToolEnabled(false);
 
             if (CellexalConfig.Config != null)
             {
