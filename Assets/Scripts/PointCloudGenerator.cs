@@ -13,6 +13,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine.VFX;
 using Random = Unity.Mathematics.Random;
 
 namespace DefaultNamespace
@@ -23,8 +24,9 @@ namespace DefaultNamespace
         public bool selected;
         public int xindex;
         public int yindex;
+        public bool rayCast;
     }
-    
+
     public class PointCloudGenerator : MonoBehaviour
     {
         public static PointCloudGenerator instance;
@@ -36,6 +38,9 @@ namespace DefaultNamespace
         public float3 minCoordValues;
         public float3 maxCoordValues;
         public float3 longestAxis;
+        public Texture2D colorMap;
+        public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
+        public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
 
         public float3 scaledOffset;
         // public List<string> cells = new List<string>();
@@ -47,12 +52,12 @@ namespace DefaultNamespace
         private Random random;
         private float spawnTimer;
         private EntityManager entityManager;
+        private List<PointCloud> pointClouds = new List<PointCloud>();
 
         private void Awake()
         {
             instance = this;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-
         }
 
         public PointCloud CreateNewPointCloud()
@@ -113,27 +118,6 @@ namespace DefaultNamespace
             return scaledCoord;
         }
 
-        public void SpawnPoints(PointCloud pc, Graph g, bool spatial)
-        {
-            creatingGraph = true;
-            ScaleAllCoordinates();
-            pc.minCoordValues = minCoordValues;
-            pc.maxCoordValues = maxCoordValues;
-            pc.scaledOffset = scaledOffset;
-            pc.longestAxis = longestAxis;
-            graphNr++;
-            // foreach (KeyValuePair<string, float3> pointPair in points)
-            // {
-            //     ScaleCoordinate(pointPair.Key);
-            // }
-            
-            
-            // StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
-            StartCoroutine(pc.CreatePositionTextureMap(g.points.Values.ToList()));
-            // pc.gameObject.SetActive(false);
-            creatingGraph = false;
-        }
-        
         public void SpawnPoints(PointCloud pc, bool spatial)
         {
             creatingGraph = true;
@@ -143,31 +127,56 @@ namespace DefaultNamespace
             pc.scaledOffset = scaledOffset;
             pc.longestAxis = longestAxis;
             graphNr++;
+            pointClouds.Add(pc);
             foreach (KeyValuePair<string, float3> pointPair in points)
             {
                 float3 pos = ScaleCoordinate(pointPair.Key);
-                // Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
-                // Transform parentTransform = pc.transform;
-                // float3 wPos = math.transform(parentTransform.localToWorldMatrix, pos);
-                // entityManager.SetComponentData(e, new Translation {Value = wPos});
-                // entityManager.AddComponent(e, typeof(Point));
-                // entityManager.SetComponentData(e, new Point
-                // {
-                //     group = 0,
-                //     selected = false
-                // });
             }
-            
-            
+
+
             StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
-            StartCoroutine(pc.CreateColorTextureMap());
+            if (nrOfGraphs == 2)
+            {
+                StartCoroutine(CreateColorTextureMap(scaledCoordinates.Values.ToList().Count));
+            }
             creatingGraph = false;
         }
 
-        public void ColorPoints(PointCloud pc)
+        private IEnumerator CreateColorTextureMap(int pointCount)
         {
-            pc.CreateColorTextureMap();
+            int width = (int) math.ceil(math.sqrt(pointCount));
+            int height = width;
+            colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int ind = x + (width * y);
+                    if (ind >= pointCount) continue;
+                    Color c = clusterDict.Count == 0 ? Color.white : colorDict[clusterDict[ind]];
+                    colorMap.SetPixel(x, y, c);
+                }
+
+                yield return null;
+            }
+
+            colorMap.Apply();
+            foreach (PointCloud pc in pointClouds)
+            {
+                print("set texture");
+                VisualEffect vfx = pc.GetComponent<VisualEffect>();
+                vfx.enabled = true;
+                vfx.Play();
+                vfx.SetTexture("ColorMapTex", colorMap);
+            }
+
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMap = colorMap;
         }
+
+        // public void ColorPoints(PointCloud pc)
+        // {
+        //     CreateColorTextureMap();
+        // }
 
         public void ReadMetaData(PointCloud pc, string dir)
         {
@@ -185,8 +194,8 @@ namespace DefaultNamespace
             // }
             //
 
-            pc.colorDict = new Dictionary<string, Color>();
-            pc.clusterDict = new Dictionary<int, string>();
+            colorDict = new Dictionary<string, Color>();
+            clusterDict = new Dictionary<int, string>();
             int id = 0;
             string[] metafiles = Directory.GetFiles(dir, "*metadata.csv");
             using (StreamReader sr = new StreamReader(metafiles[0]))
@@ -197,17 +206,15 @@ namespace DefaultNamespace
                     string[] words = sr.ReadLine().Split(',');
                     //int.Parse(words[0]);
                     string cluster = words[2];
-                    pc.clusterDict[id++] = cluster;
-                    if (!pc.colorDict.ContainsKey(cluster))
+                    clusterDict[id++] = cluster;
+                    if (!colorDict.ContainsKey(cluster))
                     {
                         Color c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
                         c.a = 1;
-                        pc.colorDict[cluster] = c;
+                        colorDict[cluster] = c;
                     }
                 }
             }
         }
-
-        
     }
 }

@@ -132,39 +132,41 @@ namespace CellexalVR.AnalysisLogic
             }
 
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            PointCloud pc = pointCloudGenerator.CreateNewPointCloud();
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
             string[] files = Directory.GetFiles(fullPath, "*.mds");
-            string mdsFile = files[0];
-            // foreach (string mdsFile in files)
-            // {
-            float x;
-            float y;
-            float z;
-            using (StreamReader streamReader = new StreamReader(mdsFile))
+            // string mdsFile = files[0];
+            foreach (string mdsFile in files)
             {
-                streamReader.ReadLine();
-
-                int i = 0;
-                while (!streamReader.EndOfStream)
+                PointCloud pc = pointCloudGenerator.CreateNewPointCloud();
+                float x;
+                float y;
+                float z;
+                using (StreamReader streamReader = new StreamReader(mdsFile))
                 {
-                    if (i % 10000 == 0) yield return null;
-                    string[] words = streamReader.ReadLine().Split(separators);
-                    x = (float.Parse(words[1])); // / 30.0f) + 1.5f;
-                    y = (float.Parse(words[2])); // / 30.0f) + 1;
-                    z = float.Parse(words[3]); // / 30.0f;
-                    // Cell cell = cellManager.AddCell(words[0]);
-                    pointCloudGenerator.AddGraphPoint(words[0], x, y, z);
-                    i++;
+                    streamReader.ReadLine();
+
+                    int i = 0;
+                    while (!streamReader.EndOfStream)
+                    {
+                        if (i % 10000 == 0) yield return null;
+                        string[] words = streamReader.ReadLine().Split(separators);
+                        x = (float.Parse(words[1])); // / 30.0f) + 1.5f;
+                        y = (float.Parse(words[2])); // / 30.0f) + 1;
+                        z = float.Parse(words[3]); // / 30.0f;
+                        // Cell cell = cellManager.AddCell(words[0]);
+                        pointCloudGenerator.AddGraphPoint(words[0], x, y, z);
+                        i++;
+                    }
                 }
+
+                pointCloudGenerator.SpawnPoints(pc, false);
+                // pointCloudGenerator.ReadMetaData(pc, fullPath);
+                // pointCloudGenerator.ColorPoints(pc);
+                GC.Collect();
             }
 
-            pointCloudGenerator.SpawnPoints(pc, false);
-            // pointCloudGenerator.ReadMetaData(pc, fullPath);
-            // pointCloudGenerator.ColorPoints(pc);
-            // }
-            GC.Collect();
+            CellexalEvents.GraphsLoaded.Invoke();
         }
 
         /// <summary>

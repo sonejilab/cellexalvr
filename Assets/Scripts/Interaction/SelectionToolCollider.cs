@@ -231,6 +231,11 @@ namespace CellexalVR.Interaction
             //}
         }
 
+        public Color GetCurrentColor()
+        {
+            return Colors[currentColorIndex];
+        }
+
 
         /// <summary>
         /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.Config.SelectionToolColors"/>.

@@ -49,16 +49,15 @@ namespace DefaultNamespace
         public const int quadrantZMultiplier = 100;
         public const int quadrantCellSize = 1;
         public static NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap;
-        public bool selectionActive;
 
         public static int GetPositionHashMapKey(float3 position)
         {
-            return (int) (math.floor((position.x * 5) / quadrantCellSize) +
-                          (quadrantYMultiplier * math.floor((position.y * 5) / quadrantCellSize)) +
-                          (quadrantZMultiplier * math.floor((position.z * 5) / quadrantCellSize)));
+            return (int) (math.floor((position.x * 8) / quadrantCellSize) +
+                          (quadrantYMultiplier * math.floor((position.y * 8) / quadrantCellSize)) +
+                          (quadrantZMultiplier * math.floor((position.z * 8) / quadrantCellSize)));
         }
 
-        private static int GetEntityCountInHashMap(NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap,
+        public static int GetEntityCountInHashMap(NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap,
             int hashMapKey)
         {
             QuadrantData quadrantData;

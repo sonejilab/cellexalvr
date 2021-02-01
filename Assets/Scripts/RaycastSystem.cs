@@ -13,29 +13,44 @@ namespace DefaultNamespace
     {
         private EntityQuery query;
         private BeginSimulationEntityCommandBufferSystem ecbSystem;
-
+        private EntityArchetype entityArchetype;
+        
         protected override void OnCreate()
         {
             base.OnCreate();
             ecbSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            query = GetEntityQuery(typeof(RaycastCheckComponent));
+            entityArchetype = EntityManager.CreateArchetype(typeof(SelectedPointComponent));
+        }
+
+        protected override void OnDestroy()
+        {
+            query.Dispose();
         }
 
         protected override void OnUpdate()
         {
-            int entityCount = query.CalculateEntityCount();
+            if (!SelectionToolCollider.instance.selActive) return;
+            int entityCount = query.CalculateEntityCount(); //GetEntityQuery(typeof(Point)).CalculateEntityCount();
 
             float3 origin = SelectionToolCollider.instance.transform.position;
-            EntityCommandBuffer.ParallelWriter commandBuffer = ecbSystem.CreateCommandBuffer().AsParallelWriter();
+            EntityCommandBuffer commandBuffer = ecbSystem.CreateCommandBuffer();
 
             NativeArray<RaycastHit> results = new NativeArray<RaycastHit>(entityCount, Allocator.TempJob);
             NativeArray<RaycastCommand> commands = new NativeArray<RaycastCommand>(entityCount, Allocator.TempJob);
             NativeArray<bool> hits = new NativeArray<bool>(entityCount, Allocator.TempJob);
-
+            // Try looping every entity and check field raycast 
             JobHandle jobHandle = Entities.WithAll<RaycastCheckComponent>().WithStoreEntityQueryInField(ref query)
-                .ForEach((Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld) =>
+                .ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
                 {
-                    Vector3 dir = origin - localToWorld.Position;
-                    commands[entityInQueryIndex] = new RaycastCommand(localToWorld.Position, dir, dir.magnitude, 1 << 14);
+                    // Point p = GetComponent<Point>(entity);
+                    // if (p.rayCast)
+                    // {
+                    Vector3 dir = origin - rc.position;
+                    commands[entityInQueryIndex] = new RaycastCommand(rc.position, dir, dir.magnitude, 1 << 14);
+                    // }
+
+                    // commandBuffer.SetComponent(entityInQueryIndex, entity, p);
                 }).ScheduleParallel(Dependency);
             JobHandle handle = RaycastCommand.ScheduleBatch(commands, results, results.Length, jobHandle);
             handle.Complete();
@@ -45,26 +60,30 @@ namespace DefaultNamespace
                 hits[i] = results[i].collider != null;
             }
 
-
-            JobHandle selectJob = Entities.WithAll<RaycastCheckComponent>().ForEach((Entity entity, int entityInQueryIndex,
-                ref RaycastCheckComponent raycastCheckComponent) =>
+            
+            // JobHandle selectJob = 
+            Entities.WithoutBurst().WithAll<RaycastCheckComponent>().ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
             {
                 if (!hits[entityInQueryIndex])
                 {
-                    commandBuffer.AddComponent<SelectedPointComponent>(entityInQueryIndex, entity);
-                    Point p = GetComponent<Point>(entity);
+                    // commandBuffer.AddComponent<SelectedPointComponent>(entityInQueryIndex, entity);
+                    Point p = GetComponent<Point>(rc.entity);
                     p.selected = true;
-                    commandBuffer.SetComponent(entityInQueryIndex, entity, p);
-                    // AddGraphPointToSelection(entity);
+                    commandBuffer.SetComponent(rc.entity, p);
+                    Entity e = commandBuffer.CreateEntity(entityArchetype);
+                    commandBuffer.SetComponent(e, new SelectedPointComponent { point = p });
                 }
 
-                commandBuffer.RemoveComponent<RaycastCheckComponent>(entityInQueryIndex, entity);
-            }).ScheduleParallel(handle);
-            selectJob.Complete();
+                // commandBuffer.RemoveComponent<RaycastCheckComponent>(entityInQueryIndex, entity);
+            }).Run();
+            // selectJob.Complete();
 
+            EntityManager.DestroyEntity(GetEntityQuery(typeof(RaycastCheckComponent)));
+            
             results.Dispose();
             commands.Dispose();
             hits.Dispose();
+            
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using AnalysisLogic;
 using CellexalVR.General;
@@ -11,6 +12,7 @@ using Unity.Burst;
 // using CellexalVR.Interaction;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.CodeGeneratedJobForEach;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -20,10 +22,13 @@ namespace DefaultNamespace
 {
     public struct SelectedPointComponent : IComponentData
     {
+        public Point point;
     }
 
     public struct RaycastCheckComponent : IComponentData
     {
+        public Entity entity;
+        public float3 position;
     }
 
     public class PointSelectionSystem : SystemBase
@@ -32,8 +37,9 @@ namespace DefaultNamespace
         private bool textureChanged;
         private int frameCount;
         private EntityQuery query;
-        private EndSimulationEntityCommandBufferSystem ecbSystem;
+        private BeginSimulationEntityCommandBufferSystem ecbSystem;
         private GameObject newParent;
+        private EntityArchetype entityArchetype;
 
         private EntityManager entityManager;
         public Texture2D colorTextureMap;
@@ -45,6 +51,7 @@ namespace DefaultNamespace
             base.OnCreate();
             entityManager = World.EntityManager;
             ecbSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            entityArchetype = EntityManager.CreateArchetype(typeof(RaycastCheckComponent));
         }
 
         public void CreateMesh()
@@ -56,61 +63,68 @@ namespace DefaultNamespace
         protected override void OnUpdate()
         {
             if (SelectionToolCollider.instance == null || !SelectionToolCollider.instance.selActive) return;
+            EntityCommandBuffer.ParallelWriter commandBuffer = ecbSystem.CreateCommandBuffer().AsParallelWriter();
+            float3 selectionToolCenter = SelectionToolCollider.instance.transform.position;
+            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter);
+            if (frameCount == 10)
+            {
+                CheckOneQuadrantYLayer(hashMapKey, -1);
+            }
+            
+            if (frameCount == 11)
+            {
+                CheckOneHalfQuadrantYLayer(hashMapKey, -1);
+            }
+            
+            if (frameCount == 12)
+            {
+                CheckOneQuadrantYLayer(hashMapKey, 0);
+            }
+            
+            if (frameCount == 13)
+            {
+                CheckOneHalfQuadrantYLayer(hashMapKey, 0);
+            }
 
-            if (frameCount >= 10)
+            if (frameCount == 14)
+            {
+                CheckOneQuadrantYLayer(hashMapKey, 1);
+            }
+            else if (frameCount == 15)
             {
                 frameCount = 0;
-                float3 selectionToolCenter = SelectionToolCollider.instance.transform.position;
-                int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter);
-                CheckOneQuadrantYLayer(hashMapKey, selectionToolCenter, -1);
-                CheckOneQuadrantYLayer(hashMapKey, selectionToolCenter, 0);
-                CheckOneQuadrantYLayer(hashMapKey, selectionToolCenter, 1);
+                CheckOneHalfQuadrantYLayer(hashMapKey, 1);
             }
 
             frameCount++;
-            
 
-            // EntityQuery entityQuery = GetEntityQuery(typeof(Point), typeof(LocalToWorld));
-            // AddPointsInsideJob addPointsInsideJob = new AddPointsInsideJob
-            // {
-            //     quadrantMultiHashMap = QuadrantSystem.quadrantMultiHashMap,
-            //     selectionToolCenter = selectionToolCenter,
-            //     entityManager = World.EntityManager,
-            //     layerMask = selToolLayerMask
-            // };
-            // JobHandle jobHandle = addPointsInsideJob.Schedule(entityQuery, Dependency);
-            // jobHandle.Complete();
-
-            // EntityCommandBuffer.ParallelWriter ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
-            // NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = QuadrantSystem.quadrantMultiHashMap;
-            // Entities.WithAll<Point>().ForEach((Entity entity, ref Translation translation) =>
-            // {
-            //     int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter);
-            //     CheckOneQuadrantYLayer(hashMapKey, float3.zero, selectionToolCenter, -1, quadrantMultiHashMap);
-            //     CheckOneQuadrantYLayer(hashMapKey, float3.zero, selectionToolCenter, 0, quadrantMultiHashMap);
-            //     CheckOneQuadrantYLayer(hashMapKey, float3.zero, selectionToolCenter, 1, quadrantMultiHashMap);
-            // }).Run();
         }
 
         [BurstCompile]
-        private void CheckOneQuadrantYLayer(int hashMapKey, float3 selectionToolCenter, int y)
+        private void CheckOneQuadrantYLayer(int hashMapKey, int y)
         {
-            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter); // current quadrant
-            CheckForNearbyEntities((hashMapKey + 1) + (y * QuadrantSystem.quadrantYMultiplier), selectionToolCenter); // one to the right
-            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter); // one to the left
-            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter);
-            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter);
-            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter);
-            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter);
-            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter);
-            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, selectionToolCenter);
+            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier); // current quadrant
+            CheckForNearbyEntities((hashMapKey + 1) + y * QuadrantSystem.quadrantYMultiplier); // one to the right
+            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier); // one to the left
+            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier); // and so on..
+        }
+
+        [BurstCompile]
+        private void CheckOneHalfQuadrantYLayer(int hashMapKey, int y)
+        {
+            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
+            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
+            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
+            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
+            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
         }
 
 
-
-        private void CheckForNearbyEntities(int hashMapKey, float3 selectionToolCenter)
+        [BurstCompile]
+        private void CheckForNearbyEntities(int hashMapKey)
         {
-            EntityCommandBuffer.ParallelWriter commandBuffer = ecbSystem.CreateCommandBuffer().AsParallelWriter();
+            NativeList<RaycastCheckComponent> entityArray = new NativeList<RaycastCheckComponent>(Allocator.Temp);
+            EntityCommandBuffer ecb = ecbSystem.CreateCommandBuffer();
             if (QuadrantSystem.quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
                 out NativeMultiHashMapIterator<int> nativeMultiHashMapIterator))
             {
@@ -118,22 +132,25 @@ namespace DefaultNamespace
                 {
                     Point p = GetComponent<Point>(quadrantData.entity);
                     if (p.selected) continue;
-                    entityManager.AddComponent<RaycastCheckComponent>(quadrantData.entity);
-                    commandBuffer.AddComponent<SelectedPointComponent>(entityInQueryIndex, entity);
-                    // Vector3 difference = selectionToolCenter - quadrantData.position;
-                    // if (!Physics.Raycast(quadrantData.position, difference, difference.magnitude,
-                    //     1 << LayerMask.NameToLayer("SelectionToolLayer")))
-                    // {
-                    //     // Debug.DrawRay(quadrantData.position, difference, Color.green);
-                    //     AddGraphPointToSelection(quadrantData);
-                    // }
+                    entityArray.Add(new RaycastCheckComponent { entity = quadrantData.entity, position = quadrantData.position });
                 } while (QuadrantSystem.quadrantMultiHashMap.TryGetNextValue(out quadrantData,
                     ref nativeMultiHashMapIterator));
             }
+
+            NativeArray<Entity> entities = new NativeArray<Entity>(entityArray.Length, Allocator.Temp);
+            EntityManager.CreateEntity(entityArchetype, entities);
+            for (int i = 0; i < entityArray.Length; i++)
+            {
+                EntityManager.SetComponentData(entities[i], new RaycastCheckComponent { entity = entityArray[i].entity, position = entityArray[i].position} );
+                
+            }
+            ecbSystem.AddJobHandleForProducer(Dependency);
+
+            entities.Dispose();
+            entityArray.Dispose();
         }
 
 
-       
         [BurstCompile]
         private void AddGraphPointToSelection(Entity entity)
         {

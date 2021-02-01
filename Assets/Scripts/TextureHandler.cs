@@ -1,14 +1,16 @@
-﻿using Unity.Entities;
+﻿using CellexalVR.Interaction;
+using Unity.Entities;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
+
     public class TextureHandler : SystemBase
     {
         private EndSimulationEntityCommandBufferSystem ecbSystem;
         private EntityManager entityManager;
         private int frameCount;
-
+        
         public Texture2D colorTextureMap;
 
         protected override void OnCreate()
@@ -21,20 +23,19 @@ namespace DefaultNamespace
 
         protected override void OnUpdate()
         {
-            if (frameCount >= 50)
+            if (colorTextureMap == null) return;
+            if (frameCount >= 10)
             {
                 frameCount = 0;
                 EntityCommandBuffer ecb = ecbSystem.CreateCommandBuffer();
-                Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref Point p, ref SelectedPointComponent sp) =>
+                Color col = SelectionToolCollider.instance.GetCurrentColor();
+                Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
                 {
-                    // p.selected = false;
-                    ecb.RemoveComponent<SelectedPointComponent>(e);
-                    // Debug.Log(p.xindex);
-                    // entityManager.RemoveComponent<SelectedPointComponent>(e);
-                    // entityManager.RemoveComponent<SelectedPointComponent>(e);
-                    colorTextureMap.SetPixel(p.xindex, p.yindex, Color.red);
+                    colorTextureMap.SetPixel(sp.point.xindex, sp.point.yindex, col);
                 }).Run();
                 ecbSystem.AddJobHandleForProducer(Dependency);
+                EntityManager.DestroyEntity(GetEntityQuery(typeof(SelectedPointComponent)));
+                
                 colorTextureMap.Apply();
             }
 
