@@ -72,6 +72,7 @@ namespace CellexalVR.General
         public static CommandFinishedEvent CommandFinished = new CommandFinishedEvent();
 
         public static UnityEvent ProceduralMeshGenerated = new UnityEvent();
+        
         //public static UnityEvent FlashGenesCategoryToggled
     }
 }

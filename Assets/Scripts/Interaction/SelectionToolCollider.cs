@@ -135,7 +135,7 @@ namespace CellexalVR.Interaction
         {
             instance = this;
             graphManager = referenceManager.graphManager;
-            // SetSelectionToolEnabled(false);
+            SetSelectionToolEnabled(false);
 
             if (CellexalConfig.Config != null)
             {
@@ -234,6 +234,11 @@ namespace CellexalVR.Interaction
         public Color GetCurrentColor()
         {
             return Colors[currentColorIndex];
+        }
+
+        public Collider GetCurrentCollider()
+        {
+            return selectionToolColliders[currentMeshIndex];
         }
 
 

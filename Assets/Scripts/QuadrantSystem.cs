@@ -1,6 +1,7 @@
-﻿// using CellexalVR.General;
-// using CellexalVR.Interaction;
-
+﻿using System.Collections.Generic;
+using System.Linq;
+using CellexalVR.General;
+using CellexalVR.Interaction;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -48,13 +49,20 @@ namespace DefaultNamespace
         public const int quadrantYMultiplier = 1000;
         public const int quadrantZMultiplier = 100;
         public const int quadrantCellSize = 1;
-        public static NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap;
+        public static List<NativeMultiHashMap<int, QuadrantData>> quadrantMultiHashMaps;
 
-        public static int GetPositionHashMapKey(float3 position)
+        public List<Transform> graphParentTransforms = new List<Transform>();
+
+
+        private bool updateQuadrantSystem;
+        private EntityQuery query;
+        private EndSimulationEntityCommandBufferSystem ecbSystem;
+
+        public static int GetPositionHashMapKey(float3 position, int scale = 1)
         {
-            return (int) (math.floor((position.x * 8) / quadrantCellSize) +
-                          (quadrantYMultiplier * math.floor((position.y * 8) / quadrantCellSize)) +
-                          (quadrantZMultiplier * math.floor((position.z * 8) / quadrantCellSize)));
+                return (int) (math.floor((position.x * 10) / quadrantCellSize) +
+                              quadrantYMultiplier * math.floor((position.y * 10) / quadrantCellSize) +
+                              quadrantZMultiplier * math.floor((position.z * 10) / quadrantCellSize));
         }
 
         public static int GetEntityCountInHashMap(NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap,
@@ -78,15 +86,16 @@ namespace DefaultNamespace
         private struct SetQuadrantDataHashMapJob : IJobForEachWithEntity<LocalToWorld, Point>
         {
             public NativeMultiHashMap<int, QuadrantData>.ParallelWriter quadrantMultiHashMap;
+            public int id;
 
             public void Execute(Entity entity, int index, ref LocalToWorld localToWorld,
                 ref Point point)
             {
-                int hashMapKey = GetPositionHashMapKey(localToWorld.Position);
+                if (point.parentID != id) return;
+                int hashMapKey = GetPositionHashMapKey(point.offset);
                 quadrantMultiHashMap.Add(hashMapKey, new QuadrantData
                 {
                     entity = entity,
-                    position = localToWorld.Position,
                     point = point,
                 });
             }
@@ -94,84 +103,143 @@ namespace DefaultNamespace
 
         protected override void OnCreate()
         {
-            quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);
+            quadrantMultiHashMaps = new List<NativeMultiHashMap<int, QuadrantData>>();
+            ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             base.OnCreate();
         }
 
         protected override void OnDestroy()
         {
-            quadrantMultiHashMap.Dispose();
+            foreach (var quadrantMultiHashMap in quadrantMultiHashMaps)
+            {
+                quadrantMultiHashMap.Dispose();
+            }
+
             base.OnDestroy();
         }
 
-        public void SetHashMap()
+        public void SetHashMap(int n = 0)
         {
-            EntityQuery entityQuery = GetEntityQuery(typeof(Point), typeof(LocalToWorld));
-            quadrantMultiHashMap.Clear();
-            if (entityQuery.CalculateEntityCount() > quadrantMultiHashMap.Capacity)
+            for (int i = 0; i < n; i++)
             {
-                quadrantMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
-            }
+                NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);
+                quadrantMultiHashMaps.Add(quadrantMultiHashMap);
+                EntityQuery entityQuery = GetEntityQuery(typeof(Point), typeof(LocalToWorld));
+                quadrantMultiHashMap.Clear();
+                if (entityQuery.CalculateEntityCount() > quadrantMultiHashMap.Capacity)
+                {
+                    quadrantMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
+                }
 
-            SetQuadrantDataHashMapJob setQuadrantDataHashMapJob = new SetQuadrantDataHashMapJob
-            {
-                quadrantMultiHashMap = quadrantMultiHashMap.AsParallelWriter(),
-            };
-            JobHandle jobHandle = setQuadrantDataHashMapJob.Schedule(entityQuery, Dependency);
-            jobHandle.Complete();
+                SetQuadrantDataHashMapJob setQuadrantDataHashMapJob = new SetQuadrantDataHashMapJob
+                {
+                    quadrantMultiHashMap = quadrantMultiHashMap.AsParallelWriter(),
+                    id = i,
+                };
+                JobHandle jobHandle = setQuadrantDataHashMapJob.Schedule(entityQuery, Dependency);
+                jobHandle.Complete();
+            }
         }
 
         protected override void OnUpdate()
         {
-            if (!SelectionTool.instance.selectionActive) return;
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                SetHashMap();
-            }
-            // quadrantMultiHashMap.AsParallelWriter();
-            // Entities.WithStoreEntityQueryInField(ref entityQuery).ForEach((Entity entity, ref LocalToWorld localToWorld, ref Point point) =>
+            // if (Input.GetKeyDown(KeyCode.K))
             // {
-            //     int hashMapKey = GetPositionHashMapKey(localToWorld.Position);
-            //     quadrantMultiHashMap.Add(hashMapKey, new QuadrantData
-            //     {
-            //         entity = entity,
-            //         position = localToWorld.Position,
-            //         point = point,
-            //     });
-            // }).ScheduleParallel();
+            //     SetHashMap(2);
+            // }
         }
 
-        private void DebugDrawCube(float3 position)
+
+        #region Debug
+
+        public static void DebugDrawCubes(float3 position, Transform t)
+        {
+            DebugDrawCube(position, t);
+
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, -quadrantCellSize / 10f, 0), t);
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, -quadrantCellSize / 10f, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, -quadrantCellSize / 10f, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, 0, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, 0, 0), t);
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, 0, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, quadrantCellSize / 10f, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, quadrantCellSize / 10f, 0), t);
+            DebugDrawCube(position - new float3(-quadrantCellSize / 10f, quadrantCellSize / 10f, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(0, -quadrantCellSize / 10f, 0), t);
+            DebugDrawCube(position - new float3(0, -quadrantCellSize / 10f, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(0, -quadrantCellSize / 10f, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(0, 0, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(0, 0, 0), t);
+            DebugDrawCube(position - new float3(0, 0, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(0, quadrantCellSize / 10f, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(0, quadrantCellSize / 10f, 0), t);
+            DebugDrawCube(position - new float3(0, quadrantCellSize / 10f, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, -quadrantCellSize / 10f, 0), t);
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, -quadrantCellSize / 10f, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, -quadrantCellSize / 10f, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, 0, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, 0, 0), t);
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, 0, quadrantCellSize / 10f), t);
+
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, quadrantCellSize / 10f, -quadrantCellSize / 10f), t);
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, quadrantCellSize / 10f, 0), t);
+            DebugDrawCube(position - new float3(quadrantCellSize / 10f, quadrantCellSize / 10f, quadrantCellSize / 10f), t);
+        }
+
+        public static void DebugDrawCube(float3 position, Transform t)
         {
             Vector3 lowerLeft = new Vector3(math.floor((position.x * 10) / quadrantCellSize) * quadrantCellSize,
                 math.floor((position.y * 10) / quadrantCellSize) * quadrantCellSize,
                 math.floor((position.z * 10) / quadrantCellSize) * quadrantCellSize);
+
             lowerLeft /= 10;
-            float size = 0.1f;
+            float size = quadrantCellSize / 10f;
+
             Vector3[] corners = new Vector3[]
             {
                 lowerLeft,
-                new Vector3(lowerLeft.x + (size * 2f), lowerLeft.y, lowerLeft.z),
-                new Vector3(lowerLeft.x, lowerLeft.y + (size * 2f), lowerLeft.z),
-                new Vector3(lowerLeft.x, lowerLeft.y, lowerLeft.z + size * 2f),
-                new Vector3(lowerLeft.x + (size * 2f), lowerLeft.y + (size * 2f), lowerLeft.z + (size * 2f)),
-                new Vector3(lowerLeft.x + (size * 2f), lowerLeft.y, lowerLeft.z + (size * 2f)),
-                new Vector3(lowerLeft.x, lowerLeft.y + (size * 2f), lowerLeft.z + (size * 2f)),
-                new Vector3(lowerLeft.x + (size * 2f), lowerLeft.y + (size * 2f), lowerLeft.z)
+                new Vector3(lowerLeft.x + size, lowerLeft.y, lowerLeft.z),
+                new Vector3(lowerLeft.x, lowerLeft.y + size, lowerLeft.z),
+                new Vector3(lowerLeft.x, lowerLeft.y, lowerLeft.z + size),
+                new Vector3(lowerLeft.x + size, lowerLeft.y + size, lowerLeft.z + size),
+                new Vector3(lowerLeft.x + size, lowerLeft.y, lowerLeft.z + size),
+                new Vector3(lowerLeft.x, lowerLeft.y + size, lowerLeft.z + size),
+                new Vector3(lowerLeft.x + size, lowerLeft.y + size, lowerLeft.z)
             };
+            Debug.DrawLine(t.TransformPoint(corners[0]), t.TransformPoint(corners[1]));
+            Debug.DrawLine(t.TransformPoint(corners[0]), t.TransformPoint(corners[2]));
+            Debug.DrawLine(t.TransformPoint(corners[0]), t.TransformPoint(corners[3]));
+            Debug.DrawLine(t.TransformPoint(corners[1]), t.TransformPoint(corners[5]));
+            Debug.DrawLine(t.TransformPoint(corners[1]), t.TransformPoint(corners[7]));
+            Debug.DrawLine(t.TransformPoint(corners[2]), t.TransformPoint(corners[7]));
+            Debug.DrawLine(t.TransformPoint(corners[2]), t.TransformPoint(corners[6]));
+            Debug.DrawLine(t.TransformPoint(corners[3]), t.TransformPoint(corners[6]));
+            Debug.DrawLine(t.TransformPoint(corners[3]), t.TransformPoint(corners[5]));
+            Debug.DrawLine(t.TransformPoint(corners[4]), t.TransformPoint(corners[6]));
+            Debug.DrawLine(t.TransformPoint(corners[4]), t.TransformPoint(corners[7]));
+            Debug.DrawLine(t.TransformPoint(corners[4]), t.TransformPoint(corners[5]));
 
-            Debug.DrawLine(corners[0], corners[1]);
-            Debug.DrawLine(corners[0], corners[2]);
-            Debug.DrawLine(corners[0], corners[3]);
-            Debug.DrawLine(corners[1], corners[5]);
-            Debug.DrawLine(corners[2], corners[6]);
-            Debug.DrawLine(corners[3], corners[5]);
-            Debug.DrawLine(corners[3], corners[6]);
-            Debug.DrawLine(corners[4], corners[7]);
-            Debug.DrawLine(corners[1], corners[7]);
-            Debug.DrawLine(corners[4], corners[5]);
-            Debug.DrawLine(corners[4], corners[6]);
-            Debug.DrawLine(corners[2], corners[7]);
+            // Debug.DrawLine((corners[0]), (corners[1]));
+            // Debug.DrawLine((corners[0]), (corners[2]));
+            // Debug.DrawLine((corners[0]), (corners[3]));
+            // Debug.DrawLine((corners[1]), (corners[5]));
+            // Debug.DrawLine((corners[1]), (corners[7]));
+            // Debug.DrawLine((corners[2]), (corners[7]));
+            // Debug.DrawLine((corners[2]), (corners[6]));
+            // Debug.DrawLine((corners[3]), (corners[6]));
+            // Debug.DrawLine((corners[3]), (corners[5]));
+            // Debug.DrawLine((corners[4]), (corners[6]));
+            // Debug.DrawLine((corners[4]), (corners[7]));
+            // Debug.DrawLine((corners[4]), (corners[5]));
         }
+
+        #endregion
     }
 }

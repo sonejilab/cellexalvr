@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using CellexalVR;
-using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using DefaultNamespace;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.VFX;
+using Valve.VR.InteractionSystem;
 
 namespace AnalysisLogic
 {
@@ -20,6 +22,7 @@ namespace AnalysisLogic
         private bool spawn = true;
         private EntityManager entityManager;
         private int frameCount;
+        private InteractableObjectBasic interactableObjectBasic;
 
         public Texture2D positionTextureMap;
         public float3 minCoordValues;
@@ -30,6 +33,7 @@ namespace AnalysisLogic
         public Dictionary<string, float3> points = new Dictionary<string, float3>();
         public int pcID;
         public Transform selectionSphere;
+        public Entity parent;
 
         public void Initialize(int id)
         {
@@ -41,6 +45,7 @@ namespace AnalysisLogic
             selectionSphere = SelectionToolCollider.instance.transform;
             vfx.pause = true;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            interactableObjectBasic = GetComponent<InteractableObjectBasic>();
         }
 
         private void Update()
@@ -58,7 +63,6 @@ namespace AnalysisLogic
             vfx.SetVector3("SelectionPosition", selectionSphere.position);
             vfx.SetFloat("SelectionRadius", selectionSphere.localScale.x / 2f);
         }
-
 
         public IEnumerator CreatePositionTextureMap(List<float3> pointPositions)
         {
@@ -85,7 +89,9 @@ namespace AnalysisLogic
                         group = -1,
                         selected = false,
                         xindex = x,
-                        yindex = y
+                        yindex = y,
+                        offset = pos,
+                        parentID = pcID
                     });
                     positionTextureMap.SetPixel(x, y, col);
                 }

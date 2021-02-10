@@ -33,7 +33,7 @@ namespace DefaultNamespace
             if (!SelectionToolCollider.instance.selActive) return;
             int entityCount = query.CalculateEntityCount(); //GetEntityQuery(typeof(Point)).CalculateEntityCount();
 
-            float3 origin = SelectionToolCollider.instance.transform.position;
+            float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
             EntityCommandBuffer commandBuffer = ecbSystem.CreateCommandBuffer();
 
             NativeArray<RaycastHit> results = new NativeArray<RaycastHit>(entityCount, Allocator.TempJob);
@@ -43,14 +43,9 @@ namespace DefaultNamespace
             JobHandle jobHandle = Entities.WithAll<RaycastCheckComponent>().WithStoreEntityQueryInField(ref query)
                 .ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
                 {
-                    // Point p = GetComponent<Point>(entity);
-                    // if (p.rayCast)
-                    // {
                     Vector3 dir = origin - rc.position;
-                    commands[entityInQueryIndex] = new RaycastCommand(rc.position, dir, dir.magnitude, 1 << 14);
-                    // }
-
-                    // commandBuffer.SetComponent(entityInQueryIndex, entity, p);
+                    commands[entityInQueryIndex] = new RaycastCommand(rc.position, dir, 10, 1 << 14);
+                    // Debug.DrawRay(rc.position, dir);
                 }).ScheduleParallel(Dependency);
             JobHandle handle = RaycastCommand.ScheduleBatch(commands, results, results.Length, jobHandle);
             handle.Complete();
@@ -61,7 +56,6 @@ namespace DefaultNamespace
             }
 
             
-            // JobHandle selectJob = 
             Entities.WithoutBurst().WithAll<RaycastCheckComponent>().ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
             {
                 if (!hits[entityInQueryIndex])
@@ -74,9 +68,7 @@ namespace DefaultNamespace
                     commandBuffer.SetComponent(e, new SelectedPointComponent { point = p });
                 }
 
-                // commandBuffer.RemoveComponent<RaycastCheckComponent>(entityInQueryIndex, entity);
             }).Run();
-            // selectJob.Complete();
 
             EntityManager.DestroyEntity(GetEntityQuery(typeof(RaycastCheckComponent)));
             

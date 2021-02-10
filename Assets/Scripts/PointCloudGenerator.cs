@@ -6,6 +6,7 @@ using System.Linq;
 using AnalysisLogic;
 using CellexalVR;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.Interaction;
 // using CellexalVR.AnalysisLogic;
 // using CellexalVR.AnalysisObjects;
 // using CellexalVR.General;
@@ -24,7 +25,13 @@ namespace DefaultNamespace
         public bool selected;
         public int xindex;
         public int yindex;
-        public bool rayCast;
+        public float3 offset;
+        public int parentID;
+    }
+
+    public struct PointCloudComponent : IComponentData
+    {
+        public int pointCloudId;
     }
 
     public class PointCloudGenerator : MonoBehaviour
@@ -33,6 +40,7 @@ namespace DefaultNamespace
         [SerializeField] public Material material;
         [SerializeField] public Mesh mesh;
         [HideInInspector] public int nrOfGraphs = 0;
+        public int mdsFileCount;
         public bool creatingGraph;
         public GameObject parentPrefab;
         public float3 minCoordValues;
@@ -53,11 +61,15 @@ namespace DefaultNamespace
         private float spawnTimer;
         private EntityManager entityManager;
         private List<PointCloud> pointClouds = new List<PointCloud>();
+        private EntityArchetype entityArchetype;
+        private QuadrantSystem quadrantSystem;
 
         private void Awake()
         {
             instance = this;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            quadrantSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>();
+            CreateParentArchetype();
         }
 
         public PointCloud CreateNewPointCloud()
@@ -67,6 +79,8 @@ namespace DefaultNamespace
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
             PointCloud pc = Instantiate(parentPrefab, new float3(graphNr, 1, graphNr), quaternion.identity).GetComponent<PointCloud>();
+            quadrantSystem.graphParentTransforms.Add(transform);
+            quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
             pc.Initialize(nrOfGraphs);
             nrOfGraphs++;
             return pc;
@@ -118,8 +132,27 @@ namespace DefaultNamespace
             return scaledCoord;
         }
 
+        private void CreateParentArchetype()
+        {
+            entityArchetype = entityManager.CreateArchetype(
+                typeof(LocalToWorld),
+                typeof(LinkedEntityGroup),
+                typeof(Translation),
+                typeof(Rotation),
+                typeof(Scale),
+                typeof(PointCloudComponent)
+            );
+        }
+
         public void SpawnPoints(PointCloud pc, bool spatial)
         {
+            Entity parent = entityManager.CreateEntity(entityArchetype);
+            entityManager.SetComponentData(parent, new Translation {Value = new float3(0, 0, 0)});
+            entityManager.SetComponentData(parent, new Rotation {Value = new quaternion(0, 0, 0, 0)});
+            entityManager.SetComponentData(parent, new Scale {Value = 1f});
+            LocalToWorld localToWorld = entityManager.GetComponentData<LocalToWorld>(parent);
+            PointCloudComponent pointCloudComponent = new PointCloudComponent{pointCloudId = graphNr};
+            entityManager.SetComponentData(parent, pointCloudComponent);
             creatingGraph = true;
             ScaleAllCoordinates();
             pc.minCoordValues = minCoordValues;
@@ -135,10 +168,12 @@ namespace DefaultNamespace
 
 
             StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
-            if (nrOfGraphs == 2)
+            print($" graphs : {nrOfGraphs}, files : {mdsFileCount}");
+            if (nrOfGraphs == mdsFileCount)
             {
                 StartCoroutine(CreateColorTextureMap(scaledCoordinates.Values.ToList().Count));
             }
+
             creatingGraph = false;
         }
 
@@ -163,7 +198,6 @@ namespace DefaultNamespace
             colorMap.Apply();
             foreach (PointCloud pc in pointClouds)
             {
-                print("set texture");
                 VisualEffect vfx = pc.GetComponent<VisualEffect>();
                 vfx.enabled = true;
                 vfx.Play();
@@ -171,6 +205,7 @@ namespace DefaultNamespace
             }
 
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMap = colorMap;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(nrOfGraphs);
         }
 
         // public void ColorPoints(PointCloud pc)
@@ -204,7 +239,6 @@ namespace DefaultNamespace
                 while (!sr.EndOfStream)
                 {
                     string[] words = sr.ReadLine().Split(',');
-                    //int.Parse(words[0]);
                     string cluster = words[2];
                     clusterDict[id++] = cluster;
                     if (!colorDict.ContainsKey(cluster))

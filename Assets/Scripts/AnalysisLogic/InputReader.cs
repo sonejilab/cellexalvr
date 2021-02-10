@@ -14,9 +14,11 @@ using CellexalVR.Extensions;
 using System.Drawing;
 using System.Diagnostics;
 using AnalysisLogic;
+// using AnalysisLogic;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.PDFViewer;
 using DefaultNamespace;
+// using DefaultNamespace;
 using Unity.Mathematics;
 using UnityEngine.XR;
 using Color = UnityEngine.Color;
@@ -135,6 +137,7 @@ namespace CellexalVR.AnalysisLogic
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
             string[] files = Directory.GetFiles(fullPath, "*.mds");
+            pointCloudGenerator.mdsFileCount = files.Length;
             // string mdsFile = files[0];
             foreach (string mdsFile in files)
             {
