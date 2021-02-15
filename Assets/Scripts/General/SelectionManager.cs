@@ -13,7 +13,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using DefaultNamespace;
 using TMPro;
+using Unity.Collections;
+using Unity.Entities;
 using UnityEngine;
 using Valve.VR;
 
@@ -24,8 +27,9 @@ namespace CellexalVR.General
     /// </summary>
     public class SelectionManager : MonoBehaviour
     {
-        public ReferenceManager referenceManager;
+        public static SelectionManager instance;
 
+        public ReferenceManager referenceManager;
 
         //public GroupInfoDisplay groupInfoDisplay;
         //public GroupInfoDisplay HUDGroupInfoDisplay;
@@ -38,7 +42,9 @@ namespace CellexalVR.General
         private SelectionFromPreviousMenu previousSelectionMenu;
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
+
         private SteamVR_Behaviour_Pose rightController;
+
         // private SteamVR_Controller.Device device;
         private List<Graph.GraphPoint> selectedCells = new List<Graph.GraphPoint>();
         private List<Graph.GraphPoint> lastSelectedCells = new List<Graph.GraphPoint>();
@@ -92,10 +98,11 @@ namespace CellexalVR.General
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
             graphManager = referenceManager.graphManager;
+            instance = this;
         }
 
         private void Start()
@@ -562,6 +569,15 @@ namespace CellexalVR.General
         // more_cells       selectionMade = false;
         // more_cells       //selectionToolMenu.RemoveSelection();
         // more_cells   }
+        public void ConfirmPCSelection()
+        {
+            List<Tuple<int, int>> selection = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().sps;
+            // Ensure points are unique. Because distinct keeps first occurence but we want to keep last we need to reverse the list before using it and then reverse back.
+            IEnumerable<Tuple<int, int>> uniqueCells = selection.Reverse<Tuple<int, int>>().Distinct().Reverse();
+            // Remove line below if the cells should be in the same order as they were selected no matter which group.  
+            IEnumerable<Tuple<int, int>> sortedUniqueCells = uniqueCells.OrderBy(x => x.Item2);
+            instance.DumpSelectionToTextFile(sortedUniqueCells.ToList());
+        }
 
         /// <summary>
         /// Confirms a selection and dumps the relevant data to a .txt file.
@@ -758,6 +774,55 @@ namespace CellexalVR.General
             DumpSelectionToTextFile(selectedCells);
         }
 
+        public void DumpSelectionToTextFile(List<Tuple<int, int>> selection, string filePath = "")
+        {
+            if (filePath != "")
+            {
+                string savedSelectionsPath = CellexalUser.UserSpecificFolder + @"\SavedSelections\";
+                if (!Directory.Exists(savedSelectionsPath))
+                {
+                    Directory.CreateDirectory(savedSelectionsPath);
+                }
+
+                filePath = savedSelectionsPath + filePath + ".txt";
+            }
+
+            else
+            {
+                filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+                using (StreamWriter file = new StreamWriter(filePath))
+                {
+                    CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
+                    CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
+                    if (selectionHistory != null)
+                        CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+                    string graphName = "PointCloud0";
+                    foreach (Tuple<int, int> sp in selection)
+                    {
+                        file.Write(sp.Item1);
+                        file.Write("\t");
+                        Color c = SelectionToolCollider.instance.Colors[sp.Item2];
+                        int r = (int) (c.r * 255);
+                        int g = (int) (c.g * 255);
+                        int b = (int) (c.b * 255);
+                        // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
+                        file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                        file.Write("\t");
+                        // file.Write(graphName);
+                        // file.Write("\t");
+                        file.Write(sp.Item2);
+                        file.WriteLine();
+                    }
+                }
+
+                if (!referenceManager.sessionHistoryList.Contains(filePath, Definitions.HistoryEvent.SELECTION))
+                {
+                    referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
+                }
+
+                referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
+            }
+        }
 
         /// <summary>
         /// Dumps the confirmed selection to a text file in the output folder.
@@ -809,7 +874,7 @@ namespace CellexalVR.General
                 {
                     referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
                 }
-                
+
                 referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
 
                 StartCoroutine(UpdateRObjectGrouping());

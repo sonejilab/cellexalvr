@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisLogic;
+﻿using System;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Filters;
@@ -14,6 +15,7 @@ using UnityEditor;
 using UnityEngine;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.PDFViewer;
+using DefaultNamespace;
 using Valve.VR;
 using Valve.VR.Extras;
 using Valve.VR.InteractionSystem;
@@ -25,6 +27,13 @@ namespace CellexalVR.General
     /// </summary>
     public class ReferenceManager : MonoBehaviour
     {
+        public static ReferenceManager instance;
+
+        private void Awake()
+        {
+            instance = this;
+        }
+
         #region Controller things
 
         [Header("Controller things")]
@@ -104,6 +113,7 @@ namespace CellexalVR.General
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
         public GraphGenerator graphGenerator;
+        public PointCloudGenerator pointCloudGenerator;
         public LegendManager legendManager;
         public InputFolderGenerator inputFolderGenerator;
         public LoaderController loaderController;
@@ -239,6 +249,7 @@ namespace CellexalVR.General
             lineBundler = managersParent.GetComponentInChildren<LineBundler>();
             selectionManager = managersParent.GetComponentInChildren<SelectionManager>();
             annotationManager = managersParent.GetComponentInChildren<AnnotationManager>();
+            pointCloudGenerator = generatorsParent.GetComponentInChildren<PointCloudGenerator>();
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();

@@ -13,11 +13,13 @@ using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using System.Drawing;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using AnalysisLogic;
 // using AnalysisLogic;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.PDFViewer;
 using DefaultNamespace;
+using Unity.Collections;
 // using DefaultNamespace;
 using Unity.Mathematics;
 using UnityEngine.XR;
@@ -142,6 +144,9 @@ namespace CellexalVR.AnalysisLogic
             foreach (string mdsFile in files)
             {
                 PointCloud pc = pointCloudGenerator.CreateNewPointCloud();
+                string[] regexResult = Regex.Split(mdsFile, @"[\\/]");
+                string graphFileName = regexResult[regexResult.Length - 1];
+                pc.gameObject.name = graphFileName.Substring(0, graphFileName.Length - 4);
                 float x;
                 float y;
                 float z;
@@ -162,12 +167,15 @@ namespace CellexalVR.AnalysisLogic
                         i++;
                     }
                 }
-
+                
                 pointCloudGenerator.SpawnPoints(pc, false);
                 // pointCloudGenerator.ReadMetaData(pc, fullPath);
                 // pointCloudGenerator.ColorPoints(pc);
                 GC.Collect();
             }
+
+            StartCoroutine(pointCloudGenerator.ReadMetaData(fullPath));
+            StartCoroutine(pointCloudGenerator.CreateColorTextureMap());
 
             CellexalEvents.GraphsLoaded.Invoke();
         }

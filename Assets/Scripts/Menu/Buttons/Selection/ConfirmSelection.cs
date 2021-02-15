@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using DefaultNamespace;
+using Unity.Entities;
 
 namespace CellexalVR.Menu.Buttons.Selection
 {
@@ -16,7 +20,6 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         protected void Start()
         {
-
             selectionManager = referenceManager.selectionManager;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             SetButtonActivated(false);
@@ -31,7 +34,17 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             referenceManager.selectionToolCollider.SetSelectionToolEnabled(false);
-            selectionManager.ConfirmSelection();
+            EntityQuery query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(PointCloudComponent));
+            int c = query.CalculateEntityCount();
+            if (c > 0)
+            {
+                selectionManager.ConfirmPCSelection();
+            }
+            else
+            {
+                selectionManager.ConfirmSelection();
+            }
+
             referenceManager.multiuserMessageSender.SendMessageConfirmSelection();
             //controllerModelSwitcher.TurnOffActiveTool(true);
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);
@@ -46,8 +59,9 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void TurnOff()
         {
+            print("turn on");
             SetButtonActivated(false);
-            spriteRenderer.sprite = deactivatedTexture;
+            // spriteRenderer.sprite = deactivatedTexture;
         }
     }
 }

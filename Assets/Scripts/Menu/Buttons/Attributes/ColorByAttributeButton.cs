@@ -2,6 +2,8 @@
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using DefaultNamespace;
+using Unity.Entities;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Attributes
 {
@@ -19,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public string Attribute { get; set; }
         public bool colored = false;
 
-        public enum Mode { SINGLE, BOOLEAN_EXPR }
+        public enum Mode { SINGLE, BOOLEAN_EXPR, BIGFOLDER }
         public Mode CurrentMode { get; set; } = Mode.SINGLE;
         public AttributeLogic CurrentBooleanExpressionState { get; private set; } = AttributeLogic.NOT_INCLUDED;
         public AttributeSubMenu parentMenu;
@@ -68,6 +70,13 @@ namespace CellexalVR.Menu.Buttons.Attributes
                 }
 
                 parentMenu.EvaluateExpression();
+            }
+            
+            else if (CurrentMode == Mode.BIGFOLDER)
+            {
+                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(Attribute, !colored);
+                colored = !colored;
+                ToggleOutline(colored);
             }
         }
 
@@ -149,6 +158,11 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
         }
 
+        public void SwitchModeToBigFolder(Mode m)
+        {
+            CurrentMode = Mode.BIGFOLDER;
+        }
+
         public override void SetHighlighted(bool highlight)
         {
             if (highlight)
@@ -161,7 +175,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
                 {
                     ColorButtonBooleanExpression();
                 }
-                else if (CurrentMode == Mode.SINGLE)
+                else if (CurrentMode == Mode.SINGLE || CurrentMode == Mode.BIGFOLDER)
                 {
                     meshRenderer.material.color = meshStandardColor;
                 }

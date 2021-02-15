@@ -39,9 +39,11 @@ namespace DefaultNamespace
 
     public struct QuadrantData
     {
-        public Entity entity;
         public float3 position;
-        public Point point;
+        public int xindex;
+        public int yindex;
+        public int label;
+        public int group;
     }
 
     public class QuadrantSystem : SystemBase
@@ -60,9 +62,9 @@ namespace DefaultNamespace
 
         public static int GetPositionHashMapKey(float3 position, int scale = 1)
         {
-                return (int) (math.floor((position.x * 10) / quadrantCellSize) +
-                              quadrantYMultiplier * math.floor((position.y * 10) / quadrantCellSize) +
-                              quadrantZMultiplier * math.floor((position.z * 10) / quadrantCellSize));
+            return (int) (math.floor((position.x * 10) / quadrantCellSize) +
+                          quadrantYMultiplier * math.floor((position.y * 10) / quadrantCellSize) +
+                          quadrantZMultiplier * math.floor((position.z * 10) / quadrantCellSize));
         }
 
         public static int GetEntityCountInHashMap(NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap,
@@ -92,11 +94,18 @@ namespace DefaultNamespace
                 ref Point point)
             {
                 if (point.parentID != id) return;
+                int x = point.xindex;
+                int y = point.yindex;
+                int label = point.label;
+                float3 pos = point.offset;
                 int hashMapKey = GetPositionHashMapKey(point.offset);
                 quadrantMultiHashMap.Add(hashMapKey, new QuadrantData
                 {
-                    entity = entity,
-                    point = point,
+                    xindex = x,
+                    yindex = y,
+                    label = label,
+                    position = pos,
+                    group = -1,
                 });
             }
         }
@@ -139,6 +148,9 @@ namespace DefaultNamespace
                 JobHandle jobHandle = setQuadrantDataHashMapJob.Schedule(entityQuery, Dependency);
                 jobHandle.Complete();
             }
+
+            EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
+            CellexalLog.Log("Quadrant Hash map set");
         }
 
         protected override void OnUpdate()

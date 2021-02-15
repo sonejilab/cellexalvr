@@ -25,7 +25,6 @@ namespace DefaultNamespace
 
         protected override void OnDestroy()
         {
-            query.Dispose();
         }
 
         protected override void OnUpdate()
@@ -45,7 +44,6 @@ namespace DefaultNamespace
                 {
                     Vector3 dir = origin - rc.position;
                     commands[entityInQueryIndex] = new RaycastCommand(rc.position, dir, 10, 1 << 14);
-                    // Debug.DrawRay(rc.position, dir);
                 }).ScheduleParallel(Dependency);
             JobHandle handle = RaycastCommand.ScheduleBatch(commands, results, results.Length, jobHandle);
             handle.Complete();
@@ -55,19 +53,18 @@ namespace DefaultNamespace
                 hits[i] = results[i].collider != null;
             }
 
-            
+            int group = SelectionToolCollider.instance.CurrentColorIndex;
             Entities.WithoutBurst().WithAll<RaycastCheckComponent>().ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
             {
                 if (!hits[entityInQueryIndex])
                 {
                     // commandBuffer.AddComponent<SelectedPointComponent>(entityInQueryIndex, entity);
-                    Point p = GetComponent<Point>(rc.entity);
-                    p.selected = true;
-                    commandBuffer.SetComponent(rc.entity, p);
+                    //Point p = GetComponent<Point>(rc.entity);
+                    //p.selected = true;
+                    //commandBuffer.SetComponent(rc.entity, p);
                     Entity e = commandBuffer.CreateEntity(entityArchetype);
-                    commandBuffer.SetComponent(e, new SelectedPointComponent { point = p });
+                    commandBuffer.SetComponent(e, new SelectedPointComponent { xindex = rc.xindex, yindex = rc.yindex, label = rc.label, group = group});
                 }
-
             }).Run();
 
             EntityManager.DestroyEntity(GetEntityQuery(typeof(RaycastCheckComponent)));

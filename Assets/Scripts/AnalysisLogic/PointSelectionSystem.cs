@@ -1,34 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using AnalysisLogic;
-using CellexalVR.General;
+﻿using AnalysisLogic;
 using CellexalVR.Interaction;
-using CellexalVR.Spatial;
 using Unity.Burst;
-// using CellexalVR.AnalysisObjects;
-// using CellexalVR.General;
-// using CellexalVR.Interaction;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Entities.CodeGeneratedJobForEach;
-using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
     public struct SelectedPointComponent : IComponentData
     {
-        public Point point;
+        public int xindex;
+        public int yindex;
+        public int label;
+        public int group;
     }
 
     public struct RaycastCheckComponent : IComponentData
     {
-        public Entity entity;
         public float3 position;
+        public float3 origin;
+        public int xindex;
+        public int yindex;
+        public int label;
     }
 
     public class PointSelectionSystem : SystemBase
@@ -42,9 +36,6 @@ namespace DefaultNamespace
         private EntityArchetype entityArchetype;
 
         private EntityManager entityManager;
-        public Texture2D colorTextureMap;
-
-        // [ReadOnly] public NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = QuadrantSystem.quadrantMultiHashMap;
 
         protected override void OnCreate()
         {
@@ -63,120 +54,113 @@ namespace DefaultNamespace
         protected override void OnUpdate()
         {
             if (SelectionToolCollider.instance == null || !SelectionToolCollider.instance.selActive) return;
-            EntityCommandBuffer.ParallelWriter commandBuffer = ecbSystem.CreateCommandBuffer().AsParallelWriter();
-            float3 selectionToolCenter = SelectionToolCollider.instance.transform.position;
-            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter);
+            Transform selTransform = SelectionToolCollider.instance.GetCurrentCollider().transform;
+            Collider[] colliders = Physics.OverlapBox(selTransform.position, Vector3.one * 0.1f, Quaternion.identity,
+                1 << LayerMask.NameToLayer("GraphLayer"));
+            PointCloud pointCloud = null;
+            foreach (var col in colliders)
+            {
+                pointCloud = col.GetComponent<PointCloud>();
+                if (pointCloud != null)
+                {
+                    break;
+                }
+            }
+
+            if (pointCloud == null) return;
+            PointCloud mat = pointCloud; 
+            float3 selectionToolCenter = pointCloud.transform.InverseTransformPoint(selTransform.position);
+            //QuadrantSystem.DebugDrawCubes(selectionToolCenter, mat.transform);
+            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter, (int)selTransform.localScale.x);
             if (frameCount == 10)
             {
-                CheckOneQuadrantYLayer(hashMapKey, -1);
+                CheckOneQuadrantYLayer(hashMapKey, -1, mat);
             }
-            
+
             if (frameCount == 11)
             {
-                CheckOneHalfQuadrantYLayer(hashMapKey, -1);
+                CheckOneHalfQuadrantYLayer(hashMapKey, -1, mat);
             }
-            
+
             if (frameCount == 12)
             {
-                CheckOneQuadrantYLayer(hashMapKey, 0);
+                CheckOneQuadrantYLayer(hashMapKey, 0, mat);
             }
-            
+
             if (frameCount == 13)
             {
-                CheckOneHalfQuadrantYLayer(hashMapKey, 0);
+                CheckOneHalfQuadrantYLayer(hashMapKey, 0, mat);
             }
 
             if (frameCount == 14)
             {
-                CheckOneQuadrantYLayer(hashMapKey, 1);
+                CheckOneQuadrantYLayer(hashMapKey, 1, mat);
             }
             else if (frameCount == 15)
             {
                 frameCount = 0;
-                CheckOneHalfQuadrantYLayer(hashMapKey, 1);
+                CheckOneHalfQuadrantYLayer(hashMapKey, 1, mat);
             }
 
             frameCount++;
-
         }
 
         [BurstCompile]
-        private void CheckOneQuadrantYLayer(int hashMapKey, int y)
+        private void CheckOneQuadrantYLayer(int hashMapKey, int y, PointCloud mat)
         {
-            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier); // current quadrant
-            CheckForNearbyEntities((hashMapKey + 1) + y * QuadrantSystem.quadrantYMultiplier); // one to the right
-            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier); // one to the left
-            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier); // and so on..
+            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier, mat); // current quadrant
+            CheckForNearbyEntities((hashMapKey + 1) + y * QuadrantSystem.quadrantYMultiplier, mat); // one to the right
+            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier, mat); // one to the left
+            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat); // and so on..
         }
 
         [BurstCompile]
-        private void CheckOneHalfQuadrantYLayer(int hashMapKey, int y)
+        private void CheckOneHalfQuadrantYLayer(int hashMapKey, int y, PointCloud mat)
         {
-            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
-            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
-            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
-            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
-            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier);
+            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
+            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
+            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
+            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
+            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
         }
 
 
         [BurstCompile]
-        private void CheckForNearbyEntities(int hashMapKey)
+        private void CheckForNearbyEntities(int hashMapKey, PointCloud pc)
         {
             NativeList<RaycastCheckComponent> entityArray = new NativeList<RaycastCheckComponent>(Allocator.Temp);
-            EntityCommandBuffer ecb = ecbSystem.CreateCommandBuffer();
-            if (QuadrantSystem.quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
+            float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
+            if (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
                 out NativeMultiHashMapIterator<int> nativeMultiHashMapIterator))
             {
                 do
                 {
-                    Point p = GetComponent<Point>(quadrantData.entity);
-                    if (p.selected) continue;
-                    entityArray.Add(new RaycastCheckComponent { entity = quadrantData.entity, position = quadrantData.position });
-                } while (QuadrantSystem.quadrantMultiHashMap.TryGetNextValue(out quadrantData,
+                    if (quadrantData.group == SelectionToolCollider.instance.CurrentColorIndex) continue;
+                    float3 pos = pc.transform.TransformPoint(quadrantData.position);
+                    entityArray.Add(new RaycastCheckComponent {position = pos, origin = origin, xindex = quadrantData.xindex, yindex = quadrantData.yindex, label = quadrantData.label});
+                } while (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetNextValue(out quadrantData,
                     ref nativeMultiHashMapIterator));
             }
-
             NativeArray<Entity> entities = new NativeArray<Entity>(entityArray.Length, Allocator.Temp);
             EntityManager.CreateEntity(entityArchetype, entities);
-            for (int i = 0; i < entityArray.Length; i++)
+            for (int i = 0; i < entities.Length; i++)
             {
-                EntityManager.SetComponentData(entities[i], new RaycastCheckComponent { entity = entityArray[i].entity, position = entityArray[i].position} );
-                
+                EntityManager.SetComponentData(entities[i], new RaycastCheckComponent
+                {
+                    position = entityArray[i].position,
+                    origin = entityArray[i].origin,
+                    label = entityArray[i].label,
+                    xindex = entityArray[i].xindex,
+                    yindex = entityArray[i].yindex
+                });
             }
+
             ecbSystem.AddJobHandleForProducer(Dependency);
 
             entities.Dispose();
             entityArray.Dispose();
         }
 
-
-        [BurstCompile]
-        private void AddGraphPointToSelection(Entity entity)
-        {
-            // if (quadrantData.point.pointType == PointType.EntityType.Graph) return;
-            // List<Dictionary<string, Entity>> dicts = PointSpawner.instance.entityDicts;
-            // foreach (Entity entity in dicts.Select(dict => dict[quadrantData.point.label.ToString()]))
-            // {
-            Point p = GetComponent<Point>(entity);
-            p.selected = true;
-            p.group = SelectionTool.instance.currentGroup;
-            // Debug.Log($"point selected : {p.yindex}, {p.xindex}");
-            // if (point.pointType == PointType.EntityType.GraphPointSpatial)
-            // {
-            // MoveToReferenceBrain(quadrantData, entity, point);
-            // }
-
-            // Color color = SelectionTool.instance.GetCurrentColor(); //new Color(1, 0, 0, 1); //TextureHandler.instance.colors[SelectionTool.instance.currentGroup];
-            // SetComponent(entity, new PointColor {color = new half4((half) color.r, (half) color.g, (half) color.b, (half) 1f)});
-            // SetComponent(entity, new Alpha {value = 2f});
-            entityManager.SetComponentData(entity, p);
-            entityManager.AddComponent<SelectedPointComponent>(entity);
-            // }
-
-            // TextureHandler.instance.ColorPoint(quadrantData.entity, colorIndex);
-            // entityManager.AddComponent<PointSelectedForColoring>(quadrantData.entity);
-        }
 
         // [BurstCompile]
         // private void MoveToReferenceBrain(QuadrantData quadrantData, Entity entity, Point point)

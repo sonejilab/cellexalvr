@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
 {
-
     /// <summary>
     /// Represents the sub menu that pops up when the <see cref="AttributeMenuButton"/> is pressed.
     /// </summary>
@@ -19,6 +18,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             get { return CellexalConfig.Config.SelectionToolColors; }
         }
+
         public ColorByBooleanExpressionButton booleanExpressionButtonPrefab;
         public Tab booleanExpressionTabPrefab;
         public List<string> attributes;
@@ -68,14 +68,22 @@ namespace CellexalVR.Menu.SubMenus
         /// <summary>
         /// Switches all buttons between boolean expression and single attribute mode.
         /// </summary>
-        public void SwitchButtonStates()
+        public void SwitchButtonStates(bool bigFolder = false)
         {
             foreach (var b in cellexalButtons)
             {
                 ColorByAttributeButton button = b.GetComponent<ColorByAttributeButton>();
-                button.SwitchMode();
+                if (!bigFolder)
+                {
+                    button.SwitchMode();
+                }
+                else
+                {
+                    button.SwitchModeToBigFolder(ColorByAttributeButton.Mode.BIGFOLDER);
+                }
             }
         }
+
 
         /// <summary>
         /// Builds a tree of and expressions and not expressions that corresponds to the current state of the attribute buttons.
@@ -109,6 +117,7 @@ namespace CellexalVR.Menu.SubMenus
                     }
                 }
             }
+
             return root;
         }
 
@@ -136,14 +145,15 @@ namespace CellexalVR.Menu.SubMenus
                     {
                         category = b.Attribute.Split('@')[0];
                     }
+
                     if (!b.colored && category == currentCategory)
                     {
                         b.ColourAttribute(true);
                     }
+
                     yield return null;
                 }
             }
         }
-
     }
 }

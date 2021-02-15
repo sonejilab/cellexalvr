@@ -3,6 +3,7 @@ using CellexalVR.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
@@ -21,6 +22,7 @@ namespace CellexalVR.AnalysisObjects
         /// List of pages with entries, access an entry with <code>entries[pageNbr][entryNbr]</code>
         /// </summary>
         private List<List<GroupingLegendEntry>> entries = new List<List<GroupingLegendEntry>>();
+
         private int currentPageNbr = 0;
         private int maxEntriesPerPage = 10;
         private int addEntryToPageIndex = 0;
@@ -61,6 +63,7 @@ namespace CellexalVR.AnalysisObjects
 
             attached = true;
         }
+
         private void DeActivateExtraColumn()
         {
             extraColumn.SetActive(false);
@@ -120,8 +123,10 @@ namespace CellexalVR.AnalysisObjects
             newEntry.filterButton.GetComponent<AttributeFilterButton>().group = groupName;
             activeCells += numberOfCells;
 
-            string percentOfSelectedString = ((float)numberOfCells / activeCells).ToString("P");
-            string percentOfAllString = ((float)numberOfCells / referenceManager.cellManager.GetNumberOfCells()).ToString("P");
+            string percentOfSelectedString = ((float) numberOfCells / activeCells).ToString("P");
+            int pointCount = referenceManager.cellManager.GetNumberOfCells();
+            if (pointCount == 0) pointCount = PointCloudGenerator.instance.pointCount;
+            string percentOfAllString = ((float) numberOfCells / pointCount).ToString("P");
             newEntry.SetPanelText(groupName, numberOfCells, percentOfSelectedString, percentOfAllString, color);
             UpdatePercentages();
             newEntry.transform.localScale = Vector3.one;
@@ -132,7 +137,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 newEntryGameObject.SetActive(false);
             }
-
         }
 
         /// <summary>
@@ -170,11 +174,11 @@ namespace CellexalVR.AnalysisObjects
                     Destroy(entry.gameObject);
                 }
             }
+
             entries.Clear();
             currentPageNbr = 0;
             addEntryToPageIndex = 0;
             pageNumberText.text = "Page 1/1";
-
         }
 
         /// <summary>
@@ -201,6 +205,7 @@ namespace CellexalVR.AnalysisObjects
                     {
                         entries[pageNbr + 1][i].gameObject.SetActive(activateMoved);
                     }
+
                     entries[pageNbr + 1].RemoveRange(0, entriesToMove);
                 }
 
@@ -219,9 +224,9 @@ namespace CellexalVR.AnalysisObjects
                 {
                     ChangePage(false);
                 }
+
                 pageNumberText.text = "Page " + (currentPageNbr + 1) + " / " + entries.Count;
             }
-
         }
 
         /// <summary>
@@ -235,8 +240,10 @@ namespace CellexalVR.AnalysisObjects
                 {
                     int numberOfCells = remainingEntry.numberOfCells;
                     remainingEntry.numberOfCellsText.text = numberOfCells.ToString();
-                    string percentOfSelectedString = ((float)numberOfCells / activeCells).ToString("P");
-                    string percentOfAllString = ((float)numberOfCells / referenceManager.cellManager.GetNumberOfCells()).ToString("P");
+                    string percentOfSelectedString = ((float) numberOfCells / activeCells).ToString("P");
+                    int pointCount = referenceManager.cellManager.GetNumberOfCells();
+                    if (pointCount == 0) pointCount = PointCloudGenerator.instance.pointCount;
+                    string percentOfAllString = ((float) numberOfCells / pointCount).ToString("P");
                     remainingEntry.UpdatePercentages(percentOfSelectedString, percentOfAllString);
                 }
             }
@@ -257,6 +264,7 @@ namespace CellexalVR.AnalysisObjects
                 foundEntry = entries[pageIndex].FirstOrDefault((entry) => entry.groupName.text == groupName);
                 pageIndex++;
             }
+
             if (foundEntry)
             {
                 foundEntry.numberOfCells += numberOfCellsToAdd;
@@ -264,6 +272,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     RemoveEntry(groupName);
                 }
+
                 UpdatePercentages();
             }
             else

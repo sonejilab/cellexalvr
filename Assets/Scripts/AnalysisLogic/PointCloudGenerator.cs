@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -6,7 +7,9 @@ using System.Linq;
 using AnalysisLogic;
 using CellexalVR;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using CellexalVR.Interaction;
+using Unity.Collections;
 // using CellexalVR.AnalysisLogic;
 // using CellexalVR.AnalysisObjects;
 // using CellexalVR.General;
@@ -21,12 +24,12 @@ namespace DefaultNamespace
 {
     public struct Point : IComponentData
     {
-        public int group;
         public bool selected;
         public int xindex;
         public int yindex;
         public float3 offset;
         public int parentID;
+        public int label;
     }
 
     public struct PointCloudComponent : IComponentData
@@ -49,7 +52,10 @@ namespace DefaultNamespace
         public Texture2D colorMap;
         public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
         public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
+        public Dictionary<string, List<Vector2>> clusters = new Dictionary<string, List<Vector2>>();
+        public Texture2D clusterMap;
 
+        public int pointCount;
         public float3 scaledOffset;
         // public List<string> cells = new List<string>();
 
@@ -63,6 +69,7 @@ namespace DefaultNamespace
         private List<PointCloud> pointClouds = new List<PointCloud>();
         private EntityArchetype entityArchetype;
         private QuadrantSystem quadrantSystem;
+        private bool readingFile;
 
         private void Awake()
         {
@@ -70,6 +77,20 @@ namespace DefaultNamespace
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             quadrantSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>();
             CreateParentArchetype();
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                foreach (PointCloud pc in pointClouds)
+                {
+                    VisualEffect vfx = pc.GetComponent<VisualEffect>();
+                    vfx.enabled = true;
+                    vfx.Play();
+                    vfx.SetTexture("ColorMapTex", clusterMap);
+                }
+            }
         }
 
         public PointCloud CreateNewPointCloud()
@@ -151,7 +172,7 @@ namespace DefaultNamespace
             entityManager.SetComponentData(parent, new Rotation {Value = new quaternion(0, 0, 0, 0)});
             entityManager.SetComponentData(parent, new Scale {Value = 1f});
             LocalToWorld localToWorld = entityManager.GetComponentData<LocalToWorld>(parent);
-            PointCloudComponent pointCloudComponent = new PointCloudComponent{pointCloudId = graphNr};
+            PointCloudComponent pointCloudComponent = new PointCloudComponent {pointCloudId = graphNr};
             entityManager.SetComponentData(parent, pointCloudComponent);
             creatingGraph = true;
             ScaleAllCoordinates();
@@ -166,36 +187,50 @@ namespace DefaultNamespace
                 float3 pos = ScaleCoordinate(pointPair.Key);
             }
 
+            pointCount = scaledCoordinates.Count;
 
             StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
-            print($" graphs : {nrOfGraphs}, files : {mdsFileCount}");
-            if (nrOfGraphs == mdsFileCount)
-            {
-                StartCoroutine(CreateColorTextureMap(scaledCoordinates.Values.ToList().Count));
-            }
+            // pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList());
+            // if (nrOfGraphs == mdsFileCount)
+            // {
+            //     StartCoroutine(CreateColorTextureMap(scaledCoordinates.Values.ToList().Count));
+            // }
 
+            points.Clear();
+            scaledCoordinates.Clear();
             creatingGraph = false;
         }
 
-        private IEnumerator CreateColorTextureMap(int pointCount)
+        public IEnumerator CreateColorTextureMap()
         {
+            while (readingFile) yield return null;
             int width = (int) math.ceil(math.sqrt(pointCount));
             int height = width;
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            Color c = new Color(0.32f, 0.32f, 0.32f);
+            Color[] carray = new Color[width*height];
+            Color[] carrayClusters = new Color[width*height];
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     int ind = x + (width * y);
                     if (ind >= pointCount) continue;
-                    Color c = clusterDict.Count == 0 ? Color.white : colorDict[clusterDict[ind]];
-                    colorMap.SetPixel(x, y, c);
+                    Color cluster = colorDict[clusterDict[ind]];
+                    carrayClusters[ind] = cluster;
+                    carray[ind] = c;
+                    clusters[clusterDict[ind]].Add(new Vector2(x, y));
                 }
 
-                yield return null;
             }
-
+            colorMap.SetPixels(carray);
+            // colorMap.SetPixel(x, y, c);
+            // clusterMap.SetPixel(x, y, cluster);
+            clusterMap.SetPixels(carrayClusters);
+            CellexalLog.Log("Color Texture Map created");
             colorMap.Apply();
+            clusterMap.Apply();
             foreach (PointCloud pc in pointClouds)
             {
                 VisualEffect vfx = pc.GetComponent<VisualEffect>();
@@ -204,7 +239,10 @@ namespace DefaultNamespace
                 vfx.SetTexture("ColorMapTex", colorMap);
             }
 
+            clusterDict.Clear();
+
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMap = colorMap;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().clusterTextureMap = clusterMap;
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(nrOfGraphs);
         }
 
@@ -213,42 +251,59 @@ namespace DefaultNamespace
         //     CreateColorTextureMap();
         // }
 
-        public void ReadMetaData(PointCloud pc, string dir)
+        public IEnumerator ReadMetaData(string dir)
         {
-            // string[] tissues = new string[]
-            // {
-            //     "Adrenal", "Cerebellum", "Cerebrum", "Eye", "Heart", "Intestine", "Kidney", "Liver", "Lung", "Muscle", "Pancreas", "Placenta",
-            //     "Spleen", "Stomach", "Thymus"
-            // };
-            //
-            // int i = 0;
-            // Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
-            // foreach (string tissue in tissues)
-            // {
-            //     colorDict[tissue] = SelectionTool.instance.colors[i++ % SelectionTool.instance.colors.Length];
-            // }
-            //
-
+            readingFile = true;
             colorDict = new Dictionary<string, Color>();
             clusterDict = new Dictionary<int, string>();
+
+            int width = (int) math.ceil(math.sqrt(pointCount));
+            int height = width;
+            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             int id = 0;
             string[] metafiles = Directory.GetFiles(dir, "*metadata.csv");
-            using (StreamReader sr = new StreamReader(metafiles[0]))
+            if (metafiles.Length != 0)
             {
-                string header = sr.ReadLine();
-                while (!sr.EndOfStream)
+                int clusterCount = 0;
+                Color c;
+                using (StreamReader sr = new StreamReader(metafiles[0]))
                 {
-                    string[] words = sr.ReadLine().Split(',');
-                    string cluster = words[2];
-                    clusterDict[id++] = cluster;
-                    if (!colorDict.ContainsKey(cluster))
+                    string header = sr.ReadLine();
+                    while (!sr.EndOfStream)
                     {
-                        Color c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
-                        c.a = 1;
-                        colorDict[cluster] = c;
+                        if (id % 10000 == 0) yield return null;
+                        string[] words = sr.ReadLine().Split(',');
+                        string cluster = words[2];
+                        clusterDict[id++] = cluster;
+                        if (!colorDict.ContainsKey(cluster))
+                        {
+                            if (clusterCount >= SelectionToolCollider.instance.Colors.Length - 1)
+                            {
+                                c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
+                                ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
+                            }
+                            else
+                            {
+                                c = SelectionToolCollider.instance.Colors[clusterCount];
+                            }
+
+                            c.a = 1;
+                            colorDict[cluster] = c;
+                            clusters[cluster] = new List<Vector2>();
+                            clusterCount++;
+                            // int xIndex = id % width;
+                            // int yIndex = (int)math.floor(id / height);
+                            // clusterMap.SetPixel(xIndex, yIndex, c);
+                        }
                     }
                 }
+
+                ReferenceManager.instance.attributeSubMenu.CreateButtons(colorDict.Keys.ToArray());
+                ReferenceManager.instance.attributeSubMenu.SwitchButtonStates(true);
+                CellexalLog.Log("Meta data read");
             }
+
+            readingFile = false;
         }
     }
 }
