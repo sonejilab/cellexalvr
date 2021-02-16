@@ -109,6 +109,10 @@ namespace CellexalVR.AnalysisLogic
 
                 string[] axes = new string[3];
                 string[] velo = new string[3];
+                List<string> names = new List<string>();
+                List<float> xcoords = new List<float>();
+                List<float> ycoords = new List<float>();
+                List<float> zcoords = new List<float>();
                 using (StreamReader mdsStreamReader = new StreamReader(file))
                 {
                     //List<string> cellnames = new List<string>();
@@ -141,8 +145,12 @@ namespace CellexalVR.AnalysisLogic
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        Cell cell = referenceManager.cellManager.AddCell(cellName);
-                        referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                        // Cell cell = referenceManager.cellManager.AddCell(cellName);
+                        // referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                        names.Add(cellName);
+                        xcoords.Add(x);
+                        ycoords.Add(y);
+                        zcoords.Add(z);
                         axes[0] = "x";
                         axes[1] = "y";
                         axes[2] = "z";
@@ -174,8 +182,12 @@ namespace CellexalVR.AnalysisLogic
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             float z = float.Parse(words[3],
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                            Cell cell = referenceManager.cellManager.AddCell(cellname);
-                            referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                            // Cell cell = referenceManager.cellManager.AddCell(cellname);
+                            // referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                            names.Add(cellname);
+                            xcoords.Add(x);
+                            ycoords.Add(y);
+                            zcoords.Add(z);
                             itemsThisFrame++;
                         }
 
@@ -214,6 +226,8 @@ namespace CellexalVR.AnalysisLogic
                     // if (debug)
                     //     newGraph.CreateConvexHull();
                 }
+                
+                CreateFromCoordinates(names, xcoords, ycoords, zcoords);
 
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
                 // Improves performance a lot when analysing larger graphs.
@@ -256,6 +270,27 @@ namespace CellexalVR.AnalysisLogic
             }
 
             CellexalEvents.GraphsLoaded.Invoke();
+        }
+
+        private void CreateFromCoordinates(List<string> names, List<float> x, List<float> y, List<float> z)
+        {
+            int gpCount = x.Count;
+            for (int i = 0; i < gpCount; i++)
+            {
+                Cell cell = referenceManager.cellManager.AddCell(names[i]);
+                referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], z[i]);
+            }
+        }
+
+        public void CreateFromCoordinates(List<float> x, List<float> y)
+        {
+             int gpCount = x.Count;
+             for (int i = 0; i < gpCount; i++)
+             {
+                 string cellName = i.ToString();
+                 Cell cell = referenceManager.cellManager.AddCell(cellName);
+                 referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], 0);
+             }           
         }
 
 

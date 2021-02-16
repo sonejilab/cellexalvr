@@ -30,6 +30,7 @@ namespace CellexalVR.AnalysisLogic
         public int facsGraphCounter;
         public bool attributeFileRead;
         public AttributeReader attributeReader;
+        public MDSReader mdsReader;
 
         private readonly char[] separators = { ' ', '\t' };
         private CellManager cellManager;
@@ -37,7 +38,6 @@ namespace CellexalVR.AnalysisLogic
         private SelectionManager selectionManager;
         private ColorByIndexMenu indexMenu;
         private GraphFromMarkersMenu createFromMarkerMenu;
-        private MDSReader mdsReader;
         private NetworkReader networkReader;
         private PDFMesh pdfMesh;
 
@@ -203,7 +203,6 @@ namespace CellexalVR.AnalysisLogic
 
             pdfMesh.ReadPDF(fullPath);
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
-            mdsReader = gameObject.AddComponent<MDSReader>();
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
             StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));

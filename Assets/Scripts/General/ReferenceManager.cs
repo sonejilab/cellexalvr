@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisLogic;
+﻿using System;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Filters;
@@ -25,6 +26,8 @@ namespace CellexalVR.General
     /// </summary>
     public class ReferenceManager : MonoBehaviour
     {
+        public static ReferenceManager instance;
+        
         #region Controller things
 
         [Header("Controller things")]
@@ -174,6 +177,10 @@ namespace CellexalVR.General
 
         #endregion
 
+        private void Awake()
+        {
+            instance = this;
+        }
 #if UNITY_EDITOR
         /// <summary>
         /// Attempts to set all references using <see cref="GameObject.Find(string)"/> and <see cref="GameObject.GetComponent(string)"/>.
