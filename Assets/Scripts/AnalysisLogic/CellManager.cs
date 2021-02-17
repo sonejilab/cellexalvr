@@ -238,7 +238,14 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] {"colorbygene", "cbg"})]
         public void ColorGraphsByGene(string geneName)
         {
-            ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            if (ScarfManager.scarfObject != null)
+            {
+                ScarfManager.ColorByFeature(geneName);
+            }
+            else
+            {
+                ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            }
         }
 
         /// <summary>
@@ -548,7 +555,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", aliases: new string[] {"colorbyattribute", "cba"})]
-        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false, int colIndex = 0)
         {
             if (!subGraph)
             {
@@ -574,7 +581,7 @@ namespace CellexalVR.AnalysisLogic
 
             foreach (Cell cell in cells.Values)
             {
-                cell.ColorByAttribute(attributeType, color);
+                cell.ColorByAttribute(attributeType, colIndex, color);
                 if (cell.GraphPoints.Count == 0) continue;
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))
@@ -582,7 +589,7 @@ namespace CellexalVR.AnalysisLogic
                     numberOfCells++;
                     if (color && !selectionList.ContainsKey(gp))
                     {
-                        selectionList.Add(gp, cell.Attributes[attributeType.ToLower()]);
+                        selectionList.Add(gp, colIndex);
                     }
 
                     if (!color)

@@ -99,6 +99,7 @@ namespace CellexalVR.DesktopUI
             CellexalEvents.ConfigLoaded.AddListener(SetValues);
             CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+            CellexalEvents.ScarfObjectLoaded.AddListener(OnGraphsLoaded);
 
             colorPicker = referenceManager.colorPicker;
             var skyboxOptions = new List<TMPro.TMP_Dropdown.OptionData>();

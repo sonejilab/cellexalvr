@@ -48,6 +48,8 @@ namespace CellexalVR.General
 
             CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyFolderColliders);
             CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyCells);
+            CellexalEvents.ScarfObjectLoaded.AddListener(referenceManager.loaderController.DestroyFolderColliders);
+            CellexalEvents.ScarfObjectLoaded.AddListener(referenceManager.loaderController.DestroyCells);
         }
 
         /// <summary>

@@ -40,6 +40,7 @@ namespace CellexalVR.Interaction
             if (buildTree)
             {
                 CellexalEvents.GraphsLoaded.AddListener(Init);
+                CellexalEvents.ScarfObjectLoaded.AddListener(Init);
             }
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
@@ -67,6 +68,10 @@ namespace CellexalVR.Interaction
                 //Grabbing the first h5reader since we dont know the path
                 results = referenceManager.inputReader.h5readers.First().Value.index2genename;
 
+            }
+            else if (ScarfManager.scarfObject != null)
+            {
+                results = ScarfManager.scarfObject.feature_names.ToArray();
             }
             else
             {

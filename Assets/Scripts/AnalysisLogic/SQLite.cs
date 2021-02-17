@@ -1020,6 +1020,7 @@ namespace SQLiter
                 result.Sort();
 
                 float binsize = (float)result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
+                print(binsize);
                 for (int j = 0; j < result.Count; ++j)
                 {
                     result[j].Color = (int)(j / binsize);

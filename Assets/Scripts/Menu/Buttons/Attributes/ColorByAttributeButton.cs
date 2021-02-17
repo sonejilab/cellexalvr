@@ -3,6 +3,7 @@ using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEngine;
+
 namespace CellexalVR.Menu.Buttons.Attributes
 {
     /// <summary>
@@ -13,13 +14,19 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public TMPro.TextMeshPro description;
 
         private CellManager cellManager;
+        private int colIndex;
         public Color booleanNotIncludedColor;
         public Color booleanYesColor;
         public Color booleanNoColor;
         public string Attribute { get; set; }
         public bool colored = false;
 
-        public enum Mode { SINGLE, BOOLEAN_EXPR }
+        public enum Mode
+        {
+            SINGLE,
+            BOOLEAN_EXPR
+        }
+
         public Mode CurrentMode { get; set; } = Mode.SINGLE;
         public AttributeLogic CurrentBooleanExpressionState { get; private set; } = AttributeLogic.NOT_INCLUDED;
         public AttributeSubMenu parentMenu;
@@ -42,7 +49,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
             if (CurrentMode == Mode.SINGLE)
             {
-                cellManager.ColorByAttribute(Attribute, !colored);
+                cellManager.ColorByAttribute(Attribute, !colored, colIndex:colIndex);
                 referenceManager.multiuserMessageSender.SendMessageColorByAttribute(Attribute, !colored);
 
                 colored = !colored;
@@ -74,9 +81,9 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// <summary>
         /// Called when toggling all attributes using the select all button.
         /// </summary>
-        public void ColourAttribute(bool toggle)
+        public void ColorAttribute(bool toggle)
         {
-            cellManager.ColorByAttribute(Attribute, toggle);
+            cellManager.ColorByAttribute(Attribute, toggle, colIndex: this.colIndex);
             referenceManager.multiuserMessageSender.SendMessageColorByAttribute(Attribute, toggle);
 
             colored = toggle;
@@ -105,7 +112,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// <param name="color"> The color that the cells in possesion of the attribute should get. </param>
         public void SetAttribute(string attribute, Color color)
         {
-            SetAttribute(attribute, attribute, color);
+            SetAttribute(attribute, attribute, colIndex);
         }
 
         /// <summary>
@@ -114,7 +121,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         /// <param name="attribute">The name of the attribute.</param>
         /// <param name="displayedName">The text that should be displayed on the button.</param>
         /// <param name="color">The color that the cells in possesion of the attribute should get.</param>
-        public void SetAttribute(string attribute, string displayedName, Color color)
+        public void SetAttribute(string attribute, string displayedName, int colorIndex)
         {
             //if (displayedName.Length > 8)
             //{
@@ -126,8 +133,19 @@ namespace CellexalVR.Menu.Buttons.Attributes
             //    description.text = displayedName;
             //}
             description.text = displayedName;
-            this.Attribute = attribute;
+            string[] words = attribute.Split('@');
+            if (words[0] == "UnnamedAttr")
+            {
+                Attribute = words[1];
+            }
+            else
+            {
+                Attribute = attribute;
+            }
+
+            colIndex = colorIndex;
             // sometimes this is done before Awake() it seems, so we use GetComponent() here
+            Color color = CellexalConfig.Config.SelectionToolColors[colorIndex];
             GetComponent<Renderer>().material.color = color;
             meshStandardColor = color;
         }
@@ -190,7 +208,5 @@ namespace CellexalVR.Menu.Buttons.Attributes
             activeOutline.SetActive(false);
             storedState = false;
         }
-
-
     }
 }

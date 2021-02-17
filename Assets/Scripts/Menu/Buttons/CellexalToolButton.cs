@@ -27,6 +27,7 @@ namespace CellexalVR.Menu.Buttons
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             CellexalEvents.ModelChanged.AddListener(UpdateButton);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+            CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
 

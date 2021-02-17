@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -21,11 +22,9 @@ namespace CellexalVR.Menu.SubMenus
         public bool Active
         {
             get => active;
-            set
-            {
-                active = value;
-            }
+            set { active = value; }
         }
+
         //public Dictionary<CellexalButton, bool> savedButtonStates = new Dictionary<CellexalButton, bool>();
         private bool active;
 
@@ -40,6 +39,8 @@ namespace CellexalVR.Menu.SubMenus
         protected int buttonsPerTab = 20;
         protected string[] names;
         protected string[] categories;
+        protected string[] orderedNames;
+        protected Dictionary<string, List<string>> categoriesAndNamesDict;
 
         private int currentPage = 0;
         private int pageCounter = 0;
@@ -64,7 +65,6 @@ namespace CellexalVR.Menu.SubMenus
         public virtual void CreateButtons(string[] categoriesAndNames)
         {
             DestroyTabs();
-            this.categoriesAndNames = categoriesAndNames;
             if (cellexalButtons == null)
                 cellexalButtons = new List<CellexalButton>();
             foreach (var button in cellexalButtons)
@@ -75,54 +75,104 @@ namespace CellexalVR.Menu.SubMenus
                     Destroy(button.gameObject, .1f);
                 }
             }
+
             cellexalButtons.Clear();
             //TurnOffAllTabs();
+            this.categoriesAndNames = categoriesAndNames;
             categories = new string[categoriesAndNames.Length];
             names = new string[categoriesAndNames.Length];
+            categoriesAndNamesDict = new Dictionary<string, List<string>>();
             for (int i = 0; i < categoriesAndNames.Length; ++i)
             {
                 if (categoriesAndNames[i].Contains("@"))
                 {
                     string[] categoryAndName = categoriesAndNames[i].Split('@');
                     categories[i] = categoryAndName[0];
+                    if (!categoriesAndNamesDict.ContainsKey(categories[i]))
+                    {
+                        categoriesAndNamesDict[categories[i]] = new List<string>();
+                    }
+
+                    categoriesAndNamesDict[categories[i]].Add(categoryAndName[1]);
                     names[i] = categoryAndName[1];
                 }
                 else
                 {
+                    if (!categoriesAndNamesDict.ContainsKey("UnnamedAttr"))
+                    {
+                        categoriesAndNamesDict["UnnamedAttr"] = new List<string>();
+                    }
+
                     categories[i] = "";
                     names[i] = categoriesAndNames[i];
+                    categoriesAndNamesDict["UnnamedAttr"].Add(names[i]);
                 }
             }
 
             Tab newTab = null;
-            for (int i = 0, buttonIndex = 0; i < names.Length; ++i, ++buttonIndex)
+            int buttonIndex = 0;
+            string prevCat = "";
+            foreach (KeyValuePair<string, List<string>> kvp in categoriesAndNamesDict)
             {
-                // add a new tab if we encounter a new category, or if the current tab is full
-                if (buttonIndex % buttonsPerTab == 0 || i > 0 && categories[i] != categories[i - 1])
+                string cat = kvp.Key;
+                int maxLen = kvp.Value.Max(x => x.Length);
+                orderedNames = kvp.Value.OrderBy(x => x.PadLeft(maxLen, '0')).ToArray();
+                for (int i = 0; i < orderedNames.Length; i++, buttonIndex++)
                 {
-                    if (tabs.Count > 0 && tabs.Count % 4 == 0)
+                    if (buttonIndex % buttonsPerTab == 0 || !cat.Equals(prevCat))
                     {
-                        nextPageButton.SetActive(true);
-                        tabButtonPos = tabButtonPosOriginal;
-                        pageCounter++;
-                        pageNrText.text = "p. " + (currentPage + 1) + "/" + (pageCounter + 1);
+                        if (tabs.Count > 0 && tabs.Count % 4 == 0)
+                        {
+                            nextPageButton.SetActive(true);
+                            tabButtonPos = tabButtonPosOriginal;
+                            pageCounter++;
+                            pageNrText.text = "p. " + (currentPage + 1) + "/" + (pageCounter + 1);
+                        }
+
+                        newTab = AddTab(tabPrefab);
+                        newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = cat;
+                        buttonIndex = 0;
                     }
-                    newTab = AddTab(tabPrefab);
-                    newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = categories[i];
-                    buttonIndex = 0;
 
+                    var newButton = Instantiate(prefab, newTab.transform);
+                    newButton.gameObject.SetActive(true);
+                    cellexalButtons.Add(newButton);
+                    newTab.AddButton(newButton);
+                    prevCat = cat;
                 }
-                var newButton = Instantiate(prefab, newTab.transform);
-
-                newButton.gameObject.SetActive(true);
-
-                //menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
-
-                //if (buttonIndex < Colors.Length)
-                //    newButton.GetComponent<Renderer>().material.color = Colors[buttonIndex];
-                cellexalButtons.Add(newButton);
-                newTab.AddButton(newButton);
             }
+
+            // Tab newTab = null;
+            // for (int i = 0, buttonIndex = 0; i < names.Length; ++i, ++buttonIndex)
+            // {
+            //     // add a new tab if we encounter a new category, or if the current tab is full
+            //     if (buttonIndex % buttonsPerTab == 0 || i > 0 && categories[i] != categories[i - 1])
+            //     {
+            //         if (tabs.Count > 0 && tabs.Count % 4 == 0)
+            //         {
+            //             nextPageButton.SetActive(true);
+            //             tabButtonPos = tabButtonPosOriginal;
+            //             pageCounter++;
+            //             pageNrText.text = "p. " + (currentPage + 1) + "/" + (pageCounter + 1);
+            //         }
+            //
+            //         newTab = AddTab(tabPrefab);
+            //         newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = categories[i];
+            //         buttonIndex = 0;
+            //     }
+            //
+            //     var newButton = Instantiate(prefab, newTab.transform);
+            //
+            //     newButton.gameObject.SetActive(true);
+            //
+            //     //menuToggler.AddGameObjectToActivate(newButton.gameObject, gameObject);
+            //
+            //     //if (buttonIndex < Colors.Length)
+            //     //    newButton.GetComponent<Renderer>().material.color = Colors[buttonIndex];
+            //     cellexalButtons.Add(newButton);
+            //     newTab.AddButton(newButton);
+            // }
+
             // set the names of the attributes after the buttons have been created.
             //for (int i = 0; i < buttons.Count; ++i)
             //{
@@ -137,6 +187,7 @@ namespace CellexalVR.Menu.SubMenus
             //newTab.SetTabActive(true);
             //newTab.SetTabActive(GetComponent<Renderer>().enabled);
         }
+
         /// <summary>
         /// Adds a tab to this menu.
         /// </summary>
@@ -154,6 +205,7 @@ namespace CellexalVR.Menu.SubMenus
             {
                 newTab.gameObject.SetActive(true);
             }
+
             //newTab.SetTabActive(false);
             //newTab.transform.parent = transform;
             newTab.tabButton.gameObject.transform.localPosition = tabButtonPos;
@@ -201,6 +253,7 @@ namespace CellexalVR.Menu.SubMenus
             {
                 Destroy(t.gameObject, 0.1f);
             }
+
             ResetTabButtonPosition();
             tabs.Clear();
         }
@@ -240,8 +293,9 @@ namespace CellexalVR.Menu.SubMenus
             pageNrText.text = "p. " + (currentPage + 1) + "/" + (pageCounter + 1);
             for (int i = 0; i < tabs.Count; i++)
             {
-                tabs[i].gameObject.SetActive((int)(i / 4) == currentPage);
+                tabs[i].gameObject.SetActive((int) (i / 4) == currentPage);
             }
+
             if (currentPage == pageCounter)
             {
                 nextPageButton.SetActive(false);
@@ -255,7 +309,6 @@ namespace CellexalVR.Menu.SubMenus
                 nextPageButton.SetActive(true);
                 prevPageButton.SetActive(true);
             }
-
         }
     }
 }

@@ -14,9 +14,10 @@ namespace CellexalVR.SceneObjects
         private bool pulseToggle;
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
             CellexalEvents.GraphsLoaded.AddListener(StartWave);
+            CellexalEvents.ScarfObjectLoaded.AddListener(StartWave);
             CellexalEvents.GraphsColoredByGene.AddListener(StartWave);
             CellexalEvents.GraphsColoredByIndex.AddListener(StartWave);
             //CellexalEvents.HeatmapCreated.AddListener(StartWave);

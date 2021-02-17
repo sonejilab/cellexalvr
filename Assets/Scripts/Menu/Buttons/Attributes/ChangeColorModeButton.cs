@@ -28,6 +28,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             SetButtonActivated(true);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+            CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
         }
 
         public override void Click()

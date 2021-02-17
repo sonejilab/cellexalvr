@@ -3,10 +3,10 @@ using System;
 using UnityEngine;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
+using CellexalVR.General;
 
 namespace CellexalVR.AnalysisLogic
 {
-
     /// <summary>
     /// Represents one cell. A cell may be present in multiple graphs.
     /// </summary>
@@ -72,10 +72,27 @@ namespace CellexalVR.AnalysisLogic
         {
             if (!Attributes.ContainsKey(attributeType.ToLower())) return;
             foreach (Graph.GraphPoint g in GraphPoints)
-            {                    
+            {
                 if (color)
                 {
                     g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);
+                }
+
+                else
+                {
+                    g.ResetColor();
+                }
+            }
+        }
+
+        public void ColorByAttribute(string attributeType, int group, bool color)
+        {
+            if (!Attributes.ContainsKey(attributeType.ToLower())) return;
+            foreach (Graph.GraphPoint g in GraphPoints)
+            {
+                if (color)
+                {
+                    g.ColorSelectionColor(group, false);
                 }
 
                 else
@@ -96,9 +113,9 @@ namespace CellexalVR.AnalysisLogic
                 if (attribute.Item2 == AttributeLogic.NO && Attributes.ContainsKey(attributeName))
                     return false;
             }
+
             return true;
         }
-
 
 
         /// <summary>
@@ -112,6 +129,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 lastExpressions.Remove(removeGeneName);
             }
+
             lastExpressions[saveGeneName] = ExpressionLevel;
         }
 
@@ -218,6 +236,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 lengths[pair.Key] = pair.Value.Length;
             }
+
             return lengths;
         }
 
