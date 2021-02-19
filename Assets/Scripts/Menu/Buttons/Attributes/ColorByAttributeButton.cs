@@ -1,8 +1,10 @@
-﻿using CellexalVR.AnalysisLogic;
+﻿using System.Collections.Generic;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEngine;
+using Valve.Newtonsoft.Json.Utilities;
 
 namespace CellexalVR.Menu.Buttons.Attributes
 {
@@ -134,7 +136,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             //}
             description.text = displayedName;
             string[] words = attribute.Split('@');
-            if (words[0] == "UnnamedAttr")
+            if (words[0] == "Unnamed")
             {
                 Attribute = words[1];
             }
@@ -144,6 +146,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
 
             colIndex = colorIndex;
+            print($"Set attribute: {Attribute}, {colIndex}");
+            ReferenceManager.instance.cellManager.Attributes.Add(Attribute);
             // sometimes this is done before Awake() it seems, so we use GetComponent() here
             Color color = CellexalConfig.Config.SelectionToolColors[colorIndex];
             GetComponent<Renderer>().material.color = color;

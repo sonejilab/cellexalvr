@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CellexalVR.General;
 using UnityEngine;
 using CellexalVR.AnalysisLogic.H5reader;
@@ -70,9 +71,9 @@ namespace CellexalVR.AnalysisLogic
 
             referenceManager.attributeSubMenu.CreateButtons(available_attributes.ToArray());
 
-            referenceManager.cellManager.Attributes = available_attributes.ToArray();
+            referenceManager.cellManager.Attributes = available_attributes;
             for (int i = CellexalConfig.Config.SelectionToolColors.Length;
-                i < referenceManager.cellManager.Attributes.Length;
+                i < referenceManager.cellManager.Attributes.Count;
                 i++)
             {
                 referenceManager.settingsMenu.AddSelectionColor();
@@ -153,11 +154,11 @@ namespace CellexalVR.AnalysisLogic
 
                     metaCellStreamReader.Close();
                     metaCellFileStream.Close();
+                    referenceManager.cellManager.Attributes = new List<string>(); //actualAttributeTypes.ToList();
                     referenceManager.attributeSubMenu.CreateButtons(actualAttributeTypes);
-                    referenceManager.cellManager.Attributes = actualAttributeTypes;
                 }
 
-                int nrOfAttributes = referenceManager.cellManager.Attributes.Length;
+                int nrOfAttributes = referenceManager.cellManager.Attributes.Count;
                 int nrOfSelToolColors = CellexalConfig.Config.SelectionToolColors.Length;
                 if (nrOfAttributes > nrOfSelToolColors)
                 {

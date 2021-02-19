@@ -358,7 +358,7 @@ namespace CellexalVR.Interaction
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             heatmap.highlightQuad.SetActive(true);
-            if (attribute >= cellManager.Attributes.Length || attribute < 0) return;
+            if (attribute >= cellManager.Attributes.Count || attribute < 0) return;
             if (heatmap.barInfoText.text == cellManager.Attributes[attribute]) return;
             ResetHeatmapHighlight(false);
             cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);

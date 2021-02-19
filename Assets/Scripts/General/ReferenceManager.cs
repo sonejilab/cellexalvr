@@ -79,6 +79,7 @@ namespace CellexalVR.General
         public ToggleArcsSubMenu arcsSubMenu;
         public AttributeSubMenu attributeSubMenu;
         public ColorByIndexMenu indexMenu;
+        public ColorByCellStatMenu cellStatMenu;
         public GraphFromMarkersMenu createFromMarkerMenu;
         public SelectionFromPreviousMenu selectionFromPreviousMenu;
         public ColorByGeneMenu colorByGeneMenu;
@@ -223,6 +224,7 @@ namespace CellexalVR.General
             arcsSubMenu = mainMenu.GetComponentInChildren<ToggleArcsSubMenu>(true);
             attributeSubMenu = leftButtons.GetComponentInChildren<AttributeSubMenu>(true);
             indexMenu = mainMenu.GetComponentInChildren<ColorByIndexMenu>(true);
+            cellStatMenu = mainMenu.GetComponentInChildren<ColorByCellStatMenu>(true);
             createFromMarkerMenu = mainMenu.GetComponentInChildren<GraphFromMarkersMenu>(true);
             selectionFromPreviousMenu = mainMenu.GetComponentInChildren<SelectionFromPreviousMenu>(true);
             colorByGeneMenu = mainMenu.GetComponentInChildren<ColorByGeneMenu>(true);

@@ -98,14 +98,14 @@ namespace CellexalVR.Menu.SubMenus
                 }
                 else
                 {
-                    if (!categoriesAndNamesDict.ContainsKey("UnnamedAttr"))
+                    if (!categoriesAndNamesDict.ContainsKey("Unnamed"))
                     {
-                        categoriesAndNamesDict["UnnamedAttr"] = new List<string>();
+                        categoriesAndNamesDict["Unnamed"] = new List<string>();
                     }
 
                     categories[i] = "";
                     names[i] = categoriesAndNames[i];
-                    categoriesAndNamesDict["UnnamedAttr"].Add(names[i]);
+                    categoriesAndNamesDict["Unnamed"].Add(names[i]);
                 }
             }
 
@@ -130,7 +130,11 @@ namespace CellexalVR.Menu.SubMenus
                         }
 
                         newTab = AddTab(tabPrefab);
-                        newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = cat;
+                        if (cat != "Unnamed")
+                        {
+                            newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = cat;
+                        }
+
                         buttonIndex = 0;
                     }
 

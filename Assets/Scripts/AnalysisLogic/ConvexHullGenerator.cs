@@ -1293,7 +1293,7 @@ namespace CellexalVR.AnalysisLogic
 
             GameObject debugParent = Instantiate(new GameObject(), graph.transform);
 
-            string[] attributes = referenceManager.cellManager.Attributes;
+            string[] attributes = referenceManager.cellManager.Attributes.ToArray();
             //string[] attributes = new string[] { "Tissue@Bladder", "Tissue@Embryonic-Mesenchyme" };
 
             foreach (string attribute in attributes)

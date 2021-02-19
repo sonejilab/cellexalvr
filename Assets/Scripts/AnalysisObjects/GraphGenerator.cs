@@ -14,6 +14,7 @@ using CellexalVR.Extensions;
 using CellexalVR.Spatial;
 using TMPro;
 using UnityEngine.Rendering;
+using Valve.Newtonsoft.Json.Utilities;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -1233,7 +1234,7 @@ namespace CellexalVR.AnalysisObjects
 
             subGraph.maxCoordValues = g.ScaleCoordinates(g.maxCoordValues);
             subGraph.minCoordValues = g.ScaleCoordinates(g.minCoordValues);
-            SliceClustering();
+            StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
             foreach (BoxCollider col in g.GetComponents<BoxCollider>())
             {
                 var newCol = subGraph.gameObject.AddComponent<BoxCollider>();
@@ -1247,13 +1248,16 @@ namespace CellexalVR.AnalysisObjects
 
             foreach (string attribute in attributesToColor)
             {
-                referenceManager.cellManager.ColorByAttribute(attribute, true, true);
+                // int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute, (s1, s2) => s1.ToLower() == s2.ToLower());
+                int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute);
+                print($"{attributeIndex}, {attribute}");
+                referenceManager.cellManager.ColorByAttribute(attribute, true, true, attributeIndex);
             }
 
             graphManager.Graphs.Add(subGraph);
             graphManager.attributeSubGraphs.Add(subGraph);
-            string[] axes = g.axisNames.ToArray();
-            AddAxes(subGraph, axes);
+            // string[] axes = g.axisNames.ToArray();
+            // AddAxes(subGraph, axes);
             if (g.hasVelocityInfo)
             {
                 referenceManager.velocitySubMenu.CreateButton(Directory.GetCurrentDirectory() +

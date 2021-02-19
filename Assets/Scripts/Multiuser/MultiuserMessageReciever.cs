@@ -408,14 +408,14 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageGenerateRandomColors(int n)
         {
             CellexalLog.Log(message: "Recieved message to generate " + n + " random colors");
-            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRandomColors(n, true);
+            referenceManager.settingsMenu.GetComponent<DesktopUI.ColorMapManager>().DoGenerateRandomColors(n, true);
         }
 
         [PunRPC]
         public void RecieveMessageGenerateRainbowColors(int n)
         {
             CellexalLog.Log(message: "Recieved message to generate " + n + " rainbow colors");
-            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRainbowColors(n, true);
+            referenceManager.settingsMenu.GetComponent<DesktopUI.ColorMapManager>().DoGenerateRainbowColors(n, true);
         }
 
         [PunRPC]

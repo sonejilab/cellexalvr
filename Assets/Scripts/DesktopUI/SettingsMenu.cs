@@ -55,6 +55,7 @@ namespace CellexalVR.DesktopUI
         public TMPro.TMP_InputField networkNumberOfNetworkColors;
         public TMPro.TMP_InputField networkLineWidth;
         [Header("Selection")] public GameObject selectionColorGroup;
+        public TMPro.TMP_Dropdown selectionColorMapDropdown;
         public GameObject selectionColorButtonPrefab;
         public List<ColorPickerButton> selectionColorButtons;
         public GameObject addSelectionColorButton;
@@ -75,6 +76,7 @@ namespace CellexalVR.DesktopUI
         public List<string> heatmapAlgorithms;
         public List<string> heatmapColormaps;
         public List<string> graphColormaps;
+        public List<string> selColorMaps;
         public List<string> graphPointQualityModes;
         public List<string> graphPointSizeModes;
         public List<string> lineColouringMethods;
@@ -133,7 +135,15 @@ namespace CellexalVR.DesktopUI
             }
 
             graphColormapDropdown.options = gColormaps;
-
+            
+            var sColormaps = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (string s in selColorMaps)
+            {
+                sColormaps.Add(new TMPro.TMP_Dropdown.OptionData(s));
+            }
+            
+            selectionColorMapDropdown.options = sColormaps;
+            
             var heatmapMethods = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in heatmapAlgorithms)
             {

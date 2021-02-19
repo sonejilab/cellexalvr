@@ -37,6 +37,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             base.CreateButtons(categoriesAndNames);
 
+            ReferenceManager.instance.cellManager.Attributes = new List<string>();
             int buttonIndex = 0;
             foreach (KeyValuePair<string, List<string>> kvp in categoriesAndNamesDict)
             {
@@ -45,7 +46,7 @@ namespace CellexalVR.Menu.SubMenus
                 {
                     var b = cellexalButtons[buttonIndex];
                     b.referenceManager = referenceManager;
-                    int colorIndex = buttonIndex % Colors.Length;
+                    int colorIndex = i % Colors.Length;
                     // string[] words = orderedNames[i].Split('@');
                     // string displayedName = words[0];
                     // if (name.Length > 0)
@@ -168,7 +169,6 @@ namespace CellexalVR.Menu.SubMenus
                     if (b.Attribute.Contains("@"))
                     {
                         category = b.Attribute.Split('@')[0];
-                        print(category);
                     }
                     else
                     {

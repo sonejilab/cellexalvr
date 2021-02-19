@@ -11,6 +11,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.AnalysisLogic.H5reader;
+using Valve.Newtonsoft.Json.Utilities;
 using Valve.VR;
 
 namespace CellexalVR.AnalysisLogic
@@ -22,7 +23,7 @@ namespace CellexalVR.AnalysisLogic
     {
         #region Properties
 
-        public string[] Attributes { get; set; }
+        public List<string> Attributes { get; set; }
         public string[] Facs { get; set; }
         public string[] Facs_values { get; set; }
 
@@ -604,7 +605,8 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
+            int attributeIndex = Attributes.IndexOf(attributeType);
+            // int attributeIndex = referenceManager.cellManager.Attributes.ToArray().IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
             Color attributeColor =
                 CellexalConfig.Config.SelectionToolColors[
                     attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];

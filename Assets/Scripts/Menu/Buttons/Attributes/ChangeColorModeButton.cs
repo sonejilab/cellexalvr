@@ -41,7 +41,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
             else
             {
-                settingsMenu.GetComponent<ColormapManager>().GenerateRainbowColors(CellexalConfig.Config.SelectionToolColors.Length);
+                settingsMenu.GetComponent<DesktopUI.ColorMapManager>().GenerateRainbowColors(CellexalConfig.Config.SelectionToolColors.Length);
                 settingsMenu.unsavedChanges = false;
             }
             menuButton.SetMenuActivated(true);
