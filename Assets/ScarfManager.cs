@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
+using JetBrains.Annotations;
 using SQLiter;
 using Unity.Mathematics;
 using Valve.Newtonsoft.Json;
@@ -22,7 +23,8 @@ namespace CellexalVR
     public class PostParams
     {
         public string uid;
-        public string feature;
+        public List<string> feature;
+        public string feat_key;
     }
 
 
@@ -42,8 +44,17 @@ namespace CellexalVR
 
     public class ScarfManager : MonoBehaviour
     {
-        private static string url = "https://scarfweb.xyz";
-        private static string analysisId = "tenx_10k_pbmc_citeseq";
+        public static ScarfManager instance;
+
+        // private static string url = "https://scarfweb.xyz";
+        // private static string analysisId = "tenx_10k_pbmc_citeseq";
+        private static string url = "http://127.0.0.1:5000/";
+
+        // private static string analysisId = "id_6021326fbf37";
+        private static string analysisId = "id_94dace868526";
+
+        private List<string> ids = new List<string>() {"id_777f9f373f34", "id_6021326fbf37"};
+        private List<string> keys = new List<string>() {"ADT", "RNA"};
 
         public static ScarfObject scarfObject;
         public static Dictionary<string, List<float>> cellStats;
@@ -51,6 +62,7 @@ namespace CellexalVR
 
         private void Start()
         {
+            instance = this;
             HttpWebRequest myReq = (HttpWebRequest) WebRequest.Create(url);
             HttpWebResponse response = (HttpWebResponse) myReq.GetResponse();
             HttpStatusCode status = response.StatusCode;
@@ -85,72 +97,76 @@ namespace CellexalVR
 
         private IEnumerator LoadAnalyzedData()
         {
-            if (!ReferenceManager.instance.loaderController.loaderMovedDown)
+            List<string> allClusters = new List<string>();
+            for (int i = 0; i < keys.Count; i++)
             {
-                ReferenceManager.instance.loaderController.loaderMovedDown = true;
-                ReferenceManager.instance.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
-            }
-
-            PostParams param = new PostParams {uid = analysisId};
-            HttpWebRequest request = CreatePostRequest(param, "/load_analyzed_data");
-
-            HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-            HttpStatusCode status = response.StatusCode;
-            if (status == HttpStatusCode.OK)
-            {
-                CellexalLog.Log($"{response.StatusDescription}");
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string jsonResponse = reader.ReadToEnd();
-                scarfObject = JsonConvert.DeserializeObject<ScarfObject>(jsonResponse);
-                reader.Close();
-                int grapNr = 0;
-                // Graph point coordinates
-                foreach (Dictionary<string, List<float>> dict in scarfObject.layout.Values)
+                // string id = ids[i];
+                string feat_key = keys[i];
+                if (!ReferenceManager.instance.loaderController.loaderMovedDown)
                 {
-                    Graph combGraph = ReferenceManager.instance.graphGenerator.CreateGraph(GraphGenerator.GraphType.MDS);
-                    combGraph.GraphName = scarfObject.layout.Keys.ToList()[grapNr];
-                    ReferenceManager.instance.graphManager.originalGraphs.Add(combGraph);
-                    ReferenceManager.instance.graphManager.Graphs.Add(combGraph);
-                    ReferenceManager.instance.inputReader.mdsReader.CreateFromCoordinates(dict["x"], dict["y"]);
-                    StartCoroutine(ReferenceManager.instance.graphGenerator.SliceClusteringLOD(1));
-                    while (ReferenceManager.instance.graphGenerator.isCreating)
-                        yield return null;
-                    grapNr++;
+                    ReferenceManager.instance.loaderController.loaderMovedDown = true;
+                    ReferenceManager.instance.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
                 }
 
-                // cluster/attributes
-                List<string> allClusters = new List<string>();
-                foreach (string key in scarfObject.cluster.Keys)
+                PostParams param = new PostParams {uid = analysisId, feat_key = feat_key};
+                HttpWebRequest request = CreatePostRequest(param, "/load_analyzed_data");
+
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+                HttpStatusCode status = response.StatusCode;
+                if (status == HttpStatusCode.OK)
                 {
-                    List<string> clusters = scarfObject.cluster[key];
-                    List<string> uniqueClusters = clusters.Distinct().ToList();
-                    List<string> clustersWithCat = new List<string>();
-                    for (int i = 0; i < clusters.Count; i++)
+                    CellexalLog.Log($"{response.StatusDescription}");
+                    StreamReader reader = new StreamReader(response.GetResponseStream());
+                    string jsonResponse = reader.ReadToEnd();
+                    scarfObject = JsonConvert.DeserializeObject<ScarfObject>(jsonResponse);
+                    reader.Close();
+                    int grapNr = 0;
+                    // Graph point coordinates
+                    foreach (Dictionary<string, List<float>> dict in scarfObject.layout.Values)
                     {
-                        clustersWithCat.Add(key + "@" + clusters[i]);
-                        ReferenceManager.instance.cellManager.AddAttribute(
-                            i.ToString(),
-                            clustersWithCat[i],
-                            uniqueClusters.IndexOf(clusters[i]) % CellexalConfig.Config.SelectionToolColors.Length
-                        );
+                        Graph combGraph = ReferenceManager.instance.graphGenerator.CreateGraph(GraphGenerator.GraphType.MDS);
+                        combGraph.GraphName = feat_key + "_" + scarfObject.layout.Keys.ToList()[grapNr];
+                        ReferenceManager.instance.graphManager.originalGraphs.Add(combGraph);
+                        ReferenceManager.instance.graphManager.Graphs.Add(combGraph);
+                        ReferenceManager.instance.inputReader.mdsReader.CreateFromCoordinates(dict["x"], dict["y"], dict["z"]);
+                        StartCoroutine(ReferenceManager.instance.graphGenerator.SliceClusteringLOD(1));
+                        while (ReferenceManager.instance.graphGenerator.isCreating)
+                            yield return null;
+                        grapNr++;
                     }
 
-                    allClusters.AddRange(clustersWithCat.Distinct());
+                    // cluster/attributes
+                    foreach (string key in scarfObject.cluster.Keys)
+                    {
+                        List<string> clusters = scarfObject.cluster[key];
+                        List<string> uniqueClusters = clusters.Distinct().ToList();
+                        List<string> clustersWithCat = new List<string>();
+                        for (int l = 0; l < clusters.Count; l++)
+                        {
+                            clustersWithCat.Add(key + "@" + clusters[l]);
+                            ReferenceManager.instance.cellManager.AddAttribute(
+                                l.ToString(),
+                                clustersWithCat[l],
+                                int.Parse(clusters[l]) - 1 % CellexalConfig.Config.SelectionToolColors.Length
+                            );
+                        }
+
+                        allClusters.AddRange(clustersWithCat.Distinct());
+                    }
                 }
 
+                response.Close();
+                // ReferenceManager.instance.cellManager.SetCellStats(scarfObject.cellStats);
 
-                // ReferenceManager.instance.cellManager.Attributes = new string[allClusters.Count];
-                ReferenceManager.instance.attributeSubMenu.CreateButtons(allClusters.ToArray());
-                // ReferenceManager.instance.cellManager.Attributes = allClusters.ToArray();
-                cellStats = scarfObject.cellStats;
-                ReferenceManager.instance.cellStatMenu.CreateButtons(cellStats.Keys.ToArray());
+                GetFeatureNames();
+                CellexalEvents.ScarfObjectLoaded.Invoke();
             }
 
-            response.Close();
-            // ReferenceManager.instance.cellManager.SetCellStats(scarfObject.cellStats);
-
-            GetFeatureNames();
-            CellexalEvents.ScarfObjectLoaded.Invoke();
+            // ReferenceManager.instance.cellManager.Attributes = new string[allClusters.Count];
+            ReferenceManager.instance.attributeSubMenu.CreateButtons(allClusters.ToArray());
+            // ReferenceManager.instance.cellManager.Attributes = allClusters.ToArray();
+            // cellStats = scarfObject.cellStats;
+            // ReferenceManager.instance.cellStatMenu.CreateButtons(cellStats.Keys.ToArray());
         }
 
 
@@ -188,6 +204,7 @@ namespace CellexalVR
             for (int i = 0; i < cellStats[statName].Count; i++)
             {
                 float val = cellStats[statName][i];
+                if (val == 0f) continue;
                 int colInd = (int) ((val - minVal) / binSize);
                 CellExpressionPair pair = new CellExpressionPair(i.ToString(), val, colInd);
                 expressions.Add(pair);
@@ -196,12 +213,13 @@ namespace CellexalVR
             ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression(statName, expressions);
         }
 
-        public static void ColorByFeature(string name)
+        public static ArrayList GetFeatureValues(string name)
         {
-            if (scarfObject == null || ReferenceManager.instance.graphGenerator.isCreating) return;
+            if (scarfObject == null || ReferenceManager.instance.graphGenerator.isCreating) return null;
+            ArrayList result = new ArrayList();
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            PostParams param = new PostParams {uid = analysisId, feature = name};
+            PostParams param = new PostParams {uid = analysisId, feature = new List<string> {name}};
             HttpWebRequest request = CreatePostRequest(param, "/get_feature_values");
             HttpWebResponse response = (HttpWebResponse) request.GetResponse();
             HttpStatusCode status = response.StatusCode;
@@ -220,6 +238,7 @@ namespace CellexalVR
                 for (int i = 0; i < values.Count; i++)
                 {
                     float val = values[i];
+                    if (val == 0f) continue;
                     int colInd = (int) ((val - minVal) / binSize);
                     CellExpressionPair pair = new CellExpressionPair(i.ToString(), val, colInd);
                     expressions.Add(pair);
@@ -243,13 +262,47 @@ namespace CellexalVR
                 //     expressions[j].Color = (int) (j / binSize);
                 // }
 
-                ArrayList result = new ArrayList();
                 result.AddRange(expressions);
-                ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression(name, result);
                 stopWatch.Stop();
-                print(stopWatch.Elapsed.Milliseconds);
+                print(stopWatch.Elapsed.TotalSeconds);
                 reader.Close();
             }
+
+            return result;
+        }
+
+
+        [ItemCanBeNull]
+        public static Dictionary<string, List<Tuple<string, float>>> GetFeatureValues(List<string> genes, List<string> cellIds)
+        {
+            if (scarfObject == null || ReferenceManager.instance.graphGenerator.isCreating) return null;
+            Dictionary<string, List<Tuple<string, float>>> result = new Dictionary<string, List<Tuple<string, float>>>();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            PostParams param = new PostParams {uid = analysisId, feature = genes};
+            HttpWebRequest request = CreatePostRequest(param, "/get_feature_values");
+            HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+            HttpStatusCode status = response.StatusCode;
+            if (status == HttpStatusCode.OK)
+            {
+                CellexalLog.Log($"{response.StatusDescription}");
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string jsonResponse = reader.ReadToEnd();
+                var resp = JsonConvert.DeserializeObject<Dictionary<string, List<float>>>(jsonResponse);
+                // var selectedValues = new Dictionary<string, List<Tuple<int, float>>>();
+                foreach (string gene in genes)
+                {
+                    result[gene] = new List<Tuple<string, float>>();
+                    foreach (string i in cellIds)
+                    {
+                        float value = resp[gene][int.Parse(i)];
+                        if (value == 0f) continue;
+                        result[gene].Add(new Tuple<string, float>(i, value));
+                    }
+                }
+            }
+
+            return result;
         }
 
         private void Update()
@@ -272,8 +325,38 @@ namespace CellexalVR
 
             if (Input.GetKeyDown(KeyCode.N))
             {
-                ColorByFeature("MS4A1");
+                ArrayList res = GetFeatureValues("MS4A1");
+                ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression(name, res);
             }
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                // GenerateHeatmap();
+            }
+        }
+
+        private void GenerateHeatmap()
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            List<Graph.GraphPoint> gps = ReferenceManager.instance.selectionManager.GetLastSelection();
+            List<string> gpIds = new List<string>();
+            foreach (var gp in gps)
+            {
+                gpIds.Add(gp.Label);
+            }
+
+            List<string> genes = scarfObject.feature_names.GetRange(0, 50);
+            // Dictionary<string, ArrayList> values = new Dictionary<string, ArrayList>();
+            GetFeatureValues(genes, gpIds);
+            // foreach (string gene in genes)
+            // {
+            //     values[gene] = GetFeatureValues(gene);
+            //     yield return null;
+            // }
+
+            stopWatch.Stop();
+            print(stopWatch.Elapsed.TotalSeconds);
         }
     }
 }

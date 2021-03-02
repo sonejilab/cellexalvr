@@ -34,7 +34,9 @@ namespace CellexalVR.AnalysisLogic
         //private GameObject calculatorCluster;
         public SelectionManager selectionManager;
         private ArrayList data;
+
         private Thread t;
+
         // private SteamVR_Controller.Device device;
         private Vector3 heatmapPosition;
         private List<Heatmap> heatmapList = new List<Heatmap>();
@@ -244,9 +246,12 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.floor.StartPulse();
 
             // Check if more than one cell is selected
-            while (selectionManager.RObjectUpdating)
+            if (ScarfManager.scarfObject == null)
             {
-                yield return null;
+                while (selectionManager.RObjectUpdating)
+                {
+                    yield return null;
+                }
             }
 
             List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
@@ -264,50 +269,53 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            //string function = "make.cellexalvr.heatmap.list";
-            string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
-            string groupingFilepath =
-                (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt")
-                .UnFixFilePath();
-            string topGenesNr = nrOfGenes.ToString();
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
-            string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
-            string args = CellexalUser.UserSpecificFolder + " " + groupingFilepath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
 
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
-
-            if (!Directory.Exists(heatmapDirectory))
+            if (ScarfManager.scarfObject == null)
             {
-                CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
-                Directory.CreateDirectory(heatmapDirectory);
+                string function = "make.cellexalvr.heatmap.list";
+                string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
+                string groupingFilepath =
+                    (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt")
+                    .UnFixFilePath();
+                string topGenesNr = nrOfGenes.ToString();
+                string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
+                string args = CellexalUser.UserSpecificFolder + " " + groupingFilepath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
+
+                string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
+
+                if (!Directory.Exists(heatmapDirectory))
+                {
+                    CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
+                    Directory.CreateDirectory(heatmapDirectory);
+                }
+
+                bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                while (!rServerReady || !RScriptRunner.serverIdle)
+                {
+                    rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
+                                   !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
+                                   !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                    yield return null;
+                }
+
+                //t = new Thread(() => RScriptRunner.RunScript(script));
+                t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
+                t.Start();
+                CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
+                var stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+
+                while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+                {
+                    yield return null;
+                }
             }
-
-            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
-            while (!rServerReady || !RScriptRunner.serverIdle)
-            {
-                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
-                yield return null;
-            }
-
-            //t = new Thread(() => RScriptRunner.RunScript(script));
-            t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            t.Start();
-            CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
-            {
-                yield return null;
-            }
-
-            stopwatch.Stop();
-            CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
+            // stopwatch.Stop();
+            // CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
 
             GeneratingHeatmaps = false;
 
@@ -405,33 +413,53 @@ namespace CellexalVR.AnalysisLogic
                 heatmap.layout.attributeWidth * cellWidth, heatmap.layout.attributeWidth));
             if (heatmap.genes == null || heatmap.genes.Length == 0)
             {
-                if (!File.Exists(filepath))
+                if (ScarfManager.scarfObject == null)
                 {
-                    CellexalLog.Log("Failed to create heatmap. R script did not return gene list file " + filepath);
-                    CellexalError.SpawnError("Failed to create heatmap",
-                        "R script did not return gene list file " + filepath);
-                    if (!(referenceManager.networkGenerator.GeneratingNetworks &&
-                          File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+                    if (!File.Exists(filepath))
                     {
-                        referenceManager.floor.StopPulse();
+                        CellexalLog.Log("Failed to create heatmap. R script did not return gene list file " + filepath);
+                        CellexalError.SpawnError("Failed to create heatmap",
+                            "R script did not return gene list file " + filepath);
+                        if (!(referenceManager.networkGenerator.GeneratingNetworks &&
+                              File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+                        {
+                            referenceManager.floor.StopPulse();
+                        }
+
+                        Destroy(heatmap.gameObject);
+
+                        return;
                     }
 
-                    Destroy(heatmap.gameObject);
+                    StreamReader streamReader = new StreamReader(filepath);
+                    int numberOfGenes = int.Parse(streamReader.ReadLine());
+                    heatmap.genes = new string[numberOfGenes];
+                    int i = 0;
+                    while (!streamReader.EndOfStream)
+                    {
+                        heatmap.genes[i] = streamReader.ReadLine();
+                        i++;
+                    }
 
-                    return;
+                    streamReader.Close();
                 }
-
-                StreamReader streamReader = new StreamReader(filepath);
-                int numberOfGenes = int.Parse(streamReader.ReadLine());
-                heatmap.genes = new string[numberOfGenes];
-                int i = 0;
-                while (!streamReader.EndOfStream)
+                else
                 {
-                    heatmap.genes[i] = streamReader.ReadLine();
-                    i++;
+                    heatmap.genes = ScarfManager.scarfObject.feature_names.GetRange(50, 50).ToArray();
+                    heatmap.genes = new string[12];
+                    heatmap.genes[0] = "CXCL8";
+                    heatmap.genes[1] = "MS4A1";
+                    heatmap.genes[2] = "MARC1";
+                    heatmap.genes[3] = "NOG";
+                    heatmap.genes[4] = "IGHD";
+                    heatmap.genes[5] = "ENHO";
+                    heatmap.genes[6] = "PPBP";
+                    heatmap.genes[7] = "ALDH1A1";
+                    heatmap.genes[8] = "PID1";
+                    heatmap.genes[9] = "CYP1B1";
+                    heatmap.genes[10] = "NRG1";
+                    heatmap.genes[11] = "ZDHHC1";
                 }
-
-                streamReader.Close();
             }
 
             heatmap.orderedByAttribute = false;
@@ -509,39 +537,57 @@ namespace CellexalVR.AnalysisLogic
                 button.SetButtonActivated(false);
             }
 
-            SQLiter.SQLite db = heatmap.gameObject.AddComponent<SQLiter.SQLite>();
-            db.referenceManager = referenceManager;
-            db.InitDatabase(heatmap.directory + ".sqlite3");
-
-            yield return StartCoroutine(db.ValidateDatabaseCoroutine());
-            if (!db._databaseOK)
+            ArrayList res = new ArrayList();
+            Dictionary<string, string> geneIds = new Dictionary<string, string>();
+            if (ScarfManager.scarfObject == null)
             {
-                // something went wrong in the r script
-                CellexalError.SpawnError("Could not generate heatmap",
-                    "R script did not return a valid gene database file, check R log for more information");
-                CellexalLog.Log("Could not generate heatmap, R script did not return a valid gene database file");
-                Destroy(heatmap.gameObject);
-                referenceManager.floor.StopPulse();
-                yield break;
-            }
+                SQLiter.SQLite db = heatmap.gameObject.AddComponent<SQLiter.SQLite>();
+                db.referenceManager = referenceManager;
+                db.InitDatabase(heatmap.directory + ".sqlite3");
 
-            while (db.QueryRunning)
-            {
-                yield return null;
-            }
+                yield return StartCoroutine(db.ValidateDatabaseCoroutine());
+                if (!db._databaseOK)
+                {
+                    // something went wrong in the r script
+                    CellexalError.SpawnError("Could not generate heatmap",
+                        "R script did not return a valid gene database file, check R log for more information");
+                    CellexalLog.Log("Could not generate heatmap, R script did not return a valid gene database file");
+                    Destroy(heatmap.gameObject);
+                    referenceManager.floor.StopPulse();
+                    yield break;
+                }
 
-            db.QueryGenesIds(heatmap.genes);
-            while (db.QueryRunning)
-            {
-                yield return null;
-            }
+                while (db.QueryRunning)
+                {
+                    yield return null;
+                }
 
-            ArrayList result = db._result;
-            Dictionary<string, string> geneIds = new Dictionary<string, string>(result.Count);
-            foreach (Tuple<string, string> t in result)
-            {
-                // keys are names, values are ids
-                geneIds[t.Item1] = t.Item2;
+                db.QueryGenesIds(heatmap.genes);
+                while (db.QueryRunning)
+                {
+                    yield return null;
+                }
+
+                res = db._result;
+                geneIds = new Dictionary<string, string>(res.Count);
+                foreach (Tuple<string, string> t in res)
+                {
+                    // keys are names, values are ids
+                    geneIds[t.Item1] = t.Item2;
+                }
+
+                while (db.QueryRunning)
+                {
+                    yield return null;
+                }
+
+                db.QueryGenesInCells(heatmap.genes, heatmap.cells.Select((c) => c.Label).ToArray());
+                while (db.QueryRunning)
+                {
+                    yield return null;
+                }
+
+                res = db._result;
             }
 
             Dictionary<string, int> genePositions = new Dictionary<string, int>(heatmap.genes.Length);
@@ -558,18 +604,6 @@ namespace CellexalVR.AnalysisLogic
                 cellsPosition[heatmap.cells[i].Label] = i;
             }
 
-            while (db.QueryRunning)
-            {
-                yield return null;
-            }
-
-            db.QueryGenesInCells(heatmap.genes, heatmap.cells.Select((c) => c.Label).ToArray());
-            while (db.QueryRunning)
-            {
-                yield return null;
-            }
-
-            result = db._result;
             string heatmapDirectory = Directory.GetCurrentDirectory() + @"\Output\Images";
             if (!Directory.Exists(heatmapDirectory))
             {
@@ -577,11 +611,21 @@ namespace CellexalVR.AnalysisLogic
             }
 
             string heatmapFilePath = heatmapDirectory + "\\heatmap_temp";
+            Thread thread;
+            if (ScarfManager.scarfObject != null)
+            {
+                Dictionary<string, List<Tuple<string, float>>> result = ScarfManager.GetFeatureValues(heatmap.genes.ToList(), heatmap.cells.Select(c => c.Label).ToList());
 
+                // CellexalLog.Log("Reading " + result.Count + " results from database");
+                thread = new Thread(() => CreateHeatmapPNGScarf(heatmap, result, genePositions, cellsPosition, heatmapFilePath));
+                thread.Start();
+            }
+            else
+            {
+                thread = new Thread(() => CreateHeatmapPNG(heatmap, res, genePositions, cellsPosition, geneIds, heatmapFilePath));
+                thread.Start();
+            }
 
-            CellexalLog.Log("Reading " + result.Count + " results from database");
-            Thread thread = new Thread(() => CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath));
-            thread.Start();
             while (thread.IsAlive)
             {
                 yield return null;
@@ -747,6 +791,79 @@ namespace CellexalVR.AnalysisLogic
                     string cellName = expressions[j].Item1;
                     float expression = expressions[j].Item2;
                     xcoord = heatmap.layout.heatmapX + cellsPosition[cellName] * xcoordInc;
+                    FillRectangle(heatmap, heatmapBrushes[(int) expression], (int) xcoord, (int) ycoord, (int) xcoordInc, (int) ycoordInc);
+                }
+            }
+
+            for (int i = 0; i < heatmap.layout.textureGraphics.Count; ++i)
+            {
+                heatmap.layout.textureGraphics[i].Flush();
+                heatmap.layout.textureBitmaps[i].Save(heatmapFilePath + "_" + i + ".png", ImageFormat.Png);
+            }
+        }
+
+        public void CreateHeatmapPNGScarf(Heatmap heatmap, Dictionary<string, List<Tuple<string, float>>> valueDictionary, Dictionary<string, int> genePositions,
+            Dictionary<string, int> cellsPosition, string heatmapFilePath)
+        {
+            var attributeWidths = heatmap.attributeWidths;
+            var groupWidths = heatmap.groupWidths;
+            heatmap.layout.textureGraphics = new List<System.Drawing.Graphics>();
+            heatmap.layout.textureBitmaps = new List<Bitmap>();
+            textureWidth = heatmap.layout.heatmapWidth;
+
+            numHeatmapTextures = cellsPosition.Count / textureWidth + 1;
+            //left side texture
+            Bitmap newBitmap = new Bitmap(heatmap.layout.heatmapX, heatmap.layout.bitmapHeight);
+            heatmap.layout.textureBitmaps.Add(newBitmap);
+            heatmap.layout.textureGraphics.Add(System.Drawing.Graphics.FromImage(newBitmap));
+            // middle side (heatmap and grouping/attribute bars)
+            for (int i = 0; i < numHeatmapTextures; ++i)
+            {
+                newBitmap = new Bitmap(textureWidth, heatmap.layout.bitmapHeight);
+                heatmap.layout.textureBitmaps.Add(newBitmap);
+                heatmap.layout.textureGraphics.Add(System.Drawing.Graphics.FromImage(newBitmap));
+            }
+
+            // right side (gene list)
+            newBitmap = new Bitmap(heatmap.layout.geneListWidth, heatmap.layout.bitmapHeight);
+            heatmap.layout.textureBitmaps.Add(newBitmap);
+            heatmap.layout.textureGraphics.Add(System.Drawing.Graphics.FromImage(newBitmap));
+
+            DrawHeatmapSurroundings(heatmap, System.Drawing.Color.FromArgb(0, 0, 0, 0), System.Drawing.Color.White);
+
+            float xcoord = heatmap.layout.heatmapX;
+            float ycoord = heatmap.layout.heatmapY;
+            float xcoordInc = (float) (heatmap.layout.heatmapWidth * numHeatmapTextures) / heatmap.cells.Length;
+            float ycoordInc = (float) heatmap.layout.heatmapHeight / heatmap.genes.Length;
+            System.Drawing.SolidBrush[] heatmapBrushes = expressionColors;
+            FillRectangle(heatmap, Brushes.Black, heatmap.layout.heatmapX, heatmap.layout.heatmapY, heatmap.layout.heatmapWidth, heatmap.layout.heatmapHeight);
+
+            string[] genes = valueDictionary.Keys.ToArray();
+
+            for (int i = 0; i < genes.Length; i++)
+            {
+                string gene = genes[i];
+                List<Tuple<string, float>> expressions = valueDictionary[gene];
+                ycoord = heatmap.layout.heatmapY + genePositions[gene] * ycoordInc;
+
+                expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => t1.Item2.CompareTo(t2.Item2));
+                float binsize = (float) expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
+                int expressionIndex = 0;
+
+                for (int j = 0; j < CellexalConfig.Config.NumberOfHeatmapColors; ++j)
+                {
+                    int nextLimit = (int) (binsize * (j + 1));
+                    for (; expressionIndex < nextLimit && expressionIndex < expressions.Count; ++expressionIndex)
+                    {
+                        expressions[expressionIndex] = new Tuple<string, float>(expressions[expressionIndex].Item1, j);
+                    }
+                }
+
+                for (int j = 0; j < expressions.Count; ++j)
+                {
+                    string cellId = expressions[j].Item1;
+                    float expression = expressions[j].Item2;
+                    xcoord = heatmap.layout.heatmapX + cellsPosition[cellId] * xcoordInc;
                     FillRectangle(heatmap, heatmapBrushes[(int) expression], (int) xcoord, (int) ycoord, (int) xcoordInc, (int) ycoordInc);
                 }
             }

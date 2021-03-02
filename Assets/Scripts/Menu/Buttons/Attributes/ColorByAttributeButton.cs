@@ -146,7 +146,6 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
 
             colIndex = colorIndex;
-            print($"Set attribute: {Attribute}, {colIndex}");
             ReferenceManager.instance.cellManager.Attributes.Add(Attribute);
             // sometimes this is done before Awake() it seems, so we use GetComponent() here
             Color color = CellexalConfig.Config.SelectionToolColors[colorIndex];

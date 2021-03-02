@@ -493,6 +493,7 @@ namespace CellexalVR.AnalysisObjects
         public void AddAttributeWidth(Dictionary<string, int> attributes, float cellWidth, Cell cell)
         {
             int attribute;
+            print($"add attr: {cell}, {attributes.Keys.ToList()[0]}, {attributes.Values.ToList()[0]}");
             if (attributes.Count > 0)
             {
                 attribute = attributes.First().Value;

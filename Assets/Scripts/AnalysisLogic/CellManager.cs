@@ -241,7 +241,8 @@ namespace CellexalVR.AnalysisLogic
         {
             if (ScarfManager.scarfObject != null)
             {
-                ScarfManager.ColorByFeature(geneName);
+                ArrayList res = ScarfManager.GetFeatureValues(geneName);
+                ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression(name, res);
             }
             else
             {
@@ -266,25 +267,35 @@ namespace CellexalVR.AnalysisLogic
         public void ColorGraphsByGene(string geneName, GraphManager.GeneExpressionColoringMethods coloringMethod,
             bool triggerEvent = true)
         {
-            try
+            print($"color by {geneName}");
+            if (ScarfManager.scarfObject != null)
             {
-                KeyValuePair<string, H5Reader> kvp;
-                if (referenceManager.inputReader.h5readers.Count > 0)
-                {
-                    kvp = referenceManager.inputReader.h5readers.First();
-                    StartCoroutine(QueryHDF5(kvp.Value, geneName, coloringMethod, triggerEvent));
-                }
-                else
-                {
-                    StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
-                }
-
-                //QueryRObject(geneName, coloringMethod, triggerEvent);
+                ArrayList res = ScarfManager.GetFeatureValues(geneName);
+                ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression(name, res);
             }
-            catch (Exception e)
+            else
             {
-                CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
-                CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+                try
+                {
+                    KeyValuePair<string, H5Reader> kvp;
+
+                    if (referenceManager.inputReader.h5readers.Count > 0)
+                    {
+                        kvp = referenceManager.inputReader.h5readers.First();
+                        StartCoroutine(QueryHDF5(kvp.Value, geneName, coloringMethod, triggerEvent));
+                    }
+                    else
+                    {
+                        StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
+                    }
+
+                    //QueryRObject(geneName, coloringMethod, triggerEvent);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Failed to colour by expression - " + e.StackTrace);
+                    CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
+                }
             }
 
             //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
