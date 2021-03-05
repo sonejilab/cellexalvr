@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 114065228220667824}
   - component: {fileID: 114706478586369516}
   - component: {fileID: 797481884179529250}
+  - component: {fileID: 634601826}
   m_Layer: 0
   m_Name: InputReader
   m_TagString: Untagged
@@ -52,6 +53,7 @@ MonoBehaviour:
   facsGraphCounter: 0
   attributeFileRead: 0
   attributeReader: {fileID: 0}
+  mdsReader: {fileID: 634601826}
   debug: 0
 --- !u!114 &114405805043964006
 MonoBehaviour:
@@ -128,6 +130,7 @@ MonoBehaviour:
   arcsSubMenu: {fileID: 0}
   attributeSubMenu: {fileID: 0}
   indexMenu: {fileID: 0}
+  cellStatMenu: {fileID: 0}
   createFromMarkerMenu: {fileID: 0}
   selectionFromPreviousMenu: {fileID: 0}
   colorByGeneMenu: {fileID: 0}
@@ -189,3 +192,16 @@ MonoBehaviour:
   colorPicker: {fileID: 0}
   spectatorRig: {fileID: 0}
   VRRig: {fileID: 0}
+--- !u!114 &634601826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865869582214080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22caf717caa248f5adaf604bc5f4e2b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 797481884179529250}

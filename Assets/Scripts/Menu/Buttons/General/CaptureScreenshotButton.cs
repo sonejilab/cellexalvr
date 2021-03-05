@@ -1,5 +1,4 @@
 ﻿using CellexalVR.Menu.Buttons;
-using UnityEngine;
 
 namespace Menu.Buttons.General
 {

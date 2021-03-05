@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using PDFiumSharp;
+using PDFiumSharp.Types;
 using UnityEngine;
-using Patagames.Pdf;
-using Patagames.Pdf.Enums;
-using Patagames.Pdf.Net;
 using TMPro;
 using Valve.VR.InteractionSystem;
 
@@ -103,6 +103,7 @@ namespace CellexalVR.PDFViewer
             }
 
             string[] files = Directory.GetFiles(path, "*.pdf");
+            print($"read pdf {path}");
             if (files.Length == 0)
             {
                 CellexalLog.Log("Tried to find article pdf in data folder but none were found.");
@@ -111,24 +112,27 @@ namespace CellexalVR.PDFViewer
 
             Directory.CreateDirectory(folder);
             string pdfPath = files[0];
-            int i = 0;
-            // using (PdfDocument doc = PdfDocument.Load(pdfPath))
-            // {
-            //     foreach (PdfPage page in doc.Pages)
-            //     {
-            //         int width = (int) (page.Width / 72.0f * 96);
-            //         int height = (int) (page.Height / 72.0f * 96);
-            //         using (PdfBitmap bitmap = new PdfBitmap(width, height, true))
-            //         {
-            //             bitmap.FillRect(0, 0, width, height, FS_COLOR.White);
-            //             page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, RenderFlags.FPDF_LCD_TEXT);
-            //             string savePath = $"{folder}\\page{++i}.png";
-            //             bitmap.Image.Save(savePath, ImageFormat.Png);
-            //         }
-            //
-            //         totalNrOfpages++;
-            //     }
-            // }
+            using (PdfDocument doc = new PdfDocument(pdfPath))
+            {
+                int i = 0;
+                foreach (PdfPage page in doc.Pages)
+                {
+                    print("page");
+                    int width = (int) (page.Width / 72.0f * 96);
+                    int height = (int) (page.Height / 72.0f * 96);
+                    string savePath = $"{folder}\\page{++i}.jpeg";
+                    using (var bitmap = new PDFiumBitmap(width, height, true)) 
+                    using (var stream = new FileStream(savePath, FileMode.Create))
+                    {
+                        bitmap.FillRectangle(0, 0, width, height, new FPDF_COLOR(255, 255, 255));
+                        page.Render(bitmap);
+                        Image image = Image.FromStream(bitmap.AsBmpStream());
+                        image.Save(stream, ImageFormat.Jpeg);
+                    }
+
+                    totalNrOfpages++;
+                }
+            }
 
             CellexalEvents.PDFArticleRead.Invoke();
         }
@@ -154,7 +158,7 @@ namespace CellexalVR.PDFViewer
             int height = 0;
             for (int i = startPage; i < startPage + nrOfPages; i++)
             {
-                string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{i}.png";
+                string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{i}.jpeg";
                 byte[] imageByteArray = File.ReadAllBytes(path);
                 Texture2D imageTexture = new Texture2D(2, 2);
                 imageTexture.LoadImage(imageByteArray);
@@ -329,6 +333,7 @@ namespace CellexalVR.PDFViewer
                 settingsHandlerPocket.SetActive(false);
                 return;
             }
+
             CreatePage();
             ShowMultiplePages();
             SetSettingsHandle(currentViewingMode);

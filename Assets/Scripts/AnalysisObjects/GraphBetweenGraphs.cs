@@ -101,7 +101,7 @@ namespace CellexalVR.AnalysisObjects
             newGraph.GraphName = "CTC_" + fromGraph.GraphName + "_" + toGraph.GraphName;
             newGraph.tag = "Untagged";
             newGraph.transform.position = fromGraph.transform.position + (toGraph.transform.position - fromGraph.transform.position) / 2f;
-            newGraph.transform.localScale /= 2;
+            //newGraph.transform.localScale /= 2;
             newGraph.ToggleInfoText();
             foreach (Graph.GraphPoint g in points)
             {

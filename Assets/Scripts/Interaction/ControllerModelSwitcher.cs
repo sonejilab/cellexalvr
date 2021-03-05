@@ -222,7 +222,7 @@ namespace CellexalVR.Interaction
                 case Model.TwoLasers:
                     //rightLaser.enabled = true;
                     laserPointerController.origin.localRotation = Quaternion.identity;
-                    referenceManager.teleportLaser.SetActive(false);
+                    //referenceManager.teleportLaser.SetActive(false);
                     break;
 
                 case Model.Menu:
@@ -241,7 +241,7 @@ namespace CellexalVR.Interaction
                     selectionToolCollider.ChangeColor(true);
                     selectionToolCollider.ChangeColor(false); // force correct color and mesh activation
                     rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
-                    referenceManager.teleportLaser.SetActive(false);
+                    //referenceManager.teleportLaser.SetActive(false);
                     break;
 
                 case Model.Minimizer:

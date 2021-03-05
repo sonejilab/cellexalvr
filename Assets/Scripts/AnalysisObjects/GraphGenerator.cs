@@ -334,6 +334,7 @@ namespace CellexalVR.AnalysisObjects
 
             lodGroup.transform.parent = parent;
             lodGroup.transform.localPosition = Vector3.zero;
+            lodGroup.transform.localScale = Vector3.one;
             lodGroup.gameObject.name = $"LODGroup{i}";
             if (i > 0)
             {

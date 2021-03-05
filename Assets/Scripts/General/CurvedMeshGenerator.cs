@@ -264,7 +264,7 @@ namespace CellexalVR
         }
 
 
-        public void GenerateMeshes()
+        private void GenerateMeshes()
         {
             if (child != null)
             {
@@ -293,7 +293,7 @@ namespace CellexalVR
                     renderer.material.SetFloat("_YGridSize", ySize - 1);
                     MeshCollider mc = GetComponent<MeshCollider>();
                     mc.sharedMesh = mesh;
-                    mc.gameObject.layer = LayerMask.NameToLayer("GraphLayer");
+                    mc.gameObject.layer = LayerMask.NameToLayer("PDFLayer");
                     transform.localScale = scale;
                 }
             }

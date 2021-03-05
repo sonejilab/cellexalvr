@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CellexalVR.General;
+using Unity.Mathematics;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.PDFViewer
 {
@@ -14,8 +16,10 @@ namespace CellexalVR.PDFViewer
         public GameObject cubePrefab;
 
         // private SteamVR_Controller.Device device;
-        private SteamVR_Behaviour_Pose rightController;
-        
+        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
+        public Vector2 touchpadPosition;
+
+        private Hand hand;
         private GameObject cube;
         private LayerMask layerMask;
 
@@ -30,14 +34,30 @@ namespace CellexalVR.PDFViewer
         private void Start()
         {
             layerMask = 1 << LayerMask.NameToLayer("PDFLayer");
+            hand = Player.instance.rightHand;
         }
 
         private void Update()
         {
             // int index = (int) referenceManager.rightController.index;
             // device = SteamVR_Controller.Input(index);
+            if (controllerAction.GetState(Player.instance.rightHand.handType))
+            {
+                touchpadPosition = SteamVR_Input.GetVector2("TouchpadPosition", hand.handType);
+                if (math.abs(touchpadPosition.y) > 0.5f)
+                {
+                    Ray ray = new Ray(Player.instance.rightHand.transform.position, Player.instance.rightHand.transform.forward);
+                    Magnify(ray);
+                }
+            }
+            
+            if (controllerAction.GetStateUp(Player.instance.rightHand.handType))
+            {
+                magnifyingCamera.gameObject.SetActive(false);
+                screenQuad.SetActive(false);
+            }
 
-            Transform rightControllerTransform = referenceManager.rightController.transform;
+            // Transform rightControllerTransform = referenceManager.rightController.transform;
 
             // if (device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
             // {
@@ -59,7 +79,8 @@ namespace CellexalVR.PDFViewer
 
         private void Magnify(Ray ray)
         {
-            if (!Physics.Raycast(ray,out RaycastHit hit, Mathf.Infinity, layerMask)) return;
+            if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask)) return;
+            print("magnify");
 
             magnifyingCamera.gameObject.SetActive(hit.collider.transform.gameObject.name.Equals("Page(Clone)"));
             screenQuad.SetActive(hit.collider.transform.gameObject.name.Equals("Page(Clone)"));

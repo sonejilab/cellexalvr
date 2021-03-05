@@ -276,12 +276,20 @@ namespace CellexalVR.AnalysisLogic
             {
                 string function = "make.cellexalvr.heatmap.list";
                 string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
-                string groupingFilepath =
-                    (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt")
-                    .UnFixFilePath();
+                string timeSelectionPath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt.time").UnFixFilePath();
+                string groupingFilePath;
+                if (File.Exists(timeSelectionPath))
+                {
+                    groupingFilePath = timeSelectionPath;
+                }
+                else
+                {
+                    groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
+                }
+
                 string topGenesNr = nrOfGenes.ToString();
                 string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
-                string args = CellexalUser.UserSpecificFolder + " " + groupingFilepath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
+                string args = CellexalUser.UserSpecificFolder + " " + groupingFilePath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
 
                 string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
 

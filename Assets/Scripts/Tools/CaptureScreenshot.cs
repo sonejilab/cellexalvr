@@ -29,6 +29,7 @@ namespace CellexalVR.Tools
         private int screenshotCounter;
         private ScreenshotLayerToggleButton[] layerButtons = new ScreenshotLayerToggleButton[] { };
         private readonly List<string> layersToRender = new List<string>();
+        private AudioSource audioSource;
 
         private void Start()
         {
@@ -39,6 +40,7 @@ namespace CellexalVR.Tools
             // }
 
             gameObject.SetActive(false);
+            audioSource = GetComponent<AudioSource>();
         }
 
         public void Capture()
@@ -52,6 +54,10 @@ namespace CellexalVR.Tools
         /// <returns></returns>
         private IEnumerator CaptureCoroutine()
         {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
             flash.enabled = true;
             yield return null;
             Texture2D snapTex = new Texture2D(picWidth, picHeight, TextureFormat.ARGB32, false);
