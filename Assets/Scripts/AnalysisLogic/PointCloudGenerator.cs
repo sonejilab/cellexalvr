@@ -19,6 +19,8 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine.VFX;
 using Random = Unity.Mathematics.Random;
+using CellexalVR.Spatial;
+using System.Diagnostics;
 
 namespace DefaultNamespace
 {
@@ -50,12 +52,15 @@ namespace DefaultNamespace
         public float3 maxCoordValues;
         public float3 longestAxis;
         public Texture2D colorMap;
+        public Texture2D alphaMap;
+        public Texture2D clusterMap;
         public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
         public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
         public Dictionary<string, List<Vector2>> clusters = new Dictionary<string, List<Vector2>>();
-        public Texture2D clusterMap;
+        public List<PointCloud> pointClouds = new List<PointCloud>();
 
         public int pointCount;
+
         public float3 scaledOffset;
         // public List<string> cells = new List<string>();
 
@@ -66,7 +71,6 @@ namespace DefaultNamespace
         private Random random;
         private float spawnTimer;
         private EntityManager entityManager;
-        private List<PointCloud> pointClouds = new List<PointCloud>();
         private EntityArchetype entityArchetype;
         private QuadrantSystem quadrantSystem;
         private bool readingFile;
@@ -100,11 +104,47 @@ namespace DefaultNamespace
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
             PointCloud pc = Instantiate(parentPrefab, new float3(graphNr, 1, graphNr), quaternion.identity).GetComponent<PointCloud>();
-            quadrantSystem.graphParentTransforms.Add(transform);
+            quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
             pc.Initialize(nrOfGraphs);
             nrOfGraphs++;
             return pc;
+        }
+
+        public PointCloud CreateFromOld(Transform oldPc)
+        {
+            points.Clear();
+            scaledCoordinates.Clear();
+            minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
+            maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
+            PointCloud pc = Instantiate(parentPrefab, oldPc.position, oldPc.rotation).GetComponent<PointCloud>();
+            quadrantSystem.graphParentTransforms.Add(pc.transform);
+            quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
+            pc.Initialize(nrOfGraphs);
+            nrOfGraphs++;
+            return pc;
+        }
+
+        public void BuildSlices(Transform oldPc)
+        {
+            StartCoroutine(BuildSlicesCoroutine(oldPc));
+        }
+
+        private IEnumerator BuildSlicesCoroutine(Transform oldPc)
+        {
+            GraphSlice[] slices = oldPc.GetComponent<GraphSlice>().childSlices.ToArray();
+            creatingGraph = true;
+            for (int i = 0; i < slices.Length; i++)
+            {
+                GraphSlice slice = slices[i];
+                slice.BuildPointCloud(oldPc);
+                //if (i % 5 == 0) 
+                yield return null;
+            }
+
+            oldPc.GetComponent<VisualEffect>().enabled = false;
+            oldPc.GetComponent<GraphSlice>().ActivateSlices(true);
+            creatingGraph = false;
         }
 
         public void AddGraphPoint(string cellName, float x, float y, float z)
@@ -147,7 +187,7 @@ namespace DefaultNamespace
             scaledCoord -= scaledOffset;
             if (!scaledCoordinates.ContainsKey(cellName))
             {
-                scaledCoordinates[cellName] = scaledCoord;
+                scaledCoordinates[cellName] = scaledCoord + 0.5f;
             }
 
             return scaledCoord;
@@ -165,14 +205,42 @@ namespace DefaultNamespace
             );
         }
 
-        public void SpawnPoints(PointCloud pc, bool spatial)
+        public void SpawnPoints(PointCloud pc, PointCloud parentPC, List<Point> points)
         {
             Entity parent = entityManager.CreateEntity(entityArchetype);
-            entityManager.SetComponentData(parent, new Translation {Value = new float3(0, 0, 0)});
-            entityManager.SetComponentData(parent, new Rotation {Value = new quaternion(0, 0, 0, 0)});
-            entityManager.SetComponentData(parent, new Scale {Value = 1f});
+            entityManager.SetComponentData(parent, new Translation { Value = new float3(0, 0, 0) });
+            entityManager.SetComponentData(parent, new Rotation { Value = new quaternion(0, 0, 0, 0) });
+            entityManager.SetComponentData(parent, new Scale { Value = 1f });
+            PointCloudComponent pointCloudComponent = new PointCloudComponent { pointCloudId = graphNr };
+            entityManager.SetComponentData(parent, pointCloudComponent);
+            creatingGraph = true;
+            ScaleAllCoordinates();
+            pc.minCoordValues = minCoordValues;
+            pc.maxCoordValues = maxCoordValues;
+            pc.scaledOffset = scaledOffset;
+            pc.longestAxis = longestAxis;
+            graphNr++;
+            pointClouds.Add(pc);
+            pointCount = points.Count;
+
+            pc.CreatePositionTextureMap(points, parentPC);
+
+            VisualEffect vfx = pc.GetComponent<VisualEffect>();
+
+            //vfx.SetTexture("ColorMapTex", colorMap);
+            //vfx.SetTexture("AlphaMapTex", alphaMap);
+
+            StartCoroutine(CreateColorTextureMap(points, pc, parentPC));
+        }
+
+        public void SpawnPoints(PointCloud pc)
+        {
+            Entity parent = entityManager.CreateEntity(entityArchetype);
+            entityManager.SetComponentData(parent, new Translation { Value = new float3(0, 0, 0) });
+            entityManager.SetComponentData(parent, new Rotation { Value = new quaternion(0, 0, 0, 0) });
+            entityManager.SetComponentData(parent, new Scale { Value = 1f });
             LocalToWorld localToWorld = entityManager.GetComponentData<LocalToWorld>(parent);
-            PointCloudComponent pointCloudComponent = new PointCloudComponent {pointCloudId = graphNr};
+            PointCloudComponent pointCloudComponent = new PointCloudComponent { pointCloudId = graphNr };
             entityManager.SetComponentData(parent, pointCloudComponent);
             creatingGraph = true;
             ScaleAllCoordinates();
@@ -189,8 +257,10 @@ namespace DefaultNamespace
 
             pointCount = scaledCoordinates.Count;
 
-            StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
-            // pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList());
+            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList());
+
+
+            // StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
             // if (nrOfGraphs == mdsFileCount)
             // {
             //     StartCoroutine(CreateColorTextureMap(scaledCoordinates.Values.ToList().Count));
@@ -201,35 +271,89 @@ namespace DefaultNamespace
             creatingGraph = false;
         }
 
+
+        public IEnumerator CreateColorTextureMap(List<Point> points, PointCloud pc, PointCloud parentCloud)
+        {
+            while (readingFile) yield return null;
+            int width = (int)math.ceil(math.sqrt(pointCount));
+            int height = width;
+            colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            alphaMap.SetPixels(0, 0, width, height, new Color[] { Color.black });
+            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            Color c;
+            Color alpha = new Color(0.55f, 0f, 0);
+            Color[] carray = new Color[width * height];
+            Color[] aarray = new Color[width * height];
+
+            Texture2D parentTexture = (Texture2D)parentCloud.GetComponent<VisualEffect>().GetTexture("ColorMapTex");
+            for (int i = 0; i < points.Count; i++)
+            {
+                Point p = points[i];
+
+                c = parentTexture.GetPixel(p.xindex, p.yindex);
+                carray[i] = c;
+                aarray[i] = alpha;
+            }
+
+            colorMap.SetPixels(carray);
+            alphaMap.SetPixels(aarray);
+            // clusterMap.SetPixels(carrayClusters);
+            CellexalLog.Log("Color Texture Map created");
+            colorMap.Apply();
+            alphaMap.Apply();
+            clusterMap.Apply();
+            VisualEffect vfx = pc.GetComponent<VisualEffect>();
+            vfx.enabled = true;
+            vfx.Play();
+            vfx.SetTexture("ColorMapTex", colorMap);
+            vfx.SetTexture("AlphaMapTex", alphaMap);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMaps.Add(colorMap);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().alphaTextureMaps.Add(alphaMap);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
+            yield return null;
+
+        }
+
+
         public IEnumerator CreateColorTextureMap()
         {
             while (readingFile) yield return null;
-            int width = (int) math.ceil(math.sqrt(pointCount));
+            int width = (int)math.ceil(math.sqrt(pointCount));
             int height = width;
-            colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
-            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             Color c = new Color(0.32f, 0.32f, 0.32f);
-            Color[] carray = new Color[width*height];
-            Color[] carrayClusters = new Color[width*height];
+            Color alpha = new Color(0.55f, 0f, 0);
+            Color[] carray = new Color[width * height];
+            Color[] aarray = new Color[width * height];
+            Color[] carrayClusters = new Color[width * height];
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     int ind = x + (width * y);
-                    if (ind >= pointCount) continue;
-                    Color cluster = colorDict[clusterDict[ind]];
-                    carrayClusters[ind] = cluster;
-                    carray[ind] = c;
-                    clusters[clusterDict[ind]].Add(new Vector2(x, y));
-                }
+                    if (ind >= pointCount)
+                    {
+                        aarray[ind] = Color.black;
+                        continue;
+                    }
 
+                    carray[ind] = c;
+                    aarray[ind] = alpha;
+                    // Color cluster = colorDict[clusterDict[ind]];
+                    // carrayClusters[ind] = cluster;
+                    // clusters[clusterDict[ind]].Add(new Vector2(x, y));
+                }
             }
+
             colorMap.SetPixels(carray);
-            // colorMap.SetPixel(x, y, c);
-            // clusterMap.SetPixel(x, y, cluster);
-            clusterMap.SetPixels(carrayClusters);
+            alphaMap.SetPixels(aarray);
+            // clusterMap.SetPixels(carrayClusters);
             CellexalLog.Log("Color Texture Map created");
             colorMap.Apply();
+            alphaMap.Apply();
             clusterMap.Apply();
             foreach (PointCloud pc in pointClouds)
             {
@@ -237,14 +361,19 @@ namespace DefaultNamespace
                 vfx.enabled = true;
                 vfx.Play();
                 vfx.SetTexture("ColorMapTex", colorMap);
+                vfx.SetTexture("AlphaMapTex", alphaMap);
+                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
+                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMaps.Add(colorMap);
+                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().alphaTextureMaps.Add(alphaMap);
             }
+
 
             clusterDict.Clear();
 
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMap = colorMap;
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().clusterTextureMap = clusterMap;
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(nrOfGraphs);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().clusterTextureMaps.Add(clusterMap);
+
         }
+
 
         // public void ColorPoints(PointCloud pc)
         // {
@@ -257,7 +386,7 @@ namespace DefaultNamespace
             colorDict = new Dictionary<string, Color>();
             clusterDict = new Dictionary<int, string>();
 
-            int width = (int) math.ceil(math.sqrt(pointCount));
+            int width = (int)math.ceil(math.sqrt(pointCount));
             int height = width;
             clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             int id = 0;

@@ -1379,22 +1379,13 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < nrOfLODGroups; i++)
             {
                 Renderer[] renderers;
+                renderers = new Renderer[graph.lodGroupClusters[i].Count];
                 if (graph != null)
                 {
-                    renderers = new Renderer[graph.lodGroupClusters[i].Count];
                     for (int j = 0; j < graph.lodGroupClusters[i].Count; j++)
                     {
                         renderers[j] = graph.lodGroupClusters[i][j].GetComponent<Renderer>();
                     }
-                }
-
-                else
-                {
-                    renderers = new Renderer[slice.lodGroupClusters[i].Count];
-                    // for (int j = 0; j < slice.lodGroupClusters[i].Count; j++)
-                    // {
-                    //     renderers[j] = slice.lodGroupClusters[i][j].GetComponent<Renderer>();
-                    // }
                 }
 
                 if (i == nrOfLODGroups - 1)

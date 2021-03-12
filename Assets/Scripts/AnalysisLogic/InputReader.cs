@@ -24,6 +24,7 @@ using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine.XR;
 using Color = UnityEngine.Color;
+using UnityEngine.VFX;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -167,12 +168,16 @@ namespace CellexalVR.AnalysisLogic
                         i++;
                     }
                 }
-                
-                pointCloudGenerator.SpawnPoints(pc, false);
+                pointCloudGenerator.SpawnPoints(pc);
                 // pointCloudGenerator.ReadMetaData(pc, fullPath);
                 // pointCloudGenerator.ColorPoints(pc);
                 GC.Collect();
             }
+
+            pointCloudGenerator.pointClouds[0].targetPositionTextureMap = pointCloudGenerator.pointClouds[1].positionTextureMap;
+            pointCloudGenerator.pointClouds[1].targetPositionTextureMap = pointCloudGenerator.pointClouds[0].positionTextureMap;
+            pointCloudGenerator.pointClouds[0].GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pointCloudGenerator.pointClouds[1].positionTextureMap);
+            pointCloudGenerator.pointClouds[1].GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pointCloudGenerator.pointClouds[0].positionTextureMap);
 
             StartCoroutine(pointCloudGenerator.ReadMetaData(fullPath));
             StartCoroutine(pointCloudGenerator.CreateColorTextureMap());

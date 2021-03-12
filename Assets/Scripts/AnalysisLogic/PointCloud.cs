@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.SceneObjects;
 using CellexalVR;
-using CellexalVR.General;
 using CellexalVR.Interaction;
 using DefaultNamespace;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.VFX;
-using Valve.VR.InteractionSystem;
 
 namespace AnalysisLogic
 {
@@ -24,8 +19,10 @@ namespace AnalysisLogic
         private EntityManager entityManager;
         private int frameCount;
         private InteractableObjectBasic interactableObjectBasic;
+        private bool morphed;
 
         public Texture2D positionTextureMap;
+        public Texture2D targetPositionTextureMap;
         public float3 minCoordValues;
         public float3 maxCoordValues;
         public float3 longestAxis;
@@ -35,9 +32,10 @@ namespace AnalysisLogic
         public int pcID;
         public Transform selectionSphere;
         public Entity parent;
+        public List<float> zPositions = new List<float>();
 
         private EntityArchetype entityArchetype;
-        
+
         public void Initialize(int id)
         {
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
@@ -63,6 +61,11 @@ namespace AnalysisLogic
             // }
             // frameCount++;
 
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                StartCoroutine(Morph(!morphed));
+                morphed = !morphed;
+            }
 
             vfx.SetVector3("SelectionPosition", selectionSphere.position);
             vfx.SetFloat("SelectionRadius", selectionSphere.localScale.x / 2f);
@@ -70,30 +73,50 @@ namespace AnalysisLogic
             vfx.SetVector3("CullingCubeScale", PointCloudCulling.instance.transform.localScale);
         }
 
-        public IEnumerator CreatePositionTextureMap(List<float3> pointPositions)
+        public IEnumerator Morph(bool toggle, float time = 1f)
         {
-            yield return null;
-            pointCount = pointPositions.Count;
-            // NativeArray<Entity> entities = new NativeArray<Entity>(pointCount, Allocator.Temp);
-            // entityManager.CreateEntity(entityArchetype, entities);
+            float t = 0.0f;
+            float min = toggle ? 1f : 0f;
+            float max = toggle ? 0f : 1f;
+            while (t <= 1f)
+            {
+                float val = math.lerp(min, max, t);
+                vfx.SetFloat("morphStep", val);
+                t += 0.8f * Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        public void CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
+        {
+            pointCount = points.Count;
             vfx.SetInt("SpawnRate", pointCount);
-            int width = (int) math.ceil(math.sqrt(pointPositions.Count));
+            int width = (int)math.ceil(math.sqrt(points.Count));
             int height = width;
             positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            Texture2D parentTextureMap = parentPC.targetPositionTextureMap;
             Color[] positions = new Color[width * height];
+            Color[] targetPositions = new Color[positions.Length];
+            for (int i = 0; i < points.Count; i++)
+            {
+                Point p = points[i];
+                Color c = parentTextureMap.GetPixel(p.xindex, p.yindex);
+                targetPositions[i] = c;
+            }
+
             Color col;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     int ind = x + (height * y);
-                    if (ind >= pointPositions.Count) continue;
-                    float3 pos = pointPositions[ind] + 0.5f;
+                    if (ind >= points.Count) continue;
+                    float3 pos = points[ind].offset;
                     col = new Color(pos.x, pos.y, pos.z, 1);
-                    // Entity e = entities[ind];
                     Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
                     float3 wPos = math.transform(transform.localToWorldMatrix, pos);
-                    entityManager.SetComponentData(e, new Translation {Value = wPos});
+                    entityManager.SetComponentData(e, new Translation { Value = wPos });
                     entityManager.AddComponent(e, typeof(Point));
                     entityManager.SetComponentData(e, new Point
                     {
@@ -105,27 +128,61 @@ namespace AnalysisLogic
                         parentID = pcID
                     });
                     positions[ind] = col;
-                    // positionTextureMap.SetPixel(x, y, col);
                 }
-                
-                //if (y % 10 == 0) yield return null;
+            }
+            targetPositionTextureMap.SetPixels(targetPositions);
+            positionTextureMap.SetPixels(positions);
+            positionTextureMap.Apply();
+            targetPositionTextureMap.Apply();
+            vfx.enabled = true;
+            vfx.SetTexture("PositionMapTex", positionTextureMap);
+            vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
+            vfx.pause = false;
+        }
 
-                // print(y);
-                // yield return null;
+
+        public void CreatePositionTextureMap(List<float3> pointPositions, bool createEntities = true)
+        {
+            pointCount = pointPositions.Count;
+            vfx.SetInt("SpawnRate", pointCount);
+            int width = (int)math.ceil(math.sqrt(pointPositions.Count));
+            int height = width;
+            positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            Color[] positions = new Color[width * height];
+            Color col;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int ind = x + (height * y);
+                    if (ind >= pointCount) continue;
+                    float3 pos = pointPositions[ind];
+                    col = new Color(pos.x, pos.y, pos.z, 1);
+                    if (createEntities)
+                    {
+                        Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
+                        float3 wPos = math.transform(transform.localToWorldMatrix, pos);
+                        entityManager.SetComponentData(e, new Translation { Value = wPos });
+                        entityManager.AddComponent(e, typeof(Point));
+                        entityManager.SetComponentData(e, new Point
+                        {
+                            selected = false,
+                            xindex = x,
+                            yindex = y,
+                            label = ind,
+                            offset = pos,
+                            parentID = pcID
+                        });
+                    }
+                    positions[ind] = col;
+                }
             }
 
             positionTextureMap.SetPixels(positions);
-            // World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pcID);
-            // entities.Dispose();
             positionTextureMap.Apply();
             vfx.enabled = true;
             vfx.SetTexture("PositionMapTex", positionTextureMap);
             vfx.pause = false;
-            // yield return new WaitForSeconds(1.5f);
-            vfx.Stop();
-            vfx.Play();
-            // vfx.SetInt("SpawnRate", 0);
-            GC.Collect();
         }
 
         //

@@ -63,7 +63,7 @@ namespace DefaultNamespace
                     //p.selected = true;
                     //commandBuffer.SetComponent(rc.entity, p);
                     Entity e = commandBuffer.CreateEntity(entityArchetype);
-                    commandBuffer.SetComponent(e, new SelectedPointComponent { xindex = rc.xindex, yindex = rc.yindex, label = rc.label, group = group});
+                    commandBuffer.SetComponent(e, new SelectedPointComponent { xindex = rc.xindex, yindex = rc.yindex, label = rc.label, group = group, parentID = rc.parentID});
                 }
             }).Run();
 

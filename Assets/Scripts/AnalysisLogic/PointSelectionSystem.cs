@@ -14,6 +14,7 @@ namespace DefaultNamespace
         public int yindex;
         public int label;
         public int group;
+        public int parentID;
     }
 
     public struct RaycastCheckComponent : IComponentData
@@ -23,6 +24,7 @@ namespace DefaultNamespace
         public int xindex;
         public int yindex;
         public int label;
+        public int parentID;
     }
 
     public class PointSelectionSystem : SystemBase
@@ -68,7 +70,7 @@ namespace DefaultNamespace
             }
 
             if (pointCloud == null) return;
-            PointCloud mat = pointCloud; 
+            PointCloud mat = pointCloud;
             float3 selectionToolCenter = pointCloud.transform.InverseTransformPoint(selTransform.position);
             //QuadrantSystem.DebugDrawCubes(selectionToolCenter, mat.transform);
             int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter, (int)selTransform.localScale.x);
@@ -137,7 +139,7 @@ namespace DefaultNamespace
                 {
                     if (quadrantData.group == SelectionToolCollider.instance.CurrentColorIndex) continue;
                     float3 pos = pc.transform.TransformPoint(quadrantData.position);
-                    entityArray.Add(new RaycastCheckComponent {position = pos, origin = origin, xindex = quadrantData.xindex, yindex = quadrantData.yindex, label = quadrantData.label});
+                    entityArray.Add(new RaycastCheckComponent {position = pos, origin = origin, xindex = quadrantData.xindex, yindex = quadrantData.yindex, label = quadrantData.label, parentID = pc.pcID});
                 } while (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetNextValue(out quadrantData,
                     ref nativeMultiHashMapIterator));
             }
@@ -151,7 +153,8 @@ namespace DefaultNamespace
                     origin = entityArray[i].origin,
                     label = entityArray[i].label,
                     xindex = entityArray[i].xindex,
-                    yindex = entityArray[i].yindex
+                    yindex = entityArray[i].yindex,
+                    parentID = entityArray[i].parentID
                 });
             }
 

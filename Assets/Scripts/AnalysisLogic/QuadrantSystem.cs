@@ -44,6 +44,7 @@ namespace DefaultNamespace
         public int yindex;
         public int label;
         public int group;
+        public int parentID;
     }
 
     public class QuadrantSystem : SystemBase
@@ -106,6 +107,7 @@ namespace DefaultNamespace
                     label = label,
                     position = pos,
                     group = -1,
+                    parentID = id
                 });
             }
         }
@@ -127,30 +129,36 @@ namespace DefaultNamespace
             base.OnDestroy();
         }
 
-        public void SetHashMap(int n = 0)
-        {
-            for (int i = 0; i < n; i++)
+        public void SetHashMap(int id)
+        {       
+            //foreach (NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap in quadrantMultiHashMaps)
+            //{
+            //    quadrantMultiHashMap.Dispose();
+            //}
+            //quadrantMultiHashMaps.Clear();
+            
+            //for (int i = 0; i < n; i++)
+            //{
+            NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);
+            quadrantMultiHashMaps.Add(quadrantMultiHashMap);
+            EntityQuery entityQuery = GetEntityQuery(typeof(Point), typeof(LocalToWorld));
+            quadrantMultiHashMap.Clear();
+            if (entityQuery.CalculateEntityCount() > quadrantMultiHashMap.Capacity)
             {
-                NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);
-                quadrantMultiHashMaps.Add(quadrantMultiHashMap);
-                EntityQuery entityQuery = GetEntityQuery(typeof(Point), typeof(LocalToWorld));
-                quadrantMultiHashMap.Clear();
-                if (entityQuery.CalculateEntityCount() > quadrantMultiHashMap.Capacity)
-                {
-                    quadrantMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
-                }
-
-                SetQuadrantDataHashMapJob setQuadrantDataHashMapJob = new SetQuadrantDataHashMapJob
-                {
-                    quadrantMultiHashMap = quadrantMultiHashMap.AsParallelWriter(),
-                    id = i,
-                };
-                JobHandle jobHandle = setQuadrantDataHashMapJob.Schedule(entityQuery, Dependency);
-                jobHandle.Complete();
+                quadrantMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
             }
 
-            EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
-            CellexalLog.Log("Quadrant Hash map set");
+            SetQuadrantDataHashMapJob setQuadrantDataHashMapJob = new SetQuadrantDataHashMapJob
+            {
+                quadrantMultiHashMap = quadrantMultiHashMap.AsParallelWriter(),
+                id = id,
+            };
+            JobHandle jobHandle = setQuadrantDataHashMapJob.Schedule(entityQuery, Dependency);
+            jobHandle.Complete();
+            //}
+
+            // EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
+            //CellexalLog.Log($"{n} Quadrant Hash map(s) set");
         }
 
         protected override void OnUpdate()

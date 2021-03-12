@@ -17,8 +17,9 @@ namespace DefaultNamespace
         private int frameCount;
 
         public List<Tuple<int, int>> sps;
-        public Texture2D colorTextureMap;
-        public Texture2D clusterTextureMap;
+        public List<Texture2D> colorTextureMaps = new List<Texture2D>();
+        public List<Texture2D> alphaTextureMaps = new List<Texture2D>();
+        public List<Texture2D> clusterTextureMaps = new List<Texture2D>();
 
         protected override void OnCreate()
         {
@@ -31,20 +32,24 @@ namespace DefaultNamespace
 
         protected override void OnUpdate()
         {
-            if (colorTextureMap == null) return;
+            if (colorTextureMaps.Count == 0) return;
+            Debug.Log(colorTextureMaps.Count);
             if (frameCount >= 10)
             {
                 frameCount = 0;
                 Color col = SelectionToolCollider.instance.GetCurrentColor();
                 Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
                 {
-                    colorTextureMap.SetPixel(sp.xindex, sp.yindex, col);
+                    int index = sp.parentID;
+                    colorTextureMaps[index].SetPixel(sp.xindex, sp.yindex, col);
+                    alphaTextureMaps[index].SetPixel(sp.xindex, sp.yindex, Color.white);
                     sps.Add(new Tuple<int, int> (sp.label, sp.group) );
                 }).Run();
                 ecbSystem.AddJobHandleForProducer(Dependency);
                 EntityManager.DestroyEntity(GetEntityQuery(typeof(SelectedPointComponent)));
                 CellexalEvents.SelectionStarted.Invoke();
-                colorTextureMap.Apply();
+                colorTextureMaps.ForEach(tex => tex.Apply());
+                alphaTextureMaps.ForEach(tex => tex.Apply());
             }
 
 
@@ -54,11 +59,11 @@ namespace DefaultNamespace
         public void ColorCluster(string cluster, bool toggle)
         {
             List<Vector2> indices = ReferenceManager.instance.pointCloudGenerator.clusters[cluster];
-            Color col = toggle ? ReferenceManager.instance.pointCloudGenerator.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f);
+            Color col = toggle ? ReferenceManager.instance.pointCloudGenerator.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f, 0.7f);
             // Debug.Log($"{cluster}, ps : {indices.Count}, col :{col}");
             foreach (Vector2 ind in indices)
             {
-                colorTextureMap.SetPixel((int)ind.x, (int)ind.y, col);
+                colorTextureMaps[0].SetPixel((int)ind.x, (int)ind.y, col);
             }
             
             if (toggle)
@@ -69,7 +74,7 @@ namespace DefaultNamespace
             {
                 ReferenceManager.instance.legendManager.attributeLegend.RemoveEntry(cluster);
             }
-            colorTextureMap.Apply();
+            colorTextureMaps[0].Apply();
         }
     }
 }
