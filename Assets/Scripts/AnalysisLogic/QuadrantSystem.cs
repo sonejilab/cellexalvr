@@ -40,6 +40,8 @@ namespace DefaultNamespace
     public struct QuadrantData
     {
         public float3 position;
+        public int orgXIndex;
+        public int orgYIndex;
         public int xindex;
         public int yindex;
         public int label;
@@ -99,9 +101,12 @@ namespace DefaultNamespace
                 int y = point.yindex;
                 int label = point.label;
                 float3 pos = point.offset;
+                Debug.Log($"{point.label}, {id}, {point.offset}");
                 int hashMapKey = GetPositionHashMapKey(point.offset);
                 quadrantMultiHashMap.Add(hashMapKey, new QuadrantData
                 {
+                    orgXIndex = point.orgXIndex,
+                    orgYIndex = point.orgYIndex,
                     xindex = x,
                     yindex = y,
                     label = label,
@@ -130,15 +135,7 @@ namespace DefaultNamespace
         }
 
         public void SetHashMap(int id)
-        {       
-            //foreach (NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap in quadrantMultiHashMaps)
-            //{
-            //    quadrantMultiHashMap.Dispose();
-            //}
-            //quadrantMultiHashMaps.Clear();
-            
-            //for (int i = 0; i < n; i++)
-            //{
+        {
             NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);
             quadrantMultiHashMaps.Add(quadrantMultiHashMap);
             EntityQuery entityQuery = GetEntityQuery(typeof(Point), typeof(LocalToWorld));
@@ -148,16 +145,31 @@ namespace DefaultNamespace
                 quadrantMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
             }
 
-            SetQuadrantDataHashMapJob setQuadrantDataHashMapJob = new SetQuadrantDataHashMapJob
-            {
-                quadrantMultiHashMap = quadrantMultiHashMap.AsParallelWriter(),
-                id = id,
-            };
-            JobHandle jobHandle = setQuadrantDataHashMapJob.Schedule(entityQuery, Dependency);
-            jobHandle.Complete();
-            //}
+            var qmap = quadrantMultiHashMap.AsParallelWriter();
 
-            // EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
+            JobHandle jobHandle = Entities.WithAll<Point>().ForEach((Entity e, int entityInQueryIndex, ref Point point) =>
+            {
+                if (point.parentID != id) return;
+                int x = point.xindex;
+                int y = point.yindex;
+                int label = point.label;
+                float3 pos = point.offset;
+                int hashMapKey = GetPositionHashMapKey(point.offset);
+                qmap.Add(hashMapKey, new QuadrantData
+                {
+                    orgXIndex = point.orgXIndex,
+                    orgYIndex = point.orgYIndex,
+                    xindex = x,
+                    yindex = y,
+                    label = label,
+                    position = pos,
+                    group = -1,
+                    parentID = id
+                });
+            }).ScheduleParallel(Dependency);
+            jobHandle.Complete();
+
+            //EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
             //CellexalLog.Log($"{n} Quadrant Hash map(s) set");
         }
 

@@ -6,9 +6,12 @@ using DefaultNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.VFX;
+using Valve.VR;
 using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Spatial
@@ -26,6 +29,7 @@ namespace CellexalVR.Spatial
         public Texture2D[] textures;
         public Texture2D positionTextureMap;
         public Texture2D targetTextureMap;
+        public bool controllerInsideSomeBox;
         public int SliceNr
         {
             get { return sliceNr; }
@@ -37,9 +41,11 @@ namespace CellexalVR.Spatial
         public SpatialGraph spatialGraph;
         public GraphSlice parentSlice;
         public List<GraphSlice> childSlices = new List<GraphSlice>();
+        public PointCloud pointCloud;
+        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
 
         protected Graph graph;
-        
+
         private Vector3 originalPos;
         private Vector3 originalSc;
         private Quaternion originalRot;
@@ -51,7 +57,13 @@ namespace CellexalVR.Spatial
         private int flipped = 1;
         private int sliceNr;
         private InteractableObjectBasic interactableObjectBasic;
-
+        private bool controllerInside;
+        private SlicerBox slicerBox;
+        private List<Point> sortedPointsX;
+        private List<Point> sortedPointsY;
+        private List<Point> sortedPointsZ;
+        private BoxCollider boxCollider;
+        private int frameCount;
 
         private void Start()
         {
@@ -59,21 +71,67 @@ namespace CellexalVR.Spatial
             originalRot = transform.localRotation;
             originalSc = transform.localScale;
             interactableObjectBasic = GetComponent<InteractableObjectBasic>();
+            slicerBox = GetComponentInChildren<SlicerBox>(true);
+            if (parentSlice == null)
+            {
+                parentSlice = this;
+            }
+            pointCloud = GetComponent<PointCloud>();
+            boxCollider = GetComponent<BoxCollider>();
             //GetComponent<Rigidbody>().drag = Mathf.Infinity;
             //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.L))
+            //if (Input.GetKeyDown(KeyCode.L))
+            //{
+            //    ActivateSlices(true);
+            //}
+
+            //if (Input.GetKeyDown(KeyCode.M))
+            //{
+            //    ActivateSlices(false);
+            //}
+            if (++frameCount > 10)
             {
-                ActivateSlices(true);
+                frameCount = 0;
+            }
+            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+            if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
+            {
+                //parentSlice.controllerInsideSomeBox = true;
+                controllerInside = true;
+                slicerBox.box.SetActive(true);
+            }
+            else
+            {
+                controllerInside = false;
+                //parentSlice.controllerInsideSomeBox = false;
+                if (!slicerBox.Active)
+                {
+                    slicerBox.box.SetActive(false);
+                }
             }
 
-            if (Input.GetKeyDown(KeyCode.M))
+            if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
             {
-                ActivateSlices(false);
+                if (controllerInside)
+                {
+                    slicerBox.Active = !slicerBox.Active;
+                    slicerBox.box.SetActive(slicerBox.Active);
+                }
             }
+        }
+
+
+        public void ClearSlices()
+        {
+            foreach (GraphSlice slice in childSlices)
+            {
+                Destroy(slice.gameObject);
+            }
+            childSlices.Clear();
         }
 
         public void MoveToGraph()
@@ -104,9 +162,12 @@ namespace CellexalVR.Spatial
             }
 
             transform.localPosition = originalPos;
-            transform.localRotation = originalRot;
+            transform.localRotation = Quaternion.identity;
             interactableObjectBasic.isGrabbable = false;
             GetComponent<BoxCollider>().enabled = false;
+            //parentSlice.GetComponent<VisualEffect>().enabled = true;
+            //yield return new WaitForSeconds(0.3f);
+            //gameObject.SetActive(false);
             //wire.SetActive(false);
             //replacement.GetComponent<Renderer>().material.color = replacementCol;
             //replacement.SetActive(false);
@@ -138,20 +199,25 @@ namespace CellexalVR.Spatial
 
         public void ActivateSlices(bool toggle)
         {
+            print($"activate slices {childSlices.Count}");
             foreach (GraphSlice gs in childSlices)
             {
                 if (toggle)
                 {
+                    //gameObject.SetActive(false);
                     interactableObjectBasic.isGrabbable = false;
+                    gs.gameObject.SetActive(true);
                     GetComponent<BoxCollider>().enabled = false;
-                    Debug.Log($"{this.gameObject.name}, {interactableObjectBasic.isGrabbable}");
                     gs.ActivateSlice(toggle, true);
                 }
 
                 else
                 {
+                    //slicerBox.gameObject.SetActive(false);
+                    gameObject.SetActive(true);
                     interactableObjectBasic.isGrabbable = true;
                     GetComponent<BoxCollider>().enabled = true;
+                    gs.slicerBox.box.SetActive(false);
                     gs.MoveToGraph();
                 }
             }
@@ -165,6 +231,10 @@ namespace CellexalVR.Spatial
         /// <returns></returns>
         public void ActivateSlice(bool activate, bool move = true)
         {
+            if (interactableObjectBasic == null)
+            {
+                interactableObjectBasic = GetComponent<InteractableObjectBasic>();
+            }
             foreach (BoxCollider bc in GetComponents<BoxCollider>())
             {
                 bc.enabled = activate;
@@ -174,16 +244,16 @@ namespace CellexalVR.Spatial
             {
                 interactableObjectBasic.isGrabbable = true;
                 transform.parent = null;
-                Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-                if (rigidbody == null)
-                {
-                    rigidbody = gameObject.AddComponent<Rigidbody>();
-                }
+                //Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+                //if (rigidbody == null)
+                //{
+                //    rigidbody = gameObject.AddComponent<Rigidbody>();
+                //}
 
-                rigidbody.useGravity = false;
-                rigidbody.isKinematic = false;
-                rigidbody.drag = 10;
-                rigidbody.angularDrag = 15;
+                //rigidbody.useGravity = false;
+                //rigidbody.isKinematic = false;
+                //rigidbody.drag = 10;
+                //rigidbody.angularDrag = 15;
                 //GetComponent<VRTK_InteractableObject>().isGrabbable = true;
                 sliceMode = true;
                 if (move)
@@ -197,7 +267,7 @@ namespace CellexalVR.Spatial
             else
             {
                 //GetComponent<VRTK_InteractableObject>().isGrabbable = false;
-                Destroy(GetComponent<Rigidbody>());
+                //Destroy(GetComponent<Rigidbody>());
                 sliceMode = false;
             }
         }
@@ -237,104 +307,156 @@ namespace CellexalVR.Spatial
         }
 
 
-
-        //public IEnumerator BuildSlice(bool scale = true)
-        //{
-        //    buildingSlice = true;
-        //    graph = GetComponent<Graph>();
-        //    referenceManager.graphGenerator.newGraph = graph;
-        //    StartCoroutine(
-        //        referenceManager.graphGenerator.SliceClusteringLOD(
-        //            referenceManager.graphGenerator.nrOfLODGroups, points, scale: scale));
-
-        //    while (referenceManager.graphGenerator.isCreating)
-        //    {
-        //        yield return null;
-        //    }
-
-        //    graph.points = points;
-
-        //    if (referenceManager.graphGenerator.nrOfLODGroups > 1)
-        //    {
-        //        if (GetComponent<LODGroup>() == null)
-        //        {
-        //            gameObject.AddComponent<LODGroup>();
-        //        }
-
-        //        referenceManager.graphGenerator.UpdateLODGroups(graph, slice: this);
-        //    }
-
-        //    //spatialGraph.slices.Add(this);
-        //    referenceManager.graphManager.Graphs.Add(graph);
-
-        //    buildingSlice = false;
-
-
-        //    // place slicer correct
-        //    float xMax = points.Max(v => v.Value.Position.x);
-        //    float yMax = points.Max(v => v.Value.Position.y);
-        //    float zMax = points.Max(v => v.Value.Position.z);
-        //    float xMin = points.Min(v => v.Value.Position.x);
-        //    float yMin = points.Min(v => v.Value.Position.y);
-        //    float zMin = points.Min(v => v.Value.Position.z);
-
-        //    var max = new Vector3(xMax, yMax, zMax);
-        //    var min = new Vector3(xMin, yMin, zMin);
-        //    var diff = max - min;
-        //    var gDiff = graph.maxCoordValues - graph.minCoordValues;
-        //    var ratio = new Vector3(diff.x / gDiff.x, diff.y / gDiff.y,
-        //        diff.z / gDiff.z) + Vector3.one * 0.1f;
-
-
-        //    var mid = (min + max) / 2;
-
-        //    Slicer slicer = GetComponentInChildren<Slicer>(true);
-        //    slicer.transform.localScale = ratio;
-        //    slicer.transform.localPosition = mid;
-
-        //    var menuScale = slicer.slicingMenuParent.transform.localScale;
-        //    menuScale.y /= ratio.y;
-        //    menuScale.z /= ratio.z;
-        //    slicer.slicingMenuParent.transform.localScale = menuScale;
-        //}
-
-
         public void BuildPointCloud(Transform oldPc)
         {
-            PointCloud pc = GetComponent<PointCloud>();
             parentSlice = oldPc.GetComponent<GraphSlice>();
-            PointCloudGenerator.instance.SpawnPoints(pc, oldPc.GetComponent<PointCloud>(), points);
+            if (pointCloud == null)
+            {
+                pointCloud = GetComponent<PointCloud>();
+            }
+            PointCloudGenerator.instance.SpawnPoints(pointCloud, parentSlice.pointCloud, points);
         }
 
-        //public void SetTexture(Dictionary<string, Color32> textureColors, int k)
-        //{
-        //    Texture2D texture = graph.textures[k];
-        //    foreach (KeyValuePair<string, Graph.GraphPoint> point in points)
-        //    {
-        //        Vector2Int textureCoord = point.Value.textureCoord[k];
-        //        Color32 col = textureColors[point.Key];
-        //        texture.SetPixel(textureCoord.x, textureCoord.y, col);
-        //    }
 
-        //    texture.Apply();
+        public IEnumerator SliceAxis(int axis, List<Point> points, int nrOfSlices)
+        {
+            // Get the different z positions (slice positions) and place the slicer in each.
+            //List<Vector3> cutPositions = new List<Vector3>();
+            List<Point> sortedPoints = new List<Point>(points.Count);
+            if (axis == 0)
+            {
+                if (sortedPointsX == null)
+                {
+                    sortedPointsX = SliceGraphSystem.SortPoints(points, 0);
+                }
 
-        //}
+                sortedPoints = sortedPointsX;
+            }
 
-        // spatialGraph.AddSlices();
-        // if (spatialGraph.slices.Count > 1)
-        // {
-        //     for (int i = 0; i < spatialGraph.slices.Count; i++)
-        //     {
-        //         float pos = -0.5f + i * (1f / (spatialGraph.slices.Count - 1));
-        //         GraphSlice slice = spatialGraph.slices[i].GetComponent<GraphSlice>();
-        //         slice.sliceCoords[axis] = pos;
-        //         // print($"name: {slice.gameObject.name}, pos: {pos}");
-        //     }
-        // }
+            else if (axis == 1)
+            {
+                if (sortedPointsY == null)
+                {
+                    sortedPointsY = SliceGraphSystem.SortPoints(points, 1);
+                }
+
+                sortedPoints = sortedPointsY;
+            }
+            else if (axis == 2)
+            {
+                if (sortedPointsZ == null)
+                {
+                    sortedPointsZ = SliceGraphSystem.SortPoints(points, 2);
+                }
+
+                sortedPoints = sortedPointsZ;
+            }
+
+            //ClearSlices();
+            List<GraphSlice> slices = new List<GraphSlice>();
+            int sliceNr = 0;
+            PointCloud newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
+            GraphSlice slice = newPc.GetComponent<GraphSlice>();
+            slice.transform.position = pointCloud.transform.position;
+            slice.sliceCoords = pointCloud.transform.position;
+            slice.SliceNr = ++sliceNr;
+            slice.gameObject.name = "Slice" + sliceNr;
+            //GraphSlice parentSlice = pc.GetComponent<GraphSlice>();
+            slice.SliceNr = SliceNr;
+            slices.Add(slice);
+            slice.gameObject.name = pointCloud.gameObject.name + "_" + SliceNr;
 
 
-        // var point = spatialGraph.points[spatialGraph.points.Count / 2];
-        // gp = referenceManager.graphManager.FindGraphPoint("Slice20", point.Item1);
-        // print($"point: {gp.WorldPosition}, slicer: {slicer.transform.position}");
+            //NativeList<Point> pointsInSlice = new NativeList<Point>(Allocator.Temp);
+            float currentCoord, diff, prevCoord;
+            Point point = sortedPoints[0];
+            float firstCoord = prevCoord = point.offset[axis];
+            float lastCoord = sortedPoints[sortedPoints.Count - 1].offset[axis];
+            int dividers = nrOfSlices;
+            float epsilonToUse = math.abs(firstCoord - lastCoord) / (float)dividers;
+            BoxCollider bc = newPc.GetComponent<BoxCollider>();
+            Vector3 bcPos = bc.center;
+            bcPos[axis] = firstCoord + epsilonToUse/2;
+            //bc.center = bcPos;
+            Vector3 bcSize = bc.size;
+            bcSize[axis] /= nrOfSlices;
+            //bc.size = bcSize;
+            newPc.SetCollider(bcPos, bcSize);
+
+            if (axis == 2)
+            {
+                epsilonToUse = 0.01f;
+            }
+
+            for (int i = 1; i < sortedPoints.Count; i++)
+            {
+                point = sortedPoints[i];
+                currentCoord = point.offset[axis];
+                // when we reach new slice (new x/y/z coordinate) build the graph and then start adding to a new one.
+                diff = math.abs(currentCoord - firstCoord);
+
+                if (diff > epsilonToUse)
+                {
+                    newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
+                    slice = newPc.GetComponent<GraphSlice>();
+                    slice.transform.position = pointCloud.transform.position;
+                    slice.sliceCoords = pointCloud.transform.position;
+                    slice.SliceNr = ++sliceNr;
+                    slice.gameObject.name = pointCloud.gameObject.name + "_" + sliceNr;
+                    slices.Add(slice);
+                    firstCoord = currentCoord;
+                    bc = newPc.GetComponent<BoxCollider>();
+                    bcPos = bc.center;
+                    bcPos[axis] = currentCoord + diff/2;
+                    bcSize = bc.size;
+                    bcSize[axis] /= nrOfSlices;
+                    newPc.SetCollider(bcPos, bcSize);
+                    yield return null;
+                }
+
+                else if (i == sortedPoints.Count - 1)
+                {
+                    slices.Add(slice);
+                    //slice.BuildPointCloud(pc.transform);
+                }
+                slice.points.Add(point);
+                prevCoord = currentCoord;
+            }
+            for (int i = 0; i < slices.Count; i++)
+            {
+                Vector3 coords = Vector3.zero;
+                coords[axis] = -0.5f + i * (1f / (slices.Count - 1));
+                coords = transform.TransformPoint(coords);
+                childSlices[i].sliceCoords = coords;
+            }
+            PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
+
+
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!parentSlice.controllerInsideSomeBox && other.CompareTag("Player"))
+            {
+                parentSlice.controllerInsideSomeBox = true;
+                controllerInside = true;
+                slicerBox.box.SetActive(true);
+            }
+
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                parentSlice.controllerInsideSomeBox = false;
+                controllerInside = false;
+                if (!slicerBox.Active)
+                {
+                    slicerBox.box.SetActive(false);
+                }
+            }
+        }
     }
+
 }

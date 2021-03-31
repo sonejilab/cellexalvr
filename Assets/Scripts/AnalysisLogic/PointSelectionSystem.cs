@@ -10,6 +10,8 @@ namespace DefaultNamespace
 {
     public struct SelectedPointComponent : IComponentData
     {
+        public int orgXIndex;
+        public int orgYIndex;
         public int xindex;
         public int yindex;
         public int label;
@@ -19,6 +21,8 @@ namespace DefaultNamespace
 
     public struct RaycastCheckComponent : IComponentData
     {
+        public int orgXIndex;
+        public int orgYIndex;
         public float3 position;
         public float3 origin;
         public int xindex;
@@ -59,71 +63,70 @@ namespace DefaultNamespace
             Transform selTransform = SelectionToolCollider.instance.GetCurrentCollider().transform;
             Collider[] colliders = Physics.OverlapBox(selTransform.position, Vector3.one * 0.1f, Quaternion.identity,
                 1 << LayerMask.NameToLayer("GraphLayer"));
-            PointCloud pointCloud = null;
+            PointCloud pc = null;
             foreach (var col in colliders)
             {
-                pointCloud = col.GetComponent<PointCloud>();
-                if (pointCloud != null)
+                pc = col.GetComponent<PointCloud>();
+                if (pc != null)
                 {
                     break;
                 }
             }
 
-            if (pointCloud == null) return;
-            PointCloud mat = pointCloud;
-            float3 selectionToolCenter = pointCloud.transform.InverseTransformPoint(selTransform.position);
-            //QuadrantSystem.DebugDrawCubes(selectionToolCenter, mat.transform);
-            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter, (int)selTransform.localScale.x);
+            if (pc == null) return;
+            float3 selectionToolCenter = pc.transform.InverseTransformPoint(selTransform.position);
+            //QuadrantSystem.DebugDrawCubes(selectionToolCenter, pc.transform);
+            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter);
             if (frameCount == 10)
             {
-                CheckOneQuadrantYLayer(hashMapKey, -1, mat);
+                CheckOneQuadrantYLayer(hashMapKey, -1, pc);
             }
 
             if (frameCount == 11)
             {
-                CheckOneHalfQuadrantYLayer(hashMapKey, -1, mat);
+                CheckOneHalfQuadrantYLayer(hashMapKey, -1, pc);
             }
 
             if (frameCount == 12)
             {
-                CheckOneQuadrantYLayer(hashMapKey, 0, mat);
+                CheckOneQuadrantYLayer(hashMapKey, 0, pc);
             }
 
             if (frameCount == 13)
             {
-                CheckOneHalfQuadrantYLayer(hashMapKey, 0, mat);
+                CheckOneHalfQuadrantYLayer(hashMapKey, 0, pc);
             }
 
             if (frameCount == 14)
             {
-                CheckOneQuadrantYLayer(hashMapKey, 1, mat);
+                CheckOneQuadrantYLayer(hashMapKey, 1, pc);
             }
             else if (frameCount == 15)
             {
                 frameCount = 0;
-                CheckOneHalfQuadrantYLayer(hashMapKey, 1, mat);
+                CheckOneHalfQuadrantYLayer(hashMapKey, 1, pc);
             }
 
             frameCount++;
         }
 
         [BurstCompile]
-        private void CheckOneQuadrantYLayer(int hashMapKey, int y, PointCloud mat)
+        private void CheckOneQuadrantYLayer(int hashMapKey, int y, PointCloud pc)
         {
-            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier, mat); // current quadrant
-            CheckForNearbyEntities((hashMapKey + 1) + y * QuadrantSystem.quadrantYMultiplier, mat); // one to the right
-            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier, mat); // one to the left
-            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat); // and so on..
+            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier, pc); // current quadrant
+            CheckForNearbyEntities((hashMapKey + 1) + y * QuadrantSystem.quadrantYMultiplier, pc); // one to the right
+            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier, pc); // one to the left
+            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc); // and so on..
         }
 
         [BurstCompile]
-        private void CheckOneHalfQuadrantYLayer(int hashMapKey, int y, PointCloud mat)
+        private void CheckOneHalfQuadrantYLayer(int hashMapKey, int y, PointCloud pc)
         {
-            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
-            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
-            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
-            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
-            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, mat);
+            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
         }
 
 
@@ -132,6 +135,10 @@ namespace DefaultNamespace
         {
             NativeList<RaycastCheckComponent> entityArray = new NativeList<RaycastCheckComponent>(Allocator.Temp);
             float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
+            // If a childSlice check quadrant map of parent slice;
+            PointCloud parent = pc.graphSlice.parentSlice.pointCloud;
+            int id = parent.pcID;
+            //Debug.Log($"{QuadrantSystem.GetEntityCountInHashMap(QuadrantSystem.quadrantMultiHashMaps[pc.pcID], hashMapKey)}");
             if (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
                 out NativeMultiHashMapIterator<int> nativeMultiHashMapIterator))
             {
@@ -139,7 +146,18 @@ namespace DefaultNamespace
                 {
                     if (quadrantData.group == SelectionToolCollider.instance.CurrentColorIndex) continue;
                     float3 pos = pc.transform.TransformPoint(quadrantData.position);
-                    entityArray.Add(new RaycastCheckComponent {position = pos, origin = origin, xindex = quadrantData.xindex, yindex = quadrantData.yindex, label = quadrantData.label, parentID = pc.pcID});
+                    //Debug.DrawRay(origin, origin - pos, Color.green, 0.5f);
+                    entityArray.Add(new RaycastCheckComponent
+                    {
+                        position = pos,
+                        origin = origin,
+                        orgXIndex = quadrantData.orgXIndex,
+                        orgYIndex = quadrantData.orgYIndex,
+                        xindex = quadrantData.xindex,
+                        yindex = quadrantData.yindex,
+                        label = quadrantData.label,
+                        parentID = pc.pcID
+                    });
                 } while (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetNextValue(out quadrantData,
                     ref nativeMultiHashMapIterator));
             }
@@ -151,6 +169,8 @@ namespace DefaultNamespace
                 {
                     position = entityArray[i].position,
                     origin = entityArray[i].origin,
+                    orgXIndex = entityArray[i].orgXIndex,
+                    orgYIndex = entityArray[i].orgYIndex,
                     label = entityArray[i].label,
                     xindex = entityArray[i].xindex,
                     yindex = entityArray[i].yindex,

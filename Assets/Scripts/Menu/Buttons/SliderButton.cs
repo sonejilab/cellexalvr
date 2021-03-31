@@ -29,18 +29,20 @@ namespace CellexalVR.Menu.Buttons
             }
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.scene.IsValid())
-            {
-                slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
-                slider.transform.localPosition += new Vector3(0, 0, -0.9f);
-                currentState = startState;
-            }
-        }
+        //private void OnValidate()
+        //{
+        //    if (gameObject.scene.IsValid())
+        //    {
+        //        slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
+        //        slider.transform.localPosition += new Vector3(0, 0, 0f);
+        //        currentState = startState;
+        //    }
+        //}
 
         private void Start()
         {
+            CurrentState = startState;
+            //StartCoroutine(SlideToNewState());
             UpdateColors();
         }
 
@@ -58,7 +60,7 @@ namespace CellexalVR.Menu.Buttons
             float currentTime = 0;
             Vector3 startPosition = slider.transform.localPosition;
             Vector3 targetPosition = currentState ? rightSide.localPosition : leftSide.localPosition;
-            targetPosition.z = -0.9f;
+            targetPosition.z = 0f;
             while (currentTime <= slideTime)
             {
                 currentTime += Time.deltaTime;

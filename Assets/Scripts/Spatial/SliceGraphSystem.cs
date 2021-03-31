@@ -47,22 +47,22 @@ namespace CellexalVR.Spatial
 
         protected override void OnUpdate()
         {
-            if (slicer == null)
-            {
-                slicer = GameObject.Find("SlicePlane");
-            }
+            //if (slicer == null)
+            //{
+            //    slicer = GameObject.Find("SlicePlane");
+            //}
 
-            EntityManager.DestroyEntity(GetEntityQuery(typeof(RemoveEntityTagComponent)));
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                // Slice(0, slicer.forward, slicer.position);
-                SliceAxis(2, 0);
-            }
+            //EntityManager.DestroyEntity(GetEntityQuery(typeof(RemoveEntityTagComponent)));
+            //if (Input.GetKeyDown(KeyCode.K))
+            //{
+            // Slice(0, slicer.forward, slicer.position);
+            //SliceAxis(0, 2);
+            //}
 
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                Slice(0, slicer.transform.forward, slicer.transform.position);
-            }
+            //if (Input.GetKeyDown(KeyCode.N))
+            //{
+            //    Slice(0, slicer.transform.forward, slicer.transform.position);
+            //}
         }
 
         public void Slice(int graphNr, Vector3 planeNormal, Vector3 planePos)
@@ -74,6 +74,18 @@ namespace CellexalVR.Spatial
             int entityCount = query.CalculateEntityCount();
             NativeArray<bool> move = new NativeArray<bool>(entityCount, Allocator.TempJob);
             EntityCommandBuffer ecb = ecbSystem.CreateCommandBuffer();
+            float xMax = float.NegativeInfinity;
+            float xMax2 = float.NegativeInfinity;
+            float yMax = float.NegativeInfinity;
+            float yMax2 = float.NegativeInfinity;
+            float zMax = float.NegativeInfinity;
+            float zMax2 = float.NegativeInfinity;
+            float xMin = float.PositiveInfinity;
+            float xMin2 = float.PositiveInfinity;
+            float yMin = float.PositiveInfinity;
+            float yMin2 = float.PositiveInfinity;
+            float zMin = float.PositiveInfinity;
+            float zMin2 = float.PositiveInfinity;
             JobHandle jobHandle = Entities.WithAll<Point>().WithStoreEntityQueryInField(ref query).ForEach(
                 (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
                 {
@@ -97,11 +109,58 @@ namespace CellexalVR.Spatial
                 if (move[entityInQueryIndex])
                 {
                     //points[point.label] = point.offset;
+                    if (point.offset.x > xMax)
+                    {
+                        xMax = point.offset.x;
+                    }
+                    else if (point.offset.x < xMin)
+                    {
+                        xMin = point.offset.x;
+                    }
+                    if (point.offset.y > yMax)
+                    {
+                        yMax = point.offset.y;
+                    }
+                    else if (point.offset.y < yMin)
+                    {
+                        yMin = point.offset.y;
+                    }
+                    if (point.offset.z > zMax)
+                    {
+                        zMax = point.offset.z;
+                    }
+                    else if (point.offset.z < zMin)
+                    {
+                        zMin = point.offset.z;
+                    }
                     points.Add(point);
                 }
                 else
                 {
-                    //points2[point.label] = point.offset;
+                    if (point.offset.x > xMax2)
+                    {
+                        xMax2 = point.offset.x;
+                    }
+                    else if (point.offset.x < xMin2)
+                    {
+                        xMin2 = point.offset.x;
+                    }
+                    if (point.offset.y > yMax2)
+                    {
+                        yMax2 = point.offset.y;
+                    }
+                    else if (point.offset.y < yMin2)
+                    {
+                        yMin2 = point.offset.y;
+                    }
+                    if (point.offset.z > zMax2)
+                    {
+                        zMax2 = point.offset.z;
+                    }
+                    else if (point.offset.z < zMin2)
+                    {
+                        zMin2 = point.offset.z;
+                    }
                     points2.Add(point);
                 }
             }).Run();
@@ -110,8 +169,8 @@ namespace CellexalVR.Spatial
 
             if (points.Count > 0)
             {
-                //PointCloudGenerator.instance.nrOfGraphs--;
                 PointCloud pc1 = PointCloudGenerator.instance.CreateFromOld(oldPc.transform);
+                oldPc.GetComponent<GraphSlice>().ClearSlices();
                 GraphSlice slice1 = pc1.GetComponent<GraphSlice>();
                 slice1.transform.position = pc1.transform.position;
                 slice1.sliceCoords = pc1.transform.position;
@@ -119,6 +178,11 @@ namespace CellexalVR.Spatial
                 slice1.gameObject.name = oldPc.gameObject.name + "_" + slice1.SliceNr;
                 slice1.points = points;
                 slice1.sliceCoords -= 0.2f * planeNormal;
+                float3 max = new float3(xMax, yMax, zMax);
+                float3 min = new float3(xMin, yMin, zMin);
+                pc1.maxCoordValues = max;
+                pc1.minCoordValues = min;
+                pc1.SetCollider(true);
 
                 PointCloud pc2 = PointCloudGenerator.instance.CreateFromOld(oldPc.transform);
                 GraphSlice slice2 = pc2.GetComponent<GraphSlice>();
@@ -128,18 +192,23 @@ namespace CellexalVR.Spatial
                 slice2.gameObject.name = oldPc.gameObject.name + "_" + slice2.SliceNr;
                 slice2.points = points2;
                 slice2.sliceCoords += 0.2f * planeNormal;
+                max = new Vector3(xMax2, yMax2, zMax2);
+                min = new Vector3(xMin2, yMin2, zMin2);
+                pc2.maxCoordValues = max;
+                pc2.minCoordValues = min;
+                pc2.SetCollider(true);
 
-                parentSlice.childSlices.Add(slice1);
-                parentSlice.childSlices.Add(slice2);
-                PointCloudGenerator.instance.BuildSlices(oldPc);
+                //parentSlice.childSlices.Add(slice1);
+                //parentSlice.childSlices.Add(slice2);
                 quadrantSystem.graphParentTransforms.Add(pc1.transform);
                 quadrantSystem.graphParentTransforms.Add(pc2.transform);
+                PointCloudGenerator.instance.BuildSlices(oldPc, new GraphSlice[] { slice1, slice2 });
             }
 
             move.Dispose();
         }
 
-        private void SliceAxis(int axis, int graphID)
+        public List<Point> GetPoints(int graphID)
         {
             List<Point> points = new List<Point>();
             Entities.WithoutBurst().WithAll<Point>().ForEach((Entity entity, int entityInQueryIndex, ref Point point) =>
@@ -148,115 +217,58 @@ namespace CellexalVR.Spatial
                 points.Add(point);
             }).Run();
 
-            var sliceSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystem<SliceGraphSystem>();
+            return points;
             // sliceSystem.slicing = true;
-            if (axis == 0)
-            {
-                // slice x
-            }
-            else if (axis == 1)
-            {
-                // slice y
-            }
-            else
-            {
-                // slice z the default slice axis
+            //if (axis == 0)
+            //{
+            //    // slice x
+            //}
+            //else if (axis == 1)
+            //{
+            //    // slice y
+            //}
+            //else
+            //{
+            //    // slice z the default slice axis
 
-                // Get the different z positions (slice positions) and place the slicer in each.
-                PointCloud pc = PointCloudGenerator.instance.pointClouds[graphID];
-                List<Vector3> cutPositions = new List<Vector3>();
-                List<Point> sortedPoints = new List<Point>(points.Count);
-                if (axis == 0)
-                {
-                    if (sortedPointsX == null)
-                    {
-                        sortedPointsX = SortPoints(points, 0);
-                    }
+            //    // Get the different z positions (slice positions) and place the slicer in each.
+            //    PointCloud pc = PointCloudGenerator.instance.pointClouds[graphID];
+            //    List<Point> sortedPoints = new List<Point>(points.Count);
+            //    if (axis == 0)
+            //    {
+            //        if (sortedPointsX == null)
+            //        {
+            //            sortedPointsX = SortPoints(points, 0);
+            //        }
 
-                    sortedPoints = sortedPointsX;
-                }
+            //        sortedPoints = sortedPointsX;
+            //    }
 
-                else if (axis == 1)
-                {
-                    if (sortedPointsY == null)
-                    {
-                        sortedPointsY = SortPoints(points, 1);
-                    }
+            //    else if (axis == 1)
+            //    {
+            //        if (sortedPointsY == null)
+            //        {
+            //            sortedPointsY = SortPoints(points, 1);
+            //        }
 
-                    sortedPoints = sortedPointsY;
-                }
-                else if (axis == 2)
-                {
-                    if (sortedPointsZ == null)
-                    {
-                        sortedPointsZ = SortPoints(points, 2);
-                    }
+            //        sortedPoints = sortedPointsY;
+            //    }
+            //    else if (axis == 2)
+            //    {
+            //        if (sortedPointsZ == null)
+            //        {
+            //            sortedPointsZ = SortPoints(points, 2);
+            //        }
 
-                    sortedPoints = sortedPointsZ;
-                }
-
-                int sliceNr = 0;
-                PointCloud newPc = PointCloudGenerator.instance.CreateFromOld(pc.transform);
-                GraphSlice slice = newPc.GetComponent<GraphSlice>();
-                slice.transform.position = pc.transform.position;
-                slice.sliceCoords = pc.transform.position;
-                slice.SliceNr = ++sliceNr;
-                slice.gameObject.name = "Slice" + sliceNr;
-                GraphSlice parentSlice = pc.GetComponent<GraphSlice>();
-                slice.SliceNr = parentSlice.SliceNr;
-                parentSlice.childSlices.Add(slice);
-                slice.gameObject.name = pc.gameObject.name + "_" + parentSlice.SliceNr;
-
-                float currentCoord, diff, prevCoord;
-                Point point = sortedPoints[0];
-                float firstCoord = prevCoord = point.offset[axis];
-                float lastCoord = sortedPoints[sortedPoints.Count - 1].offset[axis];
-                float dividers = 20f;
-                float epsilonToUse = math.abs(firstCoord - lastCoord) / (float)dividers;
-
-                if (axis == 2)
-                {
-                    epsilonToUse = 0.01f;
-                }
-
-                for (int i = 1; i < sortedPoints.Count; i++)
-                {
-                    point = sortedPoints[i];
-                    currentCoord = point.offset[axis];
-                    // when we reach new slice (new x/y/z coordinate) build the graph and then start adding to a new one.
-                    diff = math.abs(currentCoord - firstCoord);
-
-                    if (diff > epsilonToUse) // || Math.Abs(currentCoord - prevCoord) > 0.1f)
-                    {
-                        cutPositions.Add(point.offset);
-                        newPc = PointCloudGenerator.instance.CreateFromOld(pc.transform);
-                        slice = newPc.GetComponent<GraphSlice>();
-                        slice.transform.position = pc.transform.position;
-                        slice.sliceCoords = pc.transform.position;
-                        slice.SliceNr = ++sliceNr;
-                        slice.gameObject.name = pc.gameObject.name + "_" + sliceNr;
-                        parentSlice.childSlices.Add(slice);
-                        firstCoord = currentCoord;
-                    }
-
-                    else if (i == sortedPoints.Count - 1)
-                    {
-                        parentSlice.childSlices.Add(slice);
-                    }
-
-                    slice.points.Add(point);
-                    prevCoord = currentCoord;
-                }
-
-                parentSlice.childSlices.ForEach(s => s.sliceCoords[axis] = -0.5f + s.SliceNr * (1f / (parentSlice.childSlices.Count - 1)));
-                PointCloudGenerator.instance.BuildSlices(pc.transform);
+            //        sortedPoints = sortedPointsZ;
+            //    }
+            //}
 
 
-            }
         }
 
 
-        private static List<Point> SortPoints(IReadOnlyCollection<Point> points, int axis)
+        public static List<Point> SortPoints(IReadOnlyCollection<Point> points, int axis)
         {
             List<Point> sortedPoints = new List<Point>(points);
             sortedPoints.Sort((x, y) => x.offset[axis].CompareTo(y.offset[axis]));

@@ -109,7 +109,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 laserInside = false;
                 RaycastHit hit;
-                raycastingSource = referenceManager.laserPointerController.rightLaser.holder.transform;
+                raycastingSource = ReferenceManager.instance.laserPointerController.rightLaser.holder.transform;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
                     out hit, 10, layerMask);
                 if (hit.collider && hit.collider.transform == transform && referenceManager.laserPointerController.rightLaser.enabled)

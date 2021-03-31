@@ -38,7 +38,6 @@ namespace DefaultNamespace
             NativeArray<RaycastHit> results = new NativeArray<RaycastHit>(entityCount, Allocator.TempJob);
             NativeArray<RaycastCommand> commands = new NativeArray<RaycastCommand>(entityCount, Allocator.TempJob);
             NativeArray<bool> hits = new NativeArray<bool>(entityCount, Allocator.TempJob);
-            // Try looping every entity and check field raycast 
             JobHandle jobHandle = Entities.WithAll<RaycastCheckComponent>().WithStoreEntityQueryInField(ref query)
                 .ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
                 {
@@ -63,12 +62,20 @@ namespace DefaultNamespace
                     //p.selected = true;
                     //commandBuffer.SetComponent(rc.entity, p);
                     Entity e = commandBuffer.CreateEntity(entityArchetype);
-                    commandBuffer.SetComponent(e, new SelectedPointComponent { xindex = rc.xindex, yindex = rc.yindex, label = rc.label, group = group, parentID = rc.parentID});
+                    commandBuffer.SetComponent(e, new SelectedPointComponent
+                    {
+                        orgXIndex = rc.orgXIndex,
+                        orgYIndex = rc.orgYIndex,
+                        xindex = rc.xindex,
+                        yindex = rc.yindex,
+                        label = rc.label,
+                        group = group,
+                        parentID = rc.parentID
+                    });
                 }
             }).Run();
 
             EntityManager.DestroyEntity(GetEntityQuery(typeof(RaycastCheckComponent)));
-            
             results.Dispose();
             commands.Dispose();
             hits.Dispose();
