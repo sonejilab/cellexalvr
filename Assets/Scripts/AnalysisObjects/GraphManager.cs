@@ -7,6 +7,9 @@ using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
 using CellexalVR.Spatial;
+using DefaultNamespace;
+using Unity.Entities;
+using AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -236,6 +239,11 @@ namespace CellexalVR.AnalysisObjects
                 graph.ColorByGeneExpression(expressions);
             }
 
+            if (TextureHandler.instance.textureCoordDict.Count > 0)
+            {
+                TextureHandler.instance.ColorByExpression(expressions);
+            }
+
             // create the gene expression histogram
             int numberOfBins = CellexalConfig.Config.GraphNumberOfExpressionColors + 1;
             int[] cellsPerBin = new int[numberOfBins];
@@ -244,7 +252,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 cellsPerBin[expression.Color + 1]++;
             }
-            cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
+            //cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
+            cellsPerBin[0] = TextureHandler.instance.textureCoordDict.Count - expressions.Count;
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.GeneExpressionLegend;
             referenceManager.legendManager.geneExpressionHistogram.CreateHistogram(geneName, cellsPerBin, highestExpression.ToString(), GeneExpressionHistogram.YAxisMode.Linear);
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
@@ -310,6 +319,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 graph.MakeAllPointsTransparent(toggle);
             }
+
+            TextureHandler.instance.MakeAllPointsTransparent(toggle);
         }
 
         /// <summary>
@@ -466,6 +477,10 @@ namespace CellexalVR.AnalysisObjects
             foreach (Graph g in Graphs)
             {
                 g.ToggleInfoText();
+            }
+            foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+            {
+                pc.ToggleInfoText();
             }
         }
 

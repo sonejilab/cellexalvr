@@ -58,7 +58,6 @@ namespace CellexalVR.AnalysisLogic
             int totalNbrOfCells = 0;
             foreach (string file in mdsFiles)
             {
-                print($"reading file: {file}");
                 while (referenceManager.graphGenerator.isCreating)
                 {
                     yield return null;
@@ -255,7 +254,7 @@ namespace CellexalVR.AnalysisLogic
                 StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
-                referenceManager.inputReader.ReadFacsFiles(path, totalNbrOfCells);
+                referenceManager.inputReader.ReadFacsFiles(path);
                 referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
 

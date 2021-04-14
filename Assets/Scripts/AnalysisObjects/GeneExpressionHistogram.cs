@@ -7,6 +7,9 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using CellexalVR.Filters;
+using DefaultNamespace;
+using UnityEngine.VFX;
+using AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -73,7 +76,7 @@ namespace CellexalVR.AnalysisObjects
         private bool attached;
 
         // local position of the center of the histogram
-        private Vector3 center = new Vector3(0.0064f, -0.0129f, 0f);
+        private Vector3 center = new Vector3(0.0064f, -0.029f, 0f);
         private float histogramHeight = 0.4f;
         private float histogramWidth = 0.4f;
 
@@ -216,14 +219,28 @@ namespace CellexalVR.AnalysisObjects
             {
                 tabButton.GetComponentInChildren<TextMeshPro>().text = "";
             }
-            tabButtons[currentTab].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = Color.black;
+            tabButtons[currentTab].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = new Color(0.1f, 0.1f, 0.1f);
 
             geneNameLabel.text = "";
             DeactivateHighlightArea();
             DeactivateSelectedArea();
+        }
 
-
-
+        public void UpdateAlphaThreshold(float val)
+        {
+            foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+            {
+                pc.SetAlphaClipThreshold(val);
+            }
+            int ind = (int)val;
+            if (ind == 0)
+            {
+                DeactivateHighlightArea();
+            }
+            else
+            {
+                MoveHighlightArea(0, ind - 1);
+            }
         }
 
         private void ActivateExtraColumn()

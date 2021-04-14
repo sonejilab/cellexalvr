@@ -84,46 +84,62 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.L))
-            //{
-            //    ActivateSlices(true);
-            //}
+            if (SelectionToolCollider.instance.selActive)
+            {
+                UpdateColorTexture();
+            }
 
-            //if (Input.GetKeyDown(KeyCode.M))
-            //{
-            //    ActivateSlices(false);
-            //}
             if (++frameCount > 10)
             {
                 frameCount = 0;
             }
-            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
-            if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
-            {
-                //parentSlice.controllerInsideSomeBox = true;
-                controllerInside = true;
-                slicerBox.box.SetActive(true);
-            }
-            else
-            {
-                controllerInside = false;
-                //parentSlice.controllerInsideSomeBox = false;
-                if (!slicerBox.Active)
-                {
-                    slicerBox.box.SetActive(false);
-                }
-            }
+            //Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+            //if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
+            //{
+            //    //parentSlice.controllerInsideSomeBox = true;
+            //    controllerInside = true;
+            //    slicerBox.box.SetActive(true);
+            //}
+            //else
+            //{
+            //    controllerInside = false;
+            //    //parentSlice.controllerInsideSomeBox = false;
+            //    if (!slicerBox.Active)
+            //    {
+            //        slicerBox.box.SetActive(false);
+            //    }
+            //}
 
-            if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
+            //if (Player.instance.rightHand == null) return;
+            //if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
+            //{
+            //    if (controllerInside)
+            //    {
+            //        slicerBox.Active = !slicerBox.Active;
+            //        slicerBox.box.SetActive(slicerBox.Active);
+            //    }
+            //}
+        }
+        public void UpdateColorTexture()
+        {
+            if (points.Count > 0)
             {
-                if (controllerInside)
+                Color[] carray = pointCloud.colorTextureMap.GetPixels();
+                Color[] aarray = new Color[carray.Length];
+                Texture2D parentTexture = parentSlice.pointCloud.colorTextureMap;
+                Texture2D parentATexture = parentSlice.pointCloud.alphaTextureMap;
+                for (int i = 0; i < points.Count; i++)
                 {
-                    slicerBox.Active = !slicerBox.Active;
-                    slicerBox.box.SetActive(slicerBox.Active);
+                    Point p = points[i];
+                    int ind = (p.yindex) * 100 + (p.xindex);
+                    carray[ind] = parentTexture.GetPixel(p.orgXIndex, p.orgYIndex);
+                    aarray[ind] = parentATexture.GetPixel(p.orgXIndex, p.orgYIndex);
                 }
+
+                pointCloud.colorTextureMap.SetPixels(carray);
+                pointCloud.colorTextureMap.Apply();
             }
         }
-
 
         public void ClearSlices()
         {

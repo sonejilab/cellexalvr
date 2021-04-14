@@ -28,6 +28,10 @@ namespace CellexalVR.Spatial
         public SlicingMenu slicingMenu;
         public VisualEffect slicingAnimation;
         [HideInInspector] public bool sliceAnimationActive;
+        public GameObject cullingCube;
+        public GameObject cullingCube2;
+        public CullingWall[] cullingWalls = new CullingWall[6];
+        public GameObject cullingWallsParent;
 
         private bool active;
         public bool Active
@@ -47,6 +51,7 @@ namespace CellexalVR.Spatial
                 slicingMenu.transform.localPosition = transform.InverseTransformPoint(menuPosition.position);
                 toggleSlicingMenuButton.transform.localPosition = transform.InverseTransformPoint(buttonPosition.position);
                 toggleSlicingMenuButton.gameObject.SetActive(active);
+                cullingWallsParent.SetActive(active);
             }
         }
 
@@ -63,6 +68,10 @@ namespace CellexalVR.Spatial
         private PointCloud pointCloud;
         private Material boxMaterial;
         private ToggleSlicingMenuButton toggleSlicingMenuButton;
+        private VisualEffect vfx;
+        public Vector3 cullPos1 = new Vector3(.5f, .5f, .5f);
+        public Vector3 cullPos2 = new Vector3(.5f, .5f, .5f);
+
 
         private void Start()
         {
@@ -74,6 +83,8 @@ namespace CellexalVR.Spatial
             c.a = 0.05f;
             boxMaterial.color = c;
             toggleSlicingMenuButton = GetComponentInChildren<ToggleSlicingMenuButton>(true);
+            vfx = GetComponentInParent<VisualEffect>();
+            SetHandlePositions();
             // graph = GetComponentInParent<Graph>();
             // lr = GetComponentInChildren<LineRenderer>();
             // lr.useWorldSpace = false;
@@ -99,14 +110,26 @@ namespace CellexalVR.Spatial
             // }
         }
 
-        //private void Update()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.K))
-        //    {
-        //        SliceGraphAutomatic(1, 10);
-        //    }
-        //}
+        private void Update()
+        { 
+            cullPos1.x = Math.Min(0.5f, transform.InverseTransformPoint(cullingWalls[0].transform.position).x);
+            cullPos1.y = Math.Min(0.5f, transform.InverseTransformPoint(cullingWalls[1].transform.position).y);
+            cullPos1.z = Math.Min(0.5f, transform.InverseTransformPoint(cullingWalls[2].transform.position).z);
+            cullPos2.x = (Math.Min(0.5f,transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
+            cullPos2.y = (Math.Min(0.5f,transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
+            cullPos2.z = (Math.Min(0.5f,transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
+            vfx.SetVector3("CullingCubePos", cullPos1);
+            vfx.SetVector3("CullingCube2Pos", cullPos2);
+        }
 
+        public void SetHandlePositions()
+        {
+            foreach (CullingWall cw in cullingWalls)
+            {
+                cw.SetStartPosition();
+                //cw.handle.transform.position = cw.transform.TransformPoint(cw.handle.transform.localPosition);
+            }
+        }
 
         public void SliceGraphManual()
         {

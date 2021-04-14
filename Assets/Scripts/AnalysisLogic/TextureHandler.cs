@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using SQLiter;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -23,6 +25,9 @@ namespace DefaultNamespace
         public List<Texture2D> mainColorTextureMaps = new List<Texture2D>();
         public List<Texture2D> alphaTextureMaps = new List<Texture2D>();
         public List<Texture2D> clusterTextureMaps = new List<Texture2D>();
+        public Dictionary<string, Vector2Int> textureCoordDict = new Dictionary<string, Vector2Int>();
+
+        public static TextureHandler instance;
 
         protected override void OnCreate()
         {
@@ -31,6 +36,7 @@ namespace DefaultNamespace
             ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             sps = new List<Tuple<int, int>>();
             query = GetEntityQuery(typeof(RaycastCheckComponent));
+            instance = this;
         }
 
 
@@ -41,62 +47,48 @@ namespace DefaultNamespace
             //{
             frameCount = 0;
             Color col = SelectionToolCollider.instance.GetCurrentColor();
+            Color a = Color.white;
             List<Tuple<int, int>> orgPixels = new List<Tuple<int, int>>();
             Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
             {
-                //int index = sp.parentID;
-                //if (index > mainColorTextureMaps.Count)
-                //{
-                //    colorTextureMaps[index].SetPixel(sp.xindex, sp.yindex, col);
-                //    alphaTextureMaps[index].SetPixel(sp.xindex, sp.yindex, Color.white);
-                //}
                 orgPixels.Add(new Tuple<int, int>(sp.orgXIndex, sp.orgYIndex));
                 sps.Add(new Tuple<int, int>(sp.label, sp.group));
             }).Run();
             for (int i = 0; i < mainColorTextureMaps.Count; i++)
             {
                 Texture2D map = mainColorTextureMaps[i];
+                Texture2D amap = alphaTextureMaps[i];
                 foreach (Tuple<int, int> tuple in orgPixels)
                 {
                     map.SetPixel(tuple.Item1, tuple.Item2, col);
+                    amap.SetPixel(tuple.Item1, tuple.Item2, a);
                 }
-                //map.SetPixels(mainTexColors);
                 map.Apply();
+                amap.Apply();
             }
-            //for (int i = 0; i < colorTextureMaps.Count; i++)
-            //{
-            //    Texture2D map = colorTextureMaps[i];
-            //    foreach (Tuple<int, int> tuple in orgPixels)
-            //    {
-            //        map.SetPixel(tuple.Item1, tuple.Item2, col);
-            //    }
-            //    //map.SetPixels(mainTexColors);
-            //    map.Apply();
-            //}
-            //ecbSystem.AddJobHandleForProducer(Dependency);
             EntityManager.DestroyEntity(GetEntityQuery(typeof(SelectedPointComponent)));
             CellexalEvents.SelectionStarted.Invoke();
-            //colorTextureMaps.ForEach(tex => tex.Apply());
-            //alphaTextureMaps.ForEach(tex => tex.Apply());
-            //}
-
-
             frameCount++;
-        }
-
-        public void MainTexToSliceTex(int x, int y)
-        {
-            //Find correct texture pixel in slice map from main map.
         }
 
         public void ColorCluster(string cluster, bool toggle)
         {
-            List<Vector2> indices = ReferenceManager.instance.pointCloudGenerator.clusters[cluster];
-            Color col = toggle ? ReferenceManager.instance.pointCloudGenerator.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f, 0.7f);
-            // Debug.Log($"{cluster}, ps : {indices.Count}, col :{col}");
+            List<Vector2> indices = PointCloudGenerator.instance.clusters[cluster];
+            Color col = toggle ? PointCloudGenerator.instance.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f);
+            Color a = toggle ? Color.white : Color.white * 0.2f;
+            Texture2D atex = alphaTextureMaps[0];
+            Color[] aaray = atex.GetPixels();
+            for (int i = 0; i < aaray.Length; i++)
+            {
+                Color val = aaray[i];
+                if (val.r > 0.9f) continue;
+                aaray[i] = Color.white * 0.05f;
+            }
+            atex.SetPixels(aaray);
             foreach (Vector2 ind in indices)
             {
-                colorTextureMaps[0].SetPixel((int)ind.x, (int)ind.y, col);
+                mainColorTextureMaps[0].SetPixel((int)ind.x, (int)ind.y, col);
+                alphaTextureMaps[0].SetPixel((int)ind.x, (int)ind.y, a);
             }
 
             if (toggle)
@@ -108,6 +100,66 @@ namespace DefaultNamespace
                 ReferenceManager.instance.legendManager.attributeLegend.RemoveEntry(cluster);
             }
             colorTextureMaps[0].Apply();
+            alphaTextureMaps[0].Apply();
+        }
+
+        public void MakeAllPointsTransparent(bool toggle)
+        {
+            Color a = toggle ? Color.white * 0.05f : Color.white;
+            Texture2D atex = alphaTextureMaps[0];
+            Color[] aaray = atex.GetPixels();
+            for (int i = 0; i < aaray.Length; i++)
+            {
+                aaray[i] = a;
+            }
+            atex.SetPixels(aaray);
+            atex.Apply();
+        }
+
+        public void ColorAllClusters(bool toggle)
+        {
+            if (toggle)
+            {
+                mainColorTextureMaps[0].SetPixels(clusterTextureMaps[0].GetPixels());
+                mainColorTextureMaps[0].Apply();
+            }
+            else
+            {
+                ResetTexture();
+            }
+        }
+
+        public void ColorByExpression(ArrayList expressions)
+        {
+            Texture2D tex = mainColorTextureMaps[0];
+            Texture2D atex = alphaTextureMaps[0];
+            MakeAllPointsTransparent(true);
+            Color a = new Color(1f, 1f, 1f) / 30f;
+            foreach (CellExpressionPair pair in expressions)
+            {
+                Vector2Int coords = textureCoordDict[pair.Cell];
+                tex.SetPixel(coords.x, coords.y, ReferenceManager.instance.graphGenerator.geneExpressionColors[pair.Color + 1]);
+                atex.SetPixel(coords.x, coords.y, Color.white * 0.05f + (a * (pair.Color + 1)));
+            }
+            atex.Apply();
+            tex.Apply();
+        }
+
+        private void ResetTexture()
+        {
+            Color[] colors = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];
+            Color[] alphas = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];
+            Color a = new Color(0.55f, 0f, 0);
+            Color c = Color.white * 0.32f;
+            for (int i = 0; i < colors.Length; i++)
+            {
+                colors[i] = c;
+                alphas[i] = a;
+            }
+            mainColorTextureMaps[0].SetPixels(colors);
+            alphaTextureMaps[0].SetPixels(colors);
+            mainColorTextureMaps[0].Apply();
+            alphaTextureMaps[0].Apply();
         }
     }
 }

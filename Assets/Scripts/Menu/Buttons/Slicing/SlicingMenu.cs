@@ -45,13 +45,6 @@ namespace CellexalVR.Menu.Buttons.Slicing
             //sliceGraphSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>();//GetComponentInParent<GraphSlicer>();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                SliceGraph();
-            }
-        }
 
         public void ToggleMode(SliceMode modeToActivate, bool toggle)
         {

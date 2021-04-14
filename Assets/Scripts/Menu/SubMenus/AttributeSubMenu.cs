@@ -3,6 +3,7 @@ using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Attributes;
+using DefaultNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -131,27 +132,39 @@ namespace CellexalVR.Menu.SubMenus
 
         public IEnumerator SelectAllAttributesCoroutine(bool toggle)
         {
-            if (!toggle)
+            if (PointCloudGenerator.instance.pointCount > 0)
             {
-                referenceManager.multiuserMessageSender.SendMessageResetGraphColor();
-                referenceManager.graphManager.ResetGraphsColor();
+                TextureHandler.instance.ColorAllClusters(toggle);
+                foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
+                {
+                    b.ToggleOutline(toggle);
+                }
             }
             else
             {
-                foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
+
+                if (!toggle)
                 {
-                    string category = "";
-                    if (b.Attribute.Contains("@"))
+                    referenceManager.multiuserMessageSender.SendMessageResetGraphColor();
+                    referenceManager.graphManager.ResetGraphsColor();
+                }
+                else
+                {
+                    foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
                     {
-                        category = b.Attribute.Split('@')[0];
-                    }
+                        string category = "";
+                        if (b.Attribute.Contains("@"))
+                        {
+                            category = b.Attribute.Split('@')[0];
+                        }
 
-                    if (!b.colored && category == currentCategory)
-                    {
-                        b.ColourAttribute(true);
-                    }
+                        if (!b.colored && category == currentCategory)
+                        {
+                            b.ColourAttribute(true);
+                        }
 
-                    yield return null;
+                        yield return null;
+                    }
                 }
             }
         }

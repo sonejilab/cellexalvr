@@ -74,6 +74,10 @@ namespace CellexalVR.Interaction
 
         public Transform GetPreviousParent()
         {
+            if (prevParent == null)
+            {
+                return transform;
+            }
             return prevParent;
         }
 

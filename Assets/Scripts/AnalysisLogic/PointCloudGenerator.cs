@@ -65,6 +65,7 @@ namespace DefaultNamespace
         public int pointCount;
 
         public float3 scaledOffset;
+        public const int textureWidth = 1000;
         // public List<string> cells = new List<string>();
 
         private float3 diffCoordValues;
@@ -260,8 +261,8 @@ namespace DefaultNamespace
         public IEnumerator CreateColorTextureMap(List<Point> points, PointCloud pc, PointCloud parentCloud)
         {
             while (readingFile) yield return null;
-            int width = 100;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(maxPointCount / 100f);//width;
+            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(maxPointCount / (float)textureWidth);//width;
             //int height = parentCloud.positionTextureMap.height;
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
@@ -297,8 +298,8 @@ namespace DefaultNamespace
             vfx.SetTexture("ColorMapTex", colorMap);
             vfx.SetTexture("AlphaMapTex", alphaMap);
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMaps.Add(colorMap);
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().alphaTextureMaps.Add(alphaMap);
+            TextureHandler.instance.colorTextureMaps.Add(colorMap);
+            TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
 
             //EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
         }
@@ -307,8 +308,8 @@ namespace DefaultNamespace
         public IEnumerator CreateColorTextureMap()
         {
             while (readingFile) yield return null;
-            int width = 100;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(pointCount / 100f);//width;
+            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(pointCount / (float)textureWidth);//width;
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
@@ -330,9 +331,12 @@ namespace DefaultNamespace
 
                     carray[ind] = c;
                     aarray[ind] = alpha;
-                    //Color cluster = colorDict[clusterDict[ind]];
-                    //carrayClusters[ind] = cluster;
-                    //clusters[clusterDict[ind]].Add(new Vector2(x, y));
+                    if (colorDict.Count > 0)
+                    {
+                        Color cluster = colorDict[clusterDict[ind]];
+                        carrayClusters[ind] = cluster;
+                        clusters[clusterDict[ind]].Add(new Vector2(x, y));
+                    }
                 }
             }
 
@@ -352,39 +356,58 @@ namespace DefaultNamespace
                 vfx.SetTexture("ColorMapTex", colorMap);
                 vfx.SetTexture("AlphaMapTex", alphaMap);
                 World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
-                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().mainColorTextureMaps.Add(colorMap);
-                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().colorTextureMaps.Add(colorMap);
-                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().alphaTextureMaps.Add(alphaMap);
+                TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
             }
 
 
             clusterDict.Clear();
 
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().clusterTextureMaps.Add(clusterMap);
+            TextureHandler.instance.colorTextureMaps.Add(colorMap);
+            TextureHandler.instance.mainColorTextureMaps.Add(colorMap);
+            TextureHandler.instance.clusterTextureMaps.Add(clusterMap);
 
             instance.creatingGraph = false;
         }
 
 
-        // public void ColorPoints(PointCloud pc)
-        // {
-        //     CreateColorTextureMap();
-        // }
+        private void ReadColorMapFromFile()
+        {
+            string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
+            string[] files = Directory.GetFiles(path, "*.csv");
+            if (files.Length == 0) return;
+            using (StreamReader sr = new StreamReader(files[0]))
+            {
+                string header = sr.ReadLine();
+
+                while (!sr.EndOfStream)
+                {
+                    string[] words = sr.ReadLine().Split(',');
+                    ColorUtility.TryParseHtmlString(words[1], out Color c);
+                    colorDict[words[0]] = c;
+                }
+            }
+            SelectionToolCollider.instance.Colors = colorDict.Values.ToArray();
+            CellexalConfig.Config.SelectionToolColors = colorDict.Values.ToArray();
+
+        }
+
 
         public IEnumerator ReadMetaData(string dir)
         {
             readingFile = true;
-            colorDict = new Dictionary<string, Color>();
-            clusterDict = new Dictionary<int, string>();
+            ReadColorMapFromFile();
+            //colorDict = new Dictionary<string, Color>();
 
             int width = (int)math.ceil(math.sqrt(pointCount));
             int height = width;
-            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             int id = 0;
             string[] metafiles = Directory.GetFiles(dir, "*metadata.csv");
+            //UnityEngine.Debug.Log(metafiles[0]);
             if (metafiles.Length != 0)
             {
                 int clusterCount = 0;
+                clusterDict = new Dictionary<int, string>();
+                clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
                 Color c;
                 using (StreamReader sr = new StreamReader(metafiles[0]))
                 {
@@ -392,28 +415,29 @@ namespace DefaultNamespace
                     while (!sr.EndOfStream)
                     {
                         if (id % 10000 == 0) yield return null;
-                        string[] words = sr.ReadLine().Split(',');
-                        string cluster = words[2];
+                        //string[] words = sr.ReadLine().Split(',');
+                        // If no cell name column. Otherwise change below.
+                        string cluster = sr.ReadLine(); // words[0];
                         clusterDict[id++] = cluster;
-                        if (!colorDict.ContainsKey(cluster))
+                        if (!clusters.ContainsKey(cluster))
                         {
-                            if (clusterCount >= SelectionToolCollider.instance.Colors.Length - 1)
+                            if (colorDict.Count == 0)
                             {
-                                c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
-                                ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
-                            }
-                            else
-                            {
-                                c = SelectionToolCollider.instance.Colors[clusterCount];
-                            }
+                                if (clusterCount >= SelectionToolCollider.instance.Colors.Length - 1)
+                                {
+                                    c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
+                                    ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
+                                }
+                                else
+                                {
+                                    c = SelectionToolCollider.instance.Colors[clusterCount];
+                                }
 
-                            c.a = 1;
-                            colorDict[cluster] = c;
+                                c.a = 1;
+                                colorDict[cluster] = c;
+                            }
                             clusters[cluster] = new List<Vector2>();
                             clusterCount++;
-                            // int xIndex = id % width;
-                            // int yIndex = (int)math.floor(id / height);
-                            // clusterMap.SetPixel(xIndex, yIndex, c);
                         }
                     }
                 }

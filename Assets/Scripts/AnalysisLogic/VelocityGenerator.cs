@@ -353,8 +353,8 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="value"></param>
         public void ChangeParticleSize(float value)
         {
-            // Make lower ranges differ more.
             particleSize = value;
+            // Make lower ranges differ more.
             // if (value <= particleSizeStartValue / 2)
             // {
             //     particleSize /= 2f;

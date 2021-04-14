@@ -87,6 +87,7 @@ namespace CellexalVR.Menu.Buttons
 
         private void CheckForClick()
         {
+            if (Player.instance.rightHand == null) return;
             if (controllerInside && Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 Click();

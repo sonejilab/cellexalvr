@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CellexalVR;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Spatial;
 using DefaultNamespace;
+using TMPro;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.VFX;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace AnalysisLogic
 {
@@ -24,6 +28,8 @@ namespace AnalysisLogic
         private bool morphed;
         private SlicerBox slicerBox;
 
+        public VisualEffectAsset pointCloudSphere;
+        public VisualEffectAsset pointCloudQuad;
         public Texture2D positionTextureMap;
         public Texture2D colorTextureMap;
         public Texture2D alphaTextureMap;
@@ -39,8 +45,35 @@ namespace AnalysisLogic
         public Entity parent;
         public List<float> zPositions = new List<float>();
         public GraphSlice graphSlice;
+        public GameObject infoParent;
+        public TextMeshPro graphNameText;
+        public TextMeshPro graphInfoText;
+        public string otherName;
+        public string originalName;
 
-        private EntityArchetype entityArchetype;
+        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
+        public string GraphName
+        {
+            get => graphName;
+            set
+            {
+                graphName = value;
+                // We don't want two objects with the exact same name. Could cause issues in find graph and in multi user sessions.
+                //GameObject existingGraph = GameObject.Find(graphName);
+                //while (existingGraph != null)
+                //{
+                //    graphName += "_Copy";
+                //    existingGraph = GameObject.Find(graphName);
+                //}
+
+                graphNameText.text = graphName;
+                name = graphName;
+                gameObject.name = graphName;
+            }
+        }
+
+        private string graphName;
+        private string folderName;
 
         public void Initialize(int id)
         {
@@ -53,28 +86,41 @@ namespace AnalysisLogic
             vfx.pause = true;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             interactableObjectBasic = GetComponent<InteractableObjectBasic>();
-            entityArchetype = entityManager.CreateArchetype(typeof(Translation), typeof(Point));
+            interactableObjectBasic.InteractableObjectGrabbed += OnGrabbed;
+            interactableObjectBasic.InteractableObjectUnGrabbed += OnUnGrabbed;
             slicerBox = GetComponentInChildren<SlicerBox>(true);
             graphSlice = GetComponent<GraphSlice>();
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
             {
                 StartCoroutine(Morph());
             }
-
-            if (SelectionToolCollider.instance.selActive)
-            {
-                UpdateColorTexture();
-            }
-
-            //vfx.SetVector3("SelectionPosition", selectionSphere.position);
-            //vfx.SetFloat("SelectionRadius", selectionSphere.localScale.x / 2f);
-            //vfx.SetVector3("CullingCubePos", PointCloudCulling.instance.transform.position);
-            //vfx.SetVector3("CullingCubeScale", PointCloudCulling.instance.transform.localScale);
         }
+
+        private void OnGrabbed(object sender, Hand hand)
+        {
+            foreach (CullingWall cw in slicerBox.cullingWalls)
+            {
+                cw.GetComponent<InteractableObjectBasic>().isGrabbable = false;
+            }
+        }
+
+        private void OnUnGrabbed(object sender, Hand hand)
+        {
+            foreach (CullingWall cw in slicerBox.cullingWalls)
+            {
+                cw.GetComponent<InteractableObjectBasic>().isGrabbable = true;
+            }
+        }
+
+        public void ToggleInfoText()
+        {
+            infoParent.SetActive(!infoParent.gameObject.activeSelf);
+        }
+
 
         public void SetCollider(bool offset = false)
         {
@@ -93,12 +139,8 @@ namespace AnalysisLogic
             {
                 slicerBox.box.transform.localScale = bc.size;
                 slicerBox.box.transform.localPosition = bc.center - Vector3.one * 0.5f;
+                slicerBox.SetHandlePositions();
             }
-            //var sliceCube = GetComponentInChildren<GraphSliceCube>();
-            //if (sliceCube != null)
-            //{
-            //    sliceCube.SetCube(scaledOffset, bc.center);
-            //}
         }
 
         public void SetCollider(Vector3 mid, Vector3 size)
@@ -117,9 +159,8 @@ namespace AnalysisLogic
             }
         }
 
-        public IEnumerator Morph(float time = 1f)
+        public IEnumerator Morph()
         {
-            print($"{slicerBox}, {morphed}");
             if (slicerBox != null)
             {
                 slicerBox.box.SetActive(morphed);
@@ -128,21 +169,38 @@ namespace AnalysisLogic
             float t = 0.0f;
             float min = morphed ? 0f : 1f;
             float max = morphed ? 1f : 0f;
-            while (t <= time)
+            float speed = 0.4f;
+            while (t <= 1f)
             {
                 float val = math.lerp(min, max, t);
                 vfx.SetFloat("morphStep", val);
-                t += 0.8f * Time.deltaTime;
+                t += speed * Time.deltaTime;
                 yield return null;
             }
+
+            GraphName = morphed ? otherName : originalName;
         }
+
+        public void SetAlphaClipThreshold(float val)
+        {
+            int ind = (int)val;
+            vfx.SetFloat("AlphaClipThresh", (0.05f + (float)ind / (CellexalConfig.Config.GraphNumberOfExpressionColors)));
+        }
+
+        public void SetAlphaClipThreshold(bool toggle)
+        {
+            float val = toggle ? 0.9f : 0f;
+            vfx.SetFloat("AlphaClipThresh", val);
+        }
+
 
         public void CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
         {
             pointCount = points.Count;
+            vfx.visualEffectAsset = pointCount > 500000 ? pointCloudQuad : pointCloudSphere;
             vfx.SetInt("SpawnRate", pointCount);
-            int width = 100;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(pointCount / 100f);//width;
+            int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
             positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             Texture2D parentTargetTextureMap = parentPC.targetPositionTextureMap;
@@ -212,9 +270,10 @@ namespace AnalysisLogic
         public void CreatePositionTextureMap(List<float3> pointPositions)
         {
             pointCount = pointPositions.Count;
+            vfx.visualEffectAsset = pointCount > 500000 ? pointCloudQuad : pointCloudSphere;
             vfx.SetInt("SpawnRate", pointCount);
-            int width = 100;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(pointCount / 100f);//width;
+            int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
             positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             Color[] positions = new Color[width * height];
             Color col;
@@ -261,27 +320,7 @@ namespace AnalysisLogic
         //     colorMap.Apply();
         //     vfx.SetTexture("ColorMapTex", colorMap);
         // }
-        public void UpdateColorTexture()
-        {
-            // test speed and maybe make into couroutine..
-            if (graphSlice.points.Count > 0)
-            {
-                Color[] carray = colorTextureMap.GetPixels();
-                Color[] aarray = new Color[carray.Length];
-                Texture2D parentTexture = graphSlice.parentSlice.pointCloud.colorTextureMap;
-                Texture2D parentATexture = graphSlice.parentSlice.pointCloud.alphaTextureMap;
-                for (int i = 0; i < graphSlice.points.Count; i++)
-                {
-                    Point p = graphSlice.points[i];
-                    int ind = (p.yindex) * 100 + (p.xindex);
-                    carray[ind] = parentTexture.GetPixel(p.orgXIndex, p.orgYIndex);
-                    aarray[ind] = parentATexture.GetPixel(p.orgXIndex, p.orgYIndex);
-                }
 
-                colorTextureMap.SetPixels(carray);
-                colorTextureMap.Apply();
-            }
-        }
 
 
         public void AddGraphPoint(string cellName, float x, float y, float z)

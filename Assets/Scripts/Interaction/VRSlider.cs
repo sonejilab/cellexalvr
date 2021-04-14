@@ -21,6 +21,8 @@ namespace CellexalVR.Interaction
         public float minValue;
         public float maxValue;
         public float startValue;
+        public float xMaxPos;
+        public float xMinPos;
         public ReferenceManager referenceManager;
 
         public enum SliderType
@@ -55,8 +57,7 @@ namespace CellexalVR.Interaction
         private Vector3 handleStartScale;
         private Vector3 handleStartRotation;
         private Transform handleParent;
-        private float xMaxPos = 100;
-        private float xMinPos = 0;
+
         private InteractableObjectBasic handleInteractable;
 
         // Start is called before the first frame update
@@ -92,7 +93,10 @@ namespace CellexalVR.Interaction
             Vector3 fillAreaScale = fillArea.transform.localScale;
             fillAreaScale.x = 0.001f * xValue;
             fillArea.transform.localScale = fillAreaScale;
-            sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
+            if (sliderValueText != null)
+            {
+                sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
+            }
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -102,13 +106,13 @@ namespace CellexalVR.Interaction
         private void Update()
         {
             float xValue = handleParent.InverseTransformPoint(handle.transform.position).x;
-            if (xValue >= 100)
+            if (xValue > xMaxPos)
             {
-                xValue = 100;
+                xValue = xMaxPos;
             }
-            if (xValue <= 0)
+            if (xValue < xMinPos)
             {
-                xValue = 0;
+                xValue = xMinPos;
             }
             if (handleInteractable.isGrabbed)
             {
@@ -124,23 +128,23 @@ namespace CellexalVR.Interaction
         public void UpdateSliderValue()
         {
             float xValue = handleParent.InverseTransformPoint(handle.transform.position).x;
-            if (xValue >= 100)
+            if (xValue >= xMaxPos)
             {
-                xValue = 100;
+                xValue = xMaxPos;
             }
 
-            if (xValue < 0)
+            if (xValue < xMinPos)
             {
-                xValue = 0;
+                xValue = xMinPos;
             }
 
             handle.transform.position = handleParent.TransformPoint(new Vector3(xValue, 5, 0));
-            handle.transform.rotation = Quaternion.Euler(handleStartRotation);
+            //handle.transform.rotation = Quaternion.Euler(handleStartRotation);
             xValue /= xMaxPos;
             Value = minValue + xValue * (maxValue - minValue);
             sliderValueText.text = $"{((int) (xValue * 100)).ToString()}%";
             Vector3 fillAreaScale = fillArea.transform.localScale;
-            fillAreaScale.x = 0.001f * xValue;
+            fillAreaScale.x = (xMaxPos / 100000f) * xValue;
             fillArea.transform.localScale = fillAreaScale;
         }
 

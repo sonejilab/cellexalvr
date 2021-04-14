@@ -59,7 +59,6 @@ namespace CellexalVR.Menu.Buttons.Selection
 
         private void TurnOff()
         {
-            print("turn on");
             SetButtonActivated(false);
             // spriteRenderer.sprite = deactivatedTexture;
         }

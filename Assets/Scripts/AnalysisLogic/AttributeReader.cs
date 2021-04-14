@@ -5,6 +5,7 @@ using System.IO;
 using CellexalVR.General;
 using UnityEngine;
 using CellexalVR.AnalysisLogic.H5reader;
+using DefaultNamespace;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -112,6 +113,7 @@ namespace CellexalVR.AnalysisLogic
 
                 // first line is a header line
                 string header = metaCellStreamReader.ReadLine();
+                
                 if (header != null)
                 {
                     string[] attributeTypes = header.Split(null);
@@ -127,6 +129,7 @@ namespace CellexalVR.AnalysisLogic
                     }
 
                     int yieldCount = 0;
+                    int lineCounter = 0;
                     while (!metaCellStreamReader.EndOfStream)
                     {
                         string line = metaCellStreamReader.ReadLine();
@@ -135,17 +138,26 @@ namespace CellexalVR.AnalysisLogic
 
                         if (line != null)
                         {
-                            string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                            string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
                             string cellName = words[0];
                             for (int j = 1; j < words.Length; ++j)
                             {
                                 if (words[j] == "1")
-                                    referenceManager.cellManager.AddAttribute(cellName, attributeTypes[j],
-                                        (j - 1) % CellexalConfig.Config.SelectionToolColors.Length);
+                                {
+                                    string attr = attributeTypes[j];
+                                    int group = (j - 1) % CellexalConfig.Config.SelectionToolColors.Length;
+                                    referenceManager.cellManager.AddAttribute(cellName, attr, group);
+                                    PointCloudGenerator.instance.clusterDict[lineCounter] = attr;
+                                    if (!PointCloudGenerator.instance.colorDict.ContainsKey(attr))
+                                    {
+                                        PointCloudGenerator.instance.colorDict[attr] = CellexalConfig.Config.SelectionToolColors[group];
+                                        PointCloudGenerator.instance.clusters[attr] = new List<Vector2>();
+                                    }
+                                }
                             }
                         }
-
+                        lineCounter++;
                         yieldCount++;
                         if (yieldCount % 1000 == 0)
                             yield return null;
@@ -155,6 +167,7 @@ namespace CellexalVR.AnalysisLogic
                     metaCellFileStream.Close();
                     referenceManager.attributeSubMenu.CreateButtons(actualAttributeTypes);
                     referenceManager.cellManager.Attributes = actualAttributeTypes;
+
                 }
 
                 int nrOfAttributes = referenceManager.cellManager.Attributes.Length;
