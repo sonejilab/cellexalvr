@@ -16396,20 +16396,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
-  descriptionText: {fileID: 114029266455429018}
+  descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 1, g: 1, b: 1, a: 1}
-  meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  standardTexture: {fileID: 21300000, guid: fb8ca267cfddfe4459cac689ab697bfe, type: 3}
-  highlightedTexture: {fileID: 21300000, guid: de983323dd88606468144dbda2b252ee, type: 3}
-  deactivatedTexture: {fileID: 21300000, guid: 97d78306648cf1749b95e229683484ac, type: 3}
-  popupChoice: 1
-  buttonActivated: 1
-  storedState: 0
-  controllerInside: 0
-  amount: 2
+  meshStandardColor: {r: 7.3e-43, g: 2.1820731e-26, b: 7.3e-43, a: -9.331121e+19}
+  meshHighlightColor: {r: 7.29e-43, g: 0.99910355, b: 7.29e-43, a: 2.1820509e-26}
+  meshDeactivatedColor: {r: 7.3e-43, g: -9.330783e+19, b: 7.29e-43, a: 2.1819621e-26}
+  standardTexture: {fileID: 0}
+  highlightedTexture: {fileID: 0}
+  deactivatedTexture: {fileID: 0}
+  popupChoice: 521
+  buttonActivated: 0
+  storedState: 220
+  controllerInside: 161
+  amount: 3.514753e+13
 --- !u!1 &1530134183596410
 GameObject:
   m_ObjectHideFlags: 0
@@ -36809,6 +36809,8 @@ MonoBehaviour:
   minValue: 0.0005
   maxValue: 0.015
   startValue: 0.01
+  xMaxPos: 100
+  xMinPos: 0
   referenceManager: {fileID: 0}
   sliderType: 0
   OnHandleRelease:

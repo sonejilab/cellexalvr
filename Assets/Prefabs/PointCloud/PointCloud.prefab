@@ -48,7 +48,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7148217975500203127}
   m_Enabled: 0
-  m_Asset: {fileID: 8926484042661614526, guid: 742e862d1ac8f8f4fa585fe71cd912a4, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: ff05fcc0a49bb8f4f97a8e2f6644d37e, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -57,7 +57,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 2
+      - m_Value: 0.007
         m_Name: Size
         m_Overridden: 1
       - m_Value: 0
@@ -513,6 +513,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3043578974722948471, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: maxAxisValue
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3043578974722948471, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: minAxisValue
+      value: -0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3170822849989152568, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: maxAxisValue
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3170822849989152568, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: minAxisValue
+      value: -0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 3291849755327547301, guid: 3fc3c57f1e482de4bb7ff3912e789018,
         type: 3}
       propertyPath: referenceManager
@@ -543,10 +563,50 @@ PrefabInstance:
       propertyPath: referenceManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5663450239503514095, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: maxAxisValue
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663450239503514095, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: minAxisValue
+      value: -0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225329897365653216, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: maxAxisValue
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225329897365653216, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: minAxisValue
+      value: -0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 6738525465677334427, guid: 3fc3c57f1e482de4bb7ff3912e789018,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7548634939194840288, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: maxAxisValue
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7548634939194840288, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: minAxisValue
+      value: -0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449533261728369744, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: maxAxisValue
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449533261728369744, guid: 3fc3c57f1e482de4bb7ff3912e789018,
+        type: 3}
+      propertyPath: minAxisValue
+      value: -0.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fc3c57f1e482de4bb7ff3912e789018, type: 3}
@@ -566,6 +626,10 @@ PrefabInstance:
     - target: {fileID: 1022576483429428, guid: 293b10f21fa5dd5498573c7c1af9e269, type: 3}
       propertyPath: m_Name
       value: Info Parent
+      objectReference: {fileID: 0}
+    - target: {fileID: 1022576483429428, guid: 293b10f21fa5dd5498573c7c1af9e269, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4094701784171806, guid: 293b10f21fa5dd5498573c7c1af9e269, type: 3}
       propertyPath: m_RootOrder
