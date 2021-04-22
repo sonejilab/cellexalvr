@@ -94,10 +94,10 @@ namespace AnalysisLogic
 
         private void Update()
         {
-            if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
-            {
-                StartCoroutine(Morph());
-            }
+            //if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
+            //{
+            //    StartCoroutine(Morph());
+            //}
         }
 
         private void OnGrabbed(object sender, Hand hand)
@@ -161,6 +161,7 @@ namespace AnalysisLogic
 
         public IEnumerator Morph()
         {
+            //UpdateTargetTexture();
             if (slicerBox != null)
             {
                 slicerBox.box.SetActive(morphed);
@@ -181,6 +182,31 @@ namespace AnalysisLogic
             GraphName = morphed ? otherName : originalName;
         }
 
+        private void UpdateTargetTexture()
+        {
+            Texture2D targetTex = new Texture2D(positionTextureMap.width, positionTextureMap.height);
+            Color[] currentCoords = positionTextureMap.GetPixels();
+            Color[] newCoords = currentCoords;
+            Color[] targetCoords = targetPositionTextureMap.GetPixels();
+            Color[] alphas = TextureHandler.instance.alphaTextureMaps[0].GetPixels();
+
+            for (int i = 0; i < alphas.Length; i++)
+            {
+                if (alphas[i].r > 0.5f)
+                {
+                    newCoords[i] = targetCoords[i];
+                }
+                //else
+                //{
+                //    newCoords[i] = currentCoords[i];
+                //}
+            }
+            
+            targetTex.SetPixels(newCoords);
+            targetTex.Apply();
+            vfx.SetTexture("TargetPosMapTex", targetTex);
+        }
+
         public void SetAlphaClipThreshold(float val)
         {
             int ind = (int)val;
@@ -189,7 +215,7 @@ namespace AnalysisLogic
 
         public void SetAlphaClipThreshold(bool toggle)
         {
-            float val = toggle ? 0.9f : 0f;
+            float val = toggle ? 0.5f : 0f;
             vfx.SetFloat("AlphaClipThresh", val);
         }
 
@@ -197,7 +223,7 @@ namespace AnalysisLogic
         public void CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
         {
             pointCount = points.Count;
-            vfx.visualEffectAsset = pointCount > 500000 ? pointCloudQuad : pointCloudSphere;
+            vfx.visualEffectAsset = pointCount > 50 ? pointCloudQuad : pointCloudSphere;
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
@@ -270,7 +296,7 @@ namespace AnalysisLogic
         public void CreatePositionTextureMap(List<float3> pointPositions)
         {
             pointCount = pointPositions.Count;
-            vfx.visualEffectAsset = pointCount > 500000 ? pointCloudQuad : pointCloudSphere;
+            vfx.visualEffectAsset = pointCount > 50 ? pointCloudQuad : pointCloudSphere;
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
@@ -283,7 +309,7 @@ namespace AnalysisLogic
                 {
                     int ind = x + (width * y);
                     if (ind >= pointCount) continue;
-                    float3 pos = pointPositions[ind];
+                    float3 pos = pointPositions[ind] + 0.5f;
                     col = new Color(pos.x, pos.y, pos.z, 1);
 
                     Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);

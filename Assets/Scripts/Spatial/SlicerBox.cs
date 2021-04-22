@@ -112,12 +112,12 @@ namespace CellexalVR.Spatial
 
         private void Update()
         { 
-            cullPos1.x = Math.Min(0.5f, transform.InverseTransformPoint(cullingWalls[0].transform.position).x);
-            cullPos1.y = Math.Min(0.5f, transform.InverseTransformPoint(cullingWalls[1].transform.position).y);
-            cullPos1.z = Math.Min(0.5f, transform.InverseTransformPoint(cullingWalls[2].transform.position).z);
-            cullPos2.x = (Math.Min(0.5f,transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
-            cullPos2.y = (Math.Min(0.5f,transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
-            cullPos2.z = (Math.Min(0.5f,transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
+            cullPos1.x = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[0].transform.position).x);
+            cullPos1.y = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[1].transform.position).y);
+            cullPos1.z = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[2].transform.position).z);
+            cullPos2.x = (Math.Min(0.6f,transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
+            cullPos2.y = (Math.Min(0.6f,transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
+            cullPos2.z = (Math.Min(0.6f,transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
             vfx.SetVector3("CullingCubePos", cullPos1);
             vfx.SetVector3("CullingCube2Pos", cullPos2);
         }

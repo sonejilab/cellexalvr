@@ -124,6 +124,11 @@ namespace CellexalVR.Menu.Buttons.Slicing
             }
         }
 
+        public void ChangeMeshTransparancy(float val)
+        {
+            MeshGenerator.instance.ChangeMeshTransparency(val);
+        }
+
         public IEnumerator MinimizeMenu()
         {
             float time = 1f;

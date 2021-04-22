@@ -155,10 +155,7 @@ namespace CellexalVR.AnalysisObjects
                 Graph.GraphPoint gp = graph2.FindGraphPoint(point.Label);
                 if (gp != null)
                 {
-                    //Graph.GraphPoint newGp = gp;
-                    //newGp.Position = newGpWorldPos;
                     toGraphPoints.Add(gp);
-                    //graph.FindGraphPoint(point.Label).ColorSelectionColor(point.Group, false);
                 }
                 else
                 {

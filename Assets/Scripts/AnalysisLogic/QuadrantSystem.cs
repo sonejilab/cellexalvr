@@ -134,6 +134,7 @@ namespace DefaultNamespace
             base.OnDestroy();
         }
 
+        [BurstCompile]
         public void SetHashMap(int id)
         {
             NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);

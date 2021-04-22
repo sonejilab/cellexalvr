@@ -93,32 +93,33 @@ namespace CellexalVR.Spatial
             {
                 frameCount = 0;
             }
-            //Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
-            //if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
-            //{
-            //    //parentSlice.controllerInsideSomeBox = true;
-            //    controllerInside = true;
-            //    slicerBox.box.SetActive(true);
-            //}
-            //else
-            //{
-            //    controllerInside = false;
-            //    //parentSlice.controllerInsideSomeBox = false;
-            //    if (!slicerBox.Active)
-            //    {
-            //        slicerBox.box.SetActive(false);
-            //    }
-            //}
+            if (!boxCollider.enabled) return;
+            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+            if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
+            {
+                //parentSlice.controllerInsideSomeBox = true;
+                controllerInside = true;
+                slicerBox.box.SetActive(true);
+            }
+            else
+            {
+                controllerInside = false;
+                //parentSlice.controllerInsideSomeBox = false;
+                if (!slicerBox.Active)
+                {
+                    slicerBox.box.SetActive(false);
+                }
+            }
 
-            //if (Player.instance.rightHand == null) return;
-            //if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
-            //{
-            //    if (controllerInside)
-            //    {
-            //        slicerBox.Active = !slicerBox.Active;
-            //        slicerBox.box.SetActive(slicerBox.Active);
-            //    }
-            //}
+            if (Player.instance.rightHand == null) return;
+            if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
+            {
+                if (controllerInside)
+                {
+                    slicerBox.Active = !slicerBox.Active;
+                    slicerBox.box.SetActive(slicerBox.Active);
+                }
+            }
         }
         public void UpdateColorTexture()
         {
@@ -443,7 +444,7 @@ namespace CellexalVR.Spatial
                 Vector3 coords = Vector3.zero;
                 coords[axis] = -0.5f + i * (1f / (slices.Count - 1));
                 coords = transform.TransformPoint(coords);
-                childSlices[i].sliceCoords = coords;
+                slices[i].sliceCoords = coords;
             }
             PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
 

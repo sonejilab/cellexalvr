@@ -5,6 +5,7 @@ using System.Linq;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.Spatial;
 using SQLiter;
 using Unity.Collections;
 using Unity.Entities;
@@ -101,18 +102,32 @@ namespace DefaultNamespace
             }
             colorTextureMaps[0].Apply();
             alphaTextureMaps[0].Apply();
+
+            if (MeshGenerator.instance.generateMeshes)
+            {
+                if (toggle)
+                {
+                    MeshGenerator.instance.GenerateMeshes();
+                }
+                else
+                {
+                    MeshGenerator.instance.RemoveMesh(SelectionToolCollider.instance.GetColorIndex(PointCloudGenerator.instance.colorDict[cluster]));
+                }
+
+            }
         }
 
         public void MakeAllPointsTransparent(bool toggle)
         {
-            Color a = toggle ? Color.white * 0.05f : Color.white;
+            Color a = toggle ? Color.white * 0.05f : Color.white * 0.8f;
             Texture2D atex = alphaTextureMaps[0];
-            Color[] aaray = atex.GetPixels();
-            for (int i = 0; i < aaray.Length; i++)
+            Color[] aarray = atex.GetPixels();
+            for (int i = 0; i < aarray.Length; i++)
             {
-                aaray[i] = a;
+                if (aarray[i].maxColorComponent > 0.9f) continue;
+                aarray[i] = a;
             }
-            atex.SetPixels(aaray);
+            atex.SetPixels(aarray);
             atex.Apply();
         }
 

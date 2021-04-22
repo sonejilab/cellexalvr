@@ -72,7 +72,6 @@ namespace DefaultNamespace
                     break;
                 }
             }
-
             if (pc == null) return;
             float3 selectionToolCenter = pc.transform.InverseTransformPoint(selTransform.position);
             //QuadrantSystem.DebugDrawCubes(selectionToolCenter, pc.transform);

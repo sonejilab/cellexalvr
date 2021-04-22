@@ -198,6 +198,13 @@ namespace CellexalVR.AnalysisLogic
                 pc2.originalName = pc2.GraphName;
             }
 
+            else
+            {
+                PointCloud pc1 = pointCloudGenerator.pointClouds[0];
+                pc1.targetPositionTextureMap = pc1.positionTextureMap;
+                pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
+            }
+
             attributeReader = gameObject.AddComponent<AttributeReader>();
             attributeReader.referenceManager = referenceManager;
             StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));

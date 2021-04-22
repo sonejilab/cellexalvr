@@ -1141,18 +1141,19 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
-        [ConsoleCommand("graphGenerator", aliases: "cm")]
-        public void CreateMeshFromCommandLine()
-        {
-            CreateMesh();
-        }
+        //[ConsoleCommand("graphGenerator", aliases: "cm")]
+        //public void CreateMeshFromCommandLine()
+        //{
+        //    CreateMesh();
+        //}
 
 
-        public void CreateMesh()
-        {
-            StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>()
-                .CreateMesh());
-        }
+        //public void CreateMesh()
+        //{
+        //    //StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>()
+        //    //    .CreateMesh());
+        //    MeshGenerator.instance.CreateMesh();
+        //}
 
 
         /// <summary>

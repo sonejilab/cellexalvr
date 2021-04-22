@@ -46,7 +46,7 @@ namespace CellexalVR.AnalysisObjects
                 //    continue;
                 //int density = (int)(float.Parse(coords[4]) + float.Parse(coords[5]) + float.Parse(coords[6]) / 3.0);
                 //chunkManager.addDensity((int)float.Parse(coords[1]), (int)float.Parse(coords[2]), (int)float.Parse(coords[3]), onConvHull);
-                chunkManager.addDensity((int)gp.Position.x, (int)gp.Position.y, (int)gp.Position.z, onConvHull);
+                chunkManager.AddDensity((int)gp.Position.x, (int)gp.Position.y, (int)gp.Position.z, onConvHull);
                 //vertices.Add(new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3])));
                 //if (vertices.Count >= 65535 && !(streamReader.Peek() == -1))
                 //{
@@ -58,7 +58,7 @@ namespace CellexalVR.AnalysisObjects
             fileStream.Close();
             //meshes.Add(vertices);
             //triangles = Enumerable.Range(0, vertices.Count).ToList();
-            chunkManager.toggleSurfaceLevelandUpdateCubes(0);
+            //chunkManager.toggleSurfaceLevelandUpdateCubes(0);
 
             foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
             {
@@ -142,7 +142,7 @@ namespace CellexalVR.AnalysisObjects
                     //float density = tex.r / 30;
                     //vertices.Add(gp.Position);
                     //chunkManager.addDensity((int)gp.Position.x, (int)gp.Position.y, (int)gp.Position.z, 1);
-                    chunkManager.addDensity((int)float.Parse(line[1]), (int)float.Parse(line[2]), (int)float.Parse(line[3]), 1);
+                    chunkManager.AddDensity((int)float.Parse(line[1]), (int)float.Parse(line[2]), (int)float.Parse(line[3]), 1);
                 }
             }
             List<int> triangles = new List<int>();
@@ -156,7 +156,7 @@ namespace CellexalVR.AnalysisObjects
 
             meshes.Add(new List<Vector3>(vertices));
             //contour = Instantiate(contourParent);
-            chunkManager.toggleSurfaceLevelandUpdateCubes(0);
+            //chunkManager.toggleSurfaceLevelandUpdateCubes(0);
 
 
 
@@ -260,7 +260,7 @@ namespace CellexalVR.AnalysisObjects
                 string[] coords = streamReader.ReadLine().Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
                 //if (coords.Length != 3)
                 //    continue;
-                chunkManager.addDensity((int)float.Parse(coords[1]), (int)float.Parse(coords[2]), (int)float.Parse(coords[3]), 1);
+                chunkManager.AddDensity((int)float.Parse(coords[1]), (int)float.Parse(coords[2]), (int)float.Parse(coords[3]), 1);
 
                 //vertices.Add(new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3])));
                 //if (vertices.Count >= 65535 && !(streamReader.Peek() == -1))
@@ -269,7 +269,7 @@ namespace CellexalVR.AnalysisObjects
                 //    vertices.Clear();
                 //}
             }
-            chunkManager.toggleSurfaceLevelandUpdateCubes(0);
+            //chunkManager.toggleSurfaceLevelandUpdateCubes(0);
 
 
 

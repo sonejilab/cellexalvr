@@ -122,6 +122,7 @@ namespace DefaultNamespace
 
         private IEnumerator BuildSlicesCoroutine(Transform oldPc, GraphSlice[] newSlices)
         {
+            print($"start building coroutine {newSlices.Length}");
             GraphSlice parentSlice = oldPc.GetComponent<GraphSlice>();
             GraphSlice[] oldSlices = parentSlice.childSlices.ToArray();
             maxPointCount = newSlices.ToList().Max(x => x.points.Count);
@@ -168,6 +169,8 @@ namespace DefaultNamespace
 
         private void ScaleAllCoordinates()
         {
+            maxCoordValues += new float3(0.01f, 0.01f, 0.01f);
+            minCoordValues -= new float3(0.01f, 0.01f, 0.01f);
             diffCoordValues = maxCoordValues - minCoordValues;
             longestAxis = math.max(diffCoordValues.x, math.max(diffCoordValues.y, diffCoordValues.z));
             scaledOffset = (diffCoordValues / longestAxis) / 2;
@@ -184,7 +187,7 @@ namespace DefaultNamespace
             scaledCoord -= scaledOffset;
             if (!scaledCoordinates.ContainsKey(cellName))
             {
-                scaledCoordinates[cellName] = scaledCoord + 0.5f;
+                scaledCoordinates[cellName] = scaledCoord;
             }
 
             return scaledCoord;
@@ -245,7 +248,10 @@ namespace DefaultNamespace
             pointCount = scaledCoordinates.Count;
 
             pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList());
-
+            //if (pc.pcID == 0)
+            //{
+            //    MeshGenerator.instance.CreateMesh(scaledCoordinates.Values.ToList());
+            //}
 
             // StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
             // if (nrOfGraphs == mdsFileCount)
@@ -351,12 +357,12 @@ namespace DefaultNamespace
             {
                 VisualEffect vfx = pc.GetComponent<VisualEffect>();
                 pc.colorTextureMap = colorMap;
+                pc.alphaTextureMap = alphaMap;
                 vfx.enabled = true;
                 vfx.Play();
                 vfx.SetTexture("ColorMapTex", colorMap);
                 vfx.SetTexture("AlphaMapTex", alphaMap);
                 World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
-                TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
             }
 
 
@@ -365,6 +371,7 @@ namespace DefaultNamespace
             TextureHandler.instance.colorTextureMaps.Add(colorMap);
             TextureHandler.instance.mainColorTextureMaps.Add(colorMap);
             TextureHandler.instance.clusterTextureMaps.Add(clusterMap);
+            TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
 
             instance.creatingGraph = false;
         }
