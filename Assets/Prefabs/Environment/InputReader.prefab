@@ -172,6 +172,7 @@ MonoBehaviour:
   reportManager: {fileID: 0}
   floor: {fileID: 0}
   pdfMesh: {fileID: 0}
+  brainModel: {fileID: 0}
   h5ReaderAnnotatorScriptManager: {fileID: 0}
   geneKeyboard: {fileID: 0}
   keyboardSwitch: {fileID: 0}
@@ -186,6 +187,7 @@ MonoBehaviour:
   filterNameKeyboard: {fileID: 0}
   filterOperatorKeyboard: {fileID: 0}
   filterValueKeyboard: {fileID: 0}
+  referenceModelKeyboard: {fileID: 0}
   filterNameKeyboardAutoCompleteList: {fileID: 0}
   cullingFilterManager: {fileID: 0}
   settingsMenu: {fileID: 0}
