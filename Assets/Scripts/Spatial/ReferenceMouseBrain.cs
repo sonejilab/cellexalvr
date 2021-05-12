@@ -2,7 +2,6 @@
 using System.Collections;
 using CellexalVR.General;
 using CellexalVR.Spatial;
-using Valve.VR;
 
 namespace CellexalVR.Spatial
 {
@@ -14,8 +13,6 @@ namespace CellexalVR.Spatial
         public ReferenceManager referenceManager;
 
         private bool attached;
-        private SteamVR_Behaviour_Pose rightController;
-        // private SteamVR_Controller.Device device;
         private bool controllerInside;
 
         private void OnValidate()
@@ -26,42 +23,6 @@ namespace CellexalVR.Spatial
             }
         }
 
-        private void Start()
-        {
-            CellexalEvents.GraphsUnloaded.AddListener(() => Destroy(this.gameObject));
-            if (!referenceManager)
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-            rightController = referenceManager.rightController;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-            {
-                controllerInside = true;
-                GetComponent<Renderer>().material.color = Color.red;
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-            {
-                controllerInside = false;
-                GetComponent<Renderer>().material.color = Color.white;
-            }
-        }
-
-        private void Update()
-        {
-            // device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside)// && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                AttachToGraph();
-            }
-        }
         private void AttachToGraph()
         {
             if (!attached)

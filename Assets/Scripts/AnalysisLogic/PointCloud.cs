@@ -28,6 +28,8 @@ namespace AnalysisLogic
         private bool morphed;
         private SlicerBox slicerBox;
 
+        Dictionary<string, Color> clusterCentroids = new Dictionary<string, Color>();
+
         public VisualEffectAsset pointCloudSphere;
         public VisualEffectAsset pointCloudQuad;
         public Texture2D positionTextureMap;
@@ -82,6 +84,10 @@ namespace AnalysisLogic
             pcID = id;
             gameObject.name = "PointCloud" + pcID;
             vfx = GetComponent<VisualEffect>();
+            if (vfx == null)
+            {
+                vfx = GetComponentInChildren<VisualEffect>();
+            }
             selectionSphere = SelectionToolCollider.instance.transform;
             vfx.pause = true;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -94,10 +100,27 @@ namespace AnalysisLogic
 
         private void Update()
         {
-            //if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
+            if ((Player.instance.rightHand != null && controllerAction.GetStateDown(Player.instance.rightHand.handType)) || Input.GetKeyDown(KeyCode.M))
+            {
+                StartCoroutine(Morph());
+            }
+
+            if (controllerAction.GetStateDown(Player.instance.leftHand.handType))
+            {
+                SpreadOutClusters();
+                //SpreadOutPoints();
+            }
+
+            //if (Input.GetKeyDown(KeyCode.E))
             //{
-            //    StartCoroutine(Morph());
+            //    SpreadOutPoints();
             //}
+            //if (Input.GetKeyDown(KeyCode.Y))
+            //{
+            //    SpreadOutClusters();
+            //}
+
+
         }
 
         private void OnGrabbed(object sender, Hand hand)
@@ -129,6 +152,7 @@ namespace AnalysisLogic
             longestAxis = math.max(diffCoordValues.x, math.max(diffCoordValues.y, diffCoordValues.z));
             scaledOffset = (diffCoordValues / longestAxis) / 2;
             var bc = GetComponent<BoxCollider>();
+            if (bc == null) return;
             if (offset)
             {
                 bc.center = mid;
@@ -201,7 +225,7 @@ namespace AnalysisLogic
                 //    newCoords[i] = currentCoords[i];
                 //}
             }
-            
+
             targetTex.SetPixels(newCoords);
             targetTex.Apply();
             vfx.SetTexture("TargetPosMapTex", targetTex);
@@ -230,6 +254,10 @@ namespace AnalysisLogic
             positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             Texture2D parentTargetTextureMap = parentPC.targetPositionTextureMap;
+            if (parentTargetTextureMap == null)
+            {
+                parentTargetTextureMap = targetPositionTextureMap;
+            }
             Color[] positions = new Color[width * height];
             Color[] targetPositions = new Color[positions.Length];
             //for (int i = 0; i < points.Count; i++)
@@ -293,9 +321,10 @@ namespace AnalysisLogic
         }
 
 
-        public void CreatePositionTextureMap(List<float3> pointPositions)
+        public void CreatePositionTextureMap(List<float3> pointPositions, List<string> names)
         {
             pointCount = pointPositions.Count;
+            if (vfx == null) vfx = GetComponent<VisualEffect>();
             vfx.visualEffectAsset = pointCount > 50 ? pointCloudQuad : pointCloudSphere;
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
@@ -309,8 +338,10 @@ namespace AnalysisLogic
                 {
                     int ind = x + (width * y);
                     if (ind >= pointCount) continue;
-                    float3 pos = pointPositions[ind] + 0.5f;
+                    float3 pos = pointPositions[ind];
                     col = new Color(pos.x, pos.y, pos.z, 1);
+
+                    Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[names[ind]];
 
                     Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
                     float3 wPos = math.transform(transform.localToWorldMatrix, pos);
@@ -319,8 +350,8 @@ namespace AnalysisLogic
                     entityManager.SetComponentData(e, new Point
                     {
                         selected = false,
-                        orgXIndex = x,
-                        orgYIndex = y,
+                        orgXIndex = textureCoord.x,
+                        orgYIndex = textureCoord.y,
                         xindex = x,
                         yindex = y,
                         label = ind,
@@ -339,6 +370,76 @@ namespace AnalysisLogic
             PointCloudGenerator.instance.creatingGraph = false;
         }
 
+
+        public void SpreadOutPoints()
+        {
+            if (!morphed)
+            {
+                Color[] colors = new Color[TextureHandler.instance.clusterTextureMaps[0].width * TextureHandler.instance.clusterTextureMaps[0].height];
+                Color[] newPositions = new Color[TextureHandler.instance.clusterTextureMaps[0].width * TextureHandler.instance.clusterTextureMaps[0].height];
+                Color[] positions = positionTextureMap.GetPixels();
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    Vector3 pos = new Vector3(positions[i].r, positions[i].g, positions[i].b);
+                    //float diff = Vector3.Distance(pos, Vector3.zero);
+                    Vector3 newPos = pos + (pos - new Vector3(0.5f, 0.5f, 0.5f)).normalized;
+                    newPositions[i] = new Color(newPos.x, newPos.y, newPos.z);
+                }
+
+                targetPositionTextureMap.SetPixels(newPositions);
+                targetPositionTextureMap.Apply();
+            }
+            StartCoroutine(Morph());
+        }
+
+        public void SpreadOutClusters()
+        {
+            if (!morphed)
+            {
+                CalculateClusterCentroids();
+                Color[] colors = alphaTextureMap.GetPixels();
+                Color[] newPositions = new Color[TextureHandler.instance.clusterTextureMaps[0].width * TextureHandler.instance.clusterTextureMaps[0].height];
+                Color[] positions = positionTextureMap.GetPixels();
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    if (i >= pointCount) break;
+                    Color pos = positions[i];
+                    if (colors[i].maxColorComponent > 0.9f)
+                    {
+                        string cluster = PointCloudGenerator.instance.clusterDict[i];
+                        Color centroid = clusterCentroids[cluster];
+                        Vector3 cP = (new Vector3(centroid.r, centroid.g, centroid.b) - new Vector3(0.5f, 0.5f, 0.5f)).normalized;
+                        Color newPos = pos + new Color(cP.x, cP.y, cP.z);
+                        newPositions[i] = newPos;
+                    }
+                    else
+                    {
+                        newPositions[i] = pos;
+                    }
+                }
+
+                targetPositionTextureMap.SetPixels(newPositions);
+                targetPositionTextureMap.Apply();
+            }
+            StartCoroutine(Morph());
+        }
+
+        private void CalculateClusterCentroids()
+        {
+            foreach (KeyValuePair<string, List<Vector2Int>> kvp in PointCloudGenerator.instance.clusters)
+            {
+                Color sum = Color.black;
+                foreach (Vector2 ind in kvp.Value)
+                {
+                    Color pos = positionTextureMap.GetPixel((int)ind.x, (int)ind.y);
+                    sum += pos;
+                }
+
+                Color centroid = sum / kvp.Value.Count;
+                clusterCentroids[kvp.Key] = centroid;
+            }
+        }
+
         //
         // public void UpdateColorTexture(int x, int y)
         // {
@@ -349,29 +450,8 @@ namespace AnalysisLogic
 
 
 
-        public void AddGraphPoint(string cellName, float x, float y, float z)
-        {
-            points[cellName] = new float3(x, y, z);
-            UpdateMinMaxCoords(x, y, z);
-            // if (cells.Contains(cellName)) return;
-            // PointSpawner.instance.cells.Add(cellName);
-        }
 
-        public void UpdateMinMaxCoords(float x, float y, float z)
-        {
-            if (x < minCoordValues.x)
-                minCoordValues.x = x;
-            if (y < minCoordValues.y)
-                minCoordValues.y = y;
-            if (z < minCoordValues.z)
-                minCoordValues.z = z;
-            if (x > maxCoordValues.x)
-                maxCoordValues.x = x;
-            if (y > maxCoordValues.y)
-                maxCoordValues.y = y;
-            if (z > maxCoordValues.z)
-                maxCoordValues.z = z;
-        }
+
 
 
     }

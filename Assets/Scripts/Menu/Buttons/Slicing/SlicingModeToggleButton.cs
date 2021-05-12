@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {
-    public class ChangeSlicingModeToggleButton : SliderButton
+    public class SlicingModeToggleButton : SliderButton
     {
         public SlicingMenu.SliceMode modeMenuToActivate;
         protected override string Description => "Switch to " + modeMenuToActivate;

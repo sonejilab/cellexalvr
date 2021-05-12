@@ -18,6 +18,11 @@ namespace CellexalVR.Interaction
         private ReferenceManager referenceManager;
         private FlybyMenu flybyMenu;
 
+        private void Awake()
+        {
+            interactableObject = GetComponent<InteractableObjectBasic>();   
+        }
+
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

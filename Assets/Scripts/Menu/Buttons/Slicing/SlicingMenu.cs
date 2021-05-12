@@ -11,8 +11,8 @@ namespace CellexalVR.Menu.Buttons.Slicing
         public GameObject automaticModeMenu;
         public GameObject manualModeMenu;
         public GameObject freeHandModeMenu;
-        public ChangeSlicingModeToggleButton manualModeButton;
-        public ChangeSlicingModeToggleButton autoModeButton;
+        public SlicingModeToggleButton manualModeButton;
+        public SlicingModeToggleButton autoModeButton;
         public ChangeNrOfSlicesButton addSliceButton;
         public ChangeNrOfSlicesButton subtractSliceButton;
         public int nrOfSlices;

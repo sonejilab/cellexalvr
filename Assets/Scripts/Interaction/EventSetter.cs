@@ -48,6 +48,11 @@ namespace CellexalVR.Interaction
             referenceManager.inputFolderGenerator.GenerateFolders(filter);
         }
 
+        public void ReferenceModelKeyboardEditEvent(string filter)
+        {
+            AllenReferenceBrain.instance.UpdateSuggestions(filter);
+        }
+
     }
 }
 

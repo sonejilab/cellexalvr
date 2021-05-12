@@ -74,7 +74,7 @@ namespace DefaultNamespace
 
         public void ColorCluster(string cluster, bool toggle)
         {
-            List<Vector2> indices = PointCloudGenerator.instance.clusters[cluster];
+            List<Vector2Int> indices = PointCloudGenerator.instance.clusters[cluster];
             Color col = toggle ? PointCloudGenerator.instance.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f);
             Color a = toggle ? Color.white : Color.white * 0.2f;
             Texture2D atex = alphaTextureMaps[0];
@@ -176,5 +176,7 @@ namespace DefaultNamespace
             mainColorTextureMaps[0].Apply();
             alphaTextureMaps[0].Apply();
         }
+
+
     }
 }

@@ -43,6 +43,7 @@ namespace CellexalVR.Spatial
         public List<GraphSlice> childSlices = new List<GraphSlice>();
         public PointCloud pointCloud;
         public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
+        public GameObject referenceOrgan;
 
         protected Graph graph;
 
@@ -105,7 +106,7 @@ namespace CellexalVR.Spatial
             {
                 controllerInside = false;
                 //parentSlice.controllerInsideSomeBox = false;
-                if (!slicerBox.Active)
+                if (slicerBox != null && !slicerBox.Active)
                 {
                     slicerBox.box.SetActive(false);
                 }
@@ -121,6 +122,7 @@ namespace CellexalVR.Spatial
                 }
             }
         }
+
         public void UpdateColorTexture()
         {
             if (points.Count > 0)

@@ -152,7 +152,7 @@ namespace CellexalVR.AnalysisLogic
                                     if (!PointCloudGenerator.instance.colorDict.ContainsKey(attr))
                                     {
                                         PointCloudGenerator.instance.colorDict[attr] = CellexalConfig.Config.SelectionToolColors[group];
-                                        PointCloudGenerator.instance.clusters[attr] = new List<Vector2>();
+                                        PointCloudGenerator.instance.clusters[attr] = new List<Vector2Int>();
                                     }
                                 }
                             }

@@ -141,6 +141,7 @@ namespace CellexalVR.General
         public ReportManager reportManager;
         public Floor floor;
         public PDFViewer.PDFMesh pdfMesh;
+        public AllenReferenceBrain brainModel;
 
         //h5reader annotator
         public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
@@ -167,6 +168,7 @@ namespace CellexalVR.General
         public KeyboardHandler filterNameKeyboard;
         public KeyboardHandler filterOperatorKeyboard;
         public KeyboardHandler filterValueKeyboard;
+        public KeyboardHandler referenceModelKeyboard;
         public AutoCompleteList filterNameKeyboardAutoCompleteList;
         public CullingFilterManager cullingFilterManager;
 
@@ -291,6 +293,9 @@ namespace CellexalVR.General
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
             webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
             sessionHistoryList = geneKeyboard.GetComponentInChildren<SessionHistoryList>();
+
+            GameObject brainModel = GameObject.Find("BrainParent");
+            referenceModelKeyboard = brainModel.GetComponentInChildren<KeyboardHandler>(true);
 
             GameObject filterCreator = GameObject.Find("Filter Creator");
             filterBlockBoard = filterCreator.transform.Find("Filter Block Board").gameObject;

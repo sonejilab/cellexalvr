@@ -53,19 +53,20 @@ namespace DefaultNamespace
         public float3 minCoordValues;
         public float3 maxCoordValues;
         public float3 longestAxis;
+        public float3 scaledOffset;
         public Texture2D colorMap;
         public Texture2D alphaMap;
         public Texture2D clusterMap;
         public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
         public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
-        public Dictionary<string, List<Vector2>> clusters = new Dictionary<string, List<Vector2>>();
+        public Dictionary<string, List<Vector2Int>> clusters = new Dictionary<string, List<Vector2Int>>();
         public Dictionary<string, float3> scaledCoordinates = new Dictionary<string, float3>();
         public List<PointCloud> pointClouds = new List<PointCloud>();
 
         public int pointCount;
 
-        public float3 scaledOffset;
         public const int textureWidth = 1000;
+        public bool readingFile;
         // public List<string> cells = new List<string>();
 
         private float3 diffCoordValues;
@@ -76,7 +77,6 @@ namespace DefaultNamespace
         private EntityManager entityManager;
         private EntityArchetype entityArchetype;
         private QuadrantSystem quadrantSystem;
-        private bool readingFile;
         private int maxPointCount;
 
         private void Awake()
@@ -99,6 +99,21 @@ namespace DefaultNamespace
             pc.Initialize(nrOfGraphs);
             nrOfGraphs++;
             return pc;
+        }
+
+        public HistoImage CreateNewHistoImage()
+        {
+            points.Clear();
+            scaledCoordinates.Clear();
+            minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
+            maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
+            HistoImage hi = Instantiate(HistoImageHandler.instance.slicePrefab);
+            PointCloud pc = hi.GetComponent<PointCloud>();
+            quadrantSystem.graphParentTransforms.Add(pc.transform);
+            quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
+            pc.Initialize(nrOfGraphs);
+            nrOfGraphs++;
+            return hi;
         }
 
         public PointCloud CreateFromOld(Transform oldPc)
@@ -145,10 +160,17 @@ namespace DefaultNamespace
 
         }
 
+
         public void AddGraphPoint(string cellName, float x, float y, float z)
         {
             points[cellName] = new float3(x, y, z);
             UpdateMinMaxCoords(x, y, z);
+        }
+
+        public void AddGraphPoint(string cellName, float x, float y)
+        {
+            points[cellName] = new float3(x, y, 0);
+            UpdateMinMaxCoords(x, y, 0);
         }
 
         private void UpdateMinMaxCoords(float x, float y, float z)
@@ -185,11 +207,6 @@ namespace DefaultNamespace
             float3 scaledCoord = points[cellName] - minCoordValues;
             scaledCoord /= longestAxis;
             scaledCoord -= scaledOffset;
-            if (!scaledCoordinates.ContainsKey(cellName))
-            {
-                scaledCoordinates[cellName] = scaledCoord;
-            }
-
             return scaledCoord;
         }
 
@@ -242,25 +259,132 @@ namespace DefaultNamespace
             pointClouds.Add(pc);
             foreach (KeyValuePair<string, float3> pointPair in points)
             {
-                float3 pos = ScaleCoordinate(pointPair.Key);
+                float3 scaledPos = ScaleCoordinate(pointPair.Key);
+                if (!scaledCoordinates.ContainsKey(pointPair.Key))
+                {
+                    scaledCoordinates[pointPair.Key] = scaledPos + 0.5f;
+                }
+
             }
 
             pointCount = scaledCoordinates.Count;
 
-            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList());
-            //if (pc.pcID == 0)
-            //{
-            //    MeshGenerator.instance.CreateMesh(scaledCoordinates.Values.ToList());
-            //}
+            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList());
+            points.Clear();
+            scaledCoordinates.Clear();
+        }
 
-            // StartCoroutine(pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList()));
-            // if (nrOfGraphs == mdsFileCount)
-            // {
-            //     StartCoroutine(CreateColorTextureMap(scaledCoordinates.Values.ToList().Count));
-            // }
+        public void SpawnPoints(HistoImage hi, PointCloud parentPC)
+        {
+            PointCloud pc = hi.GetComponent<PointCloud>();
+            Entity parent = entityManager.CreateEntity(entityArchetype);
+            entityManager.SetComponentData(parent, new Translation { Value = new float3(0, 0, 0) });
+            entityManager.SetComponentData(parent, new Rotation { Value = new quaternion(0, 0, 0, 0) });
+            entityManager.SetComponentData(parent, new Scale { Value = 1f });
+            LocalToWorld localToWorld = entityManager.GetComponentData<LocalToWorld>(parent);
+            PointCloudComponent pointCloudComponent = new PointCloudComponent { pointCloudId = graphNr };
+            entityManager.SetComponentData(parent, pointCloudComponent);
+            instance.creatingGraph = true;
+            hi.maxValues = maxCoordValues;
+            hi.minValues = minCoordValues;
+            hi.ScaleCoordinates();
+            pc.minCoordValues = minCoordValues;
+            pc.maxCoordValues = maxCoordValues;
+            pc.scaledOffset = scaledOffset;
+            pc.longestAxis = longestAxis;
+            float maxX = 0f;
+            float minX = 0f;
+            float maxY = 0f;
+            float minY = 0f;
+            pc.SetCollider();
+            graphNr++;
+            pointClouds.Add(pc);
+            foreach (KeyValuePair<string, float3> pointPair in points)
+            {
+                float3 pos = pointPair.Value;
+                float3 scaledPos = hi.ScaleCoordinate(pos);
+                scaledCoordinates[pointPair.Key] = scaledPos;
+                if (scaledPos.x > maxX)
+                {
+                    maxX = scaledPos.x;
+                    //maxInds[0] = ind;
+                }
+
+                if (scaledPos.x < minX)
+                {
+                    minX = scaledPos.x;
+                    //maxInds[1] = ind;
+                }
+                if (scaledPos.y > maxY)
+                {
+                    maxY = scaledPos.y;
+                    //maxInds[2] = ind;
+                }
+                if (scaledPos.y < minY)
+                {
+                    minY = scaledPos.y;
+                    //maxInds[3] = ind;
+                }
+                pc.points[pointPair.Key] = pointPair.Value;
+            }
+            hi.scaledMaxValues = new Vector2(maxX, maxY);
+            hi.scaledMinValues = new Vector2(minX, minY);
+            print($"set minmax vals max - {hi.scaledMaxValues}, min - {hi.scaledMinValues}");
+
+            //pointCount = scaledCoordinates.Count;
+
+            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList());
+            StartCoroutine(CreateColorTextureMap(points, hi, parentPC));
 
             points.Clear();
             scaledCoordinates.Clear();
+        }
+
+
+        public IEnumerator CreateColorTextureMap(Dictionary<string, float3> points, HistoImage hi, PointCloud parentCloud)
+        {
+            while (readingFile) yield return null;
+            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(3500 / (float)textureWidth);//width;
+            //int height = parentCloud.positionTextureMap.height;
+            PointCloud pc = hi.GetComponent<PointCloud>();
+            colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            pc.colorTextureMap = colorMap;
+            pc.alphaTextureMap = alphaMap;
+
+            clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            Color c;
+            Color alpha = new Color(0.55f, 0f, 0);
+            Color[] carray = new Color[width * height];
+            Color[] aarray = new Color[width * height];
+            alphaMap.SetPixels(0, 0, width, height, aarray);
+
+            Texture2D parentTexture = (Texture2D)parentCloud.GetComponent<VisualEffect>().GetTexture("ColorMapTex");
+            foreach (KeyValuePair<string, float3> kvp in points)
+            {
+                Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[kvp.Key];
+                c = parentTexture.GetPixel(textureCoord.x, textureCoord.y);
+                Vector2Int hiTexCoord = hi.textureCoords[kvp.Key];
+                colorMap.SetPixel(hiTexCoord.x, hiTexCoord.y, c);
+                alphaMap.SetPixel(hiTexCoord.x, hiTexCoord.y, alpha);
+            }
+
+            CellexalLog.Log("Color Texture Map created");
+            colorMap.Apply();
+            alphaMap.Apply();
+            clusterMap.Apply();
+            VisualEffect vfx = pc.GetComponentInChildren<VisualEffect>();
+            vfx.SetTexture("ColorMapTex", colorMap);
+            vfx.SetTexture("AlphaMapTex", alphaMap);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
+            TextureHandler.instance.colorTextureMaps.Add(colorMap);
+            TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
+            vfx.enabled = true;
+            vfx.Stop();
+            vfx.Play();
+            instance.creatingGraph = false;
+            //EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
         }
 
 
@@ -299,14 +423,15 @@ namespace DefaultNamespace
             alphaMap.Apply();
             clusterMap.Apply();
             VisualEffect vfx = pc.GetComponent<VisualEffect>();
-            vfx.enabled = true;
-            vfx.Play();
             vfx.SetTexture("ColorMapTex", colorMap);
             vfx.SetTexture("AlphaMapTex", alphaMap);
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
             TextureHandler.instance.colorTextureMaps.Add(colorMap);
             TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
-
+            vfx.enabled = true;
+            vfx.Stop();
+            vfx.Play();
+            instance.creatingGraph = false;
             //EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
         }
 
@@ -334,6 +459,7 @@ namespace DefaultNamespace
                         aarray[ind] = Color.black;
                         continue;
                     }
+                    if (ind % 5000 == 0) yield return null;
 
                     carray[ind] = c;
                     aarray[ind] = alpha;
@@ -341,7 +467,7 @@ namespace DefaultNamespace
                     {
                         Color cluster = colorDict[clusterDict[ind]];
                         carrayClusters[ind] = cluster;
-                        clusters[clusterDict[ind]].Add(new Vector2(x, y));
+                        clusters[clusterDict[ind]].Add(new Vector2Int(x, y));
                     }
                 }
             }
@@ -356,17 +482,22 @@ namespace DefaultNamespace
             foreach (PointCloud pc in pointClouds)
             {
                 VisualEffect vfx = pc.GetComponent<VisualEffect>();
+                if (vfx == null) vfx = pc.GetComponentInChildren<VisualEffect>();
                 pc.colorTextureMap = colorMap;
                 pc.alphaTextureMap = alphaMap;
-                vfx.enabled = true;
-                vfx.Play();
                 vfx.SetTexture("ColorMapTex", colorMap);
                 vfx.SetTexture("AlphaMapTex", alphaMap);
+                vfx.enabled = true;
+                vfx.Stop();
+                vfx.Play();
                 World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
             }
 
 
-            clusterDict.Clear();
+            //clusterDict.Clear();
+
+            //var p = clusterMap.EncodeToPNG();
+            //File.WriteAllBytes("clusterTest.png", p);
 
             TextureHandler.instance.colorTextureMaps.Add(colorMap);
             TextureHandler.instance.mainColorTextureMaps.Add(colorMap);
@@ -380,7 +511,7 @@ namespace DefaultNamespace
         private void ReadColorMapFromFile()
         {
             string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
-            string[] files = Directory.GetFiles(path, "*.csv");
+            string[] files = Directory.GetFiles(path, "color_codes.csv");
             if (files.Length == 0) return;
             using (StreamReader sr = new StreamReader(files[0]))
             {
@@ -402,11 +533,9 @@ namespace DefaultNamespace
         public IEnumerator ReadMetaData(string dir)
         {
             readingFile = true;
-            ReadColorMapFromFile();
-            //colorDict = new Dictionary<string, Color>();
-
-            int width = (int)math.ceil(math.sqrt(pointCount));
-            int height = width;
+            //ReadColorMapFromFile();
+            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(pointCount / (float)textureWidth);//width;
             int id = 0;
             string[] metafiles = Directory.GetFiles(dir, "*metadata.csv");
             //UnityEngine.Debug.Log(metafiles[0]);
@@ -421,29 +550,27 @@ namespace DefaultNamespace
                     string header = sr.ReadLine();
                     while (!sr.EndOfStream)
                     {
-                        if (id % 10000 == 0) yield return null;
-                        //string[] words = sr.ReadLine().Split(',');
+                        if (id % 5000 == 0) yield return null;
                         // If no cell name column. Otherwise change below.
-                        string cluster = sr.ReadLine(); // words[0];
+                        string[] words = sr.ReadLine().Split(',');
+                        string cluster = words[words.Length - 1];
+                        //string cluster = sr.ReadLine();
                         clusterDict[id++] = cluster;
                         if (!clusters.ContainsKey(cluster))
                         {
-                            if (colorDict.Count == 0)
+                            if (clusterCount >= SelectionToolCollider.instance.Colors.Length - 1)
                             {
-                                if (clusterCount >= SelectionToolCollider.instance.Colors.Length - 1)
-                                {
-                                    c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
-                                    ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
-                                }
-                                else
-                                {
-                                    c = SelectionToolCollider.instance.Colors[clusterCount];
-                                }
-
-                                c.a = 1;
-                                colorDict[cluster] = c;
+                                c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
+                                ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
                             }
-                            clusters[cluster] = new List<Vector2>();
+                            else
+                            {
+                                c = SelectionToolCollider.instance.Colors[clusterCount];
+                            }
+
+                            c.a = 1;
+                            colorDict[cluster] = c;
+                            clusters[cluster] = new List<Vector2Int>();
                             clusterCount++;
                         }
                     }

@@ -25,6 +25,7 @@ using Unity.Mathematics;
 using UnityEngine.XR;
 using Color = UnityEngine.Color;
 using UnityEngine.VFX;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -166,11 +167,23 @@ namespace CellexalVR.AnalysisLogic
                     {
                         if (i % 10000 == 0) yield return null;
                         string[] words = streamReader.ReadLine().Split(separators);
-                        x = (float.Parse(words[1])); // / 30.0f) + 1.5f;
-                        y = (float.Parse(words[2])); // / 30.0f) + 1;
-                        z = float.Parse(words[3]); // / 30.0f;
-                        // Cell cell = cellManager.AddCell(words[0]);
-                        pointCloudGenerator.AddGraphPoint(words[0], x, y, z);
+                        string cellName;
+                        // reading 2d graph or img pixel coordinates for spatial slice.
+                        if (words.Length == 2)
+                        {
+                            cellName = i.ToString();
+                            x = (float.Parse(words[0]));
+                            y = (float.Parse(words[1]));
+                            z = 0f;
+                        }
+                        else
+                        {
+                            cellName = words[0];
+                            x = (float.Parse(words[1]));
+                            y = (float.Parse(words[2]));
+                            z = float.Parse(words[3]);
+                        }
+                        pointCloudGenerator.AddGraphPoint(cellName, x, y, z);
                         int textureX = i % PointCloudGenerator.textureWidth;
                         int textureY = (i / PointCloudGenerator.textureWidth);
                         TextureHandler.instance.textureCoordDict[words[0]] = new Vector2Int(textureX, textureY);
@@ -178,8 +191,6 @@ namespace CellexalVR.AnalysisLogic
                     }
                 }
                 pointCloudGenerator.SpawnPoints(pc);
-                //pointCloudGenerator.ReadMetaData(fullPath);
-                // pointCloudGenerator.ColorPoints(pc);
                 GC.Collect();
             }
 
@@ -198,13 +209,6 @@ namespace CellexalVR.AnalysisLogic
                 pc2.originalName = pc2.GraphName;
             }
 
-            else
-            {
-                PointCloud pc1 = pointCloudGenerator.pointClouds[0];
-                pc1.targetPositionTextureMap = pc1.positionTextureMap;
-                pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
-            }
-
             attributeReader = gameObject.AddComponent<AttributeReader>();
             attributeReader.referenceManager = referenceManager;
             StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
@@ -214,10 +218,77 @@ namespace CellexalVR.AnalysisLogic
             ReadFacsFiles(path);
             ReadFilterFiles(CellexalUser.UserSpecificFolder);
             StartCoroutine(pointCloudGenerator.ReadMetaData(fullPath));
+            while (pointCloudGenerator.readingFile)
+                yield return null;
             StartCoroutine(pointCloudGenerator.CreateColorTextureMap());
+
+            while (pointCloudGenerator.creatingGraph)
+                yield return null;
+
+            PointCloud parentPC = pointCloudGenerator.pointClouds[0];
+
+            files = Directory.GetFiles(fullPath, "*.csv");
+            string[] imageFiles = Directory.GetFiles(fullPath, "*.png");
+            for (int i = 0; i < files.Length; i++)
+            {
+                int lineCount = 0;
+                string imageFile = imageFiles[i];
+                byte[] imageData = File.ReadAllBytes(imageFile);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                string[] names = files[i].Split('/');
+                string n = names[names.Length - 1].Split('.')[0];
+                HistoImage hi = pointCloudGenerator.CreateNewHistoImage();
+                hi.gameObject.name = n;
+                hi.texture = texture;
+                hi.transform.position = new Vector3(0f, 1f, (float)i / 5f);
+                using (StreamReader sr = new StreamReader(files[i]))
+                {
+                    string header = sr.ReadLine();
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        string[] words = line.Split(',');
+                        string cellName = words[0];
+                        float.TryParse(words[1], out float x);
+                        float.TryParse(words[2], out float y);
+                        int xCoord = (int)x;
+                        int yCoord = (int)y;
+                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y);
+                        if (lineCount % 100 == 0) yield return null;
+                        int textureX = lineCount % PointCloudGenerator.textureWidth;
+                        int textureY = (lineCount / PointCloudGenerator.textureWidth);
+                        hi.textureCoords[cellName] = new Vector2Int(textureX, textureY);
+                        //TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
+                        lineCount++;
+                    }
+                }
+                //hi.Initialize();
+                MeshRenderer mr = hi.image.GetComponent<MeshRenderer>();
+                mr.material.mainTexture = texture;
+                mr.material.SetTexture("_EmissionMap", texture);
+                PointCloudGenerator.instance.SpawnPoints(hi, parentPC);
+                HistoImageHandler.instance.images.Add(hi);
+            }
+
+
+
+
+
+            //else
+            //{
+            //    PointCloud pc1 = pointCloudGenerator.pointClouds[0];
+            //    pc1.targetPositionTextureMap = pc1.positionTextureMap;
+            //    pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
+            //}
+
+
 
             CellexalEvents.GraphsLoaded.Invoke();
         }
+
+
+
 
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.

@@ -39,7 +39,7 @@ namespace CellexalVR.Interaction
             namesOfThings = new List<Tuple<string, Definitions.Measurement>>();
             if (buildTree)
             {
-                // CellexalEvents.GraphsLoaded.AddListener(Init);
+                CellexalEvents.GraphsLoaded.AddListener(Init);
             }
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
@@ -128,6 +128,7 @@ namespace CellexalVR.Interaction
             {
                 CellexalLog.Log("Could not read facs. Caught error - " + e.StackTrace);
             }
+
             scoreMatrix = new int[longestNameLength + 1, longestNameLength + 1];
             // two sides of the score matrix are always the same
             for (int i = 0; i <= longestNameLength; ++i)

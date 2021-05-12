@@ -118,6 +118,12 @@ namespace CellexalVR.Interaction
                     keyPressedMaterial);
             }
 
+            if (referenceManager.referenceModelKeyboard)
+            {
+                referenceManager.referenceModelKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+                    keyPressedMaterial);
+            }
+
             /*
             // tell all the panels which materials they should use
             foreach (var panel in GetComponentsInChildren<ClickableTextPanel>(true))
