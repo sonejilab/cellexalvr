@@ -1,9 +1,14 @@
 # CellexalVR
-A tool for visualising and analysing single cell expression data in VR.
-CellexalVR was created by some masters students at Lund's University in cooperation with some scientists at the biomedical centre.
-Its purpose is to create a more intuitive way of performing single cell analysis on large datasets.
+CellexalVR is a virtual reality platform for the visualisation and analysis of single-cell gene expression data.
+
+Analysing data in virtual reality provides a fully immersive environment where the user can visualise and interact with the data without restriction, with a focus on data visibility, collaboration and cell selection.
+
 You can read more about this project at [our website](https://cellexalvr.med.lu.se).
 You can read more about how to use CellexalVR in our [manual](https://cellexalvr.med.lu.se/manual_introduction).
+
+![alt text](https://www.cellexalvr.med.lu.se/images/multiuser_withglobe_s.png)
+
+![alt text](https://www.cellexalvr.med.lu.se/images/velo2.png)
 
 ## Running CellexalVR
 You can download a compiled version of CellexalVR for Windows 10 from [our website](https://cellexalvr.med.lu.se/download).
@@ -72,6 +77,19 @@ There is a [CellManager](Assets/Scripts/AnalysisLogic/CellManager.cs) class that
 The values of all gene expressions are stored in an sqlite3 database. This database contains all non-zero expression values of all cells and all genes. The [SQLiter](Assets/Prefabs/Environment/SQLiter.prefab) gameobject contains the [SQLite](Assets/Scripts/AnalysisLogic/SQLite.cs) script that handles the queries that are sent to the database.
 
 The folder structure when it comes to prefabs, materials and scripts is hopefully somewhat intuitive. The [Assets/Prefabs](Assets/Prefabs), [Assets/Materials](Assets/Materials) and [Assets/Images](Assets/Images) folders all have a similar set of folders in them like <code>Graphs</code>, <code>Heatmaps</code>, <code>Menu</code> and so on. The [Assets/Scripts](Assets/Scripts) is organised after which namespace scripts are in. All scripts written by us are in the <code>CellexalVR</code> namespace and its subsequent nested namespaces.
+
+## Video Guides
+1. [Using the HTC Vive Controller](https://www.youtube.com/watch?v=sc-CdIeGr_8)
+2. [Extended Run-through](https://www.youtube.com/watch?v=owC2GlwvL7Q)
+3. [Multi-user Setup](https://www.youtube.com/watch?v=kyAL0t4VND8)
+4. [Multi-user Session](https://www.youtube.com/watch?v=pUTFBEtijXA)
+5. [Loading Data & Using the Menu](https://www.youtube.com/watch?v=0kyynx6zSxc)
+6. [Colouring by Gene Expression](https://www.youtube.com/watch?v=_hep2RtiiiA)
+7. [Making a Selection](https://www.youtube.com/watch?v=IuXZR0dHOiw)
+8. [Generating and Interacting with Heatmaps](https://www.youtube.com/watch?v=elpndTvboX8)
+9. [Generating and Interacting with Transcription Factor Networks](https://www.youtube.com/watch?v=zzL_xpkbcRE)
+10. [Colouring by FACS Measurement](https://www.youtube.com/watch?v=5VGhyjqRxUk)
+11. [Colouring by Attributes/Meta data](https://www.youtube.com/watch?v=XesoZI3JE6Q)
 
 ## Notes
 If you lose your config.xml there is a sample one at [Assets/StreamingAssets/sample_config.xml](Assets/StreamingAssets/sample_config.xml). If you run CellexalVR without a `config.xml` file, the sample one will be copied to `Config/config.xml`.
