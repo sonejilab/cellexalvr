@@ -88,8 +88,8 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
 
-            path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
-                              path + ".mds";
+            //path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
+            //                  path + ".mds";
 
             CellexalLog.Log("Started reading velocity file " + path);
 
@@ -146,7 +146,6 @@ namespace CellexalVR.AnalysisLogic
 
                     if (counter<3)
                     {
-                        UnityEngine.Debug.Log("(" + diff.x + ", " + diff.y + ", " + diff.z + ")");
                         //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
                         counter++;
                     }
@@ -167,6 +166,7 @@ namespace CellexalVR.AnalysisLogic
                 emitter.Speed = speed;
                 emitter.UseGraphPointColors = useGraphPointColors;
                 emitter.UseArrowParticle = useArrowParticle;
+                emitter.averageVelocityArrowPrefab = averageVelocityArrowPrefab;
                 graph.velocityParticleEmitter = emitter;
                 if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
                 {
