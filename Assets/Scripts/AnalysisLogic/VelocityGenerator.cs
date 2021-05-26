@@ -73,7 +73,7 @@ namespace CellexalVR.AnalysisLogic
             //summertwerk
             if (referenceManager.inputReader.h5readers.Count > 0)
             {
-                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value ,path, subGraphName));
+                StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value, path, subGraphName));
             }
             else
                 StartCoroutine(ReadVelocityParticleSystem(path, subGraphName));
@@ -87,9 +87,6 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return null;
             }
-
-            //path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
-            //                  path + ".mds";
 
             CellexalLog.Log("Started reading velocity file " + path);
 
@@ -144,7 +141,7 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter<3)
+                    if (counter < 3)
                     {
                         //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
                         counter++;
@@ -167,6 +164,7 @@ namespace CellexalVR.AnalysisLogic
                 emitter.UseGraphPointColors = useGraphPointColors;
                 emitter.UseArrowParticle = useArrowParticle;
                 emitter.averageVelocityArrowPrefab = averageVelocityArrowPrefab;
+                emitter.AverageVelocitesResolution = averageVelocityResolution;
                 graph.velocityParticleEmitter = emitter;
                 if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
                 {
@@ -235,7 +233,7 @@ namespace CellexalVR.AnalysisLogic
                 Vector3 diff = new Vector3(diffX, diffY, diffZ);
                 //Method
                 Vector3 diffScaled = diff * 30; //arbitrary scaling, ofcourse.. DUH!
-                                                  
+
                 diffScaled /= originalGraph.longestAxis;
                 if (point != null)
                     velocities[point] = diffScaled / 5f;
