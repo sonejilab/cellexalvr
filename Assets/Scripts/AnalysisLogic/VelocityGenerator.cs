@@ -21,6 +21,7 @@ namespace CellexalVR.AnalysisLogic
         public GameObject particleSystemPrefab;
         public Material arrowMaterial;
         public Material standardMaterial;
+        public GameObject averageVelocityArrowPrefab;
 
         private float frequency = 1f;
         private float speed = 8f;
@@ -29,6 +30,9 @@ namespace CellexalVR.AnalysisLogic
         private bool graphPointsToggled = false;
         private bool useGraphPointColors = false;
         private bool useArrowParticle = true;
+        private bool emitAverageVelocity = false;
+        private int averageVelocityResolution = 8;
+
 
         private string particleSystemGameObjectName = "Velocity Particle System";
         private void Start()
@@ -252,6 +256,7 @@ namespace CellexalVR.AnalysisLogic
             emitter.Speed = speed;
             emitter.UseGraphPointColors = useGraphPointColors;
             emitter.UseArrowParticle = useArrowParticle;
+            emitter.EmitAverageVelocities = emitAverageVelocity;
             graph.velocityParticleEmitter = emitter;
             if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
             {
@@ -402,6 +407,38 @@ namespace CellexalVR.AnalysisLogic
                 g.velocityParticleEmitter.UseArrowParticle = useArrowParticle;
             }
             referenceManager.velocitySubMenu.particleMaterialText.text = "Mode: " + (useArrowParticle ? "Arrow" : "Circle");
+        }
+
+        /// <summary>
+        /// Toggles the average velcoity arrows in all active graphs showing velocity information.
+        /// </summary>
+        public void ToggleAverageVelocity()
+        {
+            emitAverageVelocity = !emitAverageVelocity;
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.EmitAverageVelocities = emitAverageVelocity;
+            }
+        }
+
+        /// <summary>
+        /// Increases the current average velocity resolution, negative values will decrease the resolution. Resolution can not go below 1.
+        /// </summary>
+        /// <param name="value">The value to add to the current resolution.</param>
+        public void ChangeAverageVelocityResolution(int value)
+        {
+            int newResolution = averageVelocityResolution + value;
+            if (newResolution < 1)
+            {
+                newResolution = 1;
+            }
+            averageVelocityResolution = newResolution;
+            referenceManager.velocitySubMenu.averageVelocityResolutionText.text = "Resolution: " + newResolution;
+
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.AverageVelocitesResolution = newResolution;
+            }
         }
 
         /*

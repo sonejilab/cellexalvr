@@ -975,6 +975,18 @@ namespace CellexalVR.Multiuser
                 activate);
         }
 
+        public void SendMessageToggleAverageVelocity()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleAverageVelocity", PhotonTargets.Others);
+        }
+
+        public void SendMessageChangeAverageVelocityResolution(int value)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageChangeAverageVelocityResolution", PhotonTargets.Others, value);
+        }
+
         #endregion
 
         #region Filters

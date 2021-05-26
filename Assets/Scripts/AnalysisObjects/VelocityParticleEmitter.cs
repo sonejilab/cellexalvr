@@ -15,6 +15,7 @@ namespace CellexalVR.AnalysisObjects
         public int itemsPerFrame = 1000;
         public Material arrowParticleMaterial;
         public Material circleParticleMaterial;
+        public GameObject averageVelocityArrowPrefab;
 
         private float arrowEmitRate;
         public float ArrowEmitRate
@@ -88,6 +89,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        private List<GameObject> averageVelocityGameObjects = new List<GameObject>();
         private float itemsPerFrameConstant;
         private bool useGraphPointColors;
         public bool UseGraphPointColors { get; set; }
@@ -117,6 +119,114 @@ namespace CellexalVR.AnalysisObjects
                     }
                 }
             }
+        }
+
+        public List<Tuple<Vector3, Vector3>> AverageVelocities = new List<Tuple<Vector3, Vector3>>();
+
+        private int averageVelocitiesResolution = 8;
+        public int AverageVelocitesResolution
+        {
+            get => averageVelocitiesResolution;
+            set
+            {
+                averageVelocitiesResolution = value;
+                EmitAverageVelocities = true;
+            }
+        }
+
+        private bool emitAverageVelocities = false;
+        public bool EmitAverageVelocities
+        {
+            get => emitAverageVelocities;
+            set
+            {
+
+                AverageVelocities.Clear();
+                foreach (GameObject arrow in averageVelocityGameObjects)
+                {
+                    Destroy(arrow);
+                }
+                averageVelocityGameObjects.Clear();
+
+                if (value)
+                {
+                    float[,,] averageVelocitiesX = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+                    float[,,] averageVelocitiesY = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+                    float[,,] averageVelocitiesZ = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+                    int[,,] averageVelocitesNumberOfPoints = new int[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+
+                    foreach (Tuple<Graph.GraphPoint, Vector3> v in emitOrder)
+                    {
+                        Vector3 pos = v.Item1.Position;
+                        int indexX = (int)((pos.x + 0.5f) * AverageVelocitesResolution); // multiply with resolution and dispose of decimals
+                        int indexY = (int)((pos.y + 0.5f) * AverageVelocitesResolution);
+                        int indexZ = (int)((pos.z + 0.5f) * AverageVelocitesResolution);
+
+                        averageVelocitiesX[indexX, indexY, indexZ] += v.Item2.x;
+                        averageVelocitiesY[indexX, indexY, indexZ] += v.Item2.y;
+                        averageVelocitiesZ[indexX, indexY, indexZ] += v.Item2.z;
+
+                        // add up the number of points in each section for later
+                        averageVelocitesNumberOfPoints[indexX, indexY, indexZ]++;
+                    }
+
+                    // offset is the length if half a section (sections are always cubes)
+                    float offset = 1f / (AverageVelocitesResolution * 2f);
+                    // the graphs have (0,0,0) as their center position, not a corner
+                    offset -= 0.5f;
+
+                    for (int i = 0; i < AverageVelocitesResolution; ++i)
+                    {
+                        for (int j = 0; j < AverageVelocitesResolution; ++j)
+                        {
+                            for (int k = 0; k < AverageVelocitesResolution; ++k)
+                            {
+                                Vector3 pos = new Vector3(
+                                    (float)i / AverageVelocitesResolution + offset,
+                                    (float)j / AverageVelocitesResolution + offset,
+                                    (float)k / AverageVelocitesResolution + offset
+                                );
+                                // average out each section
+                                int numPoints = averageVelocitesNumberOfPoints[i, j, k];
+                                if (numPoints > 0)
+                                {
+                                    Vector3 averageVelocity = new Vector3(
+                                        averageVelocitiesX[i, j, k] /= numPoints,
+                                        averageVelocitiesY[i, j, k] /= numPoints,
+                                        averageVelocitiesZ[i, j, k] /= numPoints
+                                    );
+
+                                    AverageVelocities.Add(new Tuple<Vector3, Vector3>(pos, averageVelocity));
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (Tuple<Vector3, Vector3> averageVelocity in AverageVelocities)
+                    {
+
+                        Vector3 pos = averageVelocity.Item1 + averageVelocity.Item2 / 2f;
+
+                        GameObject newArrow = Instantiate(averageVelocityArrowPrefab, transform);
+                        newArrow.transform.localPosition = pos;
+                        newArrow.transform.LookAt(graph.transform.TransformPoint(averageVelocity.Item1 + averageVelocity.Item2));
+
+                        // 0,0,0 is the middle of the shaft, local positions for the arrows subobjects must be halfed
+                        float halfMagnitude = averageVelocity.Item2.magnitude / 2f;
+
+                        Transform shaft = newArrow.transform.Find("arrow_shaft");
+                        shaft.localScale = new Vector3(shaft.localScale.x, halfMagnitude, shaft.localScale.z);
+
+                        Transform head = newArrow.transform.Find("arrow_head");
+                        head.localPosition = new Vector3(0, 0, halfMagnitude);
+
+                        averageVelocityGameObjects.Add(newArrow);
+                    }
+                }
+
+                emitAverageVelocities = value;
+            }
+
         }
 
 

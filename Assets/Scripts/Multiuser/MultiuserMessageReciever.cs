@@ -1453,6 +1453,15 @@ namespace CellexalVR.Multiuser
             veloButton.ToggleOutline(true);
         }
 
+        public void SendMessageToggleAverageVelocity()
+        {
+            referenceManager.velocityGenerator.ToggleAverageVelocity();
+        }
+
+        public void SendMessageChangeAverageVelocityResolution(int value)
+        {
+            referenceManager.velocityGenerator.ChangeAverageVelocityResolution(value);
+        }
         #endregion
 
         #region Filters
