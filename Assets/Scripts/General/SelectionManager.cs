@@ -712,6 +712,7 @@ namespace CellexalVR.General
         /// </summary>
         public void RecolorSelectionPoints()
         {
+            print($"recolor points: {selectedCells}");
             foreach (Graph.GraphPoint gp in selectedCells)
             {
                 foreach (Graph.GraphPoint g in referenceManager.cellManager.GetCell(gp.Label).GraphPoints)

@@ -12,6 +12,7 @@ namespace CellexalVR.General
         public static UnityEvent SelectionStarted = new UnityEvent();
         public static UnityEvent SelectionConfirmed = new UnityEvent();
         public static UnityEvent SelectionCanceled = new UnityEvent();
+        public static UnityEvent SelectedFromFile = new UnityEvent();
 
         public static UnityEvent BeginningOfHistoryReached = new UnityEvent();
         public static UnityEvent BeginningOfHistoryLeft = new UnityEvent();

@@ -255,13 +255,23 @@ namespace CellexalVR.AnalysisLogic
             }
             //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
-            string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
+            //string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
+            string timeSelectionPath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt.time").UnFixFilePath();
+            string groupingFilePath;
+            if (File.Exists(timeSelectionPath))
+            {
+                groupingFilePath = timeSelectionPath;
+            }
+            else
+            {
+                groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
+            }
             string topGenesNr = "250";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
             string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
             //string args = "cellexalObj" + ", \"" + groupingFilepath + "\", " + topGenesNr + ", \"" + outputFilePath + "\", \"" + statsMethod + "\"";
-            string args = CellexalUser.UserSpecificFolder + " " + groupingFilepath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
+            string args = CellexalUser.UserSpecificFolder + " " + groupingFilePath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
 
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
 
@@ -311,6 +321,11 @@ namespace CellexalVR.AnalysisLogic
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+            if (File.Exists(timeSelectionPath))
+            {
+                referenceManager.inputReader.ReadSelectionFile(timeSelectionPath, true);
+            }
+
             CellexalEvents.CommandFinished.Invoke(true);
         }
 

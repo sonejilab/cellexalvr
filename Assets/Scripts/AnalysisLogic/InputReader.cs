@@ -518,8 +518,79 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
         }
 
+        /// <summary>
+        /// Make selection from reading either previously made selection in session or an externally made selection.
+        /// File contains cell ids and group colour and name of graph it was selected from.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="select"></param>
+        /// <returns></returns>
+        [ConsoleCommand("inputReader", aliases: new string[] { "readselectionfile", "rsf" })]
+        public List<Graph.GraphPoint> ReadSelectionFile(string path, bool select = true)
+        {
+            //string dataFolder = CellexalUser.UserSpecificFolder;
+            List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
+            if (!File.Exists(path))
+            {
+                CellexalLog.Log("Could not find file:" + path);
+                return new List<Graph.GraphPoint>();
+            }
 
-        [ConsoleCommand("inputReader", aliases: new string[] {"selectfromprevious", "sfp"})]
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+            SelectionManager selectionManager = referenceManager.selectionManager;
+            selectionManager.CancelSelection();
+            GraphManager graphManager = referenceManager.graphManager;
+            int numPointsAdded = 0;
+            while (!streamReader.EndOfStream)
+            {
+                string line = streamReader.ReadLine();
+                string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                int group;
+                UnityEngine.Color groupColor;
+
+                try
+                {
+                    // group = int.Parse(words[3]);
+                    string colorString = words[1];
+                    ColorUtility.TryParseHtmlString(colorString, out groupColor);
+                    if (!CellexalConfig.Config.SelectionToolColors.Any(x => CompareColor(x, groupColor)))
+                    {
+                        referenceManager.settingsMenu.AddSelectionColor(groupColor);
+                        referenceManager.settingsMenu.unsavedChanges = false;
+                    }
+                    group = referenceManager.selectionToolCollider.GetColorIndex(groupColor);
+                }
+                catch (FormatException)
+                {
+                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
+                        path));
+                    streamReader.Close();
+                    fileStream.Close();
+                    CellexalEvents.CommandFinished.Invoke(false);
+                    return new List<Graph.GraphPoint>();
+                }
+
+                Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
+                selection.Add(graphPoint);
+                if (select)
+                {
+                    selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]),
+                        group, false, groupColor);
+                    numPointsAdded++;
+                }
+            }
+
+            CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+            CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.SelectedFromFile.Invoke();
+            streamReader.Close();
+            fileStream.Close();
+            return selection;
+        }
+
+
+        [ConsoleCommand("inputReader", aliases: new string[] { "selectfromprevious", "sfp" })]
         public void ReadAndSelectPreviousSelection(int index)
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
@@ -539,42 +610,82 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            FileStream fileStream = new FileStream(files[index], FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-            var selectionManager = referenceManager.selectionManager;
-            GraphManager graphManager = referenceManager.graphManager;
-            int numPointsAdded = 0;
-            while (!streamReader.EndOfStream)
-            {
-                string line = streamReader.ReadLine();
-                string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
-                int group = 0;
-                UnityEngine.Color groupColor;
-
-                try
-                {
-                    group = int.Parse(words[3]);
-                    ColorUtility.TryParseHtmlString(words[1], out groupColor);
-                }
-                catch (FormatException)
-                {
-                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
-                        files[index]));
-                    streamReader.Close();
-                    fileStream.Close();
-                    CellexalEvents.CommandFinished.Invoke(false);
-                    return;
-                }
-
-                selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false,
-                    groupColor);
-                numPointsAdded++;
-            }
-
-            CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
-            CellexalEvents.CommandFinished.Invoke(true);
-            streamReader.Close();
-            fileStream.Close();
+            string path = files[index];
+            ReadSelectionFile(path);
         }
+
+        /// <summary>
+        /// Helper function used to decide if two colors are (by some margin) equal.
+        /// E.g. Used when reading in selections and deciding if a new color needs to be added or if it already exists in the config.
+        /// Alpha channel is ignored.
+        /// </summary>
+        /// <param name="a">First color.</param>
+        /// <param name="b">Second color.</param>
+        /// <param name="tolerance">Function returns true if the distance between them are equal or lower than this value.</param>
+        public static bool CompareColor(UnityEngine.Color a, UnityEngine.Color b, float tolerance = 0.1f)
+        {
+            float diff = Vector3.Distance(new Vector3(a.r, a.g, a.b),
+                new Vector3(b.r, b.g, b.b));
+            return diff <= tolerance;
+        }
+
+
+        //[ConsoleCommand("inputReader", aliases: new string[] {"selectfromprevious", "sfp"})]
+        //public void ReadAndSelectPreviousSelection(int index)
+        //{
+        //    string dataFolder = CellexalUser.UserSpecificFolder;
+        //    string[] files = Directory.GetFiles(dataFolder, "selection*.txt");
+        //    if (files.Length == 0)
+        //    {
+        //        CellexalLog.Log("No previous selections found.");
+        //        CellexalEvents.CommandFinished.Invoke(false);
+        //        return;
+        //    }
+        //    else if (index < 0 || index >= files.Length)
+        //    {
+        //        CellexalLog.Log(string.Format(
+        //            "Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index,
+        //            files.Length - 1));
+        //        CellexalEvents.CommandFinished.Invoke(false);
+        //        return;
+        //    }
+
+        //    FileStream fileStream = new FileStream(files[index], FileMode.Open);
+        //    StreamReader streamReader = new StreamReader(fileStream);
+        //    var selectionManager = referenceManager.selectionManager;
+        //    GraphManager graphManager = referenceManager.graphManager;
+        //    int numPointsAdded = 0;
+        //    while (!streamReader.EndOfStream)
+        //    {
+        //        string line = streamReader.ReadLine();
+        //        string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+        //        int group = 0;
+        //        UnityEngine.Color groupColor;
+
+        //        try
+        //        {
+        //            group = int.Parse(words[3]);
+        //            ColorUtility.TryParseHtmlString(words[1], out groupColor);
+        //        }
+        //        catch (FormatException)
+        //        {
+        //            CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
+        //                files[index]));
+        //            streamReader.Close();
+        //            fileStream.Close();
+        //            CellexalEvents.CommandFinished.Invoke(false);
+        //            return;
+        //        }
+
+        //        selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]), group, false,
+        //            groupColor);
+        //        numPointsAdded++;
+        //    }
+
+        //    CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+        //    CellexalEvents.CommandFinished.Invoke(true);
+        //    streamReader.Close();
+        //    fileStream.Close();
+        //}
     }
 }

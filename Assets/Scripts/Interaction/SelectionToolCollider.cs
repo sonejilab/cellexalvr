@@ -1,3 +1,4 @@
+using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
@@ -273,6 +274,43 @@ namespace CellexalVR.Interaction
                     radialMenu.menuButtons[2].GetComponentInChildren<Image>().sprite = selectionToolShapeButtons[buttonIndexDown];
                 }
             }
+        }
+
+        public int GetColorIndex(string colorString)
+        {
+            Color[] colorArray; // = new Color[CellexalConfig.Config.SelectionToolColors.Length];
+            // if using spectator mode or for other reasons the selectionToolCollider hasnt been activated
+            // return the index from the config.
+            colorArray = Colors.Length == 0
+                ? CellexalConfig.Config.SelectionToolColors
+                : referenceManager.selectionToolCollider.Colors;
+
+            for (int i = 0; i < colorArray.Length; i++)
+            {
+                Color selectionColor = colorArray[i];
+                string selectionColorString = "#" + ColorUtility.ToHtmlStringRGB(selectionColor);
+                if (selectionColorString.Equals(colorString)) return i;
+            }
+
+            return -1;
+        }
+
+        public int GetColorIndex(Color color)
+        {
+            Color[] colorArray; // = new Color[CellexalConfig.Config.SelectionToolColors.Length];
+            // if using spectator mode or for other reasons the selectionToolCollider hasnt been activated
+            // return the index from the config.
+            colorArray = Colors.Length == 0
+                ? CellexalConfig.Config.SelectionToolColors
+                : referenceManager.selectionToolCollider.Colors;
+
+            for (int i = 0; i < colorArray.Length; i++)
+            {
+                Color selectionColor = colorArray[i];
+                if (InputReader.CompareColor(selectionColor, color)) return i;
+            }
+
+            return -1;
         }
 
     }
