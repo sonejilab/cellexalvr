@@ -1424,8 +1424,8 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
             var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
-
-
+            //string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
+            //                  shorterFilePath + ".mds";
             Graph graph = referenceManager.graphManager.FindGraph(subGraphName);
             //if (subGraphName != string.Empty)
             //{
@@ -1437,7 +1437,7 @@ namespace CellexalVR.Multiuser
             //}
             if (activate)
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(shorterFilePath, subGraphName);
+                referenceManager.velocityGenerator.ReadVelocityFile(veloButton.FilePath, subGraphName);
             }
             else
             {
@@ -1453,12 +1453,14 @@ namespace CellexalVR.Multiuser
             veloButton.ToggleOutline(true);
         }
 
-        public void SendMessageToggleAverageVelocity()
+        [PunRPC]
+        public void RecieveMessageToggleAverageVelocity()
         {
             referenceManager.velocityGenerator.ToggleAverageVelocity();
         }
 
-        public void SendMessageChangeAverageVelocityResolution(int value)
+        [PunRPC]
+        public void RecieveMessageChangeAverageVelocityResolution(int value)
         {
             referenceManager.velocityGenerator.ChangeAverageVelocityResolution(value);
         }
