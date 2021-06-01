@@ -256,11 +256,10 @@ namespace CellexalVR.AnalysisLogic
             //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
             //string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string timeSelectionPath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt.time").UnFixFilePath();
             string groupingFilePath;
-            if (File.Exists(timeSelectionPath))
+            if (selectionManager.groupCount == 1)
             {
-                groupingFilePath = timeSelectionPath;
+                groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt.time").UnFixFilePath();
             }
             else
             {
@@ -321,9 +320,9 @@ namespace CellexalVR.AnalysisLogic
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-            if (File.Exists(timeSelectionPath))
+            if (selectionManager.groupCount == 1)
             {
-                referenceManager.inputReader.ReadSelectionFile(timeSelectionPath, true);
+                referenceManager.inputReader.ReadSelectionFile(groupingFilePath, true);
             }
 
             CellexalEvents.CommandFinished.Invoke(true);

@@ -259,7 +259,14 @@ namespace CellexalVR.Interaction
             // the smaller the highlight quad becomes, the larger the text has to become
             heatmap.highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth,
                 0.003f / highlightMarkerHeight, 0.003f);
+
+            if (currentGroup == group) return;
+            currentGroup = group;
             ResetHeatmapHighlight(false);
+
+            cellsToHighlight = cellManager.GetCells(group, heatmap.cells);
+            if (cellsToHighlight.Length <= 0) return;
+            cellManager.HighlightCells(cellsToHighlight, true, group);
         }
 
         /// <summary>
@@ -609,6 +616,7 @@ namespace CellexalVR.Interaction
                 cellManager.HighlightCells(cellsToHighlight, false, -1);
                 cellsToHighlight = new Cell[0];
             }
+            currentGroup = -1;
             if (resetText) heatmap.ResetHeatmapHighlight();
         }
 
