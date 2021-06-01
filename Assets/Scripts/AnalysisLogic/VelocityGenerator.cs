@@ -31,7 +31,7 @@ namespace CellexalVR.AnalysisLogic
         private bool useGraphPointColors = false;
         private bool useArrowParticle = true;
         private bool emitAverageVelocity = false;
-        private int averageVelocityResolution = 8;
+        private int averageVelocityResolution = 20;
 
 
         private string particleSystemGameObjectName = "Velocity Particle System";

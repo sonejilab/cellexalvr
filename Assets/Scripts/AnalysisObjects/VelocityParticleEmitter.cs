@@ -123,7 +123,7 @@ namespace CellexalVR.AnalysisObjects
 
         public List<Tuple<Vector3, Vector3, float>> AverageVelocities = new List<Tuple<Vector3, Vector3, float>>();
 
-        private int averageVelocitiesResolution = 8;
+        private int averageVelocitiesResolution = 20;
         public int AverageVelocitesResolution
         {
             get => averageVelocitiesResolution;
