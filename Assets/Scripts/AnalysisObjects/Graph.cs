@@ -1164,12 +1164,16 @@ namespace CellexalVR.AnalysisObjects
             byte redChannel;
             if (i == -1)
             {
-                greenChannel = isTransparent ? (byte)190 : greenChannel;
                 redChannel = 255;
             }
             else
             {
                 redChannel = (byte)(nbrOfExpressionColors + i);
+            }
+
+            if (!outline)
+            {
+                greenChannel = isTransparent ? (byte)190 : greenChannel;
             }
             Color32 finalColor = new Color32(redChannel, greenChannel, tex.b, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1, new Color32[] { finalColor });
