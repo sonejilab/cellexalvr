@@ -1164,6 +1164,7 @@ namespace CellexalVR.AnalysisObjects
             byte redChannel;
             if (i == -1)
             {
+                greenChannel = isTransparent ? (byte)190 : greenChannel;
                 redChannel = 255;
             }
             else
