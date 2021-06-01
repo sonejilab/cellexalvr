@@ -121,7 +121,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        public List<Tuple<Vector3, Vector3>> AverageVelocities = new List<Tuple<Vector3, Vector3>>();
+        public List<Tuple<Vector3, Vector3, float>> AverageVelocities = new List<Tuple<Vector3, Vector3, float>>();
 
         private int averageVelocitiesResolution = 8;
         public int AverageVelocitesResolution
@@ -170,6 +170,15 @@ namespace CellexalVR.AnalysisObjects
                         averageVelocitesNumberOfPoints[indexX, indexY, indexZ]++;
                     }
 
+                    int maxNumPoints = 0;
+                    foreach (int i in averageVelocitesNumberOfPoints)
+                    {
+                        if (maxNumPoints < i)
+                        {
+                            maxNumPoints = i;
+                        }
+                    }
+
                     // offset is the length if half a section (sections are always cubes)
                     float offset = 1f / (AverageVelocitesResolution * 2f);
                     // the graphs have (0,0,0) as their center position, not a corner
@@ -188,6 +197,11 @@ namespace CellexalVR.AnalysisObjects
                                 );
                                 // average out each section
                                 int numPoints = averageVelocitesNumberOfPoints[i, j, k];
+                                if (maxNumPoints < numPoints)
+                                {
+                                    maxNumPoints = numPoints;
+                                }
+
                                 if (numPoints > 0)
                                 {
                                     Vector3 averageVelocity = new Vector3(
@@ -196,13 +210,24 @@ namespace CellexalVR.AnalysisObjects
                                         averageVelocitiesZ[i, j, k] /= numPoints
                                     );
 
-                                    AverageVelocities.Add(new Tuple<Vector3, Vector3>(pos, averageVelocity));
+                                    AverageVelocities.Add(new Tuple<Vector3, Vector3, float>(pos, averageVelocity, (float)numPoints / maxNumPoints));
                                 }
                             }
                         }
                     }
 
-                    foreach (Tuple<Vector3, Vector3> averageVelocity in AverageVelocities)
+                    float longestAveragevelocity = 0f;
+
+                    foreach (Tuple<Vector3, Vector3, float> averageVelocity in AverageVelocities)
+                    {
+                        if (longestAveragevelocity < averageVelocity.Item2.magnitude)
+                        {
+                            longestAveragevelocity = averageVelocity.Item2.magnitude;
+                        }
+                    }
+
+
+                    foreach (Tuple<Vector3, Vector3, float> averageVelocity in AverageVelocities)
                     {
 
                         Vector3 pos = averageVelocity.Item1 + averageVelocity.Item2 / 2f;
@@ -214,11 +239,23 @@ namespace CellexalVR.AnalysisObjects
                         // 0,0,0 is the middle of the shaft, local positions for the arrows subobjects must be halfed
                         float halfMagnitude = averageVelocity.Item2.magnitude / 2f;
 
+                        float weight = averageVelocity.Item2.magnitude / longestAveragevelocity;
+                        float scaleXZ = Mathf.Clamp(weight * 10f, 0f, 1f);
+
                         Transform shaft = newArrow.transform.Find("arrow_shaft");
-                        shaft.localScale = new Vector3(shaft.localScale.x, halfMagnitude, shaft.localScale.z);
+                        shaft.localScale = new Vector3(shaft.localScale.x * scaleXZ, halfMagnitude, shaft.localScale.z * scaleXZ);
 
                         Transform head = newArrow.transform.Find("arrow_head");
                         head.localPosition = new Vector3(0, 0, halfMagnitude);
+                        head.localScale = Vector3.Scale(head.localScale, new Vector3(scaleXZ, scaleXZ, scaleXZ));
+
+                        Color color = shaft.GetComponent<MeshRenderer>().material.color;
+                        //color.a = averageVelocity.Item3 * 10f;
+                        color.r = weight;
+                        color.b = 1f - weight;
+                        // leak materials like a madman
+                        shaft.GetComponent<MeshRenderer>().material.color = color;
+                        head.GetComponent<MeshRenderer>().material.color = color;
 
                         averageVelocityGameObjects.Add(newArrow);
                     }
