@@ -42,7 +42,7 @@ namespace CellexalVR.Interaction
             laserPointer.PointerGrab += OnPointerGrab;
             laserPointer.PointerUnGrab += OnPointerUnGrab;
             layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer")
-                                                                 | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer") | 1 << LayerMask.NameToLayer("Ignore Raycast");
+                                                                 | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");// | 1 << LayerMask.NameToLayer("Ignore Raycast");
         }
 
         private void Update()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AnalysisLogic;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Slicing;
 using DefaultNamespace;
@@ -69,6 +70,8 @@ namespace CellexalVR.Spatial
         private Material boxMaterial;
         private ToggleSlicingMenuButton toggleSlicingMenuButton;
         private VisualEffect vfx;
+        private int singleSliceViewMode = -1;
+
         public Vector3 cullPos1 = new Vector3(.5f, .5f, .5f);
         public Vector3 cullPos2 = new Vector3(.5f, .5f, .5f);
 
@@ -84,40 +87,32 @@ namespace CellexalVR.Spatial
             boxMaterial.color = c;
             toggleSlicingMenuButton = GetComponentInChildren<ToggleSlicingMenuButton>(true);
             vfx = GetComponentInParent<VisualEffect>();
-            SetHandlePositions();
-            // graph = GetComponentInParent<Graph>();
-            // lr = GetComponentInChildren<LineRenderer>();
-            // lr.useWorldSpace = false;
-            // lr.SetPositions(new Vector3[] {t1.localPosition, t2.localPosition});
-            //
-            // switch (axis)
-            // {
-            //     case 0:
-            //         currentTransforms[0] = t1;
-            //         currentTransforms[1] = t2;
-            //         lr.transform.localRotation = Quaternion.identity;
-            //         break;
-            //     case 1:
-            //         currentTransforms[0] = t3;
-            //         currentTransforms[1] = t4;
-            //         lr.transform.localRotation = Quaternion.Euler(90, 0, 0);
-            //         break;
-            //     case 2:
-            //         currentTransforms[0] = t5;
-            //         currentTransforms[1] = t6;
-            //         // lr.transform.localRotation = Quaternion.Euler(0, 0, 180);
-            //         break;
-            // }
         }
 
         private void Update()
-        { 
+        {
             cullPos1.x = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[0].transform.position).x);
             cullPos1.y = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[1].transform.position).y);
             cullPos1.z = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[2].transform.position).z);
-            cullPos2.x = (Math.Min(0.6f,transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
-            cullPos2.y = (Math.Min(0.6f,transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
-            cullPos2.z = (Math.Min(0.6f,transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
+
+            if (singleSliceViewMode == 0)
+            {
+                cullingWalls[3].transform.position = cullingWalls[0].transform.position;
+                cullingWalls[3].transform.position += new Vector3(-0.1f, 0, 0);
+            }
+            else if (singleSliceViewMode == 1)
+            {
+                cullingWalls[4].transform.position = cullingWalls[1].transform.position;
+                cullingWalls[4].transform.position += new Vector3(0, -0.1f, 0);
+            }
+            else if (singleSliceViewMode == 2)
+            {
+                cullingWalls[5].transform.position = cullingWalls[2].transform.position;
+                cullingWalls[5].transform.position += new Vector3(0, 0, -0.1f);
+            }
+            cullPos2.x = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
+            cullPos2.y = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
+            cullPos2.z = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
             vfx.SetVector3("CullingCubePos", cullPos1);
             vfx.SetVector3("CullingCube2Pos", cullPos2);
         }
@@ -127,8 +122,52 @@ namespace CellexalVR.Spatial
             foreach (CullingWall cw in cullingWalls)
             {
                 cw.SetStartPosition();
-                //cw.handle.transform.position = cw.transform.TransformPoint(cw.handle.transform.localPosition);
             }
+        }
+
+        public void SingleSliceViewMode(bool toggle, int axis)
+        {
+            //reset handle positions back when deactivate....
+            singleSliceViewMode = toggle ? axis : -1;
+            CullingWall cwToLock = cullingWalls[axis + 3];
+            cwToLock.GetComponent<InteractableObjectBasic>().enabled = !toggle;
+            cwToLock.handle.SetActive(false);
+            foreach (CullingWall cullingWall in cullingWalls)
+            {
+                if (cullingWall == cwToLock) continue;
+                InteractableObjectOneAxis interactable = cullingWall.GetComponent<InteractableObjectOneAxis>();
+                cullingWall.transform.localPosition = interactable.startPosition;
+                interactable.enabled = true;
+                cullingWall.handle.SetActive(true);
+            }
+            foreach (ChangeCullingAxisButton b in GetComponentsInChildren<ChangeCullingAxisButton>())
+            {
+                b.SetButtonActivated(true);
+            }
+        }
+
+        public void SliceBySliceAnimation()
+        {
+            StartCoroutine(SliceBySliceAnimationCoroutine());
+        }
+
+        private IEnumerator SliceBySliceAnimationCoroutine()
+        {
+            CullingWall cw = cullingWalls[singleSliceViewMode];
+            float t = 0f;
+            float animationTime = 2f;
+            Vector3 startPos = cw.transform.localPosition;
+            Vector3 targetPos = cw.transform.localPosition;
+            targetPos[singleSliceViewMode] -= 1f * Math.Sign(targetPos[singleSliceViewMode]);
+
+            while (t < animationTime)
+            {
+                //float progress = Mathf.SmoothStep(0, animationTime, t / animationTime);
+                cw.transform.localPosition = Vector3.Lerp(startPos, targetPos, t / animationTime);
+                t += (Time.deltaTime);
+                yield return null;
+            }
+
         }
 
         public void SliceGraphManual()
@@ -141,11 +180,12 @@ namespace CellexalVR.Spatial
         {
             StartCoroutine(SliceAnimation());
             StartCoroutine(graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices));
+            //graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices);
         }
 
         public void MorphGraph()
         {
-            StartCoroutine(pointCloud.Morph());
+            pointCloud.Morph();
         }
 
         public void ToggleManualSlicer(bool toggle)
@@ -181,16 +221,16 @@ namespace CellexalVR.Spatial
             slicingAnimation.enabled = true;
             sliceAnimationActive = true;
             float t = 0f;
-            float animationTime = 3.0f;
+            float animationTime = 2.0f;
 
-            while (t < animationTime || PointCloudGenerator.instance.creatingGraph)
+            while (t < animationTime || sliceAnimationActive)
             {
                 t += Time.deltaTime;
                 yield return null;
             }
 
             slicingAnimation.enabled = false;
-            gameObject.SetActive(false);
+            Active = false;
             pc.GetComponent<VisualEffect>().enabled = false;
             if (gameObject.activeSelf)
             {

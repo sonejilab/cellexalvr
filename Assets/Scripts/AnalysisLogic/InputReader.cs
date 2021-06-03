@@ -198,8 +198,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 PointCloud pc1 = pointCloudGenerator.pointClouds[0];
                 PointCloud pc2 = pointCloudGenerator.pointClouds[1];
-                pc1.targetPositionTextureMap = pc2.positionTextureMap;
-                pc2.targetPositionTextureMap = pc1.positionTextureMap;
+                pc1.morphTexture = pc2.positionTextureMap;
+                pc2.morphTexture = pc1.positionTextureMap;
                 pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
                 pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
                 pc1.otherName = pc2.GraphName;
@@ -236,9 +236,10 @@ namespace CellexalVR.AnalysisLogic
                 byte[] imageData = File.ReadAllBytes(imageFile);
                 Texture2D texture = new Texture2D(2, 2);
                 texture.LoadImage(imageData);
-                string[] names = files[i].Split('/');
+                string[] names = files[i].Split(Path.DirectorySeparatorChar);
                 string n = names[names.Length - 1].Split('.')[0];
                 HistoImage hi = pointCloudGenerator.CreateNewHistoImage();
+                hi.sliceNr = int.Parse(Regex.Match(n, @"\d+").Value);
                 hi.gameObject.name = n;
                 hi.texture = texture;
                 hi.transform.position = new Vector3(0f, 1f, (float)i / 5f);
@@ -270,19 +271,6 @@ namespace CellexalVR.AnalysisLogic
                 PointCloudGenerator.instance.SpawnPoints(hi, parentPC);
                 HistoImageHandler.instance.images.Add(hi);
             }
-
-
-
-
-
-            //else
-            //{
-            //    PointCloud pc1 = pointCloudGenerator.pointClouds[0];
-            //    pc1.targetPositionTextureMap = pc1.positionTextureMap;
-            //    pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
-            //}
-
-
 
             CellexalEvents.GraphsLoaded.Invoke();
         }

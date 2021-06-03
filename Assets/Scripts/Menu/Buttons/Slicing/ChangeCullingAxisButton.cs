@@ -1,20 +1,21 @@
-﻿using UnityEngine;
+﻿using CellexalVR.Spatial;
+using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {
-    public class ChangeSliceAxisButton : CellexalButton
+    public class ChangeCullingAxisButton : CellexalButton
     {
-        public SlicingMenu.SliceAxis axisToSlice;
+        public SlicingMenu.SliceAxis axisToCull;
 
-        protected override string Description => "Switch to slice " + axisToSlice;
+        protected override string Description => "Switch to cull " + axisToCull;
         [SerializeField] private bool startAsActive;
 
-        private SlicingMenu slicingMenu;
+        private SlicerBox slicerBox;
 
         protected override void Awake()
         {
             base.Awake();
-            slicingMenu = GetComponentInParent<SlicingMenu>();
+            slicerBox = GetComponentInParent<SlicerBox>();
             if (startAsActive)
             {
                 Click();
@@ -23,11 +24,9 @@ namespace CellexalVR.Menu.Buttons.Slicing
 
         public override void Click()
         {
-            // change slice axis
-            slicingMenu.ChangeAxis(axisToSlice);
+            slicerBox.SingleSliceViewMode(true, (int)axisToCull);
             SetButtonActivated(false);
             // TODO: Add multi user synch
-
         }
     }
 }

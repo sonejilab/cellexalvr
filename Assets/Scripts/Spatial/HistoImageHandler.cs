@@ -20,79 +20,42 @@ namespace CellexalVR.Spatial
             instance = this;
         }
 
-        //private IEnumerator ReadSlices()
-        //{
-        //    //string path = Directory.GetCurrentDirectory() + "//Data//" + file;
-        //    string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "//Data//seuratSlices//", "*.mds");
-        //    string[] imageFiles = Directory.GetFiles(Directory.GetCurrentDirectory() + "//Data//seuratSlices//", "*.png");
-        //    for (int i = 0; i < files.Length; i++)
-        //    {
-        //        int lineCount = 0;
-        //        string imageFile = imageFiles[i];
-        //        byte[] imageData = File.ReadAllBytes(imageFile);
-        //        Texture2D texture = new Texture2D(2, 2);
-        //        texture.LoadImage(imageData);
-        //        string name = files[i].Split('.')[0];
-        //        HistoImage hi = Instantiate(slicePrefab);
-        //        PointCloud pc = hi.GetComponent<PointCloud>();
-        //        pc.Initialize(i);
-        //        hi.gameObject.name = name;
-        //        hi.texture = texture;
-        //        hi.transform.position = new Vector3(0f, 1f, (float)i / 5f);
-        //        using (StreamReader sr = new StreamReader(files[i]))
-        //        {
-        //            string header = sr.ReadLine();
-        //            while (!sr.EndOfStream)
-        //            {
-        //                string line = sr.ReadLine();
-        //                string[] words = line.Split(',');
-        //                float.TryParse(words[0], out float x);
-        //                float.TryParse(words[1], out float y);
-        //                int xCoord = (int)x;
-        //                int yCoord = (int)y;
-        //                PointCloudGenerator.instance.AddGraphPoint(lineCount.ToString(), xCoord, yCoord);
-        //                if (lineCount % 100 == 0) yield return null;
-        //                //hi.imgCoords.Add(new Vector2Int(xCoord, yCoord));
-        //                int textureX = lineCount % PointCloudGenerator.textureWidth;
-        //                int textureY = (lineCount / PointCloudGenerator.textureWidth);
-        //                TextureHandler.instance.textureCoordDict[lineCount.ToString()] = new Vector2Int(textureX, textureY);
-        //                lineCount++;
-        //            }
-        //        }
-        //        //hi.Initialize();
-        //        hi.image.GetComponent<MeshRenderer>().material.mainTexture = texture;
-        //        PointCloudGenerator.instance.SpawnPoints(hi, par);
-        //        images.Add(hi);
-        //    }
-
-        //    StartCoroutine(PointCloudGenerator.instance.CreateColorTextureMap());
-
-        //    CellexalEvents.GraphsLoaded.Invoke();
-        //}
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.H))
             {
-                AllignImages(images[0], images[1]);
-                AllignImages(images[2], images[3]);
-            }
+                int prevSliceNr = 0;
+                for (int i = 0; i < images.Count - 1; i++)
+                {
+                    bool moveX = images[i].sliceNr < prevSliceNr;
+                    AllignImages(images[i], images[i + 1], moveX);
+                    prevSliceNr = images[i].sliceNr;
+                }
 
-            //if (Input.GetKeyDown(KeyCode.T))
-            //{
-            //    StartCoroutine(ReadSlices());
-            //}
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                foreach (HistoImage hi in images)
+                {
+                    hi.CropToTissue2();
+                }
+            }
         }
+
 
         public void AddImage(HistoImage image)
         {
             images.Add(image);
         }
 
-        public void AllignImages(HistoImage image1, HistoImage image2)
+        public void AllignImages(HistoImage image1, HistoImage image2, bool moveX = false)
         {
             HistoImage hi1 = image1.transform.position.z > image2.transform.position.z ? image1 : image2;
             HistoImage hi2 = image1.transform.position.z > image2.transform.position.z ? image2 : image1;
+
+            hi1.transform.parent = transform;
+            hi2.transform.parent = transform;
 
             float diffX = hi1.scaledMaxValues.x - hi2.scaledMaxValues.x;
             float diffY = hi1.scaledMaxValues.y - hi2.scaledMaxValues.y;
@@ -102,16 +65,30 @@ namespace CellexalVR.Spatial
             diffX = (diffX + diffX2) / 2;
             diffY = (diffY + diffY2) / 2;
 
+            Vector3 pos = hi1.transform.localPosition;
+            pos.x -= diffY;
+            pos.y += diffX;
+            if (moveX)
+            {
+                pos.x += 1;
+                pos.z = 0.2f * (hi1.sliceNr - 1);
 
-            Vector3 pos = hi1.image.transform.position;
-            pos.x -= diffX;
-            pos.y += diffY;
-            hi1.image.transform.position = pos;
+                Vector3 pos2 = hi2.transform.localPosition;
+                pos2.x += 1;
+                pos2.z = 0.2f * (hi2.sliceNr - 1);
+                hi2.transform.localPosition = pos2;
+            }
+            hi1.transform.localPosition = pos;
 
-            pos = hi1.visualEffect.transform.position;
-            pos.x -= diffX;
-            pos.y += diffY;
-            hi1.visualEffect.transform.position = pos;
+            //Vector3 pos = hi1.image.transform.localPosition;
+            //pos.x -= diffX;
+            //pos.y -= diffY;
+            //hi1.image.transform.localPosition = pos;
+
+            //pos = hi1.visualEffect.transform.localPosition;
+            //pos.x -= diffX;
+            //pos.y -= diffY;
+            //hi1.visualEffect.transform.localPosition = pos;
         }
     }
 }

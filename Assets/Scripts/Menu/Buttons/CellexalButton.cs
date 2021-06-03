@@ -115,10 +115,6 @@ namespace CellexalVR.Menu.Buttons
                     out hit, 10, layerMask);
                 if (hit.collider && hit.collider.transform == transform && referenceManager.laserPointerController.rightLaser.enabled)
                 {
-                    if (gameObject.name == "MorphButton")
-                    {
-                        print("hit button");
-                    }
                     frameCount = 0;
                     controllerInside = true;
                     SetHighlighted(true);

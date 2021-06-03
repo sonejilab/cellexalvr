@@ -27,13 +27,11 @@ namespace CellexalVR.Spatial
 
         public void SetStartPosition()
         {
-            var slicerBox = GetComponentInParent<SlicerBox>();
-            transform.position = slicerBox.box.transform.TransformPoint(transform.localPosition);
+            transform.localScale = new Vector3(1f / transform.lossyScale.x, 1f / transform.lossyScale.y, 1f / transform.lossyScale.z);
             var interactable = GetComponent<InteractableObjectOneAxis>();
             interactable.startPosition = transform.localPosition;
             interactable.maxAxisValue = Mathf.Abs(transform.localPosition[(int)interactable.movableAxis]);
             interactable.minAxisValue = -Mathf.Abs(transform.localPosition[(int)interactable.movableAxis]);
-            //interactable.maxAxisValue = slicerBox.box.transform.TransformPoint()
         }
 
         private void OnGrabbed(object sender, Hand hand)
@@ -44,12 +42,6 @@ namespace CellexalVR.Spatial
         private void OnUnGrabbed(object sender, Hand hand)
         {
             parentPointCloud.GetComponent<InteractableObjectBasic>().isGrabbable = true;
-        }
-
-
-        private void LateUpdate()
-        {
-
         }
 
 

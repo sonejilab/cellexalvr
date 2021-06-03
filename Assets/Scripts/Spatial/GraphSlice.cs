@@ -6,6 +6,7 @@ using DefaultNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -79,21 +80,29 @@ namespace CellexalVR.Spatial
             }
             pointCloud = GetComponent<PointCloud>();
             boxCollider = GetComponent<BoxCollider>();
+            CellexalEvents.GraphsColoredByGene.AddListener(UpdateColorTexture);
             //GetComponent<Rigidbody>().drag = Mathf.Infinity;
             //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
         }
 
         private void Update()
         {
-            if (SelectionToolCollider.instance.selActive)
-            {
-                UpdateColorTexture();
-            }
+            //if (SelectionToolCollider.instance.selActive)
+            //{
+            //    UpdateColorTexture();
+            //}
 
-            if (++frameCount > 10)
-            {
-                frameCount = 0;
-            }
+            //if (++frameCount > 10)
+            //{
+            //    frameCount = 0;
+            //}
+
+            CheckForController();
+
+        }
+
+        private void CheckForController()
+        {
             if (!boxCollider.enabled) return;
             Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
             if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
@@ -218,7 +227,6 @@ namespace CellexalVR.Spatial
 
         public void ActivateSlices(bool toggle)
         {
-            print($"activate slices {childSlices.Count}");
             foreach (GraphSlice gs in childSlices)
             {
                 if (toggle)
@@ -236,10 +244,12 @@ namespace CellexalVR.Spatial
                     gameObject.SetActive(true);
                     interactableObjectBasic.isGrabbable = true;
                     GetComponent<BoxCollider>().enabled = true;
-                    gs.slicerBox.box.SetActive(false);
+                    gs.slicerBox.Active = false;
+                    //gs.slicerBox.box.SetActive(false);
                     gs.MoveToGraph();
                 }
             }
+
         }
 
         /// <summary>
@@ -328,6 +338,7 @@ namespace CellexalVR.Spatial
 
         public void BuildPointCloud(Transform oldPc)
         {
+            PointCloudGenerator.instance.creatingGraph = false;
             parentSlice = oldPc.GetComponent<GraphSlice>();
             if (pointCloud == null)
             {
@@ -337,10 +348,18 @@ namespace CellexalVR.Spatial
         }
 
 
+        //public IEnumerator SliceAxisCoroutine(int axis, List<Point> points, int nrOfSlices)
+        //{
+        //    Thread t = t = new Thread(() => SliceAxis(axis, points, nrOfSlices));
+        //    t.Start();
+        //    while (t.IsAlive)
+        //    {
+        //        yield return null;
+        //    }
+        //}
+
         public IEnumerator SliceAxis(int axis, List<Point> points, int nrOfSlices)
         {
-            // Get the different z positions (slice positions) and place the slicer in each.
-            //List<Vector3> cutPositions = new List<Vector3>();
             List<Point> sortedPoints = new List<Point>(points.Count);
             if (axis == 0)
             {
@@ -383,6 +402,7 @@ namespace CellexalVR.Spatial
             //GraphSlice parentSlice = pc.GetComponent<GraphSlice>();
             slice.SliceNr = SliceNr;
             slices.Add(slice);
+            childSlices.Add(slice);
             slice.gameObject.name = pointCloud.gameObject.name + "_" + SliceNr;
 
 
@@ -391,17 +411,14 @@ namespace CellexalVR.Spatial
             Point point = sortedPoints[0];
             float firstCoord = prevCoord = point.offset[axis];
             float lastCoord = sortedPoints[sortedPoints.Count - 1].offset[axis];
-            int dividers = nrOfSlices;
-            float epsilonToUse = math.abs(firstCoord - lastCoord) / (float)dividers;
+            float epsilonToUse = math.abs(firstCoord - lastCoord) / (float)nrOfSlices;
             BoxCollider bc = newPc.GetComponent<BoxCollider>();
             Vector3 bcPos = bc.center;
-            bcPos[axis] = firstCoord + epsilonToUse/2;
+            bcPos[axis] = firstCoord + epsilonToUse / 2;
             //bc.center = bcPos;
             Vector3 bcSize = bc.size;
             bcSize[axis] /= nrOfSlices;
-            //bc.size = bcSize;
             newPc.SetCollider(bcPos, bcSize);
-
             if (axis == 2)
             {
                 epsilonToUse = 0.01f;
@@ -416,6 +433,13 @@ namespace CellexalVR.Spatial
 
                 if (diff > epsilonToUse)
                 {
+                    slice.BuildPointCloud(pointCloud.transform);
+                    while (PointCloudGenerator.instance.creatingGraph)
+                    {
+                        yield return null;
+                    }
+
+                    yield return new WaitForSeconds(0.1f);
                     newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
                     slice = newPc.GetComponent<GraphSlice>();
                     slice.transform.position = pointCloud.transform.position;
@@ -423,20 +447,26 @@ namespace CellexalVR.Spatial
                     slice.SliceNr = ++sliceNr;
                     slice.gameObject.name = pointCloud.gameObject.name + "_" + sliceNr;
                     slices.Add(slice);
+                    childSlices.Add(slice);
                     firstCoord = currentCoord;
                     bc = newPc.GetComponent<BoxCollider>();
                     bcPos = bc.center;
-                    bcPos[axis] = currentCoord + diff/2;
+                    bcPos[axis] = currentCoord + diff / 2;
                     bcSize = bc.size;
                     bcSize[axis] /= nrOfSlices;
                     newPc.SetCollider(bcPos, bcSize);
-                    yield return null;
+                    //yield return null;
                 }
 
                 else if (i == sortedPoints.Count - 1)
                 {
                     slices.Add(slice);
-                    //slice.BuildPointCloud(pc.transform);
+                    slice.BuildPointCloud(pointCloud.transform);
+                    childSlices.Add(slice);
+                    while (PointCloudGenerator.instance.creatingGraph)
+                    {
+                        yield return null;
+                    }
                 }
                 slice.points.Add(point);
                 prevCoord = currentCoord;
@@ -448,8 +478,10 @@ namespace CellexalVR.Spatial
                 coords = transform.TransformPoint(coords);
                 slices[i].sliceCoords = coords;
             }
-            PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
 
+            slicerBox.sliceAnimationActive = false;
+            ActivateSlices(true);
+            //PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
 
         }
 

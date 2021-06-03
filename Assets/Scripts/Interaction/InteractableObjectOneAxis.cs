@@ -31,6 +31,7 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
+            startPosition = transform.localPosition;
             startRotation = transform.localRotation;
             if (movableAxis == MovableAxis.X)
             {

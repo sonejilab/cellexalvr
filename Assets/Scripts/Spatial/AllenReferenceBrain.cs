@@ -2,9 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CellexalVR.DesktopUI;
+using CellexalVR.Interaction;
 using Spatial;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class AllenReferenceBrain : MonoBehaviour
 {
@@ -15,17 +19,24 @@ public class AllenReferenceBrain : MonoBehaviour
     public Dictionary<int, SpatialReferenceModelPart> idToModelDictionary = new Dictionary<int, SpatialReferenceModelPart>();
     public Dictionary<string, string> acronyms = new Dictionary<string, string>();
     public Dictionary<string, int> names = new Dictionary<string, int>();
-
+    public Transform midPoint;
+    public BrainPartButton brainPartButtonPrefab;
+    public List<LoadReferenceModelMeshButton> suggestionButtons = new List<LoadReferenceModelMeshButton>();
+    public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
 
     [HideInInspector] public Vector3 startPosition;
     [HideInInspector] public Vector3 startScale;
     [HideInInspector] public Quaternion startRotation;
 
-    public List<LoadReferenceModelMeshButton> suggestionButtons = new List<LoadReferenceModelMeshButton>();
 
-    private List<GameObject> spawnedParts = new List<GameObject>();
-
-    // private Dictionary<int, Tuple<string, Color> idToNameDictionary = new Dictionary<int, Tuple<string, Color>();
+    private ReferenceModelKeyboard keyboard;
+    private Dictionary<string, GameObject> spawnedParts = new Dictionary<string, GameObject>();
+    private List<BrainPartButton> brainPartButtons = new List<BrainPartButton>();
+    private const float yInc = 0.20f;
+    private const float zInc = 0.65f;
+    private BoxCollider boxCollider;
+    private bool controllerInside;
+    private int frameCount;
 
     private void Awake()
     {
@@ -34,7 +45,8 @@ public class AllenReferenceBrain : MonoBehaviour
 
     private void Start()
     {
-
+        boxCollider = GetComponent<BoxCollider>();
+        keyboard = GetComponentInChildren<ReferenceModelKeyboard>(true);
         //Make list of spawned brain models and add meshes for all.
         foreach (LoadReferenceModelMeshButton b in GetComponentsInChildren<LoadReferenceModelMeshButton>())
         {
@@ -71,31 +83,109 @@ public class AllenReferenceBrain : MonoBehaviour
                 //print($"id: {id}, name: {n}, acr: {acronym}, {model.gameObject.name}");
             }
         }
+        // root model is the main brain model. have active and transparent on start...
+        idToModelDictionary[997].color = Color.white / 10f;
+        SpawnModel("root");
+        keyboard.gameObject.SetActive(false);
     }
 
     private void Update()
     {
+        if ((int)(Time.realtimeSinceStartup) % 2 == 0)
+        {
+            CheckForController();
+        }
+
+        if (Player.instance.rightHand == null) return;
+        if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
+        {
+            if (controllerInside)
+            {
+                keyboard.gameObject.SetActive(!keyboard.gameObject.activeSelf);
+            }
+        }
+
         //if (Input.GetKeyDown(KeyCode.J))
         //{
         //    SpreadOutParts();
         //}
     }
 
+    private void CheckForController()
+    {
+        if (!boxCollider.enabled) return;
+        Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+        if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
+        {
+            controllerInside = true;
+        }
+        else
+        {
+            controllerInside = false;
+        }
+
+    }
+
+
+
+    public void RemovePart(string modelName)
+    {
+        spawnedParts[modelName].SetActive(false);
+        spawnedParts.Remove(modelName);
+        var b = brainPartButtons.Find(x => x.ModelName == modelName);
+        brainPartButtons.Remove(b);
+        Destroy(b.gameObject);
+        UpdateButtonPositions();
+    }
 
 
     [ConsoleCommand("brainModel", aliases: new string[] { "spawnbrainmodel", "sbm" })]
-    public void SpawnModel(int id)
+    public SpatialReferenceModelPart SpawnModel(int id)
     {
         idToModelDictionary.TryGetValue(id, out SpatialReferenceModelPart objToSpawn);
         objToSpawn.gameObject.SetActive(!objToSpawn.gameObject.activeSelf);
         objToSpawn.GetComponentInChildren<Renderer>().material.color = objToSpawn.color;
-        spawnedParts.Add(objToSpawn.gameObject);
-        //Instantiate(objToSpawn, transform);
+        spawnedParts[objToSpawn.modelName] = objToSpawn.gameObject;
+        return objToSpawn;
     }
 
-    public void SpawnModel(string name)
+    public void SpawnModel(string modelName)
     {
-        SpawnModel(GetModelId(name));
+        spawnedParts.TryGetValue(modelName, out GameObject spawnedPart);
+        if (spawnedPart != null && spawnedPart.activeSelf)
+        {
+            return;
+        }
+        else
+        {
+            SpatialReferenceModelPart part = SpawnModel(GetModelId(modelName));
+            CreateButton(part.modelName, part.color);
+        }
+    }
+
+    private void UpdateButtonPositions()
+    {
+        for (int i = 0; i < brainPartButtons.Count; i++)
+        {
+            BrainPartButton button = brainPartButtons[i];
+            button.transform.localPosition = new Vector3(0, -0.17f - ((i / 5) * yInc), 1.2f - ((i % 5) * zInc));
+        }
+    }
+
+    private void CreateButton(string modelName, Color color)
+    {
+        BrainPartButton button = Instantiate(brainPartButtonPrefab, keyboard.transform);
+        brainPartButtons.Add(button);
+        button.transform.localPosition = new Vector3(0, -0.17f - (((brainPartButtons.Count - 1) / 5) * yInc), 1.2f - (((brainPartButtons.Count - 1) % 5) * zInc));
+        button.gameObject.SetActive(true);
+        button.ModelName = modelName;
+        button.modelPart = spawnedParts[modelName];
+        color /= 2f;
+        button.meshStandardColor = color;
+        color *= 2f;
+        button.meshHighlightColor = color;
+        MeshRenderer mr = button.GetComponent<MeshRenderer>();
+        mr.material.color = color;
     }
 
     private int GetModelId(string n)
@@ -145,18 +235,5 @@ public class AllenReferenceBrain : MonoBehaviour
             suggestionButtons[i].ModelName = filteredNames[i];
         }
 
-    }
-
-    private void SpreadOutParts()
-    {
-        foreach (GameObject part in spawnedParts)
-        {
-            MeshRenderer mr = part.GetComponentInChildren<MeshRenderer>();
-            MeshFilter mf = part.GetComponentInChildren<MeshFilter>();
-            var position = mf.mesh.vertices[0];
-            //var position = mr.transform.localPosition;
-            var dir = (position - models.transform.localPosition).normalized;
-            part.transform.localPosition += dir;
-        }
     }
 }

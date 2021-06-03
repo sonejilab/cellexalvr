@@ -6,7 +6,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     /// <summary>
     /// Represents the button used for creating a new heatmap from a selection on the heatmap.
     /// </summary>
-    class CreateNewHeatmapButton : CellexalButton
+    public class CreateNewHeatmapButton : CellexalButton
     {
         private HeatmapRaycast heatmapRaycast;
 

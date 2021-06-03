@@ -36,6 +36,8 @@ namespace AnalysisLogic
         public Texture2D colorTextureMap;
         public Texture2D alphaTextureMap;
         public Texture2D targetPositionTextureMap;
+        public Texture2D morphTexture;
+        public Texture2D clusterSpreadTexture;
         public float3 minCoordValues;
         public float3 maxCoordValues;
         public float3 longestAxis;
@@ -100,15 +102,16 @@ namespace AnalysisLogic
 
         private void Update()
         {
-            if ((Player.instance.rightHand != null && controllerAction.GetStateDown(Player.instance.rightHand.handType)) || Input.GetKeyDown(KeyCode.M))
-            {
-                StartCoroutine(Morph());
-            }
+            //if ((Player.instance.rightHand != null && controllerAction.GetStateDown(Player.instance.rightHand.handType)) || Input.GetKeyDown(KeyCode.M))
+            //{
+            //    targetPositionTextureMap = morphTexture;
+            //    vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
+            //    StartCoroutine(Morph());
+            //}
 
-            if (controllerAction.GetStateDown(Player.instance.leftHand.handType))
+            if (Player.instance.leftHand != null && controllerAction.GetStateDown(Player.instance.leftHand.handType))
             {
                 SpreadOutClusters();
-                //SpreadOutPoints();
             }
 
             //if (Input.GetKeyDown(KeyCode.E))
@@ -183,7 +186,28 @@ namespace AnalysisLogic
             }
         }
 
-        public IEnumerator Morph()
+        public void SetTargetTexture(Texture2D texture)
+        {
+            targetPositionTextureMap = texture;
+            vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
+        }
+
+        public void Morph()
+        {
+            if (graphSlice.childSlices.Count > 0)
+            {
+                foreach (GraphSlice childSlice in graphSlice.childSlices)
+                {
+                    childSlice.pointCloud.Morph();
+                }
+            }
+            else
+            {
+                StartCoroutine(MorphCoroutine());
+            }
+        }
+
+        private IEnumerator MorphCoroutine()
         {
             //UpdateTargetTexture();
             if (slicerBox != null)
@@ -256,7 +280,7 @@ namespace AnalysisLogic
             Texture2D parentTargetTextureMap = parentPC.targetPositionTextureMap;
             if (parentTargetTextureMap == null)
             {
-                parentTargetTextureMap = targetPositionTextureMap;
+                parentTargetTextureMap = parentPC.morphTexture;
             }
             Color[] positions = new Color[width * height];
             Color[] targetPositions = new Color[positions.Length];
@@ -317,7 +341,7 @@ namespace AnalysisLogic
             vfx.SetTexture("PositionMapTex", positionTextureMap);
             vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
             vfx.pause = false;
-            PointCloudGenerator.instance.creatingGraph = false;
+            //PointCloudGenerator.instance.creatingGraph = false;
         }
 
 
@@ -389,22 +413,23 @@ namespace AnalysisLogic
                 targetPositionTextureMap.SetPixels(newPositions);
                 targetPositionTextureMap.Apply();
             }
-            StartCoroutine(Morph());
+            StartCoroutine(MorphCoroutine());
         }
 
         public void SpreadOutClusters()
         {
             if (!morphed)
             {
+                clusterSpreadTexture = new Texture2D(positionTextureMap.width, positionTextureMap.height, TextureFormat.RGBAFloat, true, true);
                 CalculateClusterCentroids();
                 Color[] colors = alphaTextureMap.GetPixels();
-                Color[] newPositions = new Color[TextureHandler.instance.clusterTextureMaps[0].width * TextureHandler.instance.clusterTextureMaps[0].height];
                 Color[] positions = positionTextureMap.GetPixels();
+                Color[] newPositions = new Color[positionTextureMap.width * positionTextureMap.height];
                 for (int i = 0; i < colors.Length; i++)
                 {
                     if (i >= pointCount) break;
                     Color pos = positions[i];
-                    if (colors[i].maxColorComponent > 0.9f)
+                    if (colors[i].r > 0.7f)
                     {
                         string cluster = PointCloudGenerator.instance.clusterDict[i];
                         Color centroid = clusterCentroids[cluster];
@@ -412,16 +437,19 @@ namespace AnalysisLogic
                         Color newPos = pos + new Color(cP.x, cP.y, cP.z);
                         newPositions[i] = newPos;
                     }
+
                     else
                     {
                         newPositions[i] = pos;
                     }
                 }
 
-                targetPositionTextureMap.SetPixels(newPositions);
-                targetPositionTextureMap.Apply();
+                clusterSpreadTexture.SetPixels(newPositions);
+                clusterSpreadTexture.Apply();
+                targetPositionTextureMap = clusterSpreadTexture;
             }
-            StartCoroutine(Morph());
+            vfx.SetTexture("TargetPosMapTex", clusterSpreadTexture);
+            StartCoroutine(MorphCoroutine());
         }
 
         private void CalculateClusterCentroids()

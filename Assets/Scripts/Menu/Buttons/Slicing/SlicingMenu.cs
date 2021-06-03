@@ -16,7 +16,6 @@ namespace CellexalVR.Menu.Buttons.Slicing
         public ChangeNrOfSlicesButton addSliceButton;
         public ChangeNrOfSlicesButton subtractSliceButton;
         public int nrOfSlices;
-
         public enum SliceMode
         {
             None,
@@ -53,27 +52,18 @@ namespace CellexalVR.Menu.Buttons.Slicing
             {
                 case SliceMode.None:
                     automaticModeMenu.SetActive(false);
-                    //sliceGraphButton.SetButtonActivated(false);
-                    //manualModeMenu.SetActive(false);
                     break;
                 case SliceMode.Automatic:
                     slicerBox.plane.SetActive(!toggle);
                     automaticModeMenu.SetActive(toggle);
-                    //sliceGraphButton.SetButtonActivated(toggle);
                     manualModeButton.CurrentState = !toggle;
-                    //manualModeMenu.SetActive(false);
                     break;
                 case SliceMode.Manual:
                     slicerBox.plane.SetActive(toggle);
-                    //manualModeMenu.SetActive(true);
                     automaticModeMenu.SetActive(!toggle);
-                    //sliceGraphButton.SetButtonActivated(toggle);
                     autoModeButton.CurrentState = !toggle;
                     break;
                 case SliceMode.Freehand:
-                    //freeHandModeMenu.SetActive(true);
-                    //automaticModeMenu.SetActive(false);
-                    //manualModeMenu.SetActive(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(modeToActivate), modeToActivate, null);
@@ -108,11 +98,9 @@ namespace CellexalVR.Menu.Buttons.Slicing
             switch (currentMode)
             {
                 case SliceMode.Automatic:
-                    //StartCoroutine(graphSlicer.SliceGraph(automatic: true, axis: graphSlicer.slicer.Axis, true));
                     slicerBox.SliceGraphAutomatic((int)currentAxis, nrOfSlices);
                     break;
                 case SliceMode.Manual:
-                    //StartCoroutine(graphSlicer.SliceGraph(false, 2, true));
                     slicerBox.SliceGraphManual();
                     break;
                 case SliceMode.None:
@@ -138,8 +126,6 @@ namespace CellexalVR.Menu.Buttons.Slicing
             while (t < time)
             {
                 float progress = Mathf.SmoothStep(0, time, t);
-                //transform.localPosition = Vector3.Lerp(startPos, originalPos, progress);
-                //transform.localRotation = Quaternion.Lerp(startRot, targetRot, progress);
                 transform.localScale = Vector3.Lerp(startScale, targetScale, progress);
                 t += (Time.deltaTime / time);
                 yield return null;
@@ -155,8 +141,6 @@ namespace CellexalVR.Menu.Buttons.Slicing
             while (t < time)
             {
                 float progress = Mathf.SmoothStep(0, time, t);
-                //transform.localPosition = Vector3.Lerp(startPos, originalPos, progress);
-                //transform.localRotation = Quaternion.Lerp(startRot, targetRot, progress);
                 transform.localScale = Vector3.Lerp(startScale, targetScale, progress);
                 t += (Time.deltaTime / time);
                 yield return null;

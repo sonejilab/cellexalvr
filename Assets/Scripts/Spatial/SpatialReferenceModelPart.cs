@@ -12,9 +12,5 @@ namespace Spatial
         public Color color;
 
 
-        private void Start()
-        {
-
-        }
     }
 }

@@ -30,13 +30,13 @@ namespace CellexalVR.Spatial
         private Quaternion rotationBeforeDispersing;
         private bool meshCreated;
         private Dictionary<int, ChunkManager> meshDict = new Dictionary<int, ChunkManager>();
-        private int frameCount;
+        private Dictionary<int, Vector3> centroids = new Dictionary<int, Vector3>();
+        private bool spreadOut;
 
-        // public bool slicesActive;
-
+        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
         public bool generateMeshes;
         public GameObject chunkManagerPrefab;
-        public GameObject contourParent;
+        public AllenReferenceBrain contourParent;
         public static MeshGenerator instance;
         public Hand hand;
         public SteamVR_Action_Boolean grabPinch;
@@ -59,9 +59,19 @@ namespace CellexalVR.Spatial
             //    CreateMesh();
             //}
 
-            if (Input.GetKeyDown(KeyCode.K))// && !meshCreated)
+            //if (Input.GetKeyDown(KeyCode.K))// && !meshCreated)
+            //{
+            //    GenerateMeshes();
+            //}
+
+            //if (Input.GetKeyDown(KeyCode.J))
+            //{
+            //    StartCoroutine(SpreadOutParts());
+            //}
+            if (controllerAction.GetStateDown(Player.instance.leftHand.handType))
             {
-                GenerateMeshes();
+                StartCoroutine(SpreadOutParts());
+                //SpreadOutPoints();
             }
         }
 
@@ -93,22 +103,6 @@ namespace CellexalVR.Spatial
                     meshPositions[cInd].Add(new float3(pos.r - 0.5f, pos.g - 0.5f, pos.b - 0.5f));
                 }
             }
-            //Color currentColor = SelectionToolCollider.instance.GetCurrentColor();
-            //int ind = SelectionToolCollider.instance.GetColorIndex(currentColor);
-            //ChunkManager meshToUpdate = meshDict[ind];
-            //meshToUpdate.UpdateMesh();
-            //StartCoroutine(CreateMesh(chunkManager, meshPositions[0], SelectionToolCollider.instance.Colors[0]));
-            //CreateMesh(meshPositions);
-            //StartCoroutine(UpdateMeshCoroutine(meshPositions));
-            //Thread t = new Thread(() =>
-            //{
-            //    UpdateMeshCoroutine(meshPositions, removeOutliers);
-            //});
-            //t.Start();
-            //while (t.IsAlive)
-            //{
-            //    yield return null;
-            //}
             StartCoroutine(UpdateMeshCoroutine(meshPositions, removeOutliers));
         }
 
@@ -152,7 +146,6 @@ namespace CellexalVR.Spatial
                     chunkManager.transform.localScale = Vector3.one * 1.55f;
                     chunkManager.transform.localPosition = Vector3.zero;
                     chunkManager.transform.localRotation = Quaternion.identity;
-                    //Color c = key == -1 ? Color.white : SelectionToolCollider.instance.Colors[key];
                     meshDict[key] = chunkManager;
                 }
 
@@ -172,11 +165,11 @@ namespace CellexalVR.Spatial
             foreach (KeyValuePair<int, ChunkManager> kvp in meshDict)
             {
                 Color c = kvp.Key == -1 ? Color.white : SelectionToolCollider.instance.Colors[kvp.Key];
-                yield return StartCoroutine(CreateMesh(kvp.Value, c));
+                yield return StartCoroutine(CreateMesh(kvp.Key, c));
             }
         }
 
-        public void CreateMesh(bool removeOutliers = false)
+        public void CreateMesh()
         {
             Color[] colors = TextureHandler.instance.colorTextureMaps[0].GetPixels();
             Color[] alphas = TextureHandler.instance.alphaTextureMaps[0].GetPixels();
@@ -198,14 +191,13 @@ namespace CellexalVR.Spatial
                     meshPositions[cInd].Add(new float3(pos.r - 0.5f, pos.g - 0.5f, pos.b - 0.5f));
                 }
             }
-            CreateMesh(meshPositions, removeOutliers);
+            CreateMesh(meshPositions);
         }
 
         private IEnumerator RemoveOutliers(ChunkManager chunkManager)
         {
             List<float3> newPositions = new List<float3>();
             Dictionary<int, int> neighbours = new Dictionary<int, int>();
-            //List<Graph.GraphPoint> neighbours = points.FindAll(x => Vector3.Distance(centroid, x.Position) < distance);
             for (int i = 0; i < chunkManager.positions.Count; i++)
             {
                 neighbours[i] = 0;
@@ -228,7 +220,6 @@ namespace CellexalVR.Spatial
                     int x = (int)(position.x * 20f) + 10;
                     int y = (int)(position.y * 20f) + 10;
                     int z = (int)(position.z * 20f) + 10;
-                    // int d = z > 5 && z < 7 ? 0 : 1; 
                     chunkManager.SetDensity(x, y, z, 0);
                 }
                 if (i % 50 == 0) yield return null;
@@ -239,7 +230,7 @@ namespace CellexalVR.Spatial
         }
 
 
-        private void CreateMesh(Dictionary<int, List<float3>> positions, bool removeOutliers = false)
+        private void CreateMesh(Dictionary<int, List<float3>> positions)
         {
             foreach (ChunkManager chunk in contourParent.GetComponentsInChildren<ChunkManager>())
             {
@@ -254,9 +245,7 @@ namespace CellexalVR.Spatial
                 chunkManager.transform.localRotation = Quaternion.identity;
                 Color c = kvp.Key == -1 ? Color.white : SelectionToolCollider.instance.Colors[kvp.Key];
                 meshDict[kvp.Key] = chunkManager;
-                //chunkManager.positions = removeOutliers ? RemoveOutliers(chunkManager) : kvp.Value;
-                //chunkManager.positions = kvp.Value;
-                StartCoroutine(CreateMesh(chunkManager, c));
+                StartCoroutine(CreateMesh(kvp.Key, c));
             }
             return /*chunkManager*/;
         }
@@ -265,11 +254,14 @@ namespace CellexalVR.Spatial
         /// Create a mesh using the marching cubes algorithm. Read the coordinates and add a density value of one to each point.
         /// </summary>
         /// <returns></returns>
-        private IEnumerator CreateMesh(ChunkManager chunkManager, Color color)
+        private IEnumerator CreateMesh(int key, Color color)
         {
+            ChunkManager chunkManager = meshDict[key];
             int i = 0;
+            float3 centroid = float3.zero;
             foreach (float3 position in chunkManager.positions)
             {
+                centroid += position;
                 int x = (int)(position.x * 20f) + 10;
                 int y = (int)(position.y * 20f) + 10;
                 int z = (int)(position.z * 20f) + 10;
@@ -279,27 +271,44 @@ namespace CellexalVR.Spatial
                 if (i % 1000 == 0) yield return null;
             }
 
+            centroid /= chunkManager.positions.Count;
+            centroids[key] = centroid;
+
             StartCoroutine(chunkManager.ToggleSurfaceLevelandUpdateCubes(0, chunkManager.chunks, color));
             //creatingMesh = true;
             while (creatingMesh) yield return null;
             chunkManager.SmoothMesh();
             meshCreated = true;
-            // ChunkManager.toggleSurfaceLevelandUpdateCubes(0, chunkManager.chunks);
+        }
 
-            // foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
-            // {
-            //     // mf.mesh.Optimize();
-            //     mf.mesh.RecalculateBounds();
-            //     mf.mesh.RecalculateNormals();
-            // }
+        private IEnumerator SpreadOutParts()
+        {
+            spreadOut = !spreadOut;
+            float t = 0f;
+            float animationTime = 1f;
+            while (t < animationTime)
+            {
+                foreach (KeyValuePair<int, ChunkManager> meshPair in meshDict)
+                {
+                    Vector3 startPos = meshPair.Value.transform.localPosition;
+                    Vector3 centroid = centroids[meshPair.Key];
+                    if (spreadOut)
+                    {
+                        Vector3 targetPosition = (centroid - Vector3.zero).normalized * 0.5f;
+                        float progress = Mathf.SmoothStep(0, animationTime, t);
+                        meshPair.Value.transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
+                    }
+                    else
+                    {
+                        Vector3 targetPosition = Vector3.zero;
+                        float progress = Mathf.SmoothStep(0, animationTime, t);
+                        meshPair.Value.transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
+                    }
+                }
+                yield return null;
+                t += (Time.deltaTime / animationTime);
+            }
 
-            // GameObject obj  = Instantiate(contourParent);
-            // chunkManager.transform.parent = obj.transform;
-            // obj.transform.localScale = Vector3.one * 0.25f;
-            // obj.transform.localPosition = new Vector3(0.5f, 1, 0.5f);
-            // BoxCollider bc = obj.AddComponent<BoxCollider>();
-            // bc.center = Vector3.one * 4;
-            // bc.size = Vector3.one * 6;
         }
     }
 }

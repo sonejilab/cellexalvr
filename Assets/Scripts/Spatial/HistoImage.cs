@@ -25,12 +25,12 @@ namespace CellexalVR.Spatial
         public Vector3 texMaxValues;
         public Vector3 texMinValues;
         public Dictionary<string, Vector2Int> textureCoords = new Dictionary<string, Vector2Int>();
-
+        public float longestAxis;
+        public Vector3 scaledOffset;
+        public int sliceNr;
         public GameObject image;
         public VisualEffect visualEffect;
 
-        public float longestAxis;
-        public Vector3 scaledOffset;
         private Vector3 diffCoordValues;
 
         private Texture2D posTexture;
@@ -43,7 +43,7 @@ namespace CellexalVR.Spatial
         private Vector3 originalScale = new Vector3();
         private float originalImageRatio;
         private int layerMask;
-        private List<Vector2Int> imgCoords = new List<Vector2Int>();
+        private List<Vector2Int> tissueCoords = new List<Vector2Int>();
         private List<Vector3> scaledCoords = new List<Vector3>();
         private PointCloud pc;
 
@@ -97,28 +97,10 @@ namespace CellexalVR.Spatial
 
         private IEnumerator InitializeCoroutine()
         {
-            //string path = Directory.GetCurrentDirectory() + "//Data//" + file;
-            //int i = 0;
-            //using (StreamReader sr = new StreamReader(path))
-            //{
-            //    string header = sr.ReadLine();
-            //    while (!sr.EndOfStream)
-            //    {
-            //        string line = sr.ReadLine();
-            //        string[] words = line.Split(',');
-            //        float.TryParse(words[0], out float x);
-            //        float.TryParse(words[1], out float y);
-            //        int xCoord = (int)x;
-            //        int yCoord = (int)y;
-            //        imgCoords.Add(new Vector2Int(xCoord, yCoord));
-            //        UpdateMinMaxCoords(xCoord, yCoord);
-            //        if (++i % 100 == 0) yield return null;
-            //    }
-            //}
             yield return null;
             ScaleCoordinates();
             int width = 1000;
-            int height = (int)math.ceil(imgCoords.Count / 1000f);
+            int height = (int)math.ceil(tissueCoords.Count / 1000f);
             float maxX = 0f;
             float minX = 0f;
             float maxY = 0f;
@@ -137,12 +119,9 @@ namespace CellexalVR.Spatial
                 for (int x = 0; x < width; x++)
                 {
                     int ind = x + (width * y);
-                    if (ind >= imgCoords.Count) continue;
-                    Vector3Int coord = new Vector3Int(imgCoords[ind].x, imgCoords[ind].y, 0);
+                    if (ind >= tissueCoords.Count) continue;
+                    Vector3Int coord = new Vector3Int(tissueCoords[ind].x, tissueCoords[ind].y, 0);
                     Vector3 scaledCoord = ScaleCoordinate(coord);
-                    //pc.AddGraphPoint(ind.ToString(), coord.x, coord.y);
-                    //scaledCoords.Add(scaledCoord);
-                    //Color pos = new Color(((float)coord.x / (float)texture.width) - 0.5f, ((float)coord.y / (float)texture.height) - 0.5f, 0);
                     Color pos = new Color(scaledCoord.x, scaledCoord.y, 0);
                     // switch r & g bc image is rotated..
                     if (pos.g > maxX)
@@ -197,7 +176,6 @@ namespace CellexalVR.Spatial
 
         public void CropToTissue()
         {
-            print($"max {maxValues}, min {minValues}");
             Vector2 c1 = PointToTexture(maxValues.x, maxValues.y);
             Vector2 c4 = PointToTexture(minValues.x, minValues.y);
 
@@ -206,9 +184,53 @@ namespace CellexalVR.Spatial
             c4.x -= 5;
             c4.y += 5;
 
-            print($"c1 {c1}, c4 {c4}");
             CropImage((int)((c1.x)), (int)((c1.y)), (int)((c4.x)), (int)((c4.y)));
         }
+
+        public void CropToTissue2()
+        {
+            Color[] colors = texture.GetPixels();
+            for (int i = 0; i < colors.Length; i++)
+            {
+                colors[i].a = 0f;
+            }
+
+            texture.SetPixels(colors);
+
+            foreach (KeyValuePair<string, float3> kvp in pc.points)
+            {
+                float3 point = kvp.Value;
+                Vector2 texCoord = PointToTexture(point.x, point.y);
+                for (int i = -5; i <= 5; i++)
+                {
+                    for (int j = -5; j <= 5; j++)
+                    {
+                        Vector2Int coord = new Vector2Int((int)texCoord.x + i, (int)texCoord.y + j);
+                        Color c = texture.GetPixel(coord.x, coord.y);
+                        c.a = 1;
+                        texture.SetPixel((int)texCoord.x + i, (int)texCoord.y + j, c);
+                    }
+
+                }
+
+            }
+
+            //print(textureCoords.Count);
+            //int j = 0;
+            //foreach (Vector2Int tissueCoord in textureCoords.Values)
+            //{
+            //    Vector2 texCoord = PointToTexture((float)tissueCoord.x, (float)tissueCoord.y);
+            //    //print($"{texCoord}");
+            //    if (j++ < 250)
+            //    {
+            //        print($"{texCoord}, {tissueCoord}");
+            //    }
+            //    //texture.SetPixel((int)tissueCoord.x, (int)tissueCoord.y, Color.white);
+            //    texture.SetPixel((int)texCoord.y, (int)texCoord.x, Color.red);
+            //}
+            texture.Apply();
+        }
+
 
 
         private Vector2 PointToTexture(float x, float y)
@@ -242,7 +264,7 @@ namespace CellexalVR.Spatial
 
         public void AddGraphPoint(int x, int y)
         {
-            imgCoords.Add(new Vector2Int(x, y));
+            tissueCoords.Add(new Vector2Int(x, y));
             UpdateMinMaxCoords(x, y);
         }
 
@@ -414,10 +436,7 @@ namespace CellexalVR.Spatial
             //ImageRayCast();
             UpdateColorTexture();
 
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                CropToTissue();
-            }
+
         }
     }
 }

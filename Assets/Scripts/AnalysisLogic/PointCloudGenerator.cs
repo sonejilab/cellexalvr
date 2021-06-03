@@ -132,14 +132,19 @@ namespace DefaultNamespace
 
         public void BuildSlices(Transform oldPc, GraphSlice[] newSlices)
         {
+            //StartCoroutine(BuildSlicesCoroutine(oldPc, new GraphSlice[] { newSlices[0], newSlices[1], newSlices[2] }));
             StartCoroutine(BuildSlicesCoroutine(oldPc, newSlices));
         }
 
         private IEnumerator BuildSlicesCoroutine(Transform oldPc, GraphSlice[] newSlices)
         {
-            print($"start building coroutine {newSlices.Length}");
             GraphSlice parentSlice = oldPc.GetComponent<GraphSlice>();
             GraphSlice[] oldSlices = parentSlice.childSlices.ToArray();
+            foreach (GraphSlice slice in oldSlices)
+            {
+                parentSlice.childSlices.Remove(slice);
+                Destroy(slice.gameObject);
+            }
             maxPointCount = newSlices.ToList().Max(x => x.points.Count);
             for (int i = 0; i < newSlices.Length; i++)
             {
@@ -152,11 +157,7 @@ namespace DefaultNamespace
                 }
                 parentSlice.childSlices.Add(slice);
             }
-            foreach (GraphSlice slice in oldSlices)
-            {
-                parentSlice.childSlices.Remove(slice);
-                Destroy(slice.gameObject);
-            }
+            parentSlice.ActivateSlices(true);
 
         }
 
@@ -235,6 +236,7 @@ namespace DefaultNamespace
             pointClouds.Add(pc);
             pointCount = points.Count;
             pc.CreatePositionTextureMap(points, parentPC);
+            //PointCloudGenerator.instance.creatingGraph = false;
             StartCoroutine(CreateColorTextureMap(points, pc, parentPC));
         }
 
@@ -329,13 +331,8 @@ namespace DefaultNamespace
             }
             hi.scaledMaxValues = new Vector2(maxX, maxY);
             hi.scaledMinValues = new Vector2(minX, minY);
-            print($"set minmax vals max - {hi.scaledMaxValues}, min - {hi.scaledMinValues}");
-
-            //pointCount = scaledCoordinates.Count;
-
             pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList());
             StartCoroutine(CreateColorTextureMap(points, hi, parentPC));
-
             points.Clear();
             scaledCoordinates.Clear();
         }
@@ -392,7 +389,7 @@ namespace DefaultNamespace
         {
             while (readingFile) yield return null;
             int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(maxPointCount / (float)textureWidth);//width;
+            int height = (int)math.ceil(points.Count / (float)textureWidth);//width;
             //int height = parentCloud.positionTextureMap.height;
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
