@@ -99,7 +99,6 @@ namespace CellexalVR.AnalysisLogic
             UnityEngine.Color low = CellexalConfig.Config.HeatmapLowExpressionColor;
             UnityEngine.Color mid = CellexalConfig.Config.HeatmapMidExpressionColor;
             UnityEngine.Color high = CellexalConfig.Config.HeatmapHighExpressionColor;
-            //print(low + " " + mid + " " + high);
 
             int dividerLowMid = numberOfExpressionColors / 2;
             if (dividerLowMid == 0)
@@ -114,7 +113,6 @@ namespace CellexalVR.AnalysisLogic
             float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
             float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
             float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
-            //print(midHighDeltaR + " " + midHighDeltaG + " " + midHighDeltaB);
 
             for (int i = 0; i < numberOfExpressionColors / 2 + 1; ++i)
             {
@@ -255,16 +253,8 @@ namespace CellexalVR.AnalysisLogic
             }
             //string function = "make.cellexalvr.heatmap.list";
             string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
-            //string groupingFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            string groupingFilePath;
-            if (selectionManager.groupCount == 1)
-            {
-                groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt.time").UnFixFilePath();
-            }
-            else
-            {
-                groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-            }
+            string groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
+
             string topGenesNr = "250";
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
@@ -309,6 +299,13 @@ namespace CellexalVR.AnalysisLogic
             GeneratingHeatmaps = false;
 
             var heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
+            if (selectionManager.groupCount == 1)
+            {
+                string timeFilePath = groupingFilePath + ".time";
+                referenceManager.inputReader.ReadSelectionFile(timeFilePath, true);
+                selectionManager.ConfirmSelection();
+                selection = selectionManager.GetCurrentSelection();
+            }
 
             heatmap.Init();
             heatmap.transform.parent = transform;
@@ -320,10 +317,6 @@ namespace CellexalVR.AnalysisLogic
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
-            if (selectionManager.groupCount == 1)
-            {
-                referenceManager.inputReader.ReadSelectionFile(groupingFilePath, true);
-            }
 
             CellexalEvents.CommandFinished.Invoke(true);
         }
