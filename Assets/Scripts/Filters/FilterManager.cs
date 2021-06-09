@@ -111,8 +111,8 @@ namespace CellexalVR.Filters
                 fileName += "_2";
             }
 
-            string filterPath = CellexalUser.UserSpecificFolder + "\\" + fileName + ".fil";
-            FileStream fileStream = new FileStream(filterPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            currentFilterPath = CellexalUser.UserSpecificFolder + "\\" + fileName + ".fil";
+            FileStream fileStream = new FileStream(currentFilterPath, FileMode.Create, FileAccess.Write, FileShare.None);
 
             using (StreamWriter streamWriter = new StreamWriter(fileStream))
             {
@@ -478,7 +478,6 @@ namespace CellexalVR.Filters
             resultBlock.DisconnectAllPorts();
             //if (informMultiUser)
             //{
-            referenceManager.multiuserMessageSender.SendMessageResetFilter();
             //}
         }
 
