@@ -649,6 +649,12 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageToggleAxes", PhotonTargets.Others);
         }
 
+        public void SendMessageToggleInfoPanels()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleInfoPanels", PhotonTargets.Others);
+        }
+
         #endregion
 
         #region Heatmaps

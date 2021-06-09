@@ -23,6 +23,7 @@ namespace CellexalVR.AnalysisObjects
         public SelectionManager selectionManager;
         [HideInInspector]
         public bool axesVisible;
+        public bool infoPanelsVisible;
 
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
@@ -462,11 +463,12 @@ namespace CellexalVR.AnalysisObjects
         /// Set all graphs' info panels to visible or not visible.
         /// </summary>
         /// <param name="visible"> TRue for visible, false for invisible </param>
-        public void SetInfoPanelsVisible(bool visible)
+        public void ToggleInfoPanels()
         {
+            infoPanelsVisible = !infoPanelsVisible;
             foreach (Graph g in Graphs)
             {
-                g.SetInfoTextVisible(visible);
+                g.SetInfoTextVisible(infoPanelsVisible);
             }
         }
 

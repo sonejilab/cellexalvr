@@ -9,13 +9,11 @@ namespace CellexalVR.Menu.Buttons.General
     public class ShowLabelsButton : CellexalButton
     {
         private GraphManager graphManager;
-        private bool activate;
 
         void Start()
         {
             graphManager = referenceManager.graphManager;
             //GetComponent<SimpleTextRotator>().SetTransforms(this.transform, this.transform);
-            activate = false;
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
@@ -30,8 +28,8 @@ namespace CellexalVR.Menu.Buttons.General
 
         public override void Click()
         {
-            graphManager.SetInfoPanelsVisible(activate);
-            activate = !activate;
+            graphManager.ToggleInfoPanels();
+            referenceManager.multiuserMessageSender.SendMessageToggleInfoPanels();
         }
 
         void TurnOn()
