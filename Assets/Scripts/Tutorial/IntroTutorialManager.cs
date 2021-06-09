@@ -29,6 +29,8 @@ namespace CellexalVR.Tutorial
             rightController = referenceManager.rightController;
             leftController = referenceManager.leftController;
 
+            CrossSceneInformation.Tutorial = true;
+
             CellexalEvents.ControllersInitiated.AddListener(Initiate);
         }
 
@@ -61,7 +63,7 @@ namespace CellexalVR.Tutorial
         {
             referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
             referenceManager.controllerModelSwitcher.SwitchToModel(Interaction.ControllerModelSwitcher.Model.Normal);
-            referenceManager.geneKeyboard.gameObject.SetActive(false);
+            referenceManager.filterNameKeyboard.gameObject.SetActive(false);
             username = name;
             CrossSceneInformation.Username = name;
             Destroy(canv);

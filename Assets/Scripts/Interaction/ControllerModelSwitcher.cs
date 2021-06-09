@@ -224,15 +224,15 @@ namespace CellexalVR.Interaction
                 HelpToolShouldStayActivated = false;
             }
             // Deactivate all tools that should not be active.
-            if (DesiredModel != Model.SelectionTool)
+            if (DesiredModel != Model.SelectionTool  && selectionToolCollider != null)
             {
                 selectionToolCollider.SetSelectionToolEnabled(false);
             }
-            if (DesiredModel != Model.DeleteTool)
+            if (DesiredModel != Model.DeleteTool && deleteTool != null)
             {
                 deleteTool.SetActive(false);
             }
-            if (DesiredModel != Model.Minimizer)
+            if (DesiredModel != Model.Minimizer && minimizer != null)
             {
                 minimizer.SetActive(false);
             }

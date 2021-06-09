@@ -633,6 +633,7 @@ namespace CellexalVR.General
         [ConsoleCommand("selectionManager", aliases: new string[] { "cancelselection", "cs" })]
         public void CancelSelection()
         {
+            referenceManager.legendManager.selectionLegend.ClearLegend();
             int stepsToGoBack = selectionHistory.Count - historyIndexOffset;
             for (int i = 0; i <= stepsToGoBack; i++)
             {
@@ -712,7 +713,6 @@ namespace CellexalVR.General
         /// </summary>
         public void RecolorSelectionPoints()
         {
-            print($"recolor points: {selectedCells}");
             foreach (Graph.GraphPoint gp in selectedCells)
             {
                 foreach (Graph.GraphPoint g in referenceManager.cellManager.GetCell(gp.Label).GraphPoints)

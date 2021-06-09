@@ -303,8 +303,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 string timeFilePath = groupingFilePath + ".time";
                 referenceManager.inputReader.ReadSelectionFile(timeFilePath, true);
-                selectionManager.ConfirmSelection();
                 selection = selectionManager.GetCurrentSelection();
+                print($"{selection.Count}");
             }
 
             heatmap.Init();
@@ -405,6 +405,12 @@ namespace CellexalVR.AnalysisLogic
 
             }
             heatmap.orderedByAttribute = false;
+
+            if (selectionManager.groupCount == 1)
+            {
+                selectionManager.ConfirmSelection();
+            }
+
             //try
             //{
             StartCoroutine(BuildTextureCoroutine(heatmap));
@@ -531,7 +537,6 @@ namespace CellexalVR.AnalysisLogic
                 // gene names are keys, positions are values
                 genePositions[heatmap.genes[i]] = i;
             }
-
             Dictionary<string, int> cellsPosition = new Dictionary<string, int>(heatmap.cells.Length);
 
             for (int i = 0; i < heatmap.cells.Length; ++i)
@@ -543,6 +548,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
             db.QueryGenesInCells(heatmap.genes, heatmap.cells.Select((c) => c.Label).ToArray());
+
             while (db.QueryRunning)
             {
                 yield return null;
@@ -554,7 +560,6 @@ namespace CellexalVR.AnalysisLogic
                 Directory.CreateDirectory(heatmapDirectory);
             }
             string heatmapFilePath = heatmapDirectory + "\\heatmap_temp.png";
-
 
             CellexalLog.Log("Reading " + result.Count + " results from database");
             //CreateHeatmapPNG(heatmap, result, genePositions, cellsPosition, geneIds, heatmapFilePath);

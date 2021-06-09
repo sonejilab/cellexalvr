@@ -97,7 +97,8 @@ namespace CellexalVR.Interaction
                 {
                     controllerModelSwitcher.ActivateDesiredTool();
                 }
-                referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
+                //referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
+                MultiUserToggle(true);
                 referenceManager.rightLaser.enabled = true;
                 referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 Vector3 hitPoint;
@@ -109,7 +110,7 @@ namespace CellexalVR.Interaction
                 {
                     hitPoint = hit.point;
                 }
-                referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hitPoint);
+                MultiUserMove(origin, hitPoint);
                 return;
             }
             if (alwaysActive)
@@ -123,7 +124,7 @@ namespace CellexalVR.Interaction
                 {
                     hitPoint = hit.point;
                 }
-                referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hitPoint);
+                MultiUserMove(origin, hitPoint);
                 if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
                 {
                     controllerModelSwitcher.ActivateDesiredTool();
@@ -134,7 +135,7 @@ namespace CellexalVR.Interaction
             {
                 referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
                 referenceManager.rightLaser.enabled = false;
-                referenceManager.multiuserMessageSender.SendMessageToggleLaser(false);
+                MultiUserToggle(false);
             }
 
             if (alwaysActive || Override) return;
@@ -142,6 +143,22 @@ namespace CellexalVR.Interaction
             if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
             {
                 controllerModelSwitcher.ActivateDesiredTool();
+            }
+        }
+
+        private void MultiUserToggle(bool toggle)
+        {
+            if (referenceManager.multiuserMessageSender != null)
+            {
+                referenceManager.multiuserMessageSender.SendMessageToggleLaser(toggle);
+            }
+        }
+
+        private void MultiUserMove(Transform origin, Vector3 hitPoint)
+        {
+            if (referenceManager.multiuserMessageSender != null)
+            {
+                referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hitPoint);
             }
         }
 
@@ -157,7 +174,7 @@ namespace CellexalVR.Interaction
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
                 referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
             origin.localRotation = Quaternion.identity;
-            referenceManager.multiuserMessageSender.SendMessageToggleLaser(active);
+            MultiUserToggle(active);
         }
 
         private void TouchingObject(bool touch)
