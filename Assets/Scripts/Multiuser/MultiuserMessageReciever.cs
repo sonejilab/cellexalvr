@@ -772,6 +772,12 @@ namespace CellexalVR.Multiuser
             cluster.RemakeLines(cluster.fromPointCluster);
         }
 
+        [PunRPC]
+        public void RecieveMessageToggleAxes()
+        {
+            referenceManager.graphManager.ToggleAxes();
+        }
+
         #endregion
 
         #region Heatmaps

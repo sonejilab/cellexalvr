@@ -643,6 +643,12 @@ namespace CellexalVR.Multiuser
                 graphName, id);
         }
 
+        public void SendMessageToggleAxes()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleAxes", PhotonTargets.Others);
+        }
+
         #endregion
 
         #region Heatmaps

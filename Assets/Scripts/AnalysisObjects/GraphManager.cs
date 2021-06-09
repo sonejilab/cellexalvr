@@ -21,6 +21,8 @@ namespace CellexalVR.AnalysisObjects
         public AudioSource goodSound;
         public List<string> directories;
         public SelectionManager selectionManager;
+        [HideInInspector]
+        public bool axesVisible;
 
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
@@ -472,11 +474,12 @@ namespace CellexalVR.AnalysisObjects
         /// Set all graphs' axes to visible or not visible.
         /// </summary>
         /// <param name="visible"> TRue for visible, false for invisible </param>
-        public void SetAxesVisible(bool visible)
+        public void ToggleAxes()
         {
+            axesVisible = !axesVisible;
             foreach (Graph g in Graphs)
             {
-                g.SetAxesVisible(visible);
+                g.SetAxesVisible(axesVisible);
             }
         }
 
