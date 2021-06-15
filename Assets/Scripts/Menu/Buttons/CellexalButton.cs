@@ -168,7 +168,7 @@ namespace CellexalVR.Menu.Buttons
 
         public virtual void SetButtonActivated(bool activate)
         {
-            //print(name + " setbuttonactivated");
+            //print(name + " setbuttonactivated " + activate);
             if (!activate)
             {
                 descriptionText.text = "";
