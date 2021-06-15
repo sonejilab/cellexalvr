@@ -778,6 +778,11 @@ namespace CellexalVR.Multiuser
             referenceManager.graphManager.ToggleAxes();
         }
 
+        [PunRPC]
+        public void RecieveMessageToggleInfoPanels()
+        {
+            referenceManager.graphManager.ToggleInfoPanels();
+        }
         #endregion
 
         #region Heatmaps
