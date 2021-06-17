@@ -722,7 +722,8 @@ namespace CellexalVR.AnalysisLogic
             graphics.FillRectangle(backgroundBrush, 0, 0, heatmap.heatmapX, heatmap.bitmapHeight);
             graphics.FillRectangle(backgroundBrush, 0, 0, heatmap.bitmapWidth, heatmap.heatmapY);
             graphics.FillRectangle(backgroundBrush, heatmap.geneListX, 0, heatmap.geneListWidth, heatmap.bitmapHeight);
-            graphics.FillRectangle(backgroundBrush, 0, (heatmap.bitmapWidth - heatmap.heatmapY), heatmap.bitmapWidth, heatmap.bitmapHeight);
+            int diff = heatmap.bitmapHeight - (heatmap.heatmapY + heatmap.heatmapHeight);
+            graphics.FillRectangle(backgroundBrush, 0, heatmap.bitmapHeight - diff, heatmap.bitmapWidth, heatmap.heatmapY);
 
             float xcoord = heatmap.heatmapX;
             float ycoord = heatmap.heatmapY;
