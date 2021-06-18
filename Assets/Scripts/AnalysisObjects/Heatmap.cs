@@ -604,7 +604,8 @@ namespace CellexalVR.AnalysisObjects
                 // unless you press this button way too many times the same second
                 heatmapImageFilePath += "_d";
             }
-            //bitmap.Save(heatmapImageFilePath);
+            string heatmapImageFilePath2 = heatmapImageFilePath + "_2";
+            bitmap.Save(heatmapImageFilePath2);
             heatmapGenerator.SavePNGtoDisk(this, heatmapImageFilePath);
             StartCoroutine(referenceManager.reportManager.LogHeatmap(heatmapImageFilePath, this));
         }
@@ -645,18 +646,15 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ColorCells()
         {
-            var selectionManager = referenceManager.selectionManager;
-
+            Graph originGraph = selection[0].parent;
+            int graphIndex = referenceManager.graphManager.Graphs.IndexOf(originGraph);
             for (int i = 0, cellIndex = 0; i < groupWidths.Count; ++i)
             {
-
                 int group = groupWidths[i].Item1;
-                UnityEngine.Color groupColor = groupingColors[group];
                 for (int j = 0; j < groupWidths[i].Item3; ++j, ++cellIndex)
                 {
-                    var graphPoint = cells[cellIndex].GraphPoints[0];
-
-                    selectionManager.AddGraphpointToSelection(graphPoint, group, false);
+                    Graph.GraphPoint graphPoint = cells[cellIndex].GraphPoints[graphIndex];
+                    referenceManager.selectionManager.AddGraphpointToSelection(graphPoint, group, false);
                 }
             }
         }

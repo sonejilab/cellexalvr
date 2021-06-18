@@ -317,6 +317,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.name = heatmapName; //"heatmap_" + heatmapsCreated;
             heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
             heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
+            selectionNr += 1;
 
             CellexalEvents.CommandFinished.Invoke(true);
         }
@@ -335,7 +336,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalLog.Log("WARNING: No selection to build texture from.");
                 return;
             }
-            heatmap.selection = selection;
+            heatmap.selection = new List<Graph.GraphPoint>();
             if (heatmap.buildingTexture)
             {
                 CellexalLog.Log("WARNING: Not building heatmap texture because it is already building");
@@ -358,6 +359,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < selection.Count; ++i)
             {
                 Graph.GraphPoint graphpoint = selection[i];
+                heatmap.selection.Add(graphpoint);
                 int group = graphpoint.Group;
                 var cell = referenceManager.cellManager.GetCell(graphpoint.Label);
                 heatmap.cells[i] = cell;
@@ -722,8 +724,7 @@ namespace CellexalVR.AnalysisLogic
             graphics.FillRectangle(backgroundBrush, 0, 0, heatmap.heatmapX, heatmap.bitmapHeight);
             graphics.FillRectangle(backgroundBrush, 0, 0, heatmap.bitmapWidth, heatmap.heatmapY);
             graphics.FillRectangle(backgroundBrush, heatmap.geneListX, 0, heatmap.geneListWidth, heatmap.bitmapHeight);
-            int diff = heatmap.bitmapHeight - (heatmap.heatmapY + heatmap.heatmapHeight);
-            graphics.FillRectangle(backgroundBrush, 0, heatmap.bitmapHeight - diff, heatmap.bitmapWidth, heatmap.heatmapY);
+            graphics.FillRectangle(backgroundBrush, 0, heatmap.heatmapY + heatmap.heatmapHeight, heatmap.bitmapWidth, heatmap.heatmapY);
 
             float xcoord = heatmap.heatmapX;
             float ycoord = heatmap.heatmapY;

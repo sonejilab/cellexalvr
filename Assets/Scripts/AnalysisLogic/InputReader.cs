@@ -575,8 +575,7 @@ namespace CellexalVR.AnalysisLogic
                 selection.Add(graphPoint);
                 if (select)
                 {
-                    selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]),
-                        group, false, groupColor);
+                    selectionManager.AddGraphpointToSelection(graphPoint, group, false, groupColor);
                     numPointsAdded++;
                 }
             }
