@@ -342,6 +342,7 @@ namespace CellexalVR.Filters
             newFilter.Expression.SetFilterManager(this);
             currentFilter = newFilter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
+            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -365,6 +366,7 @@ namespace CellexalVR.Filters
             currentFilter = newFilter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
+            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -423,6 +425,7 @@ namespace CellexalVR.Filters
                 }
             }
             currentFilter = filter;
+            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -439,6 +442,7 @@ namespace CellexalVR.Filters
             currentFilter = filter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
+            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -468,7 +472,10 @@ namespace CellexalVR.Filters
             referenceManager.filterBlockBoard.SetActive(false);
         }
 
-        public void ResetFilter(/*bool informMultiUser = true*/)
+        /// <summary>
+        /// Removes the current filter, does not clear the filter board.
+        /// </summary>
+        public void ResetFilter()
         {
             currentFilter = null;
             StopAllCoroutines();
@@ -476,9 +483,7 @@ namespace CellexalVR.Filters
             cellsToEvaluate.Clear();
             evaluating = false;
             resultBlock.DisconnectAllPorts();
-            //if (informMultiUser)
-            //{
-            //}
+            CellexalEvents.FilterDeactivated.Invoke();
         }
 
         /// <summary>
