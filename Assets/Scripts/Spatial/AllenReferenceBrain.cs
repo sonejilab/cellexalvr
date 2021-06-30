@@ -6,6 +6,7 @@ using System.Linq;
 using CellexalVR.DesktopUI;
 using CellexalVR.Interaction;
 using Spatial;
+using UnityEditor;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
@@ -22,7 +23,8 @@ public class AllenReferenceBrain : MonoBehaviour
     public Transform midPoint;
     public BrainPartButton brainPartButtonPrefab;
     public List<LoadReferenceModelMeshButton> suggestionButtons = new List<LoadReferenceModelMeshButton>();
-    public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
+    public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("TriggerClick");
+    public Dictionary<string, GameObject> spawnedParts = new Dictionary<string, GameObject>();
 
     [HideInInspector] public Vector3 startPosition;
     [HideInInspector] public Vector3 startScale;
@@ -30,13 +32,14 @@ public class AllenReferenceBrain : MonoBehaviour
 
 
     private ReferenceModelKeyboard keyboard;
-    private Dictionary<string, GameObject> spawnedParts = new Dictionary<string, GameObject>();
     private List<BrainPartButton> brainPartButtons = new List<BrainPartButton>();
     private const float yInc = 0.20f;
     private const float zInc = 0.65f;
     private BoxCollider boxCollider;
     private bool controllerInside;
     private int frameCount;
+
+    private bool spread;
 
     private void Awake()
     {
@@ -59,7 +62,9 @@ public class AllenReferenceBrain : MonoBehaviour
         }
 
         string filePath = "structure_info.csv";
-        print(filePath);
+
+        //Create instance of material for each color.
+
         using (StreamReader sr = new StreamReader(filePath))
         {
             string header = sr.ReadLine();
@@ -75,22 +80,34 @@ public class AllenReferenceBrain : MonoBehaviour
                 SpatialReferenceModelPart model = idToModelDictionary[id];
                 model.modelAcronym = acronym;
                 model.modelName = n;
-                model.color = c;
-                model.id = id;
 
                 acronyms[acronym] = n;
+                model.id = id;
                 names[n] = id;
+                if (id == 997)
+                {
+                    continue;
+                }
+                model.SetColor(c);
                 //print($"id: {id}, name: {n}, acr: {acronym}, {model.gameObject.name}");
             }
         }
         // root model is the main brain model. have active and transparent on start...
-        idToModelDictionary[997].color = Color.white / 10f;
+        //idToModelDictionary[997].color = Color.white / 10f;
         SpawnModel("root");
         keyboard.gameObject.SetActive(false);
     }
 
     private void Update()
     {
+        //if (Input.GetKeyDown(KeyCode.Y))
+        //{
+        //    Spread();
+        //}
+        //if (Input.GetKeyDown(KeyCode.J))
+        //{
+        //    StartCoroutine(SplitMeshes());
+        //}
         if ((int)(Time.realtimeSinceStartup) % 2 == 0)
         {
             CheckForController();
@@ -104,16 +121,11 @@ public class AllenReferenceBrain : MonoBehaviour
                 keyboard.gameObject.SetActive(!keyboard.gameObject.activeSelf);
             }
         }
-
-        //if (Input.GetKeyDown(KeyCode.J))
-        //{
-        //    SpreadOutParts();
-        //}
     }
 
     private void CheckForController()
     {
-        if (!boxCollider.enabled) return;
+        //if (!boxCollider.enabled) return;
         Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
         if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("Controller")))
         {
@@ -143,8 +155,13 @@ public class AllenReferenceBrain : MonoBehaviour
     public SpatialReferenceModelPart SpawnModel(int id)
     {
         idToModelDictionary.TryGetValue(id, out SpatialReferenceModelPart objToSpawn);
+        if (objToSpawn == null) return objToSpawn;
         objToSpawn.gameObject.SetActive(!objToSpawn.gameObject.activeSelf);
-        objToSpawn.GetComponentInChildren<Renderer>().material.color = objToSpawn.color;
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            //r.material.SetColor("_Col", objToSpawn.color);
+            //r.material.color = objToSpawn.color;
+        }
         spawnedParts[objToSpawn.modelName] = objToSpawn.gameObject;
         return objToSpawn;
     }
@@ -200,6 +217,16 @@ public class AllenReferenceBrain : MonoBehaviour
         }
     }
 
+    public void Spread()
+    {
+        foreach (GameObject obj in spawnedParts.Values)
+        {
+            StartCoroutine(obj.GetComponent<SpatialReferenceModelPart>().Spread());
+        }
+
+    }
+
+
     public void UpdateSuggestions(string filter)
     {
         List<string> filteredNames = new List<string>();
@@ -233,6 +260,22 @@ public class AllenReferenceBrain : MonoBehaviour
         for (int i = 0; i < filteredNames.Count; i++)
         {
             suggestionButtons[i].ModelName = filteredNames[i];
+        }
+
+    }
+
+
+    private IEnumerator SplitMeshes()
+    {
+        //SpatialReferenceModelPart part = idToModelDictionary[46];
+        int i = 1;
+        foreach (SpatialReferenceModelPart part in idToModelDictionary.Values)
+        {
+            part.gameObject.SetActive(true);
+            part.SplitMesh();
+            yield return new WaitForSeconds(0.1f);
+            part.gameObject.SetActive(false);
+            i++;
         }
 
     }

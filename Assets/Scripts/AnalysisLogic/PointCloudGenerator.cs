@@ -157,7 +157,9 @@ namespace DefaultNamespace
                 }
                 parentSlice.childSlices.Add(slice);
             }
-            parentSlice.ActivateSlices(true);
+
+            parentSlice.slicerBox.sliceAnimationActive = false;
+            //parentSlice.ActivateSlices(true);
 
         }
 

@@ -10,6 +10,7 @@ using Valve.VR.InteractionSystem;
 using Valve.VR.Extras;
 using AnalysisLogic;
 using DefaultNamespace;
+using UnityEditor;
 
 namespace CellexalVR.Spatial
 {

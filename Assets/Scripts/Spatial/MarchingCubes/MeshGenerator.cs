@@ -68,7 +68,7 @@ namespace CellexalVR.Spatial
             //{
             //    StartCoroutine(SpreadOutParts());
             //}
-            if (controllerAction.GetStateDown(Player.instance.leftHand.handType))
+            if (Player.instance.leftHand != null && controllerAction.GetStateDown(Player.instance.leftHand.handType))
             {
                 StartCoroutine(SpreadOutParts());
                 //SpreadOutPoints();
@@ -87,6 +87,7 @@ namespace CellexalVR.Spatial
             Color[] alphas = TextureHandler.instance.alphaTextureMaps[0].GetPixels();
             Color[] positions = PointCloudGenerator.instance.pointClouds[0].positionTextureMap.GetPixels();
             Dictionary<int, List<float3>> meshPositions = new Dictionary<int, List<float3>>();
+
 
             for (int i = 0; i < positions.Length; i++)
             {

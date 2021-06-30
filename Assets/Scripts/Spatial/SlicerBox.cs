@@ -17,15 +17,11 @@ namespace CellexalVR.Spatial
 {
     public class SlicerBox : MonoBehaviour
     {
-        // public Transform t1, t2, t3, t4, t5, t6;
-        // public Transform[] currentTransforms = new Transform[2];
-        // public int axis;
         public GameObject blade;
         public GameObject plane;
         public GameObject box;
         public Transform menuPosition;
         public Transform buttonPosition;
-        //public GraphSlicer graphSlicer;
         public SlicingMenu slicingMenu;
         public VisualEffect slicingAnimation;
         [HideInInspector] public bool sliceAnimationActive;
@@ -125,17 +121,23 @@ namespace CellexalVR.Spatial
             }
         }
 
-        public void SingleSliceViewMode(bool toggle, int axis)
+        public void SingleSliceViewMode(int axis = -1)
         {
             //reset handle positions back when deactivate....
-            singleSliceViewMode = toggle ? axis : -1;
-            CullingWall cwToLock = cullingWalls[axis + 3];
-            cwToLock.GetComponent<InteractableObjectBasic>().enabled = !toggle;
-            cwToLock.handle.SetActive(false);
+            // if axis == -1 then toggle off
+            CullingWall cwToLock = null;
+            if (axis != -1)
+            {
+                cwToLock = cullingWalls[axis + 3];
+                cwToLock.GetComponent<InteractableObjectBasic>().enabled = false;
+                cwToLock.handle.SetActive(false);
+            }
+            singleSliceViewMode = axis;
             foreach (CullingWall cullingWall in cullingWalls)
             {
                 if (cullingWall == cwToLock) continue;
                 InteractableObjectOneAxis interactable = cullingWall.GetComponent<InteractableObjectOneAxis>();
+                cullingWall.GetComponent<InteractableObjectBasic>().enabled = true;
                 cullingWall.transform.localPosition = interactable.startPosition;
                 interactable.enabled = true;
                 cullingWall.handle.SetActive(true);
@@ -180,7 +182,6 @@ namespace CellexalVR.Spatial
         {
             StartCoroutine(SliceAnimation());
             StartCoroutine(graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices));
-            //graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices);
         }
 
         public void MorphGraph()

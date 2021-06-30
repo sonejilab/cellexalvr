@@ -154,13 +154,13 @@ namespace DefaultNamespace
             {
                 Vector2Int coords = textureCoordDict[pair.Cell];
                 tex.SetPixel(coords.x, coords.y, ReferenceManager.instance.graphGenerator.geneExpressionColors[pair.Color + 1]);
-                atex.SetPixel(coords.x, coords.y, Color.white * 0.05f + (a * (pair.Color + 1)));
+                atex.SetPixel(coords.x, coords.y, Color.white * 0.1f + (a * (pair.Color + 1)));
             }
             atex.Apply();
             tex.Apply();
         }
 
-        private void ResetTexture()
+        public void ResetTexture()
         {
             Color[] colors = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];
             Color[] alphas = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];

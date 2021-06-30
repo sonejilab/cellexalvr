@@ -270,6 +270,16 @@ namespace CellexalVR.AnalysisLogic
                 mr.material.SetTexture("_EmissionMap", texture);
                 PointCloudGenerator.instance.SpawnPoints(hi, parentPC);
                 HistoImageHandler.instance.images.Add(hi);
+                string c = hi.sliceNr.ToString();
+                var carr = c.ToCharArray();
+                string id = n.Split(carr)[0];
+                if (!HistoImageHandler.instance.imageDict.ContainsKey(id))
+                {
+                    HistoImageHandler.instance.imageDict.Add(id, new List<HistoImage>());
+                }
+                print($"{id}, {hi.gameObject.name}");
+                HistoImageHandler.instance.imageDict[id].Add(hi);
+
             }
 
             CellexalEvents.GraphsLoaded.Invoke();

@@ -24,7 +24,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
 
         public override void Click()
         {
-            slicerBox.SingleSliceViewMode(true, (int)axisToCull);
+            slicerBox.SingleSliceViewMode((int)axisToCull);
             SetButtonActivated(false);
             // TODO: Add multi user synch
         }

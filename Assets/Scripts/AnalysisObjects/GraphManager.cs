@@ -354,6 +354,12 @@ namespace CellexalVR.AnalysisObjects
                     Destroy(panel.gameObject);
                 }
             }
+
+            if (TextureHandler.instance.textureCoordDict.Count > 0)
+            {
+                TextureHandler.instance.ResetTexture();
+            }
+
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.GraphsReset.Invoke();
         }

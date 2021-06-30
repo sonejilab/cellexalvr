@@ -37,11 +37,13 @@ namespace CellexalVR.Spatial
         private void OnGrabbed(object sender, Hand hand)
         {
             parentPointCloud.GetComponent<InteractableObjectBasic>().isGrabbable = false;
+            wall.SetActive(true);
         }
 
         private void OnUnGrabbed(object sender, Hand hand)
         {
             parentPointCloud.GetComponent<InteractableObjectBasic>().isGrabbable = true;
+            wall.SetActive(false);
         }
 
 

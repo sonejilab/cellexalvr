@@ -45,6 +45,7 @@ namespace CellexalVR.Spatial
         public PointCloud pointCloud;
         public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("Teleport");
         public GameObject referenceOrgan;
+        public SlicerBox slicerBox;
 
         protected Graph graph;
 
@@ -60,7 +61,6 @@ namespace CellexalVR.Spatial
         private int sliceNr;
         private InteractableObjectBasic interactableObjectBasic;
         private bool controllerInside;
-        private SlicerBox slicerBox;
         private List<Point> sortedPointsX;
         private List<Point> sortedPointsY;
         private List<Point> sortedPointsZ;
@@ -81,6 +81,7 @@ namespace CellexalVR.Spatial
             pointCloud = GetComponent<PointCloud>();
             boxCollider = GetComponent<BoxCollider>();
             CellexalEvents.GraphsColoredByGene.AddListener(UpdateColorTexture);
+            CellexalEvents.GraphsReset.AddListener(UpdateColorTexture);
             //GetComponent<Rigidbody>().drag = Mathf.Infinity;
             //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
         }
@@ -143,13 +144,15 @@ namespace CellexalVR.Spatial
                 for (int i = 0; i < points.Count; i++)
                 {
                     Point p = points[i];
-                    int ind = (p.yindex) * 100 + (p.xindex);
+                    int ind = (p.yindex) * PointCloudGenerator.textureWidth + (p.xindex);
                     carray[ind] = parentTexture.GetPixel(p.orgXIndex, p.orgYIndex);
                     aarray[ind] = parentATexture.GetPixel(p.orgXIndex, p.orgYIndex);
                 }
 
                 pointCloud.colorTextureMap.SetPixels(carray);
+                pointCloud.alphaTextureMap.SetPixels(aarray);
                 pointCloud.colorTextureMap.Apply();
+                pointCloud.alphaTextureMap.Apply();
             }
         }
 
@@ -360,6 +363,12 @@ namespace CellexalVR.Spatial
 
         public IEnumerator SliceAxis(int axis, List<Point> points, int nrOfSlices)
         {
+            GraphSlice[] oldSlices = childSlices.ToArray();
+            foreach (GraphSlice gs in oldSlices)
+            {
+                parentSlice.childSlices.Remove(gs);
+                Destroy(gs.gameObject);
+            }
             List<Point> sortedPoints = new List<Point>(points.Count);
             if (axis == 0)
             {
@@ -480,7 +489,7 @@ namespace CellexalVR.Spatial
             }
 
             slicerBox.sliceAnimationActive = false;
-            ActivateSlices(true);
+            //ActivateSlices(true);
             //PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
 
         }

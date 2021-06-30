@@ -16,6 +16,10 @@ namespace CellexalVR.Menu.Buttons.Slicing
         public ChangeNrOfSlicesButton addSliceButton;
         public ChangeNrOfSlicesButton subtractSliceButton;
         public int nrOfSlices;
+        public GameObject movableContent;
+        public GameObject movableContent2;
+        public GameObject movableContent3;
+
         public enum SliceMode
         {
             None,
@@ -54,20 +58,46 @@ namespace CellexalVR.Menu.Buttons.Slicing
                     automaticModeMenu.SetActive(false);
                     break;
                 case SliceMode.Automatic:
-                    slicerBox.plane.SetActive(!toggle);
+                    if (toggle)
+                    {
+                        manualModeButton.CurrentState = !toggle;
+                    }
+                    StartCoroutine(MoveContent(toggle ? -5.3f : -1.3f));
                     automaticModeMenu.SetActive(toggle);
-                    manualModeButton.CurrentState = !toggle;
                     break;
                 case SliceMode.Manual:
+                    if (toggle)
+                    {
+                        autoModeButton.CurrentState = !toggle;
+                    }
                     slicerBox.plane.SetActive(toggle);
-                    automaticModeMenu.SetActive(!toggle);
-                    autoModeButton.CurrentState = !toggle;
+                    //automaticModeMenu.SetActive(!toggle);
                     break;
                 case SliceMode.Freehand:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(modeToActivate), modeToActivate, null);
             }
+            if (!(manualModeButton.CurrentState || autoModeButton.CurrentState))
+            {
+                StartCoroutine(MoveContent(-1.3f));
+            }
+        }
+
+        private IEnumerator MoveContent(float zCoord)
+        {
+            float animationTime = 0.5f;
+            float t = 0f;
+            Vector3 startPos = movableContent.transform.localPosition;
+            Vector3 targetPos = new Vector3(movableContent.transform.localPosition.x, movableContent.transform.localPosition.y, zCoord);
+            while (t < animationTime)
+            {
+                //float progress = Mathf.SmoothStep(0, animationTime, t / animationTime);
+                movableContent.transform.localPosition = Vector3.Lerp(startPos, targetPos, t / animationTime);
+                t += (Time.deltaTime);
+                yield return null;
+            }
+            yield return null;
         }
 
         public void ChangeAxis(SliceAxis axis)

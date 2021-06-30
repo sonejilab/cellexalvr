@@ -14,10 +14,14 @@ namespace CellexalVR.Spatial
 
         public HistoImage slicePrefab;
         public List<HistoImage> images = new List<HistoImage>();
+        public Dictionary<string, List<HistoImage>> imageDict;
+
+        public GameObject parentPrefab;
 
         private void Awake()
         {
             instance = this;
+            imageDict = new Dictionary<string, List<HistoImage>>();
         }
 
 
@@ -25,12 +29,14 @@ namespace CellexalVR.Spatial
         {
             if (Input.GetKeyDown(KeyCode.H))
             {
-                int prevSliceNr = 0;
-                for (int i = 0; i < images.Count - 1; i++)
+                foreach (KeyValuePair<string, List<HistoImage>> kvp in imageDict)
                 {
-                    bool moveX = images[i].sliceNr < prevSliceNr;
-                    AllignImages(images[i], images[i + 1], moveX);
-                    prevSliceNr = images[i].sliceNr;
+                    for (int i = 0; i < kvp.Value.Count - 1; i++)
+                    {
+                        print($"{kvp.Key}, {kvp.Value[i].gameObject.name}, {kvp.Value[i+1].gameObject.name}");
+                        AllignImages(kvp.Value[i], kvp.Value[i + 1], false);
+                    }
+                    //bool moveX = images[i].sliceNr < prevSliceNr;
                 }
 
             }
@@ -41,7 +47,85 @@ namespace CellexalVR.Spatial
                     hi.CropToTissue2();
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                //GatherImages();
+                CreateVolume();
+            }
         }
+
+
+
+
+        private void CreateVolume()
+        {
+            foreach (KeyValuePair<string, List<HistoImage>> kvp in imageDict)
+            {
+                Texture2D[] textures = new Texture2D[kvp.Value.Count];
+                for (int i = 0; i < kvp.Value.Count; i++)
+                {
+                    textures[i] = kvp.Value[i].texture;
+                }
+                ImageStack.instance.CreateVolume(textures);
+            }
+        }
+
+        private void GatherImages()
+        {
+            foreach (KeyValuePair<string, List<HistoImage>> kvp in imageDict)
+            {
+                var parent = GameObject.Instantiate(parentPrefab);
+                parent.gameObject.name = kvp.Key;
+                foreach (HistoImage im in kvp.Value)
+                {
+                    im.transform.parent = parent.transform;
+                }
+            }
+        }
+
+        private void StichImages()
+        {
+            //foreach (KeyValuePair<string, List<HistoImage>> kvp in imageDict)
+            //{
+            //    foreach (HistoImage im in kvp.Value)
+            //    {
+
+            //    }
+            //    List<UnityEngine.Color[]> allTexturePixels = new List<UnityEngine.Color[]>();
+            //    int width = 0;
+            //    int height = 0;
+            //    for (int i = startPage; i < startPage + nrOfPages; i++)
+            //    {
+            //        string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{i}.png";
+            //        byte[] imageByteArray = File.ReadAllBytes(path);
+            //        Texture2D imageTexture = new Texture2D(2, 2);
+            //        imageTexture.LoadImage(imageByteArray);
+            //        UnityEngine.Color[] imageColors = imageTexture.GetPixels(0, 0, imageTexture.width, imageTexture.height);
+
+            //        allTexturePixels.Add(imageColors);
+
+            //        width = imageTexture.width;
+            //        height = imageTexture.height;
+            //    }
+
+            //    List<UnityEngine.Color> mergedTexturePixels = new List<UnityEngine.Color>();
+
+            //    for (int y = 0; y < height; y++)
+            //    {
+            //        for (int i = 0; i < nrOfPages; i++)
+            //        {
+            //            for (int x = 0; x < width; x++)
+            //            {
+            //                int c = x + (width * y);
+
+            //                mergedTexturePixels.Add(allTexturePixels[i][c]);
+            //            }
+            //        }
+            //    }
+            //}
+        }
+
 
 
         public void AddImage(HistoImage image)
@@ -54,8 +138,8 @@ namespace CellexalVR.Spatial
             HistoImage hi1 = image1.transform.position.z > image2.transform.position.z ? image1 : image2;
             HistoImage hi2 = image1.transform.position.z > image2.transform.position.z ? image2 : image1;
 
-            hi1.transform.parent = transform;
-            hi2.transform.parent = transform;
+            //hi1.transform.parent = transform;
+            //hi2.transform.parent = transform;
 
             float diffX = hi1.scaledMaxValues.x - hi2.scaledMaxValues.x;
             float diffY = hi1.scaledMaxValues.y - hi2.scaledMaxValues.y;
@@ -65,6 +149,7 @@ namespace CellexalVR.Spatial
             diffX = (diffX + diffX2) / 2;
             diffY = (diffY + diffY2) / 2;
 
+            print($"{diffX}, {diffY}");
             Vector3 pos = hi1.transform.localPosition;
             pos.x -= diffY;
             pos.y += diffX;

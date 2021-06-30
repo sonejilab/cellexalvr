@@ -204,7 +204,8 @@ namespace CellexalVR.Spatial
                 quadrantSystem.graphParentTransforms.Add(pc2.transform);
                 PointCloudGenerator.instance.BuildSlices(oldPc, new GraphSlice[] { slice1, slice2 });
             }
-
+            //parentSlice.slicerBox.sliceAnimationActive = false;
+            //parentSlice.ActivateSlice(true);
             move.Dispose();
         }
 
