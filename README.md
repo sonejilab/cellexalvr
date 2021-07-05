@@ -15,12 +15,13 @@ You can download a compiled version of CellexalVR for Windows 10 from [our websi
 
 There are a few things that must be done if you are planning to run CellexalVR for the first time.
 * Check that you have a pretty beefy computer. We are using:
-* * intel i7 or AMD ryzen 1920x CPU
-* * NVIDIA GeForce GTX 1080 GPU
-* * 16 GB RAM
+* * intel i7 or AMD ryzen 1920x CPU (SteamVR recommends Intel Core i5-4590/AMD FX 8350 equivalent or better) 
+* * NVIDIA GeForce GTX 1080 GPU (SteamVR recommends NVIDIA GeForce GTX 970, AMD Radeon R9 290 equivalent or better)
+* * 16 GB RAM (SteamVR recommends 4 GB minimum)
+* * 1x USB 2.0 or newer, HDMI 1.4, DisplayPort 1.2 or newer
 * Make sure you have an HTC Vive that is set up properly.
 * Make sure [SteamVR](https://steamcommunity.com/steamvr) is installed. (This should get installed when you configure your Vive for the first time)
-* Make sure at least [R 3.6.0](https://cran.r-project.org/src/base/R-3/) is installed.
+* Make sure at least [R 4.0.0](https://cran.r-project.org/src/base/R-4/) is installed.
 * Install the [CellexalVR R package](https://www.github.com/sonejilab/cellexalvrr) by running `devtools::install_github("sonejilab/cellexalvrr")` in an R terminal. This requires the `devtools` package, you can install it with `install.packages("devtools")`.
 * If you want to make use of the html reports, you need to install [pandoc](https://pandoc.org/).
 * Create a folder called `Data` where CellexalVR is installed.
@@ -44,8 +45,8 @@ CellexalVR
 ```
 
 ## Cloning the project
-### Requirements
-* All of the requirements of running CellexalVR (assuming you want to run it as well)
+### Unity Versions
+* If you not only want to run a working build of CellexalVR but want to edit and make a your own executable you will need to download and install Unity as well. The different Unity versions are many times backwards compatible but not always so we still recommend that you install the version we list below.  
 * [Unity 2019.1.8f1](https://unity3d.com/get-unity/download/archive)
 * or [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [3535f45](https://github.com/shambam/cellexalvr/commit/3535f4519b8f8efa2edc37f587a2f543a972e8bb)
 * or [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [5c9324f](https://github.com/shambam/cellexalvr/commit/5c9324f745c802c3b070b9efdcd2a9e0b0428c2a)
